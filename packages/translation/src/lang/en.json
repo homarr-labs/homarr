@@ -4090,8 +4090,6 @@
       "configuration": {
         "needsAttention": "Configuration needs attention: {message}",
         "advancedOptions": "Advanced options",
-        "advancedJson": "Advanced JSON",
-        "jsonObjectRequired": "Configuration must be a JSON object",
         "invalidJson": "Invalid JSON"
       }
     },

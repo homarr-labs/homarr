@@ -145,8 +145,8 @@ export function ActionButton(props: ActionButtonProps) {
 
 export interface ToggleSwitchProps {
   requestId?: string;
-  onParams?: CustomJsxRuntimeParams;
-  offParams?: CustomJsxRuntimeParams;
+  enabledParams?: CustomJsxRuntimeParams;
+  disabledParams?: CustomJsxRuntimeParams;
   initialValue?: boolean | string;
   label?: string;
   color?: string;
@@ -160,8 +160,8 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
   const initial = parseBool(props.initialValue);
   const [checked, setChecked] = useState(initial);
   const locked = useRef(false);
-  const onParams = normalizeParams(props.onParams);
-  const offParams = normalizeParams(props.offParams);
+  const enabledParams = normalizeParams(props.enabledParams);
+  const disabledParams = normalizeParams(props.disabledParams);
   const capability = runtime.requestCapabilities.find(
     (candidate) => candidate.id === props.requestId && candidate.kind === "action",
   );
@@ -169,7 +169,7 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
     if (!locked.current) setChecked(initial);
   }, [initial]);
   const change = async (next: boolean) => {
-    const params = next ? onParams : offParams;
+    const params = next ? enabledParams : disabledParams;
     if (!props.requestId || !params || locked.current) return;
     const confirmation = capability?.confirmation;
     const confirmMessage =
@@ -231,8 +231,8 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
         mutation.isPending ||
         runtime.isEditMode ||
         (!runtime.itemId && !runtime.previewSessionId) ||
-        !onParams ||
-        !offParams
+        !enabledParams ||
+        !disabledParams
       }
     />
   );

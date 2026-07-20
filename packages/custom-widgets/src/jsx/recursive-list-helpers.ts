@@ -1,4 +1,5 @@
 import { SafeJsxError } from "./interpreter-foundation";
+import type { Budget } from "./interpreter-foundation";
 import { CUSTOM_JSX_BLOCKED_PROPERTIES, normalizeCustomJsxProperty } from "./policy";
 import { ownProperty } from "./safe-properties";
 
@@ -12,25 +13,27 @@ export function exceedsRecursiveListNodeLimit(
   childrenPath: readonly string[],
   maxDepth: number,
   maxNodes: number,
+  budget: Budget,
 ) {
   let rows = 0;
-  const charge = () => {
+  const charge = (depth: number) => {
+    budget.operation(depth + 1);
     rows += 1;
     return rows > maxNodes;
   };
   const visit = (values: readonly unknown[], depth: number, ancestors: ReadonlySet<object>): boolean => {
     for (const value of values) {
-      if (charge()) return true;
+      if (charge(depth)) return true;
       if (!isObject(value) || ancestors.has(value)) continue;
 
       const rawChildren = readRestrictedPath(value, childrenPath);
       if (rawChildren !== undefined && rawChildren !== null && !Array.isArray(rawChildren)) {
-        if (charge()) return true;
+        if (charge(depth + 1)) return true;
         continue;
       }
       if (!Array.isArray(rawChildren) || rawChildren.length === 0) continue;
       if (depth + 1 >= maxDepth) {
-        if (charge()) return true;
+        if (charge(depth + 1)) return true;
         continue;
       }
       if (visit(rawChildren, depth + 1, new Set(ancestors).add(value))) return true;
@@ -74,7 +77,7 @@ export function clampWithWarning(
   const validNumber = typeof value === "number" && Number.isFinite(value);
   const number = validNumber ? Math.trunc(value) : fallback;
   const clamped = Math.min(maximum, Math.max(minimum, number));
-  if (value !== undefined && (!validNumber || number !== clamped)) {
+  if (value !== undefined && (!validNumber || value !== number || number !== clamped)) {
     warnings.add(`RECURSIVE_LIST_LIMIT_CLAMPED: ${name} was clamped to ${clamped}`);
   }
   return clamped;

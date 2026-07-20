@@ -95,7 +95,7 @@ describe("CopyAiPromptButton", () => {
     });
   });
 
-  test("copies the complete offline bundle and reports its exact character count", async () => {
+  test("copies the complete embedded skill and reports its exact character count", async () => {
     await act(async () => {
       root.render(
         <MantineProvider>
@@ -120,10 +120,26 @@ describe("CopyAiPromptButton", () => {
 
     const prompt = writeText.mock.calls[0]?.[0] as string;
     expect(prompt.startsWith("Please create this Homarr Custom JSX v2 widget:\n\nCreate a Pokédex")).toBe(true);
+    expect(prompt).toContain("# Homarr Custom Widget offline authoring bundle");
+    expect(prompt).toContain("--- BEGIN SKILL FILE: SKILL.md ---");
+    expect(prompt).toContain("--- BEGIN SKILL FILE: references/widget-schema.json ---");
+    expect(prompt).toContain("--- BEGIN CANONICAL COMPONENT CATALOG ---");
+    expect(prompt).toContain("--- BEGIN CANONICAL RUNTIME EXAMPLES ---");
+    expect(prompt.length).toBeGreaterThan(500_000);
+    expect(prompt.length).toBeLessThanOrEqual(1_700_000);
     expect(prompt.endsWith(`${CUSTOM_WIDGET_OFFLINE_BUNDLE_SENTINEL}\nCharacters: ${prompt.length}`)).toBe(true);
     expect(showSuccessNotification).toHaveBeenCalledWith({
       title: "action.copyAiPrompt",
       message: `notification.aiPromptCopiedWithCount:${prompt.length}`,
     });
+  });
+
+  test("places the AI authoring card before General information", async () => {
+    const source = await readFile(
+      resolve(process.cwd(), "apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx"),
+      "utf8",
+    );
+
+    expect(source.indexOf("<CustomWidgetAiCard")).toBeLessThan(source.indexOf('<EditorSection id="general"'));
   });
 });

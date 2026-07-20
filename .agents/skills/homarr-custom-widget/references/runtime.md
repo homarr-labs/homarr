@@ -2,6 +2,20 @@
 
 Templates read four roots: `data.<requestId>`, `status.<requestId>`, `options`, and `inputs`.
 
+Each request status is an object:
+
+```ts
+status.<requestId> = {
+  loading: boolean;
+  ok?: boolean;
+  status?: number;
+  statusText?: string;
+  error?: string;
+};
+```
+
+Use `status.list?.loading` for loading, `status.list?.ok === false` for failure, and `status.list?.ok === true` for success. Do not compare `status.list` with the strings `"loading"`, `"success"`, or `"error"`; those comparisons are always false and are rejected by validation.
+
 Use Mantine Core, Dates, Charts, safe Tabler icons, and Homarr runtime components. Safe installed Mantine exports are discovered automatically. Ordinary serializable props and Mantine style props pass through; `style` and `styles` are scoped and sanitized.
 
 Render icons as `<TablerIcon name="server" size={18} />`. When connected, retrieve `homarr://custom-widgets/components/TablerIcon` for the supported icon names.

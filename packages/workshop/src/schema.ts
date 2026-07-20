@@ -34,6 +34,7 @@ const workshopSubmissionBaseSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string().default(""),
+  widgetSchema: z.string(),
   screenshots: workshopFileListSchema,
   author: z.string(),
   authorName: z.string(),
@@ -106,53 +107,10 @@ export function validateWorkshopWidget(content: string): WorkshopValidationResul
         .join("\n");
       return { success: false, error: error || "Invalid widget" };
     }
-    if (containsCredentialLikeValue(result.data)) {
-      return { success: false, error: "Widget exports must not contain credentials or credential-like static values" };
-    }
     return { success: true, data: result.data };
   } catch {
     return { success: false, error: "Widget content is not valid JSON" };
   }
-}
-
-function containsCredentialLikeValue(widget: z.infer<typeof customWidgetImportSchema>) {
-  const sensitiveName =
-    /(^|[-_])(authorization|api[-_]?keys?|passwords?|passwds?|secrets?|tokens?|access[-_]?tokens?|refresh[-_]?tokens?|client[-_]?secrets?)($|[-_])/iu;
-  return (
-    credentialTextPattern.test(widget.template) ||
-    widget.sources.some((source) => {
-      const url = new URL(source.baseUrl);
-      return Boolean(url.username || url.password || url.search || url.hash);
-    }) ||
-    (widget.iconUrl
-      ? [...new URL(widget.iconUrl).searchParams].some(
-          ([name, value]) => sensitiveName.test(name) && value.trim().length > 0,
-        )
-      : false) ||
-    widget.requests.some(
-      (request) =>
-        Object.entries(request.staticHeaders ?? {}).some(
-          ([name, value]) =>
-            (sensitiveName.test(name) && value.trim().length > 0) || /^\s*bearer\s+\S{8,}\s*$/iu.test(value),
-        ) ||
-        containsCredential(request.optionsBinding, "", sensitiveName) ||
-        containsCredential(request.bodyTemplate, "", sensitiveName) ||
-        containsCredential(request.queryTemplate, "", sensitiveName),
-    ) ||
-    containsCredential(widget.defaultOptions, "", sensitiveName)
-  );
-}
-
-const credentialTextPattern =
-  /(?:\bauthorization\s*[:=]\s*["']?bearer\s+[A-Za-z0-9._~+/%-]{8,}|\b(?:api[ _-]?key|access[ _-]?token|refresh[ _-]?token|client[ _-]?secret|token|password|passwd|secret)\s*[:=]\s*["'][^"']{4,}["'])/iu;
-
-function containsCredential(value: unknown, key: string, pattern: RegExp): boolean {
-  if (pattern.test(key) && typeof value === "string" && value.trim().length > 0) return true;
-  if (Array.isArray(value)) return value.some((entry) => containsCredential(entry, "", pattern));
-  if (value === null || typeof value !== "object") return false;
-  const entries = Object.entries(value);
-  if (entries.length === 1 && entries[0]?.[0] === "$param" && typeof entries[0][1] === "string") return false;
-  return entries.some(([childKey, child]) => containsCredential(child, childKey, pattern));
 }
 
 export function workshopExportFilename(title: string) {
@@ -163,22 +121,4 @@ export function workshopExportFilename(title: string) {
       .replaceAll(/[^a-z0-9]+/g, "-")
       .replaceAll(/^-|-$/g, "") || "homarr-widget";
   return `${safe}.json`;
-}
-
-export class WorkshopError extends Error {
-  public constructor(
-    public readonly code:
-      | "authentication_required"
-      | "forbidden"
-      | "not_found"
-      | "conflict"
-      | "rate_limited"
-      | "unavailable"
-      | "unknown",
-    message: string,
-    public readonly status?: number,
-  ) {
-    super(message);
-    this.name = "WorkshopError";
-  }
 }

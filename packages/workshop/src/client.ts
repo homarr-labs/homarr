@@ -1,5 +1,7 @@
 import PocketBase, { ClientResponseError } from "pocketbase";
 
+import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
+
 import type {
   WorkshopReport,
   WorkshopSubmissionDetail,
@@ -11,7 +13,6 @@ import type {
 import {
   WORKSHOP_API_URL,
   WORKSHOP_REQUEST_TIMEOUT_MS,
-  WorkshopError,
   workshopReportSchema,
   workshopSubmissionDetailSchema,
   workshopSubmissionSummarySchema,
@@ -20,8 +21,6 @@ import {
   workshopUserSchema,
   workshopVoteSchema,
 } from "./schema";
-
-const WORKSHOP_OAUTH_TIMEOUT_MS = 2 * 60_000;
 
 export interface WorkshopListOptions {
   page?: number;
@@ -47,32 +46,34 @@ const requestSignal = (signal?: AbortSignal) =>
       : [AbortSignal.timeout(WORKSHOP_REQUEST_TIMEOUT_MS)],
   );
 
-function workshopError(error: unknown, fallback: string) {
-  if (error instanceof WorkshopError) return error;
-  if (error instanceof ClientResponseError) {
-    const code =
-      error.status === 401
-        ? "authentication_required"
-        : error.status === 403
-          ? "forbidden"
-          : error.status === 404
-            ? "not_found"
-            : error.status === 409
-              ? "conflict"
-              : error.status === 429
-                ? "rate_limited"
-                : error.status >= 500
-                  ? "unavailable"
-                  : "unknown";
-    return new WorkshopError(code, error.data?.message || error.message || fallback, error.status);
-  }
-  if (error instanceof DOMException && (error.name === "AbortError" || error.name === "TimeoutError"))
-    return new WorkshopError("unavailable", `${fallback}. The request timed out.`);
-  return new WorkshopError("unknown", error instanceof Error ? error.message : fallback);
+const OAUTH_TIMEOUT_MS = 2 * 60 * 1000;
+
+function oauthText(...values: unknown[]) {
+  return values.find((value): value is string => typeof value === "string" && value.trim().length > 0)?.trim();
 }
 
-function firstNonEmptyString(...values: unknown[]) {
-  return values.find((value): value is string => typeof value === "string" && value.trim().length > 0)?.trim();
+function githubProfile(meta: Record<string, unknown> | undefined, record: Record<string, unknown>) {
+  const rawUser =
+    meta?.rawUser && typeof meta.rawUser === "object" ? (meta.rawUser as Record<string, unknown>) : undefined;
+  const displayName = oauthText(meta?.name, meta?.username, rawUser?.name, rawUser?.login);
+  const avatarUrl = oauthText(meta?.avatarUrl, meta?.avatarURL, rawUser?.avatar_url);
+  return {
+    displayName: (displayName ?? `GitHub user ${String(record.id ?? "").slice(0, 8)}`).slice(0, 100),
+    avatarUrl: avatarUrl?.startsWith("https://") ? avatarUrl : undefined,
+  };
+}
+
+function workshopError(error: unknown, fallback: string) {
+  if (error instanceof ClientResponseError) {
+    const sdkMessage = error.data?.message || error.message;
+    const originalMessage =
+      error.originalError instanceof Error ? error.originalError.message : String(error.originalError?.message ?? "");
+    const message = !sdkMessage || sdkMessage === "Something went wrong." ? originalMessage || fallback : sdkMessage;
+    return new Error(message, { cause: error });
+  }
+  if (error instanceof DOMException && (error.name === "AbortError" || error.name === "TimeoutError"))
+    return new Error(`${fallback}. The request timed out.`, { cause: error });
+  return error instanceof Error ? error : new Error(fallback);
 }
 
 export class WorkshopClient {
@@ -102,83 +103,67 @@ export class WorkshopClient {
     try {
       await this.pocketBase.collection("users").authRefresh();
       return this.currentUser;
-    } catch {
-      this.pocketBase.authStore.clear();
-      return null;
+    } catch (error) {
+      if (error instanceof ClientResponseError && (error.status === 401 || error.status === 403)) {
+        this.pocketBase.authStore.clear();
+        return null;
+      }
+      return this.currentUser;
     }
   }
 
   public async signInWithGitHub() {
     if (typeof window === "undefined" || typeof window.open !== "function") {
-      throw new WorkshopError("unavailable", "GitHub sign-in requires a browser popup");
+      throw new Error("GitHub sign-in requires a browser popup");
     }
 
-    const popup = window.open(
-      "about:blank",
-      "homarr_workshop_oauth",
-      "width=1024,height=768,resizable=yes,scrollbars=yes,menubar=no",
-    );
-    if (!popup) throw new WorkshopError("unavailable", "GitHub sign-in popup was blocked by the browser");
+    const popup = window.open("about:blank", "homarr_workshop_oauth", "width=1024,height=768,resizable,menubar=no");
+    if (!popup) throw new Error("GitHub sign-in popup was blocked. Allow popups for Homarr and try again.");
 
-    const requestKey = `workshop_oauth_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const requestKey = `workshop-oauth-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    let cancellationError: Error | null = null;
     let closePoll: ReturnType<typeof setInterval> | undefined;
     let timeout: ReturnType<typeof setTimeout> | undefined;
-    const popupFailure = new Promise<never>((_resolve, reject) => {
+    const cancellation = new Promise<never>((_resolve, reject) => {
       closePoll = setInterval(() => {
-        if (popup.closed) reject(new WorkshopError("unknown", "GitHub sign-in was cancelled"));
+        if (!popup.closed) return;
+        cancellationError = new Error("GitHub sign-in was cancelled.");
+        this.pocketBase.cancelRequest(requestKey);
+        reject(cancellationError);
       }, 250);
-      timeout = setTimeout(
-        () => reject(new WorkshopError("unavailable", "GitHub sign-in timed out")),
-        WORKSHOP_OAUTH_TIMEOUT_MS,
-      );
+      timeout = setTimeout(() => {
+        cancellationError = new Error("GitHub sign-in timed out. Try again.");
+        this.pocketBase.cancelRequest(requestKey);
+        popup.close();
+        reject(cancellationError);
+      }, OAUTH_TIMEOUT_MS);
     });
 
     try {
       const auth = await Promise.race([
         this.pocketBase.collection("users").authWithOAuth2({
           provider: "github",
-          createData: { displayName: "Community member" },
+          createData: { displayName: "GitHub user" },
           requestKey,
           urlCallback: (url) => {
-            if (popup.closed) throw new WorkshopError("unknown", "GitHub sign-in was cancelled");
+            if (popup.closed) throw new Error("GitHub sign-in was cancelled.");
             popup.location.href = url;
           },
         }),
-        popupFailure,
+        cancellation,
       ]);
-      const rawUser =
-        auth.meta?.rawUser && typeof auth.meta.rawUser === "object"
-          ? (auth.meta.rawUser as Record<string, unknown>)
-          : undefined;
-      const displayName = firstNonEmptyString(
-        auth.meta?.name,
-        auth.meta?.username,
-        rawUser?.name,
-        rawUser?.login,
-        auth.record.name,
-        auth.record.username,
-      );
-      const avatarUrl = firstNonEmptyString(
-        auth.meta?.avatarUrl,
-        auth.meta?.avatar,
-        rawUser?.avatar_url,
-        auth.record.avatarUrl,
-        auth.record.avatar,
-      );
-      if (displayName || avatarUrl) {
-        await this.pocketBase.collection("users").update(auth.record.id, {
-          ...(displayName ? { displayName } : {}),
-          ...(avatarUrl ? { avatarUrl } : {}),
-        });
-      }
-      return this.refreshAuth();
+      const profile = githubProfile(auth.meta, auth.record);
+      const updated = await this.pocketBase.collection("users").update(auth.record.id, profile);
+      this.pocketBase.authStore.save(auth.token, updated);
+      return this.currentUser;
     } catch (error) {
+      if (cancellationError) throw cancellationError;
       throw workshopError(error, "GitHub sign-in failed");
     } finally {
       if (closePoll) clearInterval(closePoll);
       if (timeout) clearTimeout(timeout);
       this.pocketBase.cancelRequest(requestKey);
-      if (!popup.closed) popup.close();
+      popup.close();
     }
   }
 
@@ -244,6 +229,7 @@ export class WorkshopClient {
     workshopScreenshotsSchema.parse(screenshots);
     const data = new FormData();
     Object.entries(parsed).forEach(([key, value]) => data.set(key, value));
+    data.set("widgetSchema", CUSTOM_WIDGET_SCHEMA);
     data.set("author", this.currentUser?.id ?? "");
     screenshots.forEach((file) => data.append("screenshots", file));
     try {
@@ -259,6 +245,7 @@ export class WorkshopClient {
     workshopScreenshotsSchema.parse(screenshots);
     const data = new FormData();
     Object.entries(parsed).forEach(([key, value]) => data.set(key, value));
+    data.set("widgetSchema", CUSTOM_WIDGET_SCHEMA);
     screenshots.forEach((file) => data.append("screenshots", file));
     try {
       await this.pocketBase.collection("submissions").update(id, data);

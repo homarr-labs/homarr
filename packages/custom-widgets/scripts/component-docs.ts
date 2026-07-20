@@ -6,13 +6,7 @@ import type {
 } from "../src/core/component-catalog-types";
 import type { CustomJsxComponentPackage } from "../src/core/component-types";
 
-export const GENERATED_COMPONENT_REFERENCE_PATHS = [
-  "components.md",
-  "mantine-core.md",
-  "mantine-dates.md",
-  "mantine-charts.md",
-  "homarr-components.md",
-] as const;
+export const GENERATED_COMPONENT_REFERENCE_PATHS = ["components.md", "homarr-components.md"] as const;
 
 export type GeneratedComponentReferencePath = (typeof GENERATED_COMPONENT_REFERENCE_PATHS)[number];
 
@@ -39,7 +33,7 @@ const packageReferences = [
   },
 ] as const satisfies readonly {
   packageName: CustomJsxComponentPackage;
-  path: Exclude<GeneratedComponentReferencePath, "components.md">;
+  path: string;
   title: string;
 }[];
 
@@ -50,10 +44,7 @@ export function renderCustomWidgetComponentReferences(
 
   const references = Object.fromEntries([
     ["components.md", renderCatalogOverview(catalog)],
-    ...packageReferences.map(({ packageName, path, title }) => [
-      path,
-      renderPackageReference(catalog, packageName, title),
-    ]),
+    ["homarr-components.md", renderPackageReference(catalog, "@homarr/widgets", "Homarr components")],
   ]) as Record<GeneratedComponentReferencePath, string>;
 
   return references;
@@ -73,7 +64,7 @@ function renderCatalogOverview(catalog: Readonly<CustomJsxAuthoringCatalog>): st
     "",
     generatedNotice(catalog),
     "",
-    "This is the complete offline Custom JSX component contract for this Homarr release. When connected to Homarr, prefer the live catalog because the installed release may differ. The catalog is descriptive, not a prop allowlist: ordinary serializable props pass through unless the capability boundary explicitly blocks them.",
+    "This is the complete Custom JSX component boundary for this Homarr release. The machine-readable `component-catalog.json` contains exact generated component, prop, binding, and safety metadata; these Markdown pages provide the human-readable inventory and upstream Mantine indexes. Ordinary serializable props pass through unless the capability boundary explicitly blocks them.",
     "",
     "## Package references",
     "",
@@ -87,7 +78,7 @@ function renderCatalogOverview(catalog: Readonly<CustomJsxAuthoringCatalog>): st
     "## Authoring boundary",
     "",
     "- Use the exact component names below. Compound names such as `Tabs.List`, `Card.Section`, and `Radio.Group` are distinct catalog entries.",
-    "- The effective prop API is the shared prop table plus the component-specific table in the package reference. A component-specific record overrides the shared record with the same name.",
+    "- Use the official Mantine LLM links for component props and examples. Homarr's live catalog is authoritative for availability, bindings, and blocked capabilities.",
     '- Use `bind="name"` only when a component record declares bind metadata. Read the temporary in-memory value from `inputs.name`; it is never persisted.',
     "- Ordinary authored callbacks remain blocked. Restricted collection callbacks, directly invoked zero-argument derived-value IIFEs, and `RecursiveList`'s child template may use the immutable local `const` grammar in [JSX runtime](runtime.md#immutable-local-bindings).",
     `- Use [\`RecursiveList\`](homarr-components.md#${getComponentReferenceAnchor("RecursiveList")}) for custom arbitrary-depth trees. Do not author recursion or pass a renderer callback to Mantine Tree.`,
@@ -100,12 +91,6 @@ function renderCatalogOverview(catalog: Readonly<CustomJsxAuthoringCatalog>): st
     "## Complete denied inventory",
     "",
     ...renderInventoryByPackage(catalog, true),
-    "",
-    "## Shared prop API",
-    "",
-    "These props are available to enabled components unless a component-specific record overrides the same name.",
-    "",
-    renderPropTable(catalog, catalog.globalProps),
     "",
     "## Blocked capabilities",
     "",
@@ -134,7 +119,7 @@ function renderPackageReference(
     "",
     generatedNotice(catalog),
     "",
-    `Package: \`${packageName}\`. Effective props combine the [shared prop API](components.md#shared-prop-api) with each component's specific props below. Component-specific records override shared records with the same name.`,
+    `Package: \`${packageName}\`. The component-specific props below supplement ordinary safe serializable Mantine props and style props. Component-specific records override ordinary behavior with the same name.`,
     "",
     ...packageGuidance(packageName),
     "",
@@ -223,10 +208,13 @@ function renderInventoryByPackage(catalog: Readonly<CustomJsxAuthoringCatalog>, 
       "",
       components.length > 0
         ? components
-            .map(
-              (component) =>
-                `[\`${escapeMarkdownLinkLabel(component.name)}\`](${path}#${getComponentReferenceAnchor(component.name)})${component.deniedReason ? ` — ${component.deniedReason}` : ""}`,
-            )
+            .map((component) => {
+              const target =
+                component.package === "@homarr/widgets"
+                  ? `${path}#${getComponentReferenceAnchor(component.name)}`
+                  : component.documentationUrl;
+              return `[\`${escapeMarkdownLinkLabel(component.name)}\`](${target})${component.deniedReason ? ` — ${component.deniedReason}` : ""}`;
+            })
             .join(", ")
         : "_None._",
       "",

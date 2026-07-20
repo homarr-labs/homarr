@@ -13,6 +13,7 @@ import {
 } from "@homarr/custom-widgets/core";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
+import { insertCustomWidgetDefinition } from "./definition-insert";
 import { managementQueryProcedures } from "./management-queries";
 import { metadataProcedures } from "./metadata-procedures";
 import { previewActionProcedures } from "./preview-action-procedures";
@@ -48,35 +49,7 @@ export const customWidgetRouter = createTRPCRouter({
       }
       const definition = customWidgetDefinitionSchema.parse(candidate);
       assertSecretSources(definition.sources, secrets);
-      const id = createId();
-      const definitionRow = {
-        id,
-        ...serializeCustomWidgetDefinition(definition),
-        creatorId: ctx.session.user.id,
-      };
-      const updatedAt = new Date();
-      const secretRows = secrets.map((secret) => ({
-        definitionId: id,
-        sourceId: secret.sourceId,
-        kind: secret.kind,
-        encryptedValue: encryptSecret(secret.value),
-        updatedAt,
-      }));
-
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            await transaction.insert(schema.customWidgetDefinitions).values(definitionRow);
-            if (secretRows.length > 0) await transaction.insert(schema.customWidgetSecrets).values(secretRows);
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            transaction.insert(customWidgetDefinitions).values(definitionRow).run();
-            if (secretRows.length > 0) transaction.insert(customWidgetSecrets).values(secretRows).run();
-          });
-        },
-      });
+      const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
       logger.info("Created custom widget definition", { id, name: definition.name });
       return { id };
     }),

@@ -264,6 +264,11 @@ class Interpreter {
     const callee = asNode(node.callee, "call target");
     const argumentNodes = asNodeArray(node.arguments, "call arguments");
     if (callee.type === "ArrowFunctionExpression") {
+      if (callee.body && asNode(callee.body, "inline derived-value body").type !== "BlockStatement") {
+        throw new SafeJsxError(
+          "BLOCK_REQUIRES_FINAL_RETURN: Inline derived-value functions require a safe const block",
+        );
+      }
       if (asNodeArray(callee.params, "inline derived-value parameters").length > 0) {
         throw new SafeJsxError("CALLBACK_VALUE_NOT_ALLOWED: Inline derived-value functions cannot declare parameters");
       }

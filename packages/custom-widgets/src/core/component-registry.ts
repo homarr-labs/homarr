@@ -1,12 +1,11 @@
-import runtimeCatalog from "./component-runtime.generated.json";
-import type { CustomJsxCatalogBindingType, CustomJsxRuntimeCatalog } from "./component-catalog-types";
+import { customJsxAuthoringCatalog } from "./component-catalog";
+import type { CustomJsxCatalogBindingType } from "./component-catalog-types";
 import type { CustomJsxComponentDescriptor } from "./component-descriptor";
 
-const customJsxRuntimeCatalog = runtimeCatalog as unknown as Readonly<CustomJsxRuntimeCatalog>;
-const globalPropNames = customJsxRuntimeCatalog.globalProps;
+const globalPropNames = customJsxAuthoringCatalog.globalProps.map(({ name }) => name);
 
 export const customJsxComponentRegistry: readonly CustomJsxComponentDescriptor[] =
-  customJsxRuntimeCatalog.components.map((component) => ({
+  customJsxAuthoringCatalog.components.map((component) => ({
     name: component.name,
     package: component.package,
     safety: component.safety,
@@ -18,7 +17,7 @@ export const customJsxComponentRegistry: readonly CustomJsxComponentDescriptor[]
               ...globalPropNames.filter(
                 (propName) => !component.blockedProps.some((blockedProp) => blockedProp.name === propName),
               ),
-              ...component.props,
+              ...component.props.map(({ name }) => name),
               ...(component.bind ? ["bind"] : []),
             ]),
           ],
@@ -35,7 +34,7 @@ export const customJsxSupportedPropsByName = new Map(
 );
 
 const catalogComponentsByName = new Map(
-  customJsxRuntimeCatalog.components.map((component) => [component.name, component]),
+  customJsxAuthoringCatalog.components.map((component) => [component.name, component]),
 );
 
 const multipleDateBindingComponents = new Set([
@@ -49,7 +48,7 @@ const multipleDateBindingComponents = new Set([
 const rangeDateBindingComponents = new Set(["DateTimePicker", "InlineDateTimePicker"]);
 
 export const customJsxBindableComponentNames: ReadonlySet<string> = new Set(
-  customJsxRuntimeCatalog.components.flatMap((component) => (component.bind ? [component.name] : [])),
+  customJsxAuthoringCatalog.components.flatMap((component) => (component.bind ? [component.name] : [])),
 );
 
 export type CustomJsxBindingType = CustomJsxCatalogBindingType;

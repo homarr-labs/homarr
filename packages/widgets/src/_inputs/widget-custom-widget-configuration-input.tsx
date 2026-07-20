@@ -1,8 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
-import { json } from "@codemirror/lang-json";
+import { useEffect, useId, useMemo, useState } from "react";
 import {
   Accordion,
   Alert,
@@ -17,22 +15,19 @@ import {
   Text,
   Textarea,
   TextInput,
-  useComputedColorScheme,
 } from "@mantine/core";
 import { DateInput, TimeInput } from "@mantine/dates";
-import { IconAlertTriangle, IconBraces } from "@tabler/icons-react";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { resolveCustomWidgetOptionsBinding, validateCustomWidgetOptions } from "@homarr/custom-widgets/core";
+import { CustomWidgetCodeEditor } from "@homarr/custom-widgets/workbench";
 import { IconPicker } from "@homarr/forms-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useFormContext } from "./form";
-
-const CodeMirror = dynamic(() => import("@uiw/react-codemirror").then((module) => module.default), { ssr: false });
-const jsonExtensions = [json()];
 
 type Schema = Record<string, unknown>;
 
@@ -111,7 +106,6 @@ export const WidgetCustomWidgetConfigurationInput = ({
           </Accordion.Item>
         </Accordion>
       )}
-      <AdvancedJson value={configuration} onChange={(value) => form.setFieldValue(`options.${property}`, value)} />
     </Stack>
   );
 };
@@ -193,117 +187,156 @@ function OptionField({
       />
     );
   }
-  if (control === "switch") return <Switch label={label} description={description} required={required} {...input} />;
-  if (control === "number")
-    return <NumberInput label={label} description={description} required={required} {...input} />;
-  if (control === "duration")
-    return <NumberInput label={label} description={description} required={required} suffix=" s" min={0} {...input} />;
-  if (control === "slider") {
-    return (
-      <Stack gap={4}>
-        <Text size="sm" fw={500}>
-          {label}
-          {required ? " *" : ""}
-        </Text>
-        {description && (
-          <Text size="xs" c="dimmed">
-            {description}
-          </Text>
-        )}
-        <Slider
-          min={typeof schema.minimum === "number" ? schema.minimum : 0}
-          max={typeof schema.maximum === "number" ? schema.maximum : 100}
-          step={typeof schema.multipleOf === "number" ? schema.multipleOf : 1}
-          {...input}
-        />
-      </Stack>
-    );
-  }
-  if (control === "select") {
-    const numeric = schema.type === "number" || schema.type === "integer";
-    return (
-      <Select
-        label={label}
-        description={description}
-        placeholder={placeholder}
-        data={choices}
-        searchable
-        required={required}
-        value={input.value === undefined || input.value === null ? null : String(input.value)}
-        onBlur={input.onBlur}
-        onChange={(value) => form.setFieldValue(path, numeric && value !== null ? Number(value) : value)}
-      />
-    );
-  }
-  if (control === "multi-select") {
-    const itemSchema = isRecord(schema.items) ? schema.items : {};
-    const numeric = itemSchema.type === "number" || itemSchema.type === "integer";
-    return (
-      <MultiSelect
-        label={label}
-        description={description}
-        placeholder={placeholder}
-        data={choices}
-        searchable
-        required={required}
-        value={Array.isArray(input.value) ? input.value.map(String) : []}
-        onBlur={input.onBlur}
-        onChange={(value) => form.setFieldValue(path, numeric ? value.map(Number) : value)}
-      />
-    );
-  }
-  if (control === "date")
-    return (
-      <DateInput label={label} description={description} required={required} valueFormat="YYYY-MM-DD" {...input} />
-    );
-  if (control === "time") return <TimeInput label={label} description={description} required={required} {...input} />;
-  if (control === "color") return <ColorInput label={label} description={description} required={required} {...input} />;
-  if (control === "icon") {
-    return (
-      <Stack gap={4}>
-        <IconPicker label={label} withAsterisk={required} {...input} />
-        {description && (
-          <Text size="xs" c="dimmed">
-            {description}
-          </Text>
-        )}
-      </Stack>
-    );
-  }
-  if (control === "timeZone") {
-    return (
-      <Select
-        label={label}
-        description={description}
-        data={Intl.supportedValuesOf("timeZone")}
-        searchable
-        required={required}
-        {...input}
-      />
-    );
-  }
-  if (control === "textarea")
-    return (
-      <Textarea
-        label={label}
-        description={description}
-        placeholder={placeholder}
-        required={required}
-        autosize
-        minRows={3}
-        {...input}
-      />
-    );
+
   return (
-    <TextInput
+    <StaticOptionControl
+      control={control}
+      schema={schema}
+      path={path}
       label={label}
       description={description}
       placeholder={placeholder}
       required={required}
-      type={control === "url" ? "url" : "text"}
-      {...input}
+      choices={choices}
     />
   );
+}
+
+function StaticOptionControl({
+  control,
+  schema,
+  path,
+  label,
+  description,
+  placeholder,
+  required,
+  choices,
+}: {
+  control: string;
+  schema: Schema;
+  path: string;
+  label: string;
+  description?: string;
+  placeholder?: string;
+  required: boolean;
+  choices: Array<{ value: string; label: string }>;
+}) {
+  const form = useFormContext();
+  const input = form.getInputProps(path, { type: control === "switch" ? "checkbox" : "input" });
+  switch (control) {
+    case "switch":
+      return <Switch label={label} description={description} required={required} {...input} />;
+    case "number":
+      return <NumberInput label={label} description={description} required={required} {...input} />;
+    case "duration":
+      return <NumberInput label={label} description={description} required={required} suffix=" s" min={0} {...input} />;
+    case "slider":
+      return (
+        <Stack gap={4}>
+          <Text size="sm" fw={500}>
+            {label}
+            {required ? " *" : ""}
+          </Text>
+          {description && (
+            <Text size="xs" c="dimmed">
+              {description}
+            </Text>
+          )}
+          <Slider
+            min={typeof schema.minimum === "number" ? schema.minimum : 0}
+            max={typeof schema.maximum === "number" ? schema.maximum : 100}
+            step={typeof schema.multipleOf === "number" ? schema.multipleOf : 1}
+            {...input}
+          />
+        </Stack>
+      );
+    case "select": {
+      const numeric = schema.type === "number" || schema.type === "integer";
+      return (
+        <Select
+          label={label}
+          description={description}
+          placeholder={placeholder}
+          data={choices}
+          searchable
+          required={required}
+          value={input.value === undefined || input.value === null ? null : String(input.value)}
+          onBlur={input.onBlur}
+          onChange={(value) => form.setFieldValue(path, numeric && value !== null ? Number(value) : value)}
+        />
+      );
+    }
+    case "multi-select": {
+      const itemSchema = isRecord(schema.items) ? schema.items : {};
+      const numeric = itemSchema.type === "number" || itemSchema.type === "integer";
+      return (
+        <MultiSelect
+          label={label}
+          description={description}
+          placeholder={placeholder}
+          data={choices}
+          searchable
+          required={required}
+          value={Array.isArray(input.value) ? input.value.map(String) : []}
+          onBlur={input.onBlur}
+          onChange={(value) => form.setFieldValue(path, numeric ? value.map(Number) : value)}
+        />
+      );
+    }
+    case "date":
+      return (
+        <DateInput label={label} description={description} required={required} valueFormat="YYYY-MM-DD" {...input} />
+      );
+    case "time":
+      return <TimeInput label={label} description={description} required={required} {...input} />;
+    case "color":
+      return <ColorInput label={label} description={description} required={required} {...input} />;
+    case "icon":
+      return (
+        <Stack gap={4}>
+          <IconPicker label={label} withAsterisk={required} {...input} />
+          {description && (
+            <Text size="xs" c="dimmed">
+              {description}
+            </Text>
+          )}
+        </Stack>
+      );
+    case "timeZone":
+      return (
+        <Select
+          label={label}
+          description={description}
+          data={Intl.supportedValuesOf("timeZone")}
+          searchable
+          required={required}
+          {...input}
+        />
+      );
+    case "textarea":
+      return (
+        <Textarea
+          label={label}
+          description={description}
+          placeholder={placeholder}
+          required={required}
+          autosize
+          minRows={3}
+          {...input}
+        />
+      );
+    default:
+      return (
+        <TextInput
+          label={label}
+          description={description}
+          placeholder={placeholder}
+          required={required}
+          type={control === "url" ? "url" : "text"}
+          {...input}
+        />
+      );
+  }
 }
 
 function DynamicOptionsSelect({
@@ -391,48 +424,6 @@ function DynamicOptionsSelect({
   );
 }
 
-function AdvancedJson({
-  value,
-  onChange,
-}: {
-  value: Record<string, unknown>;
-  onChange(value: Record<string, unknown>): void;
-}) {
-  const labels = useScopedI18n("widget.customApi.configuration");
-  const [draft, setDraft] = useState(() => JSON.stringify(value, null, 2));
-  const [error, setError] = useState<string | null>(null);
-  useEffect(() => setDraft(JSON.stringify(value, null, 2)), [value]);
-  return (
-    <Accordion variant="contained">
-      <Accordion.Item value="json">
-        <Accordion.Control icon={<IconBraces size={16} />}>{labels("advancedJson")}</Accordion.Control>
-        <Accordion.Panel>
-          <ConfigurationJsonEditor
-            value={draft}
-            height="220px"
-            onChange={(next) => {
-              setDraft(next);
-              try {
-                const parsed = JSON.parse(next) as unknown;
-                if (!isRecord(parsed)) throw new Error(labels("jsonObjectRequired"));
-                setError(null);
-                onChange(parsed);
-              } catch (cause) {
-                setError(cause instanceof Error ? cause.message : labels("invalidJson"));
-              }
-            }}
-          />
-          {error && (
-            <Text c="red" size="xs" mt="xs">
-              {error}
-            </Text>
-          )}
-        </Accordion.Panel>
-      </Accordion.Item>
-    </Accordion>
-  );
-}
-
 function JsonValueInput({
   label,
   description,
@@ -451,51 +442,84 @@ function JsonValueInput({
   const [error, setError] = useState<string | null>(null);
   useEffect(() => setDraft(JSON.stringify(value ?? null, null, 2)), [value]);
   return (
-    <Stack gap={4}>
-      <Text size="sm" fw={500}>
-        {label}
-        {required ? " *" : ""}
-      </Text>
-      {description && (
-        <Text size="xs" c="dimmed">
-          {description}
-        </Text>
-      )}
-      <ConfigurationJsonEditor
-        value={draft}
-        height="160px"
-        onChange={(next) => {
-          setDraft(next);
-          try {
-            const parsed = JSON.parse(next) as unknown;
-            setError(null);
-            onChange(parsed);
-          } catch (cause) {
-            setError(cause instanceof Error ? cause.message : labels("invalidJson"));
-          }
-        }}
-      />
-      {error && (
-        <Text c="red" size="xs">
-          {error}
-        </Text>
-      )}
-    </Stack>
+    <ConfigurationJsonEditor
+      label={label}
+      description={description}
+      required={required}
+      error={error}
+      value={draft}
+      height="160px"
+      onChange={(next) => {
+        setDraft(next);
+        try {
+          const parsed = JSON.parse(next) as unknown;
+          setError(null);
+          onChange(parsed);
+        } catch (cause) {
+          setError(cause instanceof Error ? cause.message : labels("invalidJson"));
+        }
+      }}
+    />
   );
 }
 
 function ConfigurationJsonEditor({
+  label,
+  description,
+  required,
+  error,
   value,
   height,
   onChange,
 }: {
+  label: string;
+  description?: string;
+  required?: boolean;
+  error?: string | null;
   value: string;
   height: string;
   onChange(value: string): void;
 }) {
-  const colorScheme = useComputedColorScheme("light");
+  const t = useScopedI18n("customWidget.editor");
+  const id = useId();
   return (
-    <CodeMirror value={value} extensions={jsonExtensions} height={height} theme={colorScheme} onChange={onChange} />
+    <CustomWidgetCodeEditor
+      id={id}
+      label={label}
+      description={description}
+      required={required}
+      error={error}
+      value={value}
+      language="json"
+      height={height}
+      onChange={onChange}
+      messages={{
+        languageJsx: t("language.jsx"),
+        languageJson: t("language.json"),
+        undo: t("action.undo"),
+        redo: t("action.redo"),
+        components: t("action.components"),
+        componentSearch: t("componentReference.search"),
+        componentEmpty: t("componentReference.empty"),
+        componentCount: (count) => t("componentReference.count", { count }),
+        insertStarter: t("action.insertStarter"),
+        format: t("action.format"),
+        copy: t("action.copy"),
+        copied: t("action.copied"),
+        schema: t("action.schema"),
+        schemaTab: t("reference.schema"),
+        minimalTab: t("reference.minimal"),
+        fullTab: t("reference.full"),
+        errors: (count) => t("status.errors", { count }),
+        warnings: (count) => t("status.warnings", { count }),
+        ready: t("status.ready"),
+        position: (cursor) => t("status.position", cursor),
+        characters: (count, limit) =>
+          limit ? t("status.charactersWithLimit", { count, limit }) : t("status.characters", { count }),
+        diagnosticsTitle: t("diagnostics.title"),
+        diagnostic: (diagnostic) => diagnostic.value ?? diagnostic.code,
+      }}
+    />
   );
 }
 

@@ -20,7 +20,12 @@ export function parseCustomJsxTemplate(template: string): AstNode {
       allowReturnOutsideFunction: false,
     }) as unknown as AstNode;
   } catch (error) {
-    throw new SafeJsxError(error instanceof Error ? error.message : "Unable to parse JSX template");
+    const message = error instanceof Error ? error.message : "Unable to parse JSX template";
+    throw new SafeJsxError(
+      /Argument name clash/iu.test(message)
+        ? "DUPLICATE_LOCAL_BINDING: Callback parameter names must be unique"
+        : message,
+    );
   }
   const body = asNodeArray(program.body, "program body");
   if (body.length !== 1 || body[0]?.type !== "ExpressionStatement") {

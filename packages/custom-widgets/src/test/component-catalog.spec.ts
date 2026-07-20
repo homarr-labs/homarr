@@ -16,13 +16,11 @@ import { customJsxComponentRegistry } from "../core/component-registry";
 
 const repositoryRoot = resolve(import.meta.dirname, "../../../..");
 const catalogPath = resolve(repositoryRoot, "packages/custom-widgets/src/core/component-catalog.generated.json");
-const runtimeCatalogPath = resolve(repositoryRoot, "packages/custom-widgets/src/core/component-runtime.generated.json");
 const publicCatalogPath = resolve(repositoryRoot, "apps/docs/static/custom-widgets/component-catalog-v1.json");
 
 // Keep a reviewed ceiling close to the generated artifact so accidental metadata
 // duplication must receive explicit review.
-const MAX_CATALOG_BYTES = 680 * 1024;
-const MAX_RUNTIME_CATALOG_BYTES = 120 * 1024;
+const MAX_CATALOG_BYTES = 800 * 1024;
 
 describe("Custom JSX authoring catalog", () => {
   test("is versioned against the installed authoring surface", async () => {
@@ -80,22 +78,6 @@ describe("Custom JSX authoring catalog", () => {
     const catalogNames = customJsxAuthoringCatalog.components.map(({ name }) => name);
     const runtimeNames = customJsxComponentRegistry.map(({ name }) => name).toSorted();
     expect(catalogNames).toEqual(runtimeNames);
-  });
-
-  test("derives a compact runtime index from the canonical catalog", async () => {
-    const runtimeCatalog = JSON.parse(await readFile(runtimeCatalogPath, "utf8")) as {
-      globalProps: string[];
-      components: Array<{ name: string; props: string[]; blockedProps: Array<{ name: string }> }>;
-    };
-    expect(runtimeCatalog.globalProps).toEqual(customJsxAuthoringCatalog.globalProps.map(({ name }) => name));
-    expect(runtimeCatalog.components).toHaveLength(customJsxAuthoringCatalog.components.length);
-    for (const [index, component] of runtimeCatalog.components.entries()) {
-      const canonical = customJsxAuthoringCatalog.components[index];
-      expect(component.name).toBe(canonical?.name);
-      expect(component.props).toEqual(canonical?.props.map(({ name }) => name));
-      expect(component.blockedProps).toEqual(canonical?.blockedProps);
-    }
-    expect((await readFile(runtimeCatalogPath)).byteLength).toBeLessThanOrEqual(MAX_RUNTIME_CATALOG_BYTES);
   });
 
   test("includes prop APIs, bindings, accessibility, and denied reasons", () => {

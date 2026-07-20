@@ -22,7 +22,7 @@ import { buildCustomWidgetMcpPrompt } from "@homarr/custom-widgets/authoring-pro
 import {
   getCustomWidgetComponent,
   getCustomWidgetComponentCatalog,
-  getCustomWidgetSkill,
+  getCustomWidgetOfflineBundle,
 } from "@homarr/custom-widgets/authoring-resources";
 import { customJsxExamples, getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 import { db } from "@homarr/db";
@@ -252,8 +252,7 @@ const mcpHandler = createMcpHandler(
       if (uri === "homarr://custom-widgets/schema") text = JSON.stringify(getCustomWidgetJsonSchema());
       else if (uri === "homarr://custom-widgets/components") text = JSON.stringify(getCustomWidgetComponentCatalog());
       else if (uri === "homarr://custom-widgets/skill") {
-        const skill = getCustomWidgetSkill();
-        text = `${skill.skillMd}\n\nInstall from skills.sh: ${skill.skillsShUrl}\nSource: ${skill.sourceUrl}\nCommand: ${skill.installCommand}\n`;
+        text = getCustomWidgetOfflineBundle();
         mimeType = "text/markdown";
       } else if (uri.startsWith("homarr://custom-widgets/components/")) {
         const name = decodeURIComponent(uri.slice("homarr://custom-widgets/components/".length));

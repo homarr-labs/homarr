@@ -323,14 +323,6 @@
   margin-bottom: 0.6rem;
 }
 
-.codeBlock {
-  font-size: 0.75rem;
-  margin: 0;
-  max-height: 320px;
-  overflow: auto;
-  white-space: pre;
-}
-
 .a11yList {
   font-size: 0.86rem;
   margin: 0 0 0.7rem;
@@ -389,7 +381,7 @@
   font-weight: 650;
 }
 
-.rawComponent .codeBlock {
+.rawComponent > div {
   margin-top: 0.6rem;
 }
 

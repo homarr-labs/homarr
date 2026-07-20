@@ -59,7 +59,7 @@ export function buildTrustedRecursiveList(options: RecursiveListBuildOptions): T
     return [diagnosticNode("diagnostic:root-data", "RecursiveList data must be an object or an array")];
   }
 
-  const willExceedNodeLimit = exceedsRecursiveListNodeLimit(roots, childrenPath, maxDepth, maxNodes);
+  const willExceedNodeLimit = exceedsRecursiveListNodeLimit(roots, childrenPath, maxDepth, maxNodes, options.budget);
   let renderedRowCount = 0;
   let diagnosticCount = 0;
   let limitSentinelRendered = false;

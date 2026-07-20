@@ -13,5 +13,6 @@ export function GET() {
       "homarr://custom-widgets/components",
       "homarr://custom-widgets/skill",
     ],
+    httpResources: ["/api/custom-widgets/schema", "/api/custom-widgets/components", "/api/custom-widgets/skill"],
   });
 }

@@ -326,7 +326,10 @@ describe("Custom Widget runtime ports", () => {
     const port = createPort({
       executeAction: vi.fn(async () => ({ ok: false, status: 500, data: null, error: "Nope" })),
     });
-    await render(<ToggleSwitch requestId="toggle" onParams={{ enabled: true }} offParams={{ enabled: false }} />, port);
+    await render(
+      <ToggleSwitch requestId="toggle" enabledParams={{ enabled: true }} disabledParams={{ enabled: false }} />,
+      port,
+    );
     const input = host.querySelector("input") as HTMLInputElement;
     await act(async () => {
       input.click();
@@ -340,7 +343,7 @@ describe("Custom Widget runtime ports", () => {
   it("confirms a DELETE toggle before executing it", async () => {
     const port = createPort();
     await render(
-      <ToggleSwitch requestId="delete-toggle" onParams={{ enabled: true }} offParams={{ enabled: false }} />,
+      <ToggleSwitch requestId="delete-toggle" enabledParams={{ enabled: true }} disabledParams={{ enabled: false }} />,
       port,
       [
         {

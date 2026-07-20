@@ -16,7 +16,7 @@ npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widge
 
 The portable skill gives authoring instructions that do not require a tool. The Homarr MCP prompt gives instructions for a connected workflow.
 
-The offline copy prompt includes the complete portable skill and all eight release-matched references. Those references contain the generated component APIs and runtime examples, so Homarr does not append duplicate raw catalog data. A model can author directly from this bundle without MCP tools or repository access.
+The offline copy prompt includes the complete portable skill and all eleven release-matched references, including the canonical widget JSON Schema, minified component catalog, and canonical runtime examples. A model can author directly from this bundle without MCP tools or repository access.
 
 The prompt starts with the user's widget request. It ends with:
 
@@ -39,22 +39,27 @@ Repository code cannot give this attribution.
 
 - Prompt: `homarr-custom-widget-author`
 - Resources: `homarr://custom-widgets/schema`, `components`, `components/{name}`, `examples/{name}`, and `skill`
-- HTTP: `GET /api/custom-widgets/authoring-prompt` and `GET /api/custom-widgets/skill`
+- HTTP: `GET /api/custom-widgets/authoring-prompt`, `schema`, `components`, and `skill`
 
 The authoring-prompt tool description contains one sentence. The prompt contains the workflow instructions and resource links.
 
-`GET /api/custom-widgets/skill`, the MCP tool, and the MCP resource return the live `SKILL.md` with:
+`GET /api/custom-widgets/skill` and the MCP tool return the complete release-matched skill discovery payload:
 
 ```ts
 {
   name: "homarr-custom-widget";
   version: string;
   skillMd: string;
+  files: Array<{ path: string; content: string }>;
+  componentCatalog: CustomJsxAuthoringCatalog;
+  examples: CustomJsxExample[];
   skillsShUrl: string;
   sourceUrl: string;
   installCommand: string;
 }
 ```
+
+The `homarr://custom-widgets/skill` MCP resource returns the same material as one plain-text offline bundle, ending with the truncation sentinel and exact character count.
 
 These interfaces do not return an archive URL or archive hash.
 

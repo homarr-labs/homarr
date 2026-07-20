@@ -9,6 +9,10 @@ self-hosted Homarr instance.
 Workshop validates widget JSON in the browser before publishing. Homarr validates it again before installation. Widget
 exports must not contain credentials; users configure required credentials only after importing a widget.
 
+Each submission stores the manifest's `$schema` value as separate compatibility metadata. Workshop marks the current
+Custom JSX schema and unsupported schemas in listings, while Homarr blocks installation if this metadata disagrees with
+the downloaded manifest. The manifest remains the source of truth and is always validated again locally.
+
 Votes and reports are unique per user and submission. Listings expose vote totals without exposing voter identities.
 Reports include a category and explanation. Administrators can see the reporter, dismiss the report, or delete the
 reported submission.
@@ -40,10 +44,12 @@ The central Workshop PocketBase service controls authentication. Register this c
 https://<workshop-host>/api/oauth2-redirect
 ```
 
-Self-hosted Homarr origins, including localhost and custom domains, do not need separate GitHub callbacks. The Workshop
-host completes authentication in a popup and returns the result to the calling Homarr page.
+Self-hosted Homarr origins, including localhost and custom domains, do not need separate GitHub callbacks. Homarr opens
+the popup synchronously, while PocketBase completes authentication through its realtime OAuth flow on the Workshop host.
+On successful sign-in, Homarr copies the GitHub display name or login and HTTPS avatar into that user's Workshop profile.
+The collection rules let users update their own profile fields but prevent them from setting `isAdmin`.
 
 PocketBase permits all origins by default. If the deployment uses `--origins` or a restrictive reverse-proxy CORS policy,
 it must permit self-hosted Homarr origins. See [PocketBase routing and CORS](https://pocketbase.io/docs/go-routing/).
 
-Homarr shows a visible error when the provider is misconfigured or the popup is blocked, cancelled, or times out.
+Homarr shows a visible error when the provider is misconfigured or the popup is blocked or cancelled.

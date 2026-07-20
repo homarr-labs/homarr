@@ -7,6 +7,7 @@ import {
   SafeJsxError,
 } from "./interpreter-foundation";
 import type { AstNode, Budget, InterpreterCallback } from "./interpreter-foundation";
+import { RESERVED_LOCAL_BINDINGS } from "./analyzer-language";
 import { isBlockedCustomJsxLexicalBinding } from "./policy";
 
 interface InterpreterCallbackContext {
@@ -14,20 +15,20 @@ interface InterpreterCallbackContext {
   evaluate(node: AstNode, environment: Environment, depth: number): unknown;
 }
 
-const reservedLocalBindings = new Set(["data", "status", "options", "inputs"]);
-
 export function createInterpreterCallback(node: AstNode, environment: Environment): InterpreterCallback {
   if (node.async || node.generator) {
     throw new SafeJsxError("CALLBACK_VALUE_NOT_ALLOWED: Async and generator callbacks are not supported");
   }
   const parameterNames = new Set<string>();
   const params = asNodeArray(node.params, "callback parameters").map((param) => {
-    if (param.type !== "Identifier") throw new SafeJsxError("Callback parameters must be identifiers");
+    if (param.type !== "Identifier") {
+      throw new SafeJsxError("INVALID_LOCAL_DECLARATION: Callback parameters must be identifiers");
+    }
     const name = String(param.name);
     if (isBlockedCustomJsxLexicalBinding(name)) {
       throw new SafeJsxError(`INVALID_LOCAL_DECLARATION: '${name}' is not a safe callback parameter name`);
     }
-    if (reservedLocalBindings.has(name)) {
+    if (RESERVED_LOCAL_BINDINGS.has(name)) {
       throw new SafeJsxError(`RESERVED_LOCAL_BINDING: '${name}' cannot be shadowed`);
     }
     if (parameterNames.has(name)) {
@@ -55,9 +56,11 @@ export function runInterpreterCallback(
     values[name] = args[index];
   });
   const environment = new Environment(values, callback.environment);
-  return callback.body.type === "BlockStatement"
-    ? executeSafeBlock(callback.body, environment, depth + 1, context)
-    : context.evaluate(callback.body, environment, depth + 1);
+  const result =
+    callback.body.type === "BlockStatement"
+      ? executeSafeBlock(callback.body, environment, depth + 1, context)
+      : context.evaluate(callback.body, environment, depth + 1);
+  return ensureNonCallableResult(result);
 }
 
 function executeSafeBlock(
@@ -91,7 +94,9 @@ function executeSafeBlock(
       if (!isFinal) {
         throw new SafeJsxError("BLOCK_REQUIRES_FINAL_RETURN: Return is only allowed as the final statement");
       }
-      return context.evaluate(asNode(statement.argument, "safe block return value"), scopedEnvironment, depth + 1);
+      return ensureNonCallableResult(
+        context.evaluate(asNode(statement.argument, "safe block return value"), scopedEnvironment, depth + 1),
+      );
     }
     if (statement.type !== "VariableDeclaration") {
       throw new SafeJsxError(`UNSUPPORTED_BLOCK_STATEMENT: '${statement.type}' is not allowed in a safe block`);
@@ -109,7 +114,7 @@ function executeSafeBlock(
       if (isBlockedCustomJsxLexicalBinding(name)) {
         throw new SafeJsxError(`INVALID_LOCAL_DECLARATION: '${name}' is not a safe local binding name`);
       }
-      if (reservedLocalBindings.has(name)) {
+      if (RESERVED_LOCAL_BINDINGS.has(name)) {
         throw new SafeJsxError(`RESERVED_LOCAL_BINDING: '${name}' cannot be shadowed`);
       }
       if (localNames.has(name)) {
@@ -128,4 +133,11 @@ function executeSafeBlock(
     }
   }
   throw new SafeJsxError("BLOCK_REQUIRES_FINAL_RETURN: Safe block did not return a value");
+}
+
+function ensureNonCallableResult(value: unknown): unknown {
+  if (typeof value === "function" || isInterpreterCallback(value)) {
+    throw new SafeJsxError("CALLBACK_VALUE_NOT_ALLOWED: Authored callbacks cannot return callable values");
+  }
+  return value;
 }

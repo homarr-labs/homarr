@@ -5,9 +5,7 @@ import { Button, Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBuildingStore } from "@tabler/icons-react";
 
-import { customWidgetImportSchema } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
@@ -25,23 +23,9 @@ export function WorkshopInstallButton() {
       </Button>
       <Modal opened={opened} onClose={controls.close} title={t("installDialog")} size="90%">
         <WorkshopBrowser
-          onInstall={async (submission) => {
-            try {
-              const parsed = customWidgetImportSchema.safeParse(JSON.parse(submission.content) as unknown);
-              if (!parsed.success) throw new Error(t("installErrorDescription"));
-              setPendingWidget(parsed.data);
-              reviewControls.open();
-            } catch (error) {
-              showErrorNotification({
-                title: t("installError"),
-                message:
-                  error instanceof SyntaxError
-                    ? t("installErrorDescription")
-                    : error instanceof Error
-                      ? error.message
-                      : t("installErrorDescription"),
-              });
-            }
+          onInstall={async (widget) => {
+            setPendingWidget(widget);
+            reviewControls.open();
           }}
         />
       </Modal>

@@ -118,13 +118,19 @@ function analyzeAttributeValue(
     }
     if (
       attributeName === "maxDepth" &&
-      (typeof literalValue.value !== "number" || literalValue.value < 1 || literalValue.value > 32)
+      (typeof literalValue.value !== "number" ||
+        !Number.isInteger(literalValue.value) ||
+        literalValue.value < 1 ||
+        literalValue.value > 32)
     ) {
       context.add(attribute, "INVALID_PROP_VALUE: 'maxDepth' must be between 1 and 32");
     }
     if (
       attributeName === "maxNodes" &&
-      (typeof literalValue.value !== "number" || literalValue.value < 1 || literalValue.value > 2_000)
+      (typeof literalValue.value !== "number" ||
+        !Number.isInteger(literalValue.value) ||
+        literalValue.value < 1 ||
+        literalValue.value > 2_000)
     ) {
       context.add(attribute, "INVALID_PROP_VALUE: 'maxNodes' must be between 1 and 2000");
     }

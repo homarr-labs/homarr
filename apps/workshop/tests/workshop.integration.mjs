@@ -37,6 +37,9 @@ for (const removed of ["comments", "workshop_admin_actions", "workshop_admins"])
 
 // Production uses GitHub OAuth. Password auth is enabled only in this disposable database.
 const usersCollection = await request("/api/collections/users", { headers: rootHeaders });
+if (usersCollection.createRule !== '@request.context = "oauth2" && @request.body.isAdmin:isset = false') {
+  throw new Error("User creation must be limited to OAuth without administrator fields");
+}
 await request("/api/collections/users", {
   method: "PATCH",
   headers: rootHeaders,
@@ -67,8 +70,7 @@ const signIn = async (email, password) => {
 };
 
 const authorPassword = "WorkshopAuthor123!";
-const author = await createUser("widget-author@example.invalid", "Widget Author", authorPassword, { isAdmin: true });
-if (author.isAdmin !== false) throw new Error("New users must not be able to start as Workshop administrators");
+const author = await createUser("widget-author@example.invalid", "Widget Author", authorPassword);
 const authorSession = await signIn(author.email, authorPassword);
 await expectStatus(
   `/api/collections/users/records/${author.id}`,
@@ -104,11 +106,16 @@ const submission = await request("/api/collections/submissions/records", {
   body: JSON.stringify({
     title: "Workshop runtime probe",
     description: "PocketBase integration test",
+    widgetSchema: widget.$schema,
     content: JSON.stringify(widget),
     author: author.id,
   }),
 });
-if (submission.author !== author.id || submission.title !== "Workshop runtime probe") {
+if (
+  submission.author !== author.id ||
+  submission.title !== "Workshop runtime probe" ||
+  submission.widgetSchema !== widget.$schema
+) {
   throw new Error("Submission publication failed");
 }
 
@@ -117,7 +124,8 @@ const updatedSubmission = await request(`/api/collections/submissions/records/${
   headers: authorSession.headers,
   body: JSON.stringify({ title: "Updated runtime probe" }),
 });
-if (updatedSubmission.title !== "Updated runtime probe") throw new Error("Authors must be able to edit their submission");
+if (updatedSubmission.title !== "Updated runtime probe")
+  throw new Error("Authors must be able to edit their submission");
 
 await expectStatus(
   `/api/collections/submissions/records/${submission.id}`,
@@ -161,7 +169,13 @@ await expectStatus(
 );
 
 const listing = await request(`/api/collections/workshop_listings/records/${submission.id}`);
-if (listing.score !== 1 || listing.upvotes !== 1 || listing.downvotes !== 0 || listing.authorName !== "Widget Author") {
+if (
+  listing.score !== 1 ||
+  listing.upvotes !== 1 ||
+  listing.downvotes !== 0 ||
+  listing.authorName !== "Widget Author" ||
+  listing.widgetSchema !== widget.$schema
+) {
   throw new Error("Workshop listing data is incorrect");
 }
 
@@ -222,6 +236,7 @@ const visitorSubmission = await request("/api/collections/submissions/records", 
   body: JSON.stringify({
     title: "Administrator deletion probe",
     content: JSON.stringify(widget),
+    widgetSchema: widget.$schema,
     author: visitor.id,
   }),
 });

@@ -18,7 +18,7 @@ export type {
 
 export function TrustedRecursiveList({ ...props }: TrustedRecursiveListProps) {
   return (
-    <RecursiveListErrorBoundary resetKey={props.nodes}>
+    <RecursiveListErrorBoundary resetKey={props.nodes} code="RECURSIVE_LIST_RENDER_ERROR">
       <TrustedRecursiveListInner {...props} />
     </RecursiveListErrorBoundary>
   );
@@ -51,16 +51,13 @@ function TrustedRecursiveListInner({
 }
 
 class RecursiveListErrorBoundary extends Component<
-  { children: ReactNode; resetKey: readonly TreeNodeData[] },
-  { error: Error | null; resetKey: readonly TreeNodeData[] }
+  { children: ReactNode; resetKey: unknown; code: string },
+  { error: Error | null; resetKey: unknown }
 > {
-  public state = { error: null, resetKey: this.props.resetKey } as {
-    error: Error | null;
-    resetKey: readonly TreeNodeData[];
-  };
+  public state = { error: null, resetKey: this.props.resetKey } as { error: Error | null; resetKey: unknown };
   public static getDerivedStateFromProps(
-    props: Readonly<{ children: ReactNode; resetKey: readonly TreeNodeData[] }>,
-    state: Readonly<{ error: Error | null; resetKey: readonly TreeNodeData[] }>,
+    props: Readonly<{ children: ReactNode; resetKey: unknown; code: string }>,
+    state: Readonly<{ error: Error | null; resetKey: unknown }>,
   ) {
     if (props.resetKey === state.resetKey) return null;
     return { error: null, resetKey: props.resetKey };
@@ -72,7 +69,7 @@ class RecursiveListErrorBoundary extends Component<
   public render() {
     return this.state.error ? (
       <Text size="xs" c="red">
-        RECURSIVE_LIST_RENDER_ERROR: {this.state.error.message}
+        {this.props.code}: {this.state.error.message}
       </Text>
     ) : (
       this.props.children
@@ -88,7 +85,7 @@ function TrustedRecursiveListNode({
   gap,
 }: RenderTreeNodePayload & { gap: MantineSpacing }) {
   return (
-    <Group {...elementProps} gap={gap} wrap="nowrap" py={2}>
+    <Group {...elementProps} aria-expanded={hasChildren ? expanded : undefined} gap={gap} wrap="nowrap" py={2}>
       <Box w={16} h={16} style={{ flex: "0 0 16px" }} aria-hidden>
         {hasChildren && (
           <IconChevronRight
@@ -97,7 +94,11 @@ function TrustedRecursiveListNode({
           />
         )}
       </Box>
-      <Box style={{ minWidth: 0, flex: 1 }}>{node.label}</Box>
+      <Box style={{ minWidth: 0, flex: 1 }}>
+        <RecursiveListErrorBoundary resetKey={node.label} code="RECURSIVE_LIST_BRANCH_RENDER_ERROR">
+          {node.label}
+        </RecursiveListErrorBoundary>
+      </Box>
     </Group>
   );
 }

@@ -18,6 +18,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import {
   applyDefinition,
   buildDefinition,
+  getChangedSecrets,
   getCustomWidgetPreviewOptionIssues,
   isRecord,
   loadPreviewQueries,
@@ -63,13 +64,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       );
       return;
     }
-    const changedSecrets = values.secrets
-      .filter((secret) => secret.value.trim())
-      .map(({ sourceId, kind, value }) => ({
-        sourceId,
-        kind: kind as "apiKey" | "username" | "password",
-        value,
-      }));
+    const changedSecrets = getChangedSecrets(values);
     try {
       if (input.mode === "create") {
         const result = await createMutation.mutateAsync({ ...definition.data, secrets: changedSecrets });
@@ -135,13 +130,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         definition: input.candidate.data,
         definitionId: input.definitionId,
         options: input.optionsSnapshot,
-        secrets: input.form.values.secrets
-          .filter((secret) => secret.value.trim())
-          .map(({ sourceId, kind, value }) => ({
-            sourceId,
-            kind: kind as "apiKey" | "username" | "password",
-            value,
-          })),
+        secrets: getChangedSecrets(input.form.values),
       });
       const snapshot = await loadPreviewQueries(input.candidate.data, created.previewSession.id, input.optionsSnapshot);
       const failed = Object.values(snapshot.status).filter((status) => isRecord(status) && status.ok === false).length;

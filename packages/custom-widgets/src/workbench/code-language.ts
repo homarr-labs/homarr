@@ -9,6 +9,7 @@ import {
   getCustomJsxComponentProps,
 } from "../core/component-catalog";
 import { customJsxTablerIconNames } from "../core/tabler-icons";
+import { ROOT_BINDINGS } from "../jsx/analyzer-language";
 
 const enabledCatalogComponents = customJsxAuthoringCatalog.components.filter(
   (component) => component.safety !== "denied",
@@ -40,7 +41,7 @@ const iconCompletions: Completion[] = customJsxTablerIconNames.map((name) => ({
   detail: "Safe Tabler icon",
 }));
 
-const safeBlockCompletions: Completion[] = [
+export const customJsxSafeBlockCompletions: Completion[] = [
   snippetCompletion("map((item) => {\n\tconst value = ${};\n\treturn ${};\n})", {
     label: "map block",
     detail: "Safe immutable collection callback",
@@ -53,6 +54,12 @@ const safeBlockCompletions: Completion[] = [
   }),
 ];
 
+const rootBindingCompletions: Completion[] = [...ROOT_BINDINGS].toSorted().map((label) => ({
+  label,
+  type: ["data", "status", "options", "inputs"].includes(label) ? "variable" : "function",
+  detail: "Safe Custom JSX binding",
+}));
+
 export function getCustomJsxLocalConstCompletions(source: string, cursor: number): Completion[] {
   const wrapped = `<>${source}</>`;
   const target = cursor + 2;
@@ -63,6 +70,18 @@ export function getCustomJsxLocalConstCompletions(source: string, cursor: number
     activeNode = parent;
   }
   const completions: Completion[] = [];
+  let arrow = activeNode.parent;
+  while (arrow && arrow.name !== "ArrowFunction") arrow = arrow.parent;
+  arrow
+    ?.getChild("ParamList")
+    ?.getChildren("VariableDefinition")
+    .forEach((definition) => {
+      completions.push({
+        label: wrapped.slice(definition.from, definition.to),
+        type: "variable",
+        detail: "Safe callback parameter",
+      });
+    });
   for (let statement = activeNode.firstChild; statement; statement = statement.nextSibling) {
     if (statement.name !== "VariableDeclaration" || statement.from >= target) continue;
     if (statement.firstChild?.name !== "const") continue;
@@ -97,7 +116,13 @@ export const createCustomJsxCompletionSource =
       : componentCompletions;
     return {
       from: word?.from ?? context.pos,
-      options: [...localCompletions, ...safeBlockCompletions, ...contextualCompletions, ...additional],
+      options: [
+        ...localCompletions,
+        ...customJsxSafeBlockCompletions,
+        ...rootBindingCompletions,
+        ...contextualCompletions,
+        ...additional,
+      ],
     };
   };
 

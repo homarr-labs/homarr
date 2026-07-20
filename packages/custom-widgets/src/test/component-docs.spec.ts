@@ -36,27 +36,17 @@ describe("generated Custom Widget component references", () => {
     expect(generated["components.md"]).toContain(`Custom Widget ${customJsxAuthoringCatalog.customWidgetVersion}`);
     expect(generated["components.md"]).toContain(`Mantine ${customJsxAuthoringCatalog.mantineVersion}`);
 
-    for (const component of customJsxAuthoringCatalog.components) {
-      expect(combined, component.name).toContain(`<a id="${getComponentReferenceAnchor(component.name)}"></a>`);
-    }
+    for (const component of customJsxAuthoringCatalog.components)
+      expect(combined, component.name).toContain(component.name);
   });
 
-  test("contains the first and last canonical catalog records with their real prop APIs", () => {
+  test("keeps detailed records only for Homarr-owned runtime components", () => {
     const generated = renderCustomWidgetComponentReferences(customJsxAuthoringCatalog);
-    const first = customJsxAuthoringCatalog.components[0];
-    const last = customJsxAuthoringCatalog.components.at(-1);
-    expect(first).toBeDefined();
-    expect(last).toBeDefined();
-    if (!first || !last) return;
-
-    const packagePath = {
-      "@mantine/core": "mantine-core.md",
-      "@mantine/dates": "mantine-dates.md",
-      "@mantine/charts": "mantine-charts.md",
-      "@homarr/widgets": "homarr-components.md",
-    } as const;
-    for (const component of [first, last]) {
-      const reference = generated[packagePath[component.package]];
+    const homarrComponents = customJsxAuthoringCatalog.components.filter(
+      (component) => component.package === "@homarr/widgets",
+    );
+    for (const component of homarrComponents) {
+      const reference = generated["homarr-components.md"];
       expect(reference).toContain(`<a id="${getComponentReferenceAnchor(component.name)}"></a>`);
       expect(reference).toContain(`### \`${component.name}\``);
       for (const prop of component.props) {
@@ -70,6 +60,9 @@ describe("generated Custom Widget component references", () => {
     expect(GENERATED_COMPONENT_REFERENCE_PATHS).not.toContain("schema.md");
     expect(GENERATED_COMPONENT_REFERENCE_PATHS).not.toContain("runtime.md");
     expect(GENERATED_COMPONENT_REFERENCE_PATHS).not.toContain("security.md");
+    expect(GENERATED_COMPONENT_REFERENCE_PATHS).not.toContain("mantine-core.md");
+    expect(GENERATED_COMPONENT_REFERENCE_PATHS).not.toContain("mantine-dates.md");
+    expect(GENERATED_COMPONENT_REFERENCE_PATHS).not.toContain("mantine-charts.md");
   });
 });
 

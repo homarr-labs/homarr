@@ -1,13 +1,9 @@
 # Use the Custom JSX runtime
 
 import { CustomJsxComponentReference } from "@site/src/components/custom-jsx-component-reference";
+import { CustomWidgetCodeExample } from "@site/src/components/custom-widget-code";
 
-Homarr interprets declarative JSX in the error boundary of the widget. A template cannot import a module or run arbitrary JavaScript.
-
-## Use data roots
-
-```jsx
-<Stack>
+export const dataRootsExample = `<Stack>
   <TextInput bind="search" label="Search TV shows" />
   <SubFetch requestId="search-series" params={{ query: inputs.search }} />
   {data["search-series"]?.map((series) => (
@@ -18,13 +14,86 @@ Homarr interprets declarative JSX in the error boundary of the widget. A templat
       </ActionButton>
     </Group>
   ))}
+</Stack>`;
+
+export const localBindingExample = `{data.pokemon.map((pokemon) => {
+  const segments = pokemon.url.split("/").filter((part) => part);
+  const dexId = segments.at(-1);
+  const isSelected = inputs.selectedPokemon === pokemon.name;
+
+return (
+
+<Card key={dexId} withBorder={isSelected}>
+<Text>#{dexId}</Text>
+<Text tt="capitalize">{pokemon.name}</Text>
+</Card>
+);
+})}`;
+
+export const derivedValueExample = `{(() => {
+  const visiblePokemon = data.pokemon.filter(
+    (pokemon) => options.types.length === 0 || options.types.includes(pokemon.type),
+  );
+
+return (
+
+<Stack>
+{visiblePokemon.map((pokemon) => (
+<Text>{pokemon.name}</Text>
+))}
 </Stack>
-```
+);
+})()}`;
+
+export const recursiveListExample = `<RecursiveList
+  data={data.evolution.chain}
+  childrenPath="evolves_to"
+  keyPath="species.name"
+  defaultExpandedDepth={4}
+  maxDepth={16}
+  showLines
+>
+  {(node, meta) => {
+    const segments = node.species.url.split("/").filter((part) => part);
+    const dexId = segments.at(-1);
+
+    return (
+      <Group gap="xs">
+        <Badge variant="light">#{dexId}</Badge>
+        <Text tt="capitalize" fw={600}>
+          {node.species.name}
+        </Text>
+        {meta.hasChildren && <Text c="dimmed">{meta.childCount} evolutions</Text>}
+      </Group>
+    );
+
+}}
+
+</RecursiveList>`;
+
+export const temporaryInputsExample = `<TextInput bind="search" defaultValue="" />
+<DatePicker bind="selectedDate" />
+<Switch bind="enabled" defaultChecked={false} />
+<MultiSelect bind="selectedEntities" data={options.entities} />
+<SubFetch requestId="search" params={{ query: inputs.search }} />`;
+
+Homarr interprets declarative JSX in the error boundary of the widget. A template cannot import a module or run arbitrary JavaScript.
+
+## Use data roots
+
+<CustomWidgetCodeExample
+  id="custom-jsx-data-roots"
+  label="Data roots and manual requests"
+  language="jsx"
+  code={dataRootsExample}
+/>
 
 - `data.<requestId>` contains sanitized JSON or text results.
-- `status.<requestId>` contains the request status.
+- `status.<requestId>` contains `{ loading, ok, status, statusText, error }`.
 - `options` contains the validated board item configuration.
 - `inputs` contains temporary values from controls that use `bind`.
+
+Check `status.list?.loading` while loading, `status.list?.ok === false` on failure, and `status.list?.ok === true` on success. Do not compare `status.list` with `"loading"`, `"success"`, or `"error"`; the status is an object, and validation rejects those comparisons.
 
 Load queries get data automatically. They run at the widget refresh interval.
 
@@ -73,44 +142,23 @@ The explorer fetches only the plain, versioned static catalog. It does not impor
 
 A collection callback can use a restricted block when the returned JSX needs the same derived value more than once:
 
-```jsx
-{
-  data.pokemon.map((pokemon) => {
-    const segments = pokemon.url.split("/").filter((part) => part);
-    const dexId = segments.at(-1);
-    const isSelected = inputs.selectedPokemon === pokemon.name;
-
-    return (
-      <Card key={dexId} withBorder={isSelected}>
-        <Text>#{dexId}</Text>
-        <Text tt="capitalize">{pokemon.name}</Text>
-      </Card>
-    );
-  });
-}
-```
+<CustomWidgetCodeExample
+  id="custom-jsx-local-bindings"
+  label="Immutable local bindings"
+  language="jsx"
+  code={localBindingExample}
+/>
 
 The block must contain one or more `const` declarations followed by exactly one final `return`. A declaration uses one simple identifier and a required initializer. An earlier local can be used by later declarations and the final JSX.
 
 For one page-level derived value, directly invoke a zero-argument inline arrow:
 
-```jsx
-{
-  (() => {
-    const visiblePokemon = data.pokemon.filter(
-      (pokemon) => options.types.length === 0 || options.types.includes(pokemon.type),
-    );
-
-    return (
-      <Stack>
-        {visiblePokemon.map((pokemon) => (
-          <Text>{pokemon.name}</Text>
-        ))}
-      </Stack>
-    );
-  })();
-}
-```
+<CustomWidgetCodeExample
+  id="custom-jsx-derived-iife"
+  label="Page-level derived value"
+  language="jsx"
+  code={derivedValueExample}
+/>
 
 This is not general JavaScript execution. The runtime rejects:
 
@@ -130,31 +178,13 @@ Relevant diagnostics include `INVALID_LOCAL_DECLARATION`, `LOCAL_BINDING_REQUIRE
 
 Use the trusted `RecursiveList` special form for evolution chains, directory trees, nested comments, and other unknown-depth data. Do not write an authored recursive function or pass Mantine a render callback.
 
-```jsx
-<RecursiveList
-  data={data.evolution.chain}
-  childrenPath="evolves_to"
-  keyPath="species.name"
-  defaultExpandedDepth={4}
-  maxDepth={16}
-  showLines
->
-  {(node, meta) => {
-    const segments = node.species.url.split("/").filter((part) => part);
-    const dexId = segments.at(-1);
-
-    return (
-      <Group gap="xs">
-        <Badge variant="light">#{dexId}</Badge>
-        <Text tt="capitalize" fw={600}>
-          {node.species.name}
-        </Text>
-        {meta.hasChildren && <Text c="dimmed">{meta.childCount} evolutions</Text>}
-      </Group>
-    );
-  }}
-</RecursiveList>
-```
+<CustomWidgetCodeExample
+  id="custom-jsx-recursive-list"
+  label="Trusted recursive list"
+  language="jsx"
+  code={recursiveListExample}
+  height="420px"
+/>
 
 The child template receives the current `node` and this metadata:
 
@@ -180,13 +210,12 @@ Homarr detects cycles per ancestor chain. A malformed branch, render failure, or
 
 Bind a control to a literal name. Read its value from `inputs`:
 
-```jsx
-<TextInput bind="search" defaultValue="" />
-<DatePicker bind="selectedDate" />
-<Switch bind="enabled" defaultChecked={false} />
-<MultiSelect bind="selectedEntities" data={options.entities} />
-<SubFetch requestId="search" params={{ query: inputs.search }} />
-```
+<CustomWidgetCodeExample
+  id="custom-jsx-temporary-inputs"
+  label="Temporary inputs"
+  language="jsx"
+  code={temporaryInputsExample}
+/>
 
 These values exist in React memory while the widget is mounted. Homarr does not save them in any storage location.
 

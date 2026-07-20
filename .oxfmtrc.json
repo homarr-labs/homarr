@@ -12,7 +12,6 @@
     "apps/docs/build/**",
     "apps/docs/blog/**",
     "packages/custom-widgets/src/core/component-catalog.generated.json",
-    "packages/custom-widgets/src/core/component-runtime.generated.json",
     "apps/docs/static/custom-widgets/component-catalog-v1.json"
   ]
 }

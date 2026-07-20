@@ -10,6 +10,7 @@ import {
   Code,
   Group,
   Image,
+  Loader,
   Modal,
   Pagination,
   Select,
@@ -33,6 +34,8 @@ import {
 } from "@tabler/icons-react";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
+import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import type { WorkshopReport, WorkshopSubmissionDetail, WorkshopUser } from "@homarr/workshop";
 import { validateWorkshopWidget, workshopExportFilename } from "@homarr/workshop";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -49,7 +52,7 @@ function downloadWorkshopSubmission(submission: WorkshopSubmissionDetail) {
   URL.revokeObjectURL(url);
 }
 
-export function WorkshopBrowser({ onInstall }: { onInstall?(submission: WorkshopSubmissionDetail): Promise<void> }) {
+export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustomWidgetV2): Promise<void> }) {
   const t = useScopedI18n("workshop");
   const client = useMemo(createWorkshopClient, []);
   const queryClient = useQueryClient();
@@ -85,6 +88,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
     () => (detail.data ? validateWorkshopWidget(detail.data.content) : null),
     [detail.data],
   );
+  const detailCompatible = detailValidation?.success === true && detail.data?.widgetSchema === CUSTOM_WIDGET_SCHEMA;
   const signIn = () => {
     setLoginPending(true);
     setLoginError(null);
@@ -99,7 +103,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
       .finally(() => setLoginPending(false));
   };
   const install = useMutation({
-    mutationFn: async (submission: WorkshopSubmissionDetail) => onInstall?.(submission),
+    mutationFn: async (widget: HomarrCustomWidgetV2) => onInstall?.(widget),
     onSuccess: () => setSelectedId(null),
   });
   const vote = useMutation({
@@ -167,6 +171,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
         <TextInput
           label={t("search")}
           leftSection={<IconSearch size={16} />}
+          rightSection={list.isFetching ? <Loader size={16} /> : undefined}
           value={search}
           onChange={(event) => {
             setSearch(event.currentTarget.value);
@@ -194,7 +199,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
           <Skeleton h={280} />
         </SimpleGrid>
       ) : list.isError ? (
-        <Alert color="red">{t("unavailable")}</Alert>
+        <Alert color="red">{list.error instanceof Error ? list.error.message : t("unavailable")}</Alert>
       ) : list.data?.items.length ? (
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
           {list.data.items.map((item) => (
@@ -223,6 +228,9 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
                     <IconThumbUp size={13} /> {item.upvotes} · <IconThumbDown size={13} /> {item.downvotes}
                   </Text>
                 </Group>
+                <Badge color={item.widgetSchema === CUSTOM_WIDGET_SCHEMA ? "green" : "red"} variant="light">
+                  {item.widgetSchema}
+                </Badge>
                 <Text fw={700} lineClamp={1}>
                   {item.title}
                 </Text>
@@ -254,7 +262,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
         {detail.isPending ? (
           <Skeleton h={400} />
         ) : detail.isError || !detail.data ? (
-          <Alert color="red">{t("loadError")}</Alert>
+          <Alert color="red">{detail.error instanceof Error ? detail.error.message : t("loadError")}</Alert>
         ) : (
           <Stack>
             <Text>{detail.data.description}</Text>
@@ -273,10 +281,15 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
                 ))}
               </SimpleGrid>
             )}
-            <CapabilitySummary content={detail.data.content} />
+            {detailValidation?.success && <CapabilitySummary widget={detailValidation.data} />}
             {detailValidation && !detailValidation.success && (
               <Alert color="red" icon={<IconAlertTriangle size={18} />}>
                 {t("installErrorDescription")} {detailValidation.error}
+              </Alert>
+            )}
+            {detailValidation?.success && !detailCompatible && (
+              <Alert color="red" icon={<IconAlertTriangle size={18} />}>
+                {t("installErrorDescription")}
               </Alert>
             )}
             <Code block mah={360} style={{ overflow: "auto", whiteSpace: "pre" }}>
@@ -294,7 +307,8 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
                 <Button
                   variant="subtle"
                   leftSection={<IconThumbUp size={16} />}
-                  disabled={!user}
+                  loading={vote.isPending && vote.variables?.value === 1}
+                  disabled={!user || vote.isPending}
                   onClick={() => vote.mutate({ submission: detail.data.id, value: 1 })}
                 >
                   {detail.data.upvotes}
@@ -302,7 +316,8 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
                 <Button
                   variant="subtle"
                   leftSection={<IconThumbDown size={16} />}
-                  disabled={!user}
+                  loading={vote.isPending && vote.variables?.value === -1}
+                  disabled={!user || vote.isPending}
                   onClick={() => vote.mutate({ submission: detail.data.id, value: -1 })}
                 >
                   {detail.data.downvotes}
@@ -320,8 +335,8 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
               {onInstall && (
                 <Button
                   loading={install.isPending}
-                  disabled={!detailValidation?.success}
-                  onClick={() => install.mutate(detail.data)}
+                  disabled={!detailCompatible}
+                  onClick={() => detailValidation?.success && install.mutate(detailValidation.data)}
                 >
                   {t("install")}
                 </Button>
@@ -332,7 +347,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
                 {t("signInHint")}
               </Text>
             )}
-            {vote.error && <Alert color="red">{t("voteError")}</Alert>}
+            {vote.error && <Alert color="red">{vote.error.message || t("voteError")}</Alert>}
             {install.error && <Alert color="red">{install.error.message}</Alert>}
           </Stack>
         )}
@@ -367,10 +382,8 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
   );
 }
 
-function CapabilitySummary({ content }: { content: string }) {
+function CapabilitySummary({ widget }: { widget: HomarrCustomWidgetV2 }) {
   const t = useScopedI18n("workshop");
-  const parsed = validateWorkshopWidget(content);
-  if (!parsed.success) return null;
   return (
     <SimpleGrid cols={{ base: 1, sm: 2 }}>
       <Card withBorder p="sm">
@@ -378,7 +391,7 @@ function CapabilitySummary({ content }: { content: string }) {
           {t("sources")}
         </Text>
         <Stack gap={6}>
-          {parsed.data.sources.map((source) => (
+          {widget.sources.map((source) => (
             <Box key={source.id}>
               <Text size="sm" fw={500}>
                 {source.name}
@@ -402,13 +415,13 @@ function CapabilitySummary({ content }: { content: string }) {
         <Text fw={600} size="sm" mb="xs">
           {t("requests")}
         </Text>
-        {parsed.data.requests.length === 0 ? (
+        {widget.requests.length === 0 ? (
           <Text size="xs" c="dimmed">
             {t("noRequests")}
           </Text>
         ) : (
           <Stack gap={6}>
-            {parsed.data.requests.map((request) => (
+            {widget.requests.map((request) => (
               <Group key={request.id} justify="space-between" wrap="nowrap">
                 <Text size="xs" ff="monospace" truncate>
                   {request.id}

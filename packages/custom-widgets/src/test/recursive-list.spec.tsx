@@ -32,6 +32,9 @@ describe("RecursiveList", () => {
     const html = renderToStaticMarkup(createElement(MantineProvider, null, rendered.node));
     expect(html).toContain("0: LEVEL-0");
     expect(html).toContain("7: LEVEL-7");
+    expect(html).toContain('role="tree"');
+    expect(html).toContain('role="treeitem"');
+    expect(html).toContain('aria-expanded="true"');
   });
 
   test("contains malformed children, cycles, depth limits, and node limits", () => {
@@ -158,6 +161,39 @@ describe("RecursiveList", () => {
     ).toEqual(
       expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining("INVALID_PROP_VALUE") })]),
     );
+    expect(
+      validateCustomJsxTemplate(
+        '<RecursiveList data={data.tree} childrenPath="children" keyPath="name" maxNodes={1.5}>{(node) => node.name}</RecursiveList>',
+      ),
+    ).toEqual(
+      expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining("INVALID_PROP_VALUE") })]),
+    );
+  });
+
+  test("uses namespaced primitive keys and stable path fallbacks", () => {
+    const warnings = new Set<string>();
+    const nodes = buildTrustedRecursiveList({
+      data: [{ id: 1 }, { id: "1" }, { id: true }, { id: "duplicate" }, { id: "duplicate" }, {}],
+      childrenPath: "children",
+      keyPath: "id",
+      warnings,
+      budget: new Budget(DEFAULT_BUDGETS),
+      render: () => null,
+    });
+    expect(nodes.map(({ value }) => value)).toEqual([
+      "key:number:1",
+      "key:string:1",
+      "key:boolean:true",
+      "key:string:duplicate",
+      "path:4",
+      "path:5",
+    ]);
+    expect([...warnings]).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("RECURSIVE_LIST_DUPLICATE_KEY"),
+        expect.stringContaining("RECURSIVE_LIST_MISSING_KEY"),
+      ]),
+    );
   });
 
   test("contains ordinary branch errors even when their text resembles a budget failure", () => {
@@ -203,7 +239,7 @@ describe("RecursiveList", () => {
     );
   });
 
-  test("resets its contained render error when a corrected node model arrives", async () => {
+  test("contains a branch render error and resets it when a corrected node model arrives", async () => {
     (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     window.matchMedia = vi.fn().mockImplementation(() => ({
       matches: false,
@@ -226,11 +262,17 @@ describe("RecursiveList", () => {
       await act(async () => {
         root.render(
           <MantineProvider>
-            <TrustedRecursiveList nodes={[{ value: "broken", label: <BrokenLabel /> }]} />
+            <TrustedRecursiveList
+              nodes={[
+                { value: "broken", label: <BrokenLabel /> },
+                { value: "healthy", label: "Healthy sibling" },
+              ]}
+            />
           </MantineProvider>,
         );
       });
-      expect(host.textContent).toContain("RECURSIVE_LIST_RENDER_ERROR");
+      expect(host.textContent).toContain("RECURSIVE_LIST_BRANCH_RENDER_ERROR");
+      expect(host.textContent).toContain("Healthy sibling");
 
       await act(async () => {
         root.render(

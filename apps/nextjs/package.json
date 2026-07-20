@@ -55,6 +55,7 @@
     "@mantine/colors-generator": "catalog:",
     "@mantine/core": "catalog:",
     "@mantine/dropzone": "catalog:",
+    "@mantine/form": "catalog:",
     "@mantine/hooks": "catalog:",
     "@mantine/modals": "catalog:",
     "@mantine/tiptap": "catalog:",

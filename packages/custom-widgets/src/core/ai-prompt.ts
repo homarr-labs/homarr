@@ -1,22 +1,23 @@
 import type { HomarrCustomWidgetV2 } from "./custom-jsx-schema";
+import { customJsxAuthoringCatalog } from "./component-catalog";
 
-export const CUSTOM_WIDGET_MANTINE_VERSION = "9.4.1";
+export const CUSTOM_WIDGET_MANTINE_VERSION = customJsxAuthoringCatalog.mantineVersion;
 export const CUSTOM_WIDGET_OFFLINE_BUNDLE_SENTINEL = "--- END HOMARR CUSTOM WIDGET OFFLINE BUNDLE ---";
 const CUSTOM_WIDGET_AI_PROMPT_LIMIT = 8_000;
-const FINAL_OUTPUT_INSTRUCTION =
+export const CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION =
   "Create the requested widget now and return exactly one complete `json` fenced block followed by one complete `jsx` fenced block. Homarr will validate the result after it is pasted into the workbench.";
 
 const AUTHORING_PROMPT = `You create Homarr Custom JSX v2 widgets. Return exactly two fenced blocks: a json block containing one complete widget object with template set to "__HOMARR_TEMPLATE__", then a jsx block containing the readable template.
 
 Use $schema "homarr-custom-widget-v2". A widget contains metadata, inline API sources, named requests, an options schema, defaults, and one JSX template. Never include credentials. Use one source named "default" unless the widget genuinely combines APIs.
 
-This Homarr release uses Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}. Use only the Homarr runtime components and Mantine capabilities described in this prompt. The embedded-skill variant includes the exact release-matched component reference files.
+This Homarr release uses Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}. Use only the Homarr runtime components and Mantine capabilities described in this prompt. The embedded-skill variant includes the complete release-matched skill, widget schema, component catalog, and canonical examples for self-contained offline authoring.
 
 Queries and actions may use GET, POST, PUT, PATCH, or DELETE. Set kind to query for reads and action for user-triggered changes. Actions never use trigger "load". Declare every path, query, or body parameter. Use {name} in paths and {"$param":"name"} in query/body templates. Every declared parameter needs an explicit value source: SubFetch, ActionButton, and ToggleSwitch supply manual request values through their params prop; every load-query parameter must have an optionsBinding entry containing {"$option":"optionName"} or a primitive literal. Never infer a binding from matching names. Use load-triggered query results through data.<requestId>.
 
 Source authentication is exactly one of {"type":"none"}, {"type":"bearer"}, {"type":"basic"}, {"type":"apiKeyHeader","headerName":"X-API-Key"}, or {"type":"apiKeyQuery","parameterName":"api_key"}. Credentials are configured separately by the user.
 
-Templates can read data, status, options, and inputs. Bind supported Mantine controls with bind="search" and read the temporary value as inputs.search. Bound inputs live only in memory and reset when the widget reloads; saved configuration belongs in options. Restricted callback blocks may declare immutable local const values followed by one final return. Use RecursiveList for arbitrary-depth trees instead of authored recursion. Use Mantine Core, Dates, and Charts components. Do not use imports, hooks, refs, raw event callback props, component/renderRoot, arbitrary portals, raw HTML, fetch, eval, npm packages, or credentials. Design for compact and wide dashboard sizes with useful loading, empty, and error states.
+Templates can read data, status, options, and inputs. Each status.<requestId> is an object shaped { loading: boolean, ok?: boolean, status?: number, statusText?: string, error?: string }; never compare it with the strings "loading", "success", or "error". Use status.list?.loading while loading, status.list?.ok === false for failure, and status.list?.ok === true for success. Bind supported Mantine controls with bind="search" and read the temporary value as inputs.search. Bound inputs live only in memory and reset when the widget reloads; saved configuration belongs in options. Restricted callback blocks may declare immutable local const values followed by one final return. Use RecursiveList for arbitrary-depth trees instead of authored recursion. Use Mantine Core, Dates, and Charts components. Do not use imports, hooks, refs, raw event callback props, component/renderRoot, arbitrary portals, raw HTML, fetch, eval, npm packages, or credentials. Design for compact and wide dashboard sizes with useful loading, empty, and error states.
 
 Options use a restricted object JSON Schema. x-homarr controls include text, textarea, number, switch, select, multi-select, slider, date, time, color, icon, url, duration, timeZone, and json. Dynamic selects use x-homarr.optionsSource with requestId, optional itemsPath for wrapped arrays, valuePath, and labelPath.
 
@@ -37,7 +38,7 @@ export const CUSTOM_WIDGET_MCP_AUTHORING_PROMPT = `Author one Homarr Custom JSX 
 6. Use customWidget_secretSet only for a credential the user supplied and only with dedicated permission. Otherwise call customWidget_secretRequestUser and poll its completion status; never receive or repeat the plaintext.
 7. Call customWidget_create only after validation, request tests, action simulation, and visual inspection pass.
 
-Use inline sources, named queries/actions, restricted JSON Schema options, temporary declarative bind controls exposed through inputs, and safe Mantine JSX. Every load-query parameter needs an explicit optionsBinding option reference or literal; manual queries and actions receive all parameters from the invoking component's params prop. Never infer sources from matching names. Use kind, not method, to distinguish reads from user-triggered changes. Never include credentials, imports, hooks, refs, callbacks, browser requests, arbitrary JavaScript, npm packages, polymorphic roots, or arbitrary portals. Make the widget responsive, accessible, loading-aware, empty-aware, and error-aware. The live schema and component resources are authoritative for the installed Homarr release.`;
+Use inline sources, named queries/actions, restricted JSON Schema options, temporary declarative bind controls exposed through inputs, and safe Mantine JSX. Every load-query parameter needs an explicit optionsBinding option reference or literal; manual queries and actions receive all parameters from the invoking component's params prop. Never infer sources from matching names. Each status.<requestId> is an object with loading, ok, status, statusText, and error fields; never compare it with "loading", "success", or "error". Use kind, not method, to distinguish reads from user-triggered changes. Never include credentials, imports, hooks, refs, callbacks, browser requests, arbitrary JavaScript, npm packages, polymorphic roots, or arbitrary portals. Make the widget responsive, accessible, loading-aware, empty-aware, and error-aware. The live schema and component resources are authoritative for the installed Homarr release.`;
 
 export function buildCustomWidgetMcpPrompt(request?: string | null, documentationUrl?: string | null) {
   const sections = [CUSTOM_WIDGET_MCP_AUTHORING_PROMPT];
@@ -60,7 +61,7 @@ export function buildCustomWidgetAiPrompt(
   const sections = [`Please create this Homarr Custom JSX v2 widget:\n\n${requestedWidget}`];
   if (documentationUrl) sections.push(`API documentation: ${truncatePromptText(redactUrl(documentationUrl), 500)}`);
   sections.push(AUTHORING_PROMPT);
-  sections.push(FINAL_OUTPUT_INSTRUCTION);
+  sections.push(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION);
 
   const optionalSections = [
     ...(rawResponse ? [{ label: "Sample API response", content: redactResponse(rawResponse) }] : []),

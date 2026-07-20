@@ -17,7 +17,7 @@ interface SecurityDefinition {
   optionsSchema: unknown;
 }
 
-export function isCredentialKeyName(value: string) {
+function isCredentialKeyName(value: string) {
   return credentialKeyPattern.test(value);
 }
 

@@ -1,6 +1,16 @@
 # Create a Custom Widget
 
-import { CanonicalCustomWidgetExample } from "@site/src/components/custom-widget-code";
+import { CanonicalCustomWidgetExample, CustomWidgetCodeExample } from "@site/src/components/custom-widget-code";
+
+export const explicitOptionsBindingExample = `{
+  "pathTemplate": "/api/endpoints/{endpointId}/docker/containers/json",
+  "parameters": { "endpointId": "string", "showAll": "boolean" },
+  "queryTemplate": { "all": { "$param": "showAll" } },
+  "optionsBinding": {
+    "endpointId": { "$option": "endpointId" },
+    "showAll": false
+  }
+}`;
 
 The desktop workbench shows the code and preview next to each other. On a mobile device, use the Configure and Preview tabs.
 
@@ -68,10 +78,12 @@ The standard prompt contains fewer than 8,000 characters. It includes the instal
 
 It does not include a complete prop list, MCP workflow, server URL, or credentials. The prompt with the embedded skill is intentionally longer. It starts with your widget request, then includes:
 
-- `SKILL.md` and all eight release-matched reference files
+- `SKILL.md` and all eleven release-matched reference files, including the canonical widget JSON Schema
 - The Custom Widget, Mantine, skill, and catalog-schema versions
+- The compact canonical component catalog
+- Canonical runtime examples
 
-The generated reference files already contain the exact component and prop APIs. Homarr does not append a second raw catalog or a duplicate examples payload.
+The generated Markdown references remain readable offline. The compact JSON catalog gives tools the identical machine-readable component records used by Homarr.
 
 The embedded prompt ends with this sentinel and an exact total character count:
 
@@ -101,7 +113,7 @@ Widget options use a restricted object JSON Schema. Homarr supports the followin
 - URL
 - Nested group
 - Conditional field
-- Advanced JSON
+- JSON value
 
 Credentials are not widget options. Homarr rejects credential names and static credential values in widget options.
 
@@ -121,17 +133,12 @@ A parameter declaration does not give a value to the parameter. A matching widge
 
 For a load query, bind each parameter in `optionsBinding`. Use an option reference or a type-compatible primitive literal:
 
-```json
-{
-  "pathTemplate": "/api/endpoints/{endpointId}/docker/containers/json",
-  "parameters": { "endpointId": "string", "showAll": "boolean" },
-  "queryTemplate": { "all": { "$param": "showAll" } },
-  "optionsBinding": {
-    "endpointId": { "$option": "endpointId" },
-    "showAll": false
-  }
-}
-```
+<CustomWidgetCodeExample
+  id="explicit-options-binding"
+  label="Explicit load-query option bindings"
+  language="json"
+  code={explicitOptionsBindingExample}
+/>
 
 For a manual query or action, supply all parameters with the component `params` prop. Use `SubFetch`, `ActionButton`, or `ToggleSwitch`.
 

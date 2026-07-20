@@ -22,6 +22,7 @@ export const metadataProcedures = {
         "homarr://custom-widgets/components",
         "homarr://custom-widgets/skill",
       ],
+      httpResources: ["/api/custom-widgets/schema", "/api/custom-widgets/components", "/api/custom-widgets/skill"],
     })),
 
   getSkill: publicProcedure

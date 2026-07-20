@@ -24,6 +24,16 @@ export function buildDefinition(values: CustomWidgetFormValues) {
   });
 }
 
+export function getChangedSecrets(values: CustomWidgetFormValues) {
+  return values.secrets
+    .filter((secret) => secret.value.trim())
+    .map(({ sourceId, kind, value }) => ({
+      sourceId,
+      kind: kind as "apiKey" | "username" | "password",
+      value,
+    }));
+}
+
 export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrCustomWidgetV2) {
   form.setValues({
     ...form.values,

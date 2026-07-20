@@ -42,7 +42,7 @@ describe("buildCustomWidgetAiPrompt", () => {
     expect(CUSTOM_WIDGET_MANTINE_VERSION).toBe(mantinePackage.version);
     expect(source).not.toContain("skill-content.generated.json");
     expect(source).not.toContain("component-catalog.generated.json");
-    expect(source).not.toContain('from "./component-catalog"');
+    expect(source).toContain('from "./component-catalog"');
     expect(source).not.toContain('from "./authoring-resources"');
   });
 

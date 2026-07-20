@@ -130,7 +130,11 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
         />
         {props.reference && (
           <Collapse expanded={referenceOpened}>
-            <CustomWidgetSchemaReference reference={props.reference} messages={props.messages} />
+            <CustomWidgetSchemaReference
+              id={`${props.id}-schema-reference`}
+              reference={props.reference}
+              messages={props.messages}
+            />
           </Collapse>
         )}
         <div className={classes.viewport}>
@@ -201,9 +205,11 @@ export function ReadOnlyCustomWidgetCode(props: Omit<CustomWidgetCodeEditorProps
 }
 
 export function CustomWidgetSchemaReference({
+  id,
   reference,
   messages,
 }: {
+  id: string;
   reference: CustomWidgetSchemaReferenceData;
   messages: CustomWidgetEditorMessages;
 }) {
@@ -219,7 +225,7 @@ export function CustomWidgetSchemaReference({
       {Object.entries(values).map(([key, value]) => (
         <Tabs.Panel key={key} value={key} pt="xs">
           <ReadOnlyCustomWidgetCode
-            id={`schema-reference-${key}`}
+            id={`${id}-${key}`}
             label={labels[key as keyof typeof labels]}
             language="json"
             value={JSON.stringify(value, null, 2)}

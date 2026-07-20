@@ -19,7 +19,11 @@ import {
   getCustomWidgetOptionsJsonSchema,
   getCustomWidgetRequestsJsonSchema,
 } from "../core/schema-references";
-import { getCustomJsxComponentPropCompletions, getCustomJsxLocalConstCompletions } from "../workbench/code-language";
+import {
+  customJsxSafeBlockCompletions,
+  getCustomJsxComponentPropCompletions,
+  getCustomJsxLocalConstCompletions,
+} from "../workbench/code-language";
 
 describe("Custom Widget workbench contracts", () => {
   it("always provides a valid starter template", () => {
@@ -106,6 +110,17 @@ describe("Custom Widget workbench contracts", () => {
     expect(labels).toContain("first");
     expect(labels).not.toContain("current");
     expect(labels).not.toContain("future");
+  });
+
+  it("completes callback parameters and publishes safe-block snippets", () => {
+    const source = `{data.items.map((item, index, collection) => {
+      const value = item;
+      return <Text>{value}</Text>;
+    })}`;
+    const cursor = source.indexOf("return <Text>");
+    const labels = getCustomJsxLocalConstCompletions(source, cursor).map(({ label }) => label);
+    expect(labels).toEqual(expect.arrayContaining(["item", "index", "collection", "value"]));
+    expect(customJsxSafeBlockCompletions.map(({ label }) => label)).toEqual(["map block", "derived value IIFE"]);
   });
 
   it("uses canonical component prop types for contextual JSX completions", () => {

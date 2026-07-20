@@ -3,7 +3,7 @@
 Workshop is a small PocketBase service that serves the public documentation site and stores one Custom JSX v2 widget per submission.
 
 The runtime image extends `ghcr.io/muchobien/pocketbase:0.39`; Homarr adds only the built documentation, PocketBase
-collections, one small user-role guard, and its explicit serve arguments.
+collections, API rules, and its explicit serve arguments.
 
 It intentionally has no approval queue, user bans, comments, email notifications, audit log, reusable widget connections,
 or remote control over installed widgets. Submissions publish immediately. Authenticated users can vote and report;
@@ -20,8 +20,9 @@ container. With the image directly, set both values: `docker run -e PORT=3003 -p
 
 Open `http://127.0.0.1:18090/_/`, create the first PocketBase superuser, and configure GitHub OAuth on the `users` collection.
 
-The `users.isAdmin` field defaults to `false` and cannot be changed by regular users. Appoint administrators from the
-PocketBase dashboard with a superuser account.
+The `users.isAdmin` field defaults to `false`. Collection rules allow account creation only through OAuth without that
+field and reject regular-user updates to it. Appoint administrators from the PocketBase dashboard with a superuser
+account.
 
 Users must sign in again after the role changes. Setting the value back to `false` removes Workshop administrator access.
 
@@ -39,8 +40,13 @@ Run the disposable service integration test from the repository root:
 pnpm test:workshop
 ```
 
+The test uses a separate Compose project and deletes its named volume on exit. It never writes fixture users or admin
+roles into the normal `homarr-workshop_pb_data` volume.
+
 The Workshop does not maintain a second Custom Widget schema. Its frontend validates submissions with
 `customWidgetImportSchema` from `@homarr/custom-widgets`, and Homarr validates canonical content again before installation.
+The validated `$schema` is also stored as `widgetSchema` for listing compatibility badges; it must match the downloaded
+manifest before Homarr enables installation.
 PocketBase API rules enforce submission ownership, one vote/report per user and submission, and administrator-only
 moderation. Reports are dismissed by deleting them; PocketBase cascade deletion removes related votes and reports when a
 submission is deleted.
@@ -53,7 +59,8 @@ Build the documentation and serve it from PocketBase using the same production i
 pnpm docker:docs
 ```
 
-Open `http://127.0.0.1:3003`. Set `DOCS_EXPOSE_PORT` to use another host port. The preview does not mount or persist PocketBase data.
+Open `http://127.0.0.1:3003`. Set `DOCS_EXPOSE_PORT` to use another host port. PocketBase data persists in the
+`homarr-workshop_pb_data` named volume.
 
 Point a local Homarr checkout at it with:
 

@@ -2,48 +2,19 @@ import BrowserOnly from "@docusaurus/BrowserOnly";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import { useEffect, useMemo, useState } from "react";
 
+import { buildCustomJsxComponentUsageExample } from "@homarr/custom-widgets/catalog-example";
+import type {
+  CustomJsxAuthoringCatalog,
+  CustomJsxComponentApi,
+  CustomJsxPropDescriptor,
+} from "@homarr/custom-widgets/catalog";
+
+import { CustomWidgetCodeExample } from "./custom-widget-code";
 import styles from "./custom-jsx-component-reference.module.css";
 
-type ComponentSafety = "allowed" | "wrapped" | "denied";
-type ComponentPackage = "@mantine/core" | "@mantine/dates" | "@mantine/charts" | "@homarr/widgets";
-type ComponentBindingType = "string" | "number" | "boolean" | "string[]" | "number[]";
-
-interface CatalogProp {
-  name: string;
-  typeRef: number;
-  required: boolean;
-  source: "global" | "component";
-  literalValues?: Array<string | number | boolean | null>;
-  description?: string;
-}
-
-interface CatalogComponent {
-  name: string;
-  package: ComponentPackage;
-  category: string;
-  safety: ComponentSafety;
-  description?: string;
-  documentationUrl: string;
-  props: CatalogProp[];
-  blockedProps: Array<{ name: string; reason: string }>;
-  subcomponents: string[];
-  bind?: {
-    type: ComponentBindingType;
-    initialProp: "defaultValue" | "defaultChecked";
-  };
-  accessibilityRequirements: string[];
-  deniedReason?: string;
-}
-
-interface ComponentCatalog {
-  schemaVersion: number;
-  mantineVersion: string;
-  customWidgetVersion: string;
-  types: string[];
-  globalProps: CatalogProp[];
-  blockedCapabilities: Array<{ kind: string; name: string; reason: string }>;
-  components: CatalogComponent[];
-}
+type ComponentCatalog = CustomJsxAuthoringCatalog;
+type CatalogComponent = CustomJsxComponentApi;
+type CatalogProp = CustomJsxPropDescriptor;
 
 const PAGE_SIZE = 40;
 
@@ -395,10 +366,13 @@ function ComponentDetails({ id, component, types }: { id: string; component: Cat
     <div className={styles.details} id={id}>
       <div className={styles.detailsGrid}>
         <section>
-          <h5>Usage example</h5>
-          <pre className={styles.codeBlock}>
-            <code>{buildUsageExample(component, types)}</code>
-          </pre>
+          <CustomWidgetCodeExample
+            id={`${componentAnchor(component.name)}-usage`}
+            label="Usage example"
+            language="jsx"
+            code={buildCustomJsxComponentUsageExample(component, { types })}
+            height="180px"
+          />
         </section>
 
         <section>
@@ -457,9 +431,12 @@ function ComponentDetails({ id, component, types }: { id: string; component: Cat
 
       <details className={styles.rawComponent}>
         <summary>Raw component JSON</summary>
-        <pre className={styles.codeBlock}>
-          <code>{JSON.stringify(component, null, 2)}</code>
-        </pre>
+        <CustomWidgetCodeExample
+          id={`${componentAnchor(component.name)}-json`}
+          label="Component JSON"
+          code={JSON.stringify(component, null, 2)}
+          height="320px"
+        />
       </details>
     </div>
   );
@@ -517,48 +494,4 @@ function humanize(value: string) {
 
 function formatLiteral(value: string | number | boolean | null) {
   return typeof value === "string" ? JSON.stringify(value) : String(value);
-}
-
-function buildUsageExample(component: CatalogComponent, types: string[]) {
-  if (component.name === "RecursiveList") {
-    return `<RecursiveList data={data.tree} childrenPath="children" keyPath="id" showLines>
-  {(node, meta) => (
-    <Group gap="xs">
-      <Text>{node.label}</Text>
-      {meta.hasChildren && <Badge>{meta.childCount}</Badge>}
-    </Group>
-  )}
-</RecursiveList>`;
-  }
-
-  const props = component.props
-    .filter((prop) => prop.required)
-    .slice(0, 4)
-    .map((prop) => `${prop.name}=${examplePropValue(prop, types[prop.typeRef] ?? "unknown")}`);
-  if (component.bind) {
-    props.unshift(
-      `bind="value"`,
-      `${component.bind.initialProp}=${bindingInitialValue(component.bind.type, component.bind.initialProp)}`,
-    );
-  }
-  const propText = props.length > 0 ? ` ${props.join(" ")}` : "";
-  return `<${component.name}${propText} />`;
-}
-
-function bindingInitialValue(type: ComponentBindingType, initialProp: "defaultValue" | "defaultChecked") {
-  if (initialProp === "defaultChecked") return "{false}";
-  if (type === "string") return '""';
-  if (type === "number") return "{0}";
-  if (type === "boolean") return "{false}";
-  return "{[]}";
-}
-
-function examplePropValue(prop: CatalogProp, type: string) {
-  const literal = prop.literalValues?.[0];
-  if (literal !== undefined) return `{${formatLiteral(literal)}}`;
-  if (type.includes("string")) return `"${prop.name}"`;
-  if (type.includes("boolean")) return "{true}";
-  if (type.includes("number")) return "{0}";
-  if (type.includes("[]") || type.includes("Array<")) return "{[]}";
-  return `{options.${prop.name}}`;
 }

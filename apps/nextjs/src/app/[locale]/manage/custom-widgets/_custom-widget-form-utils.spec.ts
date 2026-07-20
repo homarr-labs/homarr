@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 
-import { getCustomWidgetPreviewOptionIssues, loadPreviewQueries } from "./_custom-widget-form-utils";
+import { getChangedSecrets, getCustomWidgetPreviewOptionIssues, loadPreviewQueries } from "./_custom-widget-form-utils";
 
 const previewQuery = vi.hoisted(() => vi.fn());
 
@@ -63,5 +63,24 @@ describe("Custom Widget workbench preview options", () => {
     expect(getCustomWidgetPreviewOptionIssues(definition, { environmentId: "wrong" })).toEqual([
       { path: "configuration.environmentId", message: "Expected number" },
     ]);
+  });
+
+  it("normalizes only changed secrets for save and preview", () => {
+    expect(
+      getChangedSecrets({
+        name: "Widget",
+        description: "",
+        iconUrl: "",
+        sources: "[]",
+        requests: "[]",
+        optionsSchema: "{}",
+        defaultOptions: "{}",
+        template: "<Text />",
+        secrets: [
+          { sourceId: "default", kind: "apiKey", value: "", hasValue: true },
+          { sourceId: "other", kind: "password", value: "replacement" },
+        ],
+      }),
+    ).toEqual([{ sourceId: "other", kind: "password", value: "replacement" }]);
   });
 });

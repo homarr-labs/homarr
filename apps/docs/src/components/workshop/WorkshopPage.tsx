@@ -7,6 +7,7 @@ import type {
   WorkshopUser,
 } from "@homarr/workshop";
 import { validateWorkshopWidget, WorkshopClient, workshopExportFilename } from "@homarr/workshop";
+import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 
 import { CustomWidgetCodeExample } from "../custom-widget-code";
 import styles from "./workshop.module.css";
@@ -31,6 +32,7 @@ export function WorkshopPage() {
   const [reportCategory, setReportCategory] = useState<WorkshopReport["category"]>("other");
   const [reportText, setReportText] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const draftValidation = useMemo(() => validateWorkshopWidget(draft.content), [draft.content]);
   const reportCounts = useMemo(() => {
@@ -41,6 +43,7 @@ export function WorkshopPage() {
   const selectedReports = selected ? reports.filter((report) => report.submission === selected.id) : [];
 
   const load = useCallback(async () => {
+    setLoading(true);
     try {
       const [nextReports, nextItems] = await Promise.all([
         user?.isAdmin ? client.listReports() : Promise.resolve([]),
@@ -58,6 +61,8 @@ export function WorkshopPage() {
       setError("");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Workshop is unavailable");
+    } finally {
+      setLoading(false);
     }
   }, [client, search, sort, user?.isAdmin]);
 
@@ -252,7 +257,7 @@ export function WorkshopPage() {
         </select>
       </div>
       {error && <div className={styles.error}>{error}</div>}
-      <div className={styles.grid}>
+      <div className={styles.grid} aria-busy={loading}>
         {items.map((item) => {
           const reportCount = reportCounts.get(item.id) ?? 0;
           return (
@@ -273,6 +278,9 @@ export function WorkshopPage() {
                     ▲ {item.upvotes} · ▼ {item.downvotes}
                   </span>
                 </div>
+                <span className={item.widgetSchema === CUSTOM_WIDGET_SCHEMA ? styles.success : styles.error}>
+                  {item.widgetSchema === CUSTOM_WIDGET_SCHEMA ? "Current" : "Unsupported"} · {item.widgetSchema}
+                </span>
                 {user?.isAdmin && reportCount > 0 && (
                   <span className={styles.reportCount}>
                     {reportCount} {reportCount === 1 ? "report" : "reports"}
@@ -288,7 +296,8 @@ export function WorkshopPage() {
           );
         })}
       </div>
-      {items.length === 0 && <p className={styles.empty}>No widgets match this search.</p>}
+      {loading && items.length === 0 && <p className={styles.empty}>Loading Workshop…</p>}
+      {!loading && items.length === 0 && <p className={styles.empty}>No widgets match this search.</p>}
 
       {selected && (
         <div
@@ -308,6 +317,9 @@ export function WorkshopPage() {
                 ▲ {selected.upvotes} · ▼ {selected.downvotes}
               </span>
             </div>
+            <span className={selected.widgetSchema === CUSTOM_WIDGET_SCHEMA ? styles.success : styles.error}>
+              {selected.widgetSchema === CUSTOM_WIDGET_SCHEMA ? "Current" : "Unsupported"} · {selected.widgetSchema}
+            </span>
             {user?.isAdmin && selectedReports.length > 0 && (
               <section className={styles.moderation} aria-labelledby="submission-reports-title">
                 <h3 id="submission-reports-title">

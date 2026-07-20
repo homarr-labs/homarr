@@ -17,6 +17,7 @@ migrate(
     const adminRule = "@request.auth.isAdmin = true";
     users.listRule = adminRule;
     users.viewRule = `id = @request.auth.id || ${adminRule}`;
+    users.createRule = '@request.context = "oauth2" && @request.body.isAdmin:isset = false';
     users.updateRule = "id = @request.auth.id && @request.body.isAdmin:isset = false";
     users.deleteRule = null;
     app.save(users);
@@ -32,6 +33,7 @@ migrate(
       fields: [
         { type: "text", name: "title", required: true, min: 3, max: 100 },
         { type: "text", name: "description", max: 2000 },
+        { type: "text", name: "widgetSchema", required: true, min: 1, max: 100 },
         { type: "text", name: "content", required: true, max: 1000000 },
         {
           type: "file",
@@ -126,7 +128,7 @@ migrate(
       listRule: "",
       viewRule: "",
       viewQuery: `
-        SELECT s.id, s.title, s.description, s.screenshots, s.author, u.displayName AS authorName,
+        SELECT s.id, s.title, s.description, s.widgetSchema, s.screenshots, s.author, u.displayName AS authorName,
           s.created, s.updated,
           COALESCE(SUM(CASE WHEN v.value = 1 THEN 1 ELSE 0 END), 0) AS upvotes,
           COALESCE(SUM(CASE WHEN v.value = -1 THEN 1 ELSE 0 END), 0) AS downvotes,

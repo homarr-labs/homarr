@@ -165,6 +165,14 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       </nav>
       <div className={classes.workbench} data-mobile-pane={mobilePane}>
         <Stack gap="lg" className={classes.configuration}>
+          <CustomWidgetAiCard
+            candidate={candidate.success ? candidate.data : null}
+            request={request}
+            onRequestChange={setRequest}
+            documentationUrl={documentationUrl}
+            onDocumentationUrlChange={setDocumentationUrl}
+            onPaste={() => void pasteAiResponse()}
+          />
           <EditorSection id="general" title={w("generalInformation")} icon={IconSettings}>
             <TextInput label={t("field.name")} required {...form.getInputProps("name")} />
             <Textarea label={t("field.description")} autosize minRows={2} {...form.getInputProps("description")} />
@@ -224,14 +232,6 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               maxLength={50_000}
             />
           </EditorSection>
-          <CustomWidgetAiCard
-            candidate={candidate.success ? candidate.data : null}
-            request={request}
-            onRequestChange={setRequest}
-            documentationUrl={documentationUrl}
-            onDocumentationUrlChange={setDocumentationUrl}
-            onPaste={() => void pasteAiResponse()}
-          />
           <Paper p="md" className={classes.mobileSaveBar} shadow="sm">
             <SaveActions
               dirty={form.isDirty()}

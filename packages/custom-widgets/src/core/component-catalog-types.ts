@@ -60,19 +60,3 @@ export interface CustomJsxAuthoringCatalog {
   blockedCapabilities: CustomJsxBlockedCapability[];
   components: CustomJsxComponentApi[];
 }
-
-export interface CustomJsxRuntimeComponentApi {
-  name: string;
-  package: CustomJsxComponentPackage;
-  safety: CustomJsxComponentSafety;
-  props: string[];
-  blockedProps: CustomJsxComponentBlockedProp[];
-  bind?: CustomJsxBindingDescriptor;
-  deniedReason?: string;
-}
-
-export interface CustomJsxRuntimeCatalog {
-  schemaVersion: typeof CUSTOM_JSX_AUTHORING_CATALOG_SCHEMA_VERSION;
-  globalProps: string[];
-  components: CustomJsxRuntimeComponentApi[];
-}

@@ -15,6 +15,7 @@
     "./authoring-prompt": "./src/core/ai-prompt.ts",
     "./authoring-resources": "./src/core/authoring-resources.ts",
     "./catalog": "./src/core/catalog.ts",
+    "./catalog-example": "./src/core/component-example.ts",
     "./core": "./src/core/index.ts",
     "./embedded-authoring-prompt": "./src/core/embedded-ai-prompt.ts",
     "./jsx": "./src/jsx/index.ts",

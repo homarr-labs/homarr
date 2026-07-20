@@ -93,11 +93,11 @@ const componentRegistry = await readFile(
   join(repositoryRoot, "packages/custom-widgets/src/core/component-registry.ts"),
   "utf8",
 );
-if (!/from\s+["'].\/component-runtime\.generated\.json["']/u.test(componentRegistry)) {
-  failures.push("The Custom JSX runtime registry must use the compact generated component index");
+if (!/from\s+["'].\/component-catalog["']/u.test(componentRegistry)) {
+  failures.push("The Custom JSX runtime registry must use the canonical authoring catalog");
 }
-if (/from\s+["'].\/component-catalog["']/u.test(componentRegistry)) {
-  failures.push("The Custom JSX runtime registry must not bundle the full authoring catalog");
+if (/component-runtime\.generated\.json/u.test(componentRegistry)) {
+  failures.push("The Custom JSX runtime registry must not use a second generated component catalog");
 }
 
 if (failures.length > 0) {

@@ -9,23 +9,54 @@ import {
 } from "./policy";
 import type { AstNode } from "./analyzer-ast";
 import { nodeOf, nodesOf, staticPropertyName } from "./analyzer-ast";
+import { createCustomJsxParseDiagnostic } from "./analyzer-diagnostics";
+import type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
 import { analyzeCustomJsxElement } from "./analyzer-jsx";
-import { isStaticallyCallableBinding, RESERVED_LOCAL_BINDINGS, ROOT_BINDINGS } from "./analyzer-language";
+import {
+  canStaticallyProduceCallable,
+  isStaticallyCallableBinding,
+  RESERVED_LOCAL_BINDINGS,
+  ROOT_BINDINGS,
+} from "./analyzer-language";
 import {
   CUSTOM_JSX_BINARY_OPERATORS,
   CUSTOM_JSX_CALLBACK_METHODS,
   CUSTOM_JSX_SAFE_VALUE_METHODS,
 } from "./safe-language-policy";
 
-export interface CustomJsxTemplateDiagnostic {
-  severity: "error" | "warning";
-  message: string;
-  index: number;
-  line: number;
-  column: number;
-}
+export type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
 
 const JsxParser = Parser.extend(jsx());
+const requestStatusLabels = new Set(["loading", "success", "error"]);
+
+function directRequestStatusId(node: AstNode | null): string | null {
+  if (node?.type !== "MemberExpression") return null;
+  const object = nodeOf(node.object);
+  if (object?.type !== "Identifier" || object.name !== "status") return null;
+  const property = nodeOf(node.property);
+  return node.computed
+    ? (staticPropertyName(property) ?? null)
+    : String(property?.name ?? property?.value ?? "") || null;
+}
+
+function invalidRequestStatusComparison(node: AstNode) {
+  if (!["===", "==", "!==", "!="].includes(String(node.operator))) return null;
+  const left = nodeOf(node.left);
+  const right = nodeOf(node.right);
+  const leftStatus = directRequestStatusId(left);
+  const rightStatus = directRequestStatusId(right);
+  const leftLabel = left?.type === "Literal" && typeof left.value === "string" ? left.value : null;
+  const rightLabel = right?.type === "Literal" && typeof right.value === "string" ? right.value : null;
+  const requestId =
+    leftStatus && rightLabel && requestStatusLabels.has(rightLabel)
+      ? leftStatus
+      : rightStatus && leftLabel && requestStatusLabels.has(leftLabel)
+        ? rightStatus
+        : null;
+  return requestId
+    ? `INVALID_STATUS_COMPARISON: status.${requestId} is an object. Use status.${requestId}?.loading, status.${requestId}?.ok === true, or status.${requestId}?.ok === false`
+    : null;
+}
 
 export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDiagnostic[] {
   const diagnostics: CustomJsxTemplateDiagnostic[] = [];
@@ -85,7 +116,9 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
     const body = nodeOf(node.body);
     if (!body) return;
     if (body.type === "BlockStatement") visitSafeBlock(body, depth + 1, callbackBindings);
-    else visit(body, depth + 1, callbackBindings);
+    else if (canStaticallyProduceCallable(body)) {
+      add(body, "CALLBACK_VALUE_NOT_ALLOWED: Authored callbacks cannot return callable values");
+    } else visit(body, depth + 1, callbackBindings);
   };
 
   const visitSafeBlock = (block: AstNode, depth: number, bindings: ReadonlySet<string>) => {
@@ -110,7 +143,9 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
           return;
         }
         const argument = nodeOf(statement.argument);
-        if (argument) visit(argument, depth + 1, scopedBindings);
+        if (argument && canStaticallyProduceCallable(argument)) {
+          add(argument, "CALLBACK_VALUE_NOT_ALLOWED: Authored callbacks cannot return callable values");
+        } else if (argument) visit(argument, depth + 1, scopedBindings);
         return;
       }
       if (statement.type !== "VariableDeclaration") {
@@ -146,11 +181,7 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
           add(declaration, `LOCAL_BINDING_REQUIRES_INITIALIZER: '${name}' requires an initializer`);
           continue;
         }
-        if (
-          initializer.type === "ArrowFunctionExpression" ||
-          initializer.type === "FunctionExpression" ||
-          isStaticallyCallableBinding(initializer)
-        ) {
+        if (canStaticallyProduceCallable(initializer)) {
           add(initializer, "CALLBACK_VALUE_NOT_ALLOWED: Functions cannot be stored in local bindings");
           continue;
         }
@@ -240,6 +271,10 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
         if (node.type === "BinaryExpression" && !CUSTOM_JSX_BINARY_OPERATORS.has(String(node.operator))) {
           add(node, `Binary operator '${String(node.operator)}' is not supported`);
         }
+        if (node.type === "BinaryExpression") {
+          const statusDiagnostic = invalidRequestStatusComparison(node);
+          if (statusDiagnostic) add(node, statusDiagnostic);
+        }
         const left = nodeOf(node.left);
         const right = nodeOf(node.right);
         if (left) visit(left, depth + 1, bindings);
@@ -268,12 +303,18 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
       case "CallExpression": {
         const callee = nodeOf(node.callee);
         const arguments_ = nodesOf(node.arguments);
+        if (node.optional) {
+          add(node, "CALL_TARGET_NOT_ALLOWED: Optional calls are not supported");
+        }
         if (callee?.type === "ArrowFunctionExpression") {
           if (nodesOf(callee.params).length > 0) {
             add(callee, "CALLBACK_VALUE_NOT_ALLOWED: Inline derived-value functions cannot declare parameters");
           }
           if (arguments_.length > 0) {
             add(node, "CALLBACK_VALUE_NOT_ALLOWED: Inline derived-value functions must be called without arguments");
+          }
+          if (nodeOf(callee.body)?.type !== "BlockStatement") {
+            add(callee, "BLOCK_REQUIRES_FINAL_RETURN: Inline derived-value functions require a safe const block");
           }
           visitArrow(callee, depth + 1, bindings);
           arguments_.forEach((argument) => visit(argument, depth + 1, bindings));
@@ -352,29 +393,7 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
     }) as unknown as AstNode;
     visit(program, 0, ROOT_BINDINGS);
   } catch (error) {
-    const parseError = error as Error & { pos?: number; loc?: { line?: number; column?: number } };
-    const parseIndex = Math.max(0, (parseError.pos ?? 2) - 2);
-    const missingInitializer = [...template.matchAll(/(?:\bconst|,)\s+([A-Za-z_$][\w$]*)\s*;/gu)].find((match) => {
-      const semicolon = (match.index ?? 0) + match[0].length - 1;
-      return Math.abs(semicolon - parseIndex) <= 1;
-    });
-    const duplicateCandidate = /Identifier '([^']+)' has already been declared/iu.exec(parseError.message);
-    const duplicateBinding = duplicateCandidate;
-    const message = missingInitializer
-      ? `LOCAL_BINDING_REQUIRES_INITIALIZER: '${missingInitializer[1]}' requires an initializer`
-      : duplicateBinding
-        ? `DUPLICATE_LOCAL_BINDING: '${duplicateBinding[1]}' is already declared`
-        : parseError.message;
-    diagnostics.push({
-      severity: "error",
-      message,
-      index: Math.max(0, (parseError.pos ?? 2) - 2),
-      line: parseError.loc?.line ?? 1,
-      column: Math.max(
-        1,
-        (parseError.loc?.column ?? 0) + (parseError.loc?.line === 1 || parseError.loc?.line === undefined ? -1 : 1),
-      ),
-    });
+    diagnostics.push(createCustomJsxParseDiagnostic(template, error));
   }
 
   return diagnostics;

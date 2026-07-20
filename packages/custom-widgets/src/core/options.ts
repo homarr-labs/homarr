@@ -1,3 +1,5 @@
+import { matchesDeclaredOptionType } from "./option-value-types";
+
 export interface CustomWidgetOptionIssue {
   path: string;
   message: string;
@@ -25,11 +27,21 @@ function validateValue(schema: JsonSchema, value: unknown, path: string, issues:
   }
 
   const type = schema.type;
-  if (typeof type === "string" && !matchesType(type, value)) {
+  if (typeof type === "string" && !matchesDeclaredOptionType(type, value)) {
     issues.push({ path, message: `Expected ${type}` });
     return;
   }
 
+  validateScalarValue(schema, value, path, issues);
+  if (Array.isArray(value)) validateArrayValue(schema, value, path, issues);
+  if (isRecord(value)) validateObjectValue(schema, value, path, issues);
+  else if (isRecord(schema.if)) {
+    const branch = matchesSchema(schema.if, value) ? schema.then : schema.else;
+    if (isRecord(branch)) validateValue(branch, value, path, issues);
+  }
+}
+
+function validateScalarValue(schema: JsonSchema, value: unknown, path: string, issues: CustomWidgetOptionIssue[]) {
   if (typeof value === "string") {
     if (typeof schema.minLength === "number" && value.length < schema.minLength)
       issues.push({ path, message: `Must contain at least ${schema.minLength} characters` });
@@ -46,46 +58,40 @@ function validateValue(schema: JsonSchema, value: unknown, path: string, issues:
     if (typeof schema.multipleOf === "number" && schema.multipleOf > 0 && value % schema.multipleOf !== 0)
       issues.push({ path, message: `Must be a multiple of ${schema.multipleOf}` });
   }
+}
 
-  if (Array.isArray(value)) {
-    if (typeof schema.minItems === "number" && value.length < schema.minItems)
-      issues.push({ path, message: `Choose at least ${schema.minItems} values` });
-    if (typeof schema.maxItems === "number" && value.length > schema.maxItems)
-      issues.push({ path, message: `Choose at most ${schema.maxItems} values` });
-    const items = schema.items;
-    if (isRecord(items)) value.forEach((entry, index) => validateValue(items, entry, `${path}.${index}`, issues));
+function validateArrayValue(schema: JsonSchema, value: unknown[], path: string, issues: CustomWidgetOptionIssue[]) {
+  if (typeof schema.minItems === "number" && value.length < schema.minItems)
+    issues.push({ path, message: `Choose at least ${schema.minItems} values` });
+  if (typeof schema.maxItems === "number" && value.length > schema.maxItems)
+    issues.push({ path, message: `Choose at most ${schema.maxItems} values` });
+  if (isRecord(schema.items))
+    value.forEach((entry, index) => validateValue(schema.items as JsonSchema, entry, `${path}.${index}`, issues));
+}
+
+function validateObjectValue(
+  schema: JsonSchema,
+  value: Record<string, unknown>,
+  path: string,
+  issues: CustomWidgetOptionIssue[],
+) {
+  const branch = isRecord(schema.if) ? (matchesSchema(schema.if, value) ? schema.then : schema.else) : undefined;
+  const branchSchema = isRecord(branch) ? branch : {};
+  const properties = {
+    ...(isRecord(schema.properties) ? schema.properties : {}),
+    ...(isRecord(branchSchema.properties) ? branchSchema.properties : {}),
+  };
+  const required = [
+    ...(Array.isArray(schema.required) ? schema.required : []),
+    ...(Array.isArray(branchSchema.required) ? branchSchema.required : []),
+  ].filter((entry): entry is string => typeof entry === "string");
+  for (const key of required) {
+    if (value[key] === undefined) issues.push({ path: `${path}.${key}`, message: "This field is required" });
   }
-
-  if (isRecord(value)) {
-    const branch =
-      isRecord(schema.if) && matchesSchema(schema.if, value)
-        ? schema.then
-        : isRecord(schema.if)
-          ? schema.else
-          : undefined;
-    const branchSchema = isRecord(branch) ? branch : {};
-    const properties = {
-      ...(isRecord(schema.properties) ? schema.properties : {}),
-      ...(isRecord(branchSchema.properties) ? branchSchema.properties : {}),
-    };
-    const required = [
-      ...(Array.isArray(schema.required) ? schema.required : []),
-      ...(Array.isArray(branchSchema.required) ? branchSchema.required : []),
-    ].filter((entry): entry is string => typeof entry === "string");
-    for (const key of required) {
-      if (value[key] === undefined) issues.push({ path: `${path}.${key}`, message: "This field is required" });
-    }
-    for (const [key, child] of Object.entries(value)) {
-      const childSchema = properties[key];
-      if (isRecord(childSchema)) validateValue(childSchema, child, `${path}.${key}`, issues);
-      else if (schema.additionalProperties === false)
-        issues.push({ path: `${path}.${key}`, message: "Unknown option" });
-    }
-  }
-
-  if (isRecord(schema.if) && !isRecord(value)) {
-    const branch = matchesSchema(schema.if, value) ? schema.then : schema.else;
-    if (isRecord(branch)) validateValue(branch, value, path, issues);
+  for (const [key, child] of Object.entries(value)) {
+    const childSchema = properties[key];
+    if (isRecord(childSchema)) validateValue(childSchema, child, `${path}.${key}`, issues);
+    else if (schema.additionalProperties === false) issues.push({ path: `${path}.${key}`, message: "Unknown option" });
   }
 }
 
@@ -93,14 +99,6 @@ function matchesSchema(schema: JsonSchema, value: unknown): boolean {
   const issues: CustomWidgetOptionIssue[] = [];
   validateValue(schema, value, "value", issues);
   return issues.length === 0;
-}
-
-function matchesType(type: string, value: unknown): boolean {
-  if (type === "object") return isRecord(value);
-  if (type === "array") return Array.isArray(value);
-  if (type === "integer") return typeof value === "number" && Number.isInteger(value);
-  if (type === "null") return value === null;
-  return typeof value === type;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

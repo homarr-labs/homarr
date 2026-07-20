@@ -16,16 +16,19 @@ When connected to Homarr, retrieve the live widget schema and component catalog 
 
 For offline authoring, read these installed, release-matched references in order:
 
-1. [Schema](references/schema.md)
-2. [JSX runtime](references/runtime.md)
-3. [Security boundary](references/security.md)
-4. [Component catalog](references/components.md)
-5. [Mantine Core](references/mantine-core.md)
-6. [Mantine Dates](references/mantine-dates.md)
-7. [Mantine Charts](references/mantine-charts.md)
-8. [Homarr components](references/homarr-components.md)
+1. [Schema guide](references/schema.md)
+2. [Canonical widget JSON Schema](references/widget-schema.json)
+3. [JSX runtime](references/runtime.md)
+4. [Security boundary](references/security.md)
+5. [Component catalog guide](references/components.md)
+6. [Canonical component catalog](references/component-catalog.json)
+7. [Canonical examples](references/examples.json)
+8. [Official Mantine LLM index](references/mantine-core.md)
+9. [Official Mantine Dates guide](references/mantine-dates.md)
+10. [Mantine Charts links](references/mantine-charts.md)
+11. [Homarr components](references/homarr-components.md)
 
-Together, this file and those references are the complete offline authoring bundle for the matching Homarr release. Do not require MCP tools, repository access, or external component documentation to produce a best-effort widget. If live metadata is available, prefer it over the installed static bundle.
+Together, this file and its references are the complete offline authoring bundle for the matching Homarr release. The JSON catalog contains the exact enabled component names, prop metadata, bindings, blocked capabilities, and versions. If live metadata is available, prefer it because it reflects the installed Homarr and Mantine versions.
 
 ## Authoring workflow
 
@@ -40,6 +43,7 @@ Together, this file and those references are the complete offline authoring bund
 - Use inline sources, named requests, definition-owned options, temporary bound inputs, and one safe JSX template.
 - Use `kind`, not the HTTP method, to distinguish reads from user-triggered actions.
 - Give every declared request parameter an explicit source. Load queries use `optionsBinding` with an option reference or primitive literal; manual queries and actions receive values only from the invoking component's `params` prop. Never infer bindings from matching names.
+- Treat `status.<requestId>` as `{ loading, ok, status, statusText, error }`. Never compare it with `"loading"`, `"success"`, or `"error"`; check `status.list?.loading`, `status.list?.ok === false`, or `status.list?.ok === true`.
 - Never put a credential in JSX, options, headers, URLs, examples, exports, logs, or chat output.
 - Use declarative `bind` controls and Homarr request components. Controlled collection callbacks, zero-argument derived-value IIFEs, and the `RecursiveList` child template may use the restricted safe-block grammar documented in the runtime reference. Never emit imports, hooks, refs, raw callback props, browser requests, or arbitrary JavaScript.
 - Include responsive loading, empty, error, and success states.

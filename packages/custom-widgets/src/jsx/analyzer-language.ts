@@ -102,6 +102,30 @@ export function isStaticallyCallableBinding(node: AstNode): boolean {
   return Boolean(propertyName && callableRootMembers[String(object.name)]?.has(propertyName));
 }
 
+export function canStaticallyProduceCallable(node: AstNode): boolean {
+  if (isStaticallyCallableBinding(node) || ["ArrowFunctionExpression", "FunctionExpression"].includes(node.type)) {
+    return true;
+  }
+  if (node.type === "ConditionalExpression") {
+    const consequent = nodeOf(node.consequent);
+    const alternate = nodeOf(node.alternate);
+    return Boolean(
+      (consequent && canStaticallyProduceCallable(consequent)) ||
+      (alternate && canStaticallyProduceCallable(alternate)),
+    );
+  }
+  if (node.type === "LogicalExpression") {
+    const left = nodeOf(node.left);
+    const right = nodeOf(node.right);
+    return Boolean((left && canStaticallyProduceCallable(left)) || (right && canStaticallyProduceCallable(right)));
+  }
+  if (node.type === "ChainExpression") {
+    const expression = nodeOf(node.expression);
+    return Boolean(expression && canStaticallyProduceCallable(expression));
+  }
+  return false;
+}
+
 function editDistance(left: string, right: string): number {
   const previous = Array.from({ length: right.length + 1 }, (_, index) => index);
   for (let leftIndex = 1; leftIndex <= left.length; leftIndex += 1) {

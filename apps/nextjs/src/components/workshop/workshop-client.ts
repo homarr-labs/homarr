@@ -1,10 +1,13 @@
 import { WorkshopClient, WORKSHOP_API_URL } from "@homarr/workshop";
 
-export function createWorkshopClient() {
-  const runtimeUrl =
-    typeof document === "undefined"
-      ? undefined
-      : document.querySelector<HTMLMetaElement>('meta[name="homarr-workshop-api-url"]')?.content;
+let browserClient: WorkshopClient | undefined;
 
-  return new WorkshopClient(runtimeUrl || WORKSHOP_API_URL);
+export function createWorkshopClient() {
+  if (typeof document === "undefined") return new WorkshopClient(WORKSHOP_API_URL);
+  if (browserClient) return browserClient;
+
+  const runtimeUrl = document.querySelector<HTMLMetaElement>('meta[name="homarr-workshop-api-url"]')?.content;
+
+  browserClient = new WorkshopClient(runtimeUrl || WORKSHOP_API_URL);
+  return browserClient;
 }

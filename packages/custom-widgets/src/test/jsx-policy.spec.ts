@@ -11,6 +11,27 @@ const components = { Text: () => null };
 const bindings = { data: Object.create(null) as Record<string, unknown> };
 
 describe("shared Custom JSX policy", () => {
+  test.each(['status.list === "loading"', '"success" === status.list', 'status.list !== "error"'])(
+    "rejects string request-status comparisons in %s",
+    (expression) => {
+      expect(validateCustomJsxTemplate(`<Text>{${expression}}</Text>`)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            severity: "error",
+            message: expect.stringContaining("INVALID_STATUS_COMPARISON: status.list is an object"),
+          }),
+        ]),
+      );
+    },
+  );
+
+  test("accepts request-status object fields", () => {
+    const diagnostics = validateCustomJsxTemplate(
+      "<Text>{status.list?.loading ? 'Loading' : status.list?.ok === false ? status.list.error : 'Ready'}</Text>",
+    );
+    expect(diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
+  });
+
   test("accepts canonical Mantine compound component names", () => {
     const diagnostics = validateCustomJsxTemplate(
       '<Radio.Group value="one"><Radio.Card value="one"><Radio.Indicator /></Radio.Card></Radio.Group>',
@@ -286,6 +307,52 @@ describe("shared Custom JSX policy", () => {
     });
     expect(renderToStaticMarkup(rendered.node)).toContain("Bulbasaur");
     expect(renderToStaticMarkup(rendered.node)).not.toContain("Mew");
+  });
+
+  test.each([
+    ["callback return", "{data.items.map((item) => Number)}"],
+    ["safe-block return", "{data.items.map((item) => { const value = item; return Math.round; })}"],
+    ["conditional local", "{data.items.map((item) => { const value = true ? Math.round : item; return value; })}"],
+    ["IIFE return", "{(() => { const value = 1; return Number; })()}"],
+  ])("rejects callable values escaping an authored %s", (_name, template) => {
+    expect(validateCustomJsxTemplate(template)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ message: expect.stringContaining("CALLBACK_VALUE_NOT_ALLOWED") }),
+      ]),
+    );
+    expect(() => renderSafeJsx({ template, components, bindings: createCustomJsxBindings({ items: [1] }) })).toThrow(
+      "CALLBACK_VALUE_NOT_ALLOWED",
+    );
+  });
+
+  test("keeps direct documented safe helper callbacks available", () => {
+    const template = '<Text>{data.items.map(Number).join(",")}</Text>';
+    expect(validateCustomJsxTemplate(template).filter(({ severity }) => severity === "error")).toEqual([]);
+    expect(() =>
+      renderSafeJsx({ template, components, bindings: createCustomJsxBindings({ items: ["1", "2"] }) }),
+    ).not.toThrow();
+  });
+
+  test.each([
+    ["expression body", "{(() => <Text>value</Text>)()}", "BLOCK_REQUIRES_FINAL_RETURN"],
+    ["optional call", "{(() => { const value = 1; return <Text>{value}</Text>; })?.()}", "CALL_TARGET_NOT_ALLOWED"],
+  ])("rejects unsupported derived-value IIFE form: %s", (_name, template, code) => {
+    expect(validateCustomJsxTemplate(template)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining(code) })]),
+    );
+    expect(() => renderSafeJsx({ template, components, bindings })).toThrow();
+  });
+
+  test("normalizes duplicate callback parameter parse diagnostics", () => {
+    const template = "{data.items.map((item, item) => item)}";
+    expect(validateCustomJsxTemplate(template)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ message: expect.stringContaining("DUPLICATE_LOCAL_BINDING") }),
+      ]),
+    );
+    expect(() => renderSafeJsx({ template, components, bindings: { data: { items: [1] } } })).toThrow(
+      "DUPLICATE_LOCAL_BINDING",
+    );
   });
 
   test.each([

@@ -45,6 +45,8 @@ const optionControls = new Set([
   "json",
 ]);
 const optionFormats = new Set(["date", "date-time", "time", "color", "uri", "icon", "duration", "time-zone"]);
+const finiteNumberKeywords = ["minimum", "maximum", "multipleOf"] as const;
+const nonNegativeIntegerKeywords = ["minLength", "maxLength", "minItems", "maxItems"] as const;
 const credentialOptionName =
   /(^|[-_])(authorization|api[-_]?keys?|passwords?|passwds?|secrets?|tokens?|access[-_]?tokens?|refresh[-_]?tokens?|client[-_]?secrets?)($|[-_])/iu;
 const controlsByType: Readonly<Record<string, ReadonlySet<string>>> = {
@@ -131,6 +133,45 @@ function validatePresentation(
   }
 }
 
+function validateScalarKeywords(schema: Record<string, unknown>, ctx: z.RefinementCtx, path: Array<string | number>) {
+  for (const key of finiteNumberKeywords) {
+    if (schema[key] !== undefined && (typeof schema[key] !== "number" || !Number.isFinite(schema[key]))) {
+      ctx.addIssue({ code: "custom", path: [...path, key], message: `${key} must be a finite number` });
+    }
+  }
+  if (typeof schema.multipleOf === "number" && schema.multipleOf <= 0)
+    ctx.addIssue({ code: "custom", path: [...path, "multipleOf"], message: "multipleOf must be greater than zero" });
+  for (const key of nonNegativeIntegerKeywords) {
+    if (schema[key] !== undefined && (!Number.isInteger(schema[key]) || Number(schema[key]) < 0)) {
+      ctx.addIssue({ code: "custom", path: [...path, key], message: `${key} must be a non-negative integer` });
+    }
+  }
+  for (const [minimum, maximum] of [
+    ["minimum", "maximum"],
+    ["minLength", "maxLength"],
+    ["minItems", "maxItems"],
+  ] as const) {
+    if (typeof schema[minimum] === "number" && typeof schema[maximum] === "number" && schema[minimum] > schema[maximum])
+      ctx.addIssue({ code: "custom", path, message: `${minimum} cannot be greater than ${maximum}` });
+  }
+}
+
+function validateChoices(schema: Record<string, unknown>, ctx: z.RefinementCtx, path: Array<string | number>) {
+  if (
+    schema.enum !== undefined &&
+    (!Array.isArray(schema.enum) || schema.enum.length === 0 || schema.enum.length > 100)
+  ) {
+    ctx.addIssue({ code: "custom", path: [...path, "enum"], message: "enum must contain between 1 and 100 values" });
+  } else if (
+    Array.isArray(schema.enum) &&
+    schema.enum.some((entry) => !matchesDeclaredOptionType(schema.type, entry))
+  ) {
+    ctx.addIssue({ code: "custom", path: [...path, "enum"], message: "Every enum value must match the option type" });
+  }
+  if (schema.const !== undefined && !matchesDeclaredOptionType(schema.type, schema.const))
+    ctx.addIssue({ code: "custom", path: [...path, "const"], message: "const must match the option type" });
+}
+
 function validateOptionSchemaNode(
   value: unknown,
   ctx: z.RefinementCtx,
@@ -160,55 +201,14 @@ function validateOptionSchemaNode(
       ctx.addIssue({ code: "custom", path: [...path, key], message: `${key} must be a string` });
     }
   }
-  for (const key of ["minimum", "maximum", "multipleOf"] as const) {
-    if (schema[key] !== undefined && (typeof schema[key] !== "number" || !Number.isFinite(schema[key]))) {
-      ctx.addIssue({ code: "custom", path: [...path, key], message: `${key} must be a finite number` });
-    }
-  }
-  if (typeof schema.multipleOf === "number" && schema.multipleOf <= 0) {
-    ctx.addIssue({ code: "custom", path: [...path, "multipleOf"], message: "multipleOf must be greater than zero" });
-  }
-  if (typeof schema.minimum === "number" && typeof schema.maximum === "number" && schema.minimum > schema.maximum) {
-    ctx.addIssue({ code: "custom", path, message: "minimum cannot be greater than maximum" });
-  }
-  for (const key of ["minLength", "maxLength", "minItems", "maxItems"] as const) {
-    if (
-      schema[key] !== undefined &&
-      (typeof schema[key] !== "number" || !Number.isInteger(schema[key]) || schema[key] < 0)
-    ) {
-      ctx.addIssue({ code: "custom", path: [...path, key], message: `${key} must be a non-negative integer` });
-    }
-  }
-  if (
-    typeof schema.minLength === "number" &&
-    typeof schema.maxLength === "number" &&
-    schema.minLength > schema.maxLength
-  ) {
-    ctx.addIssue({ code: "custom", path, message: "minLength cannot be greater than maxLength" });
-  }
-  if (typeof schema.minItems === "number" && typeof schema.maxItems === "number" && schema.minItems > schema.maxItems) {
-    ctx.addIssue({ code: "custom", path, message: "minItems cannot be greater than maxItems" });
-  }
+  validateScalarKeywords(schema, ctx, path);
   if (schema.format !== undefined && (typeof schema.format !== "string" || !optionFormats.has(schema.format))) {
     ctx.addIssue({ code: "custom", path: [...path, "format"], message: "Unsupported option format" });
   }
   if (schema.format !== undefined && schema.type !== "string") {
     ctx.addIssue({ code: "custom", path: [...path, "format"], message: "Option formats require a string type" });
   }
-  if (
-    schema.enum !== undefined &&
-    (!Array.isArray(schema.enum) || schema.enum.length === 0 || schema.enum.length > 100)
-  ) {
-    ctx.addIssue({ code: "custom", path: [...path, "enum"], message: "enum must contain between 1 and 100 values" });
-  } else if (
-    Array.isArray(schema.enum) &&
-    schema.enum.some((entry) => !matchesDeclaredOptionType(schema.type, entry))
-  ) {
-    ctx.addIssue({ code: "custom", path: [...path, "enum"], message: "Every enum value must match the option type" });
-  }
-  if (schema.const !== undefined && !matchesDeclaredOptionType(schema.type, schema.const)) {
-    ctx.addIssue({ code: "custom", path: [...path, "const"], message: "const must match the option type" });
-  }
+  validateChoices(schema, ctx, path);
   if (isRoot && schema.type !== "object") {
     ctx.addIssue({ code: "custom", path: [...path, "type"], message: "The root options schema must be an object" });
   }

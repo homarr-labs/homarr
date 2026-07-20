@@ -18,7 +18,6 @@ import type {
   CustomJsxLiteralValue,
   CustomJsxPropDescriptor,
   CustomJsxPropSource,
-  CustomJsxRuntimeCatalog,
 } from "../src/core/component-catalog-types";
 import { getCatalogBlockedComponentProps, getCatalogDeniedComponentReason } from "../src/core/component-catalog-policy";
 import { commonSafeProps } from "../src/core/component-props";
@@ -152,24 +151,7 @@ async function generateCatalog() {
     components,
   };
 
-  const runtimeCatalog: CustomJsxRuntimeCatalog = {
-    schemaVersion: catalog.schemaVersion,
-    globalProps: catalog.globalProps.map(({ name }) => name),
-    components: catalog.components.map((component) => ({
-      name: component.name,
-      package: component.package,
-      safety: component.safety,
-      props: component.props.map(({ name }) => name),
-      blockedProps: component.blockedProps,
-      ...(component.bind ? { bind: component.bind } : {}),
-      ...(component.deniedReason ? { deniedReason: component.deniedReason } : {}),
-    })),
-  };
-
-  await Promise.all([
-    writeFile(resolve(packageRoot, "src/core/component-catalog.generated.json"), `${JSON.stringify(catalog)}\n`),
-    writeFile(resolve(packageRoot, "src/core/component-runtime.generated.json"), `${JSON.stringify(runtimeCatalog)}\n`),
-  ]);
+  await writeFile(resolve(packageRoot, "src/core/component-catalog.generated.json"), `${JSON.stringify(catalog)}\n`);
 }
 
 function inspectMantineComponent(component: CatalogSourceComponent): InspectedComponent {
@@ -246,17 +228,19 @@ function buildComponentApi(
   const inspected = inspectedComponents.get(component.name);
   const componentProps = new Map<string, UninternedPropDescriptor>();
   for (const prop of inspected?.props ?? []) {
-    if (!blockedPropNames.has(prop.name) && !prop.global && !globalNames.has(prop.name)) {
-      const { global: _global, ...descriptor } = prop;
-      componentProps.set(prop.name, { ...descriptor, source: "component" });
-    }
+    if (blockedPropNames.has(prop.name)) continue;
+    const { global: _global, ...descriptor } = prop;
+    const componentDescriptor = { ...descriptor, source: "component" as const };
+    const globalProp = globalNames.has(prop.name) ? globalPropsByName.get(prop.name) : undefined;
+    if (globalProp && samePropMetadata(globalProp, componentDescriptor)) continue;
+    componentProps.set(prop.name, componentDescriptor);
   }
   if (component.safety !== "denied" && component.package === "@homarr/widgets") {
     const homarrProps = HOMARR_COMPONENT_PROPS[component.name];
     if (!homarrProps) throw new Error(`Homarr component '${component.name}' requires explicit catalog prop metadata`);
     for (const [propName, metadata] of Object.entries(homarrProps)) {
       const globalProp = globalPropsByName.get(propName);
-      if (globalProp && !metadata.required && samePropMetadata(globalProp, metadata)) continue;
+      if (globalProp && samePropMetadata(globalProp, metadata)) continue;
       if (isBlockedCustomJsxProp(propName)) continue;
       componentProps.set(propName, { name: propName, source: "component", ...metadata });
     }
@@ -339,8 +323,8 @@ function mergeGlobalProp(name: string, candidates: UninternedPropDescriptor[]): 
 function samePropMetadata(globalProp: UninternedPropDescriptor, componentProp: HomarrPropMetadata): boolean {
   return (
     globalProp.type === componentProp.type &&
-    (componentProp.literalValues === undefined ||
-      JSON.stringify(globalProp.literalValues ?? []) === JSON.stringify(componentProp.literalValues))
+    globalProp.required === componentProp.required &&
+    JSON.stringify(globalProp.literalValues ?? []) === JSON.stringify(componentProp.literalValues ?? [])
   );
 }
 
@@ -458,7 +442,7 @@ function inferFallbackType(name: string): string {
   if (/^(?:count|index|max|min|offset|order|page|pageSize|size|span|step|total|value)$/u.test(name)) return "number";
   if (/^(?:colors|values|sections|data)$/u.test(name)) return "unknown[]";
   if (/^(?:children|description|fallback|icon|label|leftSection|rightSection|title)$/u.test(name)) return "ReactNode";
-  if (/^(?:params|onParams|offParams|style|styles)$/u.test(name)) return "Record<string, unknown>";
+  if (/^(?:params|enabledParams|disabledParams|style|styles)$/u.test(name)) return "Record<string, unknown>";
   return "string | number | boolean";
 }
 
@@ -696,8 +680,8 @@ const HOMARR_COMPONENT_PROPS: Readonly<Record<string, Readonly<Record<string, Ho
   },
   ToggleSwitch: {
     requestId: optionalProp("string", undefined, "Identifier of the named Custom Widget action."),
-    onParams: optionalProp("Record<string, string | number | boolean>"),
-    offParams: optionalProp("Record<string, string | number | boolean>"),
+    enabledParams: optionalProp("Record<string, string | number | boolean>"),
+    disabledParams: optionalProp("Record<string, string | number | boolean>"),
     initialValue: optionalProp("boolean | string"),
     label: optionalProp("string"),
     color: optionalProp("string"),
