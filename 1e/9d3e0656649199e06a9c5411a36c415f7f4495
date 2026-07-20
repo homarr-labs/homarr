@@ -1,0 +1,19 @@
+packages/db/test/mysql-migration.spec.ts
+  s_8f75d246c03a4a::t_3bcf19f5d2d664 40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "1e9d3e0656649199e06a9c5411a36c415f7f4495",
+  "prompts": {},
+  "sessions": {
+    "s_8f75d246c03a4a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_080536410ffeZLJM1RNXK0a7w4",
+        "model": "deepseek/deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
