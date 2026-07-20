@@ -17,6 +17,7 @@ import {
   Text,
   Textarea,
   TextInput,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { DateInput, TimeInput } from "@mantine/dates";
 import { IconAlertTriangle, IconBraces } from "@tabler/icons-react";
@@ -31,6 +32,7 @@ import type { CommonWidgetInputProps } from "./common";
 import { useFormContext } from "./form";
 
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror").then((module) => module.default), { ssr: false });
+const jsonExtensions = [json()];
 
 type Schema = Record<string, unknown>;
 
@@ -405,9 +407,8 @@ function AdvancedJson({
       <Accordion.Item value="json">
         <Accordion.Control icon={<IconBraces size={16} />}>{labels("advancedJson")}</Accordion.Control>
         <Accordion.Panel>
-          <CodeMirror
+          <ConfigurationJsonEditor
             value={draft}
-            extensions={[json()]}
             height="220px"
             onChange={(next) => {
               setDraft(next);
@@ -460,9 +461,8 @@ function JsonValueInput({
           {description}
         </Text>
       )}
-      <CodeMirror
+      <ConfigurationJsonEditor
         value={draft}
-        extensions={[json()]}
         height="160px"
         onChange={(next) => {
           setDraft(next);
@@ -481,6 +481,21 @@ function JsonValueInput({
         </Text>
       )}
     </Stack>
+  );
+}
+
+function ConfigurationJsonEditor({
+  value,
+  height,
+  onChange,
+}: {
+  value: string;
+  height: string;
+  onChange(value: string): void;
+}) {
+  const colorScheme = useComputedColorScheme("light");
+  return (
+    <CodeMirror value={value} extensions={jsonExtensions} height={height} theme={colorScheme} onChange={onChange} />
   );
 }
 
