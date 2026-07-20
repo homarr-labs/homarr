@@ -1,0 +1,33 @@
+apps/docs/docs/management/custom-widgets/troubleshooting.mdx
+  s_955a5b644d1c62::t_0418289dd3feb3 7-10
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  s_955a5b644d1c62::t_fedf03cfe40a3b 30,110-127,138
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-list.tsx
+  s_955a5b644d1c62::t_22f1078b0cbf25 71-72,74,91-95,102-124,145-169
+packages/api/src/router/custom-widget/custom-widget-router.ts
+  s_955a5b644d1c62::t_40f821197b4290 21-25,143-155
+packages/api/src/router/custom-widget/management-queries.ts
+  s_955a5b644d1c62::t_6d770aa3c43bfd 5,12,19,30-52,73-74,113-120
+packages/api/src/router/custom-widget/stored-definition.ts
+  s_955a5b644d1c62::t_06fea3dbe260de 7-20,34,47-69
+packages/api/src/router/test/custom-widget/stored-definition.spec.ts
+  s_955a5b644d1c62::t_7de3ba9e3a58b5 1-49
+packages/translation/src/lang/en.json
+  s_955a5b644d1c62::t_1fce9eaa86f3e9 726-727
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "80d364c0505e05e681e032006ed9a42a620f081d",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
