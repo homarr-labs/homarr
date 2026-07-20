@@ -44,11 +44,7 @@
           },
           "networkScope": {
             "type": "string",
-            "enum": [
-              "public",
-              "private",
-              "loopback"
-            ]
+            "enum": ["public", "private", "loopback"]
           },
           "auth": {
             "oneOf": [
@@ -60,9 +56,7 @@
                     "const": "none"
                   }
                 },
-                "required": [
-                  "type"
-                ],
+                "required": ["type"],
                 "additionalProperties": false
               },
               {
@@ -73,9 +67,7 @@
                     "const": "bearer"
                   }
                 },
-                "required": [
-                  "type"
-                ],
+                "required": ["type"],
                 "additionalProperties": false
               },
               {
@@ -86,9 +78,7 @@
                     "const": "basic"
                   }
                 },
-                "required": [
-                  "type"
-                ],
+                "required": ["type"],
                 "additionalProperties": false
               },
               {
@@ -105,10 +95,7 @@
                     "pattern": "^[!#$%&'*+\\-.^_`|~0-9A-Za-z]+$"
                   }
                 },
-                "required": [
-                  "type",
-                  "headerName"
-                ],
+                "required": ["type", "headerName"],
                 "additionalProperties": false
               },
               {
@@ -124,22 +111,13 @@
                     "maxLength": 256
                   }
                 },
-                "required": [
-                  "type",
-                  "parameterName"
-                ],
+                "required": ["type", "parameterName"],
                 "additionalProperties": false
               }
             ]
           }
         },
-        "required": [
-          "id",
-          "name",
-          "baseUrl",
-          "networkScope",
-          "auth"
-        ],
+        "required": ["id", "name", "baseUrl", "networkScope", "auth"],
         "additionalProperties": false
       }
     },
@@ -163,20 +141,11 @@
           },
           "kind": {
             "type": "string",
-            "enum": [
-              "query",
-              "action"
-            ]
+            "enum": ["query", "action"]
           },
           "method": {
             "type": "string",
-            "enum": [
-              "GET",
-              "POST",
-              "PUT",
-              "DELETE",
-              "PATCH"
-            ]
+            "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"]
           },
           "pathTemplate": {
             "type": "string",
@@ -193,11 +162,7 @@
             },
             "additionalProperties": {
               "type": "string",
-              "enum": [
-                "string",
-                "number",
-                "boolean"
-              ]
+              "enum": ["string", "number", "boolean"]
             }
           },
           "optionsBinding": {
@@ -227,9 +192,7 @@
                       "maxLength": 64
                     }
                   },
-                  "required": [
-                    "$option"
-                  ],
+                  "required": ["$option"],
                   "additionalProperties": false
                 }
               ]
@@ -264,26 +227,16 @@
           },
           "auth": {
             "type": "string",
-            "enum": [
-              "inherit",
-              "none"
-            ]
+            "enum": ["inherit", "none"]
           },
           "minimumBoardPermission": {
             "type": "string",
-            "enum": [
-              "view",
-              "modify",
-              "full"
-            ]
+            "enum": ["view", "modify", "full"]
           },
           "trigger": {
             "default": "manual",
             "type": "string",
-            "enum": [
-              "load",
-              "manual"
-            ]
+            "enum": ["load", "manual"]
           },
           "cacheTtlSeconds": {
             "type": "integer",
@@ -312,10 +265,7 @@
                 "type": "boolean"
               }
             },
-            "required": [
-              "title",
-              "message"
-            ],
+            "required": ["title", "message"],
             "additionalProperties": false
           },
           "invalidates": {
@@ -379,11 +329,7 @@
         "then": {},
         "else": {}
       },
-      "required": [
-        "type",
-        "properties",
-        "additionalProperties"
-      ],
+      "required": ["type", "properties", "additionalProperties"],
       "additionalProperties": false
     },
     "defaultOptions": {
@@ -399,15 +345,7 @@
       "maxLength": 50000
     }
   },
-  "required": [
-    "$schema",
-    "name",
-    "sources",
-    "requests",
-    "optionsSchema",
-    "defaultOptions",
-    "template"
-  ],
+  "required": ["$schema", "name", "sources", "requests", "optionsSchema", "defaultOptions", "template"],
   "additionalProperties": false,
   "$defs": {
     "__schema0": {

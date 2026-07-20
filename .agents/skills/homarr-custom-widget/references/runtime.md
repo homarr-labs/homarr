@@ -60,31 +60,41 @@ Binding types follow the component mode. `Accordion multiple`, `Chip.Group multi
 Collection callbacks may use a tightly constrained block body when a value would otherwise be recomputed throughout the returned JSX:
 
 ```jsx
-{data.pokemon.map((pokemon) => {
-  const segments = pokemon.url.split("/").filter((part) => part);
-  const dexId = segments.at(-1);
-  const favorite = inputs.favorites.includes(pokemon.name);
+{
+  data.pokemon.map((pokemon) => {
+    const segments = pokemon.url.split("/").filter((part) => part);
+    const dexId = segments.at(-1);
+    const favorite = inputs.favorites.includes(pokemon.name);
 
-  return (
-    <Card key={dexId}>
-      <Text>#{dexId}</Text>
-      <Text>{pokemon.name}</Text>
-      {favorite && <Badge>Favorite</Badge>}
-    </Card>
-  );
-})}
+    return (
+      <Card key={dexId}>
+        <Text>#{dexId}</Text>
+        <Text>{pokemon.name}</Text>
+        {favorite && <Badge>Favorite</Badge>}
+      </Card>
+    );
+  });
+}
 ```
 
 A page-level derived value may use a directly invoked, zero-argument inline arrow:
 
 ```jsx
-{(() => {
-  const visiblePokemon = data.pokemon.filter(
-    (pokemon) => !inputs.favoritesOnly || inputs.favorites.includes(pokemon.name),
-  );
+{
+  (() => {
+    const visiblePokemon = data.pokemon.filter(
+      (pokemon) => !inputs.favoritesOnly || inputs.favorites.includes(pokemon.name),
+    );
 
-  return <Stack>{visiblePokemon.map((pokemon) => <Text>{pokemon.name}</Text>)}</Stack>;
-})()}
+    return (
+      <Stack>
+        {visiblePokemon.map((pokemon) => (
+          <Text>{pokemon.name}</Text>
+        ))}
+      </Stack>
+    );
+  })();
+}
 ```
 
 A safe block contains one or more `const` declarations followed by exactly one final `return`. Each declaration uses one simple identifier and a required initializer made from existing safe expressions. Earlier local bindings are available to later initializers and to the return expression.

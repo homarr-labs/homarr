@@ -38,7 +38,6 @@ This is the complete Custom JSX component boundary for this Homarr release. The 
 
 [`ActionButton`](homarr-components.md#component-actionbutton), [`Collapsible`](homarr-components.md#component-collapsible), [`PaginatedList`](homarr-components.md#component-paginatedlist), [`RecursiveList`](homarr-components.md#component-recursivelist), [`RefreshButton`](homarr-components.md#component-refreshbutton), [`StatBar`](homarr-components.md#component-statbar), [`SubData`](homarr-components.md#component-subdata), [`SubFetch`](homarr-components.md#component-subfetch), [`TabPanel`](homarr-components.md#component-tabpanel), [`TablerIcon`](homarr-components.md#component-tablericon), [`TabsContainer`](homarr-components.md#component-tabscontainer), [`ToggleSwitch`](homarr-components.md#component-toggleswitch), [`TypeBadge`](homarr-components.md#component-typebadge)
 
-
 ## Complete denied inventory
 
 ### Mantine Core
@@ -57,60 +56,59 @@ This is the complete Custom JSX component boundary for this Homarr release. The 
 
 _None._
 
-
 ## Blocked capabilities
 
-| Kind | Name | Reason |
-| --- | --- | --- |
-| prop | <code>__proto__</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>apply</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>arguments</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>autoFocus</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>backdropFilter</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>behavior</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>bottom</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>call</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>callee</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>caller</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>children</code> | Children must be expressed as interpreted JSX, not passed as a raw prop. |
-| prop | <code>className</code> | Unscoped class injection can escape widget CSS isolation. |
-| prop | <code>classNames</code> | Unscoped class injection can escape widget CSS isolation. |
-| prop | <code>classes</code> | Unscoped class injection can escape widget CSS isolation. |
-| prop | <code>clipPath</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>component</code> | Polymorphic roots can replace the Homarr-owned element boundary. |
-| prop | <code>constructor</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>content</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>contentEditable</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>dangerouslySetInnerHTML</code> | Raw HTML injection is not available to authored widgets. |
-| prop | <code>filter</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>form</code> | External form submission is outside the named-request security boundary. |
-| prop | <code>formAction</code> | External form submission is outside the named-request security boundary. |
-| prop | <code>formEncType</code> | External form submission is outside the named-request security boundary. |
-| prop | <code>formMethod</code> | External form submission is outside the named-request security boundary. |
-| prop | <code>formNoValidate</code> | External form submission is outside the named-request security boundary. |
-| prop | <code>formTarget</code> | External form submission is outside the named-request security boundary. |
-| prop | <code>innerRef</code> | Refs expose underlying React components and DOM nodes. |
-| prop | <code>inset</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>left</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>mask</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>ping</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>pointerEvents</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>popover</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>popoverTarget</code> | Portal targeting can render or interact outside the widget root. |
-| prop | <code>popoverTargetAction</code> | Portal targeting can render or interact outside the widget root. |
-| prop | <code>portalProps</code> | Portal targeting can render or interact outside the widget root. |
-| prop | <code>pos</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>position</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>prototype</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>ref</code> | Refs expose underlying React components and DOM nodes. |
-| prop | <code>renderRoot</code> | Polymorphic roots can replace the Homarr-owned element boundary. |
-| prop | <code>right</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>srcDoc</code> | Raw HTML injection is not available to authored widgets. |
-| prop | <code>suppressContentEditableWarning</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>suppressHydrationWarning</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>top</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop | <code>withinPortal</code> | Portal targeting can render or interact outside the widget root. |
-| prop | <code>zIndex</code> | This capability is blocked by the Custom JSX safety boundary. |
-| prop-pattern | <code>on*</code> | Authored event callbacks can execute code outside the declarative runtime. |
-| prop-pattern | <code>*Ref</code> | Refs expose underlying React components and DOM nodes. |
-| prop-pattern | <code>__*</code> | Private and prototype-related properties are outside the supported authoring surface. |
+| Kind         | Name                                        | Reason                                                                                |
+| ------------ | ------------------------------------------- | ------------------------------------------------------------------------------------- |
+| prop         | <code>**proto**</code>                      | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>apply</code>                          | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>arguments</code>                      | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>autoFocus</code>                      | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>backdropFilter</code>                 | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>behavior</code>                       | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>bottom</code>                         | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>call</code>                           | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>callee</code>                         | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>caller</code>                         | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>children</code>                       | Children must be expressed as interpreted JSX, not passed as a raw prop.              |
+| prop         | <code>className</code>                      | Unscoped class injection can escape widget CSS isolation.                             |
+| prop         | <code>classNames</code>                     | Unscoped class injection can escape widget CSS isolation.                             |
+| prop         | <code>classes</code>                        | Unscoped class injection can escape widget CSS isolation.                             |
+| prop         | <code>clipPath</code>                       | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>component</code>                      | Polymorphic roots can replace the Homarr-owned element boundary.                      |
+| prop         | <code>constructor</code>                    | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>content</code>                        | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>contentEditable</code>                | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>dangerouslySetInnerHTML</code>        | Raw HTML injection is not available to authored widgets.                              |
+| prop         | <code>filter</code>                         | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>form</code>                           | External form submission is outside the named-request security boundary.              |
+| prop         | <code>formAction</code>                     | External form submission is outside the named-request security boundary.              |
+| prop         | <code>formEncType</code>                    | External form submission is outside the named-request security boundary.              |
+| prop         | <code>formMethod</code>                     | External form submission is outside the named-request security boundary.              |
+| prop         | <code>formNoValidate</code>                 | External form submission is outside the named-request security boundary.              |
+| prop         | <code>formTarget</code>                     | External form submission is outside the named-request security boundary.              |
+| prop         | <code>innerRef</code>                       | Refs expose underlying React components and DOM nodes.                                |
+| prop         | <code>inset</code>                          | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>left</code>                           | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>mask</code>                           | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>ping</code>                           | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>pointerEvents</code>                  | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>popover</code>                        | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>popoverTarget</code>                  | Portal targeting can render or interact outside the widget root.                      |
+| prop         | <code>popoverTargetAction</code>            | Portal targeting can render or interact outside the widget root.                      |
+| prop         | <code>portalProps</code>                    | Portal targeting can render or interact outside the widget root.                      |
+| prop         | <code>pos</code>                            | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>position</code>                       | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>prototype</code>                      | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>ref</code>                            | Refs expose underlying React components and DOM nodes.                                |
+| prop         | <code>renderRoot</code>                     | Polymorphic roots can replace the Homarr-owned element boundary.                      |
+| prop         | <code>right</code>                          | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>srcDoc</code>                         | Raw HTML injection is not available to authored widgets.                              |
+| prop         | <code>suppressContentEditableWarning</code> | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>suppressHydrationWarning</code>       | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>top</code>                            | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop         | <code>withinPortal</code>                   | Portal targeting can render or interact outside the widget root.                      |
+| prop         | <code>zIndex</code>                         | This capability is blocked by the Custom JSX safety boundary.                         |
+| prop-pattern | <code>on*</code>                            | Authored event callbacks can execute code outside the declarative runtime.            |
+| prop-pattern | <code>*Ref</code>                           | Refs expose underlying React components and DOM nodes.                                |
+| prop-pattern | <code>__*</code>                            | Private and prototype-related properties are outside the supported authoring surface. |

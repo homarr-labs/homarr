@@ -19,6 +19,7 @@ _None._
 ## Component records
 
 <a id="component-actionbutton"></a>
+
 ### `ActionButton`
 
 - Safety: `wrapped`
@@ -34,22 +35,23 @@ Runs a named user-triggered action.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>color</code> | no | <code>string</code> | — | — |
-| <code>confirmMessage</code> | no | <code>string</code> | — | — |
-| <code>disabled</code> | no | <code>boolean &#124; string</code> | — | — |
-| <code>errorMessage</code> | no | <code>string</code> | — | — |
-| <code>fullWidth</code> | no | <code>boolean &#124; string</code> | — | — |
-| <code>icon</code> | no | <code>string</code> | — | — |
-| <code>label</code> | no | <code>string</code> | — | — |
-| <code>params</code> | no | <code>Record&lt;string, string &#124; number &#124; boolean&gt;</code> | — | — |
-| <code>requestId</code> | no | <code>string</code> | — | Identifier of the named Custom Widget action. |
-| <code>size</code> | no | <code>string</code> | — | — |
-| <code>successMessage</code> | no | <code>string</code> | — | — |
-| <code>variant</code> | no | <code>string</code> | — | — |
+| Prop                        | Required | Type                                                                   | Literal values | Description                                   |
+| --------------------------- | -------- | ---------------------------------------------------------------------- | -------------- | --------------------------------------------- |
+| <code>color</code>          | no       | <code>string</code>                                                    | —              | —                                             |
+| <code>confirmMessage</code> | no       | <code>string</code>                                                    | —              | —                                             |
+| <code>disabled</code>       | no       | <code>boolean &#124; string</code>                                     | —              | —                                             |
+| <code>errorMessage</code>   | no       | <code>string</code>                                                    | —              | —                                             |
+| <code>fullWidth</code>      | no       | <code>boolean &#124; string</code>                                     | —              | —                                             |
+| <code>icon</code>           | no       | <code>string</code>                                                    | —              | —                                             |
+| <code>label</code>          | no       | <code>string</code>                                                    | —              | —                                             |
+| <code>params</code>         | no       | <code>Record&lt;string, string &#124; number &#124; boolean&gt;</code> | —              | —                                             |
+| <code>requestId</code>      | no       | <code>string</code>                                                    | —              | Identifier of the named Custom Widget action. |
+| <code>size</code>           | no       | <code>string</code>                                                    | —              | —                                             |
+| <code>successMessage</code> | no       | <code>string</code>                                                    | —              | —                                             |
+| <code>variant</code>        | no       | <code>string</code>                                                    | —              | —                                             |
 
 <a id="component-collapsible"></a>
+
 ### `Collapsible`
 
 - Safety: `allowed`
@@ -65,12 +67,13 @@ Shows and hides a bounded content section.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>defaultOpen</code> | no | <code>boolean</code> | — | — |
-| <code>title</code> | yes | <code>string</code> | — | — |
+| Prop                     | Required | Type                 | Literal values | Description |
+| ------------------------ | -------- | -------------------- | -------------- | ----------- |
+| <code>defaultOpen</code> | no       | <code>boolean</code> | —              | —           |
+| <code>title</code>       | yes      | <code>string</code>  | —              | —           |
 
 <a id="component-paginatedlist"></a>
+
 ### `PaginatedList`
 
 - Safety: `allowed`
@@ -86,11 +89,12 @@ Renders a bounded page of collection items.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>pageSize</code> | no | <code>number</code> | — | — |
+| Prop                  | Required | Type                | Literal values | Description |
+| --------------------- | -------- | ------------------- | -------------- | ----------- |
+| <code>pageSize</code> | no       | <code>number</code> | —              | —           |
 
 <a id="component-recursivelist"></a>
+
 ### `RecursiveList`
 
 - Safety: `wrapped`
@@ -106,19 +110,20 @@ Renders an arbitrary-depth tree through a bounded, Homarr-owned traversal.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>childrenPath</code> | yes | <code>string</code> | — | — |
-| <code>data</code> | yes | <code>unknown</code> | — | — |
-| <code>defaultExpandedDepth</code> | no | <code>number</code> | — | — |
-| <code>gap</code> | no | <code>MantineSpacing</code> | — | — |
-| <code>indent</code> | no | <code>MantineSpacing</code> | — | — |
-| <code>keyPath</code> | yes | <code>string</code> | — | — |
-| <code>maxDepth</code> | no | <code>number</code> | — | — |
-| <code>maxNodes</code> | no | <code>number</code> | — | — |
-| <code>showLines</code> | no | <code>boolean</code> | — | — |
+| Prop                              | Required | Type                        | Literal values | Description |
+| --------------------------------- | -------- | --------------------------- | -------------- | ----------- |
+| <code>childrenPath</code>         | yes      | <code>string</code>         | —              | —           |
+| <code>data</code>                 | yes      | <code>unknown</code>        | —              | —           |
+| <code>defaultExpandedDepth</code> | no       | <code>number</code>         | —              | —           |
+| <code>gap</code>                  | no       | <code>MantineSpacing</code> | —              | —           |
+| <code>indent</code>               | no       | <code>MantineSpacing</code> | —              | —           |
+| <code>keyPath</code>              | yes      | <code>string</code>         | —              | —           |
+| <code>maxDepth</code>             | no       | <code>number</code>         | —              | —           |
+| <code>maxNodes</code>             | no       | <code>number</code>         | —              | —           |
+| <code>showLines</code>            | no       | <code>boolean</code>        | —              | —           |
 
 <a id="component-refreshbutton"></a>
+
 ### `RefreshButton`
 
 - Safety: `wrapped`
@@ -134,14 +139,15 @@ Refreshes load-triggered widget queries.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>color</code> | no | <code>string</code> | — | — |
-| <code>label</code> | no | <code>string</code> | — | — |
-| <code>size</code> | no | <code>string</code> | — | — |
-| <code>variant</code> | no | <code>string</code> | — | — |
+| Prop                 | Required | Type                | Literal values | Description |
+| -------------------- | -------- | ------------------- | -------------- | ----------- |
+| <code>color</code>   | no       | <code>string</code> | —              | —           |
+| <code>label</code>   | no       | <code>string</code> | —              | —           |
+| <code>size</code>    | no       | <code>string</code> | —              | —           |
+| <code>variant</code> | no       | <code>string</code> | —              | —           |
 
 <a id="component-statbar"></a>
+
 ### `StatBar`
 
 - Safety: `allowed`
@@ -157,14 +163,15 @@ Displays a compact labeled statistic and progress value.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>color</code> | no | <code>string</code> | — | — |
-| <code>label</code> | no | <code>string</code> | — | — |
-| <code>max</code> | no | <code>number</code> | — | — |
-| <code>value</code> | yes | <code>number</code> | — | — |
+| Prop               | Required | Type                | Literal values | Description |
+| ------------------ | -------- | ------------------- | -------------- | ----------- |
+| <code>color</code> | no       | <code>string</code> | —              | —           |
+| <code>label</code> | no       | <code>string</code> | —              | —           |
+| <code>max</code>   | no       | <code>number</code> | —              | —           |
+| <code>value</code> | yes      | <code>number</code> | —              | —           |
 
 <a id="component-subdata"></a>
+
 ### `SubData`
 
 - Safety: `wrapped`
@@ -180,21 +187,22 @@ Reads a nested value from a named manual-query result.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>as</code> | no | <code>'Text' &#124; 'Title' &#124; 'Badge' &#124; 'Code' &#124; 'Image'</code> | <code>"Text"</code>, <code>"Title"</code>, <code>"Badge"</code>, <code>"Code"</code>, <code>"Image"</code> | — |
-| <code>c</code> | no | <code>string</code> | — | — |
-| <code>color</code> | no | <code>string</code> | — | — |
-| <code>fit</code> | no | <code>string</code> | — | — |
-| <code>fw</code> | no | <code>number</code> | — | — |
-| <code>h</code> | no | <code>string &#124; number</code> | — | — |
-| <code>order</code> | no | <code>1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6</code> | <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code> | — |
-| <code>radius</code> | no | <code>string &#124; number</code> | — | — |
-| <code>size</code> | no | <code>string</code> | — | — |
-| <code>variant</code> | no | <code>string</code> | — | — |
-| <code>w</code> | no | <code>string &#124; number</code> | — | — |
+| Prop                 | Required | Type                                                                           | Literal values                                                                                             | Description |
+| -------------------- | -------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- | ----------- |
+| <code>as</code>      | no       | <code>'Text' &#124; 'Title' &#124; 'Badge' &#124; 'Code' &#124; 'Image'</code> | <code>"Text"</code>, <code>"Title"</code>, <code>"Badge"</code>, <code>"Code"</code>, <code>"Image"</code> | —           |
+| <code>c</code>       | no       | <code>string</code>                                                            | —                                                                                                          | —           |
+| <code>color</code>   | no       | <code>string</code>                                                            | —                                                                                                          | —           |
+| <code>fit</code>     | no       | <code>string</code>                                                            | —                                                                                                          | —           |
+| <code>fw</code>      | no       | <code>number</code>                                                            | —                                                                                                          | —           |
+| <code>h</code>       | no       | <code>string &#124; number</code>                                              | —                                                                                                          | —           |
+| <code>order</code>   | no       | <code>1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6</code>                    | <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>             | —           |
+| <code>radius</code>  | no       | <code>string &#124; number</code>                                              | —                                                                                                          | —           |
+| <code>size</code>    | no       | <code>string</code>                                                            | —                                                                                                          | —           |
+| <code>variant</code> | no       | <code>string</code>                                                            | —                                                                                                          | —           |
+| <code>w</code>       | no       | <code>string &#124; number</code>                                              | —                                                                                                          | —           |
 
 <a id="component-subfetch"></a>
+
 ### `SubFetch`
 
 - Safety: `wrapped`
@@ -210,18 +218,19 @@ Runs a named manual query with invocation-time parameters.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>as</code> | no | <code>'json' &#124; 'text'</code> | <code>"json"</code>, <code>"text"</code> | — |
-| <code>errorMessage</code> | no | <code>string</code> | — | — |
-| <code>fallback</code> | no | <code>ReactNode</code> | — | — |
-| <code>loadingLabel</code> | no | <code>string</code> | — | — |
-| <code>params</code> | no | <code>Record&lt;string, string &#124; number &#124; boolean&gt;</code> | — | — |
-| <code>refreshInterval</code> | no | <code>number</code> | — | — |
-| <code>requestId</code> | no | <code>string</code> | — | Identifier of the named Custom Widget query. |
-| <code>trigger</code> | no | <code>'auto' &#124; 'manual'</code> | <code>"auto"</code>, <code>"manual"</code> | — |
+| Prop                         | Required | Type                                                                   | Literal values                             | Description                                  |
+| ---------------------------- | -------- | ---------------------------------------------------------------------- | ------------------------------------------ | -------------------------------------------- |
+| <code>as</code>              | no       | <code>'json' &#124; 'text'</code>                                      | <code>"json"</code>, <code>"text"</code>   | —                                            |
+| <code>errorMessage</code>    | no       | <code>string</code>                                                    | —                                          | —                                            |
+| <code>fallback</code>        | no       | <code>ReactNode</code>                                                 | —                                          | —                                            |
+| <code>loadingLabel</code>    | no       | <code>string</code>                                                    | —                                          | —                                            |
+| <code>params</code>          | no       | <code>Record&lt;string, string &#124; number &#124; boolean&gt;</code> | —                                          | —                                            |
+| <code>refreshInterval</code> | no       | <code>number</code>                                                    | —                                          | —                                            |
+| <code>requestId</code>       | no       | <code>string</code>                                                    | —                                          | Identifier of the named Custom Widget query. |
+| <code>trigger</code>         | no       | <code>'auto' &#124; 'manual'</code>                                    | <code>"auto"</code>, <code>"manual"</code> | —                                            |
 
 <a id="component-tabpanel"></a>
+
 ### `TabPanel`
 
 - Safety: `allowed`
@@ -237,12 +246,13 @@ Renders content for one declarative tab.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>label</code> | no | <code>string</code> | — | — |
-| <code>value</code> | yes | <code>string</code> | — | — |
+| Prop               | Required | Type                | Literal values | Description |
+| ------------------ | -------- | ------------------- | -------------- | ----------- |
+| <code>label</code> | no       | <code>string</code> | —              | —           |
+| <code>value</code> | yes      | <code>string</code> | —              | —           |
 
 <a id="component-tablericon"></a>
+
 ### `TablerIcon`
 
 - Safety: `wrapped`
@@ -258,14 +268,15 @@ Resolves an installed Tabler icon by its safe name.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>color</code> | no | <code>string</code> | — | — |
-| <code>name</code> | yes | <code>string</code> | — | — |
-| <code>size</code> | no | <code>string &#124; number</code> | — | — |
-| <code>stroke</code> | no | <code>string &#124; number</code> | — | — |
+| Prop                | Required | Type                              | Literal values | Description |
+| ------------------- | -------- | --------------------------------- | -------------- | ----------- |
+| <code>color</code>  | no       | <code>string</code>               | —              | —           |
+| <code>name</code>   | yes      | <code>string</code>               | —              | —           |
+| <code>size</code>   | no       | <code>string &#124; number</code> | —              | —           |
+| <code>stroke</code> | no       | <code>string &#124; number</code> | —              | —           |
 
 <a id="component-tabscontainer"></a>
+
 ### `TabsContainer`
 
 - Safety: `allowed`
@@ -281,11 +292,12 @@ Renders a declarative tab container.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>defaultTab</code> | no | <code>string</code> | — | — |
+| Prop                    | Required | Type                | Literal values | Description |
+| ----------------------- | -------- | ------------------- | -------------- | ----------- |
+| <code>defaultTab</code> | no       | <code>string</code> | —              | —           |
 
 <a id="component-toggleswitch"></a>
+
 ### `ToggleSwitch`
 
 - Safety: `wrapped`
@@ -301,19 +313,20 @@ Runs named actions for the enabled and disabled states.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>color</code> | no | <code>string</code> | — | — |
-| <code>disabled</code> | no | <code>boolean &#124; string</code> | — | — |
-| <code>disabledParams</code> | no | <code>Record&lt;string, string &#124; number &#124; boolean&gt;</code> | — | — |
-| <code>enabledParams</code> | no | <code>Record&lt;string, string &#124; number &#124; boolean&gt;</code> | — | — |
-| <code>errorMessage</code> | no | <code>string</code> | — | — |
-| <code>initialValue</code> | no | <code>boolean &#124; string</code> | — | — |
-| <code>label</code> | no | <code>string</code> | — | — |
-| <code>requestId</code> | no | <code>string</code> | — | Identifier of the named Custom Widget action. |
-| <code>size</code> | no | <code>string</code> | — | — |
+| Prop                        | Required | Type                                                                   | Literal values | Description                                   |
+| --------------------------- | -------- | ---------------------------------------------------------------------- | -------------- | --------------------------------------------- |
+| <code>color</code>          | no       | <code>string</code>                                                    | —              | —                                             |
+| <code>disabled</code>       | no       | <code>boolean &#124; string</code>                                     | —              | —                                             |
+| <code>disabledParams</code> | no       | <code>Record&lt;string, string &#124; number &#124; boolean&gt;</code> | —              | —                                             |
+| <code>enabledParams</code>  | no       | <code>Record&lt;string, string &#124; number &#124; boolean&gt;</code> | —              | —                                             |
+| <code>errorMessage</code>   | no       | <code>string</code>                                                    | —              | —                                             |
+| <code>initialValue</code>   | no       | <code>boolean &#124; string</code>                                     | —              | —                                             |
+| <code>label</code>          | no       | <code>string</code>                                                    | —              | —                                             |
+| <code>requestId</code>      | no       | <code>string</code>                                                    | —              | Identifier of the named Custom Widget action. |
+| <code>size</code>           | no       | <code>string</code>                                                    | —              | —                                             |
 
 <a id="component-typebadge"></a>
+
 ### `TypeBadge`
 
 - Safety: `allowed`
@@ -329,7 +342,7 @@ Displays a compact semantic type badge.
 
 #### Component-specific props
 
-| Prop | Required | Type | Literal values | Description |
-| --- | --- | --- | --- | --- |
-| <code>size</code> | no | <code>'xs' &#124; 'sm' &#124; 'md' &#124; 'lg' &#124; 'xl'</code> | <code>"xs"</code>, <code>"sm"</code>, <code>"md"</code>, <code>"lg"</code>, <code>"xl"</code> | — |
-| <code>type</code> | yes | <code>string</code> | — | — |
+| Prop              | Required | Type                                                              | Literal values                                                                                | Description |
+| ----------------- | -------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------- |
+| <code>size</code> | no       | <code>'xs' &#124; 'sm' &#124; 'md' &#124; 'lg' &#124; 'xl'</code> | <code>"xs"</code>, <code>"sm"</code>, <code>"md"</code>, <code>"lg"</code>, <code>"xl"</code> | —           |
+| <code>type</code> | yes      | <code>string</code>                                               | —                                                                                             | —           |
