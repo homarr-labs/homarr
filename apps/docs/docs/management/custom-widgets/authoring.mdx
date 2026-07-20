@@ -20,7 +20,7 @@ The **Schema** action beside Undo, Redo, and Format expands the generated JSON S
 
 ## ChatGPT copy/paste
 
-Enter a short request and optional API documentation URL, then select **Copy AI prompt**. Its dropdown also offers a self-contained version with the Custom Widget skill embedded for models that cannot discover skills or MCP resources. The copied text starts with your request and repeats it as the final instruction so it cannot be lost behind the authoring reference. The embedded version explicitly uses a standalone workflow: the model must author immediately without searching for Homarr MCP tools or claiming that it validated the result. Paste either prompt into ChatGPT or another model. The model must return exactly:
+Enter a short request and optional API documentation URL, then select **Copy AI prompt**. Its dropdown also offers a self-contained version with the complete Custom Widget authoring skill embedded. Both copied prompts are strictly offline authoring references: they contain no MCP resource names, tool calls, or connected-workflow instructions. Paste either prompt into ChatGPT or another model. The model must return exactly:
 
 1. A fenced `json` block with one complete widget and `template: "__HOMARR_TEMPLATE__"`.
 2. A fenced `jsx` block with the readable template.

@@ -6,7 +6,7 @@ const AUTHORING_PROMPT = `You create Homarr Custom JSX v2 widgets. Return exactl
 
 Use $schema "homarr-custom-widget-v2". A widget contains metadata, inline API sources, named requests, an options schema, defaults, and one JSX template. Never include credentials. Use one source named "default" unless the widget genuinely combines APIs.
 
-This Homarr release uses Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}. When connected, read homarr://custom-widgets/schema and homarr://custom-widgets/components instead of guessing the installed surface.
+This Homarr release uses Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}. Use only the Homarr runtime components and Mantine capabilities described in this prompt and its embedded skill.
 
 Queries and actions may use GET, POST, PUT, PATCH, or DELETE. Set kind to query for reads and action for user-triggered changes. Actions never use trigger "load". Declare every path, query, or body parameter. Use {name} in paths and {"$param":"name"} in query/body templates. Every declared parameter needs an explicit value source: SubFetch, ActionButton, and ToggleSwitch supply manual request values through their params prop; every load-query parameter must have an optionsBinding entry containing {"$option":"optionName"} or a primitive literal. Never infer a binding from matching names. Use load-triggered query results through data.<requestId>.
 
@@ -51,24 +51,17 @@ export function buildCustomWidgetAiPrompt(
   embeddedSkill?: string,
 ) {
   const requestedWidget = redactText(request?.trim() || "Describe the widget you want to create.");
-  const sections = [`# User request\n\n${requestedWidget}`];
+  const sections = [`Please create this Homarr Custom JSX v2 widget:\n\n${requestedWidget}`];
   if (documentationUrl) sections.push(`API documentation: ${redactUrl(documentationUrl)}`);
-  if (embeddedSkill) {
-    sections.push(`## Execution mode: standalone copy/paste
-
-You do not have to connect to Homarr MCP or access any \`homarr://\` resource to complete this request. Do not search for unavailable Homarr tools, do not stop because they are unavailable, and do not ask whether to proceed. Author the best valid widget you can from the instructions embedded below. Do not claim that you validated, previewed, or installed it; the user will paste your two output blocks into Homarr for validation.`);
-  }
   sections.push(AUTHORING_PROMPT);
-  if (embeddedSkill) sections.push(`## Embedded Homarr Custom Widget skill\n\n${embeddedSkill}`);
+  if (embeddedSkill) sections.push(`Use this complete Homarr Custom Widget authoring skill:\n\n${embeddedSkill}`);
   if (rawResponse) sections.push(`Sample API response:\n\n\`\`\`json\n${redactResponse(rawResponse)}\n\`\`\``);
   if (currentConfig) {
     sections.push(`Current widget:\n\n\`\`\`json\n${JSON.stringify(redactValue(currentConfig), null, 2)}\n\`\`\``);
   }
-  sections.push(`## Produce the response now
-
-Create this widget: ${requestedWidget}
-
-Return exactly one complete \`json\` fenced block and one complete \`jsx\` fenced block as specified above. Do not respond with a plan, a refusal, a tool-access warning, or a question.`);
+  sections.push(
+    `Create the requested widget now and return exactly one complete \`json\` fenced block followed by one complete \`jsx\` fenced block. Homarr will validate the result after it is pasted into the workbench.`,
+  );
   const prompt = sections.join("\n\n");
   return embeddedSkill ? prompt : prompt.slice(0, 8_000);
 }

@@ -15,16 +15,14 @@ describe("buildCustomWidgetAiPrompt", () => {
       CUSTOM_WIDGET_SKILL_MD,
     );
 
-    expect(prompt.startsWith("# User request\n\nCreate a status widget")).toBe(true);
-    expect(prompt).toContain("## Execution mode: standalone copy/paste");
-    expect(prompt).toContain("Do not search for unavailable Homarr tools");
-    expect(prompt).toContain("## Embedded Homarr Custom Widget skill");
+    expect(prompt.startsWith("Please create this Homarr Custom JSX v2 widget:\n\nCreate a status widget")).toBe(true);
+    expect(prompt).toContain("Use this complete Homarr Custom Widget authoring skill:");
     expect(prompt).toContain("# Homarr Custom Widget");
-    expect(prompt).toContain("When Homarr MCP tools and `homarr://` resources are unavailable, continue offline");
-    expect(prompt).toContain("do not assume access to repository-relative files");
+    expect(prompt).toContain("## Authoring workflow");
+    expect(prompt).toContain("Do not assume access to repository-relative files");
     expect(prompt).not.toContain("references/schema.md");
-    expect(prompt.endsWith("Do not respond with a plan, a refusal, a tool-access warning, or a question.")).toBe(true);
-    expect(prompt.match(/Create a status widget/g)).toHaveLength(2);
+    expect(prompt).not.toMatch(/\bMCP\b|homarr:\/\/|customWidget_|\btools?\b/iu);
+    expect(prompt.endsWith("Homarr will validate the result after it is pasted into the workbench.")).toBe(true);
   });
 
   test("is concise and describes the one-widget v2 contract", () => {
@@ -42,7 +40,10 @@ describe("buildCustomWidgetAiPrompt", () => {
     expect(prompt).toContain('"optionsBinding"');
     expect(prompt).toContain("Never infer a binding from matching names");
     expect(prompt).toContain("Create a Portainer widget");
-    expect(prompt.startsWith("# User request\n\nCreate a Portainer widget")).toBe(true);
+    expect(prompt.startsWith("Please create this Homarr Custom JSX v2 widget:\n\nCreate a Portainer widget")).toBe(
+      true,
+    );
+    expect(prompt).not.toMatch(/\bMCP\b|homarr:\/\/|customWidget_|\btools?\b/iu);
     expect(prompt.length).toBeLessThanOrEqual(8_000);
   });
 
