@@ -8,12 +8,8 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import type { Root } from "react-dom/client";
 
-import {
-  customJsxComponentRegistry,
-  customJsxExamples,
-  customJsxTablerIconNames,
-  enabledCustomJsxComponents,
-} from "@homarr/custom-widgets/core";
+import { customJsxComponentRegistry, enabledCustomJsxComponents } from "@homarr/custom-widgets/catalog";
+import { customJsxExamples, customJsxTablerIconNames } from "@homarr/custom-widgets/core";
 import { renderSafeJsx, SafeJsxError, sanitizeCustomJsxProps } from "@homarr/custom-widgets/jsx";
 
 import CustomJsxDisplay from "./custom-jsx-display";
@@ -554,7 +550,12 @@ describe("shared Custom JSX examples", () => {
     const rendered = renderSafeJsx({
       template: example.widget.template,
       components: CUSTOM_WIDGET_COMPONENTS,
-      bindings: SAFE_BINDINGS(sampleData),
+      bindings: {
+        ...SAFE_BINDINGS(sampleData),
+        status: {},
+        options: example.widget.defaultOptions,
+        inputs: {},
+      },
     });
 
     expect(rendered.warnings).toEqual([]);

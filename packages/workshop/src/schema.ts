@@ -10,7 +10,6 @@ export const WORKSHOP_REQUEST_TIMEOUT_MS = 8_000;
 export const WORKSHOP_SCREENSHOT_MIME_TYPES = ["image/png", "image/jpeg", "image/webp"] as const;
 
 export const workshopReportCategorySchema = z.enum(["malicious", "spam", "copyright", "inappropriate", "other"]);
-export const workshopReportStatusSchema = z.enum(["open", "dismissed"]);
 
 const workshopFileListSchema = z
   .preprocess((value) => {
@@ -35,10 +34,7 @@ const workshopSubmissionBaseSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string().default(""),
-  contentHash: z.string(),
   screenshots: workshopFileListSchema,
-  revision: z.number().int().positive(),
-  changelog: z.string().default(""),
   author: z.string(),
   authorName: z.string(),
   score: z.number().int(),
@@ -58,7 +54,6 @@ export const workshopSubmissionInputSchema = z
     title: z.string().trim().min(3).max(100),
     description: z.string().trim().max(2_000).default(""),
     content: z.string().min(1).max(MAX_WORKSHOP_CONTENT_LENGTH),
-    changelog: z.string().trim().max(2_000).default(""),
   })
   .superRefine((input, context) => {
     const result = validateWorkshopWidget(input.content);
@@ -91,24 +86,10 @@ export const workshopReportSchema = z.object({
   submissionTitle: z.string().default("Deleted submission"),
   category: workshopReportCategorySchema,
   explanation: z.string(),
-  status: workshopReportStatusSchema,
   created: z.string(),
   updated: z.string(),
 });
 export type WorkshopReport = z.infer<typeof workshopReportSchema>;
-
-export const workshopAdminActionSchema = z.object({
-  id: z.string(),
-  actor: z.string(),
-  actorName: z.string().default("Workshop administrator"),
-  action: z.enum(["delete_submission", "dismiss_report"]),
-  submissionId: z.string().default(""),
-  reportId: z.string().default(""),
-  reason: z.string().default(""),
-  snapshot: z.string().default(""),
-  created: z.string(),
-});
-export type WorkshopAdminAction = z.infer<typeof workshopAdminActionSchema>;
 
 export type WorkshopValidationResult =
   | { success: true; data: z.infer<typeof customWidgetImportSchema> }
@@ -118,7 +99,13 @@ export function validateWorkshopWidget(content: string): WorkshopValidationResul
   try {
     const parsed: unknown = JSON.parse(content);
     const result = customWidgetImportSchema.safeParse(parsed);
-    if (!result.success) return { success: false, error: result.error.issues[0]?.message ?? "Invalid widget" };
+    if (!result.success) {
+      const error = result.error.issues
+        .slice(0, 5)
+        .map((issue) => `${issue.path.join(".") || "widget"}: ${issue.message}`)
+        .join("\n");
+      return { success: false, error: error || "Invalid widget" };
+    }
     if (containsCredentialLikeValue(result.data)) {
       return { success: false, error: "Widget exports must not contain credentials or credential-like static values" };
     }
@@ -148,6 +135,7 @@ function containsCredentialLikeValue(widget: z.infer<typeof customWidgetImportSc
           ([name, value]) =>
             (sensitiveName.test(name) && value.trim().length > 0) || /^\s*bearer\s+\S{8,}\s*$/iu.test(value),
         ) ||
+        containsCredential(request.optionsBinding, "", sensitiveName) ||
         containsCredential(request.bodyTemplate, "", sensitiveName) ||
         containsCredential(request.queryTemplate, "", sensitiveName),
     ) ||

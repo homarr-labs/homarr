@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 import { CustomWidgetDomainError } from "./errors";
 
+import { isCustomWidgetParameterIdentifier } from "../core";
 import type { CustomJsxRequest } from "../core";
 
 import { resolveSameOriginTarget } from "./request-executor";
@@ -59,7 +60,13 @@ export const renderRequestBody = (
 
 export const renderRequestTarget = (baseUrl: string, request: CustomJsxRequest, params: CustomJsxRuntimeParams) => {
   validateRuntimeParams(request, params);
-  const path = request.pathTemplate.replaceAll(/\{([a-z][a-z0-9_-]*)\}/g, (_placeholder, name: string) => {
+  const path = request.pathTemplate.replaceAll(/\{([^{}]+)\}/g, (_placeholder, name: string) => {
+    if (!isCustomWidgetParameterIdentifier(name)) {
+      throw new CustomWidgetDomainError({
+        code: "BAD_REQUEST",
+        message: `Path template contains an invalid placeholder '${name}'`,
+      });
+    }
     const value = params[name];
     if (value === undefined) {
       throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: `Unknown path parameter '${name}'` });

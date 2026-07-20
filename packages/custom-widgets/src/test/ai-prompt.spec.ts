@@ -1,30 +1,16 @@
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+
 import { describe, expect, test } from "vitest";
 
-import { buildCustomWidgetAiPrompt, buildCustomWidgetMcpPrompt } from "../core/ai-prompt";
-import { CUSTOM_WIDGET_SKILL_MD } from "../core/authoring-resources";
+import {
+  buildCustomWidgetAiPrompt,
+  buildCustomWidgetMcpPrompt,
+  CUSTOM_WIDGET_MANTINE_VERSION,
+} from "../core/ai-prompt";
 import { CUSTOM_WIDGET_STARTER } from "../core/examples";
 
 describe("buildCustomWidgetAiPrompt", () => {
-  test("can embed the portable skill for standalone chat models", () => {
-    const prompt = buildCustomWidgetAiPrompt(
-      undefined,
-      undefined,
-      undefined,
-      "Create a status widget",
-      undefined,
-      CUSTOM_WIDGET_SKILL_MD,
-    );
-
-    expect(prompt.startsWith("Please create this Homarr Custom JSX v2 widget:\n\nCreate a status widget")).toBe(true);
-    expect(prompt).toContain("Use this complete Homarr Custom Widget authoring skill:");
-    expect(prompt).toContain("# Homarr Custom Widget");
-    expect(prompt).toContain("## Authoring workflow");
-    expect(prompt).toContain("Do not assume access to repository-relative files");
-    expect(prompt).not.toContain("references/schema.md");
-    expect(prompt).not.toMatch(/\bMCP\b|homarr:\/\/|customWidget_|\btools?\b/iu);
-    expect(prompt.endsWith("Homarr will validate the result after it is pasted into the workbench.")).toBe(true);
-  });
-
   test("is concise and describes the one-widget v2 contract", () => {
     const prompt = buildCustomWidgetAiPrompt(
       undefined,
@@ -45,6 +31,19 @@ describe("buildCustomWidgetAiPrompt", () => {
     );
     expect(prompt).not.toMatch(/\bMCP\b|homarr:\/\/|customWidget_|\btools?\b/iu);
     expect(prompt.length).toBeLessThanOrEqual(8_000);
+  });
+
+  test("keeps release metadata lightweight and synchronized", async () => {
+    const mantinePackage = JSON.parse(
+      await readFile(resolve(import.meta.dirname, "../../../../node_modules/@mantine/core/package.json"), "utf8"),
+    ) as { version: string };
+    const source = await readFile(resolve(import.meta.dirname, "../core/ai-prompt.ts"), "utf8");
+
+    expect(CUSTOM_WIDGET_MANTINE_VERSION).toBe(mantinePackage.version);
+    expect(source).not.toContain("skill-content.generated.json");
+    expect(source).not.toContain("component-catalog.generated.json");
+    expect(source).not.toContain('from "./component-catalog"');
+    expect(source).not.toContain('from "./authoring-resources"');
   });
 
   test("includes an existing widget without exposing secret fields", () => {
@@ -81,6 +80,20 @@ describe("buildCustomWidgetAiPrompt", () => {
 
   test("redacts malformed URLs without recursing", () => {
     expect(buildCustomWidgetAiPrompt(undefined, null, null, "Inspect http://[", null)).toContain("[REDACTED_URL]");
+  });
+
+  test("preserves balanced fences and the output contract when optional content exceeds the prompt budget", () => {
+    const prompt = buildCustomWidgetAiPrompt(
+      undefined,
+      JSON.stringify({ items: Array.from({ length: 2_000 }, (_, index) => ({ index, label: `item-${index}` })) }),
+      { ...CUSTOM_WIDGET_STARTER, template: `<Stack>${"<Text>Large widget</Text>".repeat(1_000)}</Stack>` },
+      "Improve this large widget",
+    );
+
+    expect(prompt.length).toBeLessThanOrEqual(8_000);
+    expect(prompt).toContain("content omitted to fit the prompt budget");
+    expect(prompt.match(/```/gu)?.length ?? 0).toBe(4);
+    expect(prompt.endsWith("Homarr will validate the result after it is pasted into the workbench.")).toBe(true);
   });
 });
 

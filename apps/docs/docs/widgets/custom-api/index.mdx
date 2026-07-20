@@ -1,6 +1,6 @@
 ---
 title: "Custom API"
-description: "Renders an administrator-defined Custom JSX v2 widget with server-side API requests, options, and actions."
+description: "The Custom API widget shows a Custom JSX v2 definition with server-side API requests, widget options, and actions."
 hide_title: true
 ---
 
@@ -10,28 +10,48 @@ import { customApiWidget } from ".";
 
 <WidgetHeader widget={customApiWidget} categories={["Custom", "API"]} />
 
-The Custom API widget displays a Custom JSX v2 definition created in [Management → Custom Widgets](/docs/management/custom-widgets). A definition owns one or more inline API sources, named requests, an options schema, and one safe JSX template. Temporary bound inputs exist only while the tile is mounted. Source credentials are encrypted separately and never reach the browser or an export.
+The Custom API widget shows a Custom JSX v2 definition. Create the definition in [Management → Custom Widgets](/docs/management/custom-widgets).
+
+A definition contains API sources, named requests, a widget options schema, and one safe JSX template.
+
+Temporary inputs exist only while the tile is mounted. Homarr encrypts source credentials separately.
+
+Homarr does not send these credentials to the browser. Homarr does not include them in an export.
 
 ### Add the widget
 
 <AddingWidget />
 
-Choose a definition from the searchable picker, configure its generated options, and select a refresh interval. The board item stores only the selected definition ID and validated option values; credentials remain server-side.
+Select a definition from the searchable picker. Configure its generated widget options.
+
+Select a refresh interval. The board item stores the definition ID and the validated widget option values.
+
+Credentials remain on the server.
 
 :::note
 
-A definition must be enabled and available to the board before it appears in the widget picker.
+Enable the definition before you use it. The definition must also be available to the board.
 
 :::
 
 ### Permissions and actions
 
-Each request declares its minimum board permission independently of its HTTP method. Queries and actions may use GET, POST, PUT, PATCH, or DELETE; `kind` controls runtime behavior. DELETE always requires full board permission and confirmation. Anonymous viewers cannot execute actions.
+Each named request declares its minimum board permission. This permission does not depend on the HTTP method.
 
-Interactive controls are disabled while the board is in edit mode. Actions run only after an explicit user gesture and are never triggered by mounting, refresh polling, or automatic retries. Authoring previews simulate actions unless an administrator explicitly enables live actions for the short-lived preview session.
+Queries and actions can use GET, POST, PUT, PATCH, or DELETE. The `kind` value controls runtime behavior.
+
+A DELETE request requires full board permission and confirmation. An anonymous viewer cannot run an action.
+
+Homarr disables interactive controls in board edit mode. An action runs only after a user action.
+
+Mounting, refresh polling, and automatic retries do not run actions. An authoring preview simulates actions by default.
+
+An administrator can enable live actions for the short preview session.
 
 ### Refresh behavior
 
-The refresh interval reruns load-triggered queries. Manual queries run through `SubFetch`, and each query may declare its own cache duration. Successful actions can invalidate only their declared load or manual queries.
+The refresh interval runs load queries again. `SubFetch` runs manual queries.
 
-See [Custom Widgets management](/docs/management/custom-widgets) for the workbench, options, named-request manifest, Mantine JSX surface, network scopes, and security limits.
+Each query can declare a cache duration. A successful action can invalidate only its declared queries.
+
+Read [Custom Widgets management](/docs/management/custom-widgets) for authoring, widget options, named requests, Mantine, network scopes, and security limits.

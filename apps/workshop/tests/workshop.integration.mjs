@@ -15,7 +15,10 @@ const expectStatus = async (path, init, expected) => {
     ...init,
     headers: { "content-type": "application/json", ...init.headers },
   });
-  if (response.status !== expected) throw new Error(`Expected ${expected} for ${path}, received ${response.status}`);
+  if (response.status !== expected) {
+    const body = await response.text();
+    throw new Error(`Expected ${expected} for ${path}, received ${response.status}: ${body}`);
+  }
 };
 
 const root = await request("/api/collections/_superusers/auth-with-password", {
@@ -25,18 +28,14 @@ const root = await request("/api/collections/_superusers/auth-with-password", {
 const rootHeaders = { authorization: `Bearer ${root.token}` };
 const collections = await request("/api/collections?perPage=200", { headers: rootHeaders });
 const collectionNames = new Set(collections.items.map((collection) => collection.name));
-for (const required of [
-  "submissions",
-  "votes",
-  "reports",
-  "workshop_admins",
-  "workshop_admin_actions",
-  "workshop_listings",
-]) {
+for (const required of ["submissions", "votes", "reports", "workshop_listings"]) {
   if (!collectionNames.has(required)) throw new Error(`Missing Workshop collection: ${required}`);
 }
+for (const removed of ["comments", "workshop_admin_actions", "workshop_admins"]) {
+  if (collectionNames.has(removed)) throw new Error(`Removed Workshop collection still exists: ${removed}`);
+}
 
-// Workshop production authentication is GitHub OAuth. Password auth is enabled only in this disposable test database.
+// Production uses GitHub OAuth. Password auth is enabled only in this disposable database.
 const usersCollection = await request("/api/collections/users", { headers: rootHeaders });
 await request("/api/collections/users", {
   method: "PATCH",
@@ -44,29 +43,42 @@ await request("/api/collections/users", {
   body: JSON.stringify({ ...usersCollection, passwordAuth: { enabled: true, identityFields: ["email"] } }),
 });
 
-const password = "WorkshopAuthor123!";
-const user = await request("/api/collections/users/records", {
-  method: "POST",
-  headers: rootHeaders,
-  body: JSON.stringify({
-    email: "widget-author@example.invalid",
-    emailVisibility: false,
-    verified: true,
-    password,
-    passwordConfirm: password,
-    displayName: "Widget Author",
-  }),
-});
-await request("/api/collections/workshop_admins/records", {
-  method: "POST",
-  headers: rootHeaders,
-  body: JSON.stringify({ user: user.id }),
-});
-const auth = await request("/api/collections/users/auth-with-password", {
-  method: "POST",
-  body: JSON.stringify({ identity: user.email, password }),
-});
-const userHeaders = { authorization: `Bearer ${auth.token}` };
+const createUser = async (email, displayName, password, extra = {}) =>
+  request("/api/collections/users/records", {
+    method: "POST",
+    headers: rootHeaders,
+    body: JSON.stringify({
+      email,
+      emailVisibility: false,
+      verified: true,
+      password,
+      passwordConfirm: password,
+      displayName,
+      ...extra,
+    }),
+  });
+
+const signIn = async (email, password) => {
+  const auth = await request("/api/collections/users/auth-with-password", {
+    method: "POST",
+    body: JSON.stringify({ identity: email, password }),
+  });
+  return { auth, headers: { authorization: `Bearer ${auth.token}` } };
+};
+
+const authorPassword = "WorkshopAuthor123!";
+const author = await createUser("widget-author@example.invalid", "Widget Author", authorPassword, { isAdmin: true });
+if (author.isAdmin !== false) throw new Error("New users must not be able to start as Workshop administrators");
+const authorSession = await signIn(author.email, authorPassword);
+await expectStatus(
+  `/api/collections/users/records/${author.id}`,
+  { method: "PATCH", headers: authorSession.headers, body: JSON.stringify({ isAdmin: true }) },
+  404,
+);
+
+const visitorPassword = "WorkshopVisitor123!";
+const visitor = await createUser("widget-visitor@example.invalid", "Widget Visitor", visitorPassword);
+const visitorSession = await signIn(visitor.email, visitorPassword);
 
 const widget = {
   $schema: "homarr-custom-widget-v2",
@@ -85,163 +97,143 @@ const widget = {
   defaultOptions: {},
   template: "<Text>Runtime probe</Text>",
 };
+
 const submission = await request("/api/collections/submissions/records", {
   method: "POST",
-  headers: userHeaders,
+  headers: authorSession.headers,
   body: JSON.stringify({
     title: "Workshop runtime probe",
     description: "PocketBase integration test",
     content: JSON.stringify(widget),
-    changelog: "Initial",
-    author: user.id,
+    author: author.id,
   }),
 });
-if (submission.revision !== 1 || submission.authorName !== "Widget Author" || submission.contentHash.length !== 64) {
-  throw new Error("Submission hooks did not normalize publication metadata");
+if (submission.author !== author.id || submission.title !== "Workshop runtime probe") {
+  throw new Error("Submission publication failed");
 }
 
-await expectStatus(
-  "/api/collections/submissions/records",
-  {
-    method: "POST",
-    headers: userHeaders,
-    body: JSON.stringify({
-      title: "Removed format",
-      content: JSON.stringify({ displayType: "raw", displayConfig: { type: "raw" } }),
-      author: user.id,
-    }),
-  },
-  400,
-);
-
-await expectStatus(
-  "/api/collections/submissions/records",
-  {
-    method: "POST",
-    headers: userHeaders,
-    body: JSON.stringify({
-      title: "Unsafe authentication header",
-      content: JSON.stringify({
-        ...widget,
-        sources: [{ ...widget.sources[0], auth: { type: "apiKeyHeader", headerName: "X-Forwarded-Authorization" } }],
-      }),
-    }),
-  },
-  400,
-);
-
-await expectStatus(
-  "/api/collections/submissions/records",
-  {
-    method: "POST",
-    headers: userHeaders,
-    body: JSON.stringify({
-      title: "Unknown template request",
-      content: JSON.stringify({ ...widget, template: '<SubFetch requestId="missing" />' }),
-    }),
-  },
-  400,
-);
-
-const updatedWidget = { ...widget, description: "Updated definition" };
 const updatedSubmission = await request(`/api/collections/submissions/records/${submission.id}`, {
   method: "PATCH",
-  headers: userHeaders,
-  body: JSON.stringify({ content: JSON.stringify(updatedWidget), changelog: "Updated" }),
+  headers: authorSession.headers,
+  body: JSON.stringify({ title: "Updated runtime probe" }),
 });
-if (updatedSubmission.revision !== 2) throw new Error("Content edits must increment the submission revision");
+if (updatedSubmission.title !== "Updated runtime probe") throw new Error("Authors must be able to edit their submission");
 
-await request("/api/collections/votes/records", {
+await expectStatus(
+  `/api/collections/submissions/records/${submission.id}`,
+  { method: "PATCH", headers: authorSession.headers, body: JSON.stringify({ author: visitor.id }) },
+  404,
+);
+await expectStatus(
+  `/api/collections/submissions/records/${submission.id}`,
+  { method: "PATCH", headers: visitorSession.headers, body: JSON.stringify({ title: "Not mine" }) },
+  404,
+);
+await expectStatus(
+  `/api/collections/submissions/records/${submission.id}`,
+  { method: "DELETE", headers: visitorSession.headers },
+  404,
+);
+
+const vote = await request("/api/collections/votes/records", {
   method: "POST",
-  headers: userHeaders,
-  body: JSON.stringify({ submission: submission.id, user: user.id, value: 1 }),
+  headers: visitorSession.headers,
+  body: JSON.stringify({ submission: submission.id, user: visitor.id, value: 1 }),
 });
 await expectStatus(
   "/api/collections/votes/records",
   {
     method: "POST",
-    headers: userHeaders,
-    body: JSON.stringify({ submission: submission.id, user: user.id, value: 1 }),
+    headers: visitorSession.headers,
+    body: JSON.stringify({ submission: submission.id, user: visitor.id, value: 1 }),
   },
   400,
 );
-const listing = await request(`/api/collections/workshop_listings/records/${submission.id}`);
-if (listing.score !== 1 || listing.upvotes !== 1 || listing.downvotes !== 0) {
-  throw new Error("Workshop listing vote totals are incorrect");
-}
-
-const report = await request("/api/collections/reports/records", {
-  method: "POST",
-  headers: userHeaders,
-  body: JSON.stringify({
-    submission: submission.id,
-    reporter: user.id,
-    category: "other",
-    explanation: "Runtime moderation test",
-    status: "dismissed",
-  }),
-});
-const reports = await request("/api/collections/reports/records?filter=status%3D%27open%27", {
-  headers: userHeaders,
-});
-if (reports.items.length !== 1 || reports.items[0].reporter !== user.id) {
-  throw new Error("Workshop administrators cannot inspect open reports and reporters");
-}
-
-await request(`/api/collections/reports/records/${report.id}`, {
-  method: "PATCH",
-  headers: userHeaders,
-  body: JSON.stringify({ status: "dismissed", dismissalReason: "Runtime test complete" }),
-});
-const actions = await request("/api/collections/workshop_admin_actions/records", { headers: userHeaders });
-if (!actions.items.some((action) => action.action === "dismiss_report" && action.reportId === report.id)) {
-  throw new Error("Workshop report dismissal was not audited");
-}
-
-const authorPassword = "WorkshopSecondAuthor123!";
-const secondAuthor = await request("/api/collections/users/records", {
-  method: "POST",
-  headers: rootHeaders,
-  body: JSON.stringify({
-    email: "second-widget-author@example.invalid",
-    emailVisibility: false,
-    verified: true,
-    password: authorPassword,
-    passwordConfirm: authorPassword,
-    displayName: "Second Author",
-  }),
-});
-const secondAuth = await request("/api/collections/users/auth-with-password", {
-  method: "POST",
-  body: JSON.stringify({ identity: secondAuthor.email, password: authorPassword }),
-});
-const secondHeaders = { authorization: `Bearer ${secondAuth.token}` };
-const secondSubmission = await request("/api/collections/submissions/records", {
-  method: "POST",
-  headers: secondHeaders,
-  body: JSON.stringify({
-    title: "Administrator deletion probe",
-    content: JSON.stringify(widget),
-    author: secondAuthor.id,
-  }),
-});
 await expectStatus(
-  `/api/collections/submissions/records/${submission.id}`,
-  { method: "DELETE", headers: secondHeaders },
+  `/api/collections/votes/records/${vote.id}`,
+  { method: "PATCH", headers: visitorSession.headers, body: JSON.stringify({ user: author.id }) },
   404,
 );
 await expectStatus(
-  `/api/collections/submissions/records/${secondSubmission.id}`,
-  { method: "DELETE", headers: userHeaders },
+  `/api/collections/votes/records/${vote.id}`,
+  { method: "PATCH", headers: visitorSession.headers, body: JSON.stringify({ value: 0 }) },
+  404,
+);
+
+const listing = await request(`/api/collections/workshop_listings/records/${submission.id}`);
+if (listing.score !== 1 || listing.upvotes !== 1 || listing.downvotes !== 0 || listing.authorName !== "Widget Author") {
+  throw new Error("Workshop listing data is incorrect");
+}
+
+await expectStatus(
+  "/api/collections/reports/records",
+  {
+    method: "POST",
+    headers: visitorSession.headers,
+    body: JSON.stringify({
+      submission: submission.id,
+      reporter: author.id,
+      category: "other",
+      explanation: "Spoofed reporter",
+    }),
+  },
+  400,
+);
+const report = await request("/api/collections/reports/records", {
+  method: "POST",
+  headers: visitorSession.headers,
+  body: JSON.stringify({
+    submission: submission.id,
+    reporter: visitor.id,
+    category: "other",
+    explanation: "Runtime moderation test",
+  }),
+});
+const ownReport = await request(`/api/collections/reports/records/${report.id}`, { headers: visitorSession.headers });
+if (ownReport.reporter !== visitor.id) throw new Error("Reporters must be able to view their own report");
+const hiddenReports = await request("/api/collections/reports/records", { headers: visitorSession.headers });
+if (hiddenReports.items.length !== 0) throw new Error("Regular users must not list moderation reports");
+await expectStatus(
+  `/api/collections/reports/records/${report.id}`,
+  { method: "DELETE", headers: visitorSession.headers },
+  404,
+);
+
+const promotedAuthor = await request(`/api/collections/users/records/${author.id}`, {
+  method: "PATCH",
+  headers: rootHeaders,
+  body: JSON.stringify({ isAdmin: true }),
+});
+if (promotedAuthor.isAdmin !== true) throw new Error("PocketBase superusers must be able to appoint admins");
+
+const reports = await request("/api/collections/reports/records", { headers: authorSession.headers });
+if (reports.items.length !== 1 || reports.items[0].reporter !== visitor.id) {
+  throw new Error("Workshop administrators must be able to review reports");
+}
+await expectStatus(
+  `/api/collections/reports/records/${report.id}`,
+  { method: "DELETE", headers: authorSession.headers },
   204,
 );
-const deletionActions = await request("/api/collections/workshop_admin_actions/records", { headers: userHeaders });
-if (
-  !deletionActions.items.some(
-    (action) => action.action === "delete_submission" && action.submissionId === secondSubmission.id,
-  )
-) {
-  throw new Error("Workshop administrator deletion was not audited");
-}
+
+const visitorSubmission = await request("/api/collections/submissions/records", {
+  method: "POST",
+  headers: visitorSession.headers,
+  body: JSON.stringify({
+    title: "Administrator deletion probe",
+    content: JSON.stringify(widget),
+    author: visitor.id,
+  }),
+});
+await expectStatus(
+  `/api/collections/submissions/records/${visitorSubmission.id}`,
+  { method: "DELETE", headers: authorSession.headers },
+  204,
+);
+await expectStatus(
+  `/api/collections/submissions/records/${submission.id}`,
+  { method: "DELETE", headers: authorSession.headers },
+  204,
+);
 
 console.log("Workshop PocketBase integration passed");

@@ -12,7 +12,11 @@
     }
   },
   "exports": {
+    "./authoring-prompt": "./src/core/ai-prompt.ts",
+    "./authoring-resources": "./src/core/authoring-resources.ts",
+    "./catalog": "./src/core/catalog.ts",
     "./core": "./src/core/index.ts",
+    "./embedded-authoring-prompt": "./src/core/embedded-ai-prompt.ts",
     "./jsx": "./src/jsx/index.ts",
     "./runtime": "./src/runtime/index.ts",
     "./server": "./src/server/index.ts",
@@ -21,9 +25,11 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "check:architecture": "node ./scripts/check-architecture.mjs",
-    "generate:components": "tsx ./scripts/generate-component-metadata.ts",
+    "generate:catalog": "tsx ./scripts/generate-component-metadata.ts",
+    "generate:skill": "tsx ./scripts/generate-skill-content.ts",
+    "generate:components": "pnpm generate:catalog",
     "generate:component-docs": "tsx ./scripts/generate-component-docs.ts",
-    "generate": "pnpm generate:components && pnpm generate:component-docs",
+    "generate": "pnpm generate:catalog && pnpm generate:component-docs && pnpm generate:skill",
     "format": "oxfmt .",
     "lint": "oxlint",
     "test": "vitest run",

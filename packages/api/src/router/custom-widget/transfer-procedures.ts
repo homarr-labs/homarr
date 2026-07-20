@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { eq } from "@homarr/db";
+import { eq, handleTransactionsAsync } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 import { customWidgetImportSchema, customWidgetSecretsInputSchema } from "@homarr/custom-widgets/core";
 
@@ -35,22 +35,34 @@ export const transferProcedures = {
       }
       assertSecretSources(input.widget.sources, input.secrets);
       const id = createId();
-      await ctx.db.insert(customWidgetDefinitions).values({
+      const definitionRow = {
         id,
         ...serializeCustomWidgetDefinition(input.widget),
         creatorId: ctx.session.user.id,
+      };
+      const updatedAt = new Date();
+      const secretRows = input.secrets.map((secret) => ({
+        definitionId: id,
+        sourceId: secret.sourceId,
+        kind: secret.kind,
+        encryptedValue: encryptSecret(secret.value),
+        updatedAt,
+      }));
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction.insert(schema.customWidgetDefinitions).values(definitionRow);
+            if (secretRows.length > 0) await transaction.insert(schema.customWidgetSecrets).values(secretRows);
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.insert(customWidgetDefinitions).values(definitionRow).run();
+            if (secretRows.length > 0) transaction.insert(customWidgetSecrets).values(secretRows).run();
+          });
+        },
       });
-      if (input.secrets.length > 0) {
-        await ctx.db.insert(customWidgetSecrets).values(
-          input.secrets.map((secret) => ({
-            definitionId: id,
-            sourceId: secret.sourceId,
-            kind: secret.kind,
-            encryptedValue: encryptSecret(secret.value),
-            updatedAt: new Date(),
-          })),
-        );
-      }
       logger.info("Imported custom widget definition", { id, name: input.widget.name });
       return { id };
     }),

@@ -12,11 +12,15 @@ export const customWidgetIdentifierSchema = z
   .min(1)
   .max(64)
   .regex(/^[a-z][a-z0-9_-]*$/, "IDs must start with a letter and contain lowercase letters, numbers, - or _");
+export const isCustomWidgetParameterIdentifier = (value: string) => /^[A-Za-z][A-Za-z0-9_-]*$/u.test(value);
 export const customWidgetParameterIdentifierSchema = z
   .string()
   .min(1)
   .max(64)
-  .regex(/^[A-Za-z][A-Za-z0-9_-]*$/u, "Parameter names must start with a letter and contain letters, numbers, - or _");
+  .refine(
+    isCustomWidgetParameterIdentifier,
+    "Parameter names must start with a letter and contain letters, numbers, - or _",
+  );
 
 const requestParametersSchema = z
   .record(customWidgetParameterIdentifierSchema, z.enum(customJsxRequestParameterTypes))
@@ -240,7 +244,9 @@ export const customJsxRequestSchema = z
     collectParameterNames(request.queryTemplate).forEach((name) => used.push(name));
     collectParameterNames(request.bodyTemplate).forEach((name) => used.push(name));
     for (const name of used) {
-      if (!declared.has(name)) {
+      if (!isCustomWidgetParameterIdentifier(name)) {
+        ctx.addIssue({ code: "custom", path: ["pathTemplate"], message: `Placeholder '${name}' is invalid` });
+      } else if (!declared.has(name)) {
         ctx.addIssue({ code: "custom", path: ["parameters"], message: `Placeholder '${name}' is not declared` });
       }
     }

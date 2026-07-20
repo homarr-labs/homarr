@@ -36,7 +36,7 @@ const input: CreatePreviewSessionInput = {
   name: "Preview",
   template: "<Text>Preview</Text>",
   optionsSchema: { type: "object", properties: {}, additionalProperties: false },
-  defaultOptions: {},
+  options: {},
 };
 
 describe("preview session service", () => {
@@ -46,6 +46,13 @@ describe("preview session service", () => {
     const session = await service.get(created.id, input.userId);
     expect(session.secrets[0]?.value).toBe("encrypted:secret");
     expect(service.getSecrets(session, "default")).toEqual([{ kind: "apiKey", value: "secret" }]);
+  });
+
+  it("stores the selected instance options for load-query bindings", async () => {
+    const { service } = createHarness();
+    const created = await service.create({ ...input, options: { environmentId: 7 } });
+    const session = await service.get(created.id, input.userId);
+    expect(session.options).toEqual({ environmentId: 7 });
   });
 
   it("isolates sessions by user and expires them after ten minutes", async () => {

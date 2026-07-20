@@ -37,6 +37,17 @@ describe("named request manifest rendering", () => {
       enabled: true,
       nested: { level: 5 },
     });
+
+    const camelCaseRequest: CustomJsxRequest = {
+      ...request,
+      pathTemplate: "/endpoints/{endpointId}",
+      parameters: { endpointId: "string" },
+      queryTemplate: undefined,
+      bodyTemplate: undefined,
+    };
+    expect(renderRequestTarget("https://example.com", camelCaseRequest, { endpointId: "local/1" }).pathname).toBe(
+      "/endpoints/local%2F1",
+    );
   });
 
   it("rejects unresolved or malformed placeholders", () => {
@@ -50,7 +61,7 @@ describe("named request manifest rendering", () => {
     expect(() =>
       renderRequestTarget(
         "https://example.com",
-        { ...request, pathTemplate: "/{INVALID}" },
+        { ...request, pathTemplate: "/{1invalid}" },
         { device: "lamp", enabled: true, level: 5 },
       ),
     ).toThrow("invalid placeholder");

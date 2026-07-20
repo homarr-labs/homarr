@@ -994,6 +994,7 @@
       "deleted": "Widget \"{name}\" deleted.",
       "imported": "Widget imported successfully.",
       "aiPromptCopied": "AI prompt copied to clipboard",
+      "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
       "aiPromptCopyError": "Failed to copy the prompt to the clipboard.",
       "updateError": "Failed to update widget. Your changes were not saved.",
       "importError": "Failed to import widget. Ensure the file uses the homarr-custom-widget-v2 schema.",
@@ -1055,7 +1056,6 @@
     "inspect": "Inspect widget",
     "details": "Widget details",
     "loadError": "This submission could not be loaded.",
-    "revision": "Revision {revision}",
     "sources": "Declared API sources",
     "requests": "Declared queries and actions",
     "noRequests": "This widget does not declare network requests.",
@@ -1076,8 +1076,6 @@
       "signInHint": "Sign in to publish under your Workshop identity.",
       "titleField": "Title",
       "descriptionField": "Description",
-      "changelog": "Changelog",
-      "initialChangelog": "Initial publication",
       "screenshots": "Screenshots",
       "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
       "action": "Publish now",
@@ -4050,7 +4048,6 @@
       "description": "Render a configured Custom JSX definition.",
       "customJsx": {
         "noTemplate": "No JSX template is configured.",
-        "interactive": "Interactive",
         "templateWarnings": "{count} template warnings:",
         "requestIdRequired": "This network control requires a named requestId.",
         "unsavedPreview": "Run a GET test in the editor before testing named requests.",
@@ -4067,9 +4064,7 @@
         "refresh": "Refresh",
         "copy": "Copy",
         "copied": "Copied",
-        "networkCapabilities": "Network capabilities",
-        "confirmDelete": "Confirm this destructive action.",
-        "networkAccessNeedsReview": "Network access needs review before this template can run."
+        "confirmDelete": "Confirm this destructive action."
       },
       "option": {
         "definitionId": {

@@ -133,7 +133,7 @@ export function CustomWidgetSourcesEditor({
       {sources.map((source, index) => {
         const baseUrlIssue = getCustomWidgetSourceUrlIssue(source.baseUrl);
         return (
-          <Fieldset key={source.id} legend={index === 0 ? t("primary") : source.name}>
+          <Fieldset key={index} legend={index === 0 ? t("primary") : source.name}>
             <Stack gap="sm">
               <Group grow align="start">
                 <TextInput

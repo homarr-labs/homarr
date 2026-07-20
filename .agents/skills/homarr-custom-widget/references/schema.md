@@ -2,6 +2,8 @@
 
 Every import and export is one object with `$schema: "homarr-custom-widget-v2"`, metadata, `sources`, `requests`, `optionsSchema`, `defaultOptions`, and `template`. Secrets are accepted separately by create/update/preview operations and never exported.
 
+The safe-local-binding and `RecursiveList` expansion changes only template authoring. It does not add database fields, request fields, persistence, or another widget schema version.
+
 ```ts
 interface HomarrCustomWidgetV2 {
   $schema: "homarr-custom-widget-v2";
@@ -30,4 +32,6 @@ Option and bind names start with a letter and use letters, numbers, `-`, or `_`;
 
 Do not model credentials as options or static defaults. Credential-like option names and values are rejected; source authentication is configured separately.
 
-When connected, retrieve `homarr://custom-widgets/schema` for the exact machine-readable schema.
+Do not add `stateSchema`, `defaultState`, scripts, imports, or component declarations to the manifest. Temporary interaction values come only from JSX `bind` controls and are exposed through `inputs`. Derived values declared with safe `const` blocks exist only while evaluating the template.
+
+This reference is sufficient for offline authoring against the matching release. When connected, retrieve the live Custom Widget schema; it supersedes this static copy if the installed Homarr version differs.

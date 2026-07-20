@@ -15,7 +15,13 @@ import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { applyDefinition, buildDefinition, isRecord, loadPreviewQueries } from "./_custom-widget-form-utils";
+import {
+  applyDefinition,
+  buildDefinition,
+  getCustomWidgetPreviewOptionIssues,
+  isRecord,
+  loadPreviewQueries,
+} from "./_custom-widget-form-utils";
 import type { PreviewState } from "./_custom-widget-preview-panel";
 import { extractCustomWidgetSaveIssues } from "./_custom-widget-save-errors";
 import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
@@ -28,6 +34,7 @@ interface FormActionsInput {
   preview: PreviewState;
   setPreview: Dispatch<SetStateAction<PreviewState>>;
   setMobilePane: Dispatch<SetStateAction<"configure" | "preview">>;
+  optionsSnapshot: Record<string, unknown>;
   setOptionsSnapshot: Dispatch<SetStateAction<Record<string, unknown>>>;
 }
 
@@ -111,6 +118,15 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       });
       return;
     }
+    const optionIssues = getCustomWidgetPreviewOptionIssues(input.candidate.data, input.optionsSnapshot);
+    if (optionIssues.length > 0) {
+      const issue = optionIssues[0];
+      showErrorNotification({
+        title: w("section.preview"),
+        message: issue ? `${issue.path}: ${issue.message}` : w("invalidWidget"),
+      });
+      return;
+    }
     input.setMobilePane("preview");
     input.setPreview({ data: {}, status: {}, session: null, outcome: "loading" });
     setPreviewPending(true);
@@ -118,6 +134,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       const created = await previewMutation.mutateAsync({
         definition: input.candidate.data,
         definitionId: input.definitionId,
+        options: input.optionsSnapshot,
         secrets: input.form.values.secrets
           .filter((secret) => secret.value.trim())
           .map(({ sourceId, kind, value }) => ({
@@ -126,8 +143,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
             value,
           })),
       });
-      input.setOptionsSnapshot(input.candidate.data.defaultOptions);
-      const snapshot = await loadPreviewQueries(input.candidate.data, created.previewSession.id);
+      const snapshot = await loadPreviewQueries(input.candidate.data, created.previewSession.id, input.optionsSnapshot);
       const failed = Object.values(snapshot.status).filter((status) => isRecord(status) && status.ok === false).length;
       input.setPreview({
         ...snapshot,
@@ -166,6 +182,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         throw new Error(formatCustomWidgetImportIssues(result.issues));
       }
       applyDefinition(input.form, customWidgetDefinitionSchema.parse(result.widget));
+      input.setOptionsSnapshot(result.widget.defaultOptions);
       input.setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
       showSuccessNotification({
         title: w("ai.response"),
@@ -204,7 +221,8 @@ function reportSaveIssues(
   const messagesByPath = new Map<string, string[]>();
   for (const issue of issues) {
     if (!issue.path) continue;
-    messagesByPath.set(issue.path, [...(messagesByPath.get(issue.path) ?? []), issue.message]);
+    const field = issue.path.split(".")[0] ?? issue.path;
+    messagesByPath.set(field, [...(messagesByPath.get(field) ?? []), issue.message]);
   }
   for (const [path, messages] of messagesByPath) {
     form.setFieldError(path, messages.join(" "));
@@ -217,5 +235,7 @@ function reportSaveIssues(
 }
 
 function clearSaveIssues(form: UseFormReturnType<CustomWidgetFormValues>, issues: CustomWidgetSaveIssue[]) {
-  for (const path of new Set(issues.flatMap((issue) => (issue.path ? [issue.path] : [])))) form.clearFieldError(path);
+  for (const path of new Set(issues.flatMap((issue) => (issue.path ? [issue.path.split(".")[0] ?? issue.path] : [])))) {
+    form.clearFieldError(path);
+  }
 }

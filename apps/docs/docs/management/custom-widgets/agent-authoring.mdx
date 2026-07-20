@@ -1,28 +1,47 @@
-# Agents and skills.sh
+# Use agents and skills.sh
 
-An external agent creates widgets one at a time through Homarr's MCP server. The harness owns any multi-widget task list; Homarr does not create packs or multi-widget drafts.
+An external agent creates one widget at a time with the Homarr MCP server. The agent harness manages the list for multiple widgets.
+
+Homarr does not create widget packs or drafts for multiple widgets.
 
 <a className="button button--primary" href="https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget">
   View the Custom Widget Skill on skills.sh
 </a>
 
-Install the Agent Skill directly from the verified Homarr repository:
+Install the Agent Skill from the verified Homarr repository:
 
 ```sh
 npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget
 ```
 
-The portable skill is a tool-agnostic authoring reference. Connected workflow and tool instructions come from Homarr's native MCP prompt instead, so the same complete skill can also be embedded safely in the UI's offline copy/paste prompt.
+The portable skill gives authoring instructions that do not require a tool. The Homarr MCP prompt gives instructions for a connected workflow.
 
-The source lives at [`.agents/skills/homarr-custom-widget`](https://github.com/homarr-labs/homarr/tree/dev/.agents/skills/homarr-custom-widget). There is no ZIP archive. After the skill exists on the repository's default branch, run the command once to register installation activity, verify the skills.sh page, and request official maker attribution for `homarr-labs` through skills.sh. Repository code cannot grant that attribution itself.
+The offline copy prompt includes the complete portable skill and all eight release-matched references. Those references contain the generated component APIs and runtime examples, so Homarr does not append duplicate raw catalog data. A model can author directly from this bundle without MCP tools or repository access.
 
-## MCP discovery
+The prompt starts with the user's widget request. It ends with:
+
+```text
+--- END HOMARR CUSTOM WIDGET OFFLINE BUNDLE ---
+Characters: <exact clipboard character count>
+```
+
+Homarr computes the total after assembling the prompt, including the digits in the total itself. The sentinel and count make clipboard truncation detectable. A missing sentinel or mismatched length means the bundle is incomplete and should be copied again.
+
+The source is in [`.agents/skills/homarr-custom-widget`](https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget). `HEAD` follows the repository default branch, so the link is not tied to an unreleased feature branch. Homarr does not provide a ZIP archive.
+
+After publication, run the installation command once. This action registers installation activity.
+
+Then, verify the skills.sh page. Request official maker attribution for `homarr-labs` from skills.sh.
+
+Repository code cannot give this attribution.
+
+## Get MCP resources
 
 - Prompt: `homarr-custom-widget-author`
 - Resources: `homarr://custom-widgets/schema`, `components`, `components/{name}`, `examples/{name}`, and `skill`
 - HTTP: `GET /api/custom-widgets/authoring-prompt` and `GET /api/custom-widgets/skill`
 
-The authoring-prompt tool description intentionally contains only one sentence. Workflow instructions live in the prompt and link to resources.
+The authoring-prompt tool description contains one sentence. The prompt contains the workflow instructions and resource links.
 
 `GET /api/custom-widgets/skill`, the MCP tool, and the MCP resource return the live `SKILL.md` with:
 
@@ -37,17 +56,24 @@ The authoring-prompt tool description intentionally contains only one sentence. 
 }
 ```
 
-They do not return an archive URL or hash.
+These interfaces do not return an archive URL or archive hash.
 
-## Agent loop
+## Create a Custom Widget with MCP
 
-1. Fetch the prompt, live schema, and component catalog.
+1. Get the prompt, live schema, and component catalog.
 2. Read the external API documentation.
-3. Build and validate one definition without saving.
-4. Create a preview session and test its queries/actions.
-5. Open the returned preview URL with browser tools.
-6. Set a supplied credential with the dedicated secret-write permission, or ask the user through the ten-minute Homarr credential URL.
-7. Inspect the redacted journal and patch until valid.
-8. Create the widget, then repeat for the next requested widget.
+3. Build one definition.
+4. Validate the definition without saving it.
+5. Create a preview session.
+6. Test the queries and actions.
+7. Open the preview URL with browser tools.
+8. Set the credential if the user supplied it.
+9. Otherwise, ask the user for the credential with the ten-minute Homarr credential URL.
+10. Inspect the redacted journal.
+11. Patch the definition until it is valid.
+12. Create the widget.
+13. Repeat the procedure for the next widget.
 
-Credential URLs are scoped to one definition/preview, source, and required fields. The agent receives only pending/completed status. Plaintext is encrypted immediately and never returned.
+Each credential URL applies to one definition or preview, one source, and the required fields. The agent receives only the request status.
+
+Homarr encrypts the plaintext immediately. Homarr does not return the plaintext.

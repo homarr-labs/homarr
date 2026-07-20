@@ -3,7 +3,7 @@
 import { Button, Menu } from "@mantine/core";
 import { IconChevronDown, IconFileText, IconSparkles } from "@tabler/icons-react";
 
-import { buildCustomWidgetAiPrompt, CUSTOM_WIDGET_SKILL_MD } from "@homarr/custom-widgets/core";
+import { buildCustomWidgetAiPrompt } from "@homarr/custom-widgets/authoring-prompt";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -24,17 +24,23 @@ export const CopyAiPromptButton = ({
 
   const handleCopy = async (includeSkill = false) => {
     try {
-      await navigator.clipboard.writeText(
-        buildCustomWidgetAiPrompt(
-          undefined,
-          rawResponse,
-          currentConfig,
-          request,
-          documentationUrl,
-          includeSkill ? CUSTOM_WIDGET_SKILL_MD : undefined,
-        ),
-      );
-      showSuccessNotification({ title: t("action.copyAiPrompt"), message: t("notification.aiPromptCopied") });
+      const prompt = includeSkill
+        ? await import("@homarr/custom-widgets/embedded-authoring-prompt").then(
+            ({ buildCustomWidgetAiPromptWithEmbeddedSkill }) =>
+              buildCustomWidgetAiPromptWithEmbeddedSkill(
+                undefined,
+                rawResponse,
+                currentConfig,
+                request,
+                documentationUrl,
+              ),
+          )
+        : buildCustomWidgetAiPrompt(undefined, rawResponse, currentConfig, request, documentationUrl);
+      await navigator.clipboard.writeText(prompt);
+      showSuccessNotification({
+        title: t("action.copyAiPrompt"),
+        message: t("notification.aiPromptCopiedWithCount", { count: prompt.length }),
+      });
     } catch {
       showErrorNotification({ title: t("action.copyAiPrompt"), message: t("notification.aiPromptCopyError") });
     }

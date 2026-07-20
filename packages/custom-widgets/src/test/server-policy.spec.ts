@@ -83,6 +83,87 @@ describe("custom widget network policy", () => {
     }
   });
 
+  test.each([
+    [301, "GET", ""],
+    [302, "GET", ""],
+    [303, "GET", ""],
+    [307, "POST", '{"query":"status"}'],
+    [308, "POST", '{"query":"status"}'],
+  ] as const)("follows %i redirects with fetch-compatible method semantics", async (status, method, body) => {
+    const server = createServer((request, response) => {
+      if (request.url === "/start") {
+        request.resume();
+        response.writeHead(status, { location: "/target" });
+        response.end();
+        return;
+      }
+      let receivedBody = "";
+      request.setEncoding("utf8");
+      request.on("data", (chunk: string) => {
+        receivedBody += chunk;
+      });
+      request.on("end", () => {
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(
+          JSON.stringify({
+            method: request.method,
+            body: receivedBody,
+            contentType: request.headers["content-type"] ?? null,
+          }),
+        );
+      });
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Test server did not expose a TCP port");
+    const baseUrl = `http://127.0.0.1:${address.port}`;
+    try {
+      await expect(
+        executeCustomWidgetRequest({
+          baseUrl,
+          targetUrl: `${baseUrl}/start`,
+          method: "POST",
+          body: '{"query":"status"}',
+          networkScope: "loopback",
+          kind: "query",
+        }),
+      ).resolves.toMatchObject({
+        ok: true,
+        data: {
+          method,
+          body,
+          contentType: body ? "application/json" : null,
+        },
+      });
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
+  });
+
+  test("does not follow redirects for actions", async () => {
+    const server = createServer((_request, response) => {
+      response.writeHead(303, { location: "/target" });
+      response.end();
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Test server did not expose a TCP port");
+    const baseUrl = `http://127.0.0.1:${address.port}`;
+    try {
+      await expect(
+        executeCustomWidgetRequest({
+          baseUrl,
+          targetUrl: `${baseUrl}/start`,
+          method: "POST",
+          networkScope: "loopback",
+          kind: "action",
+        }),
+      ).rejects.toThrow("redirect limit");
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
+  });
+
   test("evicts declared response-cache prefixes after an action", async () => {
     let calls = 0;
     const server = createServer((_request, response) => {

@@ -18,14 +18,13 @@ import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { buildCustomWidgetMcpPrompt } from "@homarr/custom-widgets/authoring-prompt";
 import {
-  buildCustomWidgetMcpPrompt,
-  customJsxExamples,
   getCustomWidgetComponent,
   getCustomWidgetComponentCatalog,
-  getCustomWidgetJsonSchema,
   getCustomWidgetSkill,
-} from "@homarr/custom-widgets/core";
+} from "@homarr/custom-widgets/authoring-resources";
+import { customJsxExamples, getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 import { db } from "@homarr/db";
 
 import { getPackageVersion } from "~/versions/package-reader";

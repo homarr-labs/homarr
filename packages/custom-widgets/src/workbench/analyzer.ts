@@ -1,4 +1,5 @@
-import { customJsxRequestSchema, getCustomJsxBindingType } from "../core";
+import { getCustomJsxBindingType } from "../core/component-registry";
+import { customJsxRequestSchema } from "../core/request-schema";
 import { CUSTOM_JSX_LIMITS, validateCustomJsxTemplate } from "../jsx";
 
 export type EditorDiagnosticCode =

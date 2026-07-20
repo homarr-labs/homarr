@@ -60,6 +60,20 @@
   color: white;
   background: var(--ifm-color-danger-dark);
 }
+.button:hover:not(:disabled),
+.secondary:hover:not(:disabled),
+.danger:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+.button:focus-visible,
+.secondary:focus-visible,
+.danger:focus-visible,
+.input:focus-visible,
+.textarea:focus-visible,
+.select:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ifm-color-primary) 45%, transparent);
+  outline-offset: 2px;
+}
 .button:disabled,
 .secondary:disabled,
 .danger:disabled {
@@ -98,6 +112,11 @@
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 1rem;
 }
+.empty {
+  margin: 3rem 0;
+  color: var(--ifm-color-emphasis-700);
+  text-align: center;
+}
 .card {
   overflow: hidden;
   border: 1px solid var(--ifm-color-emphasis-200);
@@ -135,6 +154,29 @@
   color: var(--ifm-color-emphasis-600);
   font-size: 0.82rem;
 }
+.adminBadge,
+.reportCount {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.adminBadge {
+  margin-left: 0.45rem;
+  color: var(--ifm-color-primary-darkest);
+  background: color-mix(in srgb, var(--ifm-color-primary) 16%, transparent);
+}
+.reportCount {
+  color: var(--ifm-color-warning-darkest);
+  background: color-mix(in srgb, var(--ifm-color-warning) 24%, transparent);
+}
+.reportedCard {
+  border-color: var(--ifm-color-warning-dark);
+  background: color-mix(in srgb, var(--ifm-color-warning) 5%, var(--ifm-card-background-color));
+}
 
 .overlay {
   position: fixed;
@@ -161,19 +203,36 @@
 }
 .dialog h2 {
   margin-top: 0;
+  padding-right: 2.5rem;
+}
+.dialogClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.5rem;
+  color: var(--ifm-font-color-base);
+  background: var(--ifm-color-emphasis-200);
+  font: inherit;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.dialogClose:hover {
+  background: var(--ifm-color-emphasis-300);
+}
+.dialogClose:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ifm-color-primary) 45%, transparent);
+  outline-offset: 2px;
 }
 .stack {
   display: grid;
   gap: 1rem;
-}
-.code {
-  max-height: 340px;
-  overflow: auto;
-  padding: 1rem;
-  border-radius: 0.65rem;
-  background: var(--ifm-color-emphasis-100);
-  white-space: pre;
-  font-size: 0.78rem;
 }
 .notice,
 .error,
@@ -186,6 +245,7 @@
 }
 .error {
   background: color-mix(in srgb, var(--ifm-color-danger) 20%, transparent);
+  white-space: pre-wrap;
 }
 .success {
   background: color-mix(in srgb, var(--ifm-color-success) 20%, transparent);
@@ -214,22 +274,77 @@
   color: var(--ifm-color-emphasis-700);
   font-size: 0.82rem;
 }
-.adminGroup {
+.moderation {
   display: grid;
   gap: 0.75rem;
   padding: 1rem;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 0.8rem;
+  border: 1px solid var(--ifm-color-warning-dark);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--ifm-color-warning) 10%, var(--ifm-background-color));
 }
-.report {
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--ifm-color-warning);
+.moderation h3,
+.moderationReport p {
+  margin: 0;
 }
-.audit {
-  font-family: var(--ifm-font-family-monospace);
-  font-size: 0.78rem;
+.moderationReport {
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--ifm-color-warning) 35%, transparent);
 }
-
+.moderationReport > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.moderationReport span {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.8rem;
+}
+.moderationReport p {
+  margin-top: 0.35rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.moderationReport > button {
+  margin-top: 0.75rem;
+}
+.adminList {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.adminSummary,
+.adminHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.adminSummary {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--ifm-color-emphasis-100);
+}
+.adminGroup {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 0.9rem;
+  background: var(--ifm-card-background-color);
+}
+.adminGroup h2,
+.adminGroup p {
+  margin: 0;
+}
+.adminHeading > div {
+  display: grid;
+  gap: 0.2rem;
+}
+.adminHeading span {
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.82rem;
+}
 @media (max-width: 600px) {
   .shell {
     width: min(100% - 1rem, 1180px);
@@ -240,5 +355,15 @@
   }
   .actions > * {
     flex: 1 1 auto;
+  }
+  .moderationReport > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .adminSummary,
+  .adminHeading {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

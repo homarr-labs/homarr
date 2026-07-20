@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { WorkshopAdminAction, WorkshopReport, WorkshopSubmissionSummary, WorkshopUser } from "@homarr/workshop";
+import type { WorkshopReport, WorkshopSubmissionSummary, WorkshopUser } from "@homarr/workshop";
 import { WorkshopClient } from "@homarr/workshop";
 
 import styles from "./workshop.module.css";
@@ -12,33 +12,60 @@ export function WorkshopAdmin() {
   const [user, setUser] = useState<WorkshopUser | null>(null);
   const [reports, setReports] = useState<WorkshopReport[]>([]);
   const [submissions, setSubmissions] = useState<WorkshopSubmissionSummary[]>([]);
-  const [actions, setActions] = useState<WorkshopAdminAction[]>([]);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const load = useCallback(async () => {
+    setLoading(true);
     try {
-      const [nextReports, nextSubmissions, nextActions] = await Promise.all([
+      const [nextReports, nextSubmissions] = await Promise.all([
         client.listReports(),
         client.listAll({ sort: "newest" }),
-        client.listAdminActions(),
       ]);
       setReports(nextReports);
       setSubmissions(nextSubmissions);
-      setActions(nextActions);
       setError("");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unable to load Workshop administration");
+    } finally {
+      setLoading(false);
     }
   }, [client]);
 
   useEffect(() => {
     const unsubscribe = client.subscribeToAuth(setUser);
-    void client.refreshAuth().then((next) => {
-      setUser(next);
-      if (next?.isAdmin) void load();
+    void client.refreshAuth().then((nextUser) => {
+      setUser(nextUser);
+      if (nextUser?.isAdmin) void load();
     });
     return unsubscribe;
   }, [client, load]);
+
+  const dismiss = async (reportId: string) => {
+    setBusyId(reportId);
+    try {
+      await client.dismissReport(reportId);
+      await load();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Unable to dismiss report");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const remove = async (submission: WorkshopSubmissionSummary) => {
+    if (!window.confirm(`Delete ${submission.title}? Installed local copies will remain.`)) return;
+    setBusyId(submission.id);
+    try {
+      await client.delete(submission.id);
+      await load();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Unable to delete submission");
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   const grouped = submissions.map((submission) => ({
     submission,
@@ -49,51 +76,74 @@ export function WorkshopAdmin() {
     <main className={styles.shell}>
       <section className={styles.hero}>
         <h1>Workshop administration</h1>
-        <p>
-          Review reports, see each reporter and vote totals, dismiss reports, or delete any submission. This page does
-          not manage user accounts.
-        </p>
-        {!user && (
-          <button
-            className={styles.button}
-            onClick={() =>
-              void client.signInWithGitHub().then((next) => {
-                setUser(next);
-                if (next?.isAdmin) void load();
-              })
-            }
-          >
-            Sign in with GitHub
-          </button>
-        )}
+        <p>Review community reports and remove submissions. PocketBase rules enforce every moderation action.</p>
+        <div className={styles.actions}>
+          <a className={styles.secondary} href="/workshop">
+            Back to Workshop
+          </a>
+          {!user && (
+            <button
+              className={styles.button}
+              onClick={() =>
+                void client
+                  .signInWithGitHub()
+                  .then((nextUser) => {
+                    setUser(nextUser);
+                    if (nextUser?.isAdmin) void load();
+                  })
+                  .catch((cause: Error) => setError(cause.message))
+              }
+            >
+              Sign in with GitHub
+            </button>
+          )}
+          {user?.isAdmin && (
+            <button className={styles.secondary} disabled={loading} onClick={() => void load()}>
+              {loading ? "Refreshing…" : "Refresh"}
+            </button>
+          )}
+        </div>
       </section>
+
       {user && !user.isAdmin && <div className={styles.error}>This Workshop account is not an administrator.</div>}
       {error && <div className={styles.error}>{error}</div>}
       {user?.isAdmin && (
-        <div className={styles.stack} style={{ marginTop: "2rem" }}>
-          <h2>Submissions and open reports</h2>
+        <section className={styles.adminList} aria-busy={loading}>
+          <div className={styles.adminSummary}>
+            <strong>{reports.length} open reports</strong>
+            <span>{submissions.length} published widgets</span>
+          </div>
           {grouped.map(({ submission, reports: submissionReports }) => (
-            <section key={submission.id} className={styles.adminGroup}>
-              <div className={styles.meta}>
-                <strong>{submission.title}</strong>
-                <span>
-                  ▲ {submission.upvotes} · ▼ {submission.downvotes} · score {submission.score} ·{" "}
-                  {submissionReports.length} reports
+            <article key={submission.id} className={styles.adminGroup}>
+              <div className={styles.adminHeading}>
+                <div>
+                  <h2>{submission.title}</h2>
+                  <span>by {submission.authorName}</span>
+                </div>
+                <span className={submissionReports.length > 0 ? styles.reportCount : undefined}>
+                  {submissionReports.length} {submissionReports.length === 1 ? "report" : "reports"}
                 </span>
               </div>
-              <p>{submission.description}</p>
+              <p>{submission.description || "No description"}</p>
+              <div className={styles.meta}>
+                <span>
+                  ▲ {submission.upvotes} · ▼ {submission.downvotes} · score {submission.score}
+                </span>
+                <span>Updated {new Date(submission.updated).toLocaleDateString()}</span>
+              </div>
               {submissionReports.map((report) => (
-                <div key={report.id} className={styles.report}>
-                  <strong>{report.category}</strong> by {report.reporterName}
+                <div key={report.id} className={styles.moderationReport}>
+                  <div>
+                    <strong>{report.category}</strong>
+                    <span>Reported by {report.reporterName}</span>
+                  </div>
                   <p>{report.explanation}</p>
                   <button
                     className={styles.secondary}
-                    onClick={() => {
-                      const reason = window.prompt("Why is this report being dismissed?")?.trim();
-                      if (reason) void client.dismissReport(report.id, reason).then(load);
-                    }}
+                    disabled={busyId === report.id}
+                    onClick={() => void dismiss(report.id)}
                   >
-                    Dismiss report
+                    {busyId === report.id ? "Dismissing…" : "Dismiss report"}
                   </button>
                 </div>
               ))}
@@ -103,26 +153,16 @@ export function WorkshopAdmin() {
                 </a>
                 <button
                   className={styles.danger}
-                  onClick={() => {
-                    if (window.confirm(`Delete ${submission.title}? Installed local copies will remain.`))
-                      void client.delete(submission.id, "Deleted after administrator review").then(load);
-                  }}
+                  disabled={busyId === submission.id}
+                  onClick={() => void remove(submission)}
                 >
-                  Delete submission
+                  {busyId === submission.id ? "Deleting…" : "Delete submission"}
                 </button>
               </div>
-            </section>
+            </article>
           ))}
-          <h2>Administrator audit trail</h2>
-          {actions.map((action) => (
-            <div key={action.id} className={`${styles.adminGroup} ${styles.audit}`}>
-              {new Date(action.created).toLocaleString()} · {action.actorName} · {action.action} · submission{" "}
-              {action.submissionId || "—"} · report {action.reportId || "—"}
-              <br />
-              {action.reason}
-            </div>
-          ))}
-        </div>
+          {!loading && grouped.length === 0 && <p className={styles.empty}>No Workshop submissions.</p>}
+        </section>
       )}
     </main>
   );

@@ -2,7 +2,7 @@
 set -eu
 
 exec pocketbase serve \
-  --http=0.0.0.0:8090 \
+  --http="0.0.0.0:${PORT:-8090}" \
   --origins="${PB_ALLOWED_ORIGINS:-*}" \
   --dir=/pb_data \
   --hooksDir=/pb_hooks \

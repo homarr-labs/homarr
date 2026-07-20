@@ -3,13 +3,14 @@ import { MySqlContainer } from "@testcontainers/mysql";
 import { drizzle } from "drizzle-orm/mysql2";
 import { migrate } from "drizzle-orm/mysql2/migrator";
 import mysql from "mysql2";
-import { describe, expect, test } from "vitest";
+import { describe, test } from "vitest";
 
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 
 import * as mysqlSchema from "../schema/mysql";
 import type { Database } from "..";
 import { seedDataAsync } from "../migrations/seed";
+import { expectBundledCustomWidgetsSeeded } from "./custom-widget-seed-assertions";
 
 describe("Mysql Migration", () => {
   test("should add all tables and keys specified in migration files", async () => {
@@ -37,11 +38,7 @@ describe("Mysql Migration", () => {
 
     // Check if users table exists
     await database.query.users.findMany();
-    const bundledWidgets = await database.query.customWidgetDefinitions.findMany({
-      where: (table, { like }) => like(table.id, "seed-%"),
-    });
-    expect(bundledWidgets).toHaveLength(4);
-    expect(bundledWidgets.every(({ enabled }) => !enabled)).toBe(true);
+    await expectBundledCustomWidgetsSeeded(database as unknown as Database);
 
     connection.end();
     await mysqlContainer.stop();

@@ -1,6 +1,6 @@
 "use client";
 
-import { redo, redoDepth, undo, undoDepth } from "@codemirror/commands";
+import { indentSelection, redo, redoDepth, undo, undoDepth } from "@codemirror/commands";
 import type { EditorView as EditorViewType } from "@codemirror/view";
 import { EditorView } from "@codemirror/view";
 import { lazy, Suspense, useCallback, useEffect, useId, useMemo, useState } from "react";
@@ -109,6 +109,23 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
           onRedo={() => {
             const editorView = editorViews.get(editorInstanceId);
             if (editorView) redo(editorView);
+          }}
+          onFormat={() => {
+            const editorView = editorViews.get(editorInstanceId);
+            if (props.language === "jsx" && editorView) {
+              const selection = editorView.state.selection.main;
+              editorView.dispatch({ selection: { anchor: 0, head: editorView.state.doc.length } });
+              indentSelection(editorView);
+              const documentLength = editorView.state.doc.length;
+              editorView.dispatch({
+                selection: {
+                  anchor: Math.min(selection.anchor, documentLength),
+                  head: Math.min(selection.head, documentLength),
+                },
+              });
+            } else {
+              props.onChange(formattedValue);
+            }
           }}
         />
         {props.reference && (

@@ -1,8 +1,10 @@
-# Custom JSX runtime
+# Use the Custom JSX runtime
 
-Templates are declarative JSX interpreted inside a widget-local error boundary. They cannot import modules or run arbitrary JavaScript.
+import { CustomJsxComponentReference } from "@site/src/components/custom-jsx-component-reference";
 
-## Data roots
+Homarr interprets declarative JSX in the error boundary of the widget. A template cannot import a module or run arbitrary JavaScript.
+
+## Use data roots
 
 ```jsx
 <Stack>
@@ -20,37 +22,187 @@ Templates are declarative JSX interpreted inside a widget-local error boundary. 
 ```
 
 - `data.<requestId>` contains sanitized JSON or text results.
-- `status.<requestId>` contains loading, success, HTTP, and error state.
-- `options` contains the validated board-item configuration.
-- `inputs` contains temporary values from controls using `bind`.
+- `status.<requestId>` contains the request status.
+- `options` contains the validated board item configuration.
+- `inputs` contains temporary values from controls that use `bind`.
 
-Load-triggered queries populate data automatically and follow the widget refresh interval. `SubFetch` runs a manual query. `ActionButton` and `ToggleSwitch` invoke actions.
+Load queries get data automatically. They run at the widget refresh interval.
 
-## Mantine capabilities
+`SubFetch` runs a manual query. `ActionButton` and `ToggleSwitch` run actions.
 
-Homarr discovers exports from the installed Mantine Core, Dates, and Charts packages and generates prop metadata from their installed TypeScript definitions. Ordinary serializable props pass through. Style props, `style`, and `styles` are sanitized and scoped to the tile. Safe new Mantine exports become available without a hand-maintained allowlist; provider, portal, app-shell, modal, drawer, file, and low-level callback families are classified by the capability denylist.
+## Use Mantine components
 
-Use safe Tabler icons through the resolver, for example `<TablerIcon name="server" size={18} />`. The editor completes installed icon names, and `homarr://custom-widgets/components/TablerIcon` exposes the same names to MCP agents.
+Homarr discovers exports from the installed Mantine Core, Dates, and Charts packages. It generates prop metadata from the installed TypeScript definitions.
 
-The runtime blocks imports, hooks, refs, callbacks, polymorphic roots, provider replacement, arbitrary portal targets, browser networking, npm packages, evaluation, prototype-pollution keys, unsafe URLs, global selectors, and escaping CSS.
+Homarr passes ordinary serializable props to Mantine. It sanitizes style props, `style`, and `styles`.
 
-## Temporary inputs
+Homarr scopes these styles to the widget tile. Safe new Mantine exports become available without a hand-maintained allowlist.
 
-Bind a control to a literal name and read the value from `inputs`:
+The capability denylist blocks providers, portals, app shells, modals, drawers, file controls, and low-level callback props.
+
+Use the safe Tabler icon resolver. For example, use `<TablerIcon name="server" size={18} />`.
+
+The editor completes installed icon names. `homarr://custom-widgets/components/TablerIcon` gives the same names to MCP agents.
+
+The runtime blocks these capabilities:
+
+- Imports
+- Hooks
+- Refs
+- Raw callback props
+- Polymorphic roots
+- Provider replacement
+- Arbitrary portal targets
+- Browser network requests
+- npm packages
+- Code evaluation
+- Prototype-pollution keys
+- Unsafe URLs
+- Global selectors
+- CSS that escapes the widget tile
+
+### Browse the release-matched component API
+
+Search the generated catalog before guessing a component or prop name. Expand a component to see its actual prop types, required props, literal values, temporary-input adapter, subcomponents, accessibility notes, and a JSX usage sketch.
+
+The explorer fetches only the plain, versioned static catalog. It does not import or execute Mantine or Homarr component objects in this documentation page. Select **Open raw JSON** to give the exact same artifact to an offline tool.
+
+<CustomJsxComponentReference />
+
+## Derive values with immutable local bindings
+
+A collection callback can use a restricted block when the returned JSX needs the same derived value more than once:
+
+```jsx
+{
+  data.pokemon.map((pokemon) => {
+    const segments = pokemon.url.split("/").filter((part) => part);
+    const dexId = segments.at(-1);
+    const isSelected = inputs.selectedPokemon === pokemon.name;
+
+    return (
+      <Card key={dexId} withBorder={isSelected}>
+        <Text>#{dexId}</Text>
+        <Text tt="capitalize">{pokemon.name}</Text>
+      </Card>
+    );
+  });
+}
+```
+
+The block must contain one or more `const` declarations followed by exactly one final `return`. A declaration uses one simple identifier and a required initializer. An earlier local can be used by later declarations and the final JSX.
+
+For one page-level derived value, directly invoke a zero-argument inline arrow:
+
+```jsx
+{
+  (() => {
+    const visiblePokemon = data.pokemon.filter(
+      (pokemon) => options.types.length === 0 || options.types.includes(pokemon.type),
+    );
+
+    return (
+      <Stack>
+        {visiblePokemon.map((pokemon) => (
+          <Text>{pokemon.name}</Text>
+        ))}
+      </Stack>
+    );
+  })();
+}
+```
+
+This is not general JavaScript execution. The runtime rejects:
+
+- `let`, `var`, assignment, update expressions, and destructuring
+- Functions or classes stored in a local
+- `if`, loops, `switch`, `try`, `throw`, labels, `new`, async code, and generators
+- Early or multiple returns
+- Duplicate locals or names that shadow `data`, `status`, `options`, or `inputs`
+- IIFEs with parameters or arguments
+- Calling functions obtained from API data
+
+Local evaluation shares the widget's operation, depth, collection, string, and rendered-node limits. A block cannot create a new budget.
+
+Relevant diagnostics include `INVALID_LOCAL_DECLARATION`, `LOCAL_BINDING_REQUIRES_INITIALIZER`, `DUPLICATE_LOCAL_BINDING`, `RESERVED_LOCAL_BINDING`, `UNSUPPORTED_BLOCK_STATEMENT`, `BLOCK_REQUIRES_FINAL_RETURN`, and `CALLBACK_VALUE_NOT_ALLOWED`.
+
+## Render arbitrary-depth data with RecursiveList
+
+Use the trusted `RecursiveList` special form for evolution chains, directory trees, nested comments, and other unknown-depth data. Do not write an authored recursive function or pass Mantine a render callback.
+
+```jsx
+<RecursiveList
+  data={data.evolution.chain}
+  childrenPath="evolves_to"
+  keyPath="species.name"
+  defaultExpandedDepth={4}
+  maxDepth={16}
+  showLines
+>
+  {(node, meta) => {
+    const segments = node.species.url.split("/").filter((part) => part);
+    const dexId = segments.at(-1);
+
+    return (
+      <Group gap="xs">
+        <Badge variant="light">#{dexId}</Badge>
+        <Text tt="capitalize" fw={600}>
+          {node.species.name}
+        </Text>
+        {meta.hasChildren && <Text c="dimmed">{meta.childCount} evolutions</Text>}
+      </Group>
+    );
+  }}
+</RecursiveList>
+```
+
+The child template receives the current `node` and this metadata:
+
+```ts
+interface RecursiveListMetadata {
+  depth: number;
+  index: number;
+  path: number[];
+  key: string;
+  hasChildren: boolean;
+  childCount: number;
+  isLast: boolean;
+}
+```
+
+`data` accepts one root object or an array of roots. `childrenPath` and `keyPath` are restricted dotted paths; prototype-related segments are blocked. Keys resolve to primitives. Missing or duplicate keys receive a stable path fallback.
+
+The authorable presentation props are `data`, `childrenPath`, `keyPath`, `maxDepth`, `maxNodes`, `defaultExpandedDepth`, `indent`, `gap`, and `showLines`. Defaults are 16 levels and 500 nodes; hard limits are 32 levels and 2,000 nodes.
+
+Homarr detects cycles per ancestor chain. A malformed branch, render failure, or reached limit stays contained in that branch and does not crash the widget tile. Traversal and child templates use the same parent interpreter budget.
+
+## Use temporary inputs
+
+Bind a control to a literal name. Read its value from `inputs`:
 
 ```jsx
 <TextInput bind="search" defaultValue="" />
-<Calendar bind="selectedDate" />
+<DatePicker bind="selectedDate" />
 <Switch bind="enabled" defaultChecked={false} />
 <MultiSelect bind="selectedEntities" data={options.entities} />
 <SubFetch requestId="search" params={{ query: inputs.search }} />
 ```
 
-These values exist only in React memory while the widget is mounted. They are never written to the definition, board options, database, browser storage, or `localStorage`; reloading or remounting resets them. Use widget options for persisted user configuration.
+These values exist in React memory while the widget is mounted. Homarr does not save them in any storage location.
 
-Homarr infers the adapter type and handles ordinary `value/onChange`, `checked/onChange`, `active/onChange`, and `opened/onChange` patterns plus unusual Mantine signatures. `defaultValue` and `defaultChecked` initialize the temporary value and are not forwarded beside the controlled prop. Multiple components may share a name only when their adapter types match. Authored callbacks are not allowed.
+A reload or remount resets the values. Use widget options for saved user configuration.
 
-## Diagnostics
+Homarr infers the adapter type. It supports `value/onChange`, `checked/onChange`, `active/onChange`, and `opened/onChange` patterns.
+
+The type follows the component mode. Multiple accordions and chip groups, multi/checkbox tree selects, and multiple/range date pickers expose `string[]`. `DateTimePicker` and `InlineDateTimePicker` support ranges but not multiple selection. A component that does not advertise a temporary input adapter reports `BINDING_UNAVAILABLE`.
+
+Explicit adapters support Mantine components that use different event signatures.
+
+`defaultValue` and `defaultChecked` set the initial temporary value. Homarr does not send them with the controlled prop.
+
+Multiple components can share a name when their adapter types agree. A template cannot pass an authored callback as a component prop. Only the runtime-owned collection callbacks, zero-argument IIFE, and `RecursiveList` child template use the restricted forms described above.
+
+## Read diagnostics
 
 - `BLOCKED_CAPABILITY`: unsafe behavior; saving fails.
 - `UNKNOWN_COMPONENT`: the component does not exist; saving fails.
@@ -60,4 +212,4 @@ Homarr infers the adapter type and handles ordinary `value/onChange`, `checked/o
 - `BINDING_TYPE_CONFLICT`: components sharing one input name require incompatible value types.
 - `RUNTIME_RENDER_ERROR`: rendering failed inside this tile only.
 
-Homarr never silently drops an ordinary prop.
+Homarr does not silently remove an ordinary prop.

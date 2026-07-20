@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { CUSTOM_WIDGET_MCP_AUTHORING_PROMPT } from "@homarr/custom-widgets/core";
+import { CUSTOM_WIDGET_MCP_AUTHORING_PROMPT } from "@homarr/custom-widgets/authoring-prompt";
 
 export const dynamic = "force-static";
 

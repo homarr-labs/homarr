@@ -2,7 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
-import { customWidgetDefinitionSchema, customWidgetSecretsInputSchema } from "@homarr/custom-widgets/core";
+import {
+  customWidgetDefinitionSchema,
+  customWidgetSecretsInputSchema,
+  validateCustomWidgetOptions,
+} from "@homarr/custom-widgets/core";
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
@@ -15,6 +19,7 @@ const previewCreateInputSchema = z.object({
   definition: customWidgetDefinitionSchema,
   secrets: customWidgetSecretsInputSchema.default([]),
   definitionId: z.string().optional(),
+  options: z.record(z.string(), z.unknown()).optional(),
 });
 
 const previewCreateProcedure = manageProcedure
@@ -24,6 +29,16 @@ const previewCreateProcedure = manageProcedure
     if (input.secrets.length > 0 && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
       throw new TRPCError({ code: "FORBIDDEN", message: "Writing preview secrets requires dedicated permission" });
     }
+    const options = input.options ?? input.definition.defaultOptions;
+    const optionIssues = validateCustomWidgetOptions(input.definition.optionsSchema, options);
+    if (optionIssues.length > 0) {
+      const issue = optionIssues[0];
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: issue ? `${issue.path}: ${issue.message}` : "Preview options are invalid",
+      });
+    }
+
     const secrets = [...input.secrets];
     if (input.definitionId) {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
@@ -59,7 +74,7 @@ const previewCreateProcedure = manageProcedure
       name: input.definition.name,
       template: input.definition.template,
       optionsSchema: input.definition.optionsSchema,
-      defaultOptions: input.definition.defaultOptions,
+      options,
       secrets,
       definitionId: input.definitionId,
     });
@@ -87,7 +102,7 @@ export const previewBaseProcedures = {
       expiresAt: session.expiresAt,
       template: session.template,
       optionsSchema: session.optionsSchema,
-      defaultOptions: session.defaultOptions,
+      options: session.options,
       requests: session.requests.map(
         ({
           id,

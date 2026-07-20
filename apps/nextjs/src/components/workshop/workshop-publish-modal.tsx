@@ -6,10 +6,9 @@ import { Alert, Button, FileInput, Group, Modal, Stack, Textarea, TextInput } fr
 import { clientApi } from "@homarr/api/client";
 import { showErrorNotification } from "@homarr/notifications";
 import type { WorkshopUser } from "@homarr/workshop";
-import { WORKSHOP_API_URL, WorkshopClient } from "@homarr/workshop";
 import { useScopedI18n } from "@homarr/translation/client";
 
-const workshopUrl = process.env.NEXT_PUBLIC_WORKSHOP_API_URL ?? WORKSHOP_API_URL;
+import { createWorkshopClient } from "./workshop-client";
 
 export function WorkshopPublishModal({
   opened,
@@ -21,17 +20,15 @@ export function WorkshopPublishModal({
   widget: { id: string; name: string };
 }) {
   const t = useScopedI18n("workshop");
-  const client = useMemo(() => new WorkshopClient(workshopUrl), []);
+  const client = useMemo(createWorkshopClient, []);
   const utils = clientApi.useUtils();
   const [user, setUser] = useState<WorkshopUser | null>(null);
   const [title, setTitle] = useState(widget.name);
   const [description, setDescription] = useState("");
-  const [changelog, setChangelog] = useState("");
   const [screenshots, setScreenshots] = useState<File[]>([]);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [published, setPublished] = useState(false);
-  const initialChangelog = t("publish.initialChangelog");
 
   useEffect(() => {
     const unsubscribe = client.subscribeToAuth(setUser);
@@ -42,18 +39,17 @@ export function WorkshopPublishModal({
     if (!opened) return;
     setTitle(widget.name);
     setDescription("");
-    setChangelog(initialChangelog);
     setScreenshots([]);
     setError(null);
     setPublished(false);
-  }, [initialChangelog, opened, widget.name]);
+  }, [opened, widget.name]);
 
   const publish = async () => {
     setPending(true);
     setError(null);
     try {
       const definition = await utils.customWidget.export.fetch({ id: widget.id });
-      await client.create({ title, description, changelog, content: JSON.stringify(definition) }, screenshots);
+      await client.create({ title, description, content: JSON.stringify(definition) }, screenshots);
       setPublished(true);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : t("publish.error"));
@@ -101,12 +97,6 @@ export function WorkshopPublishModal({
               value={description}
               onChange={(event) => setDescription(event.currentTarget.value)}
               minRows={3}
-            />
-            <Textarea
-              label={t("publish.changelog")}
-              value={changelog}
-              onChange={(event) => setChangelog(event.currentTarget.value)}
-              minRows={2}
             />
             <FileInput
               label={t("publish.screenshots")}

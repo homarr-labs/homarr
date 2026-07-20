@@ -67,13 +67,15 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
   assertRequest(input);
   const baseUrl = validateCustomWidgetUrl(input.baseUrl);
   let currentUrl = resolveSameOriginTarget(input.baseUrl, input.targetUrl);
+  let currentMethod = input.method;
+  let currentBody = input.body;
   const maxRedirects = input.kind === "query" ? MAX_QUERY_REDIRECTS : 0;
   for (let redirects = 0; ; redirects += 1) {
     const dispatcher = createPinnedAgent(
       await resolveAndValidateHost(currentUrl.hostname, input.networkScope),
       REQUEST_TIMEOUT_MS,
     );
-    const headers = buildHeaders(input, currentUrl);
+    const headers = buildHeaders(input, currentUrl, currentBody);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
     let responseData: Awaited<ReturnType<typeof dispatcher.request>>;
@@ -81,9 +83,9 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
       responseData = await dispatcher.request({
         origin: currentUrl.origin,
         path: `${currentUrl.pathname}${currentUrl.search}`,
-        method: input.method,
+        method: currentMethod,
         headers,
-        body: input.body,
+        body: currentBody,
         signal: controller.signal,
       });
     } catch (error) {
@@ -91,7 +93,7 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
       if (error instanceof CustomWidgetDomainError) throw error;
       input.logError?.({
         origin: currentUrl.origin,
-        method: input.method,
+        method: currentMethod,
         errorName: error instanceof Error ? error.name : "UnknownError",
       });
       throw new CustomWidgetDomainError({
@@ -133,6 +135,10 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
     const redirected = validateCustomWidgetUrl(new URL(location, currentUrl));
     if (redirected.origin !== baseUrl.origin)
       throw new CustomWidgetDomainError({ code: "FORBIDDEN", message: "Cross-origin redirects are not allowed" });
+    if (responseData.statusCode === 303 || ([301, 302].includes(responseData.statusCode) && currentMethod === "POST")) {
+      currentMethod = "GET";
+      currentBody = undefined;
+    }
     currentUrl = redirected;
   }
 }
@@ -152,10 +158,11 @@ function assertRequest(input: CustomWidgetHttpRequest): void {
   assertSafeStaticHeaders(input.staticHeaders);
 }
 
-function buildHeaders(input: CustomWidgetHttpRequest, url: URL): Headers {
+function buildHeaders(input: CustomWidgetHttpRequest, url: URL, body: string | undefined): Headers {
   const headers = new Headers({ Accept: "application/json" });
   for (const [name, value] of Object.entries(input.staticHeaders ?? {})) headers.set(name, value);
-  if (input.body !== undefined) headers.set("Content-Type", "application/json");
+  if (body !== undefined) headers.set("Content-Type", "application/json");
+  else headers.delete("Content-Type");
   if (input.auth) {
     if (input.auth.type === "apiKeyHeader") assertSafeStaticHeaders({ [input.auth.headerName ?? "X-API-Key"]: "" });
     applyAuth(headers, url, input.auth.type, input.auth.secrets, input.auth.headerName);

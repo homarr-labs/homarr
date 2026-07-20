@@ -17,7 +17,7 @@ export default async function CustomWidgetPreviewPage({ params }: { params: Prom
   const results = await Promise.all(
     loadRequests.map(async (request) => {
       const result = await Promise.resolve()
-        .then(() => resolveCustomWidgetOptionsBinding(request, preview.defaultOptions))
+        .then(() => resolveCustomWidgetOptionsBinding(request, preview.options))
         .then((requestParams) =>
           api.customWidget.previewQuery({ sessionId: id, requestId: request.id, params: requestParams }),
         )
@@ -57,7 +57,7 @@ export default async function CustomWidgetPreviewPage({ params }: { params: Prom
               template: preview.template,
               data,
               status,
-              options: preview.defaultOptions,
+              options: preview.options,
               requestCapabilities: preview.requests,
               previewSessionId: preview.id,
               previewLiveActions: preview.liveActions,

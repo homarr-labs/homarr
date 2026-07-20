@@ -1,37 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  CopyButton,
-  Paper,
-  SegmentedControl,
-  Stack,
-  Text,
-  TextInput,
-  Textarea,
-} from "@mantine/core";
+import { Box, Button, Paper, SegmentedControl, Stack, TextInput, Textarea } from "@mantine/core";
 import {
   IconAlertCircle,
   IconApi,
   IconBraces,
-  IconCheck,
   IconCode,
-  IconCopy,
   IconDatabase,
   IconEye,
   IconSettings,
 } from "@tabler/icons-react";
 
-import {
-  CUSTOM_WIDGET_OPTIONS_EXAMPLES,
-  CUSTOM_WIDGET_REQUEST_EXAMPLES,
-  getCustomWidgetDefaultOptionsJsonSchema,
-  getCustomWidgetOptionsJsonSchema,
-  getCustomWidgetRequestsJsonSchema,
-} from "@homarr/custom-widgets/core";
 import {
   analyzeJsxTemplate,
   analyzeRequestManifest,
@@ -48,10 +28,16 @@ import { CodeEditor } from "./_code-editor";
 import { CustomWidgetAiCard } from "./_custom-widget-ai-card";
 import { createCustomWidgetCompletions, getInvalidCustomWidgetSections } from "./_custom-widget-form-analysis";
 import { EditorSection, SaveActions } from "./_custom-widget-form-layout";
+import {
+  customWidgetDefaultOptionsReference,
+  customWidgetOptionsSchemaReference,
+  customWidgetRequestReference,
+} from "./_custom-widget-form-references";
 import { applyDefinition, buildDefinition, isRecord, parseJsonArray } from "./_custom-widget-form-utils";
 import { CustomWidgetPreviewPanel } from "./_custom-widget-preview-panel";
 import type { PreviewState } from "./_custom-widget-preview-panel";
 import { CustomWidgetRequestTools } from "./_custom-widget-request-tools";
+import { CustomWidgetSaveIssuesAlert } from "./_custom-widget-save-issues-alert";
 import { CustomWidgetSourcesEditor } from "./_custom-widget-sources-editor";
 import { useCustomWidgetFormActions } from "./_use-custom-widget-form-actions";
 import classes from "./_custom-widget-form.module.css";
@@ -71,35 +57,21 @@ const sectionLinks = [
   ["preview", "section.preview", IconEye],
 ] as const;
 
-const requestReference = {
-  schema: getCustomWidgetRequestsJsonSchema(),
-  minimal: CUSTOM_WIDGET_REQUEST_EXAMPLES.minimal,
-  full: CUSTOM_WIDGET_REQUEST_EXAMPLES.full,
-};
-const optionsSchemaReference = {
-  schema: getCustomWidgetOptionsJsonSchema(),
-  minimal: CUSTOM_WIDGET_OPTIONS_EXAMPLES.minimal.schema,
-  full: CUSTOM_WIDGET_OPTIONS_EXAMPLES.full.schema,
-};
-const defaultOptionsReference = {
-  schema: getCustomWidgetDefaultOptionsJsonSchema(),
-  minimal: CUSTOM_WIDGET_OPTIONS_EXAMPLES.minimal.defaults,
-  full: CUSTOM_WIDGET_OPTIONS_EXAMPLES.full.defaults,
-};
-
 export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWidgetFormProps) {
   const t = useScopedI18n("customWidget");
   const w = useScopedI18n("customWidget.workbench");
-  const form = useZodForm(customWidgetFormSchema, {
-    initialValues: { ...DEFAULT_CUSTOM_WIDGET_FORM_VALUES, ...initialValues },
-  });
+  const formInitialValues: CustomWidgetFormValues = { ...DEFAULT_CUSTOM_WIDGET_FORM_VALUES, ...initialValues };
+  const form = useZodForm(customWidgetFormSchema, { initialValues: formInitialValues });
   const [mobilePane, setMobilePane] = useState<"configure" | "preview">("configure");
   const [request, setRequest] = useState("");
   const [documentationUrl, setDocumentationUrl] = useState("");
   const [preview, setPreview] = useState<PreviewState>({ data: {}, status: {}, session: null, outcome: "idle" });
   const [previewSize, setPreviewSize] = useState("standard");
   const [previewTheme, setPreviewTheme] = useState<"light" | "dark">("dark");
-  const [optionsSnapshot, setOptionsSnapshot] = useState<Record<string, unknown>>({});
+  const [optionsSnapshot, setOptionsSnapshot] = useState<Record<string, unknown>>(() => {
+    const initialDefinition = buildDefinition(formInitialValues);
+    return initialDefinition.success ? initialDefinition.data.defaultOptions : {};
+  });
   const [revealedRequest, setRevealedRequest] = useState({ text: "", key: 0 });
   const dirtyRef = useRef(false);
   dirtyRef.current = form.isDirty();
@@ -140,10 +112,9 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     preview,
     setPreview,
     setMobilePane,
+    optionsSnapshot,
     setOptionsSnapshot,
   });
-  const saveIssueText = saveIssues.map((issue) => `${issue.path ? `${issue.path}: ` : ""}${issue.message}`).join("\n");
-
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
       if (dirtyRef.current) event.preventDefault();
@@ -173,36 +144,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           { value: "preview", label: w("section.preview") },
         ]}
       />
-      {saveIssues.length > 0 && (
-        <Alert color="red" title={w("saveError.title")} icon={<IconAlertCircle size={18} />}>
-          <Text size="sm" mb="xs">
-            {w("saveError.description")}
-          </Text>
-          <Textarea
-            value={saveIssueText}
-            readOnly
-            autosize
-            minRows={2}
-            maxRows={10}
-            aria-label={w("saveError.errors")}
-            mb="xs"
-          />
-          <CopyButton value={saveIssueText} timeout={2_000}>
-            {({ copied, copy }) => (
-              <Button
-                type="button"
-                size="compact-sm"
-                variant="light"
-                color={copied ? "green" : "red"}
-                leftSection={copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
-                onClick={copy}
-              >
-                {copied ? w("saveError.copied") : w("saveError.copy")}
-              </Button>
-            )}
-          </CopyButton>
-        </Alert>
-      )}
+      <CustomWidgetSaveIssuesAlert issues={saveIssues} />
       <nav className={classes.sectionNav} aria-label={w("sectionNavigation")}>
         {sectionLinks.map(([id, key, SectionIcon]) => (
           <Button
@@ -244,7 +186,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               error={form.errors.requests}
               revealText={revealedRequest.text}
               revealKey={revealedRequest.key}
-              reference={requestReference}
+              reference={customWidgetRequestReference}
               required
             />
           </EditorSection>
@@ -256,7 +198,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               value={form.values.optionsSchema}
               onChange={(value) => form.setFieldValue("optionsSchema", value)}
               error={form.errors.optionsSchema}
-              reference={optionsSchemaReference}
+              reference={customWidgetOptionsSchemaReference}
             />
             <CodeEditor
               id="default-options"
@@ -265,7 +207,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               value={form.values.defaultOptions}
               onChange={(value) => form.setFieldValue("defaultOptions", value)}
               error={form.errors.defaultOptions}
-              reference={defaultOptionsReference}
+              reference={customWidgetDefaultOptionsReference}
             />
           </EditorSection>
           <EditorSection id="jsx" title={w("jsx.title")} icon={IconCode}>

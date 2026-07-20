@@ -37,10 +37,16 @@ export function containsEscapingCallback(node: AstNode): boolean {
   if (node.type === "ArrowFunctionExpression") return true;
   if (node.type === "CallExpression") {
     const callee = nodeOf(node.callee);
+    const arguments_ = nodesOf(node.arguments);
+    if (callee?.type === "ArrowFunctionExpression") {
+      if (arguments_.length > 0) return true;
+      const body = nodeOf(callee.body);
+      return body ? containsEscapingCallbackChildren(body) : false;
+    }
     if (callee && containsEscapingCallback(callee)) return true;
     const property = callee?.type === "MemberExpression" ? nodeOf(callee.property) : null;
     const method = property?.type === "Identifier" ? String(property.name) : staticPropertyName(property);
-    return nodesOf(node.arguments).some((argument) => {
+    return arguments_.some((argument) => {
       if (argument.type !== "ArrowFunctionExpression" || !method || !callbackCollectionMethods.has(method)) {
         return containsEscapingCallback(argument);
       }

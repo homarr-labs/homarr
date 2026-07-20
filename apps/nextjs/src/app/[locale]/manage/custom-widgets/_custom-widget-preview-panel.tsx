@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Badge,
@@ -18,16 +18,17 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import { analyzeCustomWidgetAccessibility } from "@homarr/custom-widgets/workbench";
+import { analyzeCustomWidgetAccessibility, PreviewErrorBoundary } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import CustomJsxDisplay from "@homarr/widgets/custom-api/custom-jsx-display";
 
 import { CodeEditor } from "./_code-editor";
-import { isRecord, parseJson } from "./_custom-widget-form-utils";
 import { getPreviewSummary, PreviewResult, PreviewStatusDot } from "./_custom-widget-preview-status";
 import type { PreviewOutcome } from "./_custom-widget-preview-status";
 import { PreviewActionControl } from "./_custom-widget-preview-action";
+import { createPreviewDisplayData } from "./_custom-widget-preview-data";
+import { JsonPreviewEditor } from "./_json-preview-editor";
 import classes from "./_custom-widget-form.module.css";
 
 export interface PreviewState {
@@ -52,6 +53,7 @@ interface PreviewPanelProps {
 
 export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
   const t = useScopedI18n("customWidget.workbench.preview");
+  const errorBoundaryMessages = useScopedI18n("customWidget.editor.errorBoundary");
   const [fixture, setFixture] = useState<"live" | "loading" | "empty" | "error">("live");
   const liveActionsMutation = clientApi.customWidget.setPreviewLiveActions.useMutation();
   const journalQuery = clientApi.customWidget.previewJournal.useQuery(
@@ -61,42 +63,23 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
   const widths: Record<string, number> = { compact: 320, standard: 480, wide: 720 };
   const candidate = props.candidate;
   const accessibilityIssues = candidate ? analyzeCustomWidgetAccessibility(candidate.template) : [];
-  const fixtureData =
-    fixture === "empty" && candidate
-      ? Object.fromEntries(candidate.requests.map((entry) => [entry.id, []]))
-      : props.preview.data;
-  const fixtureStatus =
-    fixture === "loading" && candidate
-      ? Object.fromEntries(candidate.requests.map((entry) => [entry.id, { loading: true }]))
-      : fixture === "error" && candidate
-        ? Object.fromEntries(
-            candidate.requests.map((entry) => [entry.id, { loading: false, ok: false, error: t("fixtureError") }]),
-          )
-        : props.preview.status;
-  const displayData = candidate
-    ? {
-        template: candidate.template,
-        data: fixtureData,
-        status: fixtureStatus,
-        options: props.optionsSnapshot,
-        requestCapabilities: candidate.requests.map(
-          ({ id, kind, method, trigger, minimumBoardPermission, confirmation, invalidates }) => ({
-            id,
-            kind,
-            method,
-            trigger,
-            minimumBoardPermission,
-            confirmation,
-            invalidates,
-          }),
-        ),
-        previewSessionId: props.preview.session?.id,
-        previewLiveActions: props.preview.session?.liveActions ?? false,
-        queriesDisabled: fixture !== "live",
-        isEditMode: fixture !== "live",
-      }
-    : null;
+  const displayData = createPreviewDisplayData({
+    candidate,
+    fixture,
+    preview: props.preview,
+    options: props.optionsSnapshot,
+    fixtureError: t("fixtureError"),
+  });
   const previewSummary = getPreviewSummary(props.preview.status);
+  const rendererResetKey = JSON.stringify({
+    template: candidate?.template,
+    requests: candidate?.requests,
+    fixture,
+    data: props.preview.data,
+    status: props.preview.status,
+    sessionId: props.preview.session?.id,
+    options: props.optionsSnapshot,
+  });
   const previewResult =
     props.preview.outcome === "success"
       ? {
@@ -172,7 +155,18 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
             <Box className={classes.previewCanvas}>
               <MantineProvider forceColorScheme={props.theme}>
                 <Paper withBorder p="sm" h={360} w={widths[props.size] ?? 480} maw="100%" style={{ overflow: "auto" }}>
-                  {displayData ? <CustomJsxDisplay data={displayData} /> : <Alert color="yellow">{t("invalid")}</Alert>}
+                  {displayData ? (
+                    <PreviewErrorBoundary
+                      title={errorBoundaryMessages("title")}
+                      description={t("containedFailures")}
+                      retryLabel={errorBoundaryMessages("retry")}
+                      resetKeys={[rendererResetKey]}
+                    >
+                      <CustomJsxDisplay data={displayData} />
+                    </PreviewErrorBoundary>
+                  ) : (
+                    <Alert color="yellow">{t("invalid")}</Alert>
+                  )}
                 </Paper>
               </MantineProvider>
             </Box>
@@ -216,14 +210,8 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
               {candidate?.requests
                 .filter((request) => request.kind === "action")
                 .map((request) => (
-                  <PreviewActionControl
-                    key={request.id}
-                    request={request}
-                    sessionId={props.preview.session?.id}
-                    options={props.optionsSnapshot}
-                  />
+                  <PreviewActionControl key={request.id} request={request} sessionId={props.preview.session?.id} />
                 ))}
-              {!candidate && <Alert color="yellow">{t("invalid")}</Alert>}
               {candidate?.requests.every((request) => request.kind !== "action") && (
                 <Text size="sm" c="dimmed">
                   {t("noActions")}
@@ -281,34 +269,5 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
         </Tabs>
       </Stack>
     </Card>
-  );
-}
-
-function JsonPreviewEditor({
-  id,
-  label,
-  value,
-  onChange,
-}: {
-  id: string;
-  label: string;
-  value: Record<string, unknown>;
-  onChange(value: Record<string, unknown>): void;
-}) {
-  const serialized = JSON.stringify(value, null, 2);
-  const [draft, setDraft] = useState(serialized);
-  useEffect(() => setDraft(serialized), [serialized]);
-  return (
-    <CodeEditor
-      id={id}
-      label={label}
-      language="json"
-      value={draft}
-      onChange={(next) => {
-        setDraft(next);
-        const parsed = parseJson(next);
-        if (isRecord(parsed)) onChange(parsed);
-      }}
-    />
   );
 }

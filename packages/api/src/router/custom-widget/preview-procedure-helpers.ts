@@ -1,4 +1,6 @@
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { resolveCustomWidgetOptionsBinding } from "@homarr/custom-widgets/core";
+import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
 import { z } from "zod/v4";
 
 import { appendPreviewJournal } from "./preview-sessions";
@@ -42,3 +44,11 @@ export const getPreviewRequestSource = (session: CustomWidgetPreviewSession, sou
         };
   return { source, auth };
 };
+
+export function resolvePreviewRequestParams(
+  request: CustomJsxRequest,
+  options: Record<string, unknown>,
+  suppliedParams: Record<string, string | number | boolean>,
+) {
+  return request.trigger === "load" ? resolveCustomWidgetOptionsBinding(request, options) : suppliedParams;
+}

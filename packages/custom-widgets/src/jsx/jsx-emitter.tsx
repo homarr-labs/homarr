@@ -1,18 +1,12 @@
-import type { ComponentType, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { createElement, Fragment } from "react";
 
 import { asNode, asNodeArray, SafeJsxError } from "./interpreter-foundation";
-import type { AstNode, Budget, Environment, InterpreterCallback } from "./interpreter-foundation";
+import type { AstNode, Environment } from "./interpreter-foundation";
+import type { JsxEmitterContext } from "./emitter-context";
+import { emitRecursiveList } from "./recursive-list-emitter";
 import { diagnoseCustomJsxProps, normalizedProperty, sanitizeCustomJsxProps } from "./safe-properties";
 import { CUSTOM_JSX_BLOCKED_TAGS } from "./policy";
-
-export interface JsxEmitterContext {
-  components: Readonly<Record<string, ComponentType<never>>>;
-  budget: Budget;
-  warnings: Set<string>;
-  evaluate(node: AstNode, environment: Environment, depth: number): unknown;
-  renderCallback(callback: InterpreterCallback, args: unknown[]): ReactNode;
-}
 
 export function emitJsxFragment(
   node: AstNode,
@@ -44,6 +38,7 @@ export function emitJsxElement(
     context.warnings.add(`Unknown or unavailable component: ${tag}`);
     return null;
   }
+  if (tag === "RecursiveList") return emitRecursiveList(node, environment, depth, component, context);
   const rawProps: Record<string, unknown> = {};
   for (const attribute of asNodeArray(opening.attributes, "JSX attributes")) {
     if (attribute.type === "JSXSpreadAttribute") {

@@ -34,12 +34,11 @@ import {
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { WorkshopReport, WorkshopSubmissionDetail, WorkshopUser } from "@homarr/workshop";
-import { WORKSHOP_API_URL, WorkshopClient, workshopExportFilename } from "@homarr/workshop";
-import { customWidgetImportSchema } from "@homarr/custom-widgets/core";
+import { validateWorkshopWidget, workshopExportFilename } from "@homarr/workshop";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-const workshopUrl = process.env.NEXT_PUBLIC_WORKSHOP_API_URL ?? WORKSHOP_API_URL;
+import { createWorkshopClient } from "./workshop-client";
 
 function downloadWorkshopSubmission(submission: WorkshopSubmissionDetail) {
   const url = URL.createObjectURL(new Blob([submission.content], { type: "application/json" }));
@@ -52,7 +51,7 @@ function downloadWorkshopSubmission(submission: WorkshopSubmissionDetail) {
 
 export function WorkshopBrowser({ onInstall }: { onInstall?(submission: WorkshopSubmissionDetail): Promise<void> }) {
   const t = useScopedI18n("workshop");
-  const client = useMemo(() => new WorkshopClient(workshopUrl), []);
+  const client = useMemo(createWorkshopClient, []);
   const queryClient = useQueryClient();
   const [user, setUser] = useState<WorkshopUser | null>(null);
   const [page, setPage] = useState(1);
@@ -82,6 +81,10 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
     queryFn: ({ signal }) => client.get(selectedId ?? "", signal),
     enabled: selectedId !== null,
   });
+  const detailValidation = useMemo(
+    () => (detail.data ? validateWorkshopWidget(detail.data.content) : null),
+    [detail.data],
+  );
   const signIn = () => {
     setLoginPending(true);
     setLoginError(null);
@@ -213,7 +216,9 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
               )}
               <Stack gap="xs" mt="md">
                 <Group justify="space-between">
-                  <Badge variant="light">v{item.revision}</Badge>
+                  <Text size="xs" c="dimmed">
+                    {t("author", { name: item.authorName })}
+                  </Text>
                   <Text size="sm" c="dimmed">
                     <IconThumbUp size={13} /> {item.upvotes} · <IconThumbDown size={13} /> {item.downvotes}
                   </Text>
@@ -223,9 +228,6 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
                 </Text>
                 <Text size="sm" c="dimmed" lineClamp={2}>
                   {item.description || t("noDescription")}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {t("author", { name: item.authorName })}
                 </Text>
                 <Button variant="light" onClick={() => setSelectedId(item.id)}>
                   {t("inspect")}
@@ -256,12 +258,9 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
         ) : (
           <Stack>
             <Text>{detail.data.description}</Text>
-            <Group>
-              <Badge>{t("revision", { revision: detail.data.revision })}</Badge>
-              <Text size="sm" c="dimmed">
-                SHA-256 {detail.data.contentHash.slice(0, 12)}…
-              </Text>
-            </Group>
+            <Text size="sm" c="dimmed">
+              {t("author", { name: detail.data.authorName })}
+            </Text>
             {detail.data.screenshots.length > 0 && (
               <SimpleGrid cols={{ base: 1, sm: 2 }}>
                 {detail.data.screenshots.map((file, index) => (
@@ -275,6 +274,11 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
               </SimpleGrid>
             )}
             <CapabilitySummary content={detail.data.content} />
+            {detailValidation && !detailValidation.success && (
+              <Alert color="red" icon={<IconAlertTriangle size={18} />}>
+                {t("installErrorDescription")} {detailValidation.error}
+              </Alert>
+            )}
             <Code block mah={360} style={{ overflow: "auto", whiteSpace: "pre" }}>
               {detail.data.content}
             </Code>
@@ -314,7 +318,11 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
                 </Button>
               </Group>
               {onInstall && (
-                <Button loading={install.isPending} onClick={() => install.mutate(detail.data)}>
+                <Button
+                  loading={install.isPending}
+                  disabled={!detailValidation?.success}
+                  onClick={() => install.mutate(detail.data)}
+                >
                   {t("install")}
                 </Button>
               )}
@@ -361,13 +369,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(submission: Workshop
 
 function CapabilitySummary({ content }: { content: string }) {
   const t = useScopedI18n("workshop");
-  let candidate: unknown;
-  try {
-    candidate = JSON.parse(content) as unknown;
-  } catch {
-    return null;
-  }
-  const parsed = customWidgetImportSchema.safeParse(candidate);
+  const parsed = validateWorkshopWidget(content);
   if (!parsed.success) return null;
   return (
     <SimpleGrid cols={{ base: 1, sm: 2 }}>

@@ -11,6 +11,7 @@ import { customWidgetAuthTypes, customWidgetSecretKinds } from "./schema-types";
 export * from "./options-schema";
 export * from "./request-schema";
 export type CustomWidgetOptionsSchema = z.infer<typeof customWidgetOptionsSchemaSchema>;
+export const CUSTOM_WIDGET_SCHEMA = "homarr-custom-widget-v2";
 
 export const customWidgetBindingIdentifierSchema = z
   .string()
@@ -54,7 +55,7 @@ export const customWidgetSecretsInputSchema = z
 
 export const customWidgetDefinitionSchema = z
   .object({
-    $schema: z.literal("homarr-custom-widget-v2"),
+    $schema: z.literal(CUSTOM_WIDGET_SCHEMA),
     name: z.string().trim().min(1).max(128),
     description: z.string().max(512).optional(),
     iconUrl: z

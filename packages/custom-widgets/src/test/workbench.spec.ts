@@ -19,6 +19,7 @@ import {
   getCustomWidgetOptionsJsonSchema,
   getCustomWidgetRequestsJsonSchema,
 } from "../core/schema-references";
+import { getCustomJsxComponentPropCompletions, getCustomJsxLocalConstCompletions } from "../workbench/code-language";
 
 describe("Custom Widget workbench contracts", () => {
   it("always provides a valid starter template", () => {
@@ -67,13 +68,55 @@ describe("Custom Widget workbench contracts", () => {
   });
 
   it("accepts named temporary inputs and diagnoses dynamic bindings", () => {
-    expect(analyzeJsxTemplate('<Calendar bind="selectedDate" />')).toEqual([]);
-    expect(analyzeJsxTemplate("<Calendar bind={inputs.selectedDate} />")).toEqual(
+    expect(analyzeJsxTemplate('<DatePicker bind="selectedDate" />')).toEqual([]);
+    expect(analyzeJsxTemplate("<DatePicker bind={inputs.selectedDate} />")).toEqual(
       expect.arrayContaining([expect.objectContaining({ code: "dynamicInputBinding" })]),
+    );
+    expect(analyzeJsxTemplate('<Calendar bind="selectedDate" />')).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "ast", value: expect.stringContaining("BINDING_UNAVAILABLE") }),
+      ]),
     );
     expect(analyzeJsxTemplate('<TextInput bind="filter"/><Switch bind="filter"/>')).toEqual(
       expect.arrayContaining([expect.objectContaining({ code: "bindingTypeConflict", value: "filter" })]),
     );
+  });
+
+  it("completes only earlier immutable locals from the active block, even with unrelated syntax errors", () => {
+    const source = `{data.first.map((item) => { const sibling = ; return sibling; })}
+      {data.second.map((item) => {
+        const current = item;
+        return <Text>{current}</Text>;
+        const future = item;
+      })}`;
+    const cursor = source.indexOf("return <Text>");
+    const labels = getCustomJsxLocalConstCompletions(source, cursor).map(({ label }) => label);
+    expect(labels).toContain("current");
+    expect(labels).not.toContain("sibling");
+    expect(labels).not.toContain("future");
+  });
+
+  it("does not complete the active or future declarator", () => {
+    const source = `{data.items.map((item) => {
+      const first = item, current = fir, future = current;
+      return future;
+    })}`;
+    const cursor = source.indexOf("= fir") + "= fir".length;
+    const labels = getCustomJsxLocalConstCompletions(source, cursor).map(({ label }) => label);
+    expect(labels).toContain("first");
+    expect(labels).not.toContain("current");
+    expect(labels).not.toContain("future");
+  });
+
+  it("uses canonical component prop types for contextual JSX completions", () => {
+    const textInput = getCustomJsxComponentPropCompletions("TextInput");
+    expect(textInput).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ label: "label=", detail: expect.stringContaining("ReactNode") }),
+        expect.objectContaining({ label: "bind=", detail: "string" }),
+      ]),
+    );
+    expect(getCustomJsxComponentPropCompletions("Portal")).toEqual([]);
   });
 
   it("uses the AST security policy for computed reflective access while accepting benign fetch text", () => {

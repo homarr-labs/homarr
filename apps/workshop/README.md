@@ -2,7 +2,12 @@
 
 Workshop is a small PocketBase service that serves the public documentation site and stores one Custom JSX v2 widget per submission.
 
-It intentionally has no approval queue, user bans, reusable widget connections, or remote control over installed widgets. Submissions publish immediately. Authenticated users can vote and report; records in `workshop_admins` can inspect reports, dismiss them, and delete any submission.
+The runtime image extends `ghcr.io/muchobien/pocketbase:0.39`; Homarr adds only the built documentation, PocketBase
+collections, one small user-role guard, and its explicit serve arguments.
+
+It intentionally has no approval queue, user bans, comments, email notifications, audit log, reusable widget connections,
+or remote control over installed widgets. Submissions publish immediately. Authenticated users can vote and report;
+users with `isAdmin` enabled can inspect and dismiss reports or delete any submission.
 
 ## Local development
 
@@ -10,7 +15,15 @@ It intentionally has no approval queue, user bans, reusable widget connections, 
 PB_EXPOSE_PORT=18090 docker compose -f apps/workshop/docker-compose.yml up --build
 ```
 
-Open `http://127.0.0.1:18090/_/`, create the first PocketBase superuser, configure GitHub OAuth on the `users` collection, and add Workshop administrators through the `workshop_admins` collection.
+Compose passes the selected port to PocketBase as `PORT`, so it listens on the same port inside and outside the
+container. With the image directly, set both values: `docker run -e PORT=3003 -p 3003:3003 <workshop-image>`.
+
+Open `http://127.0.0.1:18090/_/`, create the first PocketBase superuser, and configure GitHub OAuth on the `users` collection.
+
+The `users.isAdmin` field defaults to `false` and cannot be changed by regular users. Appoint administrators from the
+PocketBase dashboard with a superuser account.
+
+Users must sign in again after the role changes. Setting the value back to `false` removes Workshop administrator access.
 
 The GitHub OAuth application needs one callback for the Workshop host:
 
@@ -26,6 +39,12 @@ Run the disposable service integration test from the repository root:
 pnpm test:workshop
 ```
 
+The Workshop does not maintain a second Custom Widget schema. Its frontend validates submissions with
+`customWidgetImportSchema` from `@homarr/custom-widgets`, and Homarr validates canonical content again before installation.
+PocketBase API rules enforce submission ownership, one vote/report per user and submission, and administrator-only
+moderation. Reports are dismissed by deleting them; PocketBase cascade deletion removes related votes and reports when a
+submission is deleted.
+
 ## Production docs preview
 
 Build the documentation and serve it from PocketBase using the same production image layout as the hosted Workshop:
@@ -36,10 +55,22 @@ pnpm docker:docs
 
 Open `http://127.0.0.1:3003`. Set `DOCS_EXPOSE_PORT` to use another host port. The preview does not mount or persist PocketBase data.
 
+Point a local Homarr checkout at it with:
+
+```sh
+WORKSHOP_API_URL=http://127.0.0.1:3003 pnpm dev
+```
+
+The production Homarr image reads the same variable when the container starts:
+
+```sh
+docker run -p 7575:7575 -e WORKSHOP_API_URL=http://127.0.0.1:3003 <homarr-image>
+```
+
 This command starts the profiled `docs` service from `apps/workshop/docker-compose.yml`. It does not start the development `workshop` service. Stop and remove the preview with:
 
 ```sh
 docker compose -f apps/workshop/docker-compose.yml --profile docs rm --stop --force docs
 ```
 
-Production data lives in `/pb_data`. The image serves the built Homarr documentation and Workshop UI from `/pb_public`.
+PocketBase data lives in `/pb_data`. Docker Compose persists it in the `pb_data` named volume for both the development Workshop service and the production documentation/Workshop service. The image serves the built Homarr documentation and Workshop UI from `/pb_public`.

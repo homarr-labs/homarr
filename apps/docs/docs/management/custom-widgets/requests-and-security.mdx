@@ -1,24 +1,64 @@
-# Requests and security
+# Configure requests and security
 
-Each widget owns one or more API sources. Most use a single `default` source. Add another only when one widget genuinely combines APIs, such as a Sonarr/Radarr calendar.
+Each Custom Widget has one or more API sources. Most definitions use one `default` source.
 
-Sources support no authentication, bearer tokens, basic authentication, API-key headers, and API-key query parameters. Credentials are encrypted per definition, source, and kind. Duplicating or exporting a widget does not copy credentials.
+Add another API source when the widget must combine APIs. For example, a calendar can combine Sonarr and Radarr.
 
-## Named requests
+An API source supports these authentication modes:
 
-Queries and actions support GET, POST, PUT, PATCH, and DELETE. `kind`, not method, controls behavior:
+- No authentication
+- Bearer token
+- Basic authentication
+- API-key header
+- API-key query parameter
 
-- Queries may load automatically or run through `SubFetch`; they may include a body.
-- Actions only run after a user gesture; they may require confirmation and invalidate named queries.
+Homarr encrypts credentials for each definition, API source, and credential type. A duplicate or export does not contain credentials.
 
-Successful actions evict the declared queries from both the browser and server response cache before refetching them.
+## Configure named requests
 
-Path parameters use `{name}`. Structured query/body templates use `{ "$param": "name" }`. Every declared parameter has an explicit source: load queries use `optionsBinding` entries containing `{ "$option": "optionName" }` or a primitive literal, while manual queries and actions receive the full parameter object from the invoking component's `params` prop. Homarr never matches parameter names to option or input names implicitly.
+Named requests support GET, POST, PUT, PATCH, and DELETE. The `kind` value controls runtime behavior.
 
-## Protections
+The HTTP method does not determine whether a named request is a query or action.
 
-All requests use Homarr's server executor. It enforces source origin, network scope, DNS and redirect validation, SSRF blocking, permissions, rate limits, request/parameter/body limits, timeouts, response-size limits, and secret injection. Static headers cannot override auth, routing, proxy, cookie, or hop-by-hop headers. Credential-like static values are rejected.
+- A load query runs automatically.
+- A manual query runs with `SubFetch`.
+- A query can include a body.
+- An action runs after a user action.
+- An action can require confirmation.
+- An action can invalidate named queries.
 
-`public` allows public destinations, `private` additionally allows private LAN destinations, and `loopback` additionally allows loopback. Sensitive infrastructure ranges remain blocked according to the executor policy.
+A successful action removes each declared query from the browser cache and server cache. Homarr then runs the query again.
 
-Every request declares view, modify, or full board access and the server enforces it before contacting the source. DELETE always needs full access and confirmation. Actions are never cached, retried, or triggered on load.
+Path parameters use `{name}`. Structured query and body templates use `{ "$param": "name" }`.
+
+Give each declared parameter an explicit value source. For a load query, use `optionsBinding` with an option reference or a primitive value.
+
+For a manual query or action, send all parameters with the component `params` prop. Homarr does not bind matching names automatically.
+
+## Understand request protection
+
+All named requests use the Homarr server executor. The executor applies these security controls:
+
+- Source origin
+- Network scope
+- DNS validation
+- Redirect validation
+- SSRF protection
+- Board permissions
+- Rate limits
+- Request limits
+- Parameter limits
+- Body limits
+- Timeouts
+- Response size limits
+- Encrypted credential injection
+
+Static headers cannot replace authentication, routing, proxy, cookie, or hop-by-hop headers. Homarr rejects static values that look like credentials.
+
+The `public` network scope permits public destinations. The `private` network scope also permits private LAN destinations.
+
+The `loopback` network scope also permits loopback destinations. The SSRF policy blocks sensitive infrastructure ranges for all network scopes.
+
+Each named request requires view, modify, or full board access. The server checks this permission before it contacts the API source.
+
+A DELETE request always requires full access and confirmation. Homarr does not cache actions, retry actions, or run actions on load.

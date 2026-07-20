@@ -210,7 +210,11 @@ export const BUNDLED_CUSTOM_WIDGETS: readonly BundledCustomWidget[] = [
       template: `<Stack gap="sm" p="sm">
   <Group justify="space-between"><Title order={3}>Pokédex</Title><Badge color="red">{data.pokemon?.count ?? 0} Pokémon</Badge></Group>
   {status.pokemon?.loading ? <Skeleton height={180} radius="md" /> : status.pokemon?.error ? <Alert color="red">{status.pokemon.error}</Alert> :
-    <Stack gap="xs">{(data.pokemon?.results ?? []).map(pokemon => <Paper key={pokemon.name} withBorder p="xs"><Group justify="space-between"><Text fw={600} tt="capitalize">{pokemon.name}</Text><SubFetch requestId="detail" params={{ name: pokemon.name }} trigger="manual"><Stack gap="xs"><SubData path="sprites.front_default" as="Image" alt={pokemon.name} w={80} h={80} /><SubData path="name" as="Title" order={4} /><SubData path="types" as="Code" /></Stack></SubFetch></Group></Paper>)}</Stack>}
+    <Stack gap="xs">{(data.pokemon?.results ?? []).map((pokemon) => {
+      const segments = pokemon.url.split("/").filter((part) => part);
+      const dexId = segments.at(-1);
+      return <Paper key={dexId} withBorder p="xs"><Group justify="space-between"><Group gap="xs"><Badge variant="light">#{dexId}</Badge><Text fw={600} tt="capitalize">{pokemon.name}</Text></Group><SubFetch requestId="detail" params={{ name: pokemon.name }} trigger="manual"><Stack gap="xs"><SubData path="sprites.front_default" as="Image" alt={pokemon.name} w={80} h={80} /><SubData path="name" as="Title" order={4} /><SubData path="types" as="Code" /></Stack></SubFetch></Group></Paper>;
+    })}</Stack>}
 </Stack>`,
     },
   },

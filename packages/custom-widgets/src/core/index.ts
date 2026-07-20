@@ -1,7 +1,4 @@
-export * from "./ai-prompt";
-export * from "./authoring-resources";
 export * from "./bundled-widgets";
-export * from "./component-registry";
 export * from "./examples";
 export * from "./import";
 export * from "./options";

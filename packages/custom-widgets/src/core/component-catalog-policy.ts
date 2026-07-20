@@ -1,21 +1,18 @@
-import { accessibilityByCategory, documentationUrl } from "./component-descriptor";
-import type { CustomJsxComponentDescriptor } from "./component-descriptor";
-import { discoveredMantineComponents } from "./component-discovery";
-
-const exactReasons = new Map<string, string>([
+const exactDeniedComponentReasons = new Map<string, string>([
   ["Affix", "Escapes the widget layout boundary"],
   ["ColorSchemeScript", "Writes global document state"],
   ["Dialog", "Escapes the widget layout and focus boundary"],
   ["FloatingWindow", "Creates a separate browser window"],
   ["InlineStyles", "Writes unscoped style rules"],
   ["RemoveScroll", "Changes global page scrolling"],
+  ["TableOfContents", "Observes headings and scrolling outside the widget root"],
   ["Transition", "Requires an authored render callback"],
   ["AreaGradient", "Low-level chart implementation helper"],
   ["HiddenDatesInput", "Internal date-input primitive"],
   ["PickerInputBase", "Internal date-input primitive"],
 ]);
 
-const familyReasons: ReadonlyArray<[RegExp, string]> = [
+const deniedComponentFamilies: ReadonlyArray<[RegExp, string]> = [
   [
     /^(?:AppShell|Drawer|FloatingWindow|Modal|RemoveScroll)/u,
     "Escapes or replaces the widget layout, focus, scrolling, or overlay boundary",
@@ -34,29 +31,25 @@ const familyReasons: ReadonlyArray<[RegExp, string]> = [
   [/^(?:FocusTrap)/u, "Can capture focus outside the widget interaction flow"],
 ];
 
-export function getDeniedCustomJsxComponentReason(name: string): string | undefined {
-  const exact = exactReasons.get(name);
-  if (exact) return exact;
-  return familyReasons.find(([pattern]) => pattern.test(name))?.[1];
+const blockedComponentProps: Readonly<Record<string, readonly { name: string; reason: string }[]>> = {
+  Tooltip: [{ name: "target", reason: "String targets can select elements outside the widget root" }],
+  DatePickerInput: pickerModalProps(),
+  DateTimePicker: pickerModalProps(),
+  MonthPickerInput: pickerModalProps(),
+  YearPickerInput: pickerModalProps(),
+};
+
+function pickerModalProps() {
+  return [
+    { name: "dropdownType", reason: "Modal picker mode escapes the widget overlay boundary" },
+    { name: "modalProps", reason: "Modal picker configuration escapes the widget overlay boundary" },
+  ] as const;
 }
 
-export const customJsxDeniedComponentRegistry: readonly CustomJsxComponentDescriptor[] =
-  discoveredMantineComponents.flatMap(({ name, package: packageName }) => {
-    const reason = getDeniedCustomJsxComponentReason(name);
-    if (!reason) return [];
-    return [
-      {
-        name,
-        package: packageName,
-        category: "blocked" as const,
-        safety: "denied" as const,
-        supportedProps: [],
-        subcomponents: [],
-        accessibilityRequirements: accessibilityByCategory.blocked,
-        documentationUrl: documentationUrl(packageName, name),
-        reason,
-      },
-    ];
-  });
+export function getCatalogDeniedComponentReason(name: string): string | undefined {
+  return exactDeniedComponentReasons.get(name) ?? deniedComponentFamilies.find(([pattern]) => pattern.test(name))?.[1];
+}
 
-export const deniedCustomJsxComponentNames = new Set(customJsxDeniedComponentRegistry.map((entry) => entry.name));
+export function getCatalogBlockedComponentProps(name: string) {
+  return blockedComponentProps[name] ?? [];
+}

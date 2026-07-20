@@ -1,47 +1,125 @@
-# Workbench and ChatGPT
+# Create a Custom Widget
 
 import { CanonicalCustomWidgetExample } from "@site/src/components/custom-widget-code";
 
-The desktop workbench keeps code and preview side by side. Mobile uses Configure and Preview tabs. Save and preview actions stay available while the form scrolls.
+The desktop workbench shows the code and preview next to each other. On a mobile device, use the Configure and Preview tabs.
 
-CodeMirror edits requests, options, and JSX. The editor supplies installed Mantine components, request/source IDs, option names, temporary input names, runtime components, and icons. The request toolbar jumps to a declaration and atomically renames its invalidation, dynamic-option, and JSX references. Save validation errors appear as selectable plain text with a direct **Copy errors** action.
+The save and preview actions remain available when the form scrolls.
 
-The **Schema** action beside Undo, Redo, and Format expands the generated JSON Schema plus minimal and full examples. These references are generated from the same validators used by imports, MCP, Workshop, and saved definitions.
+Use CodeMirror to edit requests, widget options, and JSX. The editor gives completions for the installed Mantine components.
 
-## Manual workflow
+The editor also gives completions for identifiers, widget options, temporary inputs, runtime components, and icons.
 
-1. Add the API source and select its network scope and authentication mode.
-2. Enter credentials. Existing values are shown only as configured; plaintext is never revealed.
-3. Declare named load/manual queries and actions.
-4. Define persisted item options.
-5. Write JSX using `data`, `status`, `options`, and temporary `inputs`.
-6. Select **Test and preview**. Its loading state shows while load requests run; the Data tab dot and result summary turn green or red when they finish. Open Data for responses and request errors, then preview compact/standard/wide layouts and inspect runtime and accessibility diagnostics. A preview that initially lacks request data retries rendering when that data arrives.
-7. Save, then select the definition and its options in the board widget picker.
+Use the request toolbar to go to a declaration. The rename action changes all related request references.
 
-## ChatGPT copy/paste
+The rename operation updates `invalidates`, dynamic widget option, and JSX references as one transaction.
 
-Enter a short request and optional API documentation URL, then select **Copy AI prompt**. Its dropdown also offers a self-contained version with the complete Custom Widget authoring skill embedded. Both copied prompts are strictly offline authoring references: they contain no MCP resource names, tool calls, or connected-workflow instructions. Paste either prompt into ChatGPT or another model. The model must return exactly:
+Save errors appear as selectable text. Use **Copy errors** to copy them.
+
+Select **Schema** next to Undo, Redo, and Format. This action shows the generated JSON Schema and two examples.
+
+Homarr generates these references from the canonical Zod schemas. Imports, MCP, Workshop, and saved definitions use the same schemas.
+
+## Create a Custom Widget manually
+
+1. Add the API source.
+2. Select its network scope.
+3. Select its authentication mode.
+4. Enter the credentials.
+5. Declare the named requests.
+6. Define the widget options.
+7. Write JSX with `data`, `status`, `options`, and temporary `inputs`.
+8. Select **Test and preview**.
+9. Wait for the load requests to stop.
+10. Open the Data tab to examine responses and request errors.
+11. Preview the compact, standard, and wide layouts.
+12. Examine the runtime and accessibility diagnostics.
+13. Save the definition.
+14. Select the definition and its widget options in the board widget picker.
+
+Homarr does not show existing plaintext credentials. It shows only the configuration status.
+
+The preview action shows a loading state during load requests. The Data tab indicator shows green or red after completion.
+
+The preview renders again when request data becomes available.
+
+## Create a Custom Widget with ChatGPT
+
+Enter a short request. You can also enter an API documentation URL.
+
+Select **Copy AI prompt**. The menu also provides **Copy with embedded skill**, a complete release-matched offline prompt.
+
+Both prompts support offline authoring. They do not require MCP resources, MCP tools, or file-system access.
+
+Paste one prompt into ChatGPT or a different model. Tell the model to return exactly these two blocks:
 
 1. A fenced `json` block with one complete widget and `template: "__HOMARR_TEMPLATE__"`.
 2. A fenced `jsx` block with the readable template.
 
-Use **Paste AI response** to fill the workbench. Enter credentials yourself, test, and preview. If saving fails, select or copy the validation errors shown by Homarr and give that plain text to the model. Homarr does not generate a separate fix prompt or assume the model can access local skill files.
+Select **Paste AI response** to fill the workbench. Enter the credentials.
 
-The normal prompt is under 8,000 characters. It includes the installed Mantine version and capability rules but not a complete prop list, MCP workflow, server URL, or credentials. The embedded-skill variant is longer because it includes the portable offline instructions.
+Test the requests. Preview the widget.
 
-## Options
+If the save operation fails, copy the validation errors. Give the error text to the model.
 
-Options use a restricted object JSON Schema. Supported controls include text, textarea, number, switch, select, multi-select, slider, date, time, color, URL, nested groups, conditions, and advanced JSON.
+Homarr does not make a separate correction prompt. Homarr does not assume that the model can read local skill files.
 
-Credentials are not widget options. Credential-like option names and static default values are rejected; configure authentication under the widget's API source so values stay encrypted and out of exports and board configuration.
+The standard prompt contains fewer than 8,000 characters. It includes the installed Mantine version and the capability rules.
 
-Dynamic selects use `x-homarr.optionsSource` and a named query. Add `itemsPath` when the response wraps its result array, then use `valuePath` and `labelPath` relative to each item. These requests run only while configuring the item and use the same protected server executor as widget requests.
+It does not include a complete prop list, MCP workflow, server URL, or credentials. The prompt with the embedded skill is intentionally longer. It starts with your widget request, then includes:
 
-### Named requests and parameter bindings
+- `SKILL.md` and all eight release-matched reference files
+- The Custom Widget, Mantine, skill, and catalog-schema versions
 
-Request parameters are a map from parameter name to `string`, `number`, or `boolean`. Query and body templates reference them with `{ "$param": "name" }`. Declaring a parameter does not give it a value, even when an option or temporary input has the same name.
+The generated reference files already contain the exact component and prop APIs. Homarr does not append a second raw catalog or a duplicate examples payload.
 
-For a load query, bind every parameter explicitly in `optionsBinding`. Each entry is either `{ "$option": "optionName" }` or a primitive literal matching the declared parameter type:
+The embedded prompt ends with this sentinel and an exact total character count:
+
+```text
+--- END HOMARR CUSTOM WIDGET OFFLINE BUNDLE ---
+Characters: <exact clipboard character count>
+```
+
+The count includes the whole prompt and the count itself. If the sentinel is missing or the number does not match the clipboard length, copy the prompt again before sending it to a model.
+
+The embedded content explicitly tells a model to author directly from the offline bundle. It does not claim that MCP tools, Homarr resources, repository files, or file-system access exist in the chat.
+
+## Configure widget options
+
+Widget options use a restricted object JSON Schema. Homarr supports the following controls:
+
+- Text
+- Text area
+- Number
+- Switch
+- Select
+- Multi-select
+- Slider
+- Date
+- Time
+- Color
+- URL
+- Nested group
+- Conditional field
+- Advanced JSON
+
+Credentials are not widget options. Homarr rejects credential names and static credential values in widget options.
+
+Configure authentication in the API source. Homarr then keeps the values encrypted and excludes them from exports and board configuration.
+
+Dynamic selects use `x-homarr.optionsSource` and a named query. Add `itemsPath` when the response contains the result array in an object.
+
+Set `valuePath` and `labelPath` relative to each item. These requests run only during widget option configuration.
+
+The requests use the same protected server executor as runtime named requests.
+
+### Bind named request parameters
+
+Request parameters map each parameter name to `string`, `number`, or `boolean`. Query and body templates use `{ "$param": "name" }` references.
+
+A parameter declaration does not give a value to the parameter. A matching widget option or temporary input does not create a binding.
+
+For a load query, bind each parameter in `optionsBinding`. Use an option reference or a type-compatible primitive literal:
 
 ```json
 {
@@ -55,9 +133,11 @@ For a load query, bind every parameter explicitly in `optionsBinding`. Each entr
 }
 ```
 
-For manual queries and actions, `SubFetch`, `ActionButton`, or `ToggleSwitch` supplies the complete parameter object through its `params` prop. This is the only route from JSX values such as `inputs.search` or a loop variable into a request.
+For a manual query or action, supply all parameters with the component `params` prop. Use `SubFetch`, `ActionButton`, or `ToggleSwitch`.
 
-Dynamic option requests also run without a JSX invoker. If they declare parameters, give them explicit `optionsBinding` entries so the configuration form can resolve those values.
+Only this prop can send JSX values to a request. These values can include temporary inputs and loop variables.
+
+Dynamic widget option requests run without a JSX invoker. Add an `optionsBinding` entry for each declared parameter.
 
 <CanonicalCustomWidgetExample
   id="named-widget-requests"
@@ -66,9 +146,9 @@ Dynamic option requests also run without a JSX invoker. If they declare paramete
   height="420px"
 />
 
-### Options schema and defaults
+### Define the widget options schema and defaults
 
-Defaults must validate against the options schema. Keep secrets out of both documents.
+Default values must conform to the widget options schema. Do not put secrets in these documents.
 
 <CanonicalCustomWidgetExample
   id="widget-options-schema"

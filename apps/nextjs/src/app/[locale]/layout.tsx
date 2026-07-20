@@ -14,7 +14,7 @@ import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
 import { api } from "@homarr/api/server";
-import { env } from "@homarr/auth/env";
+import { env as authEnv } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { db } from "@homarr/db";
 import { getServerSettingsAsync } from "@homarr/db/queries";
@@ -24,9 +24,11 @@ import { SettingsProvider } from "@homarr/settings";
 import { SpotlightProvider } from "@homarr/spotlight";
 import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
+import { WORKSHOP_API_URL } from "@homarr/workshop/schema";
 
 import { Analytics } from "~/components/layout/analytics";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
+import { env } from "~/env";
 
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
@@ -90,7 +92,7 @@ export default async function Layout(props: {
 
   const StackedProvider = composeWrappers([
     (innerProps) => {
-      return <AuthProvider session={session} logoutUrl={env.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />;
+      return <AuthProvider session={session} logoutUrl={authEnv.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />;
     },
     (innerProps) => (
       <SettingsProvider
@@ -139,6 +141,7 @@ export default async function Layout(props: {
       suppressHydrationWarning
     >
       <head>
+        <meta name="homarr-workshop-api-url" content={env.WORKSHOP_API_URL ?? WORKSHOP_API_URL} />
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
       </head>

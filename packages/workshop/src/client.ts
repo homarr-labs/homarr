@@ -1,7 +1,6 @@
 import PocketBase, { ClientResponseError } from "pocketbase";
 
 import type {
-  WorkshopAdminAction,
   WorkshopReport,
   WorkshopSubmissionDetail,
   WorkshopSubmissionInput,
@@ -13,15 +12,16 @@ import {
   WORKSHOP_API_URL,
   WORKSHOP_REQUEST_TIMEOUT_MS,
   WorkshopError,
-  workshopAdminActionSchema,
   workshopReportSchema,
   workshopSubmissionDetailSchema,
-  workshopSubmissionInputSchema,
   workshopSubmissionSummarySchema,
+  workshopSubmissionInputSchema,
   workshopScreenshotsSchema,
   workshopUserSchema,
   workshopVoteSchema,
 } from "./schema";
+
+const WORKSHOP_OAUTH_TIMEOUT_MS = 2 * 60_000;
 
 export interface WorkshopListOptions {
   page?: number;
@@ -71,6 +71,10 @@ function workshopError(error: unknown, fallback: string) {
   return new WorkshopError("unknown", error instanceof Error ? error.message : fallback);
 }
 
+function firstNonEmptyString(...values: unknown[]) {
+  return values.find((value): value is string => typeof value === "string" && value.trim().length > 0)?.trim();
+}
+
 export class WorkshopClient {
   public readonly pocketBase: PocketBase;
 
@@ -97,13 +101,7 @@ export class WorkshopClient {
     if (!this.pocketBase.authStore.isValid) return null;
     try {
       await this.pocketBase.collection("users").authRefresh();
-      const user = this.currentUser;
-      if (!user) return null;
-      const admin = await this.pocketBase
-        .collection("workshop_admins")
-        .getFirstListItem(this.pocketBase.filter("user = {:user}", { user: user.id }))
-        .catch(() => null);
-      return { ...user, isAdmin: admin !== null };
+      return this.currentUser;
     } catch {
       this.pocketBase.authStore.clear();
       return null;
@@ -111,13 +109,76 @@ export class WorkshopClient {
   }
 
   public async signInWithGitHub() {
+    if (typeof window === "undefined" || typeof window.open !== "function") {
+      throw new WorkshopError("unavailable", "GitHub sign-in requires a browser popup");
+    }
+
+    const popup = window.open(
+      "about:blank",
+      "homarr_workshop_oauth",
+      "width=1024,height=768,resizable=yes,scrollbars=yes,menubar=no",
+    );
+    if (!popup) throw new WorkshopError("unavailable", "GitHub sign-in popup was blocked by the browser");
+
+    const requestKey = `workshop_oauth_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    let closePoll: ReturnType<typeof setInterval> | undefined;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const popupFailure = new Promise<never>((_resolve, reject) => {
+      closePoll = setInterval(() => {
+        if (popup.closed) reject(new WorkshopError("unknown", "GitHub sign-in was cancelled"));
+      }, 250);
+      timeout = setTimeout(
+        () => reject(new WorkshopError("unavailable", "GitHub sign-in timed out")),
+        WORKSHOP_OAUTH_TIMEOUT_MS,
+      );
+    });
+
     try {
-      await this.pocketBase
-        .collection("users")
-        .authWithOAuth2({ provider: "github", createData: { displayName: "Community member" } });
+      const auth = await Promise.race([
+        this.pocketBase.collection("users").authWithOAuth2({
+          provider: "github",
+          createData: { displayName: "Community member" },
+          requestKey,
+          urlCallback: (url) => {
+            if (popup.closed) throw new WorkshopError("unknown", "GitHub sign-in was cancelled");
+            popup.location.href = url;
+          },
+        }),
+        popupFailure,
+      ]);
+      const rawUser =
+        auth.meta?.rawUser && typeof auth.meta.rawUser === "object"
+          ? (auth.meta.rawUser as Record<string, unknown>)
+          : undefined;
+      const displayName = firstNonEmptyString(
+        auth.meta?.name,
+        auth.meta?.username,
+        rawUser?.name,
+        rawUser?.login,
+        auth.record.name,
+        auth.record.username,
+      );
+      const avatarUrl = firstNonEmptyString(
+        auth.meta?.avatarUrl,
+        auth.meta?.avatar,
+        rawUser?.avatar_url,
+        auth.record.avatarUrl,
+        auth.record.avatar,
+      );
+      if (displayName || avatarUrl) {
+        await this.pocketBase.collection("users").update(auth.record.id, {
+          ...(displayName ? { displayName } : {}),
+          ...(avatarUrl ? { avatarUrl } : {}),
+        });
+      }
       return this.refreshAuth();
     } catch (error) {
       throw workshopError(error, "GitHub sign-in failed");
+    } finally {
+      if (closePoll) clearInterval(closePoll);
+      if (timeout) clearTimeout(timeout);
+      this.pocketBase.cancelRequest(requestKey);
+      if (!popup.closed) popup.close();
     }
   }
 
@@ -184,7 +245,6 @@ export class WorkshopClient {
     const data = new FormData();
     Object.entries(parsed).forEach(([key, value]) => data.set(key, value));
     data.set("author", this.currentUser?.id ?? "");
-    data.set("authorName", this.currentUser?.displayName ?? "Community member");
     screenshots.forEach((file) => data.append("screenshots", file));
     try {
       const result = await this.pocketBase.collection("submissions").create(data);
@@ -194,13 +254,12 @@ export class WorkshopClient {
     }
   }
 
-  public async update(id: string, input: WorkshopSubmissionInput, screenshots: File[] = [], removed: string[] = []) {
+  public async update(id: string, input: WorkshopSubmissionInput, screenshots: File[] = []) {
     const parsed = workshopSubmissionInputSchema.parse(input);
     workshopScreenshotsSchema.parse(screenshots);
     const data = new FormData();
     Object.entries(parsed).forEach(([key, value]) => data.set(key, value));
-    screenshots.forEach((file) => data.append("screenshots+", file));
-    removed.forEach((file) => data.append("screenshots-", file));
+    screenshots.forEach((file) => data.append("screenshots", file));
     try {
       await this.pocketBase.collection("submissions").update(id, data);
       return this.get(id);
@@ -209,9 +268,9 @@ export class WorkshopClient {
     }
   }
 
-  public async delete(id: string, reason = "Deleted by author") {
+  public async delete(id: string) {
     try {
-      await this.pocketBase.collection("submissions").delete(id, { headers: { "x-workshop-reason": reason } });
+      await this.pocketBase.collection("submissions").delete(id);
     } catch (error) {
       throw workshopError(error, "Failed to delete submission");
     }
@@ -245,7 +304,7 @@ export class WorkshopClient {
       return workshopReportSchema.parse(
         await this.pocketBase
           .collection("reports")
-          .create({ submission, reporter: this.currentUser?.id ?? "", category, explanation, status: "open" }),
+          .create({ submission, reporter: this.currentUser?.id ?? "", category, explanation: explanation.trim() }),
       );
     } catch (error) {
       throw workshopError(error, "Failed to report submission");
@@ -256,7 +315,7 @@ export class WorkshopClient {
     try {
       const items = await this.pocketBase
         .collection("reports")
-        .getFullList({ batch: 200, filter: "status = 'open'", sort: "-created", expand: "reporter,submission" });
+        .getFullList({ batch: 200, sort: "-created", expand: "reporter,submission" });
       return items.map((item) =>
         workshopReportSchema.parse({
           ...item,
@@ -269,26 +328,11 @@ export class WorkshopClient {
     }
   }
 
-  public async dismissReport(id: string, reason: string) {
+  public async dismissReport(id: string) {
     try {
-      return workshopReportSchema.parse(
-        await this.pocketBase.collection("reports").update(id, { status: "dismissed", dismissalReason: reason }),
-      );
+      await this.pocketBase.collection("reports").delete(id);
     } catch (error) {
       throw workshopError(error, "Failed to dismiss report");
-    }
-  }
-
-  public async listAdminActions(): Promise<WorkshopAdminAction[]> {
-    try {
-      const items = await this.pocketBase
-        .collection("workshop_admin_actions")
-        .getFullList({ batch: 200, sort: "-created", expand: "actor" });
-      return items.map((item) =>
-        workshopAdminActionSchema.parse({ ...item, actorName: item.expand?.actor?.displayName }),
-      );
-    } catch (error) {
-      throw workshopError(error, "Failed to load administrator history");
     }
   }
 }

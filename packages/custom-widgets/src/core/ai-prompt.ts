@@ -1,18 +1,22 @@
 import type { HomarrCustomWidgetV2 } from "./custom-jsx-schema";
 
 export const CUSTOM_WIDGET_MANTINE_VERSION = "9.4.1";
+export const CUSTOM_WIDGET_OFFLINE_BUNDLE_SENTINEL = "--- END HOMARR CUSTOM WIDGET OFFLINE BUNDLE ---";
+const CUSTOM_WIDGET_AI_PROMPT_LIMIT = 8_000;
+const FINAL_OUTPUT_INSTRUCTION =
+  "Create the requested widget now and return exactly one complete `json` fenced block followed by one complete `jsx` fenced block. Homarr will validate the result after it is pasted into the workbench.";
 
 const AUTHORING_PROMPT = `You create Homarr Custom JSX v2 widgets. Return exactly two fenced blocks: a json block containing one complete widget object with template set to "__HOMARR_TEMPLATE__", then a jsx block containing the readable template.
 
 Use $schema "homarr-custom-widget-v2". A widget contains metadata, inline API sources, named requests, an options schema, defaults, and one JSX template. Never include credentials. Use one source named "default" unless the widget genuinely combines APIs.
 
-This Homarr release uses Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}. Use only the Homarr runtime components and Mantine capabilities described in this prompt and its embedded skill.
+This Homarr release uses Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}. Use only the Homarr runtime components and Mantine capabilities described in this prompt. The embedded-skill variant includes the exact release-matched component reference files.
 
 Queries and actions may use GET, POST, PUT, PATCH, or DELETE. Set kind to query for reads and action for user-triggered changes. Actions never use trigger "load". Declare every path, query, or body parameter. Use {name} in paths and {"$param":"name"} in query/body templates. Every declared parameter needs an explicit value source: SubFetch, ActionButton, and ToggleSwitch supply manual request values through their params prop; every load-query parameter must have an optionsBinding entry containing {"$option":"optionName"} or a primitive literal. Never infer a binding from matching names. Use load-triggered query results through data.<requestId>.
 
 Source authentication is exactly one of {"type":"none"}, {"type":"bearer"}, {"type":"basic"}, {"type":"apiKeyHeader","headerName":"X-API-Key"}, or {"type":"apiKeyQuery","parameterName":"api_key"}. Credentials are configured separately by the user.
 
-Templates can read data, status, options, and inputs. Bind supported Mantine controls with bind="search" and read the temporary value as inputs.search. Bound inputs live only in memory and reset when the widget reloads; saved configuration belongs in options. Use Mantine Core, Dates, and Charts components. Do not use imports, hooks, refs, event callbacks, component/renderRoot, arbitrary portals, raw HTML, fetch, eval, npm packages, or credentials. Design for compact and wide dashboard sizes with useful loading, empty, and error states.
+Templates can read data, status, options, and inputs. Bind supported Mantine controls with bind="search" and read the temporary value as inputs.search. Bound inputs live only in memory and reset when the widget reloads; saved configuration belongs in options. Restricted callback blocks may declare immutable local const values followed by one final return. Use RecursiveList for arbitrary-depth trees instead of authored recursion. Use Mantine Core, Dates, and Charts components. Do not use imports, hooks, refs, raw event callback props, component/renderRoot, arbitrary portals, raw HTML, fetch, eval, npm packages, or credentials. Design for compact and wide dashboard sizes with useful loading, empty, and error states.
 
 Options use a restricted object JSON Schema. x-homarr controls include text, textarea, number, switch, select, multi-select, slider, date, time, color, icon, url, duration, timeZone, and json. Dynamic selects use x-homarr.optionsSource with requestId, optional itemsPath for wrapped arrays, valuePath, and labelPath.
 
@@ -48,22 +52,42 @@ export function buildCustomWidgetAiPrompt(
   currentConfig?: Partial<HomarrCustomWidgetV2> | Record<string, unknown> | null,
   request?: string | null,
   documentationUrl?: string | null,
-  embeddedSkill?: string,
 ) {
-  const requestedWidget = redactText(request?.trim() || "Describe the widget you want to create.");
-  const sections = [`Please create this Homarr Custom JSX v2 widget:\n\n${requestedWidget}`];
-  if (documentationUrl) sections.push(`API documentation: ${redactUrl(documentationUrl)}`);
-  sections.push(AUTHORING_PROMPT);
-  if (embeddedSkill) sections.push(`Use this complete Homarr Custom Widget authoring skill:\n\n${embeddedSkill}`);
-  if (rawResponse) sections.push(`Sample API response:\n\n\`\`\`json\n${redactResponse(rawResponse)}\n\`\`\``);
-  if (currentConfig) {
-    sections.push(`Current widget:\n\n\`\`\`json\n${JSON.stringify(redactValue(currentConfig), null, 2)}\n\`\`\``);
-  }
-  sections.push(
-    `Create the requested widget now and return exactly one complete \`json\` fenced block followed by one complete \`jsx\` fenced block. Homarr will validate the result after it is pasted into the workbench.`,
+  const requestedWidget = truncatePromptText(
+    redactText(request?.trim() || "Describe the widget you want to create."),
+    1_500,
   );
-  const prompt = sections.join("\n\n");
-  return embeddedSkill ? prompt : prompt.slice(0, 8_000);
+  const sections = [`Please create this Homarr Custom JSX v2 widget:\n\n${requestedWidget}`];
+  if (documentationUrl) sections.push(`API documentation: ${truncatePromptText(redactUrl(documentationUrl), 500)}`);
+  sections.push(AUTHORING_PROMPT);
+  sections.push(FINAL_OUTPUT_INSTRUCTION);
+
+  const optionalSections = [
+    ...(rawResponse ? [{ label: "Sample API response", content: redactResponse(rawResponse) }] : []),
+    ...(currentConfig
+      ? [{ label: "Current widget", content: JSON.stringify(redactValue(currentConfig), null, 2) }]
+      : []),
+  ];
+  for (const [index, section] of optionalSections.entries()) {
+    const remainingSections = optionalSections.length - index;
+    const remainingCharacters = CUSTOM_WIDGET_AI_PROMPT_LIMIT - sections.join("\n\n").length - 2;
+    const sectionBudget = Math.floor(remainingCharacters / remainingSections);
+    const formatted = formatBudgetedCodeSection(section.label, section.content, sectionBudget);
+    if (formatted) sections.splice(-1, 0, formatted);
+  }
+
+  return sections.join("\n\n");
+}
+
+export function finalizeCustomWidgetOfflineContent(content: string) {
+  const footerPrefix = `${content.trimEnd()}\n\n${CUSTOM_WIDGET_OFFLINE_BUNDLE_SENTINEL}\nCharacters: `;
+  let digitCount = String(footerPrefix.length).length;
+  while (true) {
+    const characterCount = footerPrefix.length + digitCount;
+    const countText = String(characterCount);
+    if (countText.length === digitCount) return `${footerPrefix}${countText}`;
+    digitCount = countText.length;
+  }
 }
 
 const sensitiveKey =
@@ -119,4 +143,18 @@ function redactText(value: string): string {
       /\b(api[ _-]?key|access[ _-]?token|refresh[ _-]?token|client[ _-]?secret|token|password|passwd|secret)["']?\s*[:=]\s*["']?[^\s,;"'}]+/giu,
       "$1: [REDACTED]",
     );
+}
+
+function formatBudgetedCodeSection(label: string, content: string, budget: number): string | null {
+  const prefix = `${label}:\n\n\`\`\`json\n`;
+  const suffix = "\n```";
+  if (budget <= prefix.length + suffix.length + 80) return null;
+  const contentBudget = budget - prefix.length - suffix.length;
+  return `${prefix}${truncatePromptText(content, contentBudget)}${suffix}`;
+}
+
+function truncatePromptText(value: string, limit: number): string {
+  if (value.length <= limit) return value;
+  const marker = "\n... [content omitted to fit the prompt budget]";
+  return `${value.slice(0, Math.max(0, limit - marker.length))}${marker}`;
 }

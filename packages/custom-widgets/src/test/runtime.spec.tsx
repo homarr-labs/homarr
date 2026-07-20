@@ -106,6 +106,68 @@ async function settle() {
 }
 
 describe("Custom Widget runtime ports", () => {
+  it("removes unsafe dynamic link targets at runtime", async () => {
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+    const rendererMessages = {
+      noTemplate: "No template",
+      templateWarnings: (count: number) => `${count} warnings`,
+    };
+
+    await render(
+      <CustomJsxRenderer
+        template={"<Anchor href={data.url}>Unsafe</Anchor>"}
+        data={{ url: "//example.com/escape" }}
+        components={components}
+        createBindings={(data) => ({ data })}
+        messages={rendererMessages}
+      />,
+      createPort(),
+    );
+
+    expect(host.querySelector("a")?.hasAttribute("href")).toBe(false);
+  });
+
+  it("scopes authored radio names to the widget and preserves uncontrolled defaults", async () => {
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+    const rendererMessages = {
+      noTemplate: "No template",
+      templateWarnings: (count: number) => `${count} warnings`,
+    };
+
+    await render(
+      <>
+        <button name="shared" role="radio" aria-checked="false" type="button">
+          Outside
+        </button>
+        <CustomJsxRenderer
+          template={
+            '<Radio.Group name="shared" defaultValue="inside"><Radio.Card value="inside"><Radio.Indicator /></Radio.Card><Radio.Card value="other"><Radio.Indicator /></Radio.Card></Radio.Group>'
+          }
+          data={{}}
+          components={components}
+          createBindings={() => ({})}
+          messages={rendererMessages}
+        />
+      </>,
+      createPort(),
+    );
+    await settle();
+
+    const [outside, inside, other] = [...host.querySelectorAll<HTMLButtonElement>('button[role="radio"]')];
+    expect(outside?.name).toBe("shared");
+    expect(inside?.name).toMatch(/^custom-widget-/u);
+    expect(inside?.name).not.toBe(outside?.name);
+    expect(other?.name).toBe(inside?.name);
+    expect(inside?.getAttribute("aria-checked")).toBe("true");
+    expect(other?.getAttribute("aria-checked")).toBe("false");
+  });
+
   it("exposes temporary bindings through inputs without browser storage", async () => {
     const setItem = vi.spyOn(Storage.prototype, "setItem");
     const rendererMessages = {
@@ -130,6 +192,87 @@ describe("Custom Widget runtime ports", () => {
     await settle();
     expect(host.textContent).toContain("containers");
     expect(setItem).not.toHaveBeenCalled();
+  });
+
+  it("resets temporary bindings when the template changes", async () => {
+    const rendererMessages = {
+      noTemplate: "No template",
+      templateWarnings: (count: number) => `${count} warnings`,
+    };
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+
+    await render(
+      <CustomJsxRenderer
+        template={'<Stack><TextInput bind="shared" defaultValue="text"/><Text>{inputs.shared}</Text></Stack>'}
+        data={{}}
+        components={components}
+        createBindings={() => ({})}
+        messages={rendererMessages}
+      />,
+      createPort(),
+    );
+    await settle();
+    expect(host.textContent).toContain("text");
+
+    await render(
+      <CustomJsxRenderer
+        template={
+          '<Stack><Switch bind="shared" defaultChecked/><Text>{inputs.shared ? "enabled" : "disabled"}</Text></Stack>'
+        }
+        data={{}}
+        components={components}
+        createBindings={() => ({})}
+        messages={rendererMessages}
+      />,
+      createPort(),
+    );
+    await settle();
+    expect(host.textContent).toContain("enabled");
+    expect(host.textContent).not.toContain("BINDING_TYPE_CONFLICT");
+  });
+
+  it("preserves temporary bindings when data changes without changing the template", async () => {
+    const rendererMessages = {
+      noTemplate: "No template",
+      templateWarnings: (count: number) => `${count} warnings`,
+    };
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+    const template = '<Stack><Switch bind="shared"/><Text>{inputs.shared ? "enabled" : "disabled"}</Text></Stack>';
+
+    await render(
+      <CustomJsxRenderer
+        template={template}
+        data={{ version: 1 }}
+        components={components}
+        createBindings={(data) => ({ data })}
+        messages={rendererMessages}
+      />,
+      createPort(),
+    );
+    await settle();
+    await act(async () => (host.querySelector("input") as HTMLInputElement).click());
+    await settle();
+    expect(host.textContent).toContain("enabled");
+
+    await render(
+      <CustomJsxRenderer
+        template={template}
+        data={{ version: 2 }}
+        components={components}
+        createBindings={(data) => ({ data })}
+        messages={rendererMessages}
+      />,
+      createPort(),
+    );
+    await settle();
+    expect((host.querySelector("input") as HTMLInputElement).checked).toBe(true);
+    expect(host.textContent).toContain("enabled");
   });
 
   it("runs an automatic query once and publishes data to the declarative data root", async () => {

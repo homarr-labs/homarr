@@ -40,6 +40,23 @@ describe("extractCustomWidgetSaveIssues", () => {
     ]);
   });
 
+  it("preserves array indexes in serialized Zod issue paths", () => {
+    const message = JSON.stringify([
+      {
+        code: "custom",
+        message: "A load parameter requires an explicit binding.",
+        path: ["requests", 0, "optionsBinding", "endpointId"],
+      },
+    ]);
+
+    expect(extractCustomWidgetSaveIssues({ message })).toEqual([
+      {
+        path: "requests.0.optionsBinding.endpointId",
+        message: "A load parameter requires an explicit binding.",
+      },
+    ]);
+  });
+
   it("extracts root validation errors from the tRPC error shape", () => {
     expect(
       extractCustomWidgetSaveIssues({

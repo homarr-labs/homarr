@@ -1,5 +1,5 @@
 import type { ComponentType, ErrorInfo, ReactNode } from "react";
-import { Component, useCallback, useEffect, useMemo, useState } from "react";
+import { Component, useCallback, useEffect, useId, useMemo, useState } from "react";
 import { Alert, Box, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
@@ -99,7 +99,20 @@ function ErrorAlert({ error }: { error: Error }) {
   );
 }
 
-export function CustomJsxRenderer({
+export function CustomJsxRenderer(props: CustomJsxRendererProps) {
+  if (!props.template.trim())
+    return (
+      <Alert color="gray" variant="light" p="xs">
+        <Text size="xs" c="dimmed">
+          {props.messages.noTemplate}
+        </Text>
+      </Alert>
+    );
+
+  return <CustomJsxRendererSession key={props.template} {...props} />;
+}
+
+function CustomJsxRendererSession({
   template,
   data,
   status = EMPTY_RECORD,
@@ -108,6 +121,7 @@ export function CustomJsxRenderer({
   createBindings,
   messages,
 }: CustomJsxRendererProps) {
+  const inputScopeId = useId();
   const [parseErrors, setParseErrors] = useState<string[]>([]);
   const [bindingErrors, setBindingErrors] = useState<string[]>([]);
   const [inputs, setInputs] = useState<Record<string, WidgetInputValue>>({});
@@ -168,14 +182,6 @@ export function CustomJsxRenderer({
     if (rendered.error) handleError(rendered.error);
   }, [handleError, rendered]);
 
-  if (!template.trim())
-    return (
-      <Alert color="gray" variant="light" p="xs">
-        <Text size="xs" c="dimmed">
-          {messages.noTemplate}
-        </Text>
-      </Alert>
-    );
   return (
     <Stack gap={0} h="100%">
       <Box h="100%" style={{ contain: "layout paint style", isolation: "isolate", overflow: "auto", minHeight: 0 }}>
@@ -183,6 +189,7 @@ export function CustomJsxRenderer({
           <ErrorAlert error={rendered.error} />
         ) : (
           <CustomJsxInputsProvider
+            scopeId={inputScopeId}
             inputs={inputs}
             inputTypes={inputTypes}
             registerInput={registerInput}

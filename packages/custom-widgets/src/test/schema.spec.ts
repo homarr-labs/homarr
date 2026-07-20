@@ -195,6 +195,24 @@ describe("Custom JSX v2 validation", () => {
     ).toBe(false);
   });
 
+  test("uses the same parameter identifier grammar for declarations and path placeholders", () => {
+    const request = {
+      id: "detail",
+      sourceId: "default",
+      kind: "query" as const,
+      method: "GET" as const,
+      parameters: { endpointId: "string" as const },
+      optionsBinding: { endpointId: "local" },
+      auth: "none" as const,
+      minimumBoardPermission: "view" as const,
+      trigger: "load" as const,
+    };
+    expect(customJsxRequestSchema.safeParse({ ...request, pathTemplate: "/endpoints/{endpointId}" }).success).toBe(
+      true,
+    );
+    expect(customJsxRequestSchema.safeParse({ ...request, pathTemplate: "/endpoints/{1invalid}" }).success).toBe(false);
+  });
+
   test("requires invoking components to provide params for parameterized manual requests", () => {
     const request = {
       id: "detail",
@@ -350,7 +368,7 @@ describe("Custom JSX v2 validation", () => {
       },
       defaultOptions: { start: "today" },
       template:
-        '<Stack><Calendar bind="selectedDate"/><ActionButton requestId="monitor-series" params={{ seriesId: 1 }}>Monitor</ActionButton></Stack>',
+        '<Stack><DatePicker bind="selectedDate"/><ActionButton requestId="monitor-series" params={{ seriesId: 1 }}>Monitor</ActionButton></Stack>',
     });
     expect(result.success, result.error?.issues.map((issue) => issue.message).join("; ")).toBe(true);
   });
@@ -460,13 +478,13 @@ describe("Custom JSX v2 validation", () => {
     expect(
       customWidgetDefinitionSchema.safeParse({
         ...CUSTOM_WIDGET_STARTER,
-        template: '<Calendar bind="selectedDate" />',
+        template: '<DatePicker bind="selectedDate" />',
       }).success,
     ).toBe(true);
     expect(
       customWidgetDefinitionSchema.safeParse({
         ...CUSTOM_WIDGET_STARTER,
-        template: "<Calendar bind={inputs.selectedDate} />",
+        template: "<DatePicker bind={inputs.selectedDate} />",
       }).success,
     ).toBe(false);
     expect(

@@ -14,21 +14,18 @@ import { isRuntimeParams, parseJson } from "./_custom-widget-form-utils";
 export function PreviewActionControl({
   request,
   sessionId,
-  options,
 }: {
   request: HomarrCustomWidgetV2["requests"][number];
   sessionId?: string;
-  options: Record<string, unknown>;
 }) {
   const t = useScopedI18n("customWidget.workbench.preview");
   const { openConfirmModal } = useConfirmModal();
   const actionMutation = clientApi.customWidget.previewAction.useMutation();
   const initialParams = Object.fromEntries(
-    Object.entries(request.parameters).map(([name, type]) => {
-      const bound = options[name];
-      if (typeof bound === type) return [name, bound];
-      return [name, type === "number" ? 0 : type === "boolean" ? false : ""];
-    }),
+    Object.entries(request.parameters).map(([name, type]) => [
+      name,
+      type === "number" ? 0 : type === "boolean" ? false : "",
+    ]),
   );
   const [params, setParams] = useState(JSON.stringify(initialParams, null, 2));
   const parsed = parseJson(params);

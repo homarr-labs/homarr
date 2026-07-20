@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from "react";
-import { createContext, createElement, useContext, useEffect, useRef, useState } from "react";
+import { createContext, createElement, useContext, useEffect, useId, useRef, useState } from "react";
 import * as Core from "@mantine/core";
 import * as Charts from "@mantine/charts";
 import * as Dates from "@mantine/dates";
@@ -15,6 +15,8 @@ import { SubData } from "../runtime/data";
 import { RefreshButton } from "../runtime/refresh-button";
 import { SubFetch } from "../runtime/sub-fetch";
 import { Collapsible, PaginatedList, StatBar, TabPanel, TabsContainer, TypeBadge } from "./interactive-components";
+import { TrustedRecursiveList } from "./recursive-list";
+import { getScopedCustomJsxControlName, isSafeCustomJsxUrl } from "./runtime-component-policy";
 import { sanitizeCustomJsxProps } from "./safe-properties";
 
 type Namespace = Readonly<Record<string, unknown>>;
@@ -32,13 +34,10 @@ function resolveExport(namespace: Namespace, name: string): ComponentType<never>
     : undefined;
 }
 
-function safeUrl(value: unknown) {
-  return typeof value === "string" && (/^https?:\/\//iu.test(value) || value.startsWith("/") || value.startsWith("#"));
-}
-
 export type WidgetInputValue = string | number | boolean | string[] | number[];
 export type WidgetInputType = CustomJsxBindingType;
 interface CustomJsxInputsContextValue {
+  scopeId: string;
   inputs: Record<string, WidgetInputValue>;
   inputTypes: Record<string, WidgetInputType>;
   registerInput(name: string, type: WidgetInputType, initialValue: WidgetInputValue): void;
@@ -49,20 +48,21 @@ const CustomJsxInputsContext = createContext<CustomJsxInputsContextValue | null>
 
 export function CustomJsxInputsProvider({
   children,
+  scopeId,
   inputs,
   inputTypes,
   registerInput,
   setInputValue,
 }: CustomJsxInputsContextValue & { children: ReactNode }) {
   return (
-    <CustomJsxInputsContext.Provider value={{ inputs, inputTypes, registerInput, setInputValue }}>
+    <CustomJsxInputsContext.Provider value={{ scopeId, inputs, inputTypes, registerInput, setInputValue }}>
       {children}
     </CustomJsxInputsContext.Provider>
   );
 }
 
 const checkedComponents = new Set(["Checkbox", "Switch"]);
-const openedComponents = new Set(["HoverCard", "Menu", "Popover"]);
+const openedComponents = new Set(["Menu", "Popover"]);
 const activeComponents = new Set(["Stepper"]);
 const comboboxComponents = new Set(["Autocomplete", "MultiSelect", "Select", "TagsInput", "TreeSelect"]);
 const popoverInputComponents = new Set([
@@ -71,8 +71,11 @@ const popoverInputComponents = new Set([
   "DatePickerInput",
   "DateTimePicker",
   "MonthPickerInput",
+  "TimePicker",
   "YearPickerInput",
 ]);
+const modalPickerComponents = new Set(["DatePickerInput", "DateTimePicker", "MonthPickerInput", "YearPickerInput"]);
+const namedRadioComponents = new Set(["Radio", "Radio.Card", "Radio.Group", "RadioCard", "RadioGroup"]);
 const buttonRootComponents = new Set(["ActionIcon", "Burger", "Button", "CloseButton", "UnstyledButton"]);
 
 function extractEventValue(value: unknown, checked: boolean): WidgetInputValue | null {
@@ -92,28 +95,29 @@ function extractEventValue(value: unknown, checked: boolean): WidgetInputValue |
 }
 
 function useBoundProps(componentName: string, props: Record<string, unknown>): Record<string, unknown> {
+  const detachedScopeId = useId();
   const binding = typeof props.bind === "string" ? props.bind : undefined;
   const context = useContext(CustomJsxInputsContext);
-  const sanitized = sanitizeCustomJsxProps(props);
+  const sanitized = sanitizeCustomJsxProps(props, componentName);
+  if (namedRadioComponents.has(componentName) && typeof sanitized.name === "string") {
+    sanitized.name = getScopedCustomJsxControlName(context?.scopeId ?? detachedScopeId, sanitized.name);
+  }
   delete sanitized.bind;
   const inputType = getCustomJsxBindingType(componentName, sanitized);
   const initialValue = getInitialInputValue(inputType, sanitized);
+  const isBound = Boolean(binding && context && inputType && customJsxBindableComponentNames.has(componentName));
+  useEffect(() => {
+    if (isBound && binding && context && inputType) context.registerInput(binding, inputType, initialValue);
+  }, [binding, context, initialValue, inputType, isBound]);
+  if (!isBound || !binding || !context || !inputType) return sanitized;
   delete sanitized.defaultValue;
   delete sanitized.defaultChecked;
-  useEffect(() => {
-    if (binding && context && inputType && customJsxBindableComponentNames.has(componentName))
-      context.registerInput(binding, inputType, initialValue);
-  }, [binding, componentName, context, initialValue, inputType]);
-  if (!binding || !context || !inputType || !customJsxBindableComponentNames.has(componentName)) return sanitized;
   const currentValue = context.inputs[binding] ?? initialValue;
 
   const update = (value: unknown, checked = false) => {
     const extracted = extractEventValue(value, checked);
     context.setInputValue(binding, inputType, extracted ?? emptyInputValue(inputType));
   };
-  if (componentName === "Calendar") {
-    return { ...sanitized, date: currentValue, onDateChange: update };
-  }
   if (checkedComponents.has(componentName)) {
     return {
       ...sanitized,
@@ -175,7 +179,7 @@ function SafeLink({ component, props }: { component: ComponentType<never>; props
     component,
     {
       ...sanitized,
-      href: safeUrl(props.href) ? props.href : undefined,
+      href: isSafeCustomJsxUrl(props.href) ? props.href : undefined,
       target,
       rel: target === "_blank" ? "noopener noreferrer" : sanitized.rel,
     } as never,
@@ -234,6 +238,7 @@ export function createCustomJsxComponents(adapters: CustomJsxComponentAdapters):
       ) {
         additions.withinPortal = false;
       }
+      if (modalPickerComponents.has(descriptor.name)) additions.dropdownType = "popover";
       if (buttonRootComponents.has(descriptor.name)) additions.type = "button";
       components[descriptor.name] = wrap(descriptor.name, component, additions);
     }
@@ -259,13 +264,6 @@ export function createCustomJsxComponents(adapters: CustomJsxComponentAdapters):
   const navLink = resolveExport(core, "NavLink");
   if (anchor) components.Anchor = (props) => <SafeLink component={anchor} props={props} />;
   if (navLink) components.NavLink = (props) => <SafeLink component={navLink} props={props} />;
-  const dates = Dates as unknown as Namespace;
-  for (const descriptor of enabledCustomJsxComponents.filter(
-    (item) => item.package === "@mantine/dates" && item.safety === "wrapped",
-  )) {
-    const component = resolveExport(dates, descriptor.name);
-    if (component) components[descriptor.name] = wrap(descriptor.name, component);
-  }
   Object.assign(components, {
     CopyButton: createCopyButton(adapters.copyLabels),
     PaginatedList,
@@ -280,6 +278,7 @@ export function createCustomJsxComponents(adapters: CustomJsxComponentAdapters):
     ActionButton,
     ToggleSwitch,
     RefreshButton,
+    RecursiveList: TrustedRecursiveList,
   });
   return components;
 }

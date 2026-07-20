@@ -207,12 +207,10 @@ describe("customJsxComponentRegistry", () => {
     }
   });
 
-  test("publishes complete authoring metadata for every component", () => {
+  test("publishes the minimal safe runtime metadata for every component", () => {
     for (const component of customJsxComponentRegistry) {
-      expect(component.documentationUrl, component.name).toMatch(/^https:\/\//);
       expect(component.supportedProps, component.name).toBeInstanceOf(Array);
-      expect(component.subcomponents, component.name).toBeInstanceOf(Array);
-      expect(component.accessibilityRequirements, component.name).toBeInstanceOf(Array);
+      expect(component.blockedProps, component.name).toBeInstanceOf(Array);
       expect(component.supportedProps, component.name).not.toContain("renderOption");
       expect(component.supportedProps, component.name).not.toContain("rootRef");
       expect(component.supportedProps, component.name).not.toContain("popoverTarget");
@@ -243,7 +241,7 @@ describe("customJsxComponentRegistry", () => {
     ["Select", "string"],
     ["MultiSelect", "string[]"],
     ["DateInput", "string"],
-    ["Calendar", "string"],
+    ["DatePicker", "string"],
     ["Tabs", "string"],
     ["Popover", "boolean"],
     ["RangeSlider", "number[]"],
@@ -252,8 +250,31 @@ describe("customJsxComponentRegistry", () => {
   });
 
   test("infers range and multiple date controls from their authored props", () => {
-    expect(getCustomJsxBindingType("Calendar", { type: "range" })).toBe("string[]");
+    for (const component of [
+      "DatePicker",
+      "DatePickerInput",
+      "MonthPicker",
+      "MonthPickerInput",
+      "YearPicker",
+      "YearPickerInput",
+    ]) {
+      expect(getCustomJsxBindingType(component, { type: "multiple" })).toBe("string[]");
+      expect(getCustomJsxBindingType(component, { type: "range" })).toBe("string[]");
+    }
+    expect(getCustomJsxBindingType("DateTimePicker", { type: "range" })).toBe("string[]");
+    expect(getCustomJsxBindingType("DateTimePicker", { type: "multiple" })).toBe("string");
+    expect(getCustomJsxBindingType("InlineDateTimePicker", { type: "range" })).toBe("string[]");
+    expect(getCustomJsxBindingType("InlineDateTimePicker", { type: "multiple" })).toBe("string");
+    expect(getCustomJsxBindingType("Accordion", { multiple: true })).toBe("string[]");
+    expect(getCustomJsxBindingType("TreeSelect", { mode: "multiple" })).toBe("string[]");
+    expect(getCustomJsxBindingType("TreeSelect", { mode: "checkbox" })).toBe("string[]");
     expect(getCustomJsxBindingType("Chip.Group", { multiple: true })).toBe("string[]");
+    expect(getCustomJsxBindingType("ChipGroup", { multiple: true })).toBe("string[]");
+    expect(getCustomJsxBindingType("RadioGroup")).toBe("string");
+    expect(getCustomJsxBindingType("CheckboxGroup")).toBe("string[]");
+    expect(getCustomJsxBindingType("SwitchGroup")).toBe("string[]");
+    expect(getCustomJsxBindingType("Calendar")).toBeNull();
+    expect(getCustomJsxBindingType("HoverCard")).toBeNull();
     expect(getCustomJsxBindingType("Text", {})).toBeNull();
   });
 });

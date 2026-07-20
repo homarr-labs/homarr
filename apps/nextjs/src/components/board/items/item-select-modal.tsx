@@ -3,7 +3,6 @@ import { Avatar, Box, Button, Card, Center, Divider, Group, Image, Stack, Text, 
 import { IconApi } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
 import { createId, objectEntries } from "@homarr/common";
 import { getIconUrl, getIntegrationName } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -17,14 +16,13 @@ import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import { useItemActions } from "./item-actions";
 
-export const ItemSelectModal = createModal<void>(({ actions }) => {
+export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, innerProps }) => {
   const [search, setSearch] = useState("");
   const t = useI18n();
   const { createItem, updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
   const { openModal: openEditModal } = useModalAction(WidgetEditModal);
   const { data: integrationData } = clientApi.integration.all.useQuery();
-  const board = useRequiredBoard();
-  const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery({ boardId: board.id });
+  const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery({ boardId: innerProps.boardId });
   const settings = useSettings();
 
   const availableKinds = useMemo(() => new Set((integrationData ?? []).map((i) => i.kind)), [integrationData]);

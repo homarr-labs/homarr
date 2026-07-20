@@ -1,25 +1,18 @@
 import type { ComponentType, ReactNode } from "react";
-import { Parser } from "acorn";
-import jsx from "acorn-jsx";
 
 import { callCollectionMethod } from "./collection-methods";
+import { staticPropertyName } from "./analyzer-ast";
+import type { JsxEmitterContext } from "./emitter-context";
+import { createInterpreterCallback, runInterpreterCallback } from "./interpreter-callbacks";
 import { emitJsxElement, emitJsxFragment } from "./jsx-emitter";
-import type { JsxEmitterContext } from "./jsx-emitter";
 import { isSafeCallable } from "./safe-bindings";
-import {
-  asNode,
-  asNodeArray,
-  Budget,
-  DEFAULT_BUDGETS,
-  Environment,
-  INTERPRETER_CALLBACK,
-  SafeJsxError,
-} from "./interpreter-foundation";
+import { asNode, asNodeArray, Budget, DEFAULT_BUDGETS, Environment, SafeJsxError } from "./interpreter-foundation";
 import type { AstNode, EvaluationBudgets, InterpreterCallback, SafeJsxBudgets } from "./interpreter-foundation";
+import { normalizeCustomJsxText, parseCustomJsxTemplate } from "./interpreter-parser";
 import { normalizedProperty, ownProperty } from "./safe-properties";
-import { CUSTOM_JSX_LIMITS } from "./policy";
+import { CUSTOM_JSX_CALLBACK_METHODS } from "./safe-language-policy";
 
-export { SafeJsxError } from "./interpreter-foundation";
+export { SafeJsxBudgetError, SafeJsxError } from "./interpreter-foundation";
 export type { SafeJsxBudgets } from "./interpreter-foundation";
 export { sanitizeCustomJsxProps } from "./safe-properties";
 
@@ -33,23 +26,6 @@ export interface RenderSafeJsxOptions {
 export interface SafeJsxRenderResult {
   node: ReactNode;
   warnings: string[];
-}
-
-const JsxParser = Parser.extend(jsx());
-
-function jsxText(value: string): string {
-  const lines = value.replace(/\r/g, "").split("\n");
-  let result = "";
-  for (let index = 0; index < lines.length; index += 1) {
-    let line = lines[index] ?? "";
-    line = line.replace(/\t/g, " ");
-    if (index !== 0) line = line.replace(/^\s+/, "");
-    if (index !== lines.length - 1) line = line.replace(/\s+$/, "");
-    if (!line) continue;
-    if (result) result += " ";
-    result += line;
-  }
-  return result;
 }
 
 class Interpreter {
@@ -81,7 +57,7 @@ class Interpreter {
       case "JSXFragment":
         return this.evaluateJsxFragment(node, environment, depth + 1);
       case "JSXText": {
-        const text = this.budget.string(jsxText(String(node.value ?? "")));
+        const text = this.budget.string(normalizeCustomJsxText(String(node.value ?? "")));
         if (text) this.budget.rendered();
         return text || null;
       }
@@ -110,11 +86,19 @@ class Interpreter {
       case "CallExpression":
         return this.evaluateCall(node, environment, depth + 1);
       case "ArrowFunctionExpression":
-        return this.createCallback(node, environment);
+        throw new SafeJsxError(
+          "CALLBACK_VALUE_NOT_ALLOWED: Callbacks are only allowed in safe collection methods and trusted slots",
+        );
       case "TemplateLiteral":
         return this.evaluateTemplateLiteral(node, environment, depth + 1);
       case "ChainExpression":
         return this.evaluate(asNode(node.expression, "chain expression"), environment, depth + 1);
+      case "AssignmentExpression":
+      case "UpdateExpression":
+      case "NewExpression":
+      case "AwaitExpression":
+      case "YieldExpression":
+        throw new SafeJsxError(`UNSUPPORTED_BLOCK_STATEMENT: '${node.type}' is not allowed in safe expressions`);
       default:
         throw new SafeJsxError(`Unsupported expression: ${node.type}`);
     }
@@ -134,8 +118,8 @@ class Interpreter {
       budget: this.budget,
       warnings: this.warnings,
       evaluate: (node, environment, depth) => this.evaluate(node, environment, depth),
-      renderCallback: (callback, args) =>
-        new Interpreter(this.components, callback.environment, this.limits).runCallback(callback, args, 0) as ReactNode,
+      createCallback: (node, environment) => this.createCallback(node, environment),
+      renderCallback: (callback, args, depth) => this.runCallback(callback, args, depth) as ReactNode,
     };
   }
 
@@ -277,11 +261,35 @@ class Interpreter {
 
   private evaluateCall(node: AstNode, environment: Environment, depth: number): unknown {
     if (node.optional) throw new SafeJsxError("Optional calls are not supported");
-    const args = asNodeArray(node.arguments, "call arguments").map((argument) => {
+    const callee = asNode(node.callee, "call target");
+    const argumentNodes = asNodeArray(node.arguments, "call arguments");
+    if (callee.type === "ArrowFunctionExpression") {
+      if (asNodeArray(callee.params, "inline derived-value parameters").length > 0) {
+        throw new SafeJsxError("CALLBACK_VALUE_NOT_ALLOWED: Inline derived-value functions cannot declare parameters");
+      }
+      if (argumentNodes.length > 0) {
+        throw new SafeJsxError(
+          "CALLBACK_VALUE_NOT_ALLOWED: Inline derived-value functions must be called without arguments",
+        );
+      }
+      return this.runCallback(this.createCallback(callee, environment), [], depth + 1);
+    }
+    const callbackMethod =
+      callee.type === "MemberExpression"
+        ? callee.computed
+          ? staticPropertyName(asNode(callee.property, "method property"))
+          : normalizedProperty(asNode(callee.property, "method property").name)
+        : null;
+    const args = argumentNodes.map((argument) => {
       if (argument.type === "SpreadElement") throw new SafeJsxError("Spread call arguments are not supported");
+      if (argument.type === "ArrowFunctionExpression") {
+        if (!callbackMethod || !CUSTOM_JSX_CALLBACK_METHODS.has(callbackMethod)) {
+          throw new SafeJsxError("CALLBACK_VALUE_NOT_ALLOWED: Callback argument is not allowed for this call");
+        }
+        return this.createCallback(argument, environment);
+      }
       return this.evaluate(argument, environment, depth + 1);
     });
-    const callee = asNode(node.callee, "call target");
 
     if (callee.type === "MemberExpression") {
       const receiver = this.evaluate(asNode(callee.object, "method receiver"), environment, depth + 1);
@@ -317,27 +325,14 @@ class Interpreter {
   }
 
   private createCallback(node: AstNode, environment: Environment): InterpreterCallback {
-    if (node.async || node.generator || node.expression === false) {
-      throw new SafeJsxError("Only synchronous expression-bodied arrow callbacks are supported");
-    }
-    const params = asNodeArray(node.params, "callback parameters").map((param) => {
-      if (param.type !== "Identifier") throw new SafeJsxError("Callback parameters must be identifiers");
-      return normalizedProperty(param.name);
-    });
-    return {
-      kind: INTERPRETER_CALLBACK,
-      params,
-      body: asNode(node.body, "callback body"),
-      environment,
-    };
+    return createInterpreterCallback(node, environment);
   }
 
   private runCallback(callback: InterpreterCallback, args: unknown[], depth: number): unknown {
-    const values: Record<string, unknown> = Object.create(null);
-    callback.params.forEach((name, index) => {
-      values[name] = args[index];
+    return runInterpreterCallback(callback, args, depth, {
+      budget: this.budget,
+      evaluate: (node, environment, callbackDepth) => this.evaluate(node, environment, callbackDepth),
     });
-    return this.evaluate(callback.body, new Environment(values, callback.environment), depth + 1);
   }
 
   private evaluateTemplateLiteral(node: AstNode, environment: Environment, depth: number): string {
@@ -355,33 +350,11 @@ class Interpreter {
   }
 }
 
-function parseTemplate(template: string): AstNode {
-  if (template.length > CUSTOM_JSX_LIMITS.templateLength) {
-    throw new SafeJsxError(`Template exceeds the ${CUSTOM_JSX_LIMITS.templateLength} character limit`);
-  }
-  let program: AstNode;
-  try {
-    program = JsxParser.parse(`<>${template}</>`, {
-      ecmaVersion: "latest",
-      sourceType: "module",
-      allowAwaitOutsideFunction: false,
-      allowReturnOutsideFunction: false,
-    }) as unknown as AstNode;
-  } catch (error) {
-    throw new SafeJsxError(error instanceof Error ? error.message : "Unable to parse JSX template");
-  }
-  const body = asNodeArray(program.body, "program body");
-  if (body.length !== 1 || body[0]?.type !== "ExpressionStatement") {
-    throw new SafeJsxError("Template must contain JSX only");
-  }
-  return asNode(body[0].expression, "template expression");
-}
-
 export function renderSafeJsx({ template, components, bindings, budgets }: RenderSafeJsxOptions): SafeJsxRenderResult {
   const limits: EvaluationBudgets = { ...DEFAULT_BUDGETS, ...budgets };
   for (const [name, value] of Object.entries(limits)) {
     if (!Number.isSafeInteger(value) || value <= 0) throw new SafeJsxError(`Invalid interpreter budget: ${name}`);
   }
-  const root = parseTemplate(template);
+  const root = parseCustomJsxTemplate(template);
   return new Interpreter(components, new Environment(bindings), limits).render(root);
 }

@@ -1,5 +1,9 @@
 import { fetchApi } from "@homarr/api/client";
-import { customWidgetDefinitionSchema, resolveCustomWidgetOptionsBinding } from "@homarr/custom-widgets/core";
+import {
+  customWidgetDefinitionSchema,
+  resolveCustomWidgetOptionsBinding,
+  validateCustomWidgetOptions,
+} from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import type { UseFormReturnType } from "@mantine/form";
@@ -58,6 +62,10 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
+export function getCustomWidgetPreviewOptionIssues(definition: HomarrCustomWidgetV2, options: Record<string, unknown>) {
+  return validateCustomWidgetOptions(definition.optionsSchema, options);
+}
+
 export function isRuntimeParams(
   value: unknown,
   schema: Record<string, "string" | "number" | "boolean">,
@@ -66,12 +74,16 @@ export function isRuntimeParams(
   return Object.entries(schema).every(([name, type]) => typeof value[name] === type);
 }
 
-export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessionId: string) {
+export async function loadPreviewQueries(
+  definition: HomarrCustomWidgetV2,
+  sessionId: string,
+  options: Record<string, unknown>,
+) {
   const data: Record<string, unknown> = {};
   const status: Record<string, unknown> = {};
   for (const request of definition.requests.filter((entry) => entry.kind === "query" && entry.trigger === "load")) {
     try {
-      const params = resolveCustomWidgetOptionsBinding(request, definition.defaultOptions);
+      const params = resolveCustomWidgetOptionsBinding(request, options);
       const result = await fetchApi.customWidget.previewQuery.query({ sessionId, requestId: request.id, params });
       data[request.id] = result.data;
       status[request.id] = { loading: false, ...result };

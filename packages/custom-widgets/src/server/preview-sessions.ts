@@ -23,7 +23,7 @@ const sessionSchema = z.object({
   name: z.string(),
   template: z.string(),
   optionsSchema: z.record(z.string(), z.unknown()),
-  defaultOptions: z.record(z.string(), z.unknown()),
+  options: z.record(z.string(), z.unknown()),
   definitionId: z.string().optional(),
   liveActions: z.boolean(),
 });
@@ -50,7 +50,7 @@ export interface CreatePreviewSessionInput {
   name: string;
   template: string;
   optionsSchema: Record<string, unknown>;
-  defaultOptions: Record<string, unknown>;
+  options: Record<string, unknown>;
   definitionId?: string;
 }
 
@@ -97,7 +97,7 @@ export class CustomWidgetPreviewSessionService {
       name: input.name,
       template: input.template,
       optionsSchema: input.optionsSchema,
-      defaultOptions: input.defaultOptions,
+      options: input.options,
       definitionId: input.definitionId,
       liveActions: false,
     };

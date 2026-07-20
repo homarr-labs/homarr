@@ -155,8 +155,7 @@ export const ImportCustomWidgetButton = () => {
 
   useEffect(() => {
     const handlePaste = (event: ClipboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (target?.matches("input, textarea, [contenteditable='true']")) return;
+      if (event.target instanceof Element && event.target.matches("input, textarea, [contenteditable='true']")) return;
       const text = event.clipboardData?.getData("text/plain") ?? "";
       if (!looksLikeCustomWidgetClipboard(text)) return;
       event.preventDefault();

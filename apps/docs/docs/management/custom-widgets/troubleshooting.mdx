@@ -1,29 +1,61 @@
-# Troubleshooting
+# Correct Custom Widget problems
 
-## Widget unavailable
+## Correct an unavailable widget
 
-The definition was deleted or reset. Remove the broken tile from the board and install or create a current Custom JSX v2 definition. There is no legacy recovery or migration wizard.
+The definition does not exist. Remove the unavailable tile from the board.
 
-## Invalid stored definition
+Then, install or create a Custom JSX v2 definition. Homarr does not provide recovery or migration for old formats.
 
-The Custom Widgets management page isolates definitions that no longer match the current schema instead of failing the entire page. Invalid definitions show their validation issues and can be deleted, but cannot be edited, enabled, exported, duplicated, published, or selected for a board. Recreate or import a valid definition; Homarr does not silently migrate unreleased Custom JSX formats.
+## Correct an invalid saved definition
 
-## Validation fails
+The Custom Widgets page isolates a definition that does not conform to the current schema. The other definitions remain available.
 
-Use the first schema/JSX diagnostic and its path. Ensure source/request IDs are unique, every request references a source, parameters are declared, defaults match the options schema, and network components reference the correct request kind.
+An invalid definition shows its validation errors. You can delete it.
 
-Incomplete API source and icon URLs are normal form validation errors. The workbench keeps the current draft mounted and highlights the invalid field while you type; malformed URLs must never replace the form with the error boundary.
+You cannot edit, enable, export, duplicate, publish, or select an invalid definition. Recreate the definition or import a valid definition.
 
-An invalid definition disables only the rendered Widget canvas. The preview shell and its Data, Options, Actions, and Diagnostics tabs remain available, and Diagnostics lists the current schema issues.
+Homarr does not migrate old Custom JSX formats.
 
-## Request fails
+## Correct validation errors
 
-Check the source network scope, base URL, credentials, request method/path/body, runtime parameters, and board permission. For “invalid placeholder” or an unresolved parameter on a load query, first verify that every declared parameter has an explicit `optionsBinding` option reference or literal. Matching parameter and option names are not a binding. The preview journal shows redacted method, request ID, path template, status, and duration without credentials.
+Read the first schema or JSX diagnostic. Use its path to find the invalid value.
 
-## Mantine prop warning
+Make sure that each API source ID is unique. Make sure that each request ID is unique.
 
-`UNKNOWN_MANTINE_PROP` is advisory and the prop is passed through. Confirm the prop against the installed Mantine version. `BLOCKED_CAPABILITY` is deliberate and must be expressed through safe options, temporary bindings, or named requests instead.
+Make sure that each named request references an API source. Declare each request parameter.
 
-## Existing item needs repair
+Make sure that default values conform to the widget options schema. Use the correct request kind for each runtime component.
 
-The definition's options schema changed incompatibly. Open the item settings and repair the highlighted configuration. Homarr does not guess option migrations.
+An incomplete API source URL or icon URL causes a form validation error. The workbench keeps the draft open.
+
+The workbench marks the invalid field while you type. An invalid URL does not replace the form with the error boundary.
+
+An invalid definition disables only the widget preview. The Data, Options, Actions, and Diagnostics tabs remain available.
+
+The Diagnostics tab shows the current schema errors.
+
+## Correct request errors
+
+Check the API source network scope. Check the base URL and credentials.
+
+Check the request method, path, body, parameters, and board permission.
+
+For “invalid placeholder,” examine each declared load query parameter. Add an `optionsBinding` option reference or primitive value for each parameter.
+
+A matching parameter name and widget option name do not create a binding. The preview journal does not show credentials.
+
+The journal shows the method, request ID, path template, status, and duration.
+
+## Correct a Mantine prop warning
+
+`UNKNOWN_MANTINE_PROP` is a warning. Homarr passes the prop to Mantine.
+
+Check the prop in the documentation for the installed Mantine version. `BLOCKED_CAPABILITY` identifies an unsafe capability.
+
+Use safe widget options, temporary inputs, or named requests instead.
+
+## Repair an existing item
+
+The widget options schema changed and the saved values are invalid. Open the item settings.
+
+Correct the marked configuration values. Homarr does not infer widget option migrations.

@@ -1,11 +1,8 @@
 import { z } from "zod/v4";
 
-import {
-  CUSTOM_WIDGET_MCP_AUTHORING_PROMPT,
-  customWidgetImportSchema,
-  getCustomWidgetJsonSchema,
-  getCustomWidgetSkill,
-} from "@homarr/custom-widgets/core";
+import { CUSTOM_WIDGET_MCP_AUTHORING_PROMPT } from "@homarr/custom-widgets/authoring-prompt";
+import { getCustomWidgetSkill } from "@homarr/custom-widgets/authoring-resources";
+import { customWidgetImportSchema, getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 
 import { permissionRequiredProcedure, publicProcedure } from "../../trpc";
 

@@ -6,15 +6,14 @@ services:
       context: ../..
       dockerfile: apps/workshop/Dockerfile
       target: development
-      args:
-        POCKETBASE_VERSION: 0.39.6
     restart: unless-stopped
     environment:
       PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
+      PORT: ${PB_EXPOSE_PORT:-8090}
     ports:
-      - "127.0.0.1:${PB_EXPOSE_PORT:-8090}:8090"
+      - "127.0.0.1:${PB_EXPOSE_PORT:-8090}:${PB_EXPOSE_PORT:-8090}"
     volumes:
-      - ${WORKSHOP_DATA_DIR:-./pb_data}:/pb_data
+      - pb_data:/pb_data
       - ./pb_hooks:/pb_hooks:ro
       - ./pb_migrations:/pb_migrations:ro
     security_opt:
@@ -27,11 +26,15 @@ services:
       context: ../..
       dockerfile: apps/workshop/Dockerfile
       target: production
-      args:
-        POCKETBASE_VERSION: 0.39.6
     environment:
       PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
+      PORT: ${DOCS_EXPOSE_PORT:-3003}
     ports:
-      - "127.0.0.1:${DOCS_EXPOSE_PORT:-3003}:8090"
+      - "127.0.0.1:${DOCS_EXPOSE_PORT:-3003}:${DOCS_EXPOSE_PORT:-3003}"
+    volumes:
+      - pb_data:/pb_data
     security_opt:
       - no-new-privileges:true
+
+volumes:
+  pb_data:

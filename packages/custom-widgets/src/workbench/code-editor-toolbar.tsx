@@ -24,6 +24,7 @@ interface CodeEditorToolbarProps {
   onCopy(): void;
   onUndo(): void;
   onRedo(): void;
+  onFormat(): void;
 }
 
 export function CodeEditorToolbar({
@@ -37,6 +38,7 @@ export function CodeEditorToolbar({
   onCopy,
   onUndo,
   onRedo,
+  onFormat,
 }: CodeEditorToolbarProps) {
   const starter = props.starter;
   return (
@@ -99,8 +101,8 @@ export function CodeEditorToolbar({
             size="compact-xs"
             variant="subtle"
             leftSection={<IconWand size={14} />}
-            onClick={() => props.onChange(formattedValue)}
-            disabled={formattedValue === props.value}
+            onClick={onFormat}
+            disabled={props.language === "json" && formattedValue === props.value}
           >
             {props.messages.format}
           </Button>

@@ -1,4 +1,8 @@
+import { isValidElement } from "react";
+
 import { isInterpreterCallback, SafeJsxError } from "./interpreter-foundation";
+import { customJsxComponentByName } from "../core/component-registry";
+import { getInvalidCustomJsxPropValueReason } from "./runtime-component-policy";
 import {
   CUSTOM_JSX_BLOCKED_PROPERTIES,
   CUSTOM_JSX_BLOCKED_STYLE_KEYS,
@@ -83,15 +87,23 @@ function sanitizeStyles(value: unknown): Record<string, Record<string, string | 
 
 export function sanitizeCustomJsxProps(
   props: Readonly<Record<string, unknown>>,
-  _componentName?: string,
+  componentName?: string,
 ): Record<string, unknown> {
-  return sanitizeObject(props);
+  const blockedProps = componentName
+    ? new Set(customJsxComponentByName.get(componentName)?.blockedProps.map(({ name }) => name) ?? [])
+    : undefined;
+  return sanitizeObject(props, blockedProps, componentName);
 }
 
-function sanitizeObject(value: Readonly<Record<string, unknown>>): Record<string, unknown> {
+function sanitizeObject(
+  value: Readonly<Record<string, unknown>>,
+  componentBlockedProps?: ReadonlySet<string>,
+  componentName?: string,
+): Record<string, unknown> {
   const safe: Record<string, unknown> = Object.create(null);
   for (const [key, child] of Object.entries(value)) {
-    if (isBlockedCustomJsxProp(key)) continue;
+    if (isBlockedCustomJsxProp(key) || componentBlockedProps?.has(key)) continue;
+    if (componentName && getInvalidCustomJsxPropValueReason(componentName, key, child)) continue;
     if (typeof child === "function" || isInterpreterCallback(child)) continue;
     if (CUSTOM_JSX_URL_PROPS.has(key)) {
       if (isSafeUrl(child)) safe[key] = child;
@@ -127,6 +139,8 @@ function sanitizeSerializableData(value: unknown): unknown {
 }
 
 function sanitizeNestedValue(value: unknown): unknown {
+  if (typeof value === "function" || isInterpreterCallback(value)) return undefined;
+  if (isValidElement(value)) return value;
   if (Array.isArray(value)) return value.map(sanitizeNestedValue);
   if (value !== null && typeof value === "object") return sanitizeObject(value as Record<string, unknown>);
   return value;
@@ -134,13 +148,34 @@ function sanitizeNestedValue(value: unknown): unknown {
 
 export function diagnoseCustomJsxProps(props: Readonly<Record<string, unknown>>, componentName: string): string[] {
   const diagnostics: string[] = [];
-  diagnoseObject(props, componentName, diagnostics);
+  const blockedProps = new Map(
+    customJsxComponentByName.get(componentName)?.blockedProps.map(({ name, reason }) => [name, reason]) ?? [],
+  );
+  diagnoseObject(props, componentName, diagnostics, blockedProps, componentName);
   return diagnostics;
 }
 
-function diagnoseObject(value: Readonly<Record<string, unknown>>, path: string, diagnostics: string[]) {
+function diagnoseObject(
+  value: Readonly<Record<string, unknown>>,
+  path: string,
+  diagnostics: string[],
+  componentBlockedProps?: ReadonlyMap<string, string>,
+  componentName?: string,
+) {
   for (const [key, child] of Object.entries(value)) {
     const propertyPath = `${path}.${key}`;
+    const componentBlockedReason = componentBlockedProps?.get(key);
+    if (componentBlockedReason) {
+      diagnostics.push(
+        `BLOCKED_CAPABILITY: Prop '${propertyPath}' is not allowed because ${componentBlockedReason.toLowerCase()}`,
+      );
+      continue;
+    }
+    const invalidValueReason = componentName ? getInvalidCustomJsxPropValueReason(componentName, key, child) : null;
+    if (invalidValueReason) {
+      diagnostics.push(`INVALID_PROP_VALUE: '${propertyPath}' is not allowed because ${invalidValueReason}`);
+      continue;
+    }
     if (isBlockedCustomJsxProp(key) || typeof child === "function" || isInterpreterCallback(child)) {
       diagnostics.push(`BLOCKED_CAPABILITY: Prop '${propertyPath}' is not allowed`);
       continue;
@@ -149,9 +184,11 @@ function diagnoseObject(value: Readonly<Record<string, unknown>>, path: string, 
       diagnostics.push(`INVALID_PROP_VALUE: '${propertyPath}' contains an unsafe URL`);
       continue;
     }
+    if (isValidElement(child)) continue;
     if (key === "data" || key === "series") continue;
     if (Array.isArray(child)) {
       child.forEach((entry, index) => {
+        if (isValidElement(entry)) return;
         if (isInterpreterCallback(entry) || typeof entry === "function") {
           diagnostics.push(`BLOCKED_CAPABILITY: Prop '${propertyPath}[${index}]' is not allowed`);
         } else if (entry !== null && typeof entry === "object") {

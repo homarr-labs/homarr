@@ -1,13 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { resolveCustomWidgetOptionsBinding } from "@homarr/custom-widgets/core";
-
 import { permissionRequiredProcedure } from "../../trpc";
 import {
   getPreviewRequestSource,
   previewSessionRequestSchema,
   recordPreviewJournal,
+  resolvePreviewRequestParams,
 } from "./preview-procedure-helpers";
 import { executeCustomWidgetRequest } from "./request-executor";
 import { hashRuntimeParams, renderRequestBody, renderRequestTarget } from "./request-manifest";
@@ -33,8 +32,7 @@ export const previewQueryProcedures = {
       if (!request) throw new TRPCError({ code: "NOT_FOUND", message: "Preview query was not found" });
       const resolved = getPreviewRequestSource(session, request.sourceId);
       if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
-      const params =
-        request.trigger === "load" ? resolveCustomWidgetOptionsBinding(request, session.defaultOptions) : input.params;
+      const params = resolvePreviewRequestParams(request, session.options, input.params);
       const targetUrl = renderRequestTarget(resolved.source.baseUrl, request, params);
       const body = renderRequestBody(request.bodyTemplate, params);
       const release = await acquireCustomWidgetRequestLimit({

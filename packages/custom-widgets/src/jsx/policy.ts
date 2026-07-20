@@ -87,10 +87,24 @@ export const CUSTOM_JSX_BLOCKED_STYLE_KEYS: ReadonlySet<string> = new Set([
   "zIndex",
 ]);
 
+const CUSTOM_JSX_BLOCKED_POSITION_PROPS: ReadonlySet<string> = new Set([
+  "bottom",
+  "inset",
+  "left",
+  "pos",
+  "right",
+  "top",
+  "zIndex",
+]);
+
 export function normalizeCustomJsxProperty(value: unknown): string {
   return String(value ?? "")
     .normalize("NFKC")
     .toLowerCase();
+}
+
+export function isBlockedCustomJsxLexicalBinding(name: string): boolean {
+  return CUSTOM_JSX_BLOCKED_PROPERTIES.has(normalizeCustomJsxProperty(name));
 }
 
 export function isBlockedCustomJsxProp(name: string): boolean {
@@ -99,7 +113,7 @@ export function isBlockedCustomJsxProp(name: string): boolean {
     name.startsWith("__") ||
     /(?:Ref|^ref[A-Z])/u.test(name) ||
     CUSTOM_JSX_BLOCKED_PROPS.has(name) ||
-    CUSTOM_JSX_BLOCKED_STYLE_KEYS.has(name) ||
+    CUSTOM_JSX_BLOCKED_POSITION_PROPS.has(name) ||
     (name !== "bind" && CUSTOM_JSX_BLOCKED_PROPERTIES.has(normalizeCustomJsxProperty(name)))
   );
 }

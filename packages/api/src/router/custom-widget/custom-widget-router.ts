@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { and, eq, notInArray } from "@homarr/db";
+import { and, eq, handleTransactionsAsync, notInArray } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 import {
   customWidgetCreateSchema,
@@ -49,22 +49,34 @@ export const customWidgetRouter = createTRPCRouter({
       const definition = customWidgetDefinitionSchema.parse(candidate);
       assertSecretSources(definition.sources, secrets);
       const id = createId();
-      await ctx.db.insert(customWidgetDefinitions).values({
+      const definitionRow = {
         id,
         ...serializeCustomWidgetDefinition(definition),
         creatorId: ctx.session.user.id,
+      };
+      const updatedAt = new Date();
+      const secretRows = secrets.map((secret) => ({
+        definitionId: id,
+        sourceId: secret.sourceId,
+        kind: secret.kind,
+        encryptedValue: encryptSecret(secret.value),
+        updatedAt,
+      }));
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction.insert(schema.customWidgetDefinitions).values(definitionRow);
+            if (secretRows.length > 0) await transaction.insert(schema.customWidgetSecrets).values(secretRows);
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.insert(customWidgetDefinitions).values(definitionRow).run();
+            if (secretRows.length > 0) transaction.insert(customWidgetSecrets).values(secretRows).run();
+          });
+        },
       });
-      if (secrets.length > 0) {
-        await ctx.db.insert(customWidgetSecrets).values(
-          secrets.map((secret) => ({
-            definitionId: id,
-            sourceId: secret.sourceId,
-            kind: secret.kind,
-            encryptedValue: encryptSecret(secret.value),
-            updatedAt: new Date(),
-          })),
-        );
-      }
       logger.info("Created custom widget definition", { id, name: definition.name });
       return { id };
     }),
@@ -88,50 +100,96 @@ export const customWidgetRouter = createTRPCRouter({
       }
       const definition = customWidgetDefinitionSchema.parse({ ...current, ...changes });
       if (secrets) assertSecretSources(definition.sources, secrets);
+      const definitionChanges = { ...serializeCustomWidgetDefinition(definition), updatedAt: new Date() };
+      const secretRows = secrets?.map((secret) => ({
+        definitionId: id,
+        sourceId: secret.sourceId,
+        kind: secret.kind,
+        encryptedValue: encryptSecret(secret.value),
+        updatedAt: new Date(),
+      }));
+      const sourceIds = definition.sources.map((source) => source.id);
 
-      await ctx.db
-        .update(customWidgetDefinitions)
-        .set({ ...serializeCustomWidgetDefinition(definition), updatedAt: new Date() })
-        .where(eq(customWidgetDefinitions.id, id));
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .update(schema.customWidgetDefinitions)
+              .set(definitionChanges)
+              .where(eq(schema.customWidgetDefinitions.id, id));
 
-      await ctx.db.delete(customWidgetSecrets).where(
-        and(
-          eq(customWidgetSecrets.definitionId, id),
-          notInArray(
-            customWidgetSecrets.sourceId,
-            definition.sources.map((source) => source.id),
-          ),
-        ),
-      );
+            await transaction
+              .delete(schema.customWidgetSecrets)
+              .where(
+                and(
+                  eq(schema.customWidgetSecrets.definitionId, id),
+                  notInArray(schema.customWidgetSecrets.sourceId, sourceIds),
+                ),
+              );
 
-      for (const source of definition.sources) {
-        const kinds = [...requiredSecretKinds(source.auth.type)];
-        const where = and(eq(customWidgetSecrets.definitionId, id), eq(customWidgetSecrets.sourceId, source.id));
-        await ctx.db
-          .delete(customWidgetSecrets)
-          .where(kinds.length > 0 ? and(where, notInArray(customWidgetSecrets.kind, kinds)) : where);
-      }
+            for (const source of definition.sources) {
+              const kinds = [...requiredSecretKinds(source.auth.type)];
+              const where = and(
+                eq(schema.customWidgetSecrets.definitionId, id),
+                eq(schema.customWidgetSecrets.sourceId, source.id),
+              );
+              await transaction
+                .delete(schema.customWidgetSecrets)
+                .where(kinds.length > 0 ? and(where, notInArray(schema.customWidgetSecrets.kind, kinds)) : where);
+            }
 
-      if (secrets !== undefined) {
-        for (const secret of secrets) {
-          await ctx.db
-            .delete(customWidgetSecrets)
-            .where(
-              and(
-                eq(customWidgetSecrets.definitionId, id),
-                eq(customWidgetSecrets.sourceId, secret.sourceId),
-                eq(customWidgetSecrets.kind, secret.kind),
-              ),
-            );
-          await ctx.db.insert(customWidgetSecrets).values({
-            definitionId: id,
-            sourceId: secret.sourceId,
-            kind: secret.kind,
-            encryptedValue: encryptSecret(secret.value),
-            updatedAt: new Date(),
+            for (const secret of secretRows ?? []) {
+              await transaction
+                .delete(schema.customWidgetSecrets)
+                .where(
+                  and(
+                    eq(schema.customWidgetSecrets.definitionId, id),
+                    eq(schema.customWidgetSecrets.sourceId, secret.sourceId),
+                    eq(schema.customWidgetSecrets.kind, secret.kind),
+                  ),
+                );
+              await transaction.insert(schema.customWidgetSecrets).values(secret);
+            }
           });
-        }
-      }
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction
+              .update(customWidgetDefinitions)
+              .set(definitionChanges)
+              .where(eq(customWidgetDefinitions.id, id))
+              .run();
+
+            transaction
+              .delete(customWidgetSecrets)
+              .where(and(eq(customWidgetSecrets.definitionId, id), notInArray(customWidgetSecrets.sourceId, sourceIds)))
+              .run();
+
+            for (const source of definition.sources) {
+              const kinds = [...requiredSecretKinds(source.auth.type)];
+              const where = and(eq(customWidgetSecrets.definitionId, id), eq(customWidgetSecrets.sourceId, source.id));
+              transaction
+                .delete(customWidgetSecrets)
+                .where(kinds.length > 0 ? and(where, notInArray(customWidgetSecrets.kind, kinds)) : where)
+                .run();
+            }
+
+            for (const secret of secretRows ?? []) {
+              transaction
+                .delete(customWidgetSecrets)
+                .where(
+                  and(
+                    eq(customWidgetSecrets.definitionId, id),
+                    eq(customWidgetSecrets.sourceId, secret.sourceId),
+                    eq(customWidgetSecrets.kind, secret.kind),
+                  ),
+                )
+                .run();
+              transaction.insert(customWidgetSecrets).values(secret).run();
+            }
+          });
+        },
+      });
       logger.info("Updated custom widget definition", { id });
     }),
 

@@ -35,7 +35,12 @@ function parseZodIssueMessage(message: string): CustomWidgetSaveIssue[] {
     return parsed.flatMap((candidate) => {
       const issue = asRecord(candidate);
       if (typeof issue?.message !== "string") return [];
-      const path = Array.isArray(issue.path) ? issue.path.filter((part) => typeof part === "string").join(".") : undefined;
+      const path = Array.isArray(issue.path)
+        ? issue.path
+            .filter((part) => typeof part === "string" || typeof part === "number")
+            .map(String)
+            .join(".")
+        : undefined;
       return [{ path: path || undefined, message: issue.message }];
     });
   } catch {
@@ -45,10 +50,15 @@ function parseZodIssueMessage(message: string): CustomWidgetSaveIssue[] {
 
 function uniqueIssues(issues: CustomWidgetSaveIssue[]) {
   return issues
-    .filter((issue, index) => issues.findIndex((candidate) => candidate.path === issue.path && candidate.message === issue.message) === index)
+    .filter(
+      (issue, index) =>
+        issues.findIndex((candidate) => candidate.path === issue.path && candidate.message === issue.message) === index,
+    )
     .slice(0, MAX_SAVE_ISSUES);
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {
-  return value !== null && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
 }
