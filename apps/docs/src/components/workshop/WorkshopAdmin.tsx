@@ -13,21 +13,20 @@ const styles = {
   adminList: "space-y-4",
   adminSummary: "flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3 text-sm",
   adminGroup: "rounded-xl border border-border bg-card p-5 shadow-sm",
-  adminHeading: "flex flex-wrap items-start justify-between gap-3 [&_h2]:font-semibold [&_span]:text-sm [&_span]:text-muted-foreground",
+  adminHeading:
+    "flex flex-wrap items-start justify-between gap-3 [&_h2]:font-semibold [&_span]:text-sm [&_span]:text-muted-foreground",
   reportCount: "rounded-full bg-destructive/10 px-2 py-1 !text-destructive",
   meta: "mt-3 flex flex-wrap gap-4 text-xs text-muted-foreground",
-  moderationReport: "mt-4 rounded-lg border border-destructive/20 bg-destructive/5 p-4 [&_strong]:block [&_span]:text-xs [&_span]:text-muted-foreground [&_p]:my-2 [&_p]:text-sm",
+  moderationReport:
+    "mt-4 rounded-lg border border-destructive/20 bg-destructive/5 p-4 [&_strong]:block [&_span]:text-xs [&_span]:text-muted-foreground [&_p]:my-2 [&_p]:text-sm",
   empty: "py-12 text-center text-sm text-muted-foreground",
 } as const;
 
 export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
-  const client = useMemo(
-    () => {
-      const url = workshopUrl || (typeof window === "undefined" ? "" : window.location.origin);
-      return url ? new WorkshopClient(url) : new WorkshopClient();
-    },
-    [workshopUrl],
-  );
+  const client = useMemo(() => {
+    const url = workshopUrl || (typeof window === "undefined" ? "" : window.location.origin);
+    return url ? new WorkshopClient(url) : new WorkshopClient();
+  }, [workshopUrl]);
   const [user, setUser] = useState<WorkshopUser | null>(null);
   const [reports, setReports] = useState<WorkshopReport[]>([]);
   const [submissions, setSubmissions] = useState<WorkshopSubmissionSummary[]>([]);
