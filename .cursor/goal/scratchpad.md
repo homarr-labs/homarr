@@ -1,5 +1,5 @@
 ---
-iteration: 1
+iteration: 2
 max_iterations: 10
 status: active
 goal: "Maximize the downloads widget by leveraging every mantine-datatable feature, adding hover tooltips with stats, click-to-expand rich detail rows, toggleable global stats, and comprehensive customization options"
@@ -19,9 +19,37 @@ engine: cursor
 
 ## Progress log
 
+### Iteration 1
+- Added hover tooltips on name column showing size, state, speeds, ETA, ratio, category
+- Added toggleable global stats bar with overall progress, total size, speeds, ratio, status counts
+- Enhanced row expansion with RingProgress, SimpleGrid layout, collapse on click
+- Added striped rows, highlightOnHover colors, rowBackgroundColor for failed/paused
+- Added defaultColumnProps with noWrap and dynamic cellsStyle
+- Added collapseProps for smooth expansion animation
+- Added onScroll to auto-close context menu
+- Added new translations for stats bar
+- TypeCheck: PASS
+
+### Iteration 2
+- Migrated to `useDataTableColumns` hook with toggleable, draggable, resizable, pinnable columns
+- Added `storeColumnsKey` for localStorage column preference persistence
+- Added `pinFirstColumn`, `pinLastColumn`, `textSelectionDisabled`, `withColumnBorders`
+- Added `scrollAreaProps`, `customRowAttributes`, enhanced scroll tracking (`onScroll`, `onScrollToTop`, `onScrollToBottom`)
+- Added column settings menu in footer with reset visibility/order/width/pinning
+- Added scroll position indicator badge when scrolled
+- Explicit `rowExpansion.trigger: "click"`
+- Updated docs and translations for column controls
+- TypeCheck: PASS
+
 ## Blockers
+None
 
 ## Verification
+- pnpm turbo typecheck --filter=@homarr/widgets: PASS (exit code 0)
+- Context menu: preserved via onRowContextMenu
+- Sorting: preserved via sortStatus/onSortStatusChange
+- Filtering: preserved in WidgetFooter
+- Column toggling/reordering/resizing/pinning: via useDataTableColumns + header UI
 
 ## Task
 

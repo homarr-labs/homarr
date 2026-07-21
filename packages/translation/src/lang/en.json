@@ -3189,6 +3189,14 @@
         "overallProgress": "Overall queue progress",
         "totalSize": "Total queue size",
         "clients": "{count, plural, one {# client} other {# clients}}"
+      },
+      "columns": {
+        "settings": "Column settings",
+        "resetVisibility": "Reset visibility",
+        "resetOrder": "Reset order",
+        "resetWidth": "Reset widths",
+        "resetPinning": "Reset pinning",
+        "scrolled": "Scrolled {y}px from top"
       }
     },
     "mediaReleases": {

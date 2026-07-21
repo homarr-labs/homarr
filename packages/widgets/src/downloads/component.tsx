@@ -26,6 +26,7 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   IconChevronDown,
   IconChevronUp,
+  IconColumns,
   IconCopy,
   IconDatabase,
   IconDownload,
@@ -41,7 +42,7 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
-import { DataTable } from "mantine-datatable";
+import { DataTable, useDataTableColumns } from "mantine-datatable";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
@@ -85,6 +86,8 @@ const stateColorMap: Record<ExtendedDownloadClientItem["state"], string> = {
   failed: "red",
   unknown: "gray",
 };
+
+const DOWNLOADS_TABLE_STORE_KEY = "homarr-downloads-datatable";
 
 const progressColor = (state: ExtendedDownloadClientItem["state"], progress: number): string => {
   if (state === "paused") return "yellow";
@@ -132,6 +135,8 @@ export default function DownloadClientsWidget({
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const [showStats, { toggle: toggleStats }] = useDisclosure(false);
+  const [scrollPosition, setScrollPosition] = useState({ x: 0, y: 0 });
+  const [scrollAtTop, setScrollAtTop] = useState(true);
 
   const utils = clientApi.useUtils();
   const invalidateDownloads = { onSettled: () => void utils.widget.downloads.getJobsAndStatuses.invalidate() };
@@ -244,45 +249,60 @@ export default function DownloadClientsWidget({
   const hasMultipleTypes = new Set(data.map(({ type }) => type)).size > 1;
 
   const size = getSizeConfig(width);
+  const optionsColumnSet = useMemo(() => new Set<string>(options.columns), [options.columns]);
 
-  const visibleColumns = useMemo(() => {
-    const set = new Set(options.columns);
-    return {
-      name: set.has("name"),
-      progress: set.has("progress"),
-      size: set.has("size"),
-      downSpeed: set.has("downSpeed") && size.showSpeedColumns,
-      upSpeed: set.has("upSpeed") && hasTorrents && size.showSpeedColumns,
-      time: set.has("time") && size.showTimeColumn,
-      state: set.has("state") && size.showStateColumn,
-      added: set.has("added"),
-      ratio: set.has("ratio") && hasTorrents,
-      received: set.has("received"),
-      sent: set.has("sent") && hasTorrents,
-      category: set.has("category"),
-      integration: set.has("integration") && hasMultipleClients,
-      index: set.has("index"),
-      type: set.has("type") && hasMultipleTypes,
-    };
-  }, [options.columns, size, hasTorrents, hasMultipleClients, hasMultipleTypes]);
+  const shouldIncludeColumn = useCallback(
+    (accessor: string): boolean => {
+      if (!optionsColumnSet.has(accessor)) return false;
+      if ((accessor === "upSpeed" || accessor === "ratio" || accessor === "sent") && !hasTorrents) return false;
+      if (accessor === "integration" && !hasMultipleClients) return false;
+      if (accessor === "type" && !hasMultipleTypes) return false;
+      return true;
+    },
+    [optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes],
+  );
+
+  const isResponsiveVisible = useCallback(
+    (accessor: string): boolean => {
+      if ((accessor === "downSpeed" || accessor === "upSpeed") && !size.showSpeedColumns) return false;
+      if (accessor === "time" && !size.showTimeColumn) return false;
+      if (accessor === "state" && !size.showStateColumn) return false;
+      return true;
+    },
+    [size],
+  );
+
+  const getColumnMeta = useCallback(
+    (accessor: string) => ({
+      toggleable: true as const,
+      draggable: true as const,
+      resizable: accessor !== "integration" && accessor !== "index",
+      pinnable: true as const,
+      defaultToggle: isResponsiveVisible(accessor),
+      ...(accessor === "name" ? { pinned: "left" as const } : {}),
+    }),
+    [isResponsiveVisible],
+  );
 
   const columns = useMemo((): DataTableColumn<ExtendedDownloadClientItem>[] => {
     const cols: (DataTableColumn<ExtendedDownloadClientItem> | false)[] = [
-      visibleColumns.integration && {
+      shouldIncludeColumn("integration") && {
         accessor: "integration",
         title: "",
         width: 36,
+        ...getColumnMeta("integration"),
         render: (record) => (
           <Tooltip label={record.integration.name} withArrow>
             <Avatar size={20} radius={0} src={getIconUrl(record.integration.kind)} />
           </Tooltip>
         ),
       },
-      visibleColumns.name && {
+      shouldIncludeColumn("name") && {
         accessor: "name",
         title: t("items.name.columnTitle"),
         sortable: true,
         ellipsis: true,
+        ...getColumnMeta("name"),
         render: (record) => (
           <Tooltip
             label={buildHoverTooltip(record, t)}
@@ -300,11 +320,12 @@ export default function DownloadClientsWidget({
           </Tooltip>
         ),
       },
-      visibleColumns.progress && {
+      shouldIncludeColumn("progress") && {
         accessor: "progress",
         title: t("items.progress.columnTitle"),
         sortable: true,
         width: width < 400 ? 80 : 120,
+        ...getColumnMeta("progress"),
         render: (record) => (
           <Group gap={4} wrap="nowrap" style={{ flex: 1 }}>
             <Text size="xs" fw={500} w={36} ta="right" style={{ flexShrink: 0 }}>
@@ -319,20 +340,22 @@ export default function DownloadClientsWidget({
           </Group>
         ),
       },
-      visibleColumns.size && {
+      shouldIncludeColumn("size") && {
         accessor: "size",
         title: t("items.size.columnTitle"),
         sortable: true,
         width: 80,
         noWrap: true,
+        ...getColumnMeta("size"),
         render: (record) => <Text size={size.fontSize}>{formatBytes(record.size)}</Text>,
       },
-      visibleColumns.downSpeed && {
+      shouldIncludeColumn("downSpeed") && {
         accessor: "downSpeed",
         title: t("items.downSpeed.columnTitle"),
         sortable: true,
         width: 90,
         noWrap: true,
+        ...getColumnMeta("downSpeed"),
         render: (record) => record.downSpeed ? (
           <Group gap={4} wrap="nowrap">
             <IconDownload size={12} style={{ flexShrink: 0, opacity: 0.5 }} />
@@ -340,12 +363,13 @@ export default function DownloadClientsWidget({
           </Group>
         ) : null,
       },
-      visibleColumns.upSpeed && {
+      shouldIncludeColumn("upSpeed") && {
         accessor: "upSpeed",
         title: t("items.upSpeed.columnTitle"),
         sortable: true,
         width: 90,
         noWrap: true,
+        ...getColumnMeta("upSpeed"),
         render: (record) => record.upSpeed ? (
           <Group gap={4} wrap="nowrap">
             <IconUpload size={12} style={{ flexShrink: 0, opacity: 0.5 }} />
@@ -353,88 +377,108 @@ export default function DownloadClientsWidget({
           </Group>
         ) : null,
       },
-      visibleColumns.time && {
+      shouldIncludeColumn("time") && {
         accessor: "time",
         title: t("items.time.columnTitle"),
         sortable: true,
         width: 100,
         noWrap: true,
+        ...getColumnMeta("time"),
         render: (record) => {
           if (record.time === 0) return <Text size={size.fontSize} c="dimmed">∞</Text>;
           return <Text size={size.fontSize}>{dayjs().add(record.time).fromNow(true)}</Text>;
         },
       },
-      visibleColumns.state && {
+      shouldIncludeColumn("state") && {
         accessor: "state",
         title: t("items.state.columnTitle"),
         width: 90,
+        ...getColumnMeta("state"),
         render: (record) => (
           <Badge size="xs" variant="light" color={stateColorMap[record.state]}>
             {t(`states.${record.state}`)}
           </Badge>
         ),
       },
-      visibleColumns.added && {
+      shouldIncludeColumn("added") && {
         accessor: "added",
         title: t("items.added.columnTitle"),
         sortable: true,
         width: 90,
         noWrap: true,
+        ...getColumnMeta("added"),
         render: (record) => <Text size={size.fontSize}>{record.added ? dayjs(record.added).fromNow() : "—"}</Text>,
       },
-      visibleColumns.ratio && {
+      shouldIncludeColumn("ratio") && {
         accessor: "ratio",
         title: t("items.ratio.columnTitle"),
         sortable: true,
         width: 60,
+        ...getColumnMeta("ratio"),
         render: (record) => record.ratio !== undefined ? (
           <Text size={size.fontSize}>{record.ratio.toFixed(record.ratio >= 100 ? 0 : record.ratio >= 10 ? 1 : 2)}</Text>
         ) : null,
       },
-      visibleColumns.received && {
+      shouldIncludeColumn("received") && {
         accessor: "received",
         title: t("items.received.columnTitle"),
         sortable: true,
         width: 80,
         noWrap: true,
+        ...getColumnMeta("received"),
         render: (record) => <Text size={size.fontSize}>{formatBytes(record.received)}</Text>,
       },
-      visibleColumns.sent && {
+      shouldIncludeColumn("sent") && {
         accessor: "sent",
         title: t("items.sent.columnTitle"),
         sortable: true,
         width: 80,
         noWrap: true,
+        ...getColumnMeta("sent"),
         render: (record) => record.sent ? <Text size={size.fontSize}>{formatBytes(record.sent)}</Text> : null,
       },
-      visibleColumns.category && {
+      shouldIncludeColumn("category") && {
         accessor: "category",
         title: t("items.category.columnTitle"),
         width: 80,
         ellipsis: true,
+        ...getColumnMeta("category"),
         render: (record) => record.category ? (
           <Text size={size.fontSize} truncate>
             {Array.isArray(record.category) ? record.category.join(", ") : record.category}
           </Text>
         ) : null,
       },
-      visibleColumns.index && {
+      shouldIncludeColumn("index") && {
         accessor: "index",
         title: t("items.index.columnTitle"),
         sortable: true,
         width: 40,
+        ...getColumnMeta("index"),
         render: (record) => <Text size={size.fontSize}>{record.index}</Text>,
       },
-      visibleColumns.type && {
+      shouldIncludeColumn("type") && {
         accessor: "type",
         title: t("items.type.columnTitle"),
         sortable: true,
         width: 70,
+        ...getColumnMeta("type"),
         render: (record) => <Text size={size.fontSize} tt="capitalize">{record.type}</Text>,
       },
     ];
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
-  }, [visibleColumns, t, size, width]);
+  }, [shouldIncludeColumn, getColumnMeta, t, size, width]);
+
+  const {
+    effectiveColumns,
+    resetColumnsToggle,
+    resetColumnsOrder,
+    resetColumnsWidth,
+    resetColumnsPinning,
+  } = useDataTableColumns<ExtendedDownloadClientItem>({
+    key: DOWNLOADS_TABLE_STORE_KEY,
+    columns,
+  });
 
   const handleContextMenu = useCallback(
     ({ record, event }: { record: ExtendedDownloadClientItem; event: React.MouseEvent }) => {
@@ -499,6 +543,7 @@ export default function DownloadClientsWidget({
         <DataTable
           style={{ pointerEvents: isEditMode ? "none" : undefined }}
           withTableBorder={false}
+          withColumnBorders
           borderRadius={0}
           highlightOnHover
           striped="odd"
@@ -507,7 +552,11 @@ export default function DownloadClientsWidget({
           verticalAlign="center"
           fz={size.fontSize}
           records={sortedData}
-          columns={columns}
+          columns={effectiveColumns}
+          storeColumnsKey={DOWNLOADS_TABLE_STORE_KEY}
+          pinFirstColumn
+          pinLastColumn
+          textSelectionDisabled
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
           noRecordsText={t("errors.noColumns")}
@@ -518,9 +567,12 @@ export default function DownloadClientsWidget({
             noWrap: true,
             cellsStyle: () => ({ padding: `${size.cellPadding}px 8px` }),
           }}
+          scrollAreaProps={{ type: "auto", scrollbarSize: 6 }}
+          customRowAttributes={(_, index) => ({ "data-row-index": index })}
           onRowContextMenu={isEditMode ? undefined : handleContextMenu}
           rowBackgroundColor={(record) => rowBgAlpha[record.state] as string | undefined}
           rowExpansion={{
+            trigger: "click",
             allowMultiple: true,
             collapseProps: {
               transitionDuration: 200,
@@ -529,9 +581,13 @@ export default function DownloadClientsWidget({
             },
             content: ({ record, collapse }) => <ExpandedRow item={record} collapse={collapse} />,
           }}
-          onScroll={() => {
+          onScroll={(position) => {
+            setScrollPosition(position);
+            setScrollAtTop(position.y <= 0);
             if (contextMenu) closeContextMenu();
           }}
+          onScrollToTop={() => setScrollAtTop(true)}
+          onScrollToBottom={() => setScrollAtTop(false)}
         />
       </Box>
 
@@ -551,6 +607,12 @@ export default function DownloadClientsWidget({
         itemCount={sortedData.length}
         showStats={showStats}
         toggleStats={toggleStats}
+        scrollAtTop={scrollAtTop}
+        scrollPosition={scrollPosition}
+        resetColumnsToggle={resetColumnsToggle}
+        resetColumnsOrder={resetColumnsOrder}
+        resetColumnsWidth={resetColumnsWidth}
+        resetColumnsPinning={resetColumnsPinning}
       />
 
       {contextMenu && (
@@ -853,6 +915,12 @@ interface WidgetFooterProps {
   itemCount: number;
   showStats: boolean;
   toggleStats: () => void;
+  scrollAtTop: boolean;
+  scrollPosition: { x: number; y: number };
+  resetColumnsToggle: () => void;
+  resetColumnsOrder: () => void;
+  resetColumnsWidth: () => void;
+  resetColumnsPinning: () => void;
 }
 
 function WidgetFooter({
@@ -871,6 +939,12 @@ function WidgetFooter({
   itemCount,
   showStats,
   toggleStats,
+  scrollAtTop,
+  scrollPosition,
+  resetColumnsToggle,
+  resetColumnsOrder,
+  resetColumnsWidth,
+  resetColumnsPinning,
 }: WidgetFooterProps) {
   const t = useScopedI18n("widget.downloads");
   const [filterOpen, { toggle: toggleFilter }] = useDisclosure(false);
@@ -968,6 +1042,31 @@ function WidgetFooter({
               {showStats ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
             </ActionIcon>
           </Tooltip>
+
+          <Menu position="top-start" withinPortal shadow="md">
+            <Menu.Target>
+              <Tooltip label={t("columns.settings")}>
+                <ActionIcon size="xs" variant="subtle">
+                  <IconColumns size={14} />
+                </ActionIcon>
+              </Tooltip>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>{t("columns.settings")}</Menu.Label>
+              <Menu.Item onClick={resetColumnsToggle}>{t("columns.resetVisibility")}</Menu.Item>
+              <Menu.Item onClick={resetColumnsOrder}>{t("columns.resetOrder")}</Menu.Item>
+              <Menu.Item onClick={resetColumnsWidth}>{t("columns.resetWidth")}</Menu.Item>
+              <Menu.Item onClick={resetColumnsPinning}>{t("columns.resetPinning")}</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+
+          {!scrollAtTop && (
+            <Tooltip label={t("columns.scrolled", { y: Math.round(scrollPosition.y) })}>
+              <Badge size="xs" variant="dot" color="gray" style={{ cursor: "default" }}>
+                ↕
+              </Badge>
+            </Tooltip>
+          )}
 
           <Group gap={2}>
             {clients.map(({ integration }) => (
