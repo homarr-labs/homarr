@@ -32,6 +32,7 @@ HEALTHCHECK --interval=10s --timeout=5s --start-period=15s --retries=6 CMD wget 
 FROM pocketbase-runtime AS production
 COPY --from=website /app/apps/docs/build /pb_public
 COPY apps/workshop/pb_migrations /pb_migrations
-RUN chown -R pocketbase:pocketbase /pb_migrations /pb_public
+COPY apps/workshop/pb_hooks /pb_hooks
+RUN chown -R pocketbase:pocketbase /pb_hooks /pb_migrations /pb_public
 EXPOSE 8090
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD wget -q --spider "http://127.0.0.1:${PORT}/api/health" || exit 1

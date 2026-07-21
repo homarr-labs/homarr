@@ -36,23 +36,36 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tansta
 
 import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import type { WorkshopReport, WorkshopSubmissionDetail, WorkshopUser } from "@homarr/workshop";
-import { validateWorkshopWidget, workshopExportFilename } from "@homarr/workshop";
+import type { WorkshopReport, WorkshopSubmissionDetail, WorkshopSubmissionType, WorkshopUser } from "@homarr/workshop";
+import {
+  validateWorkshopContent,
+  validateWorkshopWidget,
+  WORKSHOP_CSS_SCHEMA,
+  workshopExportFilename,
+} from "@homarr/workshop";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { createWorkshopClient } from "./workshop-client";
 
 function downloadWorkshopSubmission(submission: WorkshopSubmissionDetail) {
-  const url = URL.createObjectURL(new Blob([submission.content], { type: "application/json" }));
+  const url = URL.createObjectURL(
+    new Blob([submission.content], { type: submission.type === "customCss" ? "text/css" : "application/json" }),
+  );
   const link = document.createElement("a");
   link.href = url;
-  link.download = workshopExportFilename(submission.title);
+  link.download = workshopExportFilename(submission.title, submission.type);
   link.click();
   URL.revokeObjectURL(url);
 }
 
-export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustomWidgetV2): Promise<void> }) {
+interface WorkshopBrowserProps {
+  type?: WorkshopSubmissionType;
+  onInstall?(widget: HomarrCustomWidgetV2): Promise<void>;
+  onUseCss?(css: string): void;
+}
+
+export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: WorkshopBrowserProps) {
   const t = useScopedI18n("workshop");
   const client = useMemo(createWorkshopClient, []);
   const queryClient = useQueryClient();
@@ -67,6 +80,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
   const [reportExplanation, setReportExplanation] = useState("");
   const [loginPending, setLoginPending] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [cssAwaitingConfirmation, setCssAwaitingConfirmation] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = client.subscribeToAuth(setUser);
@@ -75,8 +89,8 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
   }, [client]);
 
   const list = useQuery({
-    queryKey: ["workshop", "list", page, sort, debouncedSearch],
-    queryFn: ({ signal }) => client.list({ page, perPage: 12, sort, search: debouncedSearch, signal }),
+    queryKey: ["workshop", "list", type, page, sort, debouncedSearch],
+    queryFn: ({ signal }) => client.list({ page, perPage: 12, type, sort, search: debouncedSearch, signal }),
     placeholderData: keepPreviousData,
   });
   const detail = useQuery({
@@ -84,11 +98,15 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
     queryFn: ({ signal }) => client.get(selectedId ?? "", signal),
     enabled: selectedId !== null,
   });
-  const detailValidation = useMemo(
-    () => (detail.data ? validateWorkshopWidget(detail.data.content) : null),
-    [detail.data],
-  );
-  const detailCompatible = detailValidation?.success === true && detail.data?.widgetSchema === CUSTOM_WIDGET_SCHEMA;
+  const detailValidation = useMemo(() => {
+    if (!detail.data) return null;
+    return type === "customCss"
+      ? validateWorkshopContent("customCss", detail.data.content)
+      : validateWorkshopWidget(detail.data.content);
+  }, [detail.data, type]);
+  const expectedSchema = type === "customCss" ? WORKSHOP_CSS_SCHEMA : CUSTOM_WIDGET_SCHEMA;
+  const detailCompatible =
+    detail.data?.type === type && detailValidation?.success === true && detail.data.widgetSchema === expectedSchema;
   const signIn = () => {
     setLoginPending(true);
     setLoginError(null);
@@ -105,6 +123,13 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
   const install = useMutation({
     mutationFn: async (widget: HomarrCustomWidgetV2) => onInstall?.(widget),
     onSuccess: () => setSelectedId(null),
+  });
+  const useCss = useMutation({
+    mutationFn: async (css: string) => onUseCss?.(css),
+    onSuccess: () => {
+      setCssAwaitingConfirmation(null);
+      setSelectedId(null);
+    },
   });
   const vote = useMutation({
     mutationFn: ({ submission, value }: { submission: string; value: 1 | -1 }) => client.vote(submission, value),
@@ -138,7 +163,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
             <Box>
               <Title order={2}>{t("title")}</Title>
               <Text c="dimmed" size="sm" maw={640}>
-                {t("description")}
+                {type === "customCss" ? t("descriptionCss") : t("description")}
               </Text>
             </Box>
           </Group>
@@ -164,12 +189,12 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
         </Group>
       </Card>
       <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
-        {t("securityNotice")}
+        {type === "customCss" ? t("securityNoticeCss") : t("securityNotice")}
       </Alert>
       {loginError && <Alert color="red">{loginError}</Alert>}
       <SimpleGrid cols={{ base: 1, sm: 2 }}>
         <TextInput
-          label={t("search")}
+          label={type === "customCss" ? t("searchCss") : t("search")}
           leftSection={<IconSearch size={16} />}
           rightSection={list.isFetching ? <Loader size={16} /> : undefined}
           value={search}
@@ -215,7 +240,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
                     bg="var(--mantine-color-default-hover)"
                     style={{ display: "grid", placeItems: "center" }}
                   >
-                    <Code>JSX</Code>
+                    <Code>{item.type === "customCss" ? "CSS" : "JSX"}</Code>
                   </Box>
                 </Card.Section>
               )}
@@ -228,9 +253,17 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
                     <IconThumbUp size={13} /> {item.upvotes} · <IconThumbDown size={13} /> {item.downvotes}
                   </Text>
                 </Group>
-                <Badge color={item.widgetSchema === CUSTOM_WIDGET_SCHEMA ? "green" : "red"} variant="light">
+                <Badge color={item.widgetSchema === expectedSchema ? "green" : "red"} variant="light">
                   {item.widgetSchema}
                 </Badge>
+                <Group gap="xs">
+                  {item.outdated && <Badge color="yellow">Outdated</Badge>}
+                  {item.reportCount > 0 && (
+                    <Badge color="red">
+                      {item.reportCount} report{item.reportCount === 1 ? "" : "s"}
+                    </Badge>
+                  )}
+                </Group>
                 <Text fw={700} lineClamp={1}>
                   {item.title}
                 </Text>
@@ -238,7 +271,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
                   {item.description || t("noDescription")}
                 </Text>
                 <Button variant="light" onClick={() => setSelectedId(item.id)}>
-                  {t("inspect")}
+                  {type === "customCss" ? t("inspectCss") : t("inspect")}
                 </Button>
               </Stack>
             </Card>
@@ -246,7 +279,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
         </SimpleGrid>
       ) : (
         <Text c="dimmed" ta="center" py="xl">
-          {t("empty")}
+          {type === "customCss" ? t("emptyCss") : t("empty")}
         </Text>
       )}
       {(list.data?.totalPages ?? 0) > 1 && (
@@ -269,6 +302,18 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
             <Text size="sm" c="dimmed">
               {t("author", { name: detail.data.authorName })}
             </Text>
+            {detail.data.outdated && (
+              <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
+                The author marked this submission as outdated. Review it carefully before importing.
+              </Alert>
+            )}
+            {detail.data.reportCount > 0 && (
+              <Alert color="red" icon={<IconAlertTriangle size={18} />}>
+                This submission has {detail.data.reportCount} open community report
+                {detail.data.reportCount === 1 ? "" : "s"}. It remains installable, but you should review its content
+                first.
+              </Alert>
+            )}
             {detail.data.screenshots.length > 0 && (
               <SimpleGrid cols={{ base: 1, sm: 2 }}>
                 {detail.data.screenshots.map((file, index) => (
@@ -281,7 +326,9 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
                 ))}
               </SimpleGrid>
             )}
-            {detailValidation?.success && <CapabilitySummary widget={detailValidation.data} />}
+            {type === "customWidget" && detailValidation?.success && typeof detailValidation.data !== "string" && (
+              <CapabilitySummary widget={detailValidation.data} />
+            )}
             {detailValidation && !detailValidation.success && (
               <Alert color="red" icon={<IconAlertTriangle size={18} />}>
                 {t("installErrorDescription")} {detailValidation.error}
@@ -336,9 +383,25 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
                 <Button
                   loading={install.isPending}
                   disabled={!detailCompatible}
-                  onClick={() => detailValidation?.success && install.mutate(detailValidation.data)}
+                  onClick={() =>
+                    detailValidation?.success &&
+                    typeof detailValidation.data !== "string" &&
+                    install.mutate(detailValidation.data)
+                  }
                 >
                   {t("install")}
+                </Button>
+              )}
+              {onUseCss && (
+                <Button
+                  disabled={!detailCompatible}
+                  onClick={() =>
+                    detailValidation?.success &&
+                    typeof detailValidation.data === "string" &&
+                    setCssAwaitingConfirmation(detailValidation.data)
+                  }
+                >
+                  {t("useCss")}
                 </Button>
               )}
             </Group>
@@ -349,6 +412,7 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
             )}
             {vote.error && <Alert color="red">{vote.error.message || t("voteError")}</Alert>}
             {install.error && <Alert color="red">{install.error.message}</Alert>}
+            {useCss.error && <Alert color="red">{useCss.error.message}</Alert>}
           </Stack>
         )}
       </Modal>
@@ -376,6 +440,31 @@ export function WorkshopBrowser({ onInstall }: { onInstall?(widget: HomarrCustom
           >
             {t("reportSend")}
           </Button>
+        </Stack>
+      </Modal>
+      <Modal
+        opened={cssAwaitingConfirmation !== null}
+        onClose={() => setCssAwaitingConfirmation(null)}
+        title="Import this Custom CSS?"
+      >
+        <Stack>
+          <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
+            Review community CSS before applying it. Importing replaces the current Custom CSS editor value, but nothing
+            is saved until you save the board settings.
+          </Alert>
+          <Group justify="flex-end">
+            <Button variant="default" onClick={() => setCssAwaitingConfirmation(null)}>
+              Cancel
+            </Button>
+            <Button
+              loading={useCss.isPending}
+              onClick={() => {
+                if (cssAwaitingConfirmation !== null) useCss.mutate(cssAwaitingConfirmation);
+              }}
+            >
+              Import CSS
+            </Button>
+          </Group>
         </Stack>
       </Modal>
     </Stack>

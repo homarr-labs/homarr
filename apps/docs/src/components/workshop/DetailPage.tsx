@@ -16,21 +16,33 @@ import {
 import type { ClientResponseError } from "pocketbase";
 
 import type { WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
-import { getPocketBase, getSubmissionFileUrl } from "@site/src/lib/pocketbase";
+import { getPocketBase, getSubmissionFileUrl, signInWithGitHub } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn, errorMessage } from "@site/src/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { CustomWidgetCodeExample } from "../custom-widget-code";
+import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
+import { cn, errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
 
 import { CommentsSection } from "./DetailComments";
 import { CodeBlock, DeleteConfirmButton, DetailSkeleton, ScreenshotGallery } from "./DetailSections";
 import { formatRelativeTime } from "./format";
 import { downloadSubmissionJson, voteDelta } from "./workshop-utils";
 
-const typeLabels: Record<SubmissionType, string> = { css: "CSS", widget: "Widget" };
-const typeDotColors: Record<SubmissionType, string> = { css: "bg-blue-500", widget: "bg-yellow-500" };
-const contentLanguages: Record<SubmissionType, string> = { css: "css", widget: "json" };
+const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
+const typeDotColors: Record<SubmissionType, string> = { customCss: "bg-blue-500", customWidget: "bg-yellow-500" };
+const contentLanguages: Record<SubmissionType, string> = { customCss: "css", customWidget: "json" };
 const copyState = [
   { Icon: IconCopy, label: "Copy", iconClass: "" },
   { Icon: IconCheck, label: "Copied!", iconClass: "text-green-500" },
@@ -59,6 +71,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const pb = useMemo(() => getPocketBase(workshopUrl), [workshopUrl]);
 
   const [submission, setSubmission] = useState<WorkshopSubmission | null>(null);
+  const [reports, setReports] = useState<Array<{ id: string; category: string; explanation: string }>>([]);
   const [userVote, setUserVote] = useState<WorkshopVote | undefined>();
   const [user, setUser] = useState(pb.authStore.record);
   const [loading, setLoading] = useState(true);
@@ -66,6 +79,11 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editChangelog, setEditChangelog] = useState("");
+  const [editContent, setEditContent] = useState("");
   const copyTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const copyFailedTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const voting = useRef(false);
@@ -74,9 +92,9 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
     async (action: string) => {
       if (!pb.authStore.isValid) {
         try {
-          await pb.collection("users").authWithOAuth2({ provider: "github" });
+          await signInWithGitHub(pb);
         } catch (caught) {
-          setError(errorMessage(caught, "Sign in failed"));
+          setError(oauthErrorMessage(caught));
           return null;
         }
       }
@@ -120,9 +138,17 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
 
     const load = async () => {
       try {
-        const record = await pb.collection("marketplace").getOne<WorkshopSubmission>(submissionId);
+        const [listing, record, reportRows] = await Promise.all([
+          pb.collection("workshop_listings").getOne<WorkshopSubmission>(submissionId),
+          pb.collection("submissions").getOne<WorkshopSubmission>(submissionId),
+          pb.collection("reports").getFullList<{ id: string; category: string; explanation: string }>({
+            filter: pb.filter("submission = {:id} && status = 'open'", { id: submissionId }),
+            sort: "-created",
+          }),
+        ]);
         if (cancelled) return;
-        setSubmission(record);
+        setSubmission({ ...listing, ...record, content: record.content });
+        setReports(reportRows);
 
         if (pb.authStore.isValid && pb.authStore.record) {
           const votes = await pb.collection("votes").getFullList<WorkshopVote>({
@@ -204,6 +230,50 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
     }
   };
 
+  const handleOutdated = async () => {
+    if (!submission) return;
+    try {
+      const updated = await pb.collection("submissions").update<WorkshopSubmission>(submission.id, {
+        outdated: !submission.outdated,
+      });
+      setSubmission({ ...submission, outdated: updated.outdated });
+    } catch (caught) {
+      setError(errorMessage(caught, "Failed to update submission status"));
+    }
+  };
+
+  const openEdit = () => {
+    if (!submission) return;
+    setEditTitle(submission.title);
+    setEditDescription(submission.description);
+    setEditChangelog("");
+    setEditContent(submission.content);
+    setEditOpen(true);
+  };
+
+  const handleEdit = async () => {
+    if (!submission) return;
+    const validation = validateSubmissionContent(submission.type, editContent);
+    if (!validation.success) {
+      setError(validation.error);
+      return;
+    }
+    try {
+      const updated = await pb.collection("submissions").update<WorkshopSubmission>(submission.id, {
+        title: editTitle.trim(),
+        description: editDescription.trim(),
+        content: editContent,
+        changelog: editChangelog.trim(),
+        revision: submission.revision + 1,
+      });
+      setSubmission({ ...submission, ...updated, revision: submission.revision + 1 });
+      setEditOpen(false);
+      setError(null);
+    } catch (caught) {
+      setError(errorMessage(caught, "Failed to update submission"));
+    }
+  };
+
   const handleCopy = async () => {
     if (!submission) return;
     try {
@@ -269,9 +339,22 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
               <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
               {typeLabels[submission.type]}
             </Badge>
+            {submission.outdated && <Badge variant="secondary">Outdated</Badge>}
+            {submission.reportCount > 0 && <Badge variant="destructive">Reported</Badge>}
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
-            {submission.authorName} · v{submission.version} · {formatRelativeTime(submission.created)}
+            <a
+              href={submission.authorGithubProfileUrl || undefined}
+              target={submission.authorGithubProfileUrl ? "_blank" : undefined}
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 hover:text-foreground"
+            >
+              {submission.authorAvatarUrl && (
+                <img src={submission.authorAvatarUrl} alt="" className="size-5 rounded-full object-cover" />
+              )}
+              {submission.authorName}
+            </a>{" "}
+            · v{submission.revision} · {formatRelativeTime(submission.created)}
           </p>
         </div>
 
@@ -307,6 +390,27 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
       {submission.description && (
         <p className="mt-6 text-sm leading-relaxed text-muted-foreground">{submission.description}</p>
       )}
+      {submission.changelog && (
+        <div className="mt-4 rounded-lg border border-border bg-muted/30 p-4">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Changelog</p>
+          <p className="mt-1 text-sm">{submission.changelog}</p>
+        </div>
+      )}
+
+      {reports.length > 0 && (
+        <div className="mt-6 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm">
+          <p className="font-medium text-destructive">
+            The community has reported this submission {reports.length} time{reports.length === 1 ? "" : "s"}.
+          </p>
+          <ul className="mt-2 space-y-1 text-muted-foreground">
+            {reports.map((report) => (
+              <li key={report.id}>
+                <strong>{report.category}:</strong> {report.explanation}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <Button variant="outline" size="sm" onClick={() => void handleCopy()}>
@@ -320,16 +424,36 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
             </>
           )}
         </Button>
-        {submission.type === "widget" && (
+        {submission.type === "customWidget" && (
           <Button variant="outline" size="sm" onClick={() => downloadSubmissionJson(submission)}>
             <IconDownload size={14} /> Download
           </Button>
         )}
-        {user?.id === submission.author && <DeleteConfirmButton onConfirm={handleDelete} />}
+        {(user?.id === submission.author || user?.isAdmin === true) && (
+          <Button variant="outline" size="sm" onClick={() => void handleOutdated()}>
+            {submission.outdated ? "Mark current" : "Mark outdated"}
+          </Button>
+        )}
+        {user?.id === submission.author && (
+          <Button variant="outline" size="sm" onClick={openEdit}>
+            Edit submission
+          </Button>
+        )}
+        {(user?.id === submission.author || user?.isAdmin === true) && <DeleteConfirmButton onConfirm={handleDelete} />}
       </div>
 
       <div className="mt-6">
-        <CodeBlock content={submission.content} language={contentLanguages[submission.type]} />
+        {submission.type === "customWidget" ? (
+          <CustomWidgetCodeExample
+            id={`workshop-${submission.id}`}
+            label="widget.json"
+            code={submission.content}
+            language="json"
+            height="520px"
+          />
+        ) : (
+          <CodeBlock content={submission.content} language={contentLanguages[submission.type]} />
+        )}
       </div>
 
       <div className="mt-10 border-t border-border pt-8">
@@ -337,10 +461,52 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
           submissionId={submission.id}
           pb={pb}
           currentUserId={user?.id}
+          currentUserIsAdmin={user?.isAdmin === true}
           onRequireAuth={requireUserId}
           onError={setError}
         />
       </div>
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit submission</DialogTitle>
+            <DialogDescription>Saving creates a new revision and keeps the same Workshop URL.</DialogDescription>
+          </DialogHeader>
+          <label className="grid gap-1.5 text-sm">
+            Title
+            <Input value={editTitle} onChange={(event) => setEditTitle(event.target.value)} />
+          </label>
+          <label className="grid gap-1.5 text-sm">
+            Description
+            <Textarea value={editDescription} onChange={(event) => setEditDescription(event.target.value)} />
+          </label>
+          <label className="grid gap-1.5 text-sm">
+            Changelog
+            <Textarea
+              value={editChangelog}
+              onChange={(event) => setEditChangelog(event.target.value)}
+              placeholder="What changed?"
+            />
+          </label>
+          <label className="grid gap-1.5 text-sm">
+            Content
+            <Textarea
+              className="font-mono text-xs"
+              rows={14}
+              value={editContent}
+              onChange={(event) => setEditContent(event.target.value)}
+            />
+          </label>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setEditOpen(false)}>
+              Cancel
+            </Button>
+            <Button disabled={editTitle.trim().length < 3 || !editContent.trim()} onClick={() => void handleEdit()}>
+              Save revision
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

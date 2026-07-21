@@ -11,23 +11,32 @@ import { Input } from "@/components/ui/input";
 import { formatRelativeTime } from "./format";
 
 const commentAuthorName = (comment: WorkshopComment) =>
-  comment.expand?.author?.name || comment.expand?.author?.username || "unknown";
+  comment.expand?.author?.displayName || comment.expand?.author?.githubUsername || "unknown";
 
 interface CommentsSectionProps {
   submissionId: string;
   pb: ReturnType<typeof getPocketBase>;
   currentUserId?: string;
+  currentUserIsAdmin?: boolean;
   onRequireAuth: (action: string) => Promise<string | null>;
   onError: (message: string) => void;
 }
 
-export const CommentsSection = ({ submissionId, pb, currentUserId, onRequireAuth, onError }: CommentsSectionProps) => {
+export const CommentsSection = ({
+  submissionId,
+  pb,
+  currentUserId,
+  currentUserIsAdmin,
+  onRequireAuth,
+}: CommentsSectionProps) => {
   const [rows, setRows] = useState<WorkshopComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
+  const [mutationError, setMutationError] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -59,13 +68,14 @@ export const CommentsSection = ({ submissionId, pb, currentUserId, onRequireAuth
     const userId = await onRequireAuth("comment");
     if (!userId) return;
     try {
+      setMutationError(null);
       const created = await pb
         .collection("comments")
         .create<WorkshopComment>({ submission: submissionId, content: trimmed, author: userId }, { expand: "author" });
       setRows((prev) => [created, ...prev]);
       setNewComment("");
     } catch (caught) {
-      onError(errorMessage(caught, "Failed to post comment"));
+      setMutationError(errorMessage(caught, "Failed to post comment"));
     }
   };
 
@@ -73,22 +83,29 @@ export const CommentsSection = ({ submissionId, pb, currentUserId, onRequireAuth
     const trimmed = editContent.trim();
     if (!trimmed) return;
     try {
+      setMutationError(null);
       const updated = await pb
         .collection("comments")
         .update<WorkshopComment>(id, { content: trimmed }, { expand: "author" });
       setRows((prev) => prev.map((comment) => (comment.id === id ? updated : comment)));
       setEditingId(null);
     } catch (caught) {
-      onError(errorMessage(caught, "Failed to update comment"));
+      setMutationError(errorMessage(caught, "Failed to update comment"));
     }
   };
 
   const handleDelete = async (id: string) => {
+    if (confirmDeleteId !== id) {
+      setConfirmDeleteId(id);
+      return;
+    }
     try {
+      setMutationError(null);
       await pb.collection("comments").delete(id);
       setRows((prev) => prev.filter((comment) => comment.id !== id));
+      setConfirmDeleteId(null);
     } catch (caught) {
-      onError(errorMessage(caught, "Failed to delete comment"));
+      setMutationError(errorMessage(caught, "Failed to delete comment"));
     }
   };
 
@@ -111,6 +128,12 @@ export const CommentsSection = ({ submissionId, pb, currentUserId, onRequireAuth
         </Button>
       </div>
 
+      {mutationError && (
+        <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {mutationError}
+        </p>
+      )}
+
       {loading && <p className="py-4 text-center text-sm text-muted-foreground">Loading comments…</p>}
       {!loading && fetchError && <p className="py-4 text-center text-sm text-destructive">Failed to load comments</p>}
       {!loading && !fetchError && rows.length === 0 && (
@@ -119,14 +142,27 @@ export const CommentsSection = ({ submissionId, pb, currentUserId, onRequireAuth
 
       <div className="space-y-2">
         {rows.map((comment) => {
-          const isOwner = currentUserId === comment.author;
+          const canManage = currentUserId === comment.author || currentUserIsAdmin;
           const isEditing = editingId === comment.id;
+          const author = comment.expand?.author;
+          const edited = comment.updated !== comment.created;
           return (
             <div key={comment.id} className="rounded-lg bg-muted/30 px-3 py-2 dark:bg-input/20">
               <div className="flex items-center gap-2 text-xs">
-                <span className="font-medium">{commentAuthorName(comment)}</span>
+                <a
+                  href={author?.githubProfileUrl || undefined}
+                  target={author?.githubProfileUrl ? "_blank" : undefined}
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 font-medium hover:underline"
+                >
+                  {author?.avatarUrl && (
+                    <img src={author.avatarUrl} alt="" className="size-5 rounded-full object-cover" />
+                  )}
+                  {commentAuthorName(comment)}
+                </a>
                 <span className="text-muted-foreground/60">{formatRelativeTime(comment.created)}</span>
-                {isOwner && !isEditing && (
+                {edited && <span className="text-muted-foreground/60">edited</span>}
+                {canManage && !isEditing && (
                   <div className="ml-auto flex gap-0.5">
                     <button
                       className="rounded p-1 hover:bg-accent"
@@ -144,6 +180,7 @@ export const CommentsSection = ({ submissionId, pb, currentUserId, onRequireAuth
                       onClick={() => void handleDelete(comment.id)}
                     >
                       <IconTrash size={12} />
+                      {confirmDeleteId === comment.id && <span className="ml-1">Confirm?</span>}
                     </button>
                   </div>
                 )}

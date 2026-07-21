@@ -3,16 +3,19 @@ import PocketBase, { ClientResponseError } from "pocketbase";
 import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 
 import type {
+  WorkshopComment,
   WorkshopReport,
   WorkshopSubmissionDetail,
   WorkshopSubmissionInput,
   WorkshopSubmissionSummary,
+  WorkshopSubmissionType,
   WorkshopUser,
   WorkshopVote,
 } from "./schema";
 import {
   WORKSHOP_API_URL,
   WORKSHOP_REQUEST_TIMEOUT_MS,
+  workshopCommentSchema,
   workshopReportSchema,
   workshopSubmissionDetailSchema,
   workshopSubmissionSummarySchema,
@@ -20,14 +23,17 @@ import {
   workshopScreenshotsSchema,
   workshopUserSchema,
   workshopVoteSchema,
+  WORKSHOP_CSS_SCHEMA,
 } from "./schema";
 
 export interface WorkshopListOptions {
   page?: number;
   perPage?: number;
-  sort?: "top" | "newest";
+  sort?: "top" | "newest" | "recent" | "discussed";
   search?: string;
   author?: string;
+  type?: WorkshopSubmissionType | "all";
+  includeOutdated?: boolean;
   signal?: AbortSignal;
 }
 
@@ -55,13 +61,33 @@ function githubProfile(meta: Record<string, unknown> | undefined, record: Record
     meta?.rawUser && typeof meta.rawUser === "object" ? (meta.rawUser as Record<string, unknown>) : undefined;
   const displayName = oauthText(meta?.name, meta?.username, rawUser?.name, rawUser?.login);
   const avatarUrl = oauthText(meta?.avatarUrl, meta?.avatarURL, rawUser?.avatar_url);
+  const githubUsername = oauthText(meta?.username, rawUser?.login);
   return {
     displayName: (displayName ?? `GitHub user ${String(record.id ?? "").slice(0, 8)}`).slice(0, 100),
     avatarUrl: avatarUrl?.startsWith("https://") ? avatarUrl : undefined,
+    githubUsername,
+    githubProfileUrl: githubUsername ? `https://github.com/${encodeURIComponent(githubUsername)}` : undefined,
   };
 }
 
+const listingSort = (sort: WorkshopListOptions["sort"]) => {
+  if (sort === "newest") return "-created";
+  if (sort === "recent") return "-updated";
+  if (sort === "discussed") return "-commentCount,-created";
+  return "-score,-created";
+};
+
 function workshopError(error: unknown, fallback: string) {
+  const rawMessage = error instanceof Error ? error.message : String(error ?? "");
+  if (/popup.*block|blocked.*popup/iu.test(rawMessage))
+    return new Error("GitHub sign-in popup was blocked. Allow popups for this site and try again.", { cause: error });
+  if (/cancel|closed.*popup|popup.*closed/iu.test(rawMessage))
+    return new Error("GitHub sign-in was cancelled before it completed.", { cause: error });
+  if (
+    /provider|oauth|redirect|callback|client.?id/iu.test(rawMessage) &&
+    /invalid|missing|not found|failed/iu.test(rawMessage)
+  )
+    return new Error("GitHub sign-in is not configured correctly on the Workshop server.", { cause: error });
   if (error instanceof ClientResponseError) {
     const sdkMessage = error.data?.message || error.message;
     const originalMessage =
@@ -87,7 +113,9 @@ export class WorkshopClient {
     return workshopUserSchema.parse({
       id: record.id,
       displayName: record.displayName || record.name || record.username || "Community member",
-      avatarUrl: record.avatarUrl || record.avatar || "",
+      avatarUrl: record.avatarUrl || (record.avatar ? this.pocketBase.files.getURL(record, record.avatar) : ""),
+      githubUsername: record.githubUsername || record.username || "",
+      githubProfileUrl: record.githubProfileUrl || "",
       isAdmin: record.isAdmin === true,
     });
   }
@@ -131,15 +159,18 @@ export class WorkshopClient {
 
   public async list(options: WorkshopListOptions = {}): Promise<WorkshopPage<WorkshopSubmissionSummary>> {
     const filters: string[] = [];
+    if (options.type && options.type !== "all")
+      filters.push(this.pocketBase.filter("type = {:type}", { type: options.type }));
     if (options.search?.trim())
       filters.push(this.pocketBase.filter("title ~ {:search}", { search: options.search.trim() }));
     if (options.author) filters.push(this.pocketBase.filter("author = {:author}", { author: options.author }));
+    if (options.includeOutdated === false) filters.push("outdated = false");
     try {
       const result = await this.pocketBase
         .collection("workshop_listings")
         .getList(options.page ?? 1, options.perPage ?? 24, {
           filter: filters.join(" && "),
-          sort: options.sort === "newest" ? "-created" : "-score,-created",
+          sort: listingSort(options.sort),
           signal: requestSignal(options.signal),
         });
       return { ...result, items: result.items.map((item) => workshopSubmissionSummarySchema.parse(item)) };
@@ -150,14 +181,17 @@ export class WorkshopClient {
 
   public async listAll(options: Omit<WorkshopListOptions, "page" | "perPage"> = {}) {
     const filters: string[] = [];
+    if (options.type && options.type !== "all")
+      filters.push(this.pocketBase.filter("type = {:type}", { type: options.type }));
     if (options.search?.trim())
       filters.push(this.pocketBase.filter("title ~ {:search}", { search: options.search.trim() }));
     if (options.author) filters.push(this.pocketBase.filter("author = {:author}", { author: options.author }));
+    if (options.includeOutdated === false) filters.push("outdated = false");
     try {
       const items = await this.pocketBase.collection("workshop_listings").getFullList({
         batch: 200,
         filter: filters.join(" && "),
-        sort: options.sort === "top" ? "-score,-created" : "-created",
+        sort: listingSort(options.sort),
         signal: requestSignal(options.signal),
       });
       return items.map((item) => workshopSubmissionSummarySchema.parse(item));
@@ -186,9 +220,10 @@ export class WorkshopClient {
     const parsed = workshopSubmissionInputSchema.parse(input);
     workshopScreenshotsSchema.parse(screenshots);
     const data = new FormData();
-    Object.entries(parsed).forEach(([key, value]) => data.set(key, value));
-    data.set("widgetSchema", CUSTOM_WIDGET_SCHEMA);
+    Object.entries(parsed).forEach(([key, value]) => data.set(key, typeof value === "string" ? value : String(value)));
+    data.set("widgetSchema", parsed.type === "customCss" ? WORKSHOP_CSS_SCHEMA : CUSTOM_WIDGET_SCHEMA);
     data.set("author", this.currentUser?.id ?? "");
+    data.set("revision", "1");
     screenshots.forEach((file) => data.append("screenshots", file));
     try {
       const result = await this.pocketBase.collection("submissions").create(data);
@@ -201,9 +236,11 @@ export class WorkshopClient {
   public async update(id: string, input: WorkshopSubmissionInput, screenshots: File[] = []) {
     const parsed = workshopSubmissionInputSchema.parse(input);
     workshopScreenshotsSchema.parse(screenshots);
+    const current = await this.get(id);
     const data = new FormData();
-    Object.entries(parsed).forEach(([key, value]) => data.set(key, value));
-    data.set("widgetSchema", CUSTOM_WIDGET_SCHEMA);
+    Object.entries(parsed).forEach(([key, value]) => data.set(key, typeof value === "string" ? value : String(value)));
+    data.set("widgetSchema", parsed.type === "customCss" ? WORKSHOP_CSS_SCHEMA : CUSTOM_WIDGET_SCHEMA);
+    data.set("revision", String(current.revision + 1));
     screenshots.forEach((file) => data.append("screenshots", file));
     try {
       await this.pocketBase.collection("submissions").update(id, data);
@@ -247,9 +284,13 @@ export class WorkshopClient {
   public async report(submission: string, category: WorkshopReport["category"], explanation: string) {
     try {
       return workshopReportSchema.parse(
-        await this.pocketBase
-          .collection("reports")
-          .create({ submission, reporter: this.currentUser?.id ?? "", category, explanation: explanation.trim() }),
+        await this.pocketBase.collection("reports").create({
+          submission,
+          reporter: this.currentUser?.id ?? "",
+          category,
+          explanation: explanation.trim(),
+          status: "open",
+        }),
       );
     } catch (error) {
       throw workshopError(error, "Failed to report submission");
@@ -260,7 +301,7 @@ export class WorkshopClient {
     try {
       const items = await this.pocketBase
         .collection("reports")
-        .getFullList({ batch: 200, sort: "-created", expand: "reporter,submission" });
+        .getFullList({ batch: 200, filter: "status = 'open'", sort: "-created", expand: "reporter,submission" });
       return items.map((item) =>
         workshopReportSchema.parse({
           ...item,
@@ -275,9 +316,78 @@ export class WorkshopClient {
 
   public async dismissReport(id: string) {
     try {
-      await this.pocketBase.collection("reports").delete(id);
+      await this.pocketBase.collection("reports").update(id, { status: "dismissed" });
     } catch (error) {
       throw workshopError(error, "Failed to dismiss report");
+    }
+  }
+
+  public async toggleOutdated(id: string, outdated: boolean) {
+    try {
+      await this.pocketBase.collection("submissions").update(id, { outdated });
+      return this.get(id);
+    } catch (error) {
+      throw workshopError(error, "Failed to update submission status");
+    }
+  }
+
+  public async listComments(submission: string): Promise<WorkshopComment[]> {
+    try {
+      const rows = await this.pocketBase.collection("comments").getFullList({
+        filter: this.pocketBase.filter("submission = {:submission}", { submission }),
+        sort: "-created",
+        expand: "author",
+      });
+      return rows.map((row) =>
+        workshopCommentSchema.parse({
+          ...row,
+          authorName: row.expand?.author?.displayName,
+          authorAvatarUrl: row.expand?.author?.avatarUrl,
+          authorGithubProfileUrl: row.expand?.author?.githubProfileUrl,
+        }),
+      );
+    } catch (error) {
+      throw workshopError(error, "Failed to load comments");
+    }
+  }
+
+  public async createComment(submission: string, content: string): Promise<WorkshopComment> {
+    try {
+      const row = await this.pocketBase
+        .collection("comments")
+        .create({ submission, author: this.currentUser?.id ?? "", content: content.trim() }, { expand: "author" });
+      return workshopCommentSchema.parse({
+        ...row,
+        authorName: row.expand?.author?.displayName,
+        authorAvatarUrl: row.expand?.author?.avatarUrl,
+        authorGithubProfileUrl: row.expand?.author?.githubProfileUrl,
+      });
+    } catch (error) {
+      throw workshopError(error, "Failed to post comment");
+    }
+  }
+
+  public async updateComment(id: string, content: string): Promise<WorkshopComment> {
+    try {
+      const row = await this.pocketBase
+        .collection("comments")
+        .update(id, { content: content.trim() }, { expand: "author" });
+      return workshopCommentSchema.parse({
+        ...row,
+        authorName: row.expand?.author?.displayName,
+        authorAvatarUrl: row.expand?.author?.avatarUrl,
+        authorGithubProfileUrl: row.expand?.author?.githubProfileUrl,
+      });
+    } catch (error) {
+      throw workshopError(error, "Failed to update comment");
+    }
+  }
+
+  public async deleteComment(id: string) {
+    try {
+      await this.pocketBase.collection("comments").delete(id);
+    } catch (error) {
+      throw workshopError(error, "Failed to delete comment");
     }
   }
 }

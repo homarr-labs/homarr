@@ -34,6 +34,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 import { SubmitForm } from "./SubmitForm";
@@ -42,13 +51,13 @@ import { downloadSubmissionJson } from "./workshop-utils";
 import type { SortKey, TypeFilter } from "./useWorkshop";
 import { useWorkshop } from "./useWorkshop";
 
-const typeDotColors: Record<SubmissionType, string> = { css: "bg-blue-500", widget: "bg-yellow-500" };
-const typeLabels: Record<SubmissionType, string> = { css: "CSS", widget: "Widget" };
+const typeDotColors: Record<SubmissionType, string> = { customCss: "bg-blue-500", customWidget: "bg-yellow-500" };
+const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
 const typeIcons: Record<SubmissionType, React.ComponentType<{ size: number; className?: string }>> = {
-  css: IconBrandCss3,
-  widget: IconPuzzle,
+  customCss: IconBrandCss3,
+  customWidget: IconPuzzle,
 };
-const typeBgColors: Record<SubmissionType, string> = { css: "bg-blue-500/5", widget: "bg-yellow-500/5" };
+const typeBgColors: Record<SubmissionType, string> = { customCss: "bg-blue-500/5", customWidget: "bg-yellow-500/5" };
 const filterActiveClass = "bg-background text-foreground shadow-sm";
 const filterInactiveClass = "text-muted-foreground hover:text-foreground";
 const copyState = [
@@ -62,13 +71,15 @@ const emptyState = {
 
 const typeFilters: { value: TypeFilter; label: string; dot?: string }[] = [
   { value: "all", label: "All" },
-  { value: "widget", label: "Widgets", dot: typeDotColors.widget },
-  { value: "css", label: "CSS", dot: typeDotColors.css },
+  { value: "customWidget", label: "Widgets", dot: typeDotColors.customWidget },
+  { value: "customCss", label: "CSS", dot: typeDotColors.customCss },
   { value: "yours", label: "Yours" },
 ];
 const sortOptions: { value: SortKey; label: string }[] = [
   { value: "top", label: "Top rated" },
   { value: "new", label: "Newest" },
+  { value: "recent", label: "Recently updated" },
+  { value: "discussed", label: "Most discussed" },
 ];
 
 const stopCardNavigation = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -81,6 +92,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
   const [sort, setSort] = useState<SortKey>("top");
   const [search, setSearch] = useState("");
+  const [includeOutdated, setIncludeOutdated] = useState(true);
   const [showSubmit, setShowSubmit] = useState(false);
 
   // Stable sort order: only re-sort when filter/sort/search or submission set changes (not vote counts)
@@ -92,11 +104,12 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
         if (typeFilter === "yours") return item.author === workshop.user?.id;
         return typeFilter === "all" || item.type === typeFilter;
       })
+      .filter((item) => includeOutdated || !item.outdated)
       .filter((item) => !q || item.title.toLowerCase().includes(q))
       .toSorted(workshop.sorters[sort])
       .map((s) => s.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally keyed on submissionIds string, not the array
-  }, [submissionIds, workshop.sorters, typeFilter, sort, search, workshop.user?.id]);
+  }, [submissionIds, workshop.sorters, typeFilter, sort, search, includeOutdated, workshop.user?.id]);
 
   const visible = useMemo(() => {
     const byId = new Map(workshop.submissions.map((s) => [s.id, s]));
@@ -119,7 +132,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
                 <IconPlus size={14} /> Share yours
               </Button>
               <Button variant="ghost" size="sm" onClick={workshop.logout}>
-                <IconLogout size={14} /> {workshop.user?.name || workshop.user?.username || "Account"}
+                <IconLogout size={14} /> {workshop.user?.displayName || workshop.user?.username || "Account"}
               </Button>
             </>
           ) : (
@@ -162,6 +175,16 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
               </option>
             ))}
           </select>
+          <button
+            type="button"
+            onClick={() => setIncludeOutdated((value) => !value)}
+            className={cn(
+              "h-7 rounded-md border border-input px-2 text-xs transition-colors",
+              includeOutdated ? "bg-transparent text-muted-foreground" : filterActiveClass,
+            )}
+          >
+            {includeOutdated ? "Hide outdated" : "Show outdated"}
+          </button>
         </div>
         <div className="relative">
           <IconSearch size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -212,6 +235,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
             pb={workshop.pb}
             userVote={workshop.votes[submission.id]?.value}
             currentUserId={workshop.user?.id}
+            currentUserIsAdmin={workshop.user?.isAdmin === true}
             onVote={workshop.vote}
             onReport={workshop.report}
             onDelete={workshop.deleteSubmission}
@@ -236,8 +260,13 @@ interface SubmissionCardProps {
   pb: ReturnType<typeof useWorkshop>["pb"];
   userVote?: 1 | -1;
   currentUserId?: string;
+  currentUserIsAdmin?: boolean;
   onVote: (submissionId: string, value: 1 | -1) => void;
-  onReport: (submissionId: string, reason: string) => void;
+  onReport: (
+    submissionId: string,
+    category: "malicious" | "spam" | "copyright" | "inappropriate" | "other",
+    explanation: string,
+  ) => void;
   onDelete: (submissionId: string) => Promise<boolean>;
 }
 
@@ -246,11 +275,12 @@ const SubmissionCard = ({
   pb,
   userVote,
   currentUserId,
+  currentUserIsAdmin,
   onVote,
   onReport,
   onDelete,
 }: SubmissionCardProps) => {
-  const isOwner = currentUserId === submission.author;
+  const canDelete = currentUserId === submission.author || currentUserIsAdmin;
   const [copied, setCopied] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const confirmTimer = useRef<ReturnType<typeof setTimeout>>(null);
@@ -271,13 +301,32 @@ const SubmissionCard = ({
   );
 
   const [copyFailed, setCopyFailed] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportCategory, setReportCategory] = useState("other");
+  const [reportExplanation, setReportExplanation] = useState("");
+
+  const loadContent = async () => {
+    if (submission.content) return submission.content;
+    const record = await pb.collection("submissions").getOne<{ content: string }>(submission.id);
+    return record.content;
+  };
+
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(submission.content);
+      await navigator.clipboard.writeText(await loadContent());
       setCopied(true);
       setCopyFailed(false);
       if (copyTimer.current) clearTimeout(copyTimer.current);
       copyTimer.current = setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopyFailed(true);
+      setTimeout(() => setCopyFailed(false), 2000);
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      downloadSubmissionJson({ ...submission, content: await loadContent() });
     } catch {
       setCopyFailed(true);
       setTimeout(() => setCopyFailed(false), 2000);
@@ -332,7 +381,18 @@ const SubmissionCard = ({
           )}
         </div>
         <CardDescription className="text-xs">
-          {submission.authorName} · v{submission.version} · {formatRelativeTime(submission.created)}
+          <a
+            href={submission.authorGithubProfileUrl || undefined}
+            target={submission.authorGithubProfileUrl ? "_blank" : undefined}
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 hover:text-foreground"
+          >
+            {submission.authorAvatarUrl && (
+              <img src={submission.authorAvatarUrl} alt="" className="size-4 rounded-full object-cover" />
+            )}
+            {submission.authorName}
+          </a>{" "}
+          · v{submission.revision} · {formatRelativeTime(submission.created)}
         </CardDescription>
         <CardAction>
           <div className="flex items-center gap-px rounded-md border border-border bg-muted/40 p-px">
@@ -370,6 +430,16 @@ const SubmissionCard = ({
       </CardHeader>
 
       <CardContent>
+        {(submission.outdated || submission.reportCount > 0) && (
+          <div className="mb-2 flex flex-wrap gap-1.5">
+            {submission.outdated && <Badge variant="secondary">Outdated</Badge>}
+            {submission.reportCount > 0 && (
+              <Badge variant="destructive">
+                {submission.reportCount} community report{submission.reportCount === 1 ? "" : "s"}
+              </Badge>
+            )}
+          </div>
+        )}
         {submission.description && (
           <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{submission.description}</p>
         )}
@@ -393,11 +463,11 @@ const SubmissionCard = ({
               </>
             )}
           </Button>
-          {submission.type === "widget" && (
+          {submission.type === "customWidget" && (
             <Button
               variant="ghost"
               size="xs"
-              onClick={() => downloadSubmissionJson(submission)}
+              onClick={() => void handleDownload()}
               className="text-muted-foreground hover:text-foreground"
             >
               <IconDownload size={13} /> Download
@@ -412,7 +482,7 @@ const SubmissionCard = ({
             </a>
           )}
           <div className="ml-auto flex items-center gap-px">
-            {isOwner && (
+            {canDelete && (
               <button
                 className={cn(
                   "flex items-center gap-1 rounded px-1 py-0.5 text-xs transition-colors",
@@ -429,7 +499,7 @@ const SubmissionCard = ({
             )}
             <button
               className="flex items-center justify-center rounded p-1 text-muted-foreground/60 transition-colors hover:text-destructive"
-              onClick={() => void onReport(submission.id, "flagged")}
+              onClick={() => setReportOpen(true)}
               aria-label="Report"
             >
               <IconFlag size={13} />
@@ -437,6 +507,53 @@ const SubmissionCard = ({
           </div>
         </div>
       </CardFooter>
+      <Dialog open={reportOpen} onOpenChange={setReportOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Report submission</DialogTitle>
+            <DialogDescription>Reports are public and help others make an informed choice.</DialogDescription>
+          </DialogHeader>
+          <label className="grid gap-1.5 text-sm">
+            Category
+            <select
+              className="h-9 rounded-md border border-input bg-transparent px-3"
+              value={reportCategory}
+              onChange={(event) => setReportCategory(event.target.value)}
+            >
+              <option value="malicious">Malicious</option>
+              <option value="spam">Spam</option>
+              <option value="copyright">Copyright</option>
+              <option value="inappropriate">Inappropriate</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+          <Textarea
+            value={reportExplanation}
+            onChange={(event) => setReportExplanation(event.target.value)}
+            placeholder="Explain what is wrong…"
+            maxLength={1000}
+          />
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setReportOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={reportExplanation.trim().length < 3}
+              onClick={() => {
+                void onReport(
+                  submission.id,
+                  reportCategory as "malicious" | "spam" | "copyright" | "inappropriate" | "other",
+                  reportExplanation.trim(),
+                );
+                setReportOpen(false);
+              }}
+            >
+              Submit report
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

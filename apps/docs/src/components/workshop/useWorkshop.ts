@@ -2,20 +2,21 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dayjs from "dayjs";
 
 import type { WorkshopComment, WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
-import { getPocketBase } from "@site/src/lib/pocketbase";
+import { getPocketBase, signInWithGitHub } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import { schemaVersionByType, validateSubmissionContent } from "@site/src/lib/workshop-schema";
-import { errorMessage } from "@site/src/lib/utils";
+import { errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
 
 import { voteDelta } from "./workshop-utils";
 
-export type SortKey = "top" | "new";
+export type SortKey = "top" | "new" | "recent" | "discussed";
 export type TypeFilter = "all" | "yours" | SubmissionType;
 
 export interface SubmitInput {
   type: SubmissionType;
   title: string;
   description: string;
+  changelog: string;
   content: string;
   screenshots: File[];
 }
@@ -30,6 +31,8 @@ export interface CommentActions {
 const sorters: Record<SortKey, (a: WorkshopSubmission, b: WorkshopSubmission) => number> = {
   top: (a, b) => b.upvotes - b.downvotes - (a.upvotes - a.downvotes),
   new: (a, b) => dayjs(b.created).valueOf() - dayjs(a.created).valueOf(),
+  recent: (a, b) => dayjs(b.updated).valueOf() - dayjs(a.updated).valueOf(),
+  discussed: (a, b) => b.commentCount - a.commentCount || dayjs(b.created).valueOf() - dayjs(a.created).valueOf(),
 };
 
 const isNotFoundError = (error: unknown) =>
@@ -59,7 +62,7 @@ export const useWorkshop = (workshopUrl: string) => {
     setLoading(true);
     setError(null);
     try {
-      setSubmissions(await pb.collection("marketplace").getFullList<WorkshopSubmission>({ sort: "-created" }));
+      setSubmissions(await pb.collection("workshop_listings").getFullList<WorkshopSubmission>({ sort: "-created" }));
       await refreshVotes();
     } catch (caught) {
       setError(errorMessage(caught, "Failed to load the workshop"));
@@ -94,15 +97,8 @@ export const useWorkshop = (workshopUrl: string) => {
   }, [pb, refresh]);
 
   const ensureAuth = useCallback(async () => {
-    if (pb.authStore.isValid) {
-      try {
-        await pb.collection("users").authRefresh();
-        return true;
-      } catch {
-        pb.authStore.clear();
-      }
-    }
-    await pb.collection("users").authWithOAuth2({ provider: "github" });
+    if (pb.authStore.isValid) return true;
+    await signInWithGitHub(pb);
     await refreshVotes();
     return pb.authStore.isValid;
   }, [pb, refreshVotes]);
@@ -113,7 +109,7 @@ export const useWorkshop = (workshopUrl: string) => {
       try {
         authenticated = await ensureAuth();
       } catch (caught) {
-        setError(errorMessage(caught, `Sign in to ${action}`));
+        setError(oauthErrorMessage(caught));
         return null;
       }
 
@@ -136,7 +132,7 @@ export const useWorkshop = (workshopUrl: string) => {
       await ensureAuth();
       setError(null);
     } catch (caught) {
-      setError(errorMessage(caught, "Sign in failed"));
+      setError(oauthErrorMessage(caught));
     }
   }, [ensureAuth]);
 
@@ -217,11 +213,21 @@ export const useWorkshop = (workshopUrl: string) => {
   );
 
   const report = useCallback(
-    async (submissionId: string, reason: string) => {
+    async (
+      submissionId: string,
+      category: "malicious" | "spam" | "copyright" | "inappropriate" | "other",
+      explanation: string,
+    ) => {
       try {
         const userId = await requireUserId("report");
         if (!userId) return;
-        await pb.collection("reports").create({ submission: submissionId, reason, user: userId });
+        await pb.collection("reports").create({
+          submission: submissionId,
+          reporter: userId,
+          category,
+          explanation,
+          status: "open",
+        });
       } catch (caught) {
         setError(errorMessage(caught, "Failed to submit your report"));
       }
@@ -255,9 +261,12 @@ export const useWorkshop = (workshopUrl: string) => {
       data.set("type", input.type);
       data.set("title", input.title);
       data.set("description", input.description);
-      data.set("schemaVersion", schemaVersionByType[input.type]);
+      data.set("widgetSchema", schemaVersionByType[input.type]);
       data.set("content", input.content);
       data.set("author", userId);
+      data.set("revision", "1");
+      data.set("changelog", input.changelog || "Initial publication");
+      data.set("outdated", "false");
       for (const file of input.screenshots) data.append("screenshots", file);
       await pb.collection("submissions").create(data);
       await refresh();

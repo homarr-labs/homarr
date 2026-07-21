@@ -21,20 +21,22 @@
     "verify:search": "node ./scripts/verify-algolia-search.mjs"
   },
   "dependencies": {
-    "@base-ui/react": "catalog:",
+    "@base-ui/react": "^1.5.0",
     "@docusaurus/core": "^3.10.1",
     "@docusaurus/faster": "^3.10.1",
     "@docusaurus/plugin-content-docs": "^3.10.1",
     "@docusaurus/plugin-sitemap": "^3.10.1",
     "@docusaurus/preset-classic": "^3.10.1",
+    "@homarr/custom-widgets": "workspace:^",
     "@homarr/definitions": "workspace:^",
+    "@homarr/workshop": "workspace:^",
+    "@mantine/core": "catalog:",
     "@mdx-js/react": "^3.1.1",
     "@nivo/line": "^0.99.0",
     "@scalar/api-reference-react": "catalog:",
-    "@signalwire/docusaurus-plugin-llms-txt": "^1.2.2",
     "@tabler/icons-react": "catalog:",
     "@tailwindcss/postcss": "^4.3.2",
-    "class-variance-authority": "catalog:",
+    "class-variance-authority": "^0.7.1",
     "clsx": "catalog:",
     "dayjs": "catalog:",
     "docusaurus-plugin-image-zoom": "^3.0.1",
@@ -46,10 +48,9 @@
     "random-word-slugs": "^0.1.7",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "swiper": "^14.0.2",
-    "tailwind-merge": "catalog:",
-    "tailwindcss": "^4.3.2",
-    "zod": "catalog:"
+    "swiper": "^14.0.5",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.2"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.1",
@@ -60,7 +61,8 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "cheerio": "^1.2.0",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "zod": "catalog:"
   },
   "peerDependencies": {
     "@docusaurus/theme-common": "^3.10.1",

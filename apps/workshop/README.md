@@ -5,15 +5,18 @@ Workshop is a small PocketBase service that serves the public documentation site
 The runtime image extends `ghcr.io/muchobien/pocketbase:0.39`; Homarr adds only the built documentation, PocketBase
 collections, API rules, and its explicit serve arguments.
 
-It intentionally has no approval queue, user bans, comments, email notifications, audit log, reusable widget connections,
-or remote control over installed widgets. Submissions publish immediately. Authenticated users can vote and report;
-users with `isAdmin` enabled can inspect and dismiss reports or delete any submission.
+It intentionally has no approval queue, user bans, moderator roles, reusable widget connections, or remote control over
+installed widgets. Submissions publish immediately. Authenticated users can vote, comment, and report; users with
+`isAdmin` enabled can dismiss reports or delete any submission or comment.
 
 ## Local development
 
 ```sh
-PB_EXPOSE_PORT=18090 docker compose -f apps/workshop/docker-compose.yml up --build
+pnpm docker:workshop
 ```
+
+Use `docker compose -f apps/workshop/docker-compose.yml logs -f workshop` for logs and
+`docker compose -f apps/workshop/docker-compose.yml stop workshop` to stop it without deleting data.
 
 Compose passes the selected port to PocketBase as `PORT`, so it listens on the same port inside and outside the
 container. With the image directly, set both values: `docker run -e PORT=3003 -p 3003:3003 <workshop-image>`.
@@ -21,8 +24,8 @@ container. With the image directly, set both values: `docker run -e PORT=3003 -p
 Open `http://127.0.0.1:18090/_/`, create the first PocketBase superuser, and configure GitHub OAuth on the `users` collection.
 
 The `users.isAdmin` field defaults to `false`. Collection rules allow account creation only through OAuth without that
-field and reject regular-user updates to it. Appoint administrators from the PocketBase dashboard with a superuser
-account.
+field and reject all regular-user attempts to change it. Appoint administrators out of band with a PocketBase
+superuser or a deliberate SQLite update; there is no public role-management endpoint or hook.
 
 Users must sign in again after the role changes. Setting the value back to `false` removes Workshop administrator access.
 
@@ -33,6 +36,10 @@ https://<workshop-host>/api/oauth2-redirect
 ```
 
 Self-hosted Homarr origins do not need to be registered with GitHub. Keep `PB_ALLOWED_ORIGINS=*` (the default) so localhost and arbitrary self-hosted domains can open the central PocketBase OAuth popup. Set a restricted origin list only if it includes every Homarr origin that should use Workshop sign-in.
+
+Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in the repository-root `.env`. Set
+`WORKSHOP_PUBLIC_ORIGIN=https://<workshop-host>` so new-comment emails link to the public submission page. Configure the
+sender and SMTP transport in PocketBase. Comment email failures are logged and never reject a saved comment.
 
 Run the disposable service integration test from the repository root:
 
@@ -47,9 +54,10 @@ The Workshop does not maintain a second Custom Widget schema. Its frontend valid
 `customWidgetImportSchema` from `@homarr/custom-widgets`, and Homarr validates canonical content again before installation.
 The validated `$schema` is also stored as `widgetSchema` for listing compatibility badges; it must match the downloaded
 manifest before Homarr enables installation.
-PocketBase API rules enforce submission ownership, one vote/report per user and submission, and administrator-only
-moderation. Reports are dismissed by deleting them; PocketBase cascade deletion removes related votes and reports when a
-submission is deleted.
+PocketBase API rules enforce submission and comment ownership, one vote/report per user and submission, and
+administrator-only moderation. Each new submission receives one real author-owned upvote. Reports remain public and are
+dismissed by changing their status. PocketBase cascade deletion removes related votes, comments, and reports when a
+submission is deleted. Authors and administrators can mark a submission outdated without making it un-installable.
 
 ## Production docs preview
 
@@ -78,6 +86,12 @@ This command starts the profiled `docs` service from `apps/workshop/docker-compo
 
 ```sh
 docker compose -f apps/workshop/docker-compose.yml --profile docs rm --stop --force docs
+```
+
+Normal startup never deletes data. To intentionally recreate the local database, stop the stack first and then run:
+
+```sh
+docker compose -f apps/workshop/docker-compose.yml down --volumes
 ```
 
 PocketBase data lives in `/pb_data`. Docker Compose persists it in the `pb_data` named volume for both the development Workshop service and the production documentation/Workshop service. The image serves the built Homarr documentation and Workshop UI from `/pb_public`.

@@ -49,7 +49,10 @@ export function WorkshopPublishModal({
     setError(null);
     try {
       const definition = await utils.customWidget.export.fetch({ id: widget.id });
-      await client.create({ title, description, content: JSON.stringify(definition) }, screenshots);
+      await client.create(
+        { type: "customWidget", title, description, content: JSON.stringify(definition) },
+        screenshots,
+      );
       setPublished(true);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : t("publish.error"));

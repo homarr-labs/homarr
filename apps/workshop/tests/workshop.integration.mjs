@@ -28,10 +28,10 @@ const root = await request("/api/collections/_superusers/auth-with-password", {
 const rootHeaders = { authorization: `Bearer ${root.token}` };
 const collections = await request("/api/collections?perPage=200", { headers: rootHeaders });
 const collectionNames = new Set(collections.items.map((collection) => collection.name));
-for (const required of ["submissions", "votes", "reports", "workshop_listings"]) {
+for (const required of ["submissions", "votes", "comments", "reports", "workshop_listings"]) {
   if (!collectionNames.has(required)) throw new Error(`Missing Workshop collection: ${required}`);
 }
-for (const removed of ["comments", "workshop_admin_actions", "workshop_admins"]) {
+for (const removed of ["workshop_admin_actions", "workshop_admins"]) {
   if (collectionNames.has(removed)) throw new Error(`Removed Workshop collection still exists: ${removed}`);
 }
 
@@ -102,11 +102,15 @@ const submission = await request("/api/collections/submissions/records", {
   method: "POST",
   headers: authorSession.headers,
   body: JSON.stringify({
+    type: "customWidget",
     title: "Workshop runtime probe",
     description: "PocketBase integration test",
     widgetSchema: widget.$schema,
     content: JSON.stringify(widget),
     author: author.id,
+    revision: 1,
+    changelog: "Initial publication",
+    outdated: false,
   }),
 });
 if (
@@ -116,6 +120,14 @@ if (
 ) {
   throw new Error("Submission publication failed");
 }
+const ownerVotes = await request("/api/collections/votes/records", { headers: authorSession.headers });
+if (
+  ownerVotes.items.length !== 1 ||
+  ownerVotes.items[0].submission !== submission.id ||
+  ownerVotes.items[0].value !== 1
+) {
+  throw new Error("New submissions must receive one real author-owned upvote");
+}
 
 const updatedSubmission = await request(`/api/collections/submissions/records/${submission.id}`, {
   method: "PATCH",
@@ -124,6 +136,14 @@ const updatedSubmission = await request(`/api/collections/submissions/records/${
 });
 if (updatedSubmission.title !== "Updated runtime probe")
   throw new Error("Authors must be able to edit their submission");
+const outdatedSubmission = await request(`/api/collections/submissions/records/${submission.id}`, {
+  method: "PATCH",
+  headers: authorSession.headers,
+  body: JSON.stringify({ outdated: true, revision: 2, changelog: "Needs a newer API" }),
+});
+if (!outdatedSubmission.outdated || outdatedSubmission.revision !== 2) {
+  throw new Error("Authors must be able to mark submissions outdated and increment revisions");
+}
 
 await expectStatus(
   `/api/collections/submissions/records/${submission.id}`,
@@ -168,14 +188,34 @@ await expectStatus(
 
 const listing = await request(`/api/collections/workshop_listings/records/${submission.id}`);
 if (
-  listing.score !== 1 ||
-  listing.upvotes !== 1 ||
+  listing.score !== 2 ||
+  listing.upvotes !== 2 ||
   listing.downvotes !== 0 ||
   listing.authorName !== "Widget Author" ||
   listing.widgetSchema !== widget.$schema
 ) {
   throw new Error("Workshop listing data is incorrect");
 }
+
+const comment = await request("/api/collections/comments/records?expand=author", {
+  method: "POST",
+  headers: visitorSession.headers,
+  body: JSON.stringify({ submission: submission.id, author: visitor.id, content: "Useful widget" }),
+});
+if (comment.author !== visitor.id || comment.expand.author.displayName !== "Widget Visitor") {
+  throw new Error("Comment author expansion is incorrect");
+}
+await expectStatus(
+  `/api/collections/comments/records/${comment.id}`,
+  { method: "PATCH", headers: authorSession.headers, body: JSON.stringify({ content: "Not mine" }) },
+  404,
+);
+const editedComment = await request(`/api/collections/comments/records/${comment.id}`, {
+  method: "PATCH",
+  headers: visitorSession.headers,
+  body: JSON.stringify({ content: "Useful updated widget" }),
+});
+if (editedComment.content !== "Useful updated widget") throw new Error("Comment editing failed");
 
 await expectStatus(
   "/api/collections/reports/records",
@@ -187,6 +227,7 @@ await expectStatus(
       reporter: author.id,
       category: "other",
       explanation: "Spoofed reporter",
+      status: "open",
     }),
   },
   400,
@@ -199,12 +240,13 @@ const report = await request("/api/collections/reports/records", {
     reporter: visitor.id,
     category: "other",
     explanation: "Runtime moderation test",
+    status: "open",
   }),
 });
 const ownReport = await request(`/api/collections/reports/records/${report.id}`, { headers: visitorSession.headers });
 if (ownReport.reporter !== visitor.id) throw new Error("Reporters must be able to view their own report");
-const hiddenReports = await request("/api/collections/reports/records", { headers: visitorSession.headers });
-if (hiddenReports.items.length !== 0) throw new Error("Regular users must not list moderation reports");
+const publicReports = await request("/api/collections/reports/records", { headers: visitorSession.headers });
+if (publicReports.items.length !== 1) throw new Error("Report details must remain publicly visible");
 await expectStatus(
   `/api/collections/reports/records/${report.id}`,
   { method: "DELETE", headers: visitorSession.headers },
@@ -218,24 +260,35 @@ const promotedAuthor = await request(`/api/collections/users/records/${author.id
 });
 if (promotedAuthor.isAdmin !== true) throw new Error("PocketBase superusers must be able to appoint admins");
 
+await expectStatus(
+  `/api/collections/comments/records/${comment.id}`,
+  { method: "DELETE", headers: authorSession.headers },
+  204,
+);
+
 const reports = await request("/api/collections/reports/records", { headers: authorSession.headers });
 if (reports.items.length !== 1 || reports.items[0].reporter !== visitor.id) {
   throw new Error("Workshop administrators must be able to review reports");
 }
-await expectStatus(
-  `/api/collections/reports/records/${report.id}`,
-  { method: "DELETE", headers: authorSession.headers },
-  204,
-);
+const dismissedReport = await request(`/api/collections/reports/records/${report.id}`, {
+  method: "PATCH",
+  headers: authorSession.headers,
+  body: JSON.stringify({ status: "dismissed" }),
+});
+if (dismissedReport.status !== "dismissed") throw new Error("Workshop administrators must be able to dismiss reports");
 
 const visitorSubmission = await request("/api/collections/submissions/records", {
   method: "POST",
   headers: visitorSession.headers,
   body: JSON.stringify({
+    type: "customWidget",
     title: "Administrator deletion probe",
     content: JSON.stringify(widget),
     widgetSchema: widget.$schema,
     author: visitor.id,
+    revision: 1,
+    changelog: "Initial publication",
+    outdated: false,
   }),
 });
 await expectStatus(

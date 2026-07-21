@@ -44,12 +44,12 @@ const connectorClass = ["bg-border", "bg-primary"];
 const dropOverlayClass = ["pointer-events-none opacity-0", "opacity-100"];
 
 const placeholders: Record<SubmissionType, string> = {
-  widget: '{\n  "$schema": "homarr-custom-widget-v2",\n  "name": "My widget",\n  ...\n}',
-  css: ".grid-stack-item-content {\n  border-radius: 16px;\n}",
+  customWidget: '{\n  "$schema": "homarr-custom-widget-v2",\n  "name": "My widget",\n  ...\n}',
+  customCss: ".grid-stack-item-content {\n  border-radius: 16px;\n}",
 };
 const contentLabels: Record<SubmissionType, string> = {
-  widget: "Widget JSON (homarr-custom-widget-v2)",
-  css: "Custom CSS",
+  customWidget: "Widget JSON (homarr-custom-widget-v2)",
+  customCss: "Custom CSS",
 };
 
 const parseJsonObject = (json: string): Record<string, unknown> | null => {
@@ -68,6 +68,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
   const [type, setType] = useState<SubmissionType | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [changelog, setChangelog] = useState("Initial publication");
   const [content, setContent] = useState("");
   const [screenshots, setScreenshots] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -98,7 +99,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const text = e.target?.result as string;
-        if (!type) setType("widget");
+        if (!type) setType("customWidget");
         setContentAndAutofill(text, title, description);
         if (step === 0) goTo(1);
       };
@@ -164,7 +165,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
     setError(null);
     setPending(true);
     try {
-      await onSubmit({ type, title, description, content, screenshots });
+      await onSubmit({ type, title, description, changelog, content, screenshots });
     } catch (caught) {
       setError(errorMessage(caught, "Submission failed"));
     } finally {
@@ -173,7 +174,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
   };
 
   const onContentChange = (value: string) => {
-    if (type === "widget") setContentAndAutofill(value, title, description);
+    if (type === "customWidget") setContentAndAutofill(value, title, description);
     else setContent(value);
   };
 
@@ -252,6 +253,8 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
                 setTitle={setTitle}
                 description={description}
                 setDescription={setDescription}
+                changelog={changelog}
+                setChangelog={setChangelog}
                 content={content}
                 onContentChange={onContentChange}
               />
@@ -294,12 +297,17 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
 
 const typeCards: { type: SubmissionType; icon: typeof IconBraces; label: string; desc: string }[] = [
   {
-    type: "widget",
+    type: "customWidget",
     icon: IconBraces,
     label: "Custom Widget",
     desc: "A JSON-based widget using the homarr-custom-widget-v2 schema",
   },
-  { type: "css", icon: IconPalette, label: "Custom CSS", desc: "A CSS theme or style override for Homarr dashboards" },
+  {
+    type: "customCss",
+    icon: IconPalette,
+    label: "Custom CSS",
+    desc: "A CSS theme or style override for Homarr dashboards",
+  },
 ];
 
 const StepType = ({
@@ -393,6 +401,8 @@ const StepDetails = ({
   setTitle,
   description,
   setDescription,
+  changelog,
+  setChangelog,
   content,
   onContentChange,
 }: {
@@ -401,6 +411,8 @@ const StepDetails = ({
   setTitle: (v: string) => void;
   description: string;
   setDescription: (v: string) => void;
+  changelog: string;
+  setChangelog: (v: string) => void;
   content: string;
   onContentChange: (v: string) => void;
 }) => (
@@ -418,7 +430,7 @@ const StepDetails = ({
         rows={8}
         required
       />
-      {type === "widget" && (
+      {type === "customWidget" && (
         <p className="text-xs text-muted-foreground">
           Paste your widget JSON — title and description will auto-fill from the{" "}
           <code className="rounded bg-muted px-1 py-0.5 text-foreground">name</code> field.
@@ -450,6 +462,19 @@ const StepDetails = ({
         maxLength={2000}
         rows={2}
         placeholder="A brief description of what this does"
+      />
+    </div>
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor="submit-changelog" className="text-xs font-medium text-muted-foreground">
+        Changelog
+      </label>
+      <Textarea
+        id="submit-changelog"
+        value={changelog}
+        onChange={(e) => setChangelog(e.target.value)}
+        maxLength={2000}
+        rows={2}
+        placeholder="What is included in this revision?"
       />
     </div>
   </div>

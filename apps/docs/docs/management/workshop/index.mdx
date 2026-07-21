@@ -7,6 +7,12 @@ tags:
 
 # Community Workshop
 
+:::warning Experimental feature
+
+This feature is experimental and will probably change. If you encounter bugs, need more capabilities, or find something confusing, tell us in the [official discussion thread](https://github.com/homarr-labs/homarr/discussions/categories/custom-widgets). Your feedback directly shapes what comes next. Happy hacking!
+
+:::
+
 The [Community Workshop](pathname:///workshop) is where Homarr users share and discover
 **custom CSS themes** and **custom widgets**. You can browse submissions, upvote the ones
 you like, report abuse, and install entries directly into your own Homarr instance.
@@ -19,9 +25,15 @@ The workshop contains community-made content. Widgets may contain unwanted or ma
 
 ## Browsing and voting
 
-- Filter by **Widgets** or **CSS**, and sort by **Top rated** or **Newest**.
+- Filter by **Widgets** or **CSS**, show or hide outdated entries, and sort by popularity, creation date, recent updates, or discussion activity.
 - Sign in with **GitHub** to upvote/downvote, submit your own creations, or report a submission.
-- Each submission shows its title, description, author, version, an optional screenshot, and the full content.
+- Each submission shows its title, description, linked GitHub author, revision, optional screenshots, reports, comments, and full content.
+- A new submission receives one real upvote owned by its author. Votes remain unique per user and submission.
+- Reports and the manual **Outdated** badge are warnings, not automatic removal. Reported and outdated entries remain installable after confirmation.
+
+## Comments
+
+Comments are publicly readable. Signed-in users can post; authors can edit or delete their own comments, and Workshop administrators can delete any comment. Failed posts keep the text you typed. When SMTP and `WORKSHOP_PUBLIC_ORIGIN` are configured, the submission author receives one email for a comment from another user. Self-comments, edits, and deletions do not send mail.
 
 ## Submitting
 
@@ -30,7 +42,7 @@ The workshop contains community-made content. Widgets may contain unwanted or ma
    - **Custom widget** — paste the JSON exported from **Manage → Custom Widgets → Export**.
      It must match the `homarr-custom-widget-v2` schema (validated before submission).
    - **Custom CSS** — paste your stylesheet (max 16384 characters).
-3. Add a title, description, optional screenshot, and changelog, then submit.
+3. Add a title, description, optional screenshots, and changelog, then submit.
 
 Submissions are published immediately. Reported entries are reviewed and may be removed.
 
@@ -52,8 +64,14 @@ You can install workshop entries without leaving Homarr:
 Alternatively, use **Copy** (or **Download** for widgets) on any submission and import it
 manually.
 
+Custom Widget imports detect required bearer, basic, header, or query credentials. You can enter them during import or explicitly defer them; secret values are never stored in Workshop content. Missing credentials remain visible on the local Custom Widget afterward.
+
 ## Workshop deployment
 
 Workshop is powered by [PocketBase](https://pocketbase.io). The production image compiles the current Docusaurus site and serves it together with the API from one origin. The deployment lives in `apps/workshop/` with a Dockerfile, Compose configuration, version-controlled migrations, hooks, a smoke test, and ACT-local workflow instructions.
+
+Run `pnpm docker:workshop` for the PocketBase development service or `pnpm docker:docs` for the built documentation and Workshop site. Both use `apps/workshop/docker-compose.yml` and the persistent `pb_data` volume. Normal start and stop commands retain data; `docker compose -f apps/workshop/docker-compose.yml down --volumes` intentionally recreates the database.
+
+GitHub needs only the central callback `https://<workshop-host>/api/oauth2-redirect`. Keep PocketBase origins unrestricted unless every self-hosted Homarr caller is explicitly listed. Configure `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `WORKSHOP_PUBLIC_ORIGIN`, and PocketBase SMTP settings for authentication and comment email.
 
 Homarr instances use `NEXT_PUBLIC_WORKSHOP_API_URL` to reach the central API and `NEXT_PUBLIC_WORKSHOP_URL` for links to the public page. Docusaurus uses `WORKSHOP_URL` only when its development server runs separately; the combined production image always uses its own origin.

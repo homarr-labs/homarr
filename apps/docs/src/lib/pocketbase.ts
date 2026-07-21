@@ -14,24 +14,50 @@ export const getPocketBase = (url: string): PocketBase => {
 export const getSubmissionFileUrl = (baseUrl: string, submissionId: string, filename: string) =>
   `${baseUrl}/api/files/submissions/${submissionId}/${encodeURIComponent(filename)}`;
 
+export const signInWithGitHub = async (pb: PocketBase) => {
+  const auth = await pb.collection("users").authWithOAuth2({
+    provider: "github",
+    createData: { displayName: "GitHub user" },
+  });
+  const meta = auth.meta as Record<string, unknown>;
+  const rawUser = meta.rawUser && typeof meta.rawUser === "object" ? (meta.rawUser as Record<string, unknown>) : {};
+  const githubUsername = String(meta.username || rawUser.login || "");
+  const displayName = String(meta.name || rawUser.name || githubUsername || "GitHub user").slice(0, 100);
+  const avatarUrl = String(meta.avatarUrl || meta.avatarURL || rawUser.avatar_url || "");
+  const updated = await pb.collection("users").update(auth.record.id, {
+    displayName,
+    avatarUrl: avatarUrl.startsWith("https://") ? avatarUrl : "",
+    githubUsername,
+    githubProfileUrl: githubUsername ? `https://github.com/${encodeURIComponent(githubUsername)}` : "",
+  });
+  pb.authStore.save(auth.token, updated);
+  return updated;
+};
+
 export interface WorkshopSubmission {
   id: string;
   collectionId: string;
   collectionName: string;
-  type: "css" | "widget";
+  type: "customCss" | "customWidget";
   title: string;
   description: string;
-  schemaVersion: string;
+  widgetSchema: string;
   content: string;
   screenshots: string[];
   upvotes: number;
   downvotes: number;
   commentCount: number;
-  version: number;
+  reportCount: number;
+  revision: number;
   changelog: string;
+  outdated: boolean;
   author: string;
   authorName: string;
+  authorAvatarUrl: string;
+  authorGithubUsername: string;
+  authorGithubProfileUrl: string;
   created: string;
+  updated: string;
 }
 
 export interface WorkshopVote {
@@ -48,5 +74,14 @@ export interface WorkshopComment {
   content: string;
   created: string;
   updated: string;
-  expand?: { author?: { id: string; name?: string; username?: string } };
+  expand?: {
+    author?: {
+      id: string;
+      displayName?: string;
+      avatarUrl?: string;
+      githubUsername?: string;
+      githubProfileUrl?: string;
+      isAdmin?: boolean;
+    };
+  };
 }

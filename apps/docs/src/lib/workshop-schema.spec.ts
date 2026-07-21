@@ -1,49 +1,36 @@
 import { describe, expect, it } from "vitest";
 
+import { CUSTOM_WIDGET_STARTER } from "@homarr/custom-widgets/core";
+
 import { validateSubmissionContent } from "./workshop-schema";
 
-const validWidget = {
-  $schema: "homarr-custom-widget-v2",
-  name: "Example",
-  url: "https://example.com/api",
-  authType: "none",
-  method: "GET",
-  displayType: "singleValue",
-  displayConfig: { type: "singleValue", jsonPath: "$.count", label: "Count", unit: "" },
-};
+const validWidget = CUSTOM_WIDGET_STARTER;
 
 describe("validateSubmissionContent", () => {
   it("accepts a valid homarr-custom-widget-v2 JSON", () => {
-    expect(validateSubmissionContent("widget", JSON.stringify(validWidget)).success).toBe(true);
+    expect(validateSubmissionContent("customWidget", JSON.stringify(validWidget)).success).toBe(true);
   });
 
   it("rejects an old/unknown widget schema version", () => {
     const result = validateSubmissionContent(
-      "widget",
+      "customWidget",
       JSON.stringify({ ...validWidget, $schema: "homarr-custom-widget-v1" }),
     );
     expect(result.success).toBe(false);
   });
 
   it("rejects widgets without a schema version", () => {
-    const widgetWithoutSchema = {
-      name: validWidget.name,
-      url: validWidget.url,
-      authType: validWidget.authType,
-      method: validWidget.method,
-      displayType: validWidget.displayType,
-      displayConfig: validWidget.displayConfig,
-    };
+    const { $schema: _schema, ...widgetWithoutSchema } = validWidget;
 
-    expect(validateSubmissionContent("widget", JSON.stringify(widgetWithoutSchema)).success).toBe(false);
+    expect(validateSubmissionContent("customWidget", JSON.stringify(widgetWithoutSchema)).success).toBe(false);
   });
 
   it("rejects malformed widget JSON", () => {
-    expect(validateSubmissionContent("widget", "{ not json").success).toBe(false);
+    expect(validateSubmissionContent("customWidget", "{ not json").success).toBe(false);
   });
 
   it("accepts non-empty CSS and rejects empty CSS", () => {
-    expect(validateSubmissionContent("css", ".card { color: red; }").success).toBe(true);
-    expect(validateSubmissionContent("css", "   ").success).toBe(false);
+    expect(validateSubmissionContent("customCss", ".card { color: red; }").success).toBe(true);
+    expect(validateSubmissionContent("customCss", "   ").success).toBe(false);
   });
 });

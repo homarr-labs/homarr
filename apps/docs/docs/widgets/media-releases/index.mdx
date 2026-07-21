@@ -1,30 +1,26 @@
 ---
-title: 'Media releases'
-description: 'Display newly added medias or upcoming releases from different integrations'
+title: "Media releases"
+description: "Display newly added medias or upcoming releases from different integrations"
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { mediaReleasesWidget } from '.';
-import { embyIntegration } from '@site/docs/integrations/emby';
-import { jellyfinIntegration } from '@site/docs/integrations/jellyfin';
-import { plexIntegration } from '@site/docs/integrations/plex';
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { mediaReleasesWidget } from ".";
+import { embyIntegration } from "@site/docs/integrations/emby";
+import { jellyfinIntegration } from "@site/docs/integrations/jellyfin";
+import { plexIntegration } from "@site/docs/integrations/plex";
 
-
-<WidgetHeader
-  widget={mediaReleasesWidget}
-  categories={['Releases', 'Media']}
-/>
+<WidgetHeader widget={mediaReleasesWidget} categories={["Releases", "Media"]} />
 
 Provides a list of newly added media or upcoming releases from your media server.
 
 ### Screenshots
 
-import backdrop from './img/backdrop.png';
-import poster from './img/poster.png';
+import backdrop from "./img/backdrop.png";
+import poster from "./img/poster.png";
 
 <div className="flex gap-1">
   <img src={backdrop} alt="media-releases layout-backdrop" width={256} />
@@ -33,17 +29,24 @@ import poster from './img/poster.png';
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: embyIntegration,
-}, {
-  integration: jellyfinIntegration,
-}, {
-  integration: plexIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: embyIntegration,
+    },
+    {
+      integration: jellyfinIntegration,
+    },
+    {
+      integration: plexIntegration,
+    },
+  ]}
+/>
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={mediaReleasesWidget.configuration} />

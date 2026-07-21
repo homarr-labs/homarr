@@ -1,0 +1,44 @@
+# Use the safe JSX runtime
+
+Templates are JSX expressions interpreted inside a widget-local safety and render budget. They can read:
+
+- `data.requestId` — the latest response
+- `status.requestId` — `{ loading, ok, status, statusText, error }`
+- `options.name` — saved widget configuration
+- `inputs.name` — temporary values from declarative `bind`
+
+Use normal Mantine layouts, typography, feedback, dates, and charts. Official compound names such as `Card.Section`, `Tabs.List`, and `Radio.Group` are supported. Ordinary safe props pass through; a dangerous capability produces an explicit error.
+
+## Temporary inputs
+
+```jsx
+<Stack>
+  <TextInput bind="search" defaultValue="" label="Search" />
+  <SubFetch requestId="search" params={{ query: inputs.search }}>
+    {(results) => (
+      <Stack>
+        {(results ?? []).map((item) => (
+          <Text key={item.id}>{item.name}</Text>
+        ))}
+      </Stack>
+    )}
+  </SubFetch>
+</Stack>
+```
+
+Bound values live only in React memory while the widget is mounted. They are not saved to the database, board options, exports, browser storage, or `localStorage`. Remounting resets them. Components can share a binding when their adapter types agree.
+
+## Expression language
+
+Use expressions, conditionals, optional chaining, arrays, objects, template strings, safe standard helpers, and expression callbacks for `map`, `filter`, `sort`, and trusted runtime slots. Callback blocks, authored `const`, IIFEs, authored recursion, arbitrary functions, imports, hooks, refs, raw events, browser requests, `eval`, and bigint are blocked.
+
+Bounded regex literals are supported for string matching, splitting, search, and replacement. Patterns with lookbehind, backreferences, nested quantifiers, excessive length, or unsupported flags are rejected.
+
+## Runtime components
+
+- `SubFetch` runs a manual query with its `params`.
+- `ActionButton` and `ToggleSwitch` run actions.
+- `RefreshButton` refreshes load queries.
+- `Icon`/`TablerIcon` resolves installed safe icons.
+
+Always include responsive loading, empty, error, and success states. Runtime failures remain inside the widget tile.

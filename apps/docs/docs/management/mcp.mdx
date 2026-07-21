@@ -73,13 +73,7 @@ Replace `<your-api-key>` with your actual API key. Never commit API keys to vers
   "mcpServers": {
     "homarr": {
       "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://your-homarr-instance.com/api/mcp/mcp",
-        "--header",
-        "ApiKey:<your-api-key>"
-      ]
+      "args": ["-y", "mcp-remote", "https://your-homarr-instance.com/api/mcp/mcp", "--header", "ApiKey:<your-api-key>"]
     }
   }
 }
@@ -126,25 +120,26 @@ curl -s -X POST \
 
 Homarr exposes 50+ tools organized by namespace. Each tool is either a **query** (GET, read-only) or **mutation** (POST, write action).
 
-| Namespace          | Example Tools                                            | Type       |
-| ------------------ | -------------------------------------------------------- | ---------- |
-| `app`              | List all apps, get app by ID, create/update/delete app   | GET + POST |
-| `apiKeys`          | List API keys                                            | GET        |
-| `beszel`           | Systems status, alerts, historical system metrics        | GET        |
-| `board`            | List boards, get board by ID, create/update/delete board | GET + POST |
-| `docker`           | List containers, inspect container, start/stop/restart   | GET + POST |
-| `icon`             | Search icons                                             | GET        |
-| `info`             | Server health, version info                              | GET        |
-| `integration`      | List integrations, test connection, delete integration   | GET + POST |
-| `invite`           | List invitations, delete invite                          | GET + POST |
-| `calendar`         | Calendar events from media servers                       | GET        |
-| `dnsHole`          | DNS hole summary, toggle blocking                        | GET + POST |
-| `downloads`        | Active downloads, pause/resume/delete                    | GET + POST |
-| `healthMonitoring` | Resource usage stats                                     | GET        |
-| `patchmon`         | Host patch and security update statistics                | GET        |
-| `mediaRequests`    | Approve/decline media requests                           | GET + POST |
-| `mediaServer`      | Media server sessions and stats                          | GET        |
-| `smartHome`        | Execute automations, device states                       | GET + POST |
+| Namespace          | Example Tools                                             | Type       |
+| ------------------ | --------------------------------------------------------- | ---------- |
+| `app`              | List all apps, get app by ID, create/update/delete app    | GET + POST |
+| `apiKeys`          | List API keys                                             | GET        |
+| `beszel`           | Systems status, alerts, historical system metrics         | GET        |
+| `board`            | List boards, get board by ID, create/update/delete board  | GET + POST |
+| `docker`           | List containers, inspect container, start/stop/restart    | GET + POST |
+| `icon`             | Search icons                                              | GET        |
+| `info`             | Server health, version info                               | GET        |
+| `integration`      | List integrations, test connection, delete integration    | GET + POST |
+| `invite`           | List invitations, delete invite                           | GET + POST |
+| `calendar`         | Calendar events from media servers                        | GET        |
+| `customWidget`     | Validate, preview, create, and iteratively update widgets | GET + POST |
+| `dnsHole`          | DNS hole summary, toggle blocking                         | GET + POST |
+| `downloads`        | Active downloads, pause/resume/delete                     | GET + POST |
+| `healthMonitoring` | Resource usage stats                                      | GET        |
+| `patchmon`         | Host patch and security update statistics                 | GET        |
+| `mediaRequests`    | Approve/decline media requests                            | GET + POST |
+| `mediaServer`      | Media server sessions and stats                           | GET        |
+| `smartHome`        | Execute automations, device states                        | GET + POST |
 
 The tools table on the MCP tab is dynamically generated - it always reflects the latest available procedures from your Homarr instance.
 
@@ -154,6 +149,8 @@ The tools table on the MCP tab is dynamically generated - it always reflects the
 - Tools inherit the permissions of the API key's owner
 - OAuth endpoints are rate-limited to prevent abuse
 - Tool execution errors are contained - a failing tool call does not crash the MCP server
+- Custom-widget MCP actions are simulation-only; live preview actions must be enabled explicitly in the browser workbench
+- Custom-widget secret values are never returned through MCP
 - All communication uses HTTPS (configure HTTP → HTTPS redirects on your reverse proxy)
 
 ## Use Cases
@@ -165,3 +162,60 @@ The tools table on the MCP tab is dynamically generated - it always reflects the
 - **"How many users are on my Homarr instance?"** - AI lists all users (admin only)
 - **"Toggle Pi-hole blocking for 5 minutes"** - AI interacts with DNS controls
 - **"How are my servers doing?"** - AI fetches Beszel system stats including CPU, memory, disk, and alerts
+- **"Build a Custom Widget for this API"** - AI validates and previews one definition before it saves the definition
+
+## Create a Custom Widget with an AI agent
+
+An agent creates one `homarr-custom-widget-v2` definition at a time. Start with the native prompt `homarr-custom-widget-author`.
+
+Then, read the live schema and component resources. These resources describe the installed Mantine components.
+
+1. Call `customWidget_getAuthoringPrompt` and `customWidget_schema`.
+2. Build one Custom Widget definition.
+3. Call `customWidget_validate` without saving the definition.
+4. Call `customWidget_previewCreate`.
+5. Test named requests with `customWidget_previewQuery` and `customWidget_previewAction`.
+6. Open the returned preview URL.
+7. Examine `customWidget_previewJournal`.
+8. Change the definition with `customWidget_templatePatch` or `customWidget_update`.
+9. Set a supplied credential with `customWidget_secretSet`.
+10. Otherwise, call `customWidget_secretRequestUser` to create a ten-minute Homarr entry URL.
+11. Call `customWidget_create`.
+12. Repeat this procedure for the next Custom Widget.
+
+The agent receives the credential request status. The agent does not receive the plaintext credential.
+
+Discovery resources:
+
+- `homarr://custom-widgets/schema`
+- `homarr://custom-widgets/components`
+- `homarr://custom-widgets/components/{name}`
+- `homarr://custom-widgets/examples/{name}`
+- `homarr://custom-widgets/skill`
+
+An HTTP-only harness can use the matching `/api/custom-widgets/authoring-prompt`, `/schema`, `/components`, and `/skill` endpoints instead of MCP resource URIs.
+
+The Custom Widget tools are:
+
+- `customWidget_schema`
+- `customWidget_validate`
+- `customWidget_list`
+- `customWidget_get`
+- `customWidget_create`
+- `customWidget_update`
+- `customWidget_delete`
+- `customWidget_templatePatch`
+- `customWidget_previewCreate`
+- `customWidget_previewQuery`
+- `customWidget_previewAction`
+- `customWidget_previewJournal`
+- `customWidget_secretSet`
+- `customWidget_secretRequestUser`
+- `customWidget_getAuthoringPrompt`
+- `customWidget_getSkill`
+
+The `custom-widget-manage` permission permits authoring. A direct credential write also requires the `custom-widget-secret-write` permission.
+
+Homarr applies its request security controls during request execution. These controls include SSRF, DNS, redirect, size, timeout, rate, and permission controls.
+
+Read [Use agents and skills.sh](./custom-widgets/agent-authoring) for the complete procedure and the portable Agent Skill.

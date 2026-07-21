@@ -8,15 +8,35 @@ migrate(
     } catch {
       users = new Collection({ type: "auth", name: "users" });
     }
+
     users.passwordAuth = { enabled: false };
     if (!users.fields.getByName("displayName"))
       users.fields.add(new TextField({ name: "displayName", required: true, min: 1, max: 100 }));
     if (!users.fields.getByName("avatarUrl")) users.fields.add(new URLField({ name: "avatarUrl" }));
+    if (!users.fields.getByName("avatar"))
+      users.fields.add(
+        new FileField({
+          name: "avatar",
+          maxSelect: 1,
+          maxSize: 2_097_152,
+          mimeTypes: ["image/png", "image/jpeg", "image/webp"],
+        }),
+      );
+    if (!users.fields.getByName("githubUsername"))
+      users.fields.add(new TextField({ name: "githubUsername", max: 100 }));
+    if (!users.fields.getByName("githubProfileUrl")) users.fields.add(new URLField({ name: "githubProfileUrl" }));
     if (!users.fields.getByName("isAdmin")) users.fields.add(new BoolField({ name: "isAdmin" }));
 
+    const githubClientId = $os.getenv("GITHUB_CLIENT_ID");
+    const githubClientSecret = $os.getenv("GITHUB_CLIENT_SECRET");
+    if (githubClientId && githubClientSecret) {
+      users.oauth2.enabled = true;
+      users.oauth2.providers = [{ name: "github", clientId: githubClientId, clientSecret: githubClientSecret }];
+    }
+
     const adminRule = "@request.auth.isAdmin = true";
-    users.listRule = adminRule;
-    users.viewRule = `id = @request.auth.id || ${adminRule}`;
+    users.listRule = "";
+    users.viewRule = "";
     users.createRule = '@request.context = "oauth2" && @request.body.isAdmin:isset = false';
     users.updateRule = "id = @request.auth.id && @request.body.isAdmin:isset = false";
     users.deleteRule = null;
@@ -28,13 +48,17 @@ migrate(
       listRule: "",
       viewRule: "",
       createRule: "@request.auth.id != '' && @request.body.author = @request.auth.id",
-      updateRule: "author = @request.auth.id && @request.body.author:changed = false",
+      updateRule: `(author = @request.auth.id || ${adminRule}) && @request.body.author:changed = false && @request.body.type:changed = false && @request.body.widgetSchema:changed = false`,
       deleteRule: `author = @request.auth.id || ${adminRule}`,
       fields: [
+        { type: "select", name: "type", required: true, maxSelect: 1, values: ["customWidget", "customCss"] },
         { type: "text", name: "title", required: true, min: 3, max: 100 },
         { type: "text", name: "description", max: 2000 },
         { type: "text", name: "widgetSchema", required: true, min: 1, max: 100 },
         { type: "text", name: "content", required: true, max: 1000000 },
+        { type: "number", name: "revision", required: true, onlyInt: true, min: 1 },
+        { type: "text", name: "changelog", max: 2000 },
+        { type: "bool", name: "outdated" },
         {
           type: "file",
           name: "screenshots",
@@ -81,13 +105,40 @@ migrate(
     votes.addIndex("idx_votes_submission", false, "submission", "");
     app.save(votes);
 
+    const comments = new Collection({
+      type: "base",
+      name: "comments",
+      listRule: "",
+      viewRule: "",
+      createRule: "@request.auth.id != '' && @request.body.author = @request.auth.id",
+      updateRule:
+        "author = @request.auth.id && @request.body.author:changed = false && @request.body.submission:changed = false",
+      deleteRule: `author = @request.auth.id || ${adminRule}`,
+      fields: [
+        {
+          type: "relation",
+          name: "submission",
+          required: true,
+          maxSelect: 1,
+          collectionId: submissions.id,
+          cascadeDelete: true,
+        },
+        { type: "relation", name: "author", required: true, maxSelect: 1, collectionId: users.id, cascadeDelete: true },
+        { type: "text", name: "content", required: true, min: 1, max: 2000 },
+        { type: "autodate", name: "created", onCreate: true },
+        { type: "autodate", name: "updated", onCreate: true, onUpdate: true },
+      ],
+    });
+    comments.addIndex("idx_comments_submission", false, "submission", "");
+    app.save(comments);
+
     const reports = new Collection({
       type: "base",
       name: "reports",
-      listRule: adminRule,
-      viewRule: `reporter = @request.auth.id || ${adminRule}`,
+      listRule: "",
+      viewRule: "",
       createRule: "@request.auth.id != '' && @request.body.reporter = @request.auth.id",
-      updateRule: null,
+      updateRule: `${adminRule} && @request.body.reporter:changed = false && @request.body.submission:changed = false`,
       deleteRule: adminRule,
       fields: [
         {
@@ -114,6 +165,7 @@ migrate(
           values: ["malicious", "spam", "copyright", "inappropriate", "other"],
         },
         { type: "text", name: "explanation", required: true, min: 3, max: 1000 },
+        { type: "select", name: "status", required: true, maxSelect: 1, values: ["open", "dismissed"] },
         { type: "autodate", name: "created", onCreate: true },
         { type: "autodate", name: "updated", onCreate: true, onUpdate: true },
       ],
@@ -128,15 +180,17 @@ migrate(
       listRule: "",
       viewRule: "",
       viewQuery: `
-        SELECT s.id, s.title, s.description, s.widgetSchema, s.screenshots, s.author, u.displayName AS authorName,
-          s.created, s.updated,
-          COALESCE(SUM(CASE WHEN v.value = 1 THEN 1 ELSE 0 END), 0) AS upvotes,
-          COALESCE(SUM(CASE WHEN v.value = -1 THEN 1 ELSE 0 END), 0) AS downvotes,
-          COALESCE(SUM(v.value), 0) AS score
+        SELECT s.id, s.type, s.title, s.description, s.widgetSchema, s.screenshots, s.author,
+          u.displayName AS authorName, u.avatarUrl AS authorAvatarUrl,
+          u.githubUsername AS authorGithubUsername, u.githubProfileUrl AS authorGithubProfileUrl,
+          s.revision, s.changelog, s.outdated, s.created, s.updated,
+          COALESCE((SELECT COUNT(*) FROM votes v WHERE v.submission = s.id AND v.value = 1), 0) AS upvotes,
+          COALESCE((SELECT COUNT(*) FROM votes v WHERE v.submission = s.id AND v.value = -1), 0) AS downvotes,
+          COALESCE((SELECT SUM(v.value) FROM votes v WHERE v.submission = s.id), 0) AS score,
+          COALESCE((SELECT COUNT(*) FROM comments c WHERE c.submission = s.id), 0) AS commentCount,
+          COALESCE((SELECT COUNT(*) FROM reports r WHERE r.submission = s.id AND r.status = 'open'), 0) AS reportCount
         FROM submissions s
         JOIN users u ON u.id = s.author
-        LEFT JOIN votes v ON v.submission = s.id
-        GROUP BY s.id
       `,
     });
     app.save(listings);
@@ -145,16 +199,17 @@ migrate(
     settings.rateLimits.enabled = true;
     settings.rateLimits.rules = [
       ...settings.rateLimits.rules.filter(
-        (rule) => !["submissions:create", "votes:create", "reports:create"].includes(rule.label),
+        (rule) => !["submissions:create", "votes:create", "comments:create", "reports:create"].includes(rule.label),
       ),
       { label: "submissions:create", audience: "@auth", duration: 60, maxRequests: 10 },
       { label: "votes:create", audience: "@auth", duration: 10, maxRequests: 20 },
+      { label: "comments:create", audience: "@auth", duration: 60, maxRequests: 20 },
       { label: "reports:create", audience: "@auth", duration: 60, maxRequests: 5 },
     ];
     app.save(settings);
   },
   (app) => {
-    for (const name of ["workshop_listings", "reports", "votes", "submissions"]) {
+    for (const name of ["workshop_listings", "reports", "comments", "votes", "submissions"]) {
       try {
         app.delete(app.findCollectionByNameOrId(name));
       } catch {}

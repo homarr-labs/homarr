@@ -12,6 +12,9 @@ const config: Config = {
   favicon: "img/logo.png",
   organizationName: "homarr-labs",
   projectName: "homarr",
+  customFields: {
+    workshopUrl: process.env.WORKSHOP_URL ?? "",
+  },
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
@@ -19,11 +22,6 @@ const config: Config = {
   onBrokenLinks: "throw",
   onBrokenAnchors: "throw",
   onDuplicateRoutes: "throw",
-
-  customFields: {
-    // Empty means same-origin, which is the production Workshop image shape.
-    workshopUrl: process.env.WORKSHOP_URL ?? "",
-  },
 
   future: {
     v4: {
@@ -287,11 +285,20 @@ const config: Config = {
     function homarrPackagesPlugin() {
       return {
         name: "resolve-homarr-packages",
-        configureWebpack() {
+        configureWebpack(_config, isServer, { getJSLoader }) {
           return {
             resolve: {
               symlinks: false,
               alias: { "@": require("path").resolve(__dirname, "src") },
+            },
+            module: {
+              rules: [
+                {
+                  test: /\.[jt]sx?$/iu,
+                  include: /node_modules[\\/]@homarr/u,
+                  use: [getJSLoader({ isServer })],
+                },
+              ],
             },
           };
         },
@@ -324,19 +331,18 @@ const config: Config = {
         },
       };
     },
-    function workshopDetailRoutePlugin() {
+    function workshopRoutesPlugin() {
       return {
-        name: "workshop-detail-route",
+        name: "workshop-routes",
         async contentLoaded({ actions }) {
           actions.addRoute({
             path: "/workshop/:id",
-            component: "@site/src/components/workshop/DetailPage",
+            component: "@site/src/components/workshop/WorkshopDetailRoutePage",
             exact: true,
           });
         },
       };
     },
-    "@signalwire/docusaurus-plugin-llms-txt",
     async function tailwindCssPlugin() {
       return {
         name: "docusaurus-tailwindcss",

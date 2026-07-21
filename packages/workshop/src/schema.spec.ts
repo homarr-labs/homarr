@@ -9,9 +9,21 @@ describe("Workshop widget validation", () => {
     expect(validateWorkshopWidget(JSON.stringify(CUSTOM_WIDGET_STARTER)).success).toBe(true);
     expect(
       workshopSubmissionInputSchema.safeParse({
+        type: "customWidget",
         title: "Starter widget",
         description: "",
         content: JSON.stringify(CUSTOM_WIDGET_STARTER),
+      }).success,
+    ).toBe(true);
+  });
+
+  test("accepts Custom CSS without treating it as widget JSON", () => {
+    expect(
+      workshopSubmissionInputSchema.safeParse({
+        type: "customCss",
+        title: "Quiet dashboard",
+        description: "",
+        content: ".mantine-Card-root { box-shadow: none; }",
       }).success,
     ).toBe(true);
   });

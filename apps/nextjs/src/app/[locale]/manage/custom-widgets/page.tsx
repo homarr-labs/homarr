@@ -9,6 +9,7 @@ import { Link } from "@homarr/ui";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { CustomWidgetBetaBanner } from "./_beta-banner";
 import { WorkshopInstallButton } from "~/components/workshop/workshop-install-button";
 import { ImportCustomWidgetButton } from "./_custom-widget-actions";
 import { CustomWidgetList } from "./_custom-widget-list";
@@ -46,6 +47,7 @@ export default async function CustomWidgetsPage() {
         </Group>
       }
     >
+      <CustomWidgetBetaBanner />
       <CustomWidgetList definitions={definitions} />
     </ManagePageLayout>
   );
