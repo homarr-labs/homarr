@@ -28,6 +28,14 @@ Therfore it should support CloudKey Gen1, CloudKey Gen2, UnifiOS-based UDM-Pro c
 
 <AddingIntegration />
 
+Use the local HTTPS address of your controller:
+
+- UniFi OS consoles such as Dream Router, Dream Machine, Cloud Gateway, and CloudKey use `https://<host>` (port 443).
+- Self-hosted UniFi Network Servers normally use `https://<host>:8443`.
+- If you omit the port, Homarr tries port 443 first and then port 8443 when the first port cannot be reached.
+
+Use a local administrator account. Cloud-only accounts and accounts with multi-factor authentication are not supported by the underlying client.
+
 ### Secrets
 
 <IntegrationSecrets
