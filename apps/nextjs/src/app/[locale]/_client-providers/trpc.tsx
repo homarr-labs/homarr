@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { QueryKey } from "@tanstack/react-query";
 import { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -36,6 +36,7 @@ import { env } from "@homarr/common/env";
 import { showWarningNotification } from "@homarr/notifications";
 import { widgetImports } from "@homarr/widgets";
 
+import { createQueryCacheErrorCleanup } from "./query-cache-error-cleanup";
 import { createWidgetQueryPersister } from "./query-cache-persister";
 
 const getWebSocketProtocol = () => {
@@ -102,6 +103,10 @@ export function TRPCReactProvider(props: PropsWithChildren) {
     return client;
   });
 
+  useEffect(() => {
+    return createQueryCacheErrorCleanup(queryClient);
+  }, [queryClient]);
+
   const [trpcClient] = useState(() => {
     return clientApi.createClient({
       links: [
@@ -161,6 +166,9 @@ export function TRPCReactProvider(props: PropsWithChildren) {
             shouldDehydrateQuery: (query) =>
               query.state.status === "success" && isPersistableWidgetQueryKey(query.queryKey),
           },
+        }}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ predicate: (query) => isPersistableWidgetQueryKey(query.queryKey) });
         }}
       >
         <ReactQueryStreamedHydration transformer={superjson}>{props.children}</ReactQueryStreamedHydration>
