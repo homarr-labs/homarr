@@ -1,12 +1,14 @@
 import { getCustomWidgetOptionValueIssue } from "./options-schema";
-import type { CustomWidgetOptions } from "./options-schema";
+import type { CustomWidgetOption, CustomWidgetOptions } from "./options-schema";
 
 export interface CustomWidgetOptionIssue {
   path: string;
   message: string;
 }
 
-export function getCustomWidgetDefaultOptions(options: CustomWidgetOptions): Record<string, unknown> {
+export function getCustomWidgetDefaultOptions(
+  options: Record<string, Pick<CustomWidgetOption, "default">>,
+): Record<string, unknown> {
   return Object.fromEntries(Object.entries(options).map(([name, option]) => [name, option.default]));
 }
 
