@@ -25,7 +25,7 @@ export const immichRouter = createTRPCRouter({
     .concat(createImmichIntegrationMiddleware("query"))
     .input(
       z.object({
-        albumId: z.string(),
+        albumId: z.string().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {

@@ -61,7 +61,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconBox,
       href: "/manage/apps",
       label: t("items.apps"),
-      hidden: !session,
+      hidden: !session?.user.permissions.includes("board-modify-all"),
       iconProps: {
         strokeWidth: 2.5,
       },
