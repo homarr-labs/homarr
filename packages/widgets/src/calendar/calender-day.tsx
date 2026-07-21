@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Popover, Text, useMantineTheme } from "@mantine/core";
+import { Box, Container, Flex, HoverCard, Text, useMantineTheme } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -28,16 +28,17 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
   const isTooSmallForIndicators = height < 30;
 
   return (
-    <Popover
+    <HoverCard
       position="bottom"
       withArrow
       withinPortal
       radius="lg"
       shadow="sm"
       transitionProps={{ transition: "pop" }}
+      openDelay={350}
       disabled={disabled}
     >
-      <Popover.Target>
+      <HoverCard.Target>
         <Container
           h="100%"
           w="100%"
@@ -58,11 +59,11 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
           </Text>
           {!isTooSmallForIndicators && <NotificationIndicator events={events} isSmall={isSmall} />}
         </Container>
-      </Popover.Target>
-      <Popover.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
+      </HoverCard.Target>
+      <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
         <CalendarEventList events={events} />
-      </Popover.Dropdown>
-    </Popover>
+      </HoverCard.Dropdown>
+    </HoverCard>
   );
 };
 
