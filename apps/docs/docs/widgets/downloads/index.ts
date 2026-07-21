@@ -29,7 +29,8 @@ export const downloadsWidget: WidgetDefinition = {
     items: [
       {
         name: "Columns to show",
-        description: "Select the columns you want to display in the widget. Columns automatically hide/show based on widget width.",
+        description:
+          "Select the columns you want to display in the widget. Columns automatically hide/show based on widget width.",
         values: `List of columns: ${columnsList.join(", ")}`,
         defaultValue: ["name", "progress", "downSpeed", "time", "state"].join(", "),
       },
