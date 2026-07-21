@@ -135,8 +135,6 @@ export default function DownloadClientsWidget({
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const [showStats, { toggle: toggleStats }] = useDisclosure(false);
-  const [scrollPosition, setScrollPosition] = useState({ x: 0, y: 0 });
-  const [scrollAtTop, setScrollAtTop] = useState(true);
 
   const utils = clientApi.useUtils();
   const invalidateDownloads = { onSettled: () => void utils.widget.downloads.getJobsAndStatuses.invalidate() };
@@ -553,7 +551,6 @@ export default function DownloadClientsWidget({
         <DataTable
           style={{ pointerEvents: isEditMode ? "none" : undefined }}
           withTableBorder={false}
-          withColumnBorders
           borderRadius={0}
           highlightOnHover
           striped="odd"
@@ -593,13 +590,9 @@ export default function DownloadClientsWidget({
             },
             content: ({ record, collapse }) => <ExpandedRow item={record} collapse={collapse} />,
           }}
-          onScroll={(position) => {
-            setScrollPosition(position);
-            setScrollAtTop(position.y <= 0);
+          onScroll={() => {
             if (contextMenu) closeContextMenu();
           }}
-          onScrollToTop={() => setScrollAtTop(true)}
-          onScrollToBottom={() => setScrollAtTop(false)}
         />
       </Box>
 
@@ -619,8 +612,6 @@ export default function DownloadClientsWidget({
         itemCount={sortedData.length}
         showStats={showStats}
         toggleStats={toggleStats}
-        scrollAtTop={scrollAtTop}
-        scrollPosition={scrollPosition}
         resetColumnsToggle={resetColumnsToggle}
         resetColumnsOrder={resetColumnsOrder}
         resetColumnsWidth={resetColumnsWidth}
@@ -927,8 +918,6 @@ interface WidgetFooterProps {
   itemCount: number;
   showStats: boolean;
   toggleStats: () => void;
-  scrollAtTop: boolean;
-  scrollPosition: { x: number; y: number };
   resetColumnsToggle: () => void;
   resetColumnsOrder: () => void;
   resetColumnsWidth: () => void;
@@ -951,8 +940,6 @@ function WidgetFooter({
   itemCount,
   showStats,
   toggleStats,
-  scrollAtTop,
-  scrollPosition,
   resetColumnsToggle,
   resetColumnsOrder,
   resetColumnsWidth,
@@ -1071,14 +1058,6 @@ function WidgetFooter({
               <Menu.Item onClick={resetColumnsPinning}>{t("columns.resetPinning")}</Menu.Item>
             </Menu.Dropdown>
           </Menu>
-
-          {!scrollAtTop && (
-            <Tooltip label={t("columns.scrolled", { y: Math.round(scrollPosition.y) })}>
-              <Badge size="xs" variant="dot" color="gray" style={{ cursor: "default" }}>
-                ↕
-              </Badge>
-            </Tooltip>
-          )}
 
           <Group gap={2}>
             {clients.map(({ integration }) => (
