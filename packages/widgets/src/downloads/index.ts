@@ -93,8 +93,12 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
           validate: z.number().min(1),
           withDescription: true,
         }),
+        columnOrder: factory.text({ defaultValue: "" }),
+        columnWidths: factory.text({ defaultValue: "" }),
       }),
       {
+        columnOrder: { shouldHide: () => true },
+        columnWidths: { shouldHide: () => true },
         showCompletedUsenet: {
           shouldHide: (_, integrationKinds) =>
             !getIntegrationKindsByCategory("usenet").some((kinds) => integrationKinds.includes(kinds)),

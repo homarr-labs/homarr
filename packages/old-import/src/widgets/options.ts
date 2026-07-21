@@ -82,6 +82,8 @@ const optionMapping: OptionMapping = {
     showCompletedUsenet: () => true,
     showCompletedHttp: () => true,
     limitPerIntegration: () => undefined,
+    columnOrder: () => undefined,
+    columnWidths: () => undefined,
   },
   weather: {
     forecastDayCount: (oldOptions) => oldOptions.forecastDays,

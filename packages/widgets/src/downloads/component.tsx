@@ -3,7 +3,7 @@
 import "../widgets-common.css";
 import "./styles.css";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActionIcon,
   Avatar,
@@ -41,7 +41,7 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
-import { DataTable } from "mantine-datatable";
+import { DataTable, useDataTableColumns } from "mantine-datatable";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
@@ -116,6 +116,9 @@ export default function DownloadClientsWidget({
   isEditMode,
   integrationIds,
   options,
+  setOptions,
+  boardId,
+  itemId,
   width,
 }: WidgetComponentProps<"downloads">) {
   const allInteractAccess = useIntegrationsWithInteractAccess();
@@ -146,6 +149,24 @@ export default function DownloadClientsWidget({
   const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation(mutationOptions);
   const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation(mutationOptions);
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation(mutationOptions);
+
+  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation();
+  const persistOption = useCallback(
+    (newOptions: Partial<Record<string, string>>) => {
+      setOptions({ newOptions });
+      if (boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
+    },
+    [setOptions, boardId, itemId, saveItemOptions],
+  );
+
+  const savedOrder = useMemo<string[]>(
+    () => (options.columnOrder ? JSON.parse(options.columnOrder) as string[] : []),
+    [options.columnOrder],
+  );
+  const savedWidths = useMemo<Record<string, number>>(
+    () => (options.columnWidths ? JSON.parse(options.columnWidths) as Record<string, number> : {}),
+    [options.columnWidths],
+  );
 
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus<ExtendedDownloadClientItem>>({
     columnAccessor: options.defaultSort,
@@ -448,6 +469,51 @@ export default function DownloadClientsWidget({
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
   }, [shouldIncludeColumn, t, size, width]);
 
+  const storeKey = `downloads-${options.columns.join(",")}`;
+  const {
+    effectiveColumns,
+    columnsOrder,
+    columnsWidth,
+  } = useDataTableColumns<ExtendedDownloadClientItem>({
+    key: storeKey,
+    columns,
+  });
+
+  const initialSyncDone = useRef(false);
+  useEffect(() => {
+    if (initialSyncDone.current) return;
+    initialSyncDone.current = true;
+    if (savedOrder.length > 0) {
+      const stored = localStorage.getItem(`mantine-datatable-columns-order-${storeKey}`);
+      if (!stored) localStorage.setItem(`mantine-datatable-columns-order-${storeKey}`, JSON.stringify(savedOrder));
+    }
+    if (Object.keys(savedWidths).length > 0) {
+      const stored = localStorage.getItem(`mantine-datatable-columns-width-${storeKey}`);
+      if (!stored) localStorage.setItem(`mantine-datatable-columns-width-${storeKey}`, JSON.stringify(
+        Object.entries(savedWidths).map(([accessor, w]) => ({ accessor, width: w })),
+      ));
+    }
+  }, [storeKey, savedOrder, savedWidths]);
+
+  const prevOrder = useRef(columnsOrder);
+  const prevWidths = useRef(columnsWidth);
+  useEffect(() => {
+    const orderChanged = JSON.stringify(columnsOrder) !== JSON.stringify(prevOrder.current);
+    const widthsChanged = JSON.stringify(columnsWidth) !== JSON.stringify(prevWidths.current);
+    prevOrder.current = columnsOrder;
+    prevWidths.current = columnsWidth;
+
+    if (!orderChanged && !widthsChanged) return;
+    if (orderChanged) persistOption({ columnOrder: JSON.stringify(columnsOrder) });
+    if (widthsChanged) {
+      const widthMap: Record<string, number> = {};
+      for (const { accessor, width: w } of columnsWidth as { accessor: string; width: number }[]) {
+        if (typeof w === "number") widthMap[accessor] = w;
+      }
+      persistOption({ columnWidths: JSON.stringify(widthMap) });
+    }
+  }, [columnsOrder, columnsWidth, persistOption]);
+
   const handleContextMenu = useCallback(
     ({ record, event }: { record: ExtendedDownloadClientItem; event: React.MouseEvent }) => {
       event.preventDefault();
@@ -529,7 +595,8 @@ export default function DownloadClientsWidget({
           loaderBackgroundBlur={2}
           fz={size.fontSize}
           records={sortedData}
-          columns={columns}
+          columns={effectiveColumns}
+          storeColumnsKey={storeKey}
           textSelectionDisabled
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
@@ -539,6 +606,8 @@ export default function DownloadClientsWidget({
           className="downloads-table"
           defaultColumnProps={{
             noWrap: true,
+            draggable: true,
+            resizable: true,
             cellsStyle: () => ({ padding: `${size.cellPadding}px 8px` }),
           }}
           scrollAreaProps={{ type: "auto", scrollbarSize: 6 }}
