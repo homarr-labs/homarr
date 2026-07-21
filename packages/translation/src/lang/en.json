@@ -3099,7 +3099,8 @@
           "detailsTitle": "Current index within client"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": "Item ID"
         },
         "integration": {
           "columnTitle": "Integration"
@@ -3133,7 +3134,8 @@
         },
         "time": {
           "columnTitle": "Finish time",
-          "detailsTitle": "Time since/to completion"
+          "detailsTitle": "Time since/to completion",
+          "eta": "ETA"
         },
         "type": {
           "columnTitle": "Type",
@@ -3192,7 +3194,8 @@
         "overallProgress": "Overall queue progress",
         "totalSize": "Total queue size",
         "clients": "{count, plural, one {# client} other {# clients}}"
-      }
+      },
+      "disconnected": "(disconnected)"
     },
     "mediaReleases": {
       "name": "Media releases",

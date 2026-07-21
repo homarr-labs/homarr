@@ -300,7 +300,9 @@ export default function DownloadClientsWidget({
   const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation(mutationOptions);
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation(mutationOptions);
 
-  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation();
+  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
+    onError: () => showErrorNotification({ title: t("errors.actionFailed"), message: t("errors.actionFailedMessage") }),
+  });
   const persistOption = useCallback(
     (newOptions: Partial<Record<string, string>>) => {
       setOptions({ newOptions });
@@ -321,6 +323,9 @@ export default function DownloadClientsWidget({
     columnAccessor: options.defaultSort,
     direction: defaultSortDirection,
   });
+  useEffect(() => {
+    setSortStatus({ columnAccessor: options.defaultSort, direction: defaultSortDirection });
+  }, [options.defaultSort, defaultSortDirection]);
 
   const data = useMemo<ExtendedDownloadClientItem[]>(() => {
     return currentItems
@@ -525,7 +530,7 @@ export default function DownloadClientsWidget({
         noWrap: true,
         render: (record) => {
           if (record.time === 0) return <Text size={size.fontSize} c="dimmed">∞</Text>;
-          return <Text size={size.fontSize}>{dayjs().add(record.time).fromNow(true)}</Text>;
+          return <Text size={size.fontSize}>{dayjs().add(record.time, "milliseconds").fromNow(true)}</Text>;
         },
       },
       includeColumn("state") && {
@@ -620,24 +625,25 @@ export default function DownloadClientsWidget({
   });
 
   const lastStoreKey = useRef(storeKey);
-  const initialSyncDone = useRef(false);
+  const hydrated = useRef(false);
   useEffect(() => {
     if (lastStoreKey.current !== storeKey) {
       lastStoreKey.current = storeKey;
-      initialSyncDone.current = false;
+      hydrated.current = false;
     }
-    if (initialSyncDone.current) return;
-    initialSyncDone.current = true;
+    if (hydrated.current) return;
     if (savedOrder.length > 0) setColumnsOrder(savedOrder);
     if (Object.keys(savedWidths).length > 0) {
       setMultipleColumnWidths(Object.entries(savedWidths).map(([accessor, w]) => ({ accessor, width: w })));
     }
+    // ponytail: defer hydrated flag so the persist effect skips the restore echo
+    requestAnimationFrame(() => { hydrated.current = true; });
   }, [storeKey, savedOrder, savedWidths, setColumnsOrder, setMultipleColumnWidths]);
 
   const prevOrder = useRef(columnsOrder);
   const prevWidths = useRef(columnsWidth);
   useEffect(() => {
-    if (!initialSyncDone.current) return;
+    if (!hydrated.current) return;
     const orderChanged = JSON.stringify(columnsOrder) !== JSON.stringify(prevOrder.current);
     const widthsChanged = JSON.stringify(columnsWidth) !== JSON.stringify(prevWidths.current);
     prevOrder.current = columnsOrder;
@@ -815,7 +821,7 @@ function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): R
     lines.push({ label: t("items.upSpeed.detailsTitle"), value: formatByteRate(record.upSpeed) });
   }
   if (record.time !== 0) {
-    lines.push({ label: "ETA", value: dayjs().add(record.time, "milliseconds").fromNow() });
+    lines.push({ label: t("items.time.eta"), value: dayjs().add(record.time, "milliseconds").fromNow() });
   }
   if (record.ratio !== undefined) {
     lines.push({ label: t("items.ratio.detailsTitle"), value: record.ratio.toFixed(2) });
@@ -885,7 +891,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
             {item.sent !== undefined && <DetailPair label={t("items.sent.detailsTitle")} value={formatBytes(item.sent)} />}
             {item.added !== undefined && <DetailPair label={t("items.added.detailsTitle")} value={dayjs(item.added).format("YYYY-MM-DD HH:mm")} />}
             {categoryDisplay && <DetailPair label={t("items.category.detailsTitle")} value={categoryDisplay} />}
-            <DetailPair label="ID" value={item.id} />
+            <DetailPair label={t("items.id.detailsTitle")} value={item.id} />
           </SimpleGrid>
         </Stack>
       </Group>
@@ -1026,7 +1032,7 @@ function RowContextMenu({
             <Menu.Item
               leftSection={<IconInfoCircle size={14} />}
               onClick={() => {
-                navigator.clipboard.writeText(item.name);
+                void navigator.clipboard.writeText(item.name).catch(() => {});
                 onClose();
               }}
             >
@@ -1037,7 +1043,7 @@ function RowContextMenu({
               <Menu.Item
                 leftSection={<IconCopy size={14} />}
                 onClick={() => {
-                  navigator.clipboard.writeText(item.id);
+                  void navigator.clipboard.writeText(item.id).catch(() => {});
                   onClose();
                 }}
               >
@@ -1185,6 +1191,8 @@ function WidgetFooter({
                     return (
                       <UnstyledButton
                         key={integration.id}
+                        aria-pressed={active}
+                        aria-label={integration.name}
                         onClick={() => setClientFilter(toggleArrayItem(clientFilter, integration.id))}
                       >
                         <Badge
@@ -1211,6 +1219,8 @@ function WidgetFooter({
                     return (
                       <UnstyledButton
                         key={status}
+                        aria-pressed={active}
+                        aria-label={t(`states.${status}`)}
                         onClick={() => setStatusFilter(toggleArrayItem(statusFilter, status))}
                       >
                         <Badge size="xs" variant={variant} color={stateColorMap[status]}>
@@ -1232,6 +1242,7 @@ function WidgetFooter({
             <ActionIcon
               size="xs"
               variant={filterIconVariant}
+              aria-label={filterTooltip}
               onClick={() => {
                 if (hasActiveFilter && !filterOpen) {
                   setClientFilter([]);
@@ -1246,7 +1257,7 @@ function WidgetFooter({
           </Tooltip>
 
           <Tooltip label={statsTooltip}>
-            <ActionIcon size="xs" variant={statsIconVariant} onClick={toggleStats}>
+            <ActionIcon size="xs" variant={statsIconVariant} aria-label={statsTooltip} onClick={toggleStats}>
               <StatsIcon size={14} />
             </ActionIcon>
           </Tooltip>
@@ -1270,6 +1281,7 @@ function WidgetFooter({
                   size="xs"
                   variant="subtle"
                   color="green"
+                  aria-label={t("actions.clients.resume")}
                   disabled={integrationsStatuses.paused.length === 0}
                   onClick={() => resumeQueue({ integrationIds: integrationsStatuses.paused })}
                 >
@@ -1299,6 +1311,7 @@ function WidgetFooter({
                   size="xs"
                   variant="subtle"
                   color="red"
+                  aria-label={t("actions.clients.pause")}
                   disabled={integrationsStatuses.active.length === 0}
                   onClick={() => pauseQueue({ integrationIds: integrationsStatuses.active })}
                 >
@@ -1319,7 +1332,8 @@ function ClientIndicator({ integration }: { integration: ExtendedClientStatus["i
   const isConnected = useIntegrationConnected(integration.updatedAt, { timeout: 30000 });
 
   let tooltipLabel = integration.name;
-  if (!isConnected) tooltipLabel = `${integration.name} (disconnected)`;
+  const t = useScopedI18n("widget.downloads");
+  if (!isConnected) tooltipLabel = `${integration.name} ${t("disconnected")}`;
 
   let avatarFilter: string | undefined;
   let avatarOpacity = 1;
