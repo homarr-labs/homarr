@@ -35,7 +35,6 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
       radius="lg"
       shadow="sm"
       transitionProps={{ transition: "pop" }}
-      openDelay={350}
       disabled={disabled}
     >
       <HoverCard.Target>

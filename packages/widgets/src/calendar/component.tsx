@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { useMantineTheme } from "@mantine/core";
+import { useMantineTheme, HoverCard } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import dayjs from "dayjs";
@@ -67,84 +67,86 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   const normalizedEvents = useMemo(() => splitEvents(events), [events]);
 
   return (
-    <Calendar
-      defaultDate={new Date()}
-      onPreviousMonth={(month) => setMonth(new Date(month))}
-      onNextMonth={(month) => setMonth(new Date(month))}
-      highlightToday
-      locale={locale}
-      hideWeekdays={false}
-      date={month}
-      maxLevel="month"
-      firstDayOfWeek={firstDayOfWeek}
-      static={isEditMode}
-      className={classes.calendar}
-      w="100%"
-      h="100%"
-      ref={ref}
-      styles={{
-        calendarHeaderControl: {
-          pointerEvents: isEditMode ? "none" : undefined,
-          borderRadius: "md",
-          height: isSmall ? "1.5rem" : undefined,
-          width: isSmall ? "1.5rem" : undefined,
-        },
-        calendarHeaderLevel: {
-          pointerEvents: "none",
-          fontSize: isSmall ? "0.75rem" : undefined,
-          height: "100%",
-        },
-        levelsGroup: {
-          height: "100%",
-          padding: "md",
-        },
-        calendarHeader: {
-          maxWidth: "unset",
-          marginBottom: 0,
-        },
-        monthCell: {
-          textAlign: "center",
-          position: "relative",
-        },
-        day: {
-          borderRadius: actualItemRadius,
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-        },
-        month: {
-          height: "100%",
-        },
-        weekday: {
-          padding: 0,
-        },
-        weekdaysRow: {
-          height: 22,
-        },
-      }}
-      renderDay={(tileDate) => {
-        const eventsForDate = normalizedEvents
-          .filter((event) => dayjs(event.startDate).isSame(tileDate, "day"))
-          .filter(
-            (event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType),
-          )
-          .toSorted((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
+    <HoverCard.Group openDelay={350} closeDelay={200}>
+      <Calendar
+        defaultDate={new Date()}
+        onPreviousMonth={(month) => setMonth(new Date(month))}
+        onNextMonth={(month) => setMonth(new Date(month))}
+        highlightToday
+        locale={locale}
+        hideWeekdays={false}
+        date={month}
+        maxLevel="month"
+        firstDayOfWeek={firstDayOfWeek}
+        static={isEditMode}
+        className={classes.calendar}
+        w="100%"
+        h="100%"
+        ref={ref}
+        styles={{
+          calendarHeaderControl: {
+            pointerEvents: isEditMode ? "none" : undefined,
+            borderRadius: "md",
+            height: isSmall ? "1.5rem" : undefined,
+            width: isSmall ? "1.5rem" : undefined,
+          },
+          calendarHeaderLevel: {
+            pointerEvents: "none",
+            fontSize: isSmall ? "0.75rem" : undefined,
+            height: "100%",
+          },
+          levelsGroup: {
+            height: "100%",
+            padding: "md",
+          },
+          calendarHeader: {
+            maxWidth: "unset",
+            marginBottom: 0,
+          },
+          monthCell: {
+            textAlign: "center",
+            position: "relative",
+          },
+          day: {
+            borderRadius: actualItemRadius,
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+          },
+          month: {
+            height: "100%",
+          },
+          weekday: {
+            padding: 0,
+          },
+          weekdaysRow: {
+            height: 22,
+          },
+        }}
+        renderDay={(tileDate) => {
+          const eventsForDate = normalizedEvents
+            .filter((event) => dayjs(event.startDate).isSame(tileDate, "day"))
+            .filter(
+              (event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType),
+            )
+            .toSorted((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
 
-        return (
-          <CalendarDay
-            date={dayjs(tileDate).toDate()}
-            events={eventsForDate}
-            disabled={isEditMode || eventsForDate.length === 0}
-            rootWidth={width}
-            rootHeight={height}
-          />
-        );
-      }}
-    />
+          return (
+            <CalendarDay
+              date={dayjs(tileDate).toDate()}
+              events={eventsForDate}
+              disabled={isEditMode || eventsForDate.length === 0}
+              rootWidth={width}
+              rootHeight={height}
+            />
+          );
+        }}
+      />
+    </HoverCard.Group>
   );
 };
 
