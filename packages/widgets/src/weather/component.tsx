@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Group, HoverCard, Stack, Text } from "@mantine/core";
-import { IconArrowDownRight, IconArrowUpRight, IconDroplets, IconMapPin, IconWind } from "@tabler/icons-react";
+import { IconArrowDownRight, IconArrowUpRight, IconMapPin, IconWind } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import dayjs from "dayjs";
 
@@ -85,12 +85,6 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
                   : tCommon("unit.speed.kilometersPerHour"),
               })}
             </Text>
-          </Group>
-        )}
-        {weather.daily[0]?.humidity !== undefined && (
-          <Group className="weather-humidity-group" wrap="nowrap" gap="xs">
-            <IconDroplets size={16} />
-            <Text fz={16}>{t("dailyForecast.humidity", { humidity: weather.daily[0].humidity })}</Text>
           </Group>
         )}
         <Group className="weather-max-min-temp-group" wrap="nowrap" gap="sm">
@@ -210,7 +204,6 @@ function Forecast({ weather, options }: WeatherProps) {
               sunset={dayjs(dayWeather.sunset).format("HH:mm")}
               maxWindSpeed={dayWeather.maxWindSpeed}
               maxWindGusts={dayWeather.maxWindGusts}
-              humidity={dayWeather.humidity}
             />
           </HoverCard.Dropdown>
         </HoverCard>

@@ -18,7 +18,7 @@ const columnsList = [
   "index",
   "type",
 ];
-const sortColumns = columnsList.filter((c) => !["state", "category"].includes(c));
+const sortColumns = columnsList.filter((c) => !["state", "category", "integration"].includes(c));
 
 export const downloadsWidget: WidgetDefinition = {
   icon: IconDownload,
