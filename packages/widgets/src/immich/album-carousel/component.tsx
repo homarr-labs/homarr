@@ -11,6 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import classes from "./component.module.css";
+import { ALL_PHOTOS_ALBUM_ID } from "./constants";
 
 export default function ImmichAlbumCarouselWidget({
   integrationIds,
@@ -21,7 +22,7 @@ export default function ImmichAlbumCarouselWidget({
   const { data: album } = clientApi.widget.immich.getAlbum.useQuery(
     {
       integrationId: integrationIds[0] ?? "",
-      albumId: options.albumId || undefined,
+      albumId: options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID ? options.albumId : undefined,
     },
     { enabled: integrationIds.length > 0 },
   );

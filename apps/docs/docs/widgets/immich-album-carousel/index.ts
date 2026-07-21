@@ -10,9 +10,10 @@ export const immichAlbumCarouselWidget: WidgetDefinition = {
     items: [
       {
         name: "Album",
-        description: "Select an Immich album, or leave empty to show random photos from your full library.",
+        description:
+          "Select an Immich album or All photos. An empty selection also shows random photos from your full library.",
         values: { type: "string" },
-        defaultValue: "",
+        defaultValue: "All photos",
       },
       {
         name: "Interval in seconds",
