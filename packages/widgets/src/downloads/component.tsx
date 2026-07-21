@@ -10,10 +10,13 @@ import {
   Badge,
   Box,
   Center,
+  Divider,
   Group,
   Menu,
   Portal,
   Progress,
+  RingProgress,
+  SimpleGrid,
   Stack,
   Text,
   Tooltip,
@@ -21,7 +24,10 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
+  IconChevronDown,
+  IconChevronUp,
   IconCopy,
+  IconDatabase,
   IconDownload,
   IconFilter,
   IconFilterOff,
@@ -86,6 +92,19 @@ const progressColor = (state: ExtendedDownloadClientItem["state"], progress: num
   return "blue";
 };
 
+const rowBgAlpha: Record<ExtendedDownloadClientItem["state"], string | undefined> = {
+  failed: "rgba(255, 0, 0, 0.04)",
+  paused: "rgba(255, 200, 0, 0.03)",
+  downloading: undefined,
+  leeching: undefined,
+  seeding: undefined,
+  completed: undefined,
+  processing: undefined,
+  queued: undefined,
+  stalled: undefined,
+  unknown: undefined,
+};
+
 interface ContextMenuState {
   x: number;
   y: number;
@@ -112,6 +131,7 @@ export default function DownloadClientsWidget({
   const [clientFilter, setClientFilter] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
+  const [showStats, { toggle: toggleStats }] = useDisclosure(false);
 
   const utils = clientApi.useUtils();
   const invalidateDownloads = { onSettled: () => void utils.widget.downloads.getJobsAndStatuses.invalidate() };
@@ -253,7 +273,7 @@ export default function DownloadClientsWidget({
         title: "",
         width: 36,
         render: (record) => (
-          <Tooltip label={record.integration.name}>
+          <Tooltip label={record.integration.name} withArrow>
             <Avatar size={20} radius={0} src={getIconUrl(record.integration.kind)} />
           </Tooltip>
         ),
@@ -264,10 +284,20 @@ export default function DownloadClientsWidget({
         sortable: true,
         ellipsis: true,
         render: (record) => (
-          <Group gap={6} wrap="nowrap">
-            <Badge size="xs" variant="dot" color={stateColorMap[record.state]} style={{ flexShrink: 0 }} />
-            <Text size={size.fontSize} truncate fw={500}>{record.name}</Text>
-          </Group>
+          <Tooltip
+            label={buildHoverTooltip(record, t)}
+            multiline
+            w={280}
+            withArrow
+            position="right"
+            openDelay={400}
+            transitionProps={{ transition: "fade", duration: 150 }}
+          >
+            <Group gap={6} wrap="nowrap">
+              <Badge size="xs" variant="dot" color={stateColorMap[record.state]} style={{ flexShrink: 0 }} />
+              <Text size={size.fontSize} truncate fw={500}>{record.name}</Text>
+            </Group>
+          </Tooltip>
         ),
       },
       visibleColumns.progress && {
@@ -294,6 +324,7 @@ export default function DownloadClientsWidget({
         title: t("items.size.columnTitle"),
         sortable: true,
         width: 80,
+        noWrap: true,
         render: (record) => <Text size={size.fontSize}>{formatBytes(record.size)}</Text>,
       },
       visibleColumns.downSpeed && {
@@ -301,6 +332,7 @@ export default function DownloadClientsWidget({
         title: t("items.downSpeed.columnTitle"),
         sortable: true,
         width: 90,
+        noWrap: true,
         render: (record) => record.downSpeed ? (
           <Group gap={4} wrap="nowrap">
             <IconDownload size={12} style={{ flexShrink: 0, opacity: 0.5 }} />
@@ -313,6 +345,7 @@ export default function DownloadClientsWidget({
         title: t("items.upSpeed.columnTitle"),
         sortable: true,
         width: 90,
+        noWrap: true,
         render: (record) => record.upSpeed ? (
           <Group gap={4} wrap="nowrap">
             <IconUpload size={12} style={{ flexShrink: 0, opacity: 0.5 }} />
@@ -325,6 +358,7 @@ export default function DownloadClientsWidget({
         title: t("items.time.columnTitle"),
         sortable: true,
         width: 100,
+        noWrap: true,
         render: (record) => {
           if (record.time === 0) return <Text size={size.fontSize} c="dimmed">∞</Text>;
           return <Text size={size.fontSize}>{dayjs().add(record.time).fromNow(true)}</Text>;
@@ -345,6 +379,7 @@ export default function DownloadClientsWidget({
         title: t("items.added.columnTitle"),
         sortable: true,
         width: 90,
+        noWrap: true,
         render: (record) => <Text size={size.fontSize}>{record.added ? dayjs(record.added).fromNow() : "—"}</Text>,
       },
       visibleColumns.ratio && {
@@ -361,6 +396,7 @@ export default function DownloadClientsWidget({
         title: t("items.received.columnTitle"),
         sortable: true,
         width: 80,
+        noWrap: true,
         render: (record) => <Text size={size.fontSize}>{formatBytes(record.received)}</Text>,
       },
       visibleColumns.sent && {
@@ -368,12 +404,14 @@ export default function DownloadClientsWidget({
         title: t("items.sent.columnTitle"),
         sortable: true,
         width: 80,
+        noWrap: true,
         render: (record) => record.sent ? <Text size={size.fontSize}>{formatBytes(record.sent)}</Text> : null,
       },
       visibleColumns.category && {
         accessor: "category",
         title: t("items.category.columnTitle"),
         width: 80,
+        ellipsis: true,
         render: (record) => record.category ? (
           <Text size={size.fontSize} truncate>
             {Array.isArray(record.category) ? record.category.join(", ") : record.category}
@@ -408,7 +446,6 @@ export default function DownloadClientsWidget({
 
   const closeContextMenu = useCallback(() => setContextMenu(null), []);
 
-
   const totalSpeed = clients.reduce((sum, c) => sum + (c.status?.rates.down ?? 0), 0);
   const totalUpSpeed = clients.reduce((sum, c) => sum + (c.status?.rates.up ?? 0), 0);
   const globalRatio = useMemo(() => {
@@ -425,6 +462,18 @@ export default function DownloadClientsWidget({
     return [...new Set(data.map(({ state }) => state))];
   }, [data]);
 
+  const queueStats = useMemo(() => {
+    const stateCounts: Record<string, number> = {};
+    let totalSize = 0;
+    let completedSize = 0;
+    for (const item of data) {
+      stateCounts[item.state] = (stateCounts[item.state] ?? 0) + 1;
+      totalSize += item.size;
+      completedSize += item.received ?? item.size * item.progress;
+    }
+    return { stateCounts, totalSize, completedSize, totalItems: data.length };
+  }, [data]);
+
   if (options.columns.length === 0) {
     return (
       <Center h="100%">
@@ -435,12 +484,27 @@ export default function DownloadClientsWidget({
 
   return (
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
+      {showStats && (
+        <GlobalStatsBar
+          queueStats={queueStats}
+          totalSpeed={totalSpeed}
+          totalUpSpeed={totalUpSpeed}
+          globalRatio={globalRatio}
+          hasTorrents={hasTorrents}
+          clients={clients}
+        />
+      )}
+
       <Box style={{ flex: 1, minHeight: 0, position: "relative" }}>
         <DataTable
           style={{ pointerEvents: isEditMode ? "none" : undefined }}
           withTableBorder={false}
           borderRadius={0}
           highlightOnHover
+          striped="odd"
+          stripedColor={{ dark: "dark.7", light: "gray.0" }}
+          highlightOnHoverColor={{ dark: "dark.5", light: "gray.1" }}
+          verticalAlign="center"
           fz={size.fontSize}
           records={sortedData}
           columns={columns}
@@ -450,10 +514,23 @@ export default function DownloadClientsWidget({
           idAccessor="id"
           height="100%"
           className="downloads-table"
+          defaultColumnProps={{
+            noWrap: true,
+            cellsStyle: () => ({ padding: `${size.cellPadding}px 8px` }),
+          }}
           onRowContextMenu={isEditMode ? undefined : handleContextMenu}
+          rowBackgroundColor={(record) => rowBgAlpha[record.state] as string | undefined}
           rowExpansion={{
             allowMultiple: true,
-            content: ({ record }) => <ExpandedRow item={record} />,
+            collapseProps: {
+              transitionDuration: 200,
+              animateOpacity: true,
+              transitionTimingFunction: "ease-out",
+            },
+            content: ({ record, collapse }) => <ExpandedRow item={record} collapse={collapse} />,
+          }}
+          onScroll={() => {
+            if (contextMenu) closeContextMenu();
           }}
         />
       </Box>
@@ -472,6 +549,8 @@ export default function DownloadClientsWidget({
         pauseQueue={mutatePauseQueue}
         resumeQueue={mutateResumeQueue}
         itemCount={sortedData.length}
+        showStats={showStats}
+        toggleStats={toggleStats}
       />
 
       {contextMenu && (
@@ -485,47 +564,186 @@ export default function DownloadClientsWidget({
   );
 }
 
-function ExpandedRow({ item }: { item: ExtendedDownloadClientItem }) {
-  const t = useScopedI18n("widget.downloads");
+function buildHoverTooltip(
+  record: ExtendedDownloadClientItem,
+  t: ReturnType<typeof useScopedI18n<"widget.downloads">>,
+): React.ReactNode {
+  const lines: { label: string; value: string }[] = [
+    { label: t("items.size.detailsTitle"), value: `${formatBytes(record.received)} / ${formatBytes(record.size)}` },
+    { label: t("items.state.detailsTitle"), value: t(`states.${record.state}`) },
+  ];
+
+  if (record.downSpeed) {
+    lines.push({ label: t("items.downSpeed.detailsTitle"), value: formatByteRate(record.downSpeed) });
+  }
+  if (record.upSpeed) {
+    lines.push({ label: t("items.upSpeed.detailsTitle"), value: formatByteRate(record.upSpeed) });
+  }
+  if (record.time !== 0) {
+    lines.push({ label: "ETA", value: dayjs().add(record.time, "milliseconds").fromNow() });
+  }
+  if (record.ratio !== undefined) {
+    lines.push({ label: t("items.ratio.detailsTitle"), value: record.ratio.toFixed(2) });
+  }
+  if (record.category) {
+    lines.push({
+      label: t("items.category.detailsTitle"),
+      value: Array.isArray(record.category) ? record.category.join(", ") : record.category,
+    });
+  }
 
   return (
-    <Box px="sm" py="xs" style={{ borderBottom: "1px solid var(--mantine-color-default-border)" }}>
-      <Group gap="xl" wrap="wrap">
-        <Group gap="xs">
-          <Avatar size={20} radius={0} src={getIconUrl(item.integration.kind)} />
-          <Text size="xs" fw={500}>{item.integration.name}</Text>
-          <Text size="xs" c="dimmed">({item.integration.kind})</Text>
+    <Stack gap={2}>
+      <Text size="xs" fw={600} style={{ wordBreak: "break-all" }}>{record.name}</Text>
+      <Divider my={2} />
+      {lines.map(({ label, value }) => (
+        <Group key={label} gap={4} justify="space-between">
+          <Text size="xs" c="dimmed">{label}</Text>
+          <Text size="xs" fw={500}>{value}</Text>
         </Group>
+      ))}
+    </Stack>
+  );
+}
 
-        <DetailPair label={t("items.size.detailsTitle")} value={formatBytes(item.size)} />
-        <DetailPair label={t("items.received.detailsTitle")} value={formatBytes(item.received)} />
-        {item.sent !== undefined && <DetailPair label={t("items.sent.detailsTitle")} value={formatBytes(item.sent)} />}
-        {item.downSpeed !== undefined && <DetailPair label={t("items.downSpeed.detailsTitle")} value={formatByteRate(item.downSpeed)} />}
-        {item.upSpeed !== undefined && <DetailPair label={t("items.upSpeed.detailsTitle")} value={formatByteRate(item.upSpeed)} />}
-        {item.ratio !== undefined && <DetailPair label={t("items.ratio.detailsTitle")} value={item.ratio.toFixed(2)} />}
-        <DetailPair label={t("items.state.detailsTitle")} value={t(`states.${item.state}`)} />
-        <DetailPair
-          label={t("items.time.detailsTitle")}
-          value={item.time !== 0 ? dayjs().add(item.time, "milliseconds").fromNow() : "∞"}
+function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; collapse: () => void }) {
+  const t = useScopedI18n("widget.downloads");
+
+  const progressPercent = Math.floor(item.progress * 100);
+
+  return (
+    <Box
+      px="sm"
+      py="xs"
+      style={{ borderBottom: "1px solid var(--mantine-color-default-border)", cursor: "pointer" }}
+      onClick={collapse}
+    >
+      <Group gap="md" align="flex-start" wrap="nowrap">
+        <RingProgress
+          size={52}
+          thickness={5}
+          roundCaps
+          sections={[{ value: progressPercent, color: progressColor(item.state, item.progress) }]}
+          label={<Text size="xs" ta="center" fw={700}>{`${progressPercent}%`}</Text>}
         />
-        {item.added !== undefined && <DetailPair label={t("items.added.detailsTitle")} value={dayjs(item.added).format("YYYY-MM-DD HH:mm")} />}
-        {item.category && (
-          <DetailPair
-            label={t("items.category.detailsTitle")}
-            value={Array.isArray(item.category) ? item.category.join(", ") : item.category}
-          />
-        )}
+
+        <Stack gap={4} style={{ flex: 1 }}>
+          <Group gap="xs" wrap="nowrap">
+            <Avatar size={16} radius={0} src={getIconUrl(item.integration.kind)} />
+            <Text size="xs" fw={600} truncate>{item.name}</Text>
+            <Badge size="xs" variant="light" color={stateColorMap[item.state]} ml="auto" style={{ flexShrink: 0 }}>
+              {t(`states.${item.state}`)}
+            </Badge>
+          </Group>
+
+          <SimpleGrid cols={3} spacing={4} verticalSpacing={2}>
+            <DetailPair label={t("items.size.detailsTitle")} value={`${formatBytes(item.received)} / ${formatBytes(item.size)}`} />
+            {item.downSpeed !== undefined && item.downSpeed > 0 && (
+              <DetailPair label={t("items.downSpeed.detailsTitle")} value={formatByteRate(item.downSpeed)} icon={<IconDownload size={10} />} color="blue" />
+            )}
+            {item.upSpeed !== undefined && item.upSpeed > 0 && (
+              <DetailPair label={t("items.upSpeed.detailsTitle")} value={formatByteRate(item.upSpeed)} icon={<IconUpload size={10} />} color="green" />
+            )}
+            {item.ratio !== undefined && <DetailPair label={t("items.ratio.detailsTitle")} value={item.ratio.toFixed(2)} />}
+            <DetailPair
+              label={t("items.time.detailsTitle")}
+              value={item.time !== 0 ? dayjs().add(item.time, "milliseconds").fromNow() : "∞"}
+            />
+            {item.sent !== undefined && <DetailPair label={t("items.sent.detailsTitle")} value={formatBytes(item.sent)} />}
+            {item.added !== undefined && <DetailPair label={t("items.added.detailsTitle")} value={dayjs(item.added).format("YYYY-MM-DD HH:mm")} />}
+            {item.category && (
+              <DetailPair
+                label={t("items.category.detailsTitle")}
+                value={Array.isArray(item.category) ? item.category.join(", ") : item.category}
+              />
+            )}
+            <DetailPair label="ID" value={item.id} />
+          </SimpleGrid>
+        </Stack>
       </Group>
     </Box>
   );
 }
 
-function DetailPair({ label, value }: { label: string; value: string }) {
+function DetailPair({ label, value, icon, color }: { label: string; value: string; icon?: React.ReactNode; color?: string }) {
   return (
-    <Group gap={4}>
-      <Text size="xs" c="dimmed">{label}:</Text>
-      <Text size="xs" fw={500}>{value}</Text>
+    <Group gap={4} wrap="nowrap">
+      <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap", fontSize: 10 }}>{label}:</Text>
+      <Group gap={2} wrap="nowrap">
+        {icon}
+        <Text size="xs" fw={500} c={color} truncate style={{ fontSize: 10 }}>{value}</Text>
+      </Group>
     </Group>
+  );
+}
+
+function GlobalStatsBar({
+  queueStats,
+  totalSpeed,
+  totalUpSpeed,
+  globalRatio,
+  hasTorrents,
+  clients,
+}: {
+  queueStats: { stateCounts: Record<string, number>; totalSize: number; completedSize: number; totalItems: number };
+  totalSpeed: number;
+  totalUpSpeed: number;
+  globalRatio: number;
+  hasTorrents: boolean;
+  clients: ExtendedClientStatus[];
+}) {
+  const t = useScopedI18n("widget.downloads");
+  const overallProgress = queueStats.totalSize > 0 ? queueStats.completedSize / queueStats.totalSize : 0;
+
+  return (
+    <Box px={8} py={6} style={{ borderBottom: "1px solid var(--mantine-color-default-border)" }}>
+      <Group justify="space-between" gap="xs">
+        <Group gap="md">
+          <Tooltip label={t("stats.overallProgress")} withArrow>
+            <Group gap={4}>
+              <Progress value={Math.floor(overallProgress * 100)} color="blue" size="xs" w={40} />
+              <Text size="xs" fw={600}>{`${Math.floor(overallProgress * 100)}%`}</Text>
+            </Group>
+          </Tooltip>
+
+          <Tooltip label={t("stats.totalSize")} withArrow>
+            <Group gap={4}>
+              <IconDatabase size={12} style={{ opacity: 0.6 }} />
+              <Text size="xs">{`${formatBytes(queueStats.completedSize)} / ${formatBytes(queueStats.totalSize)}`}</Text>
+            </Group>
+          </Tooltip>
+        </Group>
+
+        <Group gap="md">
+          <Group gap={4}>
+            <IconDownload size={12} style={{ opacity: 0.6 }} />
+            <Text size="xs" fw={600} c="blue">{formatByteRate(totalSpeed)}</Text>
+          </Group>
+          {totalUpSpeed > 0 && (
+            <Group gap={4}>
+              <IconUpload size={12} style={{ opacity: 0.6 }} />
+              <Text size="xs" fw={600} c="green">{formatByteRate(totalUpSpeed)}</Text>
+            </Group>
+          )}
+          {hasTorrents && globalRatio > 0 && (
+            <Text size="xs" c="dimmed">{`${t("globalRatio")}: ${globalRatio.toFixed(2)}`}</Text>
+          )}
+        </Group>
+
+        <Group gap={6}>
+          {Object.entries(queueStats.stateCounts).map(([state, count]) => (
+            <Tooltip key={state} label={t(`states.${state as ExtendedDownloadClientItem["state"]}`)} withArrow>
+              <Badge size="xs" variant="dot" color={stateColorMap[state as ExtendedDownloadClientItem["state"]]}>
+                {count}
+              </Badge>
+            </Tooltip>
+          ))}
+          <Text size="xs" c="dimmed">
+            {t("stats.clients", { count: clients.length })}
+          </Text>
+        </Group>
+      </Group>
+    </Box>
   );
 }
 
@@ -537,7 +755,7 @@ function RowContextMenu({ state, onClose, t }: {
   const { item } = state;
   const isPaused = item.state === "paused";
   const hasActions = !!item.actions;
-  const [showDeleteConfirm, { open: openDelete, close: closeDelete }] = useDisclosure(false);
+  const [showDeleteConfirm, { open: openDelete }] = useDisclosure(false);
 
   return (
     <Portal>
@@ -633,6 +851,8 @@ interface WidgetFooterProps {
   pauseQueue: (args: { integrationIds: string[] }) => void;
   resumeQueue: (args: { integrationIds: string[] }) => void;
   itemCount: number;
+  showStats: boolean;
+  toggleStats: () => void;
 }
 
 function WidgetFooter({
@@ -649,6 +869,8 @@ function WidgetFooter({
   pauseQueue,
   resumeQueue,
   itemCount,
+  showStats,
+  toggleStats,
 }: WidgetFooterProps) {
   const t = useScopedI18n("widget.downloads");
   const [filterOpen, { toggle: toggleFilter }] = useDisclosure(false);
@@ -734,6 +956,16 @@ function WidgetFooter({
               }}
             >
               {hasActiveFilter ? <IconFilterOff size={14} /> : <IconFilter size={14} />}
+            </ActionIcon>
+          </Tooltip>
+
+          <Tooltip label={showStats ? t("stats.hide") : t("stats.show")}>
+            <ActionIcon
+              size="xs"
+              variant={showStats ? "filled" : "subtle"}
+              onClick={toggleStats}
+            >
+              {showStats ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
             </ActionIcon>
           </Tooltip>
 

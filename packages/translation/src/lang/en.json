@@ -3182,6 +3182,13 @@
       },
       "footer": {
         "filter": "Filter downloads"
+      },
+      "stats": {
+        "show": "Show global stats",
+        "hide": "Hide global stats",
+        "overallProgress": "Overall queue progress",
+        "totalSize": "Total queue size",
+        "clients": "{count, plural, one {# client} other {# clients}}"
       }
     },
     "mediaReleases": {
