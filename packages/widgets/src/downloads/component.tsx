@@ -495,7 +495,11 @@ export default function DownloadClientsWidget({
               <Box
                 w={8}
                 h={8}
-                style={{ borderRadius: "50%", backgroundColor: `var(--mantine-color-${stateColorMap[record.state]}-filled)`, flexShrink: 0 }}
+                style={{
+                  borderRadius: "50%",
+                  backgroundColor: `var(--mantine-color-${stateColorMap[record.state]}-filled)`,
+                  flexShrink: 0,
+                }}
               />
               <Text size={size.fontSize} truncate fw={500}>
                 {record.name}
