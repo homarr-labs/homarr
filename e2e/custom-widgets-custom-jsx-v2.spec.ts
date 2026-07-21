@@ -26,6 +26,7 @@ describe("Custom JSX v2 workbench", () => {
 
     try {
       await page.goto(`${baseUrl}/auth/login`);
+      await page.waitForLoadState("networkidle");
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
       await page.locator("button[type='submit']").click();
