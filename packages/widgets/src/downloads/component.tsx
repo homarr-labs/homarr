@@ -26,7 +26,6 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   IconChevronDown,
   IconChevronUp,
-  IconColumns,
   IconCopy,
   IconDatabase,
   IconDownload,
@@ -42,7 +41,7 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
-import { DataTable, useDataTableColumns } from "mantine-datatable";
+import { DataTable } from "mantine-datatable";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
@@ -86,8 +85,6 @@ const stateColorMap: Record<ExtendedDownloadClientItem["state"], string> = {
   failed: "red",
   unknown: "gray",
 };
-
-const DOWNLOADS_TABLE_STORE_KEY = "homarr-downloads-datatable";
 
 const progressColor = (state: ExtendedDownloadClientItem["state"], progress: number): string => {
   if (state === "paused") return "yellow";
@@ -264,22 +261,12 @@ export default function DownloadClientsWidget({
     [optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, size],
   );
 
-  const getColumnMeta = useCallback(
-    (accessor: string) => ({
-      toggleable: false as const,
-      draggable: true as const,
-      resizable: accessor !== "integration" && accessor !== "index",
-    }),
-    [],
-  );
-
   const columns = useMemo((): DataTableColumn<ExtendedDownloadClientItem>[] => {
     const cols: (DataTableColumn<ExtendedDownloadClientItem> | false)[] = [
       shouldIncludeColumn("integration") && {
         accessor: "integration",
         title: "",
         width: 36,
-        ...getColumnMeta("integration"),
         render: (record) => (
           <Tooltip label={record.integration.name} withArrow>
             <Avatar size={20} radius={0} src={getIconUrl(record.integration.kind)} />
@@ -292,7 +279,6 @@ export default function DownloadClientsWidget({
         sortable: true,
         ellipsis: true,
         width: "50%",
-        ...getColumnMeta("name"),
         render: (record) => (
           <Tooltip
             label={buildHoverTooltip(record, t)}
@@ -316,7 +302,6 @@ export default function DownloadClientsWidget({
         title: t("items.progress.columnTitle"),
         sortable: true,
         width: width < 400 ? 80 : 120,
-        ...getColumnMeta("progress"),
         render: (record) => {
           const pct = Math.floor(record.progress * 100);
           const tooltipLabel = [
@@ -347,7 +332,6 @@ export default function DownloadClientsWidget({
         sortable: true,
         width: 80,
         noWrap: true,
-        ...getColumnMeta("size"),
         render: (record) => <Text size={size.fontSize}>{formatBytes(record.size)}</Text>,
       },
       shouldIncludeColumn("downSpeed") && {
@@ -356,7 +340,6 @@ export default function DownloadClientsWidget({
         sortable: true,
         width: 90,
         noWrap: true,
-        ...getColumnMeta("downSpeed"),
         render: (record) => record.downSpeed ? (
           <Group gap={4} wrap="nowrap">
             <IconDownload size={12} style={{ flexShrink: 0, opacity: 0.5 }} />
@@ -370,7 +353,6 @@ export default function DownloadClientsWidget({
         sortable: true,
         width: 90,
         noWrap: true,
-        ...getColumnMeta("upSpeed"),
         render: (record) => record.upSpeed ? (
           <Group gap={4} wrap="nowrap">
             <IconUpload size={12} style={{ flexShrink: 0, opacity: 0.5 }} />
@@ -384,7 +366,6 @@ export default function DownloadClientsWidget({
         sortable: true,
         width: 100,
         noWrap: true,
-        ...getColumnMeta("time"),
         render: (record) => {
           if (record.time === 0) return <Text size={size.fontSize} c="dimmed">∞</Text>;
           return <Text size={size.fontSize}>{dayjs().add(record.time).fromNow(true)}</Text>;
@@ -394,7 +375,6 @@ export default function DownloadClientsWidget({
         accessor: "state",
         title: t("items.state.columnTitle"),
         width: 90,
-        ...getColumnMeta("state"),
         render: (record) => (
           <Badge size="xs" variant="light" color={stateColorMap[record.state]}>
             {t(`states.${record.state}`)}
@@ -407,7 +387,6 @@ export default function DownloadClientsWidget({
         sortable: true,
         width: 90,
         noWrap: true,
-        ...getColumnMeta("added"),
         render: (record) => <Text size={size.fontSize}>{record.added ? dayjs(record.added).fromNow() : "—"}</Text>,
       },
       shouldIncludeColumn("ratio") && {
@@ -415,7 +394,6 @@ export default function DownloadClientsWidget({
         title: t("items.ratio.columnTitle"),
         sortable: true,
         width: 60,
-        ...getColumnMeta("ratio"),
         render: (record) => record.ratio !== undefined ? (
           <Text size={size.fontSize}>{record.ratio.toFixed(record.ratio >= 100 ? 0 : record.ratio >= 10 ? 1 : 2)}</Text>
         ) : null,
@@ -426,7 +404,6 @@ export default function DownloadClientsWidget({
         sortable: true,
         width: 80,
         noWrap: true,
-        ...getColumnMeta("received"),
         render: (record) => <Text size={size.fontSize}>{formatBytes(record.received)}</Text>,
       },
       shouldIncludeColumn("sent") && {
@@ -435,7 +412,6 @@ export default function DownloadClientsWidget({
         sortable: true,
         width: 80,
         noWrap: true,
-        ...getColumnMeta("sent"),
         render: (record) => record.sent ? <Text size={size.fontSize}>{formatBytes(record.sent)}</Text> : null,
       },
       shouldIncludeColumn("category") && {
@@ -443,7 +419,6 @@ export default function DownloadClientsWidget({
         title: t("items.category.columnTitle"),
         width: 80,
         ellipsis: true,
-        ...getColumnMeta("category"),
         render: (record) => record.category ? (
           <Text size={size.fontSize} truncate>
             {Array.isArray(record.category) ? record.category.join(", ") : record.category}
@@ -455,7 +430,6 @@ export default function DownloadClientsWidget({
         title: t("items.index.columnTitle"),
         sortable: true,
         width: 40,
-        ...getColumnMeta("index"),
         render: (record) => <Text size={size.fontSize}>{record.index}</Text>,
       },
       shouldIncludeColumn("type") && {
@@ -463,21 +437,11 @@ export default function DownloadClientsWidget({
         title: t("items.type.columnTitle"),
         sortable: true,
         width: 70,
-        ...getColumnMeta("type"),
         render: (record) => <Text size={size.fontSize} tt="capitalize">{record.type}</Text>,
       },
     ];
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
-  }, [shouldIncludeColumn, getColumnMeta, t, size, width]);
-
-  const {
-    effectiveColumns,
-    resetColumnsOrder,
-    resetColumnsWidth,
-  } = useDataTableColumns<ExtendedDownloadClientItem>({
-    key: DOWNLOADS_TABLE_STORE_KEY,
-    columns,
-  });
+  }, [shouldIncludeColumn, t, size, width]);
 
   const handleContextMenu = useCallback(
     ({ record, event }: { record: ExtendedDownloadClientItem; event: React.MouseEvent }) => {
@@ -552,8 +516,7 @@ export default function DownloadClientsWidget({
           loaderBackgroundBlur={2}
           fz={size.fontSize}
           records={sortedData}
-          columns={effectiveColumns}
-          storeColumnsKey={DOWNLOADS_TABLE_STORE_KEY}
+          columns={columns}
           textSelectionDisabled
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
@@ -601,8 +564,6 @@ export default function DownloadClientsWidget({
         itemCount={sortedData.length}
         showStats={showStats}
         toggleStats={toggleStats}
-        resetColumnsOrder={resetColumnsOrder}
-        resetColumnsWidth={resetColumnsWidth}
       />
 
       {contextMenu && (
@@ -821,7 +782,7 @@ function RowContextMenu({ state, onClose, t }: {
         onClick={onClose}
         onContextMenu={(e) => { e.preventDefault(); onClose(); }}
       >
-        <Menu opened shadow="md" position="bottom-start" withinPortal={false} onClose={onClose}>
+        <Menu opened shadow="md" position="bottom-start" withinPortal={false} onClose={onClose} closeOnItemClick={false}>
           <Menu.Target>
             <Box pos="fixed" style={{ left: state.x, top: state.y, width: 1, height: 1 }} />
           </Menu.Target>
@@ -905,8 +866,6 @@ interface WidgetFooterProps {
   itemCount: number;
   showStats: boolean;
   toggleStats: () => void;
-  resetColumnsOrder: () => void;
-  resetColumnsWidth: () => void;
 }
 
 function WidgetFooter({
@@ -925,8 +884,6 @@ function WidgetFooter({
   itemCount,
   showStats,
   toggleStats,
-  resetColumnsOrder,
-  resetColumnsWidth,
 }: WidgetFooterProps) {
   const t = useScopedI18n("widget.downloads");
   const [filterOpen, { toggle: toggleFilter }] = useDisclosure(false);
@@ -1024,21 +981,6 @@ function WidgetFooter({
               {showStats ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
             </ActionIcon>
           </Tooltip>
-
-          <Menu position="top-start" withinPortal shadow="md">
-            <Menu.Target>
-              <Tooltip label={t("columns.settings")}>
-                <ActionIcon size="xs" variant="subtle">
-                  <IconColumns size={14} />
-                </ActionIcon>
-              </Tooltip>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>{t("columns.settings")}</Menu.Label>
-              <Menu.Item onClick={resetColumnsOrder}>{t("columns.resetOrder")}</Menu.Item>
-              <Menu.Item onClick={resetColumnsWidth}>{t("columns.resetWidth")}</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
 
           <Group gap={2}>
             {clients.map(({ integration }) => (
