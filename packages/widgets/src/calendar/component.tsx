@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { useMantineTheme, HoverCard } from "@mantine/core";
+import { useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import dayjs from "dayjs";
@@ -67,9 +67,8 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   const normalizedEvents = useMemo(() => splitEvents(events), [events]);
 
   return (
-    <HoverCard.Group openDelay={350} closeDelay={200}>
-      <Calendar
-        defaultDate={new Date()}
+    <Calendar
+      defaultDate={new Date()}
         onPreviousMonth={(month) => setMonth(new Date(month))}
         onNextMonth={(month) => setMonth(new Date(month))}
         highlightToday
@@ -145,8 +144,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
             />
           );
         }}
-      />
-    </HoverCard.Group>
+    />
   );
 };
 

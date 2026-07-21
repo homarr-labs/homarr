@@ -1,5 +1,4 @@
 import { Box, Container, Flex, HoverCard, Text, useMantineTheme } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
@@ -15,7 +14,6 @@ interface CalendarDayProps {
 }
 
 export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: CalendarDayProps) => {
-  const { ref, height } = useElementSize();
   const board = useRequiredBoard();
   const mantineTheme = useMantineTheme();
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
@@ -24,47 +22,43 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
   const shouldScaleDown = minAxisSize < 350;
   const isSmall = rootHeight < 256;
 
-  const isTooSmallForIndicators = height < 30;
-
   return (
-    <div ref={ref} style={{ width: "100%", height: "100%" }}>
-      <HoverCard
-        position="bottom"
-        withArrow
-        withinPortal
-        radius="lg"
-        shadow="sm"
-        transitionProps={{ transition: "pop" }}
-        openDelay={350}
-        closeDelay={200}
-        disabled={disabled}
-      >
-        <HoverCard.Target>
-          <Container
-            h="100%"
-            w="100%"
-            p={0}
-            pt={isSmall ? 0 : 10}
-            pb={isSmall ? 0 : 10}
-            m={0}
-            pos="relative"
-            style={{
-              alignContent: "center",
-              borderRadius: actualItemRadius,
-              cursor: disabled ? "default" : "pointer",
-            }}
-          >
-            <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
-              {date.getDate()}
-            </Text>
-            {!isTooSmallForIndicators && <NotificationIndicator events={events} isSmall={isSmall} />}
-          </Container>
-        </HoverCard.Target>
-        <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
-          <CalendarEventList events={events} />
-        </HoverCard.Dropdown>
-      </HoverCard>
-    </div>
+    <HoverCard
+      position="bottom"
+      withArrow
+      withinPortal
+      radius="lg"
+      shadow="sm"
+      transitionProps={{ transition: "pop" }}
+      openDelay={350}
+      closeDelay={400}
+      disabled={disabled}
+    >
+      <HoverCard.Target>
+        <Container
+          h="100%"
+          w="100%"
+          p={0}
+          pt={isSmall ? 0 : 10}
+          pb={isSmall ? 0 : 10}
+          m={0}
+          pos="relative"
+          style={{
+            alignContent: "center",
+            borderRadius: actualItemRadius,
+            cursor: disabled ? "default" : "pointer",
+          }}
+        >
+          <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
+            {date.getDate()}
+          </Text>
+          <NotificationIndicator events={events} isSmall={isSmall} />
+        </Container>
+      </HoverCard.Target>
+      <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
+        <CalendarEventList events={events} />
+      </HoverCard.Dropdown>
+    </HoverCard>
   );
 };
 
