@@ -124,7 +124,7 @@ export default function DownloadClientsWidget({
     integrationIds.includes(id) ? [id] : [],
   );
 
-  const { data: currentItems = [] } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
+  const { data: currentItems = [], isFetching } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
     integrationIds,
     limitPerIntegration: options.limitPerIntegration,
   });
@@ -326,19 +326,29 @@ export default function DownloadClientsWidget({
         sortable: true,
         width: width < 400 ? 80 : 120,
         ...getColumnMeta("progress"),
-        render: (record) => (
-          <Group gap={4} wrap="nowrap" style={{ flex: 1 }}>
-            <Text size="xs" fw={500} w={36} ta="right" style={{ flexShrink: 0 }}>
-              {`${Math.floor(record.progress * 100)}%`}
-            </Text>
-            <Progress
-              value={Math.floor(record.progress * 100)}
-              color={progressColor(record.state, record.progress)}
-              size="sm"
-              style={{ flex: 1 }}
-            />
-          </Group>
-        ),
+        render: (record) => {
+          const pct = Math.floor(record.progress * 100);
+          const tooltipLabel = [
+            `${formatBytes(record.received)} / ${formatBytes(record.size)}`,
+            record.downSpeed ? `↓ ${formatByteRate(record.downSpeed)}` : null,
+            record.time !== 0 ? `ETA: ${dayjs().add(record.time, "milliseconds").fromNow(true)}` : null,
+          ].filter(Boolean).join(" · ");
+          return (
+            <Tooltip label={tooltipLabel} withArrow openDelay={300} position="top">
+              <Group gap={4} wrap="nowrap" style={{ flex: 1 }}>
+                <Text size="xs" fw={500} w={36} ta="right" style={{ flexShrink: 0 }}>
+                  {`${pct}%`}
+                </Text>
+                <Progress
+                  value={pct}
+                  color={progressColor(record.state, record.progress)}
+                  size="sm"
+                  style={{ flex: 1 }}
+                />
+              </Group>
+            </Tooltip>
+          );
+        },
       },
       shouldIncludeColumn("size") && {
         accessor: "size",
@@ -550,6 +560,8 @@ export default function DownloadClientsWidget({
           stripedColor={{ dark: "dark.7", light: "gray.0" }}
           highlightOnHoverColor={{ dark: "dark.5", light: "gray.1" }}
           verticalAlign="center"
+          fetching={isFetching && currentItems.length === 0}
+          loaderBackgroundBlur={2}
           fz={size.fontSize}
           records={sortedData}
           columns={effectiveColumns}
