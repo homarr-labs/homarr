@@ -7,7 +7,7 @@ success_criteria:
   - "Leverage all mantine-datatable features: row expansion, column toggling, custom row styling, striped rows, scroll area tracking, pinned columns, and context menus"
   - "Add hover tooltips on rows showing additional stats (size, speed, ETA, ratio, category)"
   - "Implement click-to-expand row details with comprehensive download info"
-  - "Add toggleable global stats bar showing total speeds, ratios, queue counts, and disk usage"
+  - "Add toggleable global stats bar showing total speeds, ratios, queue counts, and queue size (disk usage not available from integration API)"
   - "Use every relevant DataTable prop from the mantine-datatable docs"
   - "Typecheck passes with pnpm turbo typecheck --filter=@homarr/widgets"
   - "No regressions in existing functionality (context menu, sorting, filtering still work)"
