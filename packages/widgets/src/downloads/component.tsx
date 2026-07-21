@@ -284,7 +284,6 @@ export default function DownloadClientsWidget({
         title: t("items.name.columnTitle"),
         sortable: true,
         ellipsis: true,
-        width: "50%",
         render: (record) => (
           <Tooltip
             label={buildHoverTooltip(record, t)}

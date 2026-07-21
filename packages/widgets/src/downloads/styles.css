@@ -11,6 +11,10 @@
   background-color: transparent !important;
 }
 
+.downloads-table .mantine-datatable-table {
+  table-layout: fixed;
+}
+
 .downloads-table .mantine-datatable-table tr {
   background-color: transparent;
 }
