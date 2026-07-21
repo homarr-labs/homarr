@@ -18,7 +18,8 @@ import { AppAccessControl } from "./app/app-access-control";
 const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
 export const appRouter = createTRPCRouter({
-  getPaginated: protectedProcedure
+  getPaginated: permissionRequiredProcedure
+    .requiresPermission("board-modify-all")
     .input(paginatedSchema)
     .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
     .meta({

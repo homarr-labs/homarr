@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
 import { z } from "zod/v4";
@@ -32,6 +32,9 @@ export default async function AppsPage(props: AppsPageProps) {
 
   if (!session) {
     redirect("/auth/login");
+  }
+  if (!session.user.permissions.includes("board-modify-all")) {
+    notFound();
   }
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
