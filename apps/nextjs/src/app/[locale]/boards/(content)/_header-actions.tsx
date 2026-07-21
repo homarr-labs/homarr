@@ -190,10 +190,10 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const toggle = useCallback(() => {
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
-      return saveBoard(board);
+      return saveBoard(utils.board.getBoardByName.getData({ name: board.name }) ?? board);
     }
     open();
-  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
+  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges, utils.board.getBoardByName]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
