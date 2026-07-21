@@ -27,40 +27,44 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
   const isTooSmallForIndicators = height < 30;
 
   return (
-    <HoverCard
-      position="bottom"
-      withArrow
-      withinPortal
-      radius="lg"
-      shadow="sm"
-      transitionProps={{ transition: "pop" }}
-      disabled={disabled}
-    >
-      <HoverCard.Target>
-        <Container
-          h="100%"
-          w="100%"
-          p={0}
-          pt={isSmall ? 0 : 10}
-          pb={isSmall ? 0 : 10}
-          m={0}
-          ref={ref}
-          style={{
-            alignContent: "center",
-            borderRadius: actualItemRadius,
-            cursor: disabled ? "default" : "pointer",
-          }}
-        >
-          <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
-            {date.getDate()}
-          </Text>
-          {!isTooSmallForIndicators && <NotificationIndicator events={events} isSmall={isSmall} />}
-        </Container>
-      </HoverCard.Target>
-      <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
-        <CalendarEventList events={events} />
-      </HoverCard.Dropdown>
-    </HoverCard>
+    <div ref={ref} style={{ width: "100%", height: "100%" }}>
+      <HoverCard
+        position="bottom"
+        withArrow
+        withinPortal
+        radius="lg"
+        shadow="sm"
+        transitionProps={{ transition: "pop" }}
+        openDelay={350}
+        closeDelay={200}
+        disabled={disabled}
+      >
+        <HoverCard.Target>
+          <Container
+            h="100%"
+            w="100%"
+            p={0}
+            pt={isSmall ? 0 : 10}
+            pb={isSmall ? 0 : 10}
+            m={0}
+            pos="relative"
+            style={{
+              alignContent: "center",
+              borderRadius: actualItemRadius,
+              cursor: disabled ? "default" : "pointer",
+            }}
+          >
+            <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
+              {date.getDate()}
+            </Text>
+            {!isTooSmallForIndicators && <NotificationIndicator events={events} isSmall={isSmall} />}
+          </Container>
+        </HoverCard.Target>
+        <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
+          <CalendarEventList events={events} />
+        </HoverCard.Dropdown>
+      </HoverCard>
+    </div>
   );
 };
 
