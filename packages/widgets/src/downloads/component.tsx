@@ -3,20 +3,17 @@
 import "../widgets-common.css";
 import "./styles.css";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   ActionIcon,
   Avatar,
   Badge,
   Box,
   Center,
-  Divider,
   Group,
   Menu,
   Portal,
   Progress,
-  ScrollArea,
-  SegmentedControl,
   Stack,
   Text,
   Tooltip,
@@ -24,8 +21,6 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
-  IconChevronDown,
-  IconChevronRight,
   IconCopy,
   IconDownload,
   IconFilter,
@@ -36,7 +31,6 @@ import {
   IconTrash,
   IconTrashX,
   IconUpload,
-  IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -415,9 +409,6 @@ export default function DownloadClientsWidget({
 
   const closeContextMenu = useCallback(() => setContextMenu(null), []);
 
-  const toggleExpand = useCallback((id: string) => {
-    setExpandedIds((prev) => prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]);
-  }, []);
 
   const totalSpeed = clients.reduce((sum, c) => sum + (c.status?.rates.down ?? 0), 0);
   const totalUpSpeed = clients.reduce((sum, c) => sum + (c.status?.rates.up ?? 0), 0);
@@ -461,7 +452,6 @@ export default function DownloadClientsWidget({
           height="100%"
           className="downloads-table"
           onRowContextMenu={isEditMode ? undefined : handleContextMenu}
-          onRowClick={isEditMode ? undefined : ({ record }) => toggleExpand(record.id)}
           rowExpansion={{
             allowMultiple: true,
             expanded: { recordIds: expandedIds, onRecordIdsChange: setExpandedIds },
