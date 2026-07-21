@@ -48,6 +48,7 @@ import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { formatByteRate, formatBytes, useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -117,11 +118,13 @@ export default function DownloadClientsWidget({
   options,
   width,
 }: WidgetComponentProps<"downloads">) {
-  const integrationsWithInteractions = useIntegrationsWithInteractAccess().flatMap(({ id }) =>
-    integrationIds.includes(id) ? [id] : [],
+  const allInteractAccess = useIntegrationsWithInteractAccess();
+  const integrationsWithInteractions = useMemo(
+    () => allInteractAccess.flatMap(({ id }) => (integrationIds.includes(id) ? [id] : [])),
+    [allInteractAccess, integrationIds],
   );
 
-  const { data: currentItems = [], isFetching } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
+  const { data: currentItems = [], isFetching, isError } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
     integrationIds,
     limitPerIntegration: options.limitPerIntegration,
   });
@@ -134,12 +137,15 @@ export default function DownloadClientsWidget({
   const [showStats, { toggle: toggleStats }] = useDisclosure(false);
 
   const utils = clientApi.useUtils();
-  const invalidateDownloads = { onSettled: () => void utils.widget.downloads.getJobsAndStatuses.invalidate() };
-  const { mutate: mutateResumeItem } = clientApi.widget.downloads.resumeItem.useMutation(invalidateDownloads);
-  const { mutate: mutatePauseItem } = clientApi.widget.downloads.pauseItem.useMutation(invalidateDownloads);
-  const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation(invalidateDownloads);
-  const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation(invalidateDownloads);
-  const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation(invalidateDownloads);
+  const mutationOptions = {
+    onSettled: () => void utils.widget.downloads.getJobsAndStatuses.invalidate(),
+    onError: () => showErrorNotification({ title: t("errors.actionFailed"), message: t("errors.actionFailedMessage") }),
+  };
+  const { mutate: mutateResumeItem } = clientApi.widget.downloads.resumeItem.useMutation(mutationOptions);
+  const { mutate: mutatePauseItem } = clientApi.widget.downloads.pauseItem.useMutation(mutationOptions);
+  const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation(mutationOptions);
+  const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation(mutationOptions);
+  const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation(mutationOptions);
 
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus<ExtendedDownloadClientItem>>({
     columnAccessor: options.defaultSort,
@@ -176,7 +182,7 @@ export default function DownloadClientsWidget({
               ...item,
               category: item.category !== undefined && item.category.length > 0 ? item.category : undefined,
               received,
-              ratio: item.sent !== undefined ? item.sent / item.size : undefined,
+              ratio: item.sent !== undefined && item.size > 0 ? item.sent / item.size : undefined,
               actions: integrationsWithInteractions.includes(pair.integration.id)
                 ? {
                     resume: () => mutateResumeItem({ integrationIds: ids, item }),
@@ -235,7 +241,7 @@ export default function DownloadClientsWidget({
         return {
           integration,
           interact,
-          status: { totalUp, totalDown, ratio: totalUp === undefined ? undefined : totalUp / totalDown, ...d.status },
+          status: { totalUp, totalDown, ratio: totalUp === undefined || totalDown === 0 ? undefined : totalUp / totalDown, ...d.status },
         };
       });
   }, [currentItems, integrationIds, integrationsWithInteractions, options.applyFilterToRatio, options.categoryFilter, options.filterIsWhitelist]);
@@ -244,7 +250,7 @@ export default function DownloadClientsWidget({
   const hasMultipleClients = clients.length > 1;
   const hasMultipleTypes = new Set(data.map(({ type }) => type)).size > 1;
 
-  const size = getSizeConfig(width);
+  const size = useMemo(() => getSizeConfig(width), [width]);
   const optionsColumnSet = useMemo(() => new Set<string>(options.columns), [options.columns]);
 
   const shouldIncludeColumn = useCallback(
@@ -489,6 +495,14 @@ export default function DownloadClientsWidget({
     );
   }
 
+  if (isError && currentItems.length === 0) {
+    return (
+      <Center h="100%">
+        <Text c="red">{t("errors.noCommunications")}</Text>
+      </Center>
+    );
+  }
+
   return (
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
       {showStats && (
@@ -520,8 +534,8 @@ export default function DownloadClientsWidget({
           textSelectionDisabled
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
-          noRecordsText={t("errors.noColumns")}
-          idAccessor="id"
+          noRecordsText={t("errors.noItems")}
+          idAccessor={(record) => `${record.integration.id}:${record.id}`}
           height="100%"
           className="downloads-table"
           defaultColumnProps={{

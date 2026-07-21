@@ -3073,7 +3073,10 @@
       },
       "errors": {
         "noColumns": "Select Columns in Items",
-        "noCommunications": "Can't load data from integration"
+        "noCommunications": "Can't load data from integration",
+        "noItems": "No downloads found",
+        "actionFailed": "Action failed",
+        "actionFailedMessage": "The action could not be completed. Please try again."
       },
       "items": {
         "actions": {
@@ -3189,14 +3192,6 @@
         "overallProgress": "Overall queue progress",
         "totalSize": "Total queue size",
         "clients": "{count, plural, one {# client} other {# clients}}"
-      },
-      "columns": {
-        "settings": "Column settings",
-        "resetVisibility": "Reset visibility",
-        "resetOrder": "Reset order",
-        "resetWidth": "Reset widths",
-        "resetPinning": "Reset pinning",
-        "scrolled": "Scrolled {y}px from top"
       }
     },
     "mediaReleases": {
