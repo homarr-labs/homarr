@@ -1,0 +1,25 @@
+packages/translation/src/lang/en.json
+  s_7cadbcfd6ae838::t_583c9dd57c8761 2260
+packages/request-handler/src/weather.ts
+  s_7cadbcfd6ae838::t_5d55728afe4fc4 12
+packages/widgets/src/weather/component.tsx
+  s_7cadbcfd6ae838::t_5d55728afe4fc4 4
+apps/docs/docs/widgets/downloads/index.ts
+  s_7cadbcfd6ae838::t_31eb274a111b1e 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "7c3aee944d00f8d36b79b85ca3b554db6648e2dc",
+  "prompts": {},
+  "sessions": {
+    "s_7cadbcfd6ae838": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "781480e9-8d2f-4366-99a4-54d0da9eba34",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
