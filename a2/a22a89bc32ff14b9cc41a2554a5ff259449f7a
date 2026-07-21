@@ -1,0 +1,34 @@
+packages/widgets/src/downloads/component.tsx
+  s_7cadbcfd6ae838::t_81d51dff61d536 894
+  s_7cadbcfd6ae838::t_6584329ea26fe9 1335-1336
+  s_7cadbcfd6ae838::t_8785d0b55be4a4 1260
+  s_7cadbcfd6ae838::t_9da4f6107b033c 533
+  s_7cadbcfd6ae838::t_46932346e8635f 1035,1046
+  s_7cadbcfd6ae838::t_115c3b1611831e 1194-1195
+  s_7cadbcfd6ae838::t_d464936fbfb975 326-328
+  s_7cadbcfd6ae838::t_a3cf5263f964f6 824
+  s_7cadbcfd6ae838::t_a24f7235791c07 628,632,634,639-640,646
+  s_7cadbcfd6ae838::t_497968adce6b53 1222-1223
+  s_7cadbcfd6ae838::t_4c92302245ff24 1245
+  s_7cadbcfd6ae838::t_7e4decffa12058 1284
+  s_7cadbcfd6ae838::t_27407a0ad38382 1314
+  s_7cadbcfd6ae838::t_5d62e5a2bcb815 303-305
+packages/translation/src/lang/en.json
+  s_7cadbcfd6ae838::t_74927e87d80156 3102-3103,3137-3138,3197-3198
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a2a22a89bc32ff14b9cc41a2554a5ff259449f7a",
+  "prompts": {},
+  "sessions": {
+    "s_7cadbcfd6ae838": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "781480e9-8d2f-4366-99a4-54d0da9eba34",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
