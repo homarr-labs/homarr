@@ -205,8 +205,9 @@ export default function DownloadClientsWidget({
       const aVal = a[accessor] ?? 0;
       const bVal = b[accessor] ?? 0;
       if (accessor === "time") {
-        const toKey = (time: number) => (time === 0 ? Infinity : time);
-        return (toKey(aVal as number) - toKey(bVal as number)) * dir;
+        const aTime = (aVal as number) === 0 ? Infinity : (aVal as number);
+        const bTime = (bVal as number) === 0 ? Infinity : (bVal as number);
+        return (aTime - bTime) * dir;
       }
       if (typeof aVal === "string" && typeof bVal === "string") return aVal.localeCompare(bVal) * dir;
       if (typeof aVal === "number" && typeof bVal === "number") return (aVal - bVal) * dir;
@@ -862,7 +863,7 @@ function RowContextMenu({ state, onClose, t }: {
                 <Menu.Divider />
                 <Menu.Item
                   leftSection={isPaused ? <IconPlayerPlay size={14} /> : <IconPlayerPause size={14} />}
-                  onClick={() => { (isPaused ? item.actions!.resume : item.actions!.pause)(); onClose(); }}
+                  onClick={() => { (isPaused ? item.actions?.resume : item.actions?.pause)?.(); onClose(); }}
                 >
                   {t(`actions.item.${isPaused ? "resume" : "pause"}`)}
                 </Menu.Item>
@@ -880,14 +881,14 @@ function RowContextMenu({ state, onClose, t }: {
                     <Menu.Item
                       color="red"
                       leftSection={<IconTrash size={14} />}
-                      onClick={() => { item.actions!.delete({ fromDisk: false }); onClose(); }}
+                      onClick={() => { item.actions?.delete({ fromDisk: false }); onClose(); }}
                     >
                       {t("actions.item.delete.entry")}
                     </Menu.Item>
                     <Menu.Item
                       color="red"
                       leftSection={<IconTrashX size={14} />}
-                      onClick={() => { item.actions!.delete({ fromDisk: true }); onClose(); }}
+                      onClick={() => { item.actions?.delete({ fromDisk: true }); onClose(); }}
                     >
                       {t("actions.item.delete.entryAndFiles")}
                     </Menu.Item>
