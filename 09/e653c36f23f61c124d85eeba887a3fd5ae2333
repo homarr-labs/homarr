@@ -1,0 +1,395 @@
+apps/docs/.vscode/settings.json
+  s_326c42d5720c04::t_c5bd5ca9a71361 2-3
+apps/docs/README.md
+  s_326c42d5720c04::t_9480cd9271f9f4 74,93-94,96-101
+apps/docs/docs/advanced/command-line/_category_.json
+  s_326c42d5720c04::t_e3ee8e498ae46e 4
+apps/docs/docs/advanced/command-line/fix-usernames/index.mdx
+  s_326c42d5720c04::t_33354be02ed51a 17
+apps/docs/docs/advanced/command-line/index.mdx
+  s_326c42d5720c04::t_64abe5b01fa424 4,15-18
+apps/docs/docs/advanced/command-line/integrations/index.mdx
+  s_326c42d5720c04::t_4a0193a7a3bc2f 10,47,61
+apps/docs/docs/advanced/command-line/password-recovery/index.mdx
+  s_326c42d5720c04::t_74fcba048a3db6 15,19
+apps/docs/docs/advanced/command-line/users/index.mdx
+  s_326c42d5720c04::t_7797f9fe295eb7 10,46,80
+apps/docs/docs/advanced/development/_category_.json
+  s_326c42d5720c04::t_2dff5c54133cee 2-6,8
+apps/docs/docs/advanced/development/getting-started.mdx
+  s_326c42d5720c04::t_dd522699791c6c 66,69
+apps/docs/docs/advanced/development/kubernetes.mdx
+  s_326c42d5720c04::t_21edfc8baa16cb 135
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_326c42d5720c04::t_50a79be76726a7 28-34,44-46,54-58,62-71,73,84-92,96-100,108-111
+apps/docs/docs/advanced/icons/index.mdx
+  s_326c42d5720c04::t_17a0a59371eec7 12,14-21,35
+apps/docs/docs/advanced/keyboard-shortcuts/index.mdx
+  s_326c42d5720c04::t_37f00687fe7ea0 9-10,12-13
+apps/docs/docs/advanced/proxy/index.mdx
+  s_326c42d5720c04::t_8e3a32b2a154db 12-13,16,22,32,34,59,62,64,145,148,155
+apps/docs/docs/advanced/running-as-different-user/index.mdx
+  s_326c42d5720c04::t_8f7f74ea315433 11,35-37,39,79-81,83,93
+apps/docs/docs/advanced/single-sign-on/index.mdx
+  s_326c42d5720c04::t_6c8443e21f91d3 13-14,21-27
+apps/docs/docs/advanced/styling/index.mdx
+  s_326c42d5720c04::t_9f40831cf2bbae 22,29,38,40,45-46,50-52,54,62,65,67,72,74,82,94,100,102
+apps/docs/docs/community/donate.mdx
+  s_326c42d5720c04::t_8bb8fbc0a027d7 10,12,18,26,29
+apps/docs/docs/community/faq.mdx
+  s_326c42d5720c04::t_9f7f86961e3d2c 8-9,12,16,20,24,30-40,42-44,48,52,54,58,66-67,74,80,84,88,92,96,101,104
+apps/docs/docs/community/get-in-touch.mdx
+  s_326c42d5720c04::t_6f3a95299f0075 12,19
+apps/docs/docs/community/license.mdx
+  s_326c42d5720c04::t_967c71cd08eeff 10
+apps/docs/docs/community/translations.mdx
+  s_326c42d5720c04::t_3307c635985acb 8-11,17-22,26,32,51,55
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_326c42d5720c04::t_6c666a87e0980a 57,115,122,188,195,200,204
+apps/docs/docs/getting-started/glossary.mdx
+  s_326c42d5720c04::t_1cf55b5d321477 2,6
+apps/docs/docs/getting-started/index.mdx
+  s_326c42d5720c04::t_5ddbd519097354 11-12,18,28-29,38,41
+apps/docs/docs/getting-started/installation/docker.mdx
+  s_326c42d5720c04::t_37a8bddb46e0ba 1,4,11,16,20,31,33-36,42,44-47,81,86,89-90,103-105
+apps/docs/docs/getting-started/installation/helm.md
+  s_326c42d5720c04::t_e09091d0fde0ab 15,79-84,90-95,99,106,110,123,127,136,142,153,157,159,163-164,172,175-176,186,190,192,196,205,208-209,219,237-238,249,251,267-268,275,292,306-307,322,336-337,352,359-362,383-490,493
+apps/docs/docs/getting-started/installation/home-assistant.mdx
+  s_326c42d5720c04::t_3b5b50b3c29e62 17
+apps/docs/docs/getting-started/installation/portainer.mdx
+  s_326c42d5720c04::t_2391067aaa93bc 2,4,28,32,35,47-48
+apps/docs/docs/getting-started/installation/proxmox.mdx
+  s_326c42d5720c04::t_e5f4863841f5dd 34,52,59,64
+apps/docs/docs/getting-started/installation/qnap.mdx
+  s_326c42d5720c04::t_f8e2cffd4a544d 7
+apps/docs/docs/getting-started/installation/runtipi.mdx
+  s_326c42d5720c04::t_cc9806ec822533 1,14,22-27,31,33
+apps/docs/docs/getting-started/installation/saltbox.mdx
+  s_326c42d5720c04::t_060861ff068b51 8,11
+apps/docs/docs/getting-started/installation/source.mdx
+  s_326c42d5720c04::t_a50c9f643fcf5c 31-46,50-53
+apps/docs/docs/getting-started/installation/unraid.mdx
+  s_326c42d5720c04::t_b517ebffa3e5be 1-2,17,20,26-27
+apps/docs/docs/integrations/adguard-home/index.mdx
+  s_326c42d5720c04::t_fb8c418fa02ba3 2,7-10,12-14,16,19,21-28,32,36-44
+apps/docs/docs/integrations/anchor/index.mdx
+  s_326c42d5720c04::t_54349d15e0b0e6 2,7-12,14,19,21-25,29,33-45
+apps/docs/docs/integrations/aria2/index.mdx
+  s_326c42d5720c04::t_bbaaf109e884f8 2,7-12,14,17,19-23,27,31-43
+apps/docs/docs/integrations/audiobookshelf/index.mdx
+  s_326c42d5720c04::t_bc7364040b46ce 2,7-12,14,19-20,23,27-40
+apps/docs/docs/integrations/bazarr/index.mdx
+  s_326c42d5720c04::t_49949de2fea993 2,7-12,14,20-21,25-27,37-38,41,45,48-58
+apps/docs/docs/integrations/beszel/index.mdx
+  s_326c42d5720c04::t_70a66eee3074fb 2,7-19,28,30-35,39,43-54
+apps/docs/docs/integrations/coolify/index.mdx
+  s_326c42d5720c04::t_4ae0085088c351 2-3,7-12,14,17-18,21,29-53
+apps/docs/docs/integrations/dash-dot/index.mdx
+  s_326c42d5720c04::t_121cac435b7be9 2,7-10,12-14,16,19,21-28,32-33
+apps/docs/docs/integrations/deluge/index.mdx
+  s_326c42d5720c04::t_57a4a60712a8af 2,7-10,12-14,16,19,21-25,29,33-41
+apps/docs/docs/integrations/docker/index.mdx
+  s_326c42d5720c04::t_1a81fff72c1523 2,7-9,11-12,14,17,19-20,22-24,28,51,58,61,102,108,116,118,125,132,137,142,144,151,153,162
+apps/docs/docs/integrations/emby/index.mdx
+  s_326c42d5720c04::t_a9f1bf9f8397ac 2,7-10,12-14,16,19-20,23,27-35
+apps/docs/docs/integrations/glances/index.mdx
+  s_326c42d5720c04::t_46269a3fd9f56e 2,7-13,15,18,20-27,31,35-43
+apps/docs/docs/integrations/gluetun/index.mdx
+  s_326c42d5720c04::t_0ae2197225d1ee 2-3,7-12,14,22-26,42-58
+apps/docs/docs/integrations/gotify/index.mdx
+  s_326c42d5720c04::t_fcbbcc6de249f5 2,7-12,14,17,19-23,27,31-39
+apps/docs/docs/integrations/home-assistant/index.mdx
+  s_326c42d5720c04::t_c746b91ee85b6e 2,7-10,12-14,16,19,21-28,32,36-41,48-51
+apps/docs/docs/integrations/ical/index.mdx
+  s_326c42d5720c04::t_4cb5087df83317 2,7-10,12-13,15,18,20-24,28,32-40,44
+apps/docs/docs/integrations/immich/index.mdx
+  s_326c42d5720c04::t_615d3b44e14d6f 2,7-13,15,18-19,22,26,52,56-57
+apps/docs/docs/integrations/jellyfin/index.mdx
+  s_326c42d5720c04::t_f801c8a212b125 2,7-10,12-14,16,19-20,23,27-39
+apps/docs/docs/integrations/jellyseerr/index.mdx
+  s_326c42d5720c04::t_bc9193adf816c2 2,7-10,12-14,16,19,21-36,40,44-52
+apps/docs/docs/integrations/kubernetes/index.mdx
+  s_326c42d5720c04::t_519a9c08f705c3 2,7-9,11,13,46
+apps/docs/docs/integrations/lidarr/index.mdx
+  s_326c42d5720c04::t_291467fda45288 2,7-10,12-13,15,18,20-24,28,32-40
+apps/docs/docs/integrations/navidrome/index.mdx
+  s_326c42d5720c04::t_ddc5ecf178fde5 2,7-12,14,19-20,23,27-38
+apps/docs/docs/integrations/nextcloud/index.mdx
+  s_326c42d5720c04::t_f13332eb57265e 2,7-10,12-17,20-21,24,28-43
+apps/docs/docs/integrations/ntfy/index.mdx
+  s_326c42d5720c04::t_3529d9408583fe 2,7-11,13,15,18,20-24,28,32-44
+apps/docs/docs/integrations/nzbget/index.mdx
+  s_326c42d5720c04::t_c850ea70741029 2,7-10,12-14,16,19,21-25,29,33-41
+apps/docs/docs/integrations/open-media-vault/index.mdx
+  s_326c42d5720c04::t_3bcdc72533fa6f 2,7-10,12-17,20,22-30,34,38-52
+apps/docs/docs/integrations/opnsense/index.mdx
+  s_326c42d5720c04::t_2f7b5a8d35a99c 2,7-10,12-14,16,19,21-25,29,33-46,51-57,60-64,71-75
+apps/docs/docs/integrations/overseerr/index.mdx
+  s_326c42d5720c04::t_068d767681ff03 2,7-10,12-14,16,19,21-36,40,44-52
+apps/docs/docs/integrations/paperless-ngx/index.mdx
+  s_326c42d5720c04::t_bd2c2752adf562 2,7-12,14,19-20,23,27-40
+apps/docs/docs/integrations/patchmon/index.mdx
+  s_326c42d5720c04::t_75bf3460abb20b 2,7-12,14,21-22,25,29-42
+apps/docs/docs/integrations/peanut/index.mdx
+  s_326c42d5720c04::t_42094cef6f9fda 2-3,7-12,14,20,22-23,25-26,30,34,39-53
+apps/docs/docs/integrations/pi-hole/index.mdx
+  s_326c42d5720c04::t_7211fc954ffc58 2,7-10,12-15,17,19-20,24,26-33,37,41-54
+apps/docs/docs/integrations/plex/index.mdx
+  s_326c42d5720c04::t_a6b16bbd6e3020 2,7-10,12-14,16,19-20,23,27-32,34-47
+apps/docs/docs/integrations/prowlarr/index.mdx
+  s_326c42d5720c04::t_75e50a697af20a 2,7-10,12-13,15,18-19,22,26-34
+apps/docs/docs/integrations/proxmox/index.mdx
+  s_326c42d5720c04::t_26e816884ece0f 2,7-10,12-15,17,20-21,24,28-39,46-52,56-63,67-72,77-83,85-92,94,97,100,102-107
+apps/docs/docs/integrations/q-bittorent/index.mdx
+  s_326c42d5720c04::t_6570dde05c2ce2 2,7-10,12-14,16,19-20,23,27-39
+apps/docs/docs/integrations/radarr/index.mdx
+  s_326c42d5720c04::t_26054e62fa8eb7 2,7-10,12-13,15,18-19,22,26-34
+apps/docs/docs/integrations/readarr/index.mdx
+  s_326c42d5720c04::t_7a51d656c86ae3 2,7-10,12-13,15,18-19,22,26-34
+apps/docs/docs/integrations/sabnzbd/index.mdx
+  s_326c42d5720c04::t_182165ebb50847 2,7-10,12-14,16,19-20,23,27-35
+apps/docs/docs/integrations/seerr/index.mdx
+  s_326c42d5720c04::t_984136c7c34244 2,7-10,12-14,16,19,21-36,40,44-52
+apps/docs/docs/integrations/slskd/index.mdx
+  s_326c42d5720c04::t_4890785d93beb4 2,7-12,14,17,19-23,27,31-39
+apps/docs/docs/integrations/sonarr/index.mdx
+  s_326c42d5720c04::t_918aac6a4aefcc 2,7-10,12-13,15,18-19,22,26-34
+apps/docs/docs/integrations/speedtest-tracker/index.mdx
+  s_326c42d5720c04::t_a5b01e385dd24e 2-3,7-12,14,17,19-23,27,31-39
+apps/docs/docs/integrations/synology/index.mdx
+  s_326c42d5720c04::t_eabcdbbd5d5fc3 22
+apps/docs/docs/integrations/tdarr/index.mdx
+  s_326c42d5720c04::t_81c83728a7138a 2,7-10,12-13,15,18-19,22,26-38
+apps/docs/docs/integrations/technitium-dns/index.mdx
+  s_326c42d5720c04::t_baea12e73c5d72 2,7-16,18-20,24,26-33,37,42-45,48-52,55-59,61-72
+apps/docs/docs/integrations/tracearr/index.mdx
+  s_326c42d5720c04::t_2322bee9c4bf8e 2,7-12,14,17-18,21,25-30,32-37
+apps/docs/docs/integrations/transmission/index.mdx
+  s_326c42d5720c04::t_0756cbc4a9c1b9 2,7-10,12-14,16,19-20,23,27-35
+apps/docs/docs/integrations/truenas/index.mdx
+  s_326c42d5720c04::t_3ef24124ba4171 2,7-14,16,19-20,23,27-30,34-36,38-49,52-64,66-67
+apps/docs/docs/integrations/umami/index.mdx
+  s_326c42d5720c04::t_f3ef8b5ae265cb 2-3,7-12,14,17-18,21,25,28,31-52
+apps/docs/docs/integrations/unifi-controller/index.mdx
+  s_326c42d5720c04::t_da475cba8852ad 2,7-10,12-14,16,22,24,28,32-40
+apps/docs/docs/integrations/unraid/index.mdx
+  s_326c42d5720c04::t_de7a8287892e27 2,7-13,20,23-24,27,31-71
+apps/docs/docs/integrations/uptime-kuma/index.mdx
+  s_326c42d5720c04::t_e6c30334ee7779 2,7-12,14,19-20,23,27-34,36-39
+apps/docs/docs/management/api/index.mdx
+  s_326c42d5720c04::t_1f86501d24a476 86-98
+apps/docs/docs/management/apps/index.mdx
+  s_326c42d5720c04::t_7e4ba37fb56867 10-11,30,45,53
+apps/docs/docs/management/backup.mdx
+  s_326c42d5720c04::t_b6590e25ac9ef7 27-30,32
+apps/docs/docs/management/boards/index.mdx
+  s_326c42d5720c04::t_e2874c1c2e0b02 12-16,27,33,38,43,49,59,61,69,78,83,107,112-114,117,119,124,128,132,139,141,143,145,147,149,151,153,156,160,162,165,174,178,183,202,204,208,213,218,230,240,243-245,252,258,260-261,265,267-268,272-275,282-284,293
+apps/docs/docs/management/certificates/index.mdx
+  s_326c42d5720c04::t_7430f9a69b5157 10-11,14-15,20-22,24-25,28-29,32,67
+apps/docs/docs/management/custom-widgets/_category_.json
+  s_326c42d5720c04::t_7326784f567f96 1-9
+apps/docs/docs/management/custom-widgets/agent-authoring.mdx
+  s_326c42d5720c04::t_4fef8c66bf89f4 1-86
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_326c42d5720c04::t_e45524a2cb6d6f 1-37
+apps/docs/docs/management/custom-widgets/custom-jsx.mdx
+  s_326c42d5720c04::t_98e2e63221fdfb 1-44
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_955a5b644d1c62::t_3f3fde32387e05 2-4,7-19,22,24,28-39,43-72
+apps/docs/docs/management/custom-widgets/requests-and-security.mdx
+  s_326c42d5720c04::t_a155ae669773ca 1-42
+apps/docs/docs/management/custom-widgets/troubleshooting.mdx
+  s_326c42d5720c04::t_598a64cb84b49c 1-59
+apps/docs/docs/management/integrations/index.mdx
+  s_326c42d5720c04::t_2d0ca569905009 9,15,25,29,32,37,42,57,73,82,84-87,94,98,107
+apps/docs/docs/management/mcp.mdx
+  s_326c42d5720c04::t_86b63c216434f3 76,123-142,152-153,165-221
+apps/docs/docs/management/media/index.mdx
+  s_326c42d5720c04::t_e5215d2452cecb 10,14
+apps/docs/docs/management/search-engines/index.mdx
+  s_326c42d5720c04::t_e171c3cf759438 9,17,23,27,29,36-38,41-46,54,61
+apps/docs/docs/management/settings/index.mdx
+  s_326c42d5720c04::t_860deeae80177a 12,17,26-27,32,37,42,48,56,62,68,75,85-86,111,117-118
+apps/docs/docs/management/users/index.mdx
+  s_326c42d5720c04::t_1e636d521f1f4e 23,25-26,40-41,45,47,52,57,64,81,89,98,102,109-110,114,116,118,122,127,131,135,142,146,150,154,164,185,189,198,209,214,217,225
+apps/docs/docs/management/workshop/index.mdx
+  s_955a5b644d1c62::t_5abc3ac46c66c6 10-15,28,30-36,45,67-68,73-76
+apps/docs/docs/widgets/anchor-note/index.mdx
+  s_326c42d5720c04::t_c7a8feb41e05e3 2-3,7-12,14,20,26-32
+apps/docs/docs/widgets/app/index.mdx
+  s_326c42d5720c04::t_1da686c051b36b 2-3,7-10,12,19-21,23,33
+apps/docs/docs/widgets/audio-stats/index.mdx
+  s_326c42d5720c04::t_b0d20800559f8e 2-3,7-13,15,26-37,44
+apps/docs/docs/widgets/bazarr/index.mdx
+  s_326c42d5720c04::t_328a9782782238 2-3,7-12,14,20,28-35,42
+apps/docs/docs/widgets/beszel-alerts/index.mdx
+  s_326c42d5720c04::t_9d875addc9b2ab 2-3,7-12,14,16,26-33,40
+apps/docs/docs/widgets/beszel-system-grid/index.mdx
+  s_326c42d5720c04::t_25b032493a3e8a 2-3,7-12,14,16,28-35,42
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_326c42d5720c04::t_2a919cd5fe8c3e 2-3,7-12,14,22-29,36
+apps/docs/docs/widgets/bookmarks/index.mdx
+  s_326c42d5720c04::t_fea4f175732b35 2-3,7-10,12,19-22,33,40
+apps/docs/docs/widgets/calendar/index.mdx
+  s_326c42d5720c04::t_1113f43698b2e2 2-3,7-10,12-21,23,30-32,34-39,44-68,81
+apps/docs/docs/widgets/clock/index.mdx
+  s_326c42d5720c04::t_8ccbb4365fedb2 2-3,7-10,12,18-20,22-25,33
+apps/docs/docs/widgets/coolify/index.mdx
+  s_326c42d5720c04::t_5244f3ec167386 2-3,7-12,14,20-26,38-40,42
+apps/docs/docs/widgets/custom-api/index.mdx
+  s_326c42d5720c04::t_d09963745b0418 2-3,7-9,11,13,15,17,19,21,25-30,32-34,36-57
+apps/docs/docs/widgets/custom-api/index.ts
+  s_326c42d5720c04::t_44dac28a8123f6 7-8
+apps/docs/docs/widgets/dns-hole-controls/index.mdx
+  s_326c42d5720c04::t_e64c1652164bb6 2,7-10,12-17,19,25-26,33-45,58
+apps/docs/docs/widgets/dns-hole-summary/index.mdx
+  s_326c42d5720c04::t_63edfb4e6cc060 2,7-10,12-14,16,22-27,29,31,39-51,58
+apps/docs/docs/widgets/docker-containers/index.mdx
+  s_326c42d5720c04::t_04b5b32504562c 2-3,7-10,12-15,17,27,33-39,44
+apps/docs/docs/widgets/downloads/index.mdx
+  s_326c42d5720c04::t_583a84d32e68e2 2-3,7-16,18-20,22,28,31,36-63,76
+apps/docs/docs/widgets/firewall/index.mdx
+  s_326c42d5720c04::t_ad3f8ac9b724ef 2-3,7-13,15,23-29
+apps/docs/docs/widgets/iframe/index.mdx
+  s_326c42d5720c04::t_a8b6e51d266870 2-3,7-10,12,21-22,49,56,68,77,79,86,95,100
+apps/docs/docs/widgets/immich-album-carousel/index.mdx
+  s_326c42d5720c04::t_4e5372a26fab2c 2-3,7-12,14,18,24-30,38
+apps/docs/docs/widgets/immich-server-stats/index.mdx
+  s_326c42d5720c04::t_1ca1406bb6a789 2-3,7-12,14,18,24-30,38
+apps/docs/docs/widgets/indexer-manager/index.mdx
+  s_326c42d5720c04::t_1ea32da1add9fa 2-3,7-11,13,17-19,21,28-34,46
+apps/docs/docs/widgets/media-missing/index.mdx
+  s_326c42d5720c04::t_87412a8e55e122 2-3,7-15,21-23,33-42,46-47,49
+apps/docs/docs/widgets/media-releases/index.mdx
+  s_326c42d5720c04::t_51306729201a9b 2-3,7-14,16,22-23,32-44,51
+apps/docs/docs/widgets/media-request-list/index.mdx
+  s_326c42d5720c04::t_a4cbcc5ca62928 2-3,7-10,12-16,18,22-23,26,32-41,53
+apps/docs/docs/widgets/media-request-list/index.ts
+  s_326c42d5720c04::t_1f7b2b3a6379c6 17-28
+apps/docs/docs/widgets/media-request-stats/index.mdx
+  s_326c42d5720c04::t_b6eeebdb7b7ab3 2-3,7-10,12-16,18,24-33,37
+apps/docs/docs/widgets/media-server/index.mdx
+  s_326c42d5720c04::t_3674035802ed9b 2-3,7-10,12-17,19,21,26,32-45,53
+apps/docs/docs/widgets/media-transcoding/index.mdx
+  s_326c42d5720c04::t_bc9de612f9a3b1 2-3,7-10,12-15,17,19,24-26,36-42,49
+apps/docs/docs/widgets/minecraft-server-status/index.mdx
+  s_326c42d5720c04::t_3affacc05ce9dc 2-3,7-10,12-14,16,22-23,25,35,41
+apps/docs/docs/widgets/network-controller-status/index.mdx
+  s_326c42d5720c04::t_739ab21d136a9e 2-3,7-11,13-15,17,23-24,31-37,44
+apps/docs/docs/widgets/network-controller-summary/index.mdx
+  s_326c42d5720c04::t_4208856b090076 2-3,7-11,13-15,17,23,29-35
+apps/docs/docs/widgets/notifications/index.mdx
+  s_326c42d5720c04::t_633c634391104e 2-3,7-10,12-19,25,32
+apps/docs/docs/widgets/paperless-ngx/index.mdx
+  s_326c42d5720c04::t_a2aa41476e950e 2-3,7-12,14,20-27,34
+apps/docs/docs/widgets/patchmon/index.mdx
+  s_326c42d5720c04::t_5edc3d643c94f8 2-3,7-12,14,38-44,61-63,65-67,75-82,89
+apps/docs/docs/widgets/rss-feed/index.mdx
+  s_326c42d5720c04::t_daee4fbce06c94 2-3,7-10,12,18,27,31,33,47
+apps/docs/docs/widgets/smart-home-entity-state/index.mdx
+  s_326c42d5720c04::t_70ee90c1aaca0d 2-3,7-10,12-15,17,20,25-27,35-41,52,58,65,69
+apps/docs/docs/widgets/smart-home-execute-automation/index.mdx
+  s_326c42d5720c04::t_6bc8a8e9ee646c 2-3,7-10,12-15,17,23-24,28-33,38-44,55
+apps/docs/docs/widgets/speedtest-tracker/index.mdx
+  s_326c42d5720c04::t_54309730ca8ae8 2-3,7-12,14,21,27-33,40
+apps/docs/docs/widgets/stock-price/index.mdx
+  s_326c42d5720c04::t_5e8d71f5a20b8c 2-3,7-10,12,18-21,39,43,45,60
+apps/docs/docs/widgets/system-disks/index.ts
+  s_326c42d5720c04::t_7d79576f65524d 22-26
+apps/docs/docs/widgets/timetable/index.mdx
+  s_326c42d5720c04::t_4772447d30e0cd 22-23
+apps/docs/docs/widgets/tracearr/index.mdx
+  s_326c42d5720c04::t_3326c49138c110 2-3,7-12,14,20-25,29-30,43-49,52
+apps/docs/docs/widgets/umami/index.mdx
+  s_326c42d5720c04::t_4194291a2fafbf 2-3,7-12,14,20-26,38-43
+apps/docs/docs/widgets/ups/index.mdx
+  s_326c42d5720c04::t_f50fa7ad5247ec 2-3,7-12,14,22-24,28-32,36-42,49
+apps/docs/docs/widgets/uptime-kuma/index.mdx
+  s_326c42d5720c04::t_4c03803ad1c503 2-3,7-12,14,20-27,34
+apps/docs/docs/widgets/video/index.mdx
+  s_326c42d5720c04::t_509a10bc4e47cf 2-3,7-10,12,33
+apps/docs/docs/widgets/vpn/index.mdx
+  s_326c42d5720c04::t_cabf7dd2b298cb 2-3,7-11,13,23,31-37
+apps/docs/docs/widgets/weather/index.mdx
+  s_326c42d5720c04::t_0c155476356319 2-3,7-10,12,18-19,31,37
+apps/docs/docusaurus.config.ts
+  s_955a5b644d1c62::t_fd07a4e3fa0a3a 15-17,288,294-302,334,336,340
+apps/docs/package.json
+  s_955a5b644d1c62::t_4115b0656b16fe 24,30,32-33,39,51-53,64-65
+apps/docs/scripts/dump-contributors.mjs
+  s_326c42d5720c04::t_4811e84647a80b 1-2,6-7,10-11,26,29-30,42,51,53,68,91-92,97-98
+apps/docs/scripts/verify-algolia-search.mjs
+  s_326c42d5720c04::t_a01ae94a34f051 1-4,8,11-15,21-26,28-29,39,48,55,63,70,81,87,97,107,126,128,132-133,136,142,146,148,151,154,157-158
+apps/docs/src/components/custom-jsx-component-reference.module.css
+  s_326c42d5720c04::t_23026b672662c9 1-451
+apps/docs/src/components/custom-jsx-component-reference.tsx
+  s_326c42d5720c04::t_855353c79bf3e9 1-497
+apps/docs/src/components/custom-widget-code-client.tsx
+  s_326c42d5720c04::t_c4f50d5614e71a 1-120
+apps/docs/src/components/custom-widget-code.tsx
+  s_326c42d5720c04::t_1d24bd95f34b76 1-50
+apps/docs/src/components/pages/home/integrations/available-integrations.module.css
+  s_326c42d5720c04::t_4eaf302bddd2ef 2-7,11-13,17-20
+apps/docs/src/components/workshop/WorkshopDetailRoutePage.tsx
+  s_955a5b644d1c62::t_56ba7edaa7a1b2 1
+apps/docs/src/lib/workshop-schema.spec.ts
+  s_955a5b644d1c62::t_3739e85645e7a1 3-4,7,11,16,23-25,29,33-34
+apps/docs/src/pages/workshop/admin/index.tsx
+  s_955a5b644d1c62::t_39fca7428e7ffb 1-15
+apps/docs/static/api/open-api-schema.json
+  s_326c42d5720c04::t_d0a34f53a1d68f 1-2265
+apps/docs/static/custom-widgets/component-catalog-v1.json
+  s_326c42d5720c04::t_df7a9645f36be6 1
+apps/docs/static/data/contributions.json
+  s_326c42d5720c04::t_f835d85fc1c428 1-127
+apps/docs/static/data/translation-contributions.json
+  s_326c42d5720c04::t_2cdf854fe685d2 1-966
+apps/docs/tsconfig.json
+  s_955a5b644d1c62::t_9ee7ef394ae22f 17,21,23-24
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_customCss.tsx
+  s_955a5b644d1c62::t_8aaaf2bd622ac5 14-15,50-51
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_beta-banner.tsx
+  s_955a5b644d1c62::t_470ee8f7fba139 1-19
+apps/nextjs/src/app/[locale]/manage/custom-widgets/edit/[id]/page.tsx
+  s_955a5b644d1c62::t_f152f995bd0e4a 9,32
+apps/nextjs/src/app/[locale]/manage/custom-widgets/new/page.tsx
+  s_955a5b644d1c62::t_283395ea89215c 8,31
+apps/nextjs/src/app/[locale]/manage/custom-widgets/page.tsx
+  s_955a5b644d1c62::t_194d09059ec740 12,50
+apps/nextjs/src/components/workshop/workshop-css-import-button.tsx
+  s_955a5b644d1c62::t_4bd2052560634f 1-28
+apps/workshop/Dockerfile
+  s_955a5b644d1c62::t_35cfa4aab44141 35-36
+apps/workshop/docker-compose.yml
+  s_955a5b644d1c62::t_1a243714ddd2a2 13-15,20,35-37
+apps/workshop/entrypoint.sh
+  s_955a5b644d1c62::t_12007c9f2ed89e 13
+package.json
+  s_955a5b644d1c62::t_aa5fd8f7ec2373 27
+packages/workshop/src/schema.spec.ts
+  s_955a5b644d1c62::t_5f0f3619d9724c 12,20-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "09e653c36f23f61c124d85eeba887a3fd5ae2333",
+  "prompts": {},
+  "sessions": {
+    "s_326c42d5720c04": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8178-8b84-72b2-879e-b3680cc2362a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
