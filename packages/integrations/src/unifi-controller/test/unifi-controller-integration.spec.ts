@@ -7,6 +7,7 @@ vi.hoisted(() => {
 });
 
 const controllerCtor = vi.fn();
+const controllerLogin = vi.fn().mockResolvedValue(true);
 
 vi.mock("@homarr/redis", () => ({
   createGetSetChannel: () => ({
@@ -34,6 +35,7 @@ vi.mock("@homarr/core/infrastructure/certificates", () => ({
 }));
 
 vi.mock("axios", () => ({
+  AxiosError: Error,
   default: {
     create: vi.fn().mockReturnValue({}),
   },
@@ -52,7 +54,7 @@ vi.mock("@homarr/node-unifi", () => {
       controllerCtor(options);
     }
     public async login(): Promise<true> {
-      return true;
+      return await controllerLogin(this.options.port);
     }
     public async getSitesStats(): Promise<unknown[]> {
       return [];
@@ -76,15 +78,31 @@ const createIntegration = (url: string) =>
   });
 
 describe("UnifiControllerIntegration port resolution", () => {
-  test("http://192.168.1.1 falls back to the 8443 default instead of 80", async () => {
+  test("a URL without a port uses the UniFi OS port 443", async () => {
     controllerCtor.mockClear();
+    controllerLogin.mockClear().mockResolvedValue(true);
     await createIntegration("http://192.168.1.1").getNetworkSummaryAsync();
 
-    expect(controllerCtor).toHaveBeenCalledWith(expect.objectContaining({ host: "192.168.1.1", port: 8443 }));
+    expect(controllerCtor).toHaveBeenCalledTimes(1);
+    expect(controllerCtor).toHaveBeenCalledWith(expect.objectContaining({ host: "192.168.1.1", port: 443 }));
+  });
+
+  test("a connection failure on port 443 falls back to the self-hosted controller port 8443", async () => {
+    controllerCtor.mockClear();
+    controllerLogin
+      .mockClear()
+      .mockRejectedValueOnce(Object.assign(new Error("connect ECONNREFUSED"), { isAxiosError: true }))
+      .mockResolvedValueOnce(true);
+
+    await createIntegration("http://controller.lan").getNetworkSummaryAsync();
+
+    expect(controllerCtor).toHaveBeenNthCalledWith(1, expect.objectContaining({ port: 443 }));
+    expect(controllerCtor).toHaveBeenNthCalledWith(2, expect.objectContaining({ port: 8443 }));
   });
 
   test("https://controller.lan:8443 keeps the user-specified port", async () => {
     controllerCtor.mockClear();
+    controllerLogin.mockClear().mockResolvedValue(true);
     await createIntegration("https://controller.lan:8443").getNetworkSummaryAsync();
 
     expect(controllerCtor).toHaveBeenCalledWith(expect.objectContaining({ host: "controller.lan", port: 8443 }));
@@ -92,6 +110,7 @@ describe("UnifiControllerIntegration port resolution", () => {
 
   test("https://192.168.1.1:8443 keeps the user-specified port", async () => {
     controllerCtor.mockClear();
+    controllerLogin.mockClear().mockResolvedValue(true);
     await createIntegration("https://192.168.1.1:8443").getNetworkSummaryAsync();
 
     expect(controllerCtor).toHaveBeenCalledWith(expect.objectContaining({ host: "192.168.1.1", port: 8443 }));
@@ -99,8 +118,24 @@ describe("UnifiControllerIntegration port resolution", () => {
 
   test("an unusual port like 10443 is honored verbatim", async () => {
     controllerCtor.mockClear();
+    controllerLogin.mockClear().mockResolvedValue(true);
     await createIntegration("https://192.168.1.1:10443").getNetworkSummaryAsync();
 
     expect(controllerCtor).toHaveBeenCalledWith(expect.objectContaining({ host: "192.168.1.1", port: 10443 }));
+  });
+
+  test("an authentication failure on port 443 does not try another port", async () => {
+    controllerCtor.mockClear();
+    controllerLogin.mockClear().mockRejectedValueOnce(
+      Object.assign(new Error("Request failed with status code 401"), {
+        isAxiosError: true,
+        response: { status: 401 },
+      }),
+    );
+
+    await expect(createIntegration("https://controller.lan").getNetworkSummaryAsync()).rejects.toThrow();
+
+    expect(controllerCtor).toHaveBeenCalledTimes(1);
+    expect(controllerCtor).toHaveBeenCalledWith(expect.objectContaining({ port: 443 }));
   });
 });
