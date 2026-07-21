@@ -1,0 +1,7 @@
+.day {
+  border: 2px solid transparent;
+}
+
+.day[aria-expanded="true"] {
+  border-color: var(--mantine-primary-color-filled);
+}

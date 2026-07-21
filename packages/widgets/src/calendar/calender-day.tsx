@@ -1,4 +1,3 @@
-import { useCallback, useState } from "react";
 import { Box, Container, Flex, Popover, Text, useMantineTheme } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
@@ -6,6 +5,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
 
 import { CalendarEventList } from "./calendar-event-list";
+import classes from "./calender-day.module.css";
 
 interface CalendarDayProps {
   date: Date;
@@ -13,13 +13,9 @@ interface CalendarDayProps {
   disabled: boolean;
   rootWidth: number;
   rootHeight: number;
-  onOpen: (close: () => void) => void;
 }
 
-export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth, onOpen }: CalendarDayProps) => {
-  const [opened, setOpened] = useState(false);
-  const [pinned, setPinned] = useState(false);
-  const { primaryColor } = useMantineTheme();
+export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: CalendarDayProps) => {
   const { ref, height } = useElementSize();
   const board = useRequiredBoard();
   const mantineTheme = useMantineTheme();
@@ -31,19 +27,6 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth, onO
 
   const isTooSmallForIndicators = height < 30;
 
-  const handleMouseEnter = useCallback(() => {
-    if (disabled) return;
-    onOpen(() => {
-      setOpened(false);
-      setPinned(false);
-    });
-    setOpened(true);
-  }, [disabled, onOpen]);
-
-  const handleMouseLeave = useCallback(() => {
-    if (!pinned) setOpened(false);
-  }, [pinned]);
-
   return (
     <Popover
       position="bottom"
@@ -51,14 +34,7 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth, onO
       withinPortal
       radius="lg"
       shadow="sm"
-      transitionProps={{
-        transition: "pop",
-      }}
-      onChange={(value) => {
-        setOpened(value);
-        if (!value) setPinned(false);
-      }}
-      opened={opened}
+      transitionProps={{ transition: "pop" }}
       disabled={disabled}
     >
       <Popover.Target>
@@ -70,17 +46,12 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth, onO
           pb={isSmall ? 0 : 10}
           m={0}
           ref={ref}
-          bd={`2px solid ${opened && !disabled ? primaryColor : "transparent"}`}
+          className={classes.day}
           style={{
             alignContent: "center",
             borderRadius: actualItemRadius,
             cursor: disabled ? "default" : "pointer",
           }}
-          onClick={() => {
-            if (!disabled) setPinned((prev) => !prev);
-          }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
         >
           <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
             {date.getDate()}
@@ -88,16 +59,7 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth, onO
           {!isTooSmallForIndicators && <NotificationIndicator events={events} isSmall={isSmall} />}
         </Container>
       </Popover.Target>
-      {/* Popover has some offset on the left side, padding is removed because of scrollarea paddings */}
-      <Popover.Dropdown
-        maw="calc(100vw - 24px)"
-        w={512}
-        pe={4}
-        pb={0}
-        style={{ overflow: "hidden" }}
-        onMouseEnter={() => setOpened(true)}
-        onMouseLeave={handleMouseLeave}
-      >
+      <Popover.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
         <CalendarEventList events={events} />
       </Popover.Dropdown>
     </Popover>
@@ -111,7 +73,6 @@ interface NotificationIndicatorProps {
 
 const NotificationIndicator = ({ events, isSmall }: NotificationIndicatorProps) => {
   const notificationEvents = [...new Set(events.map((event) => event.indicatorColor))].filter(String);
-  /* position bottom is lower when small to not be on top of number*/
   return (
     <Flex
       w="75%"
