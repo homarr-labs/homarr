@@ -798,7 +798,6 @@ export default function DownloadClientsWidget({
         availableStatuses={availableStatuses}
         pauseQueue={mutatePauseQueue}
         resumeQueue={mutateResumeQueue}
-        itemCount={sortedData.length}
         showStats={showStats}
         toggleStats={toggleStats}
       />
@@ -1123,7 +1122,6 @@ interface WidgetFooterProps {
   availableStatuses: ExtendedDownloadClientItem["state"][];
   pauseQueue: (args: { integrationIds: string[] }) => void;
   resumeQueue: (args: { integrationIds: string[] }) => void;
-  itemCount: number;
   showStats: boolean;
   toggleStats: () => void;
 }
@@ -1141,7 +1139,6 @@ function WidgetFooter({
   availableStatuses,
   pauseQueue,
   resumeQueue,
-  itemCount,
   showStats,
   toggleStats,
 }: WidgetFooterProps) {
@@ -1321,7 +1318,6 @@ function WidgetFooter({
             )}
           </Group>
 
-          <Badge size="xs" variant="light" color="gray" circle>{itemCount}</Badge>
         </Group>
       </Group>
     </Box>
