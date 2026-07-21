@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { Box, Group, Menu, ScrollArea } from "@mantine/core";
@@ -164,6 +164,10 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
   const commonT = useI18n();
+  const latestBoardRef = useRef(board);
+
+  latestBoardRef.current = board;
+
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onSuccess() {
       showSuccessNotification({
@@ -190,10 +194,10 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const toggle = useCallback(() => {
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
-      return saveBoard(utils.board.getBoardByName.getData({ name: board.name }) ?? board);
+      return saveBoard(latestBoardRef.current);
     }
     open();
-  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges, utils.board.getBoardByName]);
+  }, [isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
