@@ -1,55 +1,59 @@
-# Use Workshop
+---
+tags:
+  - Workshop
+  - Custom Widgets
+  - Custom CSS
+---
 
-[Open Workshop](/workshop) to browse, inspect, vote on, report, download, and publish Custom JSX v2 widgets.
+# Community Workshop
 
-Submissions publish immediately. Authors can edit or delete their own submissions, while Workshop administrators can
-review reports and delete any submission. Deleting a Workshop submission never removes widgets already installed in a
-self-hosted Homarr instance.
+The [Community Workshop](pathname:///workshop) is where Homarr users share and discover
+**custom CSS themes** and **custom widgets**. You can browse submissions, upvote the ones
+you like, report abuse, and install entries directly into your own Homarr instance.
 
-Workshop validates widget JSON in the browser before publishing. Homarr validates it again before installation. Widget
-exports must not contain credentials; users configure required credentials only after importing a widget.
+:::warning
 
-Each submission stores the manifest's `$schema` value as separate compatibility metadata. Workshop marks the current
-Custom JSX schema and unsupported schemas in listings, while Homarr blocks installation if this metadata disagrees with
-the downloaded manifest. The manifest remains the source of truth and is always validated again locally.
+The workshop contains community-made content. Widgets may contain unwanted or malicious content and it is your duty to check & verify safety of the content. While we try to remove malicious content as best as we can, we take no responsibility. Always review the widget JSON and all CSS before installing it on your instance and take frequent backups as prevention measures.
 
-Votes and reports are unique per user and submission. Listings expose vote totals without exposing voter identities.
-Reports include a category and explanation. Administrators can see the reporter, dismiss the report, or delete the
-reported submission.
+:::
 
-Workshop deliberately has no comments, email notifications, approval queue, moderator roles, user bans, or audit-history
-system.
+## Browsing and voting
 
-## Access control
+- Filter by **Widgets** or **CSS**, and sort by **Top rated** or **Newest**.
+- Sign in with **GitHub** to upvote/downvote, submit your own creations, or report a submission.
+- Each submission shows its title, description, author, version, an optional screenshot, and the full content.
 
-Workshop uses PocketBase collection API rules for access control:
+## Submitting
 
-- Anyone can browse submissions and vote totals.
-- Signed-in users can publish, vote, and report.
-- An author can update or delete only their own submission.
-- Workshop administrators can read and dismiss reports and delete any submission.
+1. Sign in with GitHub.
+2. Click **Submit** and choose the type:
+   - **Custom widget** — paste the JSON exported from **Manage → Custom Widgets → Export**.
+     It must match the `homarr-custom-widget-v2` schema (validated before submission).
+   - **Custom CSS** — paste your stylesheet (max 16384 characters).
+3. Add a title, description, optional screenshot, and changelog, then submit.
 
-The frontend uses PocketBase's normal record create, update, and delete APIs. There are no custom deletion endpoints or
-deletion hooks. PocketBase superusers bypass collection API rules, as documented in
-[API rules and filters](https://pocketbase.io/docs/api-rules-and-filters/).
+Submissions are published immediately. Reported entries are reviewed and may be removed.
 
-Set `users.isAdmin` from the PocketBase dashboard to grant Workshop administration access. The users collection update
-rule prevents ordinary users from granting this flag to themselves.
+## Submission guidelines
 
-## Configure GitHub sign-in
+Submissions must be useful to Homarr users and safe to install. Do not submit content that is
+malicious, deceptive, illegal, hateful, sexually explicit, gore, gambling-focused, spam, or content
+that primarily promotes unrelated products or services.
 
-The central Workshop PocketBase service controls authentication. Register this callback in the GitHub OAuth application:
+## Installing into Homarr
 
-```text
-https://<workshop-host>/api/oauth2-redirect
-```
+You can install workshop entries without leaving Homarr:
 
-Self-hosted Homarr origins, including localhost and custom domains, do not need separate GitHub callbacks. Homarr opens
-the popup synchronously, while PocketBase completes authentication through its realtime OAuth flow on the Workshop host.
-On successful sign-in, Homarr copies the GitHub display name or login and HTTPS avatar into that user's Workshop profile.
-The collection rules let users update their own profile fields but prevent them from setting `isAdmin`.
+- **Custom widgets** — go to **Manage → Custom Widgets**, click **Install from Workshop**, pick an
+  entry, and it is imported (secrets such as API keys must be re-entered afterwards).
+- **Custom CSS** — open a board's **Settings → Custom CSS**, click **Install from Workshop**, and
+  pick a theme to load it into the editor before saving.
 
-PocketBase permits all origins by default. If the deployment uses `--origins` or a restrictive reverse-proxy CORS policy,
-it must permit self-hosted Homarr origins. See [PocketBase routing and CORS](https://pocketbase.io/docs/go-routing/).
+Alternatively, use **Copy** (or **Download** for widgets) on any submission and import it
+manually.
 
-Homarr shows a visible error when the provider is misconfigured or the popup is blocked or cancelled.
+## Workshop deployment
+
+Workshop is powered by [PocketBase](https://pocketbase.io). The production image compiles the current Docusaurus site and serves it together with the API from one origin. The deployment lives in `apps/workshop/` with a Dockerfile, Compose configuration, version-controlled migrations, hooks, a smoke test, and ACT-local workflow instructions.
+
+Homarr instances use `NEXT_PUBLIC_WORKSHOP_API_URL` to reach the central API and `NEXT_PUBLIC_WORKSHOP_URL` for links to the public page. Docusaurus uses `WORKSHOP_URL` only when its development server runs separately; the combined production image always uses its own origin.

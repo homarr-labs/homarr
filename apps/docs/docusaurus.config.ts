@@ -20,6 +20,11 @@ const config: Config = {
   onBrokenAnchors: "throw",
   onDuplicateRoutes: "throw",
 
+  customFields: {
+    // Empty means same-origin, which is the production Workshop image shape.
+    workshopUrl: process.env.WORKSHOP_URL ?? "",
+  },
+
   future: {
     v4: {
       removeLegacyPostBuildHeadAttribute: true,
@@ -282,17 +287,11 @@ const config: Config = {
     function homarrPackagesPlugin() {
       return {
         name: "resolve-homarr-packages",
-        configureWebpack(_config, isServer, { getJSLoader }) {
+        configureWebpack() {
           return {
-            resolve: { symlinks: false },
-            module: {
-              rules: [
-                {
-                  test: /\.[jt]sx?$/iu,
-                  include: /node_modules[\\/]@homarr/u,
-                  use: [getJSLoader({ isServer })],
-                },
-              ],
+            resolve: {
+              symlinks: false,
+              alias: { "@": require("path").resolve(__dirname, "src") },
             },
           };
         },
@@ -325,6 +324,19 @@ const config: Config = {
         },
       };
     },
+    function workshopDetailRoutePlugin() {
+      return {
+        name: "workshop-detail-route",
+        async contentLoaded({ actions }) {
+          actions.addRoute({
+            path: "/workshop/:id",
+            component: "@site/src/components/workshop/DetailPage",
+            exact: true,
+          });
+        },
+      };
+    },
+    "@signalwire/docusaurus-plugin-llms-txt",
     async function tailwindCssPlugin() {
       return {
         name: "docusaurus-tailwindcss",
