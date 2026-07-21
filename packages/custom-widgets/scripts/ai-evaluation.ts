@@ -14,24 +14,57 @@ export const DEFAULT_JUDGE_MODEL = "deepseek/deepseek-v4-flash";
 export const MAX_AI_EVALUATION_LOOPS = 10;
 
 const scoreSchema = z.number().int().min(0).max(100);
+const judgeCategoriesSchema = z.strictObject({
+  schemaAndBindings: scoreSchema,
+  apiAndRequestDesign: scoreSchema,
+  runtimeCompatibility: scoreSchema,
+  goalFulfillment: scoreSchema,
+  visualQuality: scoreSchema,
+  responsiveAndTheme: scoreSchema,
+  loadingEmptyErrorSuccess: scoreSchema,
+  dailyUsefulness: scoreSchema,
+  complexityDiscipline: scoreSchema,
+  accessibility: scoreSchema,
+  actionSafety: scoreSchema,
+});
+const categoryReasonSchema = z.string().min(1).max(600);
 const judgeResultSchema = z.strictObject({
   total: scoreSchema,
   verdict: z.enum(["pass", "fail"]),
-  categories: z.strictObject({
-    schemaAndBindings: scoreSchema,
-    apiAndRequestDesign: scoreSchema,
-    runtimeCompatibility: scoreSchema,
-    visualHierarchy: scoreSchema,
-    responsiveAndTheme: scoreSchema,
-    loadingEmptyErrorSuccess: scoreSchema,
-    accessibility: scoreSchema,
-    actionSafety: scoreSchema,
-    simplicity: scoreSchema,
+  dailyUseDecision: z.enum(["would-use-daily", "promising-but-not-daily", "not-practical"]),
+  categories: judgeCategoriesSchema,
+  categoryReasons: z.strictObject({
+    schemaAndBindings: categoryReasonSchema,
+    apiAndRequestDesign: categoryReasonSchema,
+    runtimeCompatibility: categoryReasonSchema,
+    goalFulfillment: categoryReasonSchema,
+    visualQuality: categoryReasonSchema,
+    responsiveAndTheme: categoryReasonSchema,
+    loadingEmptyErrorSuccess: categoryReasonSchema,
+    dailyUsefulness: categoryReasonSchema,
+    complexityDiscipline: categoryReasonSchema,
+    accessibility: categoryReasonSchema,
+    actionSafety: categoryReasonSchema,
   }),
-  strengths: z.array(z.string()).max(8),
-  problems: z.array(z.string()).max(12),
-  highestImpactFixes: z.array(z.string()).max(8),
+  strengths: z.array(z.string().min(1).max(400)).max(6),
+  problems: z.array(z.string().min(1).max(500)).max(12),
+  fatalProblems: z.array(z.string().min(1).max(500)).max(8),
+  highestImpactFixes: z.array(z.string().min(1).max(500)).max(6),
 });
+
+const categoryWeights = {
+  schemaAndBindings: 8,
+  apiAndRequestDesign: 10,
+  runtimeCompatibility: 8,
+  goalFulfillment: 15,
+  visualQuality: 15,
+  responsiveAndTheme: 8,
+  loadingEmptyErrorSuccess: 8,
+  dailyUsefulness: 12,
+  complexityDiscipline: 8,
+  accessibility: 4,
+  actionSafety: 4,
+} as const satisfies Record<keyof z.infer<typeof judgeCategoriesSchema>, number>;
 
 export type CustomWidgetJudgeResult = z.infer<typeof judgeResultSchema>;
 
@@ -71,7 +104,7 @@ export function buildRepairPrompt(
 }
 
 export function buildJudgePrompt(testCase: CustomWidgetAiEvaluationCase, widget: HomarrCustomWidgetV2): string {
-  return `You are a strict evaluator for a safe dashboard-widget language. Judge the widget against the request and API notes. Do not reward unsupported capabilities, invented API routes, or visual claims not present in the JSX.
+  return `You are a hostile-but-fair product review panel evaluating a safe dashboard widget. Most competent drafts should score 55-75, not 90. Judge only evidence present in the manifest and JSX. Never reward unsupported capabilities, invented API routes, aspirational claims, or code that merely validates.
 
 Request:
 ${testCase.request}
@@ -82,12 +115,47 @@ ${testCase.apiNotes}
 Validated widget:
 ${JSON.stringify(widget, null, 2)}
 
-Score every category from 0 to 100. The total must reflect the whole result. A pass requires total >= 80 and no category below 65. Return JSON only with this exact shape:
-{"total":0,"verdict":"fail","categories":{"schemaAndBindings":0,"apiAndRequestDesign":0,"runtimeCompatibility":0,"visualHierarchy":0,"responsiveAndTheme":0,"loadingEmptyErrorSuccess":0,"accessibility":0,"actionSafety":0,"simplicity":0},"strengths":[],"problems":[],"highestImpactFixes":[]}`;
+Scoring calibration:
+- 95-100: exceptional, purpose-built quality; complete, beautiful, restrained, and something a demanding user would choose every day. Almost never award this.
+- 85-94: excellent with only small, specific defects. It must fully achieve the request and feel deliberately designed.
+- 70-84: good prototype or useful widget with visible compromises, generic design, missing polish, or avoidable complexity.
+- 50-69: functional but incomplete, awkward, visually ordinary, overbuilt, or impractical for repeated use.
+- 0-49: broken, misleading, unsafe, substantially incomplete, or incompatible.
+
+Required review behavior:
+- Compare every requested capability with concrete manifest/JSX evidence. A missing or invented core capability is fatal and caps total at 79.
+- Judge whether the API design can actually reach the stated goal, including response paths, bindings, invalidation, and action safety.
+- Judge visual quality, not component count: hierarchy, density, whitespace, typography, restrained color, scanability, and avoidance of repetitive nested cards.
+- Judge daily usefulness: information priority, interaction cost, refresh behavior, narrow-tile usability, and whether the widget is pleasant rather than demo-like.
+- Judge complexity discipline: penalize duplicate requests/options, unnecessary controls, excessive JSX, cleverness, and UI chrome that does not help the goal. Complexity must earn its place.
+- A visually generic but valid widget should normally score below 75 for visualQuality. A widget that is attractive but inconvenient should score below 75 for dailyUsefulness.
+- Give a concrete evidence sentence for every category. List all score-capping issues under fatalProblems.
+
+Homarr computes the weighted total and final verdict itself. Your total and verdict are advisory, but must be internally honest. A pass requires a weighted total of at least 90, every category at least 75, goalFulfillment/visualQuality/dailyUsefulness at least 85, complexityDiscipline at least 80, no fatal problem, and dailyUseDecision="would-use-daily". Return only the requested structured object.`;
 }
 
 export function judgePasses(result: CustomWidgetJudgeResult): boolean {
-  return result.total >= 80 && Object.values(result.categories).every((score) => score >= 65);
+  return (
+    result.total >= 90 &&
+    Object.values(result.categories).every((score) => score >= 75) &&
+    result.categories.goalFulfillment >= 85 &&
+    result.categories.visualQuality >= 85 &&
+    result.categories.dailyUsefulness >= 85 &&
+    result.categories.complexityDiscipline >= 80 &&
+    result.dailyUseDecision === "would-use-daily" &&
+    result.fatalProblems.length === 0
+  );
+}
+
+export function getJudgeResponseFormat() {
+  return {
+    type: "json_schema" as const,
+    json_schema: {
+      name: "homarr_custom_widget_review",
+      strict: true,
+      schema: z.toJSONSchema(judgeResultSchema, { io: "output" }),
+    },
+  };
 }
 
 export async function evaluateCustomWidgetCase(args: {
@@ -114,7 +182,7 @@ export async function evaluateCustomWidgetCase(args: {
         apiKey: args.apiKey,
         model: args.generatorModel ?? DEFAULT_GENERATOR_MODEL,
         prompt,
-        json: false,
+        purpose: "generation",
       });
     } catch (error) {
       errors.push(
@@ -139,7 +207,7 @@ export async function evaluateCustomWidgetCase(args: {
         apiKey: args.apiKey,
         model: args.judgeModel ?? DEFAULT_JUDGE_MODEL,
         prompt: buildJudgePrompt(args.testCase, canonical),
-        json: true,
+        purpose: "judge",
       });
       await writeFile(path.join(caseDirectory, `judge-${attempt}.json`), judgeRaw, "utf8");
       judge = parseJudgeResult(judgeRaw);
@@ -185,12 +253,15 @@ export async function evaluateCustomWidgetCase(args: {
 }
 
 export function parseJudgeResult(raw: string): CustomWidgetJudgeResult {
-  const fenced = /```(?:json)?\s*([\s\S]*?)```/iu.exec(raw)?.[1];
-  const parsed: unknown = JSON.parse(fenced ?? raw);
+  const parsed: unknown = JSON.parse(raw);
   const result = judgeResultSchema.parse(parsed);
+  const weightedTotal = Object.entries(categoryWeights).reduce(
+    (sum, [category, weight]) => sum + result.categories[category as keyof typeof categoryWeights] * weight,
+    0,
+  );
   const normalized = {
     ...result,
-    total: Math.round(Object.values(result.categories).reduce((sum, score) => sum + score, 0) / 9),
+    total: Math.round(weightedTotal / 100),
   };
   return { ...normalized, verdict: judgePasses(normalized) ? "pass" : "fail" };
 }
@@ -207,7 +278,13 @@ async function writeWidgetFiles(directory: string, widget: HomarrCustomWidgetV2,
   ]);
 }
 
-async function callOpenRouter(args: { apiKey: string; model: string; prompt: string; json: boolean }): Promise<string> {
+async function callOpenRouter(args: {
+  apiKey: string;
+  model: string;
+  prompt: string;
+  purpose: "generation" | "judge";
+}): Promise<string> {
+  const isJudge = args.purpose === "judge";
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -219,10 +296,10 @@ async function callOpenRouter(args: { apiKey: string; model: string; prompt: str
     body: JSON.stringify({
       model: args.model,
       messages: [{ role: "user", content: args.prompt }],
-      temperature: args.json ? 0 : 0.25,
-      max_tokens: args.json ? 8_000 : 20_000,
-      ...(args.json ? { reasoning: { effort: "low", exclude: true } } : {}),
-      ...(args.json ? { response_format: { type: "json_object" } } : {}),
+      temperature: isJudge ? 0 : 0.2,
+      max_tokens: isJudge ? 8_000 : 20_000,
+      reasoning: { effort: "xhigh", exclude: true },
+      ...(isJudge ? { response_format: getJudgeResponseFormat() } : {}),
     }),
     signal: AbortSignal.timeout(180_000),
   });

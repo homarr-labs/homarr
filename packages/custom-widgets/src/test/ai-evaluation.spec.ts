@@ -1,7 +1,49 @@
 import { describe, expect, it } from "vitest";
 
 import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "../../scripts/ai-evaluation-cases";
-import { buildEvaluationPrompt, buildRepairPrompt, judgePasses, parseJudgeResult } from "../../scripts/ai-evaluation";
+import {
+  buildEvaluationPrompt,
+  buildRepairPrompt,
+  DEFAULT_GENERATOR_MODEL,
+  DEFAULT_JUDGE_MODEL,
+  getJudgeResponseFormat,
+  judgePasses,
+  parseJudgeResult,
+} from "../../scripts/ai-evaluation";
+import type { CustomWidgetJudgeResult } from "../../scripts/ai-evaluation";
+
+const categoryNames = [
+  "schemaAndBindings",
+  "apiAndRequestDesign",
+  "runtimeCompatibility",
+  "goalFulfillment",
+  "visualQuality",
+  "responsiveAndTheme",
+  "loadingEmptyErrorSuccess",
+  "dailyUsefulness",
+  "complexityDiscipline",
+  "accessibility",
+  "actionSafety",
+] as const;
+
+const makeCategories = (score: number) =>
+  Object.fromEntries(categoryNames.map((name) => [name, score])) as CustomWidgetJudgeResult["categories"];
+const makeReasons = () =>
+  Object.fromEntries(
+    categoryNames.map((name) => [name, `Concrete evidence for ${name}.`]),
+  ) as CustomWidgetJudgeResult["categoryReasons"];
+
+const makeJudgeResult = (score: number) => ({
+  total: score,
+  verdict: "pass" as const,
+  dailyUseDecision: "would-use-daily" as const,
+  categories: makeCategories(score),
+  categoryReasons: makeReasons(),
+  strengths: [],
+  problems: [],
+  fatalProblems: [],
+  highestImpactFixes: [],
+});
 
 describe("AI authoring evaluation", () => {
   it("defines five distinct complex scenarios", () => {
@@ -27,54 +69,40 @@ describe("AI authoring evaluation", () => {
     expect(prompt).toContain("bad response");
   });
 
-  it("requires a strong overall and category score", () => {
-    const categories = {
-      schemaAndBindings: 90,
-      apiAndRequestDesign: 90,
-      runtimeCompatibility: 90,
-      visualHierarchy: 90,
-      responsiveAndTheme: 90,
-      loadingEmptyErrorSuccess: 90,
-      accessibility: 90,
-      actionSafety: 90,
-      simplicity: 90,
-    };
-    expect(
-      judgePasses({ total: 90, verdict: "pass", categories, strengths: [], problems: [], highestImpactFixes: [] }),
-    ).toBe(true);
-    expect(
-      judgePasses({
-        total: 90,
-        verdict: "pass",
-        categories: { ...categories, accessibility: 64 },
-        strengths: [],
-        problems: [],
-        highestImpactFixes: [],
-      }),
-    ).toBe(false);
+  it("uses the requested DeepSeek models and strict structured judge output", () => {
+    expect(DEFAULT_GENERATOR_MODEL).toBe("deepseek/deepseek-v4-pro");
+    expect(DEFAULT_JUDGE_MODEL).toBe("deepseek/deepseek-v4-flash");
+    const format = getJudgeResponseFormat();
+    expect(format.type).toBe("json_schema");
+    expect(format.json_schema.strict).toBe(true);
+    expect(format.json_schema.schema).toMatchObject({ type: "object", additionalProperties: false });
   });
 
-  it("normalizes a judge verdict from numeric scores", () => {
+  it("requires exceptional goal, design, practicality, and complexity scores", () => {
+    expect(judgePasses(makeJudgeResult(90))).toBe(true);
+    expect(
+      judgePasses({
+        ...makeJudgeResult(92),
+        categories: { ...makeCategories(92), dailyUsefulness: 84 },
+      }),
+    ).toBe(false);
+    expect(judgePasses({ ...makeJudgeResult(95), fatalProblems: ["A requested core action is missing."] })).toBe(false);
+  });
+
+  it("computes the weighted score and refuses inflated advisory verdicts", () => {
     const parsed = parseJudgeResult(
       JSON.stringify({
-        total: 84,
-        verdict: "fail",
-        categories: {
-          schemaAndBindings: 85,
-          apiAndRequestDesign: 82,
-          runtimeCompatibility: 84,
-          visualHierarchy: 86,
-          responsiveAndTheme: 83,
-          loadingEmptyErrorSuccess: 82,
-          accessibility: 80,
-          actionSafety: 87,
-          simplicity: 85,
-        },
+        ...makeJudgeResult(95),
+        total: 99,
+        categories: { ...makeCategories(95), visualQuality: 70 },
+        categoryReasons: makeReasons(),
         strengths: [],
         problems: [],
+        fatalProblems: [],
         highestImpactFixes: [],
       }),
     );
-    expect(parsed.verdict).toBe("pass");
+    expect(parsed.total).toBe(91);
+    expect(parsed.verdict).toBe("fail");
   });
 });

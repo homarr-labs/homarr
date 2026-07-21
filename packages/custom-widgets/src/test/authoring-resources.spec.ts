@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -19,7 +20,7 @@ describe("authoring resources", () => {
     expect(skill).not.toHaveProperty("componentCatalog");
     expect(getCustomWidgetSkillContent()).toBe(skill.skillMd);
     expect(skill.skillMd.trim()).toBe(
-      readFileSync(new URL("../../../../.agents/skills/homarr-custom-widget/SKILL.md", import.meta.url), "utf8").trim(),
+      readFileSync(path.join(process.cwd(), ".agents/skills/homarr-custom-widget/SKILL.md"), "utf8").trim(),
     );
   });
 
