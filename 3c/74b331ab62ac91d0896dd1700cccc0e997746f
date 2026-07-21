@@ -1,0 +1,33 @@
+packages/widgets/src/weather/icon.tsx
+  s_d000e0b76b42a2::t_21853e7d81465b 8
+  s_d000e0b76b42a2::t_0a5efc0f22b27e 103-105
+  s_d000e0b76b42a2::t_69932d03599e86 83
+  s_d000e0b76b42a2::t_ed7c0ca6194577 55
+packages/request-handler/src/weather.ts
+  s_d000e0b76b42a2::t_9adce1131da8df 52
+  s_d000e0b76b42a2::t_f8d1c4bf6740c1 12
+  s_d000e0b76b42a2::t_e786414b513d73 71
+  s_d000e0b76b42a2::t_c36f992fc850be 30
+packages/translation/src/lang/en.json
+  s_d000e0b76b42a2::t_15926da3ee34fe 2260-2261
+packages/widgets/src/weather/component.tsx
+  s_d000e0b76b42a2::t_fb7756df9955b2 4
+  s_d000e0b76b42a2::t_db8e18f495188e 90-95
+  s_d000e0b76b42a2::t_e54e6cdcc715b9 213
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "3c74b331ab62ac91d0896dd1700cccc0e997746f",
+  "prompts": {},
+  "sessions": {
+    "s_d000e0b76b42a2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_07c265631ffefhEw2oNjltHPdN",
+        "model": "deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
