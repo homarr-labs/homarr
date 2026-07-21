@@ -5,7 +5,6 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
 
 import { CalendarEventList } from "./calendar-event-list";
-import classes from "./calender-day.module.css";
 
 interface CalendarDayProps {
   date: Date;
@@ -46,7 +45,6 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
           pb={isSmall ? 0 : 10}
           m={0}
           ref={ref}
-          className={classes.day}
           style={{
             alignContent: "center",
             borderRadius: actualItemRadius,
