@@ -21,9 +21,9 @@ export default function ImmichAlbumCarouselWidget({
   const { data: album } = clientApi.widget.immich.getAlbum.useQuery(
     {
       integrationId: integrationIds[0] ?? "",
-      albumId: options.albumId ?? "",
+      albumId: options.albumId || undefined,
     },
-    { enabled: Boolean(options.albumId) },
+    { enabled: integrationIds.length > 0 },
   );
 
   const photoAssets = useMemo(() => {
@@ -34,10 +34,6 @@ export default function ImmichAlbumCarouselWidget({
   useEffect(() => {
     setCurrentPhotoIndex(0);
   }, [photoAssets]);
-
-  if (!options.albumId) {
-    return <NoAlbumSelected />;
-  }
 
   if (!album) return <WidgetEmptyState />;
 
@@ -114,20 +110,6 @@ function Carousel({ assets, currentIndex, setCurrentIndex, rotationInterval, sho
         </Stack>
       )}
     </Box>
-  );
-}
-
-function NoAlbumSelected() {
-  const t = useI18n();
-  return (
-    <Center h="100%">
-      <Stack align="center" gap="xs">
-        <IconAlertCircle size={32} />
-        <Text size="sm" fw={500}>
-          {t("widget.immich-albumCarousel.noAlbumSelected")}
-        </Text>
-      </Stack>
-    </Center>
   );
 }
 

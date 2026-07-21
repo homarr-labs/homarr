@@ -4,13 +4,13 @@ import { IconPhoto } from "@tabler/icons-react";
 export const immichAlbumCarouselWidget: WidgetDefinition = {
   icon: IconPhoto,
   name: "Immich Album",
-  description: "Shows a slideshow of your album pictures from Immich",
+  description: "Shows a slideshow of pictures from an Immich album or your full library",
   path: "../../widgets/immich-album-carousel",
   configuration: {
     items: [
       {
         name: "Album",
-        description: "Select the Immich album to show in the slideshow.",
+        description: "Select an Immich album, or leave empty to show random photos from your full library.",
         values: { type: "string" },
         defaultValue: "",
       },

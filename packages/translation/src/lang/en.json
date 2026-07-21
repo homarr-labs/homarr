@@ -3009,7 +3009,7 @@
       "option": {
         "albumId": {
           "label": "Album",
-          "description": "Select the Immich album to show in the slideshow."
+          "description": "Select an Immich album, or leave empty to show random photos from your full library."
         },
         "rotationIntervalSeconds": {
           "label": "Interval in seconds",
@@ -3024,9 +3024,8 @@
           "description": "Show photos in a random order instead of always starting with the same album order."
         }
       },
-      "description": "Slideshow of pictures in your Immich album",
-      "noAlbumSelected": "No album selected, edit widget and choose an album",
-      "noPhotos": "No photos in this album"
+      "description": "Slideshow of pictures from an Immich album or your full library",
+      "noPhotos": "No photos found"
     },
     "downloads": {
       "name": "Download Client",
