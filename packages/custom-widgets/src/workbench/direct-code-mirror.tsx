@@ -2,6 +2,7 @@
 
 import { autocompletion } from "@codemirror/autocomplete";
 import { indentWithTab } from "@codemirror/commands";
+import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
 import { linter } from "@codemirror/lint";
@@ -18,7 +19,7 @@ import type { EditorDiagnostic } from "./analyzer";
 
 interface DirectCodeMirrorProps {
   value: string;
-  language: "jsx" | "json";
+  language: "jsx" | "json" | "css";
   diagnostics: EditorDiagnostic[];
   completions: Completion[];
   id: string;
@@ -103,7 +104,9 @@ function createExtensions(instanceId: string, props: DirectCodeMirrorProps) {
           autocompletion({ override: [createCustomJsxCompletionSource(props.completions)] }),
           customJsxComponentHover,
         ]
-      : [json()];
+      : props.language === "css"
+        ? [css()]
+        : [json()];
   return [
     basicSetup,
     ...language,

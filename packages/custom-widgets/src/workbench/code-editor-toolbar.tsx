@@ -46,7 +46,11 @@ export function CodeEditorToolbar({
       <Group gap={6}>
         <IconCode size={16} aria-hidden />
         <Text size="xs" fw={600}>
-          {props.language === "jsx" ? props.messages.languageJsx : props.messages.languageJson}
+          {props.language === "jsx"
+            ? props.messages.languageJsx
+            : props.language === "css"
+              ? "CSS"
+              : props.messages.languageJson}
         </Text>
       </Group>
       <Group gap={6}>
@@ -102,7 +106,7 @@ export function CodeEditorToolbar({
             variant="subtle"
             leftSection={<IconWand size={14} />}
             onClick={onFormat}
-            disabled={props.language === "json" && formattedValue === props.value}
+            disabled={props.language !== "jsx" && formattedValue === props.value}
           >
             {props.messages.format}
           </Button>

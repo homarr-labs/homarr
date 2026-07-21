@@ -43,7 +43,7 @@ export interface CustomWidgetCodeEditorProps {
   messages: CustomWidgetEditorMessages;
   description?: string;
   placeholder?: string;
-  language: "jsx" | "json";
+  language: "jsx" | "json" | "css";
   diagnostics?: EditorDiagnostic[];
   error?: ReactNode;
   required?: boolean;

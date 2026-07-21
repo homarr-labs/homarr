@@ -3,6 +3,7 @@ import BrowserOnly from "@docusaurus/BrowserOnly";
 import {
   BundledCustomWidgetGalleryClient,
   CanonicalCustomWidgetExampleClient,
+  CustomWidgetCodeInputClient,
   CustomWidgetCodeExampleClient,
 } from "./custom-widget-code-client";
 
@@ -12,6 +13,19 @@ export interface CustomWidgetCodeExampleProps {
   code: string;
   language?: "json" | "jsx";
   height?: string;
+}
+
+export interface CustomWidgetCodeInputProps {
+  id: string;
+  label: string;
+  value: string;
+  onChange(value: string): void;
+  language: "json" | "css";
+  description?: string;
+  placeholder?: string;
+  height?: string;
+  required?: boolean;
+  maxLength?: number;
 }
 
 export interface CanonicalCustomWidgetExampleProps {
@@ -33,6 +47,14 @@ export function CustomWidgetCodeExample(props: CustomWidgetCodeExampleProps) {
   return (
     <BrowserOnly fallback={<CodeExampleFallback height={props.height} />}>
       {() => <CustomWidgetCodeExampleClient {...props} />}
+    </BrowserOnly>
+  );
+}
+
+export function CustomWidgetCodeInput(props: CustomWidgetCodeInputProps) {
+  return (
+    <BrowserOnly fallback={<CodeExampleFallback height={props.height} />}>
+      {() => <CustomWidgetCodeInputClient {...props} />}
     </BrowserOnly>
   );
 }

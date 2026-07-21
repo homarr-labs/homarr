@@ -18,6 +18,9 @@ catalogs:
     '@codemirror/commands':
       specifier: ^6.10.3
       version: 6.10.3
+    '@codemirror/lang-css':
+      specifier: ^6.3.1
+      version: 6.3.1
     '@codemirror/lang-javascript':
       specifier: ^6.2.5
       version: 6.2.5
@@ -1731,6 +1734,9 @@ importers:
       '@codemirror/commands':
         specifier: 'catalog:'
         version: 6.10.3
+      '@codemirror/lang-css':
+        specifier: 'catalog:'
+        version: 6.3.1
       '@codemirror/lang-javascript':
         specifier: 'catalog:'
         version: 6.2.5

@@ -39,6 +39,7 @@
   "dependencies": {
     "@codemirror/autocomplete": "catalog:",
     "@codemirror/commands": "catalog:",
+    "@codemirror/lang-css": "catalog:",
     "@codemirror/lang-javascript": "catalog:",
     "@codemirror/lang-json": "catalog:",
     "@codemirror/lint": "catalog:",

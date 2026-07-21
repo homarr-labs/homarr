@@ -15,6 +15,8 @@ import {
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 
+import { CustomWidgetCodeInput } from "@/components/custom-widget-code";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -79,10 +81,13 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
 
   const canAdvance = [type !== null, title.trim().length >= 3 && content.trim().length > 0, true];
 
-  const goTo = (next: number) => {
-    setDirection(navDirection[Number(next > step)]);
-    setStep(next);
-  };
+  const goTo = useCallback(
+    (next: number) => {
+      setDirection(navDirection[Number(next > step)]);
+      setStep(next);
+    },
+    [step],
+  );
 
   const setContentAndAutofill = useCallback((json: string, currentTitle: string, currentDesc: string) => {
     setContent(json);
@@ -97,17 +102,17 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
       const jsonFile = Array.from(files).find((f) => f.name.endsWith(".json") || f.type === "application/json");
       if (!jsonFile) return false;
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.addEventListener("load", (e) => {
         const text = e.target?.result as string;
         if (!type) setType("customWidget");
         setContentAndAutofill(text, title, description);
         if (step === 0) goTo(1);
-      };
-      reader.onerror = () => setError("Could not read the file");
+      });
+      reader.addEventListener("error", () => setError("Could not read the file"));
       reader.readAsText(jsonFile);
       return true;
     },
-    [type, step, title, description, setContentAndAutofill],
+    [type, step, title, description, setContentAndAutofill, goTo],
   );
 
   const addImageFiles = useCallback(
@@ -187,7 +192,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
     >
       {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <DialogContent
-        className="max-h-[90vh] overflow-y-auto sm:max-w-xl"
+        className="max-h-[92vh] overflow-y-auto sm:max-w-5xl"
         showCloseButton={!pending}
         onDragOver={(e: React.DragEvent) => {
           e.preventDefault();
@@ -328,8 +333,9 @@ const StepType = ({
           <button
             key={type}
             onClick={() => onChange(type)}
+            aria-pressed={value === type}
             className={cn(
-              "group flex flex-col items-center gap-3 rounded-xl border-2 p-6 text-center transition-all hover:border-primary/50 hover:bg-primary/5",
+              "group relative flex min-h-48 flex-col items-center justify-center gap-3 rounded-xl border-2 p-6 text-center transition-colors hover:border-primary/50 hover:bg-primary/5",
               value === type ? "border-primary bg-primary/10 ring-1 ring-primary/20" : "border-border bg-card",
             )}
           >
@@ -348,7 +354,7 @@ const StepType = ({
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{desc}</p>
             </div>
             {value === type && (
-              <div className="flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <div className="absolute top-3 right-3 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
                 <IconCheck size={12} />
               </div>
             )}
@@ -416,66 +422,66 @@ const StepDetails = ({
   content: string;
   onContentChange: (v: string) => void;
 }) => (
-  <div className="flex flex-col gap-4">
+  <div className="grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
     <div className="flex flex-col gap-1.5">
-      <label htmlFor="submit-content" className="text-xs font-medium text-muted-foreground">
-        {contentLabels[type]} *
-      </label>
-      <Textarea
+      <CustomWidgetCodeInput
         id="submit-content"
-        className="font-mono text-xs"
+        label={contentLabels[type]}
+        language={type === "customWidget" ? "json" : "css"}
         value={content}
-        onChange={(e) => onContentChange(e.target.value)}
+        onChange={onContentChange}
         placeholder={placeholders[type]}
-        rows={8}
         required
-      />
-      {type === "customWidget" && (
-        <p className="text-xs text-muted-foreground">
-          Paste your widget JSON — title and description will auto-fill from the{" "}
-          <code className="rounded bg-muted px-1 py-0.5 text-foreground">name</code> field.
-        </p>
-      )}
-    </div>
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor="submit-title" className="text-xs font-medium text-muted-foreground">
-        Title *
-      </label>
-      <Input
-        id="submit-title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        required
-        minLength={3}
-        maxLength={100}
-        placeholder="My awesome theme"
+        height="min(44vh, 440px)"
+        maxLength={type === "customCss" ? 16_384 : undefined}
+        description={
+          type === "customWidget"
+            ? "Paste exported widget JSON. The title and description are filled from its metadata."
+            : "Paste the stylesheet that users will import into their board settings."
+        }
       />
     </div>
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor="submit-description" className="text-xs font-medium text-muted-foreground">
-        Description
-      </label>
-      <Textarea
-        id="submit-description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        maxLength={2000}
-        rows={2}
-        placeholder="A brief description of what this does"
-      />
-    </div>
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor="submit-changelog" className="text-xs font-medium text-muted-foreground">
-        Changelog
-      </label>
-      <Textarea
-        id="submit-changelog"
-        value={changelog}
-        onChange={(e) => setChangelog(e.target.value)}
-        maxLength={2000}
-        rows={2}
-        placeholder="What is included in this revision?"
-      />
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="submit-title" className="text-xs font-medium text-muted-foreground">
+          Title *
+        </label>
+        <Input
+          id="submit-title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          minLength={3}
+          maxLength={100}
+          placeholder="My awesome theme"
+        />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="submit-description" className="text-xs font-medium text-muted-foreground">
+          Description
+        </label>
+        <Textarea
+          id="submit-description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          maxLength={2000}
+          rows={5}
+          placeholder="A brief description of what this does"
+        />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="submit-changelog" className="text-xs font-medium text-muted-foreground">
+          Changelog
+        </label>
+        <Textarea
+          id="submit-changelog"
+          value={changelog}
+          onChange={(e) => setChangelog(e.target.value)}
+          maxLength={2000}
+          rows={4}
+          placeholder="What is included in this revision?"
+        />
+      </div>
     </div>
   </div>
 );
@@ -544,22 +550,21 @@ const StepMedia = ({
       </label>
 
       {previews.length > 0 && (
-        <div className="grid grid-cols-5 gap-2">
-          {previews.map((src, i) => (
-            <div
-              key={i}
-              className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-muted"
-            >
-              <img src={src} alt={`Preview ${i + 1}`} className="h-full w-full object-cover" />
-              <button
-                onClick={() => removeScreenshot(i)}
-                className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100"
-                aria-label={`Remove screenshot ${i + 1}`}
-              >
-                <IconX size={16} className="text-white" />
-              </button>
-            </div>
-          ))}
+        <div className="max-h-44 overflow-y-auto pr-1">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+            {previews.map((src, i) => (
+              <div key={i} className="group relative h-24 overflow-hidden rounded-xl border border-border bg-muted">
+                <img src={src} alt={`Preview ${i + 1}`} className="h-full w-full object-cover" />
+                <button
+                  onClick={() => removeScreenshot(i)}
+                  className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                  aria-label={`Remove screenshot ${i + 1}`}
+                >
+                  <IconX size={16} className="text-white" />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

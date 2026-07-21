@@ -22,9 +22,13 @@ import {
   CUSTOM_WIDGET_REQUEST_EXAMPLES,
 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
-import { ReadOnlyCustomWidgetCode } from "@homarr/custom-widgets/workbench";
+import { CustomWidgetCodeEditor, ReadOnlyCustomWidgetCode } from "@homarr/custom-widgets/workbench";
 
-import type { CanonicalCustomWidgetExampleProps, CustomWidgetCodeExampleProps } from "./custom-widget-code";
+import type {
+  CanonicalCustomWidgetExampleProps,
+  CustomWidgetCodeExampleProps,
+  CustomWidgetCodeInputProps,
+} from "./custom-widget-code";
 
 const messages: CustomWidgetEditorMessages = {
   languageJsx: "JSX",
@@ -51,6 +55,7 @@ const messages: CustomWidgetEditorMessages = {
   diagnosticsTitle: "Diagnostics",
   diagnostic: (diagnostic) => diagnostic.value ?? diagnostic.code,
 };
+const editableMessages: CustomWidgetEditorMessages = { ...messages, ready: "Ready" };
 
 export function CanonicalCustomWidgetExampleClient({ id, label, example, height }: CanonicalCustomWidgetExampleProps) {
   const value = example === "requests" ? CUSTOM_WIDGET_REQUEST_EXAMPLES.full : CUSTOM_WIDGET_OPTIONS_EXAMPLES.full;
@@ -69,6 +74,14 @@ export function CustomWidgetCodeExampleClient(props: CustomWidgetCodeExampleProp
         messages={messages}
         height={props.height}
       />
+    </MantineProvider>
+  );
+}
+
+export function CustomWidgetCodeInputClient(props: CustomWidgetCodeInputProps) {
+  return (
+    <MantineProvider forceColorScheme={getDocumentationColorScheme()}>
+      <CustomWidgetCodeEditor {...props} messages={editableMessages} />
     </MantineProvider>
   );
 }

@@ -256,7 +256,7 @@ function EditorLoader() {
     </Group>
   );
 }
-function formatCode(value: string, language: "jsx" | "json") {
+function formatCode(value: string, language: "jsx" | "json" | "css") {
   if (language === "json") {
     try {
       return `${JSON.stringify(JSON.parse(value) as unknown, null, 2)}\n`;
