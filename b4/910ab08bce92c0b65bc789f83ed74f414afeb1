@@ -1,0 +1,19 @@
+packages/widgets/src/downloads/component.tsx
+  s_7cadbcfd6ae838::t_7d24cad3dc8ba0 593
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "b4910ab08bce92c0b65bc789f83ed74f414afeb1",
+  "prompts": {},
+  "sessions": {
+    "s_7cadbcfd6ae838": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "781480e9-8d2f-4366-99a4-54d0da9eba34",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
