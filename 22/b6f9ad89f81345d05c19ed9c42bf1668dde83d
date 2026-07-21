@@ -1,0 +1,31 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.spec.tsx
+  s_48530c975a60b2::t_ec0fa3e3ca4ef3 23-36
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-ai-card.tsx
+  s_955a5b644d1c62::t_403ae73550a225 3,41,50
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.module.css
+  s_955a5b644d1c62::t_6d2f2366832d8d 20-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "22b6f9ad89f81345d05c19ed9c42bf1668dde83d",
+  "prompts": {},
+  "sessions": {
+    "s_48530c975a60b2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "dca607c7-a321-4eb6-9b31-559629a6a518",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
