@@ -111,7 +111,6 @@ export default function DownloadClientsWidget({
 
   const [clientFilter, setClientFilter] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
-  const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
 
   const utils = clientApi.useUtils();
@@ -454,7 +453,6 @@ export default function DownloadClientsWidget({
           onRowContextMenu={isEditMode ? undefined : handleContextMenu}
           rowExpansion={{
             allowMultiple: true,
-            expanded: { recordIds: expandedIds, onRecordIdsChange: setExpandedIds },
             content: ({ record }) => <ExpandedRow item={record} />,
           }}
         />
