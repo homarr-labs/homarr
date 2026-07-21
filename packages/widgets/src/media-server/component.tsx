@@ -77,7 +77,9 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
               ? Math.min(100, Math.round((positionMs / durationMs) * 100))
               : null;
           const remainingMinutes =
-            positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
+            positionMs !== null && durationMs !== null
+              ? Math.max(0, Math.round((durationMs - positionMs) / 60_000))
+              : null;
 
           return (
             <Stack gap={4} style={{ minWidth: 0 }}>
@@ -124,8 +126,8 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
 
           const isTranscoding = Boolean(
             currentlyPlaying.metadata?.transcoding.target.videoCodec ??
-              currentlyPlaying.metadata?.transcoding.target.audioCodec ??
-              currentlyPlaying.metadata?.transcoding.container,
+            currentlyPlaying.metadata?.transcoding.target.audioCodec ??
+            currentlyPlaying.metadata?.transcoding.container,
           );
 
           return (
