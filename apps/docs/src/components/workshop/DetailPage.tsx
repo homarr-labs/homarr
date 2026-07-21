@@ -472,25 +472,31 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
             <DialogTitle>Edit submission</DialogTitle>
             <DialogDescription>Saving creates a new revision and keeps the same Workshop URL.</DialogDescription>
           </DialogHeader>
-          <label className="grid gap-1.5 text-sm">
+          <label htmlFor="workshop-edit-title" className="grid gap-1.5 text-sm">
             Title
-            <Input value={editTitle} onChange={(event) => setEditTitle(event.target.value)} />
+            <Input id="workshop-edit-title" value={editTitle} onChange={(event) => setEditTitle(event.target.value)} />
           </label>
-          <label className="grid gap-1.5 text-sm">
+          <label htmlFor="workshop-edit-description" className="grid gap-1.5 text-sm">
             Description
-            <Textarea value={editDescription} onChange={(event) => setEditDescription(event.target.value)} />
+            <Textarea
+              id="workshop-edit-description"
+              value={editDescription}
+              onChange={(event) => setEditDescription(event.target.value)}
+            />
           </label>
-          <label className="grid gap-1.5 text-sm">
+          <label htmlFor="workshop-edit-changelog" className="grid gap-1.5 text-sm">
             Changelog
             <Textarea
+              id="workshop-edit-changelog"
               value={editChangelog}
               onChange={(event) => setEditChangelog(event.target.value)}
               placeholder="What changed?"
             />
           </label>
-          <label className="grid gap-1.5 text-sm">
+          <label htmlFor="workshop-edit-content" className="grid gap-1.5 text-sm">
             Content
             <Textarea
+              id="workshop-edit-content"
               className="font-mono text-xs"
               rows={14}
               value={editContent}
