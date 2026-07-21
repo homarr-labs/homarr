@@ -492,7 +492,11 @@ export default function DownloadClientsWidget({
             color="dark"
           >
             <Group gap={6} wrap="nowrap">
-              <Badge size="xs" variant="dot" color={stateColorMap[record.state]} style={{ flexShrink: 0 }} />
+              <Box
+                w={8}
+                h={8}
+                style={{ borderRadius: "50%", backgroundColor: `var(--mantine-color-${stateColorMap[record.state]}-filled)`, flexShrink: 0 }}
+              />
               <Text size={size.fontSize} truncate fw={500}>
                 {record.name}
               </Text>
