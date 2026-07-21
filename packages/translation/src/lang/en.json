@@ -3068,6 +3068,12 @@
         "limitPerIntegration": {
           "label": "Limit items per integration",
           "description": "This will limit the number of items shown per integration, not globally"
+        },
+        "columnOrder": {
+          "label": "Column order"
+        },
+        "columnWidths": {
+          "label": "Column widths"
         }
       },
       "errors": {
