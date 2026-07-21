@@ -477,7 +477,7 @@ export default function DownloadClientsWidget({
         render: (record) => {
           const pct = Math.floor(record.progress * 100);
           return (
-            <Tooltip label={buildProgressTooltip(record)} withArrow openDelay={300} position="top">
+            <Tooltip label={buildProgressTooltip(record)} withArrow openDelay={300} position="top" color="dark">
               <Group gap={4} wrap="nowrap" style={{ flex: 1 }}>
                 <Text size="xs" fw={500} w={36} ta="right" style={{ flexShrink: 0 }}>
                   {`${pct}%`}
@@ -860,7 +860,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
           thickness={5}
           roundCaps
           sections={[{ value: progressPercent, color: progressColor(item.state, item.progress) }]}
-          label={<Text size="xs" ta="center" fw={700}>{`${progressPercent}%`}</Text>}
+          label={<Text ta="center" fw={700} style={{ fontSize: 10 }}>{`${progressPercent}%`}</Text>}
         />
 
         <Stack gap={4} style={{ flex: 1 }}>
@@ -1176,8 +1176,8 @@ function WidgetFooter({
           <Stack gap={6}>
             {clients.length > 1 && (
               <Group gap={4}>
-                <Text size="xs" fw={600} w={50}>{t("items.integration.columnTitle")}:</Text>
-                <Group gap={4}>
+                <Text size="xs" fw={600} style={{ flexShrink: 0 }}>{t("items.integration.columnTitle")}:</Text>
+                <Group gap={4} wrap="wrap">
                   {clients.map(({ integration }) => {
                     const active = clientFilter.includes(integration.id);
                     let variant: "filled" | "light" = "light";
@@ -1202,8 +1202,8 @@ function WidgetFooter({
             )}
             {availableStatuses.length > 1 && (
               <Group gap={4}>
-                <Text size="xs" fw={600} w={50}>{t("items.state.columnTitle")}:</Text>
-                <Group gap={4}>
+                <Text size="xs" fw={600} style={{ flexShrink: 0 }}>{t("items.state.columnTitle")}:</Text>
+                <Group gap={4} wrap="wrap">
                   {availableStatuses.map((status) => {
                     const active = statusFilter.includes(status);
                     let variant: "filled" | "light" = "light";
@@ -1259,7 +1259,7 @@ function WidgetFooter({
         </Group>
 
         <Group gap={8}>
-          {hasTorrents && globalRatio > 0 && (
+          {!showStats && hasTorrents && globalRatio > 0 && (
             <Text size="xs" c="dimmed">{`${t("globalRatio")}: ${globalRatio.toFixed(2)}`}</Text>
           )}
 
@@ -1278,18 +1278,20 @@ function WidgetFooter({
               </Tooltip>
             )}
 
-            <Group gap={2}>
-              <Text size="xs" fw={600} c="blue">
-                <IconDownload size={10} style={{ verticalAlign: "middle", marginRight: 2 }} />
-                {formatByteRate(totalSpeed)}
-              </Text>
-              {totalUpSpeed > 0 && (
-                <Text size="xs" fw={600} c="green">
-                  <IconUpload size={10} style={{ verticalAlign: "middle", marginRight: 2 }} />
-                  {formatByteRate(totalUpSpeed)}
+            {!showStats && (
+              <Group gap={2}>
+                <Text size="xs" fw={600} c="blue">
+                  <IconDownload size={10} style={{ verticalAlign: "middle", marginRight: 2 }} />
+                  {formatByteRate(totalSpeed)}
                 </Text>
-              )}
-            </Group>
+                {totalUpSpeed > 0 && (
+                  <Text size="xs" fw={600} c="green">
+                    <IconUpload size={10} style={{ verticalAlign: "middle", marginRight: 2 }} />
+                    {formatByteRate(totalUpSpeed)}
+                  </Text>
+                )}
+              </Group>
+            )}
 
             {someInteract && (
               <Tooltip label={t("actions.clients.pause")}>
