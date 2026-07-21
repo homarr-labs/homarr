@@ -1,7 +1,12 @@
 import { z } from "zod/v4";
 
-import { customJsxRequestSchema, customWidgetSecretKinds, customWidgetSourceSchema } from "../core";
-import type { CustomJsxRequest, CustomWidgetSource } from "../core";
+import {
+  customWidgetOptionsSchema,
+  customWidgetRequestsSchema,
+  customWidgetSecretKinds,
+  customWidgetSourcesSchema,
+} from "../core";
+import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource } from "../core";
 import { CustomWidgetDomainError } from "./errors";
 
 const SESSION_TTL_MS = 10 * 60_000;
@@ -17,12 +22,12 @@ const sessionSchema = z.object({
   id: z.string(),
   userId: z.string(),
   expiresAt: z.number(),
-  sources: z.array(customWidgetSourceSchema),
+  sources: customWidgetSourcesSchema,
   secrets: z.array(encryptedSecretSchema),
-  requests: z.array(customJsxRequestSchema),
+  requests: customWidgetRequestsSchema,
   name: z.string(),
   template: z.string(),
-  optionsSchema: z.record(z.string(), z.unknown()),
+  optionDefinitions: customWidgetOptionsSchema,
   options: z.record(z.string(), z.unknown()),
   definitionId: z.string().optional(),
   liveActions: z.boolean(),
@@ -34,7 +39,7 @@ const journalEntrySchema = z.object({
   requestId: z.string(),
   kind: z.enum(["query", "action"]),
   method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]),
-  pathTemplate: z.string(),
+  path: z.string(),
   status: z.number().nullable(),
   durationMs: z.number().nonnegative(),
   simulated: z.boolean(),
@@ -44,12 +49,12 @@ export type CustomWidgetPreviewJournalEntry = z.infer<typeof journalEntrySchema>
 
 export interface CreatePreviewSessionInput {
   userId: string;
-  sources: CustomWidgetSource[];
+  sources: Record<string, CustomWidgetSource>;
   secrets: Array<{ sourceId: string; kind: (typeof customWidgetSecretKinds)[number]; value: string }>;
-  requests: CustomJsxRequest[];
+  requests: Record<string, CustomJsxRequest>;
   name: string;
   template: string;
-  optionsSchema: Record<string, unknown>;
+  optionDefinitions: CustomWidgetOptions;
   options: Record<string, unknown>;
   definitionId?: string;
 }
@@ -80,7 +85,7 @@ export class CustomWidgetPreviewSessionService {
   }
 
   public async create(input: CreatePreviewSessionInput) {
-    const sourceIds = new Set(input.sources.map((source) => source.id));
+    const sourceIds = new Set(Object.keys(input.sources));
     if (input.secrets.some((secret) => !sourceIds.has(secret.sourceId))) {
       throw new CustomWidgetDomainError({
         code: "BAD_REQUEST",
@@ -96,7 +101,7 @@ export class CustomWidgetPreviewSessionService {
       requests: input.requests,
       name: input.name,
       template: input.template,
-      optionsSchema: input.optionsSchema,
+      optionDefinitions: input.optionDefinitions,
       options: input.options,
       definitionId: input.definitionId,
       liveActions: false,
@@ -155,7 +160,7 @@ export class CustomWidgetPreviewSessionService {
     secrets: Array<{ sourceId: string; kind: (typeof customWidgetSecretKinds)[number]; value: string }>,
   ) {
     const session = await this.get(id, userId);
-    const sourceIds = new Set(session.sources.map((source) => source.id));
+    const sourceIds = new Set(Object.keys(session.sources));
     if (secrets.some((secret) => !sourceIds.has(secret.sourceId))) {
       throw new CustomWidgetDomainError({
         code: "BAD_REQUEST",

@@ -1,7 +1,11 @@
-import { parse as parseSuperJson, stringify as stringifySuperJson } from "superjson";
+import { stringify as stringifySuperJson } from "superjson";
 import { describe, expect, test } from "vitest";
 
-import { BUNDLED_CUSTOM_WIDGETS, CUSTOM_WIDGET_STARTER } from "@homarr/custom-widgets/core";
+import {
+  BUNDLED_CUSTOM_WIDGETS,
+  CUSTOM_WIDGET_STARTER,
+  customWidgetDefinitionSchema,
+} from "@homarr/custom-widgets/core";
 
 import {
   safeParseStoredCustomWidgetDefinition,
@@ -10,36 +14,31 @@ import {
 
 describe("stored custom widget definitions", () => {
   test("parses a valid stored definition", () => {
-    const result = safeParseStoredCustomWidgetDefinition(serializeCustomWidgetDefinition(CUSTOM_WIDGET_STARTER));
+    const result = safeParseStoredCustomWidgetDefinition(
+      serializeCustomWidgetDefinition(customWidgetDefinitionSchema.parse(CUSTOM_WIDGET_STARTER)),
+    );
 
     expect(result).toMatchObject({ success: true, widget: { $schema: "homarr-custom-widget-v2" } });
   });
 
-  test("returns all useful issues for a stale load request instead of throwing", () => {
+  test("returns useful issues for an invalid stored request instead of throwing", () => {
     const currency = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-currency-exchange");
     if (!currency) throw new Error("Currency Exchange bundled widget is missing");
 
-    const stored = serializeCustomWidgetDefinition(currency.widget);
-    const requests = parseSuperJson(stored.requests) as Array<Record<string, unknown>>;
-    delete requests[0]?.optionsBinding;
-
+    const stored = serializeCustomWidgetDefinition(customWidgetDefinitionSchema.parse(currency.widget));
     const result = safeParseStoredCustomWidgetDefinition({
       ...stored,
-      requests: stringifySuperJson(requests),
+      requests: stringifySuperJson({ rates: { path: "/latest/{option:missing}" } }),
     });
 
     expect(result).toEqual({
       success: false,
-      issues: expect.arrayContaining([
-        expect.objectContaining({ path: "requests.0.optionsBinding.from" }),
-        expect.objectContaining({ path: "requests.0.optionsBinding.to" }),
-        expect.objectContaining({ path: "requests.0.optionsBinding.amount" }),
-      ]),
+      issues: expect.arrayContaining([expect.objectContaining({ path: "requests.rates" })]),
     });
   });
 
   test("contains malformed serialized data", () => {
-    const stored = serializeCustomWidgetDefinition(CUSTOM_WIDGET_STARTER);
+    const stored = serializeCustomWidgetDefinition(customWidgetDefinitionSchema.parse(CUSTOM_WIDGET_STARTER));
 
     expect(safeParseStoredCustomWidgetDefinition({ ...stored, requests: "not-json" })).toEqual({
       success: false,

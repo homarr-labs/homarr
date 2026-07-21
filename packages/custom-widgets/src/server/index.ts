@@ -30,6 +30,6 @@ export {
   renderBoundValue,
   renderRequestBody,
   renderRequestTarget,
-  validateRuntimeParams,
+  resolveCustomWidgetRequestValues,
 } from "./request-manifest";
 export type { CustomJsxRuntimeParams } from "./request-manifest";

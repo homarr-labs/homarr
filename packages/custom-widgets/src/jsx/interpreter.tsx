@@ -49,6 +49,21 @@ class Interpreter {
 
     switch (node.type) {
       case "Literal":
+        if (node.regex !== undefined) {
+          const regex = node.regex as { pattern?: unknown; flags?: unknown };
+          if (
+            typeof regex.pattern !== "string" ||
+            regex.pattern.length > 128 ||
+            typeof regex.flags !== "string" ||
+            /[^gimsu]/u.test(regex.flags) ||
+            /\\[1-9]|\(\?<[=!]|(?:\+|\*|\{\d+(?:,\d*)?\})\)?(?:\+|\*|\{)/u.test(regex.pattern)
+          ) {
+            throw new SafeJsxError("UNSAFE_REGEX: Invalid regular expression literal");
+          }
+          return new RegExp(regex.pattern, regex.flags);
+        }
+        if (typeof node.value === "bigint")
+          throw new SafeJsxError("BIGINT_NOT_SUPPORTED: Use Number for widget values");
         return node.value;
       case "Identifier":
         return environment.get(String(node.name));
@@ -263,22 +278,8 @@ class Interpreter {
     if (node.optional) throw new SafeJsxError("Optional calls are not supported");
     const callee = asNode(node.callee, "call target");
     const argumentNodes = asNodeArray(node.arguments, "call arguments");
-    if (callee.type === "ArrowFunctionExpression") {
-      if (callee.body && asNode(callee.body, "inline derived-value body").type !== "BlockStatement") {
-        throw new SafeJsxError(
-          "BLOCK_REQUIRES_FINAL_RETURN: Inline derived-value functions require a safe const block",
-        );
-      }
-      if (asNodeArray(callee.params, "inline derived-value parameters").length > 0) {
-        throw new SafeJsxError("CALLBACK_VALUE_NOT_ALLOWED: Inline derived-value functions cannot declare parameters");
-      }
-      if (argumentNodes.length > 0) {
-        throw new SafeJsxError(
-          "CALLBACK_VALUE_NOT_ALLOWED: Inline derived-value functions must be called without arguments",
-        );
-      }
-      return this.runCallback(this.createCallback(callee, environment), [], depth + 1);
-    }
+    if (callee.type === "ArrowFunctionExpression")
+      throw new SafeJsxError("CALL_TARGET_NOT_ALLOWED: Inline IIFEs are not supported");
     const callbackMethod =
       callee.type === "MemberExpression"
         ? callee.computed

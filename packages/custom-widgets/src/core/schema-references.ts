@@ -1,143 +1,60 @@
 import { z } from "zod/v4";
 
-import { customWidgetOptionsSchemaSchema } from "./options-schema";
-import { customJsxRequestSchema } from "./request-schema";
+import { customWidgetOptionsSchema } from "./options-schema";
+import { customWidgetRequestsSchema } from "./request-schema";
 
 let requestsSchema: Record<string, unknown> | undefined;
 let optionsSchema: Record<string, unknown> | undefined;
-let defaultOptionsSchema: Record<string, unknown> | undefined;
 
 export function getCustomWidgetRequestsJsonSchema() {
   requestsSchema ??= {
-    ...z.toJSONSchema(customJsxRequestSchema.array()),
+    ...z.toJSONSchema(customWidgetRequestsSchema, { io: "input" }),
     title: "Named Custom Widget queries and actions",
   };
   return requestsSchema;
 }
 
 export function getCustomWidgetOptionsJsonSchema() {
-  optionsSchema ??= {
-    ...z.toJSONSchema(customWidgetOptionsSchemaSchema),
-    title: "Custom Widget options schema",
-  };
+  optionsSchema ??= { ...z.toJSONSchema(customWidgetOptionsSchema, { io: "input" }), title: "Custom Widget options" };
   return optionsSchema;
 }
 
-export function getCustomWidgetDefaultOptionsJsonSchema() {
-  defaultOptionsSchema ??= {
-    ...z.toJSONSchema(z.record(z.string(), z.unknown())),
-    title: "Custom Widget default option values",
-    description: "Values must validate against the widget options schema.",
-  };
-  return defaultOptionsSchema;
-}
-
 export const CUSTOM_WIDGET_REQUEST_EXAMPLES = {
-  minimal: [
-    {
-      id: "data",
-      sourceId: "default",
-      kind: "query",
-      method: "GET",
-      pathTemplate: "/api/status",
-      parameters: {},
-      auth: "inherit",
-      minimumBoardPermission: "view",
-      trigger: "load",
+  minimal: { data: { path: "/api/status" } },
+  full: {
+    environments: { path: "/api/environments", cacheSeconds: 60 },
+    summary: {
+      path: "/api/environments/{option:environmentId}/summary",
+      query: { includeStopped: { $option: "includeStopped" } },
+      cacheSeconds: 60,
     },
-  ],
-  full: [
-    {
-      id: "environments",
-      sourceId: "default",
-      kind: "query",
-      method: "GET",
-      pathTemplate: "/api/environments",
-      parameters: {},
-      auth: "inherit",
-      minimumBoardPermission: "view",
-      trigger: "load",
-      cacheTtlSeconds: 60,
-    },
-    {
-      id: "summary",
-      sourceId: "default",
-      kind: "query",
-      method: "GET",
-      pathTemplate: "/api/environments/{environmentId}/summary",
-      parameters: { environmentId: "number", includeStopped: "boolean" },
-      optionsBinding: {
-        environmentId: { $option: "environmentId" },
-        includeStopped: false,
-      },
-      queryTemplate: { includeStopped: { $param: "includeStopped" } },
-      auth: "inherit",
-      minimumBoardPermission: "view",
-      trigger: "load",
-      cacheTtlSeconds: 60,
-    },
-    {
-      id: "search",
-      sourceId: "default",
-      kind: "query",
-      method: "POST",
-      pathTemplate: "/api/search",
-      parameters: { query: "string", limit: "number" },
-      queryTemplate: { limit: { $param: "limit" } },
-      bodyTemplate: { term: { $param: "query" } },
-      auth: "inherit",
-      minimumBoardPermission: "view",
+    search: {
       trigger: "manual",
-      cacheTtlSeconds: 30,
+      method: "POST",
+      path: "/api/search",
+      query: { limit: { $param: "limit" } },
+      body: { term: { $param: "query" } },
     },
-    {
-      id: "restart",
-      sourceId: "default",
+    restart: {
       kind: "action",
       method: "POST",
-      pathTemplate: "/api/containers/{id}/restart",
-      parameters: { id: "string" },
-      auth: "inherit",
-      minimumBoardPermission: "modify",
-      trigger: "manual",
-      confirmation: {
-        title: "Restart container",
-        message: "Restart this container now?",
-        confirmLabel: "Restart",
-      },
-      invalidates: ["search"],
+      path: "/api/containers/{param:id}/restart",
+      confirmation: "Restart this container?",
+      invalidates: ["summary"],
     },
-  ],
+  },
 } as const;
 
 export const CUSTOM_WIDGET_OPTIONS_EXAMPLES = {
-  minimal: {
-    schema: { type: "object", properties: {}, additionalProperties: false },
-    defaults: {},
-  },
+  minimal: {},
   full: {
-    schema: {
-      type: "object",
-      properties: {
-        title: { type: "string", title: "Title", "x-homarr": { control: "text" } },
-        limit: { type: "number", title: "Result limit", minimum: 1, maximum: 100 },
-        environmentId: {
-          type: "number",
-          title: "Environment",
-          "x-homarr": {
-            control: "select",
-            optionsSource: {
-              requestId: "environments",
-              itemsPath: "items",
-              valuePath: "Id",
-              labelPath: "Name",
-            },
-          },
-        },
-      },
-      required: ["limit"],
-      additionalProperties: false,
+    title: { label: "Title", control: "text", default: "Overview" },
+    limit: { label: "Result limit", control: "number", default: 20, min: 1, max: 100 },
+    environmentId: {
+      label: "Environment",
+      control: "select",
+      default: 1,
+      choicesFrom: { request: "environments", itemsPath: "items", valuePath: "Id", labelPath: "Name" },
     },
-    defaults: { title: "Overview", limit: 20 },
   },
 } as const;

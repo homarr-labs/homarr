@@ -15,13 +15,15 @@ export interface SubFetchMetadata {
   ok: boolean;
   status: number;
   statusText?: string;
+  loading: false;
+  error?: undefined;
 }
 
 export interface SubFetchProps {
   requestId?: string;
   params?: CustomJsxRuntimeParams;
   refreshInterval?: number;
-  children?: ReactNode;
+  children?: ReactNode | ((data: unknown, metadata: SubFetchMetadata) => ReactNode);
   loadingLabel?: string;
   errorMessage?: string;
   fallback?: ReactNode;
@@ -105,7 +107,12 @@ export function SubFetch(props: SubFetchProps) {
     );
   }
 
-  const content = renderContent(props, result?.data);
+  const content = renderContent(props, result?.data, {
+    ok: result?.ok ?? false,
+    status: result?.status ?? 0,
+    statusText: result?.statusText,
+    loading: false,
+  });
   return <SubFetchDataContext.Provider value={result?.data}>{content}</SubFetchDataContext.Provider>;
 }
 
@@ -113,7 +120,8 @@ function normalizeRefreshInterval(value: number | undefined): number | false {
   return value && Number.isFinite(value) && value > 0 ? Math.max(1_000, value * 1_000) : false;
 }
 
-function renderContent(props: SubFetchProps, data: unknown) {
+function renderContent(props: SubFetchProps, data: unknown, metadata: SubFetchMetadata) {
+  if (typeof props.children === "function") return props.children(data, metadata);
   if (props.children) return props.children;
   if (props.path === undefined && props.as === undefined) return null;
   const value = getByPath(data, props.path);

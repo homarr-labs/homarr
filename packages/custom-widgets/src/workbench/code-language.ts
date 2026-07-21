@@ -1,6 +1,4 @@
-import { snippetCompletion } from "@codemirror/autocomplete";
 import type { Completion, CompletionSource } from "@codemirror/autocomplete";
-import { jsxLanguage } from "@codemirror/lang-javascript";
 import { hoverTooltip } from "@codemirror/view";
 
 import {
@@ -41,64 +39,11 @@ const iconCompletions: Completion[] = customJsxTablerIconNames.map((name) => ({
   detail: "Safe Tabler icon",
 }));
 
-export const customJsxSafeBlockCompletions: Completion[] = [
-  snippetCompletion("map((item) => {\n\tconst value = ${};\n\treturn ${};\n})", {
-    label: "map block",
-    detail: "Safe immutable collection callback",
-    type: "snippet",
-  }),
-  snippetCompletion("(() => {\n\tconst value = ${};\n\treturn ${};\n})()", {
-    label: "derived value IIFE",
-    detail: "Safe page-level derived value",
-    type: "snippet",
-  }),
-];
-
 const rootBindingCompletions: Completion[] = [...ROOT_BINDINGS].toSorted().map((label) => ({
   label,
   type: ["data", "status", "options", "inputs"].includes(label) ? "variable" : "function",
   detail: "Safe Custom JSX binding",
 }));
-
-export function getCustomJsxLocalConstCompletions(source: string, cursor: number): Completion[] {
-  const wrapped = `<>${source}</>`;
-  const target = cursor + 2;
-  let activeNode = jsxLanguage.parser.parse(wrapped).resolveInner(target, -1);
-  while (activeNode.name !== "Block") {
-    const parent = activeNode.parent;
-    if (!parent) return [];
-    activeNode = parent;
-  }
-  const completions: Completion[] = [];
-  let arrow = activeNode.parent;
-  while (arrow && arrow.name !== "ArrowFunction") arrow = arrow.parent;
-  arrow
-    ?.getChild("ParamList")
-    ?.getChildren("VariableDefinition")
-    .forEach((definition) => {
-      completions.push({
-        label: wrapped.slice(definition.from, definition.to),
-        type: "variable",
-        detail: "Safe callback parameter",
-      });
-    });
-  for (let statement = activeNode.firstChild; statement; statement = statement.nextSibling) {
-    if (statement.name !== "VariableDeclaration" || statement.from >= target) continue;
-    if (statement.firstChild?.name !== "const") continue;
-    const definitions = statement.getChildren("VariableDefinition");
-    definitions.forEach((definition, index) => {
-      const nextDefinition = definitions[index + 1];
-      const declaratorFinished = nextDefinition ? nextDefinition.from <= target : statement.to < target;
-      if (!declaratorFinished) return;
-      completions.push({
-        label: wrapped.slice(definition.from, definition.to),
-        type: "variable",
-        detail: "Safe local const",
-      });
-    });
-  }
-  return completions;
-}
 
 export const createCustomJsxCompletionSource =
   (additional: Completion[]): CompletionSource =>
@@ -106,7 +51,6 @@ export const createCustomJsxCompletionSource =
     const word = context.matchBefore(/[A-Za-z](?:[\w."'_-]|\[|\])*/u);
     if (!word && !context.explicit) return null;
     const source = context.state.doc.toString();
-    const localCompletions = getCustomJsxLocalConstCompletions(source, context.pos);
     const componentName = activeOpeningComponent(source, context.pos);
     const contextualCompletions = componentName
       ? [
@@ -116,13 +60,7 @@ export const createCustomJsxCompletionSource =
       : componentCompletions;
     return {
       from: word?.from ?? context.pos,
-      options: [
-        ...localCompletions,
-        ...customJsxSafeBlockCompletions,
-        ...rootBindingCompletions,
-        ...contextualCompletions,
-        ...additional,
-      ],
+      options: [...rootBindingCompletions, ...contextualCompletions, ...additional],
     };
   };
 

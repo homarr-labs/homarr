@@ -1,7 +1,6 @@
 import { enabledCustomJsxComponents } from "../core/component-registry";
 import type { AstNode } from "./analyzer-ast";
 import { nodeOf, staticPropertyName } from "./analyzer-ast";
-import { CUSTOM_JSX_BLOCKED_PROPERTIES, normalizeCustomJsxProperty } from "./policy";
 
 export const ROOT_BINDINGS = new Set([
   "Array",
@@ -85,11 +84,6 @@ export function isSafeLiteralCustomJsxUrl(value: string): boolean {
   } catch {
     return false;
   }
-}
-
-export function isRestrictedRecursiveListPath(value: string): boolean {
-  if (!/^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*$/u.test(value)) return false;
-  return value.split(".").every((segment) => !CUSTOM_JSX_BLOCKED_PROPERTIES.has(normalizeCustomJsxProperty(segment)));
 }
 
 export function isStaticallyCallableBinding(node: AstNode): boolean {

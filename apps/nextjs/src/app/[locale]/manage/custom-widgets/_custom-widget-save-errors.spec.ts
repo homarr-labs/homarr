@@ -45,13 +45,13 @@ describe("extractCustomWidgetSaveIssues", () => {
       {
         code: "custom",
         message: "A load parameter requires an explicit binding.",
-        path: ["requests", 0, "optionsBinding", "endpointId"],
+        path: ["requests", "containers", "path"],
       },
     ]);
 
     expect(extractCustomWidgetSaveIssues({ message })).toEqual([
       {
-        path: "requests.0.optionsBinding.endpointId",
+        path: "requests.containers.path",
         message: "A load parameter requires an explicit binding.",
       },
     ]);

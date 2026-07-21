@@ -1,11 +1,11 @@
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { resolveCustomWidgetOptionsBinding } from "@homarr/custom-widgets/core";
 import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
 import { z } from "zod/v4";
 
 import { appendPreviewJournal } from "./preview-sessions";
 import { getPreviewSessionSecrets } from "./preview-sessions";
 import type { CustomWidgetPreviewSession } from "./preview-sessions";
+import { resolveCustomWidgetRequestValues } from "./request-manifest";
 
 const logger = createLogger({ module: "custom-widget-preview" });
 
@@ -27,19 +27,20 @@ export const recordPreviewJournal = async (...args: Parameters<typeof appendPrev
 };
 
 export const getPreviewRequestSource = (session: CustomWidgetPreviewSession, sourceId: string) => {
-  const source = session.sources.find((candidate) => candidate.id === sourceId);
+  const source = session.sources[sourceId];
   if (!source) return null;
+  const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
   const auth =
-    source.auth.type === "none"
+    authType === "none"
       ? undefined
       : {
-          type: source.auth.type,
-          secrets: getPreviewSessionSecrets(session, source.id),
+          type: authType,
+          secrets: getPreviewSessionSecrets(session, sourceId),
           headerName:
-            source.auth.type === "apiKeyHeader"
-              ? source.auth.headerName
-              : source.auth.type === "apiKeyQuery"
-                ? source.auth.parameterName
+            typeof source.auth === "object" && source.auth.type === "apiKeyHeader"
+              ? source.auth.name
+              : typeof source.auth === "object" && source.auth.type === "apiKeyQuery"
+                ? source.auth.name
                 : undefined,
         };
   return { source, auth };
@@ -50,5 +51,5 @@ export function resolvePreviewRequestParams(
   options: Record<string, unknown>,
   suppliedParams: Record<string, string | number | boolean>,
 ) {
-  return request.trigger === "load" ? resolveCustomWidgetOptionsBinding(request, options) : suppliedParams;
+  return resolveCustomWidgetRequestValues(request, options, suppliedParams);
 }

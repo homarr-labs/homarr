@@ -5,6 +5,8 @@ import { decryptSecret } from "@homarr/common/server";
 import {
   customWidgetDefinitionSchema,
   customWidgetSecretsInputSchema,
+  getCustomWidgetConfirmation,
+  getCustomWidgetDefaultOptions,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import { eq } from "@homarr/db";
@@ -29,8 +31,8 @@ const previewCreateProcedure = manageProcedure
     if (input.secrets.length > 0 && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
       throw new TRPCError({ code: "FORBIDDEN", message: "Writing preview secrets requires dedicated permission" });
     }
-    const options = input.options ?? input.definition.defaultOptions;
-    const optionIssues = validateCustomWidgetOptions(input.definition.optionsSchema, options);
+    const options = input.options ?? getCustomWidgetDefaultOptions(input.definition.options);
+    const optionIssues = validateCustomWidgetOptions(input.definition.options, options);
     if (optionIssues.length > 0) {
       const issue = optionIssues[0];
       throw new TRPCError({
@@ -54,11 +56,12 @@ const previewCreateProcedure = manageProcedure
     }
 
     const invalid = secrets.find((secret) => {
-      const source = input.definition.sources.find((candidate) => candidate.id === secret.sourceId);
+      const source = input.definition.sources[secret.sourceId];
+      const authType = typeof source?.auth === "string" ? source.auth : source?.auth.type;
       const kinds =
-        source?.auth.type === "basic"
+        authType === "basic"
           ? ["username", "password"]
-          : source && ["bearer", "apiKeyHeader", "apiKeyQuery"].includes(source.auth.type)
+          : source && authType && ["bearer", "apiKeyHeader", "apiKeyQuery"].includes(authType)
             ? ["apiKey"]
             : [];
       return !source || !kinds.includes(secret.kind);
@@ -73,7 +76,7 @@ const previewCreateProcedure = manageProcedure
       requests: input.definition.requests,
       name: input.definition.name,
       template: input.definition.template,
-      optionsSchema: input.definition.optionsSchema,
+      optionDefinitions: input.definition.options,
       options,
       secrets,
       definitionId: input.definitionId,
@@ -87,7 +90,7 @@ const previewCreateProcedure = manageProcedure
       ).toString(),
       definition: {
         template: input.definition.template,
-        defaultOptions: input.definition.defaultOptions,
+        defaultOptions: getCustomWidgetDefaultOptions(input.definition.options),
       },
     };
   });
@@ -101,31 +104,17 @@ export const previewBaseProcedures = {
       name: session.name,
       expiresAt: session.expiresAt,
       template: session.template,
-      optionsSchema: session.optionsSchema,
+      optionDefinitions: session.optionDefinitions,
       options: session.options,
-      requests: session.requests.map(
-        ({
-          id,
-          kind,
-          method,
-          minimumBoardPermission,
-          trigger,
-          parameters,
-          optionsBinding,
-          confirmation,
-          invalidates,
-        }) => ({
-          id,
-          kind,
-          method,
-          minimumBoardPermission,
-          trigger,
-          parameters,
-          optionsBinding,
-          confirmation,
-          invalidates,
-        }),
-      ),
+      requests: Object.entries(session.requests).map(([id, request]) => ({
+        id,
+        kind: request.kind,
+        method: request.method,
+        minimumBoardPermission: request.permission,
+        trigger: request.trigger,
+        confirmation: getCustomWidgetConfirmation(request),
+        invalidates: request.invalidates,
+      })),
       liveActions: session.liveActions,
     };
   }),

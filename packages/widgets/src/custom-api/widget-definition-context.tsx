@@ -27,12 +27,17 @@ interface WidgetDefinitionProviderProps {
   children: ReactNode;
 }
 
-export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
+const INACTIVE_PORT: CustomWidgetRuntimePort = {
+  query: async () => ({ ok: false, status: 0, data: null, error: "Custom widget unavailable" }),
+  executeAction: async () => ({ ok: false, status: 0, data: null, error: "Custom widget unavailable" }),
+  invalidate: async () => undefined,
+  confirm: async () => false,
+  notify: () => undefined,
+};
+
+const useRuntimeMessages = (): CustomWidgetRuntimeMessages => {
   const t = useScopedI18n("widget.customApi.customJsx");
-  const utils = clientApi.useUtils();
-  const queryClient = useQueryClient();
-  const { openConfirmModal } = useConfirmModal();
-  const messages: CustomWidgetRuntimeMessages = {
+  return {
     requestIdRequired: t("requestIdRequired"),
     unsavedPreview: t("unsavedPreview"),
     invalidParams: t("invalidParams"),
@@ -48,6 +53,32 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
     toggle: t("toggle"),
     refresh: t("refresh"),
   };
+};
+
+export function InactiveWidgetDefinitionProvider({
+  definitionId,
+  isEditMode,
+  children,
+}: Pick<WidgetDefinitionProviderProps, "definitionId" | "isEditMode" | "children">) {
+  const messages = useRuntimeMessages();
+  return (
+    <CustomWidgetRuntimeProvider
+      definitionId={definitionId}
+      isEditMode={isEditMode ?? false}
+      requestCapabilities={[]}
+      port={INACTIVE_PORT}
+      messages={messages}
+    >
+      {children}
+    </CustomWidgetRuntimeProvider>
+  );
+}
+
+export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
+  const utils = clientApi.useUtils();
+  const queryClient = useQueryClient();
+  const { openConfirmModal } = useConfirmModal();
+  const messages = useRuntimeMessages();
   const port: CustomWidgetRuntimePort = {
     query: async (input, signal) => {
       if (input.itemId) {

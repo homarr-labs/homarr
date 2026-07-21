@@ -15,7 +15,6 @@ import { SubData } from "../runtime/data";
 import { RefreshButton } from "../runtime/refresh-button";
 import { SubFetch } from "../runtime/sub-fetch";
 import { Collapsible, PaginatedList, StatBar, TabPanel, TabsContainer, TypeBadge } from "./interactive-components";
-import { TrustedRecursiveList } from "./recursive-list";
 import { getScopedCustomJsxControlName, isSafeCustomJsxUrl } from "./runtime-component-policy";
 import { sanitizeCustomJsxProps } from "./safe-properties";
 
@@ -278,7 +277,6 @@ export function createCustomJsxComponents(adapters: CustomJsxComponentAdapters):
     ActionButton,
     ToggleSwitch,
     RefreshButton,
-    RecursiveList: TrustedRecursiveList,
   });
   return components;
 }

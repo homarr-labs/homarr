@@ -115,81 +115,11 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
     }
     const body = nodeOf(node.body);
     if (!body) return;
-    if (body.type === "BlockStatement") visitSafeBlock(body, depth + 1, callbackBindings);
+    if (body.type === "BlockStatement")
+      add(body, "UNSUPPORTED_BLOCK_STATEMENT: Use one expression in authored callbacks");
     else if (canStaticallyProduceCallable(body)) {
       add(body, "CALLBACK_VALUE_NOT_ALLOWED: Authored callbacks cannot return callable values");
     } else visit(body, depth + 1, callbackBindings);
-  };
-
-  const visitSafeBlock = (block: AstNode, depth: number, bindings: ReadonlySet<string>) => {
-    if (!checkBudget(block, depth)) return;
-    const statements = nodesOf(block.body);
-    const finalStatement = statements.at(-1);
-    if (statements.length === 0 || finalStatement?.type !== "ReturnStatement" || !nodeOf(finalStatement.argument)) {
-      add(block, "BLOCK_REQUIRES_FINAL_RETURN: A safe block must end with exactly one value-returning return");
-    }
-    if (statements.length < 2) {
-      add(block, "INVALID_LOCAL_DECLARATION: A safe block requires at least one const before its final return");
-    }
-
-    let scopedBindings = new Set(bindings);
-    const localNames = new Set<string>();
-    statements.forEach((statement, statementIndex) => {
-      if (!checkBudget(statement, depth + 1)) return;
-      const isFinal = statementIndex === statements.length - 1;
-      if (statement.type === "ReturnStatement") {
-        if (!isFinal) {
-          add(statement, "BLOCK_REQUIRES_FINAL_RETURN: Return is only allowed as the final statement");
-          return;
-        }
-        const argument = nodeOf(statement.argument);
-        if (argument && canStaticallyProduceCallable(argument)) {
-          add(argument, "CALLBACK_VALUE_NOT_ALLOWED: Authored callbacks cannot return callable values");
-        } else if (argument) visit(argument, depth + 1, scopedBindings);
-        return;
-      }
-      if (statement.type !== "VariableDeclaration") {
-        add(statement, `UNSUPPORTED_BLOCK_STATEMENT: '${statement.type}' is not allowed in a safe block`);
-        return;
-      }
-      if (statement.kind !== "const") {
-        add(statement, "INVALID_LOCAL_DECLARATION: Only immutable const declarations are allowed");
-        return;
-      }
-      for (const declaration of nodesOf(statement.declarations)) {
-        if (!checkBudget(declaration, depth + 2)) continue;
-        const identifier = nodeOf(declaration.id);
-        if (declaration.type !== "VariableDeclarator" || identifier?.type !== "Identifier") {
-          add(declaration, "INVALID_LOCAL_DECLARATION: Local declarations require a simple identifier");
-          continue;
-        }
-        const name = String(identifier.name);
-        if (isBlockedCustomJsxLexicalBinding(name)) {
-          add(identifier, `INVALID_LOCAL_DECLARATION: '${name}' is not a safe local binding name`);
-          continue;
-        }
-        if (RESERVED_LOCAL_BINDINGS.has(name)) {
-          add(identifier, `RESERVED_LOCAL_BINDING: '${name}' cannot be shadowed`);
-          continue;
-        }
-        if (localNames.has(name)) {
-          add(identifier, `DUPLICATE_LOCAL_BINDING: '${name}' is already declared`);
-          continue;
-        }
-        const initializer = nodeOf(declaration.init);
-        if (!initializer) {
-          add(declaration, `LOCAL_BINDING_REQUIRES_INITIALIZER: '${name}' requires an initializer`);
-          continue;
-        }
-        if (canStaticallyProduceCallable(initializer)) {
-          add(initializer, "CALLBACK_VALUE_NOT_ALLOWED: Functions cannot be stored in local bindings");
-          continue;
-        }
-        visit(initializer, depth + 1, scopedBindings);
-        localNames.add(name);
-        scopedBindings = new Set(scopedBindings).add(name);
-      }
-    });
   };
 
   visit = (node: AstNode, depth: number, bindings: ReadonlySet<string>): void => {
@@ -221,9 +151,9 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
         return;
       }
       case "Literal":
-        if (node.regex !== undefined || typeof node.value === "bigint") {
-          add(node, "Regular expressions and bigint literals are not supported");
-        }
+        if (typeof node.value === "bigint") add(node, "BIGINT_NOT_SUPPORTED: Use Number for widget values");
+        if (node.regex !== undefined && !isSafeRegexLiteral(node.regex))
+          add(node, "UNSAFE_REGEX: Use a bounded regex without lookbehind, backreferences, or nested quantifiers");
         return;
       case "Identifier": {
         const name = String(node.name ?? "");
@@ -307,17 +237,7 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
           add(node, "CALL_TARGET_NOT_ALLOWED: Optional calls are not supported");
         }
         if (callee?.type === "ArrowFunctionExpression") {
-          if (nodesOf(callee.params).length > 0) {
-            add(callee, "CALLBACK_VALUE_NOT_ALLOWED: Inline derived-value functions cannot declare parameters");
-          }
-          if (arguments_.length > 0) {
-            add(node, "CALLBACK_VALUE_NOT_ALLOWED: Inline derived-value functions must be called without arguments");
-          }
-          if (nodeOf(callee.body)?.type !== "BlockStatement") {
-            add(callee, "BLOCK_REQUIRES_FINAL_RETURN: Inline derived-value functions require a safe const block");
-          }
-          visitArrow(callee, depth + 1, bindings);
-          arguments_.forEach((argument) => visit(argument, depth + 1, bindings));
+          add(callee, "CALL_TARGET_NOT_ALLOWED: Inline IIFEs are not supported");
           return;
         }
         if (callee) visit(callee, depth + 1, bindings);
@@ -363,7 +283,7 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
         return;
       }
       case "BlockStatement":
-        add(node, "UNSUPPORTED_BLOCK_STATEMENT: Blocks are only allowed as safe callback or IIFE bodies");
+        add(node, "UNSUPPORTED_BLOCK_STATEMENT: Authored callbacks must use one expression");
         return;
       case "AssignmentExpression":
       case "UpdateExpression":
@@ -397,4 +317,12 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
   }
 
   return diagnostics;
+}
+
+function isSafeRegexLiteral(regex: unknown): boolean {
+  if (!regex || typeof regex !== "object") return false;
+  const { pattern, flags } = regex as { pattern?: unknown; flags?: unknown };
+  if (typeof pattern !== "string" || pattern.length > 128 || typeof flags !== "string" || /[^gimsu]/u.test(flags))
+    return false;
+  return !/\\[1-9]|\(\?<[=!]|(?:\+|\*|\{\d+(?:,\d*)?\})\)?(?:\+|\*|\{)/u.test(pattern);
 }

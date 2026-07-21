@@ -33,6 +33,13 @@ export const customJsxSupportedPropsByName = new Map(
   customJsxComponentRegistry.map((entry) => [entry.name, new Set(entry.supportedProps)]),
 );
 
+export function resolveCustomJsxComponentName(name: string): string {
+  if (name === "Icon") return "TablerIcon";
+  if (customJsxComponentByName.has(name)) return name;
+  const flat = name.replaceAll(".", "");
+  return customJsxComponentByName.has(flat) ? flat : name;
+}
+
 const catalogComponentsByName = new Map(
   customJsxAuthoringCatalog.components.map((component) => [component.name, component]),
 );
@@ -57,6 +64,7 @@ export function getCustomJsxBindingType(
   componentName: string,
   props: Readonly<Record<string, unknown>> = {},
 ): CustomJsxBindingType | null {
+  componentName = resolveCustomJsxComponentName(componentName);
   const type = catalogComponentsByName.get(componentName)?.bind?.type;
   if (!type) return null;
   if (multipleDateBindingComponents.has(componentName) && ["multiple", "range"].includes(String(props.type))) {

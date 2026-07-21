@@ -391,8 +391,8 @@ function CapabilitySummary({ widget }: { widget: HomarrCustomWidgetV2 }) {
           {t("sources")}
         </Text>
         <Stack gap={6}>
-          {widget.sources.map((source) => (
-            <Box key={source.id}>
+          {Object.entries(widget.sources).map(([sourceId, source]) => (
+            <Box key={sourceId}>
               <Text size="sm" fw={500}>
                 {source.name}
               </Text>
@@ -404,7 +404,7 @@ function CapabilitySummary({ widget }: { widget: HomarrCustomWidgetV2 }) {
                   {source.networkScope}
                 </Badge>
                 <Badge size="xs" variant="outline">
-                  {source.auth.type}
+                  {typeof source.auth === "string" ? source.auth : source.auth.type}
                 </Badge>
               </Group>
             </Box>
@@ -415,16 +415,16 @@ function CapabilitySummary({ widget }: { widget: HomarrCustomWidgetV2 }) {
         <Text fw={600} size="sm" mb="xs">
           {t("requests")}
         </Text>
-        {widget.requests.length === 0 ? (
+        {Object.keys(widget.requests).length === 0 ? (
           <Text size="xs" c="dimmed">
             {t("noRequests")}
           </Text>
         ) : (
           <Stack gap={6}>
-            {widget.requests.map((request) => (
-              <Group key={request.id} justify="space-between" wrap="nowrap">
+            {Object.entries(widget.requests).map(([requestId, request]) => (
+              <Group key={requestId} justify="space-between" wrap="nowrap">
                 <Text size="xs" ff="monospace" truncate>
-                  {request.id}
+                  {requestId}
                 </Text>
                 <Group gap={4} wrap="nowrap">
                   <Badge size="xs">{request.kind}</Badge>
@@ -432,7 +432,7 @@ function CapabilitySummary({ widget }: { widget: HomarrCustomWidgetV2 }) {
                     {request.method}
                   </Badge>
                   <Badge size="xs" variant="outline">
-                    {request.minimumBoardPermission}
+                    {request.permission}
                   </Badge>
                 </Group>
               </Group>

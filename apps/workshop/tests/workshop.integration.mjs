@@ -85,18 +85,16 @@ const visitorSession = await signIn(visitor.email, visitorPassword);
 const widget = {
   $schema: "homarr-custom-widget-v2",
   name: "Workshop runtime probe",
-  sources: [
-    {
-      id: "default",
+  sources: {
+    default: {
       name: "API",
       baseUrl: "https://example.com",
       networkScope: "public",
-      auth: { type: "none" },
+      auth: "none",
     },
-  ],
-  requests: [],
-  optionsSchema: { type: "object", properties: {}, additionalProperties: false },
-  defaultOptions: {},
+  },
+  requests: {},
+  options: {},
   template: "<Text>Runtime probe</Text>",
 };
 

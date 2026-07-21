@@ -1,20 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
-import {
-  Avatar,
-  Badge,
-  Card,
-  Combobox,
-  Group,
-  InputBase,
-  Loader,
-  Paper,
-  Stack,
-  Text,
-  useCombobox,
-} from "@mantine/core";
+import { Avatar, Badge, Combobox, Group, InputBase, Loader, Stack, Text, useCombobox } from "@mantine/core";
 import { IconApi } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -24,8 +11,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
-
-const CustomJsxDisplay = dynamic(() => import("../custom-api/custom-jsx-display"), { ssr: false });
 
 export const WidgetCustomWidgetSelectInput = ({
   property,
@@ -59,8 +44,6 @@ export const WidgetCustomWidgetSelectInput = ({
   );
 
   const selectedLabel = definitions.find((d) => d.value === currentValue)?.label;
-  const selected = definitions.find((definition) => definition.value === currentValue);
-
   const combobox = useCombobox({
     onDropdownClose: () => {
       combobox.resetSelectedOption();
@@ -137,36 +120,6 @@ export const WidgetCustomWidgetSelectInput = ({
           </Combobox.Options>
         </Combobox.Dropdown>
       </Combobox>
-      {selected && (
-        <Card withBorder p="sm">
-          <Stack gap="xs">
-            <Group justify="space-between">
-              <Text size="sm" fw={600}>
-                {selected.name}
-              </Text>
-              <Badge size="sm" variant="light">
-                {labels("preview")}
-              </Badge>
-            </Group>
-            <Paper withBorder p="sm" h={180} style={{ overflow: "auto" }}>
-              <CustomJsxDisplay
-                data={{
-                  template: selected.template,
-                  data: {},
-                  status: Object.fromEntries(
-                    selected.requestCapabilities.map((request) => [request.id, { loading: true }]),
-                  ),
-                  options: selected.defaultOptions,
-                  requestCapabilities: selected.requestCapabilities,
-                  previewSessionId: "widget-picker",
-                  queriesDisabled: true,
-                  isEditMode: true,
-                }}
-              />
-            </Paper>
-          </Stack>
-        </Card>
-      )}
     </Stack>
   );
 };

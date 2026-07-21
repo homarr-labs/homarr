@@ -7,12 +7,13 @@ export function requiredSecretKinds(authType: string) {
 }
 
 export function assertSecretSources(
-  sources: readonly { id: string; auth: { type: string } }[],
+  sources: Record<string, { auth: string | { type: string } }>,
   secrets: readonly { sourceId: string; kind: "apiKey" | "username" | "password" }[],
 ) {
   const invalid = secrets.find((secret) => {
-    const source = sources.find((candidate) => candidate.id === secret.sourceId);
-    return !source || !new Set<string>(requiredSecretKinds(source.auth.type)).has(secret.kind);
+    const source = sources[secret.sourceId];
+    const authType = typeof source?.auth === "string" ? source.auth : source?.auth.type;
+    return !source || !authType || !new Set<string>(requiredSecretKinds(authType)).has(secret.kind);
   });
   if (invalid) {
     throw new TRPCError({

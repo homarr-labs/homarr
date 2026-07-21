@@ -51,6 +51,17 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
     });
     editorView.focus();
   }, [editorCreated, editorInstanceId, props.revealKey, props.revealText]);
+  useEffect(() => {
+    const editorView = editorViews.get(editorInstanceId);
+    if (!editorView || !props.insertText) return;
+    const selection = editorView.state.selection.main;
+    editorView.dispatch({
+      changes: { from: selection.from, to: selection.to, insert: props.insertText },
+      selection: { anchor: selection.from + props.insertText.length },
+      scrollIntoView: true,
+    });
+    editorView.focus();
+  }, [editorCreated, editorInstanceId, props.insertKey, props.insertText]);
   const handleCreateEditor = useCallback(
     (view: EditorViewType) => {
       editorViews.set(editorInstanceId, view);

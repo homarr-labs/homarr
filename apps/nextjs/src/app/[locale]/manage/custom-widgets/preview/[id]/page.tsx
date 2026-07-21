@@ -3,7 +3,6 @@ import { Badge, Box, Container, Group, Paper, Stack, Text, Title } from "@mantin
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { resolveCustomWidgetOptionsBinding } from "@homarr/custom-widgets/core";
 import CustomJsxDisplay from "@homarr/widgets/custom-api/custom-jsx-display";
 
 export default async function CustomWidgetPreviewPage({ params }: { params: Promise<{ id: string }> }) {
@@ -16,11 +15,8 @@ export default async function CustomWidgetPreviewPage({ params }: { params: Prom
   const loadRequests = preview.requests.filter((request) => request.kind === "query" && request.trigger === "load");
   const results = await Promise.all(
     loadRequests.map(async (request) => {
-      const result = await Promise.resolve()
-        .then(() => resolveCustomWidgetOptionsBinding(request, preview.options))
-        .then((requestParams) =>
-          api.customWidget.previewQuery({ sessionId: id, requestId: request.id, params: requestParams }),
-        )
+      const result = await api.customWidget
+        .previewQuery({ sessionId: id, requestId: request.id, params: {} })
         .catch((cause: unknown) => ({
           ok: false,
           status: 0,

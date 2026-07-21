@@ -20,32 +20,29 @@ export function createPreviewDisplayData({
   fixtureError: string;
 }): Record<string, unknown> | null {
   if (!candidate) return null;
-  const data =
-    fixture === "empty" ? Object.fromEntries(candidate.requests.map((entry) => [entry.id, []])) : preview.data;
+  const requests = Object.entries(candidate.requests);
+  const data = fixture === "empty" ? Object.fromEntries(requests.map(([id]) => [id, []])) : preview.data;
   const status =
     fixture === "loading"
-      ? Object.fromEntries(candidate.requests.map((entry) => [entry.id, { loading: true }]))
+      ? Object.fromEntries(requests.map(([id]) => [id, { loading: true }]))
       : fixture === "error"
-        ? Object.fromEntries(
-            candidate.requests.map((entry) => [entry.id, { loading: false, ok: false, error: fixtureError }]),
-          )
+        ? Object.fromEntries(requests.map(([id]) => [id, { loading: false, ok: false, error: fixtureError }]))
         : preview.status;
   return {
     template: candidate.template,
     data,
     status,
     options,
-    requestCapabilities: candidate.requests.map(
-      ({ id, kind, method, trigger, minimumBoardPermission, confirmation, invalidates }) => ({
-        id,
-        kind,
-        method,
-        trigger,
-        minimumBoardPermission,
-        confirmation,
-        invalidates,
-      }),
-    ),
+    requestCapabilities: requests.map(([id, { kind, method, trigger, permission, confirmation, invalidates }]) => ({
+      id,
+      kind,
+      method,
+      trigger,
+      minimumBoardPermission: permission,
+      confirmation:
+        typeof confirmation === "string" ? { title: "Confirm action", message: confirmation } : confirmation,
+      invalidates,
+    })),
     previewSessionId: preview.session?.id,
     previewLiveActions: preview.session?.liveActions ?? false,
     queriesDisabled: fixture !== "live",

@@ -11,7 +11,7 @@ import { seedDataAsync } from "../migrations/seed";
 import * as sqliteSchema from "../schema/sqlite";
 import { expectBundledCustomWidgetsSeeded } from "./custom-widget-seed-assertions";
 
-test("SQLite migrations seed the four disabled bundled custom widgets", async () => {
+test("SQLite migrations seed the five disabled bundled custom widgets", async () => {
   const connection = new BetterSqlite3(":memory:");
   const database = drizzle(connection, { schema: sqliteSchema, casing: DB_CASING });
 

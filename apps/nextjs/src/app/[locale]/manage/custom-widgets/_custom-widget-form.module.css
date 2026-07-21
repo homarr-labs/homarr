@@ -45,6 +45,10 @@
 }
 
 @media (max-width: 74.9375em) {
+  .sectionNav {
+    top: 3.5rem;
+  }
+
   .workbench[data-mobile-pane="configure"] .previewPane,
   .workbench[data-mobile-pane="preview"] .configuration {
     display: none;

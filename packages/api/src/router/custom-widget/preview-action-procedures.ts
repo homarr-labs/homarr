@@ -8,7 +8,7 @@ import {
   recordPreviewJournal,
 } from "./preview-procedure-helpers";
 import { executeCustomWidgetRequest, invalidateCustomWidgetResponseCache } from "./request-executor";
-import { renderRequestBody, renderRequestTarget } from "./request-manifest";
+import { renderRequestBody, renderRequestTarget, resolveCustomWidgetRequestValues } from "./request-manifest";
 import { acquireCustomWidgetRequestLimit } from "./request-limits";
 import { getPreviewSession } from "./preview-sessions";
 
@@ -22,20 +22,21 @@ export const previewActionProcedures = {
     .input(previewSessionRequestSchema.extend({ confirmed: z.boolean().optional() }))
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
-      const request = session.requests.find(
-        (candidate) => candidate.id === input.requestId && candidate.kind === "action",
-      );
-      if (!request) throw new TRPCError({ code: "NOT_FOUND", message: "Preview action was not found" });
-      const resolved = getPreviewRequestSource(session, request.sourceId);
+      const definition = session.requests[input.requestId];
+      if (definition?.kind !== "action")
+        throw new TRPCError({ code: "NOT_FOUND", message: "Preview action was not found" });
+      const request = { id: input.requestId, ...definition };
+      const resolved = getPreviewRequestSource(session, request.source);
       if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
-      const targetUrl = renderRequestTarget(resolved.source.baseUrl, request, input.params);
-      const body = renderRequestBody(request.bodyTemplate, input.params);
+      const params = resolveCustomWidgetRequestValues(request, session.options, input.params);
+      const targetUrl = renderRequestTarget(resolved.source.baseUrl, request, params);
+      const body = renderRequestBody(request, params);
       if (!session.liveActions) {
         await recordPreviewJournal(session, {
           requestId: request.id,
           kind: "action",
           method: request.method,
-          pathTemplate: request.pathTemplate,
+          path: request.path,
           status: null,
           durationMs: 0,
           simulated: true,
@@ -58,7 +59,7 @@ export const previewActionProcedures = {
           targetUrl,
           method: request.method,
           body,
-          staticHeaders: request.staticHeaders,
+          staticHeaders: request.headers,
           auth: request.auth === "none" ? undefined : resolved.auth,
           networkScope: resolved.source.networkScope,
           kind: "action",
@@ -72,7 +73,7 @@ export const previewActionProcedures = {
           requestId: request.id,
           kind: "action",
           method: request.method,
-          pathTemplate: request.pathTemplate,
+          path: request.path,
           status: response.status,
           durationMs: Date.now() - startedAt,
           simulated: false,

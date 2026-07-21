@@ -1,80 +1,59 @@
 import { describe, expect, it, vi } from "vitest";
 
-import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
+import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 
-import { getChangedSecrets, getCustomWidgetPreviewOptionIssues, loadPreviewQueries } from "./_custom-widget-form-utils";
+import {
+  getChangedSecrets,
+  getCustomWidgetPreviewOptionIssues,
+  loadPreviewQueries,
+  parseSources,
+} from "./_custom-widget-form-utils";
 
 const previewQuery = vi.hoisted(() => vi.fn());
+vi.mock("@homarr/api/client", () => ({ fetchApi: { customWidget: { previewQuery: { query: previewQuery } } } }));
 
-vi.mock("@homarr/api/client", () => ({
-  fetchApi: { customWidget: { previewQuery: { query: previewQuery } } },
-}));
-
-const definition: HomarrCustomWidgetV2 = {
+const definition = customWidgetDefinitionSchema.parse({
   $schema: "homarr-custom-widget-v2",
   name: "Preview options",
-  sources: [
-    {
-      id: "default",
-      name: "API",
-      baseUrl: "https://example.com",
-      networkScope: "public",
-      auth: { type: "none" },
-    },
-  ],
-  requests: [
-    {
-      id: "containers",
-      sourceId: "default",
-      kind: "query",
-      method: "GET",
-      pathTemplate: "/endpoints/{endpointId}/containers",
-      parameters: { endpointId: "number" },
-      optionsBinding: { endpointId: { $option: "environmentId" } },
-      auth: "inherit",
-      minimumBoardPermission: "view",
-      trigger: "load",
-    },
-  ],
-  optionsSchema: {
-    type: "object",
-    properties: { environmentId: { type: "number" } },
-    required: ["environmentId"],
-    additionalProperties: false,
-  },
-  defaultOptions: { environmentId: 1 },
+  sources: { default: { name: "API", baseUrl: "https://example.com", networkScope: "public", auth: "none" } },
+  requests: { containers: { path: "/endpoints/{option:environmentId}/containers" } },
+  options: { environmentId: { label: "Environment", control: "number", default: 1 } },
   template: "<Text>Preview</Text>",
-};
+});
 
 describe("Custom Widget workbench preview options", () => {
-  it("passes the selected options to load-query bindings without replacing them with defaults", async () => {
-    previewQuery.mockResolvedValueOnce({ ok: true, status: 200, data: [] });
-
-    await loadPreviewQueries(definition, "preview-1", { environmentId: 7 });
-
-    expect(previewQuery).toHaveBeenCalledWith({
-      sessionId: "preview-1",
-      requestId: "containers",
-      params: { endpointId: 7 },
-    });
+  it("shows the default source first regardless of manifest key order", () => {
+    expect(
+      parseSources(
+        JSON.stringify({
+          secondary: { baseUrl: "https://secondary.example.com", networkScope: "public", auth: "none" },
+          default: { baseUrl: "https://default.example.com", networkScope: "public", auth: "none" },
+        }),
+      ).map(({ id }) => id),
+    ).toEqual(["default", "secondary"]);
   });
 
-  it("rejects invalid selected options before creating a preview session", () => {
+  it("keeps load-query option resolution on the server", async () => {
+    previewQuery.mockResolvedValueOnce({ ok: true, status: 200, data: [] });
+    await loadPreviewQueries(definition, "preview-1");
+    expect(previewQuery).toHaveBeenCalledWith({ sessionId: "preview-1", requestId: "containers", params: {} });
+  });
+
+  it("rejects invalid selected options", () => {
     expect(getCustomWidgetPreviewOptionIssues(definition, { environmentId: "wrong" })).toEqual([
-      { path: "configuration.environmentId", message: "Expected number" },
+      { path: "configuration.environmentId", message: "Expected a number" },
     ]);
   });
 
-  it("normalizes only changed secrets for save and preview", () => {
+  it("normalizes only changed secrets", () => {
     expect(
       getChangedSecrets({
         name: "Widget",
         description: "",
         iconUrl: "",
-        sources: "[]",
-        requests: "[]",
-        optionsSchema: "{}",
-        defaultOptions: "{}",
+        sources: "{}",
+        requests: "{}",
+        options: "{}",
         template: "<Text />",
         secrets: [
           { sourceId: "default", kind: "apiKey", value: "", hasValue: true },

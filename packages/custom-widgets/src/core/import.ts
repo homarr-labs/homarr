@@ -73,32 +73,6 @@ function isTemplatePlaceholder(value: unknown) {
   return typeof value === "string" && value.replace(/[\\*_`\s]/gu, "").toUpperCase() === "HOMARRTEMPLATE";
 }
 
-function normalizeAiRequestParameters(value: Record<string, unknown>, warnings: CustomWidgetImportIssue[]) {
-  if (!Array.isArray(value.requests)) return;
-  value.requests = value.requests.map((candidate, requestIndex) => {
-    if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) return candidate;
-    const request = { ...(candidate as Record<string, unknown>) };
-    if (!request.parameters || typeof request.parameters !== "object" || Array.isArray(request.parameters))
-      return request;
-    const parameters = { ...(request.parameters as Record<string, unknown>) };
-    for (const [name, parameter] of Object.entries(parameters)) {
-      if (!parameter || typeof parameter !== "object" || Array.isArray(parameter)) continue;
-      const keys = Object.keys(parameter);
-      const type = (parameter as Record<string, unknown>).type;
-      if (keys.length === 1 && ["string", "number", "boolean"].includes(String(type))) {
-        parameters[name] = type;
-        warnings.push({
-          code: "NORMALIZED_PARAMETER_TYPE",
-          path: ["requests", requestIndex, "parameters", name],
-          message: `Converted { type: "${String(type)}" } to "${String(type)}".`,
-        });
-      }
-    }
-    request.parameters = parameters;
-    return request;
-  });
-}
-
 type ParsedWidgetValue =
   | { success: true; value: Record<string, unknown> }
   | { success: false; issue: CustomWidgetImportIssue };
@@ -179,7 +153,6 @@ export function parseCustomWidgetAiResponse(text: string): CustomWidgetParseResu
   const removedIssues = removedStateIssues(widget);
   if (removedIssues.length > 0) formatIssues.push(...removedIssues);
   const warnings: CustomWidgetImportIssue[] = [];
-  normalizeAiRequestParameters(widget, warnings);
   if (jsxBlocks[0]) {
     if (isTemplatePlaceholder(widget.template) || !widget.template) widget.template = jsxBlocks[0].content.trim();
     else if (widget.template !== jsxBlocks[0].content.trim())
@@ -214,11 +187,17 @@ export function getImportReview(value: unknown): ImportReview | null {
   const widget = parsed.data;
   return {
     name: widget.name,
-    origins: widget.sources.map((source) => new URL(source.baseUrl).origin),
-    authTypes: [...new Set(widget.sources.map((source) => source.auth.type))],
-    networkScopes: [...new Set(widget.sources.map((source) => source.networkScope))],
-    methods: [...new Set(widget.requests.map((request) => request.method))],
-    permissions: [...new Set(widget.requests.map((request) => request.minimumBoardPermission))],
-    hasActions: widget.requests.some((request) => request.kind === "action"),
+    origins: Object.values(widget.sources).map((source) => new URL(source.baseUrl).origin),
+    authTypes: [
+      ...new Set(
+        Object.values(widget.sources).map((source) =>
+          typeof source.auth === "string" ? source.auth : source.auth.type,
+        ),
+      ),
+    ],
+    networkScopes: [...new Set(Object.values(widget.sources).map((source) => source.networkScope))],
+    methods: [...new Set(Object.values(widget.requests).map((request) => request.method))],
+    permissions: [...new Set(Object.values(widget.requests).map((request) => request.permission))],
+    hasActions: Object.values(widget.requests).some((request) => request.kind === "action"),
   };
 }

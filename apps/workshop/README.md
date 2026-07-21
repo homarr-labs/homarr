@@ -81,3 +81,4 @@ docker compose -f apps/workshop/docker-compose.yml --profile docs rm --stop --fo
 ```
 
 PocketBase data lives in `/pb_data`. Docker Compose persists it in the `pb_data` named volume for both the development Workshop service and the production documentation/Workshop service. The image serves the built Homarr documentation and Workshop UI from `/pb_public`.
+At startup the container repairs ownership of existing data volumes, then runs PocketBase as its non-root user.

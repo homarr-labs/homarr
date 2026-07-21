@@ -39,6 +39,19 @@ describe("shared Custom JSX policy", () => {
     expect(diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
   });
 
+  test("accepts the concise Icon alias used by the AI prompt", () => {
+    expect(validateCustomJsxTemplate('<ThemeIcon><Icon name="brand-docker" /></ThemeIcon>')).toEqual([]);
+  });
+
+  test("accepts common bounded formatting and collection operations", () => {
+    expect(
+      validateCustomJsxTemplate(
+        '<Text>{[1, 2].concat([3]).flatMap(value => [value]).map(value => value.toLocaleString()).join(", ")}</Text>',
+      ),
+    ).toEqual([]);
+    expect(validateCustomJsxTemplate('<Text>{"b".localeCompare("a")}</Text>')).toEqual([]);
+  });
+
   test.each([...CUSTOM_JSX_BLOCKED_PROPERTIES])(
     "blocks reflective property %s in diagnostics and runtime",
     (property) => {
@@ -265,63 +278,36 @@ describe("shared Custom JSX policy", () => {
     );
   });
 
-  test("supports sequential immutable local bindings in collection callbacks", () => {
-    const template = `<Text>{data.items.map((item) => {
-      const segments = item.url.split("/").filter((part) => part);
-      const identifier = segments.at(-1);
-      const label = item.name.toUpperCase();
-      return <Text key={identifier}>#{identifier} {label}</Text>;
-    })}</Text>`;
-
+  test("supports expression callbacks", () => {
+    const template =
+      '<Text>{data.items.filter((item) => item.visible).map((item) => item.name.toUpperCase()).join(", ")}</Text>';
     expect(validateCustomJsxTemplate(template).filter(({ severity }) => severity === "error")).toEqual([]);
     const rendered = renderSafeJsx({
       template,
       components: {
         Text: ((props: { children?: unknown }) => createElement("span", null, props.children as never)) as never,
       },
-      bindings: { data: { items: [{ name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/" }] } },
+      bindings: { data: { items: [{ name: "Bulbasaur", visible: true }] } },
     });
-    expect(renderToStaticMarkup(rendered.node)).toContain("#1 BULBASAUR");
+    expect(renderToStaticMarkup(rendered.node)).toContain("BULBASAUR");
   });
 
-  test("supports controlled zero-argument IIFEs for page-level derived values", () => {
-    const template = `{(() => {
-      const visible = data.items.filter((item) => item.visible);
-      return <Text>{visible.map((item) => item.name).join(", ")}</Text>;
-    })()}`;
-
+  test("supports bounded regex string operations", () => {
+    const template = '<Text>{data.name.replace(/[^a-z]/gi, "-")}</Text>';
     expect(validateCustomJsxTemplate(template).filter(({ severity }) => severity === "error")).toEqual([]);
     const rendered = renderSafeJsx({
       template,
       components: {
         Text: ((props: { children?: unknown }) => createElement("span", null, props.children as never)) as never,
       },
-      bindings: {
-        data: {
-          items: [
-            { name: "Bulbasaur", visible: true },
-            { name: "Mew", visible: false },
-          ],
-        },
-      },
+      bindings: { data: { name: "Bulba saur!" } },
     });
-    expect(renderToStaticMarkup(rendered.node)).toContain("Bulbasaur");
-    expect(renderToStaticMarkup(rendered.node)).not.toContain("Mew");
+    expect(renderToStaticMarkup(rendered.node)).toContain("Bulba-saur-");
   });
 
-  test.each([
-    ["callback return", "{data.items.map((item) => Number)}"],
-    ["safe-block return", "{data.items.map((item) => { const value = item; return Math.round; })}"],
-    ["conditional local", "{data.items.map((item) => { const value = true ? Math.round : item; return value; })}"],
-    ["IIFE return", "{(() => { const value = 1; return Number; })()}"],
-  ])("rejects callable values escaping an authored %s", (_name, template) => {
-    expect(validateCustomJsxTemplate(template)).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ message: expect.stringContaining("CALLBACK_VALUE_NOT_ALLOWED") }),
-      ]),
-    );
-    expect(() => renderSafeJsx({ template, components, bindings: createCustomJsxBindings({ items: [1] }) })).toThrow(
-      "CALLBACK_VALUE_NOT_ALLOWED",
+  test.each(["/(a+)+$/", "/(?<=a)b/", "/(a)\\1/"])("rejects unsafe regex %s", (pattern) => {
+    expect(validateCustomJsxTemplate(`<Text>{${pattern}.test(data.name)}</Text>`)).toEqual(
+      expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining("UNSAFE_REGEX") })]),
     );
   });
 
@@ -333,14 +319,20 @@ describe("shared Custom JSX policy", () => {
     ).not.toThrow();
   });
 
-  test.each([
-    ["expression body", "{(() => <Text>value</Text>)()}", "BLOCK_REQUIRES_FINAL_RETURN"],
-    ["optional call", "{(() => { const value = 1; return <Text>{value}</Text>; })?.()}", "CALL_TARGET_NOT_ALLOWED"],
-  ])("rejects unsupported derived-value IIFE form: %s", (_name, template, code) => {
-    expect(validateCustomJsxTemplate(template)).toEqual(
-      expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining(code) })]),
-    );
-    expect(() => renderSafeJsx({ template, components, bindings })).toThrow();
+  test("rejects IIFEs and callback statement blocks", () => {
+    for (const template of [
+      "{(() => <Text>value</Text>)()}",
+      "{data.items.map((item) => { const value = item; return value; })}",
+    ]) {
+      expect(
+        validateCustomJsxTemplate(template).some(
+          ({ message }) => message.includes("IIFE") || message.includes("UNSUPPORTED_BLOCK_STATEMENT"),
+        ),
+      ).toBe(true);
+      expect(() =>
+        renderSafeJsx({ template, components, bindings: createCustomJsxBindings({ items: [1] }) }),
+      ).toThrow();
+    }
   });
 
   test("normalizes duplicate callback parameter parse diagnostics", () => {
@@ -353,47 +345,6 @@ describe("shared Custom JSX policy", () => {
     expect(() => renderSafeJsx({ template, components, bindings: { data: { items: [1] } } })).toThrow(
       "DUPLICATE_LOCAL_BINDING",
     );
-  });
-
-  test.each([
-    [
-      "let mutation",
-      `{data.items.map((item) => { let value = item; return <Text>{value}</Text>; })}`,
-      "INVALID_LOCAL_DECLARATION",
-    ],
-    [
-      "destructuring",
-      `{data.items.map((item) => { const { name } = item; return <Text>{name}</Text>; })}`,
-      "INVALID_LOCAL_DECLARATION",
-    ],
-    [
-      "reserved binding",
-      `{data.items.map((item) => { const data = item; return <Text>{data}</Text>; })}`,
-      "RESERVED_LOCAL_BINDING",
-    ],
-    [
-      "stored callback",
-      `{data.items.map((item) => { const callback = () => item; return <Text>{item}</Text>; })}`,
-      "CALLBACK_VALUE_NOT_ALLOWED",
-    ],
-    [
-      "unsupported if",
-      `{data.items.map((item) => { if (item) return <Text />; return <Text />; })}`,
-      "UNSUPPORTED_BLOCK_STATEMENT",
-    ],
-    ["missing final return", `{data.items.map((item) => { const value = item; })}`, "BLOCK_REQUIRES_FINAL_RETURN"],
-    ["return-only block", `{data.items.map((item) => { return <Text>{item}</Text>; })}`, "INVALID_LOCAL_DECLARATION"],
-    [
-      "parameterized IIFE",
-      `{((value) => { const label = value; return <Text>{label}</Text>; })()}`,
-      "CALLBACK_VALUE_NOT_ALLOWED",
-    ],
-    ["IIFE arguments", `{((value) => { return <Text>{value}</Text>; })(data.value)}`, "CALLBACK_VALUE_NOT_ALLOWED"],
-  ])("rejects unsafe block grammar: %s", (_name, template, code) => {
-    expect(validateCustomJsxTemplate(template).some(({ message }) => message.includes(code))).toBe(true);
-    expect(() =>
-      renderSafeJsx({ template, components, bindings: { data: { items: [{ name: "Bulbasaur" }], value: "value" } } }),
-    ).toThrow(code);
   });
 
   test("rejects callback values outside controlled call sites", () => {
@@ -410,61 +361,17 @@ describe("shared Custom JSX policy", () => {
     "keeps blocked lexical binding %s aligned between diagnostics and runtime",
     (name) => {
       const parameterTemplate = `{data.items.map((${name}) => <Text>{${name}}</Text>)}`;
-      const localTemplate = `{data.items.map((item) => { const ${name} = item; return <Text>{${name}}</Text>; })}`;
 
-      for (const template of [parameterTemplate, localTemplate]) {
-        expect(validateCustomJsxTemplate(template)).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({ message: expect.stringContaining("INVALID_LOCAL_DECLARATION") }),
-          ]),
-        );
-        expect(() => renderSafeJsx({ template, components, bindings: { data: { items: [1] } } })).toThrow(
-          "INVALID_LOCAL_DECLARATION",
-        );
-      }
+      expect(validateCustomJsxTemplate(parameterTemplate)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ message: expect.stringContaining("INVALID_LOCAL_DECLARATION") }),
+        ]),
+      );
+      expect(() =>
+        renderSafeJsx({ template: parameterTemplate, components, bindings: { data: { items: [1] } } }),
+      ).toThrow("INVALID_LOCAL_DECLARATION");
     },
   );
-
-  test("rejects host and interpreter functions stored in local const bindings", () => {
-    const template = `{data.items.map((item) => {
-      const round = Math.round;
-      return <Text>{item}</Text>;
-    })}`;
-    expect(validateCustomJsxTemplate(template)).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ message: expect.stringContaining("CALLBACK_VALUE_NOT_ALLOWED") }),
-      ]),
-    );
-    expect(() =>
-      renderSafeJsx({
-        template,
-        components,
-        bindings: { data: { items: [1] }, Math },
-      }),
-    ).toThrow("CALLBACK_VALUE_NOT_ALLOWED");
-  });
-
-  test("maps parse failures to missing and duplicate local binding diagnostics", () => {
-    expect(
-      validateCustomJsxTemplate(`{data.items.map((item) => { const value; return <Text>{item}</Text>; })}`),
-    ).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ message: expect.stringContaining("LOCAL_BINDING_REQUIRES_INITIALIZER") }),
-      ]),
-    );
-    expect(
-      validateCustomJsxTemplate(
-        `{data.items.map((item) => { const value = item; const value = item; return <Text>{value}</Text>; })}`,
-      ),
-    ).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ message: expect.stringContaining("DUPLICATE_LOCAL_BINDING") }),
-      ]),
-    );
-    expect(validateCustomJsxTemplate('<Text>{"const fake;" + }</Text>')[0]?.message).not.toContain(
-      "LOCAL_BINDING_REQUIRES_INITIALIZER",
-    );
-  });
 
   test.each(['{data.items["ma" + "p"]((item) => item).join(",")}', '{data.items[`map`]((item) => item).join(",")}'])(
     "keeps analyzer and runtime aligned for static computed collection callbacks",
@@ -475,19 +382,4 @@ describe("shared Custom JSX policy", () => {
       ).not.toThrow();
     },
   );
-
-  test.each([
-    ["assignment", `{data.items.map((item) => { const value = (item = 2); return <Text>{value}</Text>; })}`],
-    ["update", `{data.items.map((item) => { const value = item++; return <Text>{value}</Text>; })}`],
-    ["new", `{data.items.map((item) => { const value = new Date(item); return <Text>{value}</Text>; })}`],
-  ])("uses precise safe-block diagnostics for %s expressions", (_name, template) => {
-    expect(validateCustomJsxTemplate(template)).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ message: expect.stringContaining("UNSUPPORTED_BLOCK_STATEMENT") }),
-      ]),
-    );
-    expect(() => renderSafeJsx({ template, components, bindings: { data: { items: [1] }, Date } })).toThrow(
-      "UNSUPPORTED_BLOCK_STATEMENT",
-    );
-  });
 });

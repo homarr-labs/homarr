@@ -1,5 +1,6 @@
 import { getCustomJsxBindingType } from "../core/component-registry";
 import { customJsxRequestSchema } from "../core/request-schema";
+import { z } from "zod/v4";
 import { CUSTOM_JSX_LIMITS, validateCustomJsxTemplate } from "../jsx";
 
 export type EditorDiagnosticCode =
@@ -103,7 +104,7 @@ export function analyzeJsxTemplate(
 
 export function analyzeRequestManifest(value: string): EditorDiagnostic[] {
   try {
-    const result = customJsxRequestSchema.array().safeParse(JSON.parse(value) as unknown);
+    const result = z.record(z.string(), customJsxRequestSchema).safeParse(JSON.parse(value) as unknown);
     if (result.success) return [];
     return result.error.issues.map((issue) => ({
       code: "invalidRequestManifest",
@@ -116,11 +117,13 @@ export function analyzeRequestManifest(value: string): EditorDiagnostic[] {
   }
 }
 
-export function parseRequestManifest(value: string): unknown[] {
+export function parseRequestManifest(value: string): Record<string, unknown> {
   try {
     const parsed: unknown = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed : [];
+    return parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : {};
   } catch {
-    return [];
+    return {};
   }
 }

@@ -3,8 +3,8 @@ import type { CustomWidgetFormValues, EditorDiagnostic } from "@homarr/custom-wi
 import { isRecord, parseJson, parseSources } from "./_custom-widget-form-utils";
 
 export function createCustomWidgetCompletions(values: CustomWidgetFormValues, requestIds: string[]) {
-  const schema = parseJson(values.optionsSchema);
-  const optionKeys = Object.keys(isRecord(schema) && isRecord(schema.properties) ? schema.properties : {});
+  const options = parseJson(values.options);
+  const optionKeys = Object.keys(isRecord(options) ? options : {});
   return [
     ...requestIds.flatMap((id) => [
       { label: `data["${id}"]`, type: "variable", detail: `Response from ${id}` },
@@ -28,7 +28,7 @@ export function getInvalidCustomWidgetSections(
     if (["name", "description", "iconUrl"].includes(field)) result.add("general");
     else if (field === "sources") result.add("sources");
     else if (field === "requests") result.add("requests");
-    else if (["optionsSchema", "defaultOptions"].includes(field)) result.add("options");
+    else if (field === "options") result.add("options");
     else if (field === "template") result.add("jsx");
   }
   if (requestDiagnostics.some((entry) => entry.severity === "error")) result.add("requests");

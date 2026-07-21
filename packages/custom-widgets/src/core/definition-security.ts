@@ -1,101 +1,48 @@
-import type { RefinementCtx } from "zod/v4";
+import type { z } from "zod/v4";
 
-import type { CustomJsxRequest } from "./request-schema";
-
-const credentialKeyPattern =
+const credentialKey =
   /(^|[-_])(authorization|api[-_]?keys?|passwords?|passwds?|secrets?|tokens?|access[-_]?tokens?|refresh[-_]?tokens?|client[-_]?secrets?)($|[-_])/iu;
-const credentialTextPattern =
-  /(?:\bauthorization\s*[:=]\s*["']?bearer\s+[A-Za-z0-9._~+/%-]{8,}|\b(?:api[ _-]?key|access[ _-]?token|refresh[ _-]?token|client[ _-]?secret|token|password|passwd|secret)\s*[:=]\s*["'][^"']{4,}["'])/iu;
-const bearerHeaderValuePattern = /^\s*bearer\s+\S{8,}\s*$/iu;
-const blockedObjectKeys = new Set(["__proto__", "prototype", "constructor"]);
 
-interface SecurityDefinition {
-  defaultOptions: Record<string, unknown>;
-  requests: CustomJsxRequest[];
-  template: string;
-  iconUrl?: string;
-  optionsSchema: unknown;
-}
-
-function isCredentialKeyName(value: string) {
-  return credentialKeyPattern.test(value);
-}
-
-export function validateCredentialFreeExport(definition: SecurityDefinition, ctx: RefinementCtx) {
-  if (containsCredentialLikeValue(definition.defaultOptions)) {
-    ctx.addIssue({ code: "custom", path: ["defaultOptions"], message: "Default options cannot contain credentials" });
-  }
-  definition.requests.forEach((request, index) => {
-    if (
-      containsCredentialLikeValue(request.optionsBinding) ||
-      containsCredentialLikeValue(request.queryTemplate) ||
-      containsCredentialLikeValue(request.bodyTemplate) ||
-      Object.entries(request.staticHeaders ?? {}).some(
-        ([name, value]) => containsCredentialLikeValue(value, name) || bearerHeaderValuePattern.test(value),
-      )
-    ) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["requests", index],
-        message: "Static request templates cannot contain credentials",
-      });
-    }
-  });
-  if (credentialTextPattern.test(definition.template)) {
-    ctx.addIssue({ code: "custom", path: ["template"], message: "Templates cannot contain literal credentials" });
-  }
-  if (definition.iconUrl && URL.canParse(definition.iconUrl)) {
-    const icon = new URL(definition.iconUrl);
-    if ([...icon.searchParams].some(([key, value]) => isCredentialKeyName(key) && value.trim().length > 0)) {
-      ctx.addIssue({ code: "custom", path: ["iconUrl"], message: "Widget icon URLs cannot contain credentials" });
+export function validateCredentialFreeExport(definition: Record<string, unknown>, ctx: z.RefinementCtx) {
+  inspect(definition.options, ["options"], ctx);
+  inspect(definition.requests, ["requests"], ctx);
+  if (typeof definition.iconUrl === "string" && URL.canParse(definition.iconUrl)) {
+    const url = new URL(definition.iconUrl);
+    if ([...url.searchParams.keys()].some((key) => credentialKey.test(key))) {
+      ctx.addIssue({ code: "custom", path: ["iconUrl"], message: "Credentials must not be embedded in the icon URL" });
     }
   }
-}
-
-function containsCredentialLikeValue(value: unknown, key = ""): boolean {
-  if (isCredentialKeyName(key) && typeof value === "string" && value.trim().length > 0) return true;
-  if (Array.isArray(value)) return value.some((entry) => containsCredentialLikeValue(entry));
-  if (value === null || typeof value !== "object") return false;
-  const entries = Object.entries(value);
-  if (entries.length === 1 && entries[0]?.[0] === "$param" && typeof entries[0][1] === "string") return false;
-  return entries.some(([childKey, child]) => containsCredentialLikeValue(child, childKey));
-}
-
-export function validatePrototypeKeys(definition: SecurityDefinition, ctx: RefinementCtx) {
-  const values: Array<[Array<string | number>, unknown]> = [
-    [["optionsSchema"], definition.optionsSchema],
-    [["defaultOptions"], definition.defaultOptions],
-  ];
-  definition.requests.forEach((request, index) => {
-    values.push([["requests", index, "optionsBinding"], request.optionsBinding]);
-    values.push([["requests", index, "queryTemplate"], request.queryTemplate]);
-    values.push([["requests", index, "bodyTemplate"], request.bodyTemplate]);
-  });
-  for (const [path, value] of values) {
-    const blockedPath = findBlockedObjectKey(value);
-    if (blockedPath) {
-      ctx.addIssue({
-        code: "custom",
-        path: [...path, ...blockedPath],
-        message: "Prototype-pollution keys are not allowed",
-      });
-    }
+  if (
+    typeof definition.template === "string" &&
+    /(?:authorization\s*:\s*bearer|api[-_ ]?key\s*[:=]|password\s*[:=]|secret\s*[:=]|token\s*[:=])\s*["']?[A-Za-z0-9._~+/%=-]{8,}/iu.test(
+      definition.template,
+    )
+  ) {
+    ctx.addIssue({ code: "custom", path: ["template"], message: "Credentials must not be embedded in JSX" });
   }
 }
 
-function findBlockedObjectKey(value: unknown, path: string[] = []): string[] | null {
-  if (Array.isArray(value)) {
-    for (const [index, entry] of value.entries()) {
-      const found = findBlockedObjectKey(entry, [...path, String(index)]);
-      if (found) return found;
-    }
-    return null;
-  }
-  if (value === null || typeof value !== "object") return null;
+function inspect(value: unknown, path: Array<string | number>, ctx: z.RefinementCtx): void {
+  if (Array.isArray(value)) return value.forEach((entry, index) => inspect(entry, [...path, index], ctx));
+  if (!value || typeof value !== "object") return;
   for (const [key, child] of Object.entries(value)) {
-    if (blockedObjectKeys.has(key.toLowerCase())) return [...path, key];
-    const found = findBlockedObjectKey(child, [...path, key]);
-    if (found) return found;
+    if (credentialKey.test(key) && typeof child === "string" && child.trim()) {
+      ctx.addIssue({ code: "custom", path: [...path, key], message: "Credentials must use source authentication" });
+    }
+    inspect(child, [...path, key], ctx);
   }
-  return null;
+}
+
+export function validatePrototypeKeys(value: unknown, ctx: z.RefinementCtx) {
+  walk(value, [], ctx);
+}
+
+function walk(value: unknown, path: Array<string | number>, ctx: z.RefinementCtx): void {
+  if (Array.isArray(value)) return value.forEach((entry, index) => walk(entry, [...path, index], ctx));
+  if (!value || typeof value !== "object") return;
+  for (const [key, child] of Object.entries(value)) {
+    if (["__proto__", "prototype", "constructor"].includes(key))
+      ctx.addIssue({ code: "custom", path: [...path, key], message: "Unsafe object key" });
+    walk(child, [...path, key], ctx);
+  }
 }

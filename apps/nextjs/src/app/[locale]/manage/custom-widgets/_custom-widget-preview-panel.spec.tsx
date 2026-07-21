@@ -6,7 +6,7 @@ import type { Root } from "react-dom/client";
 import { MantineProvider } from "@mantine/core";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
-import { BUNDLED_CUSTOM_WIDGETS } from "@homarr/custom-widgets/core";
+import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 
 import { CustomWidgetPreviewPanel } from "./_custom-widget-preview-panel";
 
@@ -131,7 +131,7 @@ describe("Custom Widget preview panel", () => {
     rendererAttempt.mockClear();
     const bundledWidget = BUNDLED_CUSTOM_WIDGETS.at(0);
     if (!bundledWidget) throw new Error("Expected at least one bundled Custom Widget");
-    const candidate = bundledWidget.widget;
+    const candidate = customWidgetDefinitionSchema.parse(bundledWidget.widget);
     const preview = { data: {}, status: {}, session: null, outcome: "idle" } as const;
     const failingOptions = { throwPreview: true };
 
@@ -141,7 +141,9 @@ describe("Custom Widget preview panel", () => {
           <CustomWidgetPreviewPanel
             candidate={{
               ...candidate,
-              requests: candidate.requests.map((request) => ({ ...request })),
+              requests: Object.fromEntries(
+                Object.entries(candidate.requests).map(([id, request]) => [id, { ...request }]),
+              ),
             }}
             validationIssues={[]}
             preview={preview}

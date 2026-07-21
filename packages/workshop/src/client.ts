@@ -46,8 +46,6 @@ const requestSignal = (signal?: AbortSignal) =>
       : [AbortSignal.timeout(WORKSHOP_REQUEST_TIMEOUT_MS)],
   );
 
-const OAUTH_TIMEOUT_MS = 2 * 60 * 1000;
-
 function oauthText(...values: unknown[]) {
   return values.find((value): value is string => typeof value === "string" && value.trim().length > 0)?.trim();
 }
@@ -113,57 +111,17 @@ export class WorkshopClient {
   }
 
   public async signInWithGitHub() {
-    if (typeof window === "undefined" || typeof window.open !== "function") {
-      throw new Error("GitHub sign-in requires a browser popup");
-    }
-
-    const popup = window.open("about:blank", "homarr_workshop_oauth", "width=1024,height=768,resizable,menubar=no");
-    if (!popup) throw new Error("GitHub sign-in popup was blocked. Allow popups for Homarr and try again.");
-
-    const requestKey = `workshop-oauth-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    let cancellationError: Error | null = null;
-    let closePoll: ReturnType<typeof setInterval> | undefined;
-    let timeout: ReturnType<typeof setTimeout> | undefined;
-    const cancellation = new Promise<never>((_resolve, reject) => {
-      closePoll = setInterval(() => {
-        if (!popup.closed) return;
-        cancellationError = new Error("GitHub sign-in was cancelled.");
-        this.pocketBase.cancelRequest(requestKey);
-        reject(cancellationError);
-      }, 250);
-      timeout = setTimeout(() => {
-        cancellationError = new Error("GitHub sign-in timed out. Try again.");
-        this.pocketBase.cancelRequest(requestKey);
-        popup.close();
-        reject(cancellationError);
-      }, OAUTH_TIMEOUT_MS);
-    });
-
     try {
-      const auth = await Promise.race([
-        this.pocketBase.collection("users").authWithOAuth2({
-          provider: "github",
-          createData: { displayName: "GitHub user" },
-          requestKey,
-          urlCallback: (url) => {
-            if (popup.closed) throw new Error("GitHub sign-in was cancelled.");
-            popup.location.href = url;
-          },
-        }),
-        cancellation,
-      ]);
+      const auth = await this.pocketBase.collection("users").authWithOAuth2({
+        provider: "github",
+        createData: { displayName: "GitHub user" },
+      });
       const profile = githubProfile(auth.meta, auth.record);
       const updated = await this.pocketBase.collection("users").update(auth.record.id, profile);
       this.pocketBase.authStore.save(auth.token, updated);
       return this.currentUser;
     } catch (error) {
-      if (cancellationError) throw cancellationError;
       throw workshopError(error, "GitHub sign-in failed");
-    } finally {
-      if (closePoll) clearInterval(closePoll);
-      if (timeout) clearTimeout(timeout);
-      this.pocketBase.cancelRequest(requestKey);
-      popup.close();
     }
   }
 

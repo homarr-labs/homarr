@@ -50,7 +50,8 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
     toggleMutation.mutate(
       { id: widget.id, enabled: !widget.enabled },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          await utils.widget.customApi.getData.cancel();
           void utils.customWidget.list.invalidate();
           void utils.widget.customApi.getData.invalidate();
           void revalidatePathActionAsync("/manage/custom-widgets");

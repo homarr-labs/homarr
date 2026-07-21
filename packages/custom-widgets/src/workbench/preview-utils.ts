@@ -11,20 +11,26 @@ export const redactPreviewUrl = (value: string): string => {
 };
 
 export const getPreviewNamedRequests = (definition: Record<string, unknown>): PreviewNamedRequest[] => {
-  if (!Array.isArray(definition.requests)) return [];
-  return definition.requests.filter(
-    (request): request is PreviewNamedRequest =>
-      request !== null &&
-      typeof request === "object" &&
-      "id" in request &&
-      typeof request.id === "string" &&
-      "kind" in request &&
-      (request.kind === "query" || request.kind === "action") &&
-      "method" in request &&
-      typeof request.method === "string" &&
-      "pathTemplate" in request &&
-      typeof request.pathTemplate === "string",
-  );
+  if (!definition.requests || typeof definition.requests !== "object" || Array.isArray(definition.requests)) return [];
+  return Object.entries(definition.requests as Record<string, unknown>).flatMap(([id, candidate]) => {
+    if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) return [];
+    const request = candidate as Record<string, unknown>;
+    if (
+      (request.kind !== "query" && request.kind !== "action") ||
+      typeof request.method !== "string" ||
+      typeof request.path !== "string"
+    )
+      return [];
+    return [
+      {
+        id,
+        kind: request.kind,
+        method: request.method,
+        path: request.path,
+        minimumBoardPermission: typeof request.permission === "string" ? request.permission : undefined,
+      },
+    ];
+  });
 };
 
 export type CustomWidgetAccessibilityIssue = "imageAlt" | "actionIconLabel" | "inputLabel";

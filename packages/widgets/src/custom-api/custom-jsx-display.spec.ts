@@ -2,6 +2,7 @@ import { MantineProvider } from "@mantine/core";
 import * as MantineCharts from "@mantine/charts";
 import * as MantineCore from "@mantine/core";
 import * as MantineDates from "@mantine/dates";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -9,7 +10,12 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { Root } from "react-dom/client";
 
 import { customJsxComponentRegistry, enabledCustomJsxComponents } from "@homarr/custom-widgets/catalog";
-import { customJsxExamples, customJsxTablerIconNames } from "@homarr/custom-widgets/core";
+import {
+  BUNDLED_CUSTOM_WIDGETS,
+  customJsxExamples,
+  customJsxTablerIconNames,
+  getCustomWidgetDefaultOptions,
+} from "@homarr/custom-widgets/core";
 import { renderSafeJsx, SafeJsxError, sanitizeCustomJsxProps } from "@homarr/custom-widgets/jsx";
 
 import CustomJsxDisplay from "./custom-jsx-display";
@@ -54,6 +60,14 @@ describe("CustomJsxDisplay", () => {
         dispatchEvent: () => false,
       }),
     });
+    Object.defineProperty(globalThis, "ResizeObserver", {
+      writable: true,
+      value: class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    });
   });
 
   afterEach(async () => {
@@ -65,8 +79,15 @@ describe("CustomJsxDisplay", () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     await act(async () => {
-      root.render(createElement(MantineProvider, null, createElement(CustomJsxDisplay, { data })));
+      root.render(
+        createElement(
+          MantineProvider,
+          null,
+          createElement(QueryClientProvider, { client: queryClient }, createElement(CustomJsxDisplay, { data })),
+        ),
+      );
     });
   };
 
@@ -78,6 +99,29 @@ describe("CustomJsxDisplay", () => {
 
     expect(container.textContent).toContain("Server A");
     expect(container.textContent).toContain("3");
+  });
+
+  it("keeps runtime components inside an inert provider before a preview session exists", async () => {
+    await renderDisplay({ template: '<RefreshButton label="Refresh" />', data: {} });
+
+    expect(container.textContent).toContain("Refresh");
+    expect(container.textContent).not.toContain("RUNTIME_RENDER_ERROR");
+    expect(container.querySelector("button")?.disabled).toBe(true);
+  });
+
+  it("renders the bundled Pokédex list without a widget-wide runtime failure", async () => {
+    const pokedex = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-pokedex")?.widget;
+    expect(pokedex).toBeDefined();
+    await renderDisplay({
+      template: pokedex?.template,
+      data: { pokemon: { count: 2, results: [{ name: "bulbasaur" }, { name: "pikachu" }] } },
+      status: { pokemon: { loading: false, ok: true, status: 200 } },
+      options: getCustomWidgetDefaultOptions(pokedex?.options ?? {}),
+    });
+
+    expect(container.textContent).toContain("bulbasaur");
+    expect(container.textContent).toContain("pikachu");
+    expect(container.textContent).not.toContain("RUNTIME_RENDER_ERROR");
   });
 
   it("recovers when preview data arrives after an initial render error", async () => {
@@ -553,7 +597,7 @@ describe("shared Custom JSX examples", () => {
       bindings: {
         ...SAFE_BINDINGS(sampleData),
         status: {},
-        options: example.widget.defaultOptions,
+        options: getCustomWidgetDefaultOptions(example.widget.options ?? {}),
         inputs: {},
       },
     });

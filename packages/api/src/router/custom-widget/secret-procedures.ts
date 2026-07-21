@@ -80,7 +80,7 @@ export const secretProcedures = {
       }
 
       let widgetName: string;
-      let source: { id: string; name: string; auth: { type: string } } | undefined;
+      let source: { id: string; name: string; auth: string | { type: string } } | undefined;
       let target: { type: "definition"; id: string } | { type: "preview"; id: string };
       if (input.definitionId) {
         const stored = await ctx.db.query.customWidgetDefinitions.findFirst({
@@ -89,16 +89,22 @@ export const secretProcedures = {
         if (!stored) throw new TRPCError({ code: "NOT_FOUND" });
         const definition = parseStoredCustomWidgetDefinition(stored);
         widgetName = definition.name;
-        source = definition.sources.find((candidate) => candidate.id === input.sourceId);
+        const candidate = definition.sources[input.sourceId ?? ""];
+        source = candidate
+          ? { id: input.sourceId ?? "", name: candidate.name ?? input.sourceId ?? "", auth: candidate.auth }
+          : undefined;
         target = { type: "definition", id: input.definitionId };
       } else {
         const preview = await getPreviewSession(input.previewSessionId ?? "", ctx.session.user.id);
         widgetName = "Custom widget preview";
-        source = preview.sources.find((candidate) => candidate.id === input.sourceId);
+        const candidate = preview.sources[input.sourceId ?? ""];
+        source = candidate
+          ? { id: input.sourceId ?? "", name: candidate.name ?? input.sourceId ?? "", auth: candidate.auth }
+          : undefined;
         target = { type: "preview", id: preview.id };
       }
       if (!source) throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
-      const kinds = [...requiredSecretKinds(source.auth.type)];
+      const kinds = [...requiredSecretKinds(typeof source.auth === "string" ? source.auth : source.auth.type)];
       if (kinds.length === 0) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "This source does not require a secret" });
       }

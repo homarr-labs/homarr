@@ -2,15 +2,11 @@ import {
   customJsxBindableComponentNames,
   customJsxComponentByName,
   customJsxSupportedPropsByName,
+  resolveCustomJsxComponentName,
 } from "../core/component-registry";
 import type { AstNode } from "./analyzer-ast";
 import { containsEscapingCallback, nodeOf, nodesOf } from "./analyzer-ast";
-import {
-  closestCustomJsxComponentName,
-  customJsxTagName,
-  isRestrictedRecursiveListPath,
-  isSafeLiteralCustomJsxUrl,
-} from "./analyzer-language";
+import { closestCustomJsxComponentName, customJsxTagName, isSafeLiteralCustomJsxUrl } from "./analyzer-language";
 import { CUSTOM_JSX_URL_PROPS, isBlockedCustomJsxProp } from "./policy";
 import { getInvalidCustomJsxPropValueReason } from "./runtime-component-policy";
 
@@ -33,7 +29,8 @@ export function analyzeCustomJsxElement(
   }
   const nameNode = nodeOf(opening.name);
   const name = nameNode ? customJsxTagName(nameNode) : null;
-  const descriptor = name ? customJsxComponentByName.get(name) : undefined;
+  const resolvedName = name ? resolveCustomJsxComponentName(name) : null;
+  const descriptor = resolvedName ? customJsxComponentByName.get(resolvedName) : undefined;
   if (descriptor?.safety === "denied") {
     context.add(
       opening,
@@ -49,11 +46,8 @@ export function analyzeCustomJsxElement(
     );
   }
 
-  const attributeNames = new Set<string>();
-  let hasAttributeSpread = false;
   for (const attribute of nodesOf(opening.attributes)) {
     if (attribute.type === "JSXSpreadAttribute") {
-      hasAttributeSpread = true;
       const argument = nodeOf(attribute.argument);
       if (argument) context.visit(argument, depth + 1, bindings);
       continue;
@@ -64,7 +58,6 @@ export function analyzeCustomJsxElement(
     }
     const attributeNameNode = nodeOf(attribute.name);
     const attributeName = attributeNameNode?.type === "JSXIdentifier" ? String(attributeNameNode.name) : "";
-    attributeNames.add(attributeName);
     const componentBlockedProp = descriptor?.blockedProps.find(({ name: propName }) => propName === attributeName);
     if (componentBlockedProp) {
       context.add(
@@ -73,22 +66,23 @@ export function analyzeCustomJsxElement(
       );
     } else if (isBlockedCustomJsxProp(attributeName)) {
       context.add(attribute, `BLOCKED_CAPABILITY: Prop '${attributeName}' is not allowed`);
-    } else if (name && attributeName !== "bind" && !customJsxSupportedPropsByName.get(name)?.has(attributeName)) {
+    } else if (
+      resolvedName &&
+      attributeName !== "bind" &&
+      !customJsxSupportedPropsByName.get(resolvedName)?.has(attributeName)
+    ) {
       context.add(attribute, `UNKNOWN_MANTINE_PROP: '${attributeName}' on ${name} will be passed through`, "warning");
-    } else if (name && attributeName === "bind" && !customJsxBindableComponentNames.has(name)) {
+    } else if (resolvedName && attributeName === "bind" && !customJsxBindableComponentNames.has(resolvedName)) {
       context.add(attribute, `BINDING_UNAVAILABLE: '${name}' does not have a declarative binding adapter`, "warning");
     }
-    analyzeAttributeValue(name, attributeName, attribute, depth, bindings, context);
+    analyzeAttributeValue(resolvedName, attributeName, attribute, depth, bindings, context);
   }
 
-  if (name === "RecursiveList") analyzeRecursiveList(node, opening, attributeNames, hasAttributeSpread, context);
   nodesOf(node.children).forEach((child) => {
-    if (name === "RecursiveList" && child.type === "JSXExpressionContainer") {
-      const expression = nodeOf(child.expression);
-      if (expression?.type === "ArrowFunctionExpression") {
-        context.visitArrow(expression, depth + 1, bindings);
-        return;
-      }
+    const expression = child.type === "JSXExpressionContainer" ? nodeOf(child.expression) : null;
+    if (resolvedName === "SubFetch" && expression?.type === "ArrowFunctionExpression") {
+      context.visitArrow(expression, depth + 1, bindings);
+      return;
     }
     context.visit(child, depth + 1, bindings);
   });
@@ -109,32 +103,6 @@ function analyzeAttributeValue(
       : value?.type === "JSXExpressionContainer" && nodeOf(value.expression)?.type === "Literal"
         ? nodeOf(value.expression)
         : null;
-  if (componentName === "RecursiveList" && literalValue?.type === "Literal") {
-    if (
-      ["childrenPath", "keyPath"].includes(attributeName) &&
-      (typeof literalValue.value !== "string" || !isRestrictedRecursiveListPath(literalValue.value))
-    ) {
-      context.add(attribute, `INVALID_PROP_VALUE: '${attributeName}' must be a safe dotted property path`);
-    }
-    if (
-      attributeName === "maxDepth" &&
-      (typeof literalValue.value !== "number" ||
-        !Number.isInteger(literalValue.value) ||
-        literalValue.value < 1 ||
-        literalValue.value > 32)
-    ) {
-      context.add(attribute, "INVALID_PROP_VALUE: 'maxDepth' must be between 1 and 32");
-    }
-    if (
-      attributeName === "maxNodes" &&
-      (typeof literalValue.value !== "number" ||
-        !Number.isInteger(literalValue.value) ||
-        literalValue.value < 1 ||
-        literalValue.value > 2_000)
-    ) {
-      context.add(attribute, "INVALID_PROP_VALUE: 'maxNodes' must be between 1 and 2000");
-    }
-  }
   if (componentName && literalValue?.type === "Literal") {
     const reason = getInvalidCustomJsxPropValueReason(componentName, attributeName, literalValue.value);
     if (reason) context.add(attribute, `INVALID_PROP_VALUE: ${reason}`);
@@ -153,37 +121,5 @@ function analyzeAttributeValue(
     context.add(attribute, `BLOCKED_CAPABILITY: Callback prop '${attributeName}' is not allowed`);
   } else if (expression && expression.type !== "JSXEmptyExpression") {
     context.visit(expression, depth + 1, bindings);
-  }
-}
-
-function analyzeRecursiveList(
-  node: AstNode,
-  opening: AstNode,
-  attributeNames: ReadonlySet<string>,
-  hasAttributeSpread: boolean,
-  context: AnalyzerJsxContext,
-): void {
-  for (const requiredProp of ["data", "childrenPath", "keyPath"]) {
-    if (!hasAttributeSpread && !attributeNames.has(requiredProp)) {
-      context.add(opening, `INVALID_PROP_VALUE: RecursiveList requires '${requiredProp}'`);
-    }
-  }
-  const meaningfulChildren = nodesOf(node.children).filter(
-    (child) => child.type !== "JSXText" || String(child.value ?? "").trim().length > 0,
-  );
-  const templateExpression =
-    meaningfulChildren.length === 1 && meaningfulChildren[0]?.type === "JSXExpressionContainer"
-      ? nodeOf(meaningfulChildren[0].expression)
-      : null;
-  if (templateExpression?.type !== "ArrowFunctionExpression") {
-    context.add(node, "RECURSIVE_LIST_TEMPLATE_REQUIRED: RecursiveList requires exactly one inline arrow child");
-    return;
-  }
-  const parameters = nodesOf(templateExpression.params);
-  if (parameters.length === 0 || parameters.length > 2) {
-    context.add(
-      templateExpression,
-      "RECURSIVE_LIST_TEMPLATE_REQUIRED: RecursiveList child accepts node and optional metadata parameters",
-    );
   }
 }

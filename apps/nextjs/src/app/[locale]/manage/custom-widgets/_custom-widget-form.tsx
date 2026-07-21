@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Button, Paper, SegmentedControl, Stack, TextInput, Textarea } from "@mantine/core";
+import { Accordion, Box, Button, Paper, SegmentedControl, Stack, TextInput, Textarea } from "@mantine/core";
 import {
   IconAlertCircle,
   IconApi,
@@ -17,8 +17,8 @@ import {
   analyzeRequestManifest,
   customWidgetFormSchema,
   DEFAULT_CUSTOM_WIDGET_FORM_VALUES,
-  renameCustomWidgetRequest,
 } from "@homarr/custom-widgets/workbench";
+import { customWidgetOptionsSchema, getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import { useZodForm } from "@homarr/form";
 import { IconPicker } from "@homarr/forms-collection";
@@ -26,17 +26,16 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { CodeEditor } from "./_code-editor";
 import { CustomWidgetAiCard } from "./_custom-widget-ai-card";
+import { CustomWidgetAdvancedManifest } from "./_custom-widget-advanced-manifest";
 import { createCustomWidgetCompletions, getInvalidCustomWidgetSections } from "./_custom-widget-form-analysis";
 import { EditorSection, SaveActions } from "./_custom-widget-form-layout";
-import {
-  customWidgetDefaultOptionsReference,
-  customWidgetOptionsSchemaReference,
-  customWidgetRequestReference,
-} from "./_custom-widget-form-references";
-import { applyDefinition, buildDefinition, isRecord, parseJsonArray } from "./_custom-widget-form-utils";
+import { customWidgetOptionsSchemaReference, customWidgetRequestReference } from "./_custom-widget-form-references";
+import { buildDefinition, getDefinitionDefaults, isRecord, parseJson } from "./_custom-widget-form-utils";
+import { CustomWidgetOptionsEditor } from "./_custom-widget-options-editor";
 import { CustomWidgetPreviewPanel } from "./_custom-widget-preview-panel";
 import type { PreviewState } from "./_custom-widget-preview-panel";
-import { CustomWidgetRequestTools } from "./_custom-widget-request-tools";
+import { CustomWidgetRequestsEditor } from "./_custom-widget-requests-editor";
+import { createCustomWidgetRenameHandlers } from "./_custom-widget-rename-handlers";
 import { CustomWidgetSaveIssuesAlert } from "./_custom-widget-save-issues-alert";
 import { CustomWidgetSourcesEditor } from "./_custom-widget-sources-editor";
 import { useCustomWidgetFormActions } from "./_use-custom-widget-form-actions";
@@ -70,17 +69,20 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const [previewTheme, setPreviewTheme] = useState<"light" | "dark">("dark");
   const [optionsSnapshot, setOptionsSnapshot] = useState<Record<string, unknown>>(() => {
     const initialDefinition = buildDefinition(formInitialValues);
-    return initialDefinition.success ? initialDefinition.data.defaultOptions : {};
+    return initialDefinition.success ? getDefinitionDefaults(initialDefinition.data) : {};
   });
-  const [revealedRequest, setRevealedRequest] = useState({ text: "", key: 0 });
   const dirtyRef = useRef(false);
   dirtyRef.current = form.isDirty();
 
   const candidate = useMemo(() => buildDefinition(form.values), [form.values]);
+  const parsedOptions = useMemo(
+    () => customWidgetOptionsSchema.safeParse(parseJson(form.values.options)),
+    [form.values.options],
+  );
   const requestIds = useMemo(
     () =>
-      parseJsonArray(form.values.requests).flatMap((entry) =>
-        isRecord(entry) && typeof entry.id === "string" ? [entry.id] : [],
+      Object.keys(
+        isRecord(parseJson(form.values.requests)) ? (parseJson(form.values.requests) as Record<string, unknown>) : {},
       ),
     [form.values.requests],
   );
@@ -122,16 +124,16 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     window.addEventListener("beforeunload", beforeUnload);
     return () => window.removeEventListener("beforeunload", beforeUnload);
   }, []);
+  useEffect(() => {
+    if (parsedOptions.success) setOptionsSnapshot(getCustomWidgetDefaultOptions(parsedOptions.data));
+  }, [parsedOptions]);
 
   const invalid = hasDiagnostics || !candidate.success;
-  const renameRequest = (currentId: string, nextId: string) => {
-    if (!candidate.success) throw new Error(w("invalidWidget"));
-    applyDefinition(form, renameCustomWidgetRequest(candidate.data, currentId, nextId));
-    setRevealedRequest((current) => ({ text: `"id": "${nextId}"`, key: current.key + 1 }));
-  };
-  const revealRequest = (requestId: string) => {
-    setRevealedRequest((current) => ({ text: `"id": "${requestId}"`, key: current.key + 1 }));
-  };
+  const { renameRequest, renameOption } = createCustomWidgetRenameHandlers({
+    form,
+    candidate,
+    invalidWidgetMessage: w("invalidWidget"),
+  });
   return (
     <form onSubmit={save} className={classes.form}>
       <SegmentedControl
@@ -173,6 +175,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
             onDocumentationUrlChange={setDocumentationUrl}
             onPaste={() => void pasteAiResponse()}
           />
+          <CustomWidgetAdvancedManifest form={form} />
           <EditorSection id="general" title={w("generalInformation")} icon={IconSettings}>
             <TextInput label={t("field.name")} required {...form.getInputProps("name")} />
             <Textarea label={t("field.description")} autosize minRows={2} {...form.getInputProps("description")} />
@@ -182,41 +185,45 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
             <CustomWidgetSourcesEditor form={form} definitionId={definitionId} />
           </EditorSection>
           <EditorSection id="requests" title={w("requests.title")} icon={IconDatabase}>
-            <CustomWidgetRequestTools requestIds={requestIds} onGoTo={revealRequest} onRename={renameRequest} />
-            <CodeEditor
-              id="requests-editor"
-              label={w("requests.label")}
-              description={w("requests.description")}
-              language="json"
-              value={form.values.requests}
-              onChange={(value) => form.setFieldValue("requests", value)}
-              diagnostics={requestDiagnostics}
-              error={form.errors.requests}
-              revealText={revealedRequest.text}
-              revealKey={revealedRequest.key}
-              reference={customWidgetRequestReference}
-              required
-            />
+            <CustomWidgetRequestsEditor form={form} onRename={renameRequest} />
+            <Accordion variant="contained">
+              <Accordion.Item value="raw">
+                <Accordion.Control>{w("builder.advancedJson")}</Accordion.Control>
+                <Accordion.Panel>
+                  <CodeEditor
+                    id="requests-editor"
+                    label={w("requests.label")}
+                    description={w("requests.description")}
+                    language="json"
+                    value={form.values.requests}
+                    onChange={(value) => form.setFieldValue("requests", value)}
+                    diagnostics={requestDiagnostics}
+                    error={form.errors.requests}
+                    reference={customWidgetRequestReference}
+                    required
+                  />
+                </Accordion.Panel>
+              </Accordion.Item>
+            </Accordion>
           </EditorSection>
           <EditorSection id="options" title={w("options.title")} icon={IconBraces}>
-            <CodeEditor
-              id="options-schema"
-              label={w("options.schema")}
-              language="json"
-              value={form.values.optionsSchema}
-              onChange={(value) => form.setFieldValue("optionsSchema", value)}
-              error={form.errors.optionsSchema}
-              reference={customWidgetOptionsSchemaReference}
-            />
-            <CodeEditor
-              id="default-options"
-              label={w("options.defaults")}
-              language="json"
-              value={form.values.defaultOptions}
-              onChange={(value) => form.setFieldValue("defaultOptions", value)}
-              error={form.errors.defaultOptions}
-              reference={customWidgetDefaultOptionsReference}
-            />
+            <CustomWidgetOptionsEditor form={form} onRename={renameOption} />
+            <Accordion variant="contained">
+              <Accordion.Item value="raw">
+                <Accordion.Control>{w("builder.advancedJson")}</Accordion.Control>
+                <Accordion.Panel>
+                  <CodeEditor
+                    id="options"
+                    label={w("options.title")}
+                    language="json"
+                    value={form.values.options}
+                    onChange={(value) => form.setFieldValue("options", value)}
+                    error={form.errors.options}
+                    reference={customWidgetOptionsSchemaReference}
+                  />
+                </Accordion.Panel>
+              </Accordion.Item>
+            </Accordion>
           </EditorSection>
           <EditorSection id="jsx" title={w("jsx.title")} icon={IconCode}>
             <CodeEditor

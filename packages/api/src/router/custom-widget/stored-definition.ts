@@ -6,7 +6,7 @@ import type { CustomWidgetDefinition } from "@homarr/db/schema";
 
 type StoredCustomWidgetDefinition = Pick<
   CustomWidgetDefinition,
-  "name" | "description" | "iconUrl" | "sources" | "requests" | "optionsSchema" | "defaultOptions" | "template"
+  "name" | "description" | "iconUrl" | "sources" | "requests" | "options" | "template"
 >;
 
 export interface StoredCustomWidgetIssue {
@@ -25,8 +25,7 @@ export function serializeCustomWidgetDefinition(definition: HomarrCustomWidgetV2
     iconUrl: definition.iconUrl ?? null,
     sources: stringifySuperJson(definition.sources),
     requests: stringifySuperJson(definition.requests),
-    optionsSchema: stringifySuperJson(definition.optionsSchema),
-    defaultOptions: stringifySuperJson(definition.defaultOptions),
+    options: stringifySuperJson(definition.options),
     template: definition.template,
   };
 }
@@ -39,8 +38,7 @@ export function parseStoredCustomWidgetDefinition(definition: StoredCustomWidget
     iconUrl: definition.iconUrl ?? undefined,
     sources: parseSuperJson(definition.sources),
     requests: parseSuperJson(definition.requests),
-    optionsSchema: parseSuperJson(definition.optionsSchema),
-    defaultOptions: parseSuperJson(definition.defaultOptions),
+    options: parseSuperJson(definition.options),
     template: definition.template,
   });
 }

@@ -538,14 +538,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "options_schema": {
-          "name": "options_schema",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "default_options": {
-          "name": "default_options",
+        "options": {
+          "name": "options",
           "type": "text",
           "primaryKey": false,
           "notNull": true

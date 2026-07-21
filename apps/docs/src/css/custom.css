@@ -9,6 +9,17 @@
   --breakpoint-3xl: 1697px;
 }
 
+html,
+body,
+#__docusaurus {
+  min-height: 100%;
+  background-color: var(--ifm-background-color);
+}
+
+#__docusaurus {
+  min-height: 100vh;
+}
+
 :root {
   --ifm-color-primary: #fa5252;
   --ifm-color-primary-dark: #f93232;

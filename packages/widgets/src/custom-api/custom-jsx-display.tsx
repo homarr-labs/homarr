@@ -7,7 +7,7 @@ import type { CustomWidgetPublishedQueryState } from "@homarr/custom-widgets/run
 import { CustomJsxRenderer, parseRequestCapabilities } from "@homarr/custom-widgets/runtime";
 
 import { createCustomWidgetComponents, SAFE_BINDINGS } from "./jsx-components";
-import { WidgetDefinitionProvider } from "./widget-definition-context";
+import { InactiveWidgetDefinitionProvider, WidgetDefinitionProvider } from "./widget-definition-context";
 
 export { CUSTOM_JSX_METHOD_COLORS } from "@homarr/custom-widgets/runtime";
 
@@ -52,12 +52,21 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
       }}
     />
   );
-  const hasRuntime = typeof data.widgetItemId === "string" || typeof data.previewSessionId === "string";
-  return hasRuntime ? (
+  const definitionId = typeof data.widgetDefinitionId === "string" ? data.widgetDefinitionId : undefined;
+  const itemId = typeof data.widgetItemId === "string" ? data.widgetItemId : undefined;
+  const previewSessionId = typeof data.previewSessionId === "string" ? data.previewSessionId : undefined;
+  if (!itemId && !previewSessionId) {
+    return (
+      <InactiveWidgetDefinitionProvider definitionId={definitionId} isEditMode={data.isEditMode === true}>
+        {renderer}
+      </InactiveWidgetDefinitionProvider>
+    );
+  }
+  return (
     <WidgetDefinitionProvider
-      definitionId={String(data.widgetDefinitionId ?? "")}
-      itemId={typeof data.widgetItemId === "string" ? data.widgetItemId : undefined}
-      previewSessionId={typeof data.previewSessionId === "string" ? data.previewSessionId : undefined}
+      definitionId={definitionId}
+      itemId={itemId}
+      previewSessionId={previewSessionId}
       previewLiveActions={data.previewLiveActions === true}
       queriesDisabled={data.queriesDisabled === true}
       isEditMode={data.isEditMode === true}
@@ -66,8 +75,6 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
     >
       {renderer}
     </WidgetDefinitionProvider>
-  ) : (
-    renderer
   );
 }
 

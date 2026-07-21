@@ -54,7 +54,7 @@ export function SaveActions({
 }) {
   const t = useScopedI18n("customWidget.workbench");
   return (
-    <Group justify="space-between" wrap="nowrap">
+    <Group justify="space-between" wrap="wrap">
       <Group gap="xs">
         {invalid ? (
           <IconAlertTriangle size={16} color="var(--mantine-color-red-6)" />
@@ -62,10 +62,10 @@ export function SaveActions({
           <IconCheck size={16} color="var(--mantine-color-green-6)" />
         )}
         <Text size="sm" fw={600}>
-          {dirty ? t("status.unsaved") : invalid ? t("status.invalid") : t("status.ready")}
+          {invalid ? t("status.invalid") : dirty ? t("status.unsaved") : t("status.ready")}
         </Text>
       </Group>
-      <Group gap="xs" wrap="nowrap">
+      <Group gap="xs" wrap="wrap">
         <Button
           type="button"
           variant="light"

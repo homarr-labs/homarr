@@ -5,13 +5,22 @@ import { decryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { eq, or } from "@homarr/db";
 import { boards, customWidgetDefinitions } from "@homarr/db/schema";
-import { getCustomWidgetSecretRequirements } from "@homarr/custom-widgets/core";
+import {
+  getCustomWidgetConfirmation,
+  getCustomWidgetDefaultOptions,
+  getCustomWidgetSecretRequirements,
+} from "@homarr/custom-widgets/core";
 
 import { permissionRequiredProcedure, protectedProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { parseStoredCustomWidgetDefinition, safeParseStoredCustomWidgetDefinition } from "./stored-definition";
 import { executeCustomWidgetRequest } from "./request-executor";
-import { hashRuntimeParams, renderRequestBody, renderRequestTarget } from "./request-manifest";
+import {
+  hashRuntimeParams,
+  renderRequestBody,
+  renderRequestTarget,
+  resolveCustomWidgetRequestValues,
+} from "./request-manifest";
 import { acquireCustomWidgetRequestLimit } from "./request-limits";
 import { getCustomWidgetCacheVersion } from "./cache-version";
 
@@ -41,7 +50,7 @@ export const managementQueryProcedures = {
             sources: [],
             requestCount: 0,
             missingSecrets: [],
-            defaultOptions: {},
+            options: {},
             updatedAt: definition.updatedAt,
             enabled: definition.enabled,
             valid: false as const,
@@ -56,18 +65,18 @@ export const managementQueryProcedures = {
           name: widget.name,
           description: widget.description,
           iconUrl: widget.iconUrl,
-          sources: widget.sources.map(({ id, name, baseUrl, networkScope, auth }) => ({
+          sources: Object.entries(widget.sources).map(([id, { name, baseUrl, networkScope, auth }]) => ({
             id,
             name,
             origin: new URL(baseUrl).origin,
             networkScope,
-            authType: auth.type,
+            authType: typeof auth === "string" ? auth : auth.type,
           })),
-          requestCount: widget.requests.length,
+          requestCount: Object.keys(widget.requests).length,
           missingSecrets: getCustomWidgetSecretRequirements(widget.sources).filter(
             (requirement) => !configuredSecrets.has(`${requirement.sourceId}:${requirement.kind}`),
           ),
-          defaultOptions: widget.defaultOptions,
+          options: widget.options,
           updatedAt: definition.updatedAt,
           enabled: definition.enabled,
           valid: true as const,
@@ -123,29 +132,29 @@ export const managementQueryProcedures = {
           name: definition.name,
           description: definition.description,
           iconUrl: definition.iconUrl,
-          optionsSchema: widget.optionsSchema,
-          defaultOptions: widget.defaultOptions,
+          options: widget.options,
+          defaultOptions: getCustomWidgetDefaultOptions(widget.options),
           template: widget.template,
-          sources: widget.sources.map(({ id, name, networkScope, auth }) => ({
+          sources: Object.entries(widget.sources).map(([id, { name, networkScope, auth }]) => ({
             id,
             name,
             networkScope,
-            authType: auth.type,
+            authType: typeof auth === "string" ? auth : auth.type,
           })),
-          requestCapabilities: widget.requests.map(
-            ({ id, kind, method, trigger, minimumBoardPermission, confirmation, invalidates }) => ({
+          requestCapabilities: Object.entries(widget.requests).map(
+            ([id, { kind, method, trigger, permission, confirmation, invalidates }]) => ({
               id,
               kind,
               method,
               trigger,
-              minimumBoardPermission,
-              confirmation,
+              minimumBoardPermission: permission,
+              confirmation: getCustomWidgetConfirmation({ method, confirmation }),
               invalidates,
             }),
           ),
-          optionRequests: widget.requests
-            .filter((request) => request.kind === "query")
-            .map(({ id, parameters, optionsBinding }) => ({ id, parameters, optionsBinding })),
+          optionRequests: Object.entries(widget.requests).flatMap(([id, request]) =>
+            request.kind === "query" ? [{ id }] : [],
+          ),
           updatedAt: definition.updatedAt,
         };
       });
@@ -168,12 +177,12 @@ export const managementQueryProcedures = {
       });
       if (!stored || !stored.enabled) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget not found" });
       const definition = parseStoredCustomWidgetDefinition(stored);
-      const request = definition.requests.find(
-        (candidate) => candidate.id === input.requestId && candidate.kind === "query",
-      );
-      if (!request) throw new TRPCError({ code: "NOT_FOUND", message: "Option query not found" });
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), request.minimumBoardPermission);
-      const source = definition.sources.find((candidate) => candidate.id === request.sourceId);
+      const requestDefinition = definition.requests[input.requestId];
+      if (requestDefinition?.kind !== "query")
+        throw new TRPCError({ code: "NOT_FOUND", message: "Option query not found" });
+      const request = { id: input.requestId, ...requestDefinition };
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), request.permission);
+      const source = definition.sources[request.source];
       if (!source) throw new TRPCError({ code: "NOT_FOUND", message: "Option query source not found" });
       const release = await acquireCustomWidgetRequestLimit({
         category: "query",
@@ -182,31 +191,33 @@ export const managementQueryProcedures = {
         definitionId: input.definitionId,
       });
       try {
+        const values = resolveCustomWidgetRequestValues(request, input.params, {});
+        const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
         const response = await executeCustomWidgetRequest({
           baseUrl: source.baseUrl,
-          targetUrl: renderRequestTarget(source.baseUrl, request, input.params),
+          targetUrl: renderRequestTarget(source.baseUrl, request, values),
           method: request.method,
-          body: renderRequestBody(request.bodyTemplate, input.params),
-          staticHeaders: request.staticHeaders,
+          body: renderRequestBody(request, values),
+          staticHeaders: request.headers,
           auth:
-            request.auth === "none" || source.auth.type === "none"
+            request.auth === "none" || authType === "none"
               ? undefined
               : {
-                  type: source.auth.type,
+                  type: authType,
                   secrets: stored.secrets
-                    .filter((secret) => secret.sourceId === source.id)
+                    .filter((secret) => secret.sourceId === request.source)
                     .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
                   headerName:
-                    source.auth.type === "apiKeyHeader"
-                      ? source.auth.headerName
-                      : source.auth.type === "apiKeyQuery"
-                        ? source.auth.parameterName
+                    typeof source.auth === "object" && source.auth.type === "apiKeyHeader"
+                      ? source.auth.name
+                      : typeof source.auth === "object" && source.auth.type === "apiKeyQuery"
+                        ? source.auth.name
                         : undefined,
                 },
           networkScope: source.networkScope,
           kind: "query",
-          cacheKey: `custom-widget:options:${input.definitionId}:${getCustomWidgetCacheVersion(stored)}:${request.id}:${hashRuntimeParams(input.params)}`,
-          cacheTtlSeconds: request.cacheTtlSeconds ?? 30,
+          cacheKey: `custom-widget:options:${input.definitionId}:${getCustomWidgetCacheVersion(stored)}:${request.id}:${hashRuntimeParams(values)}`,
+          cacheTtlSeconds: request.cacheSeconds ?? 30,
         });
         return {
           ok: response.ok,

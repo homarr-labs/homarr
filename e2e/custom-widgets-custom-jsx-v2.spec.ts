@@ -7,23 +7,6 @@ import { startMockApiContainerAsync } from "./shared/mock-api-container";
 import { seedAdminUserAsync } from "./shared/seed-admin-user";
 
 const adminCredentials = { username: "admin", password: "Comp(exP4sswOrd" };
-const requests = JSON.stringify(
-  [
-    {
-      id: "status",
-      sourceId: "default",
-      kind: "query",
-      method: "GET",
-      pathTemplate: "/status",
-      parameters: {},
-      auth: "inherit",
-      minimumBoardPermission: "view",
-      trigger: "load",
-    },
-  ],
-  null,
-  2,
-);
 const initialTemplate =
   "<Stack><Title order={4}>{data.status?.title}</Title><Badge>{data.status?.status}</Badge></Stack>";
 const updatedTemplate = "<Stack><Text fw={700}>{data.status?.title}</Text><Text>{data.status?.value}</Text></Stack>";
@@ -49,11 +32,25 @@ describe("Custom JSX v2 workbench", () => {
       await page.waitForURL(baseUrl, { timeout: 15_000 });
 
       await page.goto(`${baseUrl}/manage/custom-widgets/new`);
-      await page.getByRole("textbox", { name: "Name" }).fill("E2E Custom JSX v2");
+      await page.locator('input[data-path="name"]:visible').fill("E2E Custom JSX v2");
       await page.getByRole("textbox", { name: "Base URL" }).fill(mockApi.url);
-      await page.getByRole("combobox", { name: "Network scope" }).click();
+      await page.getByRole("combobox", { name: "Network access" }).click();
       await page.getByRole("option", { name: "private" }).click();
-      await page.locator("#requests-editor-root").fill(requests);
+      await page.getByRole("group", { name: "status" }).getByRole("textbox", { name: "Path" }).fill("/status");
+      await page.getByRole("button", { name: "Add option" }).click();
+      const option = page.getByRole("group", { name: "Option 1" });
+      await option.getByRole("textbox", { name: "Option name" }).fill("label");
+      await option.getByRole("textbox", { name: "Default" }).fill("E2E");
+      const request = page.getByRole("group", { name: "status" });
+      await request.getByRole("button", { name: "Query, body and behavior" }).click();
+      await request.getByRole("button", { name: "Add query value" }).click();
+      await request.getByRole("textbox", { name: "Query key" }).fill("label");
+      await request.getByRole("combobox", { name: "Value source" }).click();
+      await page.getByRole("option", { name: "Widget option" }).click();
+      await request.getByRole("combobox", { name: "Option" }).first().click();
+      await page.getByRole("option", { name: "label" }).click();
+      await page.getByRole("button", { name: "Advanced manifest JSON" }).first().click();
+      await expect(page.locator("#requests-editor-root")).toContainText('"$option": "label"');
       await page.locator("#jsx-editor-root").fill(initialTemplate);
 
       await page.getByRole("button", { name: "Test and preview" }).last().click();
@@ -61,35 +58,28 @@ describe("Custom JSX v2 workbench", () => {
         timeout: 15_000,
       });
 
-      await page.getByRole("button", { name: "Create widget" }).last().click();
+      await page.getByRole("button", { name: "Create", exact: true }).last().click();
       await expect(page.getByText('Widget "E2E Custom JSX v2" created successfully.')).toBeVisible({ timeout: 15_000 });
       await page.waitForURL("**/manage/custom-widgets/edit/**", { timeout: 15_000 });
 
       await page.locator("#jsx-editor-root").fill(updatedTemplate);
-      await page.getByRole("button", { name: "Save changes" }).last().click();
+      await page.getByRole("button", { name: "Save", exact: true }).last().click();
       await expect(page.getByText('Widget "E2E Custom JSX v2" updated successfully.')).toBeVisible({ timeout: 15_000 });
 
       await page.goto(baseUrl);
-      await page
-        .getByRole("button", { name: /edit mode|pencil/iu })
-        .first()
-        .click();
-      await page
-        .getByRole("button", { name: /Add widget|Add item/iu })
-        .first()
-        .click();
-      await page
-        .getByRole("button", { name: /Custom API|Custom Widget/iu })
-        .first()
-        .click();
+      await page.getByRole("button", { name: "Edit", exact: true }).click();
+      await page.getByRole("button", { name: "New item", exact: true }).click();
+      await page.getByRole("menuitem", { name: "New item", exact: true }).click();
+      const picker = page.getByRole("dialog").last();
+      const customWidgetCard = picker.getByText("E2E Custom JSX v2", { exact: true }).locator("xpath=../../..");
+      await customWidgetCard.hover();
+      await customWidgetCard.getByRole("button", { name: "Add to board" }).click();
       const addDialog = page.getByRole("dialog").last();
-      await addDialog.getByText("E2E Custom JSX v2").first().click();
+      await expect(addDialog.getByText("E2E Custom JSX v2")).toBeVisible();
+      await addDialog.getByRole("button", { name: "Save changes", exact: true }).click();
 
       await expect(page.getByText("Widget definition not found")).not.toBeVisible();
-      await page
-        .getByRole("button", { name: /edit mode|pencil/iu })
-        .first()
-        .click();
+      await page.getByRole("button", { name: "Save", exact: true }).click();
       await expect(page.getByText("E2E Widget")).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText("42")).toBeVisible({ timeout: 15_000 });
     } finally {

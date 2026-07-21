@@ -9,8 +9,9 @@ import type { CustomWidgetSource, CustomWidgetSourceUrlIssue } from "@homarr/cus
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { isRecord, parseJsonArray, parseSources } from "./_custom-widget-form-utils";
+import { isRecord, parseJson, parseSources } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
+import { CustomWidgetIdentifierInput } from "./_custom-widget-identifier-input";
 
 const secretFields: Record<string, Array<{ kind: "apiKey" | "username" | "password" }>> = {
   bearer: [{ kind: "apiKey" }],
@@ -37,21 +38,38 @@ export function CustomWidgetSourcesEditor({
   const utils = clientApi.useUtils();
   const clearSecretMutation = clientApi.customWidget.secretClear.useMutation();
   const sources = parseSources(form.values.sources);
-  const update = (index: number, changes: Partial<CustomWidgetSource>) => {
+  const update = (index: number, changes: Partial<CustomWidgetSource> & { id?: string }) => {
     const previousId = sources[index]?.id;
-    const nextId = changes.id;
+    const nextId = changes.id ?? previousId;
+    if (nextId && sources.some((source, sourceIndex) => sourceIndex !== index && source.id === nextId)) {
+      form.setFieldError("sources", t("duplicateSourceId"));
+      return;
+    }
+    if (form.errors.sources === t("duplicateSourceId")) form.clearFieldError("sources");
+    const sourceEntries = sources.map(({ id, ...source }) => [id, source] as const);
     form.setFieldValue(
       "sources",
       JSON.stringify(
-        sources.map((source, i) => (i === index ? { ...source, ...changes } : source)),
+        Object.fromEntries(
+          sourceEntries.map(([id, source], i) => [
+            i === index ? nextId : id,
+            i === index ? { ...source, ...changes, id: undefined } : source,
+          ]),
+        ),
         null,
         2,
       ),
     );
     if (previousId && nextId && previousId !== nextId) {
-      const requests = parseJsonArray(form.values.requests).map((request) =>
-        isRecord(request) && request.sourceId === previousId ? { ...request, sourceId: nextId } : request,
-      );
+      const parsedRequests = parseJson(form.values.requests);
+      const requests = isRecord(parsedRequests)
+        ? Object.fromEntries(
+            Object.entries(parsedRequests).map(([id, request]) => [
+              id,
+              isRecord(request) && request.source === previousId ? { ...request, source: nextId } : request,
+            ]),
+          )
+        : {};
       form.setFieldValue("requests", JSON.stringify(requests, null, 2));
       form.setFieldValue(
         "secrets",
@@ -63,11 +81,7 @@ export function CustomWidgetSourcesEditor({
   };
   const setAuth = (index: number, type: string) => {
     const auth =
-      type === "apiKeyHeader"
-        ? { type, headerName: "X-API-Key" }
-        : type === "apiKeyQuery"
-          ? { type, parameterName: "api_key" }
-          : { type };
+      type === "apiKeyHeader" ? { type, name: "X-API-Key" } : type === "apiKeyQuery" ? { type, name: "api_key" } : type;
     update(index, { auth: auth as CustomWidgetSource["auth"] });
   };
   const setSecret = (sourceId: string, kind: string, value: string) => {
@@ -76,20 +90,22 @@ export function CustomWidgetSourcesEditor({
     form.setFieldValue("secrets", [...current, { sourceId, kind, value, hasValue: existing?.hasValue }]);
   };
   const addSource = () => {
-    const id = `source-${sources.length + 1}`;
+    const id = sources.length === 0 ? "default" : `source-${sources.length + 1}`;
     form.setFieldValue(
       "sources",
       JSON.stringify(
-        [
-          ...sources,
-          {
+        Object.fromEntries([
+          ...sources.map(({ id: sourceId, ...source }) => [sourceId, source] as const),
+          [
             id,
-            name: t("newName", { count: sources.length + 1 }),
-            baseUrl: "https://example.com",
-            networkScope: "private",
-            auth: { type: "none" },
-          },
-        ],
+            {
+              name: t("newName", { count: sources.length + 1 }),
+              baseUrl: "https://example.com",
+              networkScope: sources.length === 0 ? "public" : "private",
+              auth: "none",
+            },
+          ],
+        ]),
         null,
         2,
       ),
@@ -100,7 +116,7 @@ export function CustomWidgetSourcesEditor({
     form.setFieldValue(
       "sources",
       JSON.stringify(
-        sources.filter((_, i) => i !== index),
+        Object.fromEntries(sources.filter((_, i) => i !== index).map(({ id, ...source }) => [id, source])),
         null,
         2,
       ),
@@ -109,7 +125,13 @@ export function CustomWidgetSourcesEditor({
     form.setFieldValue(
       "requests",
       JSON.stringify(
-        parseJsonArray(form.values.requests).filter((request) => !isRecord(request) || request.sourceId !== removedId),
+        Object.fromEntries(
+          Object.entries(
+            isRecord(parseJson(form.values.requests))
+              ? (parseJson(form.values.requests) as Record<string, unknown>)
+              : {},
+          ).filter(([, request]) => !isRecord(request) || request.source !== removedId),
+        ),
         null,
         2,
       ),
@@ -136,11 +158,12 @@ export function CustomWidgetSourcesEditor({
           <Fieldset key={index} legend={index === 0 ? t("primary") : source.name}>
             <Stack gap="sm">
               <Group grow align="start">
-                <TextInput
+                <CustomWidgetIdentifierInput
                   label={t("id")}
                   value={source.id}
-                  disabled={Boolean(definitionId)}
-                  onChange={(event) => update(index, { id: event.currentTarget.value })}
+                  disabled={source.id === "default" || Boolean(definitionId)}
+                  error={form.errors.sources}
+                  onCommit={(value) => update(index, { id: value })}
                 />
                 <TextInput
                   label={t("name")}
@@ -168,30 +191,30 @@ export function CustomWidgetSourcesEditor({
                 <Select
                   label={t("authentication")}
                   data={["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"]}
-                  value={source.auth.type}
+                  value={typeof source.auth === "string" ? source.auth : source.auth.type}
                   onChange={(value) => setAuth(index, value ?? "none")}
                   allowDeselect={false}
                 />
               </Group>
-              {source.auth.type === "apiKeyHeader" && (
+              {typeof source.auth === "object" && source.auth.type === "apiKeyHeader" && (
                 <TextInput
                   label={t("headerName")}
-                  value={source.auth.headerName}
+                  value={source.auth.name}
                   onChange={(event) =>
-                    update(index, { auth: { type: "apiKeyHeader", headerName: event.currentTarget.value } })
+                    update(index, { auth: { type: "apiKeyHeader", name: event.currentTarget.value } })
                   }
                 />
               )}
-              {source.auth.type === "apiKeyQuery" && (
+              {typeof source.auth === "object" && source.auth.type === "apiKeyQuery" && (
                 <TextInput
                   label={t("queryParameter")}
-                  value={source.auth.parameterName}
+                  value={source.auth.name}
                   onChange={(event) =>
-                    update(index, { auth: { type: "apiKeyQuery", parameterName: event.currentTarget.value } })
+                    update(index, { auth: { type: "apiKeyQuery", name: event.currentTarget.value } })
                   }
                 />
               )}
-              {(secretFields[source.auth.type] ?? []).map((field) => {
+              {(secretFields[typeof source.auth === "string" ? source.auth : source.auth.type] ?? []).map((field) => {
                 const secret = form.values.secrets.find(
                   (entry) => entry.sourceId === source.id && entry.kind === field.kind,
                 );

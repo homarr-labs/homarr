@@ -9,17 +9,6 @@ export function buildCustomJsxComponentUsageExample(
   component: CustomJsxComponentApi,
   catalog: Pick<CustomJsxAuthoringCatalog, "types">,
 ) {
-  if (component.name === "RecursiveList") {
-    return `<RecursiveList data={data.tree} childrenPath="children" keyPath="id" showLines>
-  {(node, meta) => (
-    <Group gap="xs">
-      <Text>{node.label}</Text>
-      {meta.hasChildren && <Badge>{meta.childCount}</Badge>}
-    </Group>
-  )}
-</RecursiveList>`;
-  }
-
   const props = component.props
     .filter((prop) => prop.required)
     .slice(0, 4)

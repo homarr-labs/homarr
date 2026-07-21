@@ -9,4 +9,5 @@ export type {
   CustomWidgetImport,
   CustomWidgetUpdateInput,
   HomarrCustomWidgetV2,
+  HomarrCustomWidgetV2Input,
 } from "./custom-jsx-schema";

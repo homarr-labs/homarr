@@ -20,11 +20,11 @@ Homarr does not migrate old Custom JSX formats.
 
 Read the first schema or JSX diagnostic. Use its path to find the invalid value.
 
-Make sure that each API source ID is unique. Make sure that each request ID is unique.
+Make sure keyed API source and request names are valid and unique.
 
-Make sure that each named request references an API source. Declare each request parameter.
+Make sure that each named request references an API source. Use explicit `$option` and `$param` references.
 
-Make sure that default values conform to the widget options schema. Use the correct request kind for each runtime component.
+Make sure every option default matches its control. Use the correct request kind for each runtime component.
 
 An incomplete API source URL or icon URL causes a form validation error. The workbench keeps the draft open.
 
@@ -38,11 +38,9 @@ The Diagnostics tab shows the current schema errors.
 
 Check the API source network scope. Check the base URL and credentials.
 
-Check the request method, path, body, parameters, and board permission.
+Check the request method, path, body, direct value bindings, and board permission.
 
-For “invalid placeholder,” examine each declared load query parameter. Add an `optionsBinding` option reference or primitive value for each parameter.
-
-A matching parameter name and widget option name do not create a binding. The preview journal does not show credentials.
+For “invalid placeholder,” use `{option:name}` or `{param:name}`. Load queries can only reference options. The preview journal does not show credentials.
 
 The journal shows the method, request ID, path template, status, and duration.
 
@@ -56,6 +54,6 @@ Use safe widget options, temporary inputs, or named requests instead.
 
 ## Repair an existing item
 
-The widget options schema changed and the saved values are invalid. Open the item settings.
+The widget option definitions changed and the saved values are invalid. Open the item settings.
 
 Correct the marked configuration values. Homarr does not infer widget option migrations.

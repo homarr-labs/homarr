@@ -26,9 +26,8 @@ export default function CustomApiWidget({
     { itemId: itemId ?? "" },
     {
       enabled: Boolean(itemId) && Boolean(definitionId),
-      refetchInterval: intervalMs,
-      retry: (failureCount, error) =>
-        !["NOT_FOUND", "PRECONDITION_FAILED"].includes(error.data?.code ?? "") && failureCount < 3,
+      refetchInterval: (currentQuery) => (isTerminalDefinitionError(currentQuery.state.error) ? false : intervalMs),
+      retry: (failureCount, error) => !isTerminalDefinitionError(error) && failureCount < 3,
     },
   );
 
@@ -44,17 +43,18 @@ export default function CustomApiWidget({
     );
   if (query.error) {
     const errorCode = query.error.data?.code;
+    const isUnavailable = errorCode === "NOT_FOUND" || errorCode === "FORBIDDEN";
     return (
       <Unavailable
         message={
-          errorCode === "NOT_FOUND"
+          isUnavailable
             ? t("definitionNotFound")
             : errorCode === "PRECONDITION_FAILED"
               ? t("configurationNeedsRepair")
               : tCustomJsx("requestFailed")
         }
-        danger={errorCode !== "NOT_FOUND"}
-        removeLabel={errorCode === "NOT_FOUND" ? t("removeFromBoard") : undefined}
+        danger={!isUnavailable}
+        removeLabel={isUnavailable ? t("removeFromBoard") : undefined}
         onRemove={removeItem}
       />
     );
@@ -71,6 +71,13 @@ export default function CustomApiWidget({
       }}
     />
   );
+}
+
+function isTerminalDefinitionError(error: unknown): boolean {
+  if (!error || typeof error !== "object" || !("data" in error)) return false;
+  const data = error.data;
+  if (!data || typeof data !== "object" || !("code" in data)) return false;
+  return data.code === "NOT_FOUND" || data.code === "FORBIDDEN" || data.code === "PRECONDITION_FAILED";
 }
 
 function Unavailable({

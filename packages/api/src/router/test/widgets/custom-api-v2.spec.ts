@@ -27,64 +27,55 @@ import { customApiRouter } from "../../widgets/custom-api";
 const definition: HomarrCustomWidgetV2 = {
   $schema: "homarr-custom-widget-v2",
   name: "Router test widget",
-  sources: [
-    {
-      id: "default",
+  sources: {
+    default: {
       name: "API",
       baseUrl: "https://example.com",
       networkScope: "public",
-      auth: { type: "none" },
+      auth: "none",
     },
-  ],
-  requests: [
-    {
-      id: "load-status",
-      sourceId: "default",
+  },
+  requests: {
+    "load-status": {
+      source: "default",
       kind: "query",
       method: "GET",
-      pathTemplate: "/status",
-      parameters: {},
+      path: "/status",
       auth: "inherit",
-      minimumBoardPermission: "view",
+      permission: "view",
       trigger: "load",
     },
-    {
-      id: "status",
-      sourceId: "default",
+    status: {
+      source: "default",
       kind: "query",
       method: "GET",
-      pathTemplate: "/status/{name}",
-      parameters: { name: "string" },
+      path: "/status/{param:name}",
       auth: "inherit",
-      minimumBoardPermission: "view",
+      permission: "view",
       trigger: "manual",
     },
-    {
-      id: "toggle",
-      sourceId: "default",
+    toggle: {
+      source: "default",
       kind: "action",
       method: "POST",
-      pathTemplate: "/toggle",
-      parameters: { enabled: "boolean" },
-      bodyTemplate: { enabled: { $param: "enabled" } },
+      path: "/toggle",
+      body: { enabled: { $param: "enabled" } },
       auth: "inherit",
-      minimumBoardPermission: "modify",
+      permission: "modify",
       trigger: "manual",
     },
-    {
-      id: "delete",
-      sourceId: "default",
+    delete: {
+      source: "default",
       kind: "action",
       method: "DELETE",
-      pathTemplate: "/resource",
-      parameters: {},
+      path: "/resource",
       auth: "inherit",
-      minimumBoardPermission: "full",
+      permission: "full",
       trigger: "manual",
+      confirmation: { title: "Delete resource", message: "Delete this resource?", destructive: true },
     },
-  ],
-  optionsSchema: { type: "object", properties: {}, additionalProperties: false },
-  defaultOptions: {},
+  },
+  options: {},
   template: "<Text>{data['load-status']?.value}</Text>",
 };
 
@@ -149,6 +140,17 @@ describe("Custom JSX v2 board router", () => {
       .where(eq(customWidgetDefinitions.id, enabledSetup.definitionId));
     const publicCaller = customApiRouter.createCaller({ db: enabledSetup.db, deviceType: undefined, session: null });
     await expect(publicCaller.getData({ itemId: enabledSetup.itemId })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      publicCaller.queryRequest({ itemId: enabledSetup.itemId, requestId: "status", params: { name: "homarr" } }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    const ownerCaller = customApiRouter.createCaller({
+      db: enabledSetup.db,
+      deviceType: undefined,
+      session: createSession(enabledSetup.ownerId),
+    });
+    await expect(
+      ownerCaller.executeAction({ itemId: enabledSetup.itemId, requestId: "toggle", params: { enabled: true } }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
     expect(mocks.executeRequest).not.toHaveBeenCalled();
   });
 
@@ -159,7 +161,7 @@ describe("Custom JSX v2 board router", () => {
     await expect(caller.queryRequest({ itemId, requestId: "toggle", params: { enabled: true } })).rejects.toMatchObject(
       { code: "NOT_FOUND" },
     );
-    await expect(caller.queryRequest({ itemId, requestId: "status", params: { name: 42 } })).rejects.toThrow();
+    await expect(caller.queryRequest({ itemId, requestId: "status", params: {} })).rejects.toThrow();
     expect(mocks.executeRequest).not.toHaveBeenCalled();
   });
 

@@ -542,20 +542,21 @@ function WidgetCapabilitySummary({ content }: { content: string }) {
     <div className={styles.capabilities}>
       <section>
         <strong>API sources</strong>
-        {result.data.sources.map((source) => (
-          <p key={source.id}>
-            <code>{new URL(source.baseUrl).origin}</code> · {source.networkScope} · {source.auth.type}
+        {Object.entries(result.data.sources).map(([sourceId, source]) => (
+          <p key={sourceId}>
+            <code>{new URL(source.baseUrl).origin}</code> · {source.networkScope} ·{" "}
+            {typeof source.auth === "string" ? source.auth : source.auth.type}
           </p>
         ))}
       </section>
       <section>
         <strong>Requests and permissions</strong>
-        {result.data.requests.length === 0 ? (
+        {Object.keys(result.data.requests).length === 0 ? (
           <p>No network requests</p>
         ) : (
-          result.data.requests.map((request) => (
-            <p key={request.id}>
-              <code>{request.id}</code> · {request.kind} · {request.method} · {request.minimumBoardPermission}
+          Object.entries(result.data.requests).map(([requestId, request]) => (
+            <p key={requestId}>
+              <code>{requestId}</code> · {request.kind} · {request.method} · {request.permission}
             </p>
           ))
         )}

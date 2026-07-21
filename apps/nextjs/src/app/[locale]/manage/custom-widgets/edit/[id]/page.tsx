@@ -38,8 +38,7 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
                 iconUrl: definition.iconUrl ?? "",
                 sources: JSON.stringify(definition.sources, null, 2),
                 requests: JSON.stringify(definition.requests, null, 2),
-                optionsSchema: JSON.stringify(definition.optionsSchema, null, 2),
-                defaultOptions: JSON.stringify(definition.defaultOptions, null, 2),
+                options: JSON.stringify(definition.options, null, 2),
                 template: definition.template,
                 secrets: definition.secrets.map((secret) => ({
                   sourceId: secret.sourceId,

@@ -81,7 +81,7 @@ export const customWidgetRouter = createTRPCRouter({
         encryptedValue: encryptSecret(secret.value),
         updatedAt: new Date(),
       }));
-      const sourceIds = definition.sources.map((source) => source.id);
+      const sourceIds = Object.keys(definition.sources);
 
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
@@ -100,11 +100,11 @@ export const customWidgetRouter = createTRPCRouter({
                 ),
               );
 
-            for (const source of definition.sources) {
-              const kinds = [...requiredSecretKinds(source.auth.type)];
+            for (const [sourceId, source] of Object.entries(definition.sources)) {
+              const kinds = [...requiredSecretKinds(typeof source.auth === "string" ? source.auth : source.auth.type)];
               const where = and(
                 eq(schema.customWidgetSecrets.definitionId, id),
-                eq(schema.customWidgetSecrets.sourceId, source.id),
+                eq(schema.customWidgetSecrets.sourceId, sourceId),
               );
               await transaction
                 .delete(schema.customWidgetSecrets)
@@ -138,9 +138,9 @@ export const customWidgetRouter = createTRPCRouter({
               .where(and(eq(customWidgetSecrets.definitionId, id), notInArray(customWidgetSecrets.sourceId, sourceIds)))
               .run();
 
-            for (const source of definition.sources) {
-              const kinds = [...requiredSecretKinds(source.auth.type)];
-              const where = and(eq(customWidgetSecrets.definitionId, id), eq(customWidgetSecrets.sourceId, source.id));
+            for (const [sourceId, source] of Object.entries(definition.sources)) {
+              const kinds = [...requiredSecretKinds(typeof source.auth === "string" ? source.auth : source.auth.type)];
+              const where = and(eq(customWidgetSecrets.definitionId, id), eq(customWidgetSecrets.sourceId, sourceId));
               transaction
                 .delete(customWidgetSecrets)
                 .where(kinds.length > 0 ? and(where, notInArray(customWidgetSecrets.kind, kinds)) : where)

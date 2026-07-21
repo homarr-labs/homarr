@@ -16,42 +16,28 @@ describe("Workshop widget validation", () => {
     ).toBe(true);
   });
 
-  test("uses canonical option-binding validation before publication", () => {
-    const request = {
-      id: "data",
-      sourceId: "default",
-      kind: "query" as const,
-      method: "GET" as const,
-      pathTemplate: "/data/{endpointId}",
-      parameters: { endpointId: "string" as const, limit: "number" as const },
-      optionsBinding: { endpointId: { $option: "endpointId" }, limit: 5 },
-      queryTemplate: { limit: { $param: "limit" } },
-      auth: "inherit" as const,
-      minimumBoardPermission: "view" as const,
-      trigger: "load" as const,
-    };
+  test("uses canonical direct-binding validation before publication", () => {
     const widget = {
       ...CUSTOM_WIDGET_STARTER,
-      requests: [request],
-      optionsSchema: {
-        type: "object" as const,
-        properties: { endpointId: { type: "string" as const } },
-        required: ["endpointId"],
-        additionalProperties: false as const,
+      requests: {
+        data: {
+          path: "/data/{option:endpointId}",
+          query: { limit: 5 },
+        },
       },
-      defaultOptions: { endpointId: "local" },
+      options: { endpointId: { label: "Endpoint", control: "text", default: "local" } },
     };
 
     expect(validateWorkshopWidget(JSON.stringify(widget)).success).toBe(true);
     expect(
-      validateWorkshopWidget(JSON.stringify({ ...widget, requests: [{ ...request, optionsBinding: { limit: 5 } }] }))
+      validateWorkshopWidget(JSON.stringify({ ...widget, requests: { data: { path: "/data/{option:missing}" } } }))
         .success,
     ).toBe(false);
     expect(
       validateWorkshopWidget(
         JSON.stringify({
           ...widget,
-          requests: [{ ...request, optionsBinding: { endpointId: { $option: "missing" }, limit: 5 } }],
+          requests: { data: { path: "/data/{param:endpointId}" } },
         }),
       ).success,
     ).toBe(false);
@@ -78,20 +64,7 @@ describe("Workshop widget validation", () => {
       validateWorkshopWidget(
         JSON.stringify({
           ...CUSTOM_WIDGET_STARTER,
-          requests: [
-            {
-              id: "load",
-              sourceId: "default",
-              kind: "query",
-              method: "GET",
-              pathTemplate: "/load",
-              parameters: {},
-              staticHeaders: { "X-Custom": "Bearer literal-secret-value" },
-              auth: "none",
-              minimumBoardPermission: "view",
-              trigger: "load",
-            },
-          ],
+          requests: { load: { path: "/load", headers: { "X-Api-Key": "literal-secret-value" } } },
         }),
       ).success,
     ).toBe(false);

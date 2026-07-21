@@ -53,12 +53,7 @@ const messages: CustomWidgetEditorMessages = {
 };
 
 export function CanonicalCustomWidgetExampleClient({ id, label, example, height }: CanonicalCustomWidgetExampleProps) {
-  const value =
-    example === "requests"
-      ? CUSTOM_WIDGET_REQUEST_EXAMPLES.full
-      : example === "optionsSchema"
-        ? CUSTOM_WIDGET_OPTIONS_EXAMPLES.full.schema
-        : CUSTOM_WIDGET_OPTIONS_EXAMPLES.full.defaults;
+  const value = example === "requests" ? CUSTOM_WIDGET_REQUEST_EXAMPLES.full : CUSTOM_WIDGET_OPTIONS_EXAMPLES.full;
 
   return <CustomWidgetCodeExampleClient id={id} label={label} code={JSON.stringify(value, null, 2)} height={height} />;
 }

@@ -91,9 +91,7 @@ describe("Custom JSX authoring catalog", () => {
     const switchComponent = customJsxAuthoringCatalog.components.find(({ name }) => name === "Switch");
     expect(switchComponent?.bind).toEqual({ type: "boolean", initialProp: "defaultChecked" });
 
-    const recursiveList = customJsxAuthoringCatalog.components.find(({ name }) => name === "RecursiveList");
-    expect(recursiveList?.props.find(({ name }) => name === "childrenPath")?.required).toBe(true);
-    expect(recursiveList?.accessibilityRequirements.length).toBeGreaterThan(0);
+    expect(customJsxAuthoringCatalog.components.some(({ name }) => name === "RecursiveList")).toBe(false);
 
     const portal = customJsxAuthoringCatalog.components.find(({ name }) => name === "Portal");
     expect(portal?.safety).toBe("denied");

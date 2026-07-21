@@ -207,12 +207,12 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
                   );
                 }}
               />
-              {candidate?.requests
-                .filter((request) => request.kind === "action")
-                .map((request) => (
-                  <PreviewActionControl key={request.id} request={request} sessionId={props.preview.session?.id} />
+              {Object.entries(candidate?.requests ?? {})
+                .filter(([, request]) => request.kind === "action")
+                .map(([id, request]) => (
+                  <PreviewActionControl key={id} request={{ id, ...request }} sessionId={props.preview.session?.id} />
                 ))}
-              {candidate?.requests.every((request) => request.kind !== "action") && (
+              {Object.values(candidate?.requests ?? {}).every((request) => request.kind !== "action") && (
                 <Text size="sm" c="dimmed">
                   {t("noActions")}
                 </Text>

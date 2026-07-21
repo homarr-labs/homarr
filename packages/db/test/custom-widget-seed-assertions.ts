@@ -18,8 +18,7 @@ const reconstructWidget = (definition: typeof customWidgetDefinitions.$inferSele
     ...(definition.iconUrl === null ? {} : { iconUrl: definition.iconUrl }),
     sources: parse(definition.sources),
     requests: parse(definition.requests),
-    optionsSchema: parse(definition.optionsSchema),
-    defaultOptions: parse(definition.defaultOptions),
+    options: parse(definition.options),
     template: definition.template,
   });
 
@@ -36,7 +35,7 @@ export const expectBundledCustomWidgetsSeeded = async (db: Database) => {
   for (const definition of definitions) {
     const expected = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === definition.id);
     expect(expected).toBeDefined();
-    expect(reconstructWidget(definition)).toEqual(expected?.widget);
+    expect(reconstructWidget(definition)).toEqual(customWidgetDefinitionSchema.parse(expected?.widget));
   }
 
   await db
@@ -58,7 +57,9 @@ export const expectBundledCustomWidgetsSeeded = async (db: Database) => {
   expect(reseededDefinitions.filter(({ id }) => id !== "seed-dog-facts").every(({ enabled }) => !enabled)).toBe(true);
   if (!reseededCurrency) throw new Error("Currency Exchange seed was not restored");
   expect(reconstructWidget(reseededCurrency)).toEqual(
-    BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-currency-exchange")?.widget,
+    customWidgetDefinitionSchema.parse(
+      BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-currency-exchange")?.widget,
+    ),
   );
   expect(await db.$count(customWidgetSecrets)).toBe(0);
 };

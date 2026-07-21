@@ -1,5 +1,10 @@
 import BrowserOnly from "@docusaurus/BrowserOnly";
-import { lazy, Suspense } from "react";
+
+import {
+  BundledCustomWidgetGalleryClient,
+  CanonicalCustomWidgetExampleClient,
+  CustomWidgetCodeExampleClient,
+} from "./custom-widget-code-client";
 
 export interface CustomWidgetCodeExampleProps {
   id: string;
@@ -12,33 +17,14 @@ export interface CustomWidgetCodeExampleProps {
 export interface CanonicalCustomWidgetExampleProps {
   id: string;
   label: string;
-  example: "requests" | "optionsSchema" | "defaultOptions";
+  example: "requests" | "options";
   height?: string;
 }
-
-const LazyCanonicalCustomWidgetExample = lazy(async () => {
-  const module = await import("./custom-widget-code-client");
-  return { default: module.CanonicalCustomWidgetExampleClient };
-});
-
-const LazyCustomWidgetCodeExample = lazy(async () => {
-  const module = await import("./custom-widget-code-client");
-  return { default: module.CustomWidgetCodeExampleClient };
-});
-
-const LazyBundledCustomWidgetGallery = lazy(async () => {
-  const module = await import("./custom-widget-code-client");
-  return { default: module.BundledCustomWidgetGalleryClient };
-});
 
 export function CanonicalCustomWidgetExample(props: CanonicalCustomWidgetExampleProps) {
   return (
     <BrowserOnly fallback={<CodeExampleFallback height={props.height} />}>
-      {() => (
-        <Suspense fallback={<CodeExampleFallback height={props.height} />}>
-          <LazyCanonicalCustomWidgetExample {...props} />
-        </Suspense>
-      )}
+      {() => <CanonicalCustomWidgetExampleClient {...props} />}
     </BrowserOnly>
   );
 }
@@ -46,11 +32,7 @@ export function CanonicalCustomWidgetExample(props: CanonicalCustomWidgetExample
 export function CustomWidgetCodeExample(props: CustomWidgetCodeExampleProps) {
   return (
     <BrowserOnly fallback={<CodeExampleFallback height={props.height} />}>
-      {() => (
-        <Suspense fallback={<CodeExampleFallback height={props.height} />}>
-          <LazyCustomWidgetCodeExample {...props} />
-        </Suspense>
-      )}
+      {() => <CustomWidgetCodeExampleClient {...props} />}
     </BrowserOnly>
   );
 }
@@ -58,11 +40,7 @@ export function CustomWidgetCodeExample(props: CustomWidgetCodeExampleProps) {
 export function BundledCustomWidgetGallery() {
   return (
     <BrowserOnly fallback={<CodeExampleFallback height="520px" />}>
-      {() => (
-        <Suspense fallback={<CodeExampleFallback height="520px" />}>
-          <LazyBundledCustomWidgetGallery />
-        </Suspense>
-      )}
+      {() => <BundledCustomWidgetGalleryClient />}
     </BrowserOnly>
   );
 }

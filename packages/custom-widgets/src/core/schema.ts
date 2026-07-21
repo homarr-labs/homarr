@@ -10,7 +10,7 @@ let customWidgetJsonSchema: Record<string, unknown> | undefined;
 
 export function getCustomWidgetJsonSchema() {
   customWidgetJsonSchema ??= {
-    ...z.toJSONSchema(customWidgetImportSchema),
+    ...z.toJSONSchema(customWidgetImportSchema, { io: "input" }),
     title: "Homarr Custom JSX v2 widget",
     description: "The only supported Homarr custom-widget format. Secrets are configured separately.",
   };

@@ -106,6 +106,26 @@ async function settle() {
 }
 
 describe("Custom Widget runtime ports", () => {
+  it("renders common safe collection and number formatting operations", async () => {
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+    await render(
+      <CustomJsxRenderer
+        template={
+          '<Text>{[1, 2].concat([3]).flatMap(value => [value]).map(value => value.toLocaleString()).join(" · ")}</Text>'
+        }
+        data={{}}
+        components={components}
+        createBindings={() => ({})}
+        messages={{ noTemplate: "No template", templateWarnings: (count) => `${count} warnings` }}
+      />,
+      createPort(),
+    );
+    expect(host.textContent).toContain("1 · 2 · 3");
+  });
+
   it("removes unsafe dynamic link targets at runtime", async () => {
     const components = createCustomJsxComponents({
       TablerIcon: (() => null) as never,
@@ -286,6 +306,26 @@ describe("Custom Widget runtime ports", () => {
       status: expect.objectContaining({ loading: false, ok: true, status: 200 }),
     });
     expect(host.querySelector("button, p, code, [role='alert']")).toBeNull();
+  });
+
+  it("uses a built-in manual trigger and passes successful request metadata to children", async () => {
+    const port = createPort();
+    await render(
+      <SubFetch requestId="details" trigger="manual">
+        {(data, metadata) => (
+          <span>{`${(data as { name: string }).name}:${metadata.status}:${String(metadata.loading)}`}</span>
+        )}
+      </SubFetch>,
+      port,
+    );
+    expect(port.query).not.toHaveBeenCalled();
+    expect(host.textContent).toContain("Load");
+
+    await act(async () => (host.querySelector("button") as HTMLButtonElement).click());
+    await settle();
+
+    expect(port.query).toHaveBeenCalledOnce();
+    expect(host.textContent).toContain("Bulbasaur:200:false");
   });
 
   it("passes cancellation to the port when the component unmounts", async () => {

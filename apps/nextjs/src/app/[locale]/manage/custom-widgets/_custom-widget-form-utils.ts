@@ -1,7 +1,7 @@
 import { fetchApi } from "@homarr/api/client";
 import {
   customWidgetDefinitionSchema,
-  resolveCustomWidgetOptionsBinding,
+  getCustomWidgetDefaultOptions,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
@@ -18,8 +18,7 @@ export function buildDefinition(values: CustomWidgetFormValues) {
     iconUrl: values.iconUrl || undefined,
     sources: parseJson(values.sources),
     requests: parseJson(values.requests),
-    optionsSchema: parseJson(values.optionsSchema),
-    defaultOptions: parseJson(values.defaultOptions),
+    options: parseJson(values.options),
     template: values.template,
   });
 }
@@ -42,22 +41,18 @@ export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrC
     iconUrl: widget.iconUrl ?? "",
     sources: JSON.stringify(widget.sources, null, 2),
     requests: JSON.stringify(widget.requests, null, 2),
-    optionsSchema: JSON.stringify(widget.optionsSchema, null, 2),
-    defaultOptions: JSON.stringify(widget.defaultOptions, null, 2),
+    options: JSON.stringify(widget.options, null, 2),
     template: widget.template,
   });
 }
 
-export function parseSources(value: string): CustomWidgetSource[] {
+export function parseSources(value: string): Array<CustomWidgetSource & { id: string }> {
   const parsed = parseJson(value);
-  return Array.isArray(parsed)
-    ? parsed.filter((entry): entry is CustomWidgetSource => isRecord(entry) && typeof entry.id === "string")
+  return isRecord(parsed)
+    ? Object.entries(parsed)
+        .flatMap(([id, entry]) => (isRecord(entry) ? [{ id, ...(entry as CustomWidgetSource) }] : []))
+        .toSorted((left, right) => Number(right.id === "default") - Number(left.id === "default"))
     : [];
-}
-
-export function parseJsonArray(value: string): unknown[] {
-  const parsed = parseJson(value);
-  return Array.isArray(parsed) ? parsed : [];
 }
 
 export function parseJson(value: string): unknown {
@@ -73,33 +68,35 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 export function getCustomWidgetPreviewOptionIssues(definition: HomarrCustomWidgetV2, options: Record<string, unknown>) {
-  return validateCustomWidgetOptions(definition.optionsSchema, options);
+  return validateCustomWidgetOptions(definition.options, options);
 }
 
 export function isRuntimeParams(
   value: unknown,
-  schema: Record<string, "string" | "number" | "boolean">,
+  expectedNames: readonly string[],
 ): value is Record<string, string | number | boolean> {
   if (!isRecord(value)) return false;
-  return Object.entries(schema).every(([name, type]) => typeof value[name] === type);
+  const names = Object.keys(value).toSorted();
+  return (
+    names.length === expectedNames.length &&
+    names.every((name, index) => name === expectedNames[index]) &&
+    Object.values(value).every((entry) => ["string", "number", "boolean"].includes(typeof entry))
+  );
 }
 
-export async function loadPreviewQueries(
-  definition: HomarrCustomWidgetV2,
-  sessionId: string,
-  options: Record<string, unknown>,
-) {
+export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessionId: string) {
   const data: Record<string, unknown> = {};
   const status: Record<string, unknown> = {};
-  for (const request of definition.requests.filter((entry) => entry.kind === "query" && entry.trigger === "load")) {
+  for (const [requestId] of Object.entries(definition.requests).filter(
+    ([, entry]) => entry.kind === "query" && entry.trigger === "load",
+  )) {
     try {
-      const params = resolveCustomWidgetOptionsBinding(request, options);
-      const result = await fetchApi.customWidget.previewQuery.query({ sessionId, requestId: request.id, params });
-      data[request.id] = result.data;
-      status[request.id] = { loading: false, ...result };
+      const result = await fetchApi.customWidget.previewQuery.query({ sessionId, requestId, params: {} });
+      data[requestId] = result.data;
+      status[requestId] = { loading: false, ...result };
     } catch (error) {
-      data[request.id] = null;
-      status[request.id] = {
+      data[requestId] = null;
+      status[requestId] = {
         loading: false,
         ok: false,
         error: error instanceof Error ? error.message : "Request failed",
@@ -107,4 +104,8 @@ export async function loadPreviewQueries(
     }
   }
   return { data, status };
+}
+
+export function getDefinitionDefaults(definition: HomarrCustomWidgetV2) {
+  return getCustomWidgetDefaultOptions(definition.options);
 }

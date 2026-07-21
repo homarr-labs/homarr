@@ -91,7 +91,7 @@ Custom JSX v2 provides four HTTP discovery endpoints:
 - `GET /api/custom-widgets/authoring-prompt` returns the current prompt plus MCP and HTTP resource identifiers.
 - `GET /api/custom-widgets/schema` returns the canonical widget JSON Schema.
 - `GET /api/custom-widgets/components` returns the release-matched static component catalog.
-- `GET /api/custom-widgets/skill` returns the complete Agent Skill files, catalog, examples, and skills.sh metadata.
+- `GET /api/custom-widgets/skill` returns the concise live `SKILL.md` plus skills.sh, source, and install metadata. Retrieve the schema, component catalog, and examples through their dedicated resources only when needed.
 
 Call `customWidget_secretRequestUser` to create a temporary credential entry URL. Do not construct or save this URL.
 

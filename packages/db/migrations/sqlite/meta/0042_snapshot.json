@@ -560,15 +560,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "options_schema": {
-          "name": "options_schema",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "default_options": {
-          "name": "default_options",
+        "options": {
+          "name": "options",
           "type": "text",
           "primaryKey": false,
           "notNull": true,

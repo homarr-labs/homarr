@@ -151,7 +151,11 @@ async function generateCatalog() {
     components,
   };
 
-  await writeFile(resolve(packageRoot, "src/core/component-catalog.generated.json"), `${JSON.stringify(catalog)}\n`);
+  const serialized = `${JSON.stringify(catalog)}\n`;
+  await Promise.all([
+    writeFile(resolve(packageRoot, "src/core/component-catalog.generated.json"), serialized),
+    writeFile(resolve(repositoryRoot, "apps/docs/static/custom-widgets/component-catalog-v1.json"), serialized),
+  ]);
 }
 
 function inspectMantineComponent(component: CatalogSourceComponent): InspectedComponent {
@@ -506,7 +510,6 @@ const HOMARR_COMPONENT_DEFINITIONS = [
   { name: "Collapsible", category: "interaction", safety: "allowed" },
   { name: "StatBar", category: "interaction", safety: "allowed" },
   { name: "TypeBadge", category: "interaction", safety: "allowed" },
-  { name: "RecursiveList", category: "content", safety: "wrapped" },
   { name: "SubFetch", category: "network", safety: "wrapped" },
   { name: "SubData", category: "network", safety: "wrapped" },
   { name: "ActionButton", category: "network", safety: "wrapped" },
@@ -580,7 +583,6 @@ const HOMARR_COMPONENT_DESCRIPTIONS: Readonly<Record<string, string>> = {
   Collapsible: "Shows and hides a bounded content section.",
   StatBar: "Displays a compact labeled statistic and progress value.",
   TypeBadge: "Displays a compact semantic type badge.",
-  RecursiveList: "Renders an arbitrary-depth tree through a bounded, Homarr-owned traversal.",
   SubFetch: "Runs a named manual query with invocation-time parameters.",
   SubData: "Reads a nested value from a named manual-query result.",
   ActionButton: "Runs a named user-triggered action.",
@@ -626,17 +628,6 @@ const HOMARR_COMPONENT_PROPS: Readonly<Record<string, Readonly<Record<string, Ho
   TypeBadge: {
     type: requiredProp("string"),
     size: optionalProp("'xs' | 'sm' | 'md' | 'lg' | 'xl'", ["xs", "sm", "md", "lg", "xl"]),
-  },
-  RecursiveList: {
-    data: requiredProp("unknown"),
-    childrenPath: requiredProp("string"),
-    keyPath: requiredProp("string"),
-    maxDepth: optionalProp("number"),
-    maxNodes: optionalProp("number"),
-    defaultExpandedDepth: optionalProp("number"),
-    indent: optionalProp("MantineSpacing"),
-    gap: optionalProp("MantineSpacing"),
-    showLines: optionalProp("boolean"),
   },
   SubFetch: {
     requestId: optionalProp("string", undefined, "Identifier of the named Custom Widget query."),

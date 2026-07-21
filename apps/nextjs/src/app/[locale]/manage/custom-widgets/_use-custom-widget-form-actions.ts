@@ -19,6 +19,7 @@ import {
   applyDefinition,
   buildDefinition,
   getChangedSecrets,
+  getDefinitionDefaults,
   getCustomWidgetPreviewOptionIssues,
   isRecord,
   loadPreviewQueries,
@@ -132,7 +133,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         options: input.optionsSnapshot,
         secrets: getChangedSecrets(input.form.values),
       });
-      const snapshot = await loadPreviewQueries(input.candidate.data, created.previewSession.id, input.optionsSnapshot);
+      const snapshot = await loadPreviewQueries(input.candidate.data, created.previewSession.id);
       const failed = Object.values(snapshot.status).filter((status) => isRecord(status) && status.ok === false).length;
       input.setPreview({
         ...snapshot,
@@ -171,7 +172,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         throw new Error(formatCustomWidgetImportIssues(result.issues));
       }
       applyDefinition(input.form, customWidgetDefinitionSchema.parse(result.widget));
-      input.setOptionsSnapshot(result.widget.defaultOptions);
+      input.setOptionsSnapshot(getDefinitionDefaults(result.widget));
       input.setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
       showSuccessNotification({
         title: w("ai.response"),

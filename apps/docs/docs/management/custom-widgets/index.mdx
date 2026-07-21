@@ -9,55 +9,17 @@ import { BundledCustomWidgetGallery, CustomWidgetCodeExample } from "@site/src/c
 export const completeManifest = `{
   "$schema": "homarr-custom-widget-v2",
   "name": "Service status",
-  "description": "Shows the current service status.",
-  "sources": [{
-    "id": "default",
-    "name": "Service API",
-    "baseUrl": "https://status.example.com",
-    "networkScope": "public",
-    "auth": { "type": "none" }
-  }],
-  "requests": [{
-    "id": "status",
-    "sourceId": "default",
-    "kind": "query",
-    "method": "GET",
-    "pathTemplate": "/api/status",
-    "parameters": {},
-    "auth": "inherit",
-    "minimumBoardPermission": "view",
-    "trigger": "load"
-  }],
-  "optionsSchema": { "type": "object", "properties": {}, "additionalProperties": false },
-  "defaultOptions": {},
+  "sources": {
+    "default": { "name": "Service API", "baseUrl": "https://status.example.com", "networkScope": "public", "auth": "none" }
+  },
+  "requests": { "status": { "path": "/api/status" } },
+  "options": {},
   "template": "<Badge color={data.status?.ok ? 'green' : 'red'}>{data.status?.label ?? 'Unknown'}</Badge>"
 }`;
 
 # Custom Widgets
 
-Custom JSX v2 is the only Custom Widget format in Homarr. A definition contains metadata, API sources, named requests, widget options, and JSX.
-
-Homarr encrypts source credentials separately. Homarr does not include credentials in an export.
-
-Homarr does not support old display types, reusable connections, widget packs, or compatibility modes.
-
-## Audience and prerequisites
-
-This documentation is for Homarr administrators and Custom Widget authors. You must understand HTTP, JSON, API authentication, and self-hosted network routing.
-
-For a private API source, you must understand DNS, TLS, reverse proxies, and container networking.
-
-To write a template manually, you must understand JSX and Mantine. An AI-generated definition requires the same security and capability review.
-
-## Select a task
-
-- [Create a Custom Widget](./authoring): Use the workbench or an AI copy procedure.
-- [Use the JSX runtime](./custom-jsx): Use data, Mantine components, temporary inputs, and diagnostics.
-- [Configure requests and security](./requests-and-security): Configure API sources, actions, permissions, and network protection.
-- [Use agents and skills.sh](./agent-authoring): Use MCP resources, MCP tools, and the portable Agent Skill.
-- [Correct Custom Widget problems](./troubleshooting): Correct validation, request, configuration, and runtime problems.
-
-## Understand the definition
+Custom JSX v2 is Homarr's only Custom Widget format. A definition contains keyed API sources, keyed requests, optional widget options, and one safe JSX template. Credentials are encrypted separately and never exported.
 
 ```ts
 interface HomarrCustomWidgetV2 {
@@ -65,59 +27,40 @@ interface HomarrCustomWidgetV2 {
   name: string;
   description?: string;
   iconUrl?: string;
-  sources: CustomWidgetSource[];
-  requests: CustomWidgetRequest[];
-  optionsSchema: CustomWidgetOptionsSchema;
-  defaultOptions: Record<string, unknown>;
+  sources: Record<string, CustomWidgetSource>;
+  requests: Record<string, CustomWidgetRequest>;
+  options?: Record<string, CustomWidgetOption>;
   template: string;
 }
 ```
 
 <CustomWidgetCodeExample
   id="complete-widget-manifest"
-  label="Complete Custom Widget manifest"
+  label="Complete manifest"
   code={completeManifest}
-  height="420px"
+  height="360px"
 />
 
-Exports, imports, the UI, MCP, and Workshop validate this schema. Homarr rejects files that use an old format.
+The browser renders JSX. Homarr's server executes named requests, applies board permissions and network protections, and injects credentials. The browser never receives source credentials.
 
-If a definition is missing, its tile shows **Custom widget unavailable**. The other board items continue to operate.
+## Authoring paths
 
-The browser renders the safe JSX template. The Homarr server executes named requests and injects encrypted credentials.
+- [Create a Custom Widget](./authoring) visually or with one copied AI prompt.
+- [Use the JSX runtime](./custom-jsx) for data, Mantine components, temporary inputs, and diagnostics.
+- [Configure requests and security](./requests-and-security).
+- [Use MCP and the skills.sh skill](./agent-authoring).
+- [Correct problems](./troubleshooting).
 
-The browser does not receive API source credentials.
+The workbench keeps one continuous layout with visual source, request, and option editors. Advanced raw JSON remains available for experts and AI paste. Invalid values stay inline and only disable the widget preview.
 
-## Create and configure a Custom Widget
+Exports, imports, Workshop, MCP, and storage all validate the same schema. Old formats are rejected. A missing definition only renders **Custom widget unavailable** inside its tile.
 
-Open **Management → Custom Widgets → Add custom widget**. The workbench contains sections for information, sources, requests, widget options, JSX, and preview.
+## Import and Workshop
 
-Use the fixed navigation to go to a section.
+Import review shows origins, authentication modes, network scopes, methods, actions, and permissions. It also lets the user supply each required credential before import. Workshop publishes technically valid widgets immediately; users can vote or report them, and administrators can delete submissions.
 
-Select a definition from the searchable board widget picker. The picker immediately shows the widget options.
+## Bundled examples
 
-Invalid widget options prevent board insertion. If an update invalidates existing options, the item opens the configuration repair form.
-
-## Import, export, and publish
-
-An export contains one canonical JSON document without credentials. An import validates the document before Homarr creates the definition.
-
-The import review shows origins, authentication modes, network scopes, methods, actions, and required board permissions. File, clipboard, and Workshop imports use this review.
-
-The review gives credential fields for each authenticated source. Homarr encrypts entered values and excludes them from the imported document.
-
-A definition shows **Credentials missing** when a source needs credentials. You can import a definition without credentials.
-
-The indicator disappears after you configure all required source credentials.
-
-The [Workshop](/docs/management/workshop) publishes valid widgets immediately. Users can vote on a submission or report it.
-
-Workshop administrators can inspect reported posts and delete any submission. This deletion does not remove installed copies.
-
-## Examine bundled examples
-
-Homarr adds four disabled examples during database setup. These examples use the same schema as user definitions.
-
-Homarr does not overwrite an example after a user changes it. Select an example to examine its manifest and JSX.
+Homarr seeds five disabled examples without credentials and never overwrites an edited seed. They use the same public contract. The Tautulli example is the highest-scoring widget preserved from Homarr's AI authoring evaluation:
 
 <BundledCustomWidgetGallery />

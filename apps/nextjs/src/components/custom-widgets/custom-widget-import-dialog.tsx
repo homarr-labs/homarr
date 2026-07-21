@@ -26,7 +26,7 @@ export function CustomWidgetImportDialog({ opened, widget, onClose, onImported }
   const utils = clientApi.useUtils();
   const [values, setValues] = useState<Record<string, string>>({});
   const review = useMemo(() => getImportReview(widget), [widget]);
-  const requirements = useMemo(() => getCustomWidgetSecretRequirements(widget?.sources ?? []), [widget]);
+  const requirements = useMemo(() => getCustomWidgetSecretRequirements(widget?.sources ?? {}), [widget]);
   const mutation = clientApi.customWidget.import.useMutation({
     onSuccess: (result) => {
       showSuccessNotification({ title: t("action.import"), message: t("notification.imported") });

@@ -1,50 +1,24 @@
 ---
 name: homarr-custom-widget
-description: Author safe Homarr Custom JSX v2 widgets from API documentation. Use when creating or fixing Homarr custom widgets, including multi-source dashboards, queries, actions, options, temporary inputs, and Mantine JSX.
-license: Apache-2.0
-metadata:
-  version: "2.0.0"
+description: Author safe Homarr Custom JSX v2 widgets from API documentation.
 ---
 
 # Homarr Custom Widget
 
-Create one widget at a time. Repeat the workflow when the user asks for several widgets; do not invent packs or shared connections.
+Author one widget at a time. When connected to Homarr, retrieve `homarr://custom-widgets/schema` and only the component resources needed for the design. The live resources are authoritative for the installed release.
 
-## Choose the authoring reference
+1. Read the API documentation.
+2. Create one credential-free widget with keyed `sources`, keyed `requests`, optional keyed `options`, and safe JSX `template`.
+3. Validate, preview, test queries and simulated actions, visually inspect, and iterate.
+4. Request credentials through Homarr and never repeat plaintext.
+5. Save only after narrow/wide, light/dark, loading, empty, error, and success states work.
 
-When connected to Homarr, retrieve the live widget schema and component catalog before authoring. Live metadata is authoritative because Homarr and Mantine versions can differ between installations.
+Use `{option:name}` or `$option` for saved options. Use `{param:name}` or `$param` for values supplied by `SubFetch`, `ActionButton`, or `ToggleSwitch`. Load queries cannot use invocation parameters. Templates read `data`, `status`, `options`, and temporary `inputs`.
 
-For offline authoring, read these installed, release-matched references in order:
+`SubFetch` with `trigger="manual"` renders its own load button. Its callback is `(result, meta)`; never author `onClick` or a fetch callback.
 
-1. [Schema guide](references/schema.md)
-2. [Canonical widget JSON Schema](references/widget-schema.json)
-3. [JSX runtime](references/runtime.md)
-4. [Security boundary](references/security.md)
-5. [Component catalog guide](references/components.md)
-6. [Canonical component catalog](references/component-catalog.json)
-7. [Canonical examples](references/examples.json)
-8. [Official Mantine LLM index](references/mantine-core.md)
-9. [Official Mantine Dates guide](references/mantine-dates.md)
-10. [Mantine Charts links](references/mantine-charts.md)
-11. [Homarr components](references/homarr-components.md)
+Use standard Mantine compound names and deliberate visual hierarchy, spacing, restrained semantic color, and responsive layouts. Avoid excessive nested cards.
 
-Together, this file and its references are the complete offline authoring bundle for the matching Homarr release. The JSON catalog contains the exact enabled component names, prop metadata, bindings, blocked capabilities, and versions. If live metadata is available, prefer it because it reflects the installed Homarr and Mantine versions.
+Do not use imports, hooks, refs, raw HTML, raw event callbacks, browser requests, arbitrary functions, eval, bigint, npm packages, authored statement blocks, IIFEs, or recursion. Do not pretend MCP tools exist in an offline chat session.
 
-## Authoring workflow
-
-1. Read the API documentation supplied by the user. Ask for a missing base URL only when it cannot be inferred safely.
-2. Build one credential-free `homarr-custom-widget-v2` manifest and one safe JSX template.
-3. Use immutable local `const` blocks for repeated derived values and `RecursiveList` for arbitrary-depth trees. Do not emulate either feature with unrestricted JavaScript or authored recursion.
-4. Return the complete manifest and JSX in the exact fenced-block format requested by the authoring prompt.
-5. When the user supplies Homarr diagnostics, correct every reported issue while preserving unrelated fields.
-
-## Output rules
-
-- Use inline sources, named requests, definition-owned options, temporary bound inputs, and one safe JSX template.
-- Use `kind`, not the HTTP method, to distinguish reads from user-triggered actions.
-- Give every declared request parameter an explicit source. Load queries use `optionsBinding` with an option reference or primitive literal; manual queries and actions receive values only from the invoking component's `params` prop. Never infer bindings from matching names.
-- Treat `status.<requestId>` as `{ loading, ok, status, statusText, error }`. Never compare it with `"loading"`, `"success"`, or `"error"`; check `status.list?.loading`, `status.list?.ok === false`, or `status.list?.ok === true`.
-- Never put a credential in JSX, options, headers, URLs, examples, exports, logs, or chat output.
-- Use declarative `bind` controls and Homarr request components. Controlled collection callbacks, zero-argument derived-value IIFEs, and the `RecursiveList` child template may use the restricted safe-block grammar documented in the runtime reference. Never emit imports, hooks, refs, raw callback props, browser requests, or arbitrary JavaScript.
-- Include responsive loading, empty, error, and success states.
-- Keep actions explicit, permission-scoped, confirmed when destructive, and followed by targeted invalidation.
+When this skill is installed from the repository, optional offline details are in `references/schema.md`, `references/runtime.md`, and `references/security.md`. MCP-only clients should use the live Homarr resources instead.

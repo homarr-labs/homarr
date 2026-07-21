@@ -52,6 +52,8 @@ export interface CustomWidgetCodeEditorProps {
   completions?: Completion[];
   revealText?: string;
   revealKey?: number;
+  insertText?: string;
+  insertKey?: number;
   readOnly?: boolean;
   reference?: CustomWidgetSchemaReferenceData;
   height?: string;
