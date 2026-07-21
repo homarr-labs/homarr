@@ -74,11 +74,10 @@ const optionMapping: OptionMapping = {
     categoryFilter: (oldOptions) => ("labelFilter" in oldOptions ? oldOptions.labelFilter : undefined),
     filterIsWhitelist: (oldOptions) =>
       "labelFilterIsWhitelist" in oldOptions ? oldOptions.labelFilterIsWhitelist : undefined,
-    enableRowSorting: (oldOptions) => ("rowSorting" in oldOptions ? oldOptions.rowSorting : undefined),
     showCompletedTorrent: (oldOptions) =>
       "displayCompletedTorrents" in oldOptions ? oldOptions.displayCompletedTorrents : undefined,
-    columns: () => ["integration", "name", "progress", "time", "actions"],
-    defaultSort: () => "type",
+    columns: () => ["integration", "name", "progress", "time", "state"],
+    defaultSort: () => "progress",
     descendingDefaultSort: () => false,
     showCompletedUsenet: () => true,
     showCompletedHttp: () => true,

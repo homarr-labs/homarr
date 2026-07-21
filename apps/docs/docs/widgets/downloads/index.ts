@@ -2,26 +2,23 @@ import { WidgetDefinition } from "@site/src/types";
 import { IconDownload } from "@tabler/icons-react";
 
 const columnsList = [
-  "id",
-  "actions",
-  "added",
-  "category",
-  "downSpeed",
-  "index",
-  "integration",
   "name",
   "progress",
+  "size",
+  "downSpeed",
+  "upSpeed",
+  "time",
+  "state",
+  "added",
   "ratio",
   "received",
   "sent",
-  "size",
-  "state",
-  "time",
+  "category",
+  "integration",
+  "index",
   "type",
-  "upSpeed",
 ];
-const sortingExclusion = ["actions", "id", "state"];
-const columnsSort = columnsList.filter((column) => !sortingExclusion.some((exclusion) => exclusion === column));
+const sortColumns = columnsList.filter((c) => !["state", "category"].includes(c));
 
 export const downloadsWidget: WidgetDefinition = {
   icon: IconDownload,
@@ -32,25 +29,19 @@ export const downloadsWidget: WidgetDefinition = {
     items: [
       {
         name: "Columns to show",
-        description: "Select the columns you want to display in the widget.",
+        description: "Select the columns you want to display in the widget. Columns automatically hide/show based on widget width.",
         values: `List of columns: ${columnsList.join(", ")}`,
-        defaultValue: ["integration", "name", "progress", "time", "actions"].join(", "),
+        defaultValue: ["name", "progress", "downSpeed", "time", "state"].join(", "),
       },
       {
-        name: "Enable items sorting",
-        description: "Enables the sorting in the table.",
-        values: { type: "boolean" },
-        defaultValue: "no",
-      },
-      {
-        name: "Column used for sorting by default",
-        description: "By default it will sort by this column.",
-        defaultValue: "type",
-        values: `List of columns: ${columnsSort.join(", ")}`,
+        name: "Default sort column",
+        description: "The column used for initial sorting when the widget loads.",
+        defaultValue: "progress",
+        values: `List of columns: ${sortColumns.join(", ")}`,
       },
       {
         name: "Invert sorting",
-        description: "This will invert the sorting order of the table.",
+        description: "This will invert the default sorting order.",
         values: { type: "boolean" },
         defaultValue: "no",
       },
@@ -76,13 +67,13 @@ export const downloadsWidget: WidgetDefinition = {
         name: "Hide completed torrent under this threshold (in kiB/s)",
         description:
           "This will hide completed torrent entries that have a download speed below the specified threshold.",
-        values: "Any number above 1, 0 to disable",
+        values: "Any number above 0, 0 to disable",
         defaultValue: "0",
       },
       {
-        name: "Categories/names to filter",
-        description: "You can filter the items by categories or names. Use a comma to separate multiple values.",
-        values: "Comma-separated list of categories or names",
+        name: "Categories/labels to filter",
+        description: "You can filter the items by categories or labels. Use a comma to separate multiple values.",
+        values: "Comma-separated list of categories or labels",
         defaultValue: "-",
       },
       {
@@ -94,13 +85,13 @@ export const downloadsWidget: WidgetDefinition = {
       },
       {
         name: "Use filter to calculate Ratio",
-        description: "This will use the filter to calculate the ratio of items shown in the widget.",
+        description: "This will use the category filter when calculating the global torrent ratio.",
         values: { type: "boolean" },
         defaultValue: "yes",
       },
       {
         name: "Limit items per integration",
-        description: "This will limit the number of items shown per integration, not globally",
+        description: "This will limit the number of items shown per integration, not globally.",
         values: "Any number above 1",
         defaultValue: "50",
       },

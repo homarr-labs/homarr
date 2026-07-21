@@ -3174,7 +3174,15 @@
           }
         }
       },
-      "globalRatio": "Global Ratio"
+      "globalRatio": "Global Ratio",
+      "contextMenu": {
+        "copyName": "Copy name",
+        "copyId": "Copy ID",
+        "clearFilters": "Clear filters"
+      },
+      "footer": {
+        "filter": "Filter downloads"
+      }
     },
     "mediaReleases": {
       "name": "Media releases",
