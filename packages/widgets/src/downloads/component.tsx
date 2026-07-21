@@ -486,12 +486,12 @@ export default function DownloadClientsWidget({
             multiline
             w={280}
             withArrow
-            position="right"
+            position="bottom-start"
             openDelay={400}
             transitionProps={{ transition: "fade", duration: 150 }}
             color="dark"
           >
-            <Group gap={6} wrap="nowrap">
+            <Group gap={6} wrap="nowrap" style={{ overflow: "hidden" }}>
               <Box
                 w={8}
                 h={8}
