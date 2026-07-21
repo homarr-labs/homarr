@@ -256,31 +256,21 @@ export default function DownloadClientsWidget({
       if ((accessor === "upSpeed" || accessor === "ratio" || accessor === "sent") && !hasTorrents) return false;
       if (accessor === "integration" && !hasMultipleClients) return false;
       if (accessor === "type" && !hasMultipleTypes) return false;
-      return true;
-    },
-    [optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes],
-  );
-
-  const isResponsiveVisible = useCallback(
-    (accessor: string): boolean => {
       if ((accessor === "downSpeed" || accessor === "upSpeed") && !size.showSpeedColumns) return false;
       if (accessor === "time" && !size.showTimeColumn) return false;
       if (accessor === "state" && !size.showStateColumn) return false;
       return true;
     },
-    [size],
+    [optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, size],
   );
 
   const getColumnMeta = useCallback(
     (accessor: string) => ({
-      toggleable: true as const,
+      toggleable: false as const,
       draggable: true as const,
       resizable: accessor !== "integration" && accessor !== "index",
-      pinnable: true as const,
-      defaultToggle: isResponsiveVisible(accessor),
-      ...(accessor === "name" ? { pinned: "left" as const } : {}),
     }),
-    [isResponsiveVisible],
+    [],
   );
 
   const columns = useMemo((): DataTableColumn<ExtendedDownloadClientItem>[] => {
@@ -301,6 +291,7 @@ export default function DownloadClientsWidget({
         title: t("items.name.columnTitle"),
         sortable: true,
         ellipsis: true,
+        width: "50%",
         ...getColumnMeta("name"),
         render: (record) => (
           <Tooltip
@@ -311,6 +302,7 @@ export default function DownloadClientsWidget({
             position="right"
             openDelay={400}
             transitionProps={{ transition: "fade", duration: 150 }}
+            color="dark"
           >
             <Group gap={6} wrap="nowrap">
               <Badge size="xs" variant="dot" color={stateColorMap[record.state]} style={{ flexShrink: 0 }} />
@@ -480,10 +472,8 @@ export default function DownloadClientsWidget({
 
   const {
     effectiveColumns,
-    resetColumnsToggle,
     resetColumnsOrder,
     resetColumnsWidth,
-    resetColumnsPinning,
   } = useDataTableColumns<ExtendedDownloadClientItem>({
     key: DOWNLOADS_TABLE_STORE_KEY,
     columns,
@@ -564,8 +554,6 @@ export default function DownloadClientsWidget({
           records={sortedData}
           columns={effectiveColumns}
           storeColumnsKey={DOWNLOADS_TABLE_STORE_KEY}
-          pinFirstColumn
-          pinLastColumn
           textSelectionDisabled
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
@@ -613,10 +601,8 @@ export default function DownloadClientsWidget({
         itemCount={sortedData.length}
         showStats={showStats}
         toggleStats={toggleStats}
-        resetColumnsToggle={resetColumnsToggle}
         resetColumnsOrder={resetColumnsOrder}
         resetColumnsWidth={resetColumnsWidth}
-        resetColumnsPinning={resetColumnsPinning}
       />
 
       {contextMenu && (
@@ -919,10 +905,8 @@ interface WidgetFooterProps {
   itemCount: number;
   showStats: boolean;
   toggleStats: () => void;
-  resetColumnsToggle: () => void;
   resetColumnsOrder: () => void;
   resetColumnsWidth: () => void;
-  resetColumnsPinning: () => void;
 }
 
 function WidgetFooter({
@@ -941,10 +925,8 @@ function WidgetFooter({
   itemCount,
   showStats,
   toggleStats,
-  resetColumnsToggle,
   resetColumnsOrder,
   resetColumnsWidth,
-  resetColumnsPinning,
 }: WidgetFooterProps) {
   const t = useScopedI18n("widget.downloads");
   const [filterOpen, { toggle: toggleFilter }] = useDisclosure(false);
@@ -1053,10 +1035,8 @@ function WidgetFooter({
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{t("columns.settings")}</Menu.Label>
-              <Menu.Item onClick={resetColumnsToggle}>{t("columns.resetVisibility")}</Menu.Item>
               <Menu.Item onClick={resetColumnsOrder}>{t("columns.resetOrder")}</Menu.Item>
               <Menu.Item onClick={resetColumnsWidth}>{t("columns.resetWidth")}</Menu.Item>
-              <Menu.Item onClick={resetColumnsPinning}>{t("columns.resetPinning")}</Menu.Item>
             </Menu.Dropdown>
           </Menu>
 
@@ -1115,7 +1095,7 @@ function WidgetFooter({
             )}
           </Group>
 
-          <Text size="xs" c="dimmed">{itemCount}</Text>
+          <Badge size="xs" variant="light" color="gray" circle>{itemCount}</Badge>
         </Group>
       </Group>
     </Box>
