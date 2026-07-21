@@ -20,4 +20,18 @@ describe("Copy AI prompt", () => {
     expect(prompt).toContain("exactly one complete `json` fenced block");
     expect(prompt).toContain("one complete `jsx` fenced block");
   });
+
+  it("keeps AI actions and section navigation readable on narrow screens", () => {
+    const card = readFileSync(
+      `${process.cwd()}/apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-ai-card.tsx`,
+      "utf8",
+    );
+    const styles = readFileSync(
+      `${process.cwd()}/apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.module.css`,
+      "utf8",
+    );
+    expect(card).toContain("<SimpleGrid cols={{ base: 1, sm: 2 }}>");
+    expect(styles).toContain(".sectionNav > a");
+    expect(styles).toContain("flex: 0 0 auto");
+  });
 });

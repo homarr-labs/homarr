@@ -17,6 +17,10 @@
   backdrop-filter: blur(10px);
 }
 
+.sectionNav > a {
+  flex: 0 0 auto;
+}
+
 .editorSection {
   scroll-margin-top: 5rem;
 }

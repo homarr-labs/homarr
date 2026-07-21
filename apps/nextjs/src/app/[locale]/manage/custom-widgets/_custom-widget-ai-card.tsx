@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Group, Stack, Text, TextInput, Textarea } from "@mantine/core";
+import { Button, Card, Group, SimpleGrid, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import { IconSparkles } from "@tabler/icons-react";
 
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
@@ -38,7 +38,7 @@ export function CustomWidgetAiCard(props: AiCardProps) {
           value={props.documentationUrl}
           onChange={(event) => props.onDocumentationUrlChange(event.currentTarget.value)}
         />
-        <Group grow wrap="wrap">
+        <SimpleGrid cols={{ base: 1, sm: 2 }}>
           <CopyAiPromptButton
             currentConfig={props.candidate}
             request={props.request}
@@ -47,7 +47,7 @@ export function CustomWidgetAiCard(props: AiCardProps) {
           <Button type="button" variant="light" leftSection={<IconSparkles size={16} />} onClick={props.onPaste}>
             {t("paste")}
           </Button>
-        </Group>
+        </SimpleGrid>
       </Stack>
     </Card>
   );
