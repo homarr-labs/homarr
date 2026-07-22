@@ -28,7 +28,7 @@ export const { definition, componentLoader } = createWidgetDefinition("tennis", 
       }),
       matchCount: factory.slider({
         defaultValue: 5,
-        validate: z.number().min(1).max(20),
+        validate: z.number().int().min(1).max(20),
         step: 1,
         withDescription: true,
       }),

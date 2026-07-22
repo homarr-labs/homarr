@@ -9,6 +9,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { isTennisApiKeyError, shouldRetryTennisQuery } from "./api-key-error";
 
 type TennisMatch = RouterOutputs["widget"]["tennis"]["getMatches"]["data"]["matches"][number];
 
@@ -69,7 +70,12 @@ const PlayerRow = ({ player, isLive, showRanking, hasWon }: PlayerRowProps) => (
 
 export default function TennisWidget({ options, width }: WidgetComponentProps<"tennis">) {
   const t = useScopedI18n("widget.tennis");
-  const { data: result } = clientApi.widget.tennis.getMatches.useQuery(options);
+  const { data: result } = clientApi.widget.tennis.getMatches.useQuery(options, {
+    // A missing or rejected API key is escalated to the widget error boundary, which renders the
+    // dedicated API key state declared in the widget definition instead of the generic empty state.
+    throwOnError: isTennisApiKeyError,
+    retry: shouldRetryTennisQuery,
+  });
 
   if (!result) return <WidgetEmptyState />;
 
