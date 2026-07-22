@@ -224,6 +224,28 @@ describe("getLatestMatchingReleaseAsync for LinuxServer.io", () => {
     expect(mockedFetch).toHaveBeenCalledOnce();
     expectUrl(0, "https://api.linuxserver.io/api/v1/images");
   });
+
+  test("returns the GitHub error when filtered release history cannot be fetched", async () => {
+    mockedFetch.mockImplementation(async (input) => {
+      const url = new URL(input.toString());
+      if (url.origin === "https://api.linuxserver.io") return createLinuxServerResponse();
+
+      return createJsonResponse({ message: "GitHub unavailable" }, { status: 404, statusText: "Not Found" });
+    });
+
+    const result = await getLatestMatchingReleaseAsync({
+      id: "tautulli",
+      provider: "linuxServerIO",
+      identifier: "linuxserver/tautulli",
+      versionRegex: "^v2\\.16\\..+-ls[0-9]+$",
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: expect.objectContaining({ code: "unexpected", message: expect.stringContaining("GitHub unavailable") }),
+    });
+    expect(mockedFetch.mock.calls.length).toBeGreaterThan(1);
+  });
 });
 
 interface MockGhcrResponsesInput {

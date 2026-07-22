@@ -831,6 +831,7 @@ const getLinuxServerIOReleaseAsync = async (
         },
       };
     }
+    return githubResult;
   }
 
   return {
