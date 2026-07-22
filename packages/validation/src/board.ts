@@ -5,6 +5,7 @@ import {
   backgroundImageRepeats,
   backgroundImageSizes,
   boardPermissions,
+  layoutRoles,
   widgetKinds,
 } from "@homarr/definitions";
 
@@ -78,16 +79,59 @@ export const boardLayoutSchema = z
     columnCount: boardColumnCountSchema,
     leftGutterColumnCount: boardGutterColumnCountSchema.default(0),
     rightGutterColumnCount: boardGutterColumnCountSchema.default(0),
-    breakpoint: z.number().min(0).max(32767),
+    breakpoint: z.number().int().min(0).max(32767),
+    role: z.enum(layoutRoles.values),
   })
   .refine((layout) => layout.leftGutterColumnCount + layout.rightGutterColumnCount < layout.columnCount, {
     message: "Gutters must leave at least one dashboard column",
     path: ["columnCount"],
+  })
+  .refine(
+    (layout) => layout.role !== "mobile" || (layout.leftGutterColumnCount === 0 && layout.rightGutterColumnCount === 0),
+    {
+      message: "Mobile layouts cannot have sidebars",
+      path: ["leftGutterColumnCount"],
+    },
+  );
+
+export const responsiveBoardLayoutsSchema = z
+  .array(boardLayoutSchema)
+  .min(2)
+  .superRefine((layouts, ctx) => {
+    const mobileLayouts = layouts.filter((layout) => layout.role === "mobile");
+    const baseLayouts = layouts.filter((layout) => layout.role === "base");
+    const mobileLayout = mobileLayouts.at(0);
+    const baseLayout = baseLayouts.at(0);
+    if (mobileLayouts.length !== 1 || baseLayouts.length !== 1 || !mobileLayout || !baseLayout) {
+      ctx.addIssue({ code: "custom", message: "Boards require exactly one Mobile and one Base layout" });
+      return;
+    }
+
+    if (mobileLayout.breakpoint !== 0) {
+      ctx.addIssue({ code: "custom", message: "The Mobile layout breakpoint must be 0" });
+    }
+
+    if (layouts.some((layout) => layout.id !== baseLayout.id && layout.breakpoint >= baseLayout.breakpoint)) {
+      ctx.addIssue({ code: "custom", message: "The Base layout must have the highest breakpoint" });
+    }
+
+    if (new Set(layouts.map((layout) => layout.breakpoint)).size !== layouts.length) {
+      ctx.addIssue({ code: "custom", message: "Layout breakpoints must be unique" });
+    }
+
+    if (new Set(layouts.map((layout) => layout.id)).size !== layouts.length) {
+      ctx.addIssue({ code: "custom", message: "Layout IDs must be unique" });
+    }
   });
 
 export const boardSaveLayoutsSchema = z.object({
   id: z.string(),
-  layouts: z.array(boardLayoutSchema),
+  layouts: responsiveBoardLayoutsSchema,
+});
+
+export const boardResetLayoutSchema = z.object({
+  boardId: z.string(),
+  layoutId: z.string(),
 });
 
 export const boardSaveSchema = z.object({
