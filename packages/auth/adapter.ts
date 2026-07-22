@@ -35,6 +35,9 @@ export const createAdapter = (
       });
 
       if (!user && provider === "oidc" && enableDangerousCredentialsLinking) {
+        // Credentials accounts do not have an email-verification flow, so their
+        // Auth.js emailVerified field is always null. The OIDC profile's strict
+        // email_verified check is the security boundary for this opt-in.
         user = await db.query.users.findFirst({
           where: and(eq(users.email, email), eq(users.provider, "credentials")),
           columns: {
