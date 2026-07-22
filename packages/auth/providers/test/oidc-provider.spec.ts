@@ -50,6 +50,7 @@ describe("assertVerifiedEmailForCredentialsLinking", () => {
   test("OIDC provider rejects an unverified profile when credentials linking is enabled", () => {
     mockEnv.AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING = true;
     const provider = OidcProvider(null);
+    expect(provider.allowDangerousEmailAccountLinking).toBe(true);
     const mapProfile = provider.profile;
     if (!mapProfile) throw new Error("Expected OIDC profile mapper to be defined");
 
