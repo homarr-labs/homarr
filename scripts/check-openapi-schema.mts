@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-import { openApiDocument } from "@homarr/api/open-api";
+import { openApiDocument } from "../packages/api/src/open-api";
 
 const baseUrl = "http://localhost:3000";
 const generated = JSON.parse(JSON.stringify(openApiDocument(baseUrl))) as unknown;

@@ -52,7 +52,7 @@ done
 
 PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
   -f apps/workshop/docker-compose.yml stop workshop
-PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
+printf 'y\n' | PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
   -f apps/workshop/docker-compose.yml run --rm --no-deps --entrypoint pocketbase workshop \
   migrate down 1 --dir=/pb_data --migrationsDir=/pb_migrations
 PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \

@@ -1,65 +1,5 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-const CUSTOM_WIDGET_SCHEMA = "homarr-custom-widget-v2";
-const CUSTOM_CSS_SCHEMA = "homarr-custom-css-v1";
-const MAX_CSS_LENGTH = 16_384;
-const MAX_CONTENT_LENGTH = 1_000_000;
-
-const rejectRequest = (message) => {
-  throw new BadRequestError(message);
-};
-
-const requestBodyValue = (event, name) => {
-  const body = event.requestInfo().body;
-  return body && typeof body.get === "function" ? body.get(name) : body ? body[name] : undefined;
-};
-
-const validateWidgetManifest = (content) => {
-  let widget;
-  try {
-    widget = JSON.parse(content);
-  } catch {
-    rejectRequest("Widget content must be valid JSON");
-  }
-  if (!widget || Array.isArray(widget) || typeof widget !== "object") rejectRequest("Widget must be a JSON object");
-  if (widget.$schema !== CUSTOM_WIDGET_SCHEMA) rejectRequest("Widget schema is not supported");
-  if (typeof widget.name !== "string" || !widget.name.trim() || widget.name.length > 100)
-    rejectRequest("Widget name is invalid");
-  if (!widget.sources || Array.isArray(widget.sources) || typeof widget.sources !== "object" || !widget.sources.default)
-    rejectRequest("Widget must define a default source");
-  if (Object.keys(widget.sources).length > 8) rejectRequest("Widget has too many sources");
-  for (const source of Object.values(widget.sources)) {
-    if (!source || Array.isArray(source) || typeof source !== "object") rejectRequest("Widget source is invalid");
-    if (typeof source.baseUrl !== "string" || !/^https?:\/\//.test(source.baseUrl))
-      rejectRequest("Widget source URL is invalid");
-    if (!["public", "private", "loopback"].includes(source.networkScope))
-      rejectRequest("Widget source network scope is invalid");
-  }
-  if (!widget.requests || Array.isArray(widget.requests) || typeof widget.requests !== "object")
-    rejectRequest("Widget requests are invalid");
-  if (!widget.options || Array.isArray(widget.options) || typeof widget.options !== "object")
-    rejectRequest("Widget options are invalid");
-  if (typeof widget.template !== "string" || !widget.template.trim()) rejectRequest("Widget template is invalid");
-  return JSON.stringify(widget);
-};
-
-const validateAndNormalizeSubmission = (record) => {
-  const type = record.getString("type");
-  const content = record.getString("content");
-  if (!content || content.length > MAX_CONTENT_LENGTH) rejectRequest("Submission content is invalid");
-  record.set("title", record.getString("title").trim());
-  record.set("description", record.getString("description").trim());
-  record.set("changelog", record.getString("changelog").trim());
-  if (type === "customCss") {
-    if (!content.trim() || content.length > MAX_CSS_LENGTH) rejectRequest("Custom CSS is empty or too large");
-    record.set("widgetSchema", CUSTOM_CSS_SCHEMA);
-    return;
-  }
-  if (type !== "customWidget") rejectRequest("Submission type is invalid");
-  record.set("content", validateWidgetManifest(content));
-  record.set("widgetSchema", CUSTOM_WIDGET_SCHEMA);
-};
-
 onBootstrap((event) => {
   event.next();
   const users = event.app.findCollectionByNameOrId("users");
@@ -72,6 +12,7 @@ onBootstrap((event) => {
 });
 
 onRecordCreateRequest((event) => {
+  const { validateAndNormalizeSubmission } = require(`${__hooks}/workshop-utils.js`);
   validateAndNormalizeSubmission(event.record);
   event.record.set("revision", 1);
   event.record.set("changelog", "");
@@ -80,6 +21,7 @@ onRecordCreateRequest((event) => {
 }, "submissions");
 
 onRecordUpdateRequest((event) => {
+  const { requestBodyValue, validateAndNormalizeSubmission } = require(`${__hooks}/workshop-utils.js`);
   const original = event.record.original();
   const currentRevision = original.getInt("revision");
   const expectedRevision = Number(requestBodyValue(event, "expectedRevision"));
@@ -110,34 +52,9 @@ onRecordAfterCreateSuccess((event) => {
   event.next();
 }, "submissions");
 
-const escapeHtml = (value) =>
-  String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-
-const emailTemplate = (filename) => {
-  const hooksPath = $os.getenv("WORKSHOP_PB_HOOKS_DIR") || $filepath.dirname(__filepath);
-  return $os.readFile($filepath.join(hooksPath, filename));
-};
-
-const sendEmail = (app, recipientEmail, subject, text, html) => {
-  const sender = app.settings().meta;
-  app.newMailClient().send(
-    new MailerMessage({
-      from: { address: sender.senderAddress, name: sender.senderName },
-      to: [{ address: recipientEmail }],
-      subject,
-      text,
-      html,
-    }),
-  );
-};
-
 onRecordAfterCreateSuccess((event) => {
   try {
+    const { emailTemplate, escapeHtml, sendEmail } = require(`${__hooks}/workshop-utils.js`);
     const submission = event.app.findRecordById("submissions", event.record.get("submission"));
     const recipient = event.app.findRecordById("users", submission.get("author"));
     const commenter = event.app.findRecordById("users", event.record.get("author"));
@@ -174,6 +91,7 @@ onRecordAfterCreateSuccess((event) => {
 
 onRecordAfterCreateSuccess((event) => {
   try {
+    const { emailTemplate, escapeHtml, sendEmail } = require(`${__hooks}/workshop-utils.js`);
     const submission = event.app.findRecordById("submissions", event.record.get("submission"));
     const reporter = event.app.findRecordById("users", event.record.get("reporter"));
     const publicOrigin = $os.getenv("WORKSHOP_PUBLIC_ORIGIN").replace(/\/$/, "");
@@ -218,6 +136,7 @@ onRecordAfterCreateSuccess((event) => {
 }, "reports");
 
 onRecordDeleteRequest((event) => {
+  const { emailTemplate, escapeHtml, sendEmail } = require(`${__hooks}/workshop-utils.js`);
   const submissionId = event.record.id;
   const submissionTitle = event.record.getString("title");
   const authorId = event.record.get("author");

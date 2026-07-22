@@ -9,6 +9,10 @@ if (typeof clientExport !== "string") throw new Error("Workshop client export is
 await access(resolve("packages/workshop", clientExport));
 
 const hook = await read("apps/workshop/pb_hooks/workshop.pb.js");
+await access(resolve("apps/workshop/pb_hooks/workshop-utils.js"));
+if (!hook.includes("require(`${__hooks}/workshop-utils.js`)")) {
+  throw new Error("Workshop handlers must load shared helpers inside their isolated PocketBase contexts");
+}
 if (!hook.includes("onBootstrap") || !hook.includes("users.oauth2.providers = configured")) {
   throw new Error("Workshop OAuth settings must be synchronized at every bootstrap");
 }
