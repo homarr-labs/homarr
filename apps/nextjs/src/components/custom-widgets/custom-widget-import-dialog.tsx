@@ -5,7 +5,11 @@ import { useEffect, useMemo, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { applyCustomWidgetSourceSetup, getCustomWidgetSourceSetups, getImportReview } from "@homarr/custom-widgets/core";
+import {
+  applyCustomWidgetSourceSetup,
+  getCustomWidgetSourceSetups,
+  getImportReview,
+} from "@homarr/custom-widgets/core";
 import type { CustomWidgetSecretKind, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import {
   createCustomWidgetSourceSetupValues,

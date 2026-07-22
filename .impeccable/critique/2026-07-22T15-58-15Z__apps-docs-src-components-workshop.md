@@ -6,21 +6,22 @@ p1_count: 2
 timestamp: 2026-07-22T15-58-15Z
 slug: apps-docs-src-components-workshop
 ---
+
 ## Design Health Score
 
-| # | Heuristic | Score | Key Issue |
-|---|---|---:|---|
-| 1 | Visibility of System Status | 3 | Strong loading, retry, stale-data, pending, and copy states; successful report/edit actions still end silently. |
-| 2 | Match System / Real World | 3 | Core Workshop language is clear, but `networkScope`, query/action, and schema terminology assumes technical fluency. |
-| 3 | User Control and Freedom | 3 | Back, cancel, clear filters, vote toggling, and destructive confirmations are present; destructive actions have no undo. |
-| 4 | Consistency and Standards | 3 | Shared primitives are coherent, though Docusaurus chrome and the denser app-store vocabulary still feel slightly stitched together. |
-| 5 | Error Prevention | 2 | Validation and confirmations are good, but install safety and credential context appears after download/copy actions on small screens. |
-| 6 | Recognition Rather Than Recall | 3 | Author, revision, source, filters, and capabilities are visible; installation still asks users to remember a separate Homarr navigation path. |
-| 7 | Flexibility and Efficiency | 2 | Search, filters, sort, drag-and-drop, autofill, and comment shortcuts help; the install handoff remains manual. |
-| 8 | Aesthetic and Minimalist Design | 2 | Hierarchy is clear, but repeated panels, badges, uppercase metadata labels, and overlapping install actions add noise. |
-| 9 | Error Recognition and Recovery | 3 | Errors are plain-language and usually preserve work; the global action error can be detached from the failed control. |
-| 10 | Help and Documentation | 3 | The installation guide and source explanation are useful; security terminology lacks inline definitions. |
-| **Total** | | **27/40** | **Acceptable, significant improvements needed** |
+| #         | Heuristic                       |     Score | Key Issue                                                                                                                                     |
+| --------- | ------------------------------- | --------: | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1         | Visibility of System Status     |         3 | Strong loading, retry, stale-data, pending, and copy states; successful report/edit actions still end silently.                               |
+| 2         | Match System / Real World       |         3 | Core Workshop language is clear, but `networkScope`, query/action, and schema terminology assumes technical fluency.                          |
+| 3         | User Control and Freedom        |         3 | Back, cancel, clear filters, vote toggling, and destructive confirmations are present; destructive actions have no undo.                      |
+| 4         | Consistency and Standards       |         3 | Shared primitives are coherent, though Docusaurus chrome and the denser app-store vocabulary still feel slightly stitched together.           |
+| 5         | Error Prevention                |         2 | Validation and confirmations are good, but install safety and credential context appears after download/copy actions on small screens.        |
+| 6         | Recognition Rather Than Recall  |         3 | Author, revision, source, filters, and capabilities are visible; installation still asks users to remember a separate Homarr navigation path. |
+| 7         | Flexibility and Efficiency      |         2 | Search, filters, sort, drag-and-drop, autofill, and comment shortcuts help; the install handoff remains manual.                               |
+| 8         | Aesthetic and Minimalist Design |         2 | Hierarchy is clear, but repeated panels, badges, uppercase metadata labels, and overlapping install actions add noise.                        |
+| 9         | Error Recognition and Recovery  |         3 | Errors are plain-language and usually preserve work; the global action error can be detached from the failed control.                         |
+| 10        | Help and Documentation          |         3 | The installation guide and source explanation are useful; security terminology lacks inline definitions.                                      |
+| **Total** |                                 | **27/40** | **Acceptable, significant improvements needed**                                                                                               |
 
 ## Anti-Patterns Verdict
 

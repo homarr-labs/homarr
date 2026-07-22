@@ -1,7 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, Card, Center, PasswordInput, Select, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  Card,
+  Center,
+  PasswordInput,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  ThemeIcon,
+  Title,
+} from "@mantine/core";
 import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
 import { useScopedI18n } from "@homarr/translation/client";
@@ -89,7 +101,13 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
                   {t("source", { name: details.sourceName })}
                 </Text>
               </Card>
-              <TextInput label={t("baseUrl")} type="url" value={baseUrl} onChange={(event) => setBaseUrl(event.currentTarget.value)} required />
+              <TextInput
+                label={t("baseUrl")}
+                type="url"
+                value={baseUrl}
+                onChange={(event) => setBaseUrl(event.currentTarget.value)}
+                required
+              />
               <Select
                 label={t("networkScope")}
                 data={["public", "private", "loopback"]}

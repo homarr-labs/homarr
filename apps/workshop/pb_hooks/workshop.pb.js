@@ -81,9 +81,7 @@ onRecordAfterCreateSuccess((event) => {
     const submission = event.app.findRecordById("submissions", event.record.get("submission"));
     const reporter = event.app.findRecordById("users", event.record.get("reporter"));
     const publicOrigin = $os.getenv("WORKSHOP_PUBLIC_ORIGIN").replace(/\/$/, "");
-    const admins = event.app
-      .findAllRecords("users")
-      .filter((user) => user.getBool("isAdmin") && Boolean(user.email()));
+    const admins = event.app.findAllRecords("users").filter((user) => user.getBool("isAdmin") && Boolean(user.email()));
 
     if (!publicOrigin || admins.length === 0) {
       event.next();

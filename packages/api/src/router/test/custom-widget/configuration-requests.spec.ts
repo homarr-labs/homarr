@@ -26,7 +26,9 @@ describe("custom widget source configuration requests", () => {
     await releaseCustomWidgetConfigurationRequest(request.id);
     expect(await claimCustomWidgetConfigurationRequest(request.id)).not.toBeNull();
     await completeCustomWidgetConfigurationRequest(request.id);
-    expect(await getCustomWidgetConfigurationRequestForUser(request.id, "user-1")).toMatchObject({ status: "completed" });
+    expect(await getCustomWidgetConfigurationRequestForUser(request.id, "user-1")).toMatchObject({
+      status: "completed",
+    });
     expect(await claimCustomWidgetConfigurationRequest(request.id)).toBeNull();
   });
 });

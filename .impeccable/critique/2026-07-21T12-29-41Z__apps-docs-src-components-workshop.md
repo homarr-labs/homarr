@@ -6,23 +6,24 @@ p1_count: 0
 timestamp: 2026-07-21T12-29-41Z
 slug: apps-docs-src-components-workshop
 ---
+
 # Workshop Store Critique — Post-Polish
 
 ## Design Health Score
 
-| # | Heuristic | Score | Evidence |
-|---|---|---:|---|
-| 1 | Visibility of system status | 4/4 | Loading, initial failure, stale refresh failure, empty, and results states are mutually exclusive; recovery actions are visible. |
-| 2 | Match between system and real world | 4/4 | Actions describe their result: Download widget JSON, Copy CSS, View details, and Install in Homarr. |
-| 3 | User control and freedom | 4/4 | Filters can be cleared, errors retried, dialogs cancelled, and destructive submission deletion requires explicit confirmation. |
-| 4 | Consistency and standards | 4/4 | Creation and revision editing share CodeMirror, buttons follow the shared system, and cards use a predictable responsive grid. |
-| 5 | Error prevention | 3/4 | Validation, disabled progression, pending states, RLS, and confirmations are strong; disabled form progression could explain unmet requirements more explicitly. |
-| 6 | Recognition rather than recall | 4/4 | Persistent labels, type descriptions, step status, source previews, and installation instructions minimize recall. |
-| 7 | Flexibility and efficiency | 4/4 | Search spans title, description, and author; signed-in filtering, sorting, responsive controls, and direct detail actions support repeat use. |
-| 8 | Aesthetic and minimalist design | 3/4 | The catalog is restrained and scannable; long source documents and the complete creator form necessarily remain dense on small screens. |
-| 9 | Help users recover from errors | 4/4 | Route, listing, edit, report, copy, OAuth, and detail failures remain local and provide a clear next action. |
-| 10 | Help and documentation | 4/4 | The detail page explains the exact Homarr destination and links to updated Workshop documentation. |
-| **Total** |  | **38/40** | **Release-quality; minor polish remains** |
+| #         | Heuristic                           |     Score | Evidence                                                                                                                                                         |
+| --------- | ----------------------------------- | --------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1         | Visibility of system status         |       4/4 | Loading, initial failure, stale refresh failure, empty, and results states are mutually exclusive; recovery actions are visible.                                 |
+| 2         | Match between system and real world |       4/4 | Actions describe their result: Download widget JSON, Copy CSS, View details, and Install in Homarr.                                                              |
+| 3         | User control and freedom            |       4/4 | Filters can be cleared, errors retried, dialogs cancelled, and destructive submission deletion requires explicit confirmation.                                   |
+| 4         | Consistency and standards           |       4/4 | Creation and revision editing share CodeMirror, buttons follow the shared system, and cards use a predictable responsive grid.                                   |
+| 5         | Error prevention                    |       3/4 | Validation, disabled progression, pending states, RLS, and confirmations are strong; disabled form progression could explain unmet requirements more explicitly. |
+| 6         | Recognition rather than recall      |       4/4 | Persistent labels, type descriptions, step status, source previews, and installation instructions minimize recall.                                               |
+| 7         | Flexibility and efficiency          |       4/4 | Search spans title, description, and author; signed-in filtering, sorting, responsive controls, and direct detail actions support repeat use.                    |
+| 8         | Aesthetic and minimalist design     |       3/4 | The catalog is restrained and scannable; long source documents and the complete creator form necessarily remain dense on small screens.                          |
+| 9         | Help users recover from errors      |       4/4 | Route, listing, edit, report, copy, OAuth, and detail failures remain local and provide a clear next action.                                                     |
+| 10        | Help and documentation              |       4/4 | The detail page explains the exact Homarr destination and links to updated Workshop documentation.                                                               |
+| **Total** |                                     | **38/40** | **Release-quality; minor polish remains**                                                                                                                        |
 
 ## Anti-Patterns Verdict
 

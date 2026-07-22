@@ -56,7 +56,9 @@ export async function getCustomWidgetConfigurationRequest(id: string) {
   const candidate = client ? await client.get(`${CONFIGURATION_REQUEST_PREFIX}${id}`) : localRequests.get(id);
   if (!candidate) return null;
   try {
-    const request = (typeof candidate === "string" ? JSON.parse(candidate) : candidate) as CustomWidgetConfigurationRequest;
+    const request = (
+      typeof candidate === "string" ? JSON.parse(candidate) : candidate
+    ) as CustomWidgetConfigurationRequest;
     if (request.expiresAt <= Date.now()) {
       if (client) await client.del(`${CONFIGURATION_REQUEST_PREFIX}${id}`);
       else localRequests.delete(id);

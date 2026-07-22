@@ -6,23 +6,24 @@ p1_count: 3
 timestamp: 2026-07-21T11-32-50Z
 slug: apps-docs-src-components-workshop
 ---
+
 # Workshop Store Critique
 
 ## Design Health Score
 
-| # | Heuristic | Score | Key issue |
-|---|---|---:|---|
-| 1 | Visibility of system status | 1/4 | Fetch failure can show beside an empty-store message, so the system communicates two incompatible states. |
-| 2 | Match between system and real world | 3/4 | Widget, CSS, voting, revisions, and comments use familiar language. |
-| 3 | User control and freedom | 2/4 | Filters are reversible, but the crashed route and failed fetch state offer no useful recovery. |
-| 4 | Consistency and standards | 2/4 | The submission editor uses CodeMirror, while revision editing falls back to a textarea; several tiny custom controls do not follow the shared button vocabulary. |
-| 5 | Error prevention | 2/4 | Submission validation exists, but disabled progression does not explain what is missing and destructive actions use a brief inline confirmation. |
-| 6 | Recognition rather than recall | 3/4 | Labels, type choices, and the submission stepper are understandable without documentation. |
-| 7 | Flexibility and efficiency | 2/4 | Search covers titles only, signed-out users can select Yours, and installation is reduced to ambiguous Copy and Download actions. |
-| 8 | Aesthetic and minimalist design | 3/4 | The restrained visual system is clean, but the browse toolbar and card action rows become dense. |
-| 9 | Help users recover from errors | 0/4 | The production route crashes with React error 130; the fetch error has no retry action or useful context. |
-| 10 | Help and documentation | 2/4 | The editor explains its fields, but the store does not teach the full inspect, trust, download, and install journey. |
-| **Total** |  | **20/40** | **Needs work before release** |
+| #         | Heuristic                           |     Score | Key issue                                                                                                                                                        |
+| --------- | ----------------------------------- | --------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1         | Visibility of system status         |       1/4 | Fetch failure can show beside an empty-store message, so the system communicates two incompatible states.                                                        |
+| 2         | Match between system and real world |       3/4 | Widget, CSS, voting, revisions, and comments use familiar language.                                                                                              |
+| 3         | User control and freedom            |       2/4 | Filters are reversible, but the crashed route and failed fetch state offer no useful recovery.                                                                   |
+| 4         | Consistency and standards           |       2/4 | The submission editor uses CodeMirror, while revision editing falls back to a textarea; several tiny custom controls do not follow the shared button vocabulary. |
+| 5         | Error prevention                    |       2/4 | Submission validation exists, but disabled progression does not explain what is missing and destructive actions use a brief inline confirmation.                 |
+| 6         | Recognition rather than recall      |       3/4 | Labels, type choices, and the submission stepper are understandable without documentation.                                                                       |
+| 7         | Flexibility and efficiency          |       2/4 | Search covers titles only, signed-out users can select Yours, and installation is reduced to ambiguous Copy and Download actions.                                |
+| 8         | Aesthetic and minimalist design     |       3/4 | The restrained visual system is clean, but the browse toolbar and card action rows become dense.                                                                 |
+| 9         | Help users recover from errors      |       0/4 | The production route crashes with React error 130; the fetch error has no retry action or useful context.                                                        |
+| 10        | Help and documentation              |       2/4 | The editor explains its fields, but the store does not teach the full inspect, trust, download, and install journey.                                             |
+| **Total** |                                     | **20/40** | **Needs work before release**                                                                                                                                    |
 
 ## Anti-Patterns Verdict
 
