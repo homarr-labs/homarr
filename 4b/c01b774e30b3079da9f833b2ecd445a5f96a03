@@ -1,0 +1,45 @@
+.env.example
+  s_6852af5a167b0b::t_1466b54c053e8a 58-59,67-68
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_6852af5a167b0b::t_9331441c31e2c2 33,57-62
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_6852af5a167b0b::t_4c857668c9384e 39-41
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_6852af5a167b0b::t_9cd6214e8e8418 69-79,141
+apps/nextjs/src/components/board/items/widget-hover-overlay.tsx
+  s_6852af5a167b0b::t_0cc912aa8a13a9 5,26-30
+apps/nextjs/src/components/board/sections/category/category-menu-actions.tsx
+  s_6852af5a167b0b::t_53416ec96ccb6d 111-112
+apps/nextjs/src/components/layout/header/user-client.tsx
+  s_6852af5a167b0b::t_dde29f78661fa1 8,21-23,26-29,33,41,44,46
+apps/nextjs/src/components/layout/service-worker-registration.spec.ts
+  s_6852af5a167b0b::t_97d8c6f0f712cd 1-40
+e2e/custom-widgets-custom-jsx.spec.ts
+  s_6852af5a167b0b::t_fd84ddd7d7f848 45
+packages/api/src/router/update-checker.ts
+  s_6852af5a167b0b::t_63222f4e6c061e 11-12
+packages/modals/src/index.tsx
+  s_6852af5a167b0b::t_9e2cb1cd6c5c20 152-157
+packages/request-handler/src/test/update-checker.spec.ts
+  s_6852af5a167b0b::t_3ba3137d24ece1 1-2,43,48-70,72-74
+packages/request-handler/src/update-checker.ts
+  s_6852af5a167b0b::t_68fa67fd324746 20,23,27
+packages/widgets/src/errors/component.tsx
+  s_6852af5a167b0b::t_f22c5402789ab2 11,16,21,31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "4bc01b774e30b3079da9f833b2ecd445a5f96a03",
+  "prompts": {},
+  "sessions": {
+    "s_6852af5a167b0b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8a85-e8ee-7e40-9d0e-25fc837d497c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
