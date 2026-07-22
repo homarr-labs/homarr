@@ -106,6 +106,18 @@ migrate(
     submissions.addIndex("idx_submissions_author", false, "author", "");
     submissions.addIndex("idx_submissions_created", false, "created", "");
     app.save(submissions);
+    app
+      .db()
+      .newQuery(
+        `CREATE TRIGGER submissions_revision_cas
+         BEFORE UPDATE ON submissions
+         FOR EACH ROW
+         WHEN NEW.revision != OLD.revision + 1
+         BEGIN
+           SELECT RAISE(ABORT, 'submission revision must increment exactly once');
+         END`,
+      )
+      .execute();
 
     const votes = new Collection({
       type: "base",

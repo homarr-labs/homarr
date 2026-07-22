@@ -178,17 +178,20 @@ if (!outdatedSubmission.outdated || outdatedSubmission.revision !== 3) {
   throw new Error("PocketBase must own submission revision increments");
 }
 
-const concurrentUpdates = await Promise.all(
-  ["Concurrent first", "Concurrent second"].map((title) =>
-    fetch(`${baseUrl}/api/collections/submissions/records/${submission.id}`, {
-      method: "PATCH",
-      headers: { "content-type": "application/json", ...authorSession.headers },
-      body: JSON.stringify({ title, expectedRevision: 3 }),
-    }),
-  ),
-);
-if (concurrentUpdates.filter((response) => response.ok).length !== 1) {
-  throw new Error("Exactly one update may consume an expected submission revision");
+for (let attempt = 0; attempt < 5; attempt += 1) {
+  const expectedRevision = 3 + attempt;
+  const concurrentUpdates = await Promise.all(
+    ["Concurrent first", "Concurrent second"].map((title) =>
+      fetch(`${baseUrl}/api/collections/submissions/records/${submission.id}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json", ...authorSession.headers },
+        body: JSON.stringify({ title: `${title} ${attempt}`, expectedRevision }),
+      }),
+    ),
+  );
+  if (concurrentUpdates.filter((response) => response.ok).length !== 1) {
+    throw new Error("Exactly one update may consume an expected submission revision");
+  }
 }
 
 await expectStatus(

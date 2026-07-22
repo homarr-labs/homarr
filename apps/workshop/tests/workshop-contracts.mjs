@@ -24,6 +24,7 @@ const migration = await read("apps/workshop/pb_migrations/1784240000_workshop_wi
 for (const required of [
   "workshop_migration_state",
   "addedUserFields",
+  "CREATE TRIGGER submissions_revision_cas",
   "state.rateLimits.enabled",
   "users.passwordAuth = state.users.passwordAuth",
   "users.oauth2 = state.users.oauth2",

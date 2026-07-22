@@ -67,7 +67,19 @@ Object.assign(users, original.rules);
 const settings = { rateLimits: structuredClone(original.rateLimits) };
 const collections = new Map([[users.id, users]]);
 const records = new Map();
+const rawQueries = [];
 const app = {
+  db() {
+    return {
+      newQuery(sql) {
+        return {
+          execute() {
+            rawQueries.push(sql);
+          },
+        };
+      },
+    };
+  },
   findCollectionByNameOrId(name) {
     const collection = collections.get(name);
     if (!collection) throw new Error(`Missing collection ${name}`);
@@ -112,6 +124,9 @@ if (!migration) throw new Error("Workshop migration did not register");
 migration.up(app);
 if (!collections.has("workshop_migration_state") || settings.rateLimits.enabled !== true) {
   throw new Error("Workshop migration did not capture state before applying changes");
+}
+if (!rawQueries.some((query) => query.includes("CREATE TRIGGER submissions_revision_cas"))) {
+  throw new Error("Workshop migration did not install the atomic submission revision guard");
 }
 migration.down(app);
 
