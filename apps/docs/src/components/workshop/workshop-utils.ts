@@ -1,4 +1,4 @@
-import type { WorkshopSubmission } from "@site/src/lib/pocketbase";
+import type { WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
 
 export const downloadSubmissionJson = (submission: WorkshopSubmission) => {
   const url = URL.createObjectURL(new Blob([submission.content], { type: "application/json" }));
@@ -9,8 +9,17 @@ export const downloadSubmissionJson = (submission: WorkshopSubmission) => {
   URL.revokeObjectURL(url);
 };
 
-export const voteDelta = (prev: 1 | -1 | undefined, next: 1 | -1): [up: number, down: number] => {
-  if (!prev) return next === 1 ? [1, 0] : [0, 1];
-  if (prev === next) return next === 1 ? [-1, 0] : [0, -1];
-  return next === 1 ? [1, -1] : [-1, 1];
+interface WorkshopVoteBackend {
+  vote(submissionId: string, value: 1 | -1): Promise<WorkshopVote | null>;
+  get(submissionId: string): Promise<WorkshopSubmission>;
+  listVotesForCurrentUser(): Promise<WorkshopVote[]>;
+}
+
+export const voteAndReconcile = async (backend: WorkshopVoteBackend, submissionId: string, value: 1 | -1) => {
+  await backend.vote(submissionId, value);
+  const [submission, votes] = await Promise.all([backend.get(submissionId), backend.listVotesForCurrentUser()]);
+  return { submission, votes };
 };
+
+export const clampScreenshotIndex = (index: number, screenshotCount: number) =>
+  Math.min(Math.max(0, index), Math.max(0, screenshotCount - 1));

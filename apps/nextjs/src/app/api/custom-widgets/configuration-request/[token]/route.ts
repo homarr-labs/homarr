@@ -16,6 +16,8 @@ import { customWidgetSourceSchema, hasSameCustomWidgetSourceAuthentication } fro
 import { and, db, eq, handleTransactionsAsync } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 
+import { readConfigurationRequestBody } from "../body";
+
 interface RouteContext {
   params: Promise<{ token: string }>;
 }
@@ -44,15 +46,18 @@ export async function POST(request: NextRequest, context: RouteContext) {
   if (!pending || pending.status !== "pending") {
     return NextResponse.json({ error: "This credential request is invalid, completed, or expired." }, { status: 404 });
   }
-  const body = (await request.json().catch(() => null)) as {
-    baseUrl?: unknown;
-    networkScope?: unknown;
-    secrets?: Record<string, unknown>;
-  } | null;
+  const parsedBody = await readConfigurationRequestBody(request);
+  if (parsedBody.status === "too-large") {
+    return NextResponse.json({ error: "The configuration payload is too large." }, { status: 413 });
+  }
+  if (parsedBody.status !== "ok") {
+    return NextResponse.json({ error: "Enter a valid source configuration." }, { status: 400 });
+  }
+  const body = parsedBody.data;
   const sourceResult = customWidgetSourceSchema.safeParse({
     ...pending.source,
-    baseUrl: body?.baseUrl,
-    networkScope: body?.networkScope,
+    baseUrl: body.baseUrl,
+    networkScope: body.networkScope,
   });
   if (!sourceResult.success) {
     return NextResponse.json(
@@ -61,7 +66,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     );
   }
   const secrets = pending.kinds.flatMap((kind) => {
-    const value = body?.secrets?.[kind];
+    const value = body.secrets[kind];
     return typeof value === "string" && value.length > 0 && value.length <= 8192
       ? [{ sourceId: pending.sourceId, kind, value }]
       : [];

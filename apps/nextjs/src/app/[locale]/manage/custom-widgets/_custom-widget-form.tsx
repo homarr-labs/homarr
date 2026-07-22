@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Accordion, Box, Button, Paper, SegmentedControl, Stack, TextInput, Textarea } from "@mantine/core";
 import {
   IconAlertCircle,
@@ -39,6 +39,7 @@ import { createCustomWidgetRenameHandlers } from "./_custom-widget-rename-handle
 import { CustomWidgetSaveIssuesAlert } from "./_custom-widget-save-issues-alert";
 import { CustomWidgetSourcesEditor } from "./_custom-widget-sources-editor";
 import { useCustomWidgetFormActions } from "./_use-custom-widget-form-actions";
+import { useUnsavedChangesGuard } from "./_use-unsaved-changes-guard";
 import classes from "./_custom-widget-form.module.css";
 
 interface CustomWidgetFormProps {
@@ -71,8 +72,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     const initialDefinition = buildDefinition(formInitialValues);
     return initialDefinition.success ? getDefinitionDefaults(initialDefinition.data) : {};
   });
-  const dirtyRef = useRef(false);
-  dirtyRef.current = form.isDirty();
+  useUnsavedChangesGuard(form.isDirty());
 
   const candidate = useMemo(() => buildDefinition(form.values), [form.values]);
   const parsedOptions = useMemo(
@@ -117,13 +117,6 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     optionsSnapshot,
     setOptionsSnapshot,
   });
-  useEffect(() => {
-    const beforeUnload = (event: BeforeUnloadEvent) => {
-      if (dirtyRef.current) event.preventDefault();
-    };
-    window.addEventListener("beforeunload", beforeUnload);
-    return () => window.removeEventListener("beforeunload", beforeUnload);
-  }, []);
   useEffect(() => {
     if (parsedOptions.success) setOptionsSnapshot(getCustomWidgetDefaultOptions(parsedOptions.data));
   }, [parsedOptions]);

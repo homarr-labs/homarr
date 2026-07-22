@@ -8,7 +8,7 @@ on:
     types: [closed]
     branches: ["*"]
   push:
-    branches: [main, dev, beta, next]
+    branches: [main, dev, beta, next, v2]
   merge_group:
   workflow_dispatch:
     inputs:
@@ -86,6 +86,17 @@ jobs:
 
       - name: Validate workspace configuration
         run: pnpm lint:ws
+
+      - name: Validate Custom Widget architecture
+        run: pnpm check:custom-widgets
+
+      - name: Validate checked-in OpenAPI schema
+        run: pnpm check:openapi
+
+      - name: Validate Custom Widget bundle budget
+        run: |
+          pnpm --filter nextjs build
+          pnpm check:custom-widget-bundle
 
       - name: Run unit tests
         run: pnpm test
@@ -229,7 +240,7 @@ jobs:
     needs: fast-gate
     if: |
       (
-        (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+        (github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository) ||
         (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
       )
     runs-on: ubuntu-24.04-arm
@@ -286,7 +297,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
+      contents: read
       packages: write
+      pull-requests: read
     env:
       PREVIEW_TAG: pr-${{ github.event.pull_request.number || inputs.pr_number }}
     steps:
@@ -301,6 +314,26 @@ jobs:
       - name: Set up Docker Buildx
         if: "!env.ACT"
         uses: docker/setup-buildx-action@v4
+
+      - name: Verify PR head before publication
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v8
+        env:
+          EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        with:
+          script: |
+            const { data: pull } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+            if (pull.state !== "open") {
+              core.setFailed(`PR #${pull.number} is ${pull.state}; refusing to publish its preview.`);
+              return;
+            }
+            if (pull.head.sha !== process.env.EXPECTED_HEAD_SHA) {
+              core.setFailed(`PR #${pull.number} moved from ${process.env.EXPECTED_HEAD_SHA} to ${pull.head.sha}.`);
+            }
 
       - name: Publish preview manifest
         if: "!env.ACT"

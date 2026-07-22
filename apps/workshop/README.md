@@ -43,6 +43,9 @@ and SMTP transport in PocketBase. PocketBase emails the submission author about 
 Workshop administrator about a new report, and emails the author after an administrator deletes their submission. Mail
 failures are logged and never reject a comment, report, or deletion.
 
+GitHub OAuth settings are synchronized from the environment on every PocketBase startup. Restart the Workshop after
+rotating either credential; removing one or both values disables the provider instead of retaining stale credentials.
+
 Run the disposable service integration test from the repository root:
 
 ```sh
@@ -52,8 +55,9 @@ pnpm test:workshop
 The test uses a separate Compose project and deletes its named volume on exit. It never writes fixture users or admin
 roles into the normal `homarr-workshop_pb_data` volume.
 
-The Workshop does not maintain a second Custom Widget schema. Its frontend validates submissions with
-`customWidgetImportSchema` from `@homarr/custom-widgets`, and Homarr validates canonical content again before installation.
+The Workshop frontend validates submissions with `customWidgetImportSchema` from `@homarr/custom-widgets`, and Homarr
+validates canonical content again before installation. PocketBase independently enforces publication invariants for
+direct API requests, owns schema/revision fields, and rejects stale updates using the submitted expected revision.
 The validated `$schema` is also stored as `widgetSchema` for listing compatibility badges; it must match the downloaded
 manifest before Homarr enables installation.
 PocketBase API rules enforce submission and comment ownership, one vote/report per user and submission, and

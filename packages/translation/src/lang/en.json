@@ -702,6 +702,12 @@
     }
   },
   "customWidget": {
+    "betaBanner": {
+      "title": "Custom Widgets are in Beta",
+      "description": "This feature is experimental and will probably change significantly. If you encounter bugs, want additional capabilities, or find something confusing, please share your feedback in the",
+      "discussionLink": "official discussion forum",
+      "closing": "so it can be considered. Happy hacking!"
+    },
     "secretEntry": {
       "title": "Configure API source",
       "description": "Confirm the server URL and enter credentials. Secret values are encrypted by Homarr and never returned to the requesting agent.",
@@ -727,6 +733,9 @@
         "loading": "Loading...",
         "invalidDefinition": "Invalid definition",
         "invalidDefinitionDescription": "This stored widget no longer matches the current Custom Widget schema. Delete it and recreate or import a valid definition.",
+        "migrationRequired": "Migration required",
+        "migrationDescription": "This v1 custom widget is preserved but cannot run until it is migrated to Custom JSX v2.",
+        "migrationInstructions": "Open Actions, copy the redacted migration prompt into an LLM, then import the v2 JSON it produces. Existing board placements keep working after migration.",
         "missingCredentials": "{count, plural, one {Credential missing} other {# credentials missing}}",
         "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Edit it to configure the encrypted values."
       },
@@ -753,7 +762,10 @@
       "disable": "Disable",
       "menu": "Actions",
       "downloadSkill": "View Custom Widget Skill",
-      "publishWorkshop": "Publish to Workshop"
+      "publishWorkshop": "Publish to Workshop",
+      "migrate": "Migrate Custom Widget",
+      "copyMigrationPrompt": "Copy LLM migration prompt",
+      "importMigration": "Import migrated v2 JSON"
     },
     "field": {
       "name": "Name",
@@ -1058,6 +1070,10 @@
       "updated": "Widget \"{name}\" updated successfully.",
       "deleted": "Widget \"{name}\" deleted.",
       "imported": "Widget imported successfully.",
+      "migrated": "Legacy widget migrated successfully. Existing board placements now use the v2 definition.",
+      "migrationError": "Failed to migrate the legacy widget. Ensure the file uses the homarr-custom-widget-v2 schema.",
+      "migrationPromptCopied": "A redacted migration prompt was copied. Paste it into an LLM, save the returned v2 JSON, then import it here.",
+      "migrationPromptCopyError": "Failed to copy the migration prompt.",
       "aiPromptCopied": "AI prompt copied to clipboard",
       "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
       "aiPromptCopyError": "Failed to copy the prompt to the clipboard.",
@@ -1073,6 +1089,8 @@
     "importReview": {
       "title": "Review custom widget import",
       "description": "Check where this widget connects and what board access its controls require before importing it.",
+      "migrationTitle": "Review migrated v2 replacement",
+      "migrationDescription": "Review and confirm this generated v2 definition. Confirming atomically replaces the preserved v1 record while keeping existing board placements linked to the same widget ID.",
       "fileLabel": "Choose a custom widget JSON file",
       "name": "Name",
       "origin": "Base origin",
@@ -1106,7 +1124,8 @@
         "description": "Review every named action, inherited credential, and destructive confirmation after import. Secrets are not included in the file."
       },
       "cancel": "Cancel import",
-      "confirm": "Import widget"
+      "confirm": "Import widget",
+      "confirmMigration": "Confirm v2 replacement"
     }
   },
   "workshop": {
@@ -4160,6 +4179,8 @@
       },
       "noDefinition": "No definition selected",
       "definitionNotFound": "Custom widget unavailable",
+      "migrationRequired": "This legacy custom widget is preserved, but it must be migrated to Custom JSX v2 from Manage custom widgets before it can run.",
+      "manageMigration": "Open Manage custom widgets",
       "configurationNeedsRepair": "This widget's options changed. Edit the widget to repair its configuration.",
       "removeFromBoard": "Remove from board",
       "editModePending": "Save the board to load this widget.",
@@ -4168,7 +4189,10 @@
         "empty": "No custom widgets found",
         "preview": "Preview",
         "sources": "{count, plural, one {# source} other {# sources}}",
-        "requests": "{count, plural, one {# request} other {# requests}}"
+        "requests": "{count, plural, one {# request} other {# requests}}",
+        "migrationRequired": "Migration required",
+        "migrationDescription": "This placed v1 widget cannot run yet. Copy its redacted prompt to an LLM and import the returned v2 JSON.",
+        "manageMigration": "Open Manage custom widgets"
       },
       "configuration": {
         "needsAttention": "Configuration needs attention: {message}",

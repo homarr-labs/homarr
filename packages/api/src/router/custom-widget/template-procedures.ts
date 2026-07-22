@@ -5,7 +5,7 @@ import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
-import { eq } from "@homarr/db";
+import { and, eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
 import { permissionRequiredProcedure } from "../../trpc";
@@ -120,11 +120,28 @@ export const templateProcedures = {
       }
 
       const template = validateTemplate(definition, lines.join("\n"));
-      await ctx.db
+      const updateResult = (await ctx.db
         .update(customWidgetDefinitions)
         .set({ template, updatedAt: new Date() })
-        .where(eq(customWidgetDefinitions.id, input.id));
+        .where(
+          and(eq(customWidgetDefinitions.id, input.id), eq(customWidgetDefinitions.template, definition.template)),
+        )) as unknown;
+      if (getAffectedRowCount(updateResult) === 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Template changed since it was read. Read it again and retry.",
+        });
+      }
       logger.info("Patched custom widget template", { id: input.id, editCount: input.edits.length });
       return { id: input.id, template, templateLines: lines, revision: getTemplateRevision(template) };
     }),
 };
+
+function getAffectedRowCount(result: unknown): number {
+  if (Array.isArray(result)) return getAffectedRowCount(result[0]);
+  if (!result || typeof result !== "object") return 0;
+  if ("affectedRows" in result && typeof result.affectedRows === "number") return result.affectedRows;
+  if ("rowCount" in result && typeof result.rowCount === "number") return result.rowCount;
+  if ("changes" in result && typeof result.changes === "number") return result.changes;
+  return 0;
+}

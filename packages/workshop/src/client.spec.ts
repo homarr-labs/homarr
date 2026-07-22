@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, expectTypeOf, test, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   autoCancellation: vi.fn(),
   authWithOAuth2: vi.fn(),
+  create: vi.fn(),
   getFullList: vi.fn(),
   getList: vi.fn(),
   update: vi.fn(),
@@ -47,11 +48,18 @@ import type { RecordService } from "pocketbase";
 
 import { WorkshopBackend } from "./backend";
 import type { WorkshopSubmissionRecord } from "./backend";
+import * as workshopClient from "./client";
 
 describe("WorkshopBackend", () => {
+  test("resolves the advertised client module", () => {
+    expect(workshopClient.WorkshopBackend).toBe(WorkshopBackend);
+    expect(workshopClient.validateWorkshopContent).toBeTypeOf("function");
+  });
+
   beforeEach(() => {
     mocks.autoCancellation.mockReset();
     mocks.authWithOAuth2.mockReset();
+    mocks.create.mockReset();
     mocks.getFullList.mockReset();
     mocks.getList.mockReset();
     mocks.update.mockReset();
@@ -80,6 +88,27 @@ describe("WorkshopBackend", () => {
     const client = new WorkshopBackend("https://workshop.example.com");
     expectTypeOf(client.pocketBase.collection("submissions")).toEqualTypeOf<RecordService<WorkshopSubmissionRecord>>();
     expect(mocks.autoCancellation).toHaveBeenCalledWith(false);
+  });
+
+  test("leaves schema and initial revision ownership to PocketBase", async () => {
+    const client = new WorkshopBackend("https://workshop.example.com");
+    client.pocketBase.authStore.save("token", { id: "author-id" } as never);
+    mocks.create.mockResolvedValue({ id: "submission-id" });
+    vi.spyOn(client, "get").mockResolvedValue(listingRecord() as never);
+
+    await client.create({
+      type: "customCss",
+      title: "Dashboard theme",
+      description: "A theme",
+      content: ".dashboard { color: red; }",
+      changelog: "",
+      outdated: false,
+    });
+
+    const payload = mocks.create.mock.calls[0]?.[0] as FormData;
+    expect(payload.get("author")).toBe("author-id");
+    expect(payload.get("widgetSchema")).toBeNull();
+    expect(payload.get("revision")).toBeNull();
   });
 
   test("appends and removes screenshots without replacing retained files", async () => {
@@ -113,9 +142,12 @@ describe("WorkshopBackend", () => {
       expect.objectContaining({
         "screenshots+": [addition],
         "screenshots-": ["remove.png"],
-        revision: 3,
+        expectedRevision: 2,
       }),
     );
+    const payload = mocks.update.mock.calls[0]?.[1];
+    expect(payload).not.toHaveProperty("revision");
+    expect(payload).not.toHaveProperty("widgetSchema");
   });
 
   test("uses PocketBase filtering and pagination when the listing view is current", async () => {

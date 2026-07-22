@@ -6,8 +6,10 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { isLegacyCustomWidgetMigrationError, isTerminalCustomWidgetDefinitionError } from "./migration-state";
 
 const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
 
@@ -26,8 +28,9 @@ export default function CustomApiWidget({
     { itemId: itemId ?? "" },
     {
       enabled: Boolean(itemId) && Boolean(definitionId),
-      refetchInterval: (currentQuery) => (isTerminalDefinitionError(currentQuery.state.error) ? false : intervalMs),
-      retry: (failureCount, error) => !isTerminalDefinitionError(error) && failureCount < 3,
+      refetchInterval: (currentQuery) =>
+        isTerminalCustomWidgetDefinitionError(currentQuery.state.error) ? false : intervalMs,
+      retry: (failureCount, error) => !isTerminalCustomWidgetDefinitionError(error) && failureCount < 3,
     },
   );
 
@@ -43,6 +46,7 @@ export default function CustomApiWidget({
     );
   if (query.error) {
     const errorCode = query.error.data?.code;
+    const migrationRequired = isLegacyCustomWidgetMigrationError(query.error);
     if (isEditMode && errorCode === "NOT_FOUND") {
       return <Unavailable message={t("editModePending")} />;
     }
@@ -50,14 +54,18 @@ export default function CustomApiWidget({
     return (
       <Unavailable
         message={
-          isUnavailable
-            ? t("definitionNotFound")
-            : errorCode === "PRECONDITION_FAILED"
-              ? t("configurationNeedsRepair")
-              : tCustomJsx("requestFailed")
+          migrationRequired
+            ? t("migrationRequired")
+            : isUnavailable
+              ? t("definitionNotFound")
+              : errorCode === "PRECONDITION_FAILED"
+                ? t("configurationNeedsRepair")
+                : tCustomJsx("requestFailed")
         }
-        danger={!isUnavailable}
+        danger={!isUnavailable && !migrationRequired}
         removeLabel={isUnavailable ? t("removeFromBoard") : undefined}
+        actionLabel={migrationRequired ? t("manageMigration") : undefined}
+        actionHref={migrationRequired ? "/manage/custom-widgets" : undefined}
         onRemove={removeItem}
       />
     );
@@ -76,22 +84,19 @@ export default function CustomApiWidget({
   );
 }
 
-function isTerminalDefinitionError(error: unknown): boolean {
-  if (!error || typeof error !== "object" || !("data" in error)) return false;
-  const data = error.data;
-  if (!data || typeof data !== "object" || !("code" in data)) return false;
-  return data.code === "NOT_FOUND" || data.code === "FORBIDDEN" || data.code === "PRECONDITION_FAILED";
-}
-
 function Unavailable({
   message,
   danger = false,
   removeLabel,
+  actionLabel,
+  actionHref,
   onRemove,
 }: {
   message: string;
   danger?: boolean;
   removeLabel?: string;
+  actionLabel?: string;
+  actionHref?: string;
   onRemove?: () => void;
 }) {
   return (
@@ -101,6 +106,11 @@ function Unavailable({
         <Text c="dimmed" size="sm" ta="center">
           {message}
         </Text>
+        {actionLabel && actionHref && (
+          <Button component={Link} href={actionHref} size="compact-sm" color="yellow" variant="light">
+            {actionLabel}
+          </Button>
+        )}
         {removeLabel && onRemove && (
           <Button size="compact-sm" color="red" variant="light" onClick={onRemove}>
             {removeLabel}

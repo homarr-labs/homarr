@@ -1,7 +1,7 @@
 "use client";
 
 import { ActionIcon, Avatar, Badge, Card, Group, Stack, Switch, Text, Tooltip } from "@mantine/core";
-import { IconAlertTriangle, IconApi, IconPencil } from "@tabler/icons-react";
+import { IconAlertTriangle, IconApi, IconPencil, IconSparkles } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -70,7 +70,13 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
     <Card
       padding="sm"
       withBorder={!widget.valid}
-      bd={!widget.valid ? "1px solid var(--mantine-color-red-6)" : undefined}
+      bd={
+        widget.migrationRequired
+          ? "1px solid var(--mantine-color-yellow-6)"
+          : !widget.valid
+            ? "1px solid var(--mantine-color-red-6)"
+            : undefined
+      }
       style={{
         opacity: widget.valid && !widget.enabled ? 0.55 : 1,
         transition: "opacity 150ms ease",
@@ -89,18 +95,34 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
             <Text size="sm" fw={600} lineClamp={1} style={{ minWidth: 0 }}>
               {widget.name}
             </Text>
-            {!widget.valid && (
+            {widget.migrationRequired ? (
+              <Text size="xs" c="yellow.8">
+                {t("page.list.migrationDescription")}
+              </Text>
+            ) : !widget.valid ? (
               <Text size="xs" c="red">
                 {t("page.list.invalidDefinitionDescription")}
               </Text>
-            )}
+            ) : null}
             {widget.sources[0] && (
               <Text size="xs" c="dimmed" ff="monospace" lineClamp={1} style={{ wordBreak: "break-all", minWidth: 0 }}>
                 {widget.sources.map((source) => source.origin).join(" · ")}
               </Text>
             )}
           </Stack>
-          {widget.valid ? (
+          {widget.migrationRequired ? (
+            <Tooltip label={t("page.list.migrationInstructions")} multiline maw={420}>
+              <Badge
+                color="yellow"
+                size="sm"
+                variant="light"
+                leftSection={<IconSparkles size={12} />}
+                style={{ flexShrink: 0 }}
+              >
+                {t("page.list.migrationRequired")}
+              </Badge>
+            </Tooltip>
+          ) : widget.valid ? (
             <Badge color="pink" size="sm" variant="light" style={{ flexShrink: 0 }}>
               JSX · {widget.requestCount}
             </Badge>
@@ -166,7 +188,13 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
             </>
           )}
           <CustomWidgetRowActions
-            widget={{ id: widget.id, name: widget.name, enabled: widget.enabled, valid: widget.valid }}
+            widget={{
+              id: widget.id,
+              name: widget.name,
+              enabled: widget.enabled,
+              valid: widget.valid,
+              migrationRequired: widget.migrationRequired,
+            }}
           />
         </Group>
       </Group>

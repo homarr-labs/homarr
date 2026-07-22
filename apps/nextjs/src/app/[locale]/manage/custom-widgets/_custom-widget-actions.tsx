@@ -1,23 +1,26 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconBuildingStore, IconCopy, IconDots, IconDownload, IconTrash, IconUpload } from "@tabler/icons-react";
+import {
+  IconBuildingStore,
+  IconCopy,
+  IconDots,
+  IconDownload,
+  IconSparkles,
+  IconTrash,
+  IconUpload,
+} from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import {
-  formatCustomWidgetImportIssues,
-  looksLikeCustomWidgetClipboard,
-  parseCustomWidgetClipboardDetailed,
-} from "@homarr/custom-widgets/core";
+import { formatCustomWidgetImportIssues, parseCustomWidgetClipboardDetailed } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
 import { WorkshopPublishModal } from "~/components/workshop/workshop-publish-modal";
 
@@ -28,15 +31,59 @@ interface WidgetRef {
   name: string;
   enabled: boolean;
   valid: boolean;
+  migrationRequired: boolean;
 }
 
 export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const t = useScopedI18n("customWidget");
   const { openConfirmModal } = useConfirmModal();
   const deleteMutation = clientApi.customWidget.delete.useMutation();
+  const deleteLegacyMutation = clientApi.customWidget.deleteLegacy.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();
   const utils = clientApi.useUtils();
   const [publishOpened, publishControls] = useDisclosure(false);
+  const [migrationOpened, migrationControls] = useDisclosure(false);
+  const migrationFileInputRef = useRef<HTMLInputElement>(null);
+  const [migratedWidget, setMigratedWidget] = useState<HomarrCustomWidgetV2 | null>(null);
+
+  const copyMigrationPrompt = async () => {
+    try {
+      const result = await utils.customWidget.legacyMigrationPrompt.fetch({ id: widget.id });
+      await navigator.clipboard.writeText(result.prompt);
+      showSuccessNotification({
+        title: t("action.copyMigrationPrompt"),
+        message: t("notification.migrationPromptCopied"),
+      });
+    } catch (error) {
+      showErrorNotification({
+        title: t("action.copyMigrationPrompt"),
+        message: error instanceof Error ? error.message : t("notification.migrationPromptCopyError"),
+      });
+    }
+  };
+
+  const handleMigrationFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.addEventListener("load", (loadEvent) => {
+      const result = parseCustomWidgetClipboardDetailed(loadEvent.target?.result as string);
+      if (!result.success) {
+        showErrorNotification({
+          title: t("action.migrate"),
+          message: formatCustomWidgetImportIssues(result.issues),
+        });
+        return;
+      }
+      setMigratedWidget(result.widget);
+      migrationControls.open();
+    });
+    reader.addEventListener("error", () => {
+      showErrorNotification({ title: t("action.migrate"), message: t("notification.migrationError") });
+    });
+    reader.readAsText(file);
+    event.target.value = "";
+  };
 
   const handleExport = async () => {
     try {
@@ -77,23 +124,26 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
       title: t("action.delete"),
       children: t("action.deleteConfirm", { name: widget.name }),
       onConfirm: () => {
-        deleteMutation.mutate(
-          { id: widget.id },
-          {
-            onSuccess: () => {
-              showSuccessNotification({
-                title: t("action.delete"),
-                message: t("notification.deleted", { name: widget.name }),
-              });
-              void utils.customWidget.list.invalidate();
-              void utils.widget.customApi.getData.invalidate();
-              void revalidatePathActionAsync("/manage/custom-widgets");
-            },
-            onError: () => {
-              showErrorNotification({ title: t("action.delete"), message: t("notification.deleteError") });
-            },
+        const callbacks = {
+          onSuccess: () => {
+            showSuccessNotification({
+              title: t("action.delete"),
+              message: t("notification.deleted", { name: widget.name }),
+            });
+            void utils.customWidget.list.invalidate();
+            void utils.customWidget.available.invalidate();
+            void utils.widget.customApi.getData.invalidate();
+            void revalidatePathActionAsync("/manage/custom-widgets");
           },
-        );
+          onError: () => {
+            showErrorNotification({ title: t("action.delete"), message: t("notification.deleteError") });
+          },
+        };
+        if (widget.migrationRequired) {
+          deleteLegacyMutation.mutate({ id: widget.id }, callbacks);
+          return;
+        }
+        deleteMutation.mutate({ id: widget.id }, callbacks);
       },
     });
   };
@@ -125,104 +175,52 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
               <Menu.Divider />
             </>
           )}
+          {widget.migrationRequired && (
+            <>
+              <Menu.Item onClick={() => void copyMigrationPrompt()} leftSection={<IconSparkles {...iconProps} />}>
+                {t("action.copyMigrationPrompt")}
+              </Menu.Item>
+              <Menu.Item
+                onClick={() => migrationFileInputRef.current?.click()}
+                leftSection={<IconUpload {...iconProps} />}
+              >
+                {t("action.importMigration")}
+              </Menu.Item>
+              <Menu.Divider />
+            </>
+          )}
           <Menu.Item
             color="red"
             leftSection={<IconTrash {...iconProps} />}
             onClick={handleDelete}
-            disabled={deleteMutation.isPending}
+            disabled={deleteMutation.isPending || deleteLegacyMutation.isPending}
           >
             {t("action.delete")}
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
       {widget.valid && <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />}
-    </>
-  );
-};
-
-export const ImportCustomWidgetButton = () => {
-  const t = useScopedI18n("customWidget");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [pendingImport, setPendingImport] = useState<HomarrCustomWidgetV2 | null>(null);
-  const [reviewOpened, { open: openReview, close: closeReview }] = useDisclosure(false);
-  const queueImport = useCallback(
-    (value: HomarrCustomWidgetV2) => {
-      setPendingImport(value);
-      openReview();
-    },
-    [openReview],
-  );
-
-  useEffect(() => {
-    const handlePaste = (event: ClipboardEvent) => {
-      if (event.target instanceof Element && event.target.matches("input, textarea, [contenteditable='true']")) return;
-      const text = event.clipboardData?.getData("text/plain") ?? "";
-      if (!looksLikeCustomWidgetClipboard(text)) return;
-      event.preventDefault();
-      const result = parseCustomWidgetClipboardDetailed(text);
-      if (!result.success) {
-        showErrorNotification({
-          title: t("action.import"),
-          message: formatCustomWidgetImportIssues(result.issues),
-        });
-        return;
-      }
-      queueImport(result.widget);
-    };
-    window.addEventListener("paste", handlePaste);
-    return () => window.removeEventListener("paste", handlePaste);
-  }, [queueImport, t]);
-
-  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.addEventListener("load", (e) => {
-      try {
-        const result = parseCustomWidgetClipboardDetailed(e.target?.result as string);
-        if (!result.success) throw new Error(formatCustomWidgetImportIssues(result.issues));
-        queueImport(result.widget);
-      } catch (error) {
-        showErrorNotification({
-          title: t("action.import"),
-          message: error instanceof Error ? error.message : t("notification.importError"),
-        });
-      }
-    });
-    reader.addEventListener("error", () => {
-      showErrorNotification({ title: t("action.import"), message: t("notification.importError") });
-    });
-    reader.readAsText(file);
-    event.target.value = "";
-  };
-
-  return (
-    <>
-      <MobileAffixButton
-        variant="default"
-        leftSection={<IconUpload size={16} />}
-        onClick={() => fileInputRef.current?.click()}
-        title={t("action.pasteImportHint")}
-      >
-        {t("action.import")}
-      </MobileAffixButton>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".json,.md,text/markdown,application/json"
-        hidden
-        onChange={handleImport}
-        aria-label={t("importReview.fileLabel")}
-      />
-      <CustomWidgetImportDialog
-        opened={reviewOpened}
-        widget={pendingImport}
-        onClose={() => {
-          closeReview();
-          setPendingImport(null);
-        }}
-      />
+      {widget.migrationRequired && (
+        <>
+          <input
+            ref={migrationFileInputRef}
+            type="file"
+            accept=".json,.md,text/markdown,application/json"
+            hidden
+            onChange={handleMigrationFile}
+            aria-label={t("action.importMigration")}
+          />
+          <CustomWidgetImportDialog
+            opened={migrationOpened}
+            widget={migratedWidget}
+            legacyId={widget.id}
+            onClose={() => {
+              migrationControls.close();
+              setMigratedWidget(null);
+            }}
+          />
+        </>
+      )}
     </>
   );
 };

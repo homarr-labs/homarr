@@ -1,6 +1,6 @@
 PRAGMA foreign_keys=OFF;--> statement-breakpoint
-DROP TABLE `custom_widget_secret`;--> statement-breakpoint
-DROP TABLE `custom_widget_definition`;--> statement-breakpoint
+ALTER TABLE `custom_widget_definition` RENAME TO `legacy_custom_widget_definition`;--> statement-breakpoint
+ALTER TABLE `custom_widget_secret` RENAME TO `legacy_custom_widget_secret`;--> statement-breakpoint
 CREATE TABLE `custom_widget_definition` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,

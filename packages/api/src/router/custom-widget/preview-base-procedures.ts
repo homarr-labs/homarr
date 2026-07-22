@@ -14,6 +14,8 @@ import { customWidgetDefinitions } from "@homarr/db/schema";
 
 import { permissionRequiredProcedure } from "../../trpc";
 import { createPreviewSession, getPreviewSession } from "./preview-sessions";
+import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
+import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
 const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
 
@@ -48,8 +50,32 @@ const previewCreateProcedure = manageProcedure
         with: { secrets: true },
       });
       if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      const existingDefinition = parseStoredCustomWidgetDefinition(existing);
+      for (const [sourceId, existingSource] of Object.entries(existingDefinition.sources)) {
+        const submittedSource = input.definition.sources[sourceId];
+        const hasStoredSecrets = existing.secrets.some((secret) => secret.sourceId === sourceId);
+        if (!submittedSource || !hasStoredSecrets || hasSameSecretBinding(existingSource, submittedSource)) continue;
+
+        const authType = typeof submittedSource.auth === "string" ? submittedSource.auth : submittedSource.auth.type;
+        const missingReplacement = requiredSecretKinds(authType).some(
+          (kind) => !secrets.some((secret) => secret.sourceId === sourceId && secret.kind === kind),
+        );
+        if (missingReplacement) {
+          throw new TRPCError({
+            code: ctx.session.user.permissions.includes("custom-widget-secret-write") ? "BAD_REQUEST" : "FORBIDDEN",
+            message: "Source security settings changed; re-enter its credentials to preview this definition",
+          });
+        }
+      }
       for (const secret of existing.secrets) {
-        if (!secrets.some((candidate) => candidate.sourceId === secret.sourceId && candidate.kind === secret.kind)) {
+        const existingSource = existingDefinition.sources[secret.sourceId];
+        const submittedSource = input.definition.sources[secret.sourceId];
+        if (
+          existingSource &&
+          submittedSource &&
+          hasSameSecretBinding(existingSource, submittedSource) &&
+          !secrets.some((candidate) => candidate.sourceId === secret.sourceId && candidate.kind === secret.kind)
+        ) {
           secrets.push({ sourceId: secret.sourceId, kind: secret.kind, value: decryptSecret(secret.encryptedValue) });
         }
       }

@@ -61,7 +61,7 @@ import { CodeBlock, DeleteConfirmButton, DetailSkeleton, ScreenshotGallery } fro
 import { formatRelativeTime } from "./format";
 import { ScreenshotEditor } from "./ScreenshotEditor";
 import { WorkshopErrorBoundary } from "./WorkshopErrorBoundary";
-import { downloadSubmissionJson, voteDelta } from "./workshop-utils";
+import { downloadSubmissionJson, voteAndReconcile } from "./workshop-utils";
 
 const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
 const typeDotColors: Record<SubmissionType, string> = { customCss: "bg-blue-500", customWidget: "bg-yellow-500" };
@@ -305,28 +305,16 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
     if (!submission || voting.current) return;
     voting.current = true;
 
-    const userId = await requireUserId("vote");
-    if (!userId) {
+    if (!(await requireUserId("vote"))) {
       voting.current = false;
       return;
     }
 
-    const prev = userVote;
-    const isToggleOff = prev?.value === value;
-    const [upD, downD] = voteDelta(prev?.value, value);
-
-    setUserVote(
-      isToggleOff
-        ? undefined
-        : ({ ...(prev ?? { id: "", submission: submission.id, user: userId }), value } as WorkshopVote),
-    );
-    setSubmission((s) => (s ? { ...s, upvotes: s.upvotes + upD, downvotes: s.downvotes + downD } : s));
-
     try {
-      setUserVote((await backend.vote(submission.id, value)) ?? undefined);
+      const reconciled = await voteAndReconcile(backend, submission.id, value);
+      setSubmission(reconciled.submission);
+      setUserVote(reconciled.votes.find((vote) => vote.submission === submission.id));
     } catch (caught) {
-      setUserVote(prev);
-      setSubmission((s) => (s ? { ...s, upvotes: s.upvotes - upD, downvotes: s.downvotes - downD } : s));
       setError(errorMessage(caught, "Failed to register your vote"));
     } finally {
       voting.current = false;

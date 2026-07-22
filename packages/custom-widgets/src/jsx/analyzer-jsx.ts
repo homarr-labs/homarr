@@ -7,7 +7,7 @@ import {
 import type { AstNode } from "./analyzer-ast";
 import { containsEscapingCallback, nodeOf, nodesOf } from "./analyzer-ast";
 import { closestCustomJsxComponentName, customJsxTagName, isSafeLiteralCustomJsxUrl } from "./analyzer-language";
-import { CUSTOM_JSX_URL_PROPS, isBlockedCustomJsxProp } from "./policy";
+import { CUSTOM_JSX_BINDING_IDENTIFIER_PATTERN, CUSTOM_JSX_URL_PROPS, isBlockedCustomJsxProp } from "./policy";
 import { getInvalidCustomJsxPropValueReason } from "./runtime-component-policy";
 
 interface AnalyzerJsxContext {
@@ -75,6 +75,7 @@ export function analyzeCustomJsxElement(
     } else if (resolvedName && attributeName === "bind" && !customJsxBindableComponentNames.has(resolvedName)) {
       context.add(attribute, `BINDING_UNAVAILABLE: '${name}' does not have a declarative binding adapter`, "warning");
     }
+    if (attributeName === "bind") analyzeBindAttribute(attribute, context);
     analyzeAttributeValue(resolvedName, attributeName, attribute, depth, bindings, context);
   }
 
@@ -86,6 +87,15 @@ export function analyzeCustomJsxElement(
     }
     context.visit(child, depth + 1, bindings);
   });
+}
+
+function analyzeBindAttribute(attribute: AstNode, context: AnalyzerJsxContext): void {
+  const value = nodeOf(attribute.value);
+  if (value?.type !== "Literal" || typeof value.value !== "string") {
+    context.add(attribute, "bind must use a literal input name");
+  } else if (!CUSTOM_JSX_BINDING_IDENTIFIER_PATTERN.test(value.value)) {
+    context.add(attribute, `Invalid bind input name '${value.value}'`);
+  }
 }
 
 function analyzeAttributeValue(

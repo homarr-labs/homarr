@@ -7,7 +7,40 @@ import type { Root } from "react-dom/client";
 import { MantineProvider } from "@mantine/core";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
-import { PreviewHeader, PreviewResponsePanel, ResponseTree } from "../workbench";
+import { CustomWidgetCodeEditor, PreviewHeader, PreviewResponsePanel, ResponseTree } from "../workbench";
+import type { CustomWidgetEditorMessages } from "../workbench";
+
+vi.mock("../workbench/direct-code-mirror", () => ({
+  default: ({ id, label, labelledBy }: { id: string; label: string; labelledBy: string }) => (
+    <textarea id={id} aria-label={label} aria-labelledby={labelledBy} />
+  ),
+}));
+
+const editorMessages: CustomWidgetEditorMessages = {
+  languageJsx: "JSX",
+  languageJson: "JSON",
+  undo: "Undo",
+  redo: "Redo",
+  components: "Components",
+  componentSearch: "Search components",
+  componentEmpty: "No components",
+  componentCount: (count) => `${count} components`,
+  insertStarter: "Insert starter",
+  format: "Format",
+  copy: "Copy",
+  copied: "Copied",
+  schema: "Schema",
+  schemaTab: "JSON Schema",
+  minimalTab: "Minimal",
+  fullTab: "Full",
+  errors: (count) => `${count} errors`,
+  warnings: (count) => `${count} warnings`,
+  ready: "Ready",
+  position: ({ line, column }) => `${line}:${column}`,
+  characters: (count) => `${count}`,
+  diagnosticsTitle: "Diagnostics",
+  diagnostic: (diagnostic) => diagnostic.code,
+};
 
 let root: Root;
 let host: HTMLDivElement;
@@ -39,6 +72,25 @@ async function render(node: ReactNode) {
 }
 
 describe("Custom Widget workbench UI", () => {
+  test("associates the visible label with the editable CodeMirror control", async () => {
+    await render(
+      <CustomWidgetCodeEditor
+        id="template-editor"
+        label="Template"
+        language="jsx"
+        value="<Text>Hello</Text>"
+        messages={editorMessages}
+        onChange={vi.fn()}
+      />,
+    );
+    await act(async () => Promise.resolve());
+
+    const label = host.querySelector('#template-editor-label[for="template-editor"]');
+    expect(label).not.toBeNull();
+    expect(host.querySelector("#template-editor")?.getAttribute("aria-label")).toBe("Template");
+    expect(host.querySelector("#template-editor")?.getAttribute("aria-labelledby")).toBe("template-editor-label");
+  }, 15_000);
+
   test("renders response data through the Mantine Tree with accessible path actions", async () => {
     await render(
       <ResponseTree

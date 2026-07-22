@@ -13,15 +13,16 @@ if count == 1 then redis.call('PEXPIRE', KEYS[1], ARGV[1]) end
 return { count, redis.call('PTTL', KEYS[1]) }
 `;
 const ACQUIRE_SCRIPT = `
-local count = redis.call('INCR', KEYS[1])
-if count == 1 then redis.call('PEXPIRE', KEYS[1], ARGV[2]) end
-if count > tonumber(ARGV[1]) then redis.call('DECR', KEYS[1]); return 0 end
-return count
+local time = redis.call('TIME')
+local now = (tonumber(time[1]) * 1000) + math.floor(tonumber(time[2]) / 1000)
+redis.call('ZREMRANGEBYSCORE', KEYS[1], '-inf', now)
+if redis.call('ZCARD', KEYS[1]) >= tonumber(ARGV[2]) then return 0 end
+redis.call('ZADD', KEYS[1], now + tonumber(ARGV[3]), ARGV[1])
+redis.call('PEXPIRE', KEYS[1], ARGV[3])
+return 1
 `;
 const RELEASE_SCRIPT = `
-local count = tonumber(redis.call('GET', KEYS[1]) or '0')
-if count <= 1 then redis.call('DEL', KEYS[1]); return 0 end
-return redis.call('DECR', KEYS[1])
+return redis.call('ZREM', KEYS[1], ARGV[1])
 `;
 
 class RedisRequestLimitStore implements RequestLimitStore {
@@ -32,12 +33,12 @@ class RedisRequestLimitStore implements RequestLimitStore {
     return { count: Number(count), retryAfterMs: Number(retryAfterMs) || windowMs };
   }
 
-  public async acquireConcurrency(key: string, limit: number, ttlMs: number) {
-    return Number(await this.redis.eval(ACQUIRE_SCRIPT, 1, key, limit, ttlMs)) > 0;
+  public async acquireConcurrency(key: string, ownerId: string, limit: number, ttlMs: number) {
+    return Number(await this.redis.eval(ACQUIRE_SCRIPT, 1, key, ownerId, limit, ttlMs)) > 0;
   }
 
-  public async releaseConcurrency(key: string) {
-    await this.redis.eval(RELEASE_SCRIPT, 1, key);
+  public async releaseConcurrency(key: string, ownerId: string) {
+    await this.redis.eval(RELEASE_SCRIPT, 1, key, ownerId);
   }
 }
 

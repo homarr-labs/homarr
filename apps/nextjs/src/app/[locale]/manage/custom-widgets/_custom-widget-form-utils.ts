@@ -2,6 +2,7 @@ import { fetchApi } from "@homarr/api/client";
 import {
   customWidgetDefinitionSchema,
   getCustomWidgetDefaultOptions,
+  getCustomWidgetRequiredSecretKinds,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
@@ -31,6 +32,15 @@ export function getChangedSecrets(values: CustomWidgetFormValues) {
       kind: kind as "apiKey" | "username" | "password",
       value,
     }));
+}
+
+export function filterSecretsForSourceAuthentication(
+  secrets: CustomWidgetFormValues["secrets"],
+  sourceId: string,
+  authType: Parameters<typeof getCustomWidgetRequiredSecretKinds>[0],
+) {
+  const requiredKinds = new Set<string>(getCustomWidgetRequiredSecretKinds(authType));
+  return secrets.filter((secret) => secret.sourceId !== sourceId || requiredKinds.has(secret.kind));
 }
 
 export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrCustomWidgetV2) {

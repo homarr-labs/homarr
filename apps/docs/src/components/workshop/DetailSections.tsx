@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useColorMode } from "@docusaurus/theme-common";
 import { IconChevronLeft, IconChevronRight, IconTrash } from "@tabler/icons-react";
 import { Highlight, themes } from "prism-react-renderer";
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@site/src/lib/utils";
+import { clampScreenshotIndex } from "./workshop-utils";
 
 const prismThemes = { light: themes.github, dark: themes.dracula } as const;
 const colorModeKeys = { dark: "dark", light: "light" } as const;
@@ -44,11 +45,19 @@ export const DetailSkeleton = () => (
 
 export const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) => {
   const [idx, setIdx] = useState(0);
+  const selectedIndex = clampScreenshotIndex(idx, urls.length);
+  useEffect(() => setIdx((current) => clampScreenshotIndex(current, urls.length)), [urls.length]);
+
+  if (urls.length === 0) return null;
 
   return (
     <div className="group/gallery w-full">
       <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-muted">
-        <img className="h-full w-full object-contain" src={urls[idx]} alt={`${title} screenshot ${idx + 1}`} />
+        <img
+          className="h-full w-full object-contain"
+          src={urls[selectedIndex]}
+          alt={`${title} screenshot ${selectedIndex + 1}`}
+        />
         {urls.length > 1 && (
           <>
             <button
@@ -75,7 +84,7 @@ export const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: stri
           <legend className="sr-only">Screenshot previews</legend>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {urls.map((url, i) => {
-              const selected = i === idx;
+              const selected = i === selectedIndex;
               return (
                 <button
                   type="button"

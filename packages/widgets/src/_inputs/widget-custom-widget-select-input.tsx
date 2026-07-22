@@ -1,12 +1,25 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Avatar, Badge, Combobox, Group, InputBase, Loader, Stack, Text, useCombobox } from "@mantine/core";
-import { IconApi } from "@tabler/icons-react";
+import {
+  Alert,
+  Anchor,
+  Avatar,
+  Badge,
+  Combobox,
+  Group,
+  InputBase,
+  Loader,
+  Stack,
+  Text,
+  useCombobox,
+} from "@mantine/core";
+import { IconAlertTriangle, IconApi } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -43,7 +56,8 @@ export const WidgetCustomWidgetSelectInput = ({
     [definitions, search],
   );
 
-  const selectedLabel = definitions.find((d) => d.value === currentValue)?.label;
+  const selectedDefinition = definitions.find((definition) => definition.value === currentValue);
+  const selectedLabel = selectedDefinition?.label;
   const combobox = useCombobox({
     onDropdownClose: () => {
       combobox.resetSelectedOption();
@@ -57,6 +71,7 @@ export const WidgetCustomWidgetSelectInput = ({
         store={combobox}
         onOptionSubmit={(val) => {
           const definition = definitions.find((candidate) => candidate.value === val);
+          if (!definition || definition.migrationRequired) return;
           form.setFieldValue(`options.${property}`, val);
           form.setFieldValue("options.configuration", definition?.defaultOptions ?? {});
           form.setFieldValue(
@@ -89,7 +104,12 @@ export const WidgetCustomWidgetSelectInput = ({
           <Combobox.Options>
             <Combobox.Group label={labels("group")}>
               {filteredOptions.map((def) => (
-                <Combobox.Option key={def.value} value={def.value} active={def.value === currentValue}>
+                <Combobox.Option
+                  key={def.value}
+                  value={def.value}
+                  active={def.value === currentValue}
+                  disabled={def.migrationRequired}
+                >
                   <Group wrap="nowrap" gap="sm">
                     <Avatar src={def.iconUrl} size={36} radius="md" color="blue">
                       <IconApi size={18} />
@@ -104,6 +124,11 @@ export const WidgetCustomWidgetSelectInput = ({
                         </Text>
                       )}
                       <Group gap={4} mt={2}>
+                        {def.migrationRequired && (
+                          <Badge size="xs" variant="light" color="yellow">
+                            {labels("migrationRequired")}
+                          </Badge>
+                        )}
                         <Badge size="xs" variant="light">
                           {labels("sources", { count: def.sources.length })}
                         </Badge>
@@ -120,6 +145,19 @@ export const WidgetCustomWidgetSelectInput = ({
           </Combobox.Options>
         </Combobox.Dropdown>
       </Combobox>
+      {selectedDefinition?.migrationRequired && (
+        <Alert
+          color="yellow"
+          variant="light"
+          icon={<IconAlertTriangle size={18} />}
+          title={labels("migrationRequired")}
+        >
+          <Text size="xs">{labels("migrationDescription")}</Text>
+          <Anchor component={Link} href="/manage/custom-widgets" size="xs" fw={600}>
+            {labels("manageMigration")}
+          </Anchor>
+        </Alert>
+      )}
     </Stack>
   );
 };

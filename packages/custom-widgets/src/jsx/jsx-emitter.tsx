@@ -43,7 +43,12 @@ export function emitJsxElement(
   for (const attribute of asNodeArray(opening.attributes, "JSX attributes")) {
     if (attribute.type === "JSXSpreadAttribute") {
       const spread = context.evaluate(asNode(attribute.argument, "spread attribute"), environment, depth + 1);
-      if (spread && typeof spread === "object" && !Array.isArray(spread)) Object.assign(rawProps, spread);
+      if (spread && typeof spread === "object" && !Array.isArray(spread)) {
+        if (Object.hasOwn(spread, "bind")) {
+          throw new SafeJsxError("BIND_SPREAD_NOT_ALLOWED: The bind prop must be an explicit literal JSX attribute");
+        }
+        Object.assign(rawProps, spread);
+      }
       continue;
     }
     if (attribute.type !== "JSXAttribute") throw new SafeJsxError(`Unsupported JSX attribute: ${attribute.type}`);

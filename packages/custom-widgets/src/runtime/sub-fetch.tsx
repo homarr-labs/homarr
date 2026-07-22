@@ -34,6 +34,11 @@ export interface SubFetchProps {
   trigger?: "auto" | "manual";
 }
 
+// Browser timers use signed 32-bit millisecond delays. Whole-second refresh
+// intervals are capped at the largest value that remains below that boundary.
+export const MAX_REFRESH_INTERVAL_SECONDS = 2_147_483;
+export const MAX_REFRESH_INTERVAL_MS = MAX_REFRESH_INTERVAL_SECONDS * 1_000;
+
 export function SubFetch(props: SubFetchProps) {
   const { itemId, previewSessionId, queriesDisabled, port, messages, setQueryState } = useCustomWidgetRuntime();
   const [manualRun, setManualRun] = useState(false);
@@ -155,8 +160,9 @@ export function SubFetch(props: SubFetchProps) {
   return <SubFetchDataContext.Provider value={result?.data}>{content}</SubFetchDataContext.Provider>;
 }
 
-function normalizeRefreshInterval(value: number | undefined): number | false {
-  return value && Number.isFinite(value) && value > 0 ? Math.max(1_000, value * 1_000) : false;
+export function normalizeRefreshInterval(value: number | undefined): number | false {
+  if (!value || !Number.isFinite(value) || value <= 0) return false;
+  return Math.max(1_000, Math.min(value, MAX_REFRESH_INTERVAL_SECONDS) * 1_000);
 }
 
 function renderContent(props: SubFetchProps, data: unknown, metadata: SubFetchMetadata) {

@@ -1,9 +1,26 @@
 import { TRPCError } from "@trpc/server";
 
-import { getCustomWidgetRequiredSecretKinds } from "@homarr/custom-widgets/core";
+import {
+  getCustomWidgetRequiredSecretKinds,
+  hasSameCustomWidgetSourceAuthentication,
+} from "@homarr/custom-widgets/core";
+import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
 
 export function requiredSecretKinds(authType: string) {
   return getCustomWidgetRequiredSecretKinds(authType as Parameters<typeof getCustomWidgetRequiredSecretKinds>[0]);
+}
+
+/**
+ * Credentials may only survive edits that preserve their complete security
+ * boundary. The path is intentionally excluded: credentials are scoped to an
+ * origin, while the network scope and auth destination are part of the binding.
+ */
+export function hasSameSecretBinding(left: CustomWidgetSource, right: CustomWidgetSource) {
+  return (
+    new URL(left.baseUrl).origin === new URL(right.baseUrl).origin &&
+    left.networkScope === right.networkScope &&
+    hasSameCustomWidgetSourceAuthentication(left, right)
+  );
 }
 
 export function assertSecretSources(

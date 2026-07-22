@@ -24,6 +24,7 @@ interface DirectCodeMirrorProps {
   completions: Completion[];
   id: string;
   label: string;
+  labelledBy: string;
   placeholder?: string;
   height: string;
   theme: "light" | "dark";
@@ -121,7 +122,7 @@ function createExtensions(instanceId: string, props: DirectCodeMirrorProps) {
         };
       }),
     ),
-    EditorView.contentAttributes.of({ id: props.id, "aria-label": props.label }),
+    EditorView.contentAttributes.of({ id: props.id, "aria-label": props.label, "aria-labelledby": props.labelledBy }),
     EditorView.editable.of(!props.readOnly),
     EditorState.readOnly.of(props.readOnly),
     keymap.of(props.readOnly ? [] : [indentWithTab]),

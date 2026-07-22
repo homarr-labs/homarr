@@ -11,6 +11,7 @@ import type { AstNode, EvaluationBudgets, InterpreterCallback, SafeJsxBudgets } 
 import { normalizeCustomJsxText, parseCustomJsxTemplate } from "./interpreter-parser";
 import { normalizedProperty, ownProperty } from "./safe-properties";
 import { CUSTOM_JSX_CALLBACK_METHODS } from "./safe-language-policy";
+import { isSafeRegexLiteral } from "./regex-policy";
 
 export { SafeJsxBudgetError, SafeJsxError } from "./interpreter-foundation";
 export type { SafeJsxBudgets } from "./interpreter-foundation";
@@ -51,16 +52,10 @@ class Interpreter {
       case "Literal":
         if (node.regex !== undefined) {
           const regex = node.regex as { pattern?: unknown; flags?: unknown };
-          if (
-            typeof regex.pattern !== "string" ||
-            regex.pattern.length > 128 ||
-            typeof regex.flags !== "string" ||
-            /[^gimsu]/u.test(regex.flags) ||
-            /\\[1-9]|\(\?<[=!]|(?:\+|\*|\{\d+(?:,\d*)?\})\)?(?:\+|\*|\{)/u.test(regex.pattern)
-          ) {
+          if (!isSafeRegexLiteral(regex)) {
             throw new SafeJsxError("UNSAFE_REGEX: Invalid regular expression literal");
           }
-          return new RegExp(regex.pattern, regex.flags);
+          return new RegExp(regex.pattern as string, regex.flags as string);
         }
         if (typeof node.value === "bigint")
           throw new SafeJsxError("BIGINT_NOT_SUPPORTED: Use Number for widget values");

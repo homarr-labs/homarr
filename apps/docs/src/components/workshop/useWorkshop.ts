@@ -7,7 +7,7 @@ import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 import { errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
 
-import { voteDelta } from "./workshop-utils";
+import { voteAndReconcile } from "./workshop-utils";
 
 export type SortKey = "top" | "new" | "recent" | "discussed";
 export type TypeFilter = "all" | "yours" | SubmissionType;
@@ -131,58 +131,32 @@ export const useWorkshop = (workshopUrl: string) => {
       if (votingIds.current.has(submissionId)) return;
       votingIds.current.add(submissionId);
 
-      const userId = await requireUserId("vote");
-      if (!userId) {
+      if (!(await requireUserId("vote"))) {
         votingIds.current.delete(submissionId);
         return;
       }
 
-      const prev = votes[submissionId];
-      const isToggleOff = prev?.value === value;
-      const [upD, downD] = voteDelta(prev?.value, value);
-
-      setVotes((v) => {
-        const next = { ...v };
-        if (isToggleOff) delete next[submissionId];
-        else
-          next[submissionId] = {
-            ...(prev ?? { id: "", submission: submissionId, user: userId, created: "", updated: "" }),
-            value,
-          } as WorkshopVote;
-        return next;
-      });
-      setSubmissions((s) =>
-        s.map((sub) =>
-          sub.id === submissionId ? { ...sub, upvotes: sub.upvotes + upD, downvotes: sub.downvotes + downD } : sub,
-        ),
-      );
-
       try {
-        const saved = await backend.vote(submissionId, value);
-        setVotes((current) => {
-          const next = { ...current };
-          if (saved) next[submissionId] = saved;
-          else delete next[submissionId];
-          return next;
-        });
-      } catch (caught) {
-        setVotes((v) => {
-          const next = { ...v };
-          if (prev) next[submissionId] = prev;
-          else delete next[submissionId];
-          return next;
-        });
-        setSubmissions((s) =>
-          s.map((sub) =>
-            sub.id === submissionId ? { ...sub, upvotes: sub.upvotes - upD, downvotes: sub.downvotes - downD } : sub,
+        const reconciled = await voteAndReconcile(backend, submissionId, value);
+        setVotes(Object.fromEntries(reconciled.votes.map((row) => [row.submission, row])));
+        setSubmissions((current) =>
+          current.map((submission) =>
+            submission.id === submissionId
+              ? {
+                  ...submission,
+                  upvotes: reconciled.submission.upvotes,
+                  downvotes: reconciled.submission.downvotes,
+                }
+              : submission,
           ),
         );
+      } catch (caught) {
         setError(errorMessage(caught, "Failed to register your vote"));
       } finally {
         votingIds.current.delete(submissionId);
       }
     },
-    [backend, votes, requireUserId],
+    [backend, requireUserId],
   );
 
   const report = useCallback(

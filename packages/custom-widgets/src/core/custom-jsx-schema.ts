@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 
 import { validateCustomJsxTemplate } from "../jsx/analyzer";
+import { CUSTOM_JSX_BINDING_IDENTIFIER_PATTERN } from "../jsx/policy";
 import { validateCredentialFreeExport, validatePrototypeKeys } from "./definition-security";
 import { customWidgetOptionsSchema } from "./options-schema";
 import {
@@ -20,7 +21,10 @@ export const customWidgetBindingIdentifierSchema = z
   .string()
   .min(1)
   .max(64)
-  .regex(/^[A-Za-z][A-Za-z0-9_-]*$/u, "Binding names must start with a letter and contain letters, numbers, - or _");
+  .regex(
+    CUSTOM_JSX_BINDING_IDENTIFIER_PATTERN,
+    "Binding names must start with a letter and contain letters, numbers, - or _",
+  );
 
 export const customJsxTemplateSchema = z
   .string()
@@ -77,8 +81,8 @@ export const customWidgetDefinitionSchema = z
   })
   .superRefine((definition, ctx) => {
     validateRequests(definition, ctx);
+    validateCaseInsensitiveSourceIds(definition.sources, ctx);
     validateTemplateRequests(definition.template, definition.requests, ctx);
-    validateTemplateBindings(definition.template, ctx);
     validateCredentialFreeExport(definition, ctx);
     validatePrototypeKeys(definition, ctx);
   });
@@ -144,6 +148,23 @@ function validateRequests(definition: Definition, ctx: z.RefinementCtx) {
   }
 }
 
+function validateCaseInsensitiveSourceIds(sources: Definition["sources"], ctx: z.RefinementCtx) {
+  const seen = new Map<string, string>();
+  for (const sourceId of Object.keys(sources)) {
+    const normalized = sourceId.toLowerCase();
+    const existing = seen.get(normalized);
+    if (existing) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["sources", sourceId],
+        message: `Source ID '${sourceId}' conflicts case-insensitively with '${existing}'`,
+      });
+    } else {
+      seen.set(normalized, sourceId);
+    }
+  }
+}
+
 function validateTemplateRequests(template: string, requests: Record<string, CustomJsxRequest>, ctx: z.RefinementCtx) {
   for (const match of template.matchAll(/<(SubFetch|ActionButton|ToggleSwitch)\b([^>]*)>/gu)) {
     const component = match[1] as "SubFetch" | "ActionButton" | "ToggleSwitch";
@@ -166,15 +187,6 @@ function validateTemplateRequests(template: string, requests: Record<string, Cus
       ctx.addIssue({ code: "custom", path: ["template"], message: `${component} requires a ${expectedKind} request` });
     else if (component === "SubFetch" && request.trigger !== "manual")
       ctx.addIssue({ code: "custom", path: ["template"], message: `SubFetch requires '${requestId}' to be manual` });
-  }
-}
-
-function validateTemplateBindings(template: string, ctx: z.RefinementCtx) {
-  for (const match of template.matchAll(/<[A-Z][A-Za-z0-9.]*(?:\s[^<>]*?)?\bbind\s*=\s*(?:"([^"]+)"|'([^']+)'|\{)/gu)) {
-    const inputName = match[1] ?? match[2];
-    if (!inputName) ctx.addIssue({ code: "custom", path: ["template"], message: "bind must use a literal input name" });
-    else if (!customWidgetBindingIdentifierSchema.safeParse(inputName).success)
-      ctx.addIssue({ code: "custom", path: ["template"], message: `Invalid bind input name '${inputName}'` });
   }
 }
 

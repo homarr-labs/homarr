@@ -23,6 +23,7 @@ import {
   CUSTOM_JSX_CALLBACK_METHODS,
   CUSTOM_JSX_SAFE_VALUE_METHODS,
 } from "./safe-language-policy";
+import { isSafeRegexLiteral } from "./regex-policy";
 
 export type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
 
@@ -153,7 +154,7 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
       case "Literal":
         if (typeof node.value === "bigint") add(node, "BIGINT_NOT_SUPPORTED: Use Number for widget values");
         if (node.regex !== undefined && !isSafeRegexLiteral(node.regex))
-          add(node, "UNSAFE_REGEX: Use a bounded regex without lookbehind, backreferences, or nested quantifiers");
+          add(node, "UNSAFE_REGEX: Use a conservative regex without repeated alternatives or variable quantifiers");
         return;
       case "Identifier": {
         const name = String(node.name ?? "");
@@ -232,7 +233,7 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
       }
       case "CallExpression": {
         const callee = nodeOf(node.callee);
-        const arguments_ = nodesOf(node.arguments);
+        const callArguments = nodesOf(node.arguments);
         if (node.optional) {
           add(node, "CALL_TARGET_NOT_ALLOWED: Optional calls are not supported");
         }
@@ -251,7 +252,7 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
           add(callee, "CALL_TARGET_NOT_ALLOWED: Only documented safe helpers and value methods can be called");
         }
         if (method && CUSTOM_JSX_CALLBACK_METHODS.has(method)) {
-          const callback = arguments_[0];
+          const callback = callArguments[0];
           if (!callback) {
             add(node, `CALLBACK_VALUE_NOT_ALLOWED: '${method}' requires a callback`);
           } else if (["reduce", "sort"].includes(method) && callback.type !== "ArrowFunctionExpression") {
@@ -260,7 +261,7 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
             add(callback, `CALLBACK_VALUE_NOT_ALLOWED: '${method}' requires an inline arrow or safe helper callback`);
           }
         }
-        arguments_.forEach((argument, argumentIndex) => {
+        callArguments.forEach((argument, argumentIndex) => {
           if (argument.type === "SpreadElement") add(argument, "Spread call arguments are not supported");
           else if (
             argument.type === "ArrowFunctionExpression" &&
@@ -317,12 +318,4 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
   }
 
   return diagnostics;
-}
-
-function isSafeRegexLiteral(regex: unknown): boolean {
-  if (!regex || typeof regex !== "object") return false;
-  const { pattern, flags } = regex as { pattern?: unknown; flags?: unknown };
-  if (typeof pattern !== "string" || pattern.length > 128 || typeof flags !== "string" || /[^gimsu]/u.test(flags))
-    return false;
-  return !/\\[1-9]|\(\?<[=!]|(?:\+|\*|\{\d+(?:,\d*)?\})\)?(?:\+|\*|\{)/u.test(pattern);
 }

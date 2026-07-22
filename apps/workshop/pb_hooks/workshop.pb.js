@@ -1,5 +1,43 @@
 /// <reference path="../pb_data/types.d.ts" />
 
+onBootstrap((event) => {
+  event.next();
+  const users = event.app.findCollectionByNameOrId("users");
+  const clientId = String($os.getenv("GITHUB_CLIENT_ID") || "").trim();
+  const clientSecret = String($os.getenv("GITHUB_CLIENT_SECRET") || "").trim();
+  const configured = Boolean(clientId && clientSecret);
+  users.oauth2.enabled = configured;
+  users.oauth2.providers = configured ? [{ name: "github", clientId, clientSecret }] : [];
+  event.app.save(users);
+});
+
+onRecordCreateRequest((event) => {
+  const { validateAndNormalizeSubmission } = require(`${__hooks}/workshop-utils.js`);
+  validateAndNormalizeSubmission(event.record);
+  event.record.set("revision", 1);
+  event.record.set("changelog", "");
+  event.record.set("outdated", false);
+  event.next();
+}, "submissions");
+
+onRecordUpdateRequest((event) => {
+  const { requestBodyValue, validateAndNormalizeSubmission } = require(`${__hooks}/workshop-utils.js`);
+  const original = event.record.original();
+  const currentRevision = original.getInt("revision");
+  const expectedRevision = Number(requestBodyValue(event, "expectedRevision"));
+  if (!Number.isSafeInteger(expectedRevision) || expectedRevision !== currentRevision) {
+    rejectRequest("Submission changed since it was read");
+  }
+  validateAndNormalizeSubmission(event.record);
+  event.record.set("revision", currentRevision + 1);
+  event.next();
+}, "submissions");
+
+onRecordCreateRequest((event) => {
+  event.record.set("status", "open");
+  event.next();
+}, "reports");
+
 onRecordAfterCreateSuccess((event) => {
   try {
     const votes = event.app.findCollectionByNameOrId("votes");
@@ -14,34 +52,9 @@ onRecordAfterCreateSuccess((event) => {
   event.next();
 }, "submissions");
 
-const escapeHtml = (value) =>
-  String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-
-const emailTemplate = (filename) => {
-  const hooksPath = $os.getenv("WORKSHOP_PB_HOOKS_DIR") || $filepath.dirname(__filepath);
-  return $os.readFile($filepath.join(hooksPath, filename));
-};
-
-const sendEmail = (app, recipientEmail, subject, text, html) => {
-  const sender = app.settings().meta;
-  app.newMailClient().send(
-    new MailerMessage({
-      from: { address: sender.senderAddress, name: sender.senderName },
-      to: [{ address: recipientEmail }],
-      subject,
-      text,
-      html,
-    }),
-  );
-};
-
 onRecordAfterCreateSuccess((event) => {
   try {
+    const { emailTemplate, escapeHtml, sendEmail } = require(`${__hooks}/workshop-utils.js`);
     const submission = event.app.findRecordById("submissions", event.record.get("submission"));
     const recipient = event.app.findRecordById("users", submission.get("author"));
     const commenter = event.app.findRecordById("users", event.record.get("author"));
@@ -78,10 +91,11 @@ onRecordAfterCreateSuccess((event) => {
 
 onRecordAfterCreateSuccess((event) => {
   try {
+    const { emailTemplate, escapeHtml, sendEmail } = require(`${__hooks}/workshop-utils.js`);
     const submission = event.app.findRecordById("submissions", event.record.get("submission"));
     const reporter = event.app.findRecordById("users", event.record.get("reporter"));
     const publicOrigin = $os.getenv("WORKSHOP_PUBLIC_ORIGIN").replace(/\/$/, "");
-    const admins = event.app.findAllRecords("users").filter((user) => user.getBool("isAdmin") && Boolean(user.email()));
+    const admins = event.app.findRecordsByFilter("users", "isAdmin = true && email != ''", "", 100, 0);
 
     if (!publicOrigin || admins.length === 0) {
       event.next();
@@ -122,6 +136,7 @@ onRecordAfterCreateSuccess((event) => {
 }, "reports");
 
 onRecordDeleteRequest((event) => {
+  const { emailTemplate, escapeHtml, sendEmail } = require(`${__hooks}/workshop-utils.js`);
   const submissionId = event.record.id;
   const submissionTitle = event.record.getString("title");
   const authorId = event.record.get("author");

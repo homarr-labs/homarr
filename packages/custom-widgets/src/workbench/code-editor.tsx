@@ -100,7 +100,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
       description={props.description}
       error={props.error}
       required={props.required}
-      labelProps={{ htmlFor: props.id }}
+      labelProps={{ id: `${props.id}-label`, htmlFor: props.id }}
       inputWrapperOrder={["label", "description", "input", "error"]}
     >
       <div className={classes.root}>
@@ -152,7 +152,8 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
           {editorReady ? (
             <Suspense fallback={<EditorLoader />}>
               <LazyCodeMirror
-                id={`${props.id}-root`}
+                id={props.id}
+                labelledBy={`${props.id}-label`}
                 value={props.value}
                 language={props.language}
                 diagnostics={diagnostics}

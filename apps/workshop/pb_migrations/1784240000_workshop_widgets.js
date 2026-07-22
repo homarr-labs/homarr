@@ -1,38 +1,66 @@
 /// <reference path="../pb_data/types.d.ts" />
 
+const cloneJson = (value) => JSON.parse(JSON.stringify(value));
+
 migrate(
   (app) => {
+    let usersExisted = true;
     let users;
     try {
       users = app.findCollectionByNameOrId("users");
     } catch {
+      usersExisted = false;
       users = new Collection({ type: "auth", name: "users" });
     }
 
-    users.passwordAuth = { enabled: false };
-    if (!users.fields.getByName("displayName"))
-      users.fields.add(new TextField({ name: "displayName", required: true, min: 1, max: 100 }));
-    if (!users.fields.getByName("avatarUrl")) users.fields.add(new URLField({ name: "avatarUrl" }));
-    if (!users.fields.getByName("avatar"))
-      users.fields.add(
-        new FileField({
-          name: "avatar",
-          maxSelect: 1,
-          maxSize: 2_097_152,
-          mimeTypes: ["image/png", "image/jpeg", "image/webp"],
-        }),
-      );
-    if (!users.fields.getByName("githubUsername"))
-      users.fields.add(new TextField({ name: "githubUsername", max: 100 }));
-    if (!users.fields.getByName("githubProfileUrl")) users.fields.add(new URLField({ name: "githubProfileUrl" }));
-    if (!users.fields.getByName("isAdmin")) users.fields.add(new BoolField({ name: "isAdmin" }));
+    const settings = app.settings();
+    const stateCollection = new Collection({
+      type: "base",
+      name: "workshop_migration_state",
+      listRule: null,
+      viewRule: null,
+      createRule: null,
+      updateRule: null,
+      deleteRule: null,
+      fields: [{ type: "text", name: "snapshot", required: true, max: 1_000_000 }],
+    });
+    app.save(stateCollection);
+    const state = {
+      usersExisted,
+      users: usersExisted
+        ? {
+            passwordAuth: cloneJson(users.passwordAuth),
+            oauth2: cloneJson(users.oauth2),
+            listRule: users.listRule,
+            viewRule: users.viewRule,
+            createRule: users.createRule,
+            updateRule: users.updateRule,
+            deleteRule: users.deleteRule,
+          }
+        : null,
+      addedUserFields: [],
+      rateLimits: cloneJson(settings.rateLimits),
+    };
+    const addUserField = (field) => {
+      if (users.fields.getByName(field.name)) return;
+      users.fields.add(field);
+      state.addedUserFields.push(field.name);
+    };
 
-    const githubClientId = $os.getenv("GITHUB_CLIENT_ID");
-    const githubClientSecret = $os.getenv("GITHUB_CLIENT_SECRET");
-    if (githubClientId && githubClientSecret) {
-      users.oauth2.enabled = true;
-      users.oauth2.providers = [{ name: "github", clientId: githubClientId, clientSecret: githubClientSecret }];
-    }
+    users.passwordAuth = { enabled: false };
+    addUserField(new TextField({ name: "displayName", required: true, min: 1, max: 100 }));
+    addUserField(new URLField({ name: "avatarUrl" }));
+    addUserField(
+      new FileField({
+        name: "avatar",
+        maxSelect: 1,
+        maxSize: 2_097_152,
+        mimeTypes: ["image/png", "image/jpeg", "image/webp"],
+      }),
+    );
+    addUserField(new TextField({ name: "githubUsername", max: 100 }));
+    addUserField(new URLField({ name: "githubProfileUrl" }));
+    addUserField(new BoolField({ name: "isAdmin" }));
 
     const adminRule = "@request.auth.isAdmin = true";
     users.listRule = "";
@@ -41,6 +69,9 @@ migrate(
     users.updateRule = "id = @request.auth.id && @request.body.isAdmin:isset = false";
     users.deleteRule = null;
     app.save(users);
+    const stateRecord = new Record(stateCollection);
+    stateRecord.set("snapshot", JSON.stringify(state));
+    app.save(stateRecord);
 
     const submissions = new Collection({
       type: "base",
@@ -75,6 +106,18 @@ migrate(
     submissions.addIndex("idx_submissions_author", false, "author", "");
     submissions.addIndex("idx_submissions_created", false, "created", "");
     app.save(submissions);
+    app
+      .db()
+      .newQuery(
+        `CREATE TRIGGER submissions_revision_cas
+         BEFORE UPDATE ON submissions
+         FOR EACH ROW
+         WHEN NEW.revision != OLD.revision + 1
+         BEGIN
+           SELECT RAISE(ABORT, 'submission revision must increment exactly once');
+         END`,
+      )
+      .execute();
 
     const votes = new Collection({
       type: "base",
@@ -195,7 +238,6 @@ migrate(
     });
     app.save(listings);
 
-    const settings = app.settings();
     settings.rateLimits.enabled = true;
     settings.rateLimits.rules = [
       ...settings.rateLimits.rules.filter(
@@ -209,10 +251,43 @@ migrate(
     app.save(settings);
   },
   (app) => {
+    let stateCollection;
+    let stateRecord;
+    try {
+      stateCollection = app.findCollectionByNameOrId("workshop_migration_state");
+      stateRecord = app.findFirstRecordByFilter(stateCollection.id, "");
+    } catch {
+      throw new Error("Workshop migration cannot be rolled back safely because its state snapshot is missing");
+    }
+    const state = JSON.parse(stateRecord.getString("snapshot"));
     for (const name of ["workshop_listings", "reports", "comments", "votes", "submissions"]) {
       try {
         app.delete(app.findCollectionByNameOrId(name));
       } catch {}
     }
+
+    const settings = app.settings();
+    settings.rateLimits.enabled = state.rateLimits.enabled;
+    settings.rateLimits.rules = state.rateLimits.rules;
+    app.save(settings);
+
+    const users = app.findCollectionByNameOrId("users");
+    if (state.usersExisted) {
+      users.passwordAuth = state.users.passwordAuth;
+      users.oauth2 = state.users.oauth2;
+      users.listRule = state.users.listRule;
+      users.viewRule = state.users.viewRule;
+      users.createRule = state.users.createRule;
+      users.updateRule = state.users.updateRule;
+      users.deleteRule = state.users.deleteRule;
+      for (const name of state.addedUserFields) {
+        const field = users.fields.getByName(name);
+        if (field) users.fields.removeById(field.id);
+      }
+      app.save(users);
+    } else {
+      app.delete(users);
+    }
+    app.delete(stateCollection);
   },
 );
