@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import { resolveServerUrl } from "@homarr/common";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { sendPingRequestAsync } from "@homarr/ping";
 
@@ -27,7 +28,7 @@ export const appRouter = createTRPCRouter({
       });
     }
 
-    const pingUrl = app.pingUrl ?? app.href;
+    const pingUrl = resolveServerUrl(app);
 
     if (!pingUrl) {
       throw new TRPCError({

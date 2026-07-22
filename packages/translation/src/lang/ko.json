@@ -1513,7 +1513,9 @@
           "invalidFileName": "",
           "fileTooLarge": "",
           "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "groupNameTaken": "",
+          "appHrefInvalid": "",
+          "appHrefConsecutiveSlashes": ""
         }
       }
     },

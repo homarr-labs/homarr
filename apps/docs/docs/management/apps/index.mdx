@@ -38,13 +38,17 @@ An optional description that can be shown as tooltip on the app widget.
 
 ### URL
 
-The URL to the website you want to link to. Clicking on the app widget or bookmark will open this URL.
+The URL to the website you want to link to. Clicking on the app widget or bookmark will open this URL. This can be a full address or a path like `/grafana/`, which resolves against the hostname you're currently using — handy when Homarr answers on more than one hostname.
 
 ### Ping URL
 
 When you want to use another url for the simple status check you can set it here. 
 This will allow you to set a different URL for the ping than the URL that is opened when clicking on the app widget.
 It's useful when you want to ping the service internally for example with a custom ip but open the website externally.
+
+:::note
+The status check can't use a path-only URL. Set a full Ping URL here if you want the indicator for such an app.
+:::
 
 ## List of apps
 

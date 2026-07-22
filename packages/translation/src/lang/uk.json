@@ -1513,7 +1513,9 @@
           "invalidFileName": "",
           "fileTooLarge": "Файл завеликий, максимальний розмір становить {maxSize}",
           "invalidConfiguration": "Невірна конфігурація",
-          "groupNameTaken": "Назва групи вже зайнята"
+          "groupNameTaken": "Назва групи вже зайнята",
+          "appHrefInvalid": "Має бути абсолютний URL (https://example.com) або шлях, що починається з / (наприклад, /cockpit/)",
+          "appHrefConsecutiveSlashes": "Шлях не повинен містити підряд кілька скісних рисок"
         }
       }
     },
