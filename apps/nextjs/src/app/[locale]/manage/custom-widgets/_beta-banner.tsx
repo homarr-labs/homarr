@@ -1,3 +1,5 @@
+"use client";
+
 import { Alert, Anchor, Text } from "@mantine/core";
 import { IconFlask } from "@tabler/icons-react";
 
