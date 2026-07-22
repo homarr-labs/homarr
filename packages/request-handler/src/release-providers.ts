@@ -788,12 +788,12 @@ const getLinuxServerIOReleaseAsync = async (
     };
 
   // LSIO's /api/v1/images only exposes the single latest version, so a version
-  // filter can never surface an older release (#4351). When the image has a GitHub
-  // repository, delegate to the GitHub release provider to fetch the real release
-  // history and apply the filter, while keeping LSIO's own image metadata. Any
-  // GitHub failure (no repo, no releases, rate limit) falls back to the LSIO latest.
+  // filter can never surface an older release (#4351). Only when a filter is set,
+  // delegate to the image's GitHub repository to fetch the real release history,
+  // while keeping LSIO's own image metadata. Any GitHub failure (no repo, no
+  // releases, rate limit) falls back to the LSIO latest.
   const githubRepo = parseGithubRepo(release.github_url);
-  if (githubRepo) {
+  if (versionRegex && githubRepo) {
     const githubResult = await getGithubReleaseAsync(getReleaseProviderDefaultUrl("github"), githubRepo, versionRegex);
     if (githubResult.success) {
       return {

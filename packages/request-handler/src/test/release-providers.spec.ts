@@ -126,6 +126,88 @@ describe("getLatestMatchingReleaseAsync for GitHub Container Registry", () => {
   });
 });
 
+describe("getLatestMatchingReleaseAsync for LinuxServer.io", () => {
+  beforeEach(() => {
+    mockedFetch.mockReset();
+  });
+
+  test("uses the LinuxServer.io latest release without fetching GitHub history", async () => {
+    mockedFetch.mockResolvedValueOnce(createLinuxServerResponse());
+
+    const result = await getLatestMatchingReleaseAsync({
+      id: "tautulli",
+      provider: "linuxServerIO",
+      identifier: "lscr.io/linuxserver/tautulli:latest",
+    });
+
+    expect(result).toEqual({
+      success: true,
+      data: {
+        latestRelease: "v2.17.2-ls237",
+        latestReleaseAt: new Date("2026-07-17T00:25:42.000Z"),
+        releaseDescription: "Rebase to Alpine 3.24.",
+        projectUrl: "https://github.com/linuxserver/docker-tautulli",
+        projectDescription: "Tautulli image",
+        isArchived: false,
+        createdAt: new Date("2015-08-10T00:00:00.000Z"),
+        starsCount: 934,
+      },
+    });
+    expect(mockedFetch).toHaveBeenCalledOnce();
+    expectUrl(0, "https://api.linuxserver.io/api/v1/images");
+  });
+
+  test("fetches GitHub history when a version filter requires it", async () => {
+    mockedFetch.mockImplementation(async (input) => {
+      const url = new URL(input.toString());
+
+      if (url.origin === "https://api.linuxserver.io") return createLinuxServerResponse();
+      if (url.pathname === "/repos/linuxserver/docker-tautulli/releases") {
+        return createJsonResponse([
+          {
+            tag_name: "v2.16.0-ls200",
+            published_at: "2026-01-10T12:00:00.000Z",
+            html_url: "https://github.com/linuxserver/docker-tautulli/releases/tag/v2.16.0-ls200",
+            body: "Older supported image",
+            prerelease: false,
+          },
+        ]);
+      }
+      if (url.pathname === "/repos/linuxserver/docker-tautulli") {
+        return createJsonResponse({
+          html_url: "https://github.com/linuxserver/docker-tautulli",
+          description: "GitHub description",
+          fork: false,
+          archived: false,
+          created_at: "2015-08-10T00:00:00.000Z",
+          stargazers_count: 934,
+          open_issues_count: 2,
+          forks_count: 80,
+        });
+      }
+
+      return createJsonResponse({ message: "Not Found" }, { status: 404, statusText: "Not Found" });
+    });
+
+    const result = await getLatestMatchingReleaseAsync({
+      id: "tautulli",
+      provider: "linuxServerIO",
+      identifier: "linuxserver/tautulli",
+      versionRegex: "^v2\\.16\\..+-ls[0-9]+$",
+    });
+
+    expect(result).toEqual({
+      success: true,
+      data: expect.objectContaining({
+        latestRelease: "v2.16.0-ls200",
+        projectUrl: "https://github.com/linuxserver/docker-tautulli",
+        projectDescription: "Tautulli image",
+      }),
+    });
+    expect(mockedFetch).toHaveBeenCalledTimes(3);
+  });
+});
+
 interface MockGhcrResponsesInput {
   registryOrigin?: string;
   repositoryName: string;
@@ -182,6 +264,27 @@ const createJsonResponse = (body: unknown, init: JsonResponseInit = {}) =>
     statusText: init.statusText,
     headers: {
       "content-type": "application/json",
+    },
+  });
+
+const createLinuxServerResponse = () =>
+  createJsonResponse({
+    data: {
+      repositories: {
+        linuxserver: [
+          {
+            name: "tautulli",
+            initial_date: "2015-08-10",
+            github_url: "https://github.com/linuxserver/docker-tautulli",
+            description: "Tautulli image",
+            version: "v2.17.2-ls237",
+            version_timestamp: "2026-07-17 00:25:42+00:00",
+            stars: 934,
+            deprecated: false,
+            changelog: [{ date: "2026-07-05", desc: "Rebase to Alpine 3.24." }],
+          },
+        ],
+      },
     },
   });
 
