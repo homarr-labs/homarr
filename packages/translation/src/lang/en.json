@@ -4359,11 +4359,12 @@
         },
         "layout": {
           "title": "Layout",
-          "responsive": {
-            "title": "Responsive layouts",
-            "action": {
-              "add": "Add layout"
-            }
+          "desktop": {
+            "title": "Desktop layout",
+            "description": "Configure the layout used on desktop and larger screens."
+          },
+          "mobile": {
+            "description": "On mobile, items are automatically arranged in two columns and cannot be moved or resized. Categories and dynamic sections are flattened into the item list."
           }
         },
         "background": {

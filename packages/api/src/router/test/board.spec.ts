@@ -4,7 +4,7 @@ import { describe, expect, it, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import type { Database, InferInsertModel } from "@homarr/db";
-import { and, eq, not } from "@homarr/db";
+import { and, eq } from "@homarr/db";
 import {
   boardGroupPermissions,
   boards,
@@ -1324,100 +1324,7 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
   );
 });
 
-const createExistingLayout = (id: string) => ({
-  id,
-  name: "Base",
-  columnCount: 10,
-  breakpoint: 0,
-});
-const createNewLayout = (columnCount: number) => ({
-  id: createId(),
-  name: "New layout",
-  columnCount,
-  breakpoint: 1400,
-});
-describe("saveLayouts should save layout changes", () => {
-  test("should add layout when not present in database", async () => {
-    // Arrange
-    const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
-
-    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
-    const newLayout = createNewLayout(12);
-
-    // Act
-    await caller.saveLayouts({
-      id: boardId,
-      layouts: [createExistingLayout(layoutId), newLayout],
-    });
-
-    // Assert
-    const layout = await db.query.layouts.findFirst({
-      where: not(eq(layouts.id, layoutId)),
-    });
-
-    const definedLayout = expectToBeDefined(layout);
-    expect(definedLayout.name).toBe(newLayout.name);
-    expect(definedLayout.columnCount).toBe(newLayout.columnCount);
-    expect(definedLayout.breakpoint).toBe(newLayout.breakpoint);
-  });
-  test("should add items and dynamic sections generated from grid-algorithm when new layout is added", async () => {
-    // Arrange
-    const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
-
-    const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
-    const assignments = await createItemsAndSectionsAsync(db, {
-      boardId,
-      layoutId,
-      sectionId,
-    });
-    const newLayout = createNewLayout(3);
-
-    // Act
-    await caller.saveLayouts({
-      id: boardId,
-      layouts: [createExistingLayout(layoutId), newLayout],
-    });
-
-    // Assert
-    const layout = await db.query.layouts.findFirst({
-      where: not(eq(layouts.id, layoutId)),
-    });
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await expectLayoutForRootLayoutAsync(db, sectionId, layout!.id, {
-      ...assignments.inRoot,
-      a: itemId,
-    });
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layout!.id, assignments.inDynamicSection);
-  });
-  test("should update layout when present in input", async () => {
-    // Arrange
-    const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
-
-    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
-    const updatedLayout = createExistingLayout(layoutId);
-    updatedLayout.breakpoint = 1400;
-    updatedLayout.name = "Updated layout";
-
-    // Act
-    await caller.saveLayouts({
-      id: boardId,
-      layouts: [updatedLayout],
-    });
-
-    // Assert
-    const layout = await db.query.layouts.findFirst({
-      where: eq(layouts.id, layoutId),
-    });
-
-    const definedLayout = expectToBeDefined(layout);
-    expect(definedLayout.name).toBe(updatedLayout.name);
-    expect(definedLayout.columnCount).toBe(updatedLayout.columnCount);
-    expect(definedLayout.breakpoint).toBe(updatedLayout.breakpoint);
-  });
+describe("saveLayout should save the desktop layout", () => {
   test("should update position of items when column count changes", async () => {
     // Arrange
     const db = createDb();
@@ -1429,13 +1336,10 @@ describe("saveLayouts should save layout changes", () => {
       layoutId,
       sectionId,
     });
-    const updatedLayout = createExistingLayout(layoutId);
-    updatedLayout.columnCount = 3;
-
     // Act
-    await caller.saveLayouts({
+    await caller.saveLayout({
       id: boardId,
-      layouts: [updatedLayout],
+      columnCount: 3,
     });
 
     // Assert
@@ -1445,37 +1349,55 @@ describe("saveLayouts should save layout changes", () => {
     });
     await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layoutId, assignments.inDynamicSection);
   });
-  test("should remove layout when not present in input", async () => {
+  test("should keep the desktop layout and remove legacy responsive layouts", async () => {
     // Arrange
     const db = createDb();
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
-    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const { boardId, layoutId, itemId, sectionId } = await createFullBoardAsync(db, "default");
+    const desktopLayoutId = createId();
+    await db.insert(layouts).values({
+      id: desktopLayoutId,
+      boardId,
+      name: "Large",
+      columnCount: 16,
+      breakpoint: 1200,
+    });
+    await db.insert(itemLayouts).values({
+      itemId,
+      sectionId,
+      layoutId: desktopLayoutId,
+      xOffset: 0,
+      yOffset: 0,
+      width: 1,
+      height: 1,
+    });
 
     // Act
-    await caller.saveLayouts({
+    await caller.saveLayout({
       id: boardId,
-      layouts: [createNewLayout(12)],
+      columnCount: 16,
     });
 
     // Assert
-    const layout = await db.query.layouts.findFirst({
-      where: eq(layouts.id, layoutId),
-    });
-    expect(layout).toBeUndefined();
+    const savedLayouts = await db.query.layouts.findMany({ where: eq(layouts.boardId, boardId) });
+    expect(savedLayouts).toEqual([
+      expect.objectContaining({ id: desktopLayoutId, name: "Base", columnCount: 16, breakpoint: 0 }),
+    ]);
+    expect(savedLayouts.some((layout) => layout.id === layoutId)).toBe(false);
   });
   test("should fail when board not found", async () => {
     // Arrange
     const db = createDb();
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
-    const { layoutId } = await createFullBoardAsync(db, "default");
+    await createFullBoardAsync(db, "default");
 
     // Act
     const actAsync = async () =>
-      await caller.saveLayouts({
+      await caller.saveLayout({
         id: createId(),
-        layouts: [createExistingLayout(layoutId)],
+        columnCount: 12,
       });
 
     // Assert

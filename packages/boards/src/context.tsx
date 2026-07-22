@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -74,38 +74,26 @@ export const useOptionalBoard = () => {
 };
 
 export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]) => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  if (typeof window === "undefined") return board.layouts.at(0)!.id;
-
-  const sortedLayouts = board.layouts.toSorted((layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint);
-
-  // Fallback to smallest if none exists with breakpoint smaller than window width
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return sortedLayouts.find((layout) => layout.breakpoint <= window.innerWidth)?.id ?? sortedLayouts.at(0)!.id;
+  return getDesktopLayout(board).id;
 };
 
-export const useCurrentLayout = () => {
-  const board = useRequiredBoard();
-  const [currentLayout, setCurrentLayout] = useState(getCurrentLayout(board));
+export const getDesktopLayout = (board: RouterOutputs["board"]["getBoardByName"]) => {
+  const layout = board.layouts
+    .toSorted(
+      (layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint || layoutB.columnCount - layoutA.columnCount,
+    )
+    .at(0);
 
-  const onResize = useCallback(() => {
-    setCurrentLayout(getCurrentLayout(board));
-  }, [board]);
+  if (!layout) {
+    throw new Error("Board must have a layout");
+  }
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      window.removeEventListener("resize", onResize);
-    };
-  }, [onResize]);
-
-  return currentLayout;
+  return layout;
 };
 
-export const getBoardLayouts = (board: RouterOutputs["board"]["getBoardByName"]) =>
-  board.layouts.map((layout) => layout.id);
+export const useCurrentLayout = () => getCurrentLayout(useRequiredBoard());
+
+export const getBoardLayouts = (board: RouterOutputs["board"]["getBoardByName"]) => [getCurrentLayout(board)];
 
 export const useLayouts = () => {
   const board = useRequiredBoard();

@@ -38,6 +38,7 @@ import { useBoardPermissions } from "~/components/board/permissions/client";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
+import { useIsMobileBoard } from "~/components/board/use-mobile-board";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { HeaderButton } from "~/components/layout/header/button";
 
@@ -45,6 +46,7 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
+  const isMobile = useIsMobileBoard();
 
   if (!hasChangeAccess) {
     return <SelectBoardsMenu />;
@@ -52,9 +54,9 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
 
   return (
     <>
-      {isEditMode && <AddMenu />}
+      {isEditMode && !isMobile && <AddMenu />}
 
-      <EditModeMenu demoReadOnly={demoReadOnly} />
+      <EditModeMenu demoReadOnly={demoReadOnly} hidden={isMobile} />
 
       {!demoReadOnly && (
         <OnboardingTour.Target id="board-settings">
@@ -157,7 +159,7 @@ const AddMenu = () => {
   );
 };
 
-const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
+const EditModeMenu = ({ demoReadOnly, hidden }: { demoReadOnly: boolean; hidden: boolean }) => {
   const [isEditMode, { open, close }] = useEditMode();
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
@@ -186,15 +188,18 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   }, [utils, board.name, close]);
 
   const toggle = useCallback(() => {
+    if (hidden) return;
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
       return saveBoard(board);
     }
     open();
-  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
+  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges, hidden]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
+
+  if (hidden) return null;
 
   return (
     <OnboardingTour.Target id="board-edit-mode">

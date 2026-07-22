@@ -12,8 +12,6 @@ tags:
 import iconColorImage from './img/icon-color.png'
 import itemRadiusImage from './img/item-radius.png'
 import layoutLargeImage from './img/layout-large.png'
-import layoutMediumImage from './img/layout-medium.png'
-import layoutSmallImage from './img/layout-small.png'
 
 Each dashboard is called a "board".
 You can create as many boards as you want.
@@ -76,32 +74,18 @@ Homarr will fall back to the Homarr logo if nothing is set.
 
 ### Layout
 
-In this section you can configure the different responsive layouts. Depending on your screens width the layout will change.
+In this section you can configure the number of columns in the desktop layout.
 
-![](./img/layout-settings.png)
+Items and sections can be moved and resized on desktop while the board is in edit mode.
+Changing the column count automatically adjusts item positions and sizes to fit the new grid.
 
-On each element the position and size of items can be changed seperately.
-When adding a new layout the position and sizes will automatically be generated depending on the column count.
-When adding a new item / dynamic section that will always be 1x1 on each layout and placed on the first available position.
+<img src={layoutLargeImage} height={256} />
 
-#### Name
+#### Mobile layout
 
-The name of the layout can be choosen freely. It is only used for the management and will not be visible on the board.
+Mobile boards use an automatic, read-only layout with two columns. Items follow the visual order of the desktop layout and are limited to two columns wide and three rows high.
 
-#### Column count
-
-Amount of columns for this layout. Defines how many items can be placed in a row. When changed it will automatically adjust the position and size of the items.
-
-#### Breakpoint
-
-Minimum width of the screen where the layout will be used. 
-Once the minmum of the next layout is reached the layout will change.
-
-#### Preview
-
-<img src={layoutSmallImage}  height={256} />
-<img src={layoutMediumImage}  height={256} />
-<img src={layoutLargeImage}  height={256} />
+Categories and dynamic sections are not displayed as containers on mobile. Their items are included directly in the automatic grid, even when a category is collapsed on desktop. To rearrange, add, remove, or resize board items, open the board on a larger screen.
 
 ### Background
 #### Background image URL

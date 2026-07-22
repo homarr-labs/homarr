@@ -70,16 +70,9 @@ export const boardSavePartialSettingsSchema = z
   })
   .partial();
 
-export const boardSaveLayoutsSchema = z.object({
+export const boardSaveLayoutSchema = z.object({
   id: z.string(),
-  layouts: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string().trim().nonempty().max(32),
-      columnCount: boardColumnCountSchema,
-      breakpoint: z.number().min(0).max(32767),
-    }),
-  ),
+  columnCount: boardColumnCountSchema,
 });
 
 export const boardSaveSchema = z.object({
