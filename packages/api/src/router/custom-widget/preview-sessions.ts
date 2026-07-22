@@ -14,6 +14,14 @@ import { toTrpcError } from "./domain-error";
 
 const SESSION_PREFIX = "custom-widget:preview-session:";
 const JOURNAL_PREFIX = "custom-widget:preview-journal:";
+const COMPARE_AND_SWAP_SESSION_SCRIPT = `
+local current = redis.call('GET', KEYS[1])
+if not current then return 0 end
+local ok, parsed = pcall(cjson.decode, current)
+if not ok or type(parsed) ~= 'table' or tonumber(parsed.revision) ~= tonumber(ARGV[1]) then return 0 end
+redis.call('SET', KEYS[1], ARGV[2], 'PX', ARGV[3])
+return 1
+`;
 
 class RedisPreviewSessionStore implements PreviewSessionStore {
   public constructor(private readonly redis: RedisClient) {}
@@ -24,6 +32,20 @@ class RedisPreviewSessionStore implements PreviewSessionStore {
 
   public getSession(id: string) {
     return this.redis.get(`${SESSION_PREFIX}${id}`);
+  }
+  public async compareAndSwapSession(id: string, expectedRevision: number, value: unknown, ttlMs: number) {
+    return (
+      Number(
+        await this.redis.eval(
+          COMPARE_AND_SWAP_SESSION_SCRIPT,
+          1,
+          `${SESSION_PREFIX}${id}`,
+          expectedRevision,
+          JSON.stringify(value),
+          ttlMs,
+        ),
+      ) === 1
+    );
   }
   public async deleteSession(id: string) {
     await this.redis.del(`${SESSION_PREFIX}${id}`);

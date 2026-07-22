@@ -53,13 +53,14 @@ The browser renders JSX. Homarr's server executes named requests, applies board 
 
 - [Create a Custom Widget](./authoring) visually or with one copied AI prompt.
 - [Use the JSX runtime](./custom-jsx) for data, Mantine components, temporary inputs, and diagnostics.
+- [Browse the supported component reference](./component-reference).
 - [Configure requests and security](./requests-and-security).
 - [Use MCP and the skills.sh skill](./agent-authoring).
 - [Correct problems](./troubleshooting).
 
-The workbench keeps one continuous layout with visual source, request, and option editors. Advanced raw JSON remains available for experts and AI paste. Invalid values stay inline and only disable the widget preview.
+The workbench keeps one continuous layout with visual source, request, and option editors. Advanced raw JSON remains available for experts and AI paste. Invalid values stay inline and disable both preview and Save/Create until they are corrected.
 
-Exports, imports, Workshop, MCP, and storage all validate the same schema. Old formats are rejected. A missing definition only renders **Custom widget unavailable** inside its tile.
+Exports, imports, Workshop, MCP, and storage all validate the same schema. Widgets saved in the legacy format remain visible with a **Migration required** badge after upgrading. Use **Copy migration prompt**, give the redacted prompt to an LLM, then import its v2 JSON from that widget's action menu. Homarr keeps the legacy record until the replacement validates and is confirmed; credentials are never included in the prompt.
 
 When adding widgets while editing a board, the Custom Widgets section always includes **Install from Workshop**. The Workshop and API source review open above the widget picker without closing it. After import, the new definition appears in the picker. Its tile waits for the board to be saved before server requests run and loads automatically after a successful save; no page reload is required.
 

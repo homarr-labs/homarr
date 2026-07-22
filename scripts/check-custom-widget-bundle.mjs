@@ -5,6 +5,9 @@ import { basename, join, relative, resolve } from "node:path";
 const repositoryRoot = resolve(import.meta.dirname, "..");
 const nextRoot = join(repositoryRoot, "apps/nextjs/.next");
 const budgetBytes = Number(process.env.CUSTOM_WIDGET_CHUNK_BUDGET_BYTES ?? 768 * 1024);
+if (!Number.isSafeInteger(budgetBytes) || budgetBytes <= 0) {
+  throw new Error("CUSTOM_WIDGET_CHUNK_BUDGET_BYTES must be a positive integer.");
+}
 
 async function collect(directory, predicate) {
   const result = [];

@@ -1,9 +1,12 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 import { CustomWidgetDomainError } from "./errors";
 
 const WINDOW_MS = 60_000;
-const CONCURRENCY_TTL_MS = 30_000;
+// A query may legally follow three redirects with a ten-second timeout per hop.
+// Keep the lease above that total and identify every acquisition so a late
+// release can never remove capacity owned by a newer request.
+export const CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS = 60_000;
 const CATEGORY_LIMITS = { query: 60, action: 10, delete: 3 } as const;
 type RequestCategory = keyof typeof CATEGORY_LIMITS;
 
@@ -16,8 +19,8 @@ export interface RequestLimitInput {
 
 export interface RequestLimitStore {
   incrementRate(key: string, windowMs: number): Promise<{ count: number; retryAfterMs: number }>;
-  acquireConcurrency(key: string, limit: number, ttlMs: number): Promise<boolean>;
-  releaseConcurrency(key: string): Promise<void>;
+  acquireConcurrency(key: string, ownerId: string, limit: number, ttlMs: number): Promise<boolean>;
+  releaseConcurrency(key: string, ownerId: string): Promise<void>;
 }
 
 export interface RequestLimiterOptions {
@@ -34,8 +37,8 @@ export class CustomWidgetRequestLimiter {
   public async acquire(input: RequestLimitInput): Promise<() => Promise<void>> {
     const identity = input.userId ?? "anonymous";
     const rateKey = `custom-widget:rate:${input.category}:${hashKey(identity, input.itemId)}`;
-    const userKey = `custom-widget:concurrency:user-item:${hashKey(identity, input.itemId)}`;
-    const definitionKey = `custom-widget:concurrency:definition:${hashKey(input.definitionId)}`;
+    const userKey = `custom-widget:concurrency:v2:user-item:${hashKey(identity, input.itemId)}`;
+    const definitionKey = `custom-widget:concurrency:v2:definition:${hashKey(input.definitionId)}`;
     if (!this.options.store) return this.acquireLocal(rateKey, userKey, definitionKey, input.category);
     try {
       return await this.acquireStored(rateKey, userKey, definitionKey, input.category, this.options.store);
@@ -76,17 +79,22 @@ export class CustomWidgetRequestLimiter {
     category: RequestCategory,
     store: RequestLimitStore,
   ) {
+    const ownerId = randomUUID();
     const rate = await store.incrementRate(rateKey, WINDOW_MS);
     if (rate.count > CATEGORY_LIMITS[category]) throwLimit(rate.retryAfterMs);
-    if (!(await store.acquireConcurrency(userKey, 4, CONCURRENCY_TTL_MS))) throwLimit(1_000);
+    if (!(await store.acquireConcurrency(userKey, ownerId, 4, CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS))) {
+      throwLimit(1_000);
+    }
     try {
-      if (!(await store.acquireConcurrency(definitionKey, 8, CONCURRENCY_TTL_MS))) throwLimit(1_000);
+      if (!(await store.acquireConcurrency(definitionKey, ownerId, 8, CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS))) {
+        throwLimit(1_000);
+      }
     } catch (error) {
-      await store.releaseConcurrency(userKey);
+      await store.releaseConcurrency(userKey, ownerId);
       throw error;
     }
     return async () => {
-      await Promise.all([store.releaseConcurrency(userKey), store.releaseConcurrency(definitionKey)]);
+      await Promise.all([store.releaseConcurrency(userKey, ownerId), store.releaseConcurrency(definitionKey, ownerId)]);
     };
   }
 

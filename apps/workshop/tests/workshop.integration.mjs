@@ -105,21 +105,54 @@ const submission = await request("/api/collections/submissions/records", {
     type: "customWidget",
     title: "Workshop runtime probe",
     description: "PocketBase integration test",
-    widgetSchema: widget.$schema,
+    widgetSchema: "homarr-custom-css-v1",
     content: JSON.stringify(widget),
     author: author.id,
-    revision: 1,
-    changelog: "Initial publication",
-    outdated: false,
+    revision: 999,
+    changelog: "Forged publication metadata",
+    outdated: true,
   }),
 });
 if (
   submission.author !== author.id ||
   submission.title !== "Workshop runtime probe" ||
-  submission.widgetSchema !== widget.$schema
+  submission.widgetSchema !== widget.$schema ||
+  submission.revision !== 1 ||
+  submission.changelog !== "" ||
+  submission.outdated !== false
 ) {
-  throw new Error("Submission publication failed");
+  throw new Error("Submission publication was not validated and normalized server-side");
 }
+await expectStatus(
+  "/api/collections/submissions/records",
+  {
+    method: "POST",
+    headers: visitorSession.headers,
+    body: JSON.stringify({
+      type: "customCss",
+      title: "Oversized stylesheet",
+      content: "x".repeat(16_385),
+      widgetSchema: "homarr-custom-widget-v2",
+      author: visitor.id,
+    }),
+  },
+  400,
+);
+await expectStatus(
+  "/api/collections/submissions/records",
+  {
+    method: "POST",
+    headers: visitorSession.headers,
+    body: JSON.stringify({
+      type: "customWidget",
+      title: "Invalid widget payload",
+      content: ".dashboard { color: red; }",
+      widgetSchema: "homarr-custom-widget-v2",
+      author: visitor.id,
+    }),
+  },
+  400,
+);
 const ownerVotes = await request("/api/collections/votes/records", { headers: authorSession.headers });
 if (
   ownerVotes.items.length !== 1 ||
@@ -132,17 +165,30 @@ if (
 const updatedSubmission = await request(`/api/collections/submissions/records/${submission.id}`, {
   method: "PATCH",
   headers: authorSession.headers,
-  body: JSON.stringify({ title: "Updated runtime probe" }),
+  body: JSON.stringify({ title: "Updated runtime probe", expectedRevision: 1, revision: 500 }),
 });
-if (updatedSubmission.title !== "Updated runtime probe")
+if (updatedSubmission.title !== "Updated runtime probe" || updatedSubmission.revision !== 2)
   throw new Error("Authors must be able to edit their submission");
 const outdatedSubmission = await request(`/api/collections/submissions/records/${submission.id}`, {
   method: "PATCH",
   headers: authorSession.headers,
-  body: JSON.stringify({ outdated: true, revision: 2, changelog: "Needs a newer API" }),
+  body: JSON.stringify({ outdated: true, expectedRevision: 2, revision: 900, changelog: "Needs a newer API" }),
 });
-if (!outdatedSubmission.outdated || outdatedSubmission.revision !== 2) {
-  throw new Error("Authors must be able to mark submissions outdated and increment revisions");
+if (!outdatedSubmission.outdated || outdatedSubmission.revision !== 3) {
+  throw new Error("PocketBase must own submission revision increments");
+}
+
+const concurrentUpdates = await Promise.all(
+  ["Concurrent first", "Concurrent second"].map((title) =>
+    fetch(`${baseUrl}/api/collections/submissions/records/${submission.id}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json", ...authorSession.headers },
+      body: JSON.stringify({ title, expectedRevision: 3 }),
+    }),
+  ),
+);
+if (concurrentUpdates.filter((response) => response.ok).length !== 1) {
+  throw new Error("Exactly one update may consume an expected submission revision");
 }
 
 await expectStatus(
@@ -240,7 +286,7 @@ const report = await request("/api/collections/reports/records", {
     reporter: visitor.id,
     category: "other",
     explanation: "Runtime moderation test",
-    status: "open",
+    status: "dismissed",
   }),
 });
 await expectStatus(`/api/collections/reports/records/${report.id}`, { headers: visitorSession.headers }, 404);
@@ -267,7 +313,7 @@ await expectStatus(
 );
 
 const reports = await request("/api/collections/reports/records", { headers: authorSession.headers });
-if (reports.items.length !== 1 || reports.items[0].reporter !== visitor.id) {
+if (reports.items.length !== 1 || reports.items[0].reporter !== visitor.id || reports.items[0].status !== "open") {
   throw new Error("Workshop administrators must be able to review reports");
 }
 const dismissedReport = await request(`/api/collections/reports/records/${report.id}`, {

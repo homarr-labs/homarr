@@ -7,6 +7,8 @@ export const CUSTOM_JSX_LIMITS = Object.freeze({
   stringLength: 200_000,
 });
 
+export const CUSTOM_JSX_BINDING_IDENTIFIER_PATTERN = /^[A-Za-z][A-Za-z0-9_-]*$/u;
+
 export const CUSTOM_JSX_BLOCKED_PROPERTIES: ReadonlySet<string> = new Set([
   "__proto__",
   "apply",

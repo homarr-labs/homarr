@@ -10,6 +10,11 @@ import type { WorkshopUser } from "@homarr/workshop/schema";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { createWorkshopClient } from "./workshop-client";
+import {
+  getPrivateWorkshopSourceNames,
+  serializeWorkshopDefinition,
+  workshopDefinitionChanged,
+} from "./workshop-publish-definition";
 
 export function WorkshopPublishModal({
   opened,
@@ -22,7 +27,6 @@ export function WorkshopPublishModal({
 }) {
   const t = useScopedI18n("workshop");
   const client = useMemo(createWorkshopClient, []);
-  const utils = clientApi.useUtils();
   const [user, setUser] = useState<WorkshopUser | null>(null);
   const [title, setTitle] = useState(widget.name);
   const [description, setDescription] = useState("");
@@ -31,10 +35,9 @@ export function WorkshopPublishModal({
   const [error, setError] = useState<string | null>(null);
   const [published, setPublished] = useState(false);
   const [sourceUrlsReviewed, setSourceUrlsReviewed] = useState(false);
-  const definition = clientApi.customWidget.get.useQuery({ id: widget.id }, { enabled: opened });
-  const privateSources = Object.entries(definition.data?.sources ?? {}).filter(
-    ([, source]) => source.networkScope !== "public",
-  );
+  const definition = clientApi.customWidget.export.useQuery({ id: widget.id }, { enabled: opened });
+  const privateSourceNames = getPrivateWorkshopSourceNames(definition.data);
+  const definitionFingerprint = definition.data ? serializeWorkshopDefinition(definition.data) : null;
 
   useEffect(() => {
     const unsubscribe = client.subscribeToAuth(setUser);
@@ -50,13 +53,27 @@ export function WorkshopPublishModal({
     setPublished(false);
     setSourceUrlsReviewed(false);
   }, [opened, widget.name]);
+  useEffect(() => setSourceUrlsReviewed(false), [definitionFingerprint]);
 
   const publish = async () => {
     setError(null);
     try {
-      const definition = await utils.customWidget.export.fetch({ id: widget.id });
+      if (!definition.data) throw new Error(t("publish.error"));
+      const inspectedDefinition = definition.data;
+      const refreshed = await definition.refetch();
+      if (!refreshed.data) throw new Error(t("publish.error"));
+      if (workshopDefinitionChanged(inspectedDefinition, refreshed.data)) {
+        setSourceUrlsReviewed(false);
+        setError(t("publish.error"));
+        return;
+      }
       await createSubmission.mutateAsync({
-        input: { type: "customWidget", title, description, content: JSON.stringify(definition) },
+        input: {
+          type: "customWidget",
+          title,
+          description,
+          content: serializeWorkshopDefinition(refreshed.data),
+        },
         screenshots,
       });
       setPublished(true);
@@ -113,10 +130,10 @@ export function WorkshopPublishModal({
               value={screenshots}
               onChange={setScreenshots}
             />
-            {privateSources.length > 0 && (
+            {privateSourceNames.length > 0 && (
               <Alert color="yellow">
                 {t("publish.privateSourceWarning", {
-                  sources: privateSources.map(([sourceId, source]) => source.name ?? sourceId).join(", "),
+                  sources: privateSourceNames.join(", "),
                 })}
                 <Checkbox
                   mt="sm"
@@ -126,10 +143,17 @@ export function WorkshopPublishModal({
                 />
               </Alert>
             )}
+            {definition.isError && <Alert color="red">{t("publish.error")}</Alert>}
             {error && <Alert color="red">{error}</Alert>}
             <Button
-              loading={createSubmission.isPending}
-              disabled={!user || title.trim().length < 3 || (privateSources.length > 0 && !sourceUrlsReviewed)}
+              loading={createSubmission.isPending || definition.isFetching}
+              disabled={
+                !user ||
+                !definition.data ||
+                definition.isError ||
+                title.trim().length < 3 ||
+                (privateSourceNames.length > 0 && !sourceUrlsReviewed)
+              }
               onClick={() => void publish()}
             >
               {t("publish.action")}

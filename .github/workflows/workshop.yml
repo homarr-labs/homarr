@@ -2,22 +2,8 @@ name: Workshop
 
 on:
   pull_request:
-    paths:
-      - "apps/workshop/**"
-      - "apps/docs/**"
-      - "packages/workshop/**"
-      - "packages/custom-widgets/**"
-      - "pnpm-lock.yaml"
-      - ".github/workflows/workshop.yml"
   push:
     branches: [dev, v2]
-    paths:
-      - "apps/workshop/**"
-      - "apps/docs/**"
-      - "packages/workshop/**"
-      - "packages/custom-widgets/**"
-      - "pnpm-lock.yaml"
-      - ".github/workflows/workshop.yml"
 
 permissions:
   contents: read

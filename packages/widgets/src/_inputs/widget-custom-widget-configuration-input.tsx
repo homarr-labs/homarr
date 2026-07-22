@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Accordion,
   Alert,
@@ -69,7 +69,7 @@ export const WidgetCustomWidgetConfigurationInput = ({
       )}
       {regular.map(([name, option]) => (
         <OptionField
-          key={name}
+          key={`${definitionId}:${name}`}
           option={option}
           path={`options.${property}.${name}`}
           configuration={configuration}
@@ -84,7 +84,7 @@ export const WidgetCustomWidgetConfigurationInput = ({
               <Stack gap="sm">
                 {advanced.map(([name, option]) => (
                   <OptionField
-                    key={name}
+                    key={`${definitionId}:${name}`}
                     option={option}
                     path={`options.${property}.${name}`}
                     configuration={configuration}
@@ -167,6 +167,8 @@ function OptionField({
   if (option.control === "json")
     return (
       <JsonOption
+        identity={`${definitionId}:${path}`}
+        editorId={`${definitionId}-${path}-json-option`}
         label={option.label}
         description={option.description}
         value={input.value}
@@ -265,22 +267,36 @@ const editorMessages: CustomWidgetEditorMessages = {
   diagnostic: (diagnostic) => diagnostic.value ?? diagnostic.code,
 };
 
-function JsonOption({
+export function JsonOption({
+  identity,
+  editorId,
   label,
   description,
   value,
   onChange,
 }: {
+  identity: string;
+  editorId: string;
   label: string;
   description?: string;
   value: unknown;
   onChange(value: unknown): void;
 }) {
-  const [draft, setDraft] = useState(() => JSON.stringify(value ?? null, null, 2));
+  const serializedValue = JSON.stringify(value ?? null, null, 2);
+  const [draft, setDraft] = useState(serializedValue);
   const [error, setError] = useState<string>();
+  const synchronizedValueRef = useRef(serializedValue);
+  const identityRef = useRef(identity);
+  useEffect(() => {
+    if (identityRef.current === identity && synchronizedValueRef.current === serializedValue) return;
+    identityRef.current = identity;
+    synchronizedValueRef.current = serializedValue;
+    setDraft(serializedValue);
+    setError(undefined);
+  }, [identity, serializedValue]);
   return (
     <CustomWidgetCodeEditor
-      id={`${label}-json-option`}
+      id={editorId}
       label={label}
       description={description}
       language="json"
@@ -290,7 +306,9 @@ function JsonOption({
       onChange={(next) => {
         setDraft(next);
         try {
-          onChange(JSON.parse(next) as unknown);
+          const parsed = JSON.parse(next) as unknown;
+          synchronizedValueRef.current = JSON.stringify(parsed ?? null, null, 2);
+          onChange(parsed);
           setError(undefined);
         } catch (cause) {
           setError(cause instanceof Error ? cause.message : "Invalid JSON");

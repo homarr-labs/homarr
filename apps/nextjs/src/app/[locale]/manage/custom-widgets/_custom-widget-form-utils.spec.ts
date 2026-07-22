@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 
 import {
+  filterSecretsForSourceAuthentication,
   getChangedSecrets,
   getCustomWidgetPreviewOptionIssues,
   loadPreviewQueries,
@@ -61,5 +62,19 @@ describe("Custom Widget workbench preview options", () => {
         ],
       }),
     ).toEqual([{ sourceId: "other", kind: "password", value: "replacement" }]);
+  });
+
+  it("drops credentials that do not apply after an authentication transition", () => {
+    expect(
+      filterSecretsForSourceAuthentication(
+        [
+          { sourceId: "default", kind: "username", value: "admin", hasValue: true },
+          { sourceId: "default", kind: "password", value: "secret", hasValue: true },
+          { sourceId: "secondary", kind: "apiKey", value: "unchanged", hasValue: true },
+        ],
+        "default",
+        "bearer",
+      ),
+    ).toEqual([{ sourceId: "secondary", kind: "apiKey", value: "unchanged", hasValue: true }]);
   });
 });

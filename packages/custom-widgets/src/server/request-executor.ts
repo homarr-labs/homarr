@@ -32,6 +32,7 @@ export const MAX_REQUEST_BODY_BYTES = 10 * 1024;
 const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_QUERY_REDIRECTS = 3;
 const MAX_RESPONSE_CACHE_ENTRIES = 1_000;
+export const MAX_REQUEST_DURATION_MS = 45_000;
 
 export interface CustomWidgetAuthConfig {
   type: string;
@@ -64,6 +65,29 @@ const inFlight = new Map<string, Promise<CustomWidgetHttpResponse>>();
 let cacheEpoch = 0;
 
 async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), MAX_REQUEST_DURATION_MS);
+  try {
+    return await performRequestWithinDeadline(input, controller.signal);
+  } catch (error) {
+    if (error instanceof CustomWidgetDomainError) throw error;
+    if (controller.signal.aborted) {
+      throw new CustomWidgetDomainError({
+        code: "BAD_GATEWAY",
+        message: "External request exceeded the total time limit",
+        cause: error,
+      });
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function performRequestWithinDeadline(
+  input: CustomWidgetHttpRequest,
+  deadlineSignal: AbortSignal,
+): Promise<CustomWidgetHttpResponse> {
   assertRequest(input);
   const baseUrl = validateCustomWidgetUrl(input.baseUrl);
   let currentUrl = resolveSameOriginTarget(input.baseUrl, input.targetUrl);
@@ -86,7 +110,7 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
         method: currentMethod,
         headers,
         body: currentBody,
-        signal: controller.signal,
+        signal: AbortSignal.any([deadlineSignal, controller.signal]),
       });
     } catch (error) {
       await dispatcher.close();

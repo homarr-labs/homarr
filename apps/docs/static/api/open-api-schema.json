@@ -1,25 +1,54 @@
 {
   "openapi": "3.1.0",
-  "info": { "title": "Homarr API documentation", "version": "1.1.0" },
-  "servers": [{ "url": "http://localhost:3000" }],
-  "externalDocs": { "url": "https://homarr.dev" },
+  "info": {
+    "title": "Homarr API documentation",
+    "version": "1.1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "externalDocs": {
+    "url": "https://homarr.dev"
+  },
   "paths": {
     "/api/apps/paginated": {
       "get": {
         "operationId": "appRouter-getPaginated",
         "tags": ["apps"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [
-          { "in": "query", "name": "search", "schema": { "type": "string" } },
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "in": "query",
             "name": "pageSize",
-            "schema": { "default": 10, "type": "integer", "exclusiveMinimum": 0, "maximum": 9007199254740991 }
+            "schema": {
+              "default": 10,
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
           },
           {
             "in": "query",
             "name": "page",
-            "schema": { "default": 1, "type": "integer", "exclusiveMinimum": 0, "maximum": 9007199254740991 }
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
           }
         ],
         "responses": {
@@ -35,18 +64,53 @@
                       "items": {
                         "type": "object",
                         "properties": {
-                          "id": { "type": "string" },
-                          "name": { "type": "string" },
-                          "description": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                          "iconUrl": { "type": "string" },
-                          "href": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                          "pingUrl": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "iconUrl": {
+                            "type": "string"
+                          },
+                          "href": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "pingUrl": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
                         },
                         "required": ["id", "name", "description", "iconUrl", "href", "pingUrl"],
                         "additionalProperties": false
                       }
                     },
-                    "totalCount": { "type": "number" }
+                    "totalCount": {
+                      "type": "number"
+                    }
                   },
                   "required": ["items", "totalCount"],
                   "additionalProperties": false
@@ -56,24 +120,52 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -83,7 +175,11 @@
       "get": {
         "operationId": "appRouter-all",
         "tags": ["apps"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -94,12 +190,45 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "id": { "type": "string" },
-                      "name": { "type": "string" },
-                      "description": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "iconUrl": { "type": "string" },
-                      "href": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "pingUrl": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "iconUrl": {
+                        "type": "string"
+                      },
+                      "href": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "pingUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
                     },
                     "required": ["id", "name", "description", "iconUrl", "href", "pingUrl"],
                     "additionalProperties": false
@@ -110,16 +239,32 @@
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -127,7 +272,11 @@
       "post": {
         "operationId": "appRouter-create",
         "tags": ["apps"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -136,29 +285,62 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": { "type": "string", "minLength": 1, "maxLength": 64 },
-                  "description": { "anyOf": [{ "type": "string", "maxLength": 512 }, { "type": "null" }] },
-                  "iconUrl": { "type": "string", "minLength": 1 },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 512
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "iconUrl": {
+                    "type": "string",
+                    "minLength": 1
+                  },
                   "href": {
                     "anyOf": [
                       {
                         "anyOf": [
-                          { "type": "string", "pattern": "^(?!javascript)[a-zA-Z]*:\\/\\/" },
-                          { "type": "string", "const": "" }
+                          {
+                            "type": "string",
+                            "pattern": "^(?!javascript)[a-zA-Z]*:\\/\\/"
+                          },
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
                         ]
                       },
-                      { "type": "null" }
+                      {
+                        "type": "null"
+                      }
                     ]
                   },
                   "pingUrl": {
                     "anyOf": [
                       {
                         "anyOf": [
-                          { "type": "string", "pattern": "^https?:\\/\\/" },
-                          { "type": "string", "const": "" }
+                          {
+                            "type": "string",
+                            "pattern": "^https?:\\/\\/"
+                          },
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
                         ]
                       },
-                      { "type": "null" }
+                      {
+                        "type": "null"
+                      }
                     ]
                   }
                 },
@@ -176,19 +358,56 @@
                   "allOf": [
                     {
                       "type": "object",
-                      "properties": { "appId": { "type": "string" } },
+                      "properties": {
+                        "appId": {
+                          "type": "string"
+                        }
+                      },
                       "required": ["appId"],
                       "additionalProperties": false
                     },
                     {
                       "type": "object",
                       "properties": {
-                        "id": { "type": "string" },
-                        "name": { "type": "string" },
-                        "description": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                        "iconUrl": { "type": "string" },
-                        "href": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                        "pingUrl": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "iconUrl": {
+                          "type": "string"
+                        },
+                        "href": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "pingUrl": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
                       },
                       "required": ["id", "name", "description", "iconUrl", "href", "pingUrl"],
                       "additionalProperties": false
@@ -200,20 +419,42 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -223,13 +464,29 @@
       "get": {
         "operationId": "appRouter-search",
         "tags": ["apps"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [
-          { "in": "query", "name": "query", "schema": { "type": "string" }, "required": true },
+          {
+            "in": "query",
+            "name": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
           {
             "in": "query",
             "name": "limit",
-            "schema": { "default": 10, "type": "number", "minimum": 1, "maximum": 100 }
+            "schema": {
+              "default": 10,
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            }
           }
         ],
         "responses": {
@@ -242,12 +499,45 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "id": { "type": "string" },
-                      "name": { "type": "string" },
-                      "description": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "iconUrl": { "type": "string" },
-                      "href": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "pingUrl": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "iconUrl": {
+                        "type": "string"
+                      },
+                      "href": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "pingUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
                     },
                     "required": ["id", "name", "description", "iconUrl", "href", "pingUrl"],
                     "additionalProperties": false
@@ -258,24 +548,52 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -285,7 +603,11 @@
       "get": {
         "operationId": "appRouter-selectable",
         "tags": ["apps"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -296,12 +618,45 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "id": { "type": "string" },
-                      "name": { "type": "string" },
-                      "iconUrl": { "type": "string" },
-                      "href": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "pingUrl": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "description": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "iconUrl": {
+                        "type": "string"
+                      },
+                      "href": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "pingUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "description": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
                     },
                     "required": ["id", "name", "iconUrl", "href", "pingUrl", "description"],
                     "additionalProperties": false
@@ -312,16 +667,32 @@
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -331,8 +702,21 @@
       "get": {
         "operationId": "appRouter-byId",
         "tags": ["apps"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -341,12 +725,45 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": { "type": "string" },
-                    "name": { "type": "string" },
-                    "description": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "iconUrl": { "type": "string" },
-                    "href": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "pingUrl": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "iconUrl": {
+                      "type": "string"
+                    },
+                    "href": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "pingUrl": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
                   },
                   "required": ["id", "name", "description", "iconUrl", "href", "pingUrl"],
                   "additionalProperties": false
@@ -356,24 +773,52 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -381,8 +826,21 @@
       "patch": {
         "operationId": "appRouter-update",
         "tags": ["apps"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -390,29 +848,62 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": { "type": "string", "minLength": 1, "maxLength": 64 },
-                  "description": { "anyOf": [{ "type": "string", "maxLength": 512 }, { "type": "null" }] },
-                  "iconUrl": { "type": "string", "minLength": 1 },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 512
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "iconUrl": {
+                    "type": "string",
+                    "minLength": 1
+                  },
                   "href": {
                     "anyOf": [
                       {
                         "anyOf": [
-                          { "type": "string", "pattern": "^(?!javascript)[a-zA-Z]*:\\/\\/" },
-                          { "type": "string", "const": "" }
+                          {
+                            "type": "string",
+                            "pattern": "^(?!javascript)[a-zA-Z]*:\\/\\/"
+                          },
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
                         ]
                       },
-                      { "type": "null" }
+                      {
+                        "type": "null"
+                      }
                     ]
                   },
                   "pingUrl": {
                     "anyOf": [
                       {
                         "anyOf": [
-                          { "type": "string", "pattern": "^https?:\\/\\/" },
-                          { "type": "string", "const": "" }
+                          {
+                            "type": "string",
+                            "pattern": "^https?:\\/\\/"
+                          },
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
                         ]
                       },
-                      { "type": "null" }
+                      {
+                        "type": "null"
+                      }
                     ]
                   }
                 },
@@ -422,27 +913,62 @@
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -450,30 +976,78 @@
       "delete": {
         "operationId": "appRouter-delete",
         "tags": ["apps"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -483,7 +1057,11 @@
       "get": {
         "operationId": "boardRouter-getAllBoards",
         "tags": ["boards"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -494,33 +1072,88 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "id": { "type": "string" },
-                      "name": { "type": "string" },
-                      "logoImageUrl": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "isPublic": { "type": "boolean" },
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "logoImageUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "isPublic": {
+                        "type": "boolean"
+                      },
                       "creator": {
                         "anyOf": [
                           {
                             "type": "object",
                             "properties": {
-                              "id": { "type": "string" },
-                              "name": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                              "image": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                              "email": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "image": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "email": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
                             },
                             "required": ["id", "name", "image", "email"],
                             "additionalProperties": false
                           },
-                          { "type": "null" }
+                          {
+                            "type": "null"
+                          }
                         ]
                       },
-                      "isHome": { "type": "boolean" },
-                      "isMobileHome": { "type": "boolean" },
+                      "isHome": {
+                        "type": "boolean"
+                      },
+                      "isMobileHome": {
+                        "type": "boolean"
+                      },
                       "userPermissions": {
                         "type": "array",
                         "items": {
                           "type": "object",
-                          "properties": { "permission": { "type": "string", "enum": ["view", "modify", "full"] } },
+                          "properties": {
+                            "permission": {
+                              "type": "string",
+                              "enum": ["view", "modify", "full"]
+                            }
+                          },
                           "required": ["permission"],
                           "additionalProperties": false
                         }
@@ -529,7 +1162,12 @@
                         "type": "array",
                         "items": {
                           "type": "object",
-                          "properties": { "permission": { "type": "string", "enum": ["view", "modify", "full"] } },
+                          "properties": {
+                            "permission": {
+                              "type": "string",
+                              "enum": ["view", "modify", "full"]
+                            }
+                          },
                           "required": ["permission"],
                           "additionalProperties": false
                         }
@@ -554,16 +1192,32 @@
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -571,7 +1225,11 @@
       "post": {
         "operationId": "boardRouter-createBoard",
         "tags": ["boards"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -580,9 +1238,20 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": { "type": "string", "minLength": 1, "maxLength": 255, "pattern": "^[A-Za-z0-9-_]*$" },
-                  "columnCount": { "type": "number", "minimum": 1, "maximum": 24 },
-                  "isPublic": { "type": "boolean" }
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "pattern": "^[A-Za-z0-9-_]*$"
+                  },
+                  "columnCount": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 24
+                  },
+                  "isPublic": {
+                    "type": "boolean"
+                  }
                 },
                 "required": ["name", "columnCount", "isPublic"]
               }
@@ -596,7 +1265,11 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "boardId": { "type": "string" } },
+                  "properties": {
+                    "boardId": {
+                      "type": "string"
+                    }
+                  },
                   "required": ["boardId"],
                   "additionalProperties": false
                 }
@@ -605,20 +1278,42 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -628,8 +1323,21 @@
       "post": {
         "operationId": "boardRouter-duplicateBoard",
         "tags": ["boards"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -637,7 +1345,12 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": { "type": "string", "minLength": 1, "maxLength": 255, "pattern": "^[A-Za-z0-9-_]*$" }
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "pattern": "^[A-Za-z0-9-_]*$"
+                  }
                 },
                 "required": ["name"]
               }
@@ -651,7 +1364,11 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "boardId": { "type": "string" } },
+                  "properties": {
+                    "boardId": {
+                      "type": "string"
+                    }
+                  },
                   "required": ["boardId"],
                   "additionalProperties": false
                 }
@@ -660,20 +1377,42 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -683,8 +1422,21 @@
       "patch": {
         "operationId": "boardRouter-renameBoard",
         "tags": ["boards"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -692,7 +1444,12 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": { "type": "string", "minLength": 1, "maxLength": 255, "pattern": "^[A-Za-z0-9-_]*$" }
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "pattern": "^[A-Za-z0-9-_]*$"
+                  }
                 },
                 "required": ["name"]
               }
@@ -700,27 +1457,62 @@
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -730,42 +1522,95 @@
       "patch": {
         "operationId": "boardRouter-changeBoardVisibility",
         "tags": ["boards"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": { "visibility": { "type": "string", "enum": ["public", "private"] } },
+                "properties": {
+                  "visibility": {
+                    "type": "string",
+                    "enum": ["public", "private"]
+                  }
+                },
                 "required": ["visibility"]
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -775,30 +1620,78 @@
       "delete": {
         "operationId": "boardRouter-deleteBoard",
         "tags": ["boards"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -808,30 +1701,78 @@
       "patch": {
         "operationId": "boardRouter-setHomeBoard",
         "tags": ["boards"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -841,30 +1782,78 @@
       "patch": {
         "operationId": "boardRouter-setMobileHomeBoard",
         "tags": ["boards"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -874,8 +1863,21 @@
       "patch": {
         "operationId": "boardRouter-savePartialBoardSettings",
         "tags": ["boards"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -883,69 +1885,193 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "pageTitle": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                  "metaTitle": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                  "logoImageUrl": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                  "faviconImageUrl": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                  "backgroundImageUrl": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                  "backgroundImageAttachment": { "type": "string", "enum": ["fixed", "scroll"] },
+                  "pageTitle": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "metaTitle": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "logoImageUrl": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "faviconImageUrl": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "backgroundImageUrl": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "backgroundImageAttachment": {
+                    "type": "string",
+                    "enum": ["fixed", "scroll"]
+                  },
                   "backgroundImageRepeat": {
                     "type": "string",
                     "enum": ["repeat", "repeat-x", "repeat-y", "no-repeat"]
                   },
-                  "backgroundImageSize": { "type": "string", "enum": ["cover", "contain"] },
-                  "primaryColor": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-                  "secondaryColor": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-                  "opacity": { "type": "number", "minimum": 0, "maximum": 100 },
-                  "customCss": { "type": "string", "maxLength": 16384 },
+                  "backgroundImageSize": {
+                    "type": "string",
+                    "enum": ["cover", "contain"]
+                  },
+                  "primaryColor": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                  },
+                  "secondaryColor": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                  },
+                  "opacity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "customCss": {
+                    "type": "string",
+                    "maxLength": 16384
+                  },
                   "iconColor": {
                     "anyOf": [
                       {
                         "anyOf": [
-                          { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-                          { "type": "string", "const": "" }
+                          {
+                            "type": "string",
+                            "pattern": "^#[0-9A-Fa-f]{6}$"
+                          },
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
                         ]
                       },
-                      { "type": "null" }
+                      {
+                        "type": "null"
+                      }
                     ]
                   },
                   "itemRadius": {
                     "anyOf": [
-                      { "type": "string", "const": "xs" },
-                      { "type": "string", "const": "sm" },
-                      { "type": "string", "const": "md" },
-                      { "type": "string", "const": "lg" },
-                      { "type": "string", "const": "xl" }
+                      {
+                        "type": "string",
+                        "const": "xs"
+                      },
+                      {
+                        "type": "string",
+                        "const": "sm"
+                      },
+                      {
+                        "type": "string",
+                        "const": "md"
+                      },
+                      {
+                        "type": "string",
+                        "const": "lg"
+                      },
+                      {
+                        "type": "string",
+                        "const": "xl"
+                      }
                     ]
                   },
-                  "disableStatus": { "type": "boolean" }
+                  "disableStatus": {
+                    "type": "boolean"
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -955,7 +2081,11 @@
       "post": {
         "operationId": "boardRouter-addItem",
         "tags": ["boards"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -964,7 +2094,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "boardId": { "type": "string" },
+                  "boardId": {
+                    "type": "string"
+                  },
                   "kind": {
                     "type": "string",
                     "enum": [
@@ -986,6 +2118,7 @@
                       "mediaRequests-requestList",
                       "mediaRequests-requestStats",
                       "mediaTranscoding",
+                      "mediaMissing",
                       "minecraftServerStatus",
                       "networkControllerSummary",
                       "networkControllerStatus",
@@ -1005,6 +2138,8 @@
                       "immich-serverStats",
                       "immich-albumCarousel",
                       "paperlessNgx",
+                      "patchmon",
+                      "bazarr",
                       "tracearr",
                       "speedtestTracker",
                       "uptimeKuma",
@@ -1017,16 +2152,25 @@
                       "beszelSystemGrid",
                       "beszelAlerts",
                       "beszelSystemStats",
+                      "traefik",
                       "customApi"
                     ]
                   },
                   "options": {
                     "default": {},
                     "type": "object",
-                    "propertyNames": { "type": "string" },
+                    "propertyNames": {
+                      "type": "string"
+                    },
                     "additionalProperties": {}
                   },
-                  "integrationIds": { "default": [], "type": "array", "items": { "type": "string" } }
+                  "integrationIds": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
                 },
                 "required": ["boardId", "kind"]
               }
@@ -1040,7 +2184,11 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "itemId": { "type": "string" } },
+                  "properties": {
+                    "itemId": {
+                      "type": "string"
+                    }
+                  },
                   "required": ["itemId"],
                   "additionalProperties": false
                 }
@@ -1049,20 +2197,42 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1072,7 +2242,11 @@
       "get": {
         "operationId": "infoRouter-getInfo",
         "tags": ["info"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1080,7 +2254,11 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "version": { "type": "string" } },
+                  "properties": {
+                    "version": {
+                      "type": "string"
+                    }
+                  },
                   "required": ["version"],
                   "additionalProperties": false
                 }
@@ -1089,16 +2267,32 @@
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1108,7 +2302,11 @@
       "get": {
         "operationId": "inviteRouter-getAll",
         "tags": ["invites"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1119,13 +2317,28 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "id": { "type": "string" },
-                      "expirationDate": { "type": "string" },
+                      "id": {
+                        "type": "string"
+                      },
+                      "expirationDate": {
+                        "type": "string"
+                      },
                       "creator": {
                         "type": "object",
                         "properties": {
-                          "name": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                          "id": { "type": "string" }
+                          "name": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "type": "string"
+                          }
                         },
                         "required": ["name", "id"],
                         "additionalProperties": false
@@ -1140,16 +2353,32 @@
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1157,7 +2386,11 @@
       "post": {
         "operationId": "inviteRouter-createInvite",
         "tags": ["invites"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1165,7 +2398,11 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": { "expirationDate": { "type": "string" } },
+                "properties": {
+                  "expirationDate": {
+                    "type": "string"
+                  }
+                },
                 "required": ["expirationDate"]
               }
             }
@@ -1178,7 +2415,14 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "id": { "type": "string" }, "token": { "type": "string" } },
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  },
                   "required": ["id", "token"],
                   "additionalProperties": false
                 }
@@ -1187,20 +2431,42 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1210,33 +2476,80 @@
       "delete": {
         "operationId": "inviteRouter-deleteInvite",
         "tags": ["invites"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "id", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
-            "content": { "application/json": { "schema": { "not": {} } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "not": {}
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1246,7 +2559,11 @@
       "get": {
         "operationId": "serverSettingsRouter-getBoardSettings",
         "tags": ["settings"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1255,10 +2572,32 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "homeBoardId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "mobileHomeBoardId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "enableStatusByDefault": { "type": "boolean" },
-                    "forceDisableStatus": { "type": "boolean" }
+                    "homeBoardId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "mobileHomeBoardId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "enableStatusByDefault": {
+                      "type": "boolean"
+                    },
+                    "forceDisableStatus": {
+                      "type": "boolean"
+                    }
                   },
                   "required": ["homeBoardId", "mobileHomeBoardId", "enableStatusByDefault", "forceDisableStatus"],
                   "additionalProperties": false
@@ -1268,16 +2607,32 @@
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1285,7 +2640,11 @@
       "patch": {
         "operationId": "serverSettingsRouter-updateBoardSettings",
         "tags": ["settings"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1294,10 +2653,32 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "homeBoardId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                  "mobileHomeBoardId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                  "enableStatusByDefault": { "type": "boolean" },
-                  "forceDisableStatus": { "type": "boolean" }
+                  "homeBoardId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "mobileHomeBoardId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "enableStatusByDefault": {
+                    "type": "boolean"
+                  },
+                  "forceDisableStatus": {
+                    "type": "boolean"
+                  }
                 }
               }
             }
@@ -1311,10 +2692,32 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "homeBoardId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "mobileHomeBoardId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "enableStatusByDefault": { "type": "boolean" },
-                    "forceDisableStatus": { "type": "boolean" }
+                    "homeBoardId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "mobileHomeBoardId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "enableStatusByDefault": {
+                      "type": "boolean"
+                    },
+                    "forceDisableStatus": {
+                      "type": "boolean"
+                    }
                   },
                   "required": ["homeBoardId", "mobileHomeBoardId", "enableStatusByDefault", "forceDisableStatus"],
                   "additionalProperties": false
@@ -1324,24 +2727,52 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1351,7 +2782,11 @@
       "post": {
         "operationId": "userRouter-create",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1360,20 +2795,39 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "username": { "type": "string", "minLength": 3, "maxLength": 255 },
-                  "password": { "type": "string", "minLength": 8, "maxLength": 255 },
-                  "confirmPassword": { "type": "string" },
+                  "username": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 255
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 255
+                  },
+                  "confirmPassword": {
+                    "type": "string"
+                  },
                   "email": {
                     "anyOf": [
                       {
                         "type": "string",
                         "format": "email",
-                        "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                        "pattern": "^[^\\s@\"]{1,64}@[^\\s@]{1,255}$"
                       },
-                      { "type": "string", "minLength": 0, "maxLength": 0 }
+                      {
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 0
+                      }
                     ]
                   },
-                  "groupIds": { "type": "array", "items": { "type": "string" } }
+                  "groupIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
                 },
                 "required": ["username", "password", "confirmPassword", "groupIds"]
               }
@@ -1381,23 +2835,52 @@
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1405,114 +2888,9 @@
       "get": {
         "operationId": "userRouter-getAll",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": { "type": "string" },
-                      "name": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "email": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "emailVerified": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "image": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
-                    },
-                    "required": ["id", "name", "email", "emailVerified", "image"],
-                    "additionalProperties": false
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
-          },
-          "403": {
-            "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
-            }
-          }
-        }
-      }
-    },
-    "/api/users/profileImage": {
-      "put": {
-        "operationId": "userRouter-setProfileImage",
-        "tags": ["users"],
-        "security": [{ "apikey": [] }],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "userId": { "type": "string" },
-                  "image": {
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "maxLength": 350000,
-                        "pattern": "^data:image\\/(png|jpeg|gif|webp);base64,[A-Za-z0-9/+]+=*$"
-                      },
-                      { "type": "null" }
-                    ]
-                  }
-                },
-                "required": ["userId", "image"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
-          "400": {
-            "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
-          },
-          "401": {
-            "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
-          },
-          "403": {
-            "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
-          },
-          "404": {
-            "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
-            }
-          }
-        }
-      }
-    },
-    "/api/users/selectable": {
-      "get": {
-        "operationId": "userRouter-selectable",
-        "tags": ["users"],
-        "security": [{ "apikey": [] }],
-        "parameters": [
+        "security": [
           {
-            "in": "query",
-            "name": "providers",
-            "schema": { "type": "array", "items": { "type": "string", "enum": ["credentials", "oidc", "ldap"] } }
+            "apikey": []
           }
         ],
         "responses": {
@@ -1525,10 +2903,255 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "id": { "type": "string" },
-                      "name": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "image": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "email": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "email": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "emailVerified": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "image": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": ["id", "name", "email", "emailVerified", "image"],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/profileImage": {
+      "put": {
+        "operationId": "userRouter-setProfileImage",
+        "tags": ["users"],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 350000,
+                        "pattern": "^data:image\\/(png|jpeg|gif|webp);base64,[A-Za-z0-9/+]+=*$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": ["userId", "image"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/selectable": {
+      "get": {
+        "operationId": "userRouter-selectable",
+        "tags": ["users"],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "providers",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["credentials", "oidc", "ldap"]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "image": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "email": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
                     },
                     "required": ["id", "name", "image", "email"],
                     "additionalProperties": false
@@ -1539,24 +3162,52 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1566,7 +3217,11 @@
       "post": {
         "operationId": "userRouter-search",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1575,8 +3230,15 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "query": { "type": "string" },
-                  "limit": { "default": 10, "type": "number", "minimum": 1, "maximum": 100 }
+                  "query": {
+                    "type": "string"
+                  },
+                  "limit": {
+                    "default": 10,
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 100
+                  }
                 },
                 "required": ["query"]
               }
@@ -1593,10 +3255,39 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "id": { "type": "string" },
-                      "name": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "image": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                      "email": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "image": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "email": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
                     },
                     "required": ["id", "name", "image", "email"],
                     "additionalProperties": false
@@ -1607,20 +3298,42 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1630,8 +3343,21 @@
       "get": {
         "operationId": "userRouter-getById",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "userId", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1640,21 +3366,105 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": { "type": "string" },
-                    "name": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "email": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "emailVerified": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "image": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "provider": { "type": "string" },
-                    "homeBoardId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "mobileHomeBoardId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "firstDayOfWeek": { "type": "integer", "minimum": -9007199254740991, "maximum": 9007199254740991 },
-                    "pingIconsEnabled": { "type": "boolean" },
-                    "defaultSearchEngineId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                    "openSearchInNewTab": { "type": "boolean" },
-                    "ddgBangs": { "type": "boolean" },
-                    "completedManageTour": { "type": "boolean" },
-                    "completedBoardTour": { "type": "boolean" }
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "email": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "emailVerified": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "image": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "provider": {
+                      "type": "string"
+                    },
+                    "homeBoardId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "mobileHomeBoardId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "firstDayOfWeek": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "pingIconsEnabled": {
+                      "type": "boolean"
+                    },
+                    "enableRightClickOnWidgets": {
+                      "type": "boolean"
+                    },
+                    "defaultSearchEngineId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "openSearchInNewTab": {
+                      "type": "boolean"
+                    },
+                    "ddgBangs": {
+                      "type": "boolean"
+                    },
+                    "completedManageTour": {
+                      "type": "boolean"
+                    },
+                    "completedBoardTour": {
+                      "type": "boolean"
+                    }
                   },
                   "required": [
                     "id",
@@ -1667,6 +3477,7 @@
                     "mobileHomeBoardId",
                     "firstDayOfWeek",
                     "pingIconsEnabled",
+                    "enableRightClickOnWidgets",
                     "defaultSearchEngineId",
                     "openSearchInNewTab",
                     "ddgBangs",
@@ -1680,24 +3491,52 @@
           },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1705,30 +3544,78 @@
       "delete": {
         "operationId": "userRouter-delete",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "userId", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1738,7 +3625,11 @@
       "put": {
         "operationId": "userRouter-editProfile",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1747,8 +3638,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "id": { "type": "string" },
-                  "name": { "type": "string", "minLength": 3, "maxLength": 255 },
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 255
+                  },
                   "email": {
                     "anyOf": [
                       {
@@ -1756,12 +3653,17 @@
                           {
                             "type": "string",
                             "format": "email",
-                            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                            "pattern": "^[^\\s@\"]{1,64}@[^\\s@]{1,255}$"
                           },
-                          { "type": "string", "const": "" }
+                          {
+                            "type": "string",
+                            "const": ""
+                          }
                         ]
                       },
-                      { "type": "null" }
+                      {
+                        "type": "null"
+                      }
                     ]
                   }
                 },
@@ -1771,27 +3673,62 @@
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1801,8 +3738,21 @@
       "patch": {
         "operationId": "userRouter-changePassword",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
-        "parameters": [{ "in": "path", "name": "userId", "schema": { "type": "string" }, "required": true }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1810,9 +3760,18 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "previousPassword": { "type": "string", "minLength": 1 },
-                  "password": { "type": "string", "minLength": 8, "maxLength": 255 },
-                  "confirmPassword": { "type": "string" }
+                  "previousPassword": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 255
+                  },
+                  "confirmPassword": {
+                    "type": "string"
+                  }
                 },
                 "required": ["previousPassword", "password", "confirmPassword"]
               }
@@ -1820,27 +3779,62 @@
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1850,7 +3844,11 @@
       "patch": {
         "operationId": "userRouter-changeHomeBoards",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1859,9 +3857,29 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "homeBoardId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                  "mobileHomeBoardId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
-                  "userId": { "type": "string" }
+                  "homeBoardId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "mobileHomeBoardId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "userId": {
+                    "type": "string"
+                  }
                 },
                 "required": ["homeBoardId", "mobileHomeBoardId", "userId"]
               }
@@ -1869,27 +3887,62 @@
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1899,7 +3952,11 @@
       "patch": {
         "operationId": "userRouter-changeDefaultSearchEngine",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "deprecated": true,
         "parameters": [],
         "requestBody": {
@@ -1909,9 +3966,23 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "defaultSearchEngineId": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] },
-                  "ddgBangsEnabled": { "type": "boolean" },
-                  "userId": { "type": "string" }
+                  "defaultSearchEngineId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "ddgBangsEnabled": {
+                    "type": "boolean"
+                  },
+                  "userId": {
+                    "type": "string"
+                  }
                 },
                 "required": ["defaultSearchEngineId", "ddgBangsEnabled", "userId"]
               }
@@ -1919,27 +3990,62 @@
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1949,7 +4055,11 @@
       "patch": {
         "operationId": "userRouter-changeSearchPreferences",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1958,10 +4068,26 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "defaultSearchEngineId": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] },
-                  "openInNewTab": { "type": "boolean" },
-                  "ddgBangsEnabled": { "type": "boolean" },
-                  "userId": { "type": "string" }
+                  "defaultSearchEngineId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "openInNewTab": {
+                    "type": "boolean"
+                  },
+                  "ddgBangsEnabled": {
+                    "type": "boolean"
+                  },
+                  "userId": {
+                    "type": "string"
+                  }
                 },
                 "required": ["defaultSearchEngineId", "openInNewTab", "ddgBangsEnabled", "userId"]
               }
@@ -1969,27 +4095,62 @@
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -1999,7 +4160,11 @@
       "patch": {
         "operationId": "userRouter-changeColorScheme",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2007,34 +4172,165 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": { "colorScheme": { "type": "string", "enum": ["auto", "light", "dark"] } },
+                "properties": {
+                  "colorScheme": {
+                    "type": "string",
+                    "enum": ["auto", "light", "dark"]
+                  }
+                },
                 "required": ["colorScheme"]
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/right-click-widgets": {
+      "patch": {
+        "operationId": "userRouter-changeEnableRightClickOnWidgets",
+        "tags": ["users"],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enableRightClickOnWidgets": {
+                    "type": "boolean"
+                  },
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": ["enableRightClickOnWidgets", "id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -2044,7 +4340,11 @@
       "patch": {
         "operationId": "userRouter-changeDdgBangs",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "deprecated": true,
         "parameters": [],
         "requestBody": {
@@ -2053,34 +4353,76 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": { "ddgBangs": { "type": "boolean" }, "id": { "type": "string" } },
+                "properties": {
+                  "ddgBangs": {
+                    "type": "boolean"
+                  },
+                  "id": {
+                    "type": "string"
+                  }
+                },
                 "required": ["ddgBangs", "id"]
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -2090,7 +4432,11 @@
       "patch": {
         "operationId": "userRouter-changeFirstDayOfWeek",
         "tags": ["users"],
-        "security": [{ "apikey": [] }],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2099,8 +4445,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "firstDayOfWeek": { "type": "number", "minimum": 0, "maximum": 6 },
-                  "id": { "type": "string" }
+                  "firstDayOfWeek": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 6
+                  },
+                  "id": {
+                    "type": "string"
+                  }
                 },
                 "required": ["firstDayOfWeek", "id"]
               }
@@ -2108,27 +4460,62 @@
           }
         },
         "responses": {
-          "200": { "description": "Successful response", "content": { "application/json": { "schema": {} } } },
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "400": {
             "description": "Invalid input data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.BAD_REQUEST" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authorization not provided",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.UNAUTHORIZED" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
           },
           "403": {
             "description": "Insufficient access",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.FORBIDDEN" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/error.NOT_FOUND" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
             }
           }
         }
@@ -2140,15 +4527,27 @@
       "error.BAD_REQUEST": {
         "type": "object",
         "properties": {
-          "message": { "type": "string", "description": "The error message", "example": "Invalid input data" },
-          "code": { "type": "string", "description": "The error code", "example": "BAD_REQUEST" },
+          "message": {
+            "type": "string",
+            "description": "The error message",
+            "example": "Invalid input data"
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code",
+            "example": "BAD_REQUEST"
+          },
           "issues": {
             "description": "An array of issues that were responsible for the error",
             "example": [],
             "type": "array",
             "items": {
               "type": "object",
-              "properties": { "message": { "type": "string" } },
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
               "required": ["message"],
               "additionalProperties": false
             }
@@ -2158,20 +4557,36 @@
         "additionalProperties": false,
         "title": "Invalid input data error (400)",
         "description": "The error information",
-        "example": { "code": "BAD_REQUEST", "message": "Invalid input data", "issues": [] }
+        "example": {
+          "code": "BAD_REQUEST",
+          "message": "Invalid input data",
+          "issues": []
+        }
       },
       "error.UNAUTHORIZED": {
         "type": "object",
         "properties": {
-          "message": { "type": "string", "description": "The error message", "example": "Authorization not provided" },
-          "code": { "type": "string", "description": "The error code", "example": "UNAUTHORIZED" },
+          "message": {
+            "type": "string",
+            "description": "The error message",
+            "example": "Authorization not provided"
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code",
+            "example": "UNAUTHORIZED"
+          },
           "issues": {
             "description": "An array of issues that were responsible for the error",
             "example": [],
             "type": "array",
             "items": {
               "type": "object",
-              "properties": { "message": { "type": "string" } },
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
               "required": ["message"],
               "additionalProperties": false
             }
@@ -2181,20 +4596,36 @@
         "additionalProperties": false,
         "title": "Authorization not provided error (401)",
         "description": "The error information",
-        "example": { "code": "UNAUTHORIZED", "message": "Authorization not provided", "issues": [] }
+        "example": {
+          "code": "UNAUTHORIZED",
+          "message": "Authorization not provided",
+          "issues": []
+        }
       },
       "error.FORBIDDEN": {
         "type": "object",
         "properties": {
-          "message": { "type": "string", "description": "The error message", "example": "Insufficient access" },
-          "code": { "type": "string", "description": "The error code", "example": "FORBIDDEN" },
+          "message": {
+            "type": "string",
+            "description": "The error message",
+            "example": "Insufficient access"
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code",
+            "example": "FORBIDDEN"
+          },
           "issues": {
             "description": "An array of issues that were responsible for the error",
             "example": [],
             "type": "array",
             "items": {
               "type": "object",
-              "properties": { "message": { "type": "string" } },
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
               "required": ["message"],
               "additionalProperties": false
             }
@@ -2204,20 +4635,36 @@
         "additionalProperties": false,
         "title": "Insufficient access error (403)",
         "description": "The error information",
-        "example": { "code": "FORBIDDEN", "message": "Insufficient access", "issues": [] }
+        "example": {
+          "code": "FORBIDDEN",
+          "message": "Insufficient access",
+          "issues": []
+        }
       },
       "error.NOT_FOUND": {
         "type": "object",
         "properties": {
-          "message": { "type": "string", "description": "The error message", "example": "Not found" },
-          "code": { "type": "string", "description": "The error code", "example": "NOT_FOUND" },
+          "message": {
+            "type": "string",
+            "description": "The error message",
+            "example": "Not found"
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code",
+            "example": "NOT_FOUND"
+          },
           "issues": {
             "description": "An array of issues that were responsible for the error",
             "example": [],
             "type": "array",
             "items": {
               "type": "object",
-              "properties": { "message": { "type": "string" } },
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
               "required": ["message"],
               "additionalProperties": false
             }
@@ -2227,20 +4674,36 @@
         "additionalProperties": false,
         "title": "Not found error (404)",
         "description": "The error information",
-        "example": { "code": "NOT_FOUND", "message": "Not found", "issues": [] }
+        "example": {
+          "code": "NOT_FOUND",
+          "message": "Not found",
+          "issues": []
+        }
       },
       "error.INTERNAL_SERVER_ERROR": {
         "type": "object",
         "properties": {
-          "message": { "type": "string", "description": "The error message", "example": "Internal server error" },
-          "code": { "type": "string", "description": "The error code", "example": "INTERNAL_SERVER_ERROR" },
+          "message": {
+            "type": "string",
+            "description": "The error message",
+            "example": "Internal server error"
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code",
+            "example": "INTERNAL_SERVER_ERROR"
+          },
           "issues": {
             "description": "An array of issues that were responsible for the error",
             "example": [],
             "type": "array",
             "items": {
               "type": "object",
-              "properties": { "message": { "type": "string" } },
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
               "required": ["message"],
               "additionalProperties": false
             }
@@ -2250,7 +4713,11 @@
         "additionalProperties": false,
         "title": "Internal server error error (500)",
         "description": "The error information",
-        "example": { "code": "INTERNAL_SERVER_ERROR", "message": "Internal server error", "issues": [] }
+        "example": {
+          "code": "INTERNAL_SERVER_ERROR",
+          "message": "Internal server error",
+          "issues": []
+        }
       }
     },
     "securitySchemes": {

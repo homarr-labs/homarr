@@ -1,9 +1,12 @@
 import { chromium, expect } from "@playwright/test";
+import type { Browser } from "@playwright/test";
+import type { StartedTestContainer } from "testcontainers";
 import { describe, test } from "vitest";
 
 import { createHomarrContainer } from "./shared/create-homarr-container";
 import { createSqliteDbFileAsync } from "./shared/e2e-db";
-import { startMockApiContainerAsync } from "./shared/mock-api-container";
+import type { MockApiServer } from "./shared/mock-api-server";
+import { startMockApiServerAsync } from "./shared/mock-api-server";
 import { seedAdminUserAsync } from "./shared/seed-admin-user";
 
 const adminCredentials = { username: "admin", password: "Comp(exP4sswOrd" };
@@ -13,18 +16,22 @@ const updatedTemplate = "<Stack><Text fw={700}>{data.status?.title}</Text><Text>
 
 describe("Custom JSX v2 workbench", () => {
   test("creates, previews, edits, and immediately adds a widget to a board", async () => {
-    const mockApi = await startMockApiContainerAsync({ title: "E2E Widget", status: "online", value: 42 });
-    const { db, localMountPath } = await createSqliteDbFileAsync();
-    await seedAdminUserAsync(db, adminCredentials);
-    const homarrContainer = await createHomarrContainer({
-      environment: { AUTH_PROVIDERS: "credentials" },
-      mounts: { "/appdata": localMountPath },
-    }).start();
-    const baseUrl = `http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`;
-    const browser = await chromium.launch();
-    const page = await browser.newPage();
+    let mockApi: MockApiServer | undefined;
+    let homarrContainer: StartedTestContainer | undefined;
+    let browser: Browser | undefined;
 
     try {
+      mockApi = await startMockApiServerAsync({ title: "E2E Widget", status: "online", value: 42 });
+      const { db, localMountPath } = await createSqliteDbFileAsync();
+      await seedAdminUserAsync(db, adminCredentials);
+      homarrContainer = await createHomarrContainer({
+        environment: { AUTH_PROVIDERS: "credentials" },
+        mounts: { "/appdata": localMountPath },
+      }).start();
+      const baseUrl = `http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`;
+      browser = await chromium.launch();
+      const page = await browser.newPage();
+
       await page.goto(`${baseUrl}/auth/login`);
       await page.waitForLoadState("networkidle");
       await page.getByLabel("Username").fill(adminCredentials.username);
@@ -84,9 +91,7 @@ describe("Custom JSX v2 workbench", () => {
       await expect(page.getByText("E2E Widget")).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText("42")).toBeVisible({ timeout: 15_000 });
     } finally {
-      await browser.close();
-      await homarrContainer.stop();
-      await mockApi.stop();
+      await Promise.allSettled([browser?.close(), homarrContainer?.stop(), mockApi?.close()]);
     }
   }, 180_000);
 });

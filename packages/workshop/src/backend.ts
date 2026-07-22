@@ -9,7 +9,6 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 
 import type {
@@ -34,7 +33,6 @@ import {
   workshopScreenshotsSchema,
   workshopUserSchema,
   workshopVoteSchema,
-  WORKSHOP_CSS_SCHEMA,
 } from "./schema";
 
 export interface WorkshopListOptions {
@@ -458,9 +456,7 @@ export class WorkshopBackend {
     workshopScreenshotsSchema.parse(screenshots);
     const data = new FormData();
     Object.entries(parsed).forEach(([key, value]) => data.set(key, typeof value === "string" ? value : String(value)));
-    data.set("widgetSchema", parsed.type === "customCss" ? WORKSHOP_CSS_SCHEMA : CUSTOM_WIDGET_SCHEMA);
     data.set("author", this.currentUser?.id ?? "");
-    data.set("revision", "1");
     screenshots.forEach((file) => data.append("screenshots", file));
     try {
       const result = await this.pocketBase.collection("submissions").create(data);
@@ -483,8 +479,7 @@ export class WorkshopBackend {
 
     const data: Record<string, unknown> = {
       ...parsed,
-      widgetSchema: parsed.type === "customCss" ? WORKSHOP_CSS_SCHEMA : CUSTOM_WIDGET_SCHEMA,
-      revision: current.revision + 1,
+      expectedRevision: current.revision,
     };
     if (additions.length > 0) data["screenshots+"] = additions;
     if (removals.length > 0) data["screenshots-"] = removals;

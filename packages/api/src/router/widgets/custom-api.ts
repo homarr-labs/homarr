@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
 import { eq } from "@homarr/db";
-import { boards, customWidgetDefinitions, items } from "@homarr/db/schema";
+import { boards, customWidgetDefinitions, items, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import type { BoardPermission } from "@homarr/definitions";
 import {
   getCustomWidgetConfirmation,
@@ -81,7 +81,19 @@ async function resolvePlacedDefinitionAsync(ctx: RouterContext, itemId: string) 
     where: eq(customWidgetDefinitions.id, itemOptions.definitionId),
     with: { secrets: true },
   });
-  if (!stored) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget unavailable" });
+  if (!stored) {
+    const legacy = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
+      where: eq(legacyCustomWidgetDefinitions.id, itemOptions.definitionId),
+      columns: { id: true },
+    });
+    if (legacy) {
+      throw new TRPCError({
+        code: "PRECONDITION_FAILED",
+        message: "LEGACY_CUSTOM_WIDGET_MIGRATION_REQUIRED",
+      });
+    }
+    throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget unavailable" });
+  }
   if (!stored.enabled) throw new TRPCError({ code: "FORBIDDEN", message: "Widget is disabled" });
 
   const definition = parseStoredCustomWidgetDefinition(stored);

@@ -53,6 +53,27 @@ describe("lean Custom Widget schema", () => {
     expect(customWidgetDefinitionSchema.parse(withoutOptions).options).toEqual({});
   });
 
+  it("rejects source IDs that collide case-insensitively", () => {
+    const result = customWidgetDefinitionSchema.safeParse({
+      ...CUSTOM_WIDGET_STARTER,
+      sources: {
+        Api: { baseUrl: "https://one.example.com", networkScope: "public", auth: "none" },
+        api: { baseUrl: "https://two.example.com", networkScope: "public", auth: "none" },
+      },
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            path: ["sources", "api"],
+            message: expect.stringContaining("conflicts case-insensitively"),
+          }),
+        ]),
+      );
+    }
+  });
+
   it("rejects invocation params on load and unknown options", () => {
     const loadParam = customWidgetDefinitionSchema.safeParse({
       ...CUSTOM_WIDGET_STARTER,

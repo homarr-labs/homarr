@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { customWidgetDefinitionSchema } from "../core";
 import { CustomWidgetPreviewSessionService } from "../server";
+import type { PreviewSessionStore } from "../server";
 
 const definition = customWidgetDefinitionSchema.parse({
   $schema: "homarr-custom-widget-v2",
@@ -108,5 +109,84 @@ describe("preview sessions", () => {
         [],
       ),
     ).rejects.toThrow("authentication changed");
+  });
+
+  it("does not delete a preview when a different user looks it up", async () => {
+    const values = new Map<string, unknown>();
+    const store: PreviewSessionStore = {
+      saveSession: async (id, value) => {
+        values.set(id, value);
+      },
+      compareAndSwapSession: async (id, revision, value) => {
+        const current = values.get(id) as { revision?: number } | undefined;
+        if (current?.revision !== revision) return false;
+        values.set(id, value);
+        return true;
+      },
+      getSession: async (id) => values.get(id),
+      deleteSession: async (id) => {
+        values.delete(id);
+      },
+      appendJournal: async () => undefined,
+      getJournal: async () => [],
+    };
+    const service = new CustomWidgetPreviewSessionService({
+      createId: () => "session",
+      encrypt: String,
+      decrypt: String,
+      store,
+    });
+    await service.create({
+      userId: "owner",
+      sources: definition.sources,
+      requests: definition.requests,
+      name: definition.name,
+      template: definition.template,
+      optionDefinitions: definition.options,
+      options: { limit: 10 },
+      secrets: [],
+    });
+
+    await expect(service.get("session", "other-user")).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(service.get("session", "owner")).resolves.toMatchObject({ id: "session" });
+  });
+
+  it("retries concurrent mutations without losing source, secret, or action state", async () => {
+    const service = new CustomWidgetPreviewSessionService({
+      createId: () => "session",
+      encrypt: (value) => `encrypted:${value}`,
+      decrypt: (value) => value.replace("encrypted:", ""),
+    });
+    await service.create({
+      userId: "owner",
+      sources: {
+        ...definition.sources,
+        secondary: { baseUrl: "https://secondary.example.com", networkScope: "public", auth: "basic" },
+      },
+      requests: definition.requests,
+      name: definition.name,
+      template: definition.template,
+      optionDefinitions: definition.options,
+      options: { limit: 10 },
+      secrets: [],
+    });
+
+    await Promise.all([
+      service.setLiveActions("session", "owner", true),
+      service.setSecrets("session", "owner", [{ sourceId: "secondary", kind: "username", value: "operator" }]),
+      service.configureSource(
+        "session",
+        "owner",
+        "default",
+        { baseUrl: "https://api.example.com", networkScope: "public", auth: "bearer" },
+        [{ sourceId: "default", kind: "apiKey", value: "token" }],
+      ),
+    ]);
+
+    const session = await service.get("session", "owner");
+    expect(session.liveActions).toBe(true);
+    expect(session.sources.default?.baseUrl).toBe("https://api.example.com");
+    expect(service.getSecrets(session, "default")).toEqual([{ kind: "apiKey", value: "token" }]);
+    expect(service.getSecrets(session, "secondary")).toEqual([{ kind: "username", value: "operator" }]);
   });
 });

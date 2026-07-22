@@ -1,5 +1,8 @@
-DROP TABLE "custom_widget_secret";--> statement-breakpoint
-DROP TABLE "custom_widget_definition";--> statement-breakpoint
+ALTER TABLE "custom_widget_definition" RENAME TO "legacy_custom_widget_definition";--> statement-breakpoint
+ALTER TABLE "custom_widget_secret" RENAME TO "legacy_custom_widget_secret";--> statement-breakpoint
+ALTER TABLE "legacy_custom_widget_definition" RENAME CONSTRAINT "custom_widget_definition_creator_id_user_id_fk" TO "legacy_cw_definition_creator_id_user_id_fk";--> statement-breakpoint
+ALTER TABLE "legacy_custom_widget_secret" RENAME CONSTRAINT "custom_widget_secret_definition_id_custom_widget_definition_id_fk" TO "legacy_cw_secret_definition_id_fk";--> statement-breakpoint
+ALTER TABLE "legacy_custom_widget_secret" RENAME CONSTRAINT "custom_widget_secret_definition_id_kind_pk" TO "legacy_custom_widget_secret_definition_id_kind_pk";--> statement-breakpoint
 CREATE TABLE "custom_widget_definition" (
 	"id" varchar(64) PRIMARY KEY NOT NULL,
 	"name" varchar(256) NOT NULL,
@@ -23,4 +26,4 @@ CREATE TABLE "custom_widget_secret" (
 	CONSTRAINT "custom_widget_secret_definition_id_source_id_kind_pk" PRIMARY KEY("definition_id","source_id","kind")
 );--> statement-breakpoint
 ALTER TABLE "custom_widget_definition" ADD CONSTRAINT "custom_widget_definition_creator_id_user_id_fk" FOREIGN KEY ("creator_id") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "custom_widget_secret" ADD CONSTRAINT "custom_widget_secret_definition_id_custom_widget_definition_id_fk" FOREIGN KEY ("definition_id") REFERENCES "public"."custom_widget_definition"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "custom_widget_secret" ADD CONSTRAINT "cw_secret_definition_id_fk" FOREIGN KEY ("definition_id") REFERENCES "public"."custom_widget_definition"("id") ON DELETE cascade ON UPDATE no action;
