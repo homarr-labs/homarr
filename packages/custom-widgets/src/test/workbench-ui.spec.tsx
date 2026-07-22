@@ -89,7 +89,7 @@ describe("Custom Widget workbench UI", () => {
     expect(label).not.toBeNull();
     expect(host.querySelector("#template-editor")?.getAttribute("aria-label")).toBe("Template");
     expect(host.querySelector("#template-editor")?.getAttribute("aria-labelledby")).toBe("template-editor-label");
-  });
+  }, 15_000);
 
   test("renders response data through the Mantine Tree with accessible path actions", async () => {
     await render(

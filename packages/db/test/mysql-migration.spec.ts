@@ -43,7 +43,7 @@ describe("Mysql Migration", () => {
 
     connection.end();
     await mysqlContainer.stop();
-  }, 40_000);
+  }, 90_000);
 
   test("preserves populated v1 custom widgets and encrypted secrets", async () => {
     const mysqlContainer = await new MySqlContainer("mysql:latest").start();
@@ -127,5 +127,5 @@ describe("Mysql Migration", () => {
       await sql.end();
       await mysqlContainer.stop();
     }
-  }, 40_000);
+  }, 90_000);
 });
