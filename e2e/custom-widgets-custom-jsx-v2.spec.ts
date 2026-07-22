@@ -58,8 +58,8 @@ describe("Custom JSX v2 workbench", () => {
       await request.getByRole("combobox", { name: "Option" }).first().click();
       await page.getByRole("option", { name: "label" }).click();
       await page.getByRole("button", { name: "Advanced manifest JSON" }).first().click();
-      await expect(page.locator("#requests-editor-root")).toContainText('"$option": "label"');
-      await page.locator("#jsx-editor-root").fill(initialTemplate);
+      await expect(page.locator("#requests-editor")).toContainText('"$option": "label"');
+      await page.locator("#jsx-editor").fill(initialTemplate);
 
       await page.getByRole("button", { name: "Test and preview" }).last().click();
       await expect(page.getByRole("complementary", { name: "Widget preview" }).getByText("E2E Widget")).toBeVisible({
@@ -70,7 +70,7 @@ describe("Custom JSX v2 workbench", () => {
       await expect(page.getByText('Widget "E2E Custom JSX v2" created successfully.')).toBeVisible({ timeout: 15_000 });
       await page.waitForURL("**/manage/custom-widgets/edit/**", { timeout: 15_000 });
 
-      await page.locator("#jsx-editor-root").fill(updatedTemplate);
+      await page.locator("#jsx-editor").fill(updatedTemplate);
       await page.getByRole("button", { name: "Save", exact: true }).last().click();
       await expect(page.getByText('Widget "E2E Custom JSX v2" updated successfully.')).toBeVisible({ timeout: 15_000 });
 
