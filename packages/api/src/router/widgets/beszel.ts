@@ -227,11 +227,10 @@ export const beszelRouter = createTRPCRouter({
         systemId: input.systemId,
       });
 
-      let producer: Promise<void> | undefined;
       try {
         const instance = await createIntegrationAsync(integration);
         if (controller.signal.aborted) return;
-        producer = (async () => {
+        void (async () => {
           try {
             if (typeof instance.subscribeRealtimeMetrics !== "function") {
               throw new TRPCError({
@@ -286,7 +285,6 @@ export const beszelRouter = createTRPCRouter({
         for await (const event of queue) yield event;
       } finally {
         stop();
-        await producer?.catch(() => undefined);
         signal?.removeEventListener("abort", stop);
         logger.debug("Beszel realtime subscription stopped", {
           userId: ctx.session?.user?.id,
