@@ -66,4 +66,47 @@ describe("preview sessions", () => {
     });
     expect((await service.getJournal(created.id, "user"))[0]).toMatchObject({ path: "/data", status: 200 });
   });
+
+  it("applies source deployment values without restoring stale source metadata", async () => {
+    let id = 0;
+    const service = new CustomWidgetPreviewSessionService({
+      createId: () => `id-${++id}`,
+      encrypt: String,
+      decrypt: String,
+    });
+    const created = await service.create({
+      userId: "user",
+      sources: definition.sources,
+      requests: definition.requests,
+      name: definition.name,
+      template: definition.template,
+      optionDefinitions: definition.options,
+      options: { limit: 10 },
+      secrets: [],
+    });
+
+    await service.configureSource(
+      created.id,
+      "user",
+      "default",
+      { baseUrl: "http://service.local", networkScope: "private", auth: "bearer" },
+      [{ sourceId: "default", kind: "apiKey", value: "secret" }],
+    );
+
+    const configured = await service.get(created.id, "user");
+    expect(configured.sources.default).toEqual({
+      baseUrl: "http://service.local",
+      networkScope: "private",
+      auth: "bearer",
+    });
+    await expect(
+      service.configureSource(
+        created.id,
+        "user",
+        "default",
+        { baseUrl: "http://service.local", networkScope: "private", auth: "none" },
+        [],
+      ),
+    ).rejects.toThrow("authentication changed");
+  });
 });

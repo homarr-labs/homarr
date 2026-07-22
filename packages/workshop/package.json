@@ -14,6 +14,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
+    "./backend": "./src/backend.ts",
     "./schema": "./src/schema.ts"
   },
   "scripts": {
@@ -25,7 +26,9 @@
   },
   "dependencies": {
     "@homarr/custom-widgets": "workspace:^0.1.0",
+    "@tanstack/react-query": "catalog:",
     "pocketbase": "catalog:",
+    "react": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

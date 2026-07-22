@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Alert, Badge, Button, Code, Group, Modal, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
+import type { ModalProps } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import type { ImportReview } from "../core/import";
@@ -24,8 +25,11 @@ export interface ImportReviewDialogProps {
   opened: boolean;
   review: ImportReview | null;
   pending: boolean;
+  confirmDisabled?: boolean;
   messages: ImportReviewMessages;
   children?: ReactNode;
+  stackId?: string;
+  zIndex?: ModalProps["zIndex"];
   onClose(): void;
   onConfirm(): void;
 }
@@ -45,13 +49,24 @@ export function ImportReviewDialog({
   opened,
   review,
   pending,
+  confirmDisabled,
   messages,
   children,
+  stackId,
+  zIndex,
   onClose,
   onConfirm,
 }: ImportReviewDialogProps) {
   return (
-    <Modal opened={opened} onClose={onClose} title={messages.title} centered size="lg">
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={messages.title}
+      centered
+      size="lg"
+      stackId={stackId}
+      zIndex={zIndex}
+    >
       {review && (
         <Stack gap="md">
           <Text size="sm" c="dimmed">
@@ -104,7 +119,7 @@ export function ImportReviewDialog({
             <Button type="button" variant="default" onClick={onClose} disabled={pending}>
               {messages.cancel}
             </Button>
-            <Button type="button" onClick={onConfirm} loading={pending}>
+            <Button type="button" onClick={onConfirm} loading={pending} disabled={confirmDisabled}>
               {messages.confirm}
             </Button>
           </Group>

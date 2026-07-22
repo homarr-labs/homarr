@@ -703,14 +703,16 @@
   },
   "customWidget": {
     "secretEntry": {
-      "title": "Configure credential",
-      "description": "The value is encrypted by Homarr and is never returned to the requesting agent.",
+      "title": "Configure API source",
+      "description": "Confirm the server URL and enter credentials. Secret values are encrypted by Homarr and never returned to the requesting agent.",
       "loading": "Loading secure request…",
-      "saved": "Credential saved. You can close this page.",
+      "saved": "API source configured. You can close this page.",
       "unavailable": "Request unavailable",
-      "saveError": "Unable to save credentials",
+      "saveError": "Unable to configure API source",
       "source": "API source: {name}",
-      "save": "Save encrypted credential",
+      "baseUrl": "Server URL",
+      "networkScope": "Network access",
+      "save": "Save API configuration",
       "expires": "This one-time request expires at {time}.",
       "field": {
         "apiKey": "API key or token",
@@ -1089,6 +1091,16 @@
           "password": "Password"
         }
       },
+      "sourceSetup": {
+        "title": "Configure API sources",
+        "description": "Confirm where this widget connects and add credentials. Private and loopback URLs are specific to your Homarr installation.",
+        "suggestedUrl": "Suggested URL",
+        "confirmUrl": "I confirm that this server URL is correct for my Homarr installation",
+        "ready": "URL ready",
+        "needsUrl": "Confirm URL",
+        "credentialsMissing": "Credentials missing",
+        "credentialsOptional": "You can install without credentials and configure them later, but requests will fail until they are added."
+      },
       "actionWarning": {
         "title": "This widget can change remote data",
         "description": "Review every named action, inherited credential, and destructive confirmation after import. Secrets are not included in the file."
@@ -1147,6 +1159,8 @@
       "descriptionField": "Description",
       "screenshots": "Screenshots",
       "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
+      "privateSourceWarning": "This widget contains private source URLs for: {sources}. Replace personal hosts or IP addresses with safe service placeholders before publishing.",
+      "privateSourceConfirmation": "I reviewed these source URLs and they do not expose private infrastructure details",
       "action": "Publish now",
       "error": "Publication failed"
     },

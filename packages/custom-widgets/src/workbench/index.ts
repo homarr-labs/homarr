@@ -12,6 +12,7 @@ export * from "./preview-diagnostics-panel";
 export * from "./preview-header";
 export * from "./preview-utils";
 export * from "./request-references";
+export * from "./source-setup";
 export {
   CUSTOM_WIDGET_AUTH_SECRET_FIELDS,
   DEFAULT_CUSTOM_WIDGET_FORM_VALUES,

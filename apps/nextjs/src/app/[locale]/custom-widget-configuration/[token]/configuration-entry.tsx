@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, Card, Center, PasswordInput, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
+import { Alert, Button, Card, Center, PasswordInput, Select, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
 import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
 import { useScopedI18n } from "@homarr/translation/client";
@@ -12,22 +12,30 @@ interface RequestDetails {
   kinds: Array<"apiKey" | "username" | "password">;
   expiresAt: number;
   status: "pending" | "completed";
+  source: {
+    baseUrl: string;
+    networkScope: "public" | "private" | "loopback";
+  };
 }
 
-export function CustomWidgetSecretEntry({ token }: { token: string }) {
+export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
   const t = useScopedI18n("customWidget.secretEntry");
   const [details, setDetails] = useState<RequestDetails | null>(null);
   const [values, setValues] = useState<Record<string, string>>({});
+  const [baseUrl, setBaseUrl] = useState("");
+  const [networkScope, setNetworkScope] = useState<"public" | "private" | "loopback">("public");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    void fetch(`/api/custom-widgets/secret-request/${encodeURIComponent(token)}`)
+    void fetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`)
       .then(async (response) => {
         const body = (await response.json()) as RequestDetails | { error: string };
         if (!response.ok || "error" in body) throw new Error("error" in body ? body.error : t("unavailable"));
         setDetails(body);
+        setBaseUrl(body.source.baseUrl);
+        setNetworkScope(body.source.networkScope);
       })
       .catch((cause: unknown) => setError(cause instanceof Error ? cause.message : t("unavailable")))
       .finally(() => setLoading(false));
@@ -37,10 +45,10 @@ export function CustomWidgetSecretEntry({ token }: { token: string }) {
     setSaving(true);
     setError(null);
     try {
-      const response = await fetch(`/api/custom-widgets/secret-request/${encodeURIComponent(token)}`, {
+      const response = await fetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ secrets: values }),
+        body: JSON.stringify({ baseUrl, networkScope, secrets: values }),
       });
       const body = (await response.json()) as { status?: string; error?: string };
       if (!response.ok) throw new Error(body.error ?? t("saveError"));
@@ -81,6 +89,14 @@ export function CustomWidgetSecretEntry({ token }: { token: string }) {
                   {t("source", { name: details.sourceName })}
                 </Text>
               </Card>
+              <TextInput label={t("baseUrl")} type="url" value={baseUrl} onChange={(event) => setBaseUrl(event.currentTarget.value)} required />
+              <Select
+                label={t("networkScope")}
+                data={["public", "private", "loopback"]}
+                value={networkScope}
+                allowDeselect={false}
+                onChange={(value) => value && setNetworkScope(value as typeof networkScope)}
+              />
               {details.kinds.map((kind) => {
                 const Input = kind === "username" ? TextInput : PasswordInput;
                 return (
@@ -97,7 +113,7 @@ export function CustomWidgetSecretEntry({ token }: { token: string }) {
               })}
               <Button
                 loading={saving}
-                disabled={details.kinds.some((kind) => !values[kind])}
+                disabled={!URL.canParse(baseUrl) || details.kinds.some((kind) => !values[kind])}
                 onClick={() => void submit()}
               >
                 {t("save")}

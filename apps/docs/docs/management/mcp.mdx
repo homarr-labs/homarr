@@ -177,13 +177,14 @@ Then, read the live schema and component resources. These resources describe the
 5. Test named requests with `customWidget_previewQuery` and `customWidget_previewAction`.
 6. Open the returned preview URL.
 7. Examine `customWidget_previewJournal`.
-8. Change the definition with `customWidget_templatePatch` or `customWidget_update`.
-9. Set a supplied credential with `customWidget_secretSet`.
-10. Otherwise, call `customWidget_secretRequestUser` to create a ten-minute Homarr entry URL.
-11. Call `customWidget_create`.
-12. Repeat this procedure for the next Custom Widget.
+8. Revise the local candidate and create another preview session until it is ready.
+9. Call `customWidget_create`, supplying any credentials and deployment-specific source URLs the user already provided.
+10. If the user must enter the source URL or credentials, call `customWidget_configurationRequestUser` with the new definition ID and wait for completion.
+11. Create a final preview with that definition ID so Homarr loads its stored credentials, then test it again.
+12. Use `customWidget_update` or `customWidget_templatePatch` for any final saved-definition corrections.
+13. Repeat this procedure for the next Custom Widget.
 
-The agent receives the credential request status. The agent does not receive the plaintext credential.
+The agent receives the configuration-request status. The agent does not receive plaintext credentials. A preview-scoped setup URL configures only that temporary preview; use a definition-scoped URL when the values must persist.
 
 Discovery resources:
 
@@ -210,7 +211,11 @@ The Custom Widget tools are:
 - `customWidget_previewAction`
 - `customWidget_previewJournal`
 - `customWidget_secretSet`
-- `customWidget_secretRequestUser`
+- `customWidget_sourceConfigure`
+- `customWidget_configurationRequestUser`
+- `customWidget_workshopSearch`
+- `customWidget_workshopGet`
+- `customWidget_workshopInstall`
 - `customWidget_getAuthoringPrompt`
 - `customWidget_getSkill`
 

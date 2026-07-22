@@ -5,6 +5,7 @@ import {
   customWidgetRequestsSchema,
   customWidgetSecretKinds,
   customWidgetSourcesSchema,
+  hasSameCustomWidgetSourceAuthentication,
 } from "../core";
 import type { CustomJsxRequest, CustomWidgetOptions, CustomWidgetSource } from "../core";
 import { CustomWidgetDomainError } from "./errors";
@@ -170,6 +171,40 @@ export class CustomWidgetPreviewSessionService {
     const replacements = new Set(secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));
     const next = {
       ...session,
+      secrets: [
+        ...session.secrets.filter((secret) => !replacements.has(`${secret.sourceId}:${secret.kind}`)),
+        ...secrets.map((secret) => ({ ...secret, value: this.options.encrypt(secret.value) })),
+      ],
+    };
+    await this.save(next);
+    return { id, expiresAt: next.expiresAt };
+  }
+
+  public async configureSource(
+    id: string,
+    userId: string,
+    sourceId: string,
+    source: CustomWidgetSource,
+    secrets: Array<{ sourceId: string; kind: (typeof customWidgetSecretKinds)[number]; value: string }>,
+  ) {
+    const session = await this.get(id, userId);
+    const currentSource = session.sources[sourceId];
+    if (!currentSource) {
+      throw new CustomWidgetDomainError({ code: "NOT_FOUND", message: "Preview source was not found" });
+    }
+    if (!hasSameCustomWidgetSourceAuthentication(currentSource, source)) {
+      throw new CustomWidgetDomainError({
+        code: "BAD_REQUEST",
+        message: "Preview source authentication changed; create a new configuration request",
+      });
+    }
+    const replacements = new Set(secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));
+    const next = {
+      ...session,
+      sources: {
+        ...session.sources,
+        [sourceId]: { ...currentSource, baseUrl: source.baseUrl, networkScope: source.networkScope },
+      },
       secrets: [
         ...session.secrets.filter((secret) => !replacements.has(`${secret.sourceId}:${secret.kind}`)),
         ...secrets.map((secret) => ({ ...secret, value: this.options.encrypt(secret.value) })),

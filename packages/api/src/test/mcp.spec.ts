@@ -49,7 +49,11 @@ test("MCP tools should contain expected procedures", () => {
   expect(toolNames).toContain("customWidget_previewAction");
   expect(toolNames).toContain("customWidget_previewJournal");
   expect(toolNames).toContain("customWidget_secretSet");
-  expect(toolNames).toContain("customWidget_secretRequestUser");
+  expect(toolNames).toContain("customWidget_sourceConfigure");
+  expect(toolNames).toContain("customWidget_configurationRequestUser");
+  expect(toolNames).toContain("customWidget_workshopSearch");
+  expect(toolNames).toContain("customWidget_workshopGet");
+  expect(toolNames).toContain("customWidget_workshopInstall");
   expect(toolNames).toContain("customWidget_getAuthoringPrompt");
   expect(toolNames).toContain("customWidget_getSkill");
   expect(toolNames).not.toContain("customWidget_import");
@@ -98,7 +102,11 @@ test("custom widget public procedures remain available", () => {
       "setPreviewLiveActions",
       "previewJournal",
       "secretSet",
-      "secretRequestUser",
+      "sourceConfigure",
+      "configurationRequestUser",
+      "workshopSearch",
+      "workshopGet",
+      "workshopInstall",
       "secretClear",
       "getAuthoringPrompt",
       "getSkill",

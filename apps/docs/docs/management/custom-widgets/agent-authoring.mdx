@@ -60,14 +60,23 @@ These interfaces do not return an archive URL or archive hash.
 5. Create a preview session.
 6. Test the queries and actions.
 7. Open the preview URL with browser tools.
-8. Set the credential if the user supplied it.
-9. Otherwise, ask the user for the credential with the ten-minute Homarr credential URL.
-10. Inspect the redacted journal.
-11. Patch the definition until it is valid.
-12. Create the widget.
+8. Inspect the redacted journal and revise the local candidate until it is valid.
+9. Create the widget, including any source URLs and credentials the user already supplied.
+10. Otherwise, ask the user to configure the saved definition with the ten-minute Homarr source-setup URL.
+11. Create a final preview with the saved definition ID so Homarr loads its stored credentials, then test it again.
+12. Update the saved definition if the final verification finds a problem.
 13. Repeat the procedure for the next widget.
 
-Each credential URL applies to one definition or preview, one source, and the required fields. The agent receives only the request status.
+Each source-configuration URL applies to one definition or preview and one source. The user confirms the server URL, network scope, and required credential fields directly in Homarr. The agent receives only request status and never receives plaintext credentials. Preview-scoped values expire with that preview; definition-scoped values persist.
+
+Agents can install existing widgets without regenerating them:
+
+1. Search with `customWidget_workshopSearch`.
+2. Inspect and validate a result with `customWidget_workshopGet`.
+3. Install it with `customWidget_workshopInstall`.
+4. Configure deployment-specific URLs and supplied credentials with `customWidget_sourceConfigure`.
+5. If the agent does not have those values, call `customWidget_configurationRequestUser` and wait for completion.
+6. Test the installed definition, then use `board_addItem` with kind `customApi` and the returned definition ID.
 
 Homarr encrypts the plaintext immediately. Homarr does not return the plaintext.
 

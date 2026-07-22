@@ -28,6 +28,7 @@ import { templateProcedures } from "./template-procedures";
 import { transferProcedures } from "./transfer-procedures";
 import { assertSecretSources, requiredSecretKinds } from "./secret-policy";
 import { secretProcedures } from "./secret-procedures";
+import { workshopProcedures } from "./workshop-procedures";
 
 const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
 const logger = createLogger({ module: "custom-widget" });
@@ -167,6 +168,7 @@ export const customWidgetRouter = createTRPCRouter({
     }),
 
   ...secretProcedures,
+  ...workshopProcedures,
 
   toggleEnabled: manageProcedure
     .input(z.object({ id: z.string(), enabled: z.boolean() }))

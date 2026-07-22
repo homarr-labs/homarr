@@ -1374,6 +1374,9 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
+      '@homarr/workshop':
+        specifier: workspace:^0.1.0
+        version: link:../workshop
       '@kubernetes/client-node':
         specifier: 'catalog:'
         version: 1.4.0
@@ -2880,9 +2883,15 @@ importers:
       '@homarr/custom-widgets':
         specifier: workspace:^0.1.0
         version: link:../custom-widgets
+      '@tanstack/react-query':
+        specifier: 'catalog:'
+        version: 5.101.2(react@19.2.7)
       pocketbase:
         specifier: 'catalog:'
         version: 0.26.9
+      react:
+        specifier: 'catalog:'
+        version: 19.2.7
       zod:
         specifier: 'catalog:'
         version: 4.4.3

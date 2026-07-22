@@ -5,4 +5,5 @@ export * from "./options";
 export * from "./schema";
 export * from "./schema-references";
 export * from "./secret-requirements";
+export * from "./source-setup";
 export * from "./tabler-icons";

@@ -91,13 +91,13 @@ const AUTHORING_PROMPT = `You are writing one safe Homarr Custom JSX v2 dashboar
 Manifest contract:
 ${leanShape}
 
-Sources are keyed by name and must include "default". Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Never put credentials in the manifest.
+Sources are keyed by name and must include "default". Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Use the stable public API URL for public services and a clear suggested URL for self-hosted services; Homarr asks the installer for their own server URL. Never put credentials in the manifest.
 
 Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. DELETE requires full permission and receives confirmation automatically. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Paths and query values must be primitive; JSON bodies may bind structured options.
 
 Options are keyed by name. Every option has label, control, and default. Controls: text, textarea, number, switch, select, multiSelect, slider, date, time, color, icon, url, duration, timeZone, json. Select choices use \`"choices": [{"label":"...","value":"..."}]\`. Dynamic choices must use \`"choicesFrom": {"request":"requestId","itemsPath":"optional.path","valuePath":"id","labelPath":"name"}\`, never an object under \`choices\`. Options are configured outside the widget and read through \`options.name\`; a bound control writes only to \`inputs.name\` and never changes an option.
 
-JSX reads data.requestId, status.requestId, options.name, and temporary inputs.name. A status has loading, ok, status, statusText, and error. Use bind="search" on supported controls and inputs.search in params. SubFetch invokes a manual query. With trigger="manual", it renders its own load button; never author onClick or a fetch callback. Its child callback is (result, meta), where meta has ok, status, statusText, loading=false, and no error because SubFetch renders loading/error states itself. Use expression callbacks for map, filter, sort, and SubFetch. Do not use imports, hooks, refs, raw HTML, event callbacks, fetch, eval, bigint, npm packages, authored const blocks, IIFEs, or recursion. Regex is only for bounded string matching/replacement. Do not embed secrets.
+JSX reads data.requestId, status.requestId, options.name, and temporary inputs.name. A status has loading, ok, status, statusText, and error. Use bind="search" on supported controls and inputs.search in params. SubFetch invokes a manual query. With trigger="manual", it renders its own load button; pass a card or image as triggerContent with triggerAriaLabel to make that content launch the request. Never author onClick or a fetch callback. Its child callback is (result, meta), where meta has ok, status, statusText, loading=false, and no error because SubFetch renders loading/error states itself. Use expression callbacks for map, filter, sort, and SubFetch. Do not use imports, hooks, refs, raw HTML, event callbacks, fetch, eval, bigint, npm packages, authored const blocks, IIFEs, or recursion. Regex is only for bounded string matching/replacement. Do not embed secrets.
 
 Hard syntax rule: never write \`=> {\` anywhere. Every callback must be one concise expression, for example \`items.map(item => <Card key={item.id}>...</Card>)\`. Inline derived values directly, even when that repeats a short expression. Never use an IIFE to create local variables or branch; use JSX ternaries instead. Callback parameter names must not shadow the reserved roots \`data\`, \`status\`, \`options\`, or \`inputs\`.
 
@@ -123,9 +123,11 @@ export const CUSTOM_WIDGET_AUTHORING_PROMPT = AUTHORING_PROMPT;
 
 export const CUSTOM_WIDGET_MCP_AUTHORING_PROMPT = `Author one Homarr Custom JSX v2 widget at a time.
 
-Read the live schema and only the component resources needed for the design. Construct a credential-free widget, validate it, create a preview, test queries and simulated actions, visually inspect it, then create it. Request credentials through Homarr when needed and never repeat plaintext. The live resources are authoritative for this Homarr release.
+Read the live schema and only the component resources needed for the design. Construct a credential-free widget, validate it, create a preview, test queries and simulated actions, visually inspect it, then create it. Configure deployment-specific source URLs and request credentials through Homarr when needed; never repeat plaintext. The live resources are authoritative for this Homarr release.
 
-Use the lean keyed sources, requests, and options contract. Bind saved values directly with $option and invocation values with $param. Load queries cannot use $param. Keep the design responsive, accessible, theme-safe, loading-aware, empty-aware, and error-aware.`;
+Use the lean keyed sources, requests, and options contract. Bind saved values directly with $option and invocation values with $param. Load queries cannot use $param. Keep the design responsive, accessible, theme-safe, loading-aware, empty-aware, and error-aware.
+
+Use Workshop search/get/install when the user asks for an existing community widget. After installation, configure self-hosted source URLs and credentials with the dedicated source configuration tool or a secure user configuration request.`;
 
 export function buildCustomWidgetMcpPrompt(request?: string | null, documentationUrl?: string | null) {
   const sections = [CUSTOM_WIDGET_MCP_AUTHORING_PROMPT];

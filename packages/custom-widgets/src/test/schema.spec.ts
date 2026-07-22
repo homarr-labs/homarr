@@ -6,6 +6,9 @@ import {
   customJsxRequestSchema,
   getCustomWidgetDefaultOptions,
   getCustomWidgetSecretRequirements,
+  getCustomWidgetSourceSetups,
+  hasSameCustomWidgetSourceAuthentication,
+  applyCustomWidgetSourceSetup,
 } from "../core";
 
 describe("lean Custom Widget schema", () => {
@@ -80,6 +83,65 @@ describe("lean Custom Widget schema", () => {
     expect(
       getCustomWidgetSecretRequirements(definition.sources).map(({ sourceId, kind }) => `${sourceId}:${kind}`),
     ).toEqual(["default:apiKey", "admin:username", "admin:password"]);
+  });
+
+  it("requires installation confirmation for private and placeholder source URLs", () => {
+    const sources = {
+      default: { baseUrl: "https://pokeapi.co/api/v2", networkScope: "public" as const, auth: "none" as const },
+      tautulli: {
+        name: "Tautulli",
+        baseUrl: "http://tautulli.local:8181",
+        networkScope: "private" as const,
+        auth: { type: "apiKeyQuery" as const, name: "apikey" },
+      },
+      placeholder: {
+        baseUrl: "https://api.example.com",
+        networkScope: "public" as const,
+        auth: "none" as const,
+      },
+    };
+    const setups = getCustomWidgetSourceSetups(sources);
+    expect(setups.map(({ sourceId, requiresUrlConfirmation }) => [sourceId, requiresUrlConfirmation])).toEqual([
+      ["default", false],
+      ["tautulli", true],
+      ["placeholder", true],
+    ]);
+    expect(setups.find(({ sourceId }) => sourceId === "tautulli")?.credentialFields).toEqual([
+      { kind: "apiKey", destination: "apikey", configured: false },
+    ]);
+  });
+
+  it("applies source setup without changing source authentication", () => {
+    const sources = {
+      default: {
+        baseUrl: "http://tautulli.local:8181",
+        networkScope: "private" as const,
+        auth: { type: "apiKeyQuery" as const, name: "apikey" },
+      },
+    };
+    expect(
+      applyCustomWidgetSourceSetup(sources, {
+        default: { baseUrl: "http://192.168.1.20:8181", networkScope: "private" },
+      }).default,
+    ).toEqual({
+      baseUrl: "http://192.168.1.20:8181",
+      networkScope: "private",
+      auth: { type: "apiKeyQuery", name: "apikey" },
+    });
+  });
+
+  it("detects stale source authentication snapshots", () => {
+    const bearer = { baseUrl: "https://example.com", networkScope: "public" as const, auth: "bearer" as const };
+    expect(hasSameCustomWidgetSourceAuthentication(bearer, { ...bearer, baseUrl: "https://api.example.com" })).toBe(
+      true,
+    );
+    expect(hasSameCustomWidgetSourceAuthentication(bearer, { ...bearer, auth: "none" })).toBe(false);
+    expect(
+      hasSameCustomWidgetSourceAuthentication(
+        { ...bearer, auth: { type: "apiKeyHeader", name: "X-API-Key" } },
+        { ...bearer, auth: { type: "apiKeyHeader", name: "Authorization" } },
+      ),
+    ).toBe(false);
   });
 
   it("supports official Mantine compound names and separates bigint diagnostics", () => {

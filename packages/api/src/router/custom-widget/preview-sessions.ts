@@ -80,3 +80,10 @@ export const getPreviewSessionSecrets = (session: CustomWidgetPreviewSession, so
   getService().getSecrets(session, sourceId);
 export const setPreviewSessionSecrets = (id: string, userId: string, secrets: CreatePreviewSessionInput["secrets"]) =>
   call(() => getService().setSecrets(id, userId, secrets));
+export const configurePreviewSessionSource = (
+  id: string,
+  userId: string,
+  sourceId: string,
+  source: CreatePreviewSessionInput["sources"][string],
+  secrets: CreatePreviewSessionInput["secrets"],
+) => call(() => getService().configureSource(id, userId, sourceId, source, secrets));

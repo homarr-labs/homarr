@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Button, FileInput, Group, Modal, Stack, Textarea, TextInput } from "@mantine/core";
+import { Alert, Button, Checkbox, FileInput, Group, Modal, Stack, Textarea, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { showErrorNotification } from "@homarr/notifications";
-import type { WorkshopUser } from "@homarr/workshop";
+import { useWorkshopCreateMutation } from "@homarr/workshop/backend";
+import type { WorkshopUser } from "@homarr/workshop/schema";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { createWorkshopClient } from "./workshop-client";
@@ -26,9 +27,14 @@ export function WorkshopPublishModal({
   const [title, setTitle] = useState(widget.name);
   const [description, setDescription] = useState("");
   const [screenshots, setScreenshots] = useState<File[]>([]);
-  const [pending, setPending] = useState(false);
+  const createSubmission = useWorkshopCreateMutation(client);
   const [error, setError] = useState<string | null>(null);
   const [published, setPublished] = useState(false);
+  const [sourceUrlsReviewed, setSourceUrlsReviewed] = useState(false);
+  const definition = clientApi.customWidget.get.useQuery({ id: widget.id }, { enabled: opened });
+  const privateSources = Object.entries(definition.data?.sources ?? {}).filter(
+    ([, source]) => source.networkScope !== "public",
+  );
 
   useEffect(() => {
     const unsubscribe = client.subscribeToAuth(setUser);
@@ -42,22 +48,20 @@ export function WorkshopPublishModal({
     setScreenshots([]);
     setError(null);
     setPublished(false);
+    setSourceUrlsReviewed(false);
   }, [opened, widget.name]);
 
   const publish = async () => {
-    setPending(true);
     setError(null);
     try {
       const definition = await utils.customWidget.export.fetch({ id: widget.id });
-      await client.create(
-        { type: "customWidget", title, description, content: JSON.stringify(definition) },
+      await createSubmission.mutateAsync({
+        input: { type: "customWidget", title, description, content: JSON.stringify(definition) },
         screenshots,
-      );
+      });
       setPublished(true);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : t("publish.error"));
-    } finally {
-      setPending(false);
     }
   };
 
@@ -109,8 +113,25 @@ export function WorkshopPublishModal({
               value={screenshots}
               onChange={setScreenshots}
             />
+            {privateSources.length > 0 && (
+              <Alert color="yellow">
+                {t("publish.privateSourceWarning", {
+                  sources: privateSources.map(([sourceId, source]) => source.name ?? sourceId).join(", "),
+                })}
+                <Checkbox
+                  mt="sm"
+                  checked={sourceUrlsReviewed}
+                  onChange={(event) => setSourceUrlsReviewed(event.currentTarget.checked)}
+                  label={t("publish.privateSourceConfirmation")}
+                />
+              </Alert>
+            )}
             {error && <Alert color="red">{error}</Alert>}
-            <Button loading={pending} disabled={!user || title.trim().length < 3} onClick={() => void publish()}>
+            <Button
+              loading={createSubmission.isPending}
+              disabled={!user || title.trim().length < 3 || (privateSources.length > 0 && !sourceUrlsReviewed)}
+              onClick={() => void publish()}
+            >
               {t("publish.action")}
             </Button>
           </>

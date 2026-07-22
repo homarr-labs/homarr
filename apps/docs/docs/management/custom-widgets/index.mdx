@@ -61,9 +61,17 @@ The workbench keeps one continuous layout with visual source, request, and optio
 
 Exports, imports, Workshop, MCP, and storage all validate the same schema. Old formats are rejected. A missing definition only renders **Custom widget unavailable** inside its tile.
 
+When adding widgets while editing a board, the Custom Widgets section always includes **Install from Workshop**. The Workshop and API source review open above the widget picker without closing it. After import, the new definition appears in the picker. Its tile waits for the board to be saved before server requests run and loads automatically after a successful save; no page reload is required.
+
 ## Import and Workshop
 
-Import review shows origins, authentication modes, network scopes, methods, actions, and permissions. It also lets the user supply each required credential before import. Workshop publishes technically valid widgets immediately; users can vote or report them, and administrators can delete submissions.
+Import review shows origins, authentication modes, network scopes, methods, actions, and permissions. Every source has a suggested URL, but private and loopback sources must be confirmed or replaced for the current Homarr installation. The same screen accepts API keys, tokens, usernames, and passwords; credentials remain optional at install time and missing values stay visible on the Custom Widgets page.
+
+For example, installing **Tautulli Activity** asks for both the user's Tautulli URL and API key. A stable public source such as PokéAPI keeps its published URL without creating unnecessary setup work.
+
+Workshop publishes technically valid widgets immediately; users can vote or report them, and administrators can delete submissions. Publishers should replace personal private-network hosts with a clear service placeholder before publishing.
+
+Connected agents can search, inspect, and install Workshop widgets with `customWidget_workshopSearch`, `customWidget_workshopGet`, and `customWidget_workshopInstall`. After installation they can set a source URL and credentials with `customWidget_sourceConfigure`, or create a secure user-facing setup URL with `customWidget_configurationRequestUser`. Secret values are never returned through MCP.
 
 ## Bundled examples
 

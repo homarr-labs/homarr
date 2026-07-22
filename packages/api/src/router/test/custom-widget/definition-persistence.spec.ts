@@ -7,6 +7,7 @@ import { BUNDLED_CUSTOM_WIDGETS } from "@homarr/custom-widgets/core";
 import { describe, expect, test } from "vitest";
 
 import { customWidgetRouter } from "../../custom-widget/custom-widget-router";
+import { getCustomWidgetConfigurationRequestForUser } from "../../custom-widget/configuration-requests";
 
 const userId = createId();
 const session = {
@@ -97,5 +98,61 @@ describe("custom widget definition persistence", () => {
     expect(storedDefinition?.name).toBe(originalDefinition?.name);
     expect(storedDefinition?.updatedAt).toEqual(originalDefinition?.updatedAt);
     expect(storedSecret).toEqual(originalSecret);
+  });
+
+  test("configures a source URL and credential together", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const created = await caller.create({ ...jellyfin, secrets: [] });
+
+    await caller.sourceConfigure({
+      definitionId: created.id,
+      sourceId: "default",
+      baseUrl: "http://jellyfin.local:8096",
+      networkScope: "private",
+      secrets: [secret],
+    });
+
+    const definition = await caller.get({ id: created.id });
+    expect(definition.sources.default?.baseUrl).toBe("http://jellyfin.local:8096");
+    expect(definition.secrets).toMatchObject([{ sourceId: "default", kind: "apiKey", hasValue: true }]);
+  });
+
+  test("rolls back a source URL when its credential cannot be stored", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const created = await caller.create({ ...jellyfin, secrets: [] });
+    const before = await caller.get({ id: created.id });
+    rejectSecretInserts(db);
+
+    await expect(
+      caller.sourceConfigure({
+        definitionId: created.id,
+        sourceId: "default",
+        baseUrl: "http://jellyfin.local:8096",
+        networkScope: "private",
+        secrets: [secret],
+      }),
+    ).rejects.toThrow("forced secret insert failure");
+
+    expect((await caller.get({ id: created.id })).sources.default?.baseUrl).toBe(before.sources.default?.baseUrl);
+  });
+
+  test("uses the preview widget name in a user configuration request", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const preview = await caller.previewCreate({
+      definition: { ...jellyfin, name: "Living room Jellyfin" },
+      secrets: [],
+    });
+
+    const request = await caller.configurationRequestUser({
+      previewSessionId: preview.previewSession.id,
+      sourceId: "default",
+    });
+
+    expect(await getCustomWidgetConfigurationRequestForUser(request.requestId, userId)).toMatchObject({
+      widgetName: "Living room Jellyfin",
+    });
   });
 });
