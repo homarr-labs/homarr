@@ -18,7 +18,8 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
     token_endpoint_auth_method: env.AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD,
   },
   issuer: env.AUTH_OIDC_ISSUER,
-  allowDangerousEmailAccountLinking: env.AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING,
+  allowDangerousEmailAccountLinking:
+    env.AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING || env.AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING,
   authorization: {
     params: {
       scope: env.AUTH_OIDC_SCOPE_OVERWRITE,
