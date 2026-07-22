@@ -1,0 +1,37 @@
+.dockerignore
+  s_6852af5a167b0b::t_293c51ddfa3c17 20-21
+Dockerfile
+  s_6852af5a167b0b::t_7aaa2dbf0637fd 11-12,19
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_6852af5a167b0b::t_f9b33df4ce9f88 130
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_6852af5a167b0b::t_0538247ba4f420 18,48-49,113-116
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_6852af5a167b0b::t_51d43f04cd2005 4,17-25
+apps/nextjs/src/components/board/items/widget-context-menu-content.tsx
+  s_6852af5a167b0b::t_b364f49a6b776f 163-169,171
+packages/boards/src/context.tsx
+  s_6852af5a167b0b::t_752e85cb631b9a 9-13,31
+packages/db/proxy.ts
+  s_6852af5a167b0b::t_ce3fdc3612d727 44-58
+packages/widgets/src/modals/widget-edit-modal-content.tsx
+  s_6852af5a167b0b::t_d80eed623ca8eb 3,59-61,130
+scripts/ci/benchmark.mts
+  s_6852af5a167b0b::t_4c4b3da187962f 16-26,567-568
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "fab958ff6e3855a96e1eab23e3792b4e5150934d",
+  "prompts": {},
+  "sessions": {
+    "s_6852af5a167b0b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8a85-e8ee-7e40-9d0e-25fc837d497c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
