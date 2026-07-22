@@ -1,9 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useColorMode } from "@docusaurus/theme-common";
 import { IconChevronLeft, IconChevronRight, IconTrash } from "@tabler/icons-react";
 import { Highlight, themes } from "prism-react-renderer";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { cn } from "@site/src/lib/utils";
 
 const prismThemes = { light: themes.github, dark: themes.dracula } as const;
@@ -34,6 +42,7 @@ export const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: stri
       {urls.length > 1 && (
         <>
           <button
+            type="button"
             className="absolute left-3 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
             onClick={() => setIdx((i) => (i - 1 + urls.length) % urls.length)}
             aria-label="Previous screenshot"
@@ -41,6 +50,7 @@ export const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: stri
             <IconChevronLeft size={16} />
           </button>
           <button
+            type="button"
             className="absolute right-3 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
             onClick={() => setIdx((i) => (i + 1) % urls.length)}
             aria-label="Next screenshot"
@@ -50,6 +60,7 @@ export const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: stri
           <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5 rounded-full bg-black/50 px-2.5 py-1">
             {urls.map((_, i) => (
               <button
+                type="button"
                 key={i}
                 onClick={() => setIdx(i)}
                 aria-label={`Screenshot ${i + 1}`}
@@ -88,36 +99,42 @@ export const CodeBlock = ({ content, language }: { content: string; language: st
 };
 
 export const DeleteConfirmButton = ({ onConfirm }: { onConfirm: () => void }) => {
-  const [pending, setPending] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>(null);
-
-  useEffect(
-    () => () => {
-      if (timer.current) clearTimeout(timer.current);
-    },
-    [],
-  );
-
-  const handleClick = () => {
-    if (!pending) {
-      setPending(true);
-      timer.current = setTimeout(() => setPending(false), 3000);
-      return;
-    }
-    setPending(false);
-    onConfirm();
-  };
+  const [opened, setOpened] = useState(false);
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      className={cn(
-        pending ? "border-destructive bg-destructive/10 text-destructive" : "text-destructive hover:bg-destructive/10",
-      )}
-      onClick={handleClick}
-    >
-      <IconTrash size={14} /> {pending ? "Confirm delete?" : "Delete"}
-    </Button>
+    <>
+      <Button
+        variant="outline"
+        size="sm"
+        className="h-10 text-destructive hover:bg-destructive/10 sm:h-7"
+        onClick={() => setOpened(true)}
+      >
+        <IconTrash size={14} /> Delete
+      </Button>
+      <Dialog open={opened} onOpenChange={setOpened}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete submission?</DialogTitle>
+            <DialogDescription>
+              This permanently removes the Workshop listing, screenshots, votes, reports, and comments.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setOpened(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                setOpened(false);
+                onConfirm();
+              }}
+            >
+              Delete submission
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

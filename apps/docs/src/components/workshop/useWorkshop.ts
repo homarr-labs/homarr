@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dayjs from "dayjs";
 
 import type { WorkshopComment, WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
-import { getPocketBase, signInWithGitHub } from "@site/src/lib/pocketbase";
+import { getPocketBase, parseWorkshopSubmission, signInWithGitHub } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import { schemaVersionByType, validateSubmissionContent } from "@site/src/lib/workshop-schema";
 import { errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
@@ -62,7 +62,13 @@ export const useWorkshop = (workshopUrl: string) => {
     setLoading(true);
     setError(null);
     try {
-      setSubmissions(await pb.collection("workshop_listings").getFullList<WorkshopSubmission>({ sort: "-created" }));
+      const rows = await pb.collection("workshop_listings").getFullList<WorkshopSubmission>({ sort: "-created" });
+      const parsed = rows
+        .map(parseWorkshopSubmission)
+        .filter((submission): submission is WorkshopSubmission => submission !== null);
+      setSubmissions(parsed);
+      if (parsed.length !== rows.length)
+        setError(`${rows.length - parsed.length} Workshop submission could not be displayed`);
       await refreshVotes();
     } catch (caught) {
       setError(errorMessage(caught, "Failed to load the workshop"));

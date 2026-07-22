@@ -1,19 +1,8 @@
 import { useState } from "react";
+import { useColorMode } from "@docusaurus/theme-common";
 import { MantineProvider, Select, Stack, Text } from "@mantine/core";
 /* oxlint-disable import/no-unassigned-import -- Mantine component styles intentionally load for side effects. */
-import "@mantine/core/styles/Badge.css";
-import "@mantine/core/styles/Button.css";
-import "@mantine/core/styles/Combobox.css";
-import "@mantine/core/styles/Group.css";
-import "@mantine/core/styles/Input.css";
-import "@mantine/core/styles/Loader.css";
-import "@mantine/core/styles/Pill.css";
-import "@mantine/core/styles/PillsInput.css";
-import "@mantine/core/styles/Popover.css";
-import "@mantine/core/styles/ScrollArea.css";
-import "@mantine/core/styles/Stack.css";
-import "@mantine/core/styles/Text.css";
-import "@mantine/core/styles/UnstyledButton.css";
+import "@mantine/core/styles.layer.css";
 /* oxlint-enable import/no-unassigned-import */
 
 import {
@@ -64,8 +53,10 @@ export function CanonicalCustomWidgetExampleClient({ id, label, example, height 
 }
 
 export function CustomWidgetCodeExampleClient(props: CustomWidgetCodeExampleProps) {
+  const { colorMode } = useColorMode();
+
   return (
-    <MantineProvider forceColorScheme={getDocumentationColorScheme()}>
+    <MantineProvider forceColorScheme={colorMode}>
       <ReadOnlyCustomWidgetCode
         id={props.id}
         label={props.label}
@@ -79,21 +70,24 @@ export function CustomWidgetCodeExampleClient(props: CustomWidgetCodeExampleProp
 }
 
 export function CustomWidgetCodeInputClient(props: CustomWidgetCodeInputProps) {
+  const { colorMode } = useColorMode();
+
   return (
-    <MantineProvider forceColorScheme={getDocumentationColorScheme()}>
+    <MantineProvider forceColorScheme={colorMode}>
       <CustomWidgetCodeEditor {...props} messages={editableMessages} />
     </MantineProvider>
   );
 }
 
 export function BundledCustomWidgetGalleryClient() {
+  const { colorMode } = useColorMode();
   const [selectedId, setSelectedId] = useState(BUNDLED_CUSTOM_WIDGETS[0]?.id ?? null);
   const selected = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === selectedId) ?? BUNDLED_CUSTOM_WIDGETS[0];
   if (!selected) return null;
   const manifest = { ...selected.widget, template: "__HOMARR_TEMPLATE__" };
 
   return (
-    <MantineProvider forceColorScheme={getDocumentationColorScheme()}>
+    <MantineProvider forceColorScheme={colorMode}>
       <Stack gap="md">
         <Select
           label="Bundled widget"
@@ -126,8 +120,4 @@ export function BundledCustomWidgetGalleryClient() {
       </Stack>
     </MantineProvider>
   );
-}
-
-function getDocumentationColorScheme() {
-  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }

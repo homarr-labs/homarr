@@ -112,6 +112,12 @@
   --sidebar-ring: oklch(0.723 0.014 214.4);
 }
 
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--ifm-font-family-base);
+}
+
 [data-theme="dark"] {
   --ifm-color-primary: #fa5252;
   --ifm-color-primary-dark: #f93232;
@@ -121,18 +127,19 @@
   --ifm-color-primary-lighter: #fb8282;
   --ifm-color-primary-lightest: #fdc3c3;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-  --homarr-secondary-bg: oklch(0.218 0.008 223.9);
+  --homarr-secondary-bg: oklch(0.245 0.006 223.9);
   --ifm-color-content-inverse: var(--ifm-color-emphasis-100);
 
   --aa-primary-color-rgb: #fa5252 !important;
   --aa-muted-color-rgb: #fa5252 !important;
   --aa-background-color-rgb: 24, 24, 24 !important;
 
-  --background: oklch(0.148 0.004 228.8);
+  /* Preserve Docusaurus's familiar charcoal canvas instead of a near-black app shell. */
+  --background: #1b1b1d;
   --foreground: oklch(0.987 0.002 197.1);
-  --card: oklch(0.218 0.008 223.9);
+  --card: oklch(0.245 0.006 223.9);
   --card-foreground: oklch(0.987 0.002 197.1);
-  --popover: oklch(0.218 0.008 223.9);
+  --popover: oklch(0.245 0.006 223.9);
   --popover-foreground: oklch(0.987 0.002 197.1);
   --primary: oklch(0.455 0.188 13.697);
   --primary-foreground: oklch(0.969 0.015 12.422);

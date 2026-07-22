@@ -40,12 +40,20 @@ onRecordAfterCreateSuccess((event) => {
     const rawExcerpt = event.record.getString("content").slice(0, 280);
     const submissionUrl = `${publicOrigin}/workshop/${submission.id}/`;
     const sender = event.app.settings().meta;
+    const templatePath = $os.getenv("WORKSHOP_PB_HOOKS_DIR") || $filepath.dirname(__filepath);
+    const template = $os
+      .readFile($filepath.join(templatePath, "comment-email.html"))
+      .replaceAll("{{commenterName}}", escapeHtml(commenterName))
+      .replaceAll("{{submissionTitle}}", escapeHtml(submissionTitle))
+      .replaceAll("{{commentExcerpt}}", escapeHtml(rawExcerpt))
+      .replaceAll("{{submissionUrl}}", escapeHtml(submissionUrl));
+
     const message = new MailerMessage({
       from: { address: sender.senderAddress, name: sender.senderName },
       to: [{ address: recipientEmail }],
       subject: `${commenterName} commented on ${submissionTitle}`,
       text: `${commenterName} commented on “${submissionTitle}”:\n\n${rawExcerpt}\n\n${submissionUrl}`,
-      html: `<p><strong>${escapeHtml(commenterName)}</strong> commented on <strong>${escapeHtml(submissionTitle)}</strong>:</p><blockquote>${escapeHtml(rawExcerpt)}</blockquote><p><a href="${escapeHtml(submissionUrl)}">View the comment</a></p>`,
+      html: template,
     });
     event.app.newMailClient().send(message);
   } catch (error) {

@@ -46,17 +46,6 @@ const config: Config = {
 
   themes: ["@docusaurus/theme-mermaid"],
 
-  scripts: [
-    {
-      src: "https://widget.kapa.ai/kapa-widget.bundle.js",
-      "data-website-id": "1e4656f4-abeb-4343-bbae-1d8626f52378",
-      "data-project-name": "Homarr",
-      "data-project-color": "#2B2B2B",
-      "data-project-logo": "https://homarr.dev/img/favicon.png",
-      async: true,
-    },
-  ],
-
   presets: [
     [
       "classic",

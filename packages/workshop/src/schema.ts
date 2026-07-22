@@ -36,7 +36,17 @@ export const workshopUserSchema = z.object({
 });
 export type WorkshopUser = z.infer<typeof workshopUserSchema>;
 
-const workshopSubmissionBaseSchema = z.object({
+const normalizeWorkshopSubmissionRecord = (value: unknown) => {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return value;
+  const record = value as Record<string, unknown>;
+  if (record.type === "customWidget" || record.type === "customCss") return value;
+  if (record.widgetSchema === WORKSHOP_CSS_SCHEMA) return { ...record, type: "customCss" };
+  if (typeof record.widgetSchema === "string" && record.widgetSchema.startsWith("homarr-custom-widget-"))
+    return { ...record, type: "customWidget" };
+  return value;
+};
+
+const workshopSubmissionBaseObjectSchema = z.object({
   id: z.string(),
   type: workshopSubmissionTypeSchema,
   title: z.string(),
@@ -44,13 +54,13 @@ const workshopSubmissionBaseSchema = z.object({
   widgetSchema: z.string(),
   screenshots: workshopFileListSchema,
   author: z.string(),
-  authorName: z.string(),
+  authorName: z.string().default("Community member"),
   authorAvatarUrl: z.string().default(""),
   authorGithubUsername: z.string().default(""),
   authorGithubProfileUrl: z.string().default(""),
-  score: z.number().int(),
-  upvotes: z.number().int(),
-  downvotes: z.number().int(),
+  score: z.number().int().default(0),
+  upvotes: z.number().int().default(0),
+  downvotes: z.number().int().default(0),
   commentCount: z.number().int().default(0),
   reportCount: z.number().int().default(0),
   revision: z.number().int().positive().default(1),
@@ -60,9 +70,15 @@ const workshopSubmissionBaseSchema = z.object({
   updated: z.string(),
 });
 
-export const workshopSubmissionSummarySchema = workshopSubmissionBaseSchema;
+export const workshopSubmissionSummarySchema = z.preprocess(
+  normalizeWorkshopSubmissionRecord,
+  workshopSubmissionBaseObjectSchema,
+);
 export type WorkshopSubmissionSummary = z.infer<typeof workshopSubmissionSummarySchema>;
-export const workshopSubmissionDetailSchema = workshopSubmissionBaseSchema.extend({ content: z.string() });
+export const workshopSubmissionDetailSchema = z.preprocess(
+  normalizeWorkshopSubmissionRecord,
+  workshopSubmissionBaseObjectSchema.extend({ content: z.string() }),
+);
 export type WorkshopSubmissionDetail = z.infer<typeof workshopSubmissionDetailSchema>;
 
 export const workshopSubmissionInputSchema = z

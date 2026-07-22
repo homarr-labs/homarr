@@ -114,7 +114,7 @@ export const CommentsSection = ({
       <h2 className="text-sm font-medium">Comments</h2>
       <div className="flex items-center gap-2">
         <Input
-          className="flex-1"
+          className="h-10 flex-1"
           placeholder="Write a comment…"
           aria-label="Write a comment"
           value={newComment}
@@ -123,7 +123,7 @@ export const CommentsSection = ({
             if (event.key === "Enter") void handleAdd();
           }}
         />
-        <Button size="icon-sm" onClick={() => void handleAdd()} aria-label="Post comment">
+        <Button className="size-10" size="icon-lg" onClick={() => void handleAdd()} aria-label="Post comment">
           <IconSend size={14} />
         </Button>
       </div>
@@ -134,7 +134,16 @@ export const CommentsSection = ({
         </p>
       )}
 
-      {loading && <p className="py-4 text-center text-sm text-muted-foreground">Loading comments…</p>}
+      {loading && (
+        <div className="space-y-2" aria-label="Loading comments">
+          {Array.from({ length: 2 }, (_, index) => (
+            <div key={index} className="animate-pulse rounded-lg bg-muted/30 px-3 py-3">
+              <div className="h-3 w-32 rounded bg-muted" />
+              <div className="mt-3 h-3 w-4/5 rounded bg-muted" />
+            </div>
+          ))}
+        </div>
+      )}
       {!loading && fetchError && <p className="py-4 text-center text-sm text-destructive">Failed to load comments</p>}
       {!loading && !fetchError && rows.length === 0 && (
         <p className="py-4 text-center text-sm text-muted-foreground">No comments yet</p>
@@ -165,6 +174,7 @@ export const CommentsSection = ({
                 {canManage && !isEditing && (
                   <div className="ml-auto flex gap-0.5">
                     <button
+                      type="button"
                       className="rounded p-1 hover:bg-accent"
                       aria-label="Edit comment"
                       onClick={() => {
@@ -175,6 +185,7 @@ export const CommentsSection = ({
                       <IconEdit size={12} />
                     </button>
                     <button
+                      type="button"
                       className="rounded p-1 hover:bg-destructive/20 hover:text-destructive"
                       aria-label="Delete comment"
                       onClick={() => void handleDelete(comment.id)}

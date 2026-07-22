@@ -1,23 +1,20 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
+  IconAlertCircle,
   IconArrowBigDown,
   IconArrowBigUp,
   IconBrandCss3,
   IconBrandGithub,
-  IconCheck,
   IconChevronLeft,
   IconChevronRight,
-  IconCopy,
-  IconDownload,
-  IconFlag,
+  IconEye,
   IconLogout,
   IconMessage,
   IconPackage,
   IconPlus,
   IconPuzzle,
+  IconRefresh,
   IconSearch,
-  IconTrash,
-  IconX,
 } from "@tabler/icons-react";
 
 import { getSubmissionFileUrl, type WorkshopSubmission } from "@site/src/lib/pocketbase";
@@ -34,20 +31,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 import { SubmitForm } from "./SubmitForm";
 import { formatRelativeTime } from "./format";
-import { downloadSubmissionJson } from "./workshop-utils";
 import type { SortKey, TypeFilter } from "./useWorkshop";
 import { useWorkshop } from "./useWorkshop";
 
@@ -60,10 +47,6 @@ const typeIcons: Record<SubmissionType, React.ComponentType<{ size: number; clas
 const typeBgColors: Record<SubmissionType, string> = { customCss: "bg-blue-500/5", customWidget: "bg-yellow-500/5" };
 const filterActiveClass = "bg-background text-foreground shadow-sm";
 const filterInactiveClass = "text-muted-foreground hover:text-foreground";
-const copyState = [
-  { Icon: IconCopy, label: "Copy", iconClass: "" },
-  { Icon: IconCheck, label: "Copied!", iconClass: "text-green-500" },
-] as const;
 const emptyState = {
   none: { title: "No submissions yet", hint: "Be the first to share something." },
   filtered: { title: "No matching results", hint: "Try adjusting your filters or search." },
@@ -73,7 +56,6 @@ const typeFilters: { value: TypeFilter; label: string; dot?: string }[] = [
   { value: "all", label: "All" },
   { value: "customWidget", label: "Widgets", dot: typeDotColors.customWidget },
   { value: "customCss", label: "CSS", dot: typeDotColors.customCss },
-  { value: "yours", label: "Yours" },
 ];
 const sortOptions: { value: SortKey; label: string }[] = [
   { value: "top", label: "Top rated" },
@@ -98,14 +80,17 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
   // Stable sort order: only re-sort when filter/sort/search or submission set changes (not vote counts)
   const submissionIds = useMemo(() => workshop.submissions.map((s) => s.id).join(","), [workshop.submissions]);
   const sortedIds = useMemo(() => {
-    const q = search.toLowerCase();
+    const q = search.trim().toLowerCase();
     return workshop.submissions
       .filter((item) => {
         if (typeFilter === "yours") return item.author === workshop.user?.id;
         return typeFilter === "all" || item.type === typeFilter;
       })
       .filter((item) => includeOutdated || !item.outdated)
-      .filter((item) => !q || item.title.toLowerCase().includes(q))
+      .filter(
+        (item) =>
+          !q || [item.title, item.description, item.authorName].some((value) => value?.toLowerCase().includes(q)),
+      )
       .toSorted(workshop.sorters[sort])
       .map((s) => s.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally keyed on submissionIds string, not the array
@@ -117,108 +102,168 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
   }, [workshop.submissions, sortedIds]);
 
   const empty = emptyState[workshop.submissions.length === 0 ? "none" : "filtered"];
+  const initialLoadFailed = !workshop.loading && Boolean(workshop.error) && workshop.submissions.length === 0;
+  const availableTypeFilters = workshop.user
+    ? [...typeFilters, { value: "yours" as const, label: "Yours" }]
+    : typeFilters;
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-16">
-      <div className="flex flex-col gap-6 py-8 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-5 py-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Workshop</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Community custom widgets and CSS themes for Homarr.</p>
+          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+            Discover community-made widgets and CSS. Review the source, then import it into Homarr.
+          </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 self-start sm:self-auto">
           {workshop.user ? (
             <>
-              <Button onClick={() => setShowSubmit(true)}>
+              <Button className="h-10 sm:h-8" onClick={() => setShowSubmit(true)}>
                 <IconPlus size={14} /> Share yours
               </Button>
-              <Button variant="ghost" size="sm" onClick={workshop.logout}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-10 sm:h-7"
+                onClick={() => {
+                  setTypeFilter("all");
+                  workshop.logout();
+                }}
+              >
                 <IconLogout size={14} /> {workshop.user?.displayName || workshop.user?.username || "Account"}
               </Button>
             </>
           ) : (
-            <div className="flex flex-col items-end gap-0.5">
-              <Button onClick={() => void workshop.login()}>
+            <div className="flex flex-col items-start gap-1 sm:items-end">
+              <Button className="h-10 sm:h-8" onClick={() => void workshop.login()}>
                 <IconBrandGithub size={14} /> Sign in with GitHub
               </Button>
-              <p className="text-xs text-muted-foreground">Vote and share your creations</p>
+              <p className="text-xs text-muted-foreground">Vote, comment, report, and publish</p>
             </div>
           )}
         </div>
       </div>
 
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card px-3 py-2">
-        <div className="flex items-center gap-2">
-          <div className="inline-flex rounded-md bg-muted p-0.5">
-            {typeFilters.map((opt) => (
+      {workshop.submissions.length > 0 && (
+        <div className="mb-6 flex flex-col gap-3 rounded-lg border border-border bg-card p-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative order-first w-full sm:order-last sm:w-60">
+            <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input
+              className="h-11 w-full rounded-md border border-input bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:h-9"
+              placeholder="Search by title, description, or author"
+              aria-label="Search submissions"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+          </div>
+          <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
+            <fieldset
+              className={cn(
+                "grid min-w-0 rounded-md border-0 bg-muted p-0.5 sm:flex",
+                workshop.user ? "grid-cols-4" : "grid-cols-3",
+              )}
+              aria-label="Submission type"
+            >
+              {availableTypeFilters.map((opt) => (
+                <button
+                  type="button"
+                  key={opt.value}
+                  onClick={() => setTypeFilter(opt.value)}
+                  aria-pressed={typeFilter === opt.value}
+                  className={cn(
+                    "inline-flex min-h-10 items-center justify-center gap-1.5 rounded px-3 text-sm font-medium transition-colors sm:min-h-8 sm:text-xs",
+                    typeFilter === opt.value ? filterActiveClass : filterInactiveClass,
+                  )}
+                >
+                  {opt.dot && <span className={cn("size-2 rounded-full", opt.dot)} />}
+                  {opt.label}
+                </button>
+              ))}
+            </fieldset>
+            <div className="flex items-center gap-2">
+              <select
+                aria-label="Sort submissions"
+                className="h-10 min-w-0 flex-1 rounded-md border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:h-8 sm:flex-none sm:text-xs dark:bg-input/30"
+                value={sort}
+                onChange={(event) => setSort(event.target.value as SortKey)}
+              >
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
               <button
-                key={opt.value}
-                onClick={() => setTypeFilter(opt.value)}
+                type="button"
+                onClick={() => setIncludeOutdated((value) => !value)}
+                aria-pressed={!includeOutdated}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors",
-                  typeFilter === opt.value ? filterActiveClass : filterInactiveClass,
+                  "h-10 shrink-0 rounded-md border border-input px-3 text-sm transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:h-8 sm:text-xs",
+                  includeOutdated ? "bg-transparent text-muted-foreground" : filterActiveClass,
                 )}
               >
-                {opt.dot && <span className={cn("size-2 rounded-full", opt.dot)} />}
-                {opt.label}
+                {includeOutdated ? "Hide outdated" : "Show outdated"}
               </button>
-            ))}
+            </div>
           </div>
-          <select
-            aria-label="Sort order"
-            className="h-7 rounded-md border border-input bg-transparent px-2 text-xs outline-none dark:bg-input/30"
-            value={sort}
-            onChange={(e) => setSort(e.target.value as SortKey)}
-          >
-            {sortOptions.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-          <button
-            type="button"
-            onClick={() => setIncludeOutdated((value) => !value)}
-            className={cn(
-              "h-7 rounded-md border border-input px-2 text-xs transition-colors",
-              includeOutdated ? "bg-transparent text-muted-foreground" : filterActiveClass,
-            )}
-          >
-            {includeOutdated ? "Hide outdated" : "Show outdated"}
-          </button>
-        </div>
-        <div className="relative">
-          <IconSearch size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <input
-            className="h-7 w-48 rounded-md border border-input bg-transparent pl-8 text-xs outline-none placeholder:text-muted-foreground"
-            placeholder="Search…"
-            aria-label="Search submissions"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-      </div>
-
-      {workshop.error && (
-        <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
-          {workshop.error}
         </div>
       )}
 
-      {workshop.loading && (
-        <div className="columns-1 gap-4 lg:columns-2 xl:columns-3 2xl:columns-4 [&>*]:mb-4">
+      {initialLoadFailed && (
+        <div className="flex min-h-80 flex-col items-center justify-center gap-4 rounded-xl border border-border bg-card px-6 py-12 text-center">
+          <div className="flex size-11 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
+            <IconAlertCircle size={22} />
+          </div>
+          <div>
+            <h2 className="text-base font-semibold">Workshop listings could not be loaded</h2>
+            <p className="mt-1 max-w-md text-sm text-muted-foreground">
+              Check the Workshop service and your connection, then try again.
+            </p>
+          </div>
+          <Button variant="outline" onClick={() => void workshop.refresh()}>
+            <IconRefresh size={15} /> Try loading again
+          </Button>
+        </div>
+      )}
+
+      {workshop.error && workshop.submissions.length > 0 && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm">
+          <span className="text-destructive">Some Workshop data could not be refreshed.</span>
+          <Button variant="ghost" size="sm" onClick={() => void workshop.refresh()}>
+            <IconRefresh size={14} /> Retry
+          </Button>
+        </div>
+      )}
+
+      {workshop.loading && workshop.submissions.length === 0 && (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 6 }, (_, i) => (
             <SkeletonCard key={i} hasImage={i % 3 === 0} />
           ))}
         </div>
       )}
 
-      {!workshop.loading && visible.length === 0 && (
+      {!workshop.loading && !workshop.error && visible.length === 0 && (
         <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border py-16">
           <IconPackage size={28} stroke={1.5} className="text-muted-foreground" />
           <div className="text-center">
             <p className="text-sm font-medium">{empty.title}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">{empty.hint}</p>
           </div>
+          {workshop.submissions.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setTypeFilter("all");
+                setSearch("");
+                setIncludeOutdated(true);
+              }}
+            >
+              Clear filters
+            </Button>
+          )}
           {workshop.user && workshop.submissions.length === 0 && (
             <Button size="sm" onClick={() => setShowSubmit(true)}>
               <IconPlus size={14} /> Create submission
@@ -227,18 +272,14 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
         </div>
       )}
 
-      <div className="columns-1 gap-4 lg:columns-2 xl:columns-3 [&>*]:mb-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {visible.map((submission) => (
           <SubmissionCard
             key={submission.id}
             submission={submission}
             pb={workshop.pb}
             userVote={workshop.votes[submission.id]?.value}
-            currentUserId={workshop.user?.id}
-            currentUserIsAdmin={workshop.user?.isAdmin === true}
             onVote={workshop.vote}
-            onReport={workshop.report}
-            onDelete={workshop.deleteSubmission}
           />
         ))}
       </div>
@@ -259,96 +300,21 @@ interface SubmissionCardProps {
   submission: WorkshopSubmission;
   pb: ReturnType<typeof useWorkshop>["pb"];
   userVote?: 1 | -1;
-  currentUserId?: string;
-  currentUserIsAdmin?: boolean;
   onVote: (submissionId: string, value: 1 | -1) => void;
-  onReport: (
-    submissionId: string,
-    category: "malicious" | "spam" | "copyright" | "inappropriate" | "other",
-    explanation: string,
-  ) => void;
-  onDelete: (submissionId: string) => Promise<boolean>;
 }
 
-const SubmissionCard = ({
-  submission,
-  pb,
-  userVote,
-  currentUserId,
-  currentUserIsAdmin,
-  onVote,
-  onReport,
-  onDelete,
-}: SubmissionCardProps) => {
-  const canDelete = currentUserId === submission.author || currentUserIsAdmin;
-  const [copied, setCopied] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const confirmTimer = useRef<ReturnType<typeof setTimeout>>(null);
-  const copyTimer = useRef<ReturnType<typeof setTimeout>>(null);
+const SubmissionCard = ({ submission, pb, userVote, onVote }: SubmissionCardProps) => {
   const score = submission.upvotes - submission.downvotes;
-  const { Icon: CopyIcon, label: copyLabel, iconClass: copyIconClass } = copyState[Number(copied)];
   const screenshotUrls = useMemo(
     () => submission.screenshots?.map((f) => getSubmissionFileUrl(pb.baseURL, submission.id, f)) ?? [],
     [submission, pb],
   );
 
-  useEffect(
-    () => () => {
-      if (copyTimer.current) clearTimeout(copyTimer.current);
-      if (confirmTimer.current) clearTimeout(confirmTimer.current);
-    },
-    [],
-  );
-
-  const [copyFailed, setCopyFailed] = useState(false);
-  const [reportOpen, setReportOpen] = useState(false);
-  const [reportCategory, setReportCategory] = useState("other");
-  const [reportExplanation, setReportExplanation] = useState("");
-
-  const loadContent = async () => {
-    if (submission.content) return submission.content;
-    const record = await pb.collection("submissions").getOne<{ content: string }>(submission.id);
-    return record.content;
-  };
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(await loadContent());
-      setCopied(true);
-      setCopyFailed(false);
-      if (copyTimer.current) clearTimeout(copyTimer.current);
-      copyTimer.current = setTimeout(() => setCopied(false), 1500);
-    } catch {
-      setCopyFailed(true);
-      setTimeout(() => setCopyFailed(false), 2000);
-    }
-  };
-
-  const handleDownload = async () => {
-    try {
-      downloadSubmissionJson({ ...submission, content: await loadContent() });
-    } catch {
-      setCopyFailed(true);
-      setTimeout(() => setCopyFailed(false), 2000);
-    }
-  };
-
-  const handleDelete = () => {
-    if (!confirmDelete) {
-      setConfirmDelete(true);
-      if (confirmTimer.current) clearTimeout(confirmTimer.current);
-      confirmTimer.current = setTimeout(() => setConfirmDelete(false), 3000);
-      return;
-    }
-    setConfirmDelete(false);
-    void onDelete(submission.id);
-  };
-
   const hasScreenshots = screenshotUrls.length > 0;
   const TypeIcon = typeIcons[submission.type];
 
   return (
-    <Card className="relative transition-transform duration-150 hover:scale-[1.02]">
+    <Card className="relative flex h-full flex-col">
       <a href={`/workshop/${submission.id}/`} className="block">
         {hasScreenshots ? (
           <div className="relative">
@@ -368,7 +334,7 @@ const SubmissionCard = ({
         )}
       </a>
 
-      <CardHeader>
+      <CardHeader className="flex flex-col gap-2 sm:grid">
         <div className="flex items-center gap-2">
           <a href={`/workshop/${submission.id}/`} className="min-w-0 hover:underline" title={submission.title}>
             <CardTitle className="truncate">{submission.title}</CardTitle>
@@ -394,13 +360,15 @@ const SubmissionCard = ({
           </a>{" "}
           · v{submission.revision} · {formatRelativeTime(submission.created)}
         </CardDescription>
-        <CardAction>
+        <CardAction className="col-start-auto row-span-1 row-start-auto self-auto justify-self-start sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:self-start sm:justify-self-end">
           <div className="flex items-center gap-px rounded-md border border-border bg-muted/40 p-px">
             <button
+              type="button"
               onClick={() => void onVote(submission.id, 1)}
               aria-label="Upvote"
+              aria-pressed={userVote === 1}
               className={cn(
-                "flex items-center justify-center rounded-[5px] p-1 transition-colors hover:bg-accent",
+                "flex size-10 items-center justify-center rounded-[5px] transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 sm:size-8",
                 userVote === 1 && "bg-primary/15 text-primary",
               )}
             >
@@ -416,10 +384,12 @@ const SubmissionCard = ({
               {score}
             </span>
             <button
+              type="button"
               onClick={() => void onVote(submission.id, -1)}
               aria-label="Downvote"
+              aria-pressed={userVote === -1}
               className={cn(
-                "flex items-center justify-center rounded-[5px] p-1 transition-colors hover:bg-accent",
+                "flex size-10 items-center justify-center rounded-[5px] transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 sm:size-8",
                 userVote === -1 && "bg-primary/15 text-primary",
               )}
             >
@@ -429,15 +399,10 @@ const SubmissionCard = ({
         </CardAction>
       </CardHeader>
 
-      <CardContent>
-        {(submission.outdated || submission.reportCount > 0) && (
+      <CardContent className="flex-1">
+        {submission.outdated && (
           <div className="mb-2 flex flex-wrap gap-1.5">
-            {submission.outdated && <Badge variant="secondary">Outdated</Badge>}
-            {submission.reportCount > 0 && (
-              <Badge variant="destructive">
-                {submission.reportCount} community report{submission.reportCount === 1 ? "" : "s"}
-              </Badge>
-            )}
+            <Badge variant="secondary">Outdated</Badge>
           </div>
         )}
         {submission.description && (
@@ -445,115 +410,19 @@ const SubmissionCard = ({
         )}
       </CardContent>
 
-      <CardFooter className="flex-col gap-0 p-0">
-        <div className="flex w-full flex-wrap items-center gap-0.5 px-2 py-1.5">
-          <Button
-            variant="ghost"
-            size="xs"
-            onClick={() => void handleCopy()}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            {copyFailed ? (
-              <>
-                <IconX size={13} className="text-destructive" /> Failed
-              </>
-            ) : (
-              <>
-                <CopyIcon size={13} className={copyIconClass} /> {copyLabel}
-              </>
-            )}
-          </Button>
-          {submission.type === "customWidget" && (
-            <Button
-              variant="ghost"
-              size="xs"
-              onClick={() => void handleDownload()}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <IconDownload size={13} /> Download
-            </Button>
-          )}
-          {submission.commentCount > 0 && (
-            <a
-              href={`/workshop/${submission.id}/`}
-              className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-muted-foreground hover:text-foreground"
-            >
-              <IconMessage size={13} /> {submission.commentCount}
-            </a>
-          )}
-          <div className="ml-auto flex items-center gap-px">
-            {canDelete && (
-              <button
-                className={cn(
-                  "flex items-center gap-1 rounded px-1 py-0.5 text-xs transition-colors",
-                  confirmDelete
-                    ? "bg-destructive/10 text-destructive"
-                    : "text-muted-foreground/60 hover:text-destructive",
-                )}
-                onClick={handleDelete}
-                aria-label="Delete"
-              >
-                <IconTrash size={13} />
-                {confirmDelete && "Confirm?"}
-              </button>
-            )}
-            <button
-              className="flex items-center justify-center rounded p-1 text-muted-foreground/60 transition-colors hover:text-destructive"
-              onClick={() => setReportOpen(true)}
-              aria-label="Report"
-            >
-              <IconFlag size={13} />
-            </button>
-          </div>
-        </div>
+      <CardFooter className="justify-between gap-3 px-3 py-2.5">
+        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+          <IconMessage size={14} /> {submission.commentCount} {submission.commentCount === 1 ? "comment" : "comments"}
+        </span>
+        <Button
+          className="h-10 sm:h-7"
+          size="sm"
+          nativeButton={false}
+          render={<a href={`/workshop/${submission.id}/`} aria-label={`View ${submission.title} details`} />}
+        >
+          <IconEye size={14} /> View details
+        </Button>
       </CardFooter>
-      <Dialog open={reportOpen} onOpenChange={setReportOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Report submission</DialogTitle>
-            <DialogDescription>Reports are public and help others make an informed choice.</DialogDescription>
-          </DialogHeader>
-          <label className="grid gap-1.5 text-sm">
-            Category
-            <select
-              className="h-9 rounded-md border border-input bg-transparent px-3"
-              value={reportCategory}
-              onChange={(event) => setReportCategory(event.target.value)}
-            >
-              <option value="malicious">Malicious</option>
-              <option value="spam">Spam</option>
-              <option value="copyright">Copyright</option>
-              <option value="inappropriate">Inappropriate</option>
-              <option value="other">Other</option>
-            </select>
-          </label>
-          <Textarea
-            value={reportExplanation}
-            onChange={(event) => setReportExplanation(event.target.value)}
-            placeholder="Explain what is wrong…"
-            maxLength={1000}
-          />
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setReportOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              disabled={reportExplanation.trim().length < 3}
-              onClick={() => {
-                void onReport(
-                  submission.id,
-                  reportCategory as "malicious" | "spam" | "copyright" | "inappropriate" | "other",
-                  reportExplanation.trim(),
-                );
-                setReportOpen(false);
-              }}
-            >
-              Submit report
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </Card>
   );
 };
@@ -574,12 +443,9 @@ const SkeletonCard = ({ hasImage }: { hasImage: boolean }) => (
         <div className="h-3 w-2/3 animate-pulse rounded bg-muted" />
       </div>
     </CardContent>
-    <CardFooter className="p-0">
-      <div className="flex w-full gap-2 px-2 py-2">
-        <div className="h-5 w-12 animate-pulse rounded bg-muted" />
-        <div className="h-5 w-12 animate-pulse rounded bg-muted" />
-        <div className="h-5 w-16 animate-pulse rounded bg-muted" />
-      </div>
+    <CardFooter className="justify-between gap-3 px-3 py-2.5">
+      <div className="h-3 w-20 animate-pulse rounded bg-muted" />
+      <div className="h-9 w-28 animate-pulse rounded bg-muted" />
     </CardFooter>
   </Card>
 );
@@ -601,6 +467,7 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
       {urls.length > 1 && (
         <>
           <button
+            type="button"
             className="absolute left-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
             onClick={(event) => {
               stopCardNavigation(event);
@@ -611,6 +478,7 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
             <IconChevronLeft size={14} />
           </button>
           <button
+            type="button"
             className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
             onClick={(event) => {
               stopCardNavigation(event);
@@ -623,6 +491,7 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
           <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1 rounded-full bg-black/50 px-2 py-1">
             {urls.map((_, i) => (
               <button
+                type="button"
                 key={i}
                 onClick={(event) => {
                   stopCardNavigation(event);

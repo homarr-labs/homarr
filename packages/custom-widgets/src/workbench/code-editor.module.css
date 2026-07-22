@@ -1,8 +1,8 @@
 .root {
   margin-top: 4px;
-  border: 1px solid light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
+  border: 1px solid var(--mantine-color-default-border);
   border-radius: var(--mantine-radius-sm);
-  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  background: var(--mantine-color-body);
   overflow: hidden;
 }
 
@@ -15,7 +15,7 @@
 .toolbar,
 .footer {
   padding: 7px 10px;
-  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+  background: var(--mantine-color-default-hover);
 }
 
 .toolbar {
@@ -29,8 +29,8 @@
   overflow: auto;
 }
 .viewport :global(.cm-editor) {
-  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
-  color: light-dark(var(--mantine-color-black), var(--mantine-color-gray-0));
+  background: var(--mantine-color-body);
+  color: var(--mantine-color-text);
   font-family: "Fira Code", "SFMono-Regular", Consolas, monospace;
   font-size: 12px;
 }
@@ -42,7 +42,7 @@
   overflow: auto;
 }
 .viewport :global(.cm-gutters) {
-  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+  background: var(--mantine-color-default-hover);
   border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
 }
 .diagnosticButton {

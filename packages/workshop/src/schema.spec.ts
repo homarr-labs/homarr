@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import { CUSTOM_WIDGET_STARTER } from "@homarr/custom-widgets/core";
 
-import { validateWorkshopWidget, workshopSubmissionInputSchema } from "./schema";
+import { validateWorkshopWidget, workshopSubmissionInputSchema, workshopSubmissionSummarySchema } from "./schema";
 
 describe("Workshop widget validation", () => {
   test("accepts a canonical credential-free widget", () => {
@@ -53,6 +53,25 @@ describe("Workshop widget validation", () => {
         }),
       ).success,
     ).toBe(false);
+  });
+
+  test("normalizes PocketBase records before rendering", () => {
+    const result = workshopSubmissionSummarySchema.parse({
+      id: "jzyxskmimxn42io",
+      title: "Tautulli Activity",
+      description: "Shows active Plex streams from Tautulli",
+      widgetSchema: "homarr-custom-widget-v2",
+      screenshots: "[]",
+      author: "wsqylmotymtqpox",
+      revision: 1,
+      created: "2026-07-21 14:19:25.790Z",
+      updated: "2026-07-21 14:19:25.790Z",
+    });
+
+    expect(result.type).toBe("customWidget");
+    expect(result.screenshots).toEqual([]);
+    expect(result.authorName).toBe("Community member");
+    expect(result.upvotes).toBe(0);
   });
 
   test("rejects literal credentials in templates and icon URLs", () => {

@@ -68,5 +68,15 @@ export function BundledCustomWidgetGallery() {
 }
 
 function CodeExampleFallback({ height }: { height?: string }) {
-  return <div style={{ minHeight: height ?? "220px" }} aria-busy="true" />;
+  return (
+    <div
+      style={{
+        minHeight: height ?? "220px",
+        border: "1px solid var(--ifm-color-emphasis-300)",
+        borderRadius: "var(--ifm-global-radius)",
+        background: "var(--ifm-background-surface-color)",
+      }}
+      aria-busy="true"
+    />
+  );
 }

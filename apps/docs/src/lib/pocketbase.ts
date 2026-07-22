@@ -1,5 +1,7 @@
 import PocketBase from "pocketbase";
 
+import { workshopSubmissionSummarySchema, type WorkshopSubmissionSummary } from "@homarr/workshop/schema";
+
 let client: PocketBase | undefined;
 let clientUrl: string | undefined;
 
@@ -34,31 +36,23 @@ export const signInWithGitHub = async (pb: PocketBase) => {
   return updated;
 };
 
-export interface WorkshopSubmission {
-  id: string;
-  collectionId: string;
-  collectionName: string;
-  type: "customCss" | "customWidget";
-  title: string;
-  description: string;
-  widgetSchema: string;
+export type WorkshopSubmission = WorkshopSubmissionSummary & {
+  collectionId?: string;
+  collectionName?: string;
   content: string;
-  screenshots: string[];
-  upvotes: number;
-  downvotes: number;
-  commentCount: number;
-  reportCount: number;
-  revision: number;
-  changelog: string;
-  outdated: boolean;
-  author: string;
-  authorName: string;
-  authorAvatarUrl: string;
-  authorGithubUsername: string;
-  authorGithubProfileUrl: string;
-  created: string;
-  updated: string;
-}
+};
+
+export const parseWorkshopSubmission = (value: unknown): WorkshopSubmission | null => {
+  const result = workshopSubmissionSummarySchema.safeParse(value);
+  if (!result.success) return null;
+  const record = value as Record<string, unknown>;
+  return {
+    ...result.data,
+    collectionId: typeof record.collectionId === "string" ? record.collectionId : undefined,
+    collectionName: typeof record.collectionName === "string" ? record.collectionName : undefined,
+    content: typeof record.content === "string" ? record.content : "",
+  };
+};
 
 export interface WorkshopVote {
   id: string;

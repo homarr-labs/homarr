@@ -225,14 +225,17 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
             <React.Fragment key={label}>
               {i > 0 && <div className={cn("h-px flex-1 transition-colors", connectorClass[Number(i <= step)])} />}
               <button
+                type="button"
                 onClick={() => {
                   if (i < step) goTo(i);
                 }}
+                disabled={i > step}
+                aria-current={i === step ? "step" : undefined}
                 className={cn(
                   "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all",
                   i === step && "bg-primary text-primary-foreground shadow-sm",
                   i < step && "bg-primary/10 text-primary cursor-pointer hover:bg-primary/20",
-                  i > step && "bg-muted text-muted-foreground",
+                  i > step && "bg-muted text-muted-foreground disabled:cursor-default",
                 )}
               >
                 {i < step ? <IconCheck size={12} /> : <span className="tabular-nums">{i + 1}</span>}
@@ -331,6 +334,7 @@ const StepType = ({
       <div className="grid grid-cols-2 gap-3">
         {typeCards.map(({ type, icon: Icon, label, desc }) => (
           <button
+            type="button"
             key={type}
             onClick={() => onChange(type)}
             aria-pressed={value === type}
@@ -556,6 +560,7 @@ const StepMedia = ({
               <div key={i} className="group relative h-24 overflow-hidden rounded-xl border border-border bg-muted">
                 <img src={src} alt={`Preview ${i + 1}`} className="h-full w-full object-cover" />
                 <button
+                  type="button"
                   onClick={() => removeScreenshot(i)}
                   className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
                   aria-label={`Remove screenshot ${i + 1}`}

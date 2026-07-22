@@ -135,8 +135,8 @@ migrate(
     const reports = new Collection({
       type: "base",
       name: "reports",
-      listRule: "",
-      viewRule: "",
+      listRule: adminRule,
+      viewRule: adminRule,
       createRule: "@request.auth.id != '' && @request.body.reporter = @request.auth.id",
       updateRule: `${adminRule} && @request.body.reporter:changed = false && @request.body.submission:changed = false`,
       deleteRule: adminRule,
