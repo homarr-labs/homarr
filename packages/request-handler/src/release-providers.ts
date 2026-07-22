@@ -787,13 +787,36 @@ const getLinuxServerIOReleaseAsync = async (
       error: { code: "noReleasesFound", message: `Image "${parsed.name}" not found in LinuxServer.io registry` },
     };
 
-  // LSIO's /api/v1/images only exposes the single latest version, so a version
-  // filter can never surface an older release (#4351). Only when a filter is set,
-  // delegate to the image's GitHub repository to fetch the real release history,
-  // while keeping LSIO's own image metadata. Any GitHub failure (no repo, no
-  // releases, rate limit) falls back to the LSIO latest.
+  const regex = compileVersionRegex(versionRegex);
+  if (versionRegex && !regex) {
+    return {
+      success: false,
+      error: { code: "noMatchingVersion", message: `Invalid regex: /${versionRegex}/` },
+    };
+  }
+
+  if (!regex || regex.test(release.version)) {
+    return {
+      success: true,
+      data: {
+        latestRelease: release.version,
+        latestReleaseAt: release.version_timestamp,
+        releaseDescription: release.changelog?.shift()?.desc,
+        projectUrl: release.github_url,
+        projectDescription: release.description,
+        isArchived: release.deprecated,
+        createdAt: release.initial_date,
+        starsCount: release.stars,
+      },
+    };
+  }
+
+  // LSIO's /api/v1/images only exposes the single latest version, so a filter
+  // that does not match it cannot surface an older release (#4351). Delegate to
+  // the image's GitHub repository to fetch the real release history while
+  // keeping LSIO's own image metadata.
   const githubRepo = parseGithubRepo(release.github_url);
-  if (versionRegex && githubRepo) {
+  if (githubRepo) {
     const githubResult = await getGithubReleaseAsync(getReleaseProviderDefaultUrl("github"), githubRepo, versionRegex);
     if (githubResult.success) {
       return {
@@ -810,35 +833,11 @@ const getLinuxServerIOReleaseAsync = async (
     }
   }
 
-  const regex = compileVersionRegex(versionRegex);
-  if (versionRegex && !regex) {
-    return {
-      success: false,
-      error: { code: "noMatchingVersion", message: `Invalid regex: /${versionRegex}/` },
-    };
-  }
-
-  if (regex && !regex.test(release.version)) {
-    return {
-      success: false,
-      error: {
-        code: "noMatchingVersion",
-        message: `Regex /${versionRegex}/ does not match LSIO version "${release.version}"`,
-      },
-    };
-  }
-
   return {
-    success: true,
-    data: {
-      latestRelease: release.version,
-      latestReleaseAt: release.version_timestamp,
-      releaseDescription: release.changelog?.shift()?.desc,
-      projectUrl: release.github_url,
-      projectDescription: release.description,
-      isArchived: release.deprecated,
-      createdAt: release.initial_date,
-      starsCount: release.stars,
+    success: false,
+    error: {
+      code: "noMatchingVersion",
+      message: `Regex /${versionRegex}/ does not match LSIO version "${release.version}"`,
     },
   };
 };

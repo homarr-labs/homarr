@@ -206,6 +206,24 @@ describe("getLatestMatchingReleaseAsync for LinuxServer.io", () => {
     });
     expect(mockedFetch).toHaveBeenCalledTimes(3);
   });
+
+  test("uses the LinuxServer.io latest release when it matches the version filter", async () => {
+    mockedFetch.mockResolvedValueOnce(createLinuxServerResponse());
+
+    const result = await getLatestMatchingReleaseAsync({
+      id: "tautulli",
+      provider: "linuxServerIO",
+      identifier: "linuxserver/tautulli",
+      versionRegex: "^v2\\.17\\..+-ls[0-9]+$",
+    });
+
+    expect(result).toEqual({
+      success: true,
+      data: expect.objectContaining({ latestRelease: "v2.17.2-ls237" }),
+    });
+    expect(mockedFetch).toHaveBeenCalledOnce();
+    expectUrl(0, "https://api.linuxserver.io/api/v1/images");
+  });
 });
 
 interface MockGhcrResponsesInput {
