@@ -2,10 +2,18 @@
 
 import { startTransition, useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Box, Center, Loader, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
-import { IconLayoutBoard, IconPencil, IconPencilOff, IconReplace, IconSettings } from "@tabler/icons-react";
+import {
+  IconDeviceFloppy,
+  IconLayoutBoard,
+  IconPencil,
+  IconPencilOff,
+  IconReplace,
+  IconSettings,
+  IconX,
+} from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -76,11 +84,19 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEnteringEditMode, setIsEnteringEditMode] = useState(false);
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { openConfirmModal } = useConfirmModal();
+  const commonT = useI18n();
   const t = useScopedI18n("board.action.edit");
+  const returnToLayoutSettings =
+    isEditMode &&
+    searchParams.get("edit") === "true" &&
+    searchParams.get("layout") !== null &&
+    searchParams.get("returnTo") === "settings";
   const latestBoardRef = useRef(board);
 
   latestBoardRef.current = board;
-
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onSuccess() {
       showSuccessNotification({
@@ -91,6 +107,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       void utils.widget.customApi.getData.invalidate();
       void revalidatePathActionAsync(`/boards/${board.name}`);
       close();
+      if (returnToLayoutSettings) router.push(`/boards/${board.name}/settings?tab=layout`);
     },
     onError() {
       showErrorNotification({
@@ -155,8 +172,44 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
     }
   }, [demoReadOnly, discardDemoChanges, isEditMode, open, prepareEditorAsync, saveBoard, t]);
 
+  const cancelLayoutEdit = useCallback(() => {
+    openConfirmModal({
+      title: commonT("board.setting.section.layout.edit.cancel.title"),
+      children: commonT("board.setting.section.layout.edit.cancel.message"),
+      confirmProps: { children: commonT("common.action.discard"), color: "red" },
+      onConfirm() {
+        void (async () => {
+          await utils.board.getBoardByName.invalidate({ name: board.name });
+          close();
+          router.push(`/boards/${board.name}/settings?tab=layout`);
+        })();
+      },
+    });
+  }, [board.name, close, commonT, openConfirmModal, router, utils.board.getBoardByName]);
+
   useHotkeys([[hotkeys.toggleBoardEdit, () => void toggle()]]);
   usePreventLeaveWithDirty(isEditMode);
+
+  if (returnToLayoutSettings) {
+    return (
+      <>
+        <HeaderButton
+          onClick={() => saveBoard(board)}
+          loading={isPending}
+          aria-label={commonT("board.setting.section.layout.edit.save")}
+        >
+          <IconDeviceFloppy stroke={1.5} />
+        </HeaderButton>
+        <HeaderButton
+          onClick={cancelLayoutEdit}
+          disabled={isPending}
+          aria-label={commonT("board.setting.section.layout.edit.cancel.action")}
+        >
+          <IconX stroke={1.5} />
+        </HeaderButton>
+      </>
+    );
+  }
 
   return (
     <TourTarget id="board-edit-mode">
