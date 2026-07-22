@@ -12,7 +12,8 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
-import { WeatherDescription, WeatherIcon } from "./icon";
+import { AnimatedWeatherIcon } from "./animated-icon";
+import { WeatherDescription } from "./icon";
 
 export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
   const input = {
@@ -55,7 +56,7 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
         <HoverCard>
           <HoverCard.Target>
             <Box>
-              <WeatherIcon size={30} code={weather.current.weathercode} />
+              <AnimatedWeatherIcon size={30} code={weather.current.weathercode} />
             </Box>
           </HoverCard.Target>
           <HoverCard.Dropdown>
@@ -146,7 +147,7 @@ const WeeklyForecast = ({ options, weather }: WeatherProps) => {
           <HoverCard>
             <HoverCard.Target>
               <Box>
-                <WeatherIcon size={16} code={weather.current.weathercode} />
+                <AnimatedWeatherIcon size={16} code={weather.current.weathercode} />
               </Box>
             </HoverCard.Target>
             <HoverCard.Dropdown>
@@ -184,7 +185,7 @@ function Forecast({ weather, options }: WeatherProps) {
               align="center"
             >
               <Text fz="xl">{dayjs(dayWeather.time).format("dd")}</Text>
-              <WeatherIcon size={16} code={dayWeather.weatherCode} />
+              <AnimatedWeatherIcon size={16} code={dayWeather.weatherCode} />
               <Text fz={16}>
                 {getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
               </Text>

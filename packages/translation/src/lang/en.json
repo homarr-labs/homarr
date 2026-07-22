@@ -1905,6 +1905,16 @@
         "customDateFormat": {
           "label": "Custom date format",
           "description": "Use ISO 8601 to format date (this will override other options)"
+        },
+        "showWeather": {
+          "label": "Show weather",
+          "description": "Display a small animated weather icon and temperature in the corner of the card"
+        },
+        "weatherLocation": {
+          "label": "Weather location"
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": "Use Fahrenheit"
         }
       }
     },
