@@ -1,0 +1,53 @@
+---
+title: "Live Tennis"
+description: "Displays live, upcoming or completed tennis matches."
+hide_title: true
+---
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { tennisWidget } from ".";
+
+<WidgetHeader widget={tennisWidget} categories={["Sports"]} />
+
+The Live Tennis widget shows tennis matches on your dashboard, including live set and game scores,
+the player currently serving and the current game points.
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={tennisWidget.configuration} />
+
+### API key
+
+This widget uses the [Live Tennis API](https://livetennisapi.com), which requires an API key.
+A free tier is available without a credit card at https://livetennisapi.com/subscribe/free.
+
+The key is read **server side only** from the `LIVE_TENNIS_API_KEY` environment variable and is
+never sent to the browser:
+
+```yaml
+services:
+  homarr:
+    environment:
+      - LIVE_TENNIS_API_KEY=twjp_your_key_here
+```
+
+:::warning
+Do not put the API key into a widget option. Board items are readable by everyone who can view the
+board, including anonymous visitors on public boards.
+:::
+
+If the variable is not set, or the key is rejected by the API, the widget shows a
+"No valid Live Tennis API key configured" message instead of the scoreboard.
+
+### Data source
+
+Match data is fetched server side from `https://api.livetennisapi.com`.
+If you need to whitelist the API, please use the following URL: `https://api.livetennisapi.com`
+
+The widget respects `NO_EXTERNAL_CONNECTION`; when that is enabled no request is made.

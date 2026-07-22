@@ -11,6 +11,7 @@ export const widgetKinds = [
   "smartHome-entityState",
   "smartHome-executeAutomation",
   "stockPrice",
+  "tennis",
   "mediaServer",
   "calendar",
   "downloads",

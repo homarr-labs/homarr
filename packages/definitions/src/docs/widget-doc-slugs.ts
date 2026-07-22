@@ -13,6 +13,7 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   "smartHome-entityState": "smart-home-entity-state",
   "smartHome-executeAutomation": "smart-home-execute-automation",
   stockPrice: "stock-price",
+  tennis: "tennis",
   mediaServer: "media-server",
   calendar: "calendar",
   downloads: "downloads",
