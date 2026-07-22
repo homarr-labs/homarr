@@ -2,20 +2,21 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dayjs from "dayjs";
 
 import type { WorkshopComment, WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
-import { getPocketBase } from "@site/src/lib/pocketbase";
+import { getWorkshopBackend } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
-import { schemaVersionByType, validateSubmissionContent } from "@site/src/lib/workshop-schema";
-import { errorMessage } from "@site/src/lib/utils";
+import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
+import { errorMessage, oauthErrorMessage } from "@site/src/lib/utils";
 
 import { voteDelta } from "./workshop-utils";
 
-export type SortKey = "top" | "new";
+export type SortKey = "top" | "new" | "recent" | "discussed";
 export type TypeFilter = "all" | "yours" | SubmissionType;
 
 export interface SubmitInput {
   type: SubmissionType;
   title: string;
   description: string;
+  changelog: string;
   content: string;
   screenshots: File[];
 }
@@ -30,59 +31,51 @@ export interface CommentActions {
 const sorters: Record<SortKey, (a: WorkshopSubmission, b: WorkshopSubmission) => number> = {
   top: (a, b) => b.upvotes - b.downvotes - (a.upvotes - a.downvotes),
   new: (a, b) => dayjs(b.created).valueOf() - dayjs(a.created).valueOf(),
+  recent: (a, b) => dayjs(b.updated).valueOf() - dayjs(a.updated).valueOf(),
+  discussed: (a, b) => b.commentCount - a.commentCount || dayjs(b.created).valueOf() - dayjs(a.created).valueOf(),
 };
 
-const isNotFoundError = (error: unknown) =>
-  typeof error === "object" && error !== null && "status" in error && error.status === 404;
-
 export const useWorkshop = (workshopUrl: string) => {
-  const pb = useMemo(() => getPocketBase(workshopUrl), [workshopUrl]);
+  const backend = useMemo(() => getWorkshopBackend(workshopUrl), [workshopUrl]);
   const [submissions, setSubmissions] = useState<WorkshopSubmission[]>([]);
   const [votes, setVotes] = useState<Record<string, WorkshopVote>>({});
-  const [user, setUser] = useState(pb.authStore.record);
+  const [user, setUser] = useState(backend.currentUser);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const votingIds = useRef(new Set<string>());
 
   const refreshVotes = useCallback(async () => {
-    if (!pb.authStore.isValid || !pb.authStore.record) {
+    if (!backend.currentUser) {
       setVotes({});
       return;
     }
-    const rows = await pb.collection("votes").getFullList<WorkshopVote>({
-      filter: pb.filter("user = {:id}", { id: pb.authStore.record.id }),
-    });
+    const rows = await backend.listVotesForCurrentUser();
     setVotes(Object.fromEntries(rows.map((row) => [row.submission, row])));
-  }, [pb]);
+  }, [backend]);
 
   const refresh = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      setSubmissions(await pb.collection("marketplace").getFullList<WorkshopSubmission>({ sort: "-created" }));
+      const rows = await backend.listAll({ sort: "newest" });
+      setSubmissions(rows.map((submission) => ({ ...submission, content: "" })));
       await refreshVotes();
     } catch (caught) {
       setError(errorMessage(caught, "Failed to load the workshop"));
     } finally {
       setLoading(false);
     }
-  }, [pb, refreshVotes]);
+  }, [backend, refreshVotes]);
 
   useEffect(() => {
     let cancelled = false;
-    const unsubscribe = pb.authStore.onChange(() => {
-      setUser(pb.authStore.record);
-      if (!pb.authStore.isValid) setVotes({});
+    const unsubscribe = backend.subscribeToAuth((nextUser) => {
+      setUser(nextUser);
+      if (!nextUser) setVotes({});
     });
 
     const load = async () => {
-      if (pb.authStore.isValid) {
-        try {
-          await pb.collection("users").authRefresh();
-        } catch {
-          pb.authStore.clear();
-        }
-      }
+      await backend.refreshAuth();
       if (!cancelled) await refresh();
     };
 
@@ -91,21 +84,14 @@ export const useWorkshop = (workshopUrl: string) => {
       cancelled = true;
       unsubscribe();
     };
-  }, [pb, refresh]);
+  }, [backend, refresh]);
 
   const ensureAuth = useCallback(async () => {
-    if (pb.authStore.isValid) {
-      try {
-        await pb.collection("users").authRefresh();
-        return true;
-      } catch {
-        pb.authStore.clear();
-      }
-    }
-    await pb.collection("users").authWithOAuth2({ provider: "github" });
+    if (backend.currentUser) return true;
+    await backend.signInWithGitHub();
     await refreshVotes();
-    return pb.authStore.isValid;
-  }, [pb, refreshVotes]);
+    return backend.currentUser !== null;
+  }, [backend, refreshVotes]);
 
   const requireUserId = useCallback(
     async (action: string) => {
@@ -113,7 +99,7 @@ export const useWorkshop = (workshopUrl: string) => {
       try {
         authenticated = await ensureAuth();
       } catch (caught) {
-        setError(errorMessage(caught, `Sign in to ${action}`));
+        setError(oauthErrorMessage(caught));
         return null;
       }
 
@@ -121,14 +107,14 @@ export const useWorkshop = (workshopUrl: string) => {
         setError(`Sign in to ${action}`);
         return null;
       }
-      const userId = pb.authStore.record?.id;
+      const userId = backend.currentUser?.id;
       if (!userId) {
         setError(`Sign in to ${action}`);
         return null;
       }
       return userId;
     },
-    [pb, ensureAuth],
+    [backend, ensureAuth],
   );
 
   const login = useCallback(async () => {
@@ -136,7 +122,7 @@ export const useWorkshop = (workshopUrl: string) => {
       await ensureAuth();
       setError(null);
     } catch (caught) {
-      setError(errorMessage(caught, "Sign in failed"));
+      setError(oauthErrorMessage(caught));
     }
   }, [ensureAuth]);
 
@@ -172,30 +158,13 @@ export const useWorkshop = (workshopUrl: string) => {
       );
 
       try {
-        const existing = prev?.id ? prev : undefined;
-        if (!existing) {
-          const created = await pb
-            .collection("votes")
-            .create<WorkshopVote>({ submission: submissionId, value, user: userId });
-          setVotes((current) => ({ ...current, [submissionId]: created }));
-        } else if (isToggleOff) {
-          try {
-            await pb.collection("votes").delete(existing.id);
-          } catch (caught) {
-            if (!isNotFoundError(caught)) throw caught;
-          }
-        } else {
-          try {
-            const updated = await pb.collection("votes").update<WorkshopVote>(existing.id, { value });
-            setVotes((current) => ({ ...current, [submissionId]: updated }));
-          } catch (caught) {
-            if (!isNotFoundError(caught)) throw caught;
-            const created = await pb
-              .collection("votes")
-              .create<WorkshopVote>({ submission: submissionId, value, user: userId });
-            setVotes((current) => ({ ...current, [submissionId]: created }));
-          }
-        }
+        const saved = await backend.vote(submissionId, value);
+        setVotes((current) => {
+          const next = { ...current };
+          if (saved) next[submissionId] = saved;
+          else delete next[submissionId];
+          return next;
+        });
       } catch (caught) {
         setVotes((v) => {
           const next = { ...v };
@@ -213,26 +182,29 @@ export const useWorkshop = (workshopUrl: string) => {
         votingIds.current.delete(submissionId);
       }
     },
-    [pb, votes, requireUserId],
+    [backend, votes, requireUserId],
   );
 
   const report = useCallback(
-    async (submissionId: string, reason: string) => {
+    async (
+      submissionId: string,
+      category: "malicious" | "spam" | "copyright" | "inappropriate" | "other",
+      explanation: string,
+    ) => {
       try {
-        const userId = await requireUserId("report");
-        if (!userId) return;
-        await pb.collection("reports").create({ submission: submissionId, reason, user: userId });
+        if (!(await requireUserId("report"))) return;
+        await backend.report(submissionId, category, explanation);
       } catch (caught) {
         setError(errorMessage(caught, "Failed to submit your report"));
       }
     },
-    [pb, requireUserId],
+    [backend, requireUserId],
   );
 
   const deleteSubmission = useCallback(
     async (submissionId: string) => {
       try {
-        await pb.collection("submissions").delete(submissionId);
+        await backend.delete(submissionId);
         setSubmissions((prev) => prev.filter((s) => s.id !== submissionId));
         return true;
       } catch (caught) {
@@ -240,7 +212,7 @@ export const useWorkshop = (workshopUrl: string) => {
         return false;
       }
     },
-    [pb],
+    [backend],
   );
 
   const submit = useCallback(
@@ -248,76 +220,65 @@ export const useWorkshop = (workshopUrl: string) => {
       const validation = validateSubmissionContent(input.type, input.content);
       if (!validation.success) throw new Error(validation.error);
       if (!(await ensureAuth())) throw new Error("Sign in required to submit");
-      const userId = pb.authStore.record?.id;
-      if (!userId) throw new Error("Sign in required to submit");
-
-      const data = new FormData();
-      data.set("type", input.type);
-      data.set("title", input.title);
-      data.set("description", input.description);
-      data.set("schemaVersion", schemaVersionByType[input.type]);
-      data.set("content", input.content);
-      data.set("author", userId);
-      for (const file of input.screenshots) data.append("screenshots", file);
-      await pb.collection("submissions").create(data);
+      await backend.create(
+        {
+          type: input.type,
+          title: input.title,
+          description: input.description,
+          content: input.content,
+          changelog: input.changelog || "Initial publication",
+          outdated: false,
+        },
+        input.screenshots,
+      );
       await refresh();
       return true;
     },
-    [pb, ensureAuth, refresh],
+    [backend, ensureAuth, refresh],
   );
 
-  const fetchComments = useCallback(
-    (submissionId: string) =>
-      pb.collection("comments").getFullList<WorkshopComment>({
-        filter: pb.filter("submission = {:id}", { id: submissionId }),
-        sort: "-created",
-        expand: "author",
-      }),
-    [pb],
-  );
+  const fetchComments = useCallback((submissionId: string) => backend.listComments(submissionId), [backend]);
 
   const addComment = useCallback(
     async (submissionId: string, content: string) => {
       const userId = await requireUserId("comment");
       if (!userId) return null;
       try {
-        return await pb
-          .collection("comments")
-          .create<WorkshopComment>({ submission: submissionId, content, author: userId }, { expand: "author" });
+        return await backend.createComment(submissionId, content);
       } catch (caught) {
         setError(errorMessage(caught, "Failed to post comment"));
         return null;
       }
     },
-    [pb, requireUserId],
+    [backend, requireUserId],
   );
 
   const updateComment = useCallback(
     async (commentId: string, content: string) => {
       try {
-        return await pb.collection("comments").update<WorkshopComment>(commentId, { content }, { expand: "author" });
+        return await backend.updateComment(commentId, content);
       } catch (caught) {
         setError(errorMessage(caught, "Failed to update comment"));
         return null;
       }
     },
-    [pb],
+    [backend],
   );
 
   const deleteComment = useCallback(
     async (commentId: string) => {
       try {
-        await pb.collection("comments").delete(commentId);
+        await backend.deleteComment(commentId);
         return true;
       } catch (caught) {
         setError(errorMessage(caught, "Failed to delete comment"));
         return false;
       }
     },
-    [pb],
+    [backend],
   );
 
-  const logout = useCallback(() => pb.authStore.clear(), [pb]);
+  const logout = useCallback(() => backend.signOut(), [backend]);
 
   const comments = useMemo<CommentActions>(
     () => ({
@@ -330,7 +291,7 @@ export const useWorkshop = (workshopUrl: string) => {
   );
 
   return {
-    pb,
+    backend,
     submissions,
     votes,
     user,

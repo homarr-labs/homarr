@@ -1,21 +1,18 @@
-"use client";
-
 import { Alert, Anchor, Text } from "@mantine/core";
 import { IconFlask } from "@tabler/icons-react";
-import { useScopedI18n } from "@homarr/translation/client";
 
 const FEEDBACK_URL = "https://github.com/homarr-labs/homarr/discussions/categories/custom-widgets";
 
 export function CustomWidgetBetaBanner() {
-  const t = useScopedI18n("customWidget.betaBanner");
   return (
-    <Alert variant="light" color="yellow" title={t("title")} icon={<IconFlask />}>
+    <Alert variant="light" color="yellow" title="Custom Widgets are in Beta" icon={<IconFlask />}>
       <Text size="sm">
-        {t("description")}{" "}
+        This feature is experimental and will probably change a lot in the future. If you encounter bugs, wish it did
+        more, or find something confusing, then please complain to us as much as possible! Only feedback posted on the{" "}
         <Anchor href={FEEDBACK_URL} target="_blank" fw={600}>
-          {t("link")}
+          official discussion thread
         </Anchor>{" "}
-        {t("closing")}
+        will be taken into account. Happy Hacking!
       </Text>
     </Alert>
   );

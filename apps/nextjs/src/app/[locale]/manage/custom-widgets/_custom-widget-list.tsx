@@ -1,7 +1,7 @@
 "use client";
 
 import { ActionIcon, Avatar, Badge, Card, Group, Stack, Switch, Text, Tooltip } from "@mantine/core";
-import { IconApi, IconPencil } from "@tabler/icons-react";
+import { IconAlertTriangle, IconApi, IconPencil } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -13,21 +13,8 @@ import { Link } from "@homarr/ui";
 import { NoResults } from "~/components/no-results";
 import { CustomWidgetRowActions } from "./_custom-widget-actions";
 
-const displayTypeBadgeColors: Record<string, string> = {
-  singleValue: "blue",
-  keyValue: "green",
-  table: "orange",
-  statGrid: "violet",
-  progressBars: "teal",
-  statusIndicator: "cyan",
-  countGrid: "indigo",
-  raw: "gray",
-  actionButton: "red",
-  customJsx: "pink",
-};
-
 interface CustomWidgetListProps {
-  definitions: RouterOutputs["customWidget"]["all"];
+  definitions: RouterOutputs["customWidget"]["list"];
 }
 
 export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
@@ -52,7 +39,7 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
   );
 };
 
-type WidgetDef = RouterOutputs["customWidget"]["all"][number];
+type WidgetDef = RouterOutputs["customWidget"]["list"][number];
 
 function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
   const t = useScopedI18n("customWidget");
@@ -63,8 +50,9 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
     toggleMutation.mutate(
       { id: widget.id, enabled: !widget.enabled },
       {
-        onSuccess: () => {
-          void utils.customWidget.all.invalidate();
+        onSuccess: async () => {
+          await utils.widget.customApi.getData.cancel();
+          void utils.customWidget.list.invalidate();
           void utils.widget.customApi.getData.invalidate();
           void revalidatePathActionAsync("/manage/custom-widgets");
         },
@@ -81,8 +69,10 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
   return (
     <Card
       padding="sm"
+      withBorder={!widget.valid}
+      bd={!widget.valid ? "1px solid var(--mantine-color-red-6)" : undefined}
       style={{
-        opacity: widget.enabled ? 1 : 0.55,
+        opacity: widget.valid && !widget.enabled ? 0.55 : 1,
         transition: "opacity 150ms ease",
       }}
     >
@@ -99,42 +89,85 @@ function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
             <Text size="sm" fw={600} lineClamp={1} style={{ minWidth: 0 }}>
               {widget.name}
             </Text>
-            {widget.url && (
+            {!widget.valid && (
+              <Text size="xs" c="red">
+                {t("page.list.invalidDefinitionDescription")}
+              </Text>
+            )}
+            {widget.sources[0] && (
               <Text size="xs" c="dimmed" ff="monospace" lineClamp={1} style={{ wordBreak: "break-all", minWidth: 0 }}>
-                {widget.url}
+                {widget.sources.map((source) => source.origin).join(" · ")}
               </Text>
             )}
           </Stack>
-          <Badge
-            color={displayTypeBadgeColors[widget.displayType] ?? "gray"}
-            size="sm"
-            variant="light"
-            style={{ flexShrink: 0 }}
-          >
-            {t(`displayType.${widget.displayType}` as never)}
-          </Badge>
+          {widget.valid ? (
+            <Badge color="pink" size="sm" variant="light" style={{ flexShrink: 0 }}>
+              JSX · {widget.requestCount}
+            </Badge>
+          ) : (
+            <Tooltip
+              label={widget.validationIssues
+                .map((issue) => (issue.path ? `${issue.path}: ${issue.message}` : issue.message))
+                .join("\n")}
+              multiline
+              maw={520}
+            >
+              <Badge
+                color="red"
+                size="sm"
+                variant="light"
+                leftSection={<IconAlertTriangle size={12} />}
+                style={{ flexShrink: 0 }}
+              >
+                {t("page.list.invalidDefinition")}
+              </Badge>
+            </Tooltip>
+          )}
+          {widget.missingSecrets.length > 0 && (
+            <Tooltip
+              label={t("page.list.missingCredentialsDescription", { count: widget.missingSecrets.length })}
+              multiline
+              maw={320}
+            >
+              <Badge
+                color="yellow"
+                size="sm"
+                variant="light"
+                leftSection={<IconAlertTriangle size={12} />}
+                style={{ flexShrink: 0 }}
+              >
+                {t("page.list.missingCredentials", { count: widget.missingSecrets.length })}
+              </Badge>
+            </Tooltip>
+          )}
         </Group>
 
         <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>
-          <Tooltip label={widget.enabled ? t("action.disable") : t("action.enable")}>
-            <Switch
-              size="sm"
-              checked={widget.enabled}
-              onChange={handleToggle}
-              disabled={toggleMutation.isPending}
-              aria-label={widget.enabled ? t("action.disable") : t("action.enable")}
-            />
-          </Tooltip>
-          <ActionIcon
-            component={Link}
-            href={`/manage/custom-widgets/edit/${widget.id}`}
-            variant="subtle"
-            color="gray"
-            aria-label={t("action.edit")}
-          >
-            <IconPencil size={16} stroke={1.5} />
-          </ActionIcon>
-          <CustomWidgetRowActions widget={{ id: widget.id, name: widget.name, enabled: widget.enabled }} />
+          {widget.valid && (
+            <>
+              <Tooltip label={widget.enabled ? t("action.disable") : t("action.enable")}>
+                <Switch
+                  size="sm"
+                  checked={widget.enabled}
+                  onChange={handleToggle}
+                  disabled={toggleMutation.isPending}
+                  aria-label={widget.enabled ? t("action.disable") : t("action.enable")}
+                />
+              </Tooltip>
+              <ActionIcon
+                component={Link}
+                href={`/manage/custom-widgets/edit/${widget.id}`}
+                variant="subtle"
+                color="gray"
+                aria-label={t("action.edit")}
+              >
+                <IconPencil size={16} stroke={1.5} />
+              </ActionIcon>
+            </>
+          )}
+          <CustomWidgetRowActions
+            widget={{ id: widget.id, name: widget.name, enabled: widget.enabled, valid: widget.valid }}
+          />
         </Group>
       </Group>
     </Card>

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import { fetchApi, clientApi } from "@homarr/api/client";
 import type {
+  CustomWidgetPublishedQueryState,
   CustomJsxRequestCapability,
   CustomWidgetRuntimeMessages,
   CustomWidgetRuntimePort,
@@ -12,23 +13,32 @@ import { CustomWidgetRuntimeProvider } from "@homarr/custom-widgets/runtime";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface WidgetDefinitionProviderProps {
   itemId?: string;
   definitionId?: string;
   previewSessionId?: string;
   previewLiveActions?: boolean;
+  queriesDisabled?: boolean;
   isEditMode?: boolean;
   requestCapabilities?: readonly CustomJsxRequestCapability[];
+  setQueryState?(requestId: string, value: CustomWidgetPublishedQueryState | null): void;
   children: ReactNode;
 }
 
-export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
+const INACTIVE_PORT: CustomWidgetRuntimePort = {
+  query: async () => ({ ok: false, status: 0, data: null, error: "Custom widget unavailable" }),
+  executeAction: async () => ({ ok: false, status: 0, data: null, error: "Custom widget unavailable" }),
+  invalidate: async () => undefined,
+  confirm: async () => false,
+  notify: () => undefined,
+};
+
+const useRuntimeMessages = (): CustomWidgetRuntimeMessages => {
   const t = useScopedI18n("widget.customApi.customJsx");
-  const utils = clientApi.useUtils();
-  const { openConfirmModal } = useConfirmModal();
-  const messages: CustomWidgetRuntimeMessages = {
-    migrationRequired: t("migrationRequired"),
+  return {
+    requestIdRequired: t("requestIdRequired"),
     unsavedPreview: t("unsavedPreview"),
     invalidParams: t("invalidParams"),
     loadRequest: t("loadRequest"),
@@ -43,6 +53,32 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
     toggle: t("toggle"),
     refresh: t("refresh"),
   };
+};
+
+export function InactiveWidgetDefinitionProvider({
+  definitionId,
+  isEditMode,
+  children,
+}: Pick<WidgetDefinitionProviderProps, "definitionId" | "isEditMode" | "children">) {
+  const messages = useRuntimeMessages();
+  return (
+    <CustomWidgetRuntimeProvider
+      definitionId={definitionId}
+      isEditMode={isEditMode ?? false}
+      requestCapabilities={[]}
+      port={INACTIVE_PORT}
+      messages={messages}
+    >
+      {children}
+    </CustomWidgetRuntimeProvider>
+  );
+}
+
+export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
+  const utils = clientApi.useUtils();
+  const queryClient = useQueryClient();
+  const { openConfirmModal } = useConfirmModal();
+  const messages = useRuntimeMessages();
   const port: CustomWidgetRuntimePort = {
     query: async (input, signal) => {
       if (input.itemId) {
@@ -72,18 +108,41 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
           }),
     invalidate: async ({ itemId, previewSessionId, targets }) => {
       if (previewSessionId) {
-        await utils.customWidget.previewQuery.invalidate();
+        await queryClient.invalidateQueries({
+          predicate: (query) => {
+            const key = query.queryKey;
+            return key[0] === "custom-widget" && key[1] === previewSessionId && targets.includes(String(key[2]));
+          },
+        });
         return;
       }
       if (!itemId) return;
-      const tasks: Promise<unknown>[] = [];
-      if (targets.includes("parent")) tasks.push(utils.widget.customApi.getData.invalidate({ itemId }));
-      if (targets.some((target) => target !== "parent")) tasks.push(utils.widget.customApi.queryRequest.invalidate());
+      if (targets.length === 0) return;
+      const tasks: Promise<unknown>[] = [
+        queryClient.invalidateQueries({
+          predicate: (query) => {
+            const key = query.queryKey;
+            return key[0] === "custom-widget" && key[1] === itemId && targets.includes(String(key[2]));
+          },
+        }),
+      ];
+      if (
+        (props.requestCapabilities ?? []).some((request) => request.trigger === "load" && targets.includes(request.id))
+      ) {
+        tasks.push(utils.widget.customApi.getData.invalidate({ itemId }));
+      }
       await Promise.all(tasks);
     },
-    confirm: ({ title, message }) =>
+    confirm: ({ title, message, confirmLabel, destructive }) =>
       new Promise((resolve) => {
-        openConfirmModal({ title, children: message, onConfirm: () => resolve(true), onCancel: () => resolve(false) });
+        openConfirmModal({
+          title,
+          children: message,
+          labels: { confirm: confirmLabel },
+          confirmProps: { color: destructive ? "red.9" : "blue" },
+          onConfirm: () => resolve(true),
+          onCancel: () => resolve(false),
+        });
       }),
     notify: ({ kind, ...notification }) =>
       kind === "success" ? showSuccessNotification(notification) : showErrorNotification(notification),
@@ -94,10 +153,12 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
       definitionId={props.definitionId}
       previewSessionId={props.previewSessionId}
       previewLiveActions={props.previewLiveActions}
+      queriesDisabled={props.queriesDisabled}
       isEditMode={props.isEditMode ?? false}
       requestCapabilities={props.requestCapabilities ?? []}
       port={port}
       messages={messages}
+      setQueryState={props.setQueryState}
     >
       {props.children}
     </CustomWidgetRuntimeProvider>

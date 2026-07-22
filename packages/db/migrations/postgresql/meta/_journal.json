@@ -71,6 +71,13 @@
       "when": 1783786677702,
       "tag": "0009_add_right_click_preference",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1784305412862,
+      "tag": "0010_custom_widget_v2_reset",
+      "breakpoints": true
     }
   ]
 }

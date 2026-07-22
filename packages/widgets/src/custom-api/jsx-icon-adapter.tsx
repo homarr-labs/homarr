@@ -11,6 +11,7 @@ import {
   IconBluetooth,
   IconBolt,
   IconBookmark,
+  IconBrandDocker,
   IconBug,
   IconCalendar,
   IconCamera,
@@ -64,6 +65,7 @@ import {
   IconMusic,
   IconNetwork,
   IconPhoto,
+  IconPokeball,
   IconPin,
   IconPlayerPause,
   IconPlayerPlay,
@@ -133,6 +135,7 @@ const TABLER_ICON_IMPORTS = {
   IconHeart,
   IconStar,
   IconBookmark,
+  IconBrandDocker,
   IconFlag,
   IconPin,
   IconPlayerPlay,
@@ -183,6 +186,7 @@ const TABLER_ICON_IMPORTS = {
   IconExternalLink,
   IconLink,
   IconPhoto,
+  IconPokeball,
   IconCamera,
   IconMusic,
   IconVideo,
@@ -222,6 +226,8 @@ const TABLER_ICON_MAP: Record<string, ComponentType<never>> = {
   ),
   pulse: IconHeartbeat,
 };
+
+export const SAFE_TABLER_ICON_NAMES = Object.freeze(Object.keys(TABLER_ICON_MAP).toSorted());
 
 function isValidIconProp(value: unknown): value is string | number {
   return typeof value === "number" || typeof value === "string";

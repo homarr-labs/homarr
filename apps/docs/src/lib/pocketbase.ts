@@ -1,52 +1,21 @@
-import PocketBase from "pocketbase";
+import { WorkshopBackend, type TypedWorkshopPocketBase } from "@homarr/workshop/backend";
+import type { WorkshopSubmissionSummary } from "@homarr/workshop/schema";
 
-let client: PocketBase | undefined;
-let clientUrl: string | undefined;
+export type { WorkshopComment, WorkshopVote } from "@homarr/workshop/schema";
 
-export const getPocketBase = (url: string): PocketBase => {
-  if (!client || clientUrl !== url) {
-    client = new PocketBase(url);
-    clientUrl = url;
-  }
-  return client;
+const backends = new Map<string, WorkshopBackend>();
+
+export const getWorkshopBackend = (url: string): WorkshopBackend => {
+  const normalizedUrl = url.replace(/\/$/u, "");
+  const existing = backends.get(normalizedUrl);
+  if (existing) return existing;
+  const backend = new WorkshopBackend(normalizedUrl);
+  backends.set(normalizedUrl, backend);
+  return backend;
 };
 
-export const getSubmissionFileUrl = (baseUrl: string, submissionId: string, filename: string) =>
-  `${baseUrl}/api/files/submissions/${submissionId}/${encodeURIComponent(filename)}`;
+export const getPocketBase = (url: string): TypedWorkshopPocketBase => getWorkshopBackend(url).pocketBase;
 
-export interface WorkshopSubmission {
-  id: string;
-  collectionId: string;
-  collectionName: string;
-  type: "css" | "widget";
-  title: string;
-  description: string;
-  schemaVersion: string;
+export type WorkshopSubmission = WorkshopSubmissionSummary & {
   content: string;
-  screenshots: string[];
-  upvotes: number;
-  downvotes: number;
-  commentCount: number;
-  version: number;
-  changelog: string;
-  author: string;
-  authorName: string;
-  created: string;
-}
-
-export interface WorkshopVote {
-  id: string;
-  submission: string;
-  user: string;
-  value: 1 | -1;
-}
-
-export interface WorkshopComment {
-  id: string;
-  submission: string;
-  author: string;
-  content: string;
-  created: string;
-  updated: string;
-  expand?: { author?: { id: string; name?: string; username?: string } };
-}
+};

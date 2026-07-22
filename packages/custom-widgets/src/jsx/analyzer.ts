@@ -1,77 +1,62 @@
 import { Parser } from "acorn";
 import jsx from "acorn-jsx";
 
-import { customJsxComponentByName, customJsxSupportedPropsByName } from "../core/component-registry";
 import {
   CUSTOM_JSX_BLOCKED_PROPERTIES,
-  CUSTOM_JSX_BLOCKED_PROPS,
   CUSTOM_JSX_LIMITS,
+  isBlockedCustomJsxLexicalBinding,
   normalizeCustomJsxProperty,
 } from "./policy";
+import type { AstNode } from "./analyzer-ast";
+import { nodeOf, nodesOf, staticPropertyName } from "./analyzer-ast";
+import { createCustomJsxParseDiagnostic } from "./analyzer-diagnostics";
+import type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
+import { analyzeCustomJsxElement } from "./analyzer-jsx";
+import {
+  canStaticallyProduceCallable,
+  isStaticallyCallableBinding,
+  RESERVED_LOCAL_BINDINGS,
+  ROOT_BINDINGS,
+} from "./analyzer-language";
+import {
+  CUSTOM_JSX_BINARY_OPERATORS,
+  CUSTOM_JSX_CALLBACK_METHODS,
+  CUSTOM_JSX_SAFE_VALUE_METHODS,
+} from "./safe-language-policy";
 
-interface AstNode {
-  type: string;
-  start?: number;
-  loc?: { start?: { line?: number; column?: number } };
-  [key: string]: unknown;
-}
-
-export interface CustomJsxTemplateDiagnostic {
-  severity: "error" | "warning";
-  message: string;
-  index: number;
-  line: number;
-  column: number;
-}
+export type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
 
 const JsxParser = Parser.extend(jsx());
+const requestStatusLabels = new Set(["loading", "success", "error"]);
 
-const rootBindings = new Set([
-  "Array",
-  "Boolean",
-  "Date",
-  "Infinity",
-  "JSON",
-  "Math",
-  "NaN",
-  "Number",
-  "Object",
-  "String",
-  "data",
-  "decodeURIComponent",
-  "encodeURIComponent",
-  "isFinite",
-  "isNaN",
-  "parseFloat",
-  "parseInt",
-  "undefined",
-]);
+function directRequestStatusId(node: AstNode | null): string | null {
+  if (node?.type !== "MemberExpression") return null;
+  const object = nodeOf(node.object);
+  if (object?.type !== "Identifier" || object.name !== "status") return null;
+  const property = nodeOf(node.property);
+  return node.computed
+    ? (staticPropertyName(property) ?? null)
+    : String(property?.name ?? property?.value ?? "") || null;
+}
 
-const nodeOf = (value: unknown): AstNode | null =>
-  value !== null && typeof value === "object" && typeof (value as { type?: unknown }).type === "string"
-    ? (value as AstNode)
+function invalidRequestStatusComparison(node: AstNode) {
+  if (!["===", "==", "!==", "!="].includes(String(node.operator))) return null;
+  const left = nodeOf(node.left);
+  const right = nodeOf(node.right);
+  const leftStatus = directRequestStatusId(left);
+  const rightStatus = directRequestStatusId(right);
+  const leftLabel = left?.type === "Literal" && typeof left.value === "string" ? left.value : null;
+  const rightLabel = right?.type === "Literal" && typeof right.value === "string" ? right.value : null;
+  const requestId =
+    leftStatus && rightLabel && requestStatusLabels.has(rightLabel)
+      ? leftStatus
+      : rightStatus && leftLabel && requestStatusLabels.has(leftLabel)
+        ? rightStatus
+        : null;
+  return requestId
+    ? `INVALID_STATUS_COMPARISON: status.${requestId} is an object. Use status.${requestId}?.loading, status.${requestId}?.ok === true, or status.${requestId}?.ok === false`
     : null;
-
-const nodesOf = (value: unknown): AstNode[] =>
-  Array.isArray(value) ? value.map(nodeOf).filter((node): node is AstNode => node !== null) : [];
-
-const staticPropertyName = (node: AstNode | null): string | undefined => {
-  if (!node) return undefined;
-  if (node.type === "Literal" && (typeof node.value === "string" || typeof node.value === "number")) {
-    return String(node.value);
-  }
-  if (node.type === "BinaryExpression" && node.operator === "+") {
-    const left = staticPropertyName(nodeOf(node.left));
-    const right = staticPropertyName(nodeOf(node.right));
-    return left === undefined || right === undefined ? undefined : left + right;
-  }
-  if (node.type === "TemplateLiteral" && Array.isArray(node.expressions) && node.expressions.length === 0) {
-    return (node.quasis as Array<{ value?: { cooked?: unknown } }> | undefined)
-      ?.map((quasi) => String(quasi.value?.cooked ?? ""))
-      .join("");
-  }
-  return undefined;
-};
+}
 
 export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDiagnostic[] {
   const diagnostics: CustomJsxTemplateDiagnostic[] = [];
@@ -98,17 +83,46 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
     return depth <= CUSTOM_JSX_LIMITS.astDepth && operations <= CUSTOM_JSX_LIMITS.operations;
   };
 
-  const tagName = (node: AstNode): string | null => {
-    if (node.type === "JSXIdentifier") return String(node.name ?? "");
-    if (node.type !== "JSXMemberExpression") return null;
-    const object = nodeOf(node.object);
-    const property = nodeOf(node.property);
-    const left = object ? tagName(object) : null;
-    const right = property ? tagName(property) : null;
-    return left && right ? `${left}.${right}` : null;
+  let visit: (node: AstNode, depth: number, bindings: ReadonlySet<string>) => void;
+
+  const visitArrow = (node: AstNode, depth: number, bindings: ReadonlySet<string>) => {
+    if (node.async || node.generator) {
+      add(node, "CALLBACK_VALUE_NOT_ALLOWED: Async and generator callbacks are not supported");
+      return;
+    }
+    const callbackBindings = new Set(bindings);
+    const parameterNames = new Set<string>();
+    for (const parameter of nodesOf(node.params)) {
+      if (parameter.type !== "Identifier") {
+        add(parameter, "INVALID_LOCAL_DECLARATION: Callback parameters must be identifiers");
+        continue;
+      }
+      const name = String(parameter.name);
+      if (isBlockedCustomJsxLexicalBinding(name)) {
+        add(parameter, `INVALID_LOCAL_DECLARATION: '${name}' is not a safe callback parameter name`);
+        continue;
+      }
+      if (RESERVED_LOCAL_BINDINGS.has(name)) {
+        add(parameter, `RESERVED_LOCAL_BINDING: '${name}' cannot be shadowed`);
+        continue;
+      }
+      if (parameterNames.has(name)) {
+        add(parameter, `DUPLICATE_LOCAL_BINDING: '${name}' is already declared`);
+        continue;
+      }
+      parameterNames.add(name);
+      callbackBindings.add(name);
+    }
+    const body = nodeOf(node.body);
+    if (!body) return;
+    if (body.type === "BlockStatement")
+      add(body, "UNSUPPORTED_BLOCK_STATEMENT: Use one expression in authored callbacks");
+    else if (canStaticallyProduceCallable(body)) {
+      add(body, "CALLBACK_VALUE_NOT_ALLOWED: Authored callbacks cannot return callable values");
+    } else visit(body, depth + 1, callbackBindings);
   };
 
-  const visit = (node: AstNode, depth: number, bindings: ReadonlySet<string>): void => {
+  visit = (node: AstNode, depth: number, bindings: ReadonlySet<string>): void => {
     if (!checkBudget(node, depth)) return;
 
     switch (node.type) {
@@ -124,46 +138,7 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
         nodesOf(node.children).forEach((child) => visit(child, depth + 1, bindings));
         return;
       case "JSXElement": {
-        const opening = nodeOf(node.openingElement);
-        if (!opening) {
-          add(node, "Invalid JSX element");
-          return;
-        }
-        const nameNode = nodeOf(opening.name);
-        const name = nameNode ? tagName(nameNode) : null;
-        const descriptor = name ? customJsxComponentByName.get(name) : undefined;
-        if (!descriptor || descriptor.safety === "denied") {
-          add(opening, name ? `Component '${name}' is not available` : "Invalid JSX component name");
-        }
-
-        for (const attribute of nodesOf(opening.attributes)) {
-          if (attribute.type === "JSXSpreadAttribute") {
-            const argument = nodeOf(attribute.argument);
-            if (argument) visit(argument, depth + 1, bindings);
-            continue;
-          }
-          if (attribute.type !== "JSXAttribute") {
-            add(attribute, `Unsupported JSX attribute '${attribute.type}'`);
-            continue;
-          }
-          const attributeNameNode = nodeOf(attribute.name);
-          const attributeName = attributeNameNode?.type === "JSXIdentifier" ? String(attributeNameNode.name) : "";
-          const supportedProps = name ? customJsxSupportedPropsByName.get(name) : undefined;
-          if (
-            (/^on/i.test(attributeName) && !supportedProps?.has(attributeName)) ||
-            CUSTOM_JSX_BLOCKED_PROPS.has(attributeName)
-          ) {
-            add(attribute, `Prop '${attributeName}' is not allowed`);
-          } else if (name && !supportedProps?.has(attributeName)) {
-            add(attribute, `Prop '${attributeName}' is not supported by ${name} and will be ignored`, "warning");
-          }
-          const value = nodeOf(attribute.value);
-          if (value?.type === "JSXExpressionContainer") {
-            const expression = nodeOf(value.expression);
-            if (expression && expression.type !== "JSXEmptyExpression") visit(expression, depth + 1, bindings);
-          }
-        }
-        nodesOf(node.children).forEach((child) => visit(child, depth + 1, bindings));
+        analyzeCustomJsxElement(node, depth, bindings, { add, visit, visitArrow });
         return;
       }
       case "JSXText":
@@ -176,9 +151,9 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
         return;
       }
       case "Literal":
-        if (node.regex !== undefined || typeof node.value === "bigint") {
-          add(node, "Regular expressions and bigint literals are not supported");
-        }
+        if (typeof node.value === "bigint") add(node, "BIGINT_NOT_SUPPORTED: Use Number for widget values");
+        if (node.regex !== undefined && !isSafeRegexLiteral(node.regex))
+          add(node, "UNSAFE_REGEX: Use a bounded regex without lookbehind, backreferences, or nested quantifiers");
         return;
       case "Identifier": {
         const name = String(node.name ?? "");
@@ -223,6 +198,13 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
         return;
       case "BinaryExpression":
       case "LogicalExpression": {
+        if (node.type === "BinaryExpression" && !CUSTOM_JSX_BINARY_OPERATORS.has(String(node.operator))) {
+          add(node, `Binary operator '${String(node.operator)}' is not supported`);
+        }
+        if (node.type === "BinaryExpression") {
+          const statusDiagnostic = invalidRequestStatusComparison(node);
+          if (statusDiagnostic) add(node, statusDiagnostic);
+        }
         const left = nodeOf(node.left);
         const right = nodeOf(node.right);
         if (left) visit(left, depth + 1, bindings);
@@ -250,27 +232,66 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
       }
       case "CallExpression": {
         const callee = nodeOf(node.callee);
+        const arguments_ = nodesOf(node.arguments);
+        if (node.optional) {
+          add(node, "CALL_TARGET_NOT_ALLOWED: Optional calls are not supported");
+        }
+        if (callee?.type === "ArrowFunctionExpression") {
+          add(callee, "CALL_TARGET_NOT_ALLOWED: Inline IIFEs are not supported");
+          return;
+        }
         if (callee) visit(callee, depth + 1, bindings);
-        nodesOf(node.arguments).forEach((argument) => {
+        const property = callee?.type === "MemberExpression" ? nodeOf(callee.property) : null;
+        const method = property?.type === "Identifier" ? String(property.name) : staticPropertyName(property);
+        if (
+          callee &&
+          !isStaticallyCallableBinding(callee) &&
+          (callee.type !== "MemberExpression" || !method || !CUSTOM_JSX_SAFE_VALUE_METHODS.has(method))
+        ) {
+          add(callee, "CALL_TARGET_NOT_ALLOWED: Only documented safe helpers and value methods can be called");
+        }
+        if (method && CUSTOM_JSX_CALLBACK_METHODS.has(method)) {
+          const callback = arguments_[0];
+          if (!callback) {
+            add(node, `CALLBACK_VALUE_NOT_ALLOWED: '${method}' requires a callback`);
+          } else if (["reduce", "sort"].includes(method) && callback.type !== "ArrowFunctionExpression") {
+            add(callback, `CALLBACK_VALUE_NOT_ALLOWED: '${method}' requires an inline arrow callback`);
+          } else if (callback.type !== "ArrowFunctionExpression" && !isStaticallyCallableBinding(callback)) {
+            add(callback, `CALLBACK_VALUE_NOT_ALLOWED: '${method}' requires an inline arrow or safe helper callback`);
+          }
+        }
+        arguments_.forEach((argument, argumentIndex) => {
           if (argument.type === "SpreadElement") add(argument, "Spread call arguments are not supported");
-          else visit(argument, depth + 1, bindings);
+          else if (
+            argument.type === "ArrowFunctionExpression" &&
+            argumentIndex === 0 &&
+            method &&
+            CUSTOM_JSX_CALLBACK_METHODS.has(method)
+          ) {
+            visitArrow(argument, depth + 1, bindings);
+          } else if (argument.type === "ArrowFunctionExpression") {
+            add(argument, "CALLBACK_VALUE_NOT_ALLOWED: Callback arguments are only allowed in the first callback slot");
+          } else visit(argument, depth + 1, bindings);
         });
         return;
       }
       case "ArrowFunctionExpression": {
-        if (node.async || node.generator || node.expression === false) {
-          add(node, "Only synchronous expression-bodied arrow callbacks are supported");
-          return;
-        }
-        const callbackBindings = new Set(bindings);
-        for (const parameter of nodesOf(node.params)) {
-          if (parameter.type !== "Identifier") add(parameter, "Callback parameters must be identifiers");
-          else callbackBindings.add(String(parameter.name));
-        }
-        const body = nodeOf(node.body);
-        if (body) visit(body, depth + 1, callbackBindings);
+        add(
+          node,
+          "CALLBACK_VALUE_NOT_ALLOWED: Callbacks are only allowed in safe collection methods and trusted slots",
+        );
         return;
       }
+      case "BlockStatement":
+        add(node, "UNSUPPORTED_BLOCK_STATEMENT: Authored callbacks must use one expression");
+        return;
+      case "AssignmentExpression":
+      case "UpdateExpression":
+      case "NewExpression":
+      case "AwaitExpression":
+      case "YieldExpression":
+        add(node, `UNSUPPORTED_BLOCK_STATEMENT: '${node.type}' is not allowed in safe expressions`);
+        return;
       case "TemplateLiteral":
         nodesOf(node.expressions).forEach((expression) => visit(expression, depth + 1, bindings));
         return;
@@ -290,17 +311,18 @@ export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDi
       sourceType: "module",
       locations: true,
     }) as unknown as AstNode;
-    visit(program, 0, rootBindings);
+    visit(program, 0, ROOT_BINDINGS);
   } catch (error) {
-    const parseError = error as Error & { pos?: number; loc?: { line?: number; column?: number } };
-    diagnostics.push({
-      severity: "error",
-      message: parseError.message,
-      index: Math.max(0, (parseError.pos ?? 2) - 2),
-      line: parseError.loc?.line ?? 1,
-      column: Math.max(1, (parseError.loc?.column ?? 2) - 1),
-    });
+    diagnostics.push(createCustomJsxParseDiagnostic(template, error));
   }
 
   return diagnostics;
+}
+
+function isSafeRegexLiteral(regex: unknown): boolean {
+  if (!regex || typeof regex !== "object") return false;
+  const { pattern, flags } = regex as { pattern?: unknown; flags?: unknown };
+  if (typeof pattern !== "string" || pattern.length > 128 || typeof flags !== "string" || /[^gimsu]/u.test(flags))
+    return false;
+  return !/\\[1-9]|\(\?<[=!]|(?:\+|\*|\{\d+(?:,\d*)?\})\)?(?:\+|\*|\{)/u.test(pattern);
 }

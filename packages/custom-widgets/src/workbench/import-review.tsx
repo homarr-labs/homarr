@@ -1,4 +1,6 @@
+import type { ReactNode } from "react";
 import { Alert, Badge, Button, Code, Group, Modal, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
+import type { ModalProps } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import type { ImportReview } from "../core/import";
@@ -23,7 +25,11 @@ export interface ImportReviewDialogProps {
   opened: boolean;
   review: ImportReview | null;
   pending: boolean;
+  confirmDisabled?: boolean;
   messages: ImportReviewMessages;
+  children?: ReactNode;
+  stackId?: string;
+  zIndex?: ModalProps["zIndex"];
   onClose(): void;
   onConfirm(): void;
 }
@@ -39,9 +45,28 @@ function ImportFact({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function ImportReviewDialog({ opened, review, pending, messages, onClose, onConfirm }: ImportReviewDialogProps) {
+export function ImportReviewDialog({
+  opened,
+  review,
+  pending,
+  confirmDisabled,
+  messages,
+  children,
+  stackId,
+  zIndex,
+  onClose,
+  onConfirm,
+}: ImportReviewDialogProps) {
   return (
-    <Modal opened={opened} onClose={onClose} title={messages.title} centered size="lg">
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={messages.title}
+      centered
+      size="lg"
+      stackId={stackId}
+      zIndex={zIndex}
+    >
       {review && (
         <Stack gap="md">
           <Text size="sm" c="dimmed">
@@ -49,9 +74,9 @@ export function ImportReviewDialog({ opened, review, pending, messages, onClose,
           </Text>
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
             <ImportFact label={messages.name} value={review.name} />
-            <ImportFact label={messages.origin} value={review.origin} />
-            <ImportFact label={messages.authentication} value={review.authType} />
-            <ImportFact label={messages.networkScope} value={review.networkScope} />
+            <ImportFact label={messages.origin} value={review.origins.join(", ")} />
+            <ImportFact label={messages.authentication} value={review.authTypes.join(", ")} />
+            <ImportFact label={messages.networkScope} value={review.networkScopes.join(", ")} />
           </SimpleGrid>
           <div>
             <Text size="sm" fw={600} mb={6}>
@@ -89,11 +114,12 @@ export function ImportReviewDialog({ opened, review, pending, messages, onClose,
               <Text size="sm">{messages.actionWarningDescription}</Text>
             </Alert>
           )}
+          {children}
           <Group justify="flex-end">
             <Button type="button" variant="default" onClick={onClose} disabled={pending}>
               {messages.cancel}
             </Button>
-            <Button type="button" onClick={onConfirm} loading={pending}>
+            <Button type="button" onClick={onConfirm} loading={pending} disabled={confirmDisabled}>
               {messages.confirm}
             </Button>
           </Group>

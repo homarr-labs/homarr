@@ -1,75 +1,154 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-// --- Submissions ---
-
-onRecordCreateRequest((e) => {
-  e.record.set("author", e.auth?.id);
-  e.record.set("upvotes", 0);
-  e.record.set("downvotes", 0);
-  e.record.set("version", 1);
-  e.next();
-}, "submissions");
-
-onRecordAfterCreateSuccess((e) => {
+onRecordAfterCreateSuccess((event) => {
   try {
-    var votes = e.app.findCollectionByNameOrId("votes");
-    var vote = new Record(votes);
-    vote.set("submission", e.record.id);
-    vote.set("user", e.record.get("author"));
+    const votes = event.app.findCollectionByNameOrId("votes");
+    const vote = new Record(votes);
+    vote.set("submission", event.record.id);
+    vote.set("user", event.record.get("author"));
     vote.set("value", 1);
-    e.app.save(vote);
-  } catch (err) {
-    console.log("auto-upvote failed for submission " + e.record.id + ": " + err);
+    event.app.save(vote);
+  } catch (error) {
+    console.log(`Workshop initial upvote failed for ${event.record.id}: ${error}`);
   }
-  e.next();
+  event.next();
 }, "submissions");
 
-onRecordUpdateRequest((e) => {
-  var original = e.app.findRecordById("submissions", e.record.id);
-  e.record.set("author", original.get("author"));
-  e.record.set("upvotes", original.get("upvotes"));
-  e.record.set("downvotes", original.get("downvotes"));
-  e.record.set("type", original.get("type"));
-  e.record.set("schemaVersion", original.get("schemaVersion"));
-  e.record.set("version", original.get("version"));
-  e.next();
-}, "submissions");
+const escapeHtml = (value) =>
+  String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
-// --- Votes ---
+const emailTemplate = (filename) => {
+  const hooksPath = $os.getenv("WORKSHOP_PB_HOOKS_DIR") || $filepath.dirname(__filepath);
+  return $os.readFile($filepath.join(hooksPath, filename));
+};
 
-onRecordCreateRequest((e) => {
-  var v = +e.record.get("value");
-  if (v !== 1 && v !== -1) throw new BadRequestError("value must be 1 or -1");
-  e.record.set("user", e.auth?.id);
-  e.next();
-}, "votes");
+const sendEmail = (app, recipientEmail, subject, text, html) => {
+  const sender = app.settings().meta;
+  app.newMailClient().send(
+    new MailerMessage({
+      from: { address: sender.senderAddress, name: sender.senderName },
+      to: [{ address: recipientEmail }],
+      subject,
+      text,
+      html,
+    }),
+  );
+};
 
-onRecordUpdateRequest((e) => {
-  var v = +e.record.get("value");
-  if (v !== 1 && v !== -1) throw new BadRequestError("value must be 1 or -1");
-  var original = e.app.findRecordById("votes", e.record.id);
-  e.record.set("user", original.get("user"));
-  e.record.set("submission", original.get("submission"));
-  e.next();
-}, "votes");
+onRecordAfterCreateSuccess((event) => {
+  try {
+    const submission = event.app.findRecordById("submissions", event.record.get("submission"));
+    const recipient = event.app.findRecordById("users", submission.get("author"));
+    const commenter = event.app.findRecordById("users", event.record.get("author"));
+    const recipientEmail = recipient.email();
+    const publicOrigin = $os.getenv("WORKSHOP_PUBLIC_ORIGIN").replace(/\/$/, "");
 
-// Vote count hooks removed — the `marketplace` view computes upvotes/downvotes via SQL
+    if (!recipientEmail || recipient.id === commenter.id || !publicOrigin) {
+      event.next();
+      return;
+    }
 
-// --- Reports & Comments ---
+    const commenterName = commenter.getString("displayName") || "A community member";
+    const submissionTitle = submission.getString("title");
+    const rawExcerpt = event.record.getString("content").slice(0, 280);
+    const submissionUrl = `${publicOrigin}/workshop/${submission.id}/`;
+    const template = emailTemplate("comment-email.html")
+      .replaceAll("{{commenterName}}", escapeHtml(commenterName))
+      .replaceAll("{{submissionTitle}}", escapeHtml(submissionTitle))
+      .replaceAll("{{commentExcerpt}}", escapeHtml(rawExcerpt))
+      .replaceAll("{{submissionUrl}}", escapeHtml(submissionUrl));
 
-onRecordCreateRequest((e) => {
-  e.record.set("user", e.auth?.id);
-  e.next();
+    sendEmail(
+      event.app,
+      recipientEmail,
+      `${commenterName} commented on ${submissionTitle}`,
+      `${commenterName} commented on “${submissionTitle}”:\n\n${rawExcerpt}\n\n${submissionUrl}`,
+      template,
+    );
+  } catch (error) {
+    console.log(`Workshop comment email failed for ${event.record.id}: ${error}`);
+  }
+  event.next();
+}, "comments");
+
+onRecordAfterCreateSuccess((event) => {
+  try {
+    const submission = event.app.findRecordById("submissions", event.record.get("submission"));
+    const reporter = event.app.findRecordById("users", event.record.get("reporter"));
+    const publicOrigin = $os.getenv("WORKSHOP_PUBLIC_ORIGIN").replace(/\/$/, "");
+    const admins = event.app.findAllRecords("users").filter((user) => user.getBool("isAdmin") && Boolean(user.email()));
+
+    if (!publicOrigin || admins.length === 0) {
+      event.next();
+      return;
+    }
+
+    const reporterName = reporter.getString("displayName") || "A community member";
+    const submissionTitle = submission.getString("title");
+    const category = event.record.getString("category");
+    const explanation = event.record.getString("explanation");
+    const adminUrl = `${publicOrigin}/workshop/admin`;
+    const submissionUrl = `${publicOrigin}/workshop/${submission.id}/`;
+    const template = emailTemplate("report-email.html")
+      .replaceAll("{{reporterName}}", escapeHtml(reporterName))
+      .replaceAll("{{submissionTitle}}", escapeHtml(submissionTitle))
+      .replaceAll("{{category}}", escapeHtml(category))
+      .replaceAll("{{explanation}}", escapeHtml(explanation))
+      .replaceAll("{{adminUrl}}", escapeHtml(adminUrl))
+      .replaceAll("{{submissionUrl}}", escapeHtml(submissionUrl));
+
+    for (const admin of admins) {
+      try {
+        sendEmail(
+          event.app,
+          admin.email(),
+          `Workshop report: ${submissionTitle}`,
+          `${reporterName} reported “${submissionTitle}” for ${category}.\n\n${explanation}\n\nReview: ${adminUrl}`,
+          template,
+        );
+      } catch (error) {
+        console.log(`Workshop report email failed for admin ${admin.id}: ${error}`);
+      }
+    }
+  } catch (error) {
+    console.log(`Workshop report email failed for ${event.record.id}: ${error}`);
+  }
+  event.next();
 }, "reports");
 
-onRecordCreateRequest((e) => {
-  e.record.set("author", e.auth?.id);
-  e.next();
-}, "comments");
+onRecordDeleteRequest((event) => {
+  const submissionId = event.record.id;
+  const submissionTitle = event.record.getString("title");
+  const authorId = event.record.get("author");
+  const actor = event.requestInfo().auth;
+  const notifyAuthor = actor && actor.getBool("isAdmin") && actor.id !== authorId;
 
-onRecordUpdateRequest((e) => {
-  var original = e.app.findRecordById("comments", e.record.id);
-  e.record.set("author", original.get("author"));
-  e.record.set("submission", original.get("submission"));
-  e.next();
-}, "comments");
+  event.next();
+
+  if (!notifyAuthor) return;
+
+  try {
+    const author = event.app.findRecordById("users", authorId);
+    const recipientEmail = author.email();
+    if (!recipientEmail) return;
+
+    const publicOrigin = $os.getenv("WORKSHOP_PUBLIC_ORIGIN").replace(/\/$/, "");
+    const workshopUrl = publicOrigin ? `${publicOrigin}/workshop/` : "";
+    const template = emailTemplate("submission-deleted-email.html").replaceAll(
+      "{{submissionTitle}}",
+      escapeHtml(submissionTitle),
+    );
+    const text = `A Workshop administrator removed your submission “${submissionTitle}”.${
+      workshopUrl ? `\n\nReturn to Workshop: ${workshopUrl}` : ""
+    }`;
+
+    sendEmail(event.app, recipientEmail, `Your Workshop submission was removed`, text, template);
+  } catch (error) {
+    console.log(`Workshop deletion email failed for ${submissionId}: ${error}`);
+  }
+}, "submissions");

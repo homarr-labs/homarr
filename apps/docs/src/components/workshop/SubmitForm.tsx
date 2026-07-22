@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  IconAlertCircle,
   IconBraces,
   IconCheck,
   IconChevronLeft,
@@ -7,14 +8,14 @@ import {
   IconFileUpload,
   IconLoader2,
   IconPalette,
-  IconPhoto,
-  IconUpload,
-  IconX,
 } from "@tabler/icons-react";
 
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 
+import { CustomWidgetCodeInput } from "@/components/custom-widget-code";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,6 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn, errorMessage } from "@/lib/utils";
 
 import type { SubmitInput } from "./useWorkshop";
+import { ScreenshotEditor } from "./ScreenshotEditor";
 
 interface Props {
   onClose: () => void;
@@ -39,17 +41,17 @@ const steps = ["Type", "Details", "Media"] as const;
 const navDirection = [-1, 1];
 const stepAnimClass = ["submit-step-from-left", "submit-step-from-right"];
 const backLabels = ["Cancel", "Back"];
-const submitLabels = ["Submit", "Submitting…"];
+const submitLabels = ["Publish submission", "Publishing…"];
 const connectorClass = ["bg-border", "bg-primary"];
 const dropOverlayClass = ["pointer-events-none opacity-0", "opacity-100"];
 
 const placeholders: Record<SubmissionType, string> = {
-  widget: '{\n  "$schema": "homarr-custom-widget-v2",\n  "name": "My widget",\n  ...\n}',
-  css: ".grid-stack-item-content {\n  border-radius: 16px;\n}",
+  customWidget: '{\n  "$schema": "homarr-custom-widget-v2",\n  "name": "My widget",\n  ...\n}',
+  customCss: ".grid-stack-item-content {\n  border-radius: 16px;\n}",
 };
 const contentLabels: Record<SubmissionType, string> = {
-  widget: "Widget JSON (homarr-custom-widget-v2)",
-  css: "Custom CSS",
+  customWidget: "Widget JSON (homarr-custom-widget-v2)",
+  customCss: "Custom CSS",
 };
 
 const parseJsonObject = (json: string): Record<string, unknown> | null => {
@@ -68,6 +70,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
   const [type, setType] = useState<SubmissionType | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [changelog, setChangelog] = useState("Initial publication");
   const [content, setContent] = useState("");
   const [screenshots, setScreenshots] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -78,10 +81,13 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
 
   const canAdvance = [type !== null, title.trim().length >= 3 && content.trim().length > 0, true];
 
-  const goTo = (next: number) => {
-    setDirection(navDirection[Number(next > step)]);
-    setStep(next);
-  };
+  const goTo = useCallback(
+    (next: number) => {
+      setDirection(navDirection[Number(next > step)]);
+      setStep(next);
+    },
+    [step],
+  );
 
   const setContentAndAutofill = useCallback((json: string, currentTitle: string, currentDesc: string) => {
     setContent(json);
@@ -96,17 +102,17 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
       const jsonFile = Array.from(files).find((f) => f.name.endsWith(".json") || f.type === "application/json");
       if (!jsonFile) return false;
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.addEventListener("load", (e) => {
         const text = e.target?.result as string;
-        if (!type) setType("widget");
+        if (!type) setType("customWidget");
         setContentAndAutofill(text, title, description);
         if (step === 0) goTo(1);
-      };
-      reader.onerror = () => setError("Could not read the file");
+      });
+      reader.addEventListener("error", () => setError("Could not read the file"));
       reader.readAsText(jsonFile);
       return true;
     },
-    [type, step, title, description, setContentAndAutofill],
+    [type, step, title, description, setContentAndAutofill, goTo],
   );
 
   const addImageFiles = useCallback(
@@ -164,7 +170,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
     setError(null);
     setPending(true);
     try {
-      await onSubmit({ type, title, description, content, screenshots });
+      await onSubmit({ type, title, description, changelog, content, screenshots });
     } catch (caught) {
       setError(errorMessage(caught, "Submission failed"));
     } finally {
@@ -173,7 +179,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
   };
 
   const onContentChange = (value: string) => {
-    if (type === "widget") setContentAndAutofill(value, title, description);
+    if (type === "customWidget") setContentAndAutofill(value, title, description);
     else setContent(value);
   };
 
@@ -186,7 +192,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
     >
       {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <DialogContent
-        className="max-h-[90vh] overflow-y-auto sm:max-w-xl"
+        className="max-h-[92vh] overflow-y-auto sm:max-w-5xl"
         showCloseButton={!pending}
         onDragOver={(e: React.DragEvent) => {
           e.preventDefault();
@@ -219,14 +225,17 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
             <React.Fragment key={label}>
               {i > 0 && <div className={cn("h-px flex-1 transition-colors", connectorClass[Number(i <= step)])} />}
               <button
+                type="button"
                 onClick={() => {
                   if (i < step) goTo(i);
                 }}
+                disabled={i > step}
+                aria-current={i === step ? "step" : undefined}
                 className={cn(
                   "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all",
                   i === step && "bg-primary text-primary-foreground shadow-sm",
                   i < step && "bg-primary/10 text-primary cursor-pointer hover:bg-primary/20",
-                  i > step && "bg-muted text-muted-foreground",
+                  i > step && "bg-muted text-muted-foreground disabled:cursor-default",
                 )}
               >
                 {i < step ? <IconCheck size={12} /> : <span className="tabular-nums">{i + 1}</span>}
@@ -237,9 +246,11 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
         </div>
 
         {error && (
-          <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs font-medium text-destructive">
-            {error}
-          </div>
+          <Alert variant="destructive">
+            <IconAlertCircle />
+            <AlertTitle>Submission needs attention</AlertTitle>
+            <AlertDescription className="whitespace-pre-wrap">{error}</AlertDescription>
+          </Alert>
         )}
 
         <div className="relative min-h-[280px] overflow-hidden">
@@ -252,12 +263,18 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
                 setTitle={setTitle}
                 description={description}
                 setDescription={setDescription}
+                changelog={changelog}
+                setChangelog={setChangelog}
                 content={content}
                 onContentChange={onContentChange}
               />
             )}
             {step === 2 && (
-              <StepMedia previews={previews} addFiles={addImageFiles} removeScreenshot={removeScreenshot} />
+              <ScreenshotEditor
+                items={previews.map((src) => ({ id: src, src }))}
+                onAdd={addImageFiles}
+                onRemove={(id) => removeScreenshot(previews.indexOf(id))}
+              />
             )}
           </div>
         </div>
@@ -294,12 +311,17 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
 
 const typeCards: { type: SubmissionType; icon: typeof IconBraces; label: string; desc: string }[] = [
   {
-    type: "widget",
+    type: "customWidget",
     icon: IconBraces,
     label: "Custom Widget",
     desc: "A JSON-based widget using the homarr-custom-widget-v2 schema",
   },
-  { type: "css", icon: IconPalette, label: "Custom CSS", desc: "A CSS theme or style override for Homarr dashboards" },
+  {
+    type: "customCss",
+    icon: IconPalette,
+    label: "Custom CSS",
+    desc: "A CSS theme or style override for Homarr dashboards",
+  },
 ];
 
 const StepType = ({
@@ -318,10 +340,12 @@ const StepType = ({
       <div className="grid grid-cols-2 gap-3">
         {typeCards.map(({ type, icon: Icon, label, desc }) => (
           <button
+            type="button"
             key={type}
             onClick={() => onChange(type)}
+            aria-pressed={value === type}
             className={cn(
-              "group flex flex-col items-center gap-3 rounded-xl border-2 p-6 text-center transition-all hover:border-primary/50 hover:bg-primary/5",
+              "group relative flex min-h-48 flex-col items-center justify-center gap-3 rounded-xl border-2 p-6 text-center transition-colors hover:border-primary/50 hover:bg-primary/5",
               value === type ? "border-primary bg-primary/10 ring-1 ring-primary/20" : "border-border bg-card",
             )}
           >
@@ -340,7 +364,7 @@ const StepType = ({
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{desc}</p>
             </div>
             {value === type && (
-              <div className="flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <div className="absolute top-3 right-3 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
                 <IconCheck size={12} />
               </div>
             )}
@@ -393,6 +417,8 @@ const StepDetails = ({
   setTitle,
   description,
   setDescription,
+  changelog,
+  setChangelog,
   content,
   onContentChange,
 }: {
@@ -401,142 +427,71 @@ const StepDetails = ({
   setTitle: (v: string) => void;
   description: string;
   setDescription: (v: string) => void;
+  changelog: string;
+  setChangelog: (v: string) => void;
   content: string;
   onContentChange: (v: string) => void;
 }) => (
-  <div className="flex flex-col gap-4">
+  <div className="grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
     <div className="flex flex-col gap-1.5">
-      <label htmlFor="submit-content" className="text-xs font-medium text-muted-foreground">
-        {contentLabels[type]} *
-      </label>
-      <Textarea
+      <CustomWidgetCodeInput
         id="submit-content"
-        className="font-mono text-xs"
+        label={contentLabels[type]}
+        language={type === "customWidget" ? "json" : "css"}
         value={content}
-        onChange={(e) => onContentChange(e.target.value)}
+        onChange={onContentChange}
         placeholder={placeholders[type]}
-        rows={8}
         required
-      />
-      {type === "widget" && (
-        <p className="text-xs text-muted-foreground">
-          Paste your widget JSON — title and description will auto-fill from the{" "}
-          <code className="rounded bg-muted px-1 py-0.5 text-foreground">name</code> field.
-        </p>
-      )}
-    </div>
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor="submit-title" className="text-xs font-medium text-muted-foreground">
-        Title *
-      </label>
-      <Input
-        id="submit-title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        required
-        minLength={3}
-        maxLength={100}
-        placeholder="My awesome theme"
+        height="min(44vh, 440px)"
+        maxLength={type === "customCss" ? 16_384 : undefined}
+        description={
+          type === "customWidget"
+            ? "Paste exported widget JSON. The title and description are filled from its metadata."
+            : "Paste the stylesheet that users will import into their board settings."
+        }
       />
     </div>
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor="submit-description" className="text-xs font-medium text-muted-foreground">
-        Description
-      </label>
-      <Textarea
-        id="submit-description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        maxLength={2000}
-        rows={2}
-        placeholder="A brief description of what this does"
-      />
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="submit-title" className="text-xs font-medium text-muted-foreground">
+          Title *
+        </label>
+        <Input
+          id="submit-title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          minLength={3}
+          maxLength={100}
+          placeholder="My awesome theme"
+        />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="submit-description" className="text-xs font-medium text-muted-foreground">
+          Description
+        </label>
+        <Textarea
+          id="submit-description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          maxLength={2000}
+          rows={5}
+          placeholder="A brief description of what this does"
+        />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="submit-changelog" className="text-xs font-medium text-muted-foreground">
+          Changelog
+        </label>
+        <Textarea
+          id="submit-changelog"
+          value={changelog}
+          onChange={(e) => setChangelog(e.target.value)}
+          maxLength={2000}
+          rows={4}
+          placeholder="What is included in this revision?"
+        />
+      </div>
     </div>
   </div>
 );
-
-const mediaDropState = {
-  idle: { Icon: IconUpload, title: "Drag & drop or click to upload", iconClass: "bg-muted text-muted-foreground" },
-  active: { Icon: IconPhoto, title: "Drop images here", iconClass: "bg-primary text-primary-foreground" },
-} as const;
-
-const StepMedia = ({
-  previews,
-  addFiles,
-  removeScreenshot,
-}: {
-  previews: string[];
-  addFiles: (files: FileList | File[]) => void;
-  removeScreenshot: (idx: number) => void;
-}) => {
-  const [dragOver, setDragOver] = useState(false);
-  const { Icon: DropIcon, title: dropTitle, iconClass: dropIconClass } = mediaDropState[dragOver ? "active" : "idle"];
-
-  return (
-    <div className="flex flex-col gap-4">
-      <div>
-        <span className="text-xs font-medium text-muted-foreground">Screenshots (optional, up to 5)</span>
-        <p className="mt-0.5 text-xs text-muted-foreground/70">
-          Add screenshots to help others preview your submission.
-        </p>
-      </div>
-      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-      <label
-        onDragOver={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setDragOver(true);
-        }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setDragOver(false);
-          addFiles(e.dataTransfer.files);
-        }}
-        className={cn(
-          "flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border p-8 text-center transition-all hover:border-primary/50 hover:bg-primary/5",
-          dragOver && "border-primary bg-primary/10",
-          previews.length >= 5 && "pointer-events-none opacity-50",
-        )}
-      >
-        <div className={cn("flex size-10 items-center justify-center rounded-xl transition-colors", dropIconClass)}>
-          <DropIcon size={20} />
-        </div>
-        <div>
-          <p className="font-heading text-sm font-medium">{dropTitle}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">PNG, JPG, WebP up to 5 images</p>
-        </div>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          className="hidden"
-          onChange={(e) => {
-            if (e.target.files) addFiles(e.target.files);
-          }}
-        />
-      </label>
-
-      {previews.length > 0 && (
-        <div className="grid grid-cols-5 gap-2">
-          {previews.map((src, i) => (
-            <div
-              key={i}
-              className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-muted"
-            >
-              <img src={src} alt={`Preview ${i + 1}`} className="h-full w-full object-cover" />
-              <button
-                onClick={() => removeScreenshot(i)}
-                className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100"
-                aria-label={`Remove screenshot ${i + 1}`}
-              >
-                <IconX size={16} className="text-white" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};

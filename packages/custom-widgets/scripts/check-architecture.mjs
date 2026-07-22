@@ -83,11 +83,21 @@ if (!/dynamic\(\(\)\s*=>\s*import\(["']\.\/custom-jsx-display["']\)/u.test(widge
   failures.push("Custom JSX board rendering must remain dynamically loaded");
 }
 const editorAdapter = await readFile(
-  join(repositoryRoot, "apps/nextjs/src/app/[locale]/manage/custom-widgets/_code-editor.tsx"),
+  join(repositoryRoot, "packages/custom-widgets/src/workbench/code-editor.tsx"),
   "utf8",
 );
-if (!/dynamic\(\(\)\s*=>\s*import\(["']@uiw\/react-codemirror["']\)/u.test(editorAdapter)) {
-  failures.push("CodeMirror must remain dynamically loaded");
+if (!/lazy\(\(\)\s*=>\s*import\(["'].\/direct-code-mirror["']\)\)/u.test(editorAdapter)) {
+  failures.push("CodeMirror must remain dynamically loaded after the client mounts");
+}
+const componentRegistry = await readFile(
+  join(repositoryRoot, "packages/custom-widgets/src/core/component-registry.ts"),
+  "utf8",
+);
+if (!/from\s+["'].\/component-catalog["']/u.test(componentRegistry)) {
+  failures.push("The Custom JSX runtime registry must use the canonical authoring catalog");
+}
+if (/component-runtime\.generated\.json/u.test(componentRegistry)) {
+  failures.push("The Custom JSX runtime registry must not use a second generated component catalog");
 }
 
 if (failures.length > 0) {

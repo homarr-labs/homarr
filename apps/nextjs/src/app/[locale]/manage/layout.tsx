@@ -5,6 +5,7 @@ import {
   IconApi,
   IconBook2,
   IconBox,
+  IconBuildingStore,
   IconBrandDiscord,
   IconBrandDocker,
   IconBrandGithub,
@@ -27,10 +28,8 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 
-import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createDocumentationLink } from "@homarr/definitions";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { env } from "@homarr/docker/env";
@@ -41,29 +40,11 @@ import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
-import { ManageTourGate } from "~/components/onboarding/manage-tour-gate";
-import { env as nextEnv } from "~/env";
-
-const logger = createLogger({ module: "manageLayout" });
+import { ManageTourProvider } from "~/components/onboarding/manage-tour";
 
 export default async function ManageLayout({ children }: PropsWithChildren) {
-  const sessionPromise = auth();
-  const shouldRunManageTourPromise = sessionPromise.then(async (session) => {
-    if (!session || nextEnv.DEMO_MODE) return false;
-
-    try {
-      const user = await getRscUserSettingsAsync(session.user.id);
-      return user !== undefined && !user.completedManageTour;
-    } catch (error) {
-      logger.error(new Error("Failed to load the management tour status", { cause: error }));
-      return false;
-    }
-  });
-  const [t, session, shouldRunManageTour] = await Promise.all([
-    getScopedI18n("management.navbar"),
-    sessionPromise,
-    shouldRunManageTourPromise,
-  ]);
+  const t = await getScopedI18n("management.navbar");
+  const session = await auth();
   const navigationLinks: NavigationLink[] = [
     {
       label: t("items.home"),
@@ -81,7 +62,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconBox,
       href: "/manage/apps",
       label: t("items.apps"),
-      hidden: !session?.user.permissions.includes("app-create"),
+      hidden: !session,
       iconProps: {
         strokeWidth: 2.5,
       },
@@ -91,20 +72,26 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconAffiliateFilled,
       href: "/manage/integrations",
       label: t("items.integrations"),
-      hidden: !session?.user.permissions.includes("integration-create"),
+      hidden: !session,
       "data-onboarding-tour-id": "manage-integrations",
     },
     {
       icon: IconApi,
       href: "/manage/custom-widgets",
       label: t("items.customWidgets"),
-      hidden: !session?.user.permissions.includes("admin"),
+      hidden: !session?.user.permissions.includes("custom-widget-manage"),
+    },
+    {
+      icon: IconBuildingStore,
+      href: "/manage/workshop",
+      label: t("items.workshop"),
+      hidden: !session?.user.permissions.includes("custom-widget-manage"),
     },
     {
       icon: IconSearch,
       href: "/manage/search-engines",
       label: t("items.searchEngies"),
-      hidden: !session?.user.permissions.includes("search-engine-create"),
+      hidden: !session,
       iconProps: {
         strokeWidth: 2.5,
       },
@@ -114,7 +101,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconPhotoFilled,
       href: "/manage/medias",
       label: t("items.medias"),
-      hidden: !session?.user.permissions.includes("media-upload"),
+      hidden: !session,
       "data-onboarding-tour-id": "manage-medias",
     },
     {
@@ -245,9 +232,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     </ClientShell>
   );
 
-  return (
-    <ManageTourGate enabled={shouldRunManageTour} isAdmin={isAdmin}>
-      {shell}
-    </ManageTourGate>
-  );
+  if (!session) return shell;
+
+  return <ManageTourProvider isAdmin={isAdmin}>{shell}</ManageTourProvider>;
 }

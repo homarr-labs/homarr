@@ -1,19 +1,25 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconCopy, IconDots, IconDownload, IconTrash, IconUpload } from "@tabler/icons-react";
+import { IconBuildingStore, IconCopy, IconDots, IconDownload, IconTrash, IconUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { getImportReview, parseCustomWidgetClipboard } from "@homarr/custom-widgets/core";
-import { ImportReviewDialog } from "@homarr/custom-widgets/workbench";
+import {
+  formatCustomWidgetImportIssues,
+  looksLikeCustomWidgetClipboard,
+  parseCustomWidgetClipboardDetailed,
+} from "@homarr/custom-widgets/core";
+import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
+import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
+import { WorkshopPublishModal } from "~/components/workshop/workshop-publish-modal";
 
 const iconProps = { size: 16, stroke: 1.5 };
 
@@ -21,6 +27,7 @@ interface WidgetRef {
   id: string;
   name: string;
   enabled: boolean;
+  valid: boolean;
 }
 
 export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
@@ -29,6 +36,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const deleteMutation = clientApi.customWidget.delete.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();
   const utils = clientApi.useUtils();
+  const [publishOpened, publishControls] = useDisclosure(false);
 
   const handleExport = async () => {
     try {
@@ -54,7 +62,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
             title: t("action.duplicate"),
             message: t("notification.duplicated", { name: result.name }),
           });
-          void utils.customWidget.all.invalidate();
+          void utils.customWidget.list.invalidate();
           void revalidatePathActionAsync("/manage/custom-widgets");
         },
         onError: () => {
@@ -77,7 +85,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
                 title: t("action.delete"),
                 message: t("notification.deleted", { name: widget.name }),
               });
-              void utils.customWidget.all.invalidate();
+              void utils.customWidget.list.invalidate();
               void utils.widget.customApi.getData.invalidate();
               void revalidatePathActionAsync("/manage/custom-widgets");
             },
@@ -91,58 +99,54 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   };
 
   return (
-    <Menu withinPortal position="bottom-end" shadow="md">
-      <Menu.Target>
-        <ActionIcon variant="subtle" color="gray" aria-label={t("action.menu")}>
-          <IconDots {...iconProps} />
-        </ActionIcon>
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Item
-          onClick={handleDuplicate}
-          leftSection={<IconCopy {...iconProps} />}
-          disabled={duplicateMutation.isPending}
-        >
-          {t("action.duplicate")}
-        </Menu.Item>
-        <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
-          {t("action.export")}
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item
-          color="red"
-          leftSection={<IconTrash {...iconProps} />}
-          onClick={handleDelete}
-          disabled={deleteMutation.isPending}
-        >
-          {t("action.delete")}
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+    <>
+      <Menu withinPortal position="bottom-end" shadow="md">
+        <Menu.Target>
+          <ActionIcon variant="subtle" color="gray" aria-label={t("action.menu")}>
+            <IconDots {...iconProps} />
+          </ActionIcon>
+        </Menu.Target>
+        <Menu.Dropdown>
+          {widget.valid && (
+            <>
+              <Menu.Item
+                onClick={handleDuplicate}
+                leftSection={<IconCopy {...iconProps} />}
+                disabled={duplicateMutation.isPending}
+              >
+                {t("action.duplicate")}
+              </Menu.Item>
+              <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
+                {t("action.export")}
+              </Menu.Item>
+              <Menu.Item onClick={publishControls.open} leftSection={<IconBuildingStore {...iconProps} />}>
+                {t("action.publishWorkshop")}
+              </Menu.Item>
+              <Menu.Divider />
+            </>
+          )}
+          <Menu.Item
+            color="red"
+            leftSection={<IconTrash {...iconProps} />}
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
+            {t("action.delete")}
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+      {widget.valid && <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />}
+    </>
   );
 };
 
 export const ImportCustomWidgetButton = () => {
   const t = useScopedI18n("customWidget");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [pendingImport, setPendingImport] = useState<Record<string, unknown> | null>(null);
+  const [pendingImport, setPendingImport] = useState<HomarrCustomWidgetV2 | null>(null);
   const [reviewOpened, { open: openReview, close: closeReview }] = useDisclosure(false);
-  const utils = clientApi.useUtils();
-  const importMutation = clientApi.customWidget.import.useMutation({
-    onSuccess: () => {
-      closeReview();
-      setPendingImport(null);
-      showSuccessNotification({ title: t("action.import"), message: t("notification.imported") });
-      void utils.customWidget.all.invalidate();
-      void revalidatePathActionAsync("/manage/custom-widgets");
-    },
-    onError: () => {
-      showErrorNotification({ title: t("action.import"), message: t("notification.importError") });
-    },
-  });
-  const review = useMemo(() => getImportReview(pendingImport), [pendingImport]);
   const queueImport = useCallback(
-    (value: Record<string, unknown>) => {
+    (value: HomarrCustomWidgetV2) => {
       setPendingImport(value);
       openReview();
     },
@@ -151,16 +155,23 @@ export const ImportCustomWidgetButton = () => {
 
   useEffect(() => {
     const handlePaste = (event: ClipboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (target?.matches("input, textarea, [contenteditable='true']")) return;
-      const widget = parseCustomWidgetClipboard(event.clipboardData?.getData("text/plain") ?? "");
-      if (!widget) return;
+      if (event.target instanceof Element && event.target.matches("input, textarea, [contenteditable='true']")) return;
+      const text = event.clipboardData?.getData("text/plain") ?? "";
+      if (!looksLikeCustomWidgetClipboard(text)) return;
       event.preventDefault();
-      queueImport(widget);
+      const result = parseCustomWidgetClipboardDetailed(text);
+      if (!result.success) {
+        showErrorNotification({
+          title: t("action.import"),
+          message: formatCustomWidgetImportIssues(result.issues),
+        });
+        return;
+      }
+      queueImport(result.widget);
     };
     window.addEventListener("paste", handlePaste);
     return () => window.removeEventListener("paste", handlePaste);
-  }, [queueImport]);
+  }, [queueImport, t]);
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -169,11 +180,14 @@ export const ImportCustomWidgetButton = () => {
     const reader = new FileReader();
     reader.addEventListener("load", (e) => {
       try {
-        const widget = parseCustomWidgetClipboard(e.target?.result as string);
-        if (!widget) throw new Error("Invalid import");
-        queueImport(widget);
-      } catch {
-        showErrorNotification({ title: t("action.import"), message: t("notification.importError") });
+        const result = parseCustomWidgetClipboardDetailed(e.target?.result as string);
+        if (!result.success) throw new Error(formatCustomWidgetImportIssues(result.issues));
+        queueImport(result.widget);
+      } catch (error) {
+        showErrorNotification({
+          title: t("action.import"),
+          message: error instanceof Error ? error.message : t("notification.importError"),
+        });
       }
     });
     reader.addEventListener("error", () => {
@@ -189,7 +203,6 @@ export const ImportCustomWidgetButton = () => {
         variant="default"
         leftSection={<IconUpload size={16} />}
         onClick={() => fileInputRef.current?.click()}
-        loading={importMutation.isPending}
         title={t("action.pasteImportHint")}
       >
         {t("action.import")}
@@ -202,26 +215,12 @@ export const ImportCustomWidgetButton = () => {
         onChange={handleImport}
         aria-label={t("importReview.fileLabel")}
       />
-      <ImportReviewDialog
+      <CustomWidgetImportDialog
         opened={reviewOpened}
-        review={review}
-        pending={importMutation.isPending}
-        onClose={closeReview}
-        onConfirm={() => pendingImport && importMutation.mutate(pendingImport as never)}
-        messages={{
-          title: t("importReview.title"),
-          description: t("importReview.description"),
-          name: t("importReview.name"),
-          origin: t("importReview.origin"),
-          authentication: t("importReview.authentication"),
-          networkScope: t("importReview.networkScope"),
-          methods: t("importReview.methods"),
-          permissions: t("importReview.permissions"),
-          actionWarningTitle: t("importReview.actionWarning.title"),
-          actionWarningDescription: t("importReview.actionWarning.description"),
-          cancel: t("importReview.cancel"),
-          confirm: t("importReview.confirm"),
-          permission: (permission) => t(`preview.request.permission.${permission}` as never),
+        widget={pendingImport}
+        onClose={() => {
+          closeReview();
+          setPendingImport(null);
         }}
       />
     </>

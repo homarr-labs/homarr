@@ -312,6 +312,18 @@ jobs:
             "${PREVIEW_IMAGE}@${AMD64_DIGEST}" \
             "${PREVIEW_IMAGE}@${ARM64_DIGEST}"
 
+      - name: Verify preview manifest platforms
+        if: "!env.ACT"
+        run: |
+          image="${PREVIEW_IMAGE}:${PREVIEW_TAG}"
+          manifest="$(docker buildx imagetools inspect "$image" --raw)"
+          for architecture in amd64 arm64; do
+            jq --exit-status --arg architecture "$architecture" \
+              'any(.manifests[]; .platform.os == "linux" and .platform.architecture == $architecture)' \
+              <<<"$manifest" >/dev/null
+          done
+          docker buildx imagetools inspect "$image"
+
   cleanup:
     name: Clean up preview image
     if: github.event_name == 'pull_request_target' || (github.event_name == 'workflow_dispatch' && inputs.operation == 'cleanup')

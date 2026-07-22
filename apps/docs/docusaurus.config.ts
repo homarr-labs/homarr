@@ -12,6 +12,9 @@ const config: Config = {
   favicon: "img/logo.png",
   organizationName: "homarr-labs",
   projectName: "homarr",
+  customFields: {
+    workshopUrl: process.env.WORKSHOP_URL ?? "",
+  },
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
@@ -19,11 +22,6 @@ const config: Config = {
   onBrokenLinks: "throw",
   onBrokenAnchors: "throw",
   onDuplicateRoutes: "throw",
-
-  customFields: {
-    // Empty means same-origin, which is the production Workshop image shape.
-    workshopUrl: process.env.WORKSHOP_URL ?? "",
-  },
 
   future: {
     v4: {
@@ -47,17 +45,6 @@ const config: Config = {
   },
 
   themes: ["@docusaurus/theme-mermaid"],
-
-  scripts: [
-    {
-      src: "https://widget.kapa.ai/kapa-widget.bundle.js",
-      "data-website-id": "1e4656f4-abeb-4343-bbae-1d8626f52378",
-      "data-project-name": "Homarr",
-      "data-project-color": "#2B2B2B",
-      "data-project-logo": "https://homarr.dev/img/favicon.png",
-      async: true,
-    },
-  ],
 
   presets: [
     [
@@ -128,6 +115,7 @@ const config: Config = {
           label: "Blog",
           position: "left",
           to: "/blog",
+          className: "navbar-item--secondary",
         },
         {
           label: "Workshop",
@@ -138,16 +126,19 @@ const config: Config = {
           label: "About us",
           position: "left",
           to: "/about-us",
+          className: "navbar-item--collapse-first",
         },
         {
           to: "https://demo.homarr.dev/",
           label: "Demo",
           position: "right",
+          className: "navbar-item--secondary",
         },
         {
           to: "https://opencollective.com/homarr",
           label: "💴 Donate",
           position: "right",
+          className: "navbar-item--collapse-first",
         },
         {
           type: "dropdown",
@@ -246,11 +237,19 @@ const config: Config = {
         },
       ],
       logo: {
-        alt: "Homarr Logo",
-        src: "img/logo.png",
-        height: 100,
+        alt: "Homarr home",
+        src: "img/logo.svg",
+        href: "/",
+        width: 86,
+        height: 58,
       },
-      copyright: `<span class="copyright_text">Copyright © ${new Date().getFullYear()} Homarr<span> — <a href="/docs/community/license">License</a>`,
+      copyright: `
+        <div class="footer__brand-copy">
+          <strong class="footer__brand-name">Homarr</strong>
+          <span class="footer__brand-tagline">Your dashboard for the services you run.</span>
+          <span class="copyright_text">© ${new Date().getFullYear()} Homarr · <a href="/docs/community/license">License</a></span>
+        </div>
+      `,
     },
     prism: {
       theme: prismThemes.github,
@@ -287,11 +286,20 @@ const config: Config = {
     function homarrPackagesPlugin() {
       return {
         name: "resolve-homarr-packages",
-        configureWebpack() {
+        configureWebpack(_config, isServer, { getJSLoader }) {
           return {
             resolve: {
               symlinks: false,
               alias: { "@": require("path").resolve(__dirname, "src") },
+            },
+            module: {
+              rules: [
+                {
+                  test: /\.[jt]sx?$/iu,
+                  include: /node_modules[\\/]@homarr/u,
+                  use: [getJSLoader({ isServer })],
+                },
+              ],
             },
           };
         },
@@ -324,19 +332,18 @@ const config: Config = {
         },
       };
     },
-    function workshopDetailRoutePlugin() {
+    function workshopRoutesPlugin() {
       return {
-        name: "workshop-detail-route",
+        name: "workshop-routes",
         async contentLoaded({ actions }) {
           actions.addRoute({
             path: "/workshop/:id",
-            component: "@site/src/components/workshop/DetailPage",
+            component: "@site/src/components/workshop/WorkshopDetailRoutePage",
             exact: true,
           });
         },
       };
     },
-    "@signalwire/docusaurus-plugin-llms-txt",
     async function tailwindCssPlugin() {
       return {
         name: "docusaurus-tailwindcss",

@@ -1,167 +1,157 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { customJsxExamples } from "../core/examples";
-import { customJsxDisplayConfigV2Schema, customJsxRequestSchema, displayConfigSchema } from "../core/schema";
-import { validateCustomJsxTemplate } from "../jsx/analyzer";
+import {
+  CUSTOM_WIDGET_STARTER,
+  customWidgetDefinitionSchema,
+  customJsxRequestSchema,
+  getCustomWidgetDefaultOptions,
+  getCustomWidgetSecretRequirements,
+  getCustomWidgetSourceSetups,
+  hasSameCustomWidgetSourceAuthentication,
+  applyCustomWidgetSourceSetup,
+} from "../core";
 
-describe("custom JSX v2 validation", () => {
-  test.each(customJsxExamples)("validates the $id shared example", (example) => {
-    expect(() =>
-      customJsxDisplayConfigV2Schema.parse({
-        type: "customJsx",
-        jsxApiVersion: 2,
-        template: example.template,
-        networkScope: "public",
-        requests: [...example.requests],
-      }),
-    ).not.toThrow();
-  });
-
-  test("retains display-only v1 compatibility", () => {
-    expect(displayConfigSchema.parse({ type: "customJsx", template: "<Text>{data.value}</Text>" })).toEqual({
-      type: "customJsx",
-      template: "<Text>{data.value}</Text>",
+describe("lean Custom Widget schema", () => {
+  it("applies request defaults", () => {
+    expect(customJsxRequestSchema.parse({ path: "/status" })).toMatchObject({
+      source: "default",
+      kind: "query",
+      method: "GET",
+      trigger: "load",
+      auth: "inherit",
+      permission: "view",
+    });
+    expect(customJsxRequestSchema.parse({ kind: "action", path: "/restart" })).toMatchObject({
+      trigger: "manual",
+      permission: "modify",
+    });
+    expect(customJsxRequestSchema.parse({ method: "DELETE", path: "/item" })).toMatchObject({
+      permission: "full",
+      confirmation: { destructive: true },
     });
   });
 
-  test("accepts benign text containing interpreter-reserved words", () => {
-    expect(() =>
-      customJsxDisplayConfigV2Schema.parse({
-        type: "customJsx",
-        jsxApiVersion: 2,
-        template: "<Text>constructor fetch prototype</Text>",
-        networkScope: "public",
-        requests: [],
-      }),
-    ).not.toThrow();
+  it("validates keyed sources, requests and options", () => {
+    const result = customWidgetDefinitionSchema.parse({
+      ...CUSTOM_WIDGET_STARTER,
+      requests: {
+        list: { path: "/items/{option:category}", query: { limit: { $option: "limit" } } },
+        search: { trigger: "manual", path: "/search", query: { q: { $param: "query" } } },
+        restart: { kind: "action", method: "POST", path: "/items/{param:id}/restart", invalidates: ["list"] },
+      },
+      options: {
+        category: { label: "Category", control: "text", default: "all" },
+        limit: { label: "Limit", control: "number", default: 20, min: 1, max: 100 },
+      },
+    });
+    expect(Object.keys(result.requests)).toEqual(["list", "search", "restart"]);
+    expect(getCustomWidgetDefaultOptions(result.options)).toEqual({ category: "all", limit: 20 });
   });
 
-  test("accepts supported Tabs, ScrollArea, and SubData image props without warnings", () => {
-    const diagnostics = validateCustomJsxTemplate(
-      '<Tabs.List grow><ScrollArea offsetScrollbars><SubData as="Image" fit="contain" alt="Artwork" /></ScrollArea></Tabs.List>',
-    );
-    expect(diagnostics).toEqual([]);
+  it("defaults omitted options to an empty map", () => {
+    const { options: _options, ...withoutOptions } = CUSTOM_WIDGET_STARTER;
+    expect(customWidgetDefinitionSchema.parse(withoutOptions).options).toEqual({});
   });
 
-  test("rejects malformed JSX and direct global fetch while allowing declarative onParams", () => {
-    const config = {
-      type: "customJsx" as const,
-      jsxApiVersion: 2 as const,
-      networkScope: "public" as const,
-      requests: [],
+  it("rejects invocation params on load and unknown options", () => {
+    const loadParam = customWidgetDefinitionSchema.safeParse({
+      ...CUSTOM_WIDGET_STARTER,
+      requests: { bad: { path: "/{param:id}" } },
+    });
+    expect(loadParam.success).toBe(false);
+    const unknownOption = customWidgetDefinitionSchema.safeParse({
+      ...CUSTOM_WIDGET_STARTER,
+      requests: { bad: { path: "/{option:missing}" } },
+    });
+    expect(unknownOption.success).toBe(false);
+  });
+
+  it("rejects malformed placeholders and removed public fields", () => {
+    expect(customJsxRequestSchema.safeParse({ path: "/items/{id}" }).success).toBe(false);
+    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, optionsSchema: {} }).success).toBe(false);
+    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, stateSchema: {} }).success).toBe(false);
+  });
+
+  it("keeps auth secrets outside the document", () => {
+    const definition = customWidgetDefinitionSchema.parse({
+      ...CUSTOM_WIDGET_STARTER,
+      sources: {
+        default: { baseUrl: "https://example.com", networkScope: "public", auth: "bearer" },
+        admin: { baseUrl: "https://example.net", networkScope: "private", auth: "basic" },
+      },
+    });
+    expect(
+      getCustomWidgetSecretRequirements(definition.sources).map(({ sourceId, kind }) => `${sourceId}:${kind}`),
+    ).toEqual(["default:apiKey", "admin:username", "admin:password"]);
+  });
+
+  it("requires installation confirmation for private and placeholder source URLs", () => {
+    const sources = {
+      default: { baseUrl: "https://pokeapi.co/api/v2", networkScope: "public" as const, auth: "none" as const },
+      tautulli: {
+        name: "Tautulli",
+        baseUrl: "http://tautulli.local:8181",
+        networkScope: "private" as const,
+        auth: { type: "apiKeyQuery" as const, name: "apikey" },
+      },
+      placeholder: {
+        baseUrl: "https://api.example.com",
+        networkScope: "public" as const,
+        auth: "none" as const,
+      },
     };
-    expect(customJsxDisplayConfigV2Schema.safeParse({ ...config, template: "<Text>" }).success).toBe(false);
+    const setups = getCustomWidgetSourceSetups(sources);
+    expect(setups.map(({ sourceId, requiresUrlConfirmation }) => [sourceId, requiresUrlConfirmation])).toEqual([
+      ["default", false],
+      ["tautulli", true],
+      ["placeholder", true],
+    ]);
+    expect(setups.find(({ sourceId }) => sourceId === "tautulli")?.credentialFields).toEqual([
+      { kind: "apiKey", destination: "apikey", configured: false },
+    ]);
+  });
+
+  it("applies source setup without changing source authentication", () => {
+    const sources = {
+      default: {
+        baseUrl: "http://tautulli.local:8181",
+        networkScope: "private" as const,
+        auth: { type: "apiKeyQuery" as const, name: "apikey" },
+      },
+    };
     expect(
-      customJsxDisplayConfigV2Schema.safeParse({ ...config, template: '<Text>{fetch("/private")}</Text>' }).success,
+      applyCustomWidgetSourceSetup(sources, {
+        default: { baseUrl: "http://192.168.1.20:8181", networkScope: "private" },
+      }).default,
+    ).toEqual({
+      baseUrl: "http://192.168.1.20:8181",
+      networkScope: "private",
+      auth: { type: "apiKeyQuery", name: "apikey" },
+    });
+  });
+
+  it("detects stale source authentication snapshots", () => {
+    const bearer = { baseUrl: "https://example.com", networkScope: "public" as const, auth: "bearer" as const };
+    expect(hasSameCustomWidgetSourceAuthentication(bearer, { ...bearer, baseUrl: "https://api.example.com" })).toBe(
+      true,
+    );
+    expect(hasSameCustomWidgetSourceAuthentication(bearer, { ...bearer, auth: "none" })).toBe(false);
+    expect(
+      hasSameCustomWidgetSourceAuthentication(
+        { ...bearer, auth: { type: "apiKeyHeader", name: "X-API-Key" } },
+        { ...bearer, auth: { type: "apiKeyHeader", name: "Authorization" } },
+      ),
     ).toBe(false);
+  });
+
+  it("supports official Mantine compound names and separates bigint diagnostics", () => {
     expect(
-      customJsxDisplayConfigV2Schema.safeParse({
-        ...config,
-        template: '<ToggleSwitch requestId="toggle" onParams={{ enabled: true }} offParams={{ enabled: false }} />',
-        requests: [
-          {
-            id: "toggle",
-            kind: "action",
-            method: "POST",
-            pathTemplate: "/toggle",
-            parameters: { enabled: "boolean" },
-            bodyTemplate: { enabled: { $param: "enabled" } },
-            auth: "none",
-            minimumBoardPermission: "modify",
-          },
-        ],
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        template: "<Radio.Group><Radio.Card><Radio.Indicator /></Radio.Card></Radio.Group>",
       }).success,
     ).toBe(true);
-  });
-
-  test("rejects reserved manifest headers and mismatched request component kinds", () => {
-    expect(
-      customJsxRequestSchema.safeParse({
-        id: "status",
-        kind: "query",
-        method: "GET",
-        pathTemplate: "/status",
-        parameters: {},
-        staticHeaders: { Authorization: "secret" },
-        auth: "none",
-        minimumBoardPermission: "view",
-      }).success,
-    ).toBe(false);
-
-    expect(
-      customJsxDisplayConfigV2Schema.safeParse({
-        type: "customJsx",
-        jsxApiVersion: 2,
-        networkScope: "public",
-        template: '<ActionButton requestId="status" label="Run" />',
-        requests: [
-          {
-            id: "status",
-            kind: "query",
-            method: "GET",
-            pathTemplate: "/status",
-            parameters: {},
-            auth: "none",
-            minimumBoardPermission: "view",
-          },
-        ],
-      }).success,
-    ).toBe(false);
-  });
-
-  test("accepts 50,000 characters and rejects 50,001", () => {
-    const config = {
-      type: "customJsx" as const,
-      jsxApiVersion: 2 as const,
-      networkScope: "public" as const,
-      requests: [],
-    };
-    expect(customJsxDisplayConfigV2Schema.safeParse({ ...config, template: "x".repeat(50_000) }).success).toBe(true);
-    expect(customJsxDisplayConfigV2Schema.safeParse({ ...config, template: "x".repeat(50_001) }).success).toBe(false);
-  });
-
-  test("rejects duplicate request IDs", () => {
-    const request = {
-      id: "status",
-      kind: "query" as const,
-      method: "GET" as const,
-      pathTemplate: "/status",
-      parameters: {},
-      auth: "none" as const,
-      minimumBoardPermission: "view" as const,
-    };
-    const result = customJsxDisplayConfigV2Schema.safeParse({
-      type: "customJsx",
-      jsxApiVersion: 2,
-      template: "<Text />",
-      networkScope: "public",
-      requests: [request, request],
-    });
-    expect(result.success).toBe(false);
-  });
-
-  test("rejects mutation-shaped queries and weak DELETE permissions", () => {
-    expect(
-      customJsxRequestSchema.safeParse({
-        id: "mutating-query",
-        kind: "query",
-        method: "POST",
-        pathTemplate: "/status",
-        parameters: {},
-        auth: "none",
-        minimumBoardPermission: "view",
-      }).success,
-    ).toBe(false);
-    expect(
-      customJsxRequestSchema.safeParse({
-        id: "delete",
-        kind: "action",
-        method: "DELETE",
-        pathTemplate: "/resource",
-        parameters: {},
-        auth: "inherit",
-        minimumBoardPermission: "modify",
-      }).success,
-    ).toBe(false);
+    const result = customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, template: "<Text>{1n}</Text>" });
+    expect(result.success ? "" : result.error.issues[0]?.message).toContain("BIGINT_NOT_SUPPORTED");
   });
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentType } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Button, Switch } from "@mantine/core";
 import { IconCheck, IconPlayerPlay, IconPower, IconRefresh, IconTrash } from "@tabler/icons-react";
@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { useCustomWidgetRuntime } from "./context";
 import { normalizeParams } from "./data";
-import { MigrationRequiredAlert } from "./status";
+import { RequestIdRequiredAlert } from "./status";
 import type { CustomJsxRuntimeParams, CustomWidgetRequestResult } from "./types";
 
 const ICON_MAP: Record<string, ComponentType<{ size?: number | string }>> = {
@@ -59,7 +59,8 @@ function useActionExecutor() {
 export interface ActionButtonProps {
   requestId?: string;
   params?: CustomJsxRuntimeParams;
-  label: string;
+  label?: string;
+  children?: ReactNode;
   color?: string;
   variant?: string;
   size?: string;
@@ -67,21 +68,17 @@ export interface ActionButtonProps {
   successMessage?: string;
   errorMessage?: string;
   icon?: string;
-  invalidate?: string[];
   disabled?: boolean | string;
-  url?: string;
-  method?: string;
-  body?: string;
-  headers?: string;
   fullWidth?: boolean | string;
 }
 
 export function ActionButton(props: ActionButtonProps) {
   const { runtime, mutation } = useActionExecutor();
   const params = normalizeParams(props.params);
+  const title = props.label ?? (typeof props.children === "string" ? props.children : props.requestId) ?? "Action";
   const Icon = props.icon ? ICON_MAP[props.icon.toLowerCase()] : undefined;
-  const mustConfirm = runtime.requestCapabilities.some(
-    (capability) => capability.id === props.requestId && capability.kind === "action" && capability.method === "DELETE",
+  const capability = runtime.requestCapabilities.find(
+    (candidate) => candidate.id === props.requestId && candidate.kind === "action",
   );
   const run = async (confirmed: boolean) => {
     if (!props.requestId || !params) return;
@@ -90,7 +87,7 @@ export function ActionButton(props: ActionButtonProps) {
       const success = result.ok;
       runtime.port.notify({
         kind: success ? "success" : "error",
-        title: props.label,
+        title,
         message: success
           ? (props.successMessage ??
             (result.simulated ? runtime.messages.actionSimulated : runtime.messages.actionCompleted))
@@ -100,22 +97,34 @@ export function ActionButton(props: ActionButtonProps) {
         await runtime.port.invalidate({
           itemId: runtime.itemId,
           previewSessionId: runtime.previewSessionId,
-          targets: props.invalidate ?? [],
+          targets: result.invalidates ?? capability?.invalidates ?? [],
         });
     } catch {
       runtime.port.notify({
         kind: "error",
-        title: props.label,
+        title,
         message: props.errorMessage ?? runtime.messages.requestFailed,
       });
     }
   };
   const click = async () => {
-    const confirmMessage = props.confirmMessage ?? (mustConfirm ? runtime.messages.confirmDelete : undefined);
-    if (confirmMessage && !(await runtime.port.confirm({ title: props.label, message: confirmMessage }))) return;
+    const confirmMessage =
+      props.confirmMessage ??
+      capability?.confirmation?.message ??
+      (capability?.method === "DELETE" ? runtime.messages.confirmDelete : undefined);
+    if (
+      confirmMessage &&
+      !(await runtime.port.confirm({
+        title: capability?.confirmation?.title ?? title,
+        message: confirmMessage,
+        confirmLabel: capability?.confirmation?.confirmLabel,
+        destructive: capability?.confirmation?.destructive ?? capability?.method === "DELETE",
+      }))
+    )
+      return;
     await run(Boolean(confirmMessage));
   };
-  if (!props.requestId) return <MigrationRequiredAlert />;
+  if (!props.requestId) return <RequestIdRequiredAlert />;
   return (
     <Button
       color={props.color ?? "blue"}
@@ -127,27 +136,23 @@ export function ActionButton(props: ActionButtonProps) {
       disabled={
         parseBool(props.disabled) || runtime.isEditMode || (!runtime.itemId && !runtime.previewSessionId) || !params
       }
+      fullWidth={parseBool(props.fullWidth)}
     >
-      {props.label}
+      {props.children ?? props.label ?? props.requestId}
     </Button>
   );
 }
 
 export interface ToggleSwitchProps {
   requestId?: string;
-  onParams?: CustomJsxRuntimeParams;
-  offParams?: CustomJsxRuntimeParams;
+  enabledParams?: CustomJsxRuntimeParams;
+  disabledParams?: CustomJsxRuntimeParams;
   initialValue?: boolean | string;
   label?: string;
   color?: string;
   size?: string;
   errorMessage?: string;
-  invalidate?: string[];
   disabled?: boolean | string;
-  url?: string;
-  method?: string;
-  onBody?: string;
-  offBody?: string;
 }
 
 export function ToggleSwitch(props: ToggleSwitchProps) {
@@ -155,19 +160,39 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
   const initial = parseBool(props.initialValue);
   const [checked, setChecked] = useState(initial);
   const locked = useRef(false);
-  const onParams = normalizeParams(props.onParams);
-  const offParams = normalizeParams(props.offParams);
+  const enabledParams = normalizeParams(props.enabledParams);
+  const disabledParams = normalizeParams(props.disabledParams);
+  const capability = runtime.requestCapabilities.find(
+    (candidate) => candidate.id === props.requestId && candidate.kind === "action",
+  );
   useEffect(() => {
     if (!locked.current) setChecked(initial);
   }, [initial]);
   const change = async (next: boolean) => {
-    const params = next ? onParams : offParams;
+    const params = next ? enabledParams : disabledParams;
     if (!props.requestId || !params || locked.current) return;
+    const confirmation = capability?.confirmation;
+    const confirmMessage =
+      confirmation?.message ?? (capability?.method === "DELETE" ? runtime.messages.confirmDelete : undefined);
+    if (
+      confirmMessage &&
+      !(await runtime.port.confirm({
+        title: confirmation?.title ?? props.label ?? runtime.messages.toggle,
+        message: confirmMessage,
+        confirmLabel: confirmation?.confirmLabel,
+        destructive: confirmation?.destructive ?? capability?.method === "DELETE",
+      }))
+    )
+      return;
     locked.current = true;
     const previous = checked;
     setChecked(next);
     try {
-      const result = await mutation.mutateAsync({ requestId: props.requestId, params, confirmed: false });
+      const result = await mutation.mutateAsync({
+        requestId: props.requestId,
+        params,
+        confirmed: confirmMessage !== undefined,
+      });
       if (!result.ok) {
         setChecked(previous);
         runtime.port.notify({
@@ -179,7 +204,7 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
         await runtime.port.invalidate({
           itemId: runtime.itemId,
           previewSessionId: runtime.previewSessionId,
-          targets: props.invalidate ?? [],
+          targets: result.invalidates ?? capability?.invalidates ?? [],
         });
       }
     } catch {
@@ -193,7 +218,7 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
       locked.current = false;
     }
   };
-  if (!props.requestId) return <MigrationRequiredAlert />;
+  if (!props.requestId) return <RequestIdRequiredAlert />;
   return (
     <Switch
       label={props.label}
@@ -206,8 +231,8 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
         mutation.isPending ||
         runtime.isEditMode ||
         (!runtime.itemId && !runtime.previewSessionId) ||
-        !onParams ||
-        !offParams
+        !enabledParams ||
+        !disabledParams
       }
     />
   );

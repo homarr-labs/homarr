@@ -13,20 +13,22 @@ import { notFound } from "next/navigation";
 import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
-import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
-import { getRscUserSettingsAsync } from "@homarr/api/user-server";
-import { env } from "@homarr/auth/env";
+import { api } from "@homarr/api/server";
+import { env as authEnv } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
-import { createLogger } from "@homarr/core/infrastructure/logs";
+import { db } from "@homarr/db";
+import { getServerSettingsAsync } from "@homarr/db/queries";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { SettingsProvider } from "@homarr/settings";
 import { SpotlightProvider } from "@homarr/spotlight";
 import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
+import { WORKSHOP_API_URL } from "@homarr/workshop/schema";
 
 import { Analytics } from "~/components/layout/analytics";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
+import { env } from "~/env";
 
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
@@ -42,8 +44,6 @@ const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
-
-const logger = createLogger({ module: "rootLayout" });
 
 // eslint-disable-next-line no-restricted-syntax
 export const generateMetadata = async (): Promise<Metadata> => ({
@@ -80,31 +80,19 @@ export default async function Layout(props: {
   children: React.ReactNode;
   params: Promise<{ locale: SupportedLanguage }>;
 }) {
-  const { locale } = await props.params;
-  if (!isLocaleSupported(locale)) {
+  if (!isLocaleSupported((await props.params).locale)) {
     notFound();
   }
 
-  const sessionPromise = auth();
-  const userPromise = sessionPromise.then((session) =>
-    session
-      ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
-          logger.error(new Error("Failed to load the authenticated user in the root layout", { cause: error }));
-          return null;
-        })
-      : null,
-  );
-  const [session, user, serverSettings, colorScheme] = await Promise.all([
-    sessionPromise,
-    userPromise,
-    getRscServerSettingsAsync(),
-    getCurrentColorSchemeAsync(),
-  ]);
-  const direction = isLocaleRTL(locale) ? "rtl" : "ltr";
+  const session = await auth();
+  const user = session ? await api.user.getById({ userId: session.user.id }).catch(() => null) : null;
+  const serverSettings = await getServerSettingsAsync(db);
+  const colorScheme = await getCurrentColorSchemeAsync();
+  const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
 
   const StackedProvider = composeWrappers([
     (innerProps) => {
-      return <AuthProvider session={session} logoutUrl={env.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />;
+      return <AuthProvider session={session} logoutUrl={authEnv.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />;
     },
     (innerProps) => (
       <SettingsProvider
@@ -139,6 +127,8 @@ export default async function Layout(props: {
     (innerProps) => <SpotlightProvider {...innerProps} />,
   ]);
 
+  const { locale } = await props.params;
+
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
     <html
@@ -151,6 +141,7 @@ export default async function Layout(props: {
       suppressHydrationWarning
     >
       <head>
+        <meta name="homarr-workshop-api-url" content={env.WORKSHOP_API_URL ?? WORKSHOP_API_URL} />
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
       </head>

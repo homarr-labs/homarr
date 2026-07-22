@@ -1,80 +1,101 @@
 # Homarr Workshop
 
-Workshop ships as one container. Its build stage compiles the current Docusaurus site, and its runtime stage serves those static files and the PocketBase API from the same origin.
+Workshop is a small PocketBase service that serves the public documentation site and stores one Custom JSX v2 widget per submission.
 
-## Local production-like run
+The runtime image extends `ghcr.io/muchobien/pocketbase:0.39`; Homarr adds only the built documentation, PocketBase
+collections, API rules, and its explicit serve arguments.
 
-Configure optional values in the repository-root `.env`, then run:
+It intentionally has no approval queue, user bans, moderator roles, reusable widget connections, or remote control over
+installed widgets. Submissions publish immediately. Authenticated users can vote, comment, and report; users with
+`isAdmin` enabled can dismiss reports or delete any submission or comment.
 
-```sh
-pnpm dev:workshop
-```
-
-Open:
-
-- documentation: `http://localhost:8090/`;
-- Workshop: `http://localhost:8090/workshop/`;
-- PocketBase API: `http://localhost:8090/api/`;
-- PocketBase dashboard: `http://localhost:8090/_/`.
-
-The `homarr_workshop_deployment_data` volume persists records and uploaded files across image rebuilds. Migrations run automatically when PocketBase starts. It is intentionally separate from volumes created by earlier prototypes with incompatible schemas.
-
-## GitHub OAuth
-
-Create a GitHub OAuth application with these local values:
-
-- homepage: `http://localhost:8090`;
-- callback: `http://localhost:8090/api/oauth2-redirect`.
-
-Set these values only in the repository-root `.env`:
-
-```dotenv
-GITHUB_CLIENT_ID=
-GITHUB_CLIENT_SECRET=
-```
-
-For production, use `https://workshop.homarr.dev` and `https://workshop.homarr.dev/api/oauth2-redirect`. Create the first PocketBase superuser through the installer link printed on first startup or through the PocketBase CLI.
-
-## Local image validation
-
-Build and test the exact runtime shape:
+## Local development
 
 ```sh
-docker build -f apps/workshop/Dockerfile -t homarr/workshop:ci .
-pnpm test:workshop-image
+pnpm docker:workshop
 ```
 
-The smoke test starts a temporary container and verifies the documentation homepage, `/workshop/`, the migrated public collection, and `/api/health`.
+Use `docker compose -f apps/workshop/docker-compose.yml logs -f workshop` for logs and
+`docker compose -f apps/workshop/docker-compose.yml stop workshop` to stop it without deleting data.
 
-## GitHub Actions and ACT
+Compose passes the selected port to PocketBase as `PORT`, so it listens on the same port inside and outside the
+container. With the image directly, set both values: `docker run -e PORT=3003 -p 3003:3003 <workshop-image>`.
 
-`.github/workflows/deployment-workshop.yml` runs only for changes below `apps/docs/` or `apps/workshop/`, plus manual dispatches. It builds and tests the combined image, then publishes:
+Open `http://127.0.0.1:18090/_/`, create the first PocketBase superuser, and configure GitHub OAuth on the `users` collection.
 
-- `ghcr.io/homarr-labs/workshop:latest`;
-- `ghcr.io/homarr-labs/workshop:sha-<commit>`.
+The `users.isAdmin` field defaults to `false`. Collection rules allow account creation only through OAuth without that
+field and reject all regular-user attempts to change it. Appoint administrators out of band with a PocketBase
+superuser or a deliberate SQLite update; there is no public role-management endpoint or hook.
 
-Run the same build and smoke test locally without registry credentials:
+Users must sign in again after the role changes. Setting the value back to `false` removes Workshop administrator access.
+
+The GitHub OAuth application needs one callback for the Workshop host:
+
+```text
+https://<workshop-host>/api/oauth2-redirect
+```
+
+Self-hosted Homarr origins do not need to be registered with GitHub. Keep `PB_ALLOWED_ORIGINS=*` (the default) so localhost and arbitrary self-hosted domains can open the central PocketBase OAuth popup. Set a restricted origin list only if it includes every Homarr origin that should use Workshop sign-in.
+
+Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in the repository-root `.env`. Set
+`WORKSHOP_PUBLIC_ORIGIN=https://<workshop-host>` so notification emails link to the public Workshop. Configure the sender
+and SMTP transport in PocketBase. PocketBase emails the submission author about new comments, emails every current
+Workshop administrator about a new report, and emails the author after an administrator deletes their submission. Mail
+failures are logged and never reject a comment, report, or deletion.
+
+Run the disposable service integration test from the repository root:
 
 ```sh
-pnpm ci:act:workshop
+pnpm test:workshop
 ```
 
-See `.github/act/workshop.md` for the direct ACT command and Docker socket behavior.
+The test uses a separate Compose project and deletes its named volume on exit. It never writes fixture users or admin
+roles into the normal `homarr-workshop_pb_data` volume.
 
-## VPS deployment
+The Workshop does not maintain a second Custom Widget schema. Its frontend validates submissions with
+`customWidgetImportSchema` from `@homarr/custom-widgets`, and Homarr validates canonical content again before installation.
+The validated `$schema` is also stored as `widgetSchema` for listing compatibility badges; it must match the downloaded
+manifest before Homarr enables installation.
+PocketBase API rules enforce submission and comment ownership, one vote/report per user and submission, and
+administrator-only moderation. Each new submission receives one real author-owned upvote. Reports are private to
+administrators and are dismissed by changing their status. PocketBase cascade deletion removes related votes, comments,
+and reports when a submission is deleted. Authors and administrators can mark a submission outdated without making it
+un-installable.
 
-Copy `apps/workshop/docker-compose.yml` to the checkout on the VPS, authenticate Docker to GHCR if the package is private, and run from the repository root. Compose reads the optional root `.env` automatically:
+## Production docs preview
+
+Build the documentation and serve it from PocketBase using the same production image layout as the hosted Workshop:
 
 ```sh
-docker compose -f apps/workshop/docker-compose.yml pull
-docker compose -f apps/workshop/docker-compose.yml up -d --no-build
+pnpm docker:docs
 ```
 
-The service binds to `127.0.0.1:8090` by default. Put a TLS reverse proxy in front of it for `workshop.homarr.dev`, forward the original scheme and host, and persist the `homarr_workshop_deployment_data` volume. Back up that volume before PocketBase upgrades.
+Open `http://127.0.0.1:3003`. Set `DOCS_EXPOSE_PORT` to use another host port. PocketBase data persists in the
+`homarr-workshop_pb_data` named volume.
 
-## Content schema
+Point a local Homarr checkout at it with:
 
-- Custom widgets use `homarr-custom-widget-v2` JSON.
-- Custom CSS uses raw CSS tagged as `homarr-custom-css-v1`.
+```sh
+WORKSHOP_API_URL=http://127.0.0.1:3003 pnpm dev
+```
 
-Client-side validation lives in `apps/docs/src/lib/workshop-schema.ts`. PocketBase collection rules and hooks remain in this directory.
+The production Homarr image reads the same variable when the container starts:
+
+```sh
+docker run -p 7575:7575 -e WORKSHOP_API_URL=http://127.0.0.1:3003 <homarr-image>
+```
+
+This command starts the profiled `docs` service from `apps/workshop/docker-compose.yml`. It does not start the development `workshop` service. Stop and remove the preview with:
+
+```sh
+docker compose -f apps/workshop/docker-compose.yml --profile docs rm --stop --force docs
+```
+
+Normal startup never deletes data. To intentionally recreate the local database, stop the stack first and then run:
+
+```sh
+docker compose -f apps/workshop/docker-compose.yml down --volumes
+```
+
+PocketBase data lives in `/pb_data`. Docker Compose persists it in the `pb_data` named volume for both the development Workshop service and the production documentation/Workshop service. The image serves the built Homarr documentation and Workshop UI from `/pb_public`.
+At startup the container repairs ownership of existing data volumes, then runs PocketBase as its non-root user.

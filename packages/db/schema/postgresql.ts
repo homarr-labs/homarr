@@ -38,12 +38,7 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
-import type {
-  CustomWidgetAuthType,
-  CustomWidgetDisplayType,
-  CustomWidgetMethod,
-  CustomWidgetSecretKind,
-} from "@homarr/custom-widgets/core";
+import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
@@ -509,13 +504,10 @@ export const customWidgetDefinitions = pgTable("custom_widget_definition", {
   name: varchar({ length: 256 }).notNull(),
   description: text(),
   iconUrl: text(),
-  url: text().notNull(),
-  authType: varchar({ length: 32 }).$type<CustomWidgetAuthType>().notNull().default("none"),
-  headerName: varchar({ length: 256 }),
-  method: varchar({ length: 16 }).$type<CustomWidgetMethod>().notNull().default("GET"),
-  requestBody: text(),
-  displayType: varchar({ length: 32 }).$type<CustomWidgetDisplayType>().notNull().default("singleValue"),
-  displayConfig: text().default(emptySuperJSON).notNull(),
+  sources: text().notNull(),
+  requests: text().notNull(),
+  options: text().notNull(),
+  template: text().notNull(),
   enabled: boolean().notNull().default(true),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
@@ -525,8 +517,9 @@ export const customWidgetDefinitions = pgTable("custom_widget_definition", {
 export const customWidgetSecrets = pgTable(
   "custom_widget_secret",
   {
+    sourceId: varchar({ length: 64 }).notNull(),
     kind: varchar({ length: 64 }).$type<CustomWidgetSecretKind>().notNull(),
-    value: text().$type<`${string}.${string}`>().notNull(),
+    encryptedValue: text("encrypted_value").$type<`${string}.${string}`>().notNull(),
     updatedAt: timestamp()
       .$onUpdateFn(() => new Date())
       .notNull(),
@@ -536,7 +529,7 @@ export const customWidgetSecrets = pgTable(
   },
   (table) => ({
     compoundKey: primaryKey({
-      columns: [table.definitionId, table.kind],
+      columns: [table.definitionId, table.sourceId, table.kind],
     }),
   }),
 );

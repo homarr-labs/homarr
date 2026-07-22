@@ -5,7 +5,7 @@ export interface PreviewNamedRequest {
   id: string;
   kind: "query" | "action";
   method: string;
-  pathTemplate: string;
+  path: string;
   minimumBoardPermission?: string;
 }
 
@@ -13,7 +13,7 @@ export interface PreviewJournalEntry {
   id: string;
   requestId: string;
   method: string;
-  pathTemplate: string;
+  path: string;
   simulated: boolean;
   status: number | null;
   durationMs: number;
@@ -82,7 +82,7 @@ export function PreviewRequestPanel({
                     {request.id}
                   </Text>
                   <Text size="xs" c="dimmed" ff="monospace" lineClamp={1}>
-                    {request.pathTemplate}
+                    {request.path}
                   </Text>
                 </div>
                 <Group gap={4} wrap="nowrap">
@@ -111,7 +111,7 @@ export function PreviewRequestPanel({
                     {entry.requestId}
                   </Text>
                   <Text size="xs" c="dimmed" ff="monospace" truncate>
-                    {entry.pathTemplate}
+                    {entry.path}
                   </Text>
                 </div>
                 <Group gap={4} wrap="nowrap">

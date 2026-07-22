@@ -1,32 +1,42 @@
----
-sidebar_label: Requests and security
----
+# Configure requests and security
 
-# Named requests and security
+Most widgets use a single source named `default`. Extra keyed sources are available under Advanced for widgets that combine APIs. Authentication is `none`, `bearer`, `basic`, an API-key header, or an API-key query parameter. Credentials belong to the widget but remain outside its manifest.
 
-Custom JSX v2 uses a saved request manifest. Runtime components pass only a `requestId` and declared primitive parameters; they cannot change the URL, method, headers, authentication, or body shape.
+## Named requests
 
-## Capability kinds
+Requests are keyed by ID. `source`, `kind`, `method`, `trigger`, `auth`, and `permission` have sensible defaults, so a load query can be as small as:
 
-`SubFetch` references a GET `query`. `ActionButton` and `ToggleSwitch` reference a POST, PUT, PATCH, or DELETE `action`. Base data is GET-only. Actions require an explicit gesture and are never polled, cached, retried automatically, or run on mount.
+```json
+{ "status": { "path": "/api/status" } }
+```
 
-Default board permissions are view for queries, modify for POST/PUT/PATCH, and full for DELETE. Viewer actions require explicit high-risk approval; anonymous users cannot execute actions. DELETE always requires confirmation.
+The request `path` is appended to the source `baseUrl`, including a base path such as `/api/v2`.
 
-## Parameter substitution
+GET, POST, PUT, PATCH, and DELETE work for queries and actions. Kind—not method—controls behavior. Load queries run automatically, manual queries run through `SubFetch`, and actions run only from `ActionButton` or `ToggleSwitch`.
 
-Path placeholders use `{name}` and are URL-encoded by the server. Runtime parameters must exactly match all declared names and types. JSON bodies substitute `{ "$param": "name" }` recursively and preserve string, number, or boolean types.
+Bind values directly where they are used:
 
-## Network boundary
+```json
+{
+  "containers": {
+    "path": "/api/endpoints/{option:endpointId}/docker/containers/json",
+    "query": { "all": { "$option": "showAll" } }
+  },
+  "restart": {
+    "kind": "action",
+    "method": "POST",
+    "path": "/api/endpoints/{option:endpointId}/docker/containers/{param:id}/restart",
+    "invalidates": ["containers"]
+  }
+}
+```
 
-Named paths stay on the base URL origin. HTTP and HTTPS are accepted; URL credentials and fragments are rejected. DNS answers are classified and pinned. Public, private, and loopback scopes progressively allow destinations, but link-local, metadata, unspecified, multicast, documentation, carrier-grade NAT, and IPv4-mapped addresses are always blocked.
+`{option:name}` and `$option` read saved widget options. `{param:name}` and `$param` read invocation-time `params`. Load queries cannot use invocation parameters. Homarr infers the exact parameter names and primitive values from these references, rejecting missing or extra invocation params at the request boundary.
 
-Queries may follow three revalidated same-origin redirects. Actions do not follow redirects. Credentials never cross origins. Reserved authentication, cookie, host, forwarding, proxy, content-length, security, and hop-by-hop headers cannot be declared.
+Paths and query-string values must resolve to text, numbers, or booleans. JSON bodies can also use structured `json` and `multiSelect` option values, for example `{ "entity_ids": { "$option": "entities" } }`.
 
-## Limits
+## Protection
 
-- Request body: 10 KiB UTF-8.
-- Decompressed response: 1 MiB, 32 JSON levels, 50,000 JSON nodes.
-- Per user/item: 60 queries, 10 actions, and 3 deletes per minute.
-- Concurrency: 4 per user/item and 8 per definition.
+Every request uses Homarr's existing server executor: same-origin source enforcement, network scope, DNS and redirect validation, SSRF protection, board permissions, rate and request limits, body and response limits, timeouts, and encrypted credential injection. Static headers cannot override credentials, cookies, routing, proxy, forwarding, or hop-by-hop headers.
 
-Successful GETs can use manifest cache TTLs and single-flight deduplication. Logs contain redacted origin/method/error metadata, never secrets, request bodies, or query values.
+Queries default to view permission and actions to modify. DELETE always requires full permission and confirmation. Actions are never cached, retried, or run on load.

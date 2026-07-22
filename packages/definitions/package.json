@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
-    "@homarr/custom-widgets": "workspace:^0.1.0",
     "fast-xml-parser": "catalog:",
     "zod": "catalog:"
   },

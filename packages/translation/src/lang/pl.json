@@ -710,14 +710,7 @@
       "delete": "Usuń niestandardowy widget",
       "deleteConfirm": "Czy na pewno chcesz usunąć \"{name}\"? Tej akcji nie można cofnąć.",
       "export": "Eksportuj",
-      "addMapping": "Dodaj mapowanie",
-      "addColumn": "Dodaj kolumnę",
       "edit": "Edytuj",
-      "removeMapping": "Usuń mapowanie",
-      "removeColumn": "Usuń kolumnę",
-      "addItem": "Dodaj element",
-      "removeItem": "Usuń element",
-      "addBar": "Dodaj pasek",
       "duplicate": "Duplikuj",
       "copyAiPrompt": "Skopiuj prompt AI",
       "enable": "Włącz",
@@ -727,140 +720,7 @@
     "field": {
       "name": "Nazwa",
       "description": "Opis",
-      "iconUrl": "Adres URL ikony",
-      "url": "Adres URL",
-      "authType": "Typ uwierzytelniania",
-      "headerName": "Nazwa parametru Header/Query",
-      "method": "Metoda",
-      "requestBody": "Body Zapytania",
-      "displayType": "Typ Wyświetlania",
-      "jsonPath": "Ścieżka JSON",
-      "jsonPathHint": "Użyj składni JSONPath do wyodrębnienia wartości, np. $.data.temperature lub $.items[0].name",
-      "label": "Etykieta",
-      "unit": "Jednostka",
-      "mappings": "Mapowania",
-      "tablePath": "Ścieżka JSON tablicy",
-      "tablePathHint": "Ścieżka do tablicy w odpowiedzi, np. $.data.items",
-      "columns": "Kolumny",
-      "header": "Nagłówek",
-      "items": "Elementy",
-      "gridColumns": "Kolumny Siatki",
-      "cardStyle": "Styl Karty",
-      "bars": "Paski",
-      "valuePath": "Ścieżka JSON wartości",
-      "maxPath": "Ścieżka JSON wartości maksymalnej",
-      "showPercentage": "Pokaż Procent",
-      "barSize": "Rozmiar Paska",
-      "goodValues": "Dobre wartości (oddzielone przecinkami)",
-      "dotSize": "Rozmiar Kropki",
-      "valueSize": "Rozmair Wartości",
-      "labelPosition": "Pozycja Etykiety",
-      "kvLayout": "Układ",
-      "striped": "Paskowane rzędy",
-      "compact": "Tryb Kompaktowy",
-      "maxHeight": "Maksymalna Wysokość (px)",
-      "color": "Kolor",
-      "buttonLabel": "Etykieta Przycisku",
-      "buttonColor": "Kolor Przycisku",
-      "confirmText": "Tekst Potwierdzający",
-      "confirmTextHint": "Jeśli ustawione, okno dialogowe potwierdzenia pojawi się przed wykonaniem żądania",
-      "successMessage": "Wiadomość o powodzeniu",
-      "successMessageHint": "Wiadomość wyświetlana po pomyślnym wykonaniu",
-      "enabled": "Włączony",
-      "template": {
-        "label": "Szablon JSX",
-        "description": "Szablon Mantine JSX. Uzyskaj dostęp do pól odpowiedzi API poprzez powiązanie danych (np. data.name). Używaj tylko kopmonentów na białej liście. Zabronione: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura CPU",
-      "exampleLabelShort": "Temp CPU",
-      "exampleHeader": "Nazwa",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "niebieski"
-    },
-    "cardStyleOption": {
-      "filled": "Wypełnione",
-      "outline": "Obrys",
-      "subtle": "Subtelny"
-    },
-    "layoutOption": {
-      "list": "Lista",
-      "grid": "Siatka"
-    },
-    "sizeOption": {
-      "sm": "Mały",
-      "md": "Średni",
-      "lg": "Duży",
-      "xl": "Bardzo duży"
-    },
-    "labelPositionOption": {
-      "above": "Powyżej",
-      "below": "Poniżej"
-    },
-    "fieldset": {
-      "general": "Ogólne",
-      "connection": "Połączenie API",
-      "display": "Konfiguracja Wyświetlania"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Pokaż jedną wyodrębnioną wartość z etykietą i jednostką",
-      "keyValue": "Pokaż wiele oznaczonych wartości obok siebie",
-      "table": "Pokaż wiersze danych w formacie tabeli",
-      "statGrid": "Kolorowe kart statystyk w siatce - takie jak widgety Pi-Hole lub Speedtest",
-      "progressBars": "Paski postępu pokazujące użycie lub ukończenie — dla dysku, pamięci, kwot",
-      "statusIndicator": "Kolorowe kropki stanu pokazujące stan online/offline lub stan zdrowia",
-      "countGrid": "Kompaktowe numer + licznik etykiety w ścisłej siatce",
-      "raw": "Sformatowany JSON do debugowania",
-      "actionButton": "Przycisk, który wywołuje zapytanie po kliknięciu",
-      "customJsx": "Własny układ JSX za pomocą komponentów Mantine z białej listy z pełnym powiązaniem danych API"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "None",
-      "bearer": "Bearer Token",
-      "basic": "Basic Auth",
-      "apiKeyHeader": "Klucz API (Nagłówek)",
-      "apiKeyQuery": "Klucz API (Query)"
-    },
-    "displayType": {
-      "singleValue": "Pojedyncza Wartość",
-      "keyValue": "Klucz-Wartość",
-      "table": "Tabela",
-      "statGrid": "Siatka statystyk",
-      "progressBars": "Paski Postępu",
-      "statusIndicator": "Wskaźnik statusu",
-      "countGrid": "Count Grid",
-      "raw": "Nieprzetworzony JSON",
-      "actionButton": "Przycisk Akcji",
-      "customJsx": "Niestandardowy JSX"
-    },
-    "secret": {
-      "apiKey": "Klucz API / Token",
-      "username": "Nazwa użytkownika",
-      "password": "Hasło",
-      "savedPlaceholder": "•••••• (zapisane, pozostaw puste aby zachować)"
-    },
-    "preview": {
-      "title": "Podgląd",
-      "test": "Test",
-      "hint": "Kliknij test, aby wyświetlić podgląd odpowiedzi API w aktualnej konfiguracji.",
-      "rawResponse": "Nieprzetworzona odpowiedź JSON"
+      "iconUrl": "Adres URL ikony"
     },
     "notification": {
       "created": "Widget \"{name}\" został utworzony pomyślnie.",
@@ -868,9 +728,6 @@
       "deleted": "Widget \"{name}\" usunięty.",
       "imported": "Widget został zaimportowany pomyślnie.",
       "aiPromptCopied": "Prompt AI skopiowany do schowka",
-      "aiPromptDescription": "Skopiuj wstępnie zbudowany prompt, aby wkleić do dowolnego czatu AI (ChatGPT, Claude, Gemini...). Zawiera pełny schemat widgetu i odpowiedź API, aby AI mógł wygenerować gotową konfigurację JSON dla Ciebie.",
-      "aiPromptCopy": "Skopiuj do schowka",
-      "aiPromptNoResponse": "Wskazówka: Uruchom najpierw test, aby dołączyć odpowiedź API w prompcie w celu uzyskania lepszych wyników.",
       "aiPromptCopyError": "Nie udało się skopiować prompta do schowka. Twoja przeglądarka może nie obsługiwać tej funkcji.",
       "createError": "Nie udało się utworzyć widżetu. Sprawdź, czy endpoint API jest osiągalny.",
       "updateError": "Nie udało się zaktualizować widgetu. Zmiany nie zostały zapisane.",
@@ -883,14 +740,6 @@
       "previewError": "Nie udało się pobrać podglądu. Sprawdź URL i spróbuj ponownie.",
       "executed": "Akcja wykonana pomyślnie.",
       "executeError": "Akcja nie powiodła się: {error}"
-    },
-    "table": {
-      "name": "Nazwa",
-      "url": "Adres URL",
-      "display": "Widok"
-    },
-    "widget": {
-      "disabled": "Ten widget jest wyłączony"
     }
   },
   "integration": {
@@ -3914,12 +3763,7 @@
         }
       },
       "noDefinition": "Nie wybrano definicji",
-      "definitionNotFound": "Nie znaleziono definicji widgetu. Być może została usunięta.",
-      "noDisplayOutput": "No display output",
-      "executeConfirm": "Czy jesteś pewien, że chcesz wykonać to zadanie?",
-      "executing": "Wykonywanie...",
-      "executeSuccess": "Akcja wykonana pomyślnie",
-      "executeFailed": "Akcja nie powiodła się. Sprawdź konfigurację widgetu."
+      "definitionNotFound": "Nie znaleziono definicji widgetu. Być może została usunięta."
     },
     "beszelSystemTable": {
       "name": "Systemy Beszel (Tabela)",
@@ -4551,6 +4395,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Strona główna",
         "boards": "Tablice",
         "apps": "Aplikacje",
@@ -5694,6 +5539,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Zarządzaj",
       "boards": {
         "label": "Tablice"

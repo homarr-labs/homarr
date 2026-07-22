@@ -1,33 +1,59 @@
----
-sidebar_label: Troubleshooting
----
+# Correct Custom Widget problems
 
-# Troubleshooting
+## Correct an unavailable widget
 
-## The preview says the template is required
+The definition does not exist. Remove the unavailable tile from the board.
 
-New Custom JSX forms always include the starter fixture. If an imported definition has an empty template, reopen its import review; malformed imports must be corrected rather than previewed as JSX.
+Then, install or create a Custom JSX v2 definition. Homarr does not provide recovery or migration for old formats.
 
-## A prop is ignored
+## Correct an invalid saved definition
 
-The diagnostics name the component and prop. Check the generated component reference. Unsupported props are intentionally removed; use a supported layout primitive or wrapper prop instead of polymorphic, portal, ref, positioning, or raw handler props.
+The Custom Widgets page isolates a definition that does not conform to the current schema. The other definitions remain available.
 
-## A request does not run
+An invalid definition shows its validation errors. You can delete it.
 
-Confirm that the component kind matches the manifest: `SubFetch` needs a query; action controls need an action. Parameter names and primitive types must match exactly. Base requests and queries require GET. Actions only run from a gesture, and edit mode disables controls.
+You cannot edit, enable, export, duplicate, publish, or select an invalid definition. Recreate the definition or import a valid definition.
 
-## Network scope errors
+Homarr does not migrate old Custom JSX formats.
 
-Resolve the hostname from the Homarr server environment. Select private or loopback scope only when required and understood. Link-local and metadata destinations cannot be enabled by any scope. Redirects must remain on the base origin.
+## Correct validation errors
 
-## Permission errors
+Read the first schema or JSX diagnostic. Use its path to find the invalid value.
 
-The placed board item is the authorization anchor. A definition ID alone cannot authorize credential use. Verify board view/modify/full access, explicit viewer-action approval, and that the caller is not anonymous.
+Make sure keyed API source and request names are valid and unique.
 
-## Stale or failed preview data
+Make sure that each named request references an API source. Use explicit `$option` and `$param` references.
 
-Connection, authentication, body, method, secret, or manifest changes mark samples stale. Run the GET test again. Background query failures keep prior content visible and offer retry; actions roll toggles back and show error feedback.
+Make sure every option default matches its control. Use the correct request kind for each runtime component.
 
-## Import paste is ignored
+An incomplete API source URL or icon URL causes a form validation error. The workbench keeps the draft open.
 
-Paste a complete v2/v3 JSON export or authoring bundle while the list or edit page is focused. Ordinary text and partial JSON are ignored so normal typing is not intercepted.
+The workbench marks the invalid field while you type. An invalid URL does not replace the form with the error boundary.
+
+An invalid definition disables only the widget preview. The Data, Options, Actions, and Diagnostics tabs remain available.
+
+The Diagnostics tab shows the current schema errors.
+
+## Correct request errors
+
+Check the API source network scope. Check the base URL and credentials.
+
+Check the request method, path, body, direct value bindings, and board permission.
+
+For “invalid placeholder,” use `{option:name}` or `{param:name}`. Load queries can only reference options. The preview journal does not show credentials.
+
+The journal shows the method, request ID, path template, status, and duration.
+
+## Correct a Mantine prop warning
+
+`UNKNOWN_MANTINE_PROP` is a warning. Homarr passes the prop to Mantine.
+
+Check the prop in the documentation for the installed Mantine version. `BLOCKED_CAPABILITY` identifies an unsafe capability.
+
+Use safe widget options, temporary inputs, or named requests instead.
+
+## Repair an existing item
+
+The widget option definitions changed and the saved values are invalid. Open the item settings.
+
+Correct the marked configuration values. Homarr does not infer widget option migrations.

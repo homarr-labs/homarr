@@ -1,36 +1,45 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Center, Loader, Menu, ScrollArea } from "@mantine/core";
+import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
+import { Box, Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
-import { IconLayoutBoard, IconPencil, IconPencilOff, IconPlus, IconReplace, IconSettings } from "@tabler/icons-react";
+import {
+  IconBox,
+  IconBoxAlignTop,
+  IconChevronDown,
+  IconLayoutBoard,
+  IconPencil,
+  IconPencilOff,
+  IconPlug,
+  IconPlus,
+  IconReplace,
+  IconResize,
+  IconSettings,
+} from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { hotkeys } from "@homarr/definitions";
-import { useConfirmModal } from "@homarr/modals";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
+import { useItemActions } from "~/components/board/items/item-actions";
+import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useBoardPermissions } from "~/components/board/permissions/client";
+import { useCategoryActions } from "~/components/board/sections/category/category-actions";
+import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
+import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
+import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { HeaderButton } from "~/components/layout/header/button";
-import { TourTarget } from "~/components/layout/header/tour-target";
-
-const loadBoardAddMenu = () => import("./_board-add-menu");
-const preloadBoardAddMenu = () => void loadBoardAddMenu().catch(() => undefined);
-const BoardAddMenu = dynamic(() => loadBoardAddMenu().then(({ BoardAddMenu: AddMenu }) => AddMenu), {
-  loading: () => (
-    <HeaderButton loading>
-      <IconPlus stroke={1.5} />
-    </HeaderButton>
-  ),
-});
 
 export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode] = useEditMode();
@@ -43,20 +52,109 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
 
   return (
     <>
-      {isEditMode && <BoardAddMenu />}
+      {isEditMode && <AddMenu />}
 
       <EditModeMenu demoReadOnly={demoReadOnly} />
 
       {!demoReadOnly && (
-        <TourTarget id="board-settings">
+        <OnboardingTour.Target id="board-settings">
           <HeaderButton href={`/boards/${board.name}/settings`}>
             <IconSettings stroke={1.5} />
           </HeaderButton>
-        </TourTarget>
+        </OnboardingTour.Target>
       )}
 
       <SelectBoardsMenu />
     </>
+  );
+};
+
+const AddMenu = () => {
+  const board = useRequiredBoard();
+  const { data: session } = useSession();
+  const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
+  const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
+  const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
+  const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
+  const { addCategoryToEnd } = useCategoryActions();
+  const { addDynamicSection } = useDynamicSectionActions();
+  const { createItem } = useItemActions();
+  const t = useI18n();
+
+  const handleAddCategory = useCallback(
+    () =>
+      openCategoryEditModal(
+        {
+          category: {
+            id: "new",
+            name: "",
+          },
+          onSuccess({ name }) {
+            addCategoryToEnd({ name });
+          },
+          submitLabel: t("section.category.create.submit"),
+        },
+        {
+          title: (t) => t("section.category.create.title"),
+        },
+      ),
+    [addCategoryToEnd, openCategoryEditModal, t],
+  );
+
+  const handleSelectItem = useCallback(() => {
+    openItemSelectModal({ boardId: board.id });
+  }, [board.id, openItemSelectModal]);
+
+  const handleSelectApp = useCallback(() => {
+    openAppSelectModal({
+      onSelect: (app) => {
+        createItem({
+          kind: "app",
+          options: { appId: app.id },
+        });
+      },
+      withCreate: session?.user.permissions.includes("app-create") ?? false,
+    });
+  }, [openAppSelectModal, createItem]);
+
+  const handleAddIntegration = useCallback(() => {
+    openIntegrationSelectModal({});
+  }, [openIntegrationSelectModal]);
+
+  return (
+    <Menu position="bottom-end">
+      <Menu.Target>
+        <HeaderButton w="auto" px={4} aria-label={t("item.action.create")}>
+          <Group gap={4} wrap="nowrap">
+            <IconPlus stroke={1.5} />
+            <IconChevronDown color="gray" size={16} />
+          </Group>
+        </HeaderButton>
+      </Menu.Target>
+      <Menu.Dropdown style={{ transform: "translate(-3px, 0)" }}>
+        <Menu.Item leftSection={<IconResize size={20} />} onClick={handleSelectItem}>
+          {t("item.action.create")}
+        </Menu.Item>
+
+        <Menu.Item leftSection={<IconBox size={20} />} onClick={handleSelectApp}>
+          {t("app.action.add")}
+        </Menu.Item>
+
+        <Menu.Item leftSection={<IconPlug size={20} />} onClick={handleAddIntegration}>
+          {t("integration.action.create")}
+        </Menu.Item>
+
+        <Menu.Divider />
+
+        <Menu.Item leftSection={<IconBoxAlignTop size={20} />} onClick={handleAddCategory}>
+          {t("section.category.action.create")}
+        </Menu.Item>
+
+        <Menu.Item leftSection={<IconResize size={20} />} onClick={addDynamicSection}>
+          {t("section.dynamic.action.create")}
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
   );
 };
 
@@ -65,6 +163,11 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
+  const commonT = useI18n();
+  const latestBoardRef = useRef(board);
+
+  latestBoardRef.current = board;
+
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onSuccess() {
       showSuccessNotification({
@@ -72,6 +175,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
         message: t("notification.success.message"),
       });
       void utils.board.getBoardByName.invalidate({ name: board.name });
+      void utils.widget.customApi.getData.invalidate();
       void revalidatePathActionAsync(`/boards/${board.name}`);
       close();
     },
@@ -91,38 +195,34 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const toggle = useCallback(() => {
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
-      return saveBoard(board);
+      return saveBoard(latestBoardRef.current);
     }
     open();
-  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
+  }, [isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
 
   return (
-    <TourTarget id="board-edit-mode">
+    <OnboardingTour.Target id="board-edit-mode">
       <HeaderButton
         onClick={toggle}
         loading={isPending}
-        onFocus={preloadBoardAddMenu}
-        onPointerEnter={preloadBoardAddMenu}
+        aria-label={isEditMode ? commonT("common.action.save") : commonT("common.action.edit")}
       >
         {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
       </HeaderButton>
-    </TourTarget>
+    </OnboardingTour.Target>
   );
 };
 
 const SelectBoardsMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const utils = clientApi.useUtils();
-  const { data: boards = [], isPending } = clientApi.board.getAllBoards.useQuery(undefined, { enabled: isOpen });
-  const preloadBoards = () => void utils.board.getAllBoards.prefetch();
+  const { data: boards = [] } = clientApi.board.getAllBoards.useQuery();
 
   return (
-    <TourTarget id="board-switcher">
-      <Box onFocus={preloadBoards} onPointerEnter={preloadBoards}>
-        <Menu position="bottom-end" opened={isOpen} onChange={setIsOpen}>
+    <OnboardingTour.Target id="board-switcher">
+      <Box>
+        <Menu position="bottom-end">
           <Menu.Target>
             <HeaderButton w="auto" px={4}>
               <IconReplace stroke={1.5} />
@@ -130,11 +230,6 @@ const SelectBoardsMenu = () => {
           </Menu.Target>
           <Menu.Dropdown style={{ transform: "translate(-7px, 0)" }}>
             <ScrollArea.Autosize mah={300}>
-              {isPending && (
-                <Center p="xs">
-                  <Loader size="xs" />
-                </Center>
-              )}
               {boards.map((board) => (
                 <Menu.Item
                   key={board.id}
@@ -149,7 +244,7 @@ const SelectBoardsMenu = () => {
           </Menu.Dropdown>
         </Menu>
       </Box>
-    </TourTarget>
+    </OnboardingTour.Target>
   );
 };
 
@@ -162,13 +257,15 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
   useEffect(() => {
     if (!isDirty) return;
 
-    const handleClick = (event: MouseEvent) => {
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const target = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>(anchorSelector) : null;
-      if (!target) return;
+    const handleClick = (event: Event) => {
+      const target = (event.target as HTMLElement).closest("a");
+
+      if (!target) {
+        console.warn("No anchor element found for click event", event);
+        return;
+      }
 
       event.preventDefault();
-      event.stopPropagation();
 
       openConfirmModal({
         title: t("board.action.edit.confirmLeave.title"),
@@ -194,14 +291,19 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
       event.returnValue = true;
     };
 
-    document.addEventListener("click", handleClick, true);
+    const anchors = document.querySelectorAll(anchorSelector);
+    anchors.forEach((link) => {
+      link.addEventListener("click", handleClick);
+    });
     window.addEventListener("popstate", handlePopState);
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      document.removeEventListener("click", handleClick, true);
+      anchors.forEach((link) => {
+        link.removeEventListener("click", handleClick);
+      });
       window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [isDirty, openConfirmModal, router, t]);
+  }, [isDirty]);
 };

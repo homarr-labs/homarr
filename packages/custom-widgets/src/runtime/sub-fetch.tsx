@@ -2,49 +2,50 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Button, Code, Skeleton, Text } from "@mantine/core";
+import { Alert, Box, Button, Code, Skeleton, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 
 import { useCustomWidgetRuntime } from "./context";
 import { formatDisplayValue, getByPath, normalizeParams, SubFetchDataContext } from "./data";
-import { MigrationRequiredAlert } from "./status";
+import { RequestIdRequiredAlert } from "./status";
 import type { CustomJsxRuntimeParams } from "./types";
 
 export interface SubFetchMetadata {
   ok: boolean;
   status: number;
   statusText?: string;
+  loading: false;
+  error?: undefined;
 }
 
 export interface SubFetchProps {
   requestId?: string;
   params?: CustomJsxRuntimeParams;
   refreshInterval?: number;
-  children?: ReactNode;
-  render?: (data: unknown, metadata: SubFetchMetadata) => ReactNode;
+  children?: ReactNode | ((data: unknown, metadata: SubFetchMetadata) => ReactNode);
   loadingLabel?: string;
   errorMessage?: string;
   fallback?: ReactNode;
+  triggerContent?: ReactNode;
+  triggerAriaLabel?: string;
   path?: string;
   as?: "json" | "text";
   trigger?: "auto" | "manual";
-  /** @deprecated Inline targets are inert in JSX API v2. */
-  url?: string;
-  /** @deprecated Request manifests own the method, body, and headers. */
-  method?: string;
-  body?: string;
-  headers?: string;
 }
 
 export function SubFetch(props: SubFetchProps) {
-  const { itemId, previewSessionId, port, messages } = useCustomWidgetRuntime();
+  const { itemId, previewSessionId, queriesDisabled, port, messages, setQueryState } = useCustomWidgetRuntime();
   const [manualRun, setManualRun] = useState(false);
   const params = useMemo(() => normalizeParams(props.params), [props.params]);
   const paramsKey = useMemo(() => JSON.stringify(params), [params]);
   useEffect(() => setManualRun(false), [paramsKey, props.requestId, props.trigger]);
   const enabled = Boolean(
-    (itemId || previewSessionId) && props.requestId && params && (props.trigger !== "manual" || manualRun),
+    !queriesDisabled &&
+    (itemId || previewSessionId) &&
+    props.requestId &&
+    params &&
+    (props.trigger !== "manual" || manualRun),
   );
   const refreshMs = normalizeRefreshInterval(props.refreshInterval);
   const query = useQuery({
@@ -55,17 +56,74 @@ export function SubFetch(props: SubFetchProps) {
     retry: 2,
     refetchInterval: refreshMs,
   });
+  useEffect(() => {
+    // Manual queries are local to their SubFetch instance. Publishing them by request ID makes
+    // repeated cards compete for the same data slot and can remount the active query mid-request.
+    if (!props.requestId || !setQueryState || props.trigger === "manual") return;
+    if (!enabled) {
+      setQueryState(props.requestId, null);
+      return;
+    }
+    const result = query.data;
+    setQueryState(props.requestId, {
+      data: result?.data ?? null,
+      status: {
+        loading: query.isFetching && !result,
+        ok: result?.ok,
+        status: result?.status,
+        statusText: result?.statusText,
+        error: result?.error ?? (query.error ? messages.requestFailed : undefined),
+      },
+    });
+  }, [
+    enabled,
+    messages.requestFailed,
+    props.requestId,
+    props.trigger,
+    query.data,
+    query.error,
+    query.isFetching,
+    setQueryState,
+  ]);
 
-  if (!props.requestId) return <MigrationRequiredAlert />;
-  if (!itemId && !previewSessionId) return props.fallback ?? <Text c="dimmed">{messages.unsavedPreview}</Text>;
+  if (!props.requestId) return <RequestIdRequiredAlert />;
+  if (queriesDisabled) return props.trigger === "manual" ? (props.triggerContent ?? null) : null;
+  if (!itemId && !previewSessionId)
+    return props.trigger === "manual" && props.triggerContent
+      ? props.triggerContent
+      : (props.fallback ?? <Text c="dimmed">{messages.unsavedPreview}</Text>);
   if (!params) return <RequestAlert message={messages.invalidParams} />;
   if (props.trigger === "manual" && !manualRun) {
+    if (props.triggerContent) {
+      return (
+        <Box
+          component="button"
+          type="button"
+          aria-label={props.triggerAriaLabel ?? messages.loadRequest}
+          onClick={() => setManualRun(true)}
+          style={{
+            appearance: "none",
+            background: "transparent",
+            border: 0,
+            color: "inherit",
+            cursor: "pointer",
+            font: "inherit",
+            padding: 0,
+            textAlign: "inherit",
+            width: "100%",
+          }}
+        >
+          {props.triggerContent}
+        </Box>
+      );
+    }
     return (
       <Button size="compact-sm" variant="light" onClick={() => setManualRun(true)}>
         {messages.loadRequest}
       </Button>
     );
   }
+  if (!props.children && props.path === undefined && props.as === undefined) return null;
 
   const result = query.data;
   const requestError =
@@ -88,7 +146,12 @@ export function SubFetch(props: SubFetchProps) {
     );
   }
 
-  const content = renderContent(props, result?.data, result);
+  const content = renderContent(props, result?.data, {
+    ok: result?.ok ?? false,
+    status: result?.status ?? 0,
+    statusText: result?.statusText,
+    loading: false,
+  });
   return <SubFetchDataContext.Provider value={result?.data}>{content}</SubFetchDataContext.Provider>;
 }
 
@@ -96,15 +159,10 @@ function normalizeRefreshInterval(value: number | undefined): number | false {
   return value && Number.isFinite(value) && value > 0 ? Math.max(1_000, value * 1_000) : false;
 }
 
-function renderContent(props: SubFetchProps, data: unknown, result: SubFetchMetadata | undefined) {
-  if (props.render) {
-    return props.render(data, {
-      ok: result?.ok ?? false,
-      status: result?.status ?? 0,
-      statusText: result?.statusText,
-    });
-  }
+function renderContent(props: SubFetchProps, data: unknown, metadata: SubFetchMetadata) {
+  if (typeof props.children === "function") return props.children(data, metadata);
   if (props.children) return props.children;
+  if (props.path === undefined && props.as === undefined) return null;
   const value = getByPath(data, props.path);
   if (props.as === "text") return <Text size="sm">{formatDisplayValue(value)}</Text>;
   return (

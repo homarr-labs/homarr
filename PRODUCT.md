@@ -2,34 +2,32 @@
 
 ## Register
 
-GitHub OAuth is used for workshop accounts so community members can submit, vote on, comment on, and report shared widgets or CSS themes without creating a separate Homarr-specific identity.
+product
 
 ## Users
 
-Self-hosting enthusiasts managing homelab services. Technical users comfortable with Docker, APIs, and configuration files. They use Homarr as a personal dashboard to monitor and control 50+ services (media servers, DNS, NAS, download clients). Context: desktop browser, often on a local network, task-focused.
+Homarr is used by self-hosters and administrators who assemble dashboards for services running across home labs and private infrastructure. They need dense, reliable controls and status at a glance, with enough guidance to configure advanced features without hiding how they work.
 
 ## Product Purpose
 
-Homarr is a self-hosted dashboard for homelab management. It aggregates service status, media libraries, system stats, and administrative controls into a single drag-and-drop interface with 39+ widgets. The marketplace extension lets users share and install custom widgets and CSS themes created by the community.
+Homarr provides one place to organize, observe, and operate self-hosted services. Success means a user can build a useful dashboard quickly, understand its state, recover from configuration errors, and extend it without requiring a bespoke Homarr feature for every service.
 
 ## Brand Personality
 
-Practical, capable, community-driven.
+Direct, capable, and approachable. Copy should be concise and technical when precision matters, while the interface should remain familiar to users who are not developers.
 
 ## Anti-references
 
-- Generic SaaS landing pages with gradient hero sections and metric grids
-- Overly corporate enterprise dashboards (ServiceNow, Salesforce)
-- Cluttered "hacker" UIs with no visual hierarchy
+Avoid decorative admin dashboards, wizard flows that fight ordinary scrolling, hidden configuration magic, inconsistent controls, excessive modal usage, and interfaces that expose implementation complexity before the user needs it.
 
 ## Design Principles
 
-1. **Tool disappears into the task.** The interface should feel invisible; users came to manage their homelab, not admire the dashboard.
-2. **Density when it earns it.** Show useful information compactly; don't spread thin content across oversized cards.
-3. **Community first.** Sharing, voting, and installing should feel effortless and trustworthy.
-4. **Consistency across surfaces.** The marketplace in the docs app should feel like it belongs to the same product as the main Next.js app.
-5. **Respect the user's time.** Fast loads, instant feedback, no choreographed animations.
+1. Keep the user in control by making configuration and consequences visible.
+2. Prefer familiar product patterns and progressive disclosure over custom interaction concepts.
+3. Make simple tasks short without limiting advanced use cases.
+4. Isolate failures so one service or widget cannot disrupt the dashboard.
+5. Use the existing Mantine design language consistently across management and board surfaces.
 
 ## Accessibility & Inclusion
 
-WCAG 2.1 AA. Support for reduced motion. Sufficient contrast ratios (4.5:1 body text, 3:1 large text). Keyboard navigable.
+Target WCAG 2.2 AA. Support keyboard navigation, screen readers, visible focus, sufficient contrast, reduced motion, non-color status cues, responsive layouts, and actionable error messages.

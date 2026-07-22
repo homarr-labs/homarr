@@ -1,32 +1,48 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { buildCustomWidgetAiPrompt } from "../core/ai-prompt";
+import { buildCustomWidgetAiPrompt, CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION } from "../core/ai-prompt";
 
-describe("buildCustomWidgetAiPrompt", () => {
-  test("describes the complete v2 named-request and render-child workflow", () => {
-    const prompt = buildCustomWidgetAiPrompt({ type: "object" }, '{"serviceId":"alpha"}');
-
-    expect(prompt).toContain('"$schema": "homarr-custom-widget-v3"');
-    expect(prompt).toContain("jsxApiVersion: 2");
-    expect(prompt).toContain("SubFetch can reference query requests only");
-    expect(prompt).toContain("Prefer the SubFetch function-as-children API");
-    expect(prompt).toContain('<SubFetch requestId="service-detail"');
-    expect(prompt).toContain("ActionButton and ToggleSwitch can reference action requests only");
-    expect(prompt).toContain("## Generated component reference");
-    expect(prompt).toContain("## Tested examples");
-    expect(prompt).toContain('{"serviceId":"alpha"}');
+describe("AI prompt", () => {
+  it("is self-contained, request-first, and compact", () => {
+    const prompt = buildCustomWidgetAiPrompt(
+      undefined,
+      null,
+      null,
+      "Create a beautiful Pokédex",
+      "https://pokeapi.co/docs/v2",
+    );
+    expect(prompt.length).toBeLessThanOrEqual(12_000);
+    expect(prompt.indexOf("Create a beautiful Pokédex")).toBeLessThan(prompt.indexOf("Manifest contract"));
+    expect(prompt).toContain('"requests": {');
+    expect(prompt).toContain("{option:name}");
+    expect(prompt).toContain("Example — Service dashboard");
+    expect(prompt).toContain("Example — Search and action");
+    expect(prompt).toContain("visual hierarchy");
+    expect(prompt).toContain('template set exactly to "__HOMARR_TEMPLATE__"');
+    expect(prompt).toContain('trigger="manual"');
+    expect(prompt).toContain("never write `=> {` anywhere");
+    expect(prompt).toContain('"choicesFrom"');
+    expect(prompt).toContain("must not shadow the reserved roots");
+    expect(prompt.endsWith(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION)).toBe(true);
   });
 
-  test("keeps an existing multiline template readable and outside JSON escaping", () => {
-    const template = '<Stack gap="sm">\n  <Text>{data.name}</Text>\n</Stack>';
-    const prompt = buildCustomWidgetAiPrompt({ type: "object" }, null, {
-      name: "Existing",
-      displayConfig: { type: "customJsx", jsxApiVersion: 2, template, requests: [] },
-    });
+  it("does not claim offline MCP tools or embed the component catalog", () => {
+    const prompt = buildCustomWidgetAiPrompt(undefined, null, null, "Build a widget");
+    expect(prompt).not.toContain("customWidget_validate");
+    expect(prompt).not.toContain("homarr://");
+    expect(prompt).not.toContain("OFFLINE BUNDLE");
+    expect(prompt.match(/Recommended components:/gu)).toHaveLength(1);
+  });
 
-    expect(prompt).toContain('"template": "__HOMARR_TEMPLATE__"');
-    expect(prompt).toContain(`\`\`\`jsx\n${template}\n\`\`\``);
-    expect(prompt).not.toContain(template.replaceAll("\n", "\\n"));
-    expect(prompt).toContain("PASTE_API_RESPONSE_HERE");
+  it("redacts secrets and preserves the final instruction when optional context is large", () => {
+    const prompt = buildCustomWidgetAiPrompt(
+      undefined,
+      JSON.stringify({ token: "sensitive", data: "x".repeat(20_000) }),
+      null,
+      "Build it",
+    );
+    expect(prompt).not.toContain("sensitive");
+    expect(prompt.endsWith(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION)).toBe(true);
+    expect(prompt.length).toBeLessThanOrEqual(12_000);
   });
 });

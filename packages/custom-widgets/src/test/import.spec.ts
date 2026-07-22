@@ -1,68 +1,52 @@
 import { describe, expect, it } from "vitest";
 
-import { parseCustomWidgetClipboard } from "../core/import";
-import { customWidgetImportSchema } from "../core/schema";
+import {
+  CUSTOM_WIDGET_STARTER,
+  getImportReview,
+  parseCustomWidgetAiResponse,
+  parseCustomWidgetClipboardDetailed,
+} from "../core";
 
-const widget = {
-  $schema: "homarr-custom-widget-v3",
-  name: "Example",
-  url: "https://example.com/api",
-  authType: "none",
-  method: "GET",
-  displayType: "customJsx",
-  displayConfig: {
-    type: "customJsx",
-    jsxApiVersion: 2,
-    networkScope: "public",
-    requests: [],
-    template: "__HOMARR_TEMPLATE__",
-  },
-};
+const response = (manifest: unknown, jsx = "<Text>Ready</Text>") =>
+  `\`\`\`json\n${JSON.stringify(manifest, null, 2)}\n\`\`\`\n\`\`\`jsx\n${jsx}\n\`\`\``;
 
-describe("parseCustomWidgetClipboard", () => {
-  it("keeps supporting raw JSON imports", () => {
-    const result = parseCustomWidgetClipboard(JSON.stringify({ ...widget, displayType: "raw" }));
-    expect(result?.name).toBe("Example");
+describe("Custom Widget imports", () => {
+  it("accepts exactly one lean manifest and JSX block", () => {
+    const result = parseCustomWidgetAiResponse(response({ ...CUSTOM_WIDGET_STARTER, template: "__HOMARR_TEMPLATE__" }));
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.widget.template).toBe("<Text>Ready</Text>");
   });
 
-  it("keeps accepting the v2 import envelope", () => {
-    expect(
-      customWidgetImportSchema.parse({
-        ...widget,
-        $schema: "homarr-custom-widget-v2",
-        displayType: "raw",
-        displayConfig: { type: "raw", jsonPath: "$", maxHeight: 300 },
-      }).$schema,
-    ).toBe("homarr-custom-widget-v2");
-  });
-
-  it("combines a JSON metadata block with a readable JSX block", () => {
-    const result = parseCustomWidgetClipboard(`Here is the widget:
-
-\`\`\`json
-${JSON.stringify(widget, null, 2)}
-\`\`\`
-
-\`\`\`jsx
-<Stack gap="sm">
-  <Text>{data.name}</Text>
-</Stack>
-\`\`\``);
-
-    expect((result?.displayConfig as Record<string, unknown> | undefined)?.template).toBe(
-      '<Stack gap="sm">\n  <Text>{data.name}</Text>\n</Stack>',
+  it("rejects the unreleased superseded schema without normalization", () => {
+    const result = parseCustomWidgetAiResponse(
+      response({
+        ...CUSTOM_WIDGET_STARTER,
+        sources: Object.values(CUSTOM_WIDGET_STARTER.sources),
+        requests: [],
+        optionsSchema: {},
+        defaultOptions: {},
+        template: "__HOMARR_TEMPLATE__",
+      }),
     );
+    expect(result.success).toBe(false);
   });
 
-  it("accepts case-insensitive fenced languages and CRLF line endings", () => {
-    const result = parseCustomWidgetClipboard(
-      `\`\`\`JSON\r\n${JSON.stringify(widget)}\r\n\`\`\`\r\n\`\`\`TSX\r\n<Text>{data.name}</Text>\r\n\`\`\``,
+  it("reports missing fences and removed local state", () => {
+    expect(parseCustomWidgetAiResponse(JSON.stringify(CUSTOM_WIDGET_STARTER)).success).toBe(false);
+    const result = parseCustomWidgetAiResponse(
+      response({ ...CUSTOM_WIDGET_STARTER, stateSchema: {}, template: "__HOMARR_TEMPLATE__" }),
     );
-
-    expect((result?.displayConfig as Record<string, unknown> | undefined)?.template).toBe("<Text>{data.name}</Text>");
+    expect(result.success).toBe(false);
+    if (!result.success) expect(result.issues.some(({ code }) => code === "REMOVED_LOCAL_STATE")).toBe(true);
   });
 
-  it("rejects an unterminated fence with a large whitespace payload", () => {
-    expect(parseCustomWidgetClipboard(`\`\`\`json\n${" ".repeat(250_000)}`)).toBeNull();
+  it("returns a capability review from keyed records", () => {
+    const review = getImportReview(CUSTOM_WIDGET_STARTER);
+    expect(review).toMatchObject({ origins: ["https://example.com"], authTypes: ["none"], hasActions: false });
+  });
+
+  it("keeps strict clipboard import compatible with canonical exports", () => {
+    const result = parseCustomWidgetClipboardDetailed(JSON.stringify(CUSTOM_WIDGET_STARTER));
+    expect(result.success).toBe(true);
   });
 });

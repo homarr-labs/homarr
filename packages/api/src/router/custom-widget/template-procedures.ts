@@ -1,26 +1,26 @@
 import { createHash } from "node:crypto";
 
 import { TRPCError } from "@trpc/server";
-import { stringify as stringifySuperJson } from "superjson";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { displayConfigSchema } from "@homarr/custom-widgets/core";
+import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
 import { permissionRequiredProcedure } from "../../trpc";
-import { parseDisplayConfig } from "./parse-display-config";
+import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
-const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
-
+const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
 const logger = createLogger({ module: "custom-widget" });
 
 const getTemplateRevision = (template: string) => createHash("sha256").update(template).digest("hex").slice(0, 16);
 
-const validateUpdatedTemplate = (displayConfig: Record<string, unknown>, template: string) => {
-  displayConfig.template = template;
-  const result = displayConfigSchema.safeParse(displayConfig);
+const validateTemplate = (definition: ReturnType<typeof parseStoredCustomWidgetDefinition>, template: string) => {
+  if (template.trim().length === 0) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Template must not be empty" });
+  }
+  const result = customWidgetDefinitionSchema.safeParse({ ...definition, template });
   if (!result.success) {
     throw new TRPCError({
       code: "BAD_REQUEST",
@@ -29,67 +29,29 @@ const validateUpdatedTemplate = (displayConfig: Record<string, unknown>, templat
         .join("; "),
     });
   }
-  return result.data;
+  return result.data.template;
 };
 
 export const templateProcedures = {
-  readTemplate: adminProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Read the JSX template of a custom widget definition as plain text. Returns the template string separately from the full widget config, making it easier to inspect and edit.",
-      },
-    })
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
-        where: eq(customWidgetDefinitions.id, input.id),
-      });
+  readTemplate: manageProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+      where: eq(customWidgetDefinitions.id, input.id),
+    });
+    if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+    const template = parseStoredCustomWidgetDefinition(definition).template;
+    return {
+      id: definition.id,
+      name: definition.name,
+      template,
+      templateLines: template.split("\n"),
+      revision: getTemplateRevision(template),
+    };
+  }),
 
-      if (!definition) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
-      }
-
-      const config = parseDisplayConfig(
-        definition.displayConfig,
-        input.id,
-        logger,
-        "Corrupt displayConfig in custom widget readTemplate",
-      );
-
-      if (config.type !== "customJsx") {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Widget is not using customJsx display type",
-        });
-      }
-
-      const template = (config.template as string | undefined) ?? "";
-      return {
-        id: definition.id,
-        name: definition.name,
-        template,
-        templateLines: template.split("\n"),
-        revision: getTemplateRevision(template),
-      };
-    }),
-
-  writeTemplate: adminProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Update only the JSX template of a custom widget definition. Accepts either a single template string or templateLines (array of strings joined with newlines). Validates the template AST before saving. This avoids needing to send the full widget JSON for template-only edits.",
-      },
-    })
+  writeTemplate: manageProcedure
     .input(
       z
-        .object({
-          id: z.string(),
-          template: z.string().optional(),
-          templateLines: z.array(z.string()).optional(),
-        })
+        .object({ id: z.string(), template: z.string().optional(), templateLines: z.array(z.string()).optional() })
         .refine((data) => data.template !== undefined || data.templateLines !== undefined, {
           message: "Provide either template or templateLines",
         })
@@ -98,62 +60,22 @@ export const templateProcedures = {
         }),
     )
     .mutation(async ({ ctx, input }) => {
-      const resolvedTemplate =
-        input.templateLines !== undefined ? input.templateLines.join("\n") : (input.template ?? "");
-
+      const resolved = input.templateLines?.join("\n") ?? input.template ?? "";
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
       });
-
-      if (!existing) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
-      }
-
-      const displayConfig = parseDisplayConfig(
-        existing.displayConfig,
-        input.id,
-        logger,
-        "Corrupt displayConfig in custom widget writeTemplate",
-      );
-
-      if (displayConfig.type !== "customJsx") {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Widget is not using customJsx display type",
-        });
-      }
-
-      if (resolvedTemplate.trim().length === 0) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Template must not be empty" });
-      }
-      if (resolvedTemplate.length > 50_000) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Template exceeds the 50,000 character limit" });
-      }
-
-      const validatedConfig = validateUpdatedTemplate(displayConfig, resolvedTemplate);
-
+      if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      const template = validateTemplate(parseStoredCustomWidgetDefinition(existing), resolved);
       await ctx.db
         .update(customWidgetDefinitions)
-        .set({ displayConfig: stringifySuperJson(validatedConfig), updatedAt: new Date() })
+        .set({ template, updatedAt: new Date() })
         .where(eq(customWidgetDefinitions.id, input.id));
-
       logger.info("Updated custom widget template", { id: input.id });
-      return {
-        id: input.id,
-        template: resolvedTemplate,
-        templateLines: resolvedTemplate.split("\n"),
-        revision: getTemplateRevision(resolvedTemplate),
-      };
+      return { id: input.id, template, templateLines: template.split("\n"), revision: getTemplateRevision(template) };
     }),
 
-  patchTemplate: adminProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Patch selected lines of a Custom JSX template without rewriting the whole template. First call customWidget_readTemplate and pass its revision as expectedRevision. Each edit uses a 1-based startLine, deleteCount, and replacementLines. Edits are applied atomically, then the complete template and named-request references are validated before saving. A stale revision is rejected so the agent can re-read and retry safely.",
-      },
-    })
+  templatePatch: manageProcedure
+    .meta({ mcp: { enabled: true, description: "Patch selected JSX template lines using an optimistic revision." } })
     .input(
       z.object({
         id: z.string(),
@@ -175,26 +97,15 @@ export const templateProcedures = {
         where: eq(customWidgetDefinitions.id, input.id),
       });
       if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
-
-      const displayConfig = parseDisplayConfig(
-        existing.displayConfig,
-        input.id,
-        logger,
-        "Corrupt displayConfig in custom widget patchTemplate",
-      );
-      if (displayConfig.type !== "customJsx") {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Widget is not using customJsx display type" });
-      }
-
-      const currentTemplate = (displayConfig.template as string | undefined) ?? "";
-      if (getTemplateRevision(currentTemplate) !== input.expectedRevision) {
+      const definition = parseStoredCustomWidgetDefinition(existing);
+      if (getTemplateRevision(definition.template) !== input.expectedRevision) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "Template changed since it was read. Read the template again and retry the patch.",
+          message: "Template changed since it was read. Read it again and retry.",
         });
       }
 
-      const lines = currentTemplate.split("\n");
+      const lines = definition.template.split("\n");
       const edits = input.edits.toSorted((left, right) => right.startLine - left.startLine);
       let nextHigherStart = lines.length + 2;
       for (const edit of edits) {
@@ -208,19 +119,12 @@ export const templateProcedures = {
         lines.splice(edit.startLine - 1, edit.deleteCount, ...edit.replacementLines);
       }
 
-      const template = lines.join("\n");
-      const validatedConfig = validateUpdatedTemplate(displayConfig, template);
+      const template = validateTemplate(definition, lines.join("\n"));
       await ctx.db
         .update(customWidgetDefinitions)
-        .set({ displayConfig: stringifySuperJson(validatedConfig), updatedAt: new Date() })
+        .set({ template, updatedAt: new Date() })
         .where(eq(customWidgetDefinitions.id, input.id));
-
       logger.info("Patched custom widget template", { id: input.id, editCount: input.edits.length });
-      return {
-        id: input.id,
-        template,
-        templateLines: lines,
-        revision: getTemplateRevision(template),
-      };
+      return { id: input.id, template, templateLines: lines, revision: getTemplateRevision(template) };
     }),
 };

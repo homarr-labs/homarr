@@ -53,29 +53,16 @@ describe("Custom Widget workbench UI", () => {
     expect(host.querySelector('button[aria-label="Insert path"]')).not.toBeNull();
   });
 
-  test("keeps mutation preview execution disabled and labels every capability control", async () => {
+  test("keeps mutation preview execution disabled without a network-capability badge", async () => {
     await render(
       <PreviewHeader
         method="POST"
         url="https://example.com"
-        methods={["GET", "POST"]}
-        hasNamedActions
-        hasPreviewSession={false}
-        liveActions={false}
-        isUpdatingLiveActions={false}
         isTesting={false}
         isSampleStale={false}
         onTest={vi.fn()}
-        methodColor={() => "blue"}
         messages={{
           title: "Preview",
-          interactive: "Interactive",
-          capabilitiesTitle: "Capabilities",
-          capabilitiesDescription: "Declared operations",
-          liveActions: "Live actions",
-          liveActionsDescription: "Enabled",
-          runTestFirst: "Run test first",
-          simulated: "Simulated",
           test: "Test",
           mutationDisabled: "Mutations are disabled",
           staleTitle: "Stale",
@@ -86,7 +73,7 @@ describe("Custom Widget workbench UI", () => {
     const testButton = [...host.querySelectorAll("button")].find((button) => button.textContent?.trim() === "Test");
     expect(testButton?.disabled).toBe(true);
     expect(host.textContent).toContain("Mutations are disabled");
-    expect(host.textContent).toContain("Interactive");
+    expect(host.textContent).not.toContain("Interactive");
   });
 
   test("shows an empty response state without exposing a raw JSON toggle", async () => {

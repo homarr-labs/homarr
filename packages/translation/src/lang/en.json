@@ -388,6 +388,19 @@
           }
         }
       },
+      "custom-widget": {
+        "title": "Custom widgets",
+        "item": {
+          "manage": {
+            "label": "Manage custom widgets",
+            "description": "Allow members to create, edit, and delete custom widget definitions"
+          },
+          "secret-write": {
+            "label": "Configure custom widget secrets",
+            "description": "Allow members and their API keys to set encrypted custom widget credentials"
+          }
+        }
+      },
       "app": {
         "title": "Apps",
         "item": {
@@ -689,37 +702,41 @@
     }
   },
   "customWidget": {
+    "secretEntry": {
+      "title": "Configure API source",
+      "description": "Confirm the server URL and enter credentials. Secret values are encrypted by Homarr and never returned to the requesting agent.",
+      "loading": "Loading secure request…",
+      "saved": "API source configured. You can close this page.",
+      "unavailable": "Request unavailable",
+      "saveError": "Unable to configure API source",
+      "source": "API source: {name}",
+      "baseUrl": "Server URL",
+      "networkScope": "Network access",
+      "save": "Save API configuration",
+      "expires": "This one-time request expires at {time}.",
+      "field": {
+        "apiKey": "API key or token",
+        "username": "Username",
+        "password": "Password"
+      }
+    },
     "page": {
       "list": {
         "title": "Custom Widgets",
         "noResults": "No custom widgets yet. Create your first one!",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "invalidDefinition": "Invalid definition",
+        "invalidDefinitionDescription": "This stored widget no longer matches the current Custom Widget schema. Delete it and recreate or import a valid definition.",
+        "missingCredentials": "{count, plural, one {Credential missing} other {# credentials missing}}",
+        "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Edit it to configure the encrypted values."
       },
       "create": {
         "title": "Create Custom Widget",
-        "subtitle": "Define an API URL, authentication, and how to display the response data."
+        "subtitle": "Build a safe JSX widget with inline API sources, options, queries, and actions."
       },
       "edit": {
         "title": "Edit Custom Widget"
       }
-    },
-    "workshop": {
-      "title": "Workshop",
-      "action": {
-        "installFromWorkshop": "Install from Workshop",
-        "install": "Install",
-        "use": "Use"
-      },
-      "notification": {
-        "widgetInstalled": "Custom widget installed",
-        "widgetInstallFailed": "Failed to install the custom widget"
-      }
-    },
-    "betaBanner": {
-      "title": "Custom Widgets are in Beta",
-      "description": "This feature is experimental and will probably change. If you encounter bugs, need more capabilities, or find something confusing, tell us in the",
-      "link": "official discussion thread",
-      "closing": "Your feedback directly shapes what comes next. Happy hacking!"
     },
     "action": {
       "create": "Create",
@@ -729,97 +746,21 @@
       "delete": "Delete Custom Widget",
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
       "export": "Export",
-      "addMapping": "Add Mapping",
-      "addColumn": "Add Column",
       "edit": "Edit",
-      "removeMapping": "Remove mapping",
-      "removeColumn": "Remove column",
-      "addItem": "Add Item",
-      "removeItem": "Remove item",
-      "addBar": "Add Bar",
       "duplicate": "Duplicate",
       "copyAiPrompt": "Copy AI prompt",
-      "paste": "Paste JSON",
-      "readyToSave": "Ready to save",
       "enable": "Enable",
       "disable": "Disable",
-      "menu": "Actions"
+      "menu": "Actions",
+      "downloadSkill": "View Custom Widget Skill",
+      "publishWorkshop": "Publish to Workshop"
     },
     "field": {
       "name": "Name",
       "description": "Description",
-      "iconUrl": "Icon URL",
-      "url": "URL",
-      "authType": "Auth Type",
-      "headerName": "Header/Query Parameter Name",
-      "method": "Method",
-      "requestBody": "Request Body",
-      "displayType": "Display Type",
-      "jsonPath": "JSON Path",
-      "jsonPathHint": "Use JSONPath syntax to extract values, e.g. $.data.temperature or $.items[0].name",
-      "label": "Label",
-      "unit": "Unit",
-      "mappings": "Mappings",
-      "tablePath": "Array JSON Path",
-      "tablePathHint": "Path to the array in the response, e.g. $.data.items",
-      "columns": "Columns",
-      "header": "Header",
-      "items": "Items",
-      "gridColumns": "Grid Columns",
-      "cardStyle": "Card Style",
-      "bars": "Bars",
-      "valuePath": "Value JSON Path",
-      "maxPath": "Max Value JSON Path",
-      "showPercentage": "Show Percentage",
-      "barSize": "Bar Size",
-      "goodValues": "Good Values (comma-separated)",
-      "dotSize": "Dot Size",
-      "valueSize": "Value Size",
-      "labelPosition": "Label Position",
-      "kvLayout": "Layout",
-      "striped": "Striped Rows",
-      "compact": "Compact Mode",
-      "maxHeight": "Max Height (px)",
-      "color": "Color",
-      "buttonLabel": "Button Label",
-      "buttonColor": "Button Color",
-      "confirmText": "Confirmation Text",
-      "confirmTextHint": "If set, a confirmation dialog will appear before executing the request",
-      "successMessage": "Success Message",
-      "successMessageHint": "Message shown after successful execution",
-      "enabled": "Enabled",
-      "template": {
-        "label": "JSX Template",
-        "description": "Mantine JSX template. Read the base response from data and call named requests with SubFetch, ActionButton, or ToggleSwitch."
-      },
-      "jsxApiVersion": {
-        "label": "JSX API version",
-        "v2": "Version 2 (recommended)",
-        "v1": "Version 1 (legacy)",
-        "legacyWarning": "Version 1 is display-only. Inline network components are disabled until this widget is migrated to named requests."
-      },
-      "networkScope": {
-        "label": "Network scope",
-        "option": {
-          "public": "Public networks",
-          "private": "Private networks",
-          "loopback": "Loopback"
-        },
-        "description": {
-          "public": "Allow public HTTP and HTTPS destinations only.",
-          "private": "Allow public and RFC1918 or ULA private destinations.",
-          "loopback": "Allow loopback destinations for trusted local services."
-        }
-      },
-      "requestManifest": {
-        "label": "Named requests",
-        "description": "JSON array of same-origin query and action capabilities. Templates reference entries by requestId and pass only declared parameters.",
-        "invalid": "Named requests must be a valid JSON array."
-      }
+      "iconUrl": "Icon URL"
     },
     "editor": {
-      "saveBlocked": "Resolve the editor errors before saving.",
-      "saveReady": "The configuration is ready to save.",
       "errorBoundary": {
         "title": "Something went wrong",
         "retry": "Try again"
@@ -833,7 +774,15 @@
         "format": "Format",
         "insertStarter": "Insert starter",
         "undo": "Undo",
-        "redo": "Redo"
+        "redo": "Redo",
+        "copy": "Copy",
+        "copied": "Copied",
+        "schema": "Schema"
+      },
+      "reference": {
+        "schema": "JSON Schema",
+        "minimal": "Minimal example",
+        "full": "Full example"
       },
       "componentReference": {
         "search": "Search components",
@@ -852,244 +801,278 @@
         "title": "Template diagnostics",
         "line": "Line {line, number}",
         "ast": "{value}",
-        "dangerousProperty": "Reflective property \"{value}\" is not available in templates.",
+        "bindingTypeConflict": "The input \"{value}\" is shared by controls with incompatible value types.",
         "dynamicRequestId": "A literal requestId is required. Dynamic request IDs are not accepted.",
-        "eventHandler": "Event handler \"{value}\" is not allowed. Use the declarative action components.",
-        "invalidRequestManifest": "Named requests must be a valid JSON array.",
-        "legacyNetworkProps": "Version 2 network components accept requestId and params, not inline URL, method, header, or body props.",
+        "dynamicInputBinding": "A literal input name is required for bind.",
+        "inlineRequestProps": "Network components accept requestId and params; inline URL, method, header, and body props are blocked.",
+        "invalidRequestManifest": "Named requests must be a valid request map. {value}",
         "missingRequestId": "This network component requires a literal requestId.",
         "templateEmpty": "Enter a JSX template.",
         "templateTooLong": "The template exceeds the 50,000 character limit.",
-        "unknownRequest": "No named request with ID \"{value}\" exists.",
-        "unsafeTag": "The <{value}> element is not available in templates."
+        "unknownRequest": "No named request with ID \"{value}\" exists."
       }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU Temperature",
-      "exampleLabelShort": "CPU Temp",
-      "exampleHeader": "Name",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "blue"
-    },
-    "cardStyleOption": {
-      "filled": "Filled",
-      "outline": "Outline",
-      "subtle": "Subtle"
-    },
-    "layoutOption": {
-      "list": "List",
-      "grid": "Grid"
-    },
-    "sizeOption": {
-      "sm": "Small",
-      "md": "Medium",
-      "lg": "Large",
-      "xl": "Extra Large"
-    },
-    "labelPositionOption": {
-      "above": "Above",
-      "below": "Below"
-    },
-    "fieldset": {
-      "general": "General",
-      "connection": "API Connection",
-      "display": "Display Configuration"
-    },
-    "steps": {
-      "format": {
-        "label": "Choose format",
-        "description": "Purpose and presentation",
-        "help": "Choose how this widget should communicate its data. This determines which configuration options are available next."
-      },
-      "connection": {
-        "label": "Connect data",
-        "description": "Endpoint and authentication"
-      },
-      "configure": {
-        "label": "Configure",
-        "description": "Fields and behavior"
-      },
-      "back": "Back",
-      "next": "Continue",
-      "continueTo": "Continue to {step}"
     },
     "workbench": {
       "configure": "Configure",
-      "preview": "Preview and test"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Show one extracted value with a label and unit",
-      "keyValue": "Show multiple labeled values side by side",
-      "table": "Show rows of data in a table format",
-      "statGrid": "Colored stat cards in a grid — like Pi-Hole or Speedtest widgets",
-      "progressBars": "Progress bars showing usage or completion — for disk, memory, quotas",
-      "statusIndicator": "Colored status dots showing online/offline or health states",
-      "countGrid": "Compact number + label counters in a tight grid",
-      "raw": "Pretty-printed JSON output for debugging",
-      "actionButton": "A button that triggers a request when clicked",
-      "customJsx": "Custom JSX layout using whitelisted Mantine components with full API data binding"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "None",
-      "bearer": "Bearer Token",
-      "basic": "Basic Auth",
-      "apiKeyHeader": "API Key (Header)",
-      "apiKeyQuery": "API Key (Query)"
-    },
-    "displayType": {
-      "singleValue": "Single Value",
-      "keyValue": "Key-Value",
-      "table": "Table",
-      "statGrid": "Stat Grid",
-      "progressBars": "Progress Bars",
-      "statusIndicator": "Status Indicator",
-      "countGrid": "Count Grid",
-      "raw": "Raw JSON",
-      "actionButton": "Action Button",
-      "customJsx": "Custom JSX"
-    },
-    "secret": {
-      "apiKey": "API Key / Token",
-      "username": "Username",
-      "password": "Password",
-      "savedPlaceholder": "••••••• (saved, leave empty to keep)"
+      "sectionNavigation": "Custom widget sections",
+      "widgetPreview": "Widget preview",
+      "generalInformation": "General information",
+      "invalidWidget": "Invalid widget",
+      "section": {
+        "general": "General",
+        "sources": "API sources",
+        "requests": "Requests",
+        "options": "Options",
+        "jsx": "JSX",
+        "preview": "Preview"
+      },
+      "status": {
+        "unsaved": "Unsaved changes",
+        "invalid": "Needs attention",
+        "ready": "Ready"
+      },
+      "saveError": {
+        "title": "Widget was not saved",
+        "description": "Fix these validation errors and save again.",
+        "more": "+{count} more errors are shown in the workbench.",
+        "errors": "Validation errors",
+        "copy": "Copy errors",
+        "copied": "Errors copied"
+      },
+      "action": {
+        "preview": "Test and preview",
+        "previewLoading": "Testing requests",
+        "create": "Create",
+        "save": "Save"
+      },
+      "requests": {
+        "title": "Named queries and actions",
+        "label": "Requests",
+        "description": "Queries load data; actions only run after user interaction. Any HTTP method is valid for either kind."
+      },
+      "options": {
+        "title": "Widget options",
+        "schema": "Options schema",
+        "defaults": "Default option values"
+      },
+      "builder": {
+        "advancedManifest": "Advanced raw manifest",
+        "manifestFilename": "widget.json",
+        "advancedJson": "Advanced manifest JSON",
+        "request": "Request {count, number}",
+        "requestId": "Request ID",
+        "type": "Type",
+        "method": "Method",
+        "source": "API source",
+        "run": "Run",
+        "runLoad": "When the widget loads",
+        "runManual": "From SubFetch",
+        "permission": "Permission",
+        "path": "Path",
+        "pathDescription": "Use '{option:name}' for widget options and '{param:name}' for invocation values.",
+        "requestDetails": "Query, body and behavior",
+        "queryValues": "Query values",
+        "queryKey": "Query key",
+        "queryKeyInvalid": "Use a unique ID that starts with a letter and contains only letters, numbers, - or _.",
+        "valueSource": "Value source",
+        "literal": "Literal",
+        "widgetOption": "Widget option",
+        "invocationParameter": "Invocation parameter",
+        "option": "Option",
+        "parameterName": "Parameter name",
+        "value": "Value",
+        "removeQueryValue": "Remove query value",
+        "addQueryValue": "Add query value",
+        "jsonBody": "JSON body",
+        "jsonBodyDescription": "Optional. Insert $option and $param references at any depth.",
+        "insertOptionReference": "Insert option reference",
+        "insertParameterReference": "Insert parameter reference",
+        "confirmation": "Confirmation message",
+        "invalidation": "Refresh after success",
+        "invalidationDescription": "Comma-separated query IDs",
+        "noAuth": "Send without source authentication",
+        "moveRequestUp": "Move request up",
+        "moveRequestDown": "Move request down",
+        "removeRequest": "Remove request",
+        "addRequest": "Add request",
+        "optionName": "Option name",
+        "label": "Label",
+        "control": "Control",
+        "description": "Description",
+        "default": "Default",
+        "optionDetails": "Constraints and dynamic choices",
+        "minimum": "Minimum",
+        "maximum": "Maximum",
+        "step": "Step",
+        "choiceLabel": "Choice label",
+        "choiceValue": "Choice value",
+        "newChoice": "New choice",
+        "addChoice": "Add choice",
+        "removeChoice": "Remove choice",
+        "choicesRequest": "Load choices from request",
+        "itemsPath": "Items path",
+        "itemsPathPlaceholder": "items (optional)",
+        "valuePath": "Value path",
+        "labelPath": "Label path",
+        "group": "Group",
+        "advancedOption": "Advanced option",
+        "moveOptionUp": "Move option up",
+        "moveOptionDown": "Move option down",
+        "removeOption": "Remove option",
+        "addOption": "Add option",
+        "invalidJson": "Invalid JSON",
+        "invalidWidget": "Invalid widget"
+      },
+      "jsx": {
+        "title": "JSX template",
+        "label": "Template"
+      },
+      "sources": {
+        "title": "API sources and credentials",
+        "newName": "API {count, number}",
+        "duplicateSourceId": "API source IDs must be unique.",
+        "credentialRemoved": "Credential removed",
+        "credentialRemovedDescription": "The stored value was deleted.",
+        "primary": "Primary API",
+        "id": "Source ID",
+        "name": "Name",
+        "baseUrl": "Base URL",
+        "baseUrlError": {
+          "invalid": "Enter a complete URL.",
+          "protocol": "Use an HTTP or HTTPS URL.",
+          "credentials": "Remove the username and password from this URL. Configure credentials below instead.",
+          "queryOrFragment": "Remove the query string or fragment from this base URL. Add query values to a named request."
+        },
+        "networkScope": "Network access",
+        "authentication": "Authentication",
+        "headerName": "Header name",
+        "queryParameter": "Query parameter",
+        "configured": "Configured — enter a replacement",
+        "clear": "Clear",
+        "remove": "Remove source and its requests",
+        "advanced": "Advanced",
+        "add": "Add another API source",
+        "secret": {
+          "apiKey": "API key or token",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "ai": {
+        "title": "Create or fix with any AI",
+        "request": "What should this widget do?",
+        "documentationUrl": "API documentation URL (optional)",
+        "paste": "Paste AI response",
+        "response": "AI response",
+        "loaded": "Widget loaded into the editor",
+        "invalidResponse": "Clipboard does not contain a valid v2 widget",
+        "invalidResponseDetail": "The AI response is invalid: {message}"
+      },
+      "preview": {
+        "invalid": "Fix validation errors to preview this widget.",
+        "fixtureError": "Preview fixture error",
+        "requestData": "Request data",
+        "status": {
+          "idle": "Requests have not been tested",
+          "loading": "Testing requests",
+          "success": "All load requests succeeded",
+          "error": "One or more load requests failed"
+        },
+        "result": {
+          "loading": {
+            "title": "Testing API requests",
+            "description": "Homarr is creating a preview session and loading the widget data."
+          },
+          "success": {
+            "title": "Preview ready",
+            "description": "{succeeded, plural, =0 {This widget has no load requests.} one {# load request succeeded.} other {# load requests succeeded.}} Open Data to inspect the response."
+          },
+          "error": {
+            "title": "Preview completed with request errors",
+            "description": "{succeeded, number} succeeded and {failed, number} failed. Open Data for the response and error details."
+          }
+        },
+        "instanceOptions": "Instance options",
+        "liveActions": "Run actions against the configured API",
+        "liveActionsDescription": "Off is safe simulation. Turning this on affects the real service.",
+        "noActions": "No actions are defined.",
+        "sessionActive": "Preview session active",
+        "simulationPending": "Actions are simulated until you run preview",
+        "containedFailures": "Runtime failures are contained inside this widget. Request journals never include secret values.",
+        "validation": {
+          "title": "Validation",
+          "ready": "The widget definition is valid."
+        },
+        "accessibility": {
+          "title": "Accessibility checks",
+          "ready": "No common accessibility omissions detected.",
+          "pending": "Accessibility checks will run when the widget definition is valid.",
+          "imageAlt": "Add alt text to every Image, using an empty alt only for decorative images.",
+          "actionIconLabel": "Add an aria-label or title to every ActionIcon.",
+          "inputLabel": "Add a visible label or accessible name to every input."
+        },
+        "journal": "Redacted request journal",
+        "actionParameters": "Action parameters (JSON)",
+        "invalidParameters": "Use the declared string, number, and boolean parameter types.",
+      "runDestructive": "Run destructive action",
+      "runAction": "Run action",
+      "deleteConfirmation": "This preview action sends a DELETE request to the configured API.",
+        "simulated": "Action simulated",
+        "httpStatus": "HTTP {status, number}",
+        "tab": {
+          "widget": "Widget",
+          "data": "Data",
+          "options": "Options",
+          "state": "State",
+          "actions": "Actions",
+          "diagnostics": "Diagnostics"
+        },
+        "size": {
+          "compact": "Compact",
+          "standard": "Standard",
+          "wide": "Wide"
+        },
+        "theme": {
+          "light": "Light",
+          "dark": "Dark"
+        },
+        "fixture": {
+          "live": "Live",
+          "loading": "Loading",
+          "empty": "Empty",
+          "error": "Error"
+        }
+      }
     },
     "preview": {
-      "title": "Preview",
-      "errorBoundary": {
-        "title": "The preview could not be rendered",
-        "description": "Your form is still safe. Reset the preview, then review the Checks tab if the problem returns.",
-        "retry": "Reset preview"
-      },
-      "test": "Test",
-      "execute": "Execute",
-      "hint": "Click Test to preview the API response with your current configuration.",
-      "rawResponse": "Open raw JSON",
-      "mutationDisabled": "Preview only runs GET requests. Named actions are executed from an explicit widget control after the widget is saved.",
-      "tab": {
-        "widget": "Widget",
-        "response": "Response",
-        "request": "Request",
-        "diagnostics": "Checks"
-      },
-      "size": {
-        "compact": "Compact",
-        "standard": "Standard",
-        "wide": "Wide"
-      },
-      "empty": {
-        "title": "No preview data yet"
-      },
-      "stale": {
-        "title": "Sample data is out of date",
-        "description": "The connection or display configuration changed after the last test. Test again before relying on this preview."
-      },
-      "capabilities": {
-        "interactive": "Interactive",
-        "title": "Network capabilities",
-        "description": "This widget declares the following HTTP methods. Actions still require board permission and an explicit user gesture.",
-        "liveActions": "Enable live preview actions",
-        "liveActionsDescription": "Off runs action controls as simulations. On sends real requests for this short-lived preview session.",
-        "runTestFirst": "Run a GET test to create a short-lived preview session.",
-        "simulated": "Actions simulated"
-      },
-      "response": {
-        "copy": "Copy response",
-        "copied": "Copied",
-        "addSample": "Add sample JSON",
-        "editSample": "Edit sample JSON",
-        "sampleLabel": "Sample response",
-        "sampleDescription": "Use local JSON to design and test the display without calling the API.",
-        "sampleHint": "Inspect the response or replace it with local sample data.",
-        "applySample": "Apply sample data",
-        "cancelSample": "Cancel",
-        "invalidSample": "Enter valid JSON before applying the sample.",
-        "localSample": "Local sample data",
-        "raw": "Raw JSON",
-        "copyPath": "Copy data path",
-        "pathCopied": "Data path copied",
-        "insertPath": "Insert data path into the JSX template",
-        "expand": "Expand value",
-        "collapse": "Collapse value",
-        "empty": "Run a GET test to inspect the sanitized JSON response."
-      },
       "request": {
-        "method": "Base method",
-        "authentication": "Authentication",
-        "endpoint": "Endpoint",
-        "status": "Last status",
-        "notRun": "Not tested",
-        "named": "{count, number} named requests",
-        "journal": "Redacted request journal",
-        "journalEmpty": "Run the preview or use an interactive control to populate the request journal.",
-        "duration": "{duration, number} ms",
-        "simulated": "Simulated",
-        "redacted": "Secret values and query parameter values are hidden from this summary.",
         "permission": {
           "view": "View",
           "modify": "Modify",
           "full": "Full"
         }
-      },
-      "diagnostics": {
-        "templateSize": "Template size",
-        "characters": "{count, number} characters",
-        "namedRequests": "Named requests",
-        "methods": "HTTP methods",
-        "networkScope": "Network scope",
-        "legacy": "Legacy",
-        "ready": "The editor checks did not find any blocking template issues."
       }
     },
     "notification": {
       "created": "Widget \"{name}\" created successfully.",
       "updated": "Widget \"{name}\" updated successfully.",
       "deleted": "Widget \"{name}\" deleted.",
-      "imported": "Widget \"{name}\" imported into form.",
+      "imported": "Widget imported successfully.",
       "aiPromptCopied": "AI prompt copied to clipboard",
-      "aiPromptDescription": "Copy a pre-built prompt to paste into any AI chatbot (ChatGPT, Claude, Gemini...). It includes the full widget schema and your API response so the AI can generate a ready-to-import JSON config for you.",
-      "aiPromptCopy": "Copy to clipboard",
-      "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
-      "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
-      "clipboardError": "Could not read clipboard. Please paste manually.",
-      "invalidJson": "Clipboard content is not valid JSON.",
-      "invalidSchema": "The JSON does not match the custom widget schema.",
-      "createError": "Failed to create widget. Check your API endpoint is reachable.",
+      "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
+      "aiPromptCopyError": "Failed to copy the prompt to the clipboard.",
       "updateError": "Failed to update widget. Your changes were not saved.",
-      "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
+      "importError": "Failed to import widget. Ensure the file uses the homarr-custom-widget-v2 schema.",
       "exportError": "Failed to export widget.",
       "duplicated": "Widget \"{name}\" duplicated.",
       "duplicateError": "Failed to duplicate widget.",
       "toggleError": "Failed to toggle widget status.",
       "deleteError": "Failed to delete widget.",
-      "previewError": "Failed to fetch preview. Check the URL and try again.",
-      "previewActionsError": "Failed to update live preview actions. Run the GET test again if the session expired.",
-      "pastedForReplacement": "The pasted widget configuration is ready to review and save.",
-      "executed": "Action executed successfully.",
-      "executeError": "Action failed: {error}"
+      "previewError": "Failed to create the preview. Check the API source and try again."
     },
     "importReview": {
       "title": "Review custom widget import",
       "description": "Check where this widget connects and what board access its controls require before importing it.",
-      "replaceTitle": "Replace with pasted widget",
-      "replaceDescription": "Replace this form with \"{name}\" from {origin}? Stored credentials are preserved only when the authentication method is unchanged.",
-      "replaceConfirm": "Replace form",
       "fileLabel": "Choose a custom widget JSON file",
       "name": "Name",
       "origin": "Base origin",
@@ -1097,21 +1080,93 @@
       "networkScope": "Network scope",
       "methods": "HTTP methods",
       "permissions": "Required board permissions",
+      "credentials": {
+        "title": "Configure credentials now",
+        "description": "Secrets are encrypted locally and never added to the imported widget. You can leave a field blank and configure it later.",
+        "header": "Sent through the {name} header",
+        "query": "Sent through the {name} query parameter",
+        "field": {
+          "apiKey": "API key or token",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "sourceSetup": {
+        "title": "Configure API sources",
+        "description": "Confirm where this widget connects and add credentials. Private and loopback URLs are specific to your Homarr installation.",
+        "suggestedUrl": "Suggested URL",
+        "confirmUrl": "I confirm that this server URL is correct for my Homarr installation",
+        "ready": "URL ready",
+        "needsUrl": "Confirm URL",
+        "credentialsMissing": "Credentials missing",
+        "credentialsOptional": "You can install without credentials and configure them later, but requests will fail until they are added."
+      },
       "actionWarning": {
         "title": "This widget can change remote data",
         "description": "Review every named action, inherited credential, and destructive confirmation after import. Secrets are not included in the file."
       },
       "cancel": "Cancel import",
       "confirm": "Import widget"
-    },
-    "table": {
-      "name": "Name",
-      "url": "URL",
-      "display": "Display"
-    },
-    "widget": {
-      "disabled": "This widget is disabled"
     }
+  },
+  "workshop": {
+    "installSuccess": "Custom widget installed",
+    "installSuccessDescription": "Add its credentials, test the requests, and save when it is ready.",
+    "installError": "Could not install widget",
+    "installErrorDescription": "The Workshop submission is not a valid Custom JSX v2 widget.",
+    "title": "Workshop",
+    "description": "Community Custom JSX v2 widgets. Inspect the source and network capabilities before installing.",
+    "descriptionCss": "Community Custom CSS themes. Preview every rule before importing it into a board.",
+    "securityNotice": "Workshop widgets can call their declared API sources and perform declared actions with credentials you configure locally. Secrets are never included.",
+    "securityNoticeCss": "Community CSS can change the appearance and usability of a board. Review it before importing; nothing is saved until you save board settings.",
+    "signIn": "Sign in with GitHub",
+    "signInError": "GitHub sign-in failed. Check that the Workshop OAuth provider is configured and that popups are allowed.",
+    "signOut": "Sign out",
+    "search": "Search widgets",
+    "searchCss": "Search CSS themes",
+    "sort": "Sort",
+    "sortTop": "Top rated",
+    "sortNewest": "Newest",
+    "unavailable": "Workshop is unavailable. Your installed widgets are unaffected.",
+    "empty": "No widgets match this search.",
+    "emptyCss": "No CSS themes match this search.",
+    "noDescription": "No description",
+    "author": "by {name}",
+    "inspect": "Inspect widget",
+    "inspectCss": "Inspect CSS",
+    "details": "Widget details",
+    "loadError": "This submission could not be loaded.",
+    "sources": "Declared API sources",
+    "requests": "Declared queries and actions",
+    "noRequests": "This widget does not declare network requests.",
+    "export": "Export",
+    "report": "Report",
+    "install": "Install widget",
+    "useCss": "Import CSS",
+    "signInHint": "Sign in to vote or report. Installing does not require a Workshop account.",
+    "reportTitle": "Report submission",
+    "reportReason": "Reason",
+    "reportExplanation": "What should the administrators know?",
+    "reportSend": "Send report",
+    "reportSent": "Report sent",
+    "reportSentDescription": "Workshop administrators can now review this submission.",
+    "voteError": "The vote could not be saved.",
+    "publish": {
+      "title": "Publish to Workshop",
+      "success": "Published immediately. Community members can now install and report this widget.",
+      "signInHint": "Sign in to publish under your Workshop identity.",
+      "titleField": "Title",
+      "descriptionField": "Description",
+      "screenshots": "Screenshots",
+      "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
+      "privateSourceWarning": "This widget contains private source URLs for: {sources}. Replace personal hosts or IP addresses with safe service placeholders before publishing.",
+      "privateSourceConfirmation": "I reviewed these source URLs and they do not expose private infrastructure details",
+      "action": "Publish now",
+      "error": "Publication failed"
+    },
+    "installDialog": "Install from Workshop",
+    "installed": "Widget installed",
+    "installedDescription": "{name} is ready to configure."
   },
   "integration": {
     "page": {
@@ -1564,10 +1619,6 @@
       "name": "Traefik",
       "description": "Cloud-native reverse proxy and load balancer"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Monitor which of your Docker containers have image updates available"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Document management system for archiving and organizing scanned documents"
@@ -1661,18 +1712,8 @@
     "here": "here",
     "iconPicker": {
       "label": "Icon URL",
-      "description": "Search the library, paste an image URL, or upload a file.",
-      "header": "Search {countIcons} images by name",
-      "headerLoading": "Search images by name",
-      "clear": "Clear image",
-      "uploadImage": "Upload image",
-      "results": "Image search results",
-      "localImages": "Your images",
-      "svgIcons": "SVG icons",
-      "otherImages": "Other images",
-      "urlLoading": "Checking image…",
-      "urlReady": "Image is ready to use",
-      "urlError": "This image could not be loaded. Check the URL and try again.",
+      "header": "Type name or objects to filter for icons... Homarr will search through {countIcons} icons for you.",
+      "headerLoading": "Type to search icons…",
       "noResults": "No icons match \"{search}\".",
       "error": "Couldn't load icons."
     },
@@ -2027,38 +2068,6 @@
         }
       }
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Show how many watched containers have updates available.",
-      "title": "What's Up Docker",
-      "monitored": "Monitored",
-      "updatesAvailable": "{count, plural, one {# update available} other {# updates available}}",
-      "updateAvailable": "Update available",
-      "openReleaseNotes": "Open release notes",
-      "option": {
-        "showTitle": {
-          "label": "Show title"
-        },
-        "showRing": {
-          "label": "Show update ring"
-        },
-        "layout": {
-          "label": "Layout",
-          "option": {
-            "horizontal": {
-              "label": "Horizontal"
-            },
-            "vertical": {
-              "label": "Vertical"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Show container update list",
-          "description": "Lists each monitored container that has an image update available"
-        }
-      }
-    },
     "dnsHoleSummary": {
       "name": "DNS Hole Summary",
       "description": "Displays the summary of your DNS Hole",
@@ -2171,16 +2180,6 @@
         "customDateFormat": {
           "label": "Custom date format",
           "description": "Use ISO 8601 to format date (this will override other options)"
-        },
-        "showWeather": {
-          "label": "Show weather",
-          "description": "Display a small animated weather icon and temperature in the corner of the card"
-        },
-        "weatherLocation": {
-          "label": "Weather location"
-        },
-        "isWeatherFormatFahrenheit": {
-          "label": "Use Fahrenheit"
         }
       }
     },
@@ -2533,8 +2532,7 @@
         "sunrise": "Sunrise",
         "sunset": "Sunset",
         "maxWindSpeed": "Max wind speed: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}",
-        "humidity": "Humidity: {humidity}%"
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Clear",
@@ -2694,21 +2692,10 @@
         },
         "descendingDefaultSort": {
           "label": "Invert sorting"
-        },
-        "columnOrder": {
-          "label": "Column order"
-        },
-        "columnWidths": {
-          "label": "Column widths"
         }
       },
       "error": {
-        "internalServerError": "Failed to fetch containers stats",
-        "layoutSaveTitle": "Table layout not saved",
-        "layoutSaveMessage": "The Docker table layout could not be saved. Try moving or resizing the column again."
-      },
-      "empty": {
-        "noContainers": "No containers found"
+        "internalServerError": "Failed to fetch containers stats"
       }
     },
     "coolify": {
@@ -3002,19 +2989,7 @@
         "showOnlyPlaying": {
           "label": "Show only currently playing",
           "description": "Disabling this will not work for plex"
-        },
-        "showBitrate": {
-          "label": "Show bitrate",
-          "description": "Show the current playback bitrate next to the location"
-        },
-        "showLocation": {
-          "label": "Show location",
-          "description": "Show whether the stream is on your LAN or WAN"
         }
-      },
-      "footer": {
-        "streams": "{count, plural, one {# active stream} other {# active streams}}",
-        "totalBitrate": "Total: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Currently playing",
@@ -3023,9 +2998,6 @@
         "id": "Id",
         "status": "Status",
         "directPlay": "Direct play",
-        "directStream": "Direct stream",
-        "transcodeVideo": "Transcoding video",
-        "transcodeAudio": "Transcoding audio",
         "transcoding": "Transcoding",
         "paused": "Paused",
         "remaining": "{minutes} min left",
@@ -3309,11 +3281,10 @@
     },
     "immich-albumCarousel": {
       "name": "Immich Album",
-      "allPhotos": "All photos",
       "option": {
         "albumId": {
           "label": "Album",
-          "description": "Select an Immich album or All photos. An empty selection also shows random photos from your full library."
+          "description": "Select the Immich album to show in the slideshow."
         },
         "rotationIntervalSeconds": {
           "label": "Interval in seconds",
@@ -3328,8 +3299,9 @@
           "description": "Show photos in a random order instead of always starting with the same album order."
         }
       },
-      "description": "Slideshow of pictures from an Immich album or your full library",
-      "noPhotos": "No photos found"
+      "description": "Slideshow of pictures in your Immich album",
+      "noAlbumSelected": "No album selected, edit widget and choose an album",
+      "noPhotos": "No photos in this album"
     },
     "downloads": {
       "name": "Download Client",
@@ -3371,20 +3343,11 @@
         "limitPerIntegration": {
           "label": "Limit items per integration",
           "description": "This will limit the number of items shown per integration, not globally"
-        },
-        "columnOrder": {
-          "label": "Column order"
-        },
-        "columnWidths": {
-          "label": "Column widths"
         }
       },
       "errors": {
         "noColumns": "Select Columns in Items",
-        "noCommunications": "Can't load data from integration",
-        "noItems": "No downloads found",
-        "actionFailed": "Action failed",
-        "actionFailedMessage": "The action could not be completed. Please try again."
+        "noCommunications": "Can't load data from integration"
       },
       "items": {
         "actions": {
@@ -3407,8 +3370,7 @@
           "detailsTitle": "Current index within client"
         },
         "id": {
-          "columnTitle": "Id",
-          "detailsTitle": "Item ID"
+          "columnTitle": "Id"
         },
         "integration": {
           "columnTitle": "Integration"
@@ -3442,8 +3404,7 @@
         },
         "time": {
           "columnTitle": "Finish time",
-          "detailsTitle": "Time since/to completion",
-          "eta": "ETA"
+          "detailsTitle": "Time since/to completion"
         },
         "type": {
           "columnTitle": "Type",
@@ -3487,23 +3448,7 @@
           }
         }
       },
-      "globalRatio": "Global Ratio",
-      "contextMenu": {
-        "copyName": "Copy name",
-        "copyId": "Copy ID",
-        "clearFilters": "Clear filters"
-      },
-      "footer": {
-        "filter": "Filter downloads"
-      },
-      "stats": {
-        "show": "Show global stats",
-        "hide": "Hide global stats",
-        "overallProgress": "Overall queue progress",
-        "totalSize": "Total queue size",
-        "clients": "{count, plural, one {# client} other {# clients}}"
-      },
-      "disconnected": "(disconnected)"
+      "globalRatio": "Global Ratio"
     },
     "mediaReleases": {
       "name": "Media releases",
@@ -4060,6 +4005,18 @@
           "label": "Show songs",
           "description": "Show the total number of songs in your music library (Navidrome)"
         },
+        "showNowPlaying": {
+          "label": "Show now playing",
+          "description": "Show tracks currently being played (Navidrome)"
+        },
+        "showNowPlayingList": {
+          "label": "Show now playing list",
+          "description": "Show individual tracks instead of only the active stream count (Navidrome)"
+        },
+        "maxNowPlayingItems": {
+          "label": "Max now playing items",
+          "description": "Maximum number of tracks to show in the now playing list (Navidrome)"
+        },
         "showLibraryCount": {
           "label": "Show library count",
           "description": "Show the number of libraries on your instance (Audiobookshelf)"
@@ -4093,6 +4050,8 @@
       "podcasts": "Podcasts",
       "listeningTime": "Listening Time",
       "activeSessions": "Active Sessions",
+      "nowPlaying": "Now Playing",
+      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Failed to fetch audio stats data"
       }
@@ -4168,13 +4127,12 @@
       }
     },
     "customApi": {
-      "name": "Custom API",
-      "description": "Display data from any external API with custom configuration.",
+      "name": "Custom widget",
+      "description": "Render a configured Custom JSX definition.",
       "customJsx": {
         "noTemplate": "No JSX template is configured.",
-        "interactive": "Interactive",
         "templateWarnings": "{count} template warnings:",
-        "migrationRequired": "This template must be migrated to Custom JSX version 2 before it can use network requests.",
+        "requestIdRequired": "This network control requires a named requestId.",
         "unsavedPreview": "Run a GET test in the editor before testing named requests.",
         "invalidParams": "The request parameters are invalid.",
         "loading": "Loading request...",
@@ -4189,13 +4147,11 @@
         "refresh": "Refresh",
         "copy": "Copy",
         "copied": "Copied",
-        "networkCapabilities": "Network capabilities",
-        "confirmDelete": "Confirm this destructive action.",
-        "networkAccessNeedsReview": "Network access needs review before this template can run."
+        "confirmDelete": "Confirm this destructive action."
       },
       "option": {
         "definitionId": {
-          "label": "Definition ID"
+          "label": "Custom widget"
         },
         "refreshInterval": {
           "label": "Refresh interval",
@@ -4203,15 +4159,22 @@
         }
       },
       "noDefinition": "No definition selected",
-      "definitionNotFound": "Widget definition not found. It may have been deleted.",
+      "definitionNotFound": "Custom widget unavailable",
+      "configurationNeedsRepair": "This widget's options changed. Edit the widget to repair its configuration.",
+      "removeFromBoard": "Remove from board",
       "editModePending": "Save the board to load this widget.",
-      "noDisplayOutput": "No display output",
-      "openJson": "Open in browser JSON viewer",
-      "execute": "Execute",
-      "executeConfirm": "Are you sure you want to execute this action?",
-      "executing": "Executing...",
-      "executeSuccess": "Action executed successfully",
-      "executeFailed": "Action failed. Check the widget configuration."
+      "picker": {
+        "group": "Custom JSX widgets",
+        "empty": "No custom widgets found",
+        "preview": "Preview",
+        "sources": "{count, plural, one {# source} other {# sources}}",
+        "requests": "{count, plural, one {# request} other {# requests}}"
+      },
+      "configuration": {
+        "needsAttention": "Configuration needs attention: {message}",
+        "advancedOptions": "Advanced options",
+        "invalidJson": "Invalid JSON"
+      }
     },
     "beszelSystemTable": {
       "name": "Beszel Systems (Table)",
@@ -4258,19 +4221,11 @@
         },
         "showAgent": {
           "label": "Show agent version"
-        },
-        "columnOrder": {
-          "label": "Column order"
-        },
-        "columnWidths": {
-          "label": "Column widths"
         }
       },
       "noRecords": "No systems found",
       "error": {
-        "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
-        "layoutSaveTitle": "Unable to save table layout",
-        "layoutSaveMessage": "Your column order or widths could not be saved. Please try again."
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
       },
       "column": {
         "system": "System",
@@ -4848,6 +4803,7 @@
         "apps": "Apps",
         "integrations": "Integrations",
         "customWidgets": "Custom Widgets",
+        "workshop": "Workshop",
         "searchEngies": "Search engines",
         "medias": "Medias",
         "users": {
@@ -5668,7 +5624,6 @@
       },
       "remove": {
         "label": "Remove",
-        "confirm": "Click again to remove permanently",
         "notification": {
           "success": {
             "title": "Containers removed",
@@ -6031,6 +5986,9 @@
             "label": "Flow"
           }
         }
+      },
+      "workshop": {
+        "label": "Workshop"
       },
       "users": {
         "label": "Users",
