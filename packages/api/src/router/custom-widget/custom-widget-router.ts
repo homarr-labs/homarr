@@ -26,7 +26,7 @@ import {
 } from "./stored-definition";
 import { templateProcedures } from "./template-procedures";
 import { transferProcedures } from "./transfer-procedures";
-import { assertSecretSources, requiredSecretKinds } from "./secret-policy";
+import { assertSecretSources, hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { secretProcedures } from "./secret-procedures";
 import { workshopProcedures } from "./workshop-procedures";
 
@@ -83,6 +83,12 @@ export const customWidgetRouter = createTRPCRouter({
         updatedAt: new Date(),
       }));
       const sourceIds = Object.keys(definition.sources);
+      const changedSecretBindings = new Set(
+        Object.entries(definition.sources).flatMap(([sourceId, source]) => {
+          const previous = current.sources[sourceId];
+          return previous && !hasSameSecretBinding(previous, source) ? [sourceId] : [];
+        }),
+      );
 
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
@@ -100,6 +106,17 @@ export const customWidgetRouter = createTRPCRouter({
                   notInArray(schema.customWidgetSecrets.sourceId, sourceIds),
                 ),
               );
+
+            for (const sourceId of changedSecretBindings) {
+              await transaction
+                .delete(schema.customWidgetSecrets)
+                .where(
+                  and(
+                    eq(schema.customWidgetSecrets.definitionId, id),
+                    eq(schema.customWidgetSecrets.sourceId, sourceId),
+                  ),
+                );
+            }
 
             for (const [sourceId, source] of Object.entries(definition.sources)) {
               const kinds = [...requiredSecretKinds(typeof source.auth === "string" ? source.auth : source.auth.type)];
@@ -138,6 +155,13 @@ export const customWidgetRouter = createTRPCRouter({
               .delete(customWidgetSecrets)
               .where(and(eq(customWidgetSecrets.definitionId, id), notInArray(customWidgetSecrets.sourceId, sourceIds)))
               .run();
+
+            for (const sourceId of changedSecretBindings) {
+              transaction
+                .delete(customWidgetSecrets)
+                .where(and(eq(customWidgetSecrets.definitionId, id), eq(customWidgetSecrets.sourceId, sourceId)))
+                .run();
+            }
 
             for (const [sourceId, source] of Object.entries(definition.sources)) {
               const kinds = [...requiredSecretKinds(typeof source.auth === "string" ? source.auth : source.auth.type)];

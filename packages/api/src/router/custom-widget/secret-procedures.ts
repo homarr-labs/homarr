@@ -16,7 +16,7 @@ import {
   createCustomWidgetConfigurationRequest,
   getCustomWidgetConfigurationRequestForUser,
 } from "./configuration-requests";
-import { assertSecretSources, requiredSecretKinds } from "./secret-policy";
+import { assertSecretSources, hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { getPreviewSession } from "./preview-sessions";
 import { parseStoredCustomWidgetDefinition, serializeCustomWidgetDefinition } from "./stored-definition";
 
@@ -107,6 +107,7 @@ export const secretProcedures = {
       assertSecretSources({ [input.sourceId]: source }, input.secrets);
       const updated = { ...definition, sources: { ...definition.sources, [input.sourceId]: source } };
       const definitionChanges = { ...serializeCustomWidgetDefinition(updated), updatedAt: new Date() };
+      const bindingChanged = !hasSameSecretBinding(current, source);
       const secretRows = input.secrets.map((secret) => ({
         definitionId: input.definitionId,
         sourceId: input.sourceId,
@@ -121,6 +122,16 @@ export const secretProcedures = {
               .update(schema.customWidgetDefinitions)
               .set(definitionChanges)
               .where(eq(schema.customWidgetDefinitions.id, input.definitionId));
+            if (bindingChanged) {
+              await transaction
+                .delete(schema.customWidgetSecrets)
+                .where(
+                  and(
+                    eq(schema.customWidgetSecrets.definitionId, input.definitionId),
+                    eq(schema.customWidgetSecrets.sourceId, input.sourceId),
+                  ),
+                );
+            }
             for (const secret of secretRows) {
               await transaction
                 .delete(schema.customWidgetSecrets)
@@ -142,6 +153,17 @@ export const secretProcedures = {
               .set(definitionChanges)
               .where(eq(customWidgetDefinitions.id, input.definitionId))
               .run();
+            if (bindingChanged) {
+              transaction
+                .delete(customWidgetSecrets)
+                .where(
+                  and(
+                    eq(customWidgetSecrets.definitionId, input.definitionId),
+                    eq(customWidgetSecrets.sourceId, input.sourceId),
+                  ),
+                )
+                .run();
+            }
             for (const secret of secretRows) {
               transaction
                 .delete(customWidgetSecrets)
@@ -181,6 +203,12 @@ export const secretProcedures = {
       let source: { id: string; name: string; auth: string | { type: string }; value: CustomWidgetSource } | undefined;
       let target: { type: "definition"; id: string } | { type: "preview"; id: string };
       if (input.definitionId) {
+        if (!ctx.session.user.permissions.includes("custom-widget-secret-write")) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Creating a stored credential setup link requires dedicated permission",
+          });
+        }
         const stored = await ctx.db.query.customWidgetDefinitions.findFirst({
           where: eq(customWidgetDefinitions.id, input.definitionId),
         });

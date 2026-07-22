@@ -38,10 +38,26 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: "custom-widgets-node",
+          environment: "node",
+          setupFiles: ["./vitest.setup.ts", "./vitest.setup.node.ts"],
+          include: ["packages/custom-widgets/src/**/*.spec.{ts,tsx}"],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: "dom",
           environment: "jsdom",
           include: ["**/*.spec.{ts,tsx}"],
-          exclude: [...configDefaults.exclude, "apps/nextjs/.next", "packages/api/**", "packages/db/**", "e2e/**"],
+          exclude: [
+            ...configDefaults.exclude,
+            "apps/nextjs/.next",
+            "packages/api/**",
+            "packages/custom-widgets/**",
+            "packages/db/**",
+            "e2e/**",
+          ],
         },
       },
       {

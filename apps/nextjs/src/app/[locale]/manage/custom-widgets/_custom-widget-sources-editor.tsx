@@ -1,31 +1,18 @@
 "use client";
 
-import { Accordion, Button, Fieldset, Group, PasswordInput, Select, Stack, Text, TextInput } from "@mantine/core";
-import { IconKey, IconPlus, IconTrash } from "@tabler/icons-react";
+import { Accordion, Button, List, Stack, Text } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { getCustomWidgetSourceUrlIssue } from "@homarr/custom-widgets/core";
-import type { CustomWidgetSource, CustomWidgetSourceUrlIssue } from "@homarr/custom-widgets/core";
+import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
+import { useConfirmModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { isRecord, parseJson, parseSources } from "./_custom-widget-form-utils";
+import { filterSecretsForSourceAuthentication, isRecord, parseJson, parseSources } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
-import { CustomWidgetIdentifierInput } from "./_custom-widget-identifier-input";
-
-const secretFields: Record<string, Array<{ kind: "apiKey" | "username" | "password" }>> = {
-  bearer: [{ kind: "apiKey" }],
-  basic: [{ kind: "username" }, { kind: "password" }],
-  apiKeyHeader: [{ kind: "apiKey" }],
-  apiKeyQuery: [{ kind: "apiKey" }],
-};
-
-const sourceUrlErrorKeys: Record<CustomWidgetSourceUrlIssue, `baseUrlError.${CustomWidgetSourceUrlIssue}`> = {
-  invalid: "baseUrlError.invalid",
-  protocol: "baseUrlError.protocol",
-  credentials: "baseUrlError.credentials",
-  queryOrFragment: "baseUrlError.queryOrFragment",
-};
+import { getDependentRequestIds, removeDependentRequests } from "./_custom-widget-source-dependencies";
+import { CustomWidgetSourceField } from "./_custom-widget-source-field";
 
 export function CustomWidgetSourcesEditor({
   form,
@@ -35,6 +22,8 @@ export function CustomWidgetSourcesEditor({
   definitionId?: string;
 }) {
   const t = useScopedI18n("customWidget.workbench.sources");
+  const w = useScopedI18n("customWidget.workbench");
+  const { openConfirmModal } = useConfirmModal();
   const utils = clientApi.useUtils();
   const clearSecretMutation = clientApi.customWidget.secretClear.useMutation();
   const sources = parseSources(form.values.sources);
@@ -83,6 +72,14 @@ export function CustomWidgetSourcesEditor({
     const auth =
       type === "apiKeyHeader" ? { type, name: "X-API-Key" } : type === "apiKeyQuery" ? { type, name: "api_key" } : type;
     update(index, { auth: auth as CustomWidgetSource["auth"] });
+    form.setFieldValue(
+      "secrets",
+      filterSecretsForSourceAuthentication(
+        form.values.secrets,
+        sources[index]?.id ?? "",
+        type as Parameters<typeof filterSecretsForSourceAuthentication>[2],
+      ),
+    );
   };
   const setSecret = (sourceId: string, kind: string, value: string) => {
     const current = form.values.secrets.filter((secret) => !(secret.sourceId === sourceId && secret.kind === kind));
@@ -111,7 +108,7 @@ export function CustomWidgetSourcesEditor({
       ),
     );
   };
-  const removeSource = (index: number) => {
+  const removeSourceAndDependents = (index: number) => {
     const removedId = sources[index]?.id;
     form.setFieldValue(
       "sources",
@@ -122,24 +119,37 @@ export function CustomWidgetSourcesEditor({
       ),
     );
     if (!removedId) return;
-    form.setFieldValue(
-      "requests",
-      JSON.stringify(
-        Object.fromEntries(
-          Object.entries(
-            isRecord(parseJson(form.values.requests))
-              ? (parseJson(form.values.requests) as Record<string, unknown>)
-              : {},
-          ).filter(([, request]) => !isRecord(request) || request.source !== removedId),
-        ),
-        null,
-        2,
-      ),
-    );
+    form.setFieldValue("requests", JSON.stringify(removeDependentRequests(form.values.requests, removedId), null, 2));
     form.setFieldValue(
       "secrets",
       form.values.secrets.filter((secret) => secret.sourceId !== removedId),
     );
+  };
+  const removeSource = (index: number) => {
+    const removedId = sources[index]?.id;
+    if (!removedId) return;
+    const dependentRequestIds = getDependentRequestIds(form.values.requests, removedId);
+    if (dependentRequestIds.length === 0) {
+      removeSourceAndDependents(index);
+      return;
+    }
+    openConfirmModal({
+      title: t("remove"),
+      children: (
+        <Stack gap="xs">
+          <Text size="sm" fw={500}>
+            {w("requests.title")} ({dependentRequestIds.length})
+          </Text>
+          <List size="sm">
+            {dependentRequestIds.map((requestId) => (
+              <List.Item key={requestId}>{requestId}</List.Item>
+            ))}
+          </List>
+        </Stack>
+      ),
+      confirmProps: { children: t("remove") },
+      onConfirm: () => removeSourceAndDependents(index),
+    });
   };
   const clearSecret = async (sourceId: string, kind: "apiKey" | "username" | "password") => {
     if (!definitionId) return;
@@ -153,109 +163,20 @@ export function CustomWidgetSourcesEditor({
   return (
     <Stack gap="sm">
       {sources.map((source, index) => {
-        const baseUrlIssue = getCustomWidgetSourceUrlIssue(source.baseUrl);
         return (
-          <Fieldset key={index} legend={index === 0 ? t("primary") : source.name}>
-            <Stack gap="sm">
-              <Group grow align="start">
-                <CustomWidgetIdentifierInput
-                  label={t("id")}
-                  value={source.id}
-                  disabled={source.id === "default" || Boolean(definitionId)}
-                  error={form.errors.sources}
-                  onCommit={(value) => update(index, { id: value })}
-                />
-                <TextInput
-                  label={t("name")}
-                  value={source.name}
-                  onChange={(event) => update(index, { name: event.currentTarget.value })}
-                />
-              </Group>
-              <TextInput
-                label={t("baseUrl")}
-                type="url"
-                value={source.baseUrl}
-                error={baseUrlIssue ? t(sourceUrlErrorKeys[baseUrlIssue]) : undefined}
-                onChange={(event) => update(index, { baseUrl: event.currentTarget.value })}
-              />
-              <Group grow align="start">
-                <Select
-                  label={t("networkScope")}
-                  data={["public", "private", "loopback"]}
-                  value={source.networkScope}
-                  onChange={(value) =>
-                    value && update(index, { networkScope: value as CustomWidgetSource["networkScope"] })
-                  }
-                  allowDeselect={false}
-                />
-                <Select
-                  label={t("authentication")}
-                  data={["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"]}
-                  value={typeof source.auth === "string" ? source.auth : source.auth.type}
-                  onChange={(value) => setAuth(index, value ?? "none")}
-                  allowDeselect={false}
-                />
-              </Group>
-              {typeof source.auth === "object" && source.auth.type === "apiKeyHeader" && (
-                <TextInput
-                  label={t("headerName")}
-                  value={source.auth.name}
-                  onChange={(event) =>
-                    update(index, { auth: { type: "apiKeyHeader", name: event.currentTarget.value } })
-                  }
-                />
-              )}
-              {typeof source.auth === "object" && source.auth.type === "apiKeyQuery" && (
-                <TextInput
-                  label={t("queryParameter")}
-                  value={source.auth.name}
-                  onChange={(event) =>
-                    update(index, { auth: { type: "apiKeyQuery", name: event.currentTarget.value } })
-                  }
-                />
-              )}
-              {(secretFields[typeof source.auth === "string" ? source.auth : source.auth.type] ?? []).map((field) => {
-                const secret = form.values.secrets.find(
-                  (entry) => entry.sourceId === source.id && entry.kind === field.kind,
-                );
-                const Input = field.kind === "username" ? TextInput : PasswordInput;
-                return (
-                  <Group key={field.kind} align="end" wrap="nowrap">
-                    <Input
-                      style={{ flex: 1 }}
-                      label={t(`secret.${field.kind}`)}
-                      value={secret?.value ?? ""}
-                      placeholder={secret?.hasValue ? t("configured") : undefined}
-                      leftSection={<IconKey size={15} />}
-                      onChange={(event) => setSecret(source.id, field.kind, event.currentTarget.value)}
-                    />
-                    {definitionId && secret?.hasValue && (
-                      <Button
-                        type="button"
-                        color="red"
-                        variant="subtle"
-                        loading={clearSecretMutation.isPending}
-                        onClick={() => void clearSecret(source.id, field.kind)}
-                      >
-                        {t("clear")}
-                      </Button>
-                    )}
-                  </Group>
-                );
-              })}
-              {index > 0 && (
-                <Button
-                  type="button"
-                  color="red"
-                  variant="subtle"
-                  leftSection={<IconTrash size={16} />}
-                  onClick={() => removeSource(index)}
-                >
-                  {t("remove")}
-                </Button>
-              )}
-            </Stack>
-          </Fieldset>
+          <CustomWidgetSourceField
+            key={source.id}
+            source={source}
+            index={index}
+            form={form}
+            definitionId={definitionId}
+            clearSecretPending={clearSecretMutation.isPending}
+            onUpdate={update}
+            onSetAuthentication={setAuth}
+            onSetSecret={setSecret}
+            onClearSecret={clearSecret}
+            onRemove={removeSource}
+          />
         );
       })}
       <Accordion variant="contained">

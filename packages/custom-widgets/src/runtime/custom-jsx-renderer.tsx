@@ -162,19 +162,24 @@ function CustomJsxRendererSession({
     },
     [inputTypes],
   );
-  const bindings = useMemo(
-    () => ({ ...createBindings(data), status, options, inputs }),
-    [createBindings, data, inputs, options, status],
-  );
-  const boundaryKey = useMemo(() => createBoundaryKey(template, bindings), [bindings, template]);
   const rendered = useMemo(() => {
     try {
-      return { ...renderSafeJsx({ template, components, bindings }), error: null };
+      const bindings = { ...createBindings(data), status, options, inputs };
+      return {
+        ...renderSafeJsx({ template, components, bindings }),
+        boundaryKey: createBoundaryKey(template, bindings),
+        error: null,
+      };
     } catch (error) {
-      return { node: null, warnings: [], error: error instanceof Error ? error : new Error(String(error)) };
+      return {
+        node: null,
+        warnings: [],
+        boundaryKey: `${template.length}:error`,
+        error: error instanceof Error ? error : new Error(String(error)),
+      };
     }
-  }, [bindings, components, template]);
-  useEffect(() => setParseErrors([]), [bindings, template]);
+  }, [components, createBindings, data, inputs, options, status, template]);
+  useEffect(() => setParseErrors([]), [rendered.boundaryKey, template]);
   const handleError = useCallback(
     (error: Error) =>
       setParseErrors((current) => {
@@ -201,7 +206,7 @@ function CustomJsxRendererSession({
             registerInput={registerInput}
             setInputValue={setInputValue}
           >
-            <RendererErrorBoundary resetKey={boundaryKey} onError={handleError}>
+            <RendererErrorBoundary resetKey={rendered.boundaryKey} onError={handleError}>
               {rendered.node}
             </RendererErrorBoundary>
           </CustomJsxInputsProvider>

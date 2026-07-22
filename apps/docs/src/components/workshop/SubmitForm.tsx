@@ -31,6 +31,7 @@ import { cn, errorMessage } from "@/lib/utils";
 
 import type { SubmitInput } from "./useWorkshop";
 import { ScreenshotEditor } from "./ScreenshotEditor";
+import { getJsonImportSubmissionType } from "./submission-import";
 
 interface Props {
   onClose: () => void;
@@ -104,7 +105,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
       const reader = new FileReader();
       reader.addEventListener("load", (e) => {
         const text = e.target?.result as string;
-        if (!type) setType("customWidget");
+        setType(getJsonImportSubmissionType(type));
         setContentAndAutofill(text, title, description);
         if (step === 0) goTo(1);
       });
@@ -400,6 +401,7 @@ const StepType = ({
         </div>
         <input
           type="file"
+          aria-label="Choose a widget JSON file"
           accept=".json,application/json"
           className="hidden"
           onChange={(e) => {

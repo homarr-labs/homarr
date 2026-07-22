@@ -6,6 +6,7 @@ import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import {
   boolean,
   customType,
+  foreignKey,
   index,
   integer,
   pgTable,
@@ -205,8 +206,8 @@ export const integrations = pgTable(
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
     appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },
-  (integrations) => ({
-    kindIdx: index("integration__kind_idx").on(integrations.kind),
+  (table) => ({
+    kindIdx: index("integration__kind_idx").on(table.kind),
   }),
 );
 
@@ -499,6 +500,56 @@ export const onboarding = pgTable("onboarding", {
   previousStep: varchar({ length: 64 }).$type<OnboardingStep>(),
 });
 
+/**
+ * Read-only v1 definitions retained during the Custom JSX v2 upgrade.
+ * They remain separate so legacy code can never execute in the v2 runtime.
+ */
+export const legacyCustomWidgetDefinitions = pgTable(
+  "legacy_custom_widget_definition",
+  {
+    id: varchar({ length: 64 }).notNull().primaryKey(),
+    name: varchar({ length: 256 }).notNull(),
+    description: text(),
+    iconUrl: text(),
+    url: text().notNull(),
+    authType: varchar({ length: 32 }).notNull().default("none"),
+    headerName: varchar({ length: 256 }),
+    method: varchar({ length: 16 }).notNull().default("GET"),
+    requestBody: text(),
+    displayType: varchar({ length: 32 }).notNull().default("singleValue"),
+    displayConfig: text().default(emptySuperJSON).notNull(),
+    enabled: boolean().notNull().default(true),
+    createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
+    updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
+    creatorId: varchar({ length: 64 }),
+  },
+  (table) => ({
+    creatorFk: foreignKey({
+      columns: [table.creatorId],
+      foreignColumns: [users.id],
+      name: "legacy_cw_definition_creator_id_user_id_fk",
+    }).onDelete("set null"),
+  }),
+);
+
+export const legacyCustomWidgetSecrets = pgTable(
+  "legacy_custom_widget_secret",
+  {
+    kind: varchar({ length: 64 }).$type<CustomWidgetSecretKind>().notNull(),
+    encryptedValue: text("value").$type<`${string}.${string}`>().notNull(),
+    updatedAt: timestamp().notNull(),
+    definitionId: varchar({ length: 64 }).notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({ columns: [table.definitionId, table.kind] }),
+    definitionFk: foreignKey({
+      columns: [table.definitionId],
+      foreignColumns: [legacyCustomWidgetDefinitions.id],
+      name: "legacy_cw_secret_definition_id_fk",
+    }).onDelete("cascade"),
+  }),
+);
+
 export const customWidgetDefinitions = pgTable("custom_widget_definition", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: varchar({ length: 256 }).notNull(),
@@ -523,14 +574,17 @@ export const customWidgetSecrets = pgTable(
     updatedAt: timestamp()
       .$onUpdateFn(() => new Date())
       .notNull(),
-    definitionId: varchar({ length: 64 })
-      .notNull()
-      .references(() => customWidgetDefinitions.id, { onDelete: "cascade" }),
+    definitionId: varchar({ length: 64 }).notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
       columns: [table.definitionId, table.sourceId, table.kind],
     }),
+    definitionFk: foreignKey({
+      columns: [table.definitionId],
+      foreignColumns: [customWidgetDefinitions.id],
+      name: "cw_secret_definition_id_fk",
+    }).onDelete("cascade"),
   }),
 );
 
@@ -844,5 +898,20 @@ export const customWidgetSecretRelations = relations(customWidgetSecrets, ({ one
   definition: one(customWidgetDefinitions, {
     fields: [customWidgetSecrets.definitionId],
     references: [customWidgetDefinitions.id],
+  }),
+}));
+
+export const legacyCustomWidgetDefinitionRelations = relations(legacyCustomWidgetDefinitions, ({ many, one }) => ({
+  secrets: many(legacyCustomWidgetSecrets),
+  creator: one(users, {
+    fields: [legacyCustomWidgetDefinitions.creatorId],
+    references: [users.id],
+  }),
+}));
+
+export const legacyCustomWidgetSecretRelations = relations(legacyCustomWidgetSecrets, ({ one }) => ({
+  definition: one(legacyCustomWidgetDefinitions, {
+    fields: [legacyCustomWidgetSecrets.definitionId],
+    references: [legacyCustomWidgetDefinitions.id],
   }),
 }));

@@ -10,6 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ActionButton, CustomJsxRenderer, CustomWidgetRuntimeProvider, SubFetch, ToggleSwitch } from "../runtime";
 import { createCustomJsxComponents } from "../jsx";
+import { MAX_REFRESH_INTERVAL_MS, MAX_REFRESH_INTERVAL_SECONDS, normalizeRefreshInterval } from "../runtime/sub-fetch";
 import type {
   CustomJsxRequestCapability,
   CustomWidgetPublishedQueryState,
@@ -106,6 +107,31 @@ async function settle() {
 }
 
 describe("Custom Widget runtime ports", () => {
+  it("clamps refresh intervals below the browser timer overflow boundary", () => {
+    expect(normalizeRefreshInterval(MAX_REFRESH_INTERVAL_SECONDS)).toBe(MAX_REFRESH_INTERVAL_MS);
+    expect(normalizeRefreshInterval(MAX_REFRESH_INTERVAL_SECONDS + 1)).toBe(MAX_REFRESH_INTERVAL_MS);
+    expect(normalizeRefreshInterval(Number.MAX_VALUE)).toBe(MAX_REFRESH_INTERVAL_MS);
+    expect(MAX_REFRESH_INTERVAL_MS).toBeLessThan(2 ** 31 - 1);
+  });
+
+  it("routes binding-construction failures through the runtime error display", async () => {
+    await render(
+      <CustomJsxRenderer
+        template="<Text>Safe</Text>"
+        data={{}}
+        components={{ Text: (() => null) as never }}
+        createBindings={() => {
+          throw new RangeError("Response data exceeded the depth limit");
+        }}
+        messages={{ noTemplate: "No template", templateWarnings: (count) => `${count} warnings` }}
+      />,
+      createPort(),
+    );
+
+    expect(host.textContent).toContain("RUNTIME_RENDER_ERROR");
+    expect(host.textContent).toContain("Response data exceeded the depth limit");
+  });
+
   it("renders common safe collection and number formatting operations", async () => {
     const components = createCustomJsxComponents({
       TablerIcon: (() => null) as never,
@@ -162,9 +188,7 @@ describe("Custom Widget runtime ports", () => {
 
     await render(
       <>
-        <button name="shared" role="radio" aria-checked="false" type="button">
-          Outside
-        </button>
+        <input aria-label="Outside" name="shared" type="radio" />
         <CustomJsxRenderer
           template={
             '<Radio.Group name="shared" defaultValue="inside"><Radio.Card value="inside"><Radio.Indicator /></Radio.Card><Radio.Card value="other"><Radio.Indicator /></Radio.Card></Radio.Group>'
@@ -179,7 +203,8 @@ describe("Custom Widget runtime ports", () => {
     );
     await settle();
 
-    const [outside, inside, other] = [...host.querySelectorAll<HTMLButtonElement>('button[role="radio"]')];
+    const outside = host.querySelector<HTMLInputElement>('input[type="radio"]');
+    const [inside, other] = [...host.querySelectorAll<HTMLButtonElement>('button[role="radio"]')];
     expect(outside?.name).toBe("shared");
     expect(inside?.name).toMatch(/^custom-widget-/u);
     expect(inside?.name).not.toBe(outside?.name);

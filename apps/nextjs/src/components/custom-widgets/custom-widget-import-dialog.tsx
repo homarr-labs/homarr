@@ -24,6 +24,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 interface CustomWidgetImportDialogProps {
   opened: boolean;
   widget: HomarrCustomWidgetV2 | null;
+  legacyId?: string;
   stackId?: string;
   zIndex?: number;
   onClose(): void;
@@ -33,6 +34,7 @@ interface CustomWidgetImportDialogProps {
 export function CustomWidgetImportDialog({
   opened,
   widget,
+  legacyId,
   stackId,
   zIndex,
   onClose,
@@ -59,19 +61,27 @@ export function CustomWidgetImportDialog({
     };
   }, [values, widget]);
   const review = useMemo(() => getImportReview(configuredWidget), [configuredWidget]);
-  const mutation = clientApi.customWidget.import.useMutation({
-    onSuccess: (result) => {
-      showSuccessNotification({ title: t("action.import"), message: t("notification.imported") });
-      void utils.customWidget.list.invalidate();
-      void utils.customWidget.available.invalidate();
-      void revalidatePathActionAsync("/manage/custom-widgets").then(() => router.refresh());
-      onImported?.(result);
-      onClose();
-    },
-    onError: (error) => {
-      showErrorNotification({ title: t("action.import"), message: error.message || t("notification.importError") });
-    },
-  });
+  const onSuccess = (result: { id: string }) => {
+    showSuccessNotification({
+      title: legacyId ? t("action.migrate") : t("action.import"),
+      message: legacyId ? t("notification.migrated") : t("notification.imported"),
+    });
+    void utils.customWidget.list.invalidate();
+    void utils.customWidget.available.invalidate();
+    void utils.widget.customApi.getData.invalidate();
+    void revalidatePathActionAsync("/manage/custom-widgets").then(() => router.refresh());
+    onImported?.(result);
+    onClose();
+  };
+  const onError = (error: { message?: string }) => {
+    showErrorNotification({
+      title: legacyId ? t("action.migrate") : t("action.import"),
+      message: error.message || (legacyId ? t("notification.migrationError") : t("notification.importError")),
+    });
+  };
+  const importMutation = clientApi.customWidget.import.useMutation({ onSuccess, onError });
+  const migrateMutation = clientApi.customWidget.migrateLegacy.useMutation({ onSuccess, onError });
+  const pending = importMutation.isPending || migrateMutation.isPending;
 
   useEffect(() => {
     if (opened) setValues(createCustomWidgetSourceSetupValues(setups));
@@ -84,7 +94,8 @@ export function CustomWidgetImportDialog({
         secret?.trim() ? [{ sourceId, kind: kind as CustomWidgetSecretKind, value: secret }] : [],
       ),
     );
-    mutation.mutate({ widget: configuredWidget, secrets });
+    if (legacyId) migrateMutation.mutate({ id: legacyId, widget: configuredWidget, secrets });
+    else importMutation.mutate({ widget: configuredWidget, secrets });
   };
 
   return (
@@ -93,13 +104,13 @@ export function CustomWidgetImportDialog({
       stackId={stackId}
       zIndex={zIndex}
       review={review}
-      pending={mutation.isPending}
+      pending={pending}
       confirmDisabled={!isCustomWidgetSourceSetupReady(setups, values)}
       onClose={onClose}
       onConfirm={importWidget}
       messages={{
-        title: t("importReview.title"),
-        description: t("importReview.description"),
+        title: legacyId ? t("importReview.migrationTitle") : t("importReview.title"),
+        description: legacyId ? t("importReview.migrationDescription") : t("importReview.description"),
         name: t("importReview.name"),
         origin: t("importReview.origin"),
         authentication: t("importReview.authentication"),
@@ -109,7 +120,7 @@ export function CustomWidgetImportDialog({
         actionWarningTitle: t("importReview.actionWarning.title"),
         actionWarningDescription: t("importReview.actionWarning.description"),
         cancel: t("importReview.cancel"),
-        confirm: t("importReview.confirm"),
+        confirm: legacyId ? t("importReview.confirmMigration") : t("importReview.confirm"),
         permission: (permission) => t(`preview.request.permission.${permission}` as never),
       }}
     >

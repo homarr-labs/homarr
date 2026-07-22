@@ -1,6 +1,7 @@
 export type CustomWidgetDomainErrorCode =
   | "BAD_GATEWAY"
   | "BAD_REQUEST"
+  | "CONFLICT"
   | "FORBIDDEN"
   | "INTERNAL_SERVER_ERROR"
   | "NOT_FOUND"

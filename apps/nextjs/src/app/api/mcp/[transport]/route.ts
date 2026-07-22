@@ -249,8 +249,10 @@ const mcpHandler = createMcpHandler(
       const { uri } = request.params;
       let text: string;
       let mimeType = "application/json";
-      if (uri === "homarr://custom-widgets/schema") text = JSON.stringify(getCustomWidgetJsonSchema());
-      else if (uri === "homarr://custom-widgets/components") text = JSON.stringify(getCustomWidgetComponentCatalog());
+      if (uri === "homarr://custom-widgets/schema") {
+        text = JSON.stringify(getCustomWidgetJsonSchema());
+        mimeType = "application/schema+json";
+      } else if (uri === "homarr://custom-widgets/components") text = JSON.stringify(getCustomWidgetComponentCatalog());
       else if (uri === "homarr://custom-widgets/skill") {
         text = getCustomWidgetSkillContent();
         mimeType = "text/markdown";

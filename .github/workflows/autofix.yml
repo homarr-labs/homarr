@@ -32,4 +32,4 @@ jobs:
         run: |
           git diff --name-only --diff-filter=ACMR -z "origin/${BASE_REF}...HEAD" -- \
             '*.css' '*.js' '*.json' '*.jsonc' '*.jsx' '*.md' '*.mdx' '*.scss' '*.ts' '*.tsx' '*.yaml' '*.yml' \
-            | xargs -0 -r pnpm exec oxfmt --check
+            | xargs -0 -r pnpm exec oxfmt --check --

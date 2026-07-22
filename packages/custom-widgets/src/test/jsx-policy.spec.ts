@@ -3,7 +3,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import { validateCustomJsxTemplate } from "../jsx/analyzer";
-import { createCustomJsxBindings } from "../jsx/bindings";
+import { createCustomJsxBindings, CUSTOM_JSX_DATA_LIMITS } from "../jsx/bindings";
 import { renderSafeJsx, sanitizeCustomJsxProps } from "../jsx/interpreter";
 import { CUSTOM_JSX_BLOCKED_PROPERTIES, CUSTOM_JSX_BLOCKED_PROPS, CUSTOM_JSX_LIMITS } from "../jsx/policy";
 
@@ -221,6 +221,37 @@ describe("shared Custom JSX policy", () => {
     expect(diagnostics.some(({ message }) => message.includes("Prop 'bind'"))).toBe(false);
   });
 
+  test("validates explicit bind attributes through the JSX AST", () => {
+    expect(
+      validateCustomJsxTemplate('<TextInput bind="search" />').filter(({ severity }) => severity === "error"),
+    ).toEqual([]);
+    expect(validateCustomJsxTemplate("<TextInput bind={data.name} />")).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ severity: "error", message: expect.stringContaining("literal input name") }),
+      ]),
+    );
+    expect(validateCustomJsxTemplate('<TextInput bind="not valid" />')).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ severity: "error", message: expect.stringContaining("Invalid bind input name") }),
+      ]),
+    );
+    expect(
+      validateCustomJsxTemplate('<Text>{"<TextInput bind={data.name} />"}</Text>').some(({ message }) =>
+        message.includes("literal input name"),
+      ),
+    ).toBe(false);
+  });
+
+  test("rejects bind values introduced by JSX spreads at the emitter boundary", () => {
+    expect(() =>
+      renderSafeJsx({
+        template: "<TextInput {...data.props} />",
+        components: { TextInput: (() => null) as never },
+        bindings: { data: { props: { bind: "remote-name", label: "Unsafe" } } },
+      }),
+    ).toThrow("BIND_SPREAD_NOT_ALLOWED");
+  });
+
   test("provides closest component and binding diagnostics", () => {
     expect(validateCustomJsxTemplate("<Stak />")[0]?.message).toMatch(/UNKNOWN_COMPONENT.*Stack/u);
     expect(validateCustomJsxTemplate('<Text bind="search" />')).toEqual(
@@ -305,9 +336,34 @@ describe("shared Custom JSX policy", () => {
     expect(renderToStaticMarkup(rendered.node)).toContain("Bulba-saur-");
   });
 
-  test.each(["/(a+)+$/", "/(?<=a)b/", "/(a)\\1/"])("rejects unsafe regex %s", (pattern) => {
-    expect(validateCustomJsxTemplate(`<Text>{${pattern}.test(data.name)}</Text>`)).toEqual(
-      expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining("UNSAFE_REGEX") })]),
+  test.each(["/(a+)+$/", "/(?<=a)b/", "/(a)\\1/", "/^(a|aa)+$/", "/^(a|a?)+$/", "/^a+a+$/", "/^(\\w+\\s?)*$/"])(
+    "rejects unsafe regex %s in analysis and at runtime",
+    (pattern) => {
+      const template = `<Text>{${pattern}.test(data.name)}</Text>`;
+      expect(validateCustomJsxTemplate(template)).toEqual(
+        expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining("UNSAFE_REGEX") })]),
+      );
+      expect(() =>
+        renderSafeJsx({ template, components, bindings: { data: { name: "a".repeat(10_000) + "!" } } }),
+      ).toThrow("UNSAFE_REGEX");
+    },
+  );
+
+  test("allows a single unambiguous variable regex quantifier", () => {
+    const template = '<Text>{/^(ab)+$/.test(data.name) ? "yes" : "no"}</Text>';
+    expect(validateCustomJsxTemplate(template).filter(({ severity }) => severity === "error")).toEqual([]);
+    expect(() => renderSafeJsx({ template, components, bindings: { data: { name: "abab" } } })).not.toThrow();
+  });
+
+  test("bounds response data depth, node count, and string length without recursive traversal", () => {
+    let deeplyNested: unknown = null;
+    for (let depth = 0; depth <= CUSTOM_JSX_DATA_LIMITS.depth; depth += 1) deeplyNested = { child: deeplyNested };
+    expect(() => createCustomJsxBindings(deeplyNested)).toThrow(/depth limit/u);
+    expect(() => createCustomJsxBindings(Array.from({ length: CUSTOM_JSX_DATA_LIMITS.nodes }).fill(null))).toThrow(
+      /node limit/u,
+    );
+    expect(() => createCustomJsxBindings("x".repeat(CUSTOM_JSX_DATA_LIMITS.stringLength + 1))).toThrow(
+      /string length limit/u,
     );
   });
 

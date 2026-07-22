@@ -80,7 +80,7 @@ Because Workshop is still unreleased, reset an older development volume if it pr
 
 GitHub needs only the central callback `https://<workshop-host>/api/oauth2-redirect`. Keep PocketBase origins unrestricted unless every self-hosted Homarr caller is explicitly listed. Configure `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `WORKSHOP_PUBLIC_ORIGIN`, and PocketBase SMTP settings for authentication, comment email, report alerts, and submission-removal notices.
 
-Homarr instances use `NEXT_PUBLIC_WORKSHOP_API_URL` to reach the central API and `NEXT_PUBLIC_WORKSHOP_URL` for links to the public page. Docusaurus uses `WORKSHOP_URL` only when its development server runs separately; the combined production image always uses its own origin.
+Homarr instances use the server-side `WORKSHOP_API_URL` variable to reach the central API. The Docusaurus site uses `WORKSHOP_URL` when its development server runs separately; the combined production image always uses its own origin. Restart the corresponding process after changing either value because both are read at startup.
 
 ## Client architecture
 
