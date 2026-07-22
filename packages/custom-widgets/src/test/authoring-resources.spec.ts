@@ -12,7 +12,7 @@ import {
 describe("authoring resources", () => {
   it("returns the concise skills.sh discovery shape", () => {
     const skill = getCustomWidgetSkill();
-    expect(skill).toMatchObject({ name: "homarr-custom-widget", version: "2.0.0" });
+    expect(skill).toMatchObject({ name: "homarr-custom-widget", version: "2.1.0" });
     expect(skill.skillsShUrl).toContain("skills.sh/homarr-labs/homarr");
     expect(skill.sourceUrl).toContain("/tree/HEAD/.agents/skills/homarr-custom-widget");
     expect(skill.installCommand).toContain("--skill homarr-custom-widget");

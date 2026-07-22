@@ -15,7 +15,7 @@ Author one widget at a time. When connected to Homarr, retrieve `homarr://custom
 
 Use `{option:name}` or `$option` for saved options. Use `{param:name}` or `$param` for values supplied by `SubFetch`, `ActionButton`, or `ToggleSwitch`. Load queries cannot use invocation parameters. Templates read `data`, `status`, `options`, and temporary `inputs`.
 
-`SubFetch` with `trigger="manual"` renders its own load button. Pass a card or image as `triggerContent` with `triggerAriaLabel` when that content should launch the request. Its callback is `(result, meta)`; never author `onClick` or a fetch callback.
+`SubFetch` with `trigger="manual"` renders its own load button. Pass a card or image through `triggerContent` with `triggerAriaLabel` when that content should launch the request. Its callback is `(result, meta)`; never author `onClick` or a fetch callback.
 
 Use standard Mantine compound names and deliberate visual hierarchy, spacing, restrained semantic color, and responsive layouts. Avoid excessive nested cards.
 
