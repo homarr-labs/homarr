@@ -14,7 +14,8 @@
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
     "./open-api": "./src/open-api.ts",
-    "./mcp": "./src/mcp.ts"
+    "./mcp": "./src/mcp.ts",
+    "./custom-widget-configuration": "./src/custom-widget-configuration.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -43,6 +44,7 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
+    "@homarr/workshop": "workspace:^0.1.0",
     "@kubernetes/client-node": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",

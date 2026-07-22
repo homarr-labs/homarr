@@ -4,6 +4,7 @@ import {
   assertSafeStaticHeaders as assertDomainSafeStaticHeaders,
   classifyAddress,
   executeCustomWidgetRequest as executeDomainRequest,
+  invalidateCustomWidgetResponseCache as invalidateDomainResponseCache,
   MAX_REQUEST_BODY_BYTES,
   MAX_RESPONSE_BODY_BYTES,
   MAX_RESPONSE_JSON_DEPTH,
@@ -81,3 +82,6 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
     toTrpcError(error);
   }
 }
+
+export const invalidateCustomWidgetResponseCache = (prefixes: readonly string[]) =>
+  invalidateDomainResponseCache(prefixes);

@@ -8,6 +8,9 @@ import { describe, test } from "vitest";
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 
 import * as mysqlSchema from "../schema/mysql";
+import type { Database } from "..";
+import { seedDataAsync } from "../migrations/seed";
+import { expectBundledCustomWidgetsSeeded } from "./custom-widget-seed-assertions";
 
 describe("Mysql Migration", () => {
   test("should add all tables and keys specified in migration files", async () => {
@@ -31,9 +34,11 @@ describe("Mysql Migration", () => {
     await migrate(database, {
       migrationsFolder: path.join(__dirname, "..", "migrations", "mysql"),
     });
+    await seedDataAsync(database as unknown as Database);
 
     // Check if users table exists
     await database.query.users.findMany();
+    await expectBundledCustomWidgetsSeeded(database as unknown as Database);
 
     connection.end();
     await mysqlContainer.stop();

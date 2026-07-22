@@ -8,10 +8,23 @@ export interface PreviewErrorBoundaryProps {
   title: string;
   description: string;
   retryLabel: string;
+  resetKeys?: readonly unknown[];
 }
 
-export class PreviewErrorBoundary extends Component<PreviewErrorBoundaryProps, { hasError: boolean }> {
-  public state = { hasError: false };
+interface PreviewErrorBoundaryState {
+  hasError: boolean;
+  resetKeys?: readonly unknown[];
+}
+
+export class PreviewErrorBoundary extends Component<PreviewErrorBoundaryProps, PreviewErrorBoundaryState> {
+  public state: PreviewErrorBoundaryState = { hasError: false, resetKeys: this.props.resetKeys };
+  public static getDerivedStateFromProps(
+    props: PreviewErrorBoundaryProps,
+    state: PreviewErrorBoundaryState,
+  ): Partial<PreviewErrorBoundaryState> | null {
+    if (!resetKeysChanged(state.resetKeys, props.resetKeys)) return null;
+    return { hasError: false, resetKeys: props.resetKeys };
+  }
   public static getDerivedStateFromError() {
     return { hasError: true };
   }
@@ -39,4 +52,10 @@ export class PreviewErrorBoundary extends Component<PreviewErrorBoundaryProps, {
       </Card>
     );
   }
+}
+
+function resetKeysChanged(previous: readonly unknown[] | undefined, current: readonly unknown[] | undefined) {
+  if (previous === current) return false;
+  if (!previous || !current || previous.length !== current.length) return true;
+  return current.some((value, index) => !Object.is(value, previous[index]));
 }

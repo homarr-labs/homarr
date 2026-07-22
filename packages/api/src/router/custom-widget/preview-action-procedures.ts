@@ -2,73 +2,49 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { permissionRequiredProcedure } from "../../trpc";
-import { previewSessionRequestSchema, recordPreviewJournal } from "./preview-procedure-helpers";
-import { executeCustomWidgetRequest } from "./request-executor";
-import { renderRequestBody, renderRequestTarget } from "./request-manifest";
+import {
+  getPreviewRequestSource,
+  previewSessionRequestSchema,
+  recordPreviewJournal,
+} from "./preview-procedure-helpers";
+import { executeCustomWidgetRequest, invalidateCustomWidgetResponseCache } from "./request-executor";
+import { renderRequestBody, renderRequestTarget, resolveCustomWidgetRequestValues } from "./request-manifest";
 import { acquireCustomWidgetRequestLimit } from "./request-limits";
-import { getPreviewSession, getPreviewSessionSecrets } from "./preview-sessions";
+import { getPreviewSession } from "./preview-sessions";
 
-const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
+const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
 
 export const previewActionProcedures = {
-  simulatePreviewAction: adminProcedure
+  previewAction: manageProcedure
     .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Validate and simulate one named custom-widget action without sending a network request. REQUIRED: sessionId from customWidget_preview, action requestId, and typed params. Confirms parameter substitution and records a simulated journal entry. Returns requiredPermission as the action's minimum board permission (view, modify, or full), not as an execution result. This MCP tool never enables or executes live actions.",
-      },
+      mcp: { enabled: true, description: "Simulate or run one named action in a custom widget preview session." },
     })
-    .input(previewSessionRequestSchema)
-    .mutation(async ({ ctx, input }) => {
-      const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
-      const request = session.requests.find(
-        (candidate) => candidate.id === input.requestId && candidate.kind === "action",
-      );
-      if (!request) throw new TRPCError({ code: "NOT_FOUND", message: "Preview action was not found" });
-      renderRequestTarget(session.baseUrl, request, input.params);
-      renderRequestBody(request.bodyTemplate, input.params);
-      await recordPreviewJournal(session, {
-        requestId: request.id,
-        kind: "action",
-        method: request.method,
-        pathTemplate: request.pathTemplate,
-        status: null,
-        durationMs: 0,
-        simulated: true,
-      });
-      return {
-        ok: true,
-        simulated: true as const,
-        requestId: request.id,
-        method: request.method,
-        requiredPermission: request.minimumBoardPermission,
-      };
-    }),
-  previewAction: adminProcedure
     .input(previewSessionRequestSchema.extend({ confirmed: z.boolean().optional() }))
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
-      const request = session.requests.find(
-        (candidate) => candidate.id === input.requestId && candidate.kind === "action",
-      );
-      if (!request) throw new TRPCError({ code: "NOT_FOUND", message: "Preview action was not found" });
-      const targetUrl = renderRequestTarget(session.baseUrl, request, input.params);
-      const body = renderRequestBody(request.bodyTemplate, input.params);
+      const definition = session.requests[input.requestId];
+      if (definition?.kind !== "action")
+        throw new TRPCError({ code: "NOT_FOUND", message: "Preview action was not found" });
+      const request = { id: input.requestId, ...definition };
+      const resolved = getPreviewRequestSource(session, request.source);
+      if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
+      const params = resolveCustomWidgetRequestValues(request, session.options, input.params);
+      const targetUrl = renderRequestTarget(resolved.source.baseUrl, request, params);
+      const body = renderRequestBody(request, params);
       if (!session.liveActions) {
         await recordPreviewJournal(session, {
           requestId: request.id,
           kind: "action",
           method: request.method,
-          pathTemplate: request.pathTemplate,
+          path: request.path,
           status: null,
           durationMs: 0,
           simulated: true,
         });
         return { ok: true, status: 0, statusText: "Simulated", data: null, simulated: true as const };
       }
-      if (request.method === "DELETE" && input.confirmed !== true) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "DELETE actions require confirmation" });
+      if ((request.confirmation || request.method === "DELETE") && input.confirmed !== true) {
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This action requires confirmation" });
       }
       const release = await acquireCustomWidgetRequestLimit({
         category: request.method === "DELETE" ? "delete" : "action",
@@ -79,27 +55,25 @@ export const previewActionProcedures = {
       const startedAt = Date.now();
       try {
         const response = await executeCustomWidgetRequest({
-          baseUrl: session.baseUrl,
+          baseUrl: resolved.source.baseUrl,
           targetUrl,
           method: request.method,
           body,
-          staticHeaders: request.staticHeaders,
-          auth:
-            request.auth === "none"
-              ? undefined
-              : {
-                  type: session.authType,
-                  secrets: getPreviewSessionSecrets(session),
-                  headerName: session.headerName,
-                },
-          networkScope: session.networkScope,
+          staticHeaders: request.headers,
+          auth: request.auth === "none" ? undefined : resolved.auth,
+          networkScope: resolved.source.networkScope,
           kind: "action",
         });
+        if (response.ok && request.invalidates?.length) {
+          invalidateCustomWidgetResponseCache(
+            request.invalidates.map((requestId) => `custom-jsx:preview:${session.id}:${requestId}:`),
+          );
+        }
         await recordPreviewJournal(session, {
           requestId: request.id,
           kind: "action",
           method: request.method,
-          pathTemplate: request.pathTemplate,
+          path: request.path,
           status: response.status,
           durationMs: Date.now() - startedAt,
           simulated: false,

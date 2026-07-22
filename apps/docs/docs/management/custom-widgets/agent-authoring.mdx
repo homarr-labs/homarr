@@ -1,26 +1,95 @@
----
-sidebar_label: AI and MCP authoring
----
+# Use agents and skills.sh
 
-# AI and MCP authoring
+An external agent creates one widget at a time with the Homarr MCP server. The agent harness manages the list for multiple widgets.
 
-Homarr exposes an iterative, validation-first workflow to authenticated administrators. Agents should continue until validation, preview, and diagnostics are clean; they must not invent inline network access.
+Homarr does not create widget packs or drafts for multiple widgets.
 
-## Recommended loop
+<a className="button button--primary" href="https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget">
+  View the Custom Widget Skill on skills.sh
+</a>
 
-1. Read `customWidget_schema` and the generated component/capability reference.
-2. Read an existing definition with `customWidget_byId`, or create a v3 draft.
-3. Call `customWidget_validate`; fix every issue using its exact path.
-4. Call `customWidget_preview` for the base GET and retain the preview session ID.
-5. Test each named query with `customWidget_previewQuery`.
-6. Dry-run every action with `customWidget_simulatePreviewAction`.
-7. Inspect `customWidget_previewJournal` for status, duration, and method coverage.
-8. Revalidate, then call import/create or a focused update/patch operation.
+Install the Agent Skill from the verified Homarr repository:
 
-Stored secret values are never readable. Omitting secrets during an update preserves them. MCP actions are simulation-only; enabling live preview actions remains a browser-only administrator decision.
+```sh
+npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget
+```
 
-## Template format
+The portable skill gives concise authoring guidance. The Homarr MCP prompt gives connected agents a retrieval workflow: read the live schema, then fetch only the component documentation needed for the widget.
 
-Use multiline JSX when reading or patching templates. Prefer focused template read/write/patch tools over rewriting an escaped one-line JSON string. When a complete portable artifact is needed, use the authoring bundle placeholder plus a separate fenced JSX block.
+The workbench's **Copy AI prompt** action is separate. It creates a self-contained prompt below 12,000 characters for an ordinary ChatGPT or Claude conversation. It includes the lean contract, bindings, recommended components, and two polished examples. It never tells an offline model to call MCP tools.
 
-The AI prompt is generated from the same registry, examples, request rules, and limits as the validator. Agents should still trust validation output over prompt memory because the installed Homarr version is authoritative.
+The source is in [`.agents/skills/homarr-custom-widget`](https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget). `HEAD` follows the repository default branch, so the link is not tied to an unreleased feature branch. Homarr does not provide a ZIP archive.
+
+After publication, run the installation command once. This action registers installation activity.
+
+Then, verify the skills.sh page. Request official maker attribution for `homarr-labs` from skills.sh.
+
+Repository code cannot give this attribution.
+
+## Get MCP resources
+
+- Prompt: `homarr-custom-widget-author`
+- Resources: `homarr://custom-widgets/schema`, `components`, `components/{name}`, `examples/{name}`, and `skill`
+- HTTP: `GET /api/custom-widgets/authoring-prompt`, `schema`, `components`, and `skill`
+
+The authoring-prompt tool description contains one sentence. The prompt contains the workflow instructions and resource links.
+
+`GET /api/custom-widgets/skill` and the MCP tool return the concise skill discovery payload:
+
+```ts
+{
+  name: "homarr-custom-widget";
+  version: string;
+  skillMd: string;
+  skillsShUrl: string;
+  sourceUrl: string;
+  installCommand: string;
+}
+```
+
+The full installed component catalog stays available through `homarr://custom-widgets/components` and per-component resources. It is deliberately not embedded in the skill or clipboard prompt.
+
+These interfaces do not return an archive URL or archive hash.
+
+## Create a Custom Widget with MCP
+
+1. Get the prompt, live schema, and component catalog.
+2. Read the external API documentation.
+3. Build one definition.
+4. Validate the definition without saving it.
+5. Create a preview session.
+6. Test the queries and actions.
+7. Open the preview URL with browser tools.
+8. Inspect the redacted journal and revise the local candidate until it is valid.
+9. Create the widget, including any source URLs and credentials the user already supplied.
+10. Otherwise, ask the user to configure the saved definition with the ten-minute Homarr source-setup URL.
+11. Create a final preview with the saved definition ID so Homarr loads its stored credentials, then test it again.
+12. Update the saved definition if the final verification finds a problem.
+13. Repeat the procedure for the next widget.
+
+Each source-configuration URL applies to one definition or preview and one source. The user confirms the server URL, network scope, and required credential fields directly in Homarr. The agent receives only request status and never receives plaintext credentials. Preview-scoped values expire with that preview; definition-scoped values persist.
+
+Agents can install existing widgets without regenerating them:
+
+1. Search with `customWidget_workshopSearch`.
+2. Inspect and validate a result with `customWidget_workshopGet`.
+3. Install it with `customWidget_workshopInstall`.
+4. Configure deployment-specific URLs and supplied credentials with `customWidget_sourceConfigure`.
+5. If the agent does not have those values, call `customWidget_configurationRequestUser` and wait for completion.
+6. Test the installed definition, then use `board_addItem` with kind `customApi` and the returned definition ID.
+
+Homarr encrypts the plaintext immediately. Homarr does not return the plaintext.
+
+## Evaluate the copied prompt
+
+Homarr maintainers can run the same self-contained prompt that the workbench copies through the live generation-quality suite:
+
+```sh
+OPENROUTER_API_KEY=... pnpm --filter @homarr/custom-widgets test:ai
+```
+
+The suite uses DeepSeek V4 Pro to author five complex widgets and DeepSeek V4 Flash to judge only widgets that pass Homarr's real parser and canonical schema. It saves every response, validated `widget.json`, `widget.jsx`, and detailed category scores under `packages/custom-widgets/.ai-evaluations/`.
+
+The run has a hard budget of ten generation attempts across all scenarios. Override the models or budget with `OPENROUTER_GENERATOR_MODEL`, `OPENROUTER_JUDGE_MODEL`, and `CUSTOM_WIDGET_AI_MAX_LOOPS`. Generated artifacts are local and ignored by Git; promote a reviewed, validated result into the bundled-widget source deliberately.
+
+The reference API check uses a real PokeAPI list/detail request and a read-only Portainer container query when `PORTAINER_BASE_URL` and `PORTAINER_API_KEY` are set. Use `pnpm --filter @homarr/custom-widgets test:reference-apis -- --pokeapi-only` for the public PokeAPI check alone. To exercise start, restart, and stop against a disposable container, also set `PORTAINER_TEST_CONTAINER_ID` and the explicit safeguard `PORTAINER_ALLOW_MUTATIONS=1`; the script restores the container's original running state.

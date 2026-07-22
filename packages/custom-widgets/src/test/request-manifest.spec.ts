@@ -1,57 +1,84 @@
 import { describe, expect, it } from "vitest";
 
-import type { CustomJsxRequest } from "../core";
-import { hashRuntimeParams, renderRequestBody, renderRequestTarget, validateRuntimeParams } from "../server";
+import { customJsxRequestSchema } from "../core";
+import { renderRequestBody, renderRequestTarget, resolveCustomWidgetRequestValues } from "../server";
 
-const request: CustomJsxRequest = {
-  id: "device",
+const request = customJsxRequestSchema.parse({
   kind: "action",
-  method: "PATCH",
-  pathTemplate: "/devices/{device}/state",
-  parameters: { device: "string", enabled: "boolean", level: "number" },
-  bodyTemplate: { enabled: { $param: "enabled" }, nested: { level: { $param: "level" } } },
-  auth: "inherit",
-  minimumBoardPermission: "modify",
-};
+  method: "POST",
+  path: "/devices/{option:room}/{param:id}",
+  query: { verbose: true, level: { $param: "level" } },
+  body: { enabled: { $param: "enabled" }, room: { $option: "room" } },
+});
 
-describe("named request manifest rendering", () => {
-  it("validates exact parameter names and declared primitive types", () => {
-    expect(() => validateRuntimeParams(request, { device: "lamp", enabled: true, level: 5 })).not.toThrow();
-    expect(() => validateRuntimeParams(request, { device: "lamp", enabled: true })).toThrow("match the manifest");
-    expect(() => validateRuntimeParams(request, { device: "lamp", enabled: true, level: "5" })).toThrow(
-      "must be number",
+describe("lean request bindings", () => {
+  it("infers and resolves option and invocation references", () => {
+    const values = resolveCustomWidgetRequestValues(
+      request,
+      { room: "office" },
+      { id: "lamp/1", level: 5, enabled: true },
     );
+    expect(renderRequestTarget("https://example.com/api/", request, values).toString()).toBe(
+      "https://example.com/api/devices/office/lamp%2F1?verbose=true&level=5",
+    );
+    expect(JSON.parse(renderRequestBody(request, values) ?? "null")).toEqual({ enabled: true, room: "office" });
   });
 
-  it("encodes path placeholders and preserves JSON parameter types", () => {
-    const params = { device: "living room/1", enabled: true, level: 5 };
-    expect(renderRequestTarget("https://example.com/api", request, params).pathname).toBe(
-      "/devices/living%20room%2F1/state",
+  it("rejects missing and extra invocation params", () => {
+    expect(() => resolveCustomWidgetRequestValues(request, { room: "office" }, { id: "lamp", level: 5 })).toThrow(
+      "do not match",
     );
-    expect(JSON.parse(renderRequestBody(request.bodyTemplate, params) ?? "null")).toEqual({
-      enabled: true,
-      nested: { level: 5 },
+    expect(() =>
+      resolveCustomWidgetRequestValues(
+        request,
+        { room: "office" },
+        { id: "lamp", level: 5, enabled: true, extra: true },
+      ),
+    ).toThrow("do not match");
+  });
+
+  it("rejects missing options and non-primitive URL values", () => {
+    expect(() => resolveCustomWidgetRequestValues(request, {}, { id: "lamp", level: 5, enabled: true })).toThrow(
+      "room",
+    );
+    const values = resolveCustomWidgetRequestValues(request, { room: [] }, { id: "lamp", level: 5, enabled: true });
+    expect(() => renderRequestTarget("https://example.com", request, values)).toThrow("Path value");
+  });
+
+  it("supports structured options in JSON bodies", () => {
+    const bodyRequest = customJsxRequestSchema.parse({
+      kind: "action",
+      method: "POST",
+      path: "/rules",
+      body: { entities: { $option: "entities" }, rule: { $option: "rule" } },
+    });
+    const values = resolveCustomWidgetRequestValues(bodyRequest, {
+      entities: ["light.office", "light.desk"],
+      rule: { transition: 2 },
+    });
+    expect(JSON.parse(renderRequestBody(bodyRequest, values) ?? "null")).toEqual({
+      entities: ["light.office", "light.desk"],
+      rule: { transition: 2 },
     });
   });
 
-  it("rejects unresolved or malformed placeholders", () => {
-    expect(() =>
-      renderRequestTarget(
-        "https://example.com",
-        { ...request, pathTemplate: "/{missing}" },
-        { device: "lamp", enabled: true, level: 5 },
-      ),
-    ).toThrow("Unknown path parameter");
-    expect(() =>
-      renderRequestTarget(
-        "https://example.com",
-        { ...request, pathTemplate: "/{INVALID}" },
-        { device: "lamp", enabled: true, level: 5 },
-      ),
-    ).toThrow("invalid placeholder");
+  it("keeps a source base path", () => {
+    const pokemon = customJsxRequestSchema.parse({ path: "/pokemon" });
+    expect(renderRequestTarget("https://pokeapi.co/api/v2", pokemon, {}).toString()).toBe(
+      "https://pokeapi.co/api/v2/pokemon",
+    );
   });
 
-  it("hashes parameters independently of object insertion order", () => {
-    expect(hashRuntimeParams({ a: 1, b: "two" })).toBe(hashRuntimeParams({ b: "two", a: 1 }));
+  it.each(["start", "stop", "restart"])("renders a Portainer %s action without duplicating declarations", (action) => {
+    const portainer = customJsxRequestSchema.parse({
+      kind: "action",
+      method: "POST",
+      path: `/api/endpoints/{option:endpointId}/docker/containers/{param:id}/${action}`,
+      invalidates: ["containers"],
+    });
+    const values = resolveCustomWidgetRequestValues(portainer, { endpointId: 2 }, { id: "abc/123" });
+    expect(renderRequestTarget("https://portainer.example", portainer, values).pathname).toBe(
+      `/api/endpoints/2/docker/containers/abc%2F123/${action}`,
+    );
   });
 });

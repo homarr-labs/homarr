@@ -38,17 +38,27 @@ test("MCP tools should contain expected procedures", () => {
   expect(toolNames).toContain("board_duplicateBoard");
   expect(toolNames).toContain("customWidget_schema");
   expect(toolNames).toContain("customWidget_validate");
-  expect(toolNames).toContain("customWidget_all");
-  expect(toolNames).toContain("customWidget_byId");
-  expect(toolNames).toContain("customWidget_readTemplate");
-  expect(toolNames).toContain("customWidget_writeTemplate");
-  expect(toolNames).toContain("customWidget_patchTemplate");
+  expect(toolNames).toContain("customWidget_list");
+  expect(toolNames).toContain("customWidget_get");
+  expect(toolNames).toContain("customWidget_templatePatch");
   expect(toolNames).toContain("customWidget_create");
-  expect(toolNames).toContain("customWidget_import");
   expect(toolNames).toContain("customWidget_update");
-  expect(toolNames).toContain("customWidget_preview");
+  expect(toolNames).toContain("customWidget_delete");
+  expect(toolNames).toContain("customWidget_previewCreate");
   expect(toolNames).toContain("customWidget_previewQuery");
-  expect(toolNames).toContain("customWidget_simulatePreviewAction");
+  expect(toolNames).toContain("customWidget_previewAction");
+  expect(toolNames).toContain("customWidget_previewJournal");
+  expect(toolNames).toContain("customWidget_secretSet");
+  expect(toolNames).toContain("customWidget_sourceConfigure");
+  expect(toolNames).toContain("customWidget_configurationRequestUser");
+  expect(toolNames).toContain("customWidget_workshopSearch");
+  expect(toolNames).toContain("customWidget_workshopGet");
+  expect(toolNames).toContain("customWidget_workshopInstall");
+  expect(toolNames).toContain("customWidget_getAuthoringPrompt");
+  expect(toolNames).toContain("customWidget_getSkill");
+  expect(toolNames).not.toContain("customWidget_import");
+  expect(toolNames).not.toContain("customWidget_export");
+  expect(toolNames).not.toContain("customWidget_simulatePreviewAction");
   expect(toolNames).toContain("info_getInfo");
   expect(toolNames).toContain("invite_getAll");
   expect(toolNames).toContain("serverSettings_getBoardSettings");
@@ -61,13 +71,17 @@ test("MCP tools should have descriptions", () => {
   for (const tool of tools) {
     expect(tool.description, `Tool ${tool.name} should have a description`).toBeTruthy();
   }
+
+  expect(tools.find((tool) => tool.name === "customWidget_getAuthoringPrompt")?.description).toBe(
+    "Get the current Custom Widget authoring instructions.",
+  );
 });
 
 test("custom widget public procedures remain available", () => {
-  expect(Object.keys(customWidgetRouter._def.procedures)).toEqual(
+  expect(Object.keys(customWidgetRouter["_def"].procedures)).toEqual(
     expect.arrayContaining([
-      "all",
-      "byId",
+      "list",
+      "get",
       "available",
       "create",
       "update",
@@ -80,13 +94,22 @@ test("custom widget public procedures remain available", () => {
       "validate",
       "readTemplate",
       "writeTemplate",
-      "patchTemplate",
-      "preview",
+      "templatePatch",
+      "previewCreate",
+      "previewGet",
       "previewQuery",
       "previewAction",
-      "simulatePreviewAction",
       "setPreviewLiveActions",
       "previewJournal",
+      "secretSet",
+      "sourceConfigure",
+      "configurationRequestUser",
+      "workshopSearch",
+      "workshopGet",
+      "workshopInstall",
+      "secretClear",
+      "getAuthoringPrompt",
+      "getSkill",
     ]),
   );
 });

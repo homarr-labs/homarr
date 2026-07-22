@@ -1,28 +1,28 @@
 import { isSafeCallable } from "./safe-bindings";
 import { isInterpreterCallback, normalizedSliceIndex, numericArgument, SafeJsxError } from "./interpreter-foundation";
-import type { Budget, InterpreterCallback } from "./interpreter-foundation";
-
-interface CollectionMethodContext {
-  budget: Budget;
-  runCallback(callback: InterpreterCallback, args: unknown[], depth: number): unknown;
-}
+import type { InterpreterCallback } from "./interpreter-foundation";
+import type { InterpreterMethodContext } from "./interpreter-method-context";
+import { callStringMethod } from "./string-methods";
 
 export function callCollectionMethod(
   receiver: unknown,
   method: string,
   args: unknown[],
   depth: number,
-  context: CollectionMethodContext,
+  context: InterpreterMethodContext,
 ): { handled: boolean; value?: unknown } {
   if (Array.isArray(receiver)) {
-    if (method === "map" || method === "filter") {
+    if (method === "map" || method === "filter" || method === "flatMap") {
       const callback = args[0];
       if (isSafeCallable(callback)) {
         const result: unknown[] = [];
         for (let index = 0; index < receiver.length; index += 1) {
           context.budget.collection();
           const callbackResult = callback(receiver[index] as never);
-          if (method === "map") result.push(callbackResult);
+          if (method === "flatMap" && Array.isArray(callbackResult)) {
+            context.budget.collection(callbackResult.length);
+            result.push(...callbackResult);
+          } else if (method === "map" || method === "flatMap") result.push(callbackResult);
           else if (callbackResult) result.push(receiver[index]);
         }
         return { handled: true, value: result };
@@ -32,7 +32,25 @@ export function callCollectionMethod(
       for (let index = 0; index < receiver.length; index += 1) {
         context.budget.collection();
         const callbackResult = context.runCallback(callback, [receiver[index], index, receiver], depth + 1);
-        if (method === "map" || callbackResult) result.push(method === "map" ? callbackResult : receiver[index]);
+        if (method === "flatMap" && Array.isArray(callbackResult)) {
+          context.budget.collection(callbackResult.length);
+          result.push(...callbackResult);
+        } else if (method === "map" || method === "flatMap" || callbackResult) {
+          result.push(method === "map" || method === "flatMap" ? callbackResult : receiver[index]);
+        }
+      }
+      return { handled: true, value: result };
+    }
+    if (method === "concat") {
+      const result = [...receiver];
+      for (const value of args) {
+        if (Array.isArray(value)) {
+          context.budget.collection(value.length);
+          result.push(...value);
+        } else {
+          context.budget.collection();
+          result.push(value);
+        }
       }
       return { handled: true, value: result };
     }
@@ -155,98 +173,11 @@ export function callCollectionMethod(
     }
   }
 
-  if (typeof receiver === "string") {
-    switch (method) {
-      case "toUpperCase":
-        return { handled: true, value: context.budget.string(receiver.toUpperCase()) };
-      case "toLowerCase":
-        return { handled: true, value: context.budget.string(receiver.toLowerCase()) };
-      case "trim":
-        return { handled: true, value: context.budget.string(receiver.trim()) };
-      case "trimStart":
-        return { handled: true, value: context.budget.string(receiver.trimStart()) };
-      case "trimEnd":
-        return { handled: true, value: context.budget.string(receiver.trimEnd()) };
-      case "replace": {
-        const search = String(args[0] ?? "");
-        const replacement = String(args[1] ?? "");
-        const matchIndex = receiver.indexOf(search);
-        if (matchIndex === -1) return { handled: true, value: context.budget.string(receiver) };
-        return {
-          handled: true,
-          value: context.budget.string(
-            receiver.slice(0, matchIndex) + replacement + receiver.slice(matchIndex + search.length),
-          ),
-        };
-      }
-      case "replaceAll": {
-        const search = String(args[0] ?? "");
-        const replacement = String(args[1] ?? "");
-        if (search.length === 0) return { handled: true, value: context.budget.string(receiver) };
-        let result = "";
-        let cursor = 0;
-        while (cursor < receiver.length) {
-          const matchIndex = receiver.indexOf(search, cursor);
-          if (matchIndex === -1) {
-            result += receiver.slice(cursor);
-            break;
-          }
-          result += receiver.slice(cursor, matchIndex) + replacement;
-          cursor = matchIndex + search.length;
-        }
-        return { handled: true, value: context.budget.string(result) };
-      }
-      case "indexOf":
-        return { handled: true, value: receiver.indexOf(String(args[0] ?? ""), numericArgument(args[1], 0)) };
-      case "lastIndexOf": {
-        const fromIndex = args[1] !== undefined ? numericArgument(args[1], receiver.length) : undefined;
-        return { handled: true, value: receiver.lastIndexOf(String(args[0] ?? ""), fromIndex) };
-      }
-      case "repeat": {
-        let maxCount = 0;
-        if (receiver.length > 0) maxCount = Math.floor(200_001 / receiver.length);
-        const count = Math.max(0, Math.min(numericArgument(args[0], 0), maxCount));
-        return { handled: true, value: context.budget.string(receiver.repeat(count).slice(0, 200_001)) };
-      }
-      case "slice":
-        return {
-          handled: true,
-          value: context.budget.string(receiver.slice(numericArgument(args[0], 0), args[1] as number | undefined)),
-        };
-      case "substring":
-        return {
-          handled: true,
-          value: context.budget.string(receiver.substring(numericArgument(args[0], 0), args[1] as number | undefined)),
-        };
-      case "includes":
-        return { handled: true, value: receiver.includes(String(args[0] ?? ""), numericArgument(args[1], 0)) };
-      case "startsWith":
-        return { handled: true, value: receiver.startsWith(String(args[0] ?? ""), numericArgument(args[1], 0)) };
-      case "endsWith":
-        return { handled: true, value: receiver.endsWith(String(args[0] ?? ""), args[1] as number | undefined) };
-      case "padStart":
-        return {
-          handled: true,
-          value: context.budget.string(
-            receiver.padStart(Math.min(numericArgument(args[0], 0), 200_001), String(args[1] ?? " ")),
-          ),
-        };
-      case "padEnd":
-        return {
-          handled: true,
-          value: context.budget.string(
-            receiver.padEnd(Math.min(numericArgument(args[0], 0), 200_001), String(args[1] ?? " ")),
-          ),
-        };
-      case "charAt":
-        return { handled: true, value: receiver.charAt(numericArgument(args[0], 0)) };
-      case "split": {
-        const limit = Math.max(0, Math.min(2_000, numericArgument(args[1], 2_000)));
-        const split = args[0] === undefined ? [receiver] : receiver.split(String(args[0]), limit);
-        context.budget.collection(split.length);
-        return { handled: true, value: split };
-      }
-    }
+  if (typeof receiver === "string") return callStringMethod(receiver, method, args, context);
+
+  if (receiver instanceof RegExp && method === "test") {
+    const value = String(args[0] ?? "");
+    return { handled: true, value: receiver.test(value) };
   }
 
   if (typeof receiver === "number") {
@@ -257,6 +188,9 @@ export function callCollectionMethod(
     if (method === "toPrecision") {
       const precision = Math.max(1, Math.min(21, numericArgument(args[0], 1)));
       return { handled: true, value: receiver.toPrecision(precision) };
+    }
+    if (method === "toLocaleString") {
+      return { handled: true, value: context.budget.string(receiver.toLocaleString()) };
     }
   }
 

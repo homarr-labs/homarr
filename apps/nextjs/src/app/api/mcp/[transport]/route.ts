@@ -3,13 +3,28 @@ import type { NextRequest } from "next/server";
 import { userAgent } from "next/server";
 import { createMcpHandler } from "mcp-handler";
 import type { McpTool } from "trpc-to-mcp";
-import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import {
+  CallToolRequestSchema,
+  GetPromptRequestSchema,
+  ListPromptsRequestSchema,
+  ListResourcesRequestSchema,
+  ListResourceTemplatesRequestSchema,
+  ListToolsRequestSchema,
+  ReadResourceRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
 
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { buildCustomWidgetMcpPrompt } from "@homarr/custom-widgets/authoring-prompt";
+import {
+  getCustomWidgetComponent,
+  getCustomWidgetComponentCatalog,
+  getCustomWidgetSkillContent,
+} from "@homarr/custom-widgets/authoring-resources";
+import { customJsxExamples, getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 import { db } from "@homarr/db";
 
 import { getPackageVersion } from "~/versions/package-reader";
@@ -168,6 +183,91 @@ If \`hasUseAccess\` is false, the API key owner lacks permission for that integr
 
 const mcpHandler = createMcpHandler(
   (server) => {
+    server.server.setRequestHandler(ListPromptsRequestSchema, () => ({
+      prompts: [
+        {
+          name: "homarr-custom-widget-author",
+          description: "Author and iterate on one Homarr Custom JSX v2 widget.",
+          arguments: [
+            { name: "request", description: "The widget the user wants.", required: false },
+            { name: "documentationUrl", description: "External API documentation URL.", required: false },
+          ],
+        },
+      ],
+    }));
+
+    server.server.setRequestHandler(GetPromptRequestSchema, (request) => {
+      if (request.params.name !== "homarr-custom-widget-author") throw new Error("Prompt not found");
+      return {
+        description: "Current Homarr Custom Widget authoring workflow.",
+        messages: [
+          {
+            role: "user" as const,
+            content: {
+              type: "text" as const,
+              text: buildCustomWidgetMcpPrompt(
+                request.params.arguments?.request,
+                request.params.arguments?.documentationUrl,
+              ),
+            },
+          },
+        ],
+      };
+    });
+
+    server.server.setRequestHandler(ListResourcesRequestSchema, () => ({
+      resources: [
+        { uri: "homarr://custom-widgets/schema", name: "Custom Widget schema", mimeType: "application/schema+json" },
+        { uri: "homarr://custom-widgets/components", name: "Custom Widget components", mimeType: "application/json" },
+        { uri: "homarr://custom-widgets/skill", name: "Custom Widget skill", mimeType: "text/markdown" },
+        ...customJsxExamples.map((example) => ({
+          uri: `homarr://custom-widgets/examples/${example.id}`,
+          name: `Custom Widget example: ${example.title}`,
+          mimeType: "application/json",
+        })),
+      ],
+    }));
+
+    server.server.setRequestHandler(ListResourceTemplatesRequestSchema, () => ({
+      resourceTemplates: [
+        {
+          uriTemplate: "homarr://custom-widgets/components/{name}",
+          name: "Custom Widget component",
+          description: "Metadata for one installed Custom Widget component.",
+          mimeType: "application/json",
+        },
+        {
+          uriTemplate: "homarr://custom-widgets/examples/{name}",
+          name: "Custom Widget example",
+          description: "One canonical Custom Widget example.",
+          mimeType: "application/json",
+        },
+      ],
+    }));
+
+    server.server.setRequestHandler(ReadResourceRequestSchema, (request) => {
+      const { uri } = request.params;
+      let text: string;
+      let mimeType = "application/json";
+      if (uri === "homarr://custom-widgets/schema") text = JSON.stringify(getCustomWidgetJsonSchema());
+      else if (uri === "homarr://custom-widgets/components") text = JSON.stringify(getCustomWidgetComponentCatalog());
+      else if (uri === "homarr://custom-widgets/skill") {
+        text = getCustomWidgetSkillContent();
+        mimeType = "text/markdown";
+      } else if (uri.startsWith("homarr://custom-widgets/components/")) {
+        const name = decodeURIComponent(uri.slice("homarr://custom-widgets/components/".length));
+        const component = getCustomWidgetComponent(name);
+        if (!component) throw new Error("Component resource not found");
+        text = JSON.stringify(component);
+      } else if (uri.startsWith("homarr://custom-widgets/examples/")) {
+        const name = decodeURIComponent(uri.slice("homarr://custom-widgets/examples/".length));
+        const example = customJsxExamples.find((candidate) => candidate.id === name);
+        if (!example) throw new Error("Example resource not found");
+        text = JSON.stringify(example);
+      } else throw new Error("Resource not found");
+      return { contents: [{ uri, mimeType, text }] };
+    });
+
     server.server.setRequestHandler(ListToolsRequestSchema, () => ({
       tools: getTools(),
     }));
@@ -219,7 +319,7 @@ const mcpHandler = createMcpHandler(
     });
   },
   {
-    capabilities: { tools: {} },
+    capabilities: { tools: {}, prompts: {}, resources: {} },
     instructions: SERVER_INSTRUCTIONS,
     serverInfo: {
       name: "homarr",

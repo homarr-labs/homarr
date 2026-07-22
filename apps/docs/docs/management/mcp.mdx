@@ -162,58 +162,65 @@ The tools table on the MCP tab is dynamically generated - it always reflects the
 - **"How many users are on my Homarr instance?"** - AI lists all users (admin only)
 - **"Toggle Pi-hole blocking for 5 minutes"** - AI interacts with DNS controls
 - **"How are my servers doing?"** - AI fetches Beszel system stats including CPU, memory, disk, and alerts
-- **"Build and refine a custom widget for this API"** - AI validates the draft, tests GET data and named queries, simulates actions, and creates or updates the widget
+- **"Build a Custom Widget for this API"** - AI validates and previews one definition before it saves the definition
 
-## Custom Widget Workflow for AI Agents
+## Create a Custom Widget with an AI agent
 
-AI agents can create and iterate on custom widgets using these tools in sequence.
+An agent creates one `homarr-custom-widget-v2` definition at a time. Start with the native prompt `homarr-custom-widget-author`.
 
-:::tip Editing an existing widget?
-Skip to step 5. Use `customWidget_byId` to fetch it and `customWidget_readTemplate` / `customWidget_writeTemplate` to edit its template directly.
-:::
+Then, read the live schema and component resources. These resources describe the installed Mantine components.
 
-### 1. Get the schema
+1. Call `customWidget_getAuthoringPrompt` and `customWidget_schema`.
+2. Build one Custom Widget definition.
+3. Call `customWidget_validate` without saving the definition.
+4. Call `customWidget_previewCreate`.
+5. Test named requests with `customWidget_previewQuery` and `customWidget_previewAction`.
+6. Open the returned preview URL.
+7. Examine `customWidget_previewJournal`.
+8. Revise the local candidate and create another preview session until it is ready.
+9. Call `customWidget_create`, supplying any credentials and deployment-specific source URLs the user already provided.
+10. If the user must enter the source URL or credentials, call `customWidget_configurationRequestUser` with the new definition ID and wait for completion.
+11. Create a final preview with that definition ID so Homarr loads its stored credentials, then test it again.
+12. Use `customWidget_update` or `customWidget_templatePatch` for any final saved-definition corrections.
+13. Repeat this procedure for the next Custom Widget.
 
-Call `customWidget_schema` to receive the JSON Schema for the `homarr-custom-widget-v3` format. This tells the agent what fields are required and their types.
+The agent receives the configuration-request status. The agent does not receive plaintext credentials. A preview-scoped setup URL configures only that temporary preview; use a definition-scoped URL when the values must persist.
 
-### 2. Draft and validate
+Discovery resources:
 
-Build a widget JSON object and call `customWidget_validate` with it. The tool returns structured issues (path + message) so the agent can fix and re-validate until the draft is clean.
+- `homarr://custom-widgets/schema`
+- `homarr://custom-widgets/components`
+- `homarr://custom-widgets/components/{name}`
+- `homarr://custom-widgets/examples/{name}`
+- `homarr://custom-widgets/skill`
 
-### 3. Create the widget
+An HTTP-only harness can use the matching `/api/custom-widgets/authoring-prompt`, `/schema`, `/components`, and `/skill` endpoints instead of MCP resource URIs.
 
-Call `customWidget_import` with the validated `homarr-custom-widget-v3` draft. This returns the new widget `id`. Use `customWidget_create` only when you intentionally need its lower-level creation input, including secret fields.
+The Custom Widget tools are:
 
-### 4. Test with real data
+- `customWidget_schema`
+- `customWidget_validate`
+- `customWidget_list`
+- `customWidget_get`
+- `customWidget_create`
+- `customWidget_update`
+- `customWidget_delete`
+- `customWidget_templatePatch`
+- `customWidget_previewCreate`
+- `customWidget_previewQuery`
+- `customWidget_previewAction`
+- `customWidget_previewJournal`
+- `customWidget_secretSet`
+- `customWidget_sourceConfigure`
+- `customWidget_configurationRequestUser`
+- `customWidget_workshopSearch`
+- `customWidget_workshopGet`
+- `customWidget_workshopInstall`
+- `customWidget_getAuthoringPrompt`
+- `customWidget_getSkill`
 
-Call `customWidget_preview` with the widget's connection info. This makes a real GET request through Homarr's hardened executor and returns the sanitized response plus a preview session ID.
+The `custom-widget-manage` permission permits authoring. A direct credential write also requires the `custom-widget-secret-write` permission.
 
-For Custom JSX v2 widgets with named requests, use `customWidget_previewQuery` to test each named GET query, and `customWidget_simulatePreviewAction` to dry-run actions without network calls.
+Homarr applies its request security controls during request execution. These controls include SSRF, DNS, redirect, size, timeout, rate, and permission controls.
 
-### 5. Iterate on the template
-
-Use `customWidget_readTemplate` to get the current JSX template as plain text, then `customWidget_writeTemplate` to push updates. The write tool accepts either:
-
-- `template` — a single string (newlines as `\n`)
-- `templateLines` — an array of strings (joined with newlines server-side, avoids `\n` escaping)
-
-Both options validate the template AST before saving. This avoids re-sending the full widget JSON for template-only edits.
-
-For small changes, prefer `customWidget_patchTemplate`. Pass the `revision` returned by `customWidget_readTemplate` and one or more line edits. Homarr rejects stale revisions, applies all edits atomically, and validates the complete template against its named request manifest before saving.
-
-### 6. Update non-template fields
-
-Call `customWidget_byId` to get the full widget, modify fields, and call `customWidget_update` with only the changed fields.
-
-### Available components in templates
-
-Custom JSX templates support 100+ Mantine components plus:
-
-- `<TablerIcon name="server" size={20} color="blue" />` — 100+ curated Tabler icons by kebab-case name (e.g. `"player-play"`, `"alert-triangle"`)
-- `<SubFetch>` / `<ActionButton>` / `<ToggleSwitch>` — network-capable components for named requests
-- Array methods: `map`, `filter`, `find`, `findIndex`, `some`, `every`, `reduce`, `sort`, `slice`, `flat`, `reverse`, `at`, `pop`, `join`, `includes`, `indexOf` (note: `pop` returns last element without mutating)
-- String methods: `toUpperCase`, `toLowerCase`, `trim`, `trimStart`, `trimEnd`, `slice`, `substring`, `includes`, `startsWith`, `endsWith`, `split`, `replace`, `replaceAll`, `repeat`, `padStart`, `padEnd`, `charAt`, `indexOf`, `lastIndexOf`
-
-:::note
-All `customWidget_*` tools require admin-level API key permissions. The preview executor enforces rate limits (60 queries/min, 10 actions/min).
-:::
+Read [Use agents and skills.sh](./custom-widgets/agent-authoring) for the complete procedure and the portable Agent Skill.

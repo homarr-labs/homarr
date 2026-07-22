@@ -11,6 +11,8 @@ import { IconInfoCircle } from "@tabler/icons-react";
 import { useForm } from "@homarr/form";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
+import { WorkshopCssImportButton } from "~/components/workshop/workshop-css-import-button";
+
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
 import classes from "./customcss.module.css";
@@ -45,7 +47,8 @@ export const CustomCssSettingsContent = ({ board }: Props) => {
           {customCssT("customClassesAlert.description")}
         </Alert>
 
-        <Group justify="end">
+        <Group justify="space-between">
+          <WorkshopCssImportButton onImport={(css) => form.setFieldValue("customCss", css)} />
           <Button type="submit" loading={isPending}>
             {t("common.action.saveChanges")}
           </Button>

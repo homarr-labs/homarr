@@ -186,8 +186,21 @@ jobs:
           path: e2e/test-results/
           retention-days: 7
 
-      - name: Determine preview tag
-        id: preview
+      - name: Log in to GHCR for preview publication
+        if: |
+          !env.ACT &&
+          (
+            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
+          )
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push amd64 preview image by digest
+        id: preview-build
         if: |
           !env.ACT &&
           (
@@ -298,6 +311,18 @@ jobs:
           docker buildx imagetools create -t "${PREVIEW_IMAGE}:${PREVIEW_TAG}" \
             "${PREVIEW_IMAGE}@${AMD64_DIGEST}" \
             "${PREVIEW_IMAGE}@${ARM64_DIGEST}"
+
+      - name: Verify preview manifest platforms
+        if: "!env.ACT"
+        run: |
+          image="${PREVIEW_IMAGE}:${PREVIEW_TAG}"
+          manifest="$(docker buildx imagetools inspect "$image" --raw)"
+          for architecture in amd64 arm64; do
+            jq --exit-status --arg architecture "$architecture" \
+              'any(.manifests[]; .platform.os == "linux" and .platform.architecture == $architecture)' \
+              <<<"$manifest" >/dev/null
+          done
+          docker buildx imagetools inspect "$image"
 
   cleanup:
     name: Clean up preview image

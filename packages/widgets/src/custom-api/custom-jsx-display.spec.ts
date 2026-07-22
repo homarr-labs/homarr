@@ -2,20 +2,27 @@ import { MantineProvider } from "@mantine/core";
 import * as MantineCharts from "@mantine/charts";
 import * as MantineCore from "@mantine/core";
 import * as MantineDates from "@mantine/dates";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
-import type { ReactNode } from "react";
 import type { Root } from "react-dom/client";
 
-import { customJsxComponentRegistry, customJsxExamples, enabledCustomJsxComponents } from "@homarr/custom-widgets/core";
+import { customJsxComponentRegistry, enabledCustomJsxComponents } from "@homarr/custom-widgets/catalog";
+import {
+  BUNDLED_CUSTOM_WIDGETS,
+  customJsxExamples,
+  customJsxTablerIconNames,
+  getCustomWidgetDefaultOptions,
+} from "@homarr/custom-widgets/core";
 import { renderSafeJsx, SafeJsxError, sanitizeCustomJsxProps } from "@homarr/custom-widgets/jsx";
 
 import CustomJsxDisplay from "./custom-jsx-display";
-import { createWhitelistedComponents, SAFE_BINDINGS } from "./jsx-whitelist";
+import { createCustomWidgetComponents, SAFE_BINDINGS } from "./jsx-components";
+import { SAFE_TABLER_ICON_NAMES } from "./jsx-icon-adapter";
 
-const WHITELISTED_COMPONENTS = createWhitelistedComponents({ copy: "Copy", copied: "Copied" });
+const CUSTOM_WIDGET_COMPONENTS = createCustomWidgetComponents({ copy: "Copy", copied: "Copied" });
 
 vi.mock("@homarr/translation/client", () => ({
   useScopedI18n: () => (key: string, params?: Record<string, string>) =>
@@ -31,6 +38,10 @@ const isComponentLikeExport = ([name, value]: [string, unknown]): boolean => {
 };
 
 describe("CustomJsxDisplay", () => {
+  it("keeps safe Tabler icon metadata synchronized with the runtime", () => {
+    expect(SAFE_TABLER_ICON_NAMES).toEqual(customJsxTablerIconNames);
+  });
+
   let container: HTMLDivElement;
   let root: Root;
 
@@ -49,6 +60,14 @@ describe("CustomJsxDisplay", () => {
         dispatchEvent: () => false,
       }),
     });
+    Object.defineProperty(globalThis, "ResizeObserver", {
+      writable: true,
+      value: class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    });
   });
 
   afterEach(async () => {
@@ -60,8 +79,15 @@ describe("CustomJsxDisplay", () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     await act(async () => {
-      root.render(createElement(MantineProvider, null, createElement(CustomJsxDisplay, { data })));
+      root.render(
+        createElement(
+          MantineProvider,
+          null,
+          createElement(QueryClientProvider, { client: queryClient }, createElement(CustomJsxDisplay, { data })),
+        ),
+      );
     });
   };
 
@@ -73,6 +99,65 @@ describe("CustomJsxDisplay", () => {
 
     expect(container.textContent).toContain("Server A");
     expect(container.textContent).toContain("3");
+  });
+
+  it("keeps runtime components inside an inert provider before a preview session exists", async () => {
+    await renderDisplay({ template: '<RefreshButton label="Refresh" />', data: {} });
+
+    expect(container.querySelector('button[aria-label="Refresh"]')).not.toBeNull();
+    expect(container.textContent).not.toContain("RUNTIME_RENDER_ERROR");
+    expect(container.querySelector("button")?.disabled).toBe(true);
+  });
+
+  it("renders the bundled Pokédex list without a widget-wide runtime failure", async () => {
+    const pokedex = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-pokedex")?.widget;
+    expect(pokedex).toBeDefined();
+    await renderDisplay({
+      template: pokedex?.template,
+      data: {
+        pokemon: {
+          count: 2,
+          results: [
+            { name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/" },
+            { name: "pikachu", url: "https://pokeapi.co/api/v2/pokemon/25/" },
+          ],
+        },
+      },
+      status: { pokemon: { loading: false, ok: true, status: 200 } },
+      options: getCustomWidgetDefaultOptions(pokedex?.options ?? {}),
+    });
+
+    expect(container.textContent).toContain("bulbasaur");
+    expect(container.textContent).toContain("pikachu");
+    expect(
+      container.querySelector('img[src="https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/1.png"]'),
+    ).not.toBeNull();
+    expect(
+      container.querySelector('img[src="https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/25.png"]'),
+    ).not.toBeNull();
+    expect(container.querySelectorAll("img.mantine-Image-root")).toHaveLength(2);
+    expect(container.querySelectorAll(".mantine-Card-root")).toHaveLength(2);
+    expect(container.textContent).not.toContain("RUNTIME_RENDER_ERROR");
+  });
+
+  it("recovers when preview data arrives after an initial render error", async () => {
+    const template = "<Stack>{data.items.map((item) => <Text key={item}>{item}</Text>)}</Stack>";
+    await renderDisplay({ template, data: {} });
+    expect(container.textContent).toContain("RUNTIME_RENDER_ERROR");
+
+    await act(async () => {
+      root.render(
+        createElement(
+          MantineProvider,
+          null,
+          createElement(CustomJsxDisplay, { data: { template, data: { items: ["Bulbasaur", "Pikachu"] } } }),
+        ),
+      );
+    });
+
+    expect(container.textContent).toContain("Bulbasaur");
+    expect(container.textContent).toContain("Pikachu");
+    expect(container.textContent).not.toContain("RUNTIME_RENDER_ERROR");
   });
 
   it("blocks script tags and event handlers", async () => {
@@ -103,26 +188,6 @@ describe("CustomJsxDisplay", () => {
     expect(container.textContent).toContain("1. ALPHA");
     expect(container.textContent).toContain("2. BETA");
     expect(container.textContent).not.toContain("GAMMA");
-  });
-
-  it("renders fetched data through an interpreter-created SubFetch child", async () => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-    root = createRoot(container);
-    const rendered = renderSafeJsx({
-      template:
-        "<SubFetch>{(detail, meta) => <Text>{detail.types.map((entry) => entry.name).join(', ')} · {meta.status}</Text>}</SubFetch>",
-      components: {
-        SubFetch: ((props: { render?: (data: unknown, metadata: unknown) => ReactNode }) =>
-          props.render?.({ types: [{ name: "grass" }, { name: "poison" }] }, { status: 200 })) as never,
-        Text: ((props: { children?: ReactNode }) => createElement("span", null, props.children)) as never,
-      },
-      bindings: {},
-    });
-
-    await act(async () => root.render(rendered.node));
-
-    expect(container.textContent).toBe("grass, poison · 200");
   });
 
   it("blocks reflective properties assembled with string concatenation", async () => {
@@ -373,14 +438,14 @@ describe("Custom JSX component registry", () => {
   it("has a runtime implementation for every enabled registry component", () => {
     const missing = enabledCustomJsxComponents
       .map(({ name }) => name)
-      .filter((name) => !Object.hasOwn(WHITELISTED_COMPONENTS, name));
+      .filter((name) => !Object.hasOwn(CUSTOM_WIDGET_COMPONENTS, name));
 
     expect(missing, "Enabled components without a runtime implementation").toEqual([]);
   });
 });
 
 const renderTemplate = (template: string, data: Record<string, unknown> = {}) =>
-  renderSafeJsx({ template, components: WHITELISTED_COMPONENTS, bindings: SAFE_BINDINGS(data) });
+  renderSafeJsx({ template, components: CUSTOM_WIDGET_COMPONENTS, bindings: SAFE_BINDINGS(data) });
 
 describe("new collection/string methods", () => {
   let container: HTMLDivElement;
@@ -543,9 +608,14 @@ describe("shared Custom JSX examples", () => {
 
   it.each(customJsxExamples)("parses and creates the $id renderer tree", (example) => {
     const rendered = renderSafeJsx({
-      template: example.template,
-      components: WHITELISTED_COMPONENTS,
-      bindings: SAFE_BINDINGS(sampleData),
+      template: example.widget.template,
+      components: CUSTOM_WIDGET_COMPONENTS,
+      bindings: {
+        ...SAFE_BINDINGS(sampleData),
+        status: {},
+        options: getCustomWidgetDefaultOptions(example.widget.options ?? {}),
+        inputs: {},
+      },
     });
 
     expect(rendered.warnings).toEqual([]);

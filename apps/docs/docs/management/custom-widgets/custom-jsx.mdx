@@ -1,49 +1,44 @@
----
-sidebar_label: Custom JSX language
----
+# Use the safe JSX runtime
 
-# Custom JSX language
+Templates are JSX expressions interpreted inside a widget-local safety and render budget. They can read:
 
-Custom JSX is a declarative expression language, not browser JavaScript. Homarr parses an explicit AST subset and emits React elements from a classified component registry. Templates cannot access browser globals, native prototypes, constructors, refs, portals, raw event handlers, or direct `fetch`.
+- `data.requestId` — the latest response
+- `status.requestId` — `{ loading, ok, status, statusText, error }`
+- `options.name` — saved widget configuration
+- `inputs.name` — temporary values from declarative `bind`
 
-## Data and rendering
+Use normal Mantine layouts, typography, feedback, dates, and charts. Official compound names such as `Card.Section`, `Tabs.List`, and `Radio.Group` are supported. Ordinary safe props pass through; a dangerous capability produces an explicit error.
 
-The base GET response is available as `data`. Safe member access, conditionals, arrays, object literals, and interpreter-created collection callbacks can compose displays:
+## Temporary inputs
 
 ```jsx
-<Stack gap="xs">
-  {data.services
-    .filter((service) => service.visible)
-    .map((service) => (
-      <Group key={service.id} justify="space-between">
-        <Text>{service.name}</Text>
-        <Badge color={service.online ? "green" : "red"}>{service.status}</Badge>
-      </Group>
-    ))}
+<Stack>
+  <TextInput bind="search" defaultValue="" label="Search" />
+  <SubFetch requestId="search" params={{ query: inputs.search }}>
+    {(results) => (
+      <Stack>
+        {(results ?? []).map((item) => (
+          <Text key={item.id}>{item.name}</Text>
+        ))}
+      </Stack>
+    )}
+  </SubFetch>
 </Stack>
 ```
 
-Properties are resolved own-only. Reflective names such as `constructor`, `prototype`, `__proto__`, `caller`, `callee`, `arguments`, `bind`, `call`, and `apply` are rejected even when computed or Unicode escaped.
+Bound values live only in React memory while the widget is mounted. They are not saved to the database, board options, exports, browser storage, or `localStorage`. Remounting resets them. Components can share a binding when their adapter types agree.
 
-## Components and props
+## Expression language
 
-Every Mantine export is classified as allowed, wrapped, or denied. The [generated component reference](./#component-reference) is authoritative. Props are allowlisted per component; unsupported props produce warnings and are ignored. Polymorphic roots, unsafe URLs, portals, positioning escapes, refs, and function props are stripped.
+Use expressions, conditionals, optional chaining, arrays, objects, template strings, safe standard helpers, and expression callbacks for `map`, `filter`, `sort`, and trusted runtime slots. Callback blocks, authored `const`, IIFEs, authored recursion, arbitrary functions, imports, hooks, refs, raw events, browser requests, `eval`, and bigint are blocked.
 
-`SubData` is a convenience for simple response paths. Prefer the render-child pattern for rich nested results:
+Bounded regex literals are supported for string matching, splitting, search, and replacement. Patterns with lookbehind, backreferences, nested quantifiers, excessive length, or unsupported flags are rejected.
 
-```jsx
-<SubFetch requestId="detail" params={{ id: data.selectedId }}>
-  {(detail, meta) => (
-    <Stack>
-      <Title>{detail.name}</Title>
-      <Text>HTTP {meta.status}</Text>
-    </Stack>
-  )}
-</SubFetch>
-```
+## Runtime components
 
-## Safe helpers and budgets
+- `SubFetch` runs a manual query with its `params`. Set `triggerContent` to a card or image to make that content the accessible click and keyboard trigger instead of showing the default load button.
+- `ActionButton` and `ToggleSwitch` run actions.
+- `RefreshButton` renders a compact, accessible icon control that refreshes load queries.
+- `Icon`/`TablerIcon` resolves installed safe icons.
 
-Bindings include restricted conversion, string, array, object, JSON, math, URI, and pure date helpers. Native `Date` objects and native prototypes are not exposed.
-
-Templates are limited to 50,000 characters, 10,000 rendered nodes, and explicit AST-depth, operation, collection, and string budgets. Budget errors stop only the Custom JSX renderer and are contained by its error boundary.
+Always include responsive loading, empty, error, and success states. Runtime failures remain inside the widget tile.

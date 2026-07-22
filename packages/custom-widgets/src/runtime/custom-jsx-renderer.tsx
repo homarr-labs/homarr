@@ -1,10 +1,14 @@
 import type { ComponentType, ErrorInfo, ReactNode } from "react";
-import { Component, useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Badge, Box, Group, Popover, Stack, Text } from "@mantine/core";
-import { IconAlertTriangle, IconNetwork } from "@tabler/icons-react";
+import { Component, useCallback, useEffect, useId, useMemo, useState } from "react";
+import { Alert, Box, Stack, Text } from "@mantine/core";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { renderSafeJsx } from "../jsx/interpreter";
+import { CustomJsxInputsProvider } from "../jsx/runtime-components";
+import type { WidgetInputType, WidgetInputValue } from "../jsx/runtime-components";
 import type { CustomJsxRequestCapability } from "./types";
+
+const EMPTY_RECORD: Record<string, never> = {};
 
 const methodColors: Readonly<Record<string, string>> = {
   GET: "blue",
@@ -19,15 +23,14 @@ const permissions = new Set(["view", "modify", "full"]);
 
 export interface CustomJsxRendererMessages {
   noTemplate: string;
-  interactive: string;
-  networkCapabilities: string;
   templateWarnings(count: number): string;
 }
 
 export interface CustomJsxRendererProps {
   template: string;
   data: unknown;
-  requestCapabilities: unknown;
+  status?: Record<string, unknown>;
+  options?: Record<string, unknown>;
   components: Readonly<Record<string, ComponentType<never>>>;
   createBindings(data: unknown): Readonly<Record<string, unknown>>;
   messages: CustomJsxRendererMessages;
@@ -55,17 +58,31 @@ export function parseRequestCapabilities(value: unknown): CustomJsxRequestCapabi
         id: record.id,
         kind: record.kind,
         method: record.method,
+        trigger: record.trigger === "load" ? "load" : "manual",
         minimumBoardPermission: record.minimumBoardPermission,
+        confirmation:
+          record.confirmation && typeof record.confirmation === "object"
+            ? (record.confirmation as CustomJsxRequestCapability["confirmation"])
+            : undefined,
+        invalidates: Array.isArray(record.invalidates)
+          ? record.invalidates.filter((entry): entry is string => typeof entry === "string")
+          : [],
       } as CustomJsxRequestCapability,
     ];
   });
 }
 
 class RendererErrorBoundary extends Component<
-  { children: ReactNode; onError(error: Error): void },
-  { error: Error | null }
+  { children: ReactNode; resetKey: string; onError(error: Error): void },
+  { error: Error | null; resetKey: string }
 > {
-  public state = { error: null } as { error: Error | null };
+  public state = { error: null, resetKey: "" } as { error: Error | null; resetKey: string };
+  public static getDerivedStateFromProps(
+    props: Readonly<{ resetKey: string }>,
+    state: Readonly<{ error: Error | null; resetKey: string }>,
+  ) {
+    return props.resetKey === state.resetKey ? null : { error: null, resetKey: props.resetKey };
+  }
   public static getDerivedStateFromError(error: Error) {
     return { error };
   }
@@ -80,22 +97,76 @@ class RendererErrorBoundary extends Component<
 function ErrorAlert({ error }: { error: Error }) {
   return (
     <Alert color="red" variant="light" icon={<IconAlertTriangle size={16} />} p="xs">
+      <Text size="xs" fw={700}>
+        RUNTIME_RENDER_ERROR
+      </Text>
       <Text size="xs">{error.message}</Text>
     </Alert>
   );
 }
 
-export function CustomJsxRenderer({
+export function CustomJsxRenderer(props: CustomJsxRendererProps) {
+  if (!props.template.trim())
+    return (
+      <Alert color="gray" variant="light" p="xs">
+        <Text size="xs" c="dimmed">
+          {props.messages.noTemplate}
+        </Text>
+      </Alert>
+    );
+
+  return <CustomJsxRendererSession key={props.template} {...props} />;
+}
+
+function CustomJsxRendererSession({
   template,
   data,
-  requestCapabilities: rawCapabilities,
+  status = EMPTY_RECORD,
+  options = EMPTY_RECORD,
   components,
   createBindings,
   messages,
 }: CustomJsxRendererProps) {
+  const inputScopeId = useId();
   const [parseErrors, setParseErrors] = useState<string[]>([]);
-  const bindings = useMemo(() => createBindings(data), [createBindings, data]);
-  const capabilities = useMemo(() => parseRequestCapabilities(rawCapabilities), [rawCapabilities]);
+  const [bindingErrors, setBindingErrors] = useState<string[]>([]);
+  const [inputs, setInputs] = useState<Record<string, WidgetInputValue>>({});
+  const [inputTypes, setInputTypes] = useState<Record<string, WidgetInputType>>({});
+  const registerInput = useCallback((name: string, type: WidgetInputType, initialValue: WidgetInputValue) => {
+    setInputTypes((current) => {
+      const existing = current[name];
+      if (existing === type) return current;
+      if (existing && existing !== type) {
+        setBindingErrors((errors) => {
+          const message = `BINDING_TYPE_CONFLICT: '${name}' is bound as both ${existing} and ${type}`;
+          return errors.includes(message) ? errors : [...errors.slice(0, 4), message];
+        });
+        return current;
+      }
+      return { ...current, [name]: type };
+    });
+    setInputs((current) => (Object.hasOwn(current, name) ? current : { ...current, [name]: initialValue }));
+  }, []);
+  const setInputValue = useCallback(
+    (name: string, type: WidgetInputType, value: WidgetInputValue) => {
+      const existing = inputTypes[name];
+      if (existing && existing !== type) {
+        setBindingErrors((errors) => {
+          const message = `BINDING_TYPE_CONFLICT: '${name}' is bound as both ${existing} and ${type}`;
+          return errors.includes(message) ? errors : [...errors.slice(0, 4), message];
+        });
+        return;
+      }
+      setInputTypes((current) => (current[name] === type ? current : { ...current, [name]: type }));
+      setInputs((current) => (Object.is(current[name], value) ? current : { ...current, [name]: value }));
+    },
+    [inputTypes],
+  );
+  const bindings = useMemo(
+    () => ({ ...createBindings(data), status, options, inputs }),
+    [createBindings, data, inputs, options, status],
+  );
+  const boundaryKey = useMemo(() => createBoundaryKey(template, bindings), [bindings, template]);
   const rendered = useMemo(() => {
     try {
       return { ...renderSafeJsx({ template, components, bindings }), error: null };
@@ -117,72 +188,31 @@ export function CustomJsxRenderer({
     if (rendered.error) handleError(rendered.error);
   }, [handleError, rendered]);
 
-  if (!template.trim())
-    return (
-      <Alert color="gray" variant="light" p="xs">
-        <Text size="xs" c="dimmed">
-          {messages.noTemplate}
-        </Text>
-      </Alert>
-    );
   return (
     <Stack gap={0} h="100%">
-      {capabilities.length > 0 && (
-        <Group justify="flex-end" mb={4}>
-          <Popover width={320} position="bottom-end" withinPortal={false} shadow="md">
-            <Popover.Target>
-              <Badge
-                component="button"
-                type="button"
-                size="sm"
-                color="gray"
-                variant="light"
-                leftSection={<IconNetwork size={12} />}
-                style={{ cursor: "pointer" }}
-              >
-                {messages.interactive}
-              </Badge>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <Stack gap={6}>
-                <Text size="sm" fw={600}>
-                  {messages.networkCapabilities}
-                </Text>
-                {capabilities.map((capability) => (
-                  <Group key={capability.id} justify="space-between" gap="xs" wrap="nowrap">
-                    <Text size="xs" ff="monospace" truncate>
-                      {capability.id}
-                    </Text>
-                    <Group gap={4} wrap="nowrap">
-                      <Badge size="xs" color={methodColors[capability.method] ?? "gray"} variant="light">
-                        {capability.method}
-                      </Badge>
-                      <Badge size="xs" color="gray" variant="outline">
-                        {capability.minimumBoardPermission}
-                      </Badge>
-                    </Group>
-                  </Group>
-                ))}
-              </Stack>
-            </Popover.Dropdown>
-          </Popover>
-        </Group>
-      )}
       <Box h="100%" style={{ contain: "layout paint style", isolation: "isolate", overflow: "auto", minHeight: 0 }}>
         {rendered.error ? (
           <ErrorAlert error={rendered.error} />
         ) : (
-          <RendererErrorBoundary key={template} onError={handleError}>
-            {rendered.node}
-          </RendererErrorBoundary>
+          <CustomJsxInputsProvider
+            scopeId={inputScopeId}
+            inputs={inputs}
+            inputTypes={inputTypes}
+            registerInput={registerInput}
+            setInputValue={setInputValue}
+          >
+            <RendererErrorBoundary resetKey={boundaryKey} onError={handleError}>
+              {rendered.node}
+            </RendererErrorBoundary>
+          </CustomJsxInputsProvider>
         )}
       </Box>
-      {parseErrors.length > 0 && (
+      {[...parseErrors, ...bindingErrors].length > 0 && (
         <Alert color="yellow" variant="light" p="xs" mt="xs">
           <Text size="xs" c="dimmed">
-            {messages.templateWarnings(parseErrors.length)}
+            {messages.templateWarnings(parseErrors.length + bindingErrors.length)}
           </Text>
-          {parseErrors.map((message) => (
+          {[...parseErrors, ...bindingErrors].map((message) => (
             <Text key={message} size="xs" c="dimmed" style={{ fontFamily: "monospace" }}>
               {message}
             </Text>
@@ -191,4 +221,11 @@ export function CustomJsxRenderer({
       )}
     </Stack>
   );
+}
+
+function createBoundaryKey(template: string, bindings: Readonly<Record<string, unknown>>) {
+  let hash = 0;
+  const value = `${template}\0${JSON.stringify(bindings)}`;
+  for (let index = 0; index < value.length; index += 1) hash = (hash * 31 + value.charCodeAt(index)) | 0;
+  return `${template.length}:${hash}`;
 }

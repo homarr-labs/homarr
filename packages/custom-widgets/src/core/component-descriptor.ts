@@ -1,4 +1,3 @@
-import { categorySafeProps, commonSafeProps } from "./component-props";
 import type {
   CustomJsxComponentCategory,
   CustomJsxComponentPackage,
@@ -9,12 +8,9 @@ export type * from "./component-types";
 export interface CustomJsxComponentDescriptor {
   name: string;
   package: CustomJsxComponentPackage;
-  category: CustomJsxComponentCategory;
   safety: CustomJsxComponentSafety;
   supportedProps: readonly string[];
-  subcomponents: readonly string[];
-  accessibilityRequirements: readonly string[];
-  documentationUrl: string;
+  blockedProps: readonly { name: string; reason: string }[];
   reason?: string;
 }
 
@@ -46,12 +42,6 @@ export const accessibilityByCategory: Record<CustomJsxComponentCategory, readonl
   blocked: [],
 };
 
-const componentSafeProps: Readonly<Record<string, readonly string[]>> = {
-  "Tabs.List": ["grow"],
-  ScrollArea: ["offsetScrollbars"],
-  SubData: ["alt", "fit"],
-};
-
 export function documentationUrl(packageName: CustomJsxComponentPackage, name: string): string {
   if (packageName === "@homarr/widgets") return "https://homarr.dev/docs/management/custom-widgets/";
   const section = packageName === "@mantine/core" ? "core" : packageName === "@mantine/charts" ? "charts" : "dates";
@@ -61,31 +51,3 @@ export function documentationUrl(packageName: CustomJsxComponentPackage, name: s
     .toLowerCase();
   return `https://mantine.dev/${section}/${slug}/`;
 }
-
-export const describe = (
-  packageName: CustomJsxComponentPackage,
-  category: CustomJsxComponentCategory,
-  safety: CustomJsxComponentSafety,
-  names: readonly string[],
-  reason?: string,
-): CustomJsxComponentDescriptor[] =>
-  names.map((name) => ({
-    name,
-    package: packageName,
-    category,
-    safety,
-    supportedProps:
-      safety === "denied"
-        ? []
-        : [
-            ...new Set<string>([
-              ...commonSafeProps,
-              ...categorySafeProps[category],
-              ...(componentSafeProps[name] ?? []),
-            ]),
-          ],
-    subcomponents: subcomponentsByName[name] ?? [],
-    accessibilityRequirements: accessibilityByCategory[category],
-    documentationUrl: documentationUrl(packageName, name),
-    reason,
-  }));

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@mantine/core";
+import { ActionIcon } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 
 import { useCustomWidgetRuntime } from "./context";
@@ -13,7 +13,7 @@ export interface RefreshButtonProps {
   size?: string;
 }
 
-export function RefreshButton({ label, color = "blue", variant = "light", size = "sm" }: RefreshButtonProps) {
+export function RefreshButton({ label, color = "gray", variant = "subtle", size = "sm" }: RefreshButtonProps) {
   const runtime = useCustomWidgetRuntime();
   const [loading, setLoading] = useState(false);
   const refresh = async () => {
@@ -30,16 +30,16 @@ export function RefreshButton({ label, color = "blue", variant = "light", size =
     }
   };
   return (
-    <Button
+    <ActionIcon
+      aria-label={label ?? runtime.messages.refresh}
       color={color}
       variant={variant as never}
       size={size as never}
-      leftSection={<IconRefresh size={16} />}
       onClick={() => void refresh()}
       loading={loading}
       disabled={(!runtime.itemId && !runtime.previewSessionId) || runtime.isEditMode}
     >
-      {label ?? runtime.messages.refresh}
-    </Button>
+      <IconRefresh size={16} />
+    </ActionIcon>
   );
 }

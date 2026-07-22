@@ -3,7 +3,6 @@ import { Container, Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { buildDisplayFormValues } from "@homarr/custom-widgets/core";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
@@ -11,40 +10,18 @@ import { CustomWidgetBetaBanner } from "../../_beta-banner";
 import { CustomWidgetForm } from "../../_custom-widget-form";
 import { FormErrorBoundary } from "../../_form-error-boundary";
 
-const authTypeExpectedSecrets: Record<string, string[]> = {
-  bearer: ["apiKey"],
-  basic: ["username", "password"],
-  apiKeyHeader: ["apiKey"],
-  apiKeyQuery: ["apiKey"],
-};
-
-function buildInitialSecrets(authType: string, dbSecrets: Array<{ kind: string; hasValue?: boolean }>) {
-  const expected = authTypeExpectedSecrets[authType] ?? [];
-  const existingKinds = new Set(dbSecrets.map((s) => s.kind));
-  const result = dbSecrets.map((s) => ({ kind: s.kind, value: "", hasValue: s.hasValue ?? false }));
-  for (const kind of expected) {
-    if (!existingKinds.has(kind)) {
-      result.push({ kind, value: "", hasValue: false });
-    }
-  }
-  return result;
-}
-
 interface EditCustomWidgetPageProps {
   params: Promise<{ id: string }>;
 }
 
 export default async function EditCustomWidgetPage(props: EditCustomWidgetPageProps) {
   const session = await auth();
-  if (!session || !session.user.permissions.includes("admin")) {
+  if (!session || !session.user.permissions.includes("custom-widget-manage")) {
     redirect("/manage/custom-widgets");
   }
 
   const params = await props.params;
-  const definition = await api.customWidget.byId({ id: params.id }).catch(catchTrpcNotFound);
-
-  const displayConfig = definition.displayConfig as Record<string, unknown>;
-  const displayValues = buildDisplayFormValues(definition.displayType, displayConfig);
+  const definition = await api.customWidget.get({ id: params.id }).catch(catchTrpcNotFound);
 
   return (
     <>
@@ -61,13 +38,16 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
                 name: definition.name,
                 description: definition.description ?? "",
                 iconUrl: definition.iconUrl ?? "",
-                url: definition.url,
-                authType: definition.authType,
-                headerName: definition.headerName ?? "",
-                method: definition.method,
-                requestBody: definition.requestBody ?? "",
-                ...displayValues,
-                secrets: buildInitialSecrets(definition.authType, definition.secrets),
+                sources: JSON.stringify(definition.sources, null, 2),
+                requests: JSON.stringify(definition.requests, null, 2),
+                options: JSON.stringify(definition.options, null, 2),
+                template: definition.template,
+                secrets: definition.secrets.map((secret) => ({
+                  sourceId: secret.sourceId,
+                  kind: secret.kind,
+                  value: "",
+                  hasValue: true,
+                })),
               }}
             />
           </FormErrorBoundary>

@@ -2,6 +2,38 @@
   min-width: 0;
 }
 
+.sectionNav {
+  position: sticky;
+  top: 0.5rem;
+  z-index: 20;
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: var(--mantine-spacing-md);
+  padding: 0.35rem;
+  overflow-x: auto;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: color-mix(in srgb, var(--mantine-color-body) 94%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.sectionNav > a {
+  flex: 0 0 auto;
+}
+
+.editorSection {
+  scroll-margin-top: 5rem;
+}
+
+.previewCanvas {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  padding: var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-default-hover);
+}
+
 .workbench {
   display: grid;
   gap: var(--mantine-spacing-xl);
@@ -17,6 +49,10 @@
 }
 
 @media (max-width: 74.9375em) {
+  .sectionNav {
+    top: 3.5rem;
+  }
+
   .workbench[data-mobile-pane="configure"] .previewPane,
   .workbench[data-mobile-pane="preview"] .configuration {
     display: none;
@@ -46,78 +82,6 @@
   bottom: var(--mantine-spacing-sm);
   z-index: 10;
   background: var(--mantine-color-body);
-}
-
-.formFlow {
-  --flow-marker-size: 2.5rem;
-}
-
-.formSection {
-  position: relative;
-  padding: 0 0 var(--mantine-spacing-xl) calc(var(--flow-marker-size) + var(--mantine-spacing-lg));
-  scroll-margin-top: 5rem;
-  outline: none;
-}
-
-.formSection:not(:last-child)::before {
-  position: absolute;
-  top: var(--flow-marker-size);
-  bottom: 0;
-  left: calc(var(--flow-marker-size) / 2);
-  width: 1px;
-  background: var(--mantine-color-default-border);
-  content: "";
-}
-
-.formSection:focus-visible {
-  border-radius: var(--mantine-radius-md);
-  outline: 2px solid var(--mantine-primary-color-filled);
-  outline-offset: 4px;
-}
-
-.sectionMarker {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.displayTypeOption {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--mantine-spacing-sm);
-  min-height: 7rem;
-  padding: var(--mantine-spacing-md);
-  border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-md);
-  background: var(--mantine-color-body);
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease;
-}
-
-.displayTypeOption:hover {
-  background: var(--mantine-color-default-hover);
-}
-
-.displayTypeOption[data-selected] {
-  border-color: var(--mantine-primary-color-filled);
-  background: var(--mantine-primary-color-light);
-}
-
-.displayTypeOption:focus-visible {
-  outline: 2px solid var(--mantine-primary-color-filled);
-  outline-offset: 2px;
-}
-
-.displayTypeCopy {
-  min-width: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .displayTypeOption {
-    transition: none;
-  }
 }
 
 @media (min-width: 75em) {

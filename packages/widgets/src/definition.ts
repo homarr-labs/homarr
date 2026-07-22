@@ -103,6 +103,7 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
   width: number;
   height: number;
   widgetStateRef?: React.MutableRefObject<Record<string, unknown> | null>;
+  removeItem?: () => void;
 };
 
 export type WidgetOptionsRecordOf<TKind extends WidgetKind> = WidgetImports[TKind]["definition"]["createOptions"];

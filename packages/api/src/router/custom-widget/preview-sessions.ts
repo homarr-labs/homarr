@@ -76,4 +76,14 @@ export const appendPreviewJournal = (
   entry: Omit<CustomWidgetPreviewJournalEntry, "id" | "timestamp">,
 ) => call(() => getService().appendJournal(session, entry));
 export const getPreviewJournal = (id: string, userId: string) => call(() => getService().getJournal(id, userId));
-export const getPreviewSessionSecrets = (session: CustomWidgetPreviewSession) => getService().getSecrets(session);
+export const getPreviewSessionSecrets = (session: CustomWidgetPreviewSession, sourceId: string) =>
+  getService().getSecrets(session, sourceId);
+export const setPreviewSessionSecrets = (id: string, userId: string, secrets: CreatePreviewSessionInput["secrets"]) =>
+  call(() => getService().setSecrets(id, userId, secrets));
+export const configurePreviewSessionSource = (
+  id: string,
+  userId: string,
+  sourceId: string,
+  source: CreatePreviewSessionInput["sources"][string],
+  secrets: CreatePreviewSessionInput["secrets"],
+) => call(() => getService().configureSource(id, userId, sourceId, source, secrets));

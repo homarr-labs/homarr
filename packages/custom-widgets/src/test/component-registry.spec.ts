@@ -1,6 +1,10 @@
 import { describe, expect, test } from "vitest";
 
-import { customJsxComponentByName, customJsxComponentRegistry } from "../core/component-registry";
+import {
+  customJsxComponentByName,
+  customJsxComponentRegistry,
+  getCustomJsxBindingType,
+} from "../core/component-registry";
 
 const mantineCore941ComponentExports = [
   "RemoveScroll",
@@ -183,12 +187,14 @@ describe("customJsxComponentRegistry", () => {
   });
 
   test.each([
-    ["ChartTooltip", "allowed"],
-    ["ChartLegend", "allowed"],
-    ["VisuallyHidden", "allowed"],
+    ["ChartTooltip", "wrapped"],
+    ["ChartLegend", "wrapped"],
+    ["VisuallyHidden", "wrapped"],
     ["SubFetch", "wrapped"],
     ["Portal", "denied"],
-    ["TextInput", "denied"],
+    ["TextInput", "wrapped"],
+    ["ModalRoot", "denied"],
+    ["AppShellMain", "denied"],
   ] as const)("classifies %s as %s", (name, safety) => {
     expect(customJsxComponentByName.get(name)?.safety).toBe(safety);
   });
@@ -201,12 +207,13 @@ describe("customJsxComponentRegistry", () => {
     }
   });
 
-  test("publishes complete authoring metadata for every component", () => {
+  test("publishes the minimal safe runtime metadata for every component", () => {
     for (const component of customJsxComponentRegistry) {
-      expect(component.documentationUrl, component.name).toMatch(/^https:\/\//);
       expect(component.supportedProps, component.name).toBeInstanceOf(Array);
-      expect(component.subcomponents, component.name).toBeInstanceOf(Array);
-      expect(component.accessibilityRequirements, component.name).toBeInstanceOf(Array);
+      expect(component.blockedProps, component.name).toBeInstanceOf(Array);
+      expect(component.supportedProps, component.name).not.toContain("renderOption");
+      expect(component.supportedProps, component.name).not.toContain("rootRef");
+      expect(component.supportedProps, component.name).not.toContain("popoverTarget");
     }
   });
 
@@ -225,5 +232,49 @@ describe("customJsxComponentRegistry", () => {
     ...mantineDates941ComponentExports,
   ])("classifies the Mantine 9.4.1 export %s", (name) => {
     expect(customJsxComponentByName.has(name), `${name} is not classified`).toBe(true);
+  });
+
+  test.each([
+    ["TextInput", "string"],
+    ["NumberInput", "number"],
+    ["Switch", "boolean"],
+    ["Select", "string"],
+    ["MultiSelect", "string[]"],
+    ["DateInput", "string"],
+    ["DatePicker", "string"],
+    ["Tabs", "string"],
+    ["Popover", "boolean"],
+    ["RangeSlider", "number[]"],
+  ] as const)("infers %s bindings as %s", (component, type) => {
+    expect(getCustomJsxBindingType(component)).toBe(type);
+  });
+
+  test("infers range and multiple date controls from their authored props", () => {
+    for (const component of [
+      "DatePicker",
+      "DatePickerInput",
+      "MonthPicker",
+      "MonthPickerInput",
+      "YearPicker",
+      "YearPickerInput",
+    ]) {
+      expect(getCustomJsxBindingType(component, { type: "multiple" })).toBe("string[]");
+      expect(getCustomJsxBindingType(component, { type: "range" })).toBe("string[]");
+    }
+    expect(getCustomJsxBindingType("DateTimePicker", { type: "range" })).toBe("string[]");
+    expect(getCustomJsxBindingType("DateTimePicker", { type: "multiple" })).toBe("string");
+    expect(getCustomJsxBindingType("InlineDateTimePicker", { type: "range" })).toBe("string[]");
+    expect(getCustomJsxBindingType("InlineDateTimePicker", { type: "multiple" })).toBe("string");
+    expect(getCustomJsxBindingType("Accordion", { multiple: true })).toBe("string[]");
+    expect(getCustomJsxBindingType("TreeSelect", { mode: "multiple" })).toBe("string[]");
+    expect(getCustomJsxBindingType("TreeSelect", { mode: "checkbox" })).toBe("string[]");
+    expect(getCustomJsxBindingType("Chip.Group", { multiple: true })).toBe("string[]");
+    expect(getCustomJsxBindingType("ChipGroup", { multiple: true })).toBe("string[]");
+    expect(getCustomJsxBindingType("RadioGroup")).toBe("string");
+    expect(getCustomJsxBindingType("CheckboxGroup")).toBe("string[]");
+    expect(getCustomJsxBindingType("SwitchGroup")).toBe("string[]");
+    expect(getCustomJsxBindingType("Calendar")).toBeNull();
+    expect(getCustomJsxBindingType("HoverCard")).toBeNull();
+    expect(getCustomJsxBindingType("Text", {})).toBeNull();
   });
 });

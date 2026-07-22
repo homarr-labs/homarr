@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { Box, Group, Menu, ScrollArea } from "@mantine/core";
@@ -70,6 +70,7 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
 };
 
 const AddMenu = () => {
+  const board = useRequiredBoard();
   const { data: session } = useSession();
   const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
@@ -101,8 +102,8 @@ const AddMenu = () => {
   );
 
   const handleSelectItem = useCallback(() => {
-    openItemSelectModal();
-  }, [openItemSelectModal]);
+    openItemSelectModal({ boardId: board.id });
+  }, [board.id, openItemSelectModal]);
 
   const handleSelectApp = useCallback(() => {
     openAppSelectModal({
@@ -123,7 +124,7 @@ const AddMenu = () => {
   return (
     <Menu position="bottom-end">
       <Menu.Target>
-        <HeaderButton w="auto" px={4}>
+        <HeaderButton w="auto" px={4} aria-label={t("item.action.create")}>
           <Group gap={4} wrap="nowrap">
             <IconPlus stroke={1.5} />
             <IconChevronDown color="gray" size={16} />
@@ -162,6 +163,11 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
+  const commonT = useI18n();
+  const latestBoardRef = useRef(board);
+
+  latestBoardRef.current = board;
+
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onSuccess() {
       showSuccessNotification({
@@ -169,6 +175,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
         message: t("notification.success.message"),
       });
       void utils.board.getBoardByName.invalidate({ name: board.name });
+      void utils.widget.customApi.getData.invalidate();
       void revalidatePathActionAsync(`/boards/${board.name}`);
       close();
     },
@@ -188,17 +195,21 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const toggle = useCallback(() => {
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
-      return saveBoard(board);
+      return saveBoard(latestBoardRef.current);
     }
     open();
-  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
+  }, [isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
 
   return (
     <OnboardingTour.Target id="board-edit-mode">
-      <HeaderButton onClick={toggle} loading={isPending}>
+      <HeaderButton
+        onClick={toggle}
+        loading={isPending}
+        aria-label={isEditMode ? commonT("common.action.save") : commonT("common.action.edit")}
+      >
         {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
       </HeaderButton>
     </OnboardingTour.Target>

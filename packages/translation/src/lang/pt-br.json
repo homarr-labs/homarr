@@ -706,16 +706,8 @@
       "delete": "Excluir widget personalizado",
       "deleteConfirm": "Tem certeza de que deseja excluir \"{name}\"? Esta ação não pode ser desfeita.",
       "export": "Exportar",
-      "addMapping": "Adicionar Mapeamento",
-      "addColumn": "Adicionar Coluna",
       "edit": "Editar",
-      "removeMapping": "Remover Mapeamento",
-      "removeColumn": "Remover coluna",
-      "addItem": "Adicionar Item",
-      "removeItem": "Remover item",
-      "addBar": "Adicionar barra",
       "duplicate": "Duplicar",
-      "copyAiPrompt": "",
       "enable": "Habilitado",
       "disable": "Desabilitado",
       "menu": "Ações"
@@ -723,150 +715,13 @@
     "field": {
       "name": "Nome",
       "description": "Descrição",
-      "iconUrl": "URL do ícone",
-      "url": "URL",
-      "authType": "Tipo de Autenticação",
-      "headerName": "",
-      "method": "Método",
-      "requestBody": "Corpo da requisição",
-      "displayType": "",
-      "jsonPath": "Caminho JSON",
-      "jsonPathHint": "Usar sintaxe JSONPath para extrair valores, por exemplo, $.data.temperature ou $.items[0].name",
-      "label": "",
-      "unit": "",
-      "mappings": "Mapeamentos",
-      "tablePath": "Caminho Array JSON",
-      "tablePathHint": "Caminho para o array na resposta, por exemplo, $.data.items",
-      "columns": "Colunas",
-      "header": "Header (cabeçalho)",
-      "items": "Itens",
-      "gridColumns": "Colunas da grade",
-      "cardStyle": "Estilo de cartão",
-      "bars": "Barras",
-      "valuePath": "Caminho do valor JSON",
-      "maxPath": "Caminho do Max Valor JSON",
-      "showPercentage": "Mostrar porcentagem",
-      "barSize": "Tamanho da barra",
-      "goodValues": "Valores bons (separados por vírgula)",
-      "dotSize": "",
-      "valueSize": "Tamanho do valor",
-      "labelPosition": "",
-      "kvLayout": "Layout",
-      "striped": "Linhas Listradas",
-      "compact": "Modo Compacto",
-      "maxHeight": "Altura máxima (px)",
-      "color": "Cor",
-      "buttonLabel": "",
-      "buttonColor": "Cor do botão",
-      "confirmText": "Texto de confirmação",
-      "confirmTextHint": "Se definido, um diálogo de confirmação irá aparecer antes de executar a solicitação",
-      "successMessage": "Mensagem de Sucesso",
-      "successMessageHint": "Mensagem mostrada após execução com sucesso",
-      "enabled": "Habilitado",
-      "template": {
-        "label": "Template JSX",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura da CPU",
-      "exampleLabelShort": "",
-      "exampleHeader": "Nome",
-      "exampleUnit": "",
-      "iconUrl": "https://...",
-      "url": "https://api.exemplo.com/br/api/v1/status",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
-    },
-    "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
-    },
-    "layoutOption": {
-      "list": "Lista",
-      "grid": "Grade"
-    },
-    "sizeOption": {
-      "sm": "Pequeno",
-      "md": "Médio",
-      "lg": "Grande",
-      "xl": "Extra grande"
-    },
-    "labelPositionOption": {
-      "above": "Acima",
-      "below": "Abaixo"
-    },
-    "fieldset": {
-      "general": "Geral",
-      "connection": "Conexão com API",
-      "display": "Configurações de tela"
-    },
-    "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "Estatísticas coloridas em uma grade — como Pi-Hole ou Widgets Rápidos",
-      "progressBars": "Barras de progresso mostrando uso ou conclusão — para disco, memória, quotas",
-      "statusIndicator": "Pontos de status coloridos mostrando estados online/offline ou de saúde",
-      "countGrid": "",
-      "raw": "Saída JSON impressa para depuração",
-      "actionButton": "Um botão que aciona uma solicitação quando clicado",
-      "customJsx": "Layout JSX personalizado usando componentes Mantine na lista branca com ligação completa de dados de API"
-    },
-    "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
-    },
-    "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
-    },
-    "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "secret": {
-      "apiKey": "",
-      "username": "Usuário",
-      "password": "Senha",
-      "savedPlaceholder": ""
-    },
-    "preview": {
-      "title": "Pré-visualizar",
-      "test": "",
-      "hint": "Clique em Testar para visualizar a resposta da API com sua configuração atual.",
-      "rawResponse": "Resposta JSON Bruta"
+      "iconUrl": "URL do ícone"
     },
     "notification": {
       "created": "Widget \"{name}\" criado com sucesso.",
       "updated": "Widget \"{name}atualizado com sucesso.",
       "deleted": "Widget \"{name}excluído.",
       "imported": "Widget importado com sucesso.",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "Copie um prompt pré-construído para colar qualquer chatbot de AI (ChatGPT, Claude, Gemini...). Ele inclui o esquema completo de widget e a sua resposta de API para que a AI possa gerar uma configuração JSON pronta para importar para você.",
-      "aiPromptCopy": "Copiar para área de transferência",
-      "aiPromptNoResponse": "Dica: Execute um teste primeiro para incluir a sua API de resposta no prompt para melhores resultados.",
       "aiPromptCopyError": "Falha ao copiar prompt para área de transferência. O seu navegador pode não suportar este recurso.",
       "createError": "Falha ao criar widget. Verifique se o endpoint API está acessível.",
       "updateError": "Falha ao atualizar o widget. Suas alterações não foram salvas.",
@@ -879,14 +734,6 @@
       "previewError": "Falha ao buscar a pré-visualização. Verifique a URL e tente novamente.",
       "executed": "Ação executada com sucesso.",
       "executeError": "A ação falhou: {error}"
-    },
-    "table": {
-      "name": "Nome",
-      "url": "URL",
-      "display": "Exibição"
-    },
-    "widget": {
-      "disabled": ""
     }
   },
   "integration": {
@@ -3554,26 +3401,6 @@
         "unhealthy": "Não saudável"
       }
     },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
-    },
     "beszelSystemTable": {
       "name": "",
       "description": "",
@@ -4191,11 +4018,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Início",
         "boards": "Placas",
         "apps": "Aplicativos",
         "integrations": "Integrações",
-        "customWidgets": "",
         "searchEngies": "Mecanismos de busca",
         "medias": "Mídias",
         "users": {
@@ -5330,6 +5157,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Gerenciar",
       "boards": {
         "label": "Placas"
@@ -5362,18 +5192,6 @@
         },
         "edit": {
           "label": "Editar"
-        }
-      },
-      "custom-widgets": {
-        "label": "",
-        "new": {
-          "label": ""
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

@@ -1,168 +1,233 @@
+import type { HomarrCustomWidgetV2 } from "./custom-jsx-schema";
+import { customJsxAuthoringCatalog } from "./component-catalog";
 import { customJsxExamples } from "./examples";
-import { enabledCustomJsxComponents } from "./component-registry";
 
-const PROMPT_HEADER = `You are configuring a Homarr custom widget. Ask a concise clarifying question only when the requested behavior is ambiguous.
+export const CUSTOM_WIDGET_MANTINE_VERSION = customJsxAuthoringCatalog.mantineVersion;
+const CUSTOM_WIDGET_AI_PROMPT_LIMIT = 12_000;
 
-For Custom JSX, return a Homarr authoring bundle with exactly two fenced code blocks:
-1. A \`json\` block containing the complete import object. Set \`displayConfig.template\` to \`"__HOMARR_TEMPLATE__"\`.
-2. A \`jsx\` block containing the readable, multiline template with no JSON escaping.
+export const CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION =
+  "Return exactly one complete `json` fenced block followed by one complete `jsx` fenced block. Do not include prose outside those blocks.";
 
-The user can paste both blocks together into Homarr. Homarr combines and validates them before import. For non-Custom-JSX display types, return only the complete JSON block.
+const RECOMMENDED_COMPONENTS = [
+  "Stack",
+  "Group",
+  "SimpleGrid",
+  "Grid",
+  "Box",
+  "Center",
+  "Paper",
+  "Card",
+  "Card.Section",
+  "ScrollArea",
+  "Text",
+  "Title",
+  "Badge",
+  "Alert",
+  "Progress",
+  "RingProgress",
+  "ThemeIcon",
+  "Indicator",
+  "Avatar",
+  "Image",
+  "Divider",
+  "Skeleton",
+  "Loader",
+  "Table",
+  "Tabs",
+  "Tabs.List",
+  "Tabs.Tab",
+  "Tabs.Panel",
+  "Accordion",
+  "TextInput",
+  "NumberInput",
+  "Select",
+  "MultiSelect",
+  "Switch",
+  "Checkbox",
+  "Radio",
+  "Radio.Group",
+  "Radio.Card",
+  "Radio.Indicator",
+  "Slider",
+  "SegmentedControl",
+  "Button",
+  "ActionIcon",
+  "Tooltip",
+  "Popover",
+  "Calendar",
+  "AreaChart",
+  "BarChart",
+  "LineChart",
+  "DonutChart",
+] as const;
 
-## Rules
-- Use \`"$schema": "homarr-custom-widget-v3"\`.
-- \`displayType\` and \`displayConfig.type\` must match.
-- Prefer \`customJsx\` with \`jsxApiVersion: 2\` for custom layouts.
-- The base widget request must use GET. Mutations belong in named action requests.
-- JSX cannot call \`fetch\` or use event handlers. Use SubFetch, ActionButton, ToggleSwitch, and RefreshButton.
-- Version 2 network components reference a literal \`requestId\` and pass only declared \`params\`.
-- SubFetch can reference query requests only. ActionButton and ToggleSwitch can reference action requests only.
-- Prefer the SubFetch function-as-children API for fetched data. The callback receives \`(response, metadata)\` and may return any safe JSX tree. Use SubData only for very small path-based displays.
-- SubFetch owns loading, failure, retry, cancellation, and stale-response handling. The render callback runs only when response data is available.
-- Named request paths are same-origin paths beginning with \`/\`. Do not put credentials in a template or export.
-- Query requests use GET and view permission. POST, PUT, and PATCH actions default to modify. DELETE requires full permission and confirmation.
-- Use only components in the generated component reference below.
-- Template output must fit inside a dashboard widget and remain usable at narrow widths.
-- Return the complete import object, not a template fragment. Preserve unrelated fields from the current configuration.
-- Include stable keys for rendered collections, accessible labels for controls and images, useful empty states, and concise content that works in light and dark themes.
-- Prefer one clear information hierarchy over nested cards. Use ActionButton and ToggleSwitch only when the named action and required permission are declared.
-
-## Named request shape
-\`\`\`ts
-interface CustomJsxRequest {
-  id: string;
-  kind: "query" | "action";
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  pathTemplate: \`/\${string}\`;
-  parameters: Record<string, "string" | "number" | "boolean">;
-  bodyTemplate?: unknown;
-  staticHeaders?: Record<string, string>;
-  auth: "inherit" | "none";
-  minimumBoardPermission: "view" | "modify" | "full";
-  cacheTtlSeconds?: number;
-}
-\`\`\`
-
-Path parameters use \`{name}\`. JSON body parameters use \`{ "$param": "name" }\` and preserve the declared type.
-
-## SubFetch rendering
-Use a render child when a named query needs its own layout:
-
-\`\`\`jsx
-<SubFetch requestId="service-detail" params={{ id: data.serviceId }}>
-  {(detail, meta) =>
-    <Stack gap="xs">
-      <Group justify="space-between">
-        <Text fw={700}>{detail.name}</Text>
-        <Badge color={meta.ok ? "green" : "red"}>HTTP {meta.status}</Badge>
-      </Group>
-      {detail.metrics.map((metric) =>
-        <Group key={metric.name} justify="space-between">
-          <Text size="sm">{metric.name}</Text>
-          <Text fw={600}>{metric.value}</Text>
-        </Group>
-      )}
-    </Stack>
-  }
-</SubFetch>
-\`\`\`
-
-The callback is an interpreter-managed inline arrow function. Do not use native callbacks, event handlers, global state, or direct network access. Keep list keys stable and design for narrow and wide widget sizes.
-`;
-
-const PROMPT_NO_RESPONSE = `No sample response is available. Leave this marker in your reasoning and ask the user for a representative response if its shape is required:
-
-\`\`\`json
-PASTE_API_RESPONSE_HERE
-\`\`\`
-`;
-
-function buildComponentReference() {
-  const categories = new Map<string, string[]>();
-  for (const component of enabledCustomJsxComponents) {
-    const names = categories.get(component.category) ?? [];
-    names.push(component.name);
-    categories.set(component.category, names);
-  }
-
-  return [...categories.entries()].map(([category, names]) => `- ${category}: ${names.join(", ")}`).join("\n");
-}
-
-function buildExamples() {
-  return customJsxExamples
-    .map(
-      (example) => `### ${example.title}
-${example.description}
-\`\`\`json
-${JSON.stringify(
-  {
-    displayType: "customJsx",
-    displayConfig: {
-      type: "customJsx",
-      jsxApiVersion: 2,
-      networkScope: "public",
-      template: "__HOMARR_TEMPLATE__",
-      requests: example.requests,
-    },
+const leanShape = `{
+  "$schema": "homarr-custom-widget-v2",
+  "name": "Widget name",
+  "description": "Optional summary",
+  "sources": {
+    "default": { "name": "API", "baseUrl": "https://api.example.com", "networkScope": "public", "auth": "none" }
   },
-  null,
-  2,
-)}
-\`\`\`
-\`\`\`jsx
-${example.template}
-\`\`\``,
-    )
-    .join("\n\n");
+  "requests": {
+    "items": { "path": "/items/{option:category}", "query": { "limit": { "$option": "limit" } } },
+    "update": { "kind": "action", "method": "POST", "path": "/items/{param:id}", "invalidates": ["items"] }
+  },
+  "options": {
+    "category": { "label": "Category", "control": "text", "default": "all" },
+    "limit": { "label": "Result limit", "control": "number", "default": 20, "min": 1, "max": 100 }
+  },
+  "template": "__HOMARR_TEMPLATE__"
+}`;
+
+function compactExample(index: number) {
+  const example = customJsxExamples[index];
+  if (!example) return "";
+  const { template, ...manifest } = example.widget;
+  return `Example — ${example.title}:\n\n\`\`\`json\n${JSON.stringify({ ...manifest, template: "__HOMARR_TEMPLATE__" }, null, 2)}\n\`\`\`\n\n\`\`\`jsx\n${template}\n\`\`\``;
+}
+
+const AUTHORING_PROMPT = `You are writing one safe Homarr Custom JSX v2 dashboard widget for Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}.
+
+Manifest contract:
+${leanShape}
+
+Sources are keyed by name and must include "default". Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Use the stable public API URL for public services and a clear suggested URL for self-hosted services; Homarr asks the installer for their own server URL. Never put credentials in the manifest.
+
+Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. DELETE requires full permission and receives confirmation automatically. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Paths and query values must be primitive; JSON bodies may bind structured options.
+
+Options are keyed by name. Every option has label, control, and default. Controls: text, textarea, number, switch, select, multiSelect, slider, date, time, color, icon, url, duration, timeZone, json. Select choices use \`"choices": [{"label":"...","value":"..."}]\`. Dynamic choices must use \`"choicesFrom": {"request":"requestId","itemsPath":"optional.path","valuePath":"id","labelPath":"name"}\`, never an object under \`choices\`. Options are configured outside the widget and read through \`options.name\`; a bound control writes only to \`inputs.name\` and never changes an option.
+
+JSX reads data.requestId, status.requestId, options.name, and temporary inputs.name. A status has loading, ok, status, statusText, and error. Use bind="search" on supported controls and inputs.search in params. SubFetch invokes a manual query. With trigger="manual", it renders its own load button; pass a card or image as triggerContent with triggerAriaLabel to make that content launch the request. Never author onClick or a fetch callback. Its child callback is (result, meta), where meta has ok, status, statusText, loading=false, and no error because SubFetch renders loading/error states itself. Use expression callbacks for map, filter, sort, and SubFetch. Do not use imports, hooks, refs, raw HTML, event callbacks, fetch, eval, bigint, npm packages, authored const blocks, IIFEs, or recursion. Regex is only for bounded string matching/replacement. Do not embed secrets.
+
+Hard syntax rule: never write \`=> {\` anywhere. Every callback must be one concise expression, for example \`items.map(item => <Card key={item.id}>...</Card>)\`. Inline derived values directly, even when that repeats a short expression. Never use an IIFE to create local variables or branch; use JSX ternaries instead. Callback parameter names must not shadow the reserved roots \`data\`, \`status\`, \`options\`, or \`inputs\`.
+
+Use only API routes grounded in the user request, documentation, or verified API notes. When a requested mutation is undocumented, omit it and explain the limitation through the widget design rather than inventing an endpoint.
+
+Recommended components: ${RECOMMENDED_COMPONENTS.join(", ")}. This list is not exhaustive. Standard Mantine compound names are encouraged. Runtime helpers: RefreshButton, SubFetch, ActionButton, ToggleSwitch, and <Icon name="tabler-icon-name" />.
+
+Make the result genuinely attractive: establish clear visual hierarchy, use deliberate spacing, restrained semantic color, responsive layouts, and theme-safe colors. Prefer one strong primary surface over excessive nested cards. Include useful loading, empty, error, and success states. Make narrow and wide tiles both work.
+
+Visual quality bar:
+- Give the widget a purposeful header with title, useful context, and its primary status or action.
+- When the data supports it, lead with 2–4 scannable summary metrics before detailed rows.
+- Use responsive SimpleGrid/Grid column objects and let long content wrap on narrow tiles.
+- Use theme tokens and semantic Mantine colors; avoid hard-coded light backgrounds and decorative gradients.
+
+${compactExample(0)}
+
+${compactExample(1)}
+
+Output the manifest with template set exactly to "__HOMARR_TEMPLATE__", then put the complete template in the JSX block.`;
+
+export const CUSTOM_WIDGET_AUTHORING_PROMPT = AUTHORING_PROMPT;
+
+export const CUSTOM_WIDGET_MCP_AUTHORING_PROMPT = `Author one Homarr Custom JSX v2 widget at a time.
+
+Read the live schema and only the component resources needed for the design. Construct a credential-free widget, validate it, create a preview, test queries and simulated actions, visually inspect it, then create it. Configure deployment-specific source URLs and request credentials through Homarr when needed; never repeat plaintext. The live resources are authoritative for this Homarr release.
+
+Use the lean keyed sources, requests, and options contract. Bind saved values directly with $option and invocation values with $param. Load queries cannot use $param. Keep the design responsive, accessible, theme-safe, loading-aware, empty-aware, and error-aware.
+
+Use Workshop search/get/install when the user asks for an existing community widget. After installation, configure self-hosted source URLs and credentials with the dedicated source configuration tool or a secure user configuration request.`;
+
+export function buildCustomWidgetMcpPrompt(request?: string | null, documentationUrl?: string | null) {
+  const sections = [CUSTOM_WIDGET_MCP_AUTHORING_PROMPT];
+  if (documentationUrl) sections.push(`API documentation: ${redactUrl(documentationUrl)}`);
+  if (request?.trim()) sections.push(`User request: ${redactText(request.trim())}`);
+  return sections.join("\n\n");
 }
 
 export function buildCustomWidgetAiPrompt(
-  jsonSchema: unknown,
+  _jsonSchema?: unknown,
   rawResponse?: string | null,
-  currentConfig?: Record<string, unknown> | null,
+  currentConfig?: Partial<HomarrCustomWidgetV2> | Record<string, unknown> | null,
+  request?: string | null,
+  documentationUrl?: string | null,
 ) {
-  const responseSection = rawResponse
-    ? `## API response\n\n\`\`\`json\n${rawResponse}\n\`\`\`\n`
-    : `## API response\n\n${PROMPT_NO_RESPONSE}`;
-  const currentDisplayConfig = currentConfig?.displayConfig;
-  const currentTemplate =
-    currentDisplayConfig && typeof currentDisplayConfig === "object" && "template" in currentDisplayConfig
-      ? currentDisplayConfig.template
-      : null;
-  const readableCurrentConfig = currentConfig
-    ? {
-        ...currentConfig,
-        ...(currentTemplate && typeof currentTemplate === "string"
-          ? {
-              displayConfig: {
-                ...(currentDisplayConfig as Record<string, unknown>),
-                template: "__HOMARR_TEMPLATE__",
-              },
-            }
-          : {}),
+  const sections = [
+    `Create this Homarr Custom JSX v2 widget:\n\n${truncatePromptText(redactText(request?.trim() || "Describe the widget you want to create."), 1_500)}`,
+  ];
+  if (documentationUrl) sections.push(`API documentation: ${truncatePromptText(redactUrl(documentationUrl), 500)}`);
+  sections.push(AUTHORING_PROMPT);
+
+  const optionalSections = [
+    ...(rawResponse ? [{ label: "Sample API response", content: redactResponse(rawResponse) }] : []),
+    ...(currentConfig
+      ? [{ label: "Current widget", content: JSON.stringify(redactValue(currentConfig), null, 2) }]
+      : []),
+  ];
+  for (const section of optionalSections) {
+    const remaining =
+      CUSTOM_WIDGET_AI_PROMPT_LIMIT - sections.join("\n\n").length - CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION.length - 8;
+    const formatted = formatBudgetedCodeSection(section.label, section.content, remaining);
+    if (formatted) sections.push(formatted);
+  }
+  const footer = `\n\n${CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION}`;
+  return `${truncatePromptText(sections.join("\n\n"), CUSTOM_WIDGET_AI_PROMPT_LIMIT - footer.length)}${footer}`;
+}
+
+const sensitiveKey =
+  /(^|[-_])(authorization|api[-_]?keys?|passwords?|passwds?|secrets?|tokens?|access[-_]?tokens?|refresh[-_]?tokens?|client[-_]?secrets?)($|[-_])/iu;
+
+function redactValue(value: unknown, key = ""): unknown {
+  if (sensitiveKey.test(key)) return "[REDACTED]";
+  if (Array.isArray(value)) return value.map((entry) => redactValue(entry));
+  if (value !== null && typeof value === "object")
+    return Object.fromEntries(
+      Object.entries(value).map(([entryKey, entry]) => [entryKey, redactValue(entry, entryKey)]),
+    );
+  if (typeof value === "string") {
+    if (["sources", "requests", "options"].includes(key)) {
+      try {
+        return redactValue(JSON.parse(value) as unknown);
+      } catch {
+        /* Keep invalid editor JSON useful. */
       }
-    : null;
-  const configSection = readableCurrentConfig
-    ? `## Current configuration\n\nUse this as the starting point and preserve unrelated settings.\n\n\`\`\`json\n${JSON.stringify(readableCurrentConfig, null, 2)}\n\`\`\`\n${typeof currentTemplate === "string" ? `\n\`\`\`jsx\n${currentTemplate}\n\`\`\`\n` : ""}`
-    : "";
+    }
+    return key === "baseUrl" || key === "iconUrl" ? redactUrl(value) : redactText(value);
+  }
+  return value;
+}
 
-  return `${PROMPT_HEADER}
-## Import schema
-The \`__HOMARR_TEMPLATE__\` value is an authoring transport placeholder. Homarr replaces it with the following JSX block before schema and AST validation.
+function redactResponse(value: string) {
+  try {
+    return JSON.stringify(redactValue(JSON.parse(value) as unknown), null, 2);
+  } catch {
+    return truncatePromptText(redactText(value), 1_500);
+  }
+}
 
-\`\`\`json
-${JSON.stringify(jsonSchema, null, 2)}
-\`\`\`
+function redactUrl(value: string): string {
+  try {
+    const url = new URL(value);
+    url.username = "";
+    url.password = "";
+    url.search = "";
+    url.hash = "";
+    return url.toString();
+  } catch {
+    return "[REDACTED_URL]";
+  }
+}
 
-## Generated component reference
-${buildComponentReference()}
+function redactText(value: string): string {
+  return value
+    .replace(/\bhttps?:\/\/[^\s"'<>]+/giu, (candidate) => redactUrl(candidate))
+    .replace(/\b(authorization\s*:\s*bearer)\s+[^\s,;]+/giu, "$1 [REDACTED]")
+    .replace(
+      /\b(api[ _-]?key|access[ _-]?token|refresh[ _-]?token|client[ _-]?secret|token|password|passwd|secret)["']?\s*[:=]\s*["']?[^\s,;"'}]+/giu,
+      "$1: [REDACTED]",
+    );
+}
 
-## Tested examples
-${buildExamples()}
+function formatBudgetedCodeSection(label: string, content: string, budget: number): string | null {
+  const prefix = `${label}:\n\n\`\`\`json\n`;
+  const suffix = "\n```";
+  if (budget <= prefix.length + suffix.length + 80) return null;
+  return `${prefix}${truncatePromptText(content, budget - prefix.length - suffix.length)}${suffix}`;
+}
 
-${responseSection}
-${configSection}
-## Requested widget
-Describe what the widget should show and which interactions it needs:
-`;
+function truncatePromptText(value: string, limit: number): string {
+  if (value.length <= limit) return value;
+  const marker = "\n... [content omitted to fit the prompt budget]";
+  return `${value.slice(0, Math.max(0, limit - marker.length))}${marker}`;
 }

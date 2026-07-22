@@ -105,6 +105,7 @@ External redis is currently not supported with Proxmox Community Scripts
 The advanced deployments environment variables should only be used if you know what you are doing.
 :::
 
-| Environment Variable     | Description                                        |
-| ------------------------ | -------------------------------------------------- |
-| `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts |
+| Environment Variable     | Description                                                                                                     |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts                                                              |
+| `WORKSHOP_API_URL`       | Runtime public origin of the separate Workshop PocketBase service. Homarr uses `https://homarr.dev` by default. |

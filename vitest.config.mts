@@ -29,10 +29,19 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: "db-node",
+          environment: "node",
+          setupFiles: ["./vitest.setup.ts", "./vitest.setup.node.ts"],
+          include: ["packages/db/test/**/*.spec.ts"],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: "dom",
           environment: "jsdom",
           include: ["**/*.spec.{ts,tsx}"],
-          exclude: [...configDefaults.exclude, "apps/nextjs/.next", "packages/api/**", "e2e/**"],
+          exclude: [...configDefaults.exclude, "apps/nextjs/.next", "packages/api/**", "packages/db/**", "e2e/**"],
         },
       },
       {

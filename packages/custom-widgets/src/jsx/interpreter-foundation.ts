@@ -39,6 +39,13 @@ export class SafeJsxError extends Error {
   }
 }
 
+export class SafeJsxBudgetError extends SafeJsxError {
+  public constructor(message: string) {
+    super(message);
+    this.name = "SafeJsxBudgetError";
+  }
+}
+
 export class Environment {
   public constructor(
     private readonly values: Readonly<Record<string, unknown>>,
@@ -61,22 +68,22 @@ export class Budget {
   public constructor(private readonly limits: EvaluationBudgets) {}
   public operation(depth: number): void {
     if (depth > this.limits.maxAstDepth)
-      throw new SafeJsxError(`Template exceeded the AST depth limit (${this.limits.maxAstDepth})`);
+      throw new SafeJsxBudgetError(`Template exceeded the AST depth limit (${this.limits.maxAstDepth})`);
     if (++this.operations > this.limits.maxOperations)
-      throw new SafeJsxError(`Template exceeded the operation limit (${this.limits.maxOperations})`);
+      throw new SafeJsxBudgetError(`Template exceeded the operation limit (${this.limits.maxOperations})`);
   }
   public collection(count = 1): void {
     this.collectionItems += count;
     if (this.collectionItems > this.limits.maxCollectionItems)
-      throw new SafeJsxError(`Template exceeded the collection limit (${this.limits.maxCollectionItems})`);
+      throw new SafeJsxBudgetError(`Template exceeded the collection limit (${this.limits.maxCollectionItems})`);
   }
   public rendered(): void {
     if (++this.renderedNodes > this.limits.maxRenderedNodes)
-      throw new SafeJsxError(`Template exceeded the rendered node limit (${this.limits.maxRenderedNodes})`);
+      throw new SafeJsxBudgetError(`Template exceeded the rendered node limit (${this.limits.maxRenderedNodes})`);
   }
   public string(value: string): string {
     if (value.length > this.limits.maxStringLength)
-      throw new SafeJsxError(`Template exceeded the string length limit (${this.limits.maxStringLength})`);
+      throw new SafeJsxBudgetError(`Template exceeded the string length limit (${this.limits.maxStringLength})`);
     return value;
   }
 }

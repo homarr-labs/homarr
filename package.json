@@ -23,6 +23,8 @@
     "db:studio": "pnpm -F db studio",
     "dev": "pnpm -F nextjs dev",
     "dev:docs": "pnpm -F @homarr/docs dev",
+    "docker:docs": "docker compose -f apps/workshop/docker-compose.yml up --build docs",
+    "docker:workshop": "docker compose -f apps/workshop/docker-compose.yml up --build workshop",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "turbo format --continue -- --check",
     "format:fix": "turbo format --continue",
@@ -35,6 +37,7 @@
     "start": "concurrently \"pnpm with-env node apps/tasks/tasks.cjs\" \"pnpm with-env node apps/websocket/wssServer.cjs\" \"pnpm -F nextjs start\"",
     "test": "cross-env NODE_ENV=development CI=true vitest run --project api-node --project dom --coverage.enabled",
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest run --project e2e",
+    "test:workshop": "sh apps/workshop/test.sh",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
     "with-env": "dotenv -e .env --"
