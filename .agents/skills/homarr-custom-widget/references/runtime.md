@@ -11,6 +11,6 @@ Templates read `data.requestId`, `status.requestId`, `options.name`, and tempora
 </SubFetch>
 ```
 
-`SubFetch` with `trigger="manual"` renders its own load button. Its optional second callback argument contains `{ ok, status, statusText, loading: false }`; loading and request failures are rendered by `SubFetch` before the callback runs. Do not author `onClick` or a fetch callback.
+`SubFetch` with `trigger="manual"` renders its own load button. To make a card or image launch the request, pass that node through `triggerContent` and provide `triggerAriaLabel`; Homarr supplies the click and keyboard behavior. Its optional second callback argument contains `{ ok, status, statusText, loading: false }`; loading and request failures are rendered by `SubFetch` before the callback runs. Do not author `onClick` or a fetch callback.
 
 Use expression callbacks for supported collection methods and trusted slots. Do not use callback blocks, IIFEs, authored recursion, or raw events. Bounded regex literals work only with safe string matching/replacement operations.

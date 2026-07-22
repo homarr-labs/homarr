@@ -24,6 +24,7 @@ import type {
 } from "./schema";
 import {
   WORKSHOP_API_URL,
+  MAX_WORKSHOP_SCREENSHOTS,
   WORKSHOP_REQUEST_TIMEOUT_MS,
   workshopCommentSchema,
   workshopReportSchema,
@@ -55,7 +56,13 @@ export interface WorkshopPage<T> {
   items: T[];
 }
 
+export interface WorkshopScreenshotChanges {
+  additions?: File[];
+  removals?: string[];
+}
+
 interface WorkshopBaseRecord {
+  [key: string]: unknown;
   id: string;
   collectionId: string;
   collectionName: string;
@@ -95,6 +102,7 @@ export interface WorkshopSubmissionRecord extends WorkshopBaseRecord {
 export interface WorkshopListingRecord extends Omit<WorkshopSubmissionRecord, "content" | "screenshots"> {
   screenshots: string[] | string;
   authorName: string;
+  authorAvatar: string;
   authorAvatarUrl: string;
   authorGithubUsername: string;
   authorGithubProfileUrl: string;
@@ -220,7 +228,10 @@ function listingFilter(pocketBase: TypedWorkshopPocketBase, options: WorkshopLis
 const isViewCompatibilityError = (error: unknown) =>
   error instanceof ClientResponseError && (error.status === 400 || error.status === 404);
 
-const enrichAuthor = (row: unknown) => {
+const enrichAuthor = (
+  row: unknown,
+  resolveAvatarUrl?: (record: Record<string, unknown>, user: Record<string, unknown>) => string,
+) => {
   if (typeof row !== "object" || row === null || Array.isArray(row)) return row;
   const record = row as Record<string, unknown>;
   const expand = record.expand;
@@ -234,7 +245,7 @@ const enrichAuthor = (row: unknown) => {
   return {
     ...record,
     authorName: record.authorName || user.displayName || user.username,
-    authorAvatarUrl: record.authorAvatarUrl || user.avatarUrl,
+    authorAvatarUrl: resolveAvatarUrl?.(record, user) || record.authorAvatarUrl || user.avatarUrl,
     authorGithubUsername: githubUsername,
     authorGithubProfileUrl:
       record.authorGithubProfileUrl ||
@@ -245,9 +256,12 @@ const enrichAuthor = (row: unknown) => {
   };
 };
 
-const parseListings = (rows: unknown[]) =>
+const parseListings = (
+  rows: unknown[],
+  resolveAvatarUrl?: (record: Record<string, unknown>, user: Record<string, unknown>) => string,
+) =>
   rows.flatMap((row) => {
-    const result = workshopSubmissionSummarySchema.safeParse(enrichAuthor(row));
+    const result = workshopSubmissionSummarySchema.safeParse(enrichAuthor(row, resolveAvatarUrl));
     return result.success ? [result.data] : [];
   });
 
@@ -282,15 +296,33 @@ export class WorkshopBackend {
     this.pocketBase.autoCancellation(false);
   }
 
+  private userAvatarUrl(record: Record<string, unknown>) {
+    const avatar = typeof record.avatar === "string" ? record.avatar : "";
+    if (avatar) return this.pocketBase.files.getURL(record, avatar);
+    return typeof record.avatarUrl === "string" ? record.avatarUrl : "";
+  }
+
+  private listingAuthorAvatarUrl(record: Record<string, unknown>, user: Record<string, unknown>) {
+    const expandedAvatarUrl = this.userAvatarUrl(user);
+    if (expandedAvatarUrl) return expandedAvatarUrl;
+
+    const author = typeof record.author === "string" ? record.author : "";
+    const avatar = typeof record.authorAvatar === "string" ? record.authorAvatar : "";
+    if (!author || !avatar) return "";
+    return `${this.baseUrl}/api/files/users/${encodeURIComponent(author)}/${encodeURIComponent(avatar)}`;
+  }
+
   public get currentUser(): WorkshopUser | null {
     const record = this.pocketBase.authStore.record;
     if (!record) return null;
     return workshopUserSchema.parse({
       id: record.id,
       displayName: record.displayName || record.name || record.username || "Community member",
-      avatarUrl: record.avatarUrl || (record.avatar ? this.pocketBase.files.getURL(record, record.avatar) : ""),
-      githubUsername: record.githubUsername || record.username || "",
-      githubProfileUrl: record.githubProfileUrl || "",
+      avatarUrl: this.userAvatarUrl(record),
+      githubUsername: record.githubUsername || "",
+      githubProfileUrl:
+        record.githubProfileUrl ||
+        (record.githubUsername ? `https://github.com/${encodeURIComponent(record.githubUsername)}` : ""),
       isAdmin: record.isAdmin === true,
     });
   }
@@ -342,7 +374,10 @@ export class WorkshopBackend {
           sort: listingSort(options.sort),
           signal: requestSignal(options.signal),
         });
-        return { ...result, items: parseListings(result.items) };
+        return {
+          ...result,
+          items: parseListings(result.items, (record, user) => this.listingAuthorAvatarUrl(record, user)),
+        };
       } catch (error) {
         if (!isViewCompatibilityError(error)) throw error;
         const items = filterListings(await this.loadListingsFallback(options.signal), options);
@@ -368,7 +403,7 @@ export class WorkshopBackend {
           sort: listingSort(options.sort),
           signal: requestSignal(options.signal),
         });
-        return parseListings(rows);
+        return parseListings(rows, (record, user) => this.listingAuthorAvatarUrl(record, user));
       } catch (error) {
         if (!isViewCompatibilityError(error)) throw error;
         return filterListings(await this.loadListingsFallback(options.signal), options);
@@ -388,7 +423,7 @@ export class WorkshopBackend {
           return this.pocketBase.collection("submissions").getFullList({ ...options, expand: "author" });
         throw error;
       });
-    return parseListings(rows);
+    return parseListings(rows, (record, user) => this.listingAuthorAvatarUrl(record, user));
   }
 
   public async get(id: string, signal?: AbortSignal): Promise<WorkshopSubmissionDetail> {
@@ -404,7 +439,10 @@ export class WorkshopBackend {
           throw error;
         });
       return workshopSubmissionDetailSchema.parse(
-        enrichAuthor({ ...submission, ...listing, expand: submission.expand, content: submission.content }),
+        enrichAuthor(
+          { ...submission, ...listing, expand: submission.expand, content: submission.content },
+          (record, user) => this.listingAuthorAvatarUrl(record, user),
+        ),
       );
     } catch (error) {
       throw workshopError(error, "Submission not found");
@@ -432,15 +470,24 @@ export class WorkshopBackend {
     }
   }
 
-  public async update(id: string, input: WorkshopSubmissionInput, screenshots: File[] = []) {
+  public async update(id: string, input: WorkshopSubmissionInput, screenshotChanges: WorkshopScreenshotChanges = {}) {
     const parsed = workshopSubmissionInputSchema.parse(input);
-    workshopScreenshotsSchema.parse(screenshots);
+    const additions = screenshotChanges.additions ?? [];
+    const removals = screenshotChanges.removals ?? [];
+    workshopScreenshotsSchema.parse(additions);
     const current = await this.get(id);
-    const data = new FormData();
-    Object.entries(parsed).forEach(([key, value]) => data.set(key, typeof value === "string" ? value : String(value)));
-    data.set("widgetSchema", parsed.type === "customCss" ? WORKSHOP_CSS_SCHEMA : CUSTOM_WIDGET_SCHEMA);
-    data.set("revision", String(current.revision + 1));
-    screenshots.forEach((file) => data.append("screenshots", file));
+    const removalSet = new Set(removals);
+    const retainedCount = current.screenshots.filter((filename) => !removalSet.has(filename)).length;
+    if (retainedCount + additions.length > MAX_WORKSHOP_SCREENSHOTS)
+      throw new Error(`A submission can have up to ${MAX_WORKSHOP_SCREENSHOTS} screenshots`);
+
+    const data: Record<string, unknown> = {
+      ...parsed,
+      widgetSchema: parsed.type === "customCss" ? WORKSHOP_CSS_SCHEMA : CUSTOM_WIDGET_SCHEMA,
+      revision: current.revision + 1,
+    };
+    if (additions.length > 0) data["screenshots+"] = additions;
+    if (removals.length > 0) data["screenshots-"] = removals;
     try {
       await this.pocketBase.collection("submissions").update(id, data);
       return this.get(id);
@@ -554,8 +601,12 @@ export class WorkshopBackend {
         workshopCommentSchema.parse({
           ...row,
           authorName: row.expand?.author?.displayName,
-          authorAvatarUrl: row.expand?.author?.avatarUrl,
-          authorGithubProfileUrl: row.expand?.author?.githubProfileUrl,
+          authorAvatarUrl: row.expand?.author ? this.userAvatarUrl(row.expand.author) : undefined,
+          authorGithubProfileUrl:
+            row.expand?.author?.githubProfileUrl ||
+            (row.expand?.author?.githubUsername
+              ? `https://github.com/${encodeURIComponent(row.expand.author.githubUsername)}`
+              : undefined),
         }),
       );
     } catch (error) {
@@ -571,8 +622,12 @@ export class WorkshopBackend {
       return workshopCommentSchema.parse({
         ...row,
         authorName: row.expand?.author?.displayName,
-        authorAvatarUrl: row.expand?.author?.avatarUrl,
-        authorGithubProfileUrl: row.expand?.author?.githubProfileUrl,
+        authorAvatarUrl: row.expand?.author ? this.userAvatarUrl(row.expand.author) : undefined,
+        authorGithubProfileUrl:
+          row.expand?.author?.githubProfileUrl ||
+          (row.expand?.author?.githubUsername
+            ? `https://github.com/${encodeURIComponent(row.expand.author.githubUsername)}`
+            : undefined),
       });
     } catch (error) {
       throw workshopError(error, "Failed to post comment");
@@ -587,8 +642,12 @@ export class WorkshopBackend {
       return workshopCommentSchema.parse({
         ...row,
         authorName: row.expand?.author?.displayName,
-        authorAvatarUrl: row.expand?.author?.avatarUrl,
-        authorGithubProfileUrl: row.expand?.author?.githubProfileUrl,
+        authorAvatarUrl: row.expand?.author ? this.userAvatarUrl(row.expand.author) : undefined,
+        authorGithubProfileUrl:
+          row.expand?.author?.githubProfileUrl ||
+          (row.expand?.author?.githubUsername
+            ? `https://github.com/${encodeURIComponent(row.expand.author.githubUsername)}`
+            : undefined),
       });
     } catch (error) {
       throw workshopError(error, "Failed to update comment");
@@ -661,12 +720,12 @@ export const workshopUpdateMutationOptions = (backend: WorkshopBackend) =>
     mutationFn: ({
       id,
       input,
-      screenshots = [],
+      screenshotChanges,
     }: {
       id: string;
       input: WorkshopSubmissionInput;
-      screenshots?: File[];
-    }) => backend.update(id, input, screenshots),
+      screenshotChanges?: WorkshopScreenshotChanges;
+    }) => backend.update(id, input, screenshotChanges),
   });
 
 export const workshopDeleteMutationOptions = (backend: WorkshopBackend) =>

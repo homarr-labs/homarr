@@ -115,6 +115,7 @@ const config: Config = {
           label: "Blog",
           position: "left",
           to: "/blog",
+          className: "navbar-item--secondary",
         },
         {
           label: "Workshop",
@@ -125,16 +126,19 @@ const config: Config = {
           label: "About us",
           position: "left",
           to: "/about-us",
+          className: "navbar-item--collapse-first",
         },
         {
           to: "https://demo.homarr.dev/",
           label: "Demo",
           position: "right",
+          className: "navbar-item--secondary",
         },
         {
           to: "https://opencollective.com/homarr",
           label: "💴 Donate",
           position: "right",
+          className: "navbar-item--collapse-first",
         },
         {
           type: "dropdown",
@@ -233,11 +237,19 @@ const config: Config = {
         },
       ],
       logo: {
-        alt: "Homarr Logo",
-        src: "img/logo.png",
-        height: 100,
+        alt: "Homarr home",
+        src: "img/logo.svg",
+        href: "/",
+        width: 86,
+        height: 58,
       },
-      copyright: `<span class="copyright_text">Copyright © ${new Date().getFullYear()} Homarr<span> — <a href="/docs/community/license">License</a>`,
+      copyright: `
+        <div class="footer__brand-copy">
+          <strong class="footer__brand-name">Homarr</strong>
+          <span class="footer__brand-tagline">Your dashboard for the services you run.</span>
+          <span class="copyright_text">© ${new Date().getFullYear()} Homarr · <a href="/docs/community/license">License</a></span>
+        </div>
+      `,
     },
     prism: {
       theme: prismThemes.github,

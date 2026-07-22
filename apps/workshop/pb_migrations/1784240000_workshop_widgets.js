@@ -181,7 +181,7 @@ migrate(
       viewRule: "",
       viewQuery: `
         SELECT s.id, s.type, s.title, s.description, s.widgetSchema, s.screenshots, s.author,
-          u.displayName AS authorName, u.avatarUrl AS authorAvatarUrl,
+          u.displayName AS authorName, u.avatar AS authorAvatar, u.avatarUrl AS authorAvatarUrl,
           u.githubUsername AS authorGithubUsername, u.githubProfileUrl AS authorGithubProfileUrl,
           s.revision, s.changelog, s.outdated, s.created, s.updated,
           COALESCE((SELECT COUNT(*) FROM votes v WHERE v.submission = s.id AND v.value = 1), 0) AS upvotes,

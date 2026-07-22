@@ -38,8 +38,10 @@ https://<workshop-host>/api/oauth2-redirect
 Self-hosted Homarr origins do not need to be registered with GitHub. Keep `PB_ALLOWED_ORIGINS=*` (the default) so localhost and arbitrary self-hosted domains can open the central PocketBase OAuth popup. Set a restricted origin list only if it includes every Homarr origin that should use Workshop sign-in.
 
 Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in the repository-root `.env`. Set
-`WORKSHOP_PUBLIC_ORIGIN=https://<workshop-host>` so new-comment emails link to the public submission page. Configure the
-sender and SMTP transport in PocketBase. Comment email failures are logged and never reject a saved comment.
+`WORKSHOP_PUBLIC_ORIGIN=https://<workshop-host>` so notification emails link to the public Workshop. Configure the sender
+and SMTP transport in PocketBase. PocketBase emails the submission author about new comments, emails every current
+Workshop administrator about a new report, and emails the author after an administrator deletes their submission. Mail
+failures are logged and never reject a comment, report, or deletion.
 
 Run the disposable service integration test from the repository root:
 
@@ -55,9 +57,10 @@ The Workshop does not maintain a second Custom Widget schema. Its frontend valid
 The validated `$schema` is also stored as `widgetSchema` for listing compatibility badges; it must match the downloaded
 manifest before Homarr enables installation.
 PocketBase API rules enforce submission and comment ownership, one vote/report per user and submission, and
-administrator-only moderation. Each new submission receives one real author-owned upvote. Reports remain public and are
-dismissed by changing their status. PocketBase cascade deletion removes related votes, comments, and reports when a
-submission is deleted. Authors and administrators can mark a submission outdated without making it un-installable.
+administrator-only moderation. Each new submission receives one real author-owned upvote. Reports are private to
+administrators and are dismissed by changing their status. PocketBase cascade deletion removes related votes, comments,
+and reports when a submission is deleted. Authors and administrators can mark a submission outdated without making it
+un-installable.
 
 ## Production docs preview
 

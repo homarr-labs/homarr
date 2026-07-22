@@ -32,17 +32,28 @@ import {
   IconThumbDown,
   IconThumbUp,
 } from "@tabler/icons-react";
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import type { WorkshopReport, WorkshopSubmissionDetail, WorkshopSubmissionType, WorkshopUser } from "@homarr/workshop";
+import {
+  useWorkshopCssImportMutation,
+  useWorkshopQuery,
+  useWorkshopReportMutation,
+  useWorkshopSubmissionQuery,
+  useWorkshopVoteMutation,
+  useWorkshopWidgetImportMutation,
+} from "@homarr/workshop/backend";
+import type {
+  WorkshopReport,
+  WorkshopSubmissionDetail,
+  WorkshopSubmissionType,
+  WorkshopUser,
+} from "@homarr/workshop/schema";
 import {
   validateWorkshopContent,
   validateWorkshopWidget,
   WORKSHOP_CSS_SCHEMA,
   workshopExportFilename,
-} from "@homarr/workshop";
+} from "@homarr/workshop/schema";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -68,7 +79,6 @@ interface WorkshopBrowserProps {
 export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: WorkshopBrowserProps) {
   const t = useScopedI18n("workshop");
   const client = useMemo(createWorkshopClient, []);
-  const queryClient = useQueryClient();
   const [user, setUser] = useState<WorkshopUser | null>(null);
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState<"top" | "newest">("top");
@@ -88,16 +98,8 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
     return unsubscribe;
   }, [client]);
 
-  const list = useQuery({
-    queryKey: ["workshop", "list", type, page, sort, debouncedSearch],
-    queryFn: ({ signal }) => client.list({ page, perPage: 12, type, sort, search: debouncedSearch, signal }),
-    placeholderData: keepPreviousData,
-  });
-  const detail = useQuery({
-    queryKey: ["workshop", "detail", selectedId],
-    queryFn: ({ signal }) => client.get(selectedId ?? "", signal),
-    enabled: selectedId !== null,
-  });
+  const list = useWorkshopQuery(client, { page, perPage: 12, type, sort, search: debouncedSearch });
+  const detail = useWorkshopSubmissionQuery(client, selectedId ?? "");
   const detailValidation = useMemo(() => {
     if (!detail.data) return null;
     return type === "customCss"
@@ -120,33 +122,24 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
       })
       .finally(() => setLoginPending(false));
   };
-  const install = useMutation({
-    mutationFn: async (widget: HomarrCustomWidgetV2) => onInstall?.(widget),
-    onSuccess: () => setSelectedId(null),
+  const install = useWorkshopWidgetImportMutation(onInstall, () => setSelectedId(null));
+  const useCss = useWorkshopCssImportMutation(onUseCss, () => {
+    setCssAwaitingConfirmation(null);
+    setSelectedId(null);
   });
-  const useCss = useMutation({
-    mutationFn: async (css: string) => onUseCss?.(css),
-    onSuccess: () => {
-      setCssAwaitingConfirmation(null);
-      setSelectedId(null);
-    },
-  });
-  const vote = useMutation({
-    mutationFn: ({ submission, value }: { submission: string; value: 1 | -1 }) => client.vote(submission, value),
-    onSuccess: async () =>
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["workshop", "list"] }),
-        queryClient.invalidateQueries({ queryKey: ["workshop", "detail"] }),
-      ]),
-  });
-  const report = useMutation({
-    mutationFn: () => client.report(selectedId ?? "", reportCategory, reportExplanation),
-    onSuccess: () => {
-      reportControls.close();
-      setReportExplanation("");
-      showSuccessNotification({ title: t("reportSent"), message: t("reportSentDescription") });
-    },
-  });
+  const vote = useWorkshopVoteMutation(client);
+  const report = useWorkshopReportMutation(client);
+  const submitReport = () =>
+    report.mutate(
+      { submission: selectedId ?? "", category: reportCategory, explanation: reportExplanation },
+      {
+        onSuccess: () => {
+          reportControls.close();
+          setReportExplanation("");
+          showSuccessNotification({ title: t("reportSent"), message: t("reportSentDescription") });
+        },
+      },
+    );
 
   return (
     <Stack gap="lg">
@@ -433,11 +426,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
             onChange={(event) => setReportExplanation(event.currentTarget.value)}
           />
           {report.error && <Alert color="red">{report.error.message}</Alert>}
-          <Button
-            loading={report.isPending}
-            disabled={reportExplanation.trim().length < 3}
-            onClick={() => report.mutate()}
-          >
+          <Button loading={report.isPending} disabled={reportExplanation.trim().length < 3} onClick={submitReport}>
             {t("reportSend")}
           </Button>
         </Stack>

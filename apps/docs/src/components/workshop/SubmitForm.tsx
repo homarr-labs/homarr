@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  IconAlertCircle,
   IconBraces,
   IconCheck,
   IconChevronLeft,
@@ -7,9 +8,6 @@ import {
   IconFileUpload,
   IconLoader2,
   IconPalette,
-  IconPhoto,
-  IconUpload,
-  IconX,
 } from "@tabler/icons-react";
 
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
@@ -17,6 +15,7 @@ import { validateSubmissionContent } from "@site/src/lib/workshop-schema";
 
 import { CustomWidgetCodeInput } from "@/components/custom-widget-code";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,6 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn, errorMessage } from "@/lib/utils";
 
 import type { SubmitInput } from "./useWorkshop";
+import { ScreenshotEditor } from "./ScreenshotEditor";
 
 interface Props {
   onClose: () => void;
@@ -41,7 +41,7 @@ const steps = ["Type", "Details", "Media"] as const;
 const navDirection = [-1, 1];
 const stepAnimClass = ["submit-step-from-left", "submit-step-from-right"];
 const backLabels = ["Cancel", "Back"];
-const submitLabels = ["Submit", "Submitting…"];
+const submitLabels = ["Publish submission", "Publishing…"];
 const connectorClass = ["bg-border", "bg-primary"];
 const dropOverlayClass = ["pointer-events-none opacity-0", "opacity-100"];
 
@@ -246,9 +246,11 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
         </div>
 
         {error && (
-          <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs font-medium text-destructive">
-            {error}
-          </div>
+          <Alert variant="destructive">
+            <IconAlertCircle />
+            <AlertTitle>Submission needs attention</AlertTitle>
+            <AlertDescription className="whitespace-pre-wrap">{error}</AlertDescription>
+          </Alert>
         )}
 
         <div className="relative min-h-[280px] overflow-hidden">
@@ -268,7 +270,11 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
               />
             )}
             {step === 2 && (
-              <StepMedia previews={previews} addFiles={addImageFiles} removeScreenshot={removeScreenshot} />
+              <ScreenshotEditor
+                items={previews.map((src) => ({ id: src, src }))}
+                onAdd={addImageFiles}
+                onRemove={(id) => removeScreenshot(previews.indexOf(id))}
+              />
             )}
           </div>
         </div>
@@ -489,89 +495,3 @@ const StepDetails = ({
     </div>
   </div>
 );
-
-const mediaDropState = {
-  idle: { Icon: IconUpload, title: "Drag & drop or click to upload", iconClass: "bg-muted text-muted-foreground" },
-  active: { Icon: IconPhoto, title: "Drop images here", iconClass: "bg-primary text-primary-foreground" },
-} as const;
-
-const StepMedia = ({
-  previews,
-  addFiles,
-  removeScreenshot,
-}: {
-  previews: string[];
-  addFiles: (files: FileList | File[]) => void;
-  removeScreenshot: (idx: number) => void;
-}) => {
-  const [dragOver, setDragOver] = useState(false);
-  const { Icon: DropIcon, title: dropTitle, iconClass: dropIconClass } = mediaDropState[dragOver ? "active" : "idle"];
-
-  return (
-    <div className="flex flex-col gap-4">
-      <div>
-        <span className="text-xs font-medium text-muted-foreground">Screenshots (optional, up to 5)</span>
-        <p className="mt-0.5 text-xs text-muted-foreground/70">
-          Add screenshots to help others preview your submission.
-        </p>
-      </div>
-      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-      <label
-        onDragOver={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setDragOver(true);
-        }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setDragOver(false);
-          addFiles(e.dataTransfer.files);
-        }}
-        className={cn(
-          "flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border p-8 text-center transition-all hover:border-primary/50 hover:bg-primary/5",
-          dragOver && "border-primary bg-primary/10",
-          previews.length >= 5 && "pointer-events-none opacity-50",
-        )}
-      >
-        <div className={cn("flex size-10 items-center justify-center rounded-xl transition-colors", dropIconClass)}>
-          <DropIcon size={20} />
-        </div>
-        <div>
-          <p className="font-heading text-sm font-medium">{dropTitle}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">PNG, JPG, WebP up to 5 images</p>
-        </div>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          className="hidden"
-          onChange={(e) => {
-            if (e.target.files) addFiles(e.target.files);
-          }}
-        />
-      </label>
-
-      {previews.length > 0 && (
-        <div className="max-h-44 overflow-y-auto pr-1">
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
-            {previews.map((src, i) => (
-              <div key={i} className="group relative h-24 overflow-hidden rounded-xl border border-border bg-muted">
-                <img src={src} alt={`Preview ${i + 1}`} className="h-full w-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => removeScreenshot(i)}
-                  className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
-                  aria-label={`Remove screenshot ${i + 1}`}
-                >
-                  <IconX size={16} className="text-white" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};

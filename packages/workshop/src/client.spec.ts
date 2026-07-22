@@ -82,6 +82,42 @@ describe("WorkshopBackend", () => {
     expect(mocks.autoCancellation).toHaveBeenCalledWith(false);
   });
 
+  test("appends and removes screenshots without replacing retained files", async () => {
+    const client = new WorkshopBackend("https://workshop.example.com");
+    const current = {
+      ...listingRecord(),
+      type: "customCss" as const,
+      content: ".dashboard { color: red; }",
+      screenshots: ["keep.png", "remove.png"],
+      revision: 2,
+    };
+    vi.spyOn(client, "get").mockResolvedValue(current as never);
+    mocks.update.mockResolvedValue(current);
+    const addition = new File(["image"], "new.png", { type: "image/png" });
+
+    await client.update(
+      current.id,
+      {
+        type: "customCss",
+        title: current.title,
+        description: current.description,
+        content: current.content,
+        changelog: "Updated screenshots",
+        outdated: false,
+      },
+      { additions: [addition], removals: ["remove.png"] },
+    );
+
+    expect(mocks.update).toHaveBeenCalledWith(
+      current.id,
+      expect.objectContaining({
+        "screenshots+": [addition],
+        "screenshots-": ["remove.png"],
+        revision: 3,
+      }),
+    );
+  });
+
   test("uses PocketBase filtering and pagination when the listing view is current", async () => {
     mocks.getList.mockResolvedValue({
       page: 1,

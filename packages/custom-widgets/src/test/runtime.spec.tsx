@@ -214,6 +214,37 @@ describe("Custom Widget runtime ports", () => {
     expect(setItem).not.toHaveBeenCalled();
   });
 
+  it("preserves input focus across temporary binding updates", async () => {
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+    await render(
+      <CustomJsxRenderer
+        template={'<Stack><TextInput bind="search"/><Text>{inputs.search}</Text></Stack>'}
+        data={{}}
+        components={components}
+        createBindings={() => ({})}
+        messages={{ noTemplate: "No template", templateWarnings: (count) => `${count} warnings` }}
+      />,
+      createPort(),
+    );
+    await settle();
+
+    const input = host.querySelector("input") as HTMLInputElement;
+    input.focus();
+    await act(async () => {
+      input.value = "p";
+      input.dispatchEvent(new InputEvent("input", { bubbles: true, data: "p", inputType: "insertText" }));
+    });
+    await settle();
+
+    expect(input.isConnected).toBe(true);
+    expect(document.activeElement).toBe(input);
+    expect(input.value).toBe("p");
+    expect(host.textContent).toContain("p");
+  });
+
   it("resets temporary bindings when the template changes", async () => {
     const rendererMessages = {
       noTemplate: "No template",
@@ -326,6 +357,50 @@ describe("Custom Widget runtime ports", () => {
 
     expect(port.query).toHaveBeenCalledOnce();
     expect(host.textContent).toContain("Bulbasaur:200:false");
+  });
+
+  it("keeps manual query results local instead of publishing a shared request slot", async () => {
+    const port = createPort();
+    const publish = vi.fn();
+    await render(
+      <SubFetch requestId="details" trigger="manual" triggerContent={<span>Bulbasaur card</span>}>
+        {(data) => <span>{(data as { name: string }).name}</span>}
+      </SubFetch>,
+      port,
+      [],
+      publish,
+    );
+
+    await act(async () => (host.querySelector("button") as HTMLButtonElement).click());
+    await settle();
+
+    expect(port.query).toHaveBeenCalledOnce();
+    expect(publish).not.toHaveBeenCalled();
+    expect(host.textContent).toContain("Bulbasaur");
+  });
+
+  it("runs a manual query from a custom accessible trigger", async () => {
+    const port = createPort();
+    await render(
+      <SubFetch
+        requestId="details"
+        trigger="manual"
+        triggerAriaLabel="Open Bulbasaur"
+        triggerContent={<span>Bulbasaur card</span>}
+      >
+        {(data) => <span>{(data as { name: string }).name}</span>}
+      </SubFetch>,
+      port,
+    );
+
+    const trigger = host.querySelector("button") as HTMLButtonElement;
+    expect(trigger.getAttribute("aria-label")).toBe("Open Bulbasaur");
+    expect(host.textContent).toContain("Bulbasaur card");
+    await act(async () => trigger.click());
+    await settle();
+
+    expect(port.query).toHaveBeenCalledOnce();
+    expect(host.textContent).toContain("Bulbasaur");
   });
 
   it("passes cancellation to the port when the component unmounts", async () => {

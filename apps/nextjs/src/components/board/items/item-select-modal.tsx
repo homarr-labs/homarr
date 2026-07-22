@@ -14,6 +14,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
+import { WorkshopInstallButton } from "~/components/workshop/workshop-install-button";
 import { useItemActions } from "./item-actions";
 
 export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, innerProps }) => {
@@ -159,59 +160,59 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
         />
       ))}
 
-      {filteredCustomWidgets.length > 0 && (
-        <>
-          <Divider
-            label={t("customWidget.page.list.title")}
-            labelPosition="center"
-            my="sm"
-            style={{ gridColumn: "1 / -1" }}
-          />
-          {filteredCustomWidgets.map((def) => (
-            <Card
-              key={def.id}
-              h={selectGridCardHeight}
-              withBorder
-              pos="relative"
-              style={{ overflow: "hidden", "--_hover-opacity": "0" }}
-              onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
-              onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
-            >
-              <Stack h="100%" gap="xs">
-                <Group gap="sm" wrap="nowrap" align="flex-start">
-                  {def.iconUrl ? (
-                    <Image src={def.iconUrl} w={22} h={22} fit="contain" style={{ flexShrink: 0, marginTop: 2 }} />
-                  ) : (
-                    <IconApi size={22} style={{ flexShrink: 0, marginTop: 2 }} />
-                  )}
-                  <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
-                    {def.name}
-                  </Text>
-                </Group>
-                <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
-                  {def.description ?? ""}
-                </Text>
-              </Stack>
-              <Box
-                pos="absolute"
-                bottom={0}
-                left={0}
-                right={0}
-                p="xs"
-                style={{
-                  opacity: "var(--_hover-opacity)",
-                  transition: "opacity 150ms ease",
-                  background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
-                }}
-              >
-                <Button onClick={() => handleAddCustomWidget(def)} variant="light" size="xs" fullWidth>
-                  {t("item.create.addToBoard")}
-                </Button>
-              </Box>
-            </Card>
-          ))}
-        </>
-      )}
+      <Divider
+        label={t("customWidget.page.list.title")}
+        labelPosition="center"
+        my="sm"
+        style={{ gridColumn: "1 / -1" }}
+      />
+      {filteredCustomWidgets.map((def) => (
+        <Card
+          key={def.id}
+          h={selectGridCardHeight}
+          withBorder
+          pos="relative"
+          style={{ overflow: "hidden", "--_hover-opacity": "0" }}
+          onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
+          onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
+        >
+          <Stack h="100%" gap="xs">
+            <Group gap="sm" wrap="nowrap" align="flex-start">
+              {def.iconUrl ? (
+                <Image src={def.iconUrl} w={22} h={22} fit="contain" style={{ flexShrink: 0, marginTop: 2 }} />
+              ) : (
+                <IconApi size={22} style={{ flexShrink: 0, marginTop: 2 }} />
+              )}
+              <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
+                {def.name}
+              </Text>
+            </Group>
+            <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
+              {def.description ?? ""}
+            </Text>
+          </Stack>
+          <Box
+            pos="absolute"
+            bottom={0}
+            left={0}
+            right={0}
+            p="xs"
+            style={{
+              opacity: "var(--_hover-opacity)",
+              transition: "opacity 150ms ease",
+              background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
+            }}
+          >
+            <Button onClick={() => handleAddCustomWidget(def)} variant="light" size="xs" fullWidth>
+              {t("item.create.addToBoard")}
+            </Button>
+          </Box>
+        </Card>
+      ))}
+
+      <Box style={{ gridColumn: "1 / -1" }}>
+        <WorkshopInstallButton fullWidth>{t("workshop.installDialog")}</WorkshopInstallButton>
+      </Box>
 
       {filteredItems.length === 0 && filteredCustomWidgets.length === 0 && (
         <Center p="xl">

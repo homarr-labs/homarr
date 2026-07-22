@@ -43,6 +43,9 @@ export default function CustomApiWidget({
     );
   if (query.error) {
     const errorCode = query.error.data?.code;
+    if (isEditMode && errorCode === "NOT_FOUND") {
+      return <Unavailable message={t("editModePending")} />;
+    }
     const isUnavailable = errorCode === "NOT_FOUND" || errorCode === "FORBIDDEN";
     return (
       <Unavailable

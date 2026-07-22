@@ -8,7 +8,6 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconEye,
-  IconLogout,
   IconMessage,
   IconPackage,
   IconPlus,
@@ -17,9 +16,11 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 
-import { getSubmissionFileUrl, type WorkshopSubmission } from "@site/src/lib/pocketbase";
+import type { WorkshopSubmission } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,9 +32,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
 import { SubmitForm } from "./SubmitForm";
+import { WorkshopAccountMenu } from "./WorkshopAccountMenu";
 import { formatRelativeTime } from "./format";
 import type { SortKey, TypeFilter } from "./useWorkshop";
 import { useWorkshop } from "./useWorkshop";
@@ -45,8 +53,7 @@ const typeIcons: Record<SubmissionType, React.ComponentType<{ size: number; clas
   customWidget: IconPuzzle,
 };
 const typeBgColors: Record<SubmissionType, string> = { customCss: "bg-blue-500/5", customWidget: "bg-yellow-500/5" };
-const filterActiveClass = "bg-background text-foreground shadow-sm";
-const filterInactiveClass = "text-muted-foreground hover:text-foreground";
+const cardMediaClassName = "aspect-video w-full overflow-hidden bg-muted";
 const emptyState = {
   none: { title: "No submissions yet", hint: "Be the first to share something." },
   filtered: { title: "No matching results", hint: "Try adjusting your filters or search." },
@@ -68,6 +75,8 @@ const stopCardNavigation = (event: React.MouseEvent<HTMLButtonElement>) => {
   event.preventDefault();
   event.stopPropagation();
 };
+
+const avatarFallback = (name: string) => name.trim().slice(0, 1).toUpperCase() || "?";
 
 export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
   const workshop = useWorkshop(workshopUrl);
@@ -122,17 +131,13 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
               <Button className="h-10 sm:h-8" onClick={() => setShowSubmit(true)}>
                 <IconPlus size={14} /> Share yours
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-10 sm:h-7"
-                onClick={() => {
+              <WorkshopAccountMenu
+                user={workshop.user}
+                onSignOut={() => {
                   setTypeFilter("all");
                   workshop.logout();
                 }}
-              >
-                <IconLogout size={14} /> {workshop.user?.displayName || workshop.user?.username || "Account"}
-              </Button>
+              />
             </>
           ) : (
             <div className="flex flex-col items-start gap-1 sm:items-end">
@@ -147,68 +152,67 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
 
       {workshop.submissions.length > 0 && (
         <div className="mb-6 flex flex-col gap-3 rounded-lg border border-border bg-card p-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative order-first w-full sm:order-last sm:w-60">
-            <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input
-              className="h-11 w-full rounded-md border border-input bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:h-9"
-              placeholder="Search by title, description, or author"
+          <InputGroup className="order-first h-11 w-full sm:order-last sm:h-9 sm:w-64">
+            <InputGroupAddon>
+              <IconSearch size={16} />
+            </InputGroupAddon>
+            <InputGroupInput
+              placeholder="Search"
               aria-label="Search submissions"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
             />
-          </div>
+          </InputGroup>
           <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
-            <fieldset
-              className={cn(
-                "grid min-w-0 rounded-md border-0 bg-muted p-0.5 sm:flex",
-                workshop.user ? "grid-cols-4" : "grid-cols-3",
-              )}
+            <ToggleGroup
+              value={[typeFilter]}
+              onValueChange={(values) => values[0] && setTypeFilter(values[0] as TypeFilter)}
+              variant="default"
+              size="sm"
+              spacing={0}
+              className={cn("grid min-w-0 bg-muted/40 sm:flex", workshop.user ? "grid-cols-4" : "grid-cols-3")}
               aria-label="Submission type"
             >
               {availableTypeFilters.map((opt) => (
-                <button
-                  type="button"
+                <ToggleGroupItem
                   key={opt.value}
-                  onClick={() => setTypeFilter(opt.value)}
-                  aria-pressed={typeFilter === opt.value}
-                  className={cn(
-                    "inline-flex min-h-10 items-center justify-center gap-1.5 rounded px-3 text-sm font-medium transition-colors sm:min-h-8 sm:text-xs",
-                    typeFilter === opt.value ? filterActiveClass : filterInactiveClass,
-                  )}
+                  value={opt.value}
+                  className="min-h-10 min-w-0 gap-1.5 px-3 text-sm data-pressed:bg-background data-pressed:text-foreground data-pressed:shadow-sm sm:min-h-8 sm:text-xs"
                 >
                   {opt.dot && <span className={cn("size-2 rounded-full", opt.dot)} />}
                   {opt.label}
-                </button>
+                </ToggleGroupItem>
               ))}
-            </fieldset>
+            </ToggleGroup>
             <div className="flex items-center gap-2">
-              <select
-                aria-label="Sort submissions"
-                className="h-10 min-w-0 flex-1 rounded-md border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:h-8 sm:flex-none sm:text-xs dark:bg-input/30"
-                value={sort}
-                onChange={(event) => setSort(event.target.value as SortKey)}
-              >
-                {sortOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={() => setIncludeOutdated((value) => !value)}
-                aria-pressed={!includeOutdated}
-                className={cn(
-                  "h-10 shrink-0 rounded-md border border-input px-3 text-sm transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:h-8 sm:text-xs",
-                  includeOutdated ? "bg-transparent text-muted-foreground" : filterActiveClass,
-                )}
-              >
-                {includeOutdated ? "Hide outdated" : "Show outdated"}
-              </button>
+              <Select value={sort} onValueChange={(value) => setSort(value as SortKey)}>
+                <SelectTrigger aria-label="Sort submissions" className="h-10 min-w-40 flex-1 sm:h-8 sm:flex-none">
+                  <SelectValue>{(value) => sortOptions.find((option) => option.value === value)?.label}</SelectValue>
+                </SelectTrigger>
+                <SelectContent align="start">
+                  {sortOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Label className="h-10 shrink-0 cursor-pointer rounded-lg border border-input bg-background px-3 text-xs text-muted-foreground sm:h-8">
+                <Switch
+                  size="sm"
+                  checked={!includeOutdated}
+                  onCheckedChange={(checked) => setIncludeOutdated(!checked)}
+                />
+                Current only
+              </Label>
             </div>
           </div>
         </div>
       )}
+
+      <p className="sr-only" aria-live="polite">
+        {workshop.loading ? "Loading Workshop listings" : `${visible.length} submissions shown`}
+      </p>
 
       {initialLoadFailed && (
         <div className="flex min-h-80 flex-col items-center justify-center gap-4 rounded-xl border border-border bg-card px-6 py-12 text-center">
@@ -228,18 +232,22 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
       )}
 
       {workshop.error && workshop.submissions.length > 0 && (
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm">
-          <span className="text-destructive">Some Workshop data could not be refreshed.</span>
+        <Alert variant="destructive" className="mb-4 grid-cols-[auto_1fr_auto] items-center">
+          <IconAlertCircle />
+          <div>
+            <AlertTitle>Workshop data is out of date</AlertTitle>
+            <AlertDescription>The last refresh failed. Existing listings are still available.</AlertDescription>
+          </div>
           <Button variant="ghost" size="sm" onClick={() => void workshop.refresh()}>
             <IconRefresh size={14} /> Retry
           </Button>
-        </div>
+        </Alert>
       )}
 
       {workshop.loading && workshop.submissions.length === 0 && (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        <div className="grid auto-rows-fr grid-cols-1 items-stretch gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 6 }, (_, i) => (
-            <SkeletonCard key={i} hasImage={i % 3 === 0} />
+            <SkeletonCard key={i} />
           ))}
         </div>
       )}
@@ -272,12 +280,12 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="grid auto-rows-fr grid-cols-1 items-stretch gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {visible.map((submission) => (
           <SubmissionCard
             key={submission.id}
             submission={submission}
-            pb={workshop.pb}
+            backend={workshop.backend}
             userVote={workshop.votes[submission.id]?.value}
             onVote={workshop.vote}
           />
@@ -298,24 +306,24 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
 
 interface SubmissionCardProps {
   submission: WorkshopSubmission;
-  pb: ReturnType<typeof useWorkshop>["pb"];
+  backend: ReturnType<typeof useWorkshop>["backend"];
   userVote?: 1 | -1;
   onVote: (submissionId: string, value: 1 | -1) => void;
 }
 
-const SubmissionCard = ({ submission, pb, userVote, onVote }: SubmissionCardProps) => {
+const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCardProps) => {
   const score = submission.upvotes - submission.downvotes;
   const screenshotUrls = useMemo(
-    () => submission.screenshots?.map((f) => getSubmissionFileUrl(pb.baseURL, submission.id, f)) ?? [],
-    [submission, pb],
+    () => submission.screenshots?.map((file) => backend.fileUrl(submission.id, file)) ?? [],
+    [submission, backend],
   );
 
   const hasScreenshots = screenshotUrls.length > 0;
   const TypeIcon = typeIcons[submission.type];
 
   return (
-    <Card className="relative flex h-full flex-col">
-      <a href={`/workshop/${submission.id}/`} className="block">
+    <Card className="relative flex h-full min-w-0 w-full flex-col">
+      <a href={`/workshop/${submission.id}/`} className="block shrink-0">
         {hasScreenshots ? (
           <div className="relative">
             <Badge
@@ -328,7 +336,7 @@ const SubmissionCard = ({ submission, pb, userVote, onVote }: SubmissionCardProp
             <ScreenshotGallery urls={screenshotUrls} title={submission.title} />
           </div>
         ) : (
-          <div className={cn("flex items-center justify-center py-6", typeBgColors[submission.type])}>
+          <div className={cn(cardMediaClassName, "flex items-center justify-center", typeBgColors[submission.type])}>
             <TypeIcon size={32} className="text-muted-foreground/20" />
           </div>
         )}
@@ -346,19 +354,22 @@ const SubmissionCard = ({ submission, pb, userVote, onVote }: SubmissionCardProp
             </Badge>
           )}
         </div>
-        <CardDescription className="text-xs">
+        <CardDescription className="flex min-w-0 items-center gap-1 text-xs">
           <a
             href={submission.authorGithubProfileUrl || undefined}
             target={submission.authorGithubProfileUrl ? "_blank" : undefined}
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 hover:text-foreground"
+            className="inline-flex min-w-0 items-center gap-1.5 hover:text-foreground"
           >
-            {submission.authorAvatarUrl && (
-              <img src={submission.authorAvatarUrl} alt="" className="size-4 rounded-full object-cover" />
-            )}
-            {submission.authorName}
-          </a>{" "}
-          · v{submission.revision} · {formatRelativeTime(submission.created)}
+            <Avatar className="size-4">
+              {submission.authorAvatarUrl && <AvatarImage src={submission.authorAvatarUrl} alt="" />}
+              <AvatarFallback className="text-[9px]">{avatarFallback(submission.authorName)}</AvatarFallback>
+            </Avatar>
+            <span className="truncate">{submission.authorName}</span>
+          </a>
+          <span className="shrink-0 whitespace-nowrap">
+            · v{submission.revision} · {formatRelativeTime(submission.created)}
+          </span>
         </CardDescription>
         <CardAction className="col-start-auto row-span-1 row-start-auto self-auto justify-self-start sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:self-start sm:justify-self-end">
           <div className="flex items-center gap-px rounded-md border border-border bg-muted/40 p-px">
@@ -374,13 +385,7 @@ const SubmissionCard = ({ submission, pb, userVote, onVote }: SubmissionCardProp
             >
               <IconArrowBigUp size={14} />
             </button>
-            <span
-              className={cn(
-                "min-w-5 text-center text-xs font-semibold tabular-nums",
-                score > 0 && "text-foreground",
-                score < 0 && "text-destructive",
-              )}
-            >
+            <span aria-live="polite" className="min-w-5 text-center text-xs font-semibold tabular-nums text-foreground">
               {score}
             </span>
             <button
@@ -399,7 +404,7 @@ const SubmissionCard = ({ submission, pb, userVote, onVote }: SubmissionCardProp
         </CardAction>
       </CardHeader>
 
-      <CardContent className="flex-1">
+      <CardContent className="min-h-[4.5rem] flex-1 overflow-hidden">
         {submission.outdated && (
           <div className="mb-2 flex flex-wrap gap-1.5">
             <Badge variant="secondary">Outdated</Badge>
@@ -427,27 +432,52 @@ const SubmissionCard = ({ submission, pb, userVote, onVote }: SubmissionCardProp
   );
 };
 
-const SkeletonCard = ({ hasImage }: { hasImage: boolean }) => (
-  <Card>
-    {hasImage && <div className="aspect-video animate-pulse bg-muted" />}
+const SkeletonCard = () => (
+  <Card className="h-full min-w-0 w-full">
+    <Skeleton className="aspect-video rounded-none" />
     <CardHeader>
       <div className="flex items-center gap-2">
-        <div className="h-4 w-32 animate-pulse rounded bg-muted" />
-        <div className="h-4 w-12 animate-pulse rounded-full bg-muted" />
+        <Skeleton className="h-4 w-32" />
+        <Skeleton className="h-4 w-12 rounded-full" />
       </div>
-      <div className="h-3 w-40 animate-pulse rounded bg-muted" />
+      <Skeleton className="h-3 w-40" />
     </CardHeader>
-    <CardContent>
+    <CardContent className="min-h-[4.5rem]">
       <div className="space-y-1.5">
-        <div className="h-3 w-full animate-pulse rounded bg-muted" />
-        <div className="h-3 w-2/3 animate-pulse rounded bg-muted" />
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-2/3" />
       </div>
     </CardContent>
     <CardFooter className="justify-between gap-3 px-3 py-2.5">
-      <div className="h-3 w-20 animate-pulse rounded bg-muted" />
-      <div className="h-9 w-28 animate-pulse rounded bg-muted" />
+      <Skeleton className="h-3 w-20" />
+      <Skeleton className="h-9 w-28" />
     </CardFooter>
   </Card>
+);
+
+export const WorkshopListingFallback = () => (
+  <div className="mx-auto max-w-7xl px-4 pb-16" aria-busy="true" aria-label="Loading Workshop listings">
+    <div className="flex flex-col gap-5 py-8 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Workshop</h1>
+        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+          Discover community-made widgets and CSS. Review the source, then import it into Homarr.
+        </p>
+      </div>
+      <Skeleton className="h-10 w-40 sm:h-8" />
+    </div>
+
+    <div className="mb-6 flex flex-col gap-3 rounded-xl border border-border bg-card p-3 sm:flex-row sm:justify-between">
+      <Skeleton className="h-10 w-full sm:w-80" />
+      <Skeleton className="h-10 w-full sm:w-64" />
+    </div>
+
+    <div className="grid auto-rows-fr grid-cols-1 items-stretch gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      {Array.from({ length: 6 }, (_, index) => (
+        <SkeletonCard key={index} />
+      ))}
+    </div>
+  </div>
 );
 
 const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) => {
@@ -456,7 +486,7 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
 
   return (
     <div className="group/gallery relative">
-      <div className="aspect-video overflow-hidden bg-muted">
+      <div className={cardMediaClassName}>
         <img
           className="h-full w-full object-cover"
           src={urls[idx]}
@@ -468,7 +498,7 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
         <>
           <button
             type="button"
-            className="absolute left-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
+            className="absolute left-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-lg bg-background/85 opacity-80 shadow-sm transition-opacity hover:opacity-100 sm:size-8"
             onClick={(event) => {
               stopCardNavigation(event);
               setIdx((i) => (i - 1 + urls.length) % urls.length);
@@ -479,7 +509,7 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
           </button>
           <button
             type="button"
-            className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md bg-background/80 opacity-60 shadow transition-opacity hover:opacity-100"
+            className="absolute right-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-lg bg-background/85 opacity-80 shadow-sm transition-opacity hover:opacity-100 sm:size-8"
             onClick={(event) => {
               stopCardNavigation(event);
               setIdx((i) => (i + 1) % urls.length);
@@ -488,7 +518,7 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
           >
             <IconChevronRight size={14} />
           </button>
-          <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1 rounded-full bg-black/50 px-2 py-1">
+          <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 rounded-full bg-black/60 px-1 py-0.5">
             {urls.map((_, i) => (
               <button
                 type="button"
@@ -498,8 +528,11 @@ const ScreenshotGallery = ({ urls, title }: { urls: string[]; title: string }) =
                   setIdx(i);
                 }}
                 aria-label={`Screenshot ${i + 1}`}
-                className={cn("size-1.5 rounded-full transition-all", dotClass[Number(i === idx)])}
-              />
+                aria-current={i === idx ? "true" : undefined}
+                className="flex size-8 items-center justify-center rounded-full focus-visible:ring-2 focus-visible:ring-white"
+              >
+                <span className={cn("size-1.5 rounded-full transition-colors", dotClass[Number(i === idx)])} />
+              </button>
             ))}
           </div>
         </>

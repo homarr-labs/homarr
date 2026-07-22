@@ -243,10 +243,10 @@ const report = await request("/api/collections/reports/records", {
     status: "open",
   }),
 });
-const ownReport = await request(`/api/collections/reports/records/${report.id}`, { headers: visitorSession.headers });
-if (ownReport.reporter !== visitor.id) throw new Error("Reporters must be able to view their own report");
+await expectStatus(`/api/collections/reports/records/${report.id}`, { headers: visitorSession.headers }, 404);
+await expectStatus("/api/collections/reports/records", { headers: visitorSession.headers }, 200);
 const publicReports = await request("/api/collections/reports/records", { headers: visitorSession.headers });
-if (publicReports.items.length !== 1) throw new Error("Report details must remain publicly visible");
+if (publicReports.items.length !== 0) throw new Error("Report details must remain private to Workshop administrators");
 await expectStatus(
   `/api/collections/reports/records/${report.id}`,
   { method: "DELETE", headers: visitorSession.headers },

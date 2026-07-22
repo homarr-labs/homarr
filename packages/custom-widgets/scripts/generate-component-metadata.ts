@@ -636,6 +636,8 @@ const HOMARR_COMPONENT_PROPS: Readonly<Record<string, Readonly<Record<string, Ho
     loadingLabel: optionalProp("string"),
     errorMessage: optionalProp("string"),
     fallback: optionalProp("ReactNode"),
+    triggerContent: optionalProp("ReactNode", undefined, "Custom accessible trigger shown before a manual query runs."),
+    triggerAriaLabel: optionalProp("string", undefined, "Accessible label for a custom manual-query trigger."),
     path: optionalProp("string"),
     as: optionalProp("'json' | 'text'", ["json", "text"]),
     trigger: optionalProp("'auto' | 'manual'", ["auto", "manual"]),

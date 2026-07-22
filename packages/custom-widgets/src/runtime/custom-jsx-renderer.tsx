@@ -73,10 +73,16 @@ export function parseRequestCapabilities(value: unknown): CustomJsxRequestCapabi
 }
 
 class RendererErrorBoundary extends Component<
-  { children: ReactNode; onError(error: Error): void },
-  { error: Error | null }
+  { children: ReactNode; resetKey: string; onError(error: Error): void },
+  { error: Error | null; resetKey: string }
 > {
-  public state = { error: null } as { error: Error | null };
+  public state = { error: null, resetKey: "" } as { error: Error | null; resetKey: string };
+  public static getDerivedStateFromProps(
+    props: Readonly<{ resetKey: string }>,
+    state: Readonly<{ error: Error | null; resetKey: string }>,
+  ) {
+    return props.resetKey === state.resetKey ? null : { error: null, resetKey: props.resetKey };
+  }
   public static getDerivedStateFromError(error: Error) {
     return { error };
   }
@@ -195,7 +201,7 @@ function CustomJsxRendererSession({
             registerInput={registerInput}
             setInputValue={setInputValue}
           >
-            <RendererErrorBoundary key={boundaryKey} onError={handleError}>
+            <RendererErrorBoundary resetKey={boundaryKey} onError={handleError}>
               {rendered.node}
             </RendererErrorBoundary>
           </CustomJsxInputsProvider>

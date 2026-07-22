@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Button, Code, Skeleton, Text } from "@mantine/core";
+import { Alert, Box, Button, Code, Skeleton, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -27,6 +27,8 @@ export interface SubFetchProps {
   loadingLabel?: string;
   errorMessage?: string;
   fallback?: ReactNode;
+  triggerContent?: ReactNode;
+  triggerAriaLabel?: string;
   path?: string;
   as?: "json" | "text";
   trigger?: "auto" | "manual";
@@ -55,7 +57,9 @@ export function SubFetch(props: SubFetchProps) {
     refetchInterval: refreshMs,
   });
   useEffect(() => {
-    if (!props.requestId || !setQueryState) return;
+    // Manual queries are local to their SubFetch instance. Publishing them by request ID makes
+    // repeated cards compete for the same data slot and can remount the active query mid-request.
+    if (!props.requestId || !setQueryState || props.trigger === "manual") return;
     if (!enabled) {
       setQueryState(props.requestId, null);
       return;
@@ -71,13 +75,48 @@ export function SubFetch(props: SubFetchProps) {
         error: result?.error ?? (query.error ? messages.requestFailed : undefined),
       },
     });
-  }, [enabled, messages.requestFailed, props.requestId, query.data, query.error, query.isFetching, setQueryState]);
+  }, [
+    enabled,
+    messages.requestFailed,
+    props.requestId,
+    props.trigger,
+    query.data,
+    query.error,
+    query.isFetching,
+    setQueryState,
+  ]);
 
   if (!props.requestId) return <RequestIdRequiredAlert />;
-  if (queriesDisabled) return null;
-  if (!itemId && !previewSessionId) return props.fallback ?? <Text c="dimmed">{messages.unsavedPreview}</Text>;
+  if (queriesDisabled) return props.trigger === "manual" ? (props.triggerContent ?? null) : null;
+  if (!itemId && !previewSessionId)
+    return props.trigger === "manual" && props.triggerContent
+      ? props.triggerContent
+      : (props.fallback ?? <Text c="dimmed">{messages.unsavedPreview}</Text>);
   if (!params) return <RequestAlert message={messages.invalidParams} />;
   if (props.trigger === "manual" && !manualRun) {
+    if (props.triggerContent) {
+      return (
+        <Box
+          component="button"
+          type="button"
+          aria-label={props.triggerAriaLabel ?? messages.loadRequest}
+          onClick={() => setManualRun(true)}
+          style={{
+            appearance: "none",
+            background: "transparent",
+            border: 0,
+            color: "inherit",
+            cursor: "pointer",
+            font: "inherit",
+            padding: 0,
+            textAlign: "inherit",
+            width: "100%",
+          }}
+        >
+          {props.triggerContent}
+        </Box>
+      );
+    }
     return (
       <Button size="compact-sm" variant="light" onClick={() => setManualRun(true)}>
         {messages.loadRequest}

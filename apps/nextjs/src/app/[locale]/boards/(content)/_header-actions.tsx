@@ -175,6 +175,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
         message: t("notification.success.message"),
       });
       void utils.board.getBoardByName.invalidate({ name: board.name });
+      void utils.widget.customApi.getData.invalidate();
       void revalidatePathActionAsync(`/boards/${board.name}`);
       close();
     },

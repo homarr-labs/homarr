@@ -36,9 +36,9 @@ Bounded regex literals are supported for string matching, splitting, search, and
 
 ## Runtime components
 
-- `SubFetch` runs a manual query with its `params`.
+- `SubFetch` runs a manual query with its `params`. Set `triggerContent` to a card or image to make that content the accessible click and keyboard trigger instead of showing the default load button.
 - `ActionButton` and `ToggleSwitch` run actions.
-- `RefreshButton` refreshes load queries.
+- `RefreshButton` renders a compact, accessible icon control that refreshes load queries.
 - `Icon`/`TablerIcon` resolves installed safe icons.
 
 Always include responsive loading, empty, error, and success states. Runtime failures remain inside the widget tile.

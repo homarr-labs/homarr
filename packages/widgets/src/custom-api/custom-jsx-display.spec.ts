@@ -104,7 +104,7 @@ describe("CustomJsxDisplay", () => {
   it("keeps runtime components inside an inert provider before a preview session exists", async () => {
     await renderDisplay({ template: '<RefreshButton label="Refresh" />', data: {} });
 
-    expect(container.textContent).toContain("Refresh");
+    expect(container.querySelector('button[aria-label="Refresh"]')).not.toBeNull();
     expect(container.textContent).not.toContain("RUNTIME_RENDER_ERROR");
     expect(container.querySelector("button")?.disabled).toBe(true);
   });
@@ -114,13 +114,29 @@ describe("CustomJsxDisplay", () => {
     expect(pokedex).toBeDefined();
     await renderDisplay({
       template: pokedex?.template,
-      data: { pokemon: { count: 2, results: [{ name: "bulbasaur" }, { name: "pikachu" }] } },
+      data: {
+        pokemon: {
+          count: 2,
+          results: [
+            { name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/" },
+            { name: "pikachu", url: "https://pokeapi.co/api/v2/pokemon/25/" },
+          ],
+        },
+      },
       status: { pokemon: { loading: false, ok: true, status: 200 } },
       options: getCustomWidgetDefaultOptions(pokedex?.options ?? {}),
     });
 
     expect(container.textContent).toContain("bulbasaur");
     expect(container.textContent).toContain("pikachu");
+    expect(
+      container.querySelector('img[src="https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/1.png"]'),
+    ).not.toBeNull();
+    expect(
+      container.querySelector('img[src="https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/25.png"]'),
+    ).not.toBeNull();
+    expect(container.querySelectorAll("img.mantine-Image-root")).toHaveLength(2);
+    expect(container.querySelectorAll(".mantine-Card-root")).toHaveLength(2);
     expect(container.textContent).not.toContain("RUNTIME_RENDER_ERROR");
   });
 

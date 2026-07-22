@@ -27,14 +27,14 @@ The workshop contains community-made content. Widgets may contain unwanted or ma
 
 - Filter by **Widgets** or **CSS**, show or hide outdated entries, and sort by popularity, creation date, recent updates, or discussion activity.
 - Sign in with **GitHub** to upvote/downvote, submit your own creations, or report a submission.
-- Each submission shows its title, description, linked GitHub author, revision, optional screenshots, comments, and full content.
+- Each submission shows its title, description, linked GitHub author, revision, optional screenshots, comments, and full content. Widget pages also summarize API sources, actions, options, network access, and required credentials before installation.
 - A new submission receives one real upvote owned by its author. Votes remain unique per user and submission.
-- Report details and reporter identities are visible only to Workshop administrators. Reports do not automatically remove a submission.
+- Report details and reporter identities are visible only to Workshop administrators. Reported submissions are highlighted in the administration page, where each open report can be dismissed or the submission can be deleted. Reports do not automatically remove a submission.
 - The manual **Outdated** badge warns visitors that a submission may need an update.
 
 ## Comments
 
-Comments are publicly readable. Signed-in users can post; authors can edit or delete their own comments, and Workshop administrators can delete any comment. Failed posts keep the text you typed. When SMTP and `WORKSHOP_PUBLIC_ORIGIN` are configured, the submission author receives one email for a comment from another user. Self-comments, edits, and deletions do not send mail.
+Comments are publicly readable and appear in chronological conversation bubbles with the author's avatar and GitHub profile. Signed-in users can post; authors can edit or delete their own comments, and Workshop administrators can delete any comment. Failed posts keep the text you typed. When SMTP and `WORKSHOP_PUBLIC_ORIGIN` are configured, the submission author receives one email for a comment from another user. Self-comments, edits, and deletions do not send mail.
 
 ## Submitting
 
@@ -47,6 +47,9 @@ Comments are publicly readable. Signed-in users can post; authors can edit or de
 4. Submit the entry.
 
 Submissions are published immediately. Reported entries are reviewed and may be removed.
+Authors can edit a submission later to publish a new revision. The edit form can keep or remove existing screenshots and add new PNG, JPG, or WebP images without changing the Workshop URL.
+
+When SMTP and `WORKSHOP_PUBLIC_ORIGIN` are configured, every current Workshop administrator receives an email when a report is submitted. If an administrator deletes the reported submission, its author receives a separate removal email. Author self-deletion does not send a moderation email.
 
 ## Submission guidelines
 
@@ -58,8 +61,8 @@ that primarily promotes unrelated products or services.
 
 You can install workshop entries without leaving Homarr:
 
-- **Custom widgets** — go to **Manage → Custom Widgets**, click **Install from Workshop**, pick an
-  entry, and it is imported (secrets such as API keys must be re-entered afterwards).
+- **Custom widgets** — go to **Manage → Custom Widgets**, or use **Install from Workshop** in the
+  board widget picker. Pick an entry, review its capabilities, and enter any required local secrets before import.
 - **Custom CSS** — open a board's **Settings → Custom CSS**, click **Install from Workshop**, and
   pick a theme to load it into the editor before saving.
 
@@ -73,6 +76,14 @@ Workshop is powered by [PocketBase](https://pocketbase.io). The production image
 
 Run `pnpm docker:workshop` for the PocketBase development service or `pnpm docker:docs` for the built documentation and Workshop site. Both use `apps/workshop/docker-compose.yml` and the persistent `pb_data` volume. Normal start and stop commands retain data; `docker compose -f apps/workshop/docker-compose.yml down --volumes` intentionally recreates the database.
 
-GitHub needs only the central callback `https://<workshop-host>/api/oauth2-redirect`. Keep PocketBase origins unrestricted unless every self-hosted Homarr caller is explicitly listed. Configure `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `WORKSHOP_PUBLIC_ORIGIN`, and PocketBase SMTP settings for authentication and comment email.
+Because Workshop is still unreleased, reset an older development volume if it predates the current schema and comments report that their collection context is missing. No compatibility migrations are maintained for these pre-release databases.
+
+GitHub needs only the central callback `https://<workshop-host>/api/oauth2-redirect`. Keep PocketBase origins unrestricted unless every self-hosted Homarr caller is explicitly listed. Configure `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `WORKSHOP_PUBLIC_ORIGIN`, and PocketBase SMTP settings for authentication, comment email, report alerts, and submission-removal notices.
 
 Homarr instances use `NEXT_PUBLIC_WORKSHOP_API_URL` to reach the central API and `NEXT_PUBLIC_WORKSHOP_URL` for links to the public page. Docusaurus uses `WORKSHOP_URL` only when its development server runs separately; the combined production image always uses its own origin.
+
+## Client architecture
+
+Workshop access is centralized in `@homarr/workshop/backend`. It exports the typed `WorkshopBackend`, its typed PocketBase instance, stable TanStack Query option factories, and the `useWorkshop…` query and mutation hooks used by Homarr. The documentation site uses the same backend rather than maintaining a second API contract.
+
+Listing fields derived by the `workshop_listings` view—such as submission type, score, and counts—are normalized by the shared client. Healthy deployments keep filtering, sorting, and pagination in PocketBase. If a persistent development volume still has an older view that rejects those fields, the client retries without them and applies the same operations locally; it can also fall back to the base submissions collection. Production deployments should nevertheless apply the current migration so the view exposes the complete metadata.
