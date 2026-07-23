@@ -5,9 +5,20 @@ import { BoardMockBuilder } from "../items/actions/test/mocks/board-mock";
 import { DynamicSectionMockBuilder } from "../items/actions/test/mocks/dynamic-section-mock";
 import { EmptySectionMockBuilder } from "../items/actions/test/mocks/empty-section-mock";
 import { ItemMockBuilder } from "../items/actions/test/mocks/item-mock";
-import { createMobileBoardItems } from "./mobile-layout";
+import { createMobileBoardItems, getMobileRootSection } from "./mobile-layout";
 
 describe("createMobileBoardItems", () => {
+  test("selects the first root section in visual order", () => {
+    const board = new BoardMockBuilder().build();
+    board.sections.push(
+      new EmptySectionMockBuilder({ id: "stored-first", xOffset: 0, yOffset: 1 }).build(),
+      new EmptySectionMockBuilder({ id: "visually-first", xOffset: 1, yOffset: 0 }).build(),
+      new EmptySectionMockBuilder({ id: "visually-second", xOffset: 2, yOffset: 0 }).build(),
+    );
+
+    expect(getMobileRootSection(board).id).toBe("visually-first");
+  });
+
   test("flattens categories and dynamic sections in visual order", () => {
     const board = new BoardMockBuilder().build();
     const desktopLayoutId = board.layouts.at(0)?.id;
