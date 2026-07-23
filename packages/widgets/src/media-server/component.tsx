@@ -2,8 +2,16 @@
 
 import type { ReactNode } from "react";
 import { Fragment, useMemo } from "react";
-import { Avatar, Divider, Flex, Group, Stack, Text, Title } from "@mantine/core";
-import { IconDeviceTv, IconHeadphones, IconMovie, IconVideo } from "@tabler/icons-react";
+import { Avatar, Badge, Divider, Flex, Group, Progress, Stack, Text, Title } from "@mantine/core";
+import {
+  IconDeviceTv,
+  IconHeadphones,
+  IconMovie,
+  IconPlayerPause,
+  IconVideo,
+  IconWifi,
+  IconWorld,
+} from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
@@ -28,23 +36,25 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
   const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(
     () => [
       {
-        accessorKey: "sessionName",
-        header: t("items.name"),
-
-        Cell: ({ row }) => (
-          <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-            {row.original.sessionName}
-          </Text>
-        ),
-      },
-      {
         accessorKey: "user.username",
         header: t("items.user"),
+        size: 160,
 
         Cell: ({ row }) => (
-          <Group gap="xs">
-            <Avatar size={20} src={row.original.user.profilePictureUrl} />
-            <Text size="xs">{row.original.user.username}</Text>
+          <Group gap="xs" wrap="nowrap">
+            <Avatar size={28} src={row.original.user.profilePictureUrl} />
+            <Stack gap={0} style={{ minWidth: 0 }}>
+              <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {row.original.user.username}
+              </Text>
+              <Text
+                size="10px"
+                c="dimmed"
+                style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+              >
+                {row.original.sessionName}
+              </Text>
+            </Stack>
           </Group>
         ),
       },
@@ -53,17 +63,85 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
         header: t("items.currentlyPlaying"),
 
         Cell: ({ row }) => {
-          if (!row.original.currentlyPlaying) return null;
+          const currentlyPlaying = row.original.currentlyPlaying;
+          if (!currentlyPlaying) return null;
 
-          const Icon = mediaTypeIconMap[row.original.currentlyPlaying.type];
+          const playback = currentlyPlaying.playback;
+          const isPaused = playback?.state === "paused";
+          const Icon = isPaused ? IconPlayerPause : mediaTypeIconMap[currentlyPlaying.type];
+
+          const positionMs = playback?.positionMs ?? null;
+          const durationMs = playback?.durationMs ?? null;
+          const progressPercent =
+            positionMs !== null && durationMs !== null && durationMs > 0
+              ? Math.min(100, Math.round((positionMs / durationMs) * 100))
+              : null;
+          const remainingMinutes =
+            positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
 
           return (
-            <Group gap="xs" align="center">
-              <Icon size={16} />
-              <Text size="xs" lineClamp={1}>
-                {row.original.currentlyPlaying.name}
-              </Text>
-            </Group>
+            <Stack gap={4} style={{ minWidth: 0 }}>
+              <Group gap="xs" align="center" wrap="nowrap" style={{ minWidth: 0 }}>
+                <Icon
+                  size={16}
+                  color={isPaused ? "var(--mantine-color-yellow-6)" : undefined}
+                  style={{ flexShrink: 0 }}
+                />
+                <Text size="xs" lineClamp={1} style={{ minWidth: 0 }}>
+                  {currentlyPlaying.name}
+                </Text>
+                {isPaused && (
+                  <Text size="xs" c="yellow" style={{ flexShrink: 0 }}>
+                    {t("items.paused")}
+                  </Text>
+                )}
+                {!isPaused && remainingMinutes !== null && (
+                  <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
+                    {t("items.remaining", { minutes: remainingMinutes.toString() })}
+                  </Text>
+                )}
+              </Group>
+              {progressPercent !== null && (
+                <Progress
+                  value={progressPercent}
+                  size={4}
+                  color={isPaused ? "yellow" : "green"}
+                  style={{ backgroundColor: "rgba(255, 255, 255, 0.15)" }}
+                />
+              )}
+            </Stack>
+          );
+        },
+      },
+      {
+        id: "status",
+        header: t("items.status"),
+        size: 110,
+
+        Cell: ({ row }) => {
+          const currentlyPlaying = row.original.currentlyPlaying;
+          if (!currentlyPlaying) return null;
+
+          const isTranscoding = Boolean(
+            currentlyPlaying.metadata?.transcoding.target.videoCodec ??
+              currentlyPlaying.metadata?.transcoding.target.audioCodec ??
+              currentlyPlaying.metadata?.transcoding.container,
+          );
+
+          return (
+            <Stack gap={4} align="flex-start">
+              <Badge size="xs" variant="light" color={isTranscoding ? "orange" : "green"}>
+                {isTranscoding ? t("items.transcoding") : t("items.directPlay")}
+              </Badge>
+              {currentlyPlaying.location && (
+                <Group gap={4} align="center">
+                  {currentlyPlaying.location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />}
+                  <Text size="10px" c="dimmed" tt="uppercase">
+                    {currentlyPlaying.location}
+                  </Text>
+                </Group>
+              )}
+            </Stack>
           );
         },
       },
@@ -107,7 +185,7 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
     initialState: {
       density: "xs",
       columnPinning: {
-        right: ["currentlyPlaying"],
+        right: ["currentlyPlaying", "status"],
       },
     },
     mantineTableHeadProps: {
@@ -144,6 +222,10 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
         );
       },
       py: 4,
+      style: {
+        overflowX: "hidden",
+        overflowY: "visible",
+      },
     }),
   });
 

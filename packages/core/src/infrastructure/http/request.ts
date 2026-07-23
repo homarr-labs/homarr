@@ -2,7 +2,7 @@ import type { AgentOptions } from "node:https";
 import { Agent as HttpsAgent } from "node:https";
 import { checkServerIdentity } from "node:tls";
 import axios from "axios";
-import type { RequestInfo, RequestInit, Response } from "undici";
+import type { Agent as UndiciAgent, RequestInfo, RequestInit, Response } from "undici";
 import { fetch } from "undici";
 
 import {
@@ -29,11 +29,15 @@ export const createCustomCheckServerIdentity = (
   };
 };
 
-export const createCertificateAgentAsync = async (override?: {
-  ca: string | string[];
-  checkServerIdentity: typeof checkServerIdentity;
-}) => {
+export const createCertificateAgentAsync = async (
+  override?: {
+    ca: string | string[];
+    checkServerIdentity: typeof checkServerIdentity;
+  },
+  agentOptions?: Pick<UndiciAgent.Options, "bodyTimeout">,
+) => {
   return new UndiciHttpAgent({
+    ...agentOptions,
     connect: override ?? {
       ca: await getAllTrustedCertificatesAsync(),
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
@@ -61,14 +65,18 @@ export const createAxiosCertificateInstanceAsync = async (
 
 export const fetchWithTrustedCertificatesAsync = async (
   url: RequestInfo,
-  options?: RequestInit & { timeout?: number },
+  options?: RequestInit & { timeout?: number; bodyTimeout?: number },
 ): Promise<Response> => {
-  const agent = await createCertificateAgentAsync(undefined);
+  const agent = await createCertificateAgentAsync(
+    undefined,
+    options?.bodyTimeout !== undefined ? { bodyTimeout: options.bodyTimeout } : undefined,
+  );
   if (options?.timeout) {
+    const { bodyTimeout: _bodyTimeout, ...fetchOptions } = options;
     return await withTimeoutAsync(
       async (signal) =>
         fetch(url, {
-          ...options,
+          ...fetchOptions,
           signal,
           dispatcher: agent,
         }),
@@ -76,8 +84,9 @@ export const fetchWithTrustedCertificatesAsync = async (
     );
   }
 
+  const { bodyTimeout: _bodyTimeout, ...fetchOptions } = options ?? {};
   return fetch(url, {
-    ...options,
+    ...fetchOptions,
     dispatcher: agent,
   });
 };

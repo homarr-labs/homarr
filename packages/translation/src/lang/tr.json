@@ -2284,6 +2284,11 @@
         "fileSystem": {
           "label": "Dosya Sistemi Bilgilerini Göster"
         },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
+        },
         "defaultTab": {
           "label": "Varsayılan sekme"
         },
@@ -3538,6 +3543,11 @@
         },
         "showBackgroundBar": {
           "label": "Show background usage bar"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {

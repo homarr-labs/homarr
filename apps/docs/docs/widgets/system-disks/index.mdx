@@ -1,0 +1,51 @@
+---
+title: "System disks"
+description: "Disk usage of your system"
+hide_title: true
+---
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { systemDisksWidget } from ".";
+import { dashDotIntegration } from "@site/docs/integrations/dash-dot";
+import { openMediaVaultIntegration } from "@site/docs/integrations/open-media-vault";
+import { truenasIntegration } from "@site/docs/integrations/truenas";
+import { unraidIntegration } from "@site/docs/integrations/unraid";
+import { synologyIntegration } from "@site/docs/integrations/synology";
+
+<WidgetHeader widget={systemDisksWidget} categories={["Storage", "Disks"]} />
+
+This widget displays filesystem and SMART disk usage for supported server and NAS integrations.
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: dashDotIntegration,
+    },
+    {
+      integration: openMediaVaultIntegration,
+    },
+    {
+      integration: truenasIntegration,
+    },
+    {
+      integration: unraidIntegration,
+    },
+    {
+      integration: synologyIntegration,
+      note: "Supports storage volume filtering when only Synology integrations are selected",
+    },
+  ]}
+/>
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={systemDisksWidget.configuration} />

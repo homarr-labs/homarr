@@ -1,6 +1,4 @@
-import { useCallback, useState } from "react";
-import { Box, Container, Flex, Popover, Text, useMantineTheme } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
+import { Box, Container, Flex, HoverCard, Text, useMantineTheme } from "@mantine/core";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
@@ -13,14 +11,9 @@ interface CalendarDayProps {
   disabled: boolean;
   rootWidth: number;
   rootHeight: number;
-  onOpen: (close: () => void) => void;
 }
 
-export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth, onOpen }: CalendarDayProps) => {
-  const [opened, setOpened] = useState(false);
-  const [pinned, setPinned] = useState(false);
-  const { primaryColor } = useMantineTheme();
-  const { ref, height } = useElementSize();
+export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: CalendarDayProps) => {
   const board = useRequiredBoard();
   const mantineTheme = useMantineTheme();
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
@@ -29,39 +22,19 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth, onO
   const shouldScaleDown = minAxisSize < 350;
   const isSmall = rootHeight < 256;
 
-  const isTooSmallForIndicators = height < 30;
-
-  const handleMouseEnter = useCallback(() => {
-    if (disabled) return;
-    onOpen(() => {
-      setOpened(false);
-      setPinned(false);
-    });
-    setOpened(true);
-  }, [disabled, onOpen]);
-
-  const handleMouseLeave = useCallback(() => {
-    if (!pinned) setOpened(false);
-  }, [pinned]);
-
   return (
-    <Popover
+    <HoverCard
       position="bottom"
       withArrow
       withinPortal
       radius="lg"
       shadow="sm"
-      transitionProps={{
-        transition: "pop",
-      }}
-      onChange={(value) => {
-        setOpened(value);
-        if (!value) setPinned(false);
-      }}
-      opened={opened}
+      transitionProps={{ transition: "pop" }}
+      openDelay={350}
+      closeDelay={400}
       disabled={disabled}
     >
-      <Popover.Target>
+      <HoverCard.Target>
         <Container
           h="100%"
           w="100%"
@@ -69,38 +42,23 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth, onO
           pt={isSmall ? 0 : 10}
           pb={isSmall ? 0 : 10}
           m={0}
-          ref={ref}
-          bd={`2px solid ${opened && !disabled ? primaryColor : "transparent"}`}
+          pos="relative"
           style={{
             alignContent: "center",
             borderRadius: actualItemRadius,
             cursor: disabled ? "default" : "pointer",
           }}
-          onClick={() => {
-            if (!disabled) setPinned((prev) => !prev);
-          }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
         >
           <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
             {date.getDate()}
           </Text>
-          {!isTooSmallForIndicators && <NotificationIndicator events={events} isSmall={isSmall} />}
+          <NotificationIndicator events={events} isSmall={isSmall} />
         </Container>
-      </Popover.Target>
-      {/* Popover has some offset on the left side, padding is removed because of scrollarea paddings */}
-      <Popover.Dropdown
-        maw="calc(100vw - 24px)"
-        w={512}
-        pe={4}
-        pb={0}
-        style={{ overflow: "hidden" }}
-        onMouseEnter={() => setOpened(true)}
-        onMouseLeave={handleMouseLeave}
-      >
+      </HoverCard.Target>
+      <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
         <CalendarEventList events={events} />
-      </Popover.Dropdown>
-    </Popover>
+      </HoverCard.Dropdown>
+    </HoverCard>
   );
 };
 
@@ -111,7 +69,6 @@ interface NotificationIndicatorProps {
 
 const NotificationIndicator = ({ events, isSmall }: NotificationIndicatorProps) => {
   const notificationEvents = [...new Set(events.map((event) => event.indicatorColor))].filter(String);
-  /* position bottom is lower when small to not be on top of number*/
   return (
     <Flex
       w="75%"

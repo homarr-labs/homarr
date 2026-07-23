@@ -5,7 +5,7 @@ import { Group, Stack, Text } from "@mantine/core";
 import { IconDatabase, IconPhoto, IconUsers, IconVideo } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { humanFileSize } from "@homarr/common";
+import { formatBytes } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
@@ -46,7 +46,7 @@ export default function ImmichServerStatsWidget({
         <StatItem
           icon={<IconDatabase size={20} />}
           label={t("widget.immich-serverStats.storage")}
-          value={humanFileSize(stats.totalLibraryUsageInBytes)}
+          value={formatBytes(stats.totalLibraryUsageInBytes)}
         />
       )}
     </Stack>

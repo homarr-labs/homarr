@@ -3,6 +3,7 @@ import { escapeForRegEx } from "@tiptap/react";
 import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { eq } from "@homarr/db";
 import { boards, items, widgetSecrets } from "@homarr/db/schema";
 import { releaseProviderKinds } from "@homarr/definitions";
@@ -10,6 +11,8 @@ import { releasesRequestHandler } from "@homarr/request-handler/releases";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
+
+const logger = createLogger({ module: "releasesRouter" });
 
 const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFilterSchema> | undefined) => {
   if (!versionFilter) return undefined;
@@ -45,7 +48,7 @@ export const releasesRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const tokensByProvider = new Map<string, string>();
-      let allowedRepoIds: Set<string> | null = null;
+      const savedRepos = new Map<string, { providerUrl?: string }>();
 
       if (input.itemId) {
         try {
@@ -54,9 +57,15 @@ export const releasesRouter = createTRPCRouter({
             await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
 
             const options = SuperJSON.parse<Record<string, unknown>>(item.options);
-            const repos = options.repositories as Array<{ id?: string }> | undefined;
+            const repos = options.repositories as
+              | Array<{ provider?: string; identifier: string; providerUrl?: string }>
+              | undefined;
             if (repos) {
-              allowedRepoIds = new Set(repos.map((r) => r.id).filter((id): id is string => Boolean(id)));
+              for (const repo of repos) {
+                if (repo.provider && repo.identifier) {
+                  savedRepos.set(`${repo.provider}:${repo.identifier}`, { providerUrl: repo.providerUrl });
+                }
+              }
             }
 
             const secrets = await ctx.db.query.widgetSecrets.findMany({
@@ -65,29 +74,29 @@ export const releasesRouter = createTRPCRouter({
             for (const secret of secrets) {
               try {
                 tokensByProvider.set(secret.kind, decryptSecret(secret.value));
-              } catch {
-                // Skip corrupt secrets
+              } catch (error) {
+                logger.warn("Failed to decrypt widget secret", { itemId: input.itemId, kind: secret.kind, error });
               }
             }
           }
-        } catch {
-          // Access denied or table not yet migrated -- proceed without tokens
+        } catch (error) {
+          logger.warn("Failed to load release widget tokens", { itemId: input.itemId, error });
         }
       }
 
       return await Promise.all(
         input.repositories.map(async (repository) => {
           const repositoryId = repository.id ?? repository.identifier;
+          const savedRepo = savedRepos.get(`${repository.provider}:${repository.identifier}`);
           try {
-            const useToken = allowedRepoIds === null || allowedRepoIds.has(repositoryId);
             const response = await releasesRequestHandler
               .handler({
                 id: repositoryId,
                 provider: repository.provider,
                 identifier: repository.identifier,
                 versionRegex: formatVersionFilterRegex(repository.versionFilter),
-                providerUrl: repository.providerUrl,
-                token: useToken ? tokensByProvider.get(repository.provider) : undefined,
+                providerUrl: savedRepo?.providerUrl ?? repository.providerUrl,
+                token: savedRepo ? tokensByProvider.get(repository.provider) : undefined,
               })
               .getDataAsync();
 

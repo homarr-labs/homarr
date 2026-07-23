@@ -1,20 +1,30 @@
 "use client";
 
 import type { MutableRefObject, ReactNode } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Group, Menu, Switch, Text } from "@mantine/core";
-import { IconCopy, IconLayoutKanban, IconRefresh, IconSettings, IconTrash } from "@tabler/icons-react";
-import type { QueryClient } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
+import { useCallback, useMemo } from "react";
+import { Group, Loader, Menu, Switch, Text, Tooltip } from "@mantine/core";
+import {
+  IconAlertTriangle,
+  IconCircleCheck,
+  IconCopy,
+  IconLayoutKanban,
+  IconRefresh,
+  IconSettings,
+  IconTrash,
+} from "@tabler/icons-react";
+import type { QueryClient, QueryKey } from "@tanstack/react-query";
+import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { useTimeAgo } from "@homarr/common";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import type { TranslationFunction } from "@homarr/translation";
 import type { WidgetContextMenuAction } from "@homarr/widgets";
 import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
@@ -38,6 +48,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const tMenu = useScopedI18n("item.menu.label");
   const t = useI18n();
   const settings = useSettings();
+  const isRightClickEnabled = settings.enableRightClickOnWidgets;
   const { openModal } = useModalAction(WidgetEditModal);
   const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
   const { openConfirmModal } = useConfirmModal();
@@ -49,9 +60,13 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const { gridstack } = useSectionContext().refs;
   const queryClient = useQueryClient();
 
-  const widgetQueryKey = useMemo(() => [["widget", item.kind]], [item.kind]);
+  const widgetQueryKey = useMemo(
+    () => ("queryKey" in currentDefinition ? (currentDefinition.queryKey as QueryKey) : [["widget", item.kind]]),
+    [currentDefinition, item.kind],
+  );
+  const isWidgetFetching = useIsFetching({ queryKey: widgetQueryKey }) > 0;
   const handleRefetch = useCallback(() => {
-    void queryClient.invalidateQueries({ queryKey: widgetQueryKey });
+    void queryClient.refetchQueries({ queryKey: widgetQueryKey, type: "all" });
   }, [queryClient, widgetQueryKey]);
 
   const options = useMemo(
@@ -154,6 +169,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   );
 
   if (!session) return <>{children}</>;
+  if (!isRightClickEnabled) return <>{children}</>;
 
   const visibleWidgetActions = widgetContextActions.filter((a) => !a.hidden);
 
@@ -223,12 +239,19 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
 
         <>
           {(toggleOptions.length > 0 || visibleWidgetActions.length > 0 || isEditMode) && <Menu.Divider />}
-          <Menu.Item closeMenuOnClick leftSection={<IconRefresh size={16} />} onClick={handleRefetch}>
-            <Group justify="space-between" wrap="nowrap">
+          <Menu.Item
+            leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
+            onClick={handleRefetch}
+            disabled={isWidgetFetching}
+          >
+            <Group justify="space-between" wrap="nowrap" gap="sm">
               {tMenu("refresh")}
-              <Text size="xs" c="dimmed">
-                <WidgetCacheAge queryClient={queryClient} queryKey={widgetQueryKey} />
-              </Text>
+              <WidgetQueryStatus
+                queryClient={queryClient}
+                queryKey={widgetQueryKey}
+                isFetching={isWidgetFetching}
+                t={t}
+              />
             </Group>
           </Menu.Item>
           <Menu.Item
@@ -265,23 +288,65 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   );
 };
 
-const WidgetCacheAge = ({ queryClient, queryKey }: { queryClient: QueryClient; queryKey: unknown[] }) => {
-  const [, setTick] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setTick((n) => n + 1), 1000);
-    return () => clearInterval(id);
-  }, []);
+interface WidgetQueryStatusProps {
+  queryClient: QueryClient;
+  queryKey: QueryKey;
+  isFetching: boolean;
+  t: TranslationFunction;
+}
 
-  const timestamps = queryClient
-    .getQueryCache()
-    .findAll({ queryKey })
-    .map((q) => q.state.dataUpdatedAt)
-    .filter(Boolean);
-  if (timestamps.length === 0) return null;
+const WidgetQueryStatus = ({ queryClient, queryKey, isFetching, t }: WidgetQueryStatusProps) => {
+  const queries = queryClient.getQueryCache().findAll({ queryKey });
+  const timestamps = queries.map((query) => query.state.dataUpdatedAt).filter(Boolean);
+  const latest = timestamps.length > 0 ? Math.max(...timestamps) : 0;
+  const ageLabel = useTimeAgo(new Date(latest));
 
-  const oldest = Math.min(...timestamps);
-  const seconds = Math.floor((Date.now() - oldest) / 1000);
-  if (seconds < 5) return "just now";
-  if (seconds < 60) return `${seconds}s ago`;
-  return `${Math.floor(seconds / 60)}m ago`;
+  if (isFetching) {
+    return (
+      <Group gap={4} wrap="nowrap">
+        <Loader size={12} />
+        <Text size="xs" c="dimmed">
+          {t("item.menu.status.loading")}
+        </Text>
+      </Group>
+    );
+  }
+
+  if (queries.length === 0) {
+    return (
+      <Text size="xs" c="dimmed">
+        {t("item.menu.status.idle")}
+      </Text>
+    );
+  }
+
+  const hasError = queries.some((q) => q.state.status === "error");
+
+  if (hasError) {
+    const errorQuery = queries.find((q) => q.state.status === "error");
+    const errorMessage =
+      errorQuery?.state.error instanceof Error
+        ? errorQuery.state.error.message
+        : String(errorQuery?.state.error ?? "Unknown error");
+
+    return (
+      <Tooltip label={errorMessage} multiline position="left" w={250}>
+        <Group gap={4} wrap="nowrap">
+          <IconAlertTriangle size={12} color="var(--mantine-color-red-6)" />
+          <Text size="xs" c="red.6">
+            {t("item.menu.status.error")} · {ageLabel}
+          </Text>
+        </Group>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <Group gap={4} wrap="nowrap">
+      <IconCircleCheck size={12} color="var(--mantine-color-green-6)" />
+      <Text size="xs" c="dimmed">
+        {t("item.menu.status.success")} · {ageLabel}
+      </Text>
+    </Group>
+  );
 };

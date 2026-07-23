@@ -23,6 +23,8 @@ type OptionMapping = {
 const optionMapping: OptionMapping = {
   "mediaRequests-requestList": {
     linksTargetNewTab: (oldOptions) => oldOptions.openInNewTab,
+    statusFilter: () => undefined,
+    recentDays: () => undefined,
   },
   "mediaRequests-requestStats": {},
   bookmarks: {
@@ -165,6 +167,7 @@ const optionMapping: OptionMapping = {
       "sectionIndicatorColor" in oldOptions ? oldOptions.sectionIndicatorColor : undefined,
     showUptime: () => undefined,
     gpu: () => undefined,
+    visibleStorageVolumes: () => undefined,
     visibleClusterSections: (oldOptions) => {
       if (!("showNode" in oldOptions)) return undefined;
 

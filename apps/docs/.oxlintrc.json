@@ -23,9 +23,6 @@
     "react-hooks/exhaustive-deps": "warn",
     "eslint/no-unused-expressions": "warn"
   },
-  "options": {
-    "reportUnusedDisableDirectives": "off"
-  },
   "ignorePatterns": ["**/*.config.js", "**/*.config.mjs", "**/*.cjs", ".docusaurus/**", "build/**"],
   "settings": {
     "react": { "version": "19" }

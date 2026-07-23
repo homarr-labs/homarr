@@ -19,6 +19,12 @@ const createUrlByIdChannel = (id: string) =>
     headers: `${string}.${string}`;
   }>(`image-proxy:url:${id}`);
 
+export type ForwardImageResult =
+  | { image: ArrayBuffer; contentType: string | null }
+  | { error: "not-found" }
+  | { error: "upstream-error"; statusCode: number }
+  | { error: "fetch-error" };
+
 export class ImageProxy {
   private static hmacKey: Buffer<ArrayBuffer> | null = null;
 
@@ -47,17 +53,34 @@ export class ImageProxy {
     return this.createImageUrl(id);
   }
 
-  public async forwardImageAsync(id: string): Promise<ArrayBuffer | null> {
+  public async forwardImageAsync(id: string): Promise<ForwardImageResult> {
     const urlAndHeaders = await this.getImageUrlAndHeadersAsync(id);
     if (!urlAndHeaders) {
-      return null;
+      return { error: "not-found" };
     }
 
-    const response = await fetchWithTrustedCertificatesAsync(urlAndHeaders.url, {
-      headers: urlAndHeaders.headers ?? {},
-    });
-
     const proxyUrl = this.createImageUrl(id);
+    let response: Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>;
+    try {
+      response = await fetchWithTrustedCertificatesAsync(urlAndHeaders.url, {
+        headers: urlAndHeaders.headers ?? {},
+      });
+    } catch (error) {
+      logger.error(
+        new ErrorWithMetadata(
+          "Failed to connect to image source",
+          {
+            id,
+            url: this.redactUrl(urlAndHeaders.url),
+            headers: this.redactHeaders(urlAndHeaders.headers),
+            proxyUrl,
+          },
+          { cause: error },
+        ),
+      );
+      return { error: "fetch-error" };
+    }
+
     if (!response.ok) {
       logger.error(
         new ErrorWithMetadata("Failed to fetch image", {
@@ -68,7 +91,7 @@ export class ImageProxy {
           statusCode: response.status,
         }),
       );
-      return null;
+      return { error: "upstream-error", statusCode: response.status };
     }
 
     const arrayBuffer = await response.arrayBuffer();
@@ -80,7 +103,7 @@ export class ImageProxy {
       size: `${(arrayBuffer.byteLength / 1024).toFixed(1)}KB`,
     });
 
-    return arrayBuffer;
+    return { image: arrayBuffer, contentType: response.headers.get("content-type") };
   }
 
   private createImageUrl(id: string): string {

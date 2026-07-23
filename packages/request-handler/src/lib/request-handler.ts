@@ -1,6 +1,7 @@
 interface Options<TData, TInput extends Record<string, unknown>> {
   requestAsync: (input: TInput) => Promise<TData>;
   cacheTtlMs?: number;
+  fallbackToStaleOnError?: boolean;
 }
 
 type CacheEntry<TData> = { data: TData; timestamp: Date; expiresAt: number };
@@ -22,6 +23,10 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
   const inflight = new Map<string, Promise<CacheEntry<TData>>>();
 
   return {
+    invalidateCache: () => {
+      cache.clear();
+      inflight.clear();
+    },
     handler: (input: TInput) => ({
       async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
         const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
@@ -31,7 +36,6 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
         if (cached && Date.now() < cached.expiresAt) {
           return { data: cached.data, timestamp: cached.timestamp };
         }
-        if (cached) cache.delete(key);
 
         const existing = inflight.get(key);
         if (existing) return existing;
@@ -51,6 +55,9 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
           })
           .catch((err) => {
             inflight.delete(key);
+            if (options.fallbackToStaleOnError && cached) {
+              return cached;
+            }
             throw err;
           });
 

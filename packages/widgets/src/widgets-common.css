@@ -25,3 +25,83 @@
 .text-flash {
   animation: glow 1s ease-in-out;
 }
+
+/*Animated weather icons, used by clock and weather widgets*/
+.weather-anim-wrapper {
+  display: inline-flex;
+}
+
+@keyframes weather-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes weather-drift {
+  0%,
+  100% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes weather-fall {
+  0% {
+    transform: translateY(-2px);
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(2px);
+    opacity: 0.4;
+  }
+}
+
+@keyframes weather-flicker {
+  0%,
+  90%,
+  100% {
+    opacity: 1;
+  }
+  92%,
+  96% {
+    opacity: 0.4;
+  }
+}
+
+.weather-anim-sun {
+  animation: weather-spin 16s linear infinite;
+  transform-origin: center;
+}
+
+.weather-anim-cloud,
+.weather-anim-fog {
+  animation: weather-drift 4s ease-in-out infinite;
+}
+
+.weather-anim-rain,
+.weather-anim-snow {
+  animation: weather-fall 1.6s ease-in-out infinite;
+}
+
+.weather-anim-storm {
+  animation: weather-flicker 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .weather-anim-sun,
+  .weather-anim-cloud,
+  .weather-anim-fog,
+  .weather-anim-rain,
+  .weather-anim-snow,
+  .weather-anim-storm {
+    animation: none;
+  }
+}

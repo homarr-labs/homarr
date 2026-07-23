@@ -132,11 +132,14 @@ export class OverseerrIntegration
       },
     );
 
-    const allRequests = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request", { take: 20 }), {
-      headers: {
-        "X-Api-Key": this.getSecretValue("apiKey"),
+    const allRequests = await fetchWithTrustedCertificatesAsync(
+      this.url("/api/v1/request", { take: 20, sort: "modified" }),
+      {
+        headers: {
+          "X-Api-Key": this.getSecretValue("apiKey"),
+        },
       },
-    });
+    );
 
     const pendingResults = (await getRequestsSchema.parseAsync(await pendingRequests.json())).results;
     const allResults = (await getRequestsSchema.parseAsync(await allRequests.json())).results;
@@ -150,9 +153,9 @@ export class OverseerrIntegration
       );
     } else if (pendingResults.length > 0) requests = pendingResults;
     else if (allResults.length > 0) requests = allResults;
-    else return Promise.all([]);
+    else return [];
 
-    return await Promise.all(
+    const settled = await Promise.allSettled(
       requests.map(async (request): Promise<MediaRequest> => {
         const information = await this.getItemInformationAsync(request.media.tmdbId, request.type);
 
@@ -181,6 +184,10 @@ export class OverseerrIntegration
         };
       }),
     );
+
+    return settled
+      .filter((result): result is PromiseFulfilledResult<MediaRequest> => result.status === "fulfilled")
+      .map((result) => result.value);
   }
 
   protected mapRequestStatus(status: UpstreamMediaRequestStatus): MediaRequestStatus {
@@ -297,6 +304,10 @@ export class OverseerrIntegration
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
     });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${type} information for id ${id}: ${response.status} ${response.statusText}`);
+    }
 
     if (type === "tv") {
       const series = (await response.json()) as TvInformation;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Group, HoverCard, Stack, Text } from "@mantine/core";
-import { IconArrowDownRight, IconArrowUpRight, IconMapPin, IconWind } from "@tabler/icons-react";
+import { IconArrowDownRight, IconArrowUpRight, IconDroplets, IconMapPin, IconWind } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import dayjs from "dayjs";
 
@@ -12,7 +12,8 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
-import { WeatherDescription, WeatherIcon } from "./icon";
+import { AnimatedWeatherIcon } from "./animated-icon";
+import { WeatherDescription } from "./icon";
 
 export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
   const input = {
@@ -55,7 +56,7 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
         <HoverCard>
           <HoverCard.Target>
             <Box>
-              <WeatherIcon size={30} code={weather.current.weathercode} />
+              <AnimatedWeatherIcon size={30} code={weather.current.weathercode} />
             </Box>
           </HoverCard.Target>
           <HoverCard.Dropdown>
@@ -85,6 +86,12 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
                   : tCommon("unit.speed.kilometersPerHour"),
               })}
             </Text>
+          </Group>
+        )}
+        {weather.daily[0]?.humidity !== undefined && (
+          <Group className="weather-humidity-group" wrap="nowrap" gap="xs">
+            <IconDroplets size={16} />
+            <Text fz={16}>{t("dailyForecast.humidity", { humidity: weather.daily[0].humidity })}</Text>
           </Group>
         )}
         <Group className="weather-max-min-temp-group" wrap="nowrap" gap="sm">
@@ -140,7 +147,7 @@ const WeeklyForecast = ({ options, weather }: WeatherProps) => {
           <HoverCard>
             <HoverCard.Target>
               <Box>
-                <WeatherIcon size={16} code={weather.current.weathercode} />
+                <AnimatedWeatherIcon size={16} code={weather.current.weathercode} />
               </Box>
             </HoverCard.Target>
             <HoverCard.Dropdown>
@@ -178,7 +185,7 @@ function Forecast({ weather, options }: WeatherProps) {
               align="center"
             >
               <Text fz="xl">{dayjs(dayWeather.time).format("dd")}</Text>
-              <WeatherIcon size={16} code={dayWeather.weatherCode} />
+              <AnimatedWeatherIcon size={16} code={dayWeather.weatherCode} />
               <Text fz={16}>
                 {getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
               </Text>
@@ -204,6 +211,7 @@ function Forecast({ weather, options }: WeatherProps) {
               sunset={dayjs(dayWeather.sunset).format("HH:mm")}
               maxWindSpeed={dayWeather.maxWindSpeed}
               maxWindGusts={dayWeather.maxWindGusts}
+              humidity={dayWeather.humidity}
             />
           </HoverCard.Dropdown>
         </HoverCard>

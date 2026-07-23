@@ -33,6 +33,7 @@ const columnsSort = columnsList.filter((column) =>
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
+  refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

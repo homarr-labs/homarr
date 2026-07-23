@@ -87,7 +87,8 @@ export const globalCommandGroup = createGroup<Command>({
         icon: IconBox,
         name: tOption("newApp.label"),
         useInteraction: interaction.link(() => ({ href: "/manage/apps/new" })),
-        hidden: !session?.user.permissions.includes("app-create"),
+        hidden:
+          !session?.user.permissions.includes("board-modify-all") || !session?.user.permissions.includes("app-create"),
       },
       {
         commandKey: "newIntegration",
