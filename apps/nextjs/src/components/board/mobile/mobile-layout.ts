@@ -15,6 +15,19 @@ type PositionedLayout = {
 const comparePosition = (elementA: PositionedElement, elementB: PositionedElement) =>
   elementA.yOffset - elementB.yOffset || elementA.xOffset - elementB.xOffset;
 
+const getMobileRootSections = (board: Board) =>
+  board.sections
+    .filter((section) => section.kind !== "dynamic")
+    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset || sectionA.xOffset - sectionB.xOffset);
+
+export const getMobileRootSection = (board: Board) =>
+  getMobileRootSections(board)[0] ?? {
+    id: "mobile",
+    kind: "empty" as const,
+    xOffset: 0,
+    yOffset: 0,
+  };
+
 const getLayout = <TLayout extends PositionedLayout>(
   layouts: TLayout[],
   desktopLayoutId: string,
@@ -26,9 +39,7 @@ const getLayout = <TLayout extends PositionedLayout>(
   )[0];
 
 export const createMobileBoardItems = (board: Board, desktopLayoutId: string): SectionItem[] => {
-  const rootSections = board.sections
-    .filter((section) => section.kind !== "dynamic")
-    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset || sectionA.xOffset - sectionB.xOffset);
+  const rootSections = getMobileRootSections(board);
   const defaultSectionId = rootSections[0]?.id ?? "mobile";
   const layoutPriority = new Map(
     board.layouts
