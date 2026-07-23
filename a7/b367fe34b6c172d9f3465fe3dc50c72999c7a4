@@ -1,0 +1,19 @@
+.github/workflows/ci.yml
+  s_6852af5a167b0b::t_00b61aad894a68 166-168
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a7b367fe34b6c172d9f3465fe3dc50c72999c7a4",
+  "prompts": {},
+  "sessions": {
+    "s_6852af5a167b0b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8a85-e8ee-7e40-9d0e-25fc837d497c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
