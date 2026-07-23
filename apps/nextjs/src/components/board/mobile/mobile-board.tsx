@@ -1,6 +1,6 @@
 "use client";
 
-import type { RefObject } from "react";
+import type { CSSProperties, RefObject } from "react";
 import { useMemo, useRef } from "react";
 import { Box } from "@mantine/core";
 
@@ -11,18 +11,21 @@ import type { GridItemHTMLElement, GridStack as GridStackInstance } from "@homar
 import { BoardItemContent } from "../items/item-content";
 import { SectionProvider } from "../sections/section-context";
 import classes from "./mobile-board.module.css";
-import { createMobileBoardItems } from "./mobile-layout";
+import { createMobileBoardItems, mobileColumnCount } from "./mobile-layout";
 
 export const MobileBoard = () => {
   const board = useRequiredBoard();
   const desktopLayout = getDesktopLayout(board);
   const items = useMemo(() => createMobileBoardItems(board, desktopLayout.id), [board, desktopLayout.id]);
-  const rootSection = board.sections.find((section) => section.kind !== "dynamic");
+  const rootSection = board.sections.find((section) => section.kind !== "dynamic") ?? {
+    id: "mobile",
+    kind: "empty" as const,
+    xOffset: 0,
+    yOffset: 0,
+  };
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Record<string, RefObject<GridItemHTMLElement | null>>>({});
   const gridstackRef = useRef<GridStackInstance | null>(null);
-
-  if (!rootSection) return null;
 
   return (
     <ReadOnlyEditModeProvider>
@@ -34,7 +37,11 @@ export const MobileBoard = () => {
           refs: { wrapper: wrapperRef, items: itemRefs, gridstack: gridstackRef },
         }}
       >
-        <Box className={classes.grid} data-mobile-board>
+        <Box
+          className={classes.grid}
+          style={{ "--mobile-column-count": mobileColumnCount } as CSSProperties}
+          data-mobile-board
+        >
           {items.map((item) => (
             <Box
               key={item.id}

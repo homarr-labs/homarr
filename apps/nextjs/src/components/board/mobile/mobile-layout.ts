@@ -1,6 +1,6 @@
 import type { Board, DynamicSectionItem, ItemLayout, SectionItem } from "~/app/[locale]/boards/_types";
 
-const mobileColumnCount = 2;
+export const mobileColumnCount = 2;
 const mobileMaxHeight = 3;
 
 type PositionedElement = DynamicSectionItem | SectionItem;
