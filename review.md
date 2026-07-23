@@ -6,6 +6,17 @@ The range contains 630 changed files, 54,851 insertions, and 20,056 deletions. T
 
 Follow-up status: the accompanying `feat/fix-v2-review` branch addresses every verified finding below. It preserves v1 Custom Widgets as migration-required records, provides a secret-redacted LLM migration workflow with atomic replacement, and adds regression coverage across the affected runtime, Workshop, documentation, MCP, database, and CI surfaces.
 
+## Post-PR reviewer follow-up
+
+After the initial fixes were published, CodeRabbit produced eight inline comments and five lower-priority test/maintainability suggestions before its `v2` base-branch policy skipped later review runs. Each was rechecked against the updated branch:
+
+- Legacy troubleshooting now directs users to the preserved-v1, LLM-assisted migration flow, and migration-file parsing reports unexpected failures.
+- Workshop publication distinguishes a changed definition from a load failure; behavioral tests prove a changed refetch cannot publish and an unchanged refetch publishes the exact reviewed JSON.
+- Workshop optimistic concurrency is enforced by a SQLite compare-and-swap trigger using the request's expected revision, with repeated real PocketBase concurrent-update coverage.
+- Workshop rollback preserves a bootstrapped `users` collection on fresh installs, tests both pre-existing and fresh-user paths, and statically enforces parity between shared and PocketBase content limits.
+- The legacy migration prompt, migration mutation, and legacy deletion are included in the reviewed MCP allowlist with permission-aware classifications.
+- Total request deadlines take precedence over wrapped domain errors, the obsolete OpenAPI import is already replaced by the passing local-source parity check, the unsaved-guard spec matches its module name, and the one-line Workshop JSON classification wrapper was removed.
+
 ## Original merge recommendation
 
 Do not merge the reviewed `origin/v2` range without the accompanying fixes. The database reset is release-blocking because it irreversibly deletes every existing custom widget and credential. Legacy widgets must remain visible as migration-required records, with a safe LLM-assisted conversion path to v2. The credential-retargeting paths, Custom JSX denial-of-service paths, Workshop server-validation bypass, and stale preview publication race should also be fixed before merge.

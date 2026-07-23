@@ -1181,6 +1181,7 @@
       "privateSourceWarning": "This widget contains private source URLs for: {sources}. Replace personal hosts or IP addresses with safe service placeholders before publishing.",
       "privateSourceConfirmation": "I reviewed these source URLs and they do not expose private infrastructure details",
       "action": "Publish now",
+      "definitionChanged": "The widget changed while publication was being prepared. Review its private source URLs again, then retry.",
       "error": "Publication failed"
     },
     "installDialog": "Install from Workshop",

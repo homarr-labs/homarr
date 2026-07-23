@@ -40,6 +40,13 @@ export const transferProcedures = {
     }),
 
   migrateLegacy: manageProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Replace one preserved legacy Custom Widget with a validated v2 definition while retaining compatible encrypted credentials.",
+      },
+    })
     .input(
       z.object({
         id: z.string(),
@@ -124,10 +131,18 @@ export const transferProcedures = {
       return { id: legacy.id, preservedSecretCount: preservedSecrets.length };
     }),
 
-  deleteLegacy: manageProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    await ctx.db.delete(legacyCustomWidgetDefinitions).where(eq(legacyCustomWidgetDefinitions.id, input.id));
-    logger.info("Deleted legacy custom widget definition", { id: input.id });
-  }),
+  deleteLegacy: manageProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "Permanently delete one preserved legacy Custom Widget that will not be migrated.",
+      },
+    })
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(legacyCustomWidgetDefinitions).where(eq(legacyCustomWidgetDefinitions.id, input.id));
+      logger.info("Deleted legacy custom widget definition", { id: input.id });
+    }),
 };
 
 function canPreserveLegacySecrets(

@@ -125,7 +125,13 @@ migration.up(app);
 if (!collections.has("workshop_migration_state") || settings.rateLimits.enabled !== true) {
   throw new Error("Workshop migration did not capture state before applying changes");
 }
-if (!rawQueries.some((query) => query.includes("CREATE TRIGGER submissions_revision_cas"))) {
+if (
+  !rawQueries.some(
+    (query) =>
+      query.includes("CREATE TRIGGER submissions_revision_cas") &&
+      query.includes("NEW.expectedRevision != OLD.revision"),
+  )
+) {
   throw new Error("Workshop migration did not install the atomic submission revision guard");
 }
 migration.down(app);
@@ -143,6 +149,25 @@ if (JSON.stringify(settings.rateLimits) !== JSON.stringify(original.rateLimits))
   throw new Error("Rate limits were not restored");
 for (const name of ["workshop_migration_state", "workshop_listings", "reports", "comments", "votes", "submissions"]) {
   if (collections.has(name)) throw new Error(`Rollback left collection ${name}`);
+}
+
+collections.clear();
+records.clear();
+rawQueries.length = 0;
+settings.rateLimits = structuredClone(original.rateLimits);
+
+migration.up(app);
+const bootstrappedUsers = collections.get("users");
+if (!bootstrappedUsers) throw new Error("Fresh migration did not create the users collection");
+migration.down(app);
+if (collections.get("users") !== bootstrappedUsers) {
+  throw new Error("Fresh rollback removed the users collection required by the bootstrap hook");
+}
+for (const name of ["workshop_migration_state", "workshop_listings", "reports", "comments", "votes", "submissions"]) {
+  if (collections.has(name)) throw new Error(`Fresh rollback left collection ${name}`);
+}
+if (JSON.stringify(settings.rateLimits) !== JSON.stringify(original.rateLimits)) {
+  throw new Error("Fresh rollback did not restore rate limits");
 }
 
 console.log("Workshop migration up/down restoration passed");

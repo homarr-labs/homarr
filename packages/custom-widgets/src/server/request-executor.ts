@@ -70,7 +70,6 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
   try {
     return await performRequestWithinDeadline(input, controller.signal);
   } catch (error) {
-    if (error instanceof CustomWidgetDomainError) throw error;
     if (controller.signal.aborted) {
       throw new CustomWidgetDomainError({
         code: "BAD_GATEWAY",
@@ -78,6 +77,7 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
         cause: error,
       });
     }
+    if (error instanceof CustomWidgetDomainError) throw error;
     throw error;
   } finally {
     clearTimeout(timeout);

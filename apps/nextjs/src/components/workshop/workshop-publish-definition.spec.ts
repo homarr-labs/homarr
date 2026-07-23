@@ -1,8 +1,8 @@
-import { readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
   getPrivateWorkshopSourceNames,
+  publishWorkshopDefinition,
   serializeWorkshopDefinition,
   workshopDefinitionChanged,
 } from "./workshop-publish-definition";
@@ -26,16 +26,27 @@ describe("Workshop publish definition inspection", () => {
     expect(workshopDefinitionChanged(definition, { ...definition, name: "Updated" })).toBe(true);
   });
 
-  it("submits the same refreshed export that passed the change check", () => {
-    const source = readFileSync(
-      `${process.cwd()}/apps/nextjs/src/components/workshop/workshop-publish-modal.tsx`,
-      "utf8",
-    );
-    expect(source).toContain("customWidget.export.useQuery");
-    expect(source).toContain("await definition.refetch()");
-    expect(source).toContain("workshopDefinitionChanged(inspectedDefinition, refreshed.data)");
-    expect(source).toContain("content: serializeWorkshopDefinition(refreshed.data)");
-    expect(source).toMatch(/disabled=\{[\s\S]*!definition\.data[\s\S]*definition\.isError/u);
-    expect(serializeWorkshopDefinition(definition)).toBe(JSON.stringify(definition));
+  it("blocks publishing when the definition changes after inspection", async () => {
+    const publish = vi.fn(async () => undefined);
+    await expect(
+      publishWorkshopDefinition({
+        inspectedDefinition: definition,
+        refetchDefinition: async () => ({ ...definition, name: "Updated" }),
+        publish,
+      }),
+    ).resolves.toBe("changed");
+    expect(publish).not.toHaveBeenCalled();
+  });
+
+  it("publishes the same refreshed export that passed the change check", async () => {
+    const publish = vi.fn(async () => undefined);
+    await expect(
+      publishWorkshopDefinition({
+        inspectedDefinition: definition,
+        refetchDefinition: async () => definition,
+        publish,
+      }),
+    ).resolves.toBe("published");
+    expect(publish).toHaveBeenCalledWith(serializeWorkshopDefinition(definition));
   });
 });
