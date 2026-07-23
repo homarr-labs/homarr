@@ -25,7 +25,7 @@ const headerButtonActionIconProps: ActionIconProps = {
   variant: "subtle",
   style: { border: "none" },
   color: "gray",
-  size: "lg",
+  size: 44,
 };
 
 export const HeaderButton = forwardRef<HTMLButtonElement, HeaderButtonProps>((props, ref) => {
@@ -34,15 +34,15 @@ export const HeaderButton = forwardRef<HTMLButtonElement, HeaderButtonProps>((pr
       <ActionIcon
         ref={ref as ForwardedRef<HTMLAnchorElement>}
         component={Link}
-        {...props}
         {...headerButtonActionIconProps}
+        {...props}
       >
         {props.children}
       </ActionIcon>
     );
   }
   return (
-    <ActionIcon ref={ref} {...props} {...headerButtonActionIconProps}>
+    <ActionIcon ref={ref} {...headerButtonActionIconProps} {...props}>
       {props.children}
     </ActionIcon>
   );

@@ -38,6 +38,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       headerActions: <BoardContentHeaderActions demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
       getInitialBoardAsync: getInitialBoard,
       withTour: true,
+      mobileProfileInActions: true,
     }),
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {

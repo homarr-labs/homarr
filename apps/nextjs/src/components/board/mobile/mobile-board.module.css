@@ -1,20 +1,61 @@
+.stream {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 10px;
+  overflow-x: clip;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(var(--mobile-column-count), minmax(0, 1fr));
   grid-auto-flow: row;
-  grid-auto-rows: min(calc((100vw - 42px) / 2), 12rem);
+  grid-auto-rows: min(calc((100vw - 42px - env(safe-area-inset-left) - env(safe-area-inset-right)) / 2), 12rem);
   gap: 10px;
-  padding-bottom: 10px;
 }
 
 .item {
   position: relative;
   min-width: 0;
   min-height: 0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 12rem;
 }
 
-.item > :global(.grid-stack-item-content) {
+.deferredItem {
   width: 100%;
   height: 100%;
-  overflow-y: auto;
+}
+
+.deferredItem > :global(.grid-stack-item-content) {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sectionHeading {
+  scroll-margin-top: calc(var(--app-shell-header-height) + var(--mantine-spacing-md));
+  padding-block: var(--mantine-spacing-xs);
+  outline-offset: 4px;
+}
+
+.empty {
+  min-height: min(60dvh, 32rem);
+  padding: var(--mantine-spacing-xl);
+}
+
+.widgetAction {
+  position: absolute;
+  z-index: 11;
+  top: 4px;
+  right: 4px;
+  border: 1px solid color-mix(in srgb, var(--mantine-color-white) 30%, transparent);
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+.detailContent,
+.detailContent > :global(.grid-stack-item-content) {
+  width: 100%;
+  height: 100%;
+  min-height: 24rem;
 }
