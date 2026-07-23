@@ -11,18 +11,13 @@ import type { GridItemHTMLElement, GridStack as GridStackInstance } from "@homar
 import { BoardItemContent } from "../items/item-content";
 import { SectionProvider } from "../sections/section-context";
 import classes from "./mobile-board.module.css";
-import { createMobileBoardItems, mobileColumnCount } from "./mobile-layout";
+import { createMobileBoardItems, getMobileRootSection, mobileColumnCount } from "./mobile-layout";
 
 export const MobileBoard = () => {
   const board = useRequiredBoard();
   const desktopLayout = getDesktopLayout(board);
   const items = useMemo(() => createMobileBoardItems(board, desktopLayout.id), [board, desktopLayout.id]);
-  const rootSection = board.sections.find((section) => section.kind !== "dynamic") ?? {
-    id: "mobile",
-    kind: "empty" as const,
-    xOffset: 0,
-    yOffset: 0,
-  };
+  const rootSection = getMobileRootSection(board);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Record<string, RefObject<GridItemHTMLElement | null>>>({});
   const gridstackRef = useRef<GridStackInstance | null>(null);
