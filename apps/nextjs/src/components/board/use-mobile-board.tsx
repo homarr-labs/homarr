@@ -1,21 +1,97 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { Box, Group, Skeleton, Stack } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
 export const mobileBoardMediaQuery = "(max-width: 48em)";
 
-const InitialMobileBoardContext = createContext<boolean | undefined>(undefined);
+export type MobileBoardDeviceClass = "phone" | "tablet" | "desktop";
 
-export const MobileBoardViewportProvider = ({
-  initialIsMobile,
-  children,
-}: PropsWithChildren<{ initialIsMobile: boolean }>) => (
-  <InitialMobileBoardContext.Provider value={initialIsMobile}>{children}</InitialMobileBoardContext.Provider>
+interface MobileBoardViewport {
+  deviceClass: MobileBoardDeviceClass;
+  isMobile: boolean;
+  isResolved: boolean;
+}
+
+const MobileBoardViewportContext = createContext<MobileBoardViewport>({
+  deviceClass: "desktop",
+  isMobile: false,
+  isResolved: true,
+});
+
+export const resolveMobileBoardViewport = ({
+  deviceClass,
+  matchesMobileWidth,
+  hasResolvedClientWidth,
+}: {
+  deviceClass: MobileBoardDeviceClass;
+  matchesMobileWidth: boolean;
+  hasResolvedClientWidth: boolean;
+}): MobileBoardViewport => ({
+  deviceClass,
+  isMobile: deviceClass === "phone" || matchesMobileWidth,
+  isResolved: deviceClass !== "tablet" || hasResolvedClientWidth,
+});
+
+const MobileBoardViewportSkeleton = () => (
+  <Box
+    aria-busy
+    mih="100dvh"
+    p="md"
+    pt="calc(var(--mantine-spacing-md) + env(safe-area-inset-top))"
+    pr="calc(var(--mantine-spacing-md) + env(safe-area-inset-right))"
+    pb="calc(var(--mantine-spacing-md) + env(safe-area-inset-bottom))"
+    pl="calc(var(--mantine-spacing-md) + env(safe-area-inset-left))"
+  >
+    <Group h={44} justify="space-between" wrap="nowrap">
+      <Skeleton h={32} w="min(45vw, 12rem)" />
+      <Group gap="sm" wrap="nowrap">
+        <Skeleton circle h={44} />
+        <Skeleton circle h={44} />
+      </Group>
+    </Group>
+    <Stack gap="md" mt="md">
+      <Group align="stretch" grow wrap="nowrap">
+        <Skeleton h={150} />
+        <Skeleton h={150} />
+      </Group>
+      <Skeleton h={220} />
+      <Group align="stretch" grow wrap="nowrap">
+        <Skeleton h={150} />
+        <Skeleton h={150} />
+      </Group>
+    </Stack>
+  </Box>
 );
 
-export const useIsMobileBoard = () => {
-  const initialIsMobile = useContext(InitialMobileBoardContext);
-  return useMediaQuery(mobileBoardMediaQuery, initialIsMobile, { getInitialValueInEffect: true });
+export const MobileBoardViewportProvider = ({
+  initialDeviceClass,
+  children,
+}: PropsWithChildren<{ initialDeviceClass: MobileBoardDeviceClass }>) => {
+  const [hasResolvedClientWidth, setHasResolvedClientWidth] = useState(false);
+  const matchesMobileWidth = useMediaQuery(mobileBoardMediaQuery, initialDeviceClass === "phone", {
+    getInitialValueInEffect: true,
+  });
+
+  useEffect(() => {
+    setHasResolvedClientWidth(true);
+  }, []);
+
+  const viewport = resolveMobileBoardViewport({
+    deviceClass: initialDeviceClass,
+    matchesMobileWidth,
+    hasResolvedClientWidth,
+  });
+
+  return (
+    <MobileBoardViewportContext.Provider value={viewport}>
+      {viewport.isResolved ? children : <MobileBoardViewportSkeleton />}
+    </MobileBoardViewportContext.Provider>
+  );
 };
+
+export const useMobileBoardViewport = () => useContext(MobileBoardViewportContext);
+
+export const useIsMobileBoard = () => useMobileBoardViewport().isMobile;

@@ -9,25 +9,21 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useTimeAgo } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
+import type { WidgetComponentProps } from "../definition";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
-import type { WidgetComponentProps } from "../definition";
-import { getNotificationDisplay } from "./display";
 
 export default function NotificationsWidget({
   options,
   integrationIds,
   width,
   height,
-  displayMode,
 }: WidgetComponentProps<"notifications">) {
   const notificationsQuery = clientApi.widget.notifications.getNotifications.useQuery({
     ...options,
     integrationIds,
   });
-  const notificationData = getUsableWidgetQueryData(notificationsQuery);
-  const notificationIntegrations = useMemo(() => notificationData ?? [], [notificationData]);
+  const notificationIntegrations = getUsableWidgetQueryData(notificationsQuery) ?? [];
   const { isPending } = notificationsQuery;
 
   const t = useI18n();
@@ -53,23 +49,12 @@ export default function NotificationsWidget({
   const isDense = width < 280 || height < 180;
   const isRoomy = width >= 360 && height >= 220;
   const bodyLineClamp = height < 112 ? 1 : isDense ? 2 : height >= 300 ? 8 : 4;
-  const notificationDisplay = getNotificationDisplay({
-    displayMode,
-    hideLogos: options.hideLogos,
-    isRoomy,
-    bodyLineClamp,
-  });
   const columns = width >= 720 ? 2 : 1;
   const spacing = isRoomy ? "sm" : "xs";
 
   return (
     <ScrollArea className="scroll-area-w100" w="100%" h="100%" p="xs">
       <Stack w="100%" gap="xs">
-        {notificationsQuery.error && (
-          <Group justify="flex-end">
-            <WidgetQueryErrorIndicator error={notificationsQuery.error} label={t("widget.notifications.name")} />
-          </Group>
-        )}
         {failedIntegrations.length > 0 && (
           <Group gap={4} wrap="wrap">
             {failedIntegrations.map((integration) => (
@@ -110,7 +95,7 @@ export default function NotificationsWidget({
                   }}
                 >
                   <Flex gap={isDense ? "xs" : "sm"} align="flex-start" w="100%">
-                    {notificationDisplay.showLogos && notification.source?.iconUrl && (
+                    {!options.hideLogos && notification.source?.iconUrl && (
                       <Avatar
                         src={notification.source.iconUrl}
                         alt={notification.source.name}
@@ -128,7 +113,7 @@ export default function NotificationsWidget({
                       <Text
                         c="dimmed"
                         size={isDense ? "xs" : "sm"}
-                        lineClamp={notificationDisplay.bodyLineClamp}
+                        lineClamp={bodyLineClamp}
                         style={{ whiteSpace: "pre-line" }}
                       >
                         {notification.body}
@@ -136,11 +121,7 @@ export default function NotificationsWidget({
 
                       <InfoDisplay
                         date={notification.time}
-                        source={
-                          notificationDisplay.showSource
-                            ? (notification.source?.name ?? notification.integrationName)
-                            : undefined
-                        }
+                        source={isRoomy ? (notification.source?.name ?? notification.integrationName) : undefined}
                         dense={isDense}
                       />
                     </Flex>

@@ -2,10 +2,28 @@ import { IconDownload } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
-import { DOWNLOAD_COLUMN_ACCESSORS } from "./helpers";
+
+const columnsList = [
+  "name",
+  "progress",
+  "size",
+  "downSpeed",
+  "upSpeed",
+  "time",
+  "state",
+  "added",
+  "ratio",
+  "received",
+  "sent",
+  "category",
+  "integration",
+  "index",
+  "type",
+] as const satisfies (keyof ExtendedDownloadClientItem)[];
 
 const sortColumns = [
   "name",
@@ -20,7 +38,7 @@ const sortColumns = [
   "sent",
   "index",
   "type",
-] as const satisfies readonly (typeof DOWNLOAD_COLUMN_ACCESSORS)[number][];
+] as const satisfies readonly (typeof columnsList)[number][];
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
@@ -37,7 +55,7 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
       (factory) => ({
         columns: factory.multiSelect({
           defaultValue: ["name", "progress", "downSpeed", "time", "state"],
-          options: DOWNLOAD_COLUMN_ACCESSORS.map((value) => ({
+          options: columnsList.map((value) => ({
             value,
             label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
           })),

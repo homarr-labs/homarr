@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { getQueryKey } from "@trpc/react-query";
 import {
-  Box,
   Center,
   Divider,
   Group,
@@ -27,7 +26,6 @@ import { views } from ".";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { HealthCheckStatus } from "./health-check-status";
 import { QueuePanel } from "./panels/queue.panel";
@@ -68,8 +66,7 @@ export default function MediaTranscodingWidget({
   useWidgetRuntimeQueries(widgetRuntimeRef, [
     getQueryKey(clientApi.widget.mediaTranscoding.getDataAsync, input, "query"),
   ]);
-  const transcodingQuery = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input);
-  const transcodingData = getUsableWidgetQueryData(transcodingQuery);
+  const transcodingData = getUsableWidgetQueryData(clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input));
 
   const [view, setView] = useState<View>(options.defaultView);
   const t = useI18n("widget.mediaTranscoding");
@@ -97,16 +94,10 @@ export default function MediaTranscodingWidget({
   const queuePageCount = totalQueuePages ?? 1;
   const isTiny = !isAdvanced && (width < 280 || height < 140);
   const footerLayout = getTranscodingFooterLayout(width, height);
-  const queryIndicator = (
-    <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-      <WidgetQueryErrorIndicator error={transcodingQuery.error} label={t("name")} />
-    </Box>
-  );
 
   if (isAdvanced) {
     return (
-      <Stack gap="xs" h="100%" p="xs" pos="relative">
-        {queryIndicator}
+      <Stack gap="xs" h="100%" p="xs">
         <ScrollArea h="100%" style={{ flex: 1 }}>
           <SimpleGrid cols={width >= 1100 ? 3 : width >= 700 ? 2 : 1} spacing="sm">
             <AdvancedPanel title={t("tab.workers")} icon={IconCpu2}>
@@ -136,8 +127,7 @@ export default function MediaTranscodingWidget({
   }
 
   return (
-    <Stack gap={4} h="100%" pos="relative">
-      {queryIndicator}
+    <Stack gap={4} h="100%">
       {view === "workers" ? (
         <WorkersPanel workers={transcodingData.data.workers} isTiny={isTiny} />
       ) : view === "queue" ? (

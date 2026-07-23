@@ -5079,6 +5079,18 @@
     }
   },
   "board": {
+    "mobile": {
+      "actions": "Widget actions",
+      "details": "Open widget details",
+      "empty": {
+        "title": "This board is empty",
+        "description": "Add and arrange items from a desktop or larger screen. Mobile boards use the desktop order automatically."
+      },
+      "more": "More",
+      "profile": "Profile and account",
+      "sections": "Jump to section",
+      "currentBoard": "Current board"
+    },
     "action": {
       "addContent": "Add board content",
       "settings": "Board settings",
@@ -5323,7 +5335,7 @@
             "description": "Configure the layout used on desktop and larger screens."
           },
           "mobile": {
-            "description": "On mobile, items are automatically arranged in two columns and cannot be moved or resized. Categories and dynamic sections are flattened into the item list."
+            "description": "On mobile, items are automatically arranged in two columns and cannot be moved or resized. Named categories and dynamic sections appear as headings, never as layout containers."
           }
         },
         "background": {
