@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Використовувати значки для ping"
       },
+      "enableRightClickOnWidgets": {
+        "label": "",
+        "description": "Показувати контекстне меню Homarr при клацанні правою кнопкою миші на віджеті. Вимкніть, щоб використовувати меню браузера за замовчуванням (наприклад, «Відкрити посилання в новій вкладці»)."
+      },
       "defaultSearchEngine": {
         "label": "Стандартна система пошуку"
       },
@@ -862,7 +866,7 @@
       "created": "",
       "updated": "",
       "deleted": "",
-      "imported": "",
+      "imported": "Віджет успішно імпортовано.",
       "aiPromptCopied": "",
       "aiPromptDescription": "",
       "aiPromptCopy": "",
@@ -877,7 +881,7 @@
       "toggleError": "Не вдалося змінити стан віджету.",
       "deleteError": "",
       "previewError": "",
-      "executed": "",
+      "executed": "Дію успішно виконано.",
       "executeError": ""
     },
     "table": {
@@ -1021,7 +1025,7 @@
       "mediaMonitoring": "",
       "speedtest": "",
       "analytics": "",
-      "vpn": "",
+      "vpn": "VPN",
       "mediaLibrary": "Медіа бібліотека",
       "uptimeMonitoring": ""
     },
@@ -1141,7 +1145,7 @@
             "connection": {
               "hostUnreachable": "",
               "networkUnreachable": "Мережа недоступна. Перевірте підключення до Інтернету або налаштування мережі.",
-              "refused": "",
+              "refused": "Сервер відхилив з'єднання. Він не може працювати або відхиляти запити до вказаного порту.",
               "reset": ""
             },
             "dns": {
@@ -1285,6 +1289,14 @@
           "label": "",
           "newLabel": ""
         },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "Секрет API",
+          "newLabel": "Новий cекрет API"
+        },
         "githubAppId": {
           "label": "",
           "newLabel": ""
@@ -1328,8 +1340,20 @@
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
       "name": "Безпаперовий ngx",
+      "description": ""
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
+      "name": "Bazarr",
       "description": ""
     }
   },
@@ -1602,6 +1626,12 @@
         "refresh": "",
         "options": "",
         "actions": ""
+      },
+      "status": {
+        "success": "",
+        "error": "Помилка",
+        "loading": "",
+        "idle": "Неактивно"
       }
     },
     "create": {
@@ -1875,6 +1905,16 @@
         "customDateFormat": {
           "label": "",
           "description": ""
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1904,7 +1944,7 @@
       "noStation": "",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "Шукати URL"
         },
         "station": {
           "label": ""
@@ -1936,6 +1976,8 @@
         "clear": "",
         "heading": "",
         "align": "",
+        "directionLtr": "",
+        "directionRtl": "Встановити напрямок тексту справа наліво",
         "blockquote": "",
         "horizontalLine": "",
         "bulletList": "",
@@ -2225,7 +2267,8 @@
         "sunrise": "",
         "sunset": "",
         "maxWindSpeed": "Максимальна швидкість вітру: {maxWindSpeed} км/год",
-        "maxWindGusts": ""
+        "maxWindGusts": "",
+        "humidity": ""
       },
       "kind": {
         "clear": "Ясно",
@@ -2287,7 +2330,7 @@
         "visibleStorageVolumes": {
           "label": "",
           "description": "",
-          "placeholder": ""
+          "placeholder": "Оберіть томи сховища"
         },
         "defaultTab": {
           "label": ""
@@ -2359,7 +2402,7 @@
             "name": "Назва",
             "cpu": "ЦП",
             "memory": "",
-            "node": ""
+            "node": "Вузол"
           }
         }
       }
@@ -2499,7 +2542,7 @@
         }
       },
       "recentActivity": {
-        "title": "",
+        "title": "Нещодавня активність",
         "empty": "",
         "watched": "",
         "partial": ""
@@ -2689,8 +2732,13 @@
         "user": "Користувач",
         "name": "Назва",
         "id": "Id",
+        "status": "",
+        "directPlay": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
-          "title": "",
+          "title": "Статистика ботів",
           "video": {
             "title": "",
             "resolution": ""
@@ -2754,6 +2802,193 @@
         "internalServerError": ""
       }
     },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Показувати хости з оновленнями безпеки",
+          "description": "Показувати хости, які потребують патчів безпеки"
+        },
+        "showRecentUpdates24h": {
+          "label": "Показати останні оновлення (24h)",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "Показати репозиторії",
+          "description": "Відображати кількість активних репозиторіїв, що відслідковуються"
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "Виберіть спосіб відображення дистрибутива операційної системи",
+          "option": {
+            "bars": "",
+            "donut": "Кільцева діаграма"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "immich-serverStats": {
       "name": "",
       "description": "",
@@ -2782,6 +3017,7 @@
     },
     "immich-albumCarousel": {
       "name": "",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "",
@@ -2797,11 +3033,10 @@
         },
         "randomizePhotos": {
           "label": "",
-          "description": ""
+          "description": "Показувати фотографії у випадковому порядку замість того, щоб завжди починатися з того ж порядку альбому."
         }
       },
       "description": "",
-      "noAlbumSelected": "",
       "noPhotos": ""
     },
     "downloads": {
@@ -2986,6 +3221,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Відкрийте посилання в новій вкладці"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -3093,9 +3334,38 @@
         }
       }
     },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": "Залишилося часу"
+    },
     "rssFeed": {
       "name": "RSS-канали",
-      "description": "",
+      "description": "Моніторинг та відображення однієї або кількох загальних RSS-, ATOM- або JSON-стрічок",
       "option": {
         "feedUrls": {
           "label": ""
@@ -3140,7 +3410,7 @@
           "label": "Показати тільки іконку"
         },
         "topReleases": {
-          "label": "",
+          "label": "Кращі релізи",
           "description": ""
         },
         "repositories": {
@@ -3236,7 +3506,7 @@
       "projectDescription": "",
       "created": "Створено",
       "error": {
-        "label": "",
+        "label": "Помилка",
         "messages": {
           "invalidIdentifier": "",
           "noMatchingVersion": "",
@@ -3336,7 +3606,11 @@
       "name": "",
       "description": "",
       "noItems": "",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": ""
+        }
+      }
     },
     "speedtestTracker": {
       "name": "",
@@ -3415,6 +3689,40 @@
       },
       "error": {
         "internalServerError": ""
+      }
+    },
+    "traefik": {
+      "name": "Трафік",
+      "description": "Огляд маршрутизаторів, сервісів, проміжного програмного забезпечення та точок входу Traefik",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
+      "error": {
+        "internalServerError": "Неможливо отримати дані Traefik"
       }
     },
     "audioStats": {
@@ -3787,10 +4095,15 @@
           "series": "Використано"
         },
         "diskIO": {
-          "title": "",
+          "title": "Диск вводу/виводу",
           "subtitle": "",
           "read": "",
           "write": ""
+        },
+        "storage": {
+          "title": "Сховище",
+          "subtitle": "",
+          "series": "Використано"
         },
         "network": {
           "title": "",
@@ -4309,7 +4622,7 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Включити медіа від усіх користувачів"
       },
       "user": {
         "back": "",
@@ -4681,8 +4994,8 @@
                 "title": ""
               },
               "authentication": {
-                "title": "",
-                "intro": "",
+                "title": "Аутентифікація",
+                "intro": "Ви можете автентифікувати свій MCP-сервер, використовуючи або ключ API, або OAuth. Обидва методи дають той же рівень доступу.",
                 "apiKey": {
                   "title": "",
                   "description": ""
@@ -4766,9 +5079,9 @@
           "metaTitle": "",
           "export": {
             "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "description": "Завантажте повну резервну копію вашої бази даних SQLite, включаючи всі налаштування, користувачів, дошки та зашифровані секрети інтеграції. Резервна копія містить ключ шифрування та метадані у вигляді ZIP-файлу.",
+            "button": "Завантажити резервну копію",
+            "error": "Помилка експорту",
             "confirm": {
               "title": "",
               "warningTitle": "",
@@ -4837,11 +5150,11 @@
                 "app": "",
                 "integration": "",
                 "item": "",
-                "media": "",
-                "search_engine": ""
+                "media": "Медіа",
+                "search_engine": "Пошукові системи"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
+              "migrationsApplied": "Застосовано міграцію {count}",
+              "migrationsAppliedPlural": "Застосовано міграції {count}",
               "migrationsOlderVersion": "",
               "migrationsOlderVersionPlural": "",
               "migrationsUpToDate": "",
@@ -4924,6 +5237,9 @@
     "title": "Контейнери",
     "table": {
       "updated": "Оновлено {when}",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "",
       "selected": "Вибрано {selectCount} із {totalCount} контейнерів",
       "footer": "",
@@ -5055,13 +5371,13 @@
       }
     },
     "error": {
-      "internalServerError": "",
-      "noColumns": ""
+      "internalServerError": "Не вдалося отримати Docker контейнери",
+      "noColumns": "Виберіть хоча б один стовпець в налаштуваннях віджета"
     }
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
+      "title": "Панель кластера",
       "label": "",
       "providers": "",
       "version": "",
@@ -5187,7 +5503,7 @@
           "label": ""
         },
         "clusterIP": {
-          "label": ""
+          "label": "Кластер IP"
         },
         "creationTimestamp": {
           "label": ""
@@ -5273,10 +5589,10 @@
           "label": ""
         },
         "storage": {
-          "label": ""
+          "label": "Сховище"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Назва класу сховища"
         },
         "volumeMode": {
           "label": ""
@@ -5616,7 +5932,7 @@
                 "label": "",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Увімкнути Бан DuckGos"
                   }
                 }
               },
@@ -5624,12 +5940,12 @@
                 "label": "",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Оберіть перший день тижня"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Домашня дошка",
                 "children": {
                   "detail": {
                     "title": ""
@@ -5645,6 +5961,14 @@
                 }
               },
               "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {
@@ -5963,7 +6287,7 @@
                 "status": ""
               },
               "status": {
-                "requested": ""
+                "requested": "Запитано"
               }
             },
             "button": {
@@ -5977,7 +6301,7 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Назва хоста"
       },
       "subject": {
         "label": ""
@@ -6013,7 +6337,7 @@
         "toHostnames": ""
       },
       "hostnames": {
-        "title": "",
+        "title": "Довірені назви хостів сертифікатів",
         "description": "",
         "noResults": {
           "title": ""

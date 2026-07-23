@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Use icons for pings"
       },
+      "enableRightClickOnWidgets": {
+        "label": "Enable right-click on widgets",
+        "description": "Show Homarr's context menu when right-clicking a widget. Disable to use the browser's default menu (e.g. \"Open link in new tab\")."
+      },
       "defaultSearchEngine": {
         "label": "Default search engine"
       },
@@ -709,76 +713,76 @@
       "addMapping": "Add Mapping",
       "addColumn": "Add Column",
       "edit": "Edit",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
+      "removeMapping": "Remove mapping",
+      "removeColumn": "Remove column",
+      "addItem": "Add Item",
+      "removeItem": "Remove item",
+      "addBar": "Add Bar",
+      "duplicate": "Duplicate",
+      "copyAiPrompt": "Copy AI prompt",
+      "enable": "Enable",
+      "disable": "Disable",
+      "menu": "Actions"
     },
     "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
+      "name": "Name",
+      "description": "Description",
+      "iconUrl": "Icon URL",
+      "url": "URL",
+      "authType": "Auth Type",
+      "headerName": "Header/Query Parameter Name",
+      "method": "Method",
+      "requestBody": "Request Body",
+      "displayType": "Display Type",
+      "jsonPath": "JSON Path",
+      "jsonPathHint": "Use JSONPath syntax to extract values, e.g. $.data.temperature or $.items[0].name",
+      "label": "Label",
+      "unit": "Unit",
+      "mappings": "Mappings",
+      "tablePath": "Array JSON Path",
+      "tablePathHint": "Path to the array in the response, e.g. $.data.items",
+      "columns": "Columns",
+      "header": "Header",
+      "items": "Items",
+      "gridColumns": "Grid Columns",
+      "cardStyle": "Card Style",
+      "bars": "Bars",
+      "valuePath": "Value JSON Path",
+      "maxPath": "Max Value JSON Path",
+      "showPercentage": "Show Percentage",
+      "barSize": "Bar Size",
+      "goodValues": "Good Values (comma-separated)",
+      "dotSize": "Dot Size",
+      "valueSize": "Value Size",
+      "labelPosition": "Label Position",
+      "kvLayout": "Layout",
+      "striped": "Striped Rows",
+      "compact": "Compact Mode",
+      "maxHeight": "Max Height (px)",
+      "color": "Colour",
+      "buttonLabel": "Button Label",
+      "buttonColor": "Button Colour",
+      "confirmText": "Confirmation Text",
+      "confirmTextHint": "If set, a confirmation dialogue will appear before executing the request",
+      "successMessage": "Success Message",
+      "successMessageHint": "Message shown after successful execution",
+      "enabled": "Enabled",
       "template": {
-        "label": "",
-        "description": ""
+        "label": "JSX Template",
+        "description": "Mantine JSX template. Access API response fields via data bindings (e.g. data.name). Use whitelisted components only. Forbidden: constructor, __proto__, eval, Function, window, document."
       }
     },
     "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
+      "exampleLabel": "CPU Temperature",
+      "exampleLabelShort": "CPU Temp",
+      "exampleHeader": "Name",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
       "valuePath": "",
       "maxPath": "",
       "goodValues": "",
@@ -1285,6 +1289,14 @@
           "label": "API Key (Secret)",
           "newLabel": "New API Key (Secret)"
         },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
         "githubAppId": {
           "label": "App Id",
           "newLabel": "New App Id"
@@ -1328,7 +1340,19 @@
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
+      "name": "",
+      "description": ""
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
       "name": "",
       "description": ""
     }
@@ -1598,7 +1622,7 @@
     },
     "menu": {
       "label": {
-        "settings": "",
+        "settings": "Settings",
         "refresh": "",
         "options": "",
         "actions": ""
@@ -1881,6 +1905,16 @@
         "customDateFormat": {
           "label": "Custom date format",
           "description": "Use ISO 8601 to format date (this will override other options)"
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1942,6 +1976,8 @@
         "clear": "Clear formatting",
         "heading": "Heading {level}",
         "align": "Align text: {position}",
+        "directionLtr": "",
+        "directionRtl": "",
         "blockquote": "Blockquote",
         "horizontalLine": "Horizontal line",
         "bulletList": "Bullet list",
@@ -2231,7 +2267,8 @@
         "sunrise": "Sunrise",
         "sunset": "Sunset",
         "maxWindSpeed": "Max wind speed: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}"
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}",
+        "humidity": ""
       },
       "kind": {
         "clear": "Clear",
@@ -2695,6 +2732,11 @@
         "user": "User",
         "name": "Name",
         "id": "Id",
+        "status": "",
+        "directPlay": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
           "title": "Stats for nerds",
           "video": {
@@ -2760,6 +2802,193 @@
         "internalServerError": ""
       }
     },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "immich-serverStats": {
       "name": "Immich Server Stats",
       "description": "Information about your Immich instance",
@@ -2788,6 +3017,7 @@
     },
     "immich-albumCarousel": {
       "name": "Immich Album",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "Album ID",
@@ -2807,7 +3037,6 @@
         }
       },
       "description": "",
-      "noAlbumSelected": "",
       "noPhotos": ""
     },
     "downloads": {
@@ -2992,6 +3221,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": ""
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -3098,6 +3333,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
     },
     "rssFeed": {
       "name": "",
@@ -3342,7 +3606,11 @@
       "name": "",
       "description": "",
       "noItems": "",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": ""
+        }
+      }
     },
     "speedtestTracker": {
       "name": "",
@@ -3418,6 +3686,40 @@
         "upCount": "",
         "downCount": "",
         "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
       },
       "error": {
         "internalServerError": ""
@@ -3797,6 +4099,11 @@
           "subtitle": "",
           "read": "",
           "write": ""
+        },
+        "storage": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
         },
         "network": {
           "title": "",
@@ -4930,6 +5237,9 @@
     "title": "",
     "table": {
       "updated": "",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "",
       "selected": "",
       "footer": "",
@@ -5584,10 +5894,10 @@
               },
               "searchEngine": {
                 "none": "",
-                "unavailable": ""
+                "unavailable": "Currently selected (unavailable)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Colour scheme",
                 "children": {
                   "detail": {
                     "title": "Select your colour scheme"
@@ -5658,8 +5968,16 @@
                   }
                 }
               },
+              "enableRightClickOnWidgets": {
+                "label": "Enable right-click on widgets",
+                "children": {
+                  "detail": {
+                    "title": "Enable right-click on widgets"
+                  }
+                }
+              },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Open full preferences page"
               }
             }
           }
