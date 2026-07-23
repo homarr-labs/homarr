@@ -47,21 +47,30 @@ export const managementQueryProcedures = {
       return [...current, ...legacy].toSorted((left, right) => left.name.localeCompare(right.name));
     }),
 
-  legacyMigrationPrompt: manageProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-    const definition = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
-      where: eq(legacyCustomWidgetDefinitions.id, input.id),
-      with: { secrets: true },
-    });
-    if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
-    return {
-      id: definition.id,
-      version: 1 as const,
-      prompt: buildLegacyCustomWidgetMigrationPrompt(
-        definition,
-        definition.secrets.map(({ kind }) => kind),
-      ),
-    };
-  }),
+  legacyMigrationPrompt: manageProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get a redacted AI migration prompt for one preserved legacy Custom Widget. Credentials must be configured separately.",
+      },
+    })
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const definition = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
+        where: eq(legacyCustomWidgetDefinitions.id, input.id),
+        with: { secrets: true },
+      });
+      if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
+      return {
+        id: definition.id,
+        version: 1 as const,
+        prompt: buildLegacyCustomWidgetMigrationPrompt(
+          definition,
+          definition.secrets.map(({ kind }) => kind),
+        ),
+      };
+    }),
 
   get: manageProcedure
     .meta({ mcp: { enabled: true, description: "Get one Custom JSX widget without secret values." } })

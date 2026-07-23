@@ -2,9 +2,11 @@
 
 ## Correct an unavailable widget
 
-The definition does not exist. Remove the unavailable tile from the board.
+The definition does not exist. If it was deleted, remove the unavailable tile from the board.
 
-Then, install or create a Custom JSX v2 definition. Homarr does not provide recovery or migration for old formats.
+If the Custom Widgets page shows the definition with a **Migration required** badge, open its action menu and select **Copy migration prompt**. Give that redacted prompt to an LLM, then import the resulting v2 JSON from the same menu. Homarr keeps the legacy definition until the replacement validates and you confirm the migration.
+
+Otherwise, install or create a Custom JSX v2 definition.
 
 ## Correct an invalid saved definition
 
@@ -12,9 +14,7 @@ The Custom Widgets page isolates a definition that does not conform to the curre
 
 An invalid definition shows its validation errors. You can delete it.
 
-You cannot edit, enable, export, duplicate, publish, or select an invalid definition. Recreate the definition or import a valid definition.
-
-Homarr does not migrate old Custom JSX formats.
+You cannot edit, enable, export, duplicate, publish, or select an invalid v2 definition. Recreate the definition or import a valid definition. Preserved v1 definitions use the separate **Migration required** workflow described above.
 
 ## Correct validation errors
 

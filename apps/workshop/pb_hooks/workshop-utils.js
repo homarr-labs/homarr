@@ -7,11 +7,6 @@ const rejectRequest = (message) => {
   throw new BadRequestError(message);
 };
 
-const requestBodyValue = (event, name) => {
-  const body = event.requestInfo().body;
-  return body && typeof body.get === "function" ? body.get(name) : body ? body[name] : undefined;
-};
-
 const validateWidgetManifest = (content) => {
   let widget;
   try {
@@ -87,7 +82,7 @@ const sendEmail = (app, recipientEmail, subject, text, html) => {
 module.exports = {
   emailTemplate,
   escapeHtml,
-  requestBodyValue,
+  rejectRequest,
   sendEmail,
   validateAndNormalizeSubmission,
 };
