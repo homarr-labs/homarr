@@ -10,6 +10,7 @@ vi.hoisted(() => {
 const BESZEL_URL = process.env.BESZEL_TEST_URL ?? "http://localhost:8090";
 const BESZEL_EMAIL = process.env.BESZEL_TEST_EMAIL ?? "";
 const BESZEL_PASSWORD = process.env.BESZEL_TEST_PASSWORD ?? "";
+const closeAgent = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 
 vi.mock("@homarr/redis", () => ({
   createGetSetChannel: () => ({
@@ -32,7 +33,7 @@ vi.mock("@homarr/core/infrastructure/logs", () => ({
 vi.mock("@homarr/core/infrastructure/http", () => ({
   fetchWithTrustedCertificatesAsync: (url: URL | string, init?: RequestInit) => fetch(url, init),
   createAxiosCertificateInstanceAsync: vi.fn().mockResolvedValue({}),
-  createCertificateAgentAsync: vi.fn().mockResolvedValue(undefined),
+  createCertificateAgentAsync: vi.fn().mockResolvedValue({ close: closeAgent }),
 }));
 
 vi.mock("@homarr/core/infrastructure/certificates", () => ({
@@ -153,6 +154,7 @@ describe("subscribeRealtimeMetrics", () => {
 
       expect(subscriptionBodies).toEqual([{ clientId: "client-1", subscriptions: [topic] }]);
       expect(events.map((event) => event.type)).toEqual(["system_stats", "container_stats"]);
+      expect(closeAgent).toHaveBeenCalled();
     } finally {
       globalThis.fetch = originalFetch;
     }

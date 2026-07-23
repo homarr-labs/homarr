@@ -1,6 +1,7 @@
 import { ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import type { Response as UndiciResponse } from "undici";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -357,19 +358,41 @@ export class BeszelIntegration extends Integration {
     let emittedSnapshotCount = 0;
 
     while (!signal.aborted) {
+      let streamResponse: UndiciResponse | undefined;
+      let streamAgent: Awaited<ReturnType<typeof createCertificateAgentAsync>> | undefined;
+      const closeStreamAsync = async () => {
+        const response = streamResponse;
+        streamResponse = undefined;
+        const agent = streamAgent;
+        streamAgent = undefined;
+
+        if (response?.body) await response.body.cancel().catch(() => {});
+        if (agent) await agent.close().catch(() => {});
+      };
+
       try {
         let session = await this.authenticateAsync();
-        const openStream = async () =>
-          await fetchWithTrustedCertificatesAsync(realtimeUrl, {
-            headers: {
-              Accept: "text/event-stream",
-              Authorization: session.token,
-              "Cache-Control": "no-cache",
-              Pragma: "no-cache",
-            },
-            signal,
-            bodyTimeout: 0,
-          });
+        const openStream = async () => {
+          streamAgent = await createCertificateAgentAsync(undefined, { bodyTimeout: 0 });
+          try {
+            const response = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
+              headers: {
+                Accept: "text/event-stream",
+                Authorization: session.token,
+                "Cache-Control": "no-cache",
+                Pragma: "no-cache",
+              },
+              signal,
+              bodyTimeout: 0,
+              dispatcher: streamAgent,
+            });
+            streamResponse = response;
+            return response;
+          } catch (error) {
+            await closeStreamAsync();
+            throw error;
+          }
+        };
 
         logger.debug("Opening Beszel rt_metrics SSE connection", {
           integrationId: this.integration.id,
@@ -378,6 +401,7 @@ export class BeszelIntegration extends Integration {
         });
         let response = await openStream();
         if (response.status === 401) {
+          await closeStreamAsync();
           await this.sessionStore.clearAsync();
           session = await this.authenticateAsync();
           response = await openStream();
@@ -402,14 +426,21 @@ export class BeszelIntegration extends Integration {
             clientId = frame.id || fallbackClientId;
             if (!clientId) throw new Error("PocketBase PB_CONNECT event did not include a client ID");
 
+            if (!streamAgent) throw new Error("Beszel realtime stream agent is not available");
             const subscribeResponse = await fetchWithTrustedCertificatesAsync(realtimeUrl, {
               method: "POST",
               headers: { Authorization: session.token, "Content-Type": "application/json" },
               body: JSON.stringify({ clientId, subscriptions: [topic] }),
               signal,
+              dispatcher: streamAgent,
             });
-            if (subscribeResponse.status === 401) await this.sessionStore.clearAsync();
-            if (!subscribeResponse.ok) throw new ResponseError(subscribeResponse);
+            try {
+              if (subscribeResponse.status === 401) await this.sessionStore.clearAsync();
+              if (!subscribeResponse.ok) throw new ResponseError(subscribeResponse);
+              await subscribeResponse.arrayBuffer();
+            } finally {
+              if (subscribeResponse.body) await subscribeResponse.body.cancel().catch(() => {});
+            }
             logger.debug("Subscribed to Beszel rt_metrics topic", {
               integrationId: this.integration.id,
               systemId,
@@ -461,10 +492,12 @@ export class BeszelIntegration extends Integration {
         } finally {
           await reader.cancel().catch(() => {});
           reader.releaseLock();
+          await closeStreamAsync();
         }
 
         if (!signal.aborted) throw new Error("Beszel rt_metrics SSE stream ended unexpectedly");
       } catch (error) {
+        await closeStreamAsync();
         if (signal.aborted) break;
         if (error instanceof ResponseError && error.statusCode === 401 && retryAttempt === 0) {
           retryAttempt += 1;

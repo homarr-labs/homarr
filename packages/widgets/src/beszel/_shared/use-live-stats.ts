@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { skipToken } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
@@ -10,10 +10,22 @@ import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homar
 // without synthesizing points for missed updates.
 const MAX_BUFFER = 60;
 
+const subscribeToVisibility = (onChange: () => void) => {
+  if (typeof document === "undefined") return () => {};
+  document.addEventListener("visibilitychange", onChange);
+  return () => document.removeEventListener("visibilitychange", onChange);
+};
+
+const getPageVisibility = () => typeof document === "undefined" || document.visibilityState === "visible";
+
+const usePageVisible = () => useSyncExternalStore(subscribeToVisibility, getPageVisibility, () => true);
+
 export const useLiveStats = (integrationIds: string[], systemId: string, enabled: boolean) => {
   const [systemStats, setSystemStats] = useState<BeszelSystemStatsRecord[]>([]);
   const [containerStats, setContainerStats] = useState<BeszelContainerStatsRecord[]>([]);
   const [error, setError] = useState<Error | null>(null);
+  const pageVisible = usePageVisible();
+  const subscriptionEnabled = enabled && pageVisible && systemId !== "";
 
   // Append to buffer, trimming to MAX_BUFFER
   const appendSystemStats = useCallback((record: BeszelSystemStatsRecord) => {
@@ -31,7 +43,7 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
   }, []);
 
   clientApi.widget.beszel.subscribeSystemStats.useSubscription(
-    enabled && systemId !== "" ? { integrationIds, systemId } : skipToken,
+    subscriptionEnabled ? { integrationIds, systemId } : skipToken,
     {
       onData(event) {
         setError(null);
@@ -49,7 +61,7 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
 
   // Reset buffers when system changes or integration changes
   const prevKeyRef = useRef<string>("");
-  const currentKey = `${integrationIds.join(",")}:${systemId}:${enabled}`;
+  const currentKey = `${integrationIds.join(",")}:${systemId}:${subscriptionEnabled}`;
   useEffect(() => {
     if (prevKeyRef.current !== currentKey) {
       prevKeyRef.current = currentKey;
