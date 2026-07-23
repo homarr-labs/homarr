@@ -31,7 +31,6 @@ import { cn, errorMessage } from "@/lib/utils";
 
 import type { SubmitInput } from "./useWorkshop";
 import { ScreenshotEditor } from "./ScreenshotEditor";
-import { getJsonImportSubmissionType } from "./submission-import";
 
 interface Props {
   onClose: () => void;
@@ -105,7 +104,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
       const reader = new FileReader();
       reader.addEventListener("load", (e) => {
         const text = e.target?.result as string;
-        setType(getJsonImportSubmissionType(type));
+        setType("customWidget");
         setContentAndAutofill(text, title, description);
         if (step === 0) goTo(1);
       });
@@ -113,7 +112,7 @@ export const SubmitForm = ({ onClose, onSubmit }: Props) => {
       reader.readAsText(jsonFile);
       return true;
     },
-    [type, step, title, description, setContentAndAutofill, goTo],
+    [step, title, description, setContentAndAutofill, goTo],
   );
 
   const addImageFiles = useCallback(

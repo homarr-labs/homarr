@@ -9,7 +9,19 @@ if (typeof clientExport !== "string") throw new Error("Workshop client export is
 await access(resolve("packages/workshop", clientExport));
 
 const hook = await read("apps/workshop/pb_hooks/workshop.pb.js");
-await access(resolve("apps/workshop/pb_hooks/workshop-utils.js"));
+const hookUtils = await read("apps/workshop/pb_hooks/workshop-utils.js");
+const schema = await read("packages/workshop/src/schema.ts");
+const constantValue = (source, name) => {
+  const match = source.match(new RegExp(`(?:export )?const ${name} = ([\\d_]+)`));
+  if (!match?.[1]) throw new Error(`Workshop limit ${name} is missing or is not a numeric literal`);
+  return Number(match[1].replaceAll("_", ""));
+};
+if (constantValue(hookUtils, "MAX_CSS_LENGTH") !== constantValue(schema, "MAX_WORKSHOP_CSS_LENGTH")) {
+  throw new Error("PocketBase and shared Workshop CSS limits must match");
+}
+if (constantValue(hookUtils, "MAX_CONTENT_LENGTH") !== constantValue(schema, "MAX_WORKSHOP_CONTENT_LENGTH")) {
+  throw new Error("PocketBase and shared Workshop content limits must match");
+}
 if (!hook.includes("require(`${__hooks}/workshop-utils.js`)")) {
   throw new Error("Workshop handlers must load shared helpers inside their isolated PocketBase contexts");
 }
@@ -25,6 +37,7 @@ for (const required of [
   "workshop_migration_state",
   "addedUserFields",
   "CREATE TRIGGER submissions_revision_cas",
+  "NEW.expectedRevision != OLD.revision",
   "state.rateLimits.enabled",
   "users.passwordAuth = state.users.passwordAuth",
   "users.oauth2 = state.users.oauth2",

@@ -67,16 +67,23 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
     if (!file) return;
     const reader = new FileReader();
     reader.addEventListener("load", (loadEvent) => {
-      const result = parseCustomWidgetClipboardDetailed(loadEvent.target?.result as string);
-      if (!result.success) {
+      try {
+        const result = parseCustomWidgetClipboardDetailed(loadEvent.target?.result as string);
+        if (!result.success) {
+          showErrorNotification({
+            title: t("action.migrate"),
+            message: formatCustomWidgetImportIssues(result.issues),
+          });
+          return;
+        }
+        setMigratedWidget(result.widget);
+        migrationControls.open();
+      } catch {
         showErrorNotification({
           title: t("action.migrate"),
-          message: formatCustomWidgetImportIssues(result.issues),
+          message: t("notification.migrationError"),
         });
-        return;
       }
-      setMigratedWidget(result.widget);
-      migrationControls.open();
     });
     reader.addEventListener("error", () => {
       showErrorNotification({ title: t("action.migrate"), message: t("notification.migrationError") });
