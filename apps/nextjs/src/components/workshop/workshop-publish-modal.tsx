@@ -12,8 +12,8 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { createWorkshopClient } from "./workshop-client";
 import {
   getPrivateWorkshopSourceNames,
+  publishWorkshopDefinition,
   serializeWorkshopDefinition,
-  workshopDefinitionChanged,
 } from "./workshop-publish-definition";
 
 export function WorkshopPublishModal({
@@ -60,22 +60,26 @@ export function WorkshopPublishModal({
     try {
       if (!definition.data) throw new Error(t("publish.error"));
       const inspectedDefinition = definition.data;
-      const refreshed = await definition.refetch();
-      if (!refreshed.data) throw new Error(t("publish.error"));
-      if (workshopDefinitionChanged(inspectedDefinition, refreshed.data)) {
+      const result = await publishWorkshopDefinition({
+        inspectedDefinition,
+        refetchDefinition: async () => (await definition.refetch()).data,
+        publish: (content) =>
+          createSubmission.mutateAsync({
+            input: {
+              type: "customWidget",
+              title,
+              description,
+              content,
+            },
+            screenshots,
+          }),
+      });
+      if (result === "unavailable") throw new Error(t("publish.error"));
+      if (result === "changed") {
         setSourceUrlsReviewed(false);
-        setError(t("publish.error"));
+        setError(t("publish.definitionChanged"));
         return;
       }
-      await createSubmission.mutateAsync({
-        input: {
-          type: "customWidget",
-          title,
-          description,
-          content: serializeWorkshopDefinition(refreshed.data),
-        },
-        screenshots,
-      });
       setPublished(true);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : t("publish.error"));

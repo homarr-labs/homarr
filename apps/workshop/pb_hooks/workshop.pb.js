@@ -15,20 +15,22 @@ onRecordCreateRequest((event) => {
   const { validateAndNormalizeSubmission } = require(`${__hooks}/workshop-utils.js`);
   validateAndNormalizeSubmission(event.record);
   event.record.set("revision", 1);
+  event.record.set("expectedRevision", 0);
   event.record.set("changelog", "");
   event.record.set("outdated", false);
   event.next();
 }, "submissions");
 
 onRecordUpdateRequest((event) => {
-  const { requestBodyValue, validateAndNormalizeSubmission } = require(`${__hooks}/workshop-utils.js`);
+  const { rejectRequest, validateAndNormalizeSubmission } = require(`${__hooks}/workshop-utils.js`);
   const original = event.record.original();
   const currentRevision = original.getInt("revision");
-  const expectedRevision = Number(requestBodyValue(event, "expectedRevision"));
-  if (!Number.isSafeInteger(expectedRevision) || expectedRevision !== currentRevision) {
+  const expectedRevision = event.record.getInt("expectedRevision");
+  if (!Number.isSafeInteger(expectedRevision) || expectedRevision < 1) {
     rejectRequest("Submission changed since it was read");
   }
   validateAndNormalizeSubmission(event.record);
+  event.record.set("expectedRevision", expectedRevision);
   event.record.set("revision", currentRevision + 1);
   event.next();
 }, "submissions");

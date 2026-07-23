@@ -88,6 +88,7 @@ migrate(
         { type: "text", name: "widgetSchema", required: true, min: 1, max: 100 },
         { type: "text", name: "content", required: true, max: 1000000 },
         { type: "number", name: "revision", required: true, onlyInt: true, min: 1 },
+        { type: "number", name: "expectedRevision", onlyInt: true, min: 0 },
         { type: "text", name: "changelog", max: 2000 },
         { type: "bool", name: "outdated" },
         {
@@ -112,9 +113,9 @@ migrate(
         `CREATE TRIGGER submissions_revision_cas
          BEFORE UPDATE ON submissions
          FOR EACH ROW
-         WHEN NEW.revision != OLD.revision + 1
+         WHEN NEW.expectedRevision != OLD.revision OR NEW.revision != OLD.revision + 1
          BEGIN
-           SELECT RAISE(ABORT, 'submission revision must increment exactly once');
+           SELECT RAISE(ABORT, 'submission revision compare-and-swap failed');
          END`,
       )
       .execute();
@@ -285,8 +286,6 @@ migrate(
         if (field) users.fields.removeById(field.id);
       }
       app.save(users);
-    } else {
-      app.delete(users);
     }
     app.delete(stateCollection);
   },
