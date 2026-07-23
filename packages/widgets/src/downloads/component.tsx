@@ -83,6 +83,7 @@ export default function DownloadClientsWidget({
   integrationIds,
   options,
   setOptions,
+  displayMode,
 }: WidgetComponentProps<"downloads">) {
   const integrationsWithInteractions = useIntegrationsWithInteractAccess().flatMap(({ id }) =>
     integrationIds.includes(id) ? [id] : [],
@@ -604,6 +605,23 @@ export default function DownloadClientsWidget({
       }),
       { up: 0, down: 0 },
     );
+
+  if (displayMode === "mobileSummary") {
+    const totalDownloadSpeed = clients.reduce((total, { status }) => total + (status?.rates.down ?? 0), 0);
+
+    return (
+      <Center h="100%" p="md">
+        <Stack align="center" gap={4} maw="100%">
+          <Text fw={700} size="xl">
+            {data.length}
+          </Text>
+          <Text c="dimmed" size="sm" lineClamp={1}>
+            {`${t("items.downSpeed.columnTitle")}: ${formatByteRate(totalDownloadSpeed)}`}
+          </Text>
+        </Stack>
+      </Center>
+    );
+  }
 
   if (options.columns.length === 0)
     return (

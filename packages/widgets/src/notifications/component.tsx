@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Avatar, Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
+import { Avatar, Box, Card, Center, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -11,7 +11,11 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 
-export default function NotificationsWidget({ options, integrationIds }: WidgetComponentProps<"notifications">) {
+export default function NotificationsWidget({
+  options,
+  integrationIds,
+  displayMode,
+}: WidgetComponentProps<"notifications">) {
   const { data: notificationIntegrations = [] } = clientApi.widget.notifications.getNotifications.useQuery({
     ...options,
     integrationIds,
@@ -28,6 +32,35 @@ export default function NotificationsWidget({ options, integrationIds }: WidgetC
         .sort((entryA, entryB) => entryB.time.getTime() - entryA.time.getTime()),
     [notificationIntegrations],
   );
+
+  if (displayMode === "mobileSummary") {
+    const latestNotification = sortedNotifications[0];
+
+    return (
+      <Center h="100%" p="md">
+        {latestNotification ? (
+          latestNotification.href ? (
+            <Box
+              component="a"
+              href={latestNotification.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              maw="100%"
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              <NotificationSummary notification={latestNotification} />
+            </Box>
+          ) : (
+            <NotificationSummary notification={latestNotification} />
+          )
+        ) : (
+          <Text size="sm" c="dimmed">
+            {t("noItems")}
+          </Text>
+        )}
+      </Center>
+    );
+  }
 
   return (
     <ScrollArea className="scroll-area-w100" w="100%" p="sm">
@@ -79,6 +112,23 @@ export default function NotificationsWidget({ options, integrationIds }: WidgetC
     </ScrollArea>
   );
 }
+
+const NotificationSummary = ({
+  notification,
+}: {
+  notification: {
+    title: string | null;
+    body: string;
+    time: Date;
+  };
+}) => (
+  <Stack align="center" gap={4} maw="100%">
+    <Text fw={700} size="lg" lineClamp={1} maw="100%">
+      {notification.title ?? notification.body}
+    </Text>
+    <InfoDisplay date={notification.time} />
+  </Stack>
+);
 
 const InfoDisplay = ({ date }: { date: Date }) => {
   const timeAgo = useTimeAgo(date, 30000); // update every 30sec

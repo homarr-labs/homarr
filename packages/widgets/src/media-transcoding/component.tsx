@@ -10,6 +10,7 @@ import type { TablerIcon } from "@homarr/ui";
 
 import { views } from ".";
 import { WidgetEmptyState } from "../common/empty-state";
+import { WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 import { HealthCheckStatus } from "./health-check-status";
 import { QueuePanel } from "./panels/queue.panel";
@@ -30,6 +31,7 @@ export default function MediaTranscodingWidget({
   integrationIds,
   options,
   width,
+  displayMode,
 }: WidgetComponentProps<"mediaTranscoding">) {
   const [queuePage, setQueuePage] = useState(1);
   const queuePageSize = 10;
@@ -44,6 +46,27 @@ export default function MediaTranscodingWidget({
   const t = useI18n("widget.mediaTranscoding");
 
   if (!transcodingData) return <WidgetEmptyState />;
+
+  if (displayMode === "mobileSummary") {
+    const summary =
+      options.defaultView === "workers"
+        ? { value: transcodingData.data.workers.length, label: t("tab.workers") }
+        : options.defaultView === "queue"
+          ? { value: transcodingData.data.queue.totalCount, label: t("tab.queue") }
+          : {
+              value: transcodingData.data.statistics.totalTranscodeCount,
+              label: t("panel.statistics.transcodesCount"),
+            };
+    const failedHealthChecks = transcodingData.data.statistics.failedHealthCheckCount;
+
+    return (
+      <WidgetMobileSummary
+        value={summary.value}
+        label={summary.label}
+        description={t(failedHealthChecks > 0 ? "healthCheck.status.unhealthy" : "healthCheck.status.healthy")}
+      />
+    );
+  }
 
   const totalQueuePages = Math.ceil((transcodingData.data.queue.totalCount || 1) / queuePageSize);
   const isTiny = width < 256;

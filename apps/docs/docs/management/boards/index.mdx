@@ -83,9 +83,13 @@ Changing the column count automatically adjusts item positions and sizes to fit 
 
 #### Mobile layout
 
-Mobile boards use an automatic, read-only layout with two columns. Items follow the visual order of the desktop layout and are limited to two columns wide and three rows high.
+Phones use an automatic, read-only layout with exactly two columns in both portrait and landscape. Tablets use this layout at widths up to 48em. Items follow the visual order of the desktop layout and are limited to two columns wide and three rows high.
 
-Categories and dynamic sections are not displayed as containers on mobile. Their items are included directly in the automatic grid, even when a category is collapsed on desktop. To rearrange, add, remove, or resize board items, open the board on a larger screen.
+Named categories and dynamic sections appear as lightweight headings and section shortcuts, but never as layout containers. Their items are included directly in the automatic grid, even when a category is collapsed on desktop. Layout and widget configuration stay locked on mobile; links, refresh actions, automations, and widget details remain interactive.
+
+App items use compact tiles. Widgets can opt into a compact summary, and larger widgets provide a full-screen detail view. Widgets farther down a long board are loaded shortly before they enter the viewport while their space is preserved with a skeleton.
+
+To rearrange, add, remove, resize, or configure board items, open the board on a larger screen.
 
 ### Background
 #### Background image URL

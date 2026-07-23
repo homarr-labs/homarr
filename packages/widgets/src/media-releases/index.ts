@@ -5,6 +5,12 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("mediaReleases", {
   icon: IconTicket,
+  mobile: {
+    width: 2,
+    height: 1,
+    supportsCompactSummary: true,
+    supportsDetailView: true,
+  },
   queryKey: [["widget", "mediaRelease"]],
   refetchInterval: null,
   createOptions() {

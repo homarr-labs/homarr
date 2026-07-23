@@ -26,6 +26,7 @@ import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
+import { WidgetMobileSummary } from "../../common/mobile-summary";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "../search-button.module.css";
@@ -35,7 +36,9 @@ export default function MediaServerWidget({
   isEditMode,
   options,
   width,
+  displayMode,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
+  const t = useScopedI18n("widget.mediaRequests-requestList");
   const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
     integrationIds,
     statuses:
@@ -47,6 +50,10 @@ export default function MediaServerWidget({
 
   if (!mediaRequests) return <WidgetEmptyState />;
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
+
+  if (displayMode === "mobileSummary") {
+    return <WidgetMobileSummary value={mediaRequests.length} label={t("name")} description={mediaRequests[0]?.name} />;
+  }
 
   return (
     <Box className={classes.searchRoot}>
