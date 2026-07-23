@@ -1,4 +1,5 @@
 import type { JSX, PropsWithChildren } from "react";
+import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { AppShellMain } from "@mantine/core";
 import { TRPCError } from "@trpc/server";
@@ -6,8 +7,10 @@ import { TRPCError } from "@trpc/server";
 import { auth } from "@homarr/auth/next";
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
+import { userAgent } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import { MobileBoardViewportProvider } from "~/components/board/use-mobile-board";
 import { MainHeader } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
 import { ClientShell } from "~/components/layout/shell";
@@ -61,28 +64,31 @@ export const createBoardLayout = <TParams extends Params>({
 
       throw error;
     });
-    const colorScheme = await getCurrentColorSchemeAsync();
+    const [colorScheme, requestHeaders] = await Promise.all([getCurrentColorSchemeAsync(), headers()]);
+    const initialIsMobile = userAgent(new Headers(requestHeaders)).device.type === "mobile";
 
     return (
-      <BoardProvider initialBoard={initialBoard}>
-        <BoardReadyProvider>
-          <EditModeProvider>
-            <BoardMantineProvider defaultColorScheme={colorScheme}>
-              <CustomCss />
-              <BoardTourWrapper hasSession={withTour && !!session}>
-                <ClientShell hasNavigation={false}>
-                  <MainHeader
-                    logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
-                    actions={headerActions}
-                    hasNavigation={false}
-                  />
-                  <AppShellMain>{children}</AppShellMain>
-                </ClientShell>
-              </BoardTourWrapper>
-            </BoardMantineProvider>
-          </EditModeProvider>
-        </BoardReadyProvider>
-      </BoardProvider>
+      <MobileBoardViewportProvider initialIsMobile={initialIsMobile}>
+        <BoardProvider initialBoard={initialBoard}>
+          <BoardReadyProvider>
+            <EditModeProvider>
+              <BoardMantineProvider defaultColorScheme={colorScheme}>
+                <CustomCss />
+                <BoardTourWrapper hasSession={withTour && !!session}>
+                  <ClientShell hasNavigation={false}>
+                    <MainHeader
+                      logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                      actions={headerActions}
+                      hasNavigation={false}
+                    />
+                    <AppShellMain>{children}</AppShellMain>
+                  </ClientShell>
+                </BoardTourWrapper>
+              </BoardMantineProvider>
+            </EditModeProvider>
+          </BoardReadyProvider>
+        </BoardProvider>
+      </MobileBoardViewportProvider>
     );
   };
 

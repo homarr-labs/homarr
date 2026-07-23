@@ -682,73 +682,147 @@ export const boardRouter = createTRPCRouter({
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
   }),
-  saveLayout: protectedProcedure.input(boardSaveLayoutSchema).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
+  saveLayout: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Set a board's desktop column count and remove legacy responsive layouts. Requires modify permission. REQUIRED: id (board ID), columnCount (1-24)",
+      },
+    })
+    .input(boardSaveLayoutSchema)
+    .output(z.void())
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
-    const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
-    const desktopLayout = board.layouts
-      .toSorted(
-        (layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint || layoutB.columnCount - layoutA.columnCount,
-      )
-      .at(0);
+      const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
+      const desktopLayout = board.layouts
+        .toSorted(
+          (layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint || layoutB.columnCount - layoutA.columnCount,
+        )
+        .at(0);
 
-    if (!desktopLayout) {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a layout" });
-    }
+      if (!desktopLayout) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a layout" });
+      }
 
-    if (desktopLayout.columnCount !== input.columnCount) {
-      const updatedBoardLayout = getUpdatedBoardLayout(board, {
-        previous: {
-          layoutId: desktopLayout.id,
-          columnCount: desktopLayout.columnCount,
+      const updatedBoardLayout =
+        desktopLayout.columnCount === input.columnCount
+          ? null
+          : getUpdatedBoardLayout(board, {
+              previous: {
+                layoutId: desktopLayout.id,
+                columnCount: desktopLayout.columnCount,
+              },
+              current: {
+                layoutId: desktopLayout.id,
+                columnCount: input.columnCount,
+              },
+            });
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            for (const itemSectionLayout of updatedBoardLayout?.itemSectionLayouts ?? []) {
+              await transaction
+                .update(schema.itemLayouts)
+                .set({
+                  height: itemSectionLayout.height,
+                  width: itemSectionLayout.width,
+                  xOffset: itemSectionLayout.xOffset,
+                  yOffset: itemSectionLayout.yOffset,
+                  sectionId: itemSectionLayout.sectionId,
+                })
+                .where(
+                  and(
+                    eq(schema.itemLayouts.itemId, itemSectionLayout.itemId),
+                    eq(schema.itemLayouts.layoutId, itemSectionLayout.layoutId),
+                  ),
+                );
+            }
+
+            for (const sectionLayout of updatedBoardLayout?.sectionLayouts ?? []) {
+              await transaction
+                .update(schema.sectionLayouts)
+                .set({
+                  height: sectionLayout.height,
+                  width: sectionLayout.width,
+                  xOffset: sectionLayout.xOffset,
+                  yOffset: sectionLayout.yOffset,
+                  parentSectionId: sectionLayout.parentSectionId,
+                })
+                .where(
+                  and(
+                    eq(schema.sectionLayouts.sectionId, sectionLayout.sectionId),
+                    eq(schema.sectionLayouts.layoutId, sectionLayout.layoutId),
+                  ),
+                );
+            }
+
+            await transaction
+              .update(schema.layouts)
+              .set({ name: "Base", columnCount: input.columnCount, breakpoint: 0 })
+              .where(eq(schema.layouts.id, desktopLayout.id));
+
+            await transaction
+              .delete(schema.layouts)
+              .where(and(eq(schema.layouts.boardId, board.id), not(eq(schema.layouts.id, desktopLayout.id))));
+          });
         },
-        current: {
-          layoutId: desktopLayout.id,
-          columnCount: input.columnCount,
+        handleSync(db) {
+          db.transaction((transaction) => {
+            for (const itemSectionLayout of updatedBoardLayout?.itemSectionLayouts ?? []) {
+              transaction
+                .update(itemLayouts)
+                .set({
+                  height: itemSectionLayout.height,
+                  width: itemSectionLayout.width,
+                  xOffset: itemSectionLayout.xOffset,
+                  yOffset: itemSectionLayout.yOffset,
+                  sectionId: itemSectionLayout.sectionId,
+                })
+                .where(
+                  and(
+                    eq(itemLayouts.itemId, itemSectionLayout.itemId),
+                    eq(itemLayouts.layoutId, itemSectionLayout.layoutId),
+                  ),
+                )
+                .run();
+            }
+
+            for (const sectionLayout of updatedBoardLayout?.sectionLayouts ?? []) {
+              transaction
+                .update(sectionLayouts)
+                .set({
+                  height: sectionLayout.height,
+                  width: sectionLayout.width,
+                  xOffset: sectionLayout.xOffset,
+                  yOffset: sectionLayout.yOffset,
+                  parentSectionId: sectionLayout.parentSectionId,
+                })
+                .where(
+                  and(
+                    eq(sectionLayouts.sectionId, sectionLayout.sectionId),
+                    eq(sectionLayouts.layoutId, sectionLayout.layoutId),
+                  ),
+                )
+                .run();
+            }
+
+            transaction
+              .update(layouts)
+              .set({ name: "Base", columnCount: input.columnCount, breakpoint: 0 })
+              .where(eq(layouts.id, desktopLayout.id))
+              .run();
+
+            transaction
+              .delete(layouts)
+              .where(and(eq(layouts.boardId, board.id), not(eq(layouts.id, desktopLayout.id))))
+              .run();
+          });
         },
       });
-
-      for (const itemSectionLayout of updatedBoardLayout.itemSectionLayouts) {
-        await ctx.db
-          .update(itemLayouts)
-          .set({
-            height: itemSectionLayout.height,
-            width: itemSectionLayout.width,
-            xOffset: itemSectionLayout.xOffset,
-            yOffset: itemSectionLayout.yOffset,
-            sectionId: itemSectionLayout.sectionId,
-          })
-          .where(
-            and(eq(itemLayouts.itemId, itemSectionLayout.itemId), eq(itemLayouts.layoutId, itemSectionLayout.layoutId)),
-          );
-      }
-
-      for (const sectionLayout of updatedBoardLayout.sectionLayouts) {
-        await ctx.db
-          .update(sectionLayouts)
-          .set({
-            height: sectionLayout.height,
-            width: sectionLayout.width,
-            xOffset: sectionLayout.xOffset,
-            yOffset: sectionLayout.yOffset,
-            parentSectionId: sectionLayout.parentSectionId,
-          })
-          .where(
-            and(
-              eq(sectionLayouts.sectionId, sectionLayout.sectionId),
-              eq(sectionLayouts.layoutId, sectionLayout.layoutId),
-            ),
-          );
-      }
-    }
-
-    await ctx.db
-      .update(layouts)
-      .set({ name: "Base", columnCount: input.columnCount, breakpoint: 0 })
-      .where(eq(layouts.id, desktopLayout.id));
-
-    await ctx.db.delete(layouts).where(and(eq(layouts.boardId, board.id), not(eq(layouts.id, desktopLayout.id))));
-  }),
+    }),
   savePartialBoardSettings: protectedProcedure
     .meta({
       openapi: { method: "PATCH", path: "/api/boards/{id}/settings", tags: ["boards"], protect: true },
