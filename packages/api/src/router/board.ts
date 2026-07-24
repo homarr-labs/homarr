@@ -29,13 +29,12 @@ import {
   sections,
   users,
 } from "@homarr/db/schema";
-import type { WidgetKind } from "@homarr/definitions";
+import type { SectionKind, WidgetKind } from "@homarr/definitions";
 import {
   emptySuperJSON,
   everyoneGroup,
   getPermissionsWithChildren,
   getPermissionsWithParents,
-  sectionKinds,
   widgetDefaultSizes,
   widgetKinds,
 } from "@homarr/definitions";
@@ -128,7 +127,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List all boards the current user can access. Returns id, name, logoImageUrl, isPublic, creator, isHome and isMobileHome flags",
+          "List all boards the current user can access. Returns id, name, logoImageUrl, isPublic, creator, isHome and isMobileHome flags and the sections of each board (id, kind, name and position). Use a section id as sectionId in board_addItem to place an item in a specific empty or category section",
       },
     })
     .query(async ({ ctx }) => {
@@ -175,6 +174,15 @@ export const boardRouter = createTRPCRouter({
               email: true,
             },
           },
+          sections: {
+            columns: {
+              id: true,
+              kind: true,
+              name: true,
+              xOffset: true,
+              yOffset: true,
+            },
+          },
           userPermissions: {
             where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
           },
@@ -199,6 +207,7 @@ export const boardRouter = createTRPCRouter({
       });
       return dbBoards.map((board) => ({
         ...board,
+        sections: board.sections.toSorted((sectionA, sectionB) => (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0)),
         isHome: currentUserWhenPresent?.homeBoardId === board.id,
         isMobileHome: currentUserWhenPresent?.mobileHomeBoardId === board.id,
       }));
@@ -1428,52 +1437,13 @@ export const boardRouter = createTRPCRouter({
       const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
       await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
     }),
-  getSections: protectedProcedure
-    .meta({
-      openapi: { method: "GET", path: "/api/boards/{boardId}/sections", tags: ["boards"], protect: true },
-      mcp: {
-        enabled: true,
-        description:
-          "List the sections of a board. Requires view access to the board. Provide boardId (from board_getAllBoards). Returns id, kind (empty, category or dynamic), name (only category sections are named) and position for each section. Use the id as sectionId in board_addItem to place an item in a specific section",
-      },
-    })
-    .input(z.object({ boardId: z.string() }))
-    .output(
-      z.array(
-        z.object({
-          id: z.string(),
-          kind: z.enum(sectionKinds),
-          name: z.string().nullable(),
-          xOffset: z.number().nullable(),
-          yOffset: z.number().nullable(),
-        }),
-      ),
-    )
-    .query(async ({ ctx, input }) => {
-      // Throws NOT_FOUND when the board does not exist
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "view");
-
-      const boardSections = await ctx.db.query.sections.findMany({
-        where: eq(sections.boardId, input.boardId),
-      });
-
-      return boardSections
-        .toSorted((sectionA, sectionB) => (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0))
-        .map((section) => ({
-          id: section.id,
-          kind: section.kind,
-          name: section.name,
-          xOffset: section.xOffset,
-          yOffset: section.yOffset,
-        }));
-    }),
   addItem: protectedProcedure
     .meta({
       openapi: { method: "POST", path: "/api/boards/items", tags: ["boards"], protect: true },
       mcp: {
         enabled: true,
         description:
-          "Add a widget/app item to a board at the next free grid position. Requires modify access to the board. Provide boardId (from board_getAllBoards), kind (widget type like 'app', 'weather', etc.), optional options map, optional integrationIds array (from integration_all or integration_search) and an optional sectionId (from board_getSections) to place the item in a specific empty or category section. Without sectionId the item is placed in the first empty section. Returns { itemId }",
+          "Add a widget/app item to a board at the next free grid position. Requires modify access to the board. Provide boardId (from board_getAllBoards), kind (widget type like 'app', 'weather', etc.), optional options map, optional integrationIds array (from integration_all or integration_search) and an optional sectionId (from the sections array of board_getAllBoards) to place the item in a specific empty or category section. Without sectionId the item is placed in the first empty section. Returns { itemId }",
       },
     })
     .input(addItemToBoardSchema)
@@ -1506,28 +1476,7 @@ export const boardRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
       }
 
-      const targetSection =
-        input.sectionId !== undefined
-          ? board.sections.find((section) => section.id === input.sectionId)
-          : board.sections
-              .filter((section) => section.kind === "empty")
-              .toSorted((sectionA, sectionB) => (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0))
-              .at(0);
-
-      if (!targetSection) {
-        throw new TRPCError(
-          input.sectionId !== undefined
-            ? { code: "NOT_FOUND", message: "Section not found on this board" }
-            : { code: "BAD_REQUEST", message: "Board has no empty section to place items in" },
-        );
-      }
-
-      if (targetSection.kind === "dynamic") {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Items can only be added to empty or category sections",
-        });
-      }
+      const targetSection = findTargetSectionOrThrow(board.sections, input.sectionId);
 
       const itemId = createId();
 
@@ -1626,6 +1575,44 @@ export const boardRouter = createTRPCRouter({
  * 8. serverSettings.homeBoardId
  * 9. show NOT_FOUND error
  */
+/**
+ * Determines the section a new item should be placed in.
+ * When a sectionId is provided the matching empty or category section is returned,
+ * otherwise the topmost empty section of the board is used.
+ * @param boardSections sections of the board the item is added to
+ * @param sectionId optional id of the section the item should be placed in
+ * @returns the section the item should be placed in
+ */
+const findTargetSectionOrThrow = <TSection extends { id: string; kind: SectionKind; yOffset: number | null }>(
+  boardSections: TSection[],
+  sectionId: string | undefined,
+): TSection => {
+  if (sectionId === undefined) {
+    const firstEmptySection = boardSections
+      .filter((section) => section.kind === "empty")
+      .toSorted((sectionA, sectionB) => (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0))
+      .at(0);
+
+    if (!firstEmptySection) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "Board has no empty section to place items in" });
+    }
+
+    return firstEmptySection;
+  }
+
+  const requestedSection = boardSections.find((section) => section.id === sectionId);
+
+  if (!requestedSection) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Section not found on this board" });
+  }
+
+  if (requestedSection.kind === "dynamic") {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Items can only be added to empty or category sections" });
+  }
+
+  return requestedSection;
+};
+
 const getHomeIdBoardAsync = async (
   db: Database,
   user: InferSelectModel<typeof users> | null,

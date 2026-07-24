@@ -1483,7 +1483,7 @@ describe("saveLayouts should save layout changes", () => {
   });
 });
 
-describe("getSections should return sections of a board", () => {
+describe("getAllBoards should include sections of the boards", () => {
   test("should return sections sorted by yOffset", async () => {
     // Arrange
     const db = createDb();
@@ -1500,29 +1500,18 @@ describe("getSections should return sections of a board", () => {
     });
 
     // Act
-    const result = await caller.getSections({ boardId });
+    const result = await caller.getAllBoards();
 
     // Assert
-    expect(result.length).toBe(2);
-    const firstSection = expectToBeDefined(result[0]);
+    const board = expectToBeDefined(result.find((currentBoard) => currentBoard.id === boardId));
+    expect(board.sections.length).toBe(2);
+    const firstSection = expectToBeDefined(board.sections[0]);
     expect(firstSection.id).toBe(sectionId);
     expect(firstSection.kind).toBe("empty");
-    const secondSection = expectToBeDefined(result[1]);
+    const secondSection = expectToBeDefined(board.sections[1]);
     expect(secondSection.id).toBe(categorySectionId);
     expect(secondSection.kind).toBe("category");
     expect(secondSection.name).toBe("First category");
-  });
-
-  test("should throw error when board not found", async () => {
-    // Arrange
-    const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
-
-    // Act
-    const actAsync = async () => await caller.getSections({ boardId: "nonExistentBoardId" });
-
-    // Assert
-    await expect(actAsync()).rejects.toThrowError("Board not found");
   });
 });
 

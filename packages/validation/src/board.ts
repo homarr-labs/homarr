@@ -5,6 +5,7 @@ import {
   backgroundImageRepeats,
   backgroundImageSizes,
   boardPermissions,
+  sectionKinds,
   widgetKinds,
 } from "@homarr/definitions";
 
@@ -100,6 +101,14 @@ const boardPermissionEntrySchema = z.object({
   permission: z.enum(boardPermissions),
 });
 
+export const boardSectionSummarySchema = z.object({
+  id: z.string(),
+  kind: z.enum(sectionKinds),
+  name: z.string().nullable(),
+  xOffset: z.number().nullable(),
+  yOffset: z.number().nullable(),
+});
+
 export const boardSummarySchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -113,6 +122,7 @@ export const boardSummarySchema = z.object({
       email: z.string().nullable(),
     })
     .nullable(),
+  sections: z.array(boardSectionSummarySchema),
   isHome: z.boolean(),
   isMobileHome: z.boolean(),
   userPermissions: z.array(boardPermissionEntrySchema),
