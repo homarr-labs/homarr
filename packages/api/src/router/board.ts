@@ -1434,7 +1434,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List the sections of a board. Returns id, kind (empty, category or dynamic), name (only category sections are named) and position for each section. Use the id as sectionId in board_addItem to place an item in a specific section",
+          "List the sections of a board. Requires view access to the board. Provide boardId (from board_getAllBoards). Returns id, kind (empty, category or dynamic), name (only category sections are named) and position for each section. Use the id as sectionId in board_addItem to place an item in a specific section",
       },
     })
     .input(z.object({ boardId: z.string() }))
@@ -1450,20 +1450,14 @@ export const boardRouter = createTRPCRouter({
       ),
     )
     .query(async ({ ctx, input }) => {
+      // Throws NOT_FOUND when the board does not exist
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "view");
 
-      const board = await ctx.db.query.boards.findFirst({
-        where: eq(boards.id, input.boardId),
-        with: {
-          sections: true,
-        },
+      const boardSections = await ctx.db.query.sections.findMany({
+        where: eq(sections.boardId, input.boardId),
       });
 
-      if (!board) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
-      }
-
-      return board.sections
+      return boardSections
         .toSorted((sectionA, sectionB) => (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0))
         .map((section) => ({
           id: section.id,
@@ -1479,7 +1473,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Add a widget/app item to a board at the next free grid position. Provide boardId (from board_getAllBoards), kind (widget type like 'app', 'weather', etc.), optional options map, optional integrationIds array and an optional sectionId (from board_getSections) to place the item in a specific empty or category section. Without sectionId the item is placed in the first empty section. Returns { itemId }",
+          "Add a widget/app item to a board at the next free grid position. Requires modify access to the board. Provide boardId (from board_getAllBoards), kind (widget type like 'app', 'weather', etc.), optional options map, optional integrationIds array (from integration_all or integration_search) and an optional sectionId (from board_getSections) to place the item in a specific empty or category section. Without sectionId the item is placed in the first empty section. Returns { itemId }",
       },
     })
     .input(addItemToBoardSchema)
@@ -1512,16 +1506,17 @@ export const boardRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
       }
 
-      const targetSection = input.sectionId
-        ? board.sections.find((section) => section.id === input.sectionId)
-        : board.sections
-            .filter((section) => section.kind === "empty")
-            .toSorted((sectionA, sectionB) => (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0))
-            .at(0);
+      const targetSection =
+        input.sectionId !== undefined
+          ? board.sections.find((section) => section.id === input.sectionId)
+          : board.sections
+              .filter((section) => section.kind === "empty")
+              .toSorted((sectionA, sectionB) => (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0))
+              .at(0);
 
       if (!targetSection) {
         throw new TRPCError(
-          input.sectionId
+          input.sectionId !== undefined
             ? { code: "NOT_FOUND", message: "Section not found on this board" }
             : { code: "BAD_REQUEST", message: "Board has no empty section to place items in" },
         );

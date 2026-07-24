@@ -1588,6 +1588,24 @@ describe("addItem should add item to board", () => {
     await expect(actAsync()).rejects.toThrowError("Section not found on this board");
   });
 
+  test("should throw error when section id is an empty string", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId } = await createFullBoardAsync(db, "board-for-add-item-empty-section-id");
+
+    // Act
+    const actAsync = async () => await caller.addItem({ boardId, kind: "clock", sectionId: "" });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError();
+    const boardItems = await db.query.items.findMany({
+      where: eq(items.boardId, boardId),
+    });
+    // Only the item created by createFullBoardAsync should exist
+    expect(boardItems.length).toBe(1);
+  });
+
   test("should throw error when section is a dynamic section", async () => {
     // Arrange
     const db = createDb();
