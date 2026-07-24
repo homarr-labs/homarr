@@ -101,7 +101,7 @@ export const homeRouter = createTRPCRouter({
       });
     }
 
-    if (ctx.session?.user) {
+    if (ctx.session?.user.permissions.includes("board-modify-all")) {
       statistics.push({
         titleKey: "app",
         subtitleKey: "resources",

@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "crwdns44:0crwdne44:0"
       },
+      "enableRightClickOnWidgets": {
+        "label": "crwdns6095:0crwdne6095:0",
+        "description": "crwdns6097:0crwdne6097:0"
+      },
       "defaultSearchEngine": {
         "label": "crwdns2694:0crwdne2694:0"
       },
@@ -862,7 +866,7 @@
       "created": "crwdns5553:0{name}crwdne5553:0",
       "updated": "crwdns5555:0{name}crwdne5555:0",
       "deleted": "crwdns5557:0{name}crwdne5557:0",
-      "imported": "crwdns5559:0crwdne5559:0",
+      "imported": "crwdns6079:0crwdne6079:0",
       "aiPromptCopied": "crwdns5561:0crwdne5561:0",
       "aiPromptDescription": "crwdns5563:0crwdne5563:0",
       "aiPromptCopy": "crwdns5565:0crwdne5565:0",
@@ -1285,6 +1289,14 @@
           "label": "crwdns3618:0crwdne3618:0",
           "newLabel": "crwdns3620:0crwdne3620:0"
         },
+        "patchmonApiKey": {
+          "label": "crwdns5859:0crwdne5859:0",
+          "newLabel": "crwdns5861:0crwdne5861:0"
+        },
+        "patchmonApiSecret": {
+          "label": "crwdns5863:0crwdne5863:0",
+          "newLabel": "crwdns5865:0crwdne5865:0"
+        },
         "githubAppId": {
           "label": "crwdns3676:0crwdne3676:0",
           "newLabel": "crwdns3678:0crwdne3678:0"
@@ -1328,9 +1340,21 @@
         }
       }
     },
+    "traefik": {
+      "name": "crwdns5753:0crwdne5753:0",
+      "description": "crwdns5755:0crwdne5755:0"
+    },
     "paperlessNgx": {
       "name": "crwdns5003:0crwdne5003:0",
       "description": "crwdns5005:0crwdne5005:0"
+    },
+    "patchmon": {
+      "name": "crwdns5867:0crwdne5867:0",
+      "description": "crwdns5869:0crwdne5869:0"
+    },
+    "bazarr": {
+      "name": "crwdns5799:0crwdne5799:0",
+      "description": "crwdns5801:0crwdne5801:0"
     }
   },
   "media": {
@@ -1602,6 +1626,12 @@
         "refresh": "crwdns5739:0crwdne5739:0",
         "options": "crwdns5709:0crwdne5709:0",
         "actions": "crwdns5711:0crwdne5711:0"
+      },
+      "status": {
+        "success": "crwdns6049:0crwdne6049:0",
+        "error": "crwdns6051:0crwdne6051:0",
+        "loading": "crwdns6053:0crwdne6053:0",
+        "idle": "crwdns6055:0crwdne6055:0"
       }
     },
     "create": {
@@ -1875,6 +1905,16 @@
         "customDateFormat": {
           "label": "crwdns2726:0crwdne2726:0",
           "description": "crwdns2728:0crwdne2728:0"
+        },
+        "showWeather": {
+          "label": "crwdns6113:0crwdne6113:0",
+          "description": "crwdns6115:0crwdne6115:0"
+        },
+        "weatherLocation": {
+          "label": "crwdns6117:0crwdne6117:0"
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": "crwdns6119:0crwdne6119:0"
         }
       }
     },
@@ -1936,6 +1976,8 @@
         "clear": "crwdns884:0crwdne884:0",
         "heading": "crwdns886:0{level}crwdne886:0",
         "align": "crwdns888:0{position}crwdne888:0",
+        "directionLtr": "crwdns6043:0crwdne6043:0",
+        "directionRtl": "crwdns6045:0crwdne6045:0",
         "blockquote": "crwdns890:0crwdne890:0",
         "horizontalLine": "crwdns892:0crwdne892:0",
         "bulletList": "crwdns894:0crwdne894:0",
@@ -2225,7 +2267,8 @@
         "sunrise": "crwdns2712:0crwdne2712:0",
         "sunset": "crwdns2714:0crwdne2714:0",
         "maxWindSpeed": "crwdns3772:0{maxWindSpeed}crwdnd3772:0{unit}crwdne3772:0",
-        "maxWindGusts": "crwdns3774:0{maxWindGusts}crwdnd3774:0{unit}crwdne3774:0"
+        "maxWindGusts": "crwdns3774:0{maxWindGusts}crwdnd3774:0{unit}crwdne3774:0",
+        "humidity": "crwdns6111:0{humidity}crwdne6111:0"
       },
       "kind": {
         "clear": "crwdns1032:0crwdne1032:0",
@@ -2689,6 +2732,11 @@
         "user": "crwdns2476:0crwdne2476:0",
         "name": "crwdns2478:0crwdne2478:0",
         "id": "crwdns2480:0crwdne2480:0",
+        "status": "crwdns6085:0crwdne6085:0",
+        "directPlay": "crwdns6087:0crwdne6087:0",
+        "transcoding": "crwdns6089:0crwdne6089:0",
+        "paused": "crwdns6091:0crwdne6091:0",
+        "remaining": "crwdns6093:0{minutes}crwdne6093:0",
         "metadata": {
           "title": "crwdns3744:0crwdne3744:0",
           "video": {
@@ -2754,6 +2802,193 @@
         "internalServerError": "crwdns5055:0crwdne5055:0"
       }
     },
+    "patchmon": {
+      "name": "crwdns5871:0crwdne5871:0",
+      "description": "crwdns5873:0crwdne5873:0",
+      "title": "crwdns5875:0crwdne5875:0",
+      "totalHosts": "crwdns5877:0crwdne5877:0",
+      "hostsNeedingUpdates": "crwdns5879:0crwdne5879:0",
+      "securityUpdates": "crwdns5881:0crwdne5881:0",
+      "upToDateHosts": "crwdns5883:0crwdne5883:0",
+      "hostsWithSecurityUpdates": "crwdns5885:0crwdne5885:0",
+      "recentUpdates24h": "crwdns5887:0crwdne5887:0",
+      "totalOutdatedPackages": "crwdns5889:0crwdne5889:0",
+      "totalRepos": "crwdns5891:0crwdne5891:0",
+      "osDistribution": "crwdns5893:0crwdne5893:0",
+      "compliance": "crwdns5895:0crwdne5895:0",
+      "complianceRatio": "crwdns5897:0{upToDate}crwdnd5897:0{total}crwdne5897:0",
+      "lastUpdated": "crwdns5899:0{time}crwdne5899:0",
+      "option": {
+        "showTotalHosts": {
+          "label": "crwdns5901:0crwdne5901:0",
+          "description": "crwdns5903:0crwdne5903:0"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "crwdns5905:0crwdne5905:0",
+          "description": "crwdns5907:0crwdne5907:0"
+        },
+        "showSecurityUpdates": {
+          "label": "crwdns5909:0crwdne5909:0",
+          "description": "crwdns5911:0crwdne5911:0"
+        },
+        "showUpToDateHosts": {
+          "label": "crwdns5913:0crwdne5913:0",
+          "description": "crwdns5915:0crwdne5915:0"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "crwdns5917:0crwdne5917:0",
+          "description": "crwdns5919:0crwdne5919:0"
+        },
+        "showRecentUpdates24h": {
+          "label": "crwdns5921:0crwdne5921:0",
+          "description": "crwdns5923:0crwdne5923:0"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "crwdns5925:0crwdne5925:0",
+          "description": "crwdns5927:0crwdne5927:0"
+        },
+        "showTotalRepos": {
+          "label": "crwdns5929:0crwdne5929:0",
+          "description": "crwdns5931:0crwdne5931:0"
+        },
+        "enableThresholdColors": {
+          "label": "crwdns5933:0crwdne5933:0",
+          "description": "crwdns5935:0crwdne5935:0"
+        },
+        "useCustomThresholds": {
+          "label": "crwdns5937:0crwdne5937:0",
+          "description": "crwdns5939:0crwdne5939:0"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "crwdns5941:0crwdne5941:0",
+            "percent": "crwdns5943:0crwdne5943:0"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "crwdns5945:0crwdne5945:0",
+          "description": "crwdns5947:0crwdne5947:0"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "crwdns5949:0crwdne5949:0",
+          "description": "crwdns5951:0crwdne5951:0"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "crwdns5953:0crwdne5953:0",
+          "description": "crwdns5955:0crwdne5955:0"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "crwdns5957:0crwdne5957:0",
+          "description": "crwdns5959:0crwdne5959:0"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "crwdns5961:0crwdne5961:0",
+          "description": "crwdns5963:0crwdne5963:0"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "crwdns5965:0crwdne5965:0",
+          "description": "crwdns5967:0crwdne5967:0"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "crwdns5969:0crwdne5969:0",
+          "description": "crwdns5971:0crwdne5971:0"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "crwdns5973:0crwdne5973:0",
+          "description": "crwdns5975:0crwdne5975:0"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "crwdns5977:0crwdne5977:0",
+          "description": "crwdns5979:0crwdne5979:0"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "crwdns5981:0crwdne5981:0",
+          "description": "crwdns5983:0crwdne5983:0"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "crwdns5985:0crwdne5985:0",
+          "description": "crwdns5987:0crwdne5987:0"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "crwdns5989:0crwdne5989:0",
+          "description": "crwdns5991:0crwdne5991:0"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "crwdns5993:0crwdne5993:0",
+          "description": "crwdns5995:0crwdne5995:0"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "crwdns5997:0crwdne5997:0",
+          "description": "crwdns5999:0crwdne5999:0"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "crwdns6001:0crwdne6001:0",
+          "description": "crwdns6003:0crwdne6003:0"
+        },
+        "showOsDistribution": {
+          "label": "crwdns6005:0crwdne6005:0",
+          "description": "crwdns6007:0crwdne6007:0"
+        },
+        "osDistributionLimit": {
+          "label": "crwdns6009:0crwdne6009:0",
+          "description": "crwdns6011:0crwdne6011:0",
+          "option": {
+            "3": "crwdns6013:0crwdne6013:0",
+            "5": "crwdns6015:0crwdne6015:0",
+            "10": "crwdns6017:0crwdne6017:0",
+            "all": "crwdns6019:0crwdne6019:0"
+          }
+        },
+        "showOsVersion": {
+          "label": "crwdns6021:0crwdne6021:0",
+          "description": "crwdns6023:0crwdne6023:0"
+        },
+        "showComplianceHero": {
+          "label": "crwdns6025:0crwdne6025:0",
+          "description": "crwdns6027:0crwdne6027:0"
+        },
+        "osDisplayMode": {
+          "label": "crwdns6029:0crwdne6029:0",
+          "description": "crwdns6031:0crwdne6031:0",
+          "option": {
+            "bars": "crwdns6033:0crwdne6033:0",
+            "donut": "crwdns6035:0crwdne6035:0"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "crwdns6037:0crwdne6037:0"
+      }
+    },
+    "bazarr": {
+      "name": "crwdns5803:0crwdne5803:0",
+      "description": "crwdns5805:0crwdne5805:0",
+      "episodes": "crwdns5807:0crwdne5807:0",
+      "movies": "crwdns5809:0crwdne5809:0",
+      "providers": "crwdns5811:0crwdne5811:0",
+      "status": "crwdns5813:0crwdne5813:0",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "crwdns5815:0crwdne5815:0",
+          "description": "crwdns5817:0crwdne5817:0"
+        },
+        "showMissingMovies": {
+          "label": "crwdns5819:0crwdne5819:0",
+          "description": "crwdns5821:0crwdne5821:0"
+        },
+        "showProviderIssues": {
+          "label": "crwdns5823:0crwdne5823:0",
+          "description": "crwdns5825:0crwdne5825:0"
+        },
+        "showHealthIssues": {
+          "label": "crwdns5827:0crwdne5827:0",
+          "description": "crwdns5829:0crwdne5829:0"
+        }
+      },
+      "error": {
+        "internalServerError": "crwdns5831:0crwdne5831:0"
+      }
+    },
     "immich-serverStats": {
       "name": "crwdns3880:0crwdne3880:0",
       "description": "crwdns3882:0crwdne3882:0",
@@ -2782,10 +3017,11 @@
     },
     "immich-albumCarousel": {
       "name": "crwdns3908:0crwdne3908:0",
+      "allPhotos": "crwdns6103:0crwdne6103:0",
       "option": {
         "albumId": {
           "label": "crwdns5715:0crwdne5715:0",
-          "description": "crwdns5717:0crwdne5717:0"
+          "description": "crwdns6105:0crwdne6105:0"
         },
         "rotationIntervalSeconds": {
           "label": "crwdns3914:0crwdne3914:0",
@@ -2800,9 +3036,8 @@
           "description": "crwdns5721:0crwdne5721:0"
         }
       },
-      "description": "crwdns3922:0crwdne3922:0",
-      "noAlbumSelected": "crwdns3924:0crwdne3924:0",
-      "noPhotos": "crwdns3926:0crwdne3926:0"
+      "description": "crwdns6107:0crwdne6107:0",
+      "noPhotos": "crwdns6109:0crwdne6109:0"
     },
     "downloads": {
       "name": "crwdns1170:0crwdne1170:0",
@@ -2986,6 +3221,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "crwdns1306:0crwdne1306:0"
+        },
+        "statusFilter": {
+          "label": "crwdns6081:0crwdne6081:0"
+        },
+        "recentDays": {
+          "label": "crwdns6083:0crwdne6083:0"
         }
       },
       "pending": {
@@ -3092,6 +3333,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "crwdns5833:0crwdne5833:0",
+      "description": "crwdns5835:0crwdne5835:0",
+      "option": {
+        "showMissing": {
+          "label": "crwdns5837:0crwdne5837:0"
+        },
+        "showQueued": {
+          "label": "crwdns5839:0crwdne5839:0"
+        },
+        "pageSize": {
+          "label": "crwdns5841:0crwdne5841:0"
+        }
+      },
+      "tab": {
+        "missing": "crwdns5843:0crwdne5843:0",
+        "queued": "crwdns5845:0crwdne5845:0"
+      },
+      "type": {
+        "movie": "crwdns5847:0crwdne5847:0",
+        "episode": "crwdns5849:0crwdne5849:0"
+      },
+      "empty": {
+        "missing": "crwdns5851:0crwdne5851:0",
+        "queued": "crwdns5853:0crwdne5853:0",
+        "noTabsEnabled": "crwdns5855:0crwdne5855:0"
+      },
+      "timeLeft": "crwdns5857:0crwdne5857:0"
     },
     "rssFeed": {
       "name": "crwdns1352:0crwdne1352:0",
@@ -3336,7 +3606,11 @@
       "name": "crwdns3476:0crwdne3476:0",
       "description": "crwdns3478:0crwdne3478:0",
       "noItems": "crwdns3480:0crwdne3480:0",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": "crwdns5757:0crwdne5757:0"
+        }
+      }
     },
     "speedtestTracker": {
       "name": "crwdns4014:0crwdne4014:0",
@@ -3415,6 +3689,40 @@
       },
       "error": {
         "internalServerError": "crwdns5095:0crwdne5095:0"
+      }
+    },
+    "traefik": {
+      "name": "crwdns5759:0crwdne5759:0",
+      "description": "crwdns5761:0crwdne5761:0",
+      "option": {
+        "showTcp": {
+          "label": "crwdns5763:0crwdne5763:0"
+        },
+        "showUdp": {
+          "label": "crwdns5765:0crwdne5765:0"
+        },
+        "showEntryPoints": {
+          "label": "crwdns5767:0crwdne5767:0"
+        }
+      },
+      "instances": "crwdns5769:0crwdne5769:0",
+      "versionUnknown": "crwdns5771:0crwdne5771:0",
+      "summary": {
+        "routers": "crwdns5773:0crwdne5773:0",
+        "entryPoints": "crwdns5775:0crwdne5775:0"
+      },
+      "resource": {
+        "routers": "crwdns5777:0crwdne5777:0",
+        "services": "crwdns5779:0crwdne5779:0",
+        "middlewares": "crwdns5781:0crwdne5781:0"
+      },
+      "status": {
+        "healthy": "crwdns5783:0crwdne5783:0",
+        "errors": "crwdns5785:0{count}crwdne5785:0",
+        "warnings": "crwdns5787:0{count}crwdne5787:0"
+      },
+      "error": {
+        "internalServerError": "crwdns5789:0crwdne5789:0"
       }
     },
     "audioStats": {
@@ -3783,14 +4091,19 @@
         },
         "disk": {
           "title": "crwdns4943:0crwdne4943:0",
-          "subtitle": "crwdns4945:0crwdne4945:0",
-          "series": "crwdns4947:0crwdne4947:0"
+          "subtitle": "crwdns6039:0crwdne6039:0",
+          "series": "crwdns6041:0crwdne6041:0"
         },
         "diskIO": {
           "title": "crwdns4949:0crwdne4949:0",
           "subtitle": "crwdns4951:0crwdne4951:0",
           "read": "crwdns4953:0crwdne4953:0",
           "write": "crwdns4955:0crwdne4955:0"
+        },
+        "storage": {
+          "title": "crwdns5793:0crwdne5793:0",
+          "subtitle": "crwdns5795:0crwdne5795:0",
+          "series": "crwdns5797:0crwdne5797:0"
         },
         "network": {
           "title": "crwdns4957:0crwdne4957:0",
@@ -4924,6 +5237,9 @@
     "title": "crwdns1892:0crwdne1892:0",
     "table": {
       "updated": "crwdns1894:0{when}crwdne1894:0",
+      "refresh": {
+        "lastUpdated": "crwdns6047:0{when}crwdne6047:0"
+      },
       "search": "crwdns3432:0{count}crwdne3432:0",
       "selected": "crwdns1898:0{selectCount}crwdnd1898:0{totalCount}crwdne1898:0",
       "footer": "crwdns3434:0{count}crwdne3434:0",
@@ -5649,6 +5965,14 @@
                 "children": {
                   "detail": {
                     "title": "crwdns4365:0crwdne4365:0"
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
+                "label": "crwdns6099:0crwdne6099:0",
+                "children": {
+                  "detail": {
+                    "title": "crwdns6101:0crwdne6101:0"
                   }
                 }
               },

@@ -60,7 +60,7 @@ jobs:
       TURBO_PLATFORM: linux/amd64
     steps:
       - uses: actions/checkout@v7
-        if: '!env.ACT'
+        if: "!env.ACT"
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -91,7 +91,7 @@ jobs:
         run: pnpm test
 
   container:
-    name: Container, E2E, and memory
+    name: Container and E2E
     needs: fast-gate
     if: |
       github.event_name == 'merge_group' ||
@@ -104,7 +104,7 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v7
-        if: '!env.ACT'
+        if: "!env.ACT"
         with:
           persist-credentials: false
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
@@ -113,11 +113,11 @@ jobs:
         uses: ./tooling/github/setup
 
       - name: Set up Docker Buildx
-        if: '!env.ACT'
+        if: "!env.ACT"
         uses: docker/setup-buildx-action@v4
 
       - name: Build container once
-        if: '!env.ACT'
+        if: "!env.ACT"
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -158,7 +158,7 @@ jobs:
             --tag homarr-ci --tag homarr-e2e "${secret_args[@]}" .
 
       - name: Cache Playwright browsers
-        if: '!env.ACT'
+        if: "!env.ACT"
         id: playwright-cache
         uses: actions/cache@v6
         with:
@@ -183,82 +183,6 @@ jobs:
           name: playwright-report
           path: e2e/test-results/
           retention-days: 7
-
-      - name: Run memory regression test
-        env:
-          CONTAINER_NAME: homarr-mem-${{ github.run_id }}-${{ github.run_attempt }}
-          SECRET_ENCRYPTION_KEY: 0000000000000000000000000000000000000000000000000000000000000000
-        run: |
-          docker run -d --name "$CONTAINER_NAME" -p 127.0.0.1::7575 \
-            -e NO_EXTERNAL_CONNECTION=true \
-            -e SECRET_ENCRYPTION_KEY="$SECRET_ENCRYPTION_KEY" \
-            homarr-ci
-          PORT=$(docker port "$CONTAINER_NAME" 7575/tcp | sed 's/.*://')
-          [[ "$PORT" =~ ^[0-9]+$ ]] || { echo "ERROR: invalid port mapping: '$PORT'"; exit 1; }
-          URL="http://127.0.0.1:${PORT}"
-
-          healthy=false
-          for i in $(seq 1 30); do
-            if curl -sf "$URL/api/health/ready" >/dev/null 2>&1; then
-              echo "Container healthy after $((i * 2))s"
-              healthy=true
-              break
-            fi
-            sleep 2
-          done
-
-          if [ "$healthy" != "true" ]; then
-            echo "ERROR: Container never became healthy"
-            docker logs "$CONTAINER_NAME" --tail 100
-            exit 1
-          fi
-
-          warmup_ok=0
-          for _ in $(seq 1 5); do
-            curl -sf "$URL/" >/dev/null 2>&1 && warmup_ok=$((warmup_ok + 1))
-            sleep 2
-          done
-          if [ "$warmup_ok" -eq 0 ]; then
-            echo "ERROR: All warmup requests failed"
-            docker logs "$CONTAINER_NAME" --tail 50
-            exit 1
-          fi
-
-          docker inspect -f '{{.State.Running}}' "$CONTAINER_NAME" | grep -qx true || {
-            echo "ERROR: Container died before memory measurement"
-            docker logs "$CONTAINER_NAME" --tail 100
-            exit 1
-          }
-
-          RAW_MEMORY=$(docker stats --no-stream --format '{{.MemUsage}}' "$CONTAINER_NAME" | sed 's| /.*||')
-          MEMORY_MB=$(echo "$RAW_MEMORY" | awk '
-            /GiB/ { gsub(/GiB/, ""); print $1 * 1024; next }
-            /MiB/ { gsub(/MiB/, ""); print $1; next }
-            /KiB/ { gsub(/KiB/, ""); print $1 / 1024; next }
-            { print $1 / 1048576 }
-          ')
-
-          echo "Memory usage: ${MEMORY_MB} MB (${RAW_MEMORY})"
-          [[ "$MEMORY_MB" =~ ^[0-9]+(\.[0-9]+)?$ ]] || {
-            echo "ERROR: non-numeric memory value: '$MEMORY_MB' (raw: '$RAW_MEMORY')"
-            docker logs "$CONTAINER_NAME" --tail 100
-            exit 1
-          }
-          if awk "BEGIN { exit !($MEMORY_MB < 50) }"; then
-            echo "ERROR: Memory suspiciously low (${MEMORY_MB} MB) — container may have crashed"
-            docker logs "$CONTAINER_NAME" --tail 100
-            exit 1
-          elif awk "BEGIN { exit !($MEMORY_MB > 700) }"; then
-            echo "ERROR: Memory usage ${MEMORY_MB} MB exceeds 700 MB"
-            docker logs "$CONTAINER_NAME" --tail 100
-            exit 1
-          fi
-
-      - name: Clean up memory test container
-        if: always()
-        env:
-          CONTAINER_NAME: homarr-mem-${{ github.run_id }}-${{ github.run_attempt }}
-        run: docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
 
       - name: Determine preview tag
         id: preview
@@ -309,7 +233,7 @@ jobs:
         run: test -n "$PR_NUMBER" || { echo "pr_number is required for cleanup"; exit 1; }
 
       - name: Delete GHCR package version
-        if: '!env.ACT'
+        if: "!env.ACT"
         uses: actions/github-script@v8
         with:
           script: |

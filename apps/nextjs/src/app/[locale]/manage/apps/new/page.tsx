@@ -10,7 +10,7 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 export default async function AppNewPage() {
   const session = await auth();
 
-  if (!session?.user.permissions.includes("app-create")) {
+  if (!session?.user.permissions.includes("board-modify-all") || !session?.user.permissions.includes("app-create")) {
     notFound();
   }
 

@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "핑에 아이콘 사용"
       },
+      "enableRightClickOnWidgets": {
+        "label": "위젯 우클릭 활성화",
+        "description": "위젯을 마우스 오른쪽 버튼으로 클릭할 때 Homarr 컨텍스트 메뉴를 표시합니다. 브라우저의 기본 메뉴를 사용하려면 비활성화합니다 (예: \"새 탭에서 링크 열기\")."
+      },
       "defaultSearchEngine": {
         "label": "기본 검색 엔진"
       },
@@ -893,34 +897,34 @@
     "page": {
       "list": {
         "title": "통합",
-        "search": "",
+        "search": "통합 검색",
         "noResults": {
-          "title": ""
+          "title": "아직 통합이 없습니다"
         }
       },
       "create": {
         "title": "새 {name} 통합",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "생성 완료",
+            "message": "통합 생성 완료"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "생성 실패",
+            "message": "통합 생성에 실패했습니다"
           }
         },
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "기존",
+              "label": "기존 앱 선택"
             },
             "new": {
               "title": "신규",
               "url": {
                 "label": "앱 URL",
-                "description": ""
+                "description": "대시보드에서 액세스할 때 앱이 열리는 URL"
               }
             }
           }
@@ -930,33 +934,33 @@
         "title": "{name} 통합 편집",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "변경 사항 적용 완료",
+            "message": "통합 저장 완료"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "변경 사항을 적용할 수 없습니다",
+            "message": "통합을 저장할 수 없었습니다"
           }
         },
         "app": {
           "action": {
             "add": "앱 연결",
             "remove": "연결 해제",
-            "select": ""
+            "select": "연결할 앱 선택"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "통합 삭제",
+        "message": "{name} 통합을 삭제하시겠습니까?",
         "notification": {
           "success": {
             "title": "삭제 성공",
-            "message": ""
+            "message": "통합 삭제 완료"
           },
           "error": {
             "title": "삭제 실패",
-            "message": ""
+            "message": "통합을 삭제할 수 없습니다"
           }
         }
       }
@@ -966,33 +970,33 @@
         "label": "이름"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "검색 엔진 생성",
+        "description": "\"{kind}\" 통합은 검색 엔진과 함께 사용할 수 있습니다. 검색 엔진을 자동 설정하려면 이 항목을 선택하십시오."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "연결된 앱"
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "앱 생성",
+        "description": "통합과 동일한 아이콘 및 이름을 가진 앱을 생성합니다. 아래 입력 필드를 비워두면 통합 URL이 있는 앱을 만들 수 있습니다."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "커스텀 앱 URL"
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "API 키 획득"
       }
     },
     "action": {
       "create": "새 통합"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "위젯 {count}개",
+      "noWidgets": "위젯 없음",
+      "detected": "Docker에서 탐지됨"
     },
     "category": {
       "dnsHole": "DNS",
@@ -1001,9 +1005,9 @@
       "mediaSearch": "검색",
       "mediaRelease": "릴리즈",
       "mediaRequest": "요청",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
+      "downloadClient": "다운로드",
+      "usenet": "유즈넷",
+      "torrent": "토렌트",
       "miscellaneous": "기타",
       "smartHomeServer": "스마트 홈",
       "indexerManager": "인덱서",
@@ -1131,7 +1135,7 @@
             "description": "",
             "content": {
               "action": "항목 보기",
-              "title": ""
+              "title": "PEM 인증서"
             }
           }
         },
@@ -1139,109 +1143,109 @@
           "title": "요청 오류",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "서버에 도달할 수 없습니다. 보통 호스트가 오프라인이거나 현재 네트워크에서 도달할 수 없다는 것을 의미합니다.",
+              "networkUnreachable": "네트워크에 접속할 수 없습니다. 인터넷 연결 또는 네트워크 설정을 확인하여 주십시오.",
+              "refused": "서버가 연결을 거부했습니다. 지정된 포트에서 실행되고 있지 않거나 요청을 거부하고 있을 수 있습니다.",
+              "reset": "서버에서 연결을 예기치 못하게 종료했습니다. 서버가 불안정하거나 재시작된 경우 발생할 수 있습니다."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "서버 주소를 찾을 수 없습니다. URL에 오타 또는 잘못된 도메인 이름을 지정했는지 확인해 주십시오.",
+              "timeout": "DNS 조회 시간이 초과되었습니다. 일시적인 문제일 수 있으므로 잠시 후 다시 시도해 주십시오.",
+              "noAnswer": "DNS 서버가 유효한 응답을 반환하지 않았습니다. 도메인이 존재할 수도 있지만 유효한 레코드가 없습니다."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "요청이 완료 전에 중단되었습니다. 사용자 작업 또는 시스템 시간 초과 때문일 수 있습니다.",
+              "timeout": "요청 완료에 너무 오래 걸려 시간이 초과되었습니다. 네트워크를 확인하거나 나중에 다시 시도하십시오."
             }
           }
         }
       },
-      "alertNotice": "",
+      "alertNotice": "연결이 정상적으로 이루어지면 저장 버튼이 활성화됩니다",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "연결 성공",
+          "message": "연결 설정에 성공했습니다"
         },
         "invalidUrl": {
           "title": "잘못된 URL",
-          "message": ""
+          "message": "URL이 유효하지 않습니다"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "자격 증명 없음",
+          "message": "자격 증명이 모두 제공되지 않았습니다"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "잘못된 자격 증명",
+          "message": "자격 증명이 올바르지 않습니다"
         },
         "commonError": {
           "title": "연결 실패",
-          "message": ""
+          "message": "연결 설정에 실패했습니다"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "잘못된 요청",
+          "message": "요청 형식 잘못됨"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "권한 없음",
+          "message": "자격 증명이 잘못되었을 수 있습니다"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "거부됨",
+          "message": "권한이 누락되었을 수 있습니다"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "찾을 수 없음",
+          "message": "URL 또는 경로가 잘못되었을 수 있습니다"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "내부 서버 오류",
+          "message": "서버에 오류가 발생했습니다"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "서비스 사용 불가",
+          "message": "현재 서버를 사용할 수 없습니다"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "연결 중단",
+          "message": "연결이 중단되었습니다"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "도메인 찾을 수 없음",
+          "message": "도메인을 찾을 수 없습니다"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "연결 거부됨",
+          "message": "연결이 거부되었습니다"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "유효하지 않은 JSON",
+          "message": "응답이 유효한 JSON이 아닙니다"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "잘못된 경로",
+          "message": "경로가 올바르지 않을 수 있습니다"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "정해진 시간 내 너무 많은 요청",
+          "message": "요청이 너무 많습니다. 대상 시스템에 한도가 설정되어 있거나 거절되었을 수 있습니다"
         }
       }
     },
     "secrets": {
       "title": "비밀 구문",
-      "lastUpdated": "",
+      "lastUpdated": "{date}에 마지막으로 업데이트됨",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "설정된 값 없음",
+        "tooltip": "이 필수 시크릿 값이 아직 설정되지 않았습니다"
       },
-      "secureNotice": "",
+      "secureNotice": "이 시크릿 값은 생성 후 열람할 수 없습니다",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "시크릿 값 초기화",
+        "message": "이 시크릿 값을 초기화하시겠습니까?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
+        "segmentTitle": "시크릿 값 없음",
         "text": ""
       },
       "kind": {
@@ -1284,6 +1288,14 @@
         "opnsenseApiSecret": {
           "label": "",
           "newLabel": "새 API 키(Secret)"
+        },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "",
+          "newLabel": ""
         },
         "githubAppId": {
           "label": "",
@@ -1328,7 +1340,19 @@
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
+      "name": "",
+      "description": ""
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
       "name": "",
       "description": ""
     }
@@ -1416,7 +1440,7 @@
       "header": "이름 또는 주제를 입력해 아이콘을 필터링하세요... Homarr가 {countIcons}에서 아이콘을 검색합니다.",
       "headerLoading": "",
       "noResults": "",
-      "error": ""
+      "error": "아이콘을 불러올 수 없습니다."
     },
     "colorScheme": {
       "options": {
@@ -1454,11 +1478,11 @@
       "placeholder": "하나 이상의 값 선택"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "값 추가",
+      "addLabel": "{value} 추가"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "값 선택",
       "badge": {
         "recommended": "추천"
       }
@@ -1468,7 +1492,7 @@
         "switchToDarkMode": "다크 모드로 전환",
         "switchToLightMode": "라이트 모드로 전환",
         "management": "관리",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "기본 설정",
         "logout": "로그아웃",
         "login": "로그인",
@@ -1508,19 +1532,19 @@
         "custom": {
           "passwordsDoNotMatch": "패스워드가 일치하지 않습니다",
           "passwordRequirements": "패스워드가 요구사항을 충족하지 않습니다",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "boardAlreadyExists": "이 이름을 가진 보드가 이미 존재합니다",
+          "invalidFileType": "잘못된 파일 유형, {expected}(으)로 예상",
+          "invalidFileName": "잘못된 파일명",
+          "fileTooLarge": "파일이 너무 큽니다. 최대 크기는 {maxSize}입니다",
+          "invalidConfiguration": "잘못된 설정",
+          "groupNameTaken": "이미 사용 중인 그룹 이름"
         }
       }
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1528,22 +1552,22 @@
     "dynamic": {
       "action": {
         "create": "새 동적 섹션",
-        "remove": ""
+        "remove": "동적 섹션 제거"
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "제목"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "사용자 지정 css 클래스"
         },
         "borderColor": {
-          "label": ""
+          "label": "테두리 색상"
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "동적 섹션 제거",
+        "message": "이 동적 섹션을 제거하시겠습니까? 항목은 상위 섹션의 동일한 위치로 이동합니다."
       }
     },
     "category": {
@@ -1554,31 +1578,31 @@
       },
       "action": {
         "create": "새 카테고리",
-        "edit": "",
-        "remove": "",
+        "edit": "카테고리 이름 변경",
+        "remove": "카테고리 제거",
         "moveUp": "위로 이동",
         "moveDown": "아래로 이동",
-        "createAbove": "",
-        "createBelow": "",
+        "createAbove": "위에 새 카테고리 생성",
+        "createBelow": "아래 새 카테고리 생성",
         "openAllInNewTabs": "탭에서 모두 열기"
       },
       "create": {
         "title": "새 카테고리",
-        "submit": ""
+        "submit": "카테고리 추가"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "카테고리 제거",
+        "message": "{name} 카테고리를 제거하시겠습니까?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "카테고리 이름 변경",
+        "submit": "카테고리 이름 변경"
       },
       "menu": {
         "label": {
           "create": "새 카테고리",
           "changePosition": "위치 변경",
-          "settings": ""
+          "settings": "설정"
         }
       },
       "openAllInNewTabs": {
@@ -1602,12 +1626,18 @@
         "refresh": "새로고침",
         "options": "옵션",
         "actions": "동작"
+      },
+      "status": {
+        "success": "확인",
+        "error": "오류",
+        "loading": "불러오는 중",
+        "idle": "대기"
       }
     },
     "create": {
-      "title": "",
-      "search": "",
-      "addToBoard": ""
+      "title": "추가할 항목을 선택",
+      "search": "아이템 필터",
+      "addToBoard": "보드에 추가"
     },
     "moveResize": {
       "title": "항목 이동 / 크기변경",
@@ -1875,6 +1905,16 @@
         "customDateFormat": {
           "label": "커스텀 날짜 형식",
           "description": "ISO 8601을 사용하여 날짜 형식 지정 (다른 옵션 무시)"
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1936,6 +1976,8 @@
         "clear": "서식 초기화",
         "heading": "제목 레벨 {level}",
         "align": "텍스트 정렬: {position}",
+        "directionLtr": "",
+        "directionRtl": "",
         "blockquote": "인용문",
         "horizontalLine": "가로선",
         "bulletList": "글머리 기호 목록",
@@ -2225,7 +2267,8 @@
         "sunrise": "일출",
         "sunset": "일몰",
         "maxWindSpeed": "최대 풍속: {maxWindSpeed}{unit}",
-        "maxWindGusts": "최대 순간 풍속: {maxWindGusts}{unit}"
+        "maxWindGusts": "최대 순간 풍속: {maxWindGusts}{unit}",
+        "humidity": ""
       },
       "kind": {
         "clear": "맑음",
@@ -2285,9 +2328,9 @@
           "label": "파일시스템 정보 표시"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "저장소 볼륨 표시",
+          "description": "선택한 모든 통합이 Synology일 때만 사용할 수 있습니다. 감지된 모든 저장소 볼륨을 표시하려면 비워두십시오.",
+          "placeholder": "저장소 볼륨 선택"
         },
         "defaultTab": {
           "label": "기본 탭"
@@ -2616,21 +2659,21 @@
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "query": "도시 / 우편번호",
+        "latitude": "위도",
+        "longitude": "경도",
+        "disabledTooltip": "도시 또는 우편번호를 입력하십시오",
+        "unknownLocation": "알 수 없는 위치",
         "search": "검색",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "도시",
+            "country": "국가",
+            "coordinates": "좌표",
+            "population": "인구"
           },
           "action": {
-            "select": ""
+            "select": "{city}, {countryCode} 선택"
           },
           "population": {
             "fallback": "알 수 없음"
@@ -2638,17 +2681,17 @@
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "통합 없음",
+        "description": "새 통합을 생성하려면 <here></here> 클릭"
       },
       "app": {
-        "noData": "",
-        "description": "",
-        "quickCreate": ""
+        "noData": "앱 없음",
+        "description": "새 앱을 생성하려면 <here></here> 클릭",
+        "quickCreate": "즉석 앱 생성"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "선택한 통합 없음",
+        "noData": "사용 가능한 통합 데이터 없음"
       },
       "option": {}
     },
@@ -2689,6 +2732,11 @@
         "user": "사용자",
         "name": "이름",
         "id": "아이디",
+        "status": "",
+        "directPlay": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
           "title": "너드 통계",
           "video": {
@@ -2754,54 +2802,241 @@
         "internalServerError": ""
       }
     },
-    "immich-serverStats": {
+    "patchmon": {
       "name": "",
       "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
       "option": {
-        "showUsers": {
+        "showTotalHosts": {
           "label": "",
           "description": ""
         },
-        "showPhotos": {
+        "showHostsNeedingUpdates": {
           "label": "",
           "description": ""
         },
-        "showVideos": {
+        "showSecurityUpdates": {
           "label": "",
           "description": ""
         },
-        "showStorage": {
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
           "label": "",
           "description": ""
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "immich-serverStats": {
+      "name": "Immich 서버 정보",
+      "description": "Immich 인스턴스에 대한 정보",
+      "option": {
+        "showUsers": {
+          "label": "사용자 표시",
+          "description": "인스턴스의 사용자 수 표시"
+        },
+        "showPhotos": {
+          "label": "사진 표시",
+          "description": "인스턴스의 사진 수 표시"
+        },
+        "showVideos": {
+          "label": "동영상 표시",
+          "description": "인스턴스의 동영상 수 표시"
+        },
+        "showStorage": {
+          "label": "저장소 표시",
+          "description": "사용하는 저장소 총량 표시"
+        }
+      },
+      "users": "사용자",
+      "photos": "사진",
+      "videos": "동영상",
+      "storage": "용량 사용"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Immich 앨범",
+      "allPhotos": "",
       "option": {
         "albumId": {
-          "label": "",
+          "label": "앨범",
           "description": ""
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "표시 간격 초",
+          "description": "앨범 사진이 매 X초마다 전환됩니다. 1 이상 3600 이하여야 합니다."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "사진 정보 표시",
+          "description": "슬라이드 쇼 하단에 사진 날짜와 현재 인덱스를 표시합니다"
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "사진 무작위 표시",
+          "description": "항상 같은 앨범 순서로 시작하는 대신 무작위 순서로 사진을 표시합니다."
         }
       },
       "description": "",
-      "noAlbumSelected": "",
       "noPhotos": ""
     },
     "downloads": {
@@ -2830,7 +3065,7 @@
           "label": "완료된 기타 항목 표시"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "이 임계값 이하의 완료된 토렌트 숨기기 (kiB/s)"
         },
         "categoryFilter": {
           "label": "필터링할 카테고리/라벨"
@@ -2932,20 +3167,20 @@
         "clients": {
           "modalTitle": "다운로드 클라이언트 목록",
           "pause": "모든 클라이언트/항목 정지",
-          "resume": ""
+          "resume": "모든 클라이언트/항목 재시작"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "클라이언트 정지",
+          "resume": "클라이언트 재시작"
         },
         "item": {
-          "pause": "",
-          "resume": "",
+          "pause": "항목 정지",
+          "resume": "항목 재시작",
           "delete": {
-            "title": "",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "title": "항목 삭제",
+            "modalTitle": "이 작업을 삭제하시겠습니까?",
+            "entry": "엔트리 삭제",
+            "entryAndFiles": "엔트리 및 파일 삭제"
           }
         }
       },
@@ -2986,6 +3221,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "새 탭에서 링크 열기"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -3092,6 +3333,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
     },
     "rssFeed": {
       "name": "",
@@ -3336,7 +3606,11 @@
       "name": "알림",
       "description": "통합에서 알림 기록 표시",
       "noItems": "표시할 알림이 없습니다.",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": "로고 숨기기"
+        }
+      }
     },
     "speedtestTracker": {
       "name": "",
@@ -3417,71 +3691,105 @@
         "internalServerError": ""
       }
     },
-    "audioStats": {
+    "traefik": {
       "name": "",
       "description": "",
       "option": {
-        "showArtists": {
-          "label": "",
-          "description": ""
+        "showTcp": {
+          "label": ""
         },
-        "showAlbums": {
-          "label": "",
-          "description": ""
+        "showUdp": {
+          "label": ""
         },
-        "showSongs": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
-        },
-        "showLibraryCount": {
-          "label": "",
-          "description": ""
-        },
-        "showAudiobooks": {
-          "label": "",
-          "description": ""
-        },
-        "showPodcasts": {
-          "label": "",
-          "description": ""
-        },
-        "showListeningTime": {
-          "label": "",
-          "description": ""
-        },
-        "showActiveSessions": {
-          "label": "",
-          "description": ""
-        },
-        "compactMode": {
-          "label": "",
-          "description": ""
+        "showEntryPoints": {
+          "label": ""
         }
       },
-      "artists": "",
-      "albums": "",
-      "songs": "",
-      "libraryCount": "",
-      "audiobooks": "",
-      "podcasts": "",
-      "listeningTime": "",
-      "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
       "error": {
         "internalServerError": ""
+      }
+    },
+    "audioStats": {
+      "name": "오디오 정보",
+      "description": "Navidrome 또는 Audiobookshelf의 라이브러리 및 재생 정보",
+      "option": {
+        "showArtists": {
+          "label": "아티스트 표시",
+          "description": "음악 라이브러리에 있는 아티스트 총 수를 표시 (Navidrome)"
+        },
+        "showAlbums": {
+          "label": "앨범 표시",
+          "description": "음악 라이브러리에 있는 앨범 총 수를 표시 (Navidrome)"
+        },
+        "showSongs": {
+          "label": "음원 표시",
+          "description": "음악 라이브러리에 있는 음원 총 수를 표시 (Navidrome)"
+        },
+        "showNowPlaying": {
+          "label": "현재 재생 중 표시",
+          "description": "현재 재생 중인 트랙을 표시 (Navidrome)"
+        },
+        "showNowPlayingList": {
+          "label": "현재 재생 목록 표시",
+          "description": "활성 스트림 수 대신 개별 트랙 표시 (Navidrome)"
+        },
+        "maxNowPlayingItems": {
+          "label": "최대 현재 재생 항목 수",
+          "description": "현재 재생 목록에 표시할 최대 트랙 수 (Navidrome)"
+        },
+        "showLibraryCount": {
+          "label": "라이브러리 수 표시",
+          "description": "인스턴스에 있는 라이브러리 수 표시 (Audiobookshelf)"
+        },
+        "showAudiobooks": {
+          "label": "오디오북 표시",
+          "description": "모든 라이브러리의 오디오북 총 수 표시 (Audiobookshelf)"
+        },
+        "showPodcasts": {
+          "label": "팟캐스트 표시",
+          "description": "모든 라이브러리의 팟캐스트 총 수 표시 (Audiobookshelf)"
+        },
+        "showListeningTime": {
+          "label": "청취 시간 표시",
+          "description": "총 청취 시간 표시 (Audiobookshelf)"
+        },
+        "showActiveSessions": {
+          "label": "활성 세션 표시",
+          "description": "현재 활성 재생 세션 총 수 표시 (Audiobookshelf)"
+        },
+        "compactMode": {
+          "label": "컴팩트 모드",
+          "description": "작은 크기 위젯에 적합한 더 작은 타일로 밀집된 레이아웃을 사용합니다"
+        }
+      },
+      "artists": "아티스트",
+      "albums": "앨범",
+      "songs": "음원",
+      "libraryCount": "라이브러리",
+      "audiobooks": "오디오북",
+      "podcasts": "팟캐스트",
+      "listeningTime": "청취 시간",
+      "activeSessions": "활성 세션",
+      "nowPlaying": "현재 재생 중",
+      "nowPlayingCount": "{count, plural, one {# 스트림} other {# 스트림}}",
+      "error": {
+        "internalServerError": "오디오 정보 가져오기 실패"
       }
     },
     "systemResources": {
@@ -3555,24 +3863,24 @@
       }
     },
     "customApi": {
-      "name": "",
-      "description": "",
+      "name": "사용자 지정 API",
+      "description": "사용자 지정 설정으로 외부 API 데이터를 표시합니다.",
       "option": {
         "definitionId": {
-          "label": ""
+          "label": "정의 ID"
         },
         "refreshInterval": {
-          "label": "",
-          "description": ""
+          "label": "새로고침 간격",
+          "description": "API에서 데이터를 다시 가져오는 빈도 (초 단위)"
         }
       },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
+      "noDefinition": "선택한 정의 없음",
+      "definitionNotFound": "위젯 정의를 찾을 수 없습니다. 삭제되었을 수 있습니다.",
+      "noDisplayOutput": "디스플레이 출력 없음",
+      "executeConfirm": "이 작업을 삭제하시겠습니까?",
+      "executing": "실행 중...",
+      "executeSuccess": "작업 실행 완료",
+      "executeFailed": "작업 실패. 위젯 설정을 확인하십시오."
     },
     "beszelSystemTable": {
       "name": "",
@@ -3792,6 +4100,11 @@
           "read": "",
           "write": ""
         },
+        "storage": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
+        },
         "network": {
           "title": "",
           "subtitle": "",
@@ -3815,11 +4128,11 @@
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "편집 모드 활성화됨",
+      "disabled": "편집 모드 비활성화됨"
     },
     "dimensions": {
-      "title": ""
+      "title": "차원 변경"
     }
   },
   "board": {
@@ -4195,15 +4508,15 @@
         "boards": "보드",
         "apps": "앱",
         "integrations": "통합",
-        "customWidgets": "",
-        "searchEngies": "",
-        "medias": "",
+        "customWidgets": "사용자 지정 위젯",
+        "searchEngies": "검색 엔진",
+        "medias": "미디어",
         "users": {
           "label": "사용자",
           "items": {
             "manage": "관리",
             "invites": "초대",
-            "groups": ""
+            "groups": "그룹"
           }
         },
         "tools": {
@@ -4223,9 +4536,9 @@
           "label": "도움말",
           "items": {
             "documentation": "문서",
-            "submitIssue": "",
+            "submitIssue": "이슈 제출",
             "discord": "커뮤니티 불화",
-            "sourceCode": ""
+            "sourceCode": "소스 코드"
           }
         },
         "about": "정보"
@@ -4237,66 +4550,66 @@
           "board": "보드",
           "user": "사용자",
           "invite": "초대",
-          "integration": "",
+          "integration": "통합",
           "app": "앱",
-          "group": "",
-          "searchEngine": "",
-          "media": ""
+          "group": "그룹",
+          "searchEngine": "검색 엔진",
+          "media": "미디어"
         },
         "statisticLabel": {
           "boards": "보드",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "리소스",
+          "authentication": "인증",
+          "authorization": "권한"
         },
         "heroBanner": {
           "title": "",
-          "subtitle": ""
+          "subtitle": "{app} 보드"
         }
       },
       "board": {
         "title": "보드",
         "action": {
           "new": {
-            "label": ""
+            "label": "새 보드"
           },
           "open": {
-            "label": ""
+            "label": "보드 열기"
           },
           "settings": {
             "label": "설정"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "홈 보드로 설정",
             "badge": {
               "label": "홈",
-              "tooltip": ""
+              "tooltip": "이 보드를 홈 보드로 표시합니다"
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "모바일 보드로 설정",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "모바일",
+              "tooltip": "이 보드를 모바일 보드로 표시합니다"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "보드 복사"
           },
           "delete": {
             "label": "영구 삭제",
             "confirm": {
               "title": "게시판 삭제",
-              "description": ""
+              "description": "{name} 보드를 삭제하시겠습니까?"
             }
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "이 보드는 공개 보드입니다",
+          "private": "이 보드는 개인 보드입니다"
         },
         "noResults": {
-          "title": ""
+          "title": "아직 보드가 없습니다"
         },
         "modal": {
           "createBoard": {
@@ -4309,40 +4622,40 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "모든 사용자의 미디어 포함"
       },
       "user": {
-        "back": "",
-        "fieldsDisabledExternalProvider": "",
+        "back": "사용자로 돌아가기",
+        "fieldsDisabledExternalProvider": "특정 필드는 외부 인증 제공자에 의해 관리되므로 비활성화됩니다.",
         "setting": {
           "general": {
             "title": "일반",
             "item": {
-              "language": "",
+              "language": "언어 & 지역",
               "board": {
-                "title": "",
+                "title": "홈 보드",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "일반",
+                  "mobile": "모바일"
                 }
               },
-              "search": "",
+              "search": "검색",
               "firstDayOfWeek": "요일별 요일",
               "accessibility": "접근성",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "온보딩 투어",
+                "description": "관리 에리어 또는 대시보드를 다음에 방문할 때 다시 볼 수 있도록 온보딩 투어를 재설정합니다.",
+                "reset": "온보딩 투어 재설정",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "투어 재설정",
+                  "message": "다음 방문 때 온보딩 투어를 표시합니다"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "완료",
+                  "notStarted": "시작하지 않음"
                 },
                 "name": {
-                  "management": "",
+                  "management": "관리",
                   "dashboard": "대시보드"
                 }
               }
@@ -4503,19 +4816,19 @@
             "status": {
               "title": "앱 상태",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "기본적으로 상태 활성화",
+                "description": "앱 항목을 추가할 때 상태 표시를 기본적으로 활성화합니다"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "상태 비활성화 강제",
+                "description": "모든 사용자에게 앱 상태 표시를 비활성화하며 활성화할 수 없습니다"
               }
             }
           },
           "user": {
-            "title": "",
+            "title": "사용자",
             "enableGravatar": {
-              "label": "",
+              "label": "Gravatar 활성화",
               "description": ""
             }
           },
@@ -4924,6 +5237,9 @@
     "title": "",
     "table": {
       "updated": "",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "",
       "selected": "",
       "footer": "",
@@ -5645,6 +5961,14 @@
                 }
               },
               "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {
