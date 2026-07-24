@@ -1483,6 +1483,134 @@ describe("saveLayouts should save layout changes", () => {
   });
 });
 
+describe("getSections should return sections of a board", () => {
+  test("should return sections sorted by yOffset", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId } = await createFullBoardAsync(db, "board-with-sections");
+    const categorySectionId = createId();
+    await db.insert(sections).values({
+      id: categorySectionId,
+      kind: "category",
+      name: "First category",
+      xOffset: 0,
+      yOffset: 1,
+      boardId,
+    });
+
+    // Act
+    const result = await caller.getSections({ boardId });
+
+    // Assert
+    expect(result.length).toBe(2);
+    const firstSection = expectToBeDefined(result[0]);
+    expect(firstSection.id).toBe(sectionId);
+    expect(firstSection.kind).toBe("empty");
+    const secondSection = expectToBeDefined(result[1]);
+    expect(secondSection.id).toBe(categorySectionId);
+    expect(secondSection.kind).toBe("category");
+    expect(secondSection.name).toBe("First category");
+  });
+
+  test("should throw error when board not found", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    // Act
+    const actAsync = async () => await caller.getSections({ boardId: "nonExistentBoardId" });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError("Board not found");
+  });
+});
+
+describe("addItem should add item to board", () => {
+  test("should place item in first empty section when no sectionId is provided", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId } = await createFullBoardAsync(db, "board-for-add-item");
+
+    // Act
+    const { itemId } = await caller.addItem({ boardId, kind: "clock" });
+
+    // Assert
+    const itemLayout = await db.query.itemLayouts.findFirst({
+      where: eq(itemLayouts.itemId, itemId),
+    });
+    const definedItemLayout = expectToBeDefined(itemLayout);
+    expect(definedItemLayout.sectionId).toBe(sectionId);
+    // The existing item of createFullBoardAsync occupies (0, 0), so the next free position is (1, 0)
+    expect(definedItemLayout.xOffset).toBe(1);
+    expect(definedItemLayout.yOffset).toBe(0);
+  });
+
+  test("should place item in the section provided through sectionId", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId } = await createFullBoardAsync(db, "board-for-add-item-section");
+    const categorySectionId = createId();
+    await db.insert(sections).values({
+      id: categorySectionId,
+      kind: "category",
+      name: "First category",
+      xOffset: 0,
+      yOffset: 1,
+      boardId,
+    });
+
+    // Act
+    const { itemId } = await caller.addItem({ boardId, kind: "clock", sectionId: categorySectionId });
+
+    // Assert
+    const itemLayout = await db.query.itemLayouts.findFirst({
+      where: eq(itemLayouts.itemId, itemId),
+    });
+    const definedItemLayout = expectToBeDefined(itemLayout);
+    expect(definedItemLayout.sectionId).toBe(categorySectionId);
+    expect(definedItemLayout.xOffset).toBe(0);
+    expect(definedItemLayout.yOffset).toBe(0);
+  });
+
+  test("should throw error when section does not exist on the board", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId } = await createFullBoardAsync(db, "board-for-add-item-invalid-section");
+
+    // Act
+    const actAsync = async () => await caller.addItem({ boardId, kind: "clock", sectionId: "nonExistentSectionId" });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError("Section not found on this board");
+  });
+
+  test("should throw error when section is a dynamic section", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId, layoutId } = await createFullBoardAsync(db, "board-for-add-item-dynamic-section");
+    const dynamicSectionId = await addDynamicSectionAsync(db, {
+      parentSectionId: sectionId,
+      boardId,
+      layoutId,
+      xOffset: 1,
+      yOffset: 0,
+      width: 2,
+      height: 2,
+    });
+
+    // Act
+    const actAsync = async () => await caller.addItem({ boardId, kind: "clock", sectionId: dynamicSectionId });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError("Items can only be added to empty or category sections");
+  });
+});
+
 const expectInputToBeFullBoardWithName = (
   input: RouterOutputs["board"]["getHomeBoard"],
   props: { name: string } & Awaited<ReturnType<typeof createFullBoardAsync>>,

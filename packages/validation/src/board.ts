@@ -124,4 +124,5 @@ export const addItemToBoardSchema = z.object({
   kind: zodEnumFromArray(widgetKinds),
   options: z.record(z.string(), z.unknown()).default({}),
   integrationIds: z.array(z.string()).default([]),
+  sectionId: z.string().optional(),
 });
