@@ -9,7 +9,7 @@ import { groupMembers, groups, users } from "@homarr/db/schema";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
 import { env } from "./env";
-import { extractProfileName } from "./providers/oidc/oidc-provider";
+import { extractProfileName, getProfileValueByPath } from "./providers/oidc/profile";
 
 const logger = createLogger({ module: "authEvents" });
 
@@ -30,15 +30,11 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
     if (!dbUser) throw new Error("User not found");
 
     const groupsKey = env.AUTH_OIDC_GROUPS_ATTRIBUTE;
+    const profileGroups = profile ? getProfileValueByPath(profile, groupsKey) : undefined;
     // Groups from oidc provider are provided from the profile, it's not typed.
-    if (
-      !env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT &&
-      profile &&
-      groupsKey in profile &&
-      Array.isArray(profile[groupsKey])
-    ) {
-      logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profile[groupsKey])}`);
-      await synchronizeGroupsWithExternalForUserAsync(db, user.id, profile[groupsKey] as string[]);
+    if (!env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT && Array.isArray(profileGroups)) {
+      logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profileGroups)}`);
+      await synchronizeGroupsWithExternalForUserAsync(db, user.id, profileGroups as string[]);
     }
 
     // In ldap-authroization we return the groups from ldap, it's not typed.

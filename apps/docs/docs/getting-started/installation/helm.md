@@ -398,9 +398,9 @@ All available values are listed on the [artifacthub](https://artifacthub.io/pack
 | env.AUTH_LOGOUT_REDIRECT_URL | string | `nil` | URL to redirect to after clicking logging out. |
 | env.AUTH_OIDC_AUTO_LOGIN | string | `"false"` | Automatically redirect to OIDC login |
 | env.AUTH_OIDC_CLIENT_NAME | string | `"OIDC"` | Display name of provider (in login screen) |
-| env.AUTH_OIDC_GROUPS_ATTRIBUTE | string | `"groups"` | Attribute used for groups (roles) claim |
+| env.AUTH_OIDC_GROUPS_ATTRIBUTE | string | `"groups"` | Attribute or dot-separated path used for groups (roles) claim |
 | env.AUTH_OIDC_ISSUER | string | `nil` | Issuer URI of OIDC provider without trailing slash (/) |
-| env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE | string | `nil` | Overwrite name attribute. By default, it will use preferred_username if it does not contain a @ and otherwise name. |
+| env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE | string | `nil` | Overwrite name attribute; dot-separated paths are supported. By default, it will use preferred_username if it does not contain a @ and otherwise name. |
 | env.AUTH_OIDC_SCOPE_OVERWRITE | string | `"openid email profile groups"` | Override the OIDC scopes |
 | env.AUTH_PROVIDERS | string | `"credentials"` | Enabled authentication methods. Multiple providers can be enabled with by separating them with , (ex. AUTH_PROVIDERS=credentials,oidc, it is highly recommended to just enable one provider). |
 | env.AUTH_SESSION_EXPIRY_TIME | string | `"30d"` | Time for the session to time out. Can be set as pure number, which will automatically be used in seconds, or followed by s, m, h or d for seconds, minutes, hours or days. (ex: "30m") |
