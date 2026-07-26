@@ -150,16 +150,57 @@ describe("BeszelIntegration session lifecycle", () => {
   test("re-authenticates once the stored token has expired", async () => {
     // Beszel replies 200 + empty list to an expired token instead of 401, so without an expiry
     // check the stale session would be reused forever. See homarr-labs/homarr#6470.
-    issuedToken = createToken(Math.floor(Date.now() / 1000) - 1);
-    const integration = createIntegration();
+    vi.useFakeTimers();
 
-    await integration.getSystemsAsync();
+    try {
+      const lifetimeSeconds = 7 * 24 * 60 * 60;
+      const issuedAt = new Date("2026-07-26T00:00:00.000Z");
+      vi.setSystemTime(issuedAt);
+      issuedToken = createToken(Math.floor(issuedAt.getTime() / 1000) + lifetimeSeconds);
+      const integration = createIntegration();
+
+      await integration.getSystemsAsync();
+      expect(authCount).toBe(1);
+
+      // Step past the token's lifetime, exactly as an idle Homarr instance would.
+      vi.setSystemTime(new Date(issuedAt.getTime() + (lifetimeSeconds + 1) * 1000));
+      issuedToken = createToken(Math.floor(Date.now() / 1000) + lifetimeSeconds);
+      await integration.getSystemsAsync();
+
+      expect(authCount).toBe(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  test("uses a short-lived token that is valid now but lapses inside the leeway window", async () => {
+    // The leeway exists to stop a token expiring mid-request; it must not reject a token that is
+    // still valid, or an instance with a short authToken.duration could never authenticate.
+    issuedToken = createToken(Math.floor(Date.now() / 1000) + 30);
+
+    await expect(createIntegration().getSystemsAsync()).resolves.toEqual([]);
     expect(authCount).toBe(1);
+    expect(store.get("session-store:test-beszel-session")?.ttlSeconds).toBeGreaterThan(0);
+  });
 
-    issuedToken = createToken(Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60);
-    await integration.getSystemsAsync();
+  test("fails loudly when Beszel issues an already-expired token instead of returning empty data", async () => {
+    issuedToken = createToken(Math.floor(Date.now() / 1000) - 600);
 
-    expect(authCount).toBe(2);
+    const caught = await createIntegration()
+      .getSystemsAsync()
+      .then(
+        () => null,
+        (error: unknown) => error,
+      );
+
+    // The integration base class wraps thrown errors, so assert against the cause chain.
+    const messages: string[] = [];
+    for (let error: unknown = caught; error instanceof Error; error = error.cause) messages.push(error.message);
+    expect(messages.join(" | ")).toMatch(/clock skew/i);
+
+    // The dead token must not be persisted, or it would be served to the next caller.
+    expect(store.has("session-store:test-beszel-session")).toBe(false);
+    expect(authCount).toBe(1);
   });
 
   test("does not store a ttl when the token carries no readable expiry", async () => {

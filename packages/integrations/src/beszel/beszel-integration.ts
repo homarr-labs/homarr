@@ -1,5 +1,6 @@
 import { ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import type { Response as UndiciResponse } from "undici";
 
@@ -164,11 +165,24 @@ export class BeszelIntegration extends Integration {
 
     const data = (await response.json()) as BeszelAuthResponse;
     const expiresAt = parseTokenExpiration(data.token) ?? undefined;
+
+    // A token that has already lapsed by the time it reaches us means our clock and Beszel's
+    // disagree by more than the token lifetime. Re-authenticating would only mint another dead
+    // token, and using this one would silently produce the empty responses this check exists to
+    // prevent — so fail loudly instead.
+    if (expiresAt !== undefined && expiresAt <= Date.now()) {
+      logger.warn("Beszel issued an already-expired token", { integrationId: this.integration.id, expiresAt });
+      throw new ErrorWithMetadata("Beszel issued an already-expired authentication token, check for clock skew", {
+        integrationId: this.integration.id,
+        expiresAt,
+      });
+    }
+
     const session: BeszelSession = { token: data.token, userId: data.record.id, expiresAt };
     // Give the stored entry the token's own lifetime, so the cache cannot outlive the credential
     // even if the session is never read again before it lapses.
-    const ttlSeconds = expiresAt === undefined ? undefined : Math.ceil((expiresAt - Date.now()) / 1000);
-    await this.sessionStore.setAsync(session, ttlSeconds !== undefined && ttlSeconds > 0 ? { ttlSeconds } : undefined);
+    const ttlSeconds = expiresAt === undefined ? undefined : Math.max(1, Math.ceil((expiresAt - Date.now()) / 1000));
+    await this.sessionStore.setAsync(session, ttlSeconds === undefined ? undefined : { ttlSeconds });
     logger.debug("Saved Beszel session", {
       integrationId: this.integration.id,
       userId: session.userId,
