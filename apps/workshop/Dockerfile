@@ -12,6 +12,7 @@ COPY apps/docs ./apps/docs
 COPY packages/custom-widgets ./packages/custom-widgets
 COPY packages/definitions ./packages/definitions
 COPY packages/workshop ./packages/workshop
+COPY scripts/build-workshop-validator.mjs ./scripts/build-workshop-validator.mjs
 COPY tooling/typescript ./tooling/typescript
 RUN pnpm config set store-dir /pnpm/store && pnpm install --filter @homarr/docs... --frozen-lockfile
 RUN pnpm build:workshop-validator

@@ -12,6 +12,7 @@ import {
   resolveSameOriginTarget,
   validateCustomWidgetUrl,
 } from "./network-policy";
+import { closeDispatcher } from "./request-dispatcher-lifecycle";
 import { parseResponseBody } from "./response";
 
 export {
@@ -30,7 +31,6 @@ export {
 
 export const MAX_REQUEST_BODY_BYTES = 10 * 1024;
 const REQUEST_TIMEOUT_MS = 10_000;
-const DISPATCHER_CLOSE_GRACE_MS = 1_000;
 const MAX_QUERY_REDIRECTS = 3;
 export const MAX_REQUEST_DURATION_MS = 45_000;
 const TIMEOUT_ERROR_CODES = new Set(["UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT", "UND_ERR_BODY_TIMEOUT"]);
@@ -211,60 +211,6 @@ async function performRequestWithinDeadline(
     }
     currentUrl = redirected;
   }
-}
-
-async function closeDispatcher(
-  dispatcher: ReturnType<typeof createPinnedAgent>,
-  deadlineSignal: AbortSignal,
-): Promise<boolean> {
-  const cleanupController = new AbortController();
-  const timeout = setTimeout(() => cleanupController.abort(), DISPATCHER_CLOSE_GRACE_MS);
-  try {
-    await abortable(dispatcher.close(), AbortSignal.any([deadlineSignal, cleanupController.signal]));
-    return true;
-  } catch (error) {
-    detachDispatcherDestroy(dispatcher);
-    if (cleanupController.signal.aborted && !deadlineSignal.aborted) return false;
-    throw error;
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
-function detachDispatcherDestroy(dispatcher: ReturnType<typeof createPinnedAgent>): void {
-  try {
-    void dispatcher.destroy().catch(() => undefined);
-  } catch {
-    // Cleanup is best effort after its bounded grace period.
-  }
-}
-
-function abortable<T>(operation: Promise<T>, signal: AbortSignal): Promise<T> {
-  if (signal.aborted) return Promise.reject(signal.reason ?? createAbortError());
-
-  return new Promise<T>((resolve, reject) => {
-    const onAbort = () => {
-      signal.removeEventListener("abort", onAbort);
-      reject(signal.reason ?? createAbortError());
-    };
-    signal.addEventListener("abort", onAbort, { once: true });
-    operation.then(
-      (value) => {
-        signal.removeEventListener("abort", onAbort);
-        resolve(value);
-      },
-      (error: unknown) => {
-        signal.removeEventListener("abort", onAbort);
-        reject(error);
-      },
-    );
-  });
-}
-
-function createAbortError(): Error {
-  const error = new Error("Operation aborted");
-  error.name = "AbortError";
-  return error;
 }
 
 export function isCustomWidgetRequestTimeoutError(error: unknown, ...signals: readonly AbortSignal[]): boolean {
