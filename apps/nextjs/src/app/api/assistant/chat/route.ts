@@ -22,9 +22,10 @@ import { extractMcpTools } from "../../mcp/_extract-tools";
 export const maxDuration = 60;
 
 const logger = createLogger({ module: "assistant" });
-const toolApprovalSecret = Buffer.from(
-  hkdfSync("sha256", Buffer.from(env.SECRET_ENCRYPTION_KEY, "hex"), "", "assistant-tool-approval", 32),
-).toString("base64url");
+const getToolApprovalSecret = () =>
+  Buffer.from(
+    hkdfSync("sha256", Buffer.from(env.SECRET_ENCRYPTION_KEY, "hex"), "", "assistant-tool-approval", 32),
+  ).toString("base64url");
 const safeStreamError = "The model endpoint stopped the response. Check its URL, model, and credentials.";
 
 const requestSchema = z.object({
@@ -243,7 +244,7 @@ export async function POST(request: Request) {
       timeout: { totalMs: 55_000, stepMs: 30_000, toolMs: 30_000 },
       maxRetries: 2,
       toolApproval,
-      experimental_toolApprovalSecret: toolApprovalSecret,
+      experimental_toolApprovalSecret: getToolApprovalSecret(),
       onError: ({ error }) => {
         logger.error("Assistant response stream failed", {
           error: error instanceof Error ? error.message : String(error),
