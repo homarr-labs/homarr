@@ -1,3 +1,5 @@
+import { hkdfSync } from "node:crypto";
+
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { ToolSet, UIMessage } from "ai";
 import { convertToModelMessages, jsonSchema, stepCountIs, streamText, tool } from "ai";
@@ -13,11 +15,17 @@ import { and, eq } from "@homarr/db";
 import { db } from "@homarr/db";
 import { assistantConfigurations, assistantThreads } from "@homarr/db/schema";
 
+import { browserToolContracts } from "~/components/assistant/assistant-tool-contracts";
+
 import { extractMcpTools } from "../../mcp/_extract-tools";
 
 export const maxDuration = 60;
 
 const logger = createLogger({ module: "assistant" });
+const toolApprovalSecret = Buffer.from(
+  hkdfSync("sha256", Buffer.from(env.SECRET_ENCRYPTION_KEY, "hex"), "", "assistant-tool-approval", 32),
+).toString("base64url");
+const safeStreamError = "The model endpoint stopped the response. Check its URL, model, and credentials.";
 
 const requestSchema = z.object({
   id: z.string().min(1).max(64),
@@ -44,26 +52,6 @@ const requestSchema = z.object({
     .refine((tools) => tools === undefined || Object.keys(tools).length <= 16)
     .optional(),
 });
-
-const browserToolDefinitions = {
-  navigate_to_route: {
-    description: "Navigate the current Homarr tab to a safe internal route.",
-    parameters: {
-      type: "object",
-      properties: { path: { type: "string", description: "An internal Homarr path beginning with /" } },
-      required: ["path"],
-      additionalProperties: false,
-    },
-  },
-  open_command_menu: {
-    description: "Open Homarr's command and search menu.",
-    parameters: { type: "object", properties: {}, additionalProperties: false },
-  },
-  open_media_request_search: {
-    description: "Open Homarr's media request search interface.",
-    parameters: { type: "object", properties: {}, additionalProperties: false },
-  },
-} as const;
 
 const assistantInstructions = `You are Homarr Assistant, embedded in the user's self-hosted Homarr dashboard.
 
@@ -164,11 +152,10 @@ export async function POST(request: Request) {
   const context = createTRPCContext({ headers: request.headers, session });
   const caller = mcpRouter.createCaller(context);
   const procedureTypes = getProcedureTypeMap();
+  const mcpTools = extractMcpTools();
 
   const homarrTools = Object.fromEntries(
-    extractMcpTools().map((mcpTool) => {
-      const procedurePath = mcpTool.pathInRouter.join(".");
-      const isMutation = procedureTypes.get(procedurePath) === "mutation";
+    mcpTools.map((mcpTool) => {
       return [
         mcpTool.name,
         tool({
@@ -176,7 +163,6 @@ export async function POST(request: Request) {
           inputSchema: jsonSchema(
             (mcpTool.inputSchema ?? { type: "object", properties: {} }) as Parameters<typeof jsonSchema>[0],
           ),
-          needsApproval: isMutation,
           execute: async (input) => {
             try {
               const procedure = mcpTool.pathInRouter.reduce<unknown>(
@@ -205,17 +191,24 @@ export async function POST(request: Request) {
       ];
     }),
   ) satisfies ToolSet;
+  const toolApproval = Object.fromEntries(
+    mcpTools.flatMap((mcpTool) =>
+      procedureTypes.get(mcpTool.pathInRouter.join(".")) === "mutation"
+        ? [[mcpTool.name, "user-approval" as const]]
+        : [],
+    ),
+  );
 
   const frontendTools = Object.fromEntries(
     Object.keys(parsed.data.tools ?? {}).flatMap((name) => {
-      if (!(name in browserToolDefinitions)) return [];
-      const definition = browserToolDefinitions[name as keyof typeof browserToolDefinitions];
+      if (!(name in browserToolContracts)) return [];
+      const definition = browserToolContracts[name as keyof typeof browserToolContracts];
       return [
         [
           name,
           tool({
             description: definition.description,
-            inputSchema: jsonSchema(definition.parameters as Parameters<typeof jsonSchema>[0]),
+            inputSchema: jsonSchema(z.toJSONSchema(definition.parameters) as Parameters<typeof jsonSchema>[0]),
           }),
         ] as const,
       ];
@@ -249,16 +242,29 @@ export async function POST(request: Request) {
       abortSignal: request.signal,
       timeout: { totalMs: 55_000, stepMs: 30_000, toolMs: 30_000 },
       maxRetries: 2,
-      experimental_toolApprovalSecret: env.SECRET_ENCRYPTION_KEY,
+      toolApproval,
+      experimental_toolApprovalSecret: toolApprovalSecret,
+      onError: ({ error }) => {
+        logger.error("Assistant response stream failed", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+      },
       onFinish: async () => {
-        await db
-          .update(assistantThreads)
-          .set({ modelId: configuration.modelId, updatedAt: new Date() })
-          .where(eq(assistantThreads.id, thread.id));
+        try {
+          await db
+            .update(assistantThreads)
+            .set({ modelId: configuration.modelId, updatedAt: new Date() })
+            .where(eq(assistantThreads.id, thread.id));
+        } catch (error) {
+          logger.error("Failed to update assistant conversation metadata", {
+            threadId: thread.id,
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
       },
     });
 
-    return result.toUIMessageStreamResponse();
+    return result.toUIMessageStreamResponse({ onError: () => safeStreamError });
   } catch {
     return Response.json(
       { error: "The configured model endpoint could not start this response. Check its URL, model, and credentials." },

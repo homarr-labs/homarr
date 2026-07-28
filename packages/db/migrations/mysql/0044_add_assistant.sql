@@ -23,9 +23,9 @@ CREATE TABLE `assistant_thread` (
 );
 --> statement-breakpoint
 CREATE TABLE `assistant_message` (
-	`id` varchar(64) NOT NULL,
+	`id` varchar(128) NOT NULL,
 	`thread_id` varchar(64) NOT NULL,
-	`parent_id` varchar(64),
+	`parent_id` varchar(128),
 	`format` varchar(64) DEFAULT 'ai-sdk/v6' NOT NULL,
 	`content` text DEFAULT ('{"json": {}}') NOT NULL,
 	`created_at` timestamp DEFAULT (now()) NOT NULL,
@@ -35,3 +35,7 @@ CREATE TABLE `assistant_message` (
 ALTER TABLE `assistant_thread` ADD CONSTRAINT `assistant_thread_user_id_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE cascade ON UPDATE no action;
 --> statement-breakpoint
 ALTER TABLE `assistant_message` ADD CONSTRAINT `assistant_message_thread_id_assistant_thread_id_fk` FOREIGN KEY (`thread_id`) REFERENCES `assistant_thread`(`id`) ON DELETE cascade ON UPDATE no action;
+--> statement-breakpoint
+CREATE INDEX `assistant_message__thread_id_created_at_idx` ON `assistant_message` (`thread_id`,`created_at`);
+--> statement-breakpoint
+CREATE INDEX `assistant_thread__user_id_updated_at_idx` ON `assistant_thread` (`user_id`,`updated_at`);

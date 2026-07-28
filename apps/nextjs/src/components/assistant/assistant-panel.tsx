@@ -13,6 +13,7 @@ import {
   useAuiState,
 } from "@assistant-ui/react";
 import { ActionIcon, Box, Button, Drawer, Group, ScrollArea, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import {
   IconArchive,
   IconArrowUp,
@@ -206,8 +207,17 @@ const ArchivedThreadListItem = () => {
 
 const ThreadHistory = ({ opened, onClose }: { opened: boolean; onClose: () => void }) => {
   const t = useScopedI18n("common.assistant");
+  const isMobile = useMediaQuery("(max-width: 48em)");
+  const hidden = isMobile && !opened;
   return (
-    <Stack className={classes.history} gap="xs" p="sm" data-opened={opened}>
+    <Stack
+      className={classes.history}
+      gap="xs"
+      p="sm"
+      data-opened={opened}
+      inert={hidden ? true : undefined}
+      aria-hidden={hidden || undefined}
+    >
       <Group gap="xs" wrap="nowrap">
         <ThreadListPrimitive.New asChild>
           <Button variant="light" leftSection={<IconPlus size={16} />} fullWidth onClick={onClose}>

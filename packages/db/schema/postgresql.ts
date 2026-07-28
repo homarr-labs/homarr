@@ -495,28 +495,40 @@ export const assistantConfigurations = pgTable("assistant_configuration", {
   updatedAt: timestamp().notNull().defaultNow(),
 });
 
-export const assistantThreads = pgTable("assistant_thread", {
-  id: varchar({ length: 64 }).notNull().primaryKey(),
-  userId: varchar({ length: 64 })
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  title: varchar({ length: 256 }),
-  modelId: varchar({ length: 256 }),
-  status: varchar({ length: 16 }).$type<"regular" | "archived">().notNull().default("regular"),
-  createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
-});
+export const assistantThreads = pgTable(
+  "assistant_thread",
+  {
+    id: varchar({ length: 64 }).notNull().primaryKey(),
+    userId: varchar({ length: 64 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    title: varchar({ length: 256 }),
+    modelId: varchar({ length: 256 }),
+    status: varchar({ length: 16 }).$type<"regular" | "archived">().notNull().default("regular"),
+    createdAt: timestamp().notNull().defaultNow(),
+    updatedAt: timestamp().notNull().defaultNow(),
+  },
+  (thread) => ({
+    userUpdatedAtIdx: index("assistant_thread__user_id_updated_at_idx").on(thread.userId, thread.updatedAt),
+  }),
+);
 
-export const assistantMessages = pgTable("assistant_message", {
-  id: varchar({ length: 64 }).notNull().primaryKey(),
-  threadId: varchar({ length: 64 })
-    .notNull()
-    .references(() => assistantThreads.id, { onDelete: "cascade" }),
-  parentId: varchar({ length: 64 }),
-  format: varchar({ length: 64 }).notNull().default("ai-sdk/v6"),
-  content: text().default(emptySuperJSON).notNull(),
-  createdAt: timestamp().notNull().defaultNow(),
-});
+export const assistantMessages = pgTable(
+  "assistant_message",
+  {
+    id: varchar({ length: 128 }).notNull().primaryKey(),
+    threadId: varchar({ length: 64 })
+      .notNull()
+      .references(() => assistantThreads.id, { onDelete: "cascade" }),
+    parentId: varchar({ length: 128 }),
+    format: varchar({ length: 64 }).notNull().default("ai-sdk/v6"),
+    content: text().default(emptySuperJSON).notNull(),
+    createdAt: timestamp().notNull().defaultNow(),
+  },
+  (message) => ({
+    threadCreatedAtIdx: index("assistant_message__thread_id_created_at_idx").on(message.threadId, message.createdAt),
+  }),
+);
 
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
   user: one(users, {

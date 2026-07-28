@@ -3,7 +3,6 @@
 import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useChat } from "@ai-sdk/react";
 import type { MessageFormatAdapter, RemoteThreadListAdapter, ThreadHistoryAdapter, Toolkit } from "@assistant-ui/react";
 import {
   AssistantRuntimeProvider,
@@ -13,12 +12,11 @@ import {
   useAuiState,
   useRemoteThreadListRuntime,
 } from "@assistant-ui/react";
-import { AssistantChatTransport, useAISDKRuntime } from "@assistant-ui/react-ai-sdk";
+import { AssistantChatTransport, useChatRuntime } from "@assistant-ui/react-ai-sdk";
 import { useHotkeys } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
 import type { UIMessage } from "ai";
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from "ai";
-import { z } from "zod/v4";
 
 import { clientApi, fetchApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -32,6 +30,7 @@ import {
 } from "@homarr/spotlight";
 
 import { AssistantPanel } from "./assistant-panel";
+import { browserToolContracts } from "./assistant-tool-contracts";
 
 interface AssistantContextValue {
   enabled: boolean;
@@ -178,22 +177,15 @@ const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapte
 });
 
 const AssistantThreadRuntime = () => {
-  const localThreadId = useAuiState((state) => state.threadListItem.id);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
-  const aui = useAui();
   const transport = useMemo(() => new AssistantChatTransport({ api: "/api/assistant/chat" }), []);
-  const chat = useChat<UIMessage>({
-    id: localThreadId,
+  const history = useMemo(() => createHistoryAdapter(threadId), [threadId]);
+
+  return useChatRuntime<UIMessage>({
     transport,
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
+    adapters: { history },
   });
-  const history = useMemo(() => createHistoryAdapter(threadId), [threadId]);
-  const runtime = useAISDKRuntime(chat, { adapters: { history } });
-
-  transport.setRuntime(runtime);
-  transport["__internal_setGetThreadListItem"](() => (aui.threadListItem.source ? aui.threadListItem() : undefined));
-
-  return runtime;
 };
 
 const AssistantRuntime = ({ children }: PropsWithChildren) => {
@@ -208,17 +200,20 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
       defineToolkit({
         navigate_to_route: {
           type: "frontend",
-          description:
-            "Navigate the current Homarr tab to a safe internal route. Only paths beginning with a single slash are accepted.",
-          parameters: z.object({
-            path: z.string().describe("An internal Homarr route, for example /manage/apps"),
-          }),
+          ...browserToolContracts.navigate_to_route,
           execute: async ({ path }) => {
-            if (!path.startsWith("/") || path.startsWith("//")) {
+            const target = URL.canParse(path, window.location.origin) ? new URL(path, window.location.origin) : null;
+            if (
+              !path.startsWith("/") ||
+              path.startsWith("/\\") ||
+              target === null ||
+              target.origin !== window.location.origin
+            ) {
               return { success: false, error: "Only internal Homarr paths are allowed." };
             }
-            router.push(path);
-            return { success: true, path };
+            const internalPath = `${target.pathname}${target.search}${target.hash}`;
+            router.push(internalPath);
+            return { success: true, path: internalPath };
           },
           renderText: {
             running: ({ args }) => `Opening ${args.path}…`,
@@ -227,8 +222,7 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
         },
         open_command_menu: {
           type: "frontend",
-          description: "Open Homarr's command and search menu.",
-          parameters: z.object({}),
+          ...browserToolContracts.open_command_menu,
           execute: async () => {
             openSpotlight();
             return { success: true };
@@ -237,8 +231,7 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
         },
         open_media_request_search: {
           type: "frontend",
-          description: "Open Homarr's media request search interface.",
-          parameters: z.object({}),
+          ...browserToolContracts.open_media_request_search,
           execute: async () => {
             openMediaRequestSearch();
             return { success: true };

@@ -1,7 +1,3 @@
-.drawer {
-  --assistant-panel-width: min(32rem, 100vw);
-}
-
 .content {
   height: 100dvh;
   background: var(--mantine-color-body);
