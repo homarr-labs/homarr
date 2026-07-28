@@ -28,7 +28,8 @@ export class OnboardingActions {
   }
 
   public async startOnboardingAsync(type: "scratch" | "before 1.0") {
-    await this.page.locator("button", { hasText: type }).click();
+    const name = type === "scratch" ? "Start from scratch" : "Import from Homarr before 1.0";
+    await this.page.getByRole("button", { name, exact: true }).click();
   }
 
   public async processUserStepAsync(input: { username: string; password: string; confirmPassword: string }) {

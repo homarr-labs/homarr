@@ -173,8 +173,8 @@ const addCustomWidgetToBoard = async (
   const customWidgetCard = picker.getByText(name, { exact: true }).locator("xpath=../../..");
   await customWidgetCard.hover();
   await customWidgetCard.getByRole("button", { name: "Add to board" }).click();
-  const addDialog = page.getByRole("dialog").last();
-  await expect(addDialog.getByText(name, { exact: true })).toBeVisible();
+  const addDialog = page.getByRole("dialog", { name: `Edit item - ${name}`, exact: true });
+  await expect(addDialog).toBeVisible();
   await addDialog.getByRole("button", { name: "Save changes", exact: true }).click();
   await page.getByRole("button", { name: "Save", exact: true }).click();
 };
@@ -233,9 +233,9 @@ describe("Custom JSX v2 workbench", () => {
       await expect(page.getByText('Widget "E2E Custom JSX v2" updated successfully.')).toBeVisible({ timeout: 15_000 });
 
       await addCustomWidgetToBoard(page, baseUrl, "E2E Custom JSX v2");
-      await expect(page.getByText("Widget definition not found")).not.toBeVisible();
       await expect(page.getByText("E2E Widget")).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText("42")).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText("Widget definition not found")).not.toBeVisible();
     } finally {
       await Promise.allSettled([browser?.close(), homarrContainer?.stop(), mockApi?.close()]);
     }
@@ -299,9 +299,9 @@ describe("Custom JSX v2 workbench", () => {
       await page.waitForURL("**/manage/custom-widgets/edit/**", { timeout: 15_000 });
 
       await addCustomWidgetToBoard(page, baseUrl, workshopWidgetName);
-      await expect(page.getByText("Widget definition not found")).not.toBeVisible();
       await expect(page.getByText("Workshop query result")).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText("73")).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText("Widget definition not found")).not.toBeVisible();
     } finally {
       await Promise.allSettled([browser?.close(), homarrContainer?.stop(), workshopMock?.close(), mockApi?.close()]);
     }
