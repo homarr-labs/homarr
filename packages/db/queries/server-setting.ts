@@ -4,8 +4,12 @@ import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
-import { eq } from "..";
+import { eq, sql } from "..";
+import { isMysql, isPostgresql } from "../collection";
+import type { HomarrDatabaseMysql, HomarrDatabasePostgresql } from "../driver";
 import { serverSettings } from "../schema";
+import { serverSettings as mysqlServerSettings } from "../schema/mysql";
+import { serverSettings as postgresqlServerSettings } from "../schema/postgresql";
 
 interface ExistingBoardLayout {
   boardId: string;
@@ -45,6 +49,7 @@ const getAutomaticMobileLayoutUpgradeDefaultAsync = async (db: Database) => {
 
 export const getServerSettingsAsync = async (db: Database) => {
   const settings = await db.query.serverSettings.findMany();
+  let parsedBoardSettings: Partial<ServerSettings["board"]> = {};
 
   const mergedSettings = defaultServerSettingsKeys.reduce((acc, settingKey) => {
     const setting = settings.find((candidate) => candidate.settingKey === settingKey);
@@ -55,17 +60,15 @@ export const getServerSettingsAsync = async (db: Database) => {
     }
 
     const persistedSettings = parse<Record<string, unknown>>(setting.value);
+    if (settingKey === "board") {
+      parsedBoardSettings = persistedSettings as Partial<ServerSettings["board"]>;
+    }
     acc[settingKey] = {
       ...defaultServerSettings[settingKey],
       ...persistedSettings,
     } as never;
     return acc;
   }, {} as ServerSettings);
-
-  const persistedBoardSettings = settings.find((setting) => setting.settingKey === "board");
-  const parsedBoardSettings = persistedBoardSettings
-    ? parse<Partial<ServerSettings["board"]>>(persistedBoardSettings.value)
-    : {};
 
   if (typeof parsedBoardSettings.enableAutomaticMobileLayout !== "boolean") {
     mergedSettings.board.enableAutomaticMobileLayout = await getAutomaticMobileLayoutUpgradeDefaultAsync(db);
@@ -129,4 +132,54 @@ export const insertServerSettingByKeyAsync = async <TKey extends keyof ServerSet
     settingKey: key,
     value: stringify(value),
   });
+};
+
+export const mergeServerSettingByKeyAsync = async <TKey extends keyof ServerSettings>(
+  db: Database,
+  key: TKey,
+  value: ServerSettings[TKey],
+  patch: Partial<ServerSettings[TKey]>,
+) => {
+  const serializedValue = stringify(value);
+  const serializedPatch = stringify(patch);
+
+  if (isMysql()) {
+    await (db as unknown as HomarrDatabaseMysql)
+      .insert(mysqlServerSettings)
+      .values({ settingKey: key, value: serializedValue })
+      .onDuplicateKeyUpdate({
+        set: {
+          value: sql`JSON_MERGE_PATCH(${mysqlServerSettings.value}, ${serializedPatch})`,
+        },
+      });
+    return;
+  }
+
+  if (isPostgresql()) {
+    await (db as unknown as HomarrDatabasePostgresql)
+      .insert(postgresqlServerSettings)
+      .values({ settingKey: key, value: serializedValue })
+      .onConflictDoUpdate({
+        target: postgresqlServerSettings.settingKey,
+        set: {
+          value: sql`jsonb_set(
+            ${postgresqlServerSettings.value}::jsonb,
+            '{json}',
+            (${postgresqlServerSettings.value}::jsonb -> 'json') || (${serializedPatch}::jsonb -> 'json'),
+            true
+          )::text`,
+        },
+      });
+    return;
+  }
+
+  await db
+    .insert(serverSettings)
+    .values({ settingKey: key, value: serializedValue })
+    .onConflictDoUpdate({
+      target: serverSettings.settingKey,
+      set: {
+        value: sql`json_patch(${serverSettings.value}, ${serializedPatch})`,
+      },
+    });
 };

@@ -12,9 +12,27 @@ export type BoardEditActionResult = boolean | void;
 export type BoardEditAction = () => BoardEditActionResult | Promise<BoardEditActionResult>;
 export type BoardEditActionEvent = CustomEvent<{ action: BoardEditAction }>;
 
+const reportBoardEditActionError = (error: unknown) => {
+  const reportError = (globalThis as { reportError?: (reportedError: unknown) => void }).reportError;
+  if (reportError) {
+    reportError(error);
+    return;
+  }
+
+  console.error("Board edit action failed", error);
+};
+
+const runBoardEditAction = (action: BoardEditAction) => {
+  try {
+    void Promise.resolve(action()).catch(reportBoardEditActionError);
+  } catch (error) {
+    reportBoardEditActionError(error);
+  }
+};
+
 export const requestBoardEditAction = (action: BoardEditAction) => {
   if (typeof document === "undefined") {
-    void action();
+    runBoardEditAction(action);
     return;
   }
 
@@ -24,7 +42,7 @@ export const requestBoardEditAction = (action: BoardEditAction) => {
   });
 
   if (document.dispatchEvent(event)) {
-    void action();
+    runBoardEditAction(action);
   }
 };
 

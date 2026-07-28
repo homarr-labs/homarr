@@ -1574,9 +1574,6 @@ importers:
       '@homarr/api':
         specifier: workspace:^0.1.0
         version: link:../api
-      '@homarr/settings':
-        specifier: workspace:^0.1.0
-        version: link:../settings
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -2575,9 +2572,6 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
-      '@homarr/boards':
-        specifier: workspace:^0.1.0
-        version: link:../boards
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common

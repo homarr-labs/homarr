@@ -2,7 +2,7 @@
 
 import { describe, expect, it, vi } from "vitest";
 
-import { getIntegrationQueryProvenance, settleIntegrationQueries } from "./settle-integrations";
+import { settleIntegrationQueries, settleIntegrationQueriesWithProvenance } from "./settle-integrations";
 
 const integrations = [
   { id: "first", name: "First", kind: "mock" },
@@ -77,18 +77,23 @@ describe("settleIntegrationQueries", () => {
   });
 });
 
-describe("getIntegrationQueryProvenance", () => {
-  it("counts dropped and stale integration results independently", () => {
-    expect(getIntegrationQueryProvenance(4, [{ isStale: false }, { isStale: true }, { isStale: true }])).toEqual({
-      failedIntegrationCount: 1,
-      staleIntegrationCount: 2,
-    });
-  });
+describe("settleIntegrationQueriesWithProvenance", () => {
+  it("counts failed queries even when fallbacks preserve the result count", async () => {
+    const { results, ...provenance } = await settleIntegrationQueriesWithProvenance(
+      integrations,
+      vi.fn(async (integration) => {
+        if (integration.id === "first") throw new Error("offline");
+        return { integrationId: integration.id, isStale: true };
+      }),
+      {
+        fallback: (integration) => ({ integrationId: integration.id, isStale: false }),
+      },
+    );
 
-  it("does not report failures for complete current results", () => {
-    expect(getIntegrationQueryProvenance(2, [{ isStale: false }, {}])).toEqual({
-      failedIntegrationCount: 0,
-      staleIntegrationCount: 0,
+    expect(results).toHaveLength(2);
+    expect(provenance).toEqual({
+      failedIntegrationCount: 1,
+      staleIntegrationCount: 1,
     });
   });
 });
