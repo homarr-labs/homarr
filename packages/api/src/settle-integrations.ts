@@ -25,19 +25,16 @@ export interface IntegrationQueryProvenance {
   staleIntegrationCount: number;
 }
 
-export const getIntegrationQueryProvenance = (
-  selectedIntegrationCount: number,
-  results: readonly { isStale?: boolean }[],
-): IntegrationQueryProvenance => ({
-  failedIntegrationCount: Math.max(0, selectedIntegrationCount - results.length),
-  staleIntegrationCount: results.filter((result) => result.isStale === true).length,
-});
+interface IntegrationQuerySettlement<TResult> {
+  results: TResult[];
+  failedIntegrationCount: number;
+}
 
-export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
+const settleIntegrationQueriesInternal = async <TIntegration extends IntegrationLike, TResult>(
   integrations: TIntegration[],
   fn: (integration: TIntegration) => Promise<TResult>,
   options?: Options<TIntegration, TResult>,
-): Promise<TResult[]> {
+): Promise<IntegrationQuerySettlement<TResult>> => {
   const settled = await Promise.allSettled(integrations.map(async (integration) => fn(integration)));
   const results: TResult[] = [];
   const errors: unknown[] = [];
@@ -76,5 +73,32 @@ export async function settleIntegrationQueries<TIntegration extends IntegrationL
     });
   }
 
-  return results;
+  return {
+    results,
+    failedIntegrationCount: settled.filter((result) => result.status === "rejected").length,
+  };
+};
+
+export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
+  integrations: TIntegration[],
+  fn: (integration: TIntegration) => Promise<TResult>,
+  options?: Options<TIntegration, TResult>,
+): Promise<TResult[]> {
+  return (await settleIntegrationQueriesInternal(integrations, fn, options)).results;
+}
+
+export async function settleIntegrationQueriesWithProvenance<
+  TIntegration extends IntegrationLike,
+  TResult extends { isStale?: boolean },
+>(
+  integrations: TIntegration[],
+  fn: (integration: TIntegration) => Promise<TResult>,
+  options?: Options<TIntegration, TResult>,
+): Promise<IntegrationQuerySettlement<TResult> & IntegrationQueryProvenance> {
+  const settlement = await settleIntegrationQueriesInternal(integrations, fn, options);
+
+  return {
+    ...settlement,
+    staleIntegrationCount: settlement.results.filter((result) => result.isStale === true).length,
+  };
 }

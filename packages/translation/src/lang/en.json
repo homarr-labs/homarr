@@ -4031,6 +4031,7 @@
           "main": "Media Stats",
           "approved": "Already approved",
           "pending": "Pending approvals",
+          "pendingCount": "{pending} pending approvals",
           "processing": "Being processed",
           "declined": "Already declined",
           "available": "Already Available",

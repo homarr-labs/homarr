@@ -5,10 +5,10 @@ import { and, eq, inArray } from "@homarr/db";
 import {
   getServerSettingByKeyAsync,
   getServerSettingsAsync,
-  insertServerSettingByKeyAsync,
+  mergeServerSettingByKeyAsync,
   updateServerSettingByKeyAsync,
 } from "@homarr/db/queries";
-import { boards, serverSettings } from "@homarr/db/schema";
+import { boards } from "@homarr/db/schema";
 import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettingsKeys } from "@homarr/server-settings";
 import { settingsInitSchema } from "@homarr/validation/settings";
@@ -82,17 +82,9 @@ export const serverSettingsRouter = createTRPCRouter({
 
       const current = await getServerSettingByKeyAsync(ctx.db, "board");
       const next = { ...current, ...input };
-      const existing = await ctx.db.query.serverSettings.findFirst({
-        where: eq(serverSettings.settingKey, "board"),
-      });
+      await mergeServerSettingByKeyAsync(ctx.db, "board", next, input);
 
-      if (existing) {
-        await updateServerSettingByKeyAsync(ctx.db, "board", next);
-      } else {
-        await insertServerSettingByKeyAsync(ctx.db, "board", next);
-      }
-
-      return next;
+      return await getServerSettingByKeyAsync(ctx.db, "board");
     }),
   saveSettings: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -108,15 +100,7 @@ export const serverSettingsRouter = createTRPCRouter({
         ...current,
         ...input.value,
       } as ServerSettings[keyof ServerSettings];
-      const existing = await ctx.db.query.serverSettings.findFirst({
-        where: eq(serverSettings.settingKey, input.settingsKey),
-      });
-
-      if (existing) {
-        await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, next);
-      } else {
-        await insertServerSettingByKeyAsync(ctx.db, input.settingsKey, next);
-      }
+      await mergeServerSettingByKeyAsync(ctx.db, input.settingsKey, next, input.value);
     }),
   initSettings: onboardingProcedure
     .requiresStep("settings")
