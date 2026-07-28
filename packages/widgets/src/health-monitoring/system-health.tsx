@@ -24,8 +24,6 @@ import {
   IconCpu2,
   IconFileReport,
   IconInfoCircle,
-  IconPackages,
-  IconRefreshAlert,
   IconServer,
   IconTemperature,
   IconVersions,
@@ -43,9 +41,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
-import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import actionTargetClasses from "../common/action-target.module.css";
 import { CpuRing } from "./rings/cpu-ring";
@@ -64,46 +60,21 @@ export const SystemHealthMonitoring = ({
   withScrollArea = true,
 }: WidgetComponentProps<"healthMonitoring"> & { withScrollArea?: boolean }) => {
   const t = useI18n();
-  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
-  const healthResults = getUsableWidgetQueryData(healthQuery) ?? [];
-  const healthData = healthResults.filter(
-    (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,
-  );
+  const healthData =
+    getUsableWidgetQueryData(clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds })) ??
+    [];
   const [openedIntegrationId, setOpenedIntegrationId] = useState<string | null>(null);
   const board = useRequiredBoard();
 
   const isAdvanced = displayMode === "advanced";
   const isTiny = !isAdvanced && width < 256;
-  const showCpu = isAdvanced || options.cpu;
-  const showMemory = isAdvanced || options.memory;
-  const showGpu = isAdvanced || options.gpu;
-  const showFileSystem = isAdvanced || options.fileSystem;
-  const queryIndicators = (
-    <Group gap={0}>
-      <IntegrationErrorIndicator results={healthResults} />
-      <WidgetQueryErrorIndicator error={healthQuery.error} label={t("widget.healthMonitoring.name")} />
-    </Group>
-  );
 
-  if (isInitialWidgetQueryPending(healthQuery)) return <WidgetQueryLoadingState />;
-  if (healthData.length === 0) {
-    return (
-      <Box h="100%" pos="relative">
-        <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-          {queryIndicators}
-        </Box>
-        <WidgetEmptyState />
-      </Box>
-    );
-  }
+  if (healthData.length === 0) return <WidgetEmptyState />;
 
   const Container = withScrollArea ? ScrollArea : Box;
 
   return (
-    <Container h={withScrollArea ? "100%" : undefined} pos="relative">
-      <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-        {queryIndicators}
-      </Box>
+    <Container h={withScrollArea ? "100%" : undefined}>
       <Stack mih="100%" gap="sm" className="health-monitoring">
         {healthData.map(({ integrationId, integrationName, healthInfo }) => {
           const filteredFileSystem = filterStorageVolumes(
@@ -174,18 +145,18 @@ export const SystemHealthMonitoring = ({
                 </Modal>
               </Box>
               <Flex className="health-monitoring-information-card-elements" justify="center" align="center" wrap="wrap">
-                {showCpu && <CpuRing cpuUtilization={healthInfo.cpuUtilization} isTiny={isTiny} />}
-                {showCpu && (
+                {options.cpu && <CpuRing cpuUtilization={healthInfo.cpuUtilization} isTiny={isTiny} />}
+                {options.cpu && (
                   <CpuTempRing fahrenheit={options.fahrenheit} cpuTemp={healthInfo.cpuTemp} isTiny={isTiny} />
                 )}
-                {showMemory && (
+                {options.memory && (
                   <MemoryRing
                     available={healthInfo.memAvailableInBytes}
                     used={healthInfo.memUsedInBytes}
                     isTiny={isTiny}
                   />
                 )}
-                {showGpu &&
+                {options.gpu &&
                   healthInfo.gpu.map((gpu) => (
                     <GpuRing key={gpu.gpuId} gpu={gpu} isTiny={isTiny} fahrenheit={options.fahrenheit} />
                   ))}
@@ -195,7 +166,7 @@ export const SystemHealthMonitoring = ({
                   <SystemInformationList healthInfo={healthInfo} memoryUsage={memoryUsage} t={t} compact />
                 </Card>
               )}
-              {showFileSystem &&
+              {options.fileSystem &&
                 disksData.map((disk) => {
                   return (
                     <Card
@@ -271,9 +242,7 @@ export const SystemHealthMonitoring = ({
   );
 };
 
-type HealthInfo = NonNullable<
-  RouterOutputs["widget"]["healthMonitoring"]["getSystemHealthStatus"][number]["healthInfo"]
->;
+type HealthInfo = RouterOutputs["widget"]["healthMonitoring"]["getSystemHealthStatus"][number]["healthInfo"];
 
 const SystemInformationList = ({
   healthInfo,
@@ -316,14 +285,6 @@ const SystemInformationList = ({
         {healthInfo.loadAverage["5min"]}% / {healthInfo.loadAverage["15min"]}%
       </List.Item>
     )}
-    <List.Item className="health-monitoring-information-updates" icon={<IconPackages size={compact ? 18 : 30} />}>
-      {t("widget.healthMonitoring.popover.updatesAvailable", { count: healthInfo.availablePkgUpdates })}
-    </List.Item>
-    <List.Item className="health-monitoring-information-reboot" icon={<IconRefreshAlert size={compact ? 18 : 30} />}>
-      {healthInfo.rebootRequired
-        ? t("widget.healthMonitoring.popover.rebootRequired")
-        : t("widget.healthMonitoring.popover.rebootNotRequired")}
-    </List.Item>
   </List>
 );
 

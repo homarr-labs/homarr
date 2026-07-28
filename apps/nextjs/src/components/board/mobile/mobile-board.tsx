@@ -13,6 +13,7 @@ import { widgetImports } from "@homarr/widgets";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { BoardItemContent } from "../items/item-content";
+import { useBoardPermissions } from "../permissions/client";
 import { SectionProvider } from "../sections/section-context";
 import { DeferredMobileItem } from "./deferred-mobile-item";
 import classes from "./mobile-board.module.css";
@@ -70,19 +71,16 @@ const MobileBoardItem = ({ item }: { item: SectionItem }) => {
       data-mobile-board-item={item.id}
       data-mobile-display-mode={presentation.displayMode}
     >
-      <DeferredMobileItem eager={presentation.eager}>
+      <DeferredMobileItem eager={presentation.eager} unmountWhenOffscreen={presentation.unmountWhenOffscreen}>
         <BoardItemContent
           item={item}
           displayMode={presentation.displayMode}
           disableContextMenu
-          widgetStateRef={widgetStateRef}
-        />
-        <MobileWidgetActions
-          item={item}
-          supportsDetails={presentation.supportsDetails}
+          isReadOnly
           widgetStateRef={widgetStateRef}
         />
       </DeferredMobileItem>
+      <MobileWidgetActions item={item} supportsDetails={presentation.supportsDetails} widgetStateRef={widgetStateRef} />
     </Box>
   );
 };
@@ -90,6 +88,7 @@ const MobileBoardItem = ({ item }: { item: SectionItem }) => {
 export const MobileBoard = () => {
   const board = useRequiredBoard();
   const t = useI18n();
+  const { hasChangeAccess } = useBoardPermissions(board);
   const desktopLayout = getDesktopLayout(board);
   const items = useMemo(() => createMobileBoardItems(board, desktopLayout.id), [board, desktopLayout.id]);
   const elements = useMemo(() => createMobileBoardElements(board, desktopLayout.id), [board, desktopLayout.id]);
@@ -110,6 +109,9 @@ export const MobileBoard = () => {
         }}
       >
         <Box className={classes.stream} data-mobile-board>
+          <Title order={1} className={classes.boardTitle}>
+            {board.name}
+          </Title>
           {elements.length === 0 ? (
             <Center className={classes.empty}>
               <Stack align="center" gap="xs" ta="center" maw={360}>
@@ -120,7 +122,7 @@ export const MobileBoard = () => {
                   {t("board.mobile.empty.title")}
                 </Title>
                 <Text c="dimmed" size="sm">
-                  {t("board.mobile.empty.description")}
+                  {t(hasChangeAccess ? "board.mobile.empty.editorDescription" : "board.mobile.empty.viewerDescription")}
                 </Text>
               </Stack>
             </Center>
@@ -130,10 +132,12 @@ export const MobileBoard = () => {
                 <Title
                   key={block.id}
                   id={block.anchorId}
-                  order={2}
-                  size="h4"
+                  order={block.headingLevel}
+                  size={block.headingLevel === 2 ? "h4" : block.headingLevel === 3 ? "h5" : "h6"}
+                  fw={block.headingLevel === 2 ? 700 : 600}
                   className={classes.sectionHeading}
                   tabIndex={-1}
+                  style={{ marginInlineStart: Math.max(0, block.headingLevel - 2) * 12 }}
                 >
                   {block.title}
                 </Title>

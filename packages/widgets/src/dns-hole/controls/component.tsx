@@ -6,7 +6,6 @@ import { useState } from "react";
 import {
   ActionIcon,
   Badge,
-  Box,
   Button,
   Card,
   Flex,
@@ -34,24 +33,13 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
-import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../../common/query-state";
-import { WidgetQueryErrorIndicator } from "../../common/query-state-indicator";
 import actionTargetClasses from "../../common/action-target.module.css";
 import classes from "./component.module.css";
 import TimerModal from "./TimerModal";
 
 const dnsLightStatus = (enabled: boolean | undefined) =>
   `var(--mantine-color-${typeof enabled === "undefined" ? "blue" : enabled ? "green" : "red"}-6`;
-
-type DnsSummaryResult = RouterOutputs["widget"]["dnsHole"]["summary"][number];
-type AvailableDnsSummaryResult = DnsSummaryResult & {
-  summary: NonNullable<DnsSummaryResult["summary"]>;
-  integration: DnsSummaryResult["integration"] & { updatedAt: Date };
-};
-
-const isAvailableDnsSummaryResult = (result: DnsSummaryResult): result is AvailableDnsSummaryResult =>
-  result.summary !== null && result.integration.updatedAt !== undefined;
 
 export default function DnsHoleControlsWidget({
   options,
@@ -67,8 +55,7 @@ export default function DnsHoleControlsWidget({
     .filter((id) => integrationIds.includes(id));
 
   const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({ integrationIds });
-  const summaryResults = getUsableWidgetQueryData(summaryQuery) ?? [];
-  const summaries = summaryResults.filter(isAvailableDnsSummaryResult);
+  const summaries = getUsableWidgetQueryData(summaryQuery) ?? [];
   const { isPending: isSummaryPending } = summaryQuery;
   const utils = clientApi.useUtils();
 
@@ -97,7 +84,7 @@ export default function DnsHoleControlsWidget({
         if (!prevData) return [];
 
         return prevData.map((item) =>
-          item.integration.id === integrationId && item.summary
+          item.integration.id === integrationId
             ? {
                 ...item,
                 summary: {
@@ -160,14 +147,7 @@ export default function DnsHoleControlsWidget({
       p="sm"
       gap="sm"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
-      pos="relative"
     >
-      <Box pos="absolute" top={4} right={4} style={{ zIndex: 2 }}>
-        <Group gap={0}>
-          <IntegrationErrorIndicator results={summaryResults} />
-          <WidgetQueryErrorIndicator error={summaryQuery.error} label={t("widget.dnsHoleControls.name")} />
-        </Group>
-      </Box>
       {controlAllButtonsVisible && (
         <Flex className="dns-hole-controls-buttons" gap="sm">
           <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
@@ -280,7 +260,7 @@ export default function DnsHoleControlsWidget({
 interface ControlsCardProps {
   integrationsWithInteractions: string[];
   toggleDns: (integrationId: string) => Promise<void>;
-  data: AvailableDnsSummaryResult;
+  data: RouterOutputs["widget"]["dnsHole"]["summary"][number];
   setSelectedIntegrationIds: (integrationId: string[]) => void;
   open: () => void;
   t: TranslationFunction;

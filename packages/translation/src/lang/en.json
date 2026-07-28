@@ -2356,12 +2356,6 @@
       "noProjectSelected": "No project selected",
       "runnerStatus": "Runner: {status}",
       "updatedAt": "Updated {date}",
-      "projectId": "Project: {id}",
-      "sessionReceived": "Session received: {value}",
-      "sessionSent": "Session sent: {value}",
-      "sessionId": "Session: {id}",
-      "startedAt": "Started {date}",
-      "emptyItems": "No active or recent jobs in this snapshot",
       "metric": {
         "running": "Running",
         "completed": "Done",
@@ -2763,7 +2757,6 @@
       },
       "advanced": {
         "entityId": "Entity ID: {id}",
-        "lastChanged": "Changed {date}",
         "lastUpdated": "Updated {date}",
         "attribute": {
           "unit": "Unit",
@@ -2792,9 +2785,7 @@
       },
       "advanced": {
         "lastExecuted": "Last run at {time}",
-        "automationId": "Automation ID: {id}",
-        "ready": "Ready to run",
-        "noPermission": "No permission to run this automation"
+        "automationId": "Automation ID: {id}"
       },
       "status": {
         "running": "Running automation",
@@ -2807,14 +2798,6 @@
     "stockPrice": {
       "name": "Stock Price",
       "description": "Displays the current stock price of a company",
-      "advanced": {
-        "currentPrice": "Current price",
-        "previousClose": "Previous close",
-        "change": "Change",
-        "changePercentage": "Change (%)",
-        "minimum": "Minimum",
-        "maximum": "Maximum"
-      },
       "option": {
         "stock": {
           "label": "Stock symbol"
@@ -3003,11 +2986,6 @@
       },
       "title": "Indexer manager",
       "testAll": "Test all",
-      "status": {
-        "healthy": "Healthy",
-        "unhealthy": "Unhealthy",
-        "disabled": "Disabled"
-      },
       "error": {
         "internalServerError": "Failed to fetch indexers status"
       }
@@ -3065,10 +3043,7 @@
         "minutes": "{count} minutes",
         "used": "Used",
         "available": "Available",
-        "lastSeen": "Last status update: {lastSeen}",
-        "updatesAvailable": "{count, plural, one {# update available} other {# updates available}}",
-        "rebootRequired": "Reboot required",
-        "rebootNotRequired": "No reboot required"
+        "lastSeen": "Last status update: {lastSeen}"
       },
       "memory": {},
       "error": {
@@ -3187,13 +3162,7 @@
       },
       "server": {
         "buildServer": "Build",
-        "resourceCounts": "{applications, plural, one {# app} other {# apps}} / {services, plural, one {# service} other {# services}}",
-        "reachability": "Reachability",
-        "usability": "Usability"
-      },
-      "source": {
-        "url": "Source: {url}",
-        "unavailable": "{source}: unavailable"
+        "resourceCounts": "{applications, plural, one {# app} other {# apps}} / {services, plural, one {# service} other {# services}}"
       },
       "instances": {
         "title": "Instances"
@@ -3212,11 +3181,7 @@
         "restarting": "Restarting",
         "unknown": "Unknown",
         "online": "Online",
-        "offline": "Offline",
-        "reachable": "Reachable",
-        "unreachable": "Unreachable",
-        "usable": "Usable",
-        "unusable": "Unusable"
+        "offline": "Offline"
       }
     },
     "vpn": {
@@ -3752,9 +3717,6 @@
       "movies": "Missing Movies",
       "providers": "Provider Issues",
       "status": "Health Issues",
-      "sonarrSignalr": "Sonarr SignalR",
-      "radarrSignalr": "Radarr SignalR",
-      "announcements": "Announcements",
       "option": {
         "showMissingEpisodes": {
           "label": "Show missing episodes",
@@ -4353,16 +4315,6 @@
     },
     "networkControllerSummary": {
       "option": {},
-      "advanced": {
-        "updated": "Updated",
-        "metric": {
-          "latency": "Latency",
-          "ping": "Ping",
-          "uptime": "Uptime",
-          "users": "Users",
-          "guests": "Guests"
-        }
-      },
       "card": {
         "vpn": {
           "countConnected": "{count, plural, one {# connected} other {# connected}}",
@@ -4381,9 +4333,6 @@
       "description": "Displays the summary of a Network Controller (like UniFi Controller)"
     },
     "networkControllerStatus": {
-      "advanced": {
-        "updatedAt": "Updated {date}"
-      },
       "card": {
         "variants": {
           "wired": {
@@ -4515,8 +4464,7 @@
       "range": {
         "twelveHours": "12h",
         "oneDay": "24h",
-        "all": "All",
-        "lastThirty": "Last 30"
+        "all": "All"
       }
     },
     "uptimeKuma": {
@@ -4731,9 +4679,7 @@
         }
       },
       "status": {
-        "unhealthy": "Unhealthy",
-        "smart": "SMART",
-        "free": "{percentage}% free"
+        "unhealthy": "Unhealthy"
       }
     },
     "customApi": {
@@ -4854,12 +4800,6 @@
       },
       "column": {
         "system": "System",
-        "source": "Source",
-        "hostname": "Hostname",
-        "os": "OS",
-        "cpuModel": "CPU model",
-        "cores": "Cores",
-        "memoryTotal": "Memory total",
         "cpu": "CPU",
         "memory": "Memory",
         "disk": "Disk",
@@ -4919,14 +4859,6 @@
       },
       "empty": {
         "noSystems": "No systems found"
-      },
-      "metadata": {
-        "hostname": "Hostname",
-        "os": "OS",
-        "cpuModel": "CPU model",
-        "cores": "Cores",
-        "memoryTotal": "Memory total",
-        "source": "Source"
       },
       "metric": {
         "cpu": "CPU",
@@ -5079,18 +5011,6 @@
     }
   },
   "board": {
-    "mobile": {
-      "actions": "Widget actions",
-      "details": "Open widget details",
-      "empty": {
-        "title": "This board is empty",
-        "description": "Add and arrange items from a desktop or larger screen. Mobile boards use the desktop order automatically."
-      },
-      "more": "More",
-      "profile": "Profile and account",
-      "sections": "Jump to section",
-      "currentBoard": "Current board"
-    },
     "action": {
       "addContent": "Add board content",
       "settings": "Board settings",
@@ -5330,12 +5250,46 @@
         },
         "layout": {
           "title": "Layout",
-          "desktop": {
-            "title": "Desktop layout",
-            "description": "Configure the layout used on desktop and larger screens."
+          "responsive": {
+            "title": "Responsive layouts",
+            "description": "Each layout keeps its own widget positions and sizes. Mobile and Base are always available; add custom layouts for widths in between.",
+            "action": {
+              "add": "Add layout"
+            }
+          },
+          "role": {
+            "mobile": "Mobile",
+            "base": "Base",
+            "custom": "Custom"
+          },
+          "custom": {
+            "defaultName": "Custom layout"
           },
           "mobile": {
-            "description": "On mobile, items are automatically arranged in two columns and cannot be moved or resized. Named categories and dynamic sections appear as headings, never as layout containers."
+            "breakpointDescription": "Mobile is always used from 0px until the next layout breakpoint."
+          },
+          "preview": {
+            "columns": "columns",
+            "empty": "This layout is empty",
+            "dynamicSection": "Dynamic section",
+            "editorWidthLabel": "{layoutName} · {width}px"
+          },
+          "reset": {
+            "action": "Reset from Base",
+            "confirm": {
+              "title": "Reset {layoutName}?",
+              "message": "This replaces every saved position and size in this layout with a new layout generated from Base. This cannot be undone."
+            }
+          },
+          "edit": {
+            "action": "Edit layout",
+            "saveAndEdit": "Save and edit",
+            "save": "Save layout",
+            "cancel": {
+              "action": "Cancel layout editing",
+              "title": "Discard layout changes?",
+              "message": "Your unsaved changes to this layout will be discarded."
+            }
           }
         },
         "background": {

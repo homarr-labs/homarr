@@ -70,7 +70,6 @@ import type { TablerIcon } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 import actionTargetClasses from "../common/action-target.module.css";
 import { createReadOnlyTaskItemTransaction, ReadOnlyTaskItem } from "./read-only-task-item";
-import { getNotebookDisplay } from "./display";
 import { NotebookTextDirection, setTextDirection } from "./text-direction";
 
 import "@mantine/tiptap/styles.css";
@@ -99,7 +98,6 @@ export function Notebook({
   boardId,
   itemId,
   height,
-  displayMode = "compact",
 }: WidgetComponentProps<"notebook">) {
   const [content, setContent] = useState(options.content);
   const previousContentRef = useRef(options.content);
@@ -341,13 +339,6 @@ export function Notebook({
     characters: documentText.length,
     words: documentText.length === 0 ? 0 : documentText.split(/\s+/).length,
   };
-  const display = getNotebookDisplay({
-    height,
-    isAdvanced: displayMode === "advanced",
-    isEditing,
-    isSaving,
-    showToolbar: options.showToolbar,
-  });
 
   return (
     <Box className="homarr-notebook" h="100%" onDoubleClick={handleDoubleClick}>
@@ -384,9 +375,9 @@ export function Notebook({
       >
         <RichTextEditor.Toolbar
           style={{
-            display: display.showToolbar ? "flex" : "none",
-            maxHeight: display.toolbarMaxHeight,
-            overflowY: display.toolbarMaxHeight === undefined ? undefined : "auto",
+            display: isEditing && !isSaving && options.showToolbar === true ? "flex" : "none",
+            maxHeight: height < 180 ? "4.5rem" : "10rem",
+            overflowY: "auto",
           }}
         >
           <RichTextEditor.ControlsGroup>
@@ -514,7 +505,7 @@ export function Notebook({
           <RichTextEditor.Content />
         </ScrollArea>
       </RichTextEditor>
-      {(saveError || display.showDocumentStats) && (
+      {(saveError || height >= 180) && (
         <Group pos="absolute" bottom={4} right={8} gap="xs" style={{ pointerEvents: saveError ? undefined : "none" }}>
           {saveError && (
             <Tooltip label={saveError} multiline>
@@ -530,7 +521,7 @@ export function Notebook({
               </Text>
             </Tooltip>
           )}
-          {display.showDocumentStats && (
+          {height >= 180 && (
             <Text size="xs" c="dimmed">
               {t("widget.notebook.documentStats", documentStats)}
             </Text>
@@ -882,18 +873,9 @@ function ListIndentIncrease() {
     editor?.chain().focus().sinkListItem(itemType).run();
   }, [editor, itemType]);
 
-  useEffect(() => {
-    if (!editor) return;
-
-    const handleSelectionUpdate = ({ editor: updatedEditor }: { editor: Editor }) => {
-      setItemType(updatedEditor.isActive("taskItem") ? "taskItem" : "listItem");
-    };
-
-    editor.on("selectionUpdate", handleSelectionUpdate);
-    return () => {
-      editor.off("selectionUpdate", handleSelectionUpdate);
-    };
-  }, [editor]);
+  editor?.on("selectionUpdate", ({ editor }) => {
+    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
+  });
 
   return (
     <RichTextEditor.Control
@@ -915,18 +897,9 @@ function ListIndentDecrease() {
     editor?.chain().focus().liftListItem(itemType).run();
   }, [editor, itemType]);
 
-  useEffect(() => {
-    if (!editor) return;
-
-    const handleSelectionUpdate = ({ editor: updatedEditor }: { editor: Editor }) => {
-      setItemType(updatedEditor.isActive("taskItem") ? "taskItem" : "listItem");
-    };
-
-    editor.on("selectionUpdate", handleSelectionUpdate);
-    return () => {
-      editor.off("selectionUpdate", handleSelectionUpdate);
-    };
-  }, [editor]);
+  editor?.on("selectionUpdate", ({ editor }) => {
+    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
+  });
 
   return (
     <RichTextEditor.Control

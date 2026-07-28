@@ -19,6 +19,7 @@ export type MobileBoardSectionHeading = {
   sectionId: string;
   title: string;
   anchorId: string;
+  headingLevel: 2 | 3 | 4 | 5 | 6;
 };
 
 export type MobileBoardElement = SectionItem | MobileBoardSectionHeading;
@@ -51,7 +52,10 @@ const getLayout = <TLayout extends PositionedLayout>(
     (layoutA, layoutB) => (layoutPriority.get(layoutB.layoutId) ?? -1) - (layoutPriority.get(layoutA.layoutId) ?? -1),
   )[0];
 
-const createSectionHeading = (section: CategorySection | DynamicSectionItem): MobileBoardSectionHeading | null => {
+const createSectionHeading = (
+  section: CategorySection | DynamicSectionItem,
+  headingDepth: number,
+): MobileBoardSectionHeading | null => {
   const title = (section.kind === "category" ? section.name : section.options.title).trim();
   if (title.length === 0) return null;
 
@@ -61,6 +65,7 @@ const createSectionHeading = (section: CategorySection | DynamicSectionItem): Mo
     sectionId: section.id,
     title,
     anchorId: getMobileSectionAnchorId(section.id),
+    headingLevel: Math.min(headingDepth + 2, 6) as MobileBoardSectionHeading["headingLevel"],
   };
 };
 
@@ -112,16 +117,18 @@ export const createMobileBoardElements = (board: Board, desktopLayoutId: string)
 
   const createSectionElements = (
     section: CategorySection | DynamicSectionItem | (typeof rootSections)[number],
+    headingDepth = 0,
   ): { elements: MobileBoardElement[]; items: SectionItem[] } => {
     if (visitedSections.has(section.id)) return { elements: [], items: [] };
     const sectionId = section.id;
     visitedSections.add(sectionId);
+    const heading = section.kind === "empty" ? null : createSectionHeading(section, headingDepth);
 
     const sectionElements: MobileBoardElement[] = [];
     const sectionItems: SectionItem[] = [];
     for (const element of (elementsBySection.get(sectionId) ?? []).toSorted(comparePosition)) {
       if (element.type === "section") {
-        const nestedResult = createSectionElements(element);
+        const nestedResult = createSectionElements(element, heading ? headingDepth + 1 : headingDepth);
         sectionElements.push(...nestedResult.elements);
         sectionItems.push(...nestedResult.items);
         continue;
@@ -136,7 +143,6 @@ export const createMobileBoardElements = (board: Board, desktopLayoutId: string)
 
     if (sectionItems.length === 0) return { elements: [], items: [] };
 
-    const heading = section.kind === "empty" ? null : createSectionHeading(section);
     return {
       elements: heading ? [heading, ...sectionElements] : sectionElements,
       items: sectionItems,

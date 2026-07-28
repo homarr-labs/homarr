@@ -147,7 +147,10 @@ describe("createMobileBoardItems", () => {
       type: "sectionHeading",
       sectionId: category.id,
       anchorId: getMobileSectionAnchorId(category.id),
+      headingLevel: 2,
     });
+    expect(result[2]).toMatchObject({ type: "sectionHeading", headingLevel: 3 });
+    expect(result[4]).toMatchObject({ type: "sectionHeading", headingLevel: 4 });
   });
 
   test("omits headings for empty and unnamed sections while preserving their items", () => {
@@ -179,5 +182,32 @@ describe("createMobileBoardItems", () => {
 
     expect(result.map((element) => element.type)).toEqual(["item", "item"]);
     expect(result.map((element) => element.id)).toEqual(["inside-unnamed", "orphan"]);
+  });
+
+  test("does not skip heading levels when unnamed sections are flattened", () => {
+    const board = new BoardMockBuilder().build();
+    const desktopLayoutId = board.layouts.at(0)?.id;
+    if (!desktopLayoutId) throw new Error("Expected a desktop layout");
+
+    const unnamedCategory = new CategorySectionMockBuilder({ id: "category", name: " " }).build();
+    const namedDynamicSection = new DynamicSectionMockBuilder({
+      id: "dynamic",
+      options: { title: "Services", borderColor: "", customCssClasses: [] },
+    })
+      .addLayout({ layoutId: desktopLayoutId, parentSectionId: unnamedCategory.id })
+      .build();
+
+    board.sections.push(unnamedCategory, namedDynamicSection);
+    board.items.push(
+      new ItemMockBuilder({ id: "item" })
+        .addLayout({ layoutId: desktopLayoutId, sectionId: namedDynamicSection.id })
+        .build(),
+    );
+
+    expect(createMobileBoardElements(board, desktopLayoutId)[0]).toMatchObject({
+      type: "sectionHeading",
+      title: "Services",
+      headingLevel: 2,
+    });
   });
 });
