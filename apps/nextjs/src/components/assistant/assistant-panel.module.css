@@ -146,6 +146,10 @@
     inset-inline-start: 0;
     width: min(20rem, 88vw);
     transform: translateX(-105%);
+    visibility: hidden;
+    transition:
+      transform 180ms ease,
+      visibility 180ms ease;
     box-shadow: var(--mantine-shadow-xl);
   }
 
@@ -155,6 +159,7 @@
 
   .history[data-opened="true"] {
     transform: translateX(0);
+    visibility: visible;
   }
 
   .mobileHistoryButton {
