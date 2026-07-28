@@ -146,7 +146,7 @@ catalog:
   mcp-handler: ^1.1.0
   maria2: ^0.4.1
   mysql2: 3.22.6
-  next: 16.2.10
+  next: 16.3.0-preview.9
   next-auth: 5.0.0-beta.31
   next-intl: 4.13.1
   node-loader: ^2.1.0
@@ -177,7 +177,7 @@ catalog:
   tsdav: ^2.3.0
   tsx: 4.20.4
   turbo: ^2.10.4
-  typescript: "npm:@typescript/typescript6@^6.0.2"
+  typescript: 7.0.2
   vite: ^8.1.4
   undici: 7.28.0
   use-deep-compare-effect: ^1.8.1
@@ -201,6 +201,7 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - next
   - "@next/*"
+  - "typescript@7.0.2"
   - "@immich/sdk@3.0.0"
   # Renovate security update: turbo@2.9.14
   - turbo@2.9.14
