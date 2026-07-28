@@ -4,7 +4,7 @@ packages:
   - tooling/*
 catalog:
   "@auth/core": ^0.41.2
-  "@auth/drizzle-adapter": ^1.11.2
+  "@auth/drizzle-adapter": ^1.11.3
   "@ctrl/deluge": ^8.0.0
   "@ctrl/qbittorrent": ^9.14.0
   "@ctrl/transmission": ^7.4.0
