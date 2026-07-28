@@ -480,6 +480,44 @@ export const serverSettings = pgTable("serverSetting", {
   value: text().default(emptySuperJSON).notNull(),
 });
 
+export const assistantConfigurations = pgTable("assistant_configuration", {
+  id: varchar({ length: 64 }).notNull().primaryKey().default("default"),
+  enabled: boolean().notNull().default(false),
+  provider: varchar({ length: 32 })
+    .$type<"openrouter" | "openai" | "ollama" | "lm-studio" | "custom">()
+    .notNull()
+    .default("openrouter"),
+  baseUrl: varchar({ length: 2048 }).notNull().default("https://openrouter.ai/api/v1"),
+  modelDiscoveryPath: varchar({ length: 512 }).default("/models"),
+  encryptedApiKey: text().$type<`${string}.${string}`>(),
+  encryptedHeaders: text().$type<`${string}.${string}`>(),
+  modelId: varchar({ length: 256 }),
+  updatedAt: timestamp().notNull().defaultNow(),
+});
+
+export const assistantThreads = pgTable("assistant_thread", {
+  id: varchar({ length: 64 }).notNull().primaryKey(),
+  userId: varchar({ length: 64 })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  title: varchar({ length: 256 }),
+  modelId: varchar({ length: 256 }),
+  status: varchar({ length: 16 }).$type<"regular" | "archived">().notNull().default("regular"),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
+});
+
+export const assistantMessages = pgTable("assistant_message", {
+  id: varchar({ length: 64 }).notNull().primaryKey(),
+  threadId: varchar({ length: 64 })
+    .notNull()
+    .references(() => assistantThreads.id, { onDelete: "cascade" }),
+  parentId: varchar({ length: 64 }),
+  format: varchar({ length: 64 }).notNull().default("ai-sdk/v6"),
+  content: text().default(emptySuperJSON).notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
   user: one(users, {
     fields: [apiKeys.userId],

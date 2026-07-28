@@ -12,6 +12,7 @@ import {
   IconLogin,
   IconLogout,
   IconSettings,
+  IconRobot,
   IconTool,
 } from "@tabler/icons-react";
 
@@ -23,6 +24,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
+import { useOptionalHomarrAssistant } from "./assistant/assistant-provider";
 import { CurrentColorSchemeCombobox } from "./color-scheme/current-color-scheme-combobox";
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
 import { DockerQuickAccessModal } from "./layout/header/docker-quick-access-modal";
@@ -45,6 +47,7 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
   const { logoutUrl } = useAuthContext();
   const { openModal } = useModalAction(LogoutModal);
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
+  const assistant = useOptionalHomarrAssistant();
 
   const handleSignout = useCallback(async () => {
     await signOut({
@@ -80,6 +83,11 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
         <Menu.Divider />
         {Boolean(session.data) && (
           <>
+            {assistant?.enabled && (
+              <Menu.Item leftSection={<IconRobot size="1rem" />} onClick={assistant.open}>
+                {t("assistant")}
+              </Menu.Item>
+            )}
             <Menu.Item
               component={Link}
               href={`/manage/users/${session.data?.user.id}/general`}

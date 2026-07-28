@@ -8,6 +8,7 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { CrawlingAndIndexingSettings } from "~/app/[locale]/manage/settings/_components/crawling-and-indexing.settings";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { AnalyticsSettings } from "./_components/analytics.settings";
+import { AssistantSettings } from "./_components/assistant-settings";
 import { AppearanceSettingsForm } from "./_components/appearance-settings-form";
 import { BoardSettingsForm } from "./_components/board-settings-form";
 import { CultureSettingsForm } from "./_components/culture-settings-form";
@@ -38,6 +39,7 @@ export default async function SettingsPage() {
       <Stack>
         <Title order={1}>{tSettings("title")}</Title>
         <AnalyticsSettings initialData={serverSettings.analytics} />
+        <AssistantSettings />
         <CrawlingAndIndexingSettings initialData={serverSettings.crawlingAndIndexing} />
         <Stack>
           <Title order={2}>{tSettings("section.board.title")}</Title>

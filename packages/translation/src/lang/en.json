@@ -1492,6 +1492,7 @@
         "switchToDarkMode": "Switch to dark mode",
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
+        "assistant": "Homarr Assistant",
         "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Logout",
@@ -1500,6 +1501,38 @@
         "loggedOut": "Logged out",
         "updateAvailable": "{countUpdates} updates available: {tag}"
       }
+    },
+    "assistant": {
+      "title": "Homarr Assistant",
+      "subtitle": "Connected to this Homarr instance",
+      "open": "Open Homarr Assistant",
+      "close": "Close assistant",
+      "spotlight": "Ask Homarr Assistant",
+      "newConversation": "New conversation",
+      "archivedConversation": "Archived conversation",
+      "conversations": "Conversations",
+      "archived": "Archived",
+      "archive": "Archive",
+      "restore": "Restore",
+      "delete": "Delete",
+      "closeHistory": "Close conversation history",
+      "openHistory": "Open conversation history",
+      "emptyTitle": "What can I help with?",
+      "emptyDescription": "Ask about your Homarr setup, inspect live instance data, or approve actions when you want me to make a change.",
+      "composerPlaceholder": "Ask Homarr Assistant…",
+      "stop": "Stop response",
+      "send": "Send message",
+      "copy": "Copy response",
+      "regenerate": "Regenerate response",
+      "scrollToLatest": "Scroll to latest",
+      "approvalRequired": "Approval required",
+      "complete": "Complete",
+      "denied": "Denied",
+      "failed": "Failed",
+      "working": "Working",
+      "approvalDescription": "This action changes Homarr. Review the input before allowing it.",
+      "allowOnce": "Allow once",
+      "deny": "Deny"
     },
     "dangerZone": "Danger zone",
     "noResults": "No results found",
@@ -4786,6 +4819,112 @@
               "text": "This helps us figure out what people actually use so we know where to spend our time. We see stuff like how many widgets or integrations you have, your Homarr version, and what database you're on. That's it — no personal info, no URLs, no names, nothing that could identify you or your setup."
             }
           },
+          "assistant": {
+            "title": "Homarr Assistant",
+            "description": "Connect an OpenAI-compatible model endpoint for the instance-wide assistant.",
+            "security": {
+              "title": "Server-side secrets",
+              "description": "API keys and additional header values are encrypted in the Homarr database. They are never returned to browsers. Model requests are sent from the Homarr server directly to the configured endpoint."
+            },
+            "connection": {
+              "title": "Provider connection",
+              "description": "Choose a preset or connect any service that implements the OpenAI Chat Completions API.",
+              "saved": "Connection saved",
+              "notSaved": "Not configured",
+              "save": "Save provider connection",
+              "clearCredentials": "Remove all credentials"
+            },
+            "provider": {
+              "title": "Provider",
+              "options": {
+                "openrouter": {
+                  "label": "OpenRouter",
+                  "description": "Hosted model routing with a large tool-capable model catalog."
+                },
+                "openai": {
+                  "label": "OpenAI",
+                  "description": "OpenAI Chat Completions through the official API endpoint."
+                },
+                "ollama": {
+                  "label": "Ollama",
+                  "description": "A local or network Ollama server using its OpenAI-compatible API."
+                },
+                "lm-studio": {
+                  "label": "LM Studio",
+                  "description": "An LM Studio local server with OpenAI compatibility enabled."
+                },
+                "custom": {
+                  "label": "Custom endpoint",
+                  "description": "Any other endpoint compatible with OpenAI Chat Completions."
+                }
+              }
+            },
+            "baseUrl": {
+              "title": "API base URL",
+              "description": "Include the API prefix, usually /v1. In containers, localhost refers to the Homarr container."
+            },
+            "destinationChanged": {
+              "title": "Credentials will not follow this endpoint",
+              "description": "Changing the provider or base URL clears the stored API key and headers unless replacements are entered now. This prevents sending one provider's secrets to another service."
+            },
+            "apiKey": {
+              "title": "API key",
+              "required": "Required by this provider. The value is encrypted and write-only.",
+              "optional": "Optional for local endpoints. Leave it blank when the service does not require bearer authentication.",
+              "placeholder": "Enter an API key",
+              "configured": "A key is configured. Enter a new key to replace it.",
+              "configuredBadge": "Key configured",
+              "pendingRemoval": "Removal pending",
+              "clear": "Remove stored API key when saving",
+              "keep": "Keep stored API key"
+            },
+            "headers": {
+              "title": "Additional request headers",
+              "description": "Optional authentication or routing headers. Header values are encrypted and write-only.",
+              "add": "Add header",
+              "name": "Header name",
+              "value": "Header value",
+              "valuePlaceholder": "Secret or routing value",
+              "remove": "Remove header",
+              "configured": "Additional encrypted headers are configured. Adding headers replaces the complete stored set.",
+              "clear": "Remove stored headers when saving",
+              "keep": "Keep stored headers"
+            },
+            "model": {
+              "title": "Model",
+              "description": "Select a discovered model or enter an exact endpoint model ID.",
+              "placeholder": "Model ID",
+              "refresh": "Refresh models",
+              "discoveryPath": "Model discovery path",
+              "discoveryPathDescription": "Appended to the API base URL. Leave blank to disable discovery and use a manual model ID.",
+              "manual": "Enter a model ID manually or save the connection to discover models.",
+              "manualFallback": "Discovery is unavailable. You can still enter a model ID manually.",
+              "discovered": "Discovered {count} models. Tool support depends on the selected endpoint and model."
+            },
+            "enabled": {
+              "label": "Enable Homarr Assistant",
+              "description": "Shows the assistant to all signed-in users. Existing Homarr permissions still apply to every internal tool call."
+            },
+            "save": "Save assistant settings",
+            "notification": {
+              "connectionSaved": {
+                "title": "Provider connection saved",
+                "message": "The endpoint and encrypted credentials are ready for model selection.",
+                "credentialsCleared": "The endpoint changed, so previous credentials were cleared. Add credentials for the new destination if required."
+              },
+              "credentialsCleared": {
+                "title": "Provider credentials removed",
+                "message": "The stored API key and headers were removed, and the assistant was disabled."
+              },
+              "saved": {
+                "title": "Assistant settings saved",
+                "message": "The new model and availability settings are active."
+              },
+              "error": {
+                "title": "Assistant settings could not be saved"
+              }
+            }
+          },
           "crawlingAndIndexing": {
             "title": "Crawling and Indexing",
             "warning": "Enabling or disabling any settings here will severely impact how search engines will index & crawl your page. Any setting is a request and it is up to the crawler to apply these settings. Any modification may take up to multiple days or weeks to apply. Some settings may be search engine specific.",
@@ -5225,7 +5364,8 @@
               "toggleBoardEdit": "Toggle board edit mode",
               "toggleColorScheme": "Toggle light/dark mode",
               "saveNotebook": "Save notebook (only inside notebook widget)",
-              "openSpotlight": "Open search"
+              "openSpotlight": "Open search",
+              "openAssistant": "Open Homarr Assistant"
             },
             "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }

@@ -19,6 +19,9 @@ export const schema = createSchema({
 export const {
   accounts,
   apiKeys,
+  assistantConfigurations,
+  assistantMessages,
+  assistantThreads,
   apps,
   boardGroupPermissions,
   boardUserPermissions,
@@ -56,6 +59,9 @@ export const {
 
 export type User = InferSelectModel<typeof schema.users>;
 export type Account = InferSelectModel<typeof schema.accounts>;
+export type AssistantConfiguration = InferSelectModel<typeof schema.assistantConfigurations>;
+export type AssistantMessage = InferSelectModel<typeof schema.assistantMessages>;
+export type AssistantThread = InferSelectModel<typeof schema.assistantThreads>;
 export type Session = InferSelectModel<typeof schema.sessions>;
 export type VerificationToken = InferSelectModel<typeof schema.verificationTokens>;
 export type Integration = InferSelectModel<typeof schema.integrations>;

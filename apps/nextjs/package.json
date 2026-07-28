@@ -14,6 +14,10 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@ai-sdk/openai-compatible": "catalog:",
+    "@ai-sdk/react": "catalog:",
+    "@assistant-ui/react": "catalog:",
+    "@assistant-ui/react-ai-sdk": "catalog:",
     "@dnd-kit/core": "catalog:",
     "@dnd-kit/modifiers": "catalog:",
     "@dnd-kit/sortable": "catalog:",
@@ -72,6 +76,8 @@
     "@xterm/addon-fit": "catalog:",
     "@xterm/xterm": "catalog:",
     "adm-zip": "catalog:",
+    "ai": "catalog:",
+    "assistant-stream": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "better-sqlite3": "catalog:",
     "chroma-js": "catalog:",

@@ -9,10 +9,72 @@ tags:
 ---
 
 # Settings
+
 The settings page has a few options that will be applied to the entire Homarr application.
 They may require a full page reload for changes to apply.
 
+## Homarr Assistant
+
+Administrators can enable an instance-wide AI assistant from `Management` → `Settings` → **Homarr Assistant**.
+It is available to signed-in users from the header, the user menu, and the `Cmd/Ctrl + K` command menu.
+`Cmd/Ctrl + Shift + K` opens it directly.
+
+### Configure a model provider
+
+Homarr supports OpenRouter, OpenAI, Ollama, LM Studio, and custom services that implement the OpenAI
+Chat Completions API.
+
+1. Choose a provider preset or **Custom endpoint**.
+2. Confirm the API base URL. It usually ends in `/v1`.
+3. Add an API key if the service requires bearer authentication.
+4. Add any provider-specific authentication or routing headers.
+5. Save the provider connection.
+6. Refresh the model list or enter an exact model ID manually.
+7. Enable the assistant and save the settings.
+
+The model discovery path defaults to `/models` and is appended to the API base URL. Leave it blank when
+the service does not expose model discovery. A manual model ID can still be used.
+
+API keys and additional header values are encrypted in the Homarr database. They are decrypted only on
+the server for discovery and model requests, and they are never returned to the browser. Changing the
+provider or base URL clears existing credentials unless replacements are submitted with the change. This
+prevents credentials for one service from being sent to another endpoint.
+
+:::info Container networking
+
+For a containerized Homarr installation, `localhost` refers to the Homarr container. Use a resolvable
+container name, internal DNS name, or host gateway address to reach Ollama, LM Studio, or another local
+model server.
+
+:::
+
+The configured endpoint must support streaming Chat Completions and structured tool calls for the full
+assistant experience. Model discovery alone does not guarantee tool support, except when OpenRouter
+explicitly advertises the model's `tools` capability.
+
+### Conversations and tools
+
+Conversations and messages are stored per user in the Homarr database. Users can start, revisit, archive,
+and delete conversations from the assistant panel.
+
+The assistant can use the same internal tool definitions as the [Homarr MCP server](../mcp).
+Each tool call runs as the signed-in user, so normal Homarr permission checks still apply. Read-only
+procedures can run during the agent loop. Mutating procedures require an explicit approval in the
+conversation before they execute.
+
+Homarr also exposes a small set of browser-only actions to the assistant. These actions can navigate to
+safe internal routes and open Homarr interfaces such as the command menu and media request search.
+They never receive provider credentials and cannot navigate to arbitrary external URLs.
+
+:::warning
+
+Assistant prompts and selected tool results are sent to the configured model endpoint. Review that
+service's privacy and retention terms before enabling this feature for an instance.
+
+:::
+
 ## Analytics
+
 By default, Homarr is collecting anonymous analytics to identify issues and prioritize bugfixes and improvements.
 The data is never shared with any third-parties and is fully GDPR & CCPA compliant.
 The software being used is [Umami Analytics](https://umami.is/) which is fully open source.
@@ -21,25 +83,29 @@ The main server software can be found [here](https://github.com/umami-software/u
 A full list of the collected data by default can be found here: https://umami.is/docs/metric-definitions.
 
 We understand that you might not want Homarr to communicate with our services.
-By unchecking the ``Send anonymous analytics`` checkbox and reloading the full page, all communication by Umami will be disabled and no data will be collected.
-If you are paranoid, you can permanently block ``umami.homarr.dev`` from your DNS / firewall.
+By unchecking the `Send anonymous analytics` checkbox and reloading the full page, all communication by Umami will be disabled and no data will be collected.
+If you are paranoid, you can permanently block `umami.homarr.dev` from your DNS / firewall.
 
 Additionally, you opt in to more data collection to help us provide more useful data.
 
 ### Integration data
+
 Enabling this optional data will send the types of integrations (e.g. SABnzbd, Sonarr, ...) and how many you have configured of them.
 This will not include any URLs, names, secrets, errors and others. This is disabled by default.
 
 ### Widget data
+
 Enabling this optional data will send the types of widgets (e.g. downloads, media streams, iframe, ...) and how many you have configured of them.
 This will not include any URLs, names, secrets, errors and others. This is disabled by default.
 
 ### Users data
+
 Enabling this optional data will send the count of users and whether you activated SSO.
 This will not include any usernames, passwords, emails, URLs, authentication flows or client IDs.
 This is disabled by default.
 
 ## Search Engine Optimization (SEO)
+
 Big companies [like Google, Microsoft, Baidu and Yandex](https://de.wikipedia.org/wiki/Web-Index) will use [web crawlers](https://de.wikipedia.org/wiki/Webcrawler) to index the Internet for new websites & pages.
 This is desirable in many cases (for example when selling products in an online shop) but can lead to unwanted traffic and attention to your personal dashboard.
 Homarr is requesting the crawlers to not index Homarr instances by default for this reason.
@@ -47,22 +113,26 @@ If you use Homarr as a public website and want it to be searchable on these sear
 Please note that Homarr doesn't have control over what the crawlers do; it is a mere request to them to not perform these actions but will not guarantee that your website doesn't land on some index.
 
 ### No index
+
 This will ask crawlers to not index your Homarr instance on any indexes.
 It is up to the crawler to properly respect this request.
 By default, this setting is enabled. Disabling it will allow indexing.
 
 ### No follow
+
 If indexing is allowed, crawlers will also attempt to follow any links on your page to further "discover" new parts of the Internet and on your website.
 By default, this setting is enabled and will ask crawlers to not follow any links.
 Crawler of different companies may behave differently when indexing is prohibited and following is allowed.
 
 ### No translate
+
 Google and Chrome on Android will prompt users to translate pages that are not in their device language.
 This can lead to some shifting and can be undesired in some cases. By enabling this,
 you ask crawlers to never translate and never prompt users for translation.
 It should be noted that some browsers will ignore this and translate regardless.
 
 ### No site links search box
+
 This setting is exclusive to Google.
 [Google will create a box below your domain](https://developers.google.com/search/docs/appearance/structured-data/sitelinks-searchbox) that lists the paths that were discovered by the "folowing".
 The user can search them directly in Google.
@@ -72,7 +142,8 @@ This setting is disabled by default.
 ## Boards
 
 ### Global home board
-You can set a global home board that will be used for all users that have not set a home board themselves. 
+
+You can set a global home board that will be used for all users that have not set a home board themselves.
 It will also be used for anonymous users.
 Note that the board must be public to be used as a global home board.
 
@@ -97,9 +168,11 @@ You can decide if the app status should be disabled for all boards.
 ## Appearance
 
 ### Default color scheme
+
 You can set the default color scheme for all users that have not set a color scheme themselves.
 
 ## Culture
 
 ### Default language
+
 You can set the default language for all users that have not set a language themselves.

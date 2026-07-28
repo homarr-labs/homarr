@@ -12,6 +12,10 @@ Homarr exposes a [Model Context Protocol](https://modelcontextprotocol.io) serve
 
 With MCP, you can ask your AI assistant to manage apps, integrations, users, boards, Docker containers, media servers, DNS settings, and more - all through Homarr's existing tRPC API, now exposed as 50+ AI-callable tools.
 
+The optional [Homarr Assistant](./settings#homarr-assistant) uses these same tool definitions internally.
+Unlike external MCP clients, it uses the current Homarr session directly and asks for in-conversation
+approval before running mutating procedures.
+
 ## Getting Started
 
 The MCP endpoint lives under the **API** page at `Management` → `Tools` → `API` → **MCP** tab.
@@ -73,13 +77,7 @@ Replace `<your-api-key>` with your actual API key. Never commit API keys to vers
   "mcpServers": {
     "homarr": {
       "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://your-homarr-instance.com/api/mcp/mcp",
-        "--header",
-        "ApiKey:<your-api-key>"
-      ]
+      "args": ["-y", "mcp-remote", "https://your-homarr-instance.com/api/mcp/mcp", "--header", "ApiKey:<your-api-key>"]
     }
   }
 }
