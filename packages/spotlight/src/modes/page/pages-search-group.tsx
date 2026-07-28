@@ -76,7 +76,7 @@ export const pagesSearchGroup = createGroup<{
         icon: IconBox,
         path: "/manage/apps",
         name: t("manageApp.label"),
-        hidden: !session,
+        hidden: !session?.user.permissions.includes("board-modify-all"),
       },
       {
         icon: IconPlug,

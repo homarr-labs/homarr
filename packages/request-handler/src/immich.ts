@@ -33,7 +33,7 @@ export const immichAlbumsRequestHandler = createIntegrationRequestHandler<
 export const immichAlbumRequestHandler = createIntegrationRequestHandler<
   ImmichAlbum,
   IntegrationKindByCategory<"photoService">,
-  { albumId: string }
+  { albumId?: string }
 >({
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);

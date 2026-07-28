@@ -66,10 +66,12 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
           const currentlyPlaying = row.original.currentlyPlaying;
           if (!currentlyPlaying) return null;
 
-          const isPaused = currentlyPlaying.playback.state === "paused";
+          const playback = currentlyPlaying.playback;
+          const isPaused = playback?.state === "paused";
           const Icon = isPaused ? IconPlayerPause : mediaTypeIconMap[currentlyPlaying.type];
 
-          const { positionMs, durationMs } = currentlyPlaying.playback;
+          const positionMs = playback?.positionMs ?? null;
+          const durationMs = playback?.durationMs ?? null;
           const progressPercent =
             positionMs !== null && durationMs !== null && durationMs > 0
               ? Math.min(100, Math.round((positionMs / durationMs) * 100))

@@ -67,12 +67,14 @@ export const fetchWithTrustedCertificatesAsync = async (
   url: RequestInfo,
   options?: RequestInit & { timeout?: number; bodyTimeout?: number },
 ): Promise<Response> => {
-  const agent = await createCertificateAgentAsync(
-    undefined,
-    options?.bodyTimeout !== undefined ? { bodyTimeout: options.bodyTimeout } : undefined,
-  );
+  const agent =
+    options?.dispatcher ??
+    (await createCertificateAgentAsync(
+      undefined,
+      options?.bodyTimeout !== undefined ? { bodyTimeout: options.bodyTimeout } : undefined,
+    ));
   if (options?.timeout) {
-    const { bodyTimeout: _bodyTimeout, ...fetchOptions } = options;
+    const { bodyTimeout: _bodyTimeout, dispatcher: _dispatcher, ...fetchOptions } = options;
     return await withTimeoutAsync(
       async (signal) =>
         fetch(url, {
@@ -84,7 +86,7 @@ export const fetchWithTrustedCertificatesAsync = async (
     );
   }
 
-  const { bodyTimeout: _bodyTimeout, ...fetchOptions } = options ?? {};
+  const { bodyTimeout: _bodyTimeout, dispatcher: _dispatcher, ...fetchOptions } = options ?? {};
   return fetch(url, {
     ...fetchOptions,
     dispatcher: agent,

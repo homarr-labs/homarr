@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Stack, Text, Title } from "@mantine/core";
+import { Box, Stack, Text, Title } from "@mantine/core";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import timezones from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 
+import { clientApi } from "@homarr/api/client";
+
 import type { WidgetComponentProps } from "../definition";
+import { AnimatedWeatherIcon } from "../weather/animated-icon";
 
 dayjs.extend(advancedFormat);
 dayjs.extend(utc);
@@ -23,29 +26,64 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
   const time = useCurrentTime(options);
 
   const sizing = width < 128 ? "xs" : width < 196 ? "sm" : "md";
+  const showWeatherCorner = options.showWeather && sizing !== "xs";
 
   return (
-    <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap={sizing}>
-      {options.customTitleToggle && (
-        <Text className="clock-customTitle-text" size={sizing} ta="center">
-          {options.customTitle}
-        </Text>
+    <Box className="clock-widget-container" h="100%" pos="relative">
+      {showWeatherCorner && (
+        <ClockWeatherCorner
+          latitude={options.weatherLocation.latitude}
+          longitude={options.weatherLocation.longitude}
+          isFahrenheit={options.isWeatherFormatFahrenheit}
+        />
       )}
-      <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
-        {options.customTimeFormat
-          ? dayjs(time).tz(timezone).format(customTimeFormat)
-          : dayjs(time).tz(timezone).format(timeFormat)}
-      </Title>
-      {options.showDate && (
-        <Text className="clock-date-text" size={sizing} lineClamp={1}>
-          {options.customDateFormat
-            ? dayjs(time).tz(timezone).format(customDateFormat)
-            : dayjs(time).tz(timezone).format(dateFormat)}
-        </Text>
-      )}
-    </Stack>
+      <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap={sizing}>
+        {options.customTitleToggle && (
+          <Text className="clock-customTitle-text" size={sizing} ta="center">
+            {options.customTitle}
+          </Text>
+        )}
+        <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
+          {options.customTimeFormat
+            ? dayjs(time).tz(timezone).format(customTimeFormat)
+            : dayjs(time).tz(timezone).format(timeFormat)}
+        </Title>
+        {options.showDate && (
+          <Text className="clock-date-text" size={sizing} lineClamp={1}>
+            {options.customDateFormat
+              ? dayjs(time).tz(timezone).format(customDateFormat)
+              : dayjs(time).tz(timezone).format(dateFormat)}
+          </Text>
+        )}
+      </Stack>
+    </Box>
   );
 }
+
+interface ClockWeatherCornerProps {
+  latitude: number;
+  longitude: number;
+  isFahrenheit: boolean;
+}
+
+const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit }: ClockWeatherCornerProps) => {
+  const { data: weather } = clientApi.widget.weather.atLocation.useQuery({ latitude, longitude });
+
+  if (!weather) return null;
+
+  const temp = isFahrenheit ? weather.current.temperature * (9 / 5) + 32 : weather.current.temperature;
+  const unit = isFahrenheit ? "°F" : "°C";
+
+  return (
+    <Stack className="clock-weather-corner" pos="absolute" top={4} left={4} gap={0} align="center">
+      <AnimatedWeatherIcon code={weather.current.weathercode} size={22} />
+      <Text className="clock-weather-corner-temp" size="xs" c="dimmed">
+        {Math.round(temp)}
+        {unit}
+      </Text>
+    </Stack>
+  );
+};
 
 interface UseCurrentTimeProps {
   showSeconds: boolean;

@@ -61,7 +61,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconBox,
       href: "/manage/apps",
       label: t("items.apps"),
-      hidden: !session,
+      hidden: !session?.user.permissions.includes("app-create"),
       iconProps: {
         strokeWidth: 2.5,
       },
@@ -71,20 +71,20 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconAffiliateFilled,
       href: "/manage/integrations",
       label: t("items.integrations"),
-      hidden: !session,
+      hidden: !session?.user.permissions.includes("integration-create"),
       "data-onboarding-tour-id": "manage-integrations",
     },
     {
       icon: IconApi,
       href: "/manage/custom-widgets",
       label: t("items.customWidgets"),
-      hidden: !session,
+      hidden: !session?.user.permissions.includes("admin"),
     },
     {
       icon: IconSearch,
       href: "/manage/search-engines",
       label: t("items.searchEngies"),
-      hidden: !session,
+      hidden: !session?.user.permissions.includes("search-engine-create"),
       iconProps: {
         strokeWidth: 2.5,
       },
@@ -94,7 +94,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconPhotoFilled,
       href: "/manage/medias",
       label: t("items.medias"),
-      hidden: !session,
+      hidden: !session?.user.permissions.includes("media-upload"),
       "data-onboarding-tour-id": "manage-medias",
     },
     {

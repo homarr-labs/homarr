@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -14,8 +13,10 @@ import {
 import { settleIntegrationQueries } from "../../settle-integrations";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { BoundedAsyncQueue } from "./bounded-async-queue";
 
 const logger = createLogger({ module: "beszelRouter" });
+const MAX_PENDING_LIVE_EVENTS = 4;
 
 const errorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
 
@@ -203,98 +204,94 @@ export const beszelRouter = createTRPCRouter({
         systemId: z.string(),
       }),
     )
-    .subscription(({ ctx, input }) => {
-      return observable<LiveStatsEvent>((emit) => {
-        const controller = new AbortController();
-        let isActive = true;
-        let emittedEventCount = 0;
+    .subscription(async function* ({ ctx, input, signal }) {
+      const integration = ctx.integrations[0];
+      if (!integration) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" });
+      }
 
-        logger.debug("Beszel realtime subscription started", {
-          userId: ctx.session?.user?.id,
-          integrationIds: ctx.integrations.map((integration) => integration.id),
-          systemId: input.systemId,
-        });
+      const queue = new BoundedAsyncQueue<LiveStatsEvent>(MAX_PENDING_LIVE_EVENTS);
+      const controller = new AbortController();
+      let emittedEventCount = 0;
 
+      const stop = () => {
+        controller.abort();
+        void queue.return();
+      };
+      if (signal?.aborted) return;
+      signal?.addEventListener("abort", stop, { once: true });
+
+      logger.debug("Beszel realtime subscription started", {
+        userId: ctx.session?.user?.id,
+        integrationIds: ctx.integrations.map((candidate) => candidate.id),
+        systemId: input.systemId,
+      });
+
+      try {
+        const instance = await createIntegrationAsync(integration);
+        if (controller.signal.aborted) return;
         void (async () => {
-          const integration = ctx.integrations[0];
-          if (!integration) {
-            emit.error(
-              new TRPCError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" }),
-            );
-            return;
-          }
-
           try {
-            const instance = await createIntegrationAsync(integration);
-            if (typeof instance.subscribeRealtimeMetrics === "function") {
-              await instance.subscribeRealtimeMetrics(
-                input.systemId,
-                (event) => {
-                  if (!isActive) return;
-                  emittedEventCount += 1;
-                  if (emittedEventCount <= 2 || emittedEventCount % 60 === 0) {
-                    logger.debug("Forwarding Beszel realtime events", {
-                      userId: ctx.session?.user?.id,
-                      integrationId: integration.id,
-                      systemId: input.systemId,
-                      eventType: event.type,
-                      emittedEventCount,
-                      statsCount: Array.isArray(event.record.stats) ? event.record.stats.length : undefined,
-                    });
-                  }
-                  emit.next(event);
-                },
-                controller.signal,
-              );
-            } else {
-              emit.error(
-                new TRPCError({
-                  code: "METHOD_NOT_SUPPORTED",
-                  message: `Integration ${integration.kind} does not support realtime metrics`,
-                }),
-              );
-            }
-          } catch (error) {
-            if (isActive) {
-              logger.warn("Beszel realtime subscription failed", {
-                userId: ctx.session?.user?.id,
-                integrationId: integration.id,
-                systemId: input.systemId,
-                emittedEventCount,
-                error: errorMessage(error),
+            if (typeof instance.subscribeRealtimeMetrics !== "function") {
+              throw new TRPCError({
+                code: "METHOD_NOT_SUPPORTED",
+                message: `Integration ${integration.kind} does not support realtime metrics`,
               });
-              emit.error(
-                error instanceof TRPCError
-                  ? error
-                  : new TRPCError({
-                      code: "INTERNAL_SERVER_ERROR",
-                      message: error instanceof Error ? error.message : String(error),
-                    }),
-              );
             }
-          }
 
-          if (isActive) {
-            logger.debug("Beszel realtime subscription completed", {
+            await instance.subscribeRealtimeMetrics(
+              input.systemId,
+              (event) => {
+                emittedEventCount += 1;
+                if (emittedEventCount <= 2 || emittedEventCount % 60 === 0) {
+                  logger.debug("Forwarding Beszel realtime events", {
+                    userId: ctx.session?.user?.id,
+                    integrationId: integration.id,
+                    systemId: input.systemId,
+                    eventType: event.type,
+                    emittedEventCount,
+                    statsCount: Array.isArray(event.record.stats) ? event.record.stats.length : undefined,
+                  });
+                }
+                queue.push(event);
+              },
+              controller.signal,
+            );
+            queue.close();
+          } catch (error) {
+            if (controller.signal.aborted) {
+              queue.close();
+              return;
+            }
+
+            logger.warn("Beszel realtime subscription failed", {
               userId: ctx.session?.user?.id,
               integrationId: integration.id,
               systemId: input.systemId,
               emittedEventCount,
+              error: errorMessage(error),
             });
-            emit.complete();
+            queue.fail(
+              error instanceof TRPCError
+                ? error
+                : new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: error instanceof Error ? error.message : String(error),
+                  }),
+            );
           }
         })();
 
-        return () => {
-          isActive = false;
-          logger.debug("Beszel realtime subscription cancelled", {
-            userId: ctx.session?.user?.id,
-            integrationIds: ctx.integrations.map((integration) => integration.id),
-            systemId: input.systemId,
-            emittedEventCount,
-          });
-          controller.abort();
-        };
-      });
+        for await (const event of queue) yield event;
+      } finally {
+        stop();
+        signal?.removeEventListener("abort", stop);
+        logger.debug("Beszel realtime subscription stopped", {
+          userId: ctx.session?.user?.id,
+          integrationId: integration.id,
+          systemId: input.systemId,
+          emittedEventCount,
+        });
+      }
     }),
 });
