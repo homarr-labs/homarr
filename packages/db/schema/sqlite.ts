@@ -465,6 +465,49 @@ export const serverSettings = sqliteTable("serverSetting", {
   value: text().default(emptySuperJSON).notNull(),
 });
 
+export const assistantConfigurations = sqliteTable("assistant_configuration", {
+  id: text().notNull().primaryKey().default("default"),
+  enabled: int({ mode: "boolean" }).notNull().default(false),
+  provider: text().$type<"openrouter" | "openai" | "ollama" | "lm-studio" | "custom">().notNull().default("openrouter"),
+  baseUrl: text().notNull().default("https://openrouter.ai/api/v1"),
+  modelDiscoveryPath: text().default("/models"),
+  encryptedApiKey: text().$type<`${string}.${string}`>(),
+  encryptedHeaders: text().$type<`${string}.${string}`>(),
+  modelId: text(),
+  updatedAt: int({ mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
+
+export const assistantThreads = sqliteTable("assistant_thread", {
+  id: text().notNull().primaryKey(),
+  userId: text()
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  title: text(),
+  modelId: text(),
+  status: text().$type<"regular" | "archived">().notNull().default("regular"),
+  createdAt: int({ mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  updatedAt: int({ mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
+
+export const assistantMessages = sqliteTable("assistant_message", {
+  id: text().notNull().primaryKey(),
+  threadId: text()
+    .notNull()
+    .references(() => assistantThreads.id, { onDelete: "cascade" }),
+  parentId: text(),
+  format: text().notNull().default("ai-sdk/v6"),
+  content: text().default(emptySuperJSON).notNull(),
+  createdAt: int({ mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
+
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
   user: one(users, {
     fields: [apiKeys.userId],
