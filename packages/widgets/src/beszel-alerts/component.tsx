@@ -13,6 +13,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
+import { hasStaleIntegrationData } from "../beszel/_shared/query-status";
 import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 
 const alertIconMap: Record<string, LucideIcon> = {
@@ -43,7 +44,13 @@ export default function BeszelAlertsWidget({
     () => ({ integrationIds, includeHistory: options.showHistory, maxHistoryItems: options.maxHistoryItems }),
     [integrationIds, options.showHistory, options.maxHistoryItems],
   );
-  const { data: results = [], error: alertsError, isPending } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput);
+  const {
+    data: results = [],
+    error: alertsError,
+    isPending,
+    isLoadingError: alertsLoadingError,
+    isRefetchError: alertsRefetchError,
+  } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput);
 
   const systemNameMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -72,7 +79,7 @@ export default function BeszelAlertsWidget({
 
   const failedResults = results.filter((result) => "error" in result);
 
-  if (alertsError) throw alertsError;
+  if (alertsLoadingError) throw alertsError;
   if (results.length > 0 && failedResults.length === results.length) {
     throw new Error(String(failedResults[0]?.error ?? "Unable to connect to Beszel"));
   }
@@ -93,7 +100,7 @@ export default function BeszelAlertsWidget({
         value={triggeredAlerts.length}
         label={t("status.triggered")}
         description={`${alerts.length} ${t("name")}`}
-        isStale={failedResults.length > 0}
+        isStale={hasStaleIntegrationData(alertsRefetchError, failedResults)}
       />
     );
   }
@@ -101,7 +108,7 @@ export default function BeszelAlertsWidget({
   return (
     <Box h="100%" pos="relative">
       <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
-        <BeszelIntegrationErrorIndicator results={results} />
+        <BeszelIntegrationErrorIndicator results={results} isStale={alertsRefetchError} />
       </Box>
       <ScrollArea h="100%" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
         <Stack gap="sm" p="sm">

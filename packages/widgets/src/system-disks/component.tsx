@@ -10,9 +10,10 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
-import type { WidgetComponentProps } from "../definition";
-import { filterStorageVolumes } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
+import { filterStorageVolumes, storageDeviceNamesMatch } from "../filter-storage-volumes";
+import type { WidgetComponentProps } from "../definition";
+import { formatDiskTemperature } from "./mobile-summary";
 
 type DisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
 
@@ -81,6 +82,7 @@ const SystemDiskCard = ({
   }, [displayText, healthy]);
 
   const unhealthyLabel = t("widget.systemDisks.status.unhealthy");
+  const temperatureLabel = formatDiskTemperature(temperature, true);
 
   return (
     <Tooltip
@@ -105,7 +107,7 @@ const SystemDiskCard = ({
               {!healthy && <span style={{ marginLeft: 5 }}>{unhealthyLabel}</span>}
             </p>
           </div>
-          <div>{temperature ? <p style={{ margin: 0 }}>{temperature}°C</p> : null}</div>
+          <div>{temperatureLabel ? <p style={{ margin: 0 }}>{temperatureLabel}</p> : null}</div>
         </Group>
         <Box
           bg={healthy ? "green" : "red"}
@@ -155,10 +157,9 @@ export default function SystemResources({
     const disk = fileSystem.toSorted((diskA, diskB) => diskB.percentage - diskA.percentage)[0];
     if (!disk) return <WidgetEmptyState />;
 
-    const smartItem = smart.find((item) => item.deviceName === disk.deviceName);
+    const smartItem = smart.find((item) => storageDeviceNamesMatch(item.deviceName, disk.deviceName));
     const isHealthy = smartItem?.healthy ?? true;
-    const temperature =
-      options.showTemperatureIfAvailable && smartItem?.temperature ? `${smartItem.temperature}°C` : undefined;
+    const temperature = formatDiskTemperature(smartItem?.temperature, options.showTemperatureIfAvailable);
 
     return (
       <WidgetMobileSummary
@@ -173,7 +174,7 @@ export default function SystemResources({
   return (
     <Stack gap="xs" p="xs" h="100%">
       {fileSystem.map((item) => {
-        const smartItem = smart.find((smartEntry) => smartEntry.deviceName === item.deviceName);
+        const smartItem = smart.find((smartEntry) => storageDeviceNamesMatch(smartEntry.deviceName, item.deviceName));
 
         return (
           <SystemDiskCard

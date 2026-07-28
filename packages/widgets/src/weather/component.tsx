@@ -14,6 +14,7 @@ import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { AnimatedWeatherIcon } from "./animated-icon";
 import { WeatherDescription } from "./icon";
+import { getPreferredUnit } from "./temperature";
 
 export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
   const input = {
@@ -247,10 +248,3 @@ function Forecast({ weather, options }: WeatherProps) {
     </Group>
   );
 }
-
-const getPreferredUnit = (value?: number, isFahrenheit = false, disableTemperatureDecimals = false): string =>
-  value
-    ? isFahrenheit
-      ? `${(value * (9 / 5) + 32).toFixed(disableTemperatureDecimals ? 0 : 1)}°F`
-      : `${value.toFixed(disableTemperatureDecimals ? 0 : 1)}°C`
-    : "?";

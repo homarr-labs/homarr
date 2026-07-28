@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Button, Center, Group, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
+import { Box, Button, Center, Group, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
 import { IconPlugConnectedX, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -19,6 +19,7 @@ import {
   useSystemChartData,
 } from "./chart";
 import { chartAxisFormatters, formatByteRate, formatGB, formatPercent, formatStorageBytes } from "./format";
+import { BeszelIntegrationErrorIndicator } from "./error-indicator";
 import { makeTooltipProps } from "./tooltip";
 import { useLiveStats } from "./use-live-stats";
 
@@ -74,7 +75,12 @@ export function BeszelStatsView({
   const showDocker = visibility.dockerCpu || visibility.dockerMemory || visibility.dockerNetwork;
   const isLive = timePeriod === "1m";
 
-  const { data: historicalData, error: historicalError } = clientApi.widget.beszel.getSystemStats.useQuery(
+  const {
+    data: historicalData,
+    error: historicalError,
+    isLoadingError: historicalLoadingError,
+    isRefetchError: historicalRefetchError,
+  } = clientApi.widget.beszel.getSystemStats.useQuery(
     { integrationIds, systemId, timePeriod, includeDocker: showDocker },
     { refetchInterval: isLive ? false : 5_000, enabled: !isLive && systemId !== "" },
   );
@@ -175,7 +181,7 @@ export function BeszelStatsView({
     timePeriod,
   );
 
-  if (historicalError) throw historicalError;
+  if (!isLive && historicalLoadingError) throw historicalError;
 
   if (isLive && liveError) {
     return (
@@ -220,7 +226,10 @@ export function BeszelStatsView({
   }
 
   return (
-    <SimpleGrid cols={columns} spacing="md">
+    <SimpleGrid cols={columns} spacing="md" pos="relative">
+      <Box pos="absolute" top={0} right={0} style={{ zIndex: 1 }}>
+        <BeszelIntegrationErrorIndicator results={[]} isStale={historicalRefetchError} />
+      </Box>
       {visibility.cpu && cpuData.length > 0 && (
         <BeszelChartPanel
           title={t("chart.cpu.title")}

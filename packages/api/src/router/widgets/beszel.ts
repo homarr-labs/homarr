@@ -47,6 +47,7 @@ export const beszelRouter = createTRPCRouter({
           };
         },
         {
+          throwOnAllFailure: true,
           fallback: (integration, error) => ({
             integrationId: integration.id,
             integrationName: integration.name,
@@ -119,6 +120,7 @@ export const beszelRouter = createTRPCRouter({
           };
         },
         {
+          throwOnAllFailure: true,
           fallback: (integration, error) => ({
             integrationId: integration.id,
             integrationName: integration.name,
