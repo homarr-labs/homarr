@@ -3085,11 +3085,20 @@
         "limitPerIntegration": {
           "label": "Limit items per integration",
           "description": "This will limit the number of items shown per integration, not globally"
+        },
+        "columnOrder": {
+          "label": "Column order"
+        },
+        "columnWidths": {
+          "label": "Column widths"
         }
       },
       "errors": {
         "noColumns": "Select Columns in Items",
-        "noCommunications": "Can't load data from integration"
+        "noCommunications": "Can't load data from integration",
+        "noItems": "No downloads found",
+        "actionFailed": "Action failed",
+        "actionFailedMessage": "The action could not be completed. Please try again."
       },
       "items": {
         "actions": {
@@ -3112,7 +3121,8 @@
           "detailsTitle": "Current index within client"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": "Item ID"
         },
         "integration": {
           "columnTitle": "Integration"
@@ -3146,7 +3156,8 @@
         },
         "time": {
           "columnTitle": "Finish time",
-          "detailsTitle": "Time since/to completion"
+          "detailsTitle": "Time since/to completion",
+          "eta": "ETA"
         },
         "type": {
           "columnTitle": "Type",
@@ -3190,7 +3201,23 @@
           }
         }
       },
-      "globalRatio": "Global Ratio"
+      "globalRatio": "Global Ratio",
+      "contextMenu": {
+        "copyName": "Copy name",
+        "copyId": "Copy ID",
+        "clearFilters": "Clear filters"
+      },
+      "footer": {
+        "filter": "Filter downloads"
+      },
+      "stats": {
+        "show": "Show global stats",
+        "hide": "Hide global stats",
+        "overallProgress": "Overall queue progress",
+        "totalSize": "Total queue size",
+        "clients": "{count, plural, one {# client} other {# clients}}"
+      },
+      "disconnected": "(disconnected)"
     },
     "mediaReleases": {
       "name": "Media releases",

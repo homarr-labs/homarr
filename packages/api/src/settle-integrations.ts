@@ -30,8 +30,15 @@ const settleIntegrationQueriesInternal = async <TIntegration extends Integration
   options?: Options<TIntegration, TResult>,
 ): Promise<IntegrationQuerySettlement<TResult>> => {
   const settled = await Promise.allSettled(integrations.map(async (integration) => fn(integration)));
-  const results = settled.flatMap((result, index) => {
-    if (result.status === "fulfilled") return [result.value];
+  const results: TResult[] = [];
+  const errors: unknown[] = [];
+
+  settled.forEach((result, index) => {
+    if (result.status === "fulfilled") {
+      results.push(result.value);
+      return;
+    }
+
     const integration = integrations[index];
     logger.warn(
       new ErrorWithMetadata(
@@ -40,8 +47,13 @@ const settleIntegrationQueriesInternal = async <TIntegration extends Integration
         { cause: result.reason },
       ),
     );
-    if (options?.fallback && integration) return [options.fallback(integration, result.reason)];
-    return [];
+
+    if (options?.fallback && integration) {
+      results.push(options.fallback(integration, result.reason));
+      return;
+    }
+
+    errors.push(result.reason);
   });
 
   const firstFailure = settled.find((result) => result.status === "rejected");
@@ -52,6 +64,10 @@ const settleIntegrationQueriesInternal = async <TIntegration extends Integration
     firstFailure?.status === "rejected"
   ) {
     throw firstFailure.reason;
+  }
+
+  if (options?.throwOnAllFailure !== false && results.length === 0 && errors.length > 0) {
+    throw errors[0];
   }
 
   return {

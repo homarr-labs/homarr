@@ -115,14 +115,22 @@ const getMaxVisibleMetrics = (cellHeight: number, size: SizeConfig): number => {
   return Math.max(1, Math.floor(available / size.rowHeight));
 };
 
-const MIN_CELL_WIDTH = 180;
+const MIN_CELL_WIDTH = 140;
 const MIN_CELL_HEIGHT = 80;
 
-const getColCount = (width: number, height: number, itemCount: number): number => {
+const getColCount = (width: number, _height: number, itemCount: number): number => {
   if (itemCount <= 1) return 1;
   const maxCols = Math.min(itemCount, Math.max(1, Math.floor(width / MIN_CELL_WIDTH)));
-  const aspectRatio = width / Math.max(height, MIN_CELL_HEIGHT);
-  return Math.min(maxCols, Math.max(1, Math.ceil(Math.sqrt(itemCount * aspectRatio))));
+
+  let best = 1;
+  for (let c = 1; c <= maxCols; c++) {
+    const emptyCells = (c - (itemCount % c)) % c;
+    const bestEmpty = (best - (itemCount % best)) % best;
+    if (emptyCells < bestEmpty || (emptyCells === bestEmpty && c > best)) {
+      best = c;
+    }
+  }
+  return best;
 };
 
 interface MetricRowProps {

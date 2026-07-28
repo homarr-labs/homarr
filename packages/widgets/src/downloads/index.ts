@@ -8,28 +8,37 @@ import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 const columnsList = [
-  "id",
-  "actions",
-  "added",
-  "category",
-  "downSpeed",
-  "index",
-  "integration",
   "name",
   "progress",
+  "size",
+  "downSpeed",
+  "upSpeed",
+  "time",
+  "state",
+  "added",
   "ratio",
   "received",
   "sent",
-  "size",
-  "state",
-  "time",
+  "category",
+  "integration",
+  "index",
   "type",
-  "upSpeed",
 ] as const satisfies (keyof ExtendedDownloadClientItem)[];
-const sortingExclusion = ["actions", "id", "state"] as const satisfies readonly (typeof columnsList)[number][];
-const columnsSort = columnsList.filter((column) =>
-  sortingExclusion.every((exclusion) => exclusion !== column),
-) as Exclude<typeof columnsList, (typeof sortingExclusion)[number]>;
+
+const sortColumns = [
+  "name",
+  "progress",
+  "size",
+  "downSpeed",
+  "upSpeed",
+  "time",
+  "added",
+  "ratio",
+  "received",
+  "sent",
+  "index",
+  "type",
+] as const satisfies readonly (typeof columnsList)[number][];
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
@@ -46,19 +55,16 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
     return optionsBuilder.from(
       (factory) => ({
         columns: factory.multiSelect({
-          defaultValue: ["integration", "name", "progress", "time", "actions"],
+          defaultValue: ["name", "progress", "downSpeed", "time", "state"],
           options: columnsList.map((value) => ({
             value,
             label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
           })),
           searchable: true,
         }),
-        enableRowSorting: factory.switch({
-          defaultValue: false,
-        }),
         defaultSort: factory.select({
-          defaultValue: "type",
-          options: columnsSort.map((value) => ({
+          defaultValue: "progress",
+          options: sortColumns.map((value) => ({
             value,
             label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
           })),
@@ -76,7 +82,6 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
           defaultValue: true,
         }),
         activeTorrentThreshold: factory.number({
-          //in KiB/s
           validate: z.number().min(0),
           defaultValue: 0,
           step: 1,
@@ -96,14 +101,12 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
           validate: z.number().min(1),
           withDescription: true,
         }),
+        columnOrder: factory.text({ defaultValue: "" }),
+        columnWidths: factory.text({ defaultValue: "" }),
       }),
       {
-        defaultSort: {
-          shouldHide: (options) => !options.enableRowSorting,
-        },
-        descendingDefaultSort: {
-          shouldHide: (options) => !options.enableRowSorting,
-        },
+        columnOrder: { shouldHide: () => true },
+        columnWidths: { shouldHide: () => true },
         showCompletedUsenet: {
           shouldHide: (_, integrationKinds) =>
             !getIntegrationKindsByCategory("usenet").some((kinds) => integrationKinds.includes(kinds)),
