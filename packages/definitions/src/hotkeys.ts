@@ -3,4 +3,5 @@ export const hotkeys = {
   toggleColorScheme: "mod+j",
   saveNotebook: "mod+s",
   openSpotlight: "mod+k",
+  openAssistant: "mod+shift+k",
 };
