@@ -32,7 +32,7 @@
     "@scalar/api-reference-react": "catalog:",
     "@signalwire/docusaurus-plugin-llms-txt": "^1.2.2",
     "@tabler/icons-react": "catalog:",
-    "@tailwindcss/postcss": "^4.3.2",
+    "@tailwindcss/postcss": "^4.3.3",
     "clsx": "catalog:",
     "dayjs": "catalog:",
     "docusaurus-plugin-image-zoom": "^3.0.1",
@@ -44,7 +44,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "swiper": "^14.0.5",
-    "tailwindcss": "^4.3.2"
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.1",
