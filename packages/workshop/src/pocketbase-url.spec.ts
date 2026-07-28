@@ -27,6 +27,9 @@ describe("PocketBase URL compatibility", () => {
     "http://09.0.0.1",
     "http://099.0.0.1",
     "http://[:::1]",
+    "http://[:1:2:3:4:5:6:7:8]",
+    "http://[1:2:3:4:5:6:7:8:]",
+    "http://[192.168.1.1::]",
     "http://[::ffff:192.168.001.001]",
     "http://[::ffff:192.168.1.01]",
     "http://[fe80::1%25eth0]",
@@ -68,6 +71,11 @@ describe("PocketBase URL compatibility", () => {
   test("normalizes international hostnames like the native parser", () => {
     expect(new PocketBaseUrl("https://münich.example").hostname).toBe("xn--mnich-kva.example");
     expect(new PocketBaseUrl("https://例え.テスト.").hostname).toBe("xn--r8jz45g.xn--zckzah.");
+  });
+
+  test("normalizes IPv6 hostnames like the native parser", () => {
+    expect(new PocketBaseUrl("http://[1:2:3:4:5:6:7::]").hostname).toBe("[1:2:3:4:5:6:7:0]");
+    expect(new PocketBaseUrl("http://[::ffff:192.168.1.1]").hostname).toBe("[::ffff:c0a8:101]");
   });
 
   test.each([

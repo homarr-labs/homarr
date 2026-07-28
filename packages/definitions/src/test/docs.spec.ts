@@ -36,9 +36,13 @@ describe("createDocumentationLink parameter validation", () => {
     meta.content = "https://docs.example.com/base/";
     document.head.append(meta);
 
-    expect(createDocumentationLink("/docs/getting-started")).toBe("https://docs.example.com/base/docs/getting-started");
-
-    meta.remove();
+    try {
+      expect(createDocumentationLink("/docs/getting-started")).toBe(
+        "https://docs.example.com/base/docs/getting-started",
+      );
+    } finally {
+      meta.remove();
+    }
   });
 
   test("should work with only path parameter", () => {

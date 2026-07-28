@@ -15,6 +15,7 @@ vi.mock("../server/network-policy", async (importOriginal) => {
 });
 
 import { executeCustomWidgetRequest, MAX_REQUEST_DURATION_MS } from "../server/request-executor";
+import { closeDispatcher, DISPATCHER_CLOSE_GRACE_MS } from "../server/request-dispatcher-lifecycle";
 import { resolveAndValidateHost } from "../server/network-policy";
 
 const query = {
@@ -83,7 +84,7 @@ describe("custom widget request deadline", () => {
       logError,
     });
 
-    await vi.advanceTimersByTimeAsync(1_000);
+    await vi.advanceTimersByTimeAsync(DISPATCHER_CLOSE_GRACE_MS);
 
     await expect(request).resolves.toMatchObject({ ok: true, status: 200, data: {} });
     expect(close).toHaveBeenCalledOnce();
@@ -131,6 +132,28 @@ describe("custom widget request deadline", () => {
         errorName: "DispatcherCloseError",
       }),
     );
+  });
+
+  it("consumes a late close rejection when cleanup starts after the deadline", async () => {
+    const abortReason = new Error("request deadline elapsed");
+    const closeFailure = new Error("late close failure");
+    const controller = new AbortController();
+    controller.abort(abortReason);
+    let rejectClose: ((reason: Error) => void) | undefined;
+    const close = vi.fn(
+      () =>
+        new Promise<void>((_resolve, reject) => {
+          rejectClose = reject;
+        }),
+    );
+    const destroy = vi.fn(async () => undefined);
+
+    await expect(closeDispatcher({ close, destroy } as never, controller.signal)).rejects.toBe(abortReason);
+    rejectClose?.(closeFailure);
+    await Promise.resolve();
+
+    expect(close).toHaveBeenCalledOnce();
+    expect(destroy).toHaveBeenCalledOnce();
   });
 
   it("redacts apiKeyQuery credentials from transport errors and structured log events", async () => {

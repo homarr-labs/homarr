@@ -10,6 +10,11 @@ const validate = (value) =>
     env: { ...process.env, WORKSHOP_URL_VALIDATOR_PATH: validator },
   });
 
+const validateDocsBaseUrl = (value) =>
+  spawnSync("sh", [entrypoint, "--validate-docs-base-url", value], {
+    encoding: "utf8",
+  });
+
 for (const [value, expected] of [
   ["http://127.0.0.1:8090/", "http://127.0.0.1:8090"],
   ["https://example.com/docs/", "https://example.com/docs"],
@@ -30,6 +35,8 @@ for (const value of [
   "https://example.com:65536",
   "https://::1",
   "https://[:::1]",
+  "http://[:1:2:3:4:5:6:7:8]",
+  "http://[1:2:3:4:5:6:7:8:]",
   "https://1.2.3.4.5",
   "http://09.0.0.1",
   "http://099.0.0.1",
@@ -44,6 +51,22 @@ for (const value of [
 ]) {
   const result = validate(value);
   if (result.status === 0) throw new Error(`Expected invalid runtime URL to be rejected: ${JSON.stringify(value)}`);
+}
+
+for (const [value, expected] of [
+  ["/", "/"],
+  ["/docs/", "/docs"],
+  ["/docs..preview", "/docs..preview"],
+]) {
+  const result = validateDocsBaseUrl(value);
+  if (result.status !== 0 || result.stdout.trim() !== expected) {
+    throw new Error(`Expected valid DOCS_BASE_URL ${value}: ${result.stderr || result.stdout}`);
+  }
+}
+
+for (const value of ["docs", "/../docs", "/docs/../private", "/./docs", "/docs?preview=1"]) {
+  const result = validateDocsBaseUrl(value);
+  if (result.status === 0) throw new Error(`Expected invalid DOCS_BASE_URL to be rejected: ${JSON.stringify(value)}`);
 }
 
 console.log("Workshop runtime URL validation passed");

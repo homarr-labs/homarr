@@ -69,7 +69,7 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
       previewSessionId={previewSessionId}
       previewLiveActions={data.previewLiveActions === true}
       queriesDisabled={data.queriesDisabled === true}
-      canInvalidateQueries={data.canInvalidateQueries === true}
+      canInvalidateQueries={typeof data.canInvalidateQueries === "boolean" ? data.canInvalidateQueries : undefined}
       isEditMode={data.isEditMode === true}
       requestCapabilities={capabilities}
       setQueryState={publishQueryState}

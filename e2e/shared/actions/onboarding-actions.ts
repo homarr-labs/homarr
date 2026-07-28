@@ -32,7 +32,7 @@ export class OnboardingActions {
   }
 
   public async processUserStepAsync(input: { username: string; password: string; confirmPassword: string }) {
-    await this.page.waitForSelector("text=administrator user");
+    await this.page.getByLabel("Username").waitFor({ state: "visible" });
 
     await this.page.getByLabel("Username").fill(input.username);
     await this.page.getByLabel("Password", { exact: true }).fill(input.password);

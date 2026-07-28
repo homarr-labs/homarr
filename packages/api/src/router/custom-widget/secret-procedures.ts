@@ -80,20 +80,18 @@ export const secretProcedures = {
         networkScope: input.networkScope ?? current.networkScope,
       });
       assertSecretSources({ [input.sourceId]: source }, input.secrets);
-      const updated = { ...definition, sources: { ...definition.sources, [input.sourceId]: source } };
-      await configureCustomWidgetSource(ctx.db, {
+      const configuredSource = await configureCustomWidgetSource(ctx.db, {
         definitionId: input.definitionId,
         sourceId: input.sourceId,
-        definition: updated,
-        previousSource: current,
-        source,
+        baseUrl: source.baseUrl,
+        networkScope: input.networkScope,
         secrets: input.secrets,
       });
       return {
         definitionId: input.definitionId,
         sourceId: input.sourceId,
-        baseUrl: source.baseUrl,
-        networkScope: source.networkScope,
+        baseUrl: configuredSource.baseUrl,
+        networkScope: configuredSource.networkScope,
         configuredSecrets: input.secrets.map(({ kind }) => kind),
       };
     }),

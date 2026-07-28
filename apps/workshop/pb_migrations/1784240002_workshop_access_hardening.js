@@ -9,7 +9,6 @@ const legacyReportUpdateRule =
 const identityFieldsUnchanged = [
   "@request.body.email:changed = false",
   "@request.body.displayName:changed = false",
-  "@request.body.avatar:changed = false",
   "@request.body.avatarUrl:changed = false",
   "@request.body.githubUsername:changed = false",
   "@request.body.githubProfileUrl:changed = false",

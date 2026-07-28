@@ -6,19 +6,19 @@ import { stringify as stringifySuperJson } from "superjson";
 import type { StartedTestContainer } from "testcontainers";
 import { describe, test } from "vitest";
 
-import { eq } from "@homarr/db";
+import { eq } from "drizzle-orm";
 import {
   customWidgetDefinitions,
   customWidgetSecrets,
   legacyCustomWidgetDefinitions,
   legacyCustomWidgetSecrets,
-} from "@homarr/db/schema";
-import type { HomarrCustomWidgetV2Input } from "@homarr/custom-widgets/core";
+} from "../packages/db/schema/sqlite";
+import type { HomarrCustomWidgetV2Input } from "../packages/custom-widgets/src/core";
 
 import { createHomarrContainer } from "./shared/create-homarr-container";
 import { createSqliteDbFileAsync } from "./shared/e2e-db";
 import type { MockApiServer } from "./shared/mock-api-server";
-import { startMockApiServerAsync } from "./shared/mock-api-server";
+import { exposeHostPortToContainersAsync, startMockApiServerAsync } from "./shared/mock-api-server";
 import { seedAdminUserAsync } from "./shared/seed-admin-user";
 
 const adminCredentials = { username: "admin", password: "Comp(exP4sswOrd" };
@@ -122,7 +122,7 @@ const startWorkshopMockServerAsync = async (widget: HomarrCustomWidgetV2Input): 
 
   await new Promise<void>((resolve, reject) => {
     server.once("error", reject);
-    server.listen(0, "127.0.0.1", () => {
+    server.listen(0, "0.0.0.0", () => {
       server.off("error", reject);
       resolve();
     });
@@ -130,14 +130,20 @@ const startWorkshopMockServerAsync = async (widget: HomarrCustomWidgetV2Input): 
   const address = server.address();
   if (!address || typeof address === "string") throw new Error("Workshop mock server did not bind to a TCP port");
 
-  return {
-    url: `http://127.0.0.1:${address.port}`,
-    close: () =>
-      new Promise<void>((resolve, reject) => {
-        server.close((error) => (error ? reject(error) : resolve()));
-        server.closeAllConnections();
-      }),
-  };
+  try {
+    return {
+      url: await exposeHostPortToContainersAsync(address.port),
+      close: () =>
+        new Promise<void>((resolve, reject) => {
+          server.close((error) => (error ? reject(error) : resolve()));
+          server.closeAllConnections();
+        }),
+    };
+  } catch (error) {
+    server.closeAllConnections();
+    server.close();
+    throw error;
+  }
 };
 
 const loginAsAdmin = async (browser: Browser, baseUrl: string, clipboard = false) => {

@@ -5,3 +5,4 @@ export {
   parseStoredCustomWidgetDefinition,
   serializeCustomWidgetDefinition,
 } from "./router/custom-widget/stored-definition";
+export { configureCustomWidgetSourceFromRequest } from "./router/custom-widget/secret-persistence";

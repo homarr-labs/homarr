@@ -42,6 +42,14 @@ export function getCustomWidgetHttpUrlIssue(value: string): CustomWidgetHttpUrlI
   const rawHostname = withoutTrailingRootDot(hostAndPort.hostname);
   const parsedHostname = withoutTrailingRootDot(url.hostname);
   if (!rawHostname || !hasCanonicalParsedHostname(parsedHostname)) return "invalid";
+  if (
+    rawHostname.startsWith("[") &&
+    parsedHostname.startsWith("[") &&
+    !rawHostname.includes(".") &&
+    rawHostname.toLowerCase() !== parsedHostname
+  ) {
+    return "invalid";
+  }
 
   if (looksNumeric(rawHostname) && !isStrictIpv4(rawHostname)) return "invalid";
   if (isStrictIpv4(parsedHostname) && rawHostname !== parsedHostname) return "invalid";

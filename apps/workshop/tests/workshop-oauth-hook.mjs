@@ -6,6 +6,7 @@ const nodeRequire = createRequire(import.meta.url);
 const workshopUtils = nodeRequire("../pb_hooks/workshop-utils.js");
 const hookSource = await readFile("apps/workshop/pb_hooks/workshop.pb.js", "utf8");
 let oauthHook;
+let userUpdateHook;
 
 const ignoreHook = () => {};
 vm.runInNewContext(hookSource, {
@@ -15,7 +16,9 @@ vm.runInNewContext(hookSource, {
   onRecordAfterCreateSuccess: ignoreHook,
   onRecordCreateRequest: ignoreHook,
   onRecordDeleteRequest: ignoreHook,
-  onRecordUpdateRequest: ignoreHook,
+  onRecordUpdateRequest: (handler, collection) => {
+    if (collection === "users") userUpdateHook = handler;
+  },
   onRecordAuthWithOAuth2Request: (handler, collection) => {
     if (collection !== "users") throw new Error(`OAuth hook targets unexpected collection: ${collection}`);
     oauthHook = handler;
@@ -24,11 +27,17 @@ vm.runInNewContext(hookSource, {
     if (specifier !== "/pb_hooks/workshop-utils.js") {
       throw new Error(`OAuth hook loaded unexpected dependency: ${specifier}`);
     }
-    return workshopUtils;
+    return {
+      ...workshopUtils,
+      rejectRequest: (message) => {
+        throw new Error(message);
+      },
+    };
   },
 });
 
 if (typeof oauthHook !== "function") throw new Error("Workshop OAuth request hook was not registered");
+if (typeof userUpdateHook !== "function") throw new Error("Workshop user update hook was not registered");
 
 const oauth2User = {
   id: "provider-user-123",
@@ -106,6 +115,54 @@ oauthHook({
 });
 if (ignoredNextCalls !== 1 || Object.keys(ignoredCreateData).length !== 0) {
   throw new Error("Non-GitHub OAuth providers must pass through without GitHub identity synchronization");
+}
+
+let unchangedAvatarNextCalls = 0;
+userUpdateHook({
+  next: () => {
+    unchangedAvatarNextCalls += 1;
+  },
+  record: {
+    getString: () => "provider-avatar.png",
+    getUnsavedFiles: () => [],
+    original: () => ({ getString: () => "provider-avatar.png" }),
+  },
+});
+if (unchangedAvatarNextCalls !== 1) {
+  throw new Error("User updates that leave the provider avatar unchanged must pass through");
+}
+
+for (const avatarChange of [
+  {
+    name: "upload",
+    current: "provider-avatar.png",
+    original: "provider-avatar.png",
+    unsavedFiles: [{ name: "forged-avatar.png" }],
+  },
+  {
+    name: "removal",
+    current: "",
+    original: "provider-avatar.png",
+    unsavedFiles: [],
+  },
+]) {
+  let nextCalls = 0;
+  try {
+    userUpdateHook({
+      next: () => {
+        nextCalls += 1;
+      },
+      record: {
+        getString: () => avatarChange.current,
+        getUnsavedFiles: () => avatarChange.unsavedFiles,
+        original: () => ({ getString: () => avatarChange.original }),
+      },
+    });
+    throw new Error(`Workshop user avatar ${avatarChange.name} was accepted`);
+  } catch (error) {
+    if (!String(error).includes("managed by GitHub OAuth")) throw error;
+  }
+  if (nextCalls !== 0) throw new Error(`Rejected avatar ${avatarChange.name} continued the update request`);
 }
 
 console.log("Workshop OAuth hook contract passed");

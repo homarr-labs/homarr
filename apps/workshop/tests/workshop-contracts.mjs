@@ -106,12 +106,29 @@ for (const operation of ["create", "update", "delete"]) {
   }
 }
 if (!hardeningMigration.includes("users:update")) throw new Error("Workshop user file updates must be rate limited");
+for (const required of [
+  "writeRateLimits",
+  "managedRules(settings.rateLimits.rules)",
+  "settings.rateLimits.enabled = state.enabled",
+  "...cloneJson(state.managedRules)",
+]) {
+  if (!hardeningMigration.includes(required)) {
+    throw new Error(`Workshop write rate-limit rollback is missing persistent state restoration: ${required}`);
+  }
+}
 
 const accessHardeningMigration = await read("apps/workshop/pb_migrations/1784240002_workshop_access_hardening.js");
+const rateLimitCompatibilityMigration = await read(
+  "apps/workshop/pb_migrations/1784240003_workshop_rate_limit_rollback_compatibility.js",
+);
+for (const required of ["writeRateLimits", "legacyCreateRules", "rate-limit compatibility state is unavailable"]) {
+  if (!rateLimitCompatibilityMigration.includes(required)) {
+    throw new Error(`Workshop rate-limit compatibility migration is missing: ${required}`);
+  }
+}
 for (const protectedField of [
   "email:changed",
   "displayName:changed",
-  "avatar:changed",
   "avatarUrl:changed",
   "githubUsername:changed",
   "githubProfileUrl:changed",
@@ -119,6 +136,16 @@ for (const protectedField of [
   if (!accessHardeningMigration.includes(protectedField)) {
     throw new Error(`Workshop OAuth identity field remains caller-controlled: ${protectedField}`);
   }
+}
+if (accessHardeningMigration.includes("@request.body.avatar:changed")) {
+  throw new Error("Workshop access rules must not use the unsupported :changed modifier for file fields");
+}
+if (
+  !hook.includes('getUnsavedFiles("avatar")') ||
+  !hook.includes('original().getString("avatar")') ||
+  !hook.includes("Workshop avatars are managed by GitHub OAuth")
+) {
+  throw new Error("Workshop avatar updates must be rejected by the user update request hook");
 }
 for (const protectedField of [
   "title:changed",

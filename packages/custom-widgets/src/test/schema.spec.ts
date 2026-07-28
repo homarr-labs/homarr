@@ -128,6 +128,8 @@ describe("lean Custom Widget schema", () => {
     "https://example.com:65536",
     "https://[fe80::1%25eth0]",
     "https://[::ffff:192.168.001.001]",
+    "https://[0:0:0:0:0:0:0:1]",
+    "https://[2001:0db8::1]",
   ])("rejects ambiguous persisted URL spelling %s for sources and icons", (url) => {
     expect(
       customWidgetDefinitionSchema.safeParse({

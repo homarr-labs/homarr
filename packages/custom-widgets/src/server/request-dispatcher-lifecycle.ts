@@ -1,6 +1,6 @@
 import type { createPinnedAgent } from "./network-policy";
 
-const DISPATCHER_CLOSE_GRACE_MS = 1_000;
+export const DISPATCHER_CLOSE_GRACE_MS = 1_000;
 
 type CustomWidgetDispatcher = ReturnType<typeof createPinnedAgent>;
 
@@ -31,7 +31,10 @@ function detachDispatcherDestroy(dispatcher: CustomWidgetDispatcher): void {
 }
 
 function abortable<T>(operation: Promise<T>, signal: AbortSignal): Promise<T> {
-  if (signal.aborted) return Promise.reject(signal.reason ?? createAbortError());
+  if (signal.aborted) {
+    void operation.catch(() => undefined);
+    return Promise.reject(signal.reason ?? createAbortError());
+  }
 
   return new Promise<T>((resolve, reject) => {
     const onAbort = () => {

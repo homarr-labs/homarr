@@ -28391,6 +28391,9 @@ function getCustomWidgetHttpUrlIssue(value) {
   const rawHostname = withoutTrailingRootDot(hostAndPort.hostname);
   const parsedHostname = withoutTrailingRootDot(url2.hostname);
   if (!rawHostname || !hasCanonicalParsedHostname(parsedHostname)) return "invalid";
+  if (rawHostname.startsWith("[") && parsedHostname.startsWith("[") && !rawHostname.includes(".") && rawHostname.toLowerCase() !== parsedHostname) {
+    return "invalid";
+  }
   if (looksNumeric(rawHostname) && !isStrictIpv4(rawHostname)) return "invalid";
   if (isStrictIpv4(parsedHostname) && rawHostname !== parsedHostname) return "invalid";
   return null;
@@ -28908,8 +28911,9 @@ function parseAuthority(authority) {
     const closeIndex = hostAndPort.indexOf("]");
     if (closeIndex < 0) throw new TypeError("Invalid URL");
     const address = hostAndPort.slice(1, closeIndex);
-    if (!isValidIpv6(address)) throw new TypeError("Invalid URL");
-    hostname3 = `[${address.toLowerCase()}]`;
+    const normalizedAddress = normalizeIpv6(address);
+    if (normalizedAddress === null) throw new TypeError("Invalid URL");
+    hostname3 = `[${normalizedAddress}]`;
     const suffix = hostAndPort.slice(closeIndex + 1);
     if (suffix) {
       if (!suffix.startsWith(":")) throw new TypeError("Invalid URL");
@@ -28961,22 +28965,60 @@ function hasForbiddenUrlCharacter2(value) {
     return code <= 32 || code >= 127 && code <= 160 || code === 5760 || code >= 8192 && code <= 8207 || code >= 8232 && code <= 8239 || code >= 8287 && code <= 8303 || code === 12288 || code === 65279;
   });
 }
-function isValidIpv6(value) {
-  if (value.includes("%")) return false;
+function normalizeIpv6(value) {
+  if (value.includes("%")) return null;
   const address = value;
-  if (!address.includes(":") || address.includes(":::") || /[^0-9A-Fa-f:.]/u.test(address)) return false;
-  if (address.indexOf("::") !== address.lastIndexOf("::")) return false;
-  const groups = address.split(":").filter(Boolean);
-  let groupCount = groups.length;
+  if (!address.includes(":") || address.includes(":::") || /[^0-9A-Fa-f:.]/u.test(address)) return null;
+  if (address.indexOf("::") !== address.lastIndexOf("::")) return null;
+  if (address.startsWith(":") && !address.startsWith("::") || address.endsWith(":") && !address.endsWith("::")) {
+    return null;
+  }
+  const hasCompression = address.includes("::");
+  const [left = "", right = ""] = hasCompression ? address.split("::") : [address, ""];
+  if (hasCompression && left.includes(".")) return null;
+  const leftGroups = parseIpv6Groups(left);
+  const rightGroups = parseIpv6Groups(right);
+  if (leftGroups === null || rightGroups === null) return null;
+  const explicitGroupCount = leftGroups.length + rightGroups.length;
+  if (!hasCompression && explicitGroupCount !== 8 || hasCompression && explicitGroupCount >= 8) return null;
+  const groups = hasCompression ? [...leftGroups, ...Array.from({ length: 8 - explicitGroupCount }, () => 0), ...rightGroups] : leftGroups;
+  let bestStart = -1;
+  let bestLength = 1;
+  for (let index = 0; index < groups.length; ) {
+    if (groups[index] !== 0) {
+      index += 1;
+      continue;
+    }
+    let end = index + 1;
+    while (end < groups.length && groups[end] === 0) end += 1;
+    if (end - index > bestLength) {
+      bestStart = index;
+      bestLength = end - index;
+    }
+    index = end;
+  }
+  const hexadecimalGroups = groups.map((group) => group.toString(16));
+  if (bestStart < 0) return hexadecimalGroups.join(":");
+  const before = hexadecimalGroups.slice(0, bestStart).join(":");
+  const after = hexadecimalGroups.slice(bestStart + bestLength).join(":");
+  return `${before}::${after}`;
+}
+function parseIpv6Groups(value) {
+  var _a5, _b, _c, _d;
+  if (!value) return [];
+  const groups = value.split(":");
+  const parsed = [];
   for (const [index, group] of groups.entries()) {
     if (group.includes(".")) {
-      if (index !== groups.length - 1 || !isStrictIpv42(group)) return false;
-      groupCount += 1;
-    } else if (!/^[0-9A-Fa-f]{1,4}$/u.test(group)) {
-      return false;
+      if (index !== groups.length - 1 || !isStrictIpv42(group)) return null;
+      const parts = group.split(".").map(Number);
+      parsed.push(((_a5 = parts[0]) != null ? _a5 : 0) << 8 | ((_b = parts[1]) != null ? _b : 0), ((_c = parts[2]) != null ? _c : 0) << 8 | ((_d = parts[3]) != null ? _d : 0));
+    } else {
+      if (!/^[0-9A-Fa-f]{1,4}$/u.test(group)) return null;
+      parsed.push(Number.parseInt(group, 16));
     }
   }
-  return address.includes("::") ? groupCount < 8 : groupCount === 8;
+  return parsed;
 }
 function isStrictIpv42(value) {
   const parts = value.split(".");

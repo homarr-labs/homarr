@@ -14,6 +14,7 @@ import { describe, expect, test } from "vitest";
 
 import { customWidgetRouter } from "../../custom-widget/custom-widget-router";
 import { getCustomWidgetConfigurationRequestForUser } from "../../custom-widget/configuration-requests";
+import { configureCustomWidgetSourceFromRequest } from "../../custom-widget/secret-persistence";
 import { serializeCustomWidgetDefinition } from "../../custom-widget/stored-definition";
 
 const userId = createId();
@@ -392,6 +393,103 @@ describe("custom widget definition persistence", () => {
       secrets: [],
     });
 
+    expect(
+      await db.query.customWidgetSecrets.findMany({
+        where: eq(customWidgetSecrets.definitionId, created.id),
+      }),
+    ).toHaveLength(0);
+  });
+
+  test("uses the persisted source binding from inside the configuration transaction", async () => {
+    const db = await prepareDatabase();
+    const created = await createCaller(db).create({ ...jellyfin, secrets: [secret] });
+    const definition = customWidgetDefinitionSchema.parse(jellyfin);
+    const defaultSource = definition.sources.default;
+    if (!defaultSource) throw new Error("Jellyfin default source is missing");
+    await db
+      .update(customWidgetDefinitions)
+      .set(
+        serializeCustomWidgetDefinition({
+          ...definition,
+          name: "Concurrent definition edit",
+          sources: {
+            ...definition.sources,
+            default: { ...defaultSource, baseUrl: "https://changed.example/api" },
+          },
+        }),
+      )
+      .where(eq(customWidgetDefinitions.id, created.id));
+
+    await expect(
+      configureCustomWidgetSourceFromRequest(db, {
+        definitionId: created.id,
+        sourceId: "default",
+        baseUrl: defaultSource.baseUrl,
+        networkScope: defaultSource.networkScope,
+        secrets: [],
+        expectedSource: defaultSource,
+      }),
+    ).resolves.toMatchObject({
+      status: "configured",
+      source: { baseUrl: defaultSource.baseUrl },
+    });
+
+    expect(await createCaller(db).get({ id: created.id })).toMatchObject({
+      name: "Concurrent definition edit",
+      sources: { default: { baseUrl: defaultSource.baseUrl } },
+    });
+    expect(
+      await db.query.customWidgetSecrets.findMany({
+        where: eq(customWidgetSecrets.definitionId, created.id),
+      }),
+    ).toHaveLength(0);
+  });
+
+  test("rejects stale setup-link credentials after a concurrent authentication binding change", async () => {
+    const db = await prepareDatabase();
+    const created = await createCaller(db).create({ ...jellyfin, secrets: [] });
+    const definition = customWidgetDefinitionSchema.parse(jellyfin);
+    const expectedSource = definition.sources.default;
+    if (!expectedSource || typeof expectedSource.auth === "string") {
+      throw new Error("Jellyfin default source must use header authentication");
+    }
+    await db
+      .update(customWidgetDefinitions)
+      .set(
+        serializeCustomWidgetDefinition({
+          ...definition,
+          name: "Concurrent definition edit",
+          sources: {
+            ...definition.sources,
+            default: {
+              ...expectedSource,
+              auth: { ...expectedSource.auth, name: "X-Replaced-Credential" },
+            },
+          },
+        }),
+      )
+      .where(eq(customWidgetDefinitions.id, created.id));
+
+    await expect(
+      configureCustomWidgetSourceFromRequest(db, {
+        definitionId: created.id,
+        sourceId: "default",
+        baseUrl: "https://configured.example/api",
+        networkScope: "public",
+        secrets: [secret],
+        expectedSource,
+      }),
+    ).resolves.toEqual({ status: "binding-changed" });
+
+    expect(await createCaller(db).get({ id: created.id })).toMatchObject({
+      name: "Concurrent definition edit",
+      sources: {
+        default: {
+          baseUrl: expectedSource.baseUrl,
+          auth: { name: "X-Replaced-Credential" },
+        },
+      },
+    });
     expect(
       await db.query.customWidgetSecrets.findMany({
         where: eq(customWidgetSecrets.definitionId, created.id),

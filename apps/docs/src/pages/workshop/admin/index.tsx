@@ -1,4 +1,5 @@
 import React from "react";
+import BrowserOnly from "@docusaurus/BrowserOnly";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 
@@ -10,7 +11,9 @@ export default function WorkshopAdminRoute() {
   const workshopUrl = (siteConfig.customFields?.workshopUrl as string | undefined) ?? "";
   return (
     <Layout title="Workshop moderation" noFooter>
-      <WorkshopAdmin workshopUrl={getRuntimeWorkshopApiUrl(workshopUrl)} />
+      <BrowserOnly fallback={null}>
+        {() => <WorkshopAdmin workshopUrl={getRuntimeWorkshopApiUrl(workshopUrl)} />}
+      </BrowserOnly>
     </Layout>
   );
 }

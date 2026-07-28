@@ -57,6 +57,16 @@ onRecordAuthWithOAuth2Request((event) => {
   event.next();
 }, "users");
 
+onRecordUpdateRequest((event) => {
+  const { rejectRequest } = require(`${__hooks}/workshop-utils.js`);
+  const originalAvatar = event.record.original().getString("avatar");
+  const pendingAvatarFiles = event.record.getUnsavedFiles("avatar");
+  if (event.record.getString("avatar") !== originalAvatar || pendingAvatarFiles.length > 0) {
+    rejectRequest("Workshop avatars are managed by GitHub OAuth");
+  }
+  event.next();
+}, "users");
+
 onRecordCreateRequest((event) => {
   try {
     const { validateAndNormalizeSubmission } = require(`${__hooks}/workshop-utils.js`);

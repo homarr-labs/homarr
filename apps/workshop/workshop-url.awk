@@ -32,11 +32,14 @@ function valid_hostname(value, labels, count, label_index) {
   return 1
 }
 
-function valid_ipv6(value, percent, address, zone, collapsed, parts, count, groups, part_index) {
+function valid_ipv6(value, percent, address, starts_single_colon, ends_single_colon, collapsed, parts, count, groups, part_index) {
   percent = index(value, "%")
   if (percent) return 0
   address = value
   if (address !~ /:/ || address ~ /:::/ || address !~ /^[0-9A-Fa-f:.]+$/) return 0
+  starts_single_colon = substr(address, 1, 1) == ":" && substr(address, 1, 2) != "::"
+  ends_single_colon = substr(address, length(address), 1) == ":" && substr(address, length(address) - 1) != "::"
+  if (starts_single_colon || ends_single_colon) return 0
   collapsed = address
   sub(/::/, "", collapsed)
   if (collapsed ~ /::/) return 0

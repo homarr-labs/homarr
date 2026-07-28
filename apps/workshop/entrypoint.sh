@@ -9,8 +9,31 @@ normalize_http_url() {
     -f "${WORKSHOP_URL_VALIDATOR_PATH:-/usr/local/lib/workshop-url.awk}"
 }
 
+normalize_docs_base_url() {
+  value=$1
+  case "$value" in
+    /*) ;;
+    *)
+      echo "DOCS_BASE_URL must start with '/'" >&2
+      return 1
+      ;;
+  esac
+  case "${value%/}/" in
+    *[!A-Za-z0-9._~/-]* | */./* | */../*)
+      echo "DOCS_BASE_URL must be a safe URL path without traversal" >&2
+      return 1
+      ;;
+  esac
+  printf '/%s\n' "$(printf '%s' "$value" | sed 's#^/*##; s#/*$##')"
+}
+
 if [ "${1:-}" = "--validate-url" ]; then
   normalize_http_url "${2:-URL}" "${3:-}"
+  exit
+fi
+
+if [ "${1:-}" = "--validate-docs-base-url" ]; then
+  normalize_docs_base_url "${2:-}"
   exit
 fi
 
@@ -32,21 +55,7 @@ if [ "$(id -u)" -eq 0 ]; then
 fi
 
 if [ -d /pb_public ]; then
-  docs_base_url=${DOCS_BASE_URL:-/}
-  case "$docs_base_url" in
-    /*) ;;
-    *)
-      echo "DOCS_BASE_URL must start with '/'" >&2
-      exit 1
-      ;;
-  esac
-  case "$docs_base_url" in
-    *[!A-Za-z0-9._~/-]* | *".."*)
-      echo "DOCS_BASE_URL must be a safe URL path without traversal" >&2
-      exit 1
-      ;;
-  esac
-  docs_base_url="/$(printf '%s' "$docs_base_url" | sed 's#^/*##; s#/*$##')"
+  docs_base_url=$(normalize_docs_base_url "${DOCS_BASE_URL:-/}")
   runtime_directory="/pb_public${docs_base_url%/}"
   mkdir -p "$runtime_directory"
   cat >"$runtime_directory/workshop-runtime-config.js" <<EOF

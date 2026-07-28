@@ -37,6 +37,7 @@ describe("Workshop URL configuration", () => {
     ["/", "/"],
     ["/docs", "/docs/"],
     ["/docs/", "/docs/"],
+    ["/docs..preview", "/docs..preview/"],
   ])("normalizes DOCS_BASE_URL %s", (input, expected) => {
     expect(normalizeDocsBaseUrl(input)).toBe(expected);
   });

@@ -98,11 +98,37 @@ for (const [field, value] of [
     404,
   );
 }
+const forgedAvatar = new FormData();
+forgedAvatar.set(
+  "avatar",
+  new Blob(
+    [
+      Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+        "base64",
+      ),
+    ],
+    { type: "image/png" },
+  ),
+  "forged-avatar.png",
+);
+const avatarResponse = await fetch(`${baseUrl}/api/collections/users/records/${author.id}`, {
+  method: "PATCH",
+  headers: authorSession.headers,
+  body: forgedAvatar,
+});
+const avatarResponseBody = await avatarResponse.json().catch(() => null);
+if (avatarResponse.status !== 400 || !JSON.stringify(avatarResponseBody).includes("managed by GitHub OAuth")) {
+  throw new Error(
+    `Workshop user avatar upload bypassed the OAuth identity hook: ${avatarResponse.status} ${JSON.stringify(avatarResponseBody)}`,
+  );
+}
 const unchangedAuthor = await request(`/api/collections/users/records/${author.id}`, {
   headers: authorSession.headers,
 });
 if (
   unchangedAuthor.displayName !== "Widget Author" ||
+  unchangedAuthor.avatar ||
   unchangedAuthor.avatarUrl ||
   unchangedAuthor.githubUsername ||
   unchangedAuthor.githubProfileUrl
