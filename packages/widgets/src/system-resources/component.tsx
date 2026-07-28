@@ -5,7 +5,11 @@ import { Box, Group, Stack } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
+import { formatByteRate } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
+import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
@@ -30,14 +34,89 @@ const toChartItem = (healthInfo: {
   network: healthInfo.network,
 });
 
-export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemResources">) {
+export default function SystemResources({
+  integrationIds,
+  options,
+  displayMode,
+}: WidgetComponentProps<"systemResources">) {
+  if (displayMode === "mobileSummary") {
+    return <SystemResourcesMobileSummary integrationIds={integrationIds} options={options} />;
+  }
+
+  return <SystemResourcesCharts integrationIds={integrationIds} options={options} />;
+}
+
+const SystemResourcesMobileSummary = ({
+  integrationIds,
+  options,
+}: Pick<WidgetComponentProps<"systemResources">, "integrationIds" | "options">) => {
+  const t = useScopedI18n("widget.systemResources");
+  const { data, error, isPending } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
+    integrationIds,
+  });
+
+  if (isPending) return <WidgetMobileLoading />;
+  if (error && !data) throw error;
+
+  const healthInfo = data?.[0]?.healthInfo;
+  const hasPartialFailure = (data?.length ?? 0) < integrationIds.length;
+  if (!healthInfo) return <WidgetEmptyState />;
+
+  const memoryCapacityInBytes = healthInfo.memAvailableInBytes + healthInfo.memUsedInBytes;
+  const memoryUsagePercent =
+    memoryCapacityInBytes > 0 ? Math.round((healthInfo.memUsedInBytes / memoryCapacityInBytes) * 100) : 0;
+  const gpuUsage =
+    healthInfo.gpu.length > 0
+      ? healthInfo.gpu.reduce((total, gpu) => total + gpu.processorUtilization, 0) / healthInfo.gpu.length
+      : 0;
+  const metrics: Record<
+    (typeof options.visibleCharts)[number],
+    { value: string; label: string; description?: string }
+  > = {
+    cpu: {
+      value: `${Math.round(healthInfo.cpuUtilization)}%`,
+      label: t("card.cpu"),
+    },
+    memory: {
+      value: `${memoryUsagePercent}%`,
+      label: t("card.memory"),
+    },
+    gpu: {
+      value: `${Math.round(gpuUsage)}%`,
+      label: t("card.gpu"),
+    },
+    network: {
+      value: healthInfo.network ? `↓ ${formatByteRate(Math.round(healthInfo.network.down))}` : "—",
+      label: t("card.network"),
+      description: healthInfo.network ? `↑ ${formatByteRate(Math.round(healthInfo.network.up))}` : undefined,
+    },
+  };
+  const [primaryMetric, supportingMetric] = options.visibleCharts.map((chart) => metrics[chart]);
+
+  if (!primaryMetric) return <WidgetEmptyState />;
+
+  return (
+    <WidgetMobileSummary
+      value={primaryMetric.value}
+      label={primaryMetric.label}
+      description={supportingMetric ? `${supportingMetric.label} ${supportingMetric.value}` : primaryMetric.description}
+      isStale={Boolean(error) || hasPartialFailure}
+    />
+  );
+};
+
+const SystemResourcesCharts = ({
+  integrationIds,
+  options,
+}: Pick<WidgetComponentProps<"systemResources">, "integrationIds" | "options">) => {
   const { ref, width } = useElementSize();
 
   const { data = [], dataUpdatedAt } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
     integrationIds,
   });
+  const currentHealthInfo = data[0]?.healthInfo;
   const memoryCapacityInBytes =
-    (data[0]?.healthInfo.memAvailableInBytes ?? 0) + (data[0]?.healthInfo.memUsedInBytes ?? 0);
+    (currentHealthInfo?.memAvailableInBytes ?? 0) + (currentHealthInfo?.memUsedInBytes ?? 0);
 
   const [items, setItems] = useState<
     { cpu: number; memory: number; gpu: number; network: { up: number; down: number } | null }[]
@@ -124,4 +203,4 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
         ))}
     </Stack>
   );
-}
+};

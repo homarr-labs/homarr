@@ -13,6 +13,7 @@ export const { componentLoader, definition } = createWidgetDefinition("notificat
     supportsCompactSummary: true,
     supportsDetailView: true,
   },
+  queryKey: [["widget", "notifications"]],
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({

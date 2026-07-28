@@ -25,6 +25,13 @@ const sortDirectionOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemTable", {
   icon: IconTable,
+  mobile: {
+    width: 2,
+    height: 1,
+    supportsCompactSummary: true,
+    supportsDetailView: true,
+    unmountWhenOffscreen: true,
+  },
   queryKey: [["widget", "beszel"]],
   supportedIntegrations: ["beszel", "mock"],
   integrationsRequired: true,

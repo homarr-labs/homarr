@@ -15,6 +15,7 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaMiss
     supportsCompactSummary: true,
     supportsDetailView: true,
   },
+  queryKey: [["widget", "mediaOrganizer"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showMissing: factory.switch({ defaultValue: true }),

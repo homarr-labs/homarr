@@ -25,10 +25,14 @@ export const mediaRequestsRouter = createTRPCRouter({
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .input(mediaRequestListInputSchema)
     .query(async ({ ctx, input }) => {
-      const results = await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const { data } = await mediaRequestListRequestHandler.handler(integration, input).getDataAsync();
-        return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
-      });
+      const results = await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const { data } = await mediaRequestListRequestHandler.handler(integration, input).getDataAsync();
+          return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
+        },
+        { throwOnAllFailure: true },
+      );
       return results
         .flatMap(({ data, integration }) =>
           data.map((request) => ({
@@ -57,10 +61,14 @@ export const mediaRequestsRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
-      const results = await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const { data } = await mediaRequestStatsRequestHandler.handler(integration, {}).getDataAsync();
-        return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
-      });
+      const results = await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const { data } = await mediaRequestStatsRequestHandler.handler(integration, {}).getDataAsync();
+          return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
+        },
+        { throwOnAllFailure: true },
+      );
       return {
         stats: results.flatMap((result) => result.data.stats),
         users: results

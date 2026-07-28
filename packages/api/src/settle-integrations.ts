@@ -11,6 +11,7 @@ interface IntegrationLike {
 
 interface Options<TIntegration extends IntegrationLike, TResult> {
   fallback?: (integration: TIntegration, error: unknown) => TResult;
+  throwOnAllFailure?: boolean;
 }
 
 export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
@@ -19,7 +20,7 @@ export async function settleIntegrationQueries<TIntegration extends IntegrationL
   options?: Options<TIntegration, TResult>,
 ): Promise<TResult[]> {
   const settled = await Promise.allSettled(integrations.map(async (integration) => fn(integration)));
-  return settled.flatMap((result, index) => {
+  const results = settled.flatMap((result, index) => {
     if (result.status === "fulfilled") return [result.value];
     const integration = integrations[index];
     logger.warn(
@@ -32,4 +33,16 @@ export async function settleIntegrationQueries<TIntegration extends IntegrationL
     if (options?.fallback && integration) return [options.fallback(integration, result.reason)];
     return [];
   });
+
+  const firstFailure = settled.find((result) => result.status === "rejected");
+  if (
+    options?.throwOnAllFailure === true &&
+    settled.length > 0 &&
+    settled.every((result) => result.status === "rejected") &&
+    firstFailure?.status === "rejected"
+  ) {
+    throw firstFailure.reason;
+  }
+
+  return results;
 }

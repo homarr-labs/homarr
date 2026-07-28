@@ -15,22 +15,35 @@ import { useCurrentLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
 
+import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
-import { WidgetMobileSummary } from "../common/mobile-summary";
 
 export default function MediaReleasesWidget({
   options,
   integrationIds,
   displayMode,
 }: WidgetComponentProps<"mediaReleases">) {
-  const { data: releases = [] } = clientApi.widget.mediaRelease.getMediaReleases.useQuery({
+  const { data, error, isPending } = clientApi.widget.mediaRelease.getMediaReleases.useQuery({
     integrationIds,
   });
   const t = useI18n("widget.mediaReleases");
 
   if (displayMode === "mobileSummary") {
-    return <WidgetMobileSummary value={releases.length} label={t("name")} description={releases[0]?.title} />;
+    if (isPending) return <WidgetMobileLoading />;
+    if (error && !data) throw error;
+
+    const releases = data ?? [];
+    return (
+      <WidgetMobileSummary
+        value={releases.length}
+        label={t("name")}
+        description={releases[0]?.title}
+        isStale={Boolean(error)}
+      />
+    );
   }
+
+  const releases = data ?? [];
 
   return (
     <Stack p="xs" gap="sm">

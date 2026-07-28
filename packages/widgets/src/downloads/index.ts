@@ -38,7 +38,9 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
     height: 1,
     supportsCompactSummary: true,
     supportsDetailView: true,
+    unmountWhenOffscreen: true,
   },
+  queryKey: [["widget", "downloads"]],
   refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from(

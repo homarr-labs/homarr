@@ -5,6 +5,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("archiveTeamWarrior", {
   icon: IconArchive,
+  queryKey: [["widget", "archiveTeamWarrior"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showBroadcastMessage: factory.switch({

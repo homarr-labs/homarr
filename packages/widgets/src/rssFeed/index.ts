@@ -12,6 +12,8 @@ import { optionsBuilder } from "../options";
  */
 export const { definition, componentLoader } = createWidgetDefinition("rssFeed", {
   icon: IconRss,
+  mobile: { supportsDetailView: true },
+  queryKey: [["widget", "rssFeed"]],
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({

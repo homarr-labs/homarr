@@ -17,7 +17,7 @@ const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]
   return feedEntries;
 };
 
-export default function RssFeed({ options, width }: WidgetComponentProps<"rssFeed">) {
+export default function RssFeed({ options, width, displayMode }: WidgetComponentProps<"rssFeed">) {
   const feedEntries = useLiveFeedEntries({
     urls: options.feedUrls,
     maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
@@ -29,49 +29,55 @@ export default function RssFeed({ options, width }: WidgetComponentProps<"rssFee
 
   const isNarrow = width < 128 * 3;
 
-  return (
-    <ScrollArea className="scroll-area-w100" w="100%" p="sm">
-      <Stack w={"100%"} gap="sm">
-        {feedEntries.map((feedEntry) => (
-          <Card
-            key={feedEntry.id}
-            component={"a"}
-            href={feedEntry.link}
-            radius={board.itemRadius}
-            target="_blank"
-            w="100%"
-            p="sm"
-          >
-            {feedEntry.enclosure !== undefined && (
-              <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
+  const feed = (
+    <Stack w="100%" gap="sm" p="sm">
+      {feedEntries.map((feedEntry) => (
+        <Card
+          key={feedEntry.id}
+          component={"a"}
+          href={feedEntry.link}
+          radius={board.itemRadius}
+          target="_blank"
+          w="100%"
+          p="sm"
+        >
+          {feedEntry.enclosure !== undefined && (
+            <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
+          )}
+
+          <Group wrap="nowrap">
+            {feedEntry.enclosure !== undefined && options.showPosterImage && !isNarrow && (
+              <Image src={feedEntry.enclosure} alt={feedEntry.title} w={140} h={140} radius="sm" />
             )}
 
-            <Group wrap="nowrap">
-              {feedEntry.enclosure !== undefined && options.showPosterImage && !isNarrow && (
-                <Image src={feedEntry.enclosure} alt={feedEntry.title} w={140} h={140} radius="sm" />
+            <Flex gap="sm" direction="column" w="100%">
+              <Text dir={languageDir} fz="sm" lh="sm" lineClamp={2}>
+                {feedEntry.title}
+              </Text>
+              {!options.hideDescription && feedEntry.description && (
+                <Text
+                  className={feedEntry.description}
+                  dir={languageDir}
+                  c="dimmed"
+                  size="sm"
+                  lineClamp={options.textLinesClamp}
+                  dangerouslySetInnerHTML={{ __html: feedEntry.description }}
+                />
               )}
 
-              <Flex gap="sm" direction="column" w="100%">
-                <Text dir={languageDir} fz="sm" lh="sm" lineClamp={2}>
-                  {feedEntry.title}
-                </Text>
-                {!options.hideDescription && feedEntry.description && (
-                  <Text
-                    className={feedEntry.description}
-                    dir={languageDir}
-                    c="dimmed"
-                    size="sm"
-                    lineClamp={options.textLinesClamp}
-                    dangerouslySetInnerHTML={{ __html: feedEntry.description }}
-                  />
-                )}
+              {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
+            </Flex>
+          </Group>
+        </Card>
+      ))}
+    </Stack>
+  );
 
-                {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
-              </Flex>
-            </Group>
-          </Card>
-        ))}
-      </Stack>
+  if (displayMode === "mobileDetail") return feed;
+
+  return (
+    <ScrollArea className="scroll-area-w100" w="100%">
+      {feed}
     </ScrollArea>
   );
 }

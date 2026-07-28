@@ -1853,6 +1853,8 @@
         "internalServerError": "Failed to control DNS Hole"
       },
       "controls": {
+        "enable": "Enable",
+        "disable": "Disable",
         "enableAll": "Enable All",
         "disableAll": "Disable All",
         "setTimer": "Set Timer",
@@ -3859,7 +3861,8 @@
         }
       },
       "status": {
-        "unhealthy": "Unhealthy"
+        "unhealthy": "Unhealthy",
+        "free": "{value}% free"
       }
     },
     "customApi": {
@@ -4137,15 +4140,18 @@
   },
   "board": {
     "mobile": {
-      "actions": "Widget actions",
+      "actions": "Actions for {title}",
       "details": "Open widget details",
       "empty": {
         "title": "This board is empty",
-        "description": "Add and arrange items from a desktop or larger screen. Mobile boards use the desktop order automatically."
+        "editorDescription": "Add and arrange items from a desktop or larger screen. Mobile boards use the desktop order automatically.",
+        "viewerDescription": "No items have been added to this board yet."
       },
       "more": "More",
       "profile": "Profile and account",
       "sections": "Jump to section",
+      "dataWarning": "Data may be incomplete or outdated",
+      "systemStatus": "{up} up · {attention} need attention",
       "currentBoard": "Current board"
     },
     "action": {

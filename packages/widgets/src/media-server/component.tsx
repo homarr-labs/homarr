@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Fragment, useMemo } from "react";
+import { Fragment, useCallback, useMemo } from "react";
 import { Avatar, Badge, Divider, Flex, Group, Progress, Stack, Text, Title } from "@mantine/core";
 import {
   IconDeviceTv,
@@ -24,9 +24,47 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
+import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 
-export default function MediaServerWidget({ options, integrationIds }: WidgetComponentProps<"mediaServer">) {
+export default function MediaServerWidget({ displayMode, ...props }: WidgetComponentProps<"mediaServer">) {
+  if (displayMode === "mobileSummary") return <MediaServerMobileSummary {...props} />;
+  return <MediaServerTable {...props} />;
+}
+
+const MediaServerMobileSummary = ({
+  options,
+  integrationIds,
+}: Pick<WidgetComponentProps<"mediaServer">, "options" | "integrationIds">) => {
+  const t = useScopedI18n("widget.mediaServer");
+  const { data, error, isPending } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
+    integrationIds,
+    showOnlyPlaying: options.showOnlyPlaying,
+  });
+
+  if (isPending) return <WidgetMobileLoading />;
+  if (error && !data) throw error;
+
+  const currentStreams = data ?? [];
+  const hasPartialFailure = currentStreams.length < integrationIds.length;
+  const playingSessions = currentStreams
+    .flatMap((stream) => stream.sessions)
+    .filter((session) => session.currentlyPlaying !== null);
+
+  return (
+    <WidgetMobileSummary
+      value={playingSessions.length}
+      label={t("items.currentlyPlaying")}
+      description={playingSessions[0]?.currentlyPlaying?.name}
+      isStale={Boolean(error) || hasPartialFailure}
+    />
+  );
+};
+
+const MediaServerTable = ({
+  options,
+  integrationIds,
+}: Pick<WidgetComponentProps<"mediaServer">, "options" | "integrationIds">) => {
   const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
     integrationIds,
     showOnlyPlaying: options.showOnlyPlaying,
@@ -77,7 +115,9 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
               ? Math.min(100, Math.round((positionMs / durationMs) * 100))
               : null;
           const remainingMinutes =
-            positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
+            positionMs !== null && durationMs !== null
+              ? Math.max(0, Math.round((durationMs - positionMs) / 60_000))
+              : null;
 
           return (
             <Stack gap={4} style={{ minWidth: 0 }}>
@@ -124,8 +164,8 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
 
           const isTranscoding = Boolean(
             currentlyPlaying.metadata?.transcoding.target.videoCodec ??
-              currentlyPlaying.metadata?.transcoding.target.audioCodec ??
-              currentlyPlaying.metadata?.transcoding.container,
+            currentlyPlaying.metadata?.transcoding.target.audioCodec ??
+            currentlyPlaying.metadata?.transcoding.container,
           );
 
           return (
@@ -165,6 +205,17 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
   );
 
   const { openModal } = useModalAction(ItemInfoModal);
+  const openSession = useCallback(
+    (session: StreamSession) => {
+      openModal(
+        { item: session },
+        {
+          title: session.sessionName,
+        },
+      );
+    },
+    [openModal],
+  );
   const table = useTranslatedMantineReactTable({
     columns,
     data: flatSessions,
@@ -210,17 +261,21 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
         height: "100%",
       },
     },
-    mantineTableBodyCellProps: ({ row }) => ({
-      onClick: () => {
-        openModal(
-          {
-            item: row.original,
-          },
-          {
-            title: row.original.sessionName,
-          },
-        );
+    mantineTableBodyRowProps: ({ row }) => ({
+      tabIndex: 0,
+      "aria-haspopup": "dialog",
+      "aria-label": row.original.currentlyPlaying
+        ? `${row.original.sessionName}: ${row.original.currentlyPlaying.name}`
+        : row.original.sessionName,
+      onClick: () => openSession(row.original),
+      onKeyDown: (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        openSession(row.original);
       },
+      style: { cursor: "pointer" },
+    }),
+    mantineTableBodyCellProps: () => ({
       py: 4,
       style: {
         overflowX: "hidden",
@@ -230,7 +285,7 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
   });
 
   const uniqueIntegrations = Array.from(new Set(flatSessions.map((session) => session.integrationKind))).map((kind) => {
-    const session = flatSessions.find((session) => session.integrationKind === kind);
+    const session = flatSessions.find((candidate) => candidate.integrationKind === kind);
     return {
       integrationKind: kind,
       integrationIcon: session?.integrationIcon,
@@ -262,7 +317,7 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
       </Group>
     </Stack>
   );
-}
+};
 
 const ItemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
   const t = useScopedI18n("widget.mediaServer.items");

@@ -7,6 +7,8 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("indexerManager", {
   icon: IconReportSearch,
+  mobile: { supportsDetailView: true },
+  queryKey: [["widget", "indexerManager"]],
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({

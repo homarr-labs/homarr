@@ -13,6 +13,7 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
     supportsCompactSummary: true,
     eager: true,
   },
+  queryKey: [["widget", "smartHome"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       entityId: factory.text({

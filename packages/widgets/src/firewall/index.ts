@@ -7,6 +7,8 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("firewall", {
   icon: IconWall,
+  mobile: { supportsDetailView: true },
+  queryKey: [["widget", "firewall"]],
   refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from(() => ({}));

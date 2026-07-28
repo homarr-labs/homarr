@@ -14,6 +14,8 @@ const hideUnlessAudiobookshelf = {
 
 export const { definition, componentLoader } = createWidgetDefinition("audioStats", {
   icon: IconHeadphones,
+  mobile: { supportsDetailView: true },
+  queryKey: [["widget", "audioStats"]],
   supportedIntegrations: ["navidrome", "audiobookshelf"],
   integrationsRequired: true,
   maxIntegrations: 1,

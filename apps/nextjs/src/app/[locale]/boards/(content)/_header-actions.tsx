@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { Box, Button, Divider, Drawer, Group, Menu, ScrollArea, Stack, Text } from "@mantine/core";
@@ -47,6 +47,7 @@ import { useCategoryActions } from "~/components/board/sections/category/categor
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
 import { createMobileBoardElements } from "~/components/board/mobile/mobile-layout";
+import { focusMobileBoardSection } from "~/components/board/mobile/mobile-section-navigation";
 import { useIsMobileBoard } from "~/components/board/use-mobile-board";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { CurrentColorSchemeCombobox } from "~/components/color-scheme/current-color-scheme-combobox";
@@ -268,6 +269,7 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
   const tProfile = useScopedI18n("common.userAvatar.menu");
   const reduceMotion = useReducedMotion();
   const [opened, disclosure] = useDisclosure(false);
+  const pendingSectionAnchorId = useRef<string | null>(null);
   const desktopLayout = getDesktopLayout(board);
   const sections = useMemo(
     () => createMobileBoardElements(board, desktopLayout.id).filter((element) => element.type === "sectionHeading"),
@@ -275,12 +277,16 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
   );
 
   const jumpToSection = (anchorId: string) => {
+    pendingSectionAnchorId.current = anchorId;
     disclosure.close();
-    requestAnimationFrame(() => {
-      const heading = document.getElementById(anchorId);
-      heading?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-      heading?.focus({ preventScroll: true });
-    });
+  };
+
+  const focusPendingSection = () => {
+    const anchorId = pendingSectionAnchorId.current;
+    pendingSectionAnchorId.current = null;
+    if (!anchorId) return;
+
+    focusMobileBoardSection({ anchorId, reduceMotion });
   };
 
   return (
@@ -296,8 +302,53 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
         size="auto"
         padding="md"
         overlayProps={{ backgroundOpacity: 0.45, blur: 2 }}
+        onExitTransitionEnd={focusPendingSection}
+        styles={{
+          content: {
+            paddingLeft: "env(safe-area-inset-left)",
+            paddingRight: "env(safe-area-inset-right)",
+          },
+        }}
+        closeButtonProps={{
+          "aria-label": t("common.action.close"),
+          size: 44,
+        }}
       >
         <Stack gap="xs" pb="calc(var(--mantine-spacing-sm) + env(safe-area-inset-bottom))">
+          {sections.length >= 2 && (
+            <>
+              <Group gap="xs" px="sm" pt="xs">
+                <IconList size={18} aria-hidden />
+                <Text size="sm" fw={600}>
+                  {t("board.mobile.sections")}
+                </Text>
+              </Group>
+              {sections.map((section) => (
+                <Button
+                  key={section.id}
+                  variant="subtle"
+                  size="lg"
+                  justify="flex-start"
+                  h="auto"
+                  mih={44}
+                  py="xs"
+                  title={section.title}
+                  style={{ marginInlineStart: (section.headingLevel - 2) * 12 }}
+                  styles={{
+                    label: {
+                      whiteSpace: "normal",
+                      overflowWrap: "anywhere",
+                      textAlign: "start",
+                    },
+                  }}
+                  onClick={() => jumpToSection(section.anchorId)}
+                >
+                  {section.title}
+                </Button>
+              ))}
+              <Divider />
+            </>
+          )}
           <Button
             component={Link}
             href="/boards"
@@ -372,28 +423,6 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
             >
               {t("item.menu.label.settings")}
             </Button>
-          )}
-          {sections.length >= 2 && (
-            <>
-              {showSettings && <Divider />}
-              <Group gap="xs" px="sm" pt="xs">
-                <IconList size={18} aria-hidden />
-                <Text size="sm" fw={600}>
-                  {t("board.mobile.sections")}
-                </Text>
-              </Group>
-              {sections.map((section) => (
-                <Button
-                  key={section.id}
-                  variant="subtle"
-                  size="lg"
-                  justify="flex-start"
-                  onClick={() => jumpToSection(section.anchorId)}
-                >
-                  {section.title}
-                </Button>
-              ))}
-            </>
           )}
         </Stack>
       </Drawer>

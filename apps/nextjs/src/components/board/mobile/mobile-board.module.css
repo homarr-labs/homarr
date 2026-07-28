@@ -6,6 +6,18 @@
   overflow-x: clip;
 }
 
+.boardTitle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(var(--mobile-column-count), minmax(0, 1fr));
@@ -18,8 +30,6 @@
   position: relative;
   min-width: 0;
   min-height: 0;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 12rem;
 }
 
 .deferredItem {
@@ -34,9 +44,18 @@
 }
 
 .sectionHeading {
+  width: fit-content;
+  max-width: 100%;
   scroll-margin-top: calc(var(--app-shell-header-height) + var(--mantine-spacing-md));
-  padding-block: var(--mantine-spacing-xs);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  color: var(--mantine-color-text);
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-xs);
   outline-offset: 4px;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 
 .empty {
@@ -48,14 +67,21 @@
   position: absolute;
   z-index: 11;
   top: 4px;
-  right: 4px;
+  inset-inline-end: 4px;
   border: 1px solid color-mix(in srgb, var(--mantine-color-white) 30%, transparent);
   box-shadow: var(--mantine-shadow-sm);
 }
 
 .detailContent,
 .detailContent > :global(.grid-stack-item-content) {
+  position: relative;
   width: 100%;
   height: 100%;
   min-height: 24rem;
+}
+
+.detailContent :global(.mantine-ActionIcon-root),
+.detailContent :global(.mantine-Button-root) {
+  min-width: 44px;
+  min-height: 44px;
 }

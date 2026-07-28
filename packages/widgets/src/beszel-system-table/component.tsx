@@ -38,6 +38,7 @@ import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
+import { BeszelSystemsMobileSummary } from "../beszel/_shared/mobile-summary";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
@@ -70,7 +71,23 @@ const getSizeConfig = (width: number): SizeConfig => {
   };
 };
 
-export default function BeszelSystemTableWidget({
+export default function BeszelSystemTableWidget({ displayMode, ...props }: WidgetComponentProps<"beszelSystemTable">) {
+  const t = useScopedI18n("widget.beszelSystemTable");
+
+  if (displayMode === "mobileSummary") {
+    return (
+      <BeszelSystemsMobileSummary
+        integrationIds={props.integrationIds}
+        statusFilter={props.options.statusFilter}
+        label={t("name")}
+      />
+    );
+  }
+
+  return <BeszelSystemTableContent {...props} />;
+}
+
+function BeszelSystemTableContent({
   options,
   integrationIds,
   isEditMode,

@@ -17,6 +17,7 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaTran
     supportsCompactSummary: true,
     supportsDetailView: true,
   },
+  queryKey: [["widget", "mediaTranscoding"]],
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({

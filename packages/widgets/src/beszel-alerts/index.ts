@@ -6,6 +6,14 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelAlerts", {
   icon: IconBell,
+  mobile: {
+    width: 2,
+    height: 1,
+    supportsCompactSummary: true,
+    supportsDetailView: true,
+    unmountWhenOffscreen: true,
+  },
+  queryKey: [["widget", "beszel"]],
   supportedIntegrations: ["beszel", "mock"],
   integrationsRequired: true,
   createOptions() {

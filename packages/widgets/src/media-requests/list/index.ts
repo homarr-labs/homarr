@@ -17,6 +17,7 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaRequ
     supportsCompactSummary: true,
     supportsDetailView: true,
   },
+  queryKey: [["widget", "mediaRequests"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       linksTargetNewTab: factory.switch({
@@ -38,6 +39,7 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaRequ
   contextActions: ({ integrationIds }) => [
     {
       key: "search",
+      mobileVisible: true,
       label: (t) => t("search.mode.media.action.search.label"),
       icon: IconSearch,
       onClick: () => {

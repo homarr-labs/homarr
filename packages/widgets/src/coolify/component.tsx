@@ -10,7 +10,12 @@ import { createWidgetKey } from "./coolify-utils";
 import { InstanceCard } from "./instance-card";
 import { SingleInstanceLayout } from "./single-instance-layout";
 
-export default function CoolifyWidget({ options, integrationIds, width }: WidgetComponentProps<"coolify">) {
+export default function CoolifyWidget({
+  options,
+  integrationIds,
+  width,
+  displayMode,
+}: WidgetComponentProps<"coolify">) {
   const t = useScopedI18n("widget.coolify");
 
   if (integrationIds.length === 0) {
@@ -21,16 +26,24 @@ export default function CoolifyWidget({ options, integrationIds, width }: Widget
     );
   }
 
-  return <CoolifyContent integrationIds={integrationIds} options={options} width={width} />;
+  return (
+    <CoolifyContent
+      integrationIds={integrationIds}
+      options={options}
+      width={width}
+      isMobileDetail={displayMode === "mobileDetail"}
+    />
+  );
 }
 
 interface CoolifyContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"coolify">["options"];
   width: number;
+  isMobileDetail: boolean;
 }
 
-function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps) {
+function CoolifyContent({ integrationIds, options, width, isMobileDetail }: CoolifyContentProps) {
   const { data: instancesData = [] } = clientApi.widget.coolify.getInstancesInfo.useQuery({ integrationIds });
 
   const isTiny = width < 256;
@@ -38,7 +51,15 @@ function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps)
   const widgetKey = createWidgetKey(integrationIds);
 
   if (instancesData.length === 1 && firstInstance) {
-    return <SingleInstanceLayout instance={firstInstance} options={options} isTiny={isTiny} widgetKey={widgetKey} />;
+    return (
+      <SingleInstanceLayout
+        instance={firstInstance}
+        options={options}
+        isTiny={isTiny}
+        widgetKey={widgetKey}
+        isMobileDetail={isMobileDetail}
+      />
+    );
   }
 
   return (
@@ -51,6 +72,7 @@ function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps)
             options={options}
             isTiny={isTiny}
             widgetKey={widgetKey}
+            isMobileDetail={isMobileDetail}
           />
         ))}
       </Stack>

@@ -8,17 +8,21 @@ export const uptimeKumaRouter = createTRPCRouter({
   getDashboard: publicProcedure
     .concat(createManyIntegrationMiddleware("query", "uptimeKuma"))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const innerHandler = uptimeKumaRequestHandler.handler(integration, {});
-        const { data, timestamp } = await innerHandler.getDataAsync();
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const innerHandler = uptimeKumaRequestHandler.handler(integration, {});
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          integrationUrl: integration.url,
-          dashboard: data,
-          updatedAt: timestamp,
-        };
-      });
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationUrl: integration.url,
+            dashboard: data,
+            updatedAt: timestamp,
+          };
+        },
+        { throwOnAllFailure: true },
+      );
     }),
 });

@@ -5,6 +5,8 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("traefik", {
   icon: IconRoute,
+  mobile: { supportsDetailView: true },
+  queryKey: [["widget", "traefik"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showTcp: factory.switch({

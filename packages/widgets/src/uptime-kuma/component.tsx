@@ -10,6 +10,7 @@ import type { UptimeKumaDashboardData } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
@@ -85,24 +86,41 @@ const heroVariantByRing = {
   false: classes.heroTextOnly,
 } as const;
 
-export default function UptimeKumaWidget({ integrationIds, options, width }: WidgetComponentProps<"uptimeKuma">) {
+export default function UptimeKumaWidget({
+  integrationIds,
+  options,
+  width,
+  displayMode,
+}: WidgetComponentProps<"uptimeKuma">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }
 
-  return <UptimeKumaContent integrationIds={integrationIds} options={options} width={width} />;
+  return (
+    <UptimeKumaContent integrationIds={integrationIds} options={options} width={width} displayMode={displayMode} />
+  );
 }
 
 interface UptimeKumaContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"uptimeKuma">["options"];
   width: number;
+  displayMode?: WidgetComponentProps<"uptimeKuma">["displayMode"];
 }
 
-function UptimeKumaContent({ integrationIds, options, width }: UptimeKumaContentProps) {
+function UptimeKumaContent({ integrationIds, options, width, displayMode }: UptimeKumaContentProps) {
   const t = useScopedI18n("widget.uptimeKuma");
-  const { data: dashboardData } = clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds });
+  const {
+    data: dashboardData,
+    error,
+    isPending,
+  } = clientApi.widget.uptimeKuma.getDashboard.useQuery({
+    integrationIds,
+  });
+  const hasPartialFailure = (dashboardData?.length ?? 0) < integrationIds.length;
 
+  if (displayMode === "mobileSummary" && isPending) return <WidgetMobileLoading />;
+  if (displayMode === "mobileSummary" && error && !dashboardData) throw error;
   if (!dashboardData) return <WidgetEmptyState />;
 
   const combined = dashboardData.reduce<UptimeKumaDashboardData>(
@@ -131,6 +149,38 @@ function UptimeKumaContent({ integrationIds, options, width }: UptimeKumaContent
 
   const showHero = options.showAverageUptime;
   const hasContent = showHero || visibleStatKeys.length > 0;
+
+  if (displayMode === "mobileSummary") {
+    const primaryStat = visibleStatKeys[0];
+    const supportingStat = showHero ? primaryStat : visibleStatKeys[1];
+    const supportingDescription = supportingStat
+      ? `${formatNumber(combined[supportingStat], 0)} ${t(`stats.${supportingStat}`)}`
+      : undefined;
+
+    if (!showHero && primaryStat) {
+      return (
+        <WidgetMobileSummary
+          value={formatNumber(combined[primaryStat], 0)}
+          label={t(`stats.${primaryStat}`)}
+          description={supportingDescription}
+          isStale={Boolean(error) || hasPartialFailure}
+        />
+      );
+    }
+
+    if (!hasContent) {
+      return <WidgetMobileSummary value="—" label={t("name")} isStale={Boolean(error) || hasPartialFailure} />;
+    }
+
+    return (
+      <WidgetMobileSummary
+        value={`${formatNumber(uptimeValue, 1)}%`}
+        label={t("averageUptime")}
+        description={supportingDescription}
+        isStale={Boolean(error) || hasPartialFailure}
+      />
+    );
+  }
 
   const heroLayoutClass =
     heroLayoutBySecondaryStats[String(visibleStatKeys.length > 0) as keyof typeof heroLayoutBySecondaryStats];

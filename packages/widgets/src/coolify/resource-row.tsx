@@ -3,6 +3,8 @@
 import { ActionIcon, Anchor, Group, Indicator, Stack, Text } from "@mantine/core";
 import { IconExternalLink, IconFileText, IconLink } from "@tabler/icons-react";
 
+import { useScopedI18n } from "@homarr/translation/client";
+
 import { cleanFqdn, getResourceTimestamp, getStatusColor, parseStatus } from "./coolify-utils";
 
 interface ResourceRowProps {
@@ -21,11 +23,18 @@ interface ResourceRowProps {
   baseUrl: string;
   isTiny: boolean;
   resourceType: "application" | "service";
+  isMobileDetail: boolean;
 }
 
-export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRowProps) {
+export function ResourceRow({ item, baseUrl, isTiny, resourceType, isMobileDetail }: ResourceRowProps) {
+  const tCommon = useScopedI18n("common");
+  const tApp = useScopedI18n("widget.app");
   const status = parseStatus(item.status ?? "");
   const statusColor = getStatusColor(status);
+  const fqdn = cleanFqdn(item.fqdn);
+  const actionIconSize = isMobileDetail ? 44 : "xs";
+  const resourceLabel = resourceType === "application" ? tCommon("applications") : tCommon("services");
+  const openInNewTabLabel = tApp("option.openInNewTab.label");
 
   const resourceUrl =
     item.projectUuid && item.environmentUuid
@@ -49,18 +58,42 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
         )}
       </Group>
       <Group wrap="nowrap" gap={4} ml={16}>
-        {cleanFqdn(item.fqdn) && (
-          <ActionIcon component="a" href={cleanFqdn(item.fqdn)} target="_blank" size="xs" variant="subtle" c="dimmed">
+        {fqdn && (
+          <ActionIcon
+            component="a"
+            href={fqdn}
+            target="_blank"
+            size={actionIconSize}
+            variant="subtle"
+            c="dimmed"
+            aria-label={`${openInNewTabLabel}: ${fqdn}`}
+          >
             <IconLink size={12} />
           </ActionIcon>
         )}
         {resourceUrl && (
-          <ActionIcon component="a" href={resourceUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
+          <ActionIcon
+            component="a"
+            href={resourceUrl}
+            target="_blank"
+            size={actionIconSize}
+            variant="subtle"
+            c="dimmed"
+            aria-label={`${openInNewTabLabel}: ${resourceLabel} ${item.name}`}
+          >
             <IconExternalLink size={12} />
           </ActionIcon>
         )}
         {logsUrl && (
-          <ActionIcon component="a" href={logsUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
+          <ActionIcon
+            component="a"
+            href={logsUrl}
+            target="_blank"
+            size={actionIconSize}
+            variant="subtle"
+            c="dimmed"
+            aria-label={`${tCommon("action.checkLogs")}: ${item.name}`}
+          >
             <IconFileText size={12} />
           </ActionIcon>
         )}

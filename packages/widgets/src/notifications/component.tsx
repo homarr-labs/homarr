@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Avatar, Box, Card, Center, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
+import { Avatar, Box, Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -9,6 +9,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useTimeAgo } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 
 export default function NotificationsWidget({
@@ -16,7 +17,11 @@ export default function NotificationsWidget({
   integrationIds,
   displayMode,
 }: WidgetComponentProps<"notifications">) {
-  const { data: notificationIntegrations = [] } = clientApi.widget.notifications.getNotifications.useQuery({
+  const {
+    data: notificationIntegrations,
+    error,
+    isPending,
+  } = clientApi.widget.notifications.getNotifications.useQuery({
     ...options,
     integrationIds,
   });
@@ -27,38 +32,39 @@ export default function NotificationsWidget({
 
   const sortedNotifications = useMemo(
     () =>
-      notificationIntegrations
+      (notificationIntegrations ?? [])
         .flatMap((integration) => integration.data)
         .sort((entryA, entryB) => entryB.time.getTime() - entryA.time.getTime()),
     [notificationIntegrations],
   );
 
   if (displayMode === "mobileSummary") {
+    if (isPending) return <WidgetMobileLoading />;
+    if (error && !notificationIntegrations) throw error;
+
+    const notifications = notificationIntegrations ?? [];
     const latestNotification = sortedNotifications[0];
+    const isStale = Boolean(error) || notifications.length < integrationIds.length;
+    const summary = latestNotification ? (
+      <NotificationMobileSummary notification={latestNotification} isStale={isStale} />
+    ) : (
+      <WidgetMobileSummary value={0} label={t("name")} description={t("noItems")} isStale={isStale} />
+    );
+
+    if (!latestNotification?.href) return summary;
 
     return (
-      <Center h="100%" p="md">
-        {latestNotification ? (
-          latestNotification.href ? (
-            <Box
-              component="a"
-              href={latestNotification.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              maw="100%"
-              style={{ color: "inherit", textDecoration: "none" }}
-            >
-              <NotificationSummary notification={latestNotification} />
-            </Box>
-          ) : (
-            <NotificationSummary notification={latestNotification} />
-          )
-        ) : (
-          <Text size="sm" c="dimmed">
-            {t("noItems")}
-          </Text>
-        )}
-      </Center>
+      <Box
+        component="a"
+        href={latestNotification.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        h="100%"
+        display="block"
+        style={{ color: "inherit", textDecoration: "none" }}
+      >
+        {summary}
+      </Box>
     );
   }
 
@@ -113,22 +119,21 @@ export default function NotificationsWidget({
   );
 }
 
-const NotificationSummary = ({
+const NotificationMobileSummary = ({
   notification,
+  isStale,
 }: {
   notification: {
     title: string | null;
     body: string;
     time: Date;
   };
-}) => (
-  <Stack align="center" gap={4} maw="100%">
-    <Text fw={700} size="lg" lineClamp={1} maw="100%">
-      {notification.title ?? notification.body}
-    </Text>
-    <InfoDisplay date={notification.time} />
-  </Stack>
-);
+  isStale: boolean;
+}) => {
+  const timeAgo = useTimeAgo(notification.time, 30000);
+
+  return <WidgetMobileSummary value={notification.title ?? notification.body} label={timeAgo} isStale={isStale} />;
+};
 
 const InfoDisplay = ({ date }: { date: Date }) => {
   const timeAgo = useTimeAgo(date, 30000); // update every 30sec

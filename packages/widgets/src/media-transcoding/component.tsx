@@ -10,7 +10,7 @@ import type { TablerIcon } from "@homarr/ui";
 
 import { views } from ".";
 import { WidgetEmptyState } from "../common/empty-state";
-import { WidgetMobileSummary } from "../common/mobile-summary";
+import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 import { HealthCheckStatus } from "./health-check-status";
 import { QueuePanel } from "./panels/queue.panel";
@@ -40,11 +40,13 @@ export default function MediaTranscodingWidget({
     pageSize: queuePageSize,
     page: queuePage,
   };
-  const { data: transcodingData } = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input);
+  const { data: transcodingData, error, isPending } = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input);
 
   const [view, setView] = useState<View>(options.defaultView);
   const t = useI18n("widget.mediaTranscoding");
 
+  if (displayMode === "mobileSummary" && isPending) return <WidgetMobileLoading />;
+  if (displayMode === "mobileSummary" && error && !transcodingData) throw error;
   if (!transcodingData) return <WidgetEmptyState />;
 
   if (displayMode === "mobileSummary") {
@@ -64,6 +66,7 @@ export default function MediaTranscodingWidget({
         value={summary.value}
         label={summary.label}
         description={t(failedHealthChecks > 0 ? "healthCheck.status.unhealthy" : "healthCheck.status.healthy")}
+        isStale={Boolean(error)}
       />
     );
   }

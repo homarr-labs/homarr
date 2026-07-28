@@ -16,6 +16,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
+import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
@@ -35,6 +36,7 @@ const actionIconIconStyle: IconProps["style"] = {
 
 const createColumns = (
   t: ReturnType<typeof useScopedI18n<"docker">>,
+  actionIconSize: "xs" | 44,
 ): MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] => [
   {
     id: "name",
@@ -130,6 +132,7 @@ const createColumns = (
       const { mutateAsync: startContainer } = clientApi.docker.startAll.useMutation({ onSettled });
       const { mutateAsync: stopContainer } = clientApi.docker.stopAll.useMutation({ onSettled });
       const { mutateAsync: restartContainer } = clientApi.docker.restartAll.useMutation({ onSettled });
+      const toggleAction = row.original.state === "running" ? "stop" : "start";
 
       const handleActionAsync = async (action: "start" | "stop" | "restart") => {
         const mutation = action === "start" ? startContainer : action === "stop" ? stopContainer : restartContainer;
@@ -155,12 +158,13 @@ const createColumns = (
 
       return (
         <Group wrap="nowrap" gap="xs">
-          <Tooltip label={row.original.state === "running" ? t("action.stop.label") : t("action.start.label")}>
+          <Tooltip label={t(`action.${toggleAction}.label`)}>
             <ActionIcon
               variant="subtle"
-              size="xs"
+              size={actionIconSize}
               radius="100%"
-              onClick={() => handleActionAsync(row.original.state === "running" ? "stop" : "start")}
+              aria-label={`${t(`action.${toggleAction}.label`)}: ${row.original.name}`}
+              onClick={() => handleActionAsync(toggleAction)}
             >
               {row.original.state === "running" ? (
                 <IconPlayerStop style={actionIconIconStyle} />
@@ -170,7 +174,13 @@ const createColumns = (
             </ActionIcon>
           </Tooltip>
           <Tooltip label={t("action.restart.label")}>
-            <ActionIcon variant="subtle" size="xs" radius="100%" onClick={() => handleActionAsync("restart")}>
+            <ActionIcon
+              variant="subtle"
+              size={actionIconSize}
+              radius="100%"
+              aria-label={`${t("action.restart.label")}: ${row.original.name}`}
+              onClick={() => handleActionAsync("restart")}
+            >
               <IconRotateClockwise style={actionIconIconStyle} />
             </ActionIcon>
           </Tooltip>
@@ -180,12 +190,38 @@ const createColumns = (
   },
 ];
 
-export default function DockerWidget({ options, width, isEditMode }: WidgetComponentProps<"dockerContainers">) {
+export default function DockerWidget({ displayMode, ...props }: WidgetComponentProps<"dockerContainers">) {
+  if (displayMode === "mobileSummary") return <DockerMobileSummary />;
+  return <DockerTable {...props} displayMode={displayMode} />;
+}
+
+const DockerMobileSummary = () => {
+  const t = useScopedI18n("docker");
+  const { data, error, isPending } = clientApi.docker.getContainers.useQuery();
+
+  if (isPending) return <WidgetMobileLoading />;
+  if (error && !data) throw error;
+
+  const containers = data?.containers ?? [];
+  const runningContainers = containers.filter((container) => container.state === "running").length;
+
+  return (
+    <WidgetMobileSummary
+      value={runningContainers}
+      label={t("field.state.option.running")}
+      description={t("table.footer", { count: containers.length.toString() })}
+      isStale={Boolean(error)}
+    />
+  );
+};
+
+const DockerTable = ({ options, width, isEditMode, displayMode }: WidgetComponentProps<"dockerContainers">) => {
   const t = useScopedI18n("docker");
   const isTiny = width <= 256;
+  const actionIconSize = displayMode === "mobileDetail" ? 44 : "xs";
 
   const { data, refetch, isFetching } = clientApi.docker.getContainers.useQuery();
-  const containers = data?.containers ?? [];
+  const containers = useMemo(() => data?.containers ?? [], [data?.containers]);
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
 
@@ -202,7 +238,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
     );
   }, [containers]);
 
-  const columns = useMemo(() => createColumns(t), [t]);
+  const columns = useMemo(() => createColumns(t, actionIconSize), [t, actionIconSize]);
 
   const columnVisibility: MRT_VisibilityState = {
     name: options.columns.includes("name"),
@@ -300,7 +336,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
 
             <Tooltip label={t("table.refresh.lastUpdated", { when: relativeTime })}>
               <ActionIcon
-                size="sm"
+                size={displayMode === "mobileDetail" ? 44 : "sm"}
                 variant="transparent"
                 c="var(--mantine-color-text)"
                 loading={isFetching}
@@ -315,4 +351,4 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
       )}
     </Stack>
   );
-}
+};

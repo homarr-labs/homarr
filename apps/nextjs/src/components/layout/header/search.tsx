@@ -6,11 +6,15 @@ import { IconSearch } from "@tabler/icons-react";
 import { openSpotlight } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 
+import { useIsMobileBoard } from "../../board/use-mobile-board";
 import { HeaderButton } from "./button";
 import classes from "./search.module.css";
 
 export const DesktopSearchInput = () => {
   const t = useI18n();
+  const isMobileBoard = useIsMobileBoard();
+
+  if (isMobileBoard) return null;
 
   return (
     <TextInput
@@ -29,9 +33,14 @@ export const DesktopSearchInput = () => {
 
 export const MobileSearchButton = () => {
   const t = useI18n();
+  const isMobileBoard = useIsMobileBoard();
 
   return (
-    <HeaderButton onClick={openSpotlight} className={classes.mobileSearch} aria-label={t("search.placeholder")}>
+    <HeaderButton
+      onClick={openSpotlight}
+      className={isMobileBoard ? undefined : classes.mobileSearch}
+      aria-label={t("search.placeholder")}
+    >
       <IconSearch size={20} stroke={1.5} />
     </HeaderButton>
   );

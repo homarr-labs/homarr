@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Box, Button, Center, Loader, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
 import { IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
 
@@ -15,9 +15,20 @@ import classes from "./component.module.css";
 import type { WidgetComponentProps } from "../definition";
 import type { BeszelTimePeriod } from "../beszel/_shared/chart";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
+import { BeszelSystemsMobileSummary } from "../beszel/_shared/mobile-summary";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
 
-export default function BeszelSystemStatsWidget({
+export default function BeszelSystemStatsWidget({ displayMode, ...props }: WidgetComponentProps<"beszelSystemStats">) {
+  const t = useScopedI18n("widget.beszelSystemStats");
+
+  if (displayMode === "mobileSummary") {
+    return <BeszelSystemsMobileSummary integrationIds={props.integrationIds} statusFilter="all" label={t("name")} />;
+  }
+
+  return <BeszelSystemStatsContent {...props} />;
+}
+
+function BeszelSystemStatsContent({
   options,
   integrationIds,
   isEditMode,
@@ -25,6 +36,7 @@ export default function BeszelSystemStatsWidget({
   boardId,
   itemId,
   setOptions,
+  isReadOnly = false,
 }: WidgetComponentProps<"beszelSystemStats">) {
   const t = useScopedI18n("widget.beszelSystemStats");
   const board = useOptionalBoard();
@@ -41,18 +53,29 @@ export default function BeszelSystemStatsWidget({
     () => systemsResult.flatMap((result) => result.systems.map((system) => ({ value: system.id, label: system.name }))),
     [systemsResult],
   );
-  const selectedSystem = options.systemId || systems[0]?.value || "";
+  const [temporarySystemId, setTemporarySystemId] = useState<string | null>(null);
+  const [temporaryTimePeriod, setTemporaryTimePeriod] = useState<BeszelTimePeriod | null>(null);
+  const configuredSystem = temporarySystemId ?? options.systemId;
+  const selectedSystem =
+    isReadOnly && !systems.some((system) => system.value === configuredSystem)
+      ? (systems[0]?.value ?? "")
+      : configuredSystem || systems[0]?.value || "";
   const selectedLabel = systems.find((system) => system.value === selectedSystem)?.label;
   const systemExists = systems.some((system) => system.value === selectedSystem);
 
   const handleSelectSystem = useCallback(
     (value: string) => {
+      if (isReadOnly) {
+        setTemporarySystemId(value);
+        return;
+      }
+
       setOptions({ newOptions: { systemId: value } });
       if (hasChangeAccess && boardId && itemId) {
         saveItemOptions({ boardId, itemId, newOptions: { systemId: value } });
       }
     },
-    [setOptions, hasChangeAccess, boardId, itemId, saveItemOptions],
+    [setOptions, isReadOnly, hasChangeAccess, boardId, itemId, saveItemOptions],
   );
 
   if (systemsError) throw systemsError;
@@ -140,7 +163,7 @@ export default function BeszelSystemStatsWidget({
           <BeszelStatsView
             integrationIds={integrationIds}
             systemId={selectedSystem}
-            timePeriod={options.timePeriod as BeszelTimePeriod}
+            timePeriod={temporaryTimePeriod ?? (options.timePeriod as BeszelTimePeriod)}
             columns={width > 600 ? 2 : 1}
             visibility={{
               cpu: options.showCpu,
@@ -152,7 +175,13 @@ export default function BeszelSystemStatsWidget({
               dockerMemory: options.showDockerMemory,
               dockerNetwork: options.showDockerNetwork,
             }}
-            onSwitchToHistorical={() => setOptions({ newOptions: { timePeriod: "1h" } })}
+            onSwitchToHistorical={() => {
+              if (isReadOnly) {
+                setTemporaryTimePeriod("1h");
+                return;
+              }
+              setOptions({ newOptions: { timePeriod: "1h" } });
+            }}
           />
         </Stack>
       </ScrollArea>

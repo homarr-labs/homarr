@@ -41,6 +41,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { formatByteRate, formatBytes, useIntegrationConnected } from "@homarr/common";
@@ -48,6 +49,7 @@ import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 
 dayjs.extend(relativeTime);
@@ -78,13 +80,85 @@ const columnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
   upSpeed: 3,
 };
 
-export default function DownloadClientsWidget({
+type DownloadsWidgetOptions = WidgetComponentProps<"downloads">["options"];
+type DownloadItem = RouterOutputs["widget"]["downloads"]["getJobsAndStatuses"][number]["data"]["items"][number];
+type DownloadVisibilityOptions = Pick<
+  DownloadsWidgetOptions,
+  | "activeTorrentThreshold"
+  | "categoryFilter"
+  | "filterIsWhitelist"
+  | "showCompletedHttp"
+  | "showCompletedTorrent"
+  | "showCompletedUsenet"
+>;
+
+const matchesConfiguredFilters = (item: DownloadItem, options: DownloadVisibilityOptions) => {
+  const matchesCategoryFilter =
+    options.filterIsWhitelist ===
+    options.categoryFilter.some((filter) =>
+      (Array.isArray(item.category) ? item.category : [item.category]).includes(filter),
+    );
+  const isVisibleCompletedItem =
+    (item.type === "torrent" &&
+      ((item.progress === 1 &&
+        options.showCompletedTorrent &&
+        (item.upSpeed ?? 0) >= Number(options.activeTorrentThreshold) * 1024) ||
+        item.progress !== 1)) ||
+    (item.type === "usenet" && ((item.progress === 1 && options.showCompletedUsenet) || item.progress !== 1)) ||
+    (item.type === "miscellaneous" && ((item.progress === 1 && options.showCompletedHttp) || item.progress !== 1));
+
+  return matchesCategoryFilter && isVisibleCompletedItem;
+};
+
+export default function DownloadClientsWidget(props: WidgetComponentProps<"downloads">) {
+  if (props.displayMode === "mobileSummary") {
+    return <DownloadClientsMobileSummary integrationIds={props.integrationIds} options={props.options} />;
+  }
+
+  return <DownloadClientsTable {...props} />;
+}
+
+const DownloadClientsMobileSummary = ({
+  integrationIds,
+  options,
+}: Pick<WidgetComponentProps<"downloads">, "integrationIds" | "options">) => {
+  const t = useScopedI18n("widget.downloads");
+  const { data, error, isPending } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
+    integrationIds,
+    limitPerIntegration: options.limitPerIntegration,
+  });
+
+  if (isPending) return <WidgetMobileLoading />;
+  if (error && !data) throw error;
+
+  const currentItems = data ?? [];
+  const selectedClients = currentItems.filter(({ integration }) => integrationIds.includes(integration.id));
+  const visibleItemCount = selectedClients.reduce(
+    (total, { data: clientData }) =>
+      total + clientData.items.filter((item) => matchesConfiguredFilters(item, options)).length,
+    0,
+  );
+  const totalDownloadSpeed = selectedClients.reduce(
+    (total, { data: clientData }) => total + (clientData.status.rates.down ?? 0),
+    0,
+  );
+
+  return (
+    <WidgetMobileSummary
+      value={visibleItemCount}
+      label={t("name")}
+      description={`${t("items.downSpeed.columnTitle")}: ${formatByteRate(totalDownloadSpeed)}`}
+      isStale={Boolean(error) || currentItems.length < integrationIds.length}
+    />
+  );
+};
+
+const DownloadClientsTable = ({
   isEditMode,
   integrationIds,
   options,
   setOptions,
-  displayMode,
-}: WidgetComponentProps<"downloads">) {
+}: WidgetComponentProps<"downloads">) => {
   const integrationsWithInteractions = useIntegrationsWithInteractAccess().flatMap(({ id }) =>
     integrationIds.includes(id) ? [id] : [],
   );
@@ -119,6 +193,25 @@ export default function DownloadClientsWidget({
   const { mutate: mutatePauseItem } = clientApi.widget.downloads.pauseItem.useMutation(invalidateDownloads);
   const { mutate: mutateDeleteItem } = clientApi.widget.downloads.deleteItem.useMutation(invalidateDownloads);
 
+  const visibilityOptions = useMemo<DownloadVisibilityOptions>(
+    () => ({
+      activeTorrentThreshold: options.activeTorrentThreshold,
+      categoryFilter: options.categoryFilter,
+      filterIsWhitelist: options.filterIsWhitelist,
+      showCompletedHttp: options.showCompletedHttp,
+      showCompletedTorrent: options.showCompletedTorrent,
+      showCompletedUsenet: options.showCompletedUsenet,
+    }),
+    [
+      options.activeTorrentThreshold,
+      options.categoryFilter,
+      options.filterIsWhitelist,
+      options.showCompletedHttp,
+      options.showCompletedTorrent,
+      options.showCompletedUsenet,
+    ],
+  );
+
   //Flatten Data array for which each element has its integration, data (base + calculated) and actions
   const data = useMemo<ExtendedDownloadClientItem[]>(
     () =>
@@ -129,24 +222,7 @@ export default function DownloadClientsWidget({
         .flatMap((pair) =>
           //Apply user white/black list
           pair.data.items
-            .filter(
-              ({ category }) =>
-                options.filterIsWhitelist ===
-                options.categoryFilter.some((filter) =>
-                  (Array.isArray(category) ? category : [category]).includes(filter),
-                ),
-            )
-            //Filter completed items following widget option
-            .filter(
-              ({ type, progress, upSpeed }) =>
-                (type === "torrent" &&
-                  ((progress === 1 &&
-                    options.showCompletedTorrent &&
-                    (upSpeed ?? 0) >= Number(options.activeTorrentThreshold) * 1024) ||
-                    progress !== 1)) ||
-                (type === "usenet" && ((progress === 1 && options.showCompletedUsenet) || progress !== 1)) ||
-                (type === "miscellaneous" && ((progress === 1 && options.showCompletedHttp) || progress !== 1)),
-            )
+            .filter((item) => matchesConfiguredFilters(item, visibilityOptions))
             //Filter following user quick setting
             .filter(
               ({ state }) =>
@@ -184,13 +260,8 @@ export default function DownloadClientsWidget({
       mutateDeleteItem,
       mutatePauseItem,
       mutateResumeItem,
-      options.activeTorrentThreshold,
-      options.categoryFilter,
-      options.filterIsWhitelist,
-      options.showCompletedTorrent,
-      options.showCompletedUsenet,
-      options.showCompletedHttp,
       quickFilters,
+      visibilityOptions,
     ],
   );
 
@@ -317,12 +388,24 @@ export default function DownloadClientsWidget({
           return actions ? (
             <Group wrap="nowrap" gap="xs">
               <Tooltip label={t(`actions.item.${pausedAction}`)}>
-                <ActionIcon size="xs" variant="light" radius="100%" onClick={actions[pausedAction]}>
+                <ActionIcon
+                  size="xs"
+                  variant="light"
+                  radius="100%"
+                  aria-label={`${t(`actions.item.${pausedAction}`)}: ${row.original.name}`}
+                  onClick={actions[pausedAction]}
+                >
                   {pausedAction === "resume" ? <IconPlayerPlay /> : <IconPlayerPause />}
                 </ActionIcon>
               </Tooltip>
               <Tooltip label={t("actions.item.delete.title")}>
-                <ActionIcon size="xs" color="red" radius="100%" onClick={open}>
+                <ActionIcon
+                  size="xs"
+                  color="red"
+                  radius="100%"
+                  aria-label={`${t("actions.item.delete.title")}: ${row.original.name}`}
+                  onClick={open}
+                >
                   <IconTrash />
                 </ActionIcon>
               </Tooltip>
@@ -354,7 +437,12 @@ export default function DownloadClientsWidget({
               </Modal>
             </Group>
           ) : (
-            <ActionIcon size="xs" radius="100%" disabled>
+            <ActionIcon
+              size="xs"
+              radius="100%"
+              aria-label={`${t("items.actions.columnTitle")}: ${row.original.name}`}
+              disabled
+            >
               <IconX />
             </ActionIcon>
           );
@@ -606,23 +694,6 @@ export default function DownloadClientsWidget({
       { up: 0, down: 0 },
     );
 
-  if (displayMode === "mobileSummary") {
-    const totalDownloadSpeed = clients.reduce((total, { status }) => total + (status?.rates.down ?? 0), 0);
-
-    return (
-      <Center h="100%" p="md">
-        <Stack align="center" gap={4} maw="100%">
-          <Text fw={700} size="xl">
-            {data.length}
-          </Text>
-          <Text c="dimmed" size="sm" lineClamp={1}>
-            {`${t("items.downSpeed.columnTitle")}: ${formatByteRate(totalDownloadSpeed)}`}
-          </Text>
-        </Stack>
-      </Center>
-    );
-  }
-
   if (options.columns.length === 0)
     return (
       <Center h="100%">
@@ -657,7 +728,7 @@ export default function DownloadClientsWidget({
       <ItemInfoModal items={data} currentIndex={clickedIndex} opened={opened} onClose={close} />
     </Stack>
   );
-}
+};
 
 interface ItemInfoModalProps {
   items: ExtendedDownloadClientItem[];
@@ -770,11 +841,17 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation(invalidateDownloads);
   const [opened, { open, close }] = useDisclosure(false);
   const t = useScopedI18n("widget.downloads");
+  const tCommon = useScopedI18n("common");
   return (
     <Group gap={5}>
       <Popover withinPortal={false} offset={0}>
         <Popover.Target>
-          <ActionIcon size="xs" radius="lg" variant="light">
+          <ActionIcon
+            size="xs"
+            radius="lg"
+            variant="light"
+            aria-label={`${tCommon("action.show")}: ${t("items.integration.columnTitle")} / ${t("items.state.columnTitle")}`}
+          >
             <IconFilter />
           </ActionIcon>
         </Popover.Target>
@@ -819,6 +896,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
             radius="lg"
             disabled={integrationsStatuses.paused.length === 0}
             variant="light"
+            aria-label={t("actions.clients.resume")}
             onClick={() => mutateResumeQueue({ integrationIds: integrationsStatuses.paused })}
           >
             <IconPlayerPlay />
@@ -843,6 +921,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
             radius="xl"
             disabled={integrationsStatuses.active.length === 0}
             variant="light"
+            aria-label={t("actions.clients.pause")}
             onClick={() => mutatePauseQueue({ integrationIds: integrationsStatuses.active })}
           >
             <IconPlayerPause />
@@ -900,6 +979,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
                       radius={999}
                       variant="light"
                       size="lg"
+                      aria-label={`${t(`actions.client.${client.status.paused ? "resume" : "pause"}`)}: ${client.integration.name}`}
                       onClick={() => {
                         (client.status?.paused ? mutateResumeQueue : mutatePauseQueue)({
                           integrationIds: [client.integration.id],
@@ -910,7 +990,13 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
                     </ActionIcon>
                   </Tooltip>
                 ) : (
-                  <ActionIcon radius={999} variant="light" size="lg" disabled>
+                  <ActionIcon
+                    radius={999}
+                    variant="light"
+                    size="lg"
+                    aria-label={`${t("items.actions.columnTitle")}: ${client.integration.name}`}
+                    disabled
+                  >
                     <IconX />
                   </ActionIcon>
                 )}

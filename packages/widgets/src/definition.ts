@@ -15,16 +15,18 @@ import type { inferOptionsFromCreator, inferOptionsFromDefinition, WidgetOptions
 export type WidgetDisplayMode = "default" | "mobileSummary" | "mobileDetail";
 
 export interface WidgetMobilePresentation {
-  width: 1 | 2;
-  height: 1 | 2 | 3;
+  width?: 1 | 2;
+  height?: 1 | 2 | 3;
   supportsCompactSummary?: boolean;
   supportsDetailView?: boolean;
   eager?: boolean;
+  unmountWhenOffscreen?: boolean;
 }
 
 export interface WidgetContextMenuAction {
   key: string;
   label: stringOrTranslation;
+  mobileVisible?: boolean;
   icon?: TablerIcon;
   onClick: () => void;
   hidden?: boolean;
@@ -111,6 +113,7 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
   boardId: string | undefined; // undefined when in preview mode
   displayMode?: WidgetDisplayMode;
   isEditMode: boolean;
+  isReadOnly?: boolean;
   setOptions: ({ newOptions }: { newOptions: Partial<inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>> }) => void;
   width: number;
   height: number;

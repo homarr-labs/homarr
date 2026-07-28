@@ -18,9 +18,10 @@ interface InstanceCardProps {
   options: CoolifyOptions;
   isTiny: boolean;
   widgetKey: string;
+  isMobileDetail: boolean;
 }
 
-export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceCardProps) {
+export function InstanceCard({ instance, options, isTiny, widgetKey, isMobileDetail }: InstanceCardProps) {
   const t = useScopedI18n("widget.coolify");
   const cardKey = `${widgetKey}-${instance.integrationId}`;
   const [showIp, setShowIp] = useLocalStorage({
@@ -99,13 +100,24 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
             isTiny={isTiny}
             showIp={showIp}
             onToggleIp={() => setShowIp((prev) => !prev)}
+            isMobileDetail={isMobileDetail}
           />
         )}
         {options.showApplications && (
-          <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
+          <ApplicationsSection
+            applications={instance.instanceInfo.applications}
+            baseUrl={baseUrl}
+            isTiny={isTiny}
+            isMobileDetail={isMobileDetail}
+          />
         )}
         {options.showServices && (
-          <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
+          <ServicesSection
+            services={instance.instanceInfo.services}
+            baseUrl={baseUrl}
+            isTiny={isTiny}
+            isMobileDetail={isMobileDetail}
+          />
         )}
       </Accordion>
 

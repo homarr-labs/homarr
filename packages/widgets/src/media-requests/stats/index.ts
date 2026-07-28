@@ -7,12 +7,15 @@ import { createWidgetDefinition } from "../../definition";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestStats", {
   icon: IconChartBar,
+  mobile: { supportsDetailView: true },
+  queryKey: [["widget", "mediaRequests"]],
   createOptions() {
     return {};
   },
   contextActions: ({ integrationIds }) => [
     {
       key: "search",
+      mobileVisible: true,
       label: (t) => t("search.mode.media.action.search.label"),
       icon: IconSearch,
       onClick: () => {
