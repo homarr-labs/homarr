@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Accordion, Anchor, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
@@ -19,19 +18,11 @@ interface SingleInstanceLayoutProps {
   instance: InstanceData;
   options: CoolifyOptions;
   isTiny: boolean;
-  isAdvanced: boolean;
   widgetKey: string;
   hideFooter: boolean;
 }
 
-export function SingleInstanceLayout({
-  instance,
-  options,
-  isTiny,
-  isAdvanced,
-  widgetKey,
-  hideFooter,
-}: SingleInstanceLayoutProps) {
+export function SingleInstanceLayout({ instance, options, isTiny, widgetKey, hideFooter }: SingleInstanceLayoutProps) {
   const t = useScopedI18n("widget.coolify");
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${widgetKey}`,
@@ -41,7 +32,6 @@ export function SingleInstanceLayout({
     key: `coolify-sections-${widgetKey}`,
     defaultValue: ["applications"],
   });
-  const [advancedOpenSections, setAdvancedOpenSections] = useState(["servers", "applications", "services"]);
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,
     instance.instanceInfo.applications,
@@ -62,41 +52,27 @@ export function SingleInstanceLayout({
               oolify
             </Text>
           </Group>
-          <Stack gap={0} miw={0}>
-            {isAdvanced && (
-              <Text fz="xs" fw={600} truncate="end">
-                {instance.integrationName}
-              </Text>
-            )}
-            <Anchor
-              component={baseUrl ? "a" : "span"}
-              href={baseUrl}
-              target={baseUrl ? "_blank" : undefined}
-              rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
-              fz={isTiny ? "xs" : "sm"}
-              fw={500}
-              c="dimmed"
-              lineClamp={1}
-            >
-              {isAdvanced ? t("source.url", { url: displayUrl }) : displayUrl}
-            </Anchor>
-          </Stack>
+          <Anchor
+            component={baseUrl ? "a" : "span"}
+            href={baseUrl}
+            target={baseUrl ? "_blank" : undefined}
+            rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
+            fz={isTiny ? "xs" : "sm"}
+            fw={500}
+            c="dimmed"
+            lineClamp={1}
+          >
+            {displayUrl}
+          </Anchor>
         </Group>
 
-        <Accordion
-          variant="contained"
-          chevronPosition="right"
-          multiple
-          value={isAdvanced ? advancedOpenSections : openSections}
-          onChange={isAdvanced ? setAdvancedOpenSections : setOpenSections}
-        >
+        <Accordion variant="contained" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
           {options.showServers && (
             <ServersSection
               servers={instance.instanceInfo.servers}
               serverResourceCounts={serverResourceCounts}
               baseUrl={baseUrl}
               isTiny={isTiny}
-              isAdvanced={isAdvanced}
               showIp={showIp}
               onToggleIp={() => setShowIp((prev) => !prev)}
             />
@@ -105,12 +81,7 @@ export function SingleInstanceLayout({
             <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
           )}
           {options.showServices && (
-            <ServicesSection
-              services={instance.instanceInfo.services}
-              baseUrl={baseUrl}
-              isTiny={isTiny}
-              isAdvanced={isAdvanced}
-            />
+            <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
           )}
         </Accordion>
 

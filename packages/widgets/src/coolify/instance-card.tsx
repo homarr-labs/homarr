@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Accordion, Anchor, Badge, Card, Group, Image, Stack, Text, Tooltip } from "@mantine/core";
+import { Accordion, Anchor, Badge, Card, Group, Image, Text, Tooltip } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
 import { useTimeAgo } from "@homarr/common";
@@ -9,7 +8,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
-import { buildServerResourceCounts, getBadgeColor, isCoolifyServerOnline, parseStatus } from "./coolify-utils";
+import { buildServerResourceCounts, getBadgeColor, parseStatus } from "./coolify-utils";
 import { ServersSection } from "./servers-section";
 import { ServicesSection } from "./services-section";
 import type { CoolifyOptions, InstanceData } from "./types";
@@ -19,12 +18,11 @@ interface InstanceCardProps {
   instance: InstanceData;
   options: CoolifyOptions;
   isTiny: boolean;
-  isAdvanced: boolean;
   widgetKey: string;
   hideFooter: boolean;
 }
 
-export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey, hideFooter }: InstanceCardProps) {
+export function InstanceCard({ instance, options, isTiny, widgetKey, hideFooter }: InstanceCardProps) {
   const t = useScopedI18n("widget.coolify");
   const tCommon = useScopedI18n("common");
   const cardKey = `${widgetKey}-${instance.integrationId}`;
@@ -36,7 +34,6 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
     key: `coolify-sections-${cardKey}`,
     defaultValue: ["applications"],
   });
-  const [advancedOpenSections, setAdvancedOpenSections] = useState(["servers", "applications", "services"]);
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,
     instance.instanceInfo.applications,
@@ -44,10 +41,9 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
   );
 
   const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
-  const displayUrl = baseUrl ? baseUrl.replace(/^https?:\/\//, "") : "—";
   const relativeTime = useTimeAgo(instance.updatedAt);
 
-  const onlineServers = instance.instanceInfo.servers.filter(isCoolifyServerOnline).length;
+  const onlineServers = instance.instanceInfo.servers.filter((s) => s.is_reachable !== false).length;
   const runningApps = instance.instanceInfo.applications.filter(
     (a) => parseStatus(a.status ?? "") === "running",
   ).length;
@@ -80,27 +76,20 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
         wrap="nowrap"
         style={{ borderBottom: "1px solid var(--mantine-color-dark-4)" }}
       >
-        <Group gap={4} wrap="nowrap" miw={0}>
+        <Group gap={4} wrap="nowrap">
           <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
-          <Stack gap={0} miw={0}>
-            <Anchor
-              component={baseUrl ? "a" : "span"}
-              href={baseUrl}
-              target={baseUrl ? "_blank" : undefined}
-              rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
-              fz={isTiny ? "10px" : "xs"}
-              fw={600}
-              c="inherit"
-              lineClamp={1}
-            >
-              {instance.integrationName}
-            </Anchor>
-            {isAdvanced && (
-              <Text fz="10px" c="dimmed" truncate="end">
-                {t("source.url", { url: displayUrl })}
-              </Text>
-            )}
-          </Stack>
+          <Anchor
+            component={baseUrl ? "a" : "span"}
+            href={baseUrl}
+            target={baseUrl ? "_blank" : undefined}
+            rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
+            fz={isTiny ? "10px" : "xs"}
+            fw={600}
+            c="inherit"
+            lineClamp={1}
+          >
+            {instance.integrationName}
+          </Anchor>
         </Group>
         <Group gap={4} wrap="nowrap">
           {isTiny && totalResources > 0 ? (
@@ -136,20 +125,13 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
         </Group>
       </Group>
 
-      <Accordion
-        variant="filled"
-        chevronPosition="right"
-        multiple
-        value={isAdvanced ? advancedOpenSections : openSections}
-        onChange={isAdvanced ? setAdvancedOpenSections : setOpenSections}
-      >
+      <Accordion variant="filled" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
         {options.showServers && (
           <ServersSection
             servers={instance.instanceInfo.servers}
             serverResourceCounts={serverResourceCounts}
             baseUrl={baseUrl}
             isTiny={isTiny}
-            isAdvanced={isAdvanced}
             showIp={showIp}
             onToggleIp={() => setShowIp((prev) => !prev)}
           />
@@ -158,12 +140,7 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
           <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
         )}
         {options.showServices && (
-          <ServicesSection
-            services={instance.instanceInfo.services}
-            baseUrl={baseUrl}
-            isTiny={isTiny}
-            isAdvanced={isAdvanced}
-          />
+          <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
         )}
       </Accordion>
 

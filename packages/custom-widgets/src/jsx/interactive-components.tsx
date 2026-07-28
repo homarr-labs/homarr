@@ -2,8 +2,10 @@
 
 import type { ReactNode } from "react";
 import { Children, isValidElement, useEffect, useRef, useState } from "react";
-import { ActionIcon, Badge, Collapse, Group, Stack, Tabs, Text, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Badge, Collapse, Group, Stack, Tabs, Text, UnstyledButton, useDirection } from "@mantine/core";
 import { IconChevronDown, IconChevronLeft, IconChevronRight, IconChevronUp } from "@tabler/icons-react";
+
+import { useScopedI18n } from "@homarr/translation/client";
 
 interface PaginatedListProps {
   children: ReactNode;
@@ -11,6 +13,8 @@ interface PaginatedListProps {
 }
 
 export function PaginatedList({ children, pageSize = 6 }: PaginatedListProps) {
+  const tCommon = useScopedI18n("common");
+  const { dir } = useDirection();
   const items = Children.toArray(children);
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
   const [page, setPage] = useState(0);
@@ -26,6 +30,8 @@ export function PaginatedList({ children, pageSize = 6 }: PaginatedListProps) {
   const clampedPage = Math.min(page, totalPages - 1);
   const start = clampedPage * pageSize;
   const visible = items.slice(start, start + pageSize);
+  const PreviousIcon = dir === "rtl" ? IconChevronRight : IconChevronLeft;
+  const NextIcon = dir === "rtl" ? IconChevronLeft : IconChevronRight;
 
   return (
     <Stack gap="xs">
@@ -34,22 +40,24 @@ export function PaginatedList({ children, pageSize = 6 }: PaginatedListProps) {
         <Group justify="center" gap="xs">
           <ActionIcon
             variant="subtle"
-            size="sm"
+            size={44}
             disabled={clampedPage === 0}
+            aria-label={tCommon("action.previous")}
             onClick={() => setPage((p) => Math.max(0, p - 1))}
           >
-            <IconChevronLeft size={14} />
+            <PreviousIcon size={14} />
           </ActionIcon>
           <Text size="xs" c="dimmed">
             {clampedPage + 1} / {totalPages}
           </Text>
           <ActionIcon
             variant="subtle"
-            size="sm"
+            size={44}
             disabled={clampedPage >= totalPages - 1}
+            aria-label={tCommon("action.next")}
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
           >
-            <IconChevronRight size={14} />
+            <NextIcon size={14} />
           </ActionIcon>
         </Group>
       )}

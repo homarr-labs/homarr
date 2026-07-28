@@ -9,10 +9,8 @@ import { formatNumber } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
 import { aggregateUptimeKumaDashboards } from "./aggregate";
@@ -130,16 +128,12 @@ interface UptimeKumaContentProps {
 
 function UptimeKumaContent({ integrationIds, options, width, height, displayMode }: UptimeKumaContentProps) {
   const t = useScopedI18n("widget.uptimeKuma");
-  const dashboardQuery = clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds });
-  const dashboardData = getUsableWidgetQueryData(dashboardQuery);
+  const dashboardData = getUsableWidgetQueryData(clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds }));
 
   if (!dashboardData) return <WidgetEmptyState />;
-  const successfulDashboardData = dashboardData.flatMap((item) =>
-    item.dashboard === null ? [] : [{ ...item, dashboard: item.dashboard }],
-  );
 
-  const combined = aggregateUptimeKumaDashboards(successfulDashboardData.map((item) => item.dashboard));
-  const monitors = successfulDashboardData.flatMap((result) =>
+  const combined = aggregateUptimeKumaDashboards(dashboardData.map((item) => item.dashboard));
+  const monitors = dashboardData.flatMap((result) =>
     result.dashboard.monitors.map((monitor) => ({
       ...monitor,
       key: `${result.integrationId}:${monitor.id}`,
@@ -151,22 +145,25 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
   const ringSize = getRingSize(width);
   const iconSize = getIconSize(width);
   const gridCols = getGridCols(width);
-  const isAdvanced = displayMode === "advanced";
 
   const enabledStatKeys = Object.entries(statVisibilityByOption)
-    .filter(([optionKey]) => isAdvanced || options[optionKey as keyof typeof options])
+    .filter(([optionKey]) => options[optionKey as keyof typeof options])
     .map(([, statKey]) => statKey);
 
-  const showHero = isAdvanced || options.showAverageUptime;
-  const showRing = isAdvanced || (options.showUptimeRing && width >= 170 && height >= 110);
-  const prioritizedStatKeys = isAdvanced
-    ? enabledStatKeys
-    : enabledStatKeys.toSorted(
-        (left, right) => getCompactStatPriority(left, combined[left]) - getCompactStatPriority(right, combined[right]),
-      );
+  const showHero = options.showAverageUptime;
+  const showRing = options.showUptimeRing && (displayMode === "advanced" || (width >= 170 && height >= 110));
+  const prioritizedStatKeys =
+    displayMode === "advanced"
+      ? enabledStatKeys
+      : enabledStatKeys.toSorted(
+          (left, right) =>
+            getCompactStatPriority(left, combined[left]) - getCompactStatPriority(right, combined[right]),
+        );
   const visibleStatKeys = prioritizedStatKeys.slice(
     0,
-    isAdvanced ? prioritizedStatKeys.length : getCompactStatLimit(height, showHero, prioritizedStatKeys.length),
+    displayMode === "advanced"
+      ? prioritizedStatKeys.length
+      : getCompactStatLimit(height, showHero, prioritizedStatKeys.length),
   );
   const hasContent = showHero || visibleStatKeys.length > 0;
 
@@ -248,17 +245,7 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
     </div>
   );
 
-  if (displayMode === "compact") {
-    return (
-      <Box h="100%" pos="relative">
-        <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
-          <IntegrationErrorIndicator results={dashboardData} />
-          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={t("name")} />
-        </Group>
-        {summaryContent}
-      </Box>
-    );
-  }
+  if (displayMode === "compact") return summaryContent;
 
   const monitorList = (
     <Stack gap="xs">
@@ -270,7 +257,7 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
               <Text size="sm" fw={600} truncate>
                 {monitor.name}
               </Text>
-              {(isAdvanced || successfulDashboardData.length > 1) && (
+              {dashboardData.length > 1 && (
                 <Text size="xs" c="dimmed">
                   {monitor.integrationName}
                 </Text>
@@ -287,32 +274,20 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
 
   if (width < 760) {
     return (
-      <Box h="100%" pos="relative">
-        <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
-          <IntegrationErrorIndicator results={dashboardData} />
-          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={t("name")} />
-        </Group>
-        <ScrollArea h="100%">
-          <Stack gap="lg" p="md">
-            <Box h={Math.max(280, Math.min(420, height - 120))}>{summaryContent}</Box>
-            {monitorList}
-          </Stack>
-        </ScrollArea>
-      </Box>
+      <ScrollArea h="100%">
+        <Stack gap="lg" p="md">
+          <Box h={Math.max(280, Math.min(420, height - 120))}>{summaryContent}</Box>
+          {monitorList}
+        </Stack>
+      </ScrollArea>
     );
   }
 
   return (
-    <Box h="100%" pos="relative">
-      <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
-        <IntegrationErrorIndicator results={dashboardData} />
-        <WidgetQueryErrorIndicator error={dashboardQuery.error} label={t("name")} />
-      </Group>
-      <SimpleGrid cols={2} spacing="lg" h="100%" p="md" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
-        {summaryContent}
-        <ScrollArea h="100%">{monitorList}</ScrollArea>
-      </SimpleGrid>
-    </Box>
+    <SimpleGrid cols={2} spacing="lg" h="100%" p="md" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
+      {summaryContent}
+      <ScrollArea h="100%">{monitorList}</ScrollArea>
+    </SimpleGrid>
   );
 }
 

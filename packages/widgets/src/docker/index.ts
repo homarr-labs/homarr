@@ -25,6 +25,13 @@ const columnTranslationKeyMap = {
 
 export const { definition, componentLoader } = createWidgetDefinition("dockerContainers", {
   icon: IconBrandDocker,
+  mobile: {
+    width: 2,
+    height: 1,
+    supportsCompactSummary: true,
+    supportsDetailView: true,
+    unmountWhenOffscreen: true,
+  },
   queryKey: [["docker", "getContainers"]],
   refetchInterval: 30,
   createOptions() {

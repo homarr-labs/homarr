@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useRef } from "react";
 import { Box, Button, Center, Group, Loader, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
 import { IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
+import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -18,7 +19,6 @@ import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import type { BeszelTimePeriod } from "../beszel/_shared/chart";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
 import { createBeszelSystemChoices, resolveBeszelSystemChoice } from "./selection";
 
@@ -46,8 +46,7 @@ export default function BeszelSystemStatsWidget({
         }),
     });
   const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
-  const systemsData = getUsableWidgetQueryData(systemsQuery);
-  const systemsResult = useMemo(() => systemsData ?? [], [systemsData]);
+  const systemsResult = getUsableWidgetQueryData(systemsQuery) ?? [];
   const { isPending: systemsPending } = systemsQuery;
 
   const systems = useMemo(() => createBeszelSystemChoices(systemsResult), [systemsResult]);
@@ -68,15 +67,16 @@ export default function BeszelSystemStatsWidget({
     widgetRuntimeRef,
     selectedSystem && options.timePeriod !== "1m"
       ? [
-          {
-            path: ["widget", "beszel", "getSystemStats"],
-            input: {
+          getQueryKey(
+            clientApi.widget.beszel.getSystemStats,
+            {
               integrationIds: [selectedSystem.integrationId],
               systemId: selectedSystem.systemId,
-              timePeriod: options.timePeriod,
+              timePeriod: options.timePeriod as BeszelTimePeriod,
               includeDocker,
             },
-          },
+            "query",
+          ),
         ]
       : [],
   );
@@ -140,10 +140,7 @@ export default function BeszelSystemStatsWidget({
   if (systems.length === 0) {
     return (
       <Box h="100%" pos="relative">
-        <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 1 }}>
-          <WidgetQueryErrorIndicator error={systemsQuery.error} label={t("name")} />
-          <IntegrationErrorIndicator results={systemsResult} />
-        </Group>
+        <IntegrationErrorIndicator results={systemsResult} />
         <Center h="100%">
           <Stack align="center" gap="xs">
             <IconServerOff size={28} opacity={0.5} />
@@ -180,10 +177,7 @@ export default function BeszelSystemStatsWidget({
   return (
     <Box h="100%" pos="relative">
       <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
-        <Group gap={0}>
-          <WidgetQueryErrorIndicator error={systemsQuery.error} label={t("name")} />
-          <IntegrationErrorIndicator results={systemsResult} />
-        </Group>
+        <IntegrationErrorIndicator results={systemsResult} />
       </Box>
       <ScrollArea
         h="100%"

@@ -37,7 +37,6 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import classes from "./component.module.css";
 
 type TranscodingDecision = NonNullable<NonNullable<StreamSession["currentlyPlaying"]>["metadata"]>["transcoding"];
@@ -75,17 +74,16 @@ export default function MediaServerWidget({
   isEditMode,
   displayMode,
 }: WidgetComponentProps<"mediaServer">) {
-  const currentStreamsQuery = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
-    integrationIds,
-    showOnlyPlaying: options.showOnlyPlaying,
-  });
-  const currentStreamsData = getUsableWidgetQueryData(currentStreamsQuery);
-  const currentStreams = useMemo(() => currentStreamsData ?? [], [currentStreamsData]);
+  const currentStreams =
+    getUsableWidgetQueryData(
+      clientApi.widget.mediaServer.getCurrentStreams.useQuery({
+        integrationIds,
+        showOnlyPlaying: options.showOnlyPlaying,
+      }),
+    ) ?? [];
 
   const t = useScopedI18n("widget.mediaServer");
   const isAdvanced = displayMode === "advanced";
-  const showLocation = isAdvanced || options.showLocation;
-  const showBitrate = isAdvanced || options.showBitrate;
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
   const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(() => {
     const result: MRT_ColumnDef<StreamSession>[] = [
@@ -144,8 +142,8 @@ export default function MediaServerWidget({
                 if (!currentlyPlaying) return null;
 
                 const status = getPlaybackStatus(currentlyPlaying.metadata?.transcoding);
-                const location = showLocation ? currentlyPlaying.location : null;
-                const bitrateLabel = showBitrate ? formatBitrate(currentlyPlaying.metadata?.bitrateKbps) : null;
+                const location = options.showLocation ? currentlyPlaying.location : null;
+                const bitrateLabel = options.showBitrate ? formatBitrate(currentlyPlaying.metadata?.bitrateKbps) : null;
 
                 return (
                   <Stack gap={4} align="flex-start">
@@ -177,7 +175,7 @@ export default function MediaServerWidget({
         : []),
     ];
     return result;
-  }, [isAdvanced, selectedRowId, showBitrate, showLocation, t, width]);
+  }, [isAdvanced, options.showBitrate, options.showLocation, selectedRowId, t, width]);
 
   // Only render the flat list of sessions when the currentStreams change
   // Otherwise it will always create a new array reference and cause the table to re-render
@@ -287,7 +285,7 @@ export default function MediaServerWidget({
     (sum, session) => sum + (session.currentlyPlaying?.metadata?.bitrateKbps ?? 0),
     0,
   );
-  const totalBitrateLabel = showBitrate ? formatBitrate(totalBitrateKbps) : null;
+  const totalBitrateLabel = options.showBitrate ? formatBitrate(totalBitrateKbps) : null;
   const hasFailedIntegrations = currentStreams.some(({ error }) => Boolean(error));
 
   return (
@@ -302,14 +300,12 @@ export default function MediaServerWidget({
             {t("summary.transcoding", { count: transcodingCount })}
           </Badge>
           <Group ml="auto">
-            <WidgetQueryErrorIndicator error={currentStreamsQuery.error} label={t("name")} />
             <IntegrationErrorIndicator results={currentStreams} />
           </Group>
         </Group>
       )}
-      {!isAdvanced && (hasFailedIntegrations || currentStreamsQuery.error) && (
+      {!isAdvanced && hasFailedIntegrations && (
         <Group px="xs" justify="flex-end">
-          <WidgetQueryErrorIndicator error={currentStreamsQuery.error} label={t("name")} />
           <IntegrationErrorIndicator results={currentStreams} />
         </Group>
       )}

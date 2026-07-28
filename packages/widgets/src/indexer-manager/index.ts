@@ -13,6 +13,7 @@ const createOptions = () =>
   }));
 
 export const { definition, componentLoader } = createWidgetDefinition("indexerManager", {
+  supportsAdvancedFocus: false,
   icon: IconReportSearch,
   contextActions: ({ widgetRuntimeRef, context }) => [
     {

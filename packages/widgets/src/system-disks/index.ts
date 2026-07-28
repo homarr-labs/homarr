@@ -7,6 +7,13 @@ import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options
 export const { definition, componentLoader } = createWidgetDefinition("systemDisks", {
   supportsAdvancedFocus: true,
   icon: IconServer2,
+  mobile: {
+    width: 2,
+    height: 1,
+    supportsCompactSummary: true,
+    supportsDetailView: true,
+    unmountWhenOffscreen: true,
+  },
   queryKey: [["widget", "healthMonitoring"]],
   refetchInterval: 5,
   supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],

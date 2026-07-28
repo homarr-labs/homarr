@@ -4,13 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Center, Group, Loader, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
 import { SystemResourceGPUChart } from "./chart/gpu-chart";
@@ -19,9 +16,6 @@ import { NetworkTrafficChart } from "./chart/network-traffic";
 
 const COMPACT_HISTORY_SIZE = 15;
 const ADVANCED_HISTORY_SIZE = 60;
-const ALL_SYSTEM_CHARTS = ["cpu", "memory", "gpu", "network"] as const;
-
-type SystemChart = WidgetComponentProps<"systemResources">["options"]["visibleCharts"][number];
 
 type ChartItem = {
   cpu: number;
@@ -57,26 +51,6 @@ export const getCompactChartBudget = (height: number): number => {
   return 4;
 };
 
-export const getVisibleSystemCharts = ({
-  configuredCharts,
-  hasGpu,
-  hasNetwork,
-  height,
-  isAdvanced,
-}: {
-  configuredCharts: readonly SystemChart[];
-  hasGpu: boolean;
-  hasNetwork: boolean;
-  height: number;
-  isAdvanced: boolean;
-}): SystemChart[] => {
-  const selectedCharts = isAdvanced ? ALL_SYSTEM_CHARTS : configuredCharts;
-  const availableCharts = selectedCharts.filter(
-    (chart) => (chart !== "gpu" || !isAdvanced || hasGpu) && (chart !== "network" || hasNetwork),
-  );
-  return isAdvanced ? [...availableCharts] : availableCharts.slice(0, getCompactChartBudget(height));
-};
-
 export default function SystemResources({
   integrationIds,
   options,
@@ -84,23 +58,13 @@ export default function SystemResources({
   height,
   displayMode,
 }: WidgetComponentProps<"systemResources">) {
-  const t = useScopedI18n("widget.systemResources");
   const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
-  const results = getUsableWidgetQueryData(healthQuery) ?? [];
-  const data = results.filter(
-    (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,
-  );
+  const data = getUsableWidgetQueryData(healthQuery) ?? [];
   const { dataUpdatedAt, isPending } = healthQuery;
   const isAdvanced = displayMode === "advanced";
   const integrationKey = useMemo(() => integrationIds.join("\u0000"), [integrationIds]);
   const [historyByIntegration, setHistoryByIntegration] = useState<Record<string, ChartItem[]>>({});
   const previousIntegrationKey = useRef(integrationKey);
-  const queryIndicators = (
-    <Group gap={0}>
-      <IntegrationErrorIndicator results={results} />
-      <WidgetQueryErrorIndicator error={healthQuery.error} label={t("name")} />
-    </Group>
-  );
 
   useEffect(() => {
     if (previousIntegrationKey.current === integrationKey) return;
@@ -138,7 +102,6 @@ export default function SystemResources({
         key={entry.integrationId}
         integrationName={entry.integrationName}
         items={history}
-        hasGpu={entry.healthInfo.gpu.length > 0}
         memoryCapacityInBytes={entry.healthInfo.memAvailableInBytes + entry.healthInfo.memUsedInBytes}
         options={options}
         width={availableWidth}
@@ -157,23 +120,11 @@ export default function SystemResources({
     );
   }
 
-  if (data.length === 0) {
-    return (
-      <Box h="100%" pos="relative">
-        <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-          {queryIndicators}
-        </Box>
-        <WidgetEmptyState />
-      </Box>
-    );
-  }
+  if (data.length === 0) return <WidgetEmptyState />;
 
   if (!isAdvanced && data.length === 1 && data[0]) {
     return (
-      <Box h="100%" p="xs" pos="relative">
-        <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-          {queryIndicators}
-        </Box>
+      <Box h="100%" p="xs">
         {renderCharts(data[0], width, Math.max(0, height - 20))}
       </Box>
     );
@@ -182,23 +133,17 @@ export default function SystemResources({
   const compactPanelHeight = Math.max(160, Math.floor(height / Math.min(data.length, 2)));
 
   return (
-    <Box h="100%" pos="relative">
-      <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-        {queryIndicators}
-      </Box>
-      <ScrollArea h="100%">
-        <SimpleGrid cols={panelColumns} spacing="xs" p="xs">
-          {data.map((entry) => renderCharts(entry, panelWidth, isAdvanced ? height : compactPanelHeight))}
-        </SimpleGrid>
-      </ScrollArea>
-    </Box>
+    <ScrollArea h="100%">
+      <SimpleGrid cols={panelColumns} spacing="xs" p="xs">
+        {data.map((entry) => renderCharts(entry, panelWidth, isAdvanced ? height : compactPanelHeight))}
+      </SimpleGrid>
+    </ScrollArea>
   );
 }
 
 interface SystemChartsProps {
   integrationName: string;
   items: ChartItem[];
-  hasGpu: boolean;
   memoryCapacityInBytes: number;
   options: WidgetComponentProps<"systemResources">["options"];
   width: number;
@@ -210,7 +155,6 @@ interface SystemChartsProps {
 const SystemCharts = ({
   integrationName,
   items,
-  hasGpu,
   memoryCapacityInBytes,
   options,
   width,
@@ -219,15 +163,9 @@ const SystemCharts = ({
   showTitle,
 }: SystemChartsProps) => {
   const networkItems = getNetworkHistory(items);
-  const visibleCharts = getVisibleSystemCharts({
-    configuredCharts: options.visibleCharts,
-    hasGpu,
-    hasNetwork: networkItems.length > 0,
-    height,
-    isAdvanced,
-  });
+  const availableCharts = options.visibleCharts.filter((chart) => chart !== "network" || networkItems.length > 0);
+  const visibleCharts = isAdvanced ? availableCharts : availableCharts.slice(0, getCompactChartBudget(height));
   const showNetwork = visibleCharts.includes("network");
-  const labelDisplayMode = isAdvanced ? "textWithIcon" : options.labelDisplayMode;
   const chartCount = visibleCharts.length;
   const chartColumns = isAdvanced && width >= 560 ? 2 : 1;
   const chartHeight = isAdvanced
@@ -254,7 +192,7 @@ const SystemCharts = ({
             <SystemResourceCPUChart
               cpuUsageOverTime={items.map((item) => item.cpu)}
               hasShadow={options.hasShadow}
-              labelDisplayMode={labelDisplayMode}
+              labelDisplayMode={options.labelDisplayMode}
             />
           </Box>
         )}
@@ -264,7 +202,7 @@ const SystemCharts = ({
               memoryUsageOverTime={items.map((item) => item.memory)}
               totalCapacityInBytes={memoryCapacityInBytes}
               hasShadow={options.hasShadow}
-              labelDisplayMode={labelDisplayMode}
+              labelDisplayMode={options.labelDisplayMode}
             />
           </Box>
         )}
@@ -273,7 +211,7 @@ const SystemCharts = ({
             <SystemResourceGPUChart
               gpuUsageOverTime={items.map((item) => item.gpu)}
               hasShadow={options.hasShadow}
-              labelDisplayMode={labelDisplayMode}
+              labelDisplayMode={options.labelDisplayMode}
             />
           </Box>
         )}
@@ -284,13 +222,13 @@ const SystemCharts = ({
                 usageOverTime={networkItems.map((network) => network.down)}
                 isUp={false}
                 hasShadow={options.hasShadow}
-                labelDisplayMode={labelDisplayMode}
+                labelDisplayMode={options.labelDisplayMode}
               />
               <NetworkTrafficChart
                 usageOverTime={networkItems.map((network) => network.up)}
                 isUp
                 hasShadow={options.hasShadow}
-                labelDisplayMode={labelDisplayMode}
+                labelDisplayMode={options.labelDisplayMode}
               />
             </Group>
           ) : (
@@ -298,7 +236,7 @@ const SystemCharts = ({
               <CombinedNetworkTrafficChart
                 usageOverTime={networkItems}
                 hasShadow={options.hasShadow}
-                labelDisplayMode={labelDisplayMode}
+                labelDisplayMode={options.labelDisplayMode}
               />
             </Box>
           ))}

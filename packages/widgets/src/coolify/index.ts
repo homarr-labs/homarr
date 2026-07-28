@@ -6,6 +6,8 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("coolify", {
   supportsAdvancedFocus: true,
   icon: IconCloud,
+  mobile: { supportsDetailView: true },
+  queryKey: [["widget", "coolify"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showServers: factory.switch({
