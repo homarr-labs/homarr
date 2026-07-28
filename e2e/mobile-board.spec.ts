@@ -3,8 +3,8 @@ import { createId } from "@paralleldrive/cuid2";
 import SuperJSON from "superjson";
 import { describe, test } from "vitest";
 
-import { eq } from "@homarr/db";
-import * as sqliteSchema from "@homarr/db/schema/sqlite";
+import { eq } from "drizzle-orm";
+import * as sqliteSchema from "../packages/db/schema/sqlite";
 
 import { createHomarrContainer } from "./shared/create-homarr-container";
 import { createSqliteDbFileAsync } from "./shared/e2e-db";
