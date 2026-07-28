@@ -1,4 +1,7 @@
-import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
+import {
+  BUNDLED_CUSTOM_WIDGETS,
+  customWidgetDefinitionSchema,
+} from "../../../packages/custom-widgets/src/core/index.ts";
 
 const baseUrl = process.env.WORKSHOP_TEST_URL ?? "http://127.0.0.1:18090";
 const password = "WorkshopCorpus123!";
