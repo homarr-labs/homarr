@@ -5,19 +5,99 @@ import { env } from "@homarr/common/env";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { createRequestHandler } from "./lib/request-handler";
+import { createGetSetChannel, createLockChannel } from "@homarr/redis";
 
 import packageJson from "../../../package.json";
 
 const logger = createLogger({ module: "updateCheckerRequestHandler" });
 
-export const updateCheckerRequestHandler = createRequestHandler({
-  async requestAsync(_) {
+const updateCheckTtlSeconds = 24 * 60 * 60;
+const updateCheckLockTtlSeconds = 2 * 60;
+const updateCheckWaitIntervalMs = 100;
+const updateCheckWaitAttempts = 50;
+
+type UpdateCheckCacheEntry = {
+  availableUpdates: Update[];
+  attemptedAt: number;
+  checkedAt: number | null;
+};
+
+const freshUpdateCheckChannel = createGetSetChannel<UpdateCheckCacheEntry>("update-checker:fresh:v1");
+const staleUpdateCheckChannel = createGetSetChannel<UpdateCheckCacheEntry>("update-checker:stale:v1");
+const updateCheckLock = createLockChannel("update-checker:lock:v1");
+
+const waitAsync = async (durationMs: number) =>
+  await new Promise<void>((resolve) => {
+    setTimeout(resolve, durationMs);
+  });
+
+const waitForConcurrentUpdateCheckAsync = async () => {
+  for (let attempt = 0; attempt < updateCheckWaitAttempts; attempt++) {
+    await waitAsync(updateCheckWaitIntervalMs);
+    const cached = await freshUpdateCheckChannel.getAsync();
+    if (cached) return cached;
+  }
+
+  return await staleUpdateCheckChannel.getAsync();
+};
+
+const getCachedAvailableUpdatesAsync = async (): Promise<UpdateCheckCacheEntry> => {
+  const cached = await freshUpdateCheckChannel.getAsync();
+  if (cached) return cached;
+
+  const lockToken = await updateCheckLock.acquireAsync(updateCheckLockTtlSeconds);
+  if (!lockToken) {
+    const concurrentResult = await waitForConcurrentUpdateCheckAsync();
+    if (concurrentResult) return concurrentResult;
+    throw new Error("Timed out waiting for the update check");
+  }
+
+  try {
+    const attemptedAt = Date.now();
     const availableUpdates = await getAvailableUpdatesAsync(packageJson.version);
-    return { availableUpdates };
-  },
-  cacheTtlMs: 30 * 60 * 1000,
-});
+    const result: UpdateCheckCacheEntry = {
+      availableUpdates,
+      attemptedAt,
+      checkedAt: attemptedAt,
+    };
+    await staleUpdateCheckChannel.setAsync(result);
+    await freshUpdateCheckChannel.setAsync(result, { ttlSeconds: updateCheckTtlSeconds });
+    return result;
+  } catch (error) {
+    const stale = await staleUpdateCheckChannel.getAsync();
+    const result: UpdateCheckCacheEntry = {
+      availableUpdates: stale?.availableUpdates ?? [],
+      attemptedAt: Date.now(),
+      checkedAt: stale?.checkedAt ?? null,
+    };
+    await freshUpdateCheckChannel.setAsync(result, { ttlSeconds: updateCheckTtlSeconds });
+    logger.warn("Failed to fetch available updates; suppressing retries for 24 hours", {
+      error: error instanceof Error ? error.message : String(error),
+      servingStale: stale !== null,
+    });
+    return result;
+  } finally {
+    try {
+      await updateCheckLock.releaseAsync(lockToken);
+    } catch (error) {
+      logger.warn("Failed to release the update-check lock", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+};
+
+export const updateCheckerRequestHandler = {
+  handler: (_input: Record<string, never>) => ({
+    getDataAsync: async () => {
+      const result = await getCachedAvailableUpdatesAsync();
+      return {
+        data: { availableUpdates: result.availableUpdates },
+        timestamp: new Date(result.checkedAt ?? result.attemptedAt),
+      };
+    },
+  }),
+};
 
 interface Update {
   name: string | null;

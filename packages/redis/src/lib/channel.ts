@@ -114,16 +114,41 @@ export const createGetSetChannel = <TData>(name: string) => {
      * @param options optional TTL in seconds
      */
     setAsync: async (data: TData, options?: { ttlSeconds?: number }) => {
-      await getSetClient.set(name, superjson.stringify(data));
       if (options?.ttlSeconds) {
-        await getSetClient.expire(name, options.ttlSeconds);
+        await getSetClient.set(name, superjson.stringify(data), "EX", options.ttlSeconds);
+        return;
       }
+      await getSetClient.set(name, superjson.stringify(data));
     },
     /**
      * Remove data from the channel
      */
     removeAsync: async () => {
       await getSetClient.del(name);
+    },
+  };
+};
+
+/**
+ * Creates a short-lived distributed lock.
+ *
+ * The token prevents a process from releasing a lock that expired and was
+ * acquired by another process in the meantime.
+ */
+export const createLockChannel = (name: string) => {
+  return {
+    acquireAsync: async (ttlSeconds: number) => {
+      const token = createId();
+      const result = await getSetClient.set(name, token, "EX", ttlSeconds, "NX");
+      return result === "OK" ? token : null;
+    },
+    releaseAsync: async (token: string) => {
+      await getSetClient.eval(
+        "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end",
+        1,
+        name,
+        token,
+      );
     },
   };
 };

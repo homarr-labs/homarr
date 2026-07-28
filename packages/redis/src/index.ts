@@ -6,6 +6,7 @@ export {
   handshakeAsync,
   createSubPubChannel,
   createGetSetChannel,
+  createLockChannel,
   setQueryCacheAsync,
   getQueryCacheAsync,
   removeQueryCacheAsync,
