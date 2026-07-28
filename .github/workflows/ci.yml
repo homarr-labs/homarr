@@ -47,6 +47,24 @@ env:
   PREVIEW_IMAGE: ghcr.io/homarr-labs/homarr-test
 
 jobs:
+  formatting:
+    name: Formatting
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Check formatting
+        run: pnpm format
+
   fast-gate:
     name: Fast gate
     if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
@@ -89,6 +107,9 @@ jobs:
       - name: Validate workspace configuration
         run: pnpm lint:ws
 
+      - name: Validate GitHub Actions
+        run: pnpm check:actions
+
       - name: Validate Custom Widget architecture
         run: pnpm check:custom-widgets
 
@@ -100,12 +121,63 @@ jobs:
           pnpm --filter nextjs build
           pnpm check:custom-widget-bundle
 
+  unit:
+    name: Full unit suite
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Copy environment defaults
+        run: cp .env.example .env
+
       - name: Run unit tests
         run: pnpm test
 
+  migration-matrix:
+    name: Database migrations (${{ matrix.database }})
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - database: SQLite
+            test_file: packages/db/test/sqlite-migration.spec.ts
+          - database: MySQL
+            test_file: packages/db/test/mysql-migration.spec.ts
+          - database: PostgreSQL
+            test_file: packages/db/test/postgresql-migration.spec.ts
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Copy environment defaults
+        run: cp .env.example .env
+
+      - name: Run ${{ matrix.database }} migration tests
+        env:
+          MIGRATION_TEST_FILE: ${{ matrix.test_file }}
+        run: pnpm exec vitest run --project db-node "$MIGRATION_TEST_FILE"
+
   container:
     name: Container and E2E
-    needs: fast-gate
+    needs: [formatting, fast-gate, unit, migration-matrix]
     if: |
       github.event_name == 'merge_group' ||
       (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
@@ -238,11 +310,12 @@ jobs:
         run: echo "Act validated the publication path; external GHCR writes are disabled locally."
 
   preview-arm64:
-    name: Build arm64 preview image
-    needs: fast-gate
+    name: Arm64 image
+    needs: [formatting, fast-gate, unit, migration-matrix]
     if: |
       (
-        (github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository) ||
+        github.event_name == 'merge_group' ||
+        (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
         (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
       )
     runs-on: ubuntu-24.04-arm
@@ -260,7 +333,12 @@ jobs:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
 
       - name: Log in to GHCR
-        if: "!env.ACT"
+        if: |
+          !env.ACT &&
+          (
+            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
+          )
         uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
@@ -273,13 +351,39 @@ jobs:
 
       - name: Build and push arm64 preview image by digest
         id: preview-build
-        if: "!env.ACT"
+        if: |
+          !env.ACT &&
+          (
+            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
+          )
         uses: docker/build-push-action@v7
         with:
           context: .
           network: host
           platforms: linux/arm64
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=homarr-linux-arm64
+          cache-to: type=gha,scope=homarr-linux-arm64,mode=max
+          secrets: |
+            TURBO_API=${{ secrets.TURBO_API }}
+            TURBO_TEAM=${{ secrets.TURBO_TEAM }}
+            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+            TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+
+      - name: Build arm64 image without publication
+        if: |
+          !env.ACT &&
+          (
+            github.event_name == 'merge_group' ||
+            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
+          )
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          network: host
+          platforms: linux/arm64
+          outputs: type=cacheonly
           cache-from: type=gha,scope=homarr-linux-arm64
           cache-to: type=gha,scope=homarr-linux-arm64,mode=max
           secrets: |
@@ -318,6 +422,7 @@ jobs:
         uses: docker/setup-buildx-action@v4
 
       - name: Verify PR head before publication
+        id: publication-preflight
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v8
         env:
@@ -330,15 +435,21 @@ jobs:
               pull_number: context.payload.pull_request.number,
             });
             if (pull.state !== "open") {
-              core.setFailed(`PR #${pull.number} is ${pull.state}; refusing to publish its preview.`);
+              core.notice(`PR #${pull.number} is ${pull.state}; preview publication is no longer needed.`);
+              core.setOutput("publish", "false");
               return;
             }
             if (pull.head.sha !== process.env.EXPECTED_HEAD_SHA) {
-              core.setFailed(`PR #${pull.number} moved from ${process.env.EXPECTED_HEAD_SHA} to ${pull.head.sha}.`);
+              core.notice(`PR #${pull.number} moved to ${pull.head.sha}; a newer run owns preview publication.`);
+              core.setOutput("publish", "false");
+              return;
             }
+            core.setOutput("publish", "true");
 
       - name: Publish preview manifest
-        if: "!env.ACT"
+        if: |
+          !env.ACT &&
+          (github.event_name != 'pull_request' || steps.publication-preflight.outputs.publish == 'true')
         env:
           AMD64_DIGEST: ${{ needs.container.outputs.digest }}
           ARM64_DIGEST: ${{ needs.preview-arm64.outputs.digest }}
@@ -348,7 +459,9 @@ jobs:
             "${PREVIEW_IMAGE}@${ARM64_DIGEST}"
 
       - name: Verify preview manifest platforms
-        if: "!env.ACT"
+        if: |
+          !env.ACT &&
+          (github.event_name != 'pull_request' || steps.publication-preflight.outputs.publish == 'true')
         run: |
           image="${PREVIEW_IMAGE}:${PREVIEW_TAG}"
           manifest="$(docker buildx imagetools inspect "$image" --raw)"
@@ -383,24 +496,42 @@ jobs:
             const packageName = "homarr-test";
             const org = context.repo.owner;
             const tag = process.env.IMAGE_TAG;
-            const versions = await github.paginate(
-              github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg,
-              { package_type: "container", package_name: packageName, org, per_page: 100 },
-            );
-            const target = versions.find((version) =>
-              version.metadata?.container?.tags?.includes(tag),
-            );
-            if (!target) {
-              core.info(`No package version found with tag "${tag}"`);
-              return;
+            const attempts = context.eventName === "pull_request_target" ? 7 : 1;
+            for (let attempt = 1; attempt <= attempts; attempt += 1) {
+              let versions;
+              try {
+                versions = await github.paginate(
+                  github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg,
+                  { package_type: "container", package_name: packageName, org, per_page: 100 },
+                );
+              } catch (error) {
+                if (error.status === 404) {
+                  core.info(`Package "${packageName}" does not exist; cleanup is already complete.`);
+                  return;
+                }
+                throw error;
+              }
+              const targets = versions.filter((version) =>
+                version.metadata?.container?.tags?.includes(tag),
+              );
+              if (targets.length > 0) {
+                for (const target of targets) {
+                  await github.rest.packages.deletePackageVersionForOrg({
+                    package_type: "container",
+                    package_name: packageName,
+                    org,
+                    package_version_id: target.id,
+                  });
+                  core.info(`Deleted package version ${target.id} (${tag})`);
+                }
+                return;
+              }
+              if (attempt < attempts) {
+                core.info(`No "${tag}" version found yet; retrying cleanup after publication settles.`);
+                await new Promise((resolve) => setTimeout(resolve, 5_000));
+              }
             }
-            await github.rest.packages.deletePackageVersionForOrg({
-              package_type: "container",
-              package_name: packageName,
-              org,
-              package_version_id: target.id,
-            });
-            core.info(`Deleted package version ${target.id} (${tag})`);
+            core.info(`No package version found with tag "${tag}"; cleanup is already complete.`);
 
       - name: Show Act cleanup result
         if: env.ACT

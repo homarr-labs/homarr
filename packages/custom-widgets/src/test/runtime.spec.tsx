@@ -8,7 +8,14 @@ import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ActionButton, CustomJsxRenderer, CustomWidgetRuntimeProvider, SubFetch, ToggleSwitch } from "../runtime";
+import {
+  ActionButton,
+  CustomJsxRenderer,
+  CustomWidgetRuntimeProvider,
+  RefreshButton,
+  SubFetch,
+  ToggleSwitch,
+} from "../runtime";
 import { createCustomJsxComponents } from "../jsx";
 import { MAX_REFRESH_INTERVAL_MS, MAX_REFRESH_INTERVAL_SECONDS, normalizeRefreshInterval } from "../runtime/sub-fetch";
 import type {
@@ -78,6 +85,7 @@ async function render(
   port: CustomWidgetRuntimePort,
   capabilities: readonly CustomJsxRequestCapability[] = [],
   setQueryState?: (requestId: string, value: CustomWidgetPublishedQueryState | null) => void,
+  canInvalidateQueries = true,
 ) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   await act(async () => {
@@ -86,6 +94,7 @@ async function render(
         <QueryClientProvider client={queryClient}>
           <CustomWidgetRuntimeProvider
             itemId="item-1"
+            canInvalidateQueries={canInvalidateQueries}
             isEditMode={false}
             requestCapabilities={capabilities}
             port={port}
@@ -107,6 +116,16 @@ async function settle() {
 }
 
 describe("Custom Widget runtime ports", () => {
+  it("disables shared-cache refresh for anonymous public-board viewers", async () => {
+    const port = createPort();
+    await render(<RefreshButton />, port, [], undefined, false);
+
+    const button = host.querySelector<HTMLButtonElement>('button[aria-label="Refresh"]');
+    expect(button?.disabled).toBe(true);
+    button?.click();
+    expect(port.invalidate).not.toHaveBeenCalled();
+  });
+
   it("clamps refresh intervals below the browser timer overflow boundary", () => {
     expect(normalizeRefreshInterval(MAX_REFRESH_INTERVAL_SECONDS)).toBe(MAX_REFRESH_INTERVAL_MS);
     expect(normalizeRefreshInterval(MAX_REFRESH_INTERVAL_SECONDS + 1)).toBe(MAX_REFRESH_INTERVAL_MS);

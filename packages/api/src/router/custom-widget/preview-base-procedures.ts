@@ -12,12 +12,10 @@ import {
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { customWidgetAdminProcedure } from "./feature-flags";
 import { createPreviewSession, getPreviewSession } from "./preview-sessions";
 import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
-
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
 
 const previewCreateInputSchema = z.object({
   definition: customWidgetDefinitionSchema,
@@ -26,13 +24,10 @@ const previewCreateInputSchema = z.object({
   options: z.record(z.string(), z.unknown()).optional(),
 });
 
-const previewCreateProcedure = manageProcedure
+const previewCreateProcedure = customWidgetAdminProcedure
   .meta({ mcp: { enabled: true, description: "Create a short-lived preview session for one unsaved custom widget." } })
   .input(previewCreateInputSchema)
   .mutation(async ({ ctx, input }) => {
-    if (input.secrets.length > 0 && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
-      throw new TRPCError({ code: "FORBIDDEN", message: "Writing preview secrets requires dedicated permission" });
-    }
     const options = input.options ?? getCustomWidgetDefaultOptions(input.definition.options);
     const optionIssues = validateCustomWidgetOptions(input.definition.options, options);
     if (optionIssues.length > 0) {
@@ -62,7 +57,7 @@ const previewCreateProcedure = manageProcedure
         );
         if (missingReplacement) {
           throw new TRPCError({
-            code: ctx.session.user.permissions.includes("custom-widget-secret-write") ? "BAD_REQUEST" : "FORBIDDEN",
+            code: "BAD_REQUEST",
             message: "Source security settings changed; re-enter its credentials to preview this definition",
           });
         }
@@ -123,7 +118,7 @@ const previewCreateProcedure = manageProcedure
 
 export const previewBaseProcedures = {
   previewCreate: previewCreateProcedure,
-  previewGet: manageProcedure.input(z.object({ sessionId: z.string() })).query(async ({ ctx, input }) => {
+  previewGet: customWidgetAdminProcedure.input(z.object({ sessionId: z.string() })).query(async ({ ctx, input }) => {
     const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
     return {
       id: session.id,

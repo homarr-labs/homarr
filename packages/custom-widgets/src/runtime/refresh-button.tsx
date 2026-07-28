@@ -24,6 +24,7 @@ export function RefreshButton({ label, color = "gray", variant = "subtle", size 
         itemId: runtime.itemId,
         previewSessionId: runtime.previewSessionId,
         targets: ["parent", "*"],
+        refresh: true,
       });
     } finally {
       setLoading(false);
@@ -37,7 +38,7 @@ export function RefreshButton({ label, color = "gray", variant = "subtle", size 
       size={size as never}
       onClick={() => void refresh()}
       loading={loading}
-      disabled={(!runtime.itemId && !runtime.previewSessionId) || runtime.isEditMode}
+      disabled={(!runtime.itemId && !runtime.previewSessionId) || !runtime.canInvalidateQueries || runtime.isEditMode}
     >
       <IconRefresh size={16} />
     </ActionIcon>

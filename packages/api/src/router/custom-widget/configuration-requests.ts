@@ -4,6 +4,8 @@ import type { RedisClient } from "@homarr/core/infrastructure/redis";
 import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
 
+import { useProcessLocalCustomWidgetState } from "../../custom-widget-state-mode";
+
 const CONFIGURATION_REQUEST_TTL_MS = 10 * 60_000;
 const CONFIGURATION_REQUEST_PREFIX = "custom-widget:configuration-request:";
 const CONFIGURATION_REQUEST_LOCK_PREFIX = "custom-widget:configuration-request-lock:";
@@ -26,7 +28,7 @@ const localLocks = new Set<string>();
 let redis: RedisClient | undefined;
 
 function getRedis() {
-  if (process.env.CI !== undefined || process.env.NODE_ENV === "test") return undefined;
+  if (useProcessLocalCustomWidgetState()) return undefined;
   redis ??= createRedisClient();
   return redis;
 }

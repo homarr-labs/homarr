@@ -25,13 +25,18 @@ This is especially useful for [docker secrets](https://docs.docker.com/engine/sw
 Using the `PUID` and `PGID` will require you to set the correct permissions on the mounted volumes and if used the docker socket. See more in the [Running as a different user](/docs/advanced/running-as-different-user) documentation.
 :::
 
-| Environment Variable     | Description                                                                                                                                                                        | Possible values                     | Default |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------- |
-| `PUID`                   | User ID to run the container as                                                                                                                                                    | Any valid user ID                   | `0`     |
-| `PGID`                   | Group ID to run the container as                                                                                                                                                   | Any valid group ID                  | `0`     |
-| `LOG_LEVEL`              | Log level to use                                                                                                                                                                   | `debug` / `info` / `warn` / `error` | `info`  |
-| `NO_EXTERNAL_CONNECTION` | Disables some requests that need internet connection                                                                                                                               | `true` or `false`                   | `false` |
-| `ENABLE_DNS_CACHING`     | Enables dns caching. Enabled by default, but if you experience issues with IPv6 or static IPs, see [#4006](https://github.com/homarr-labs/homarr/issues/4006) or disable this flag | `true` or `false`                   | `true`  |
+| Environment Variable     | Description                                                                                                                                                                        | Possible values                     | Default                       |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ----------------------------- |
+| `PUID`                   | User ID to run the container as                                                                                                                                                    | Any valid user ID                   | `0`                           |
+| `PGID`                   | Group ID to run the container as                                                                                                                                                   | Any valid group ID                  | `0`                           |
+| `LOG_LEVEL`              | Log level to use                                                                                                                                                                   | `debug` / `info` / `warn` / `error` | `info`                        |
+| `NO_EXTERNAL_CONNECTION` | Disables some requests that need internet connection                                                                                                                               | `true` or `false`                   | `false`                       |
+| `ENABLE_DNS_CACHING`     | Enables dns caching. Enabled by default, but if you experience issues with IPv6 or static IPs, see [#4006](https://github.com/homarr-labs/homarr/issues/4006) or disable this flag | `true` or `false`                   | `true`                        |
+| `HOMARR_WEBSITE_URL`     | Main Homarr documentation/site base used by runtime links. Must be an absolute HTTP(S) URL.                                                                                        | HTTP(S) URL                         | `https://homarr.dev`          |
+| `WORKSHOP_API_URL`       | PocketBase API used by Homarr and standalone documentation.                                                                                                                        | HTTP(S) URL                         | `HOMARR_WEBSITE_URL`          |
+| `WORKSHOP_WEB_URL`       | Public Workshop page opened from Homarr.                                                                                                                                           | HTTP(S) URL                         | `HOMARR_WEBSITE_URL/workshop` |
+| `CUSTOM_WIDGETS_ENABLED` | Emergency switch. `false` preserves definitions and placements but blocks Custom Widget authoring and execution.                                                                   | `true` or `false`                   | `true`                        |
+| `WORKSHOP_ENABLED`       | Emergency switch. `false` hides and blocks Workshop operations without disabling installed widgets.                                                                                | `true` or `false`                   | `true`                        |
 
 ## Authentication
 
@@ -105,7 +110,14 @@ External redis is currently not supported with Proxmox Community Scripts
 The advanced deployments environment variables should only be used if you know what you are doing.
 :::
 
-| Environment Variable     | Description                                                                                                     |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts                                                              |
-| `WORKSHOP_API_URL`       | Runtime public origin of the separate Workshop PocketBase service. Homarr uses `https://homarr.dev` by default. |
+| Environment Variable     | Description                                                                                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts.                                                                                 |
+| `DOCS_BASE_URL`          | Docusaurus deployment path. It must start with `/` and is normalized with a trailing slash. Default: `/`.                           |
+| `WORKSHOP_PUBLIC_ORIGIN` | Origin used in PocketBase-generated links and email. It must be set explicitly in production.                                       |
+| `PB_ALLOWED_ORIGINS`     | Browser origins accepted by PocketBase. The central public community defaults to `*` so self-hosted Homarr instances can use OAuth. |
+| `WORKSHOP_REQUIRE_OAUTH` | Fail Workshop production readiness when GitHub OAuth is disabled. Both GitHub OAuth credentials are always required together.       |
+
+All public URL variables reject non-HTTP protocols, embedded credentials, query strings, and fragments, and normalize
+trailing slashes at startup. The Docusaurus-only `WORKSHOP_URL` name is accepted as a deprecated alias for
+`WORKSHOP_API_URL` for one release. `WORKSHOP_API_URL` takes precedence.

@@ -10,6 +10,7 @@ import { WidgetCustomWidgetSelectInput } from "./widget-custom-widget-select-inp
 
 const mocks = vi.hoisted(() => ({
   available: [] as Array<Record<string, unknown>>,
+  permissions: ["admin"] as string[],
   setFieldValue: vi.fn(),
 }));
 
@@ -62,6 +63,10 @@ vi.mock("@homarr/api/client", () => ({
   },
 }));
 
+vi.mock("@homarr/auth/client", () => ({
+  useSession: () => ({ data: { user: { permissions: mocks.permissions } } }),
+}));
+
 vi.mock("@homarr/boards/context", () => ({
   useOptionalBoard: () => ({ id: "board-1" }),
 }));
@@ -72,6 +77,7 @@ vi.mock("@homarr/translation/client", () => ({
       migrationRequired: "Migration required",
       migrationDescription: "Copy its redacted prompt to an LLM and import the returned v2 JSON.",
       manageMigration: "Open Manage custom widgets",
+      contactAdmin: "Contact an administrator.",
     })[key] ?? key,
 }));
 
@@ -90,6 +96,7 @@ let host: HTMLDivElement;
 beforeEach(() => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   mocks.available = [];
+  mocks.permissions = ["admin"];
   mocks.setFieldValue.mockReset();
   host = document.createElement("div");
   document.body.append(host);
@@ -136,5 +143,27 @@ describe("custom widget picker migration status", () => {
     expect(host.textContent).toContain("Migration required");
     expect(host.textContent).toContain("Copy its redacted prompt to an LLM");
     expect(host.querySelector('a[href="/manage/custom-widgets"]')?.textContent).toBe("Open Manage custom widgets");
+  });
+
+  it("tells non-admins to contact an administrator without linking management", async () => {
+    mocks.permissions = ["board-modify-all"];
+    mocks.available = [
+      {
+        id: "legacy-widget",
+        name: "Legacy status",
+        description: "Old API widget",
+        iconUrl: null,
+        sources: [],
+        requestCapabilities: [],
+        defaultOptions: {},
+        updatedAt: new Date(0),
+        migrationRequired: true,
+      },
+    ];
+
+    await renderInput();
+
+    expect(host.textContent).toContain("Contact an administrator.");
+    expect(host.querySelector('a[href="/manage/custom-widgets"]')).toBeNull();
   });
 });

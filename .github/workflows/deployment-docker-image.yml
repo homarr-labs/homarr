@@ -54,7 +54,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to commit package.json & changelog changes, merge them to dev / next and publish the release
 
       - uses: actions/checkout@v7
@@ -246,7 +246,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to publish the release
 
       - name: Log in to the Container registry

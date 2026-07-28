@@ -727,6 +727,10 @@
       }
     },
     "page": {
+      "disabled": {
+        "title": "Custom Widgets are unavailable",
+        "message": "Custom Widgets are temporarily disabled by the server administrator. Definitions, secrets, and board placements remain preserved."
+      },
       "list": {
         "title": "Custom Widgets",
         "noResults": "No custom widgets yet. Create your first one!",
@@ -1134,6 +1138,7 @@
     "installError": "Could not install widget",
     "installErrorDescription": "The Workshop submission is not a valid Custom JSX v2 widget.",
     "title": "Workshop",
+    "openCommunity": "Open public Workshop",
     "description": "Community Custom JSX v2 widgets. Inspect the source and network capabilities before installing.",
     "descriptionCss": "Community Custom CSS themes. Preview every rule before importing it into a board.",
     "securityNotice": "Workshop widgets can call their declared API sources and perform declared actions with credentials you configure locally. Secrets are never included.",
@@ -1165,10 +1170,10 @@
     "signInHint": "Sign in to vote or report. Installing does not require a Workshop account.",
     "reportTitle": "Report submission",
     "reportReason": "Reason",
-    "reportExplanation": "What should the administrators know?",
+    "reportExplanation": "What should the Workshop moderators know?",
     "reportSend": "Send report",
     "reportSent": "Report sent",
-    "reportSentDescription": "Workshop administrators can now review this submission.",
+    "reportSentDescription": "Workshop moderators can now review this submission.",
     "voteError": "The vote could not be saved.",
     "publish": {
       "title": "Publish to Workshop",
@@ -4180,8 +4185,10 @@
       },
       "noDefinition": "No definition selected",
       "definitionNotFound": "Custom widget unavailable",
+      "temporarilyDisabled": "Custom Widgets are temporarily disabled by the server administrator.",
       "migrationRequired": "This legacy custom widget is preserved, but it must be migrated to Custom JSX v2 from Manage custom widgets before it can run.",
       "manageMigration": "Open Manage custom widgets",
+      "contactAdmin": "Contact an administrator.",
       "configurationNeedsRepair": "This widget's options changed. Edit the widget to repair its configuration.",
       "removeFromBoard": "Remove from board",
       "editModePending": "Save the board to load this widget.",
@@ -4193,7 +4200,8 @@
         "requests": "{count, plural, one {# request} other {# requests}}",
         "migrationRequired": "Migration required",
         "migrationDescription": "This placed v1 widget cannot run yet. Copy its redacted prompt to an LLM and import the returned v2 JSON.",
-        "manageMigration": "Open Manage custom widgets"
+        "manageMigration": "Open Manage custom widgets",
+        "contactAdmin": "Contact an administrator."
       },
       "configuration": {
         "needsAttention": "Configuration needs attention: {message}",

@@ -34,6 +34,15 @@ for (const required of ["submissions", "votes", "comments", "reports", "workshop
 for (const removed of ["workshop_admin_actions", "workshop_admins"]) {
   if (collectionNames.has(removed)) throw new Error(`Removed Workshop collection still exists: ${removed}`);
 }
+const settings = await request("/api/settings", { headers: rootHeaders });
+const rateLimitLabels = new Set(settings.rateLimits?.rules?.map((rule) => rule.label));
+for (const operation of ["create", "update", "delete"]) {
+  for (const collection of ["submissions", "votes", "comments", "reports"]) {
+    const label = `${collection}:${operation}`;
+    if (!rateLimitLabels.has(label)) throw new Error(`Missing Workshop write rate limit: ${label}`);
+  }
+}
+if (!rateLimitLabels.has("users:update")) throw new Error("Workshop user/file updates are not rate limited");
 
 // Production uses GitHub OAuth. Password auth is enabled only in this disposable database.
 const usersCollection = await request("/api/collections/users", { headers: rootHeaders });
@@ -77,6 +86,29 @@ await expectStatus(
   { method: "PATCH", headers: authorSession.headers, body: JSON.stringify({ isAdmin: true }) },
   404,
 );
+for (const [field, value] of [
+  ["displayName", "Homarr Team"],
+  ["avatarUrl", "https://example.invalid/forged-avatar.png"],
+  ["githubUsername", "homarr-labs"],
+  ["githubProfileUrl", "https://github.com/homarr-labs"],
+]) {
+  await expectStatus(
+    `/api/collections/users/records/${author.id}`,
+    { method: "PATCH", headers: authorSession.headers, body: JSON.stringify({ [field]: value }) },
+    404,
+  );
+}
+const unchangedAuthor = await request(`/api/collections/users/records/${author.id}`, {
+  headers: authorSession.headers,
+});
+if (
+  unchangedAuthor.displayName !== "Widget Author" ||
+  unchangedAuthor.avatarUrl ||
+  unchangedAuthor.githubUsername ||
+  unchangedAuthor.githubProfileUrl
+) {
+  throw new Error("Workshop users can forge OAuth provider identity fields");
+}
 
 const visitorPassword = "WorkshopVisitor123!";
 const visitor = await createUser("widget-visitor@example.invalid", "Widget Visitor", visitorPassword);
@@ -295,7 +327,7 @@ const report = await request("/api/collections/reports/records", {
 await expectStatus(`/api/collections/reports/records/${report.id}`, { headers: visitorSession.headers }, 404);
 await expectStatus("/api/collections/reports/records", { headers: visitorSession.headers }, 200);
 const publicReports = await request("/api/collections/reports/records", { headers: visitorSession.headers });
-if (publicReports.items.length !== 0) throw new Error("Report details must remain private to Workshop administrators");
+if (publicReports.items.length !== 0) throw new Error("Report details must remain private to Workshop moderators");
 await expectStatus(
   `/api/collections/reports/records/${report.id}`,
   { method: "DELETE", headers: visitorSession.headers },
@@ -317,14 +349,45 @@ await expectStatus(
 
 const reports = await request("/api/collections/reports/records", { headers: authorSession.headers });
 if (reports.items.length !== 1 || reports.items[0].reporter !== visitor.id || reports.items[0].status !== "open") {
-  throw new Error("Workshop administrators must be able to review reports");
+  throw new Error("Workshop moderators must be able to review reports");
 }
+await expectStatus(
+  `/api/collections/reports/records/${report.id}`,
+  {
+    method: "PATCH",
+    headers: authorSession.headers,
+    body: JSON.stringify({ category: "spam", explanation: "Moderator-authored replacement" }),
+  },
+  404,
+);
 const dismissedReport = await request(`/api/collections/reports/records/${report.id}`, {
   method: "PATCH",
   headers: authorSession.headers,
   body: JSON.stringify({ status: "dismissed" }),
 });
-if (dismissedReport.status !== "dismissed") throw new Error("Workshop administrators must be able to dismiss reports");
+if (dismissedReport.status !== "dismissed") throw new Error("Workshop moderators must be able to dismiss reports");
+const reopenedReport = await request("/api/collections/reports/records", {
+  method: "POST",
+  headers: visitorSession.headers,
+  body: JSON.stringify({
+    submission: submission.id,
+    reporter: visitor.id,
+    category: "malicious",
+    explanation: "The later submission revision now needs another review",
+    status: "dismissed",
+  }),
+});
+if (reopenedReport.status !== "open" || reopenedReport.id === report.id) {
+  throw new Error("A dismissed Workshop report must be replaceable with a fresh open report");
+}
+const reopenedReports = await request("/api/collections/reports/records", { headers: authorSession.headers });
+if (
+  reopenedReports.items.length !== 1 ||
+  reopenedReports.items[0].id !== reopenedReport.id ||
+  reopenedReports.items[0].status !== "open"
+) {
+  throw new Error("Re-reporting must replace only the reporter's dismissed report");
+}
 
 const visitorSubmission = await request("/api/collections/submissions/records", {
   method: "POST",
@@ -340,6 +403,27 @@ const visitorSubmission = await request("/api/collections/submissions/records", 
     outdated: false,
   }),
 });
+await expectStatus(
+  `/api/collections/submissions/records/${visitorSubmission.id}`,
+  {
+    method: "PATCH",
+    headers: authorSession.headers,
+    body: JSON.stringify({
+      title: "Moderator-authored replacement",
+      content: JSON.stringify({ ...widget, name: "Moderator-authored replacement" }),
+      expectedRevision: 1,
+    }),
+  },
+  404,
+);
+const moderatedStatus = await request(`/api/collections/submissions/records/${visitorSubmission.id}`, {
+  method: "PATCH",
+  headers: authorSession.headers,
+  body: JSON.stringify({ outdated: true, expectedRevision: 1 }),
+});
+if (!moderatedStatus.outdated || moderatedStatus.revision !== 2) {
+  throw new Error("Workshop moderators must be limited to CAS-protected submission status changes");
+}
 await expectStatus(
   `/api/collections/submissions/records/${visitorSubmission.id}`,
   { method: "DELETE", headers: authorSession.headers },

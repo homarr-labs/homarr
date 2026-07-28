@@ -10,6 +10,7 @@ import type {
   PreviewSessionStore,
 } from "@homarr/custom-widgets/server";
 
+import { useProcessLocalCustomWidgetState } from "../../custom-widget-state-mode";
 import { toTrpcError } from "./domain-error";
 
 const SESSION_PREFIX = "custom-widget:preview-session:";
@@ -69,7 +70,7 @@ class RedisPreviewSessionStore implements PreviewSessionStore {
 let service: CustomWidgetPreviewSessionService | undefined;
 function getService() {
   if (service) return service;
-  const useLocal = process.env.CI !== undefined || process.env.NODE_ENV === "test";
+  const useLocal = useProcessLocalCustomWidgetState();
   service = new CustomWidgetPreviewSessionService({
     createId,
     encrypt: encryptSecret,

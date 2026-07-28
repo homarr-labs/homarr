@@ -1,20 +1,35 @@
 import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
 import { themes as prismThemes } from "prism-react-renderer";
+import { normalizeDocsBaseUrl, resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 const a11yEmoji = require("@fec/remark-a11y-emoji");
+
+const deprecatedWorkshopUrl = process.env.WORKSHOP_URL;
+if (deprecatedWorkshopUrl && !process.env.WORKSHOP_API_URL) {
+  console.warn("WORKSHOP_URL is deprecated; use WORKSHOP_API_URL instead.");
+}
+
+const publicUrls = resolveHomarrUrlConfig({
+  homarrWebsiteUrl: process.env.HOMARR_WEBSITE_URL,
+  workshopApiUrl: process.env.WORKSHOP_API_URL ?? deprecatedWorkshopUrl,
+  workshopWebUrl: process.env.WORKSHOP_WEB_URL,
+});
+const docsBaseUrl = normalizeDocsBaseUrl(process.env.DOCS_BASE_URL);
 
 const config: Config = {
   title: "Homarr documentation",
   tagline: "A simple yet powerful dashboard for your server.",
-  url: "https://homarr.dev",
-  baseUrl: "/",
+  url: publicUrls.homarrWebsiteUrl,
+  baseUrl: docsBaseUrl,
   trailingSlash: undefined,
   favicon: "img/logo.png",
   organizationName: "homarr-labs",
   projectName: "homarr",
   customFields: {
-    workshopUrl: process.env.WORKSHOP_URL ?? "",
+    workshopUrl: publicUrls.workshopApiUrl,
+    workshopWebUrl: publicUrls.workshopWebUrl,
   },
+  scripts: [{ src: `${docsBaseUrl}workshop-runtime-config.js` }],
   i18n: {
     defaultLocale: "en",
     locales: ["en"],

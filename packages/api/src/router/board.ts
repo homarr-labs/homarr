@@ -59,8 +59,13 @@ import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 
+import { env } from "../env";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
+import {
+  throwIfCustomWidgetBoardDuplicationForbidden,
+  throwIfCustomWidgetPlacementChangeForbidden,
+} from "./board/custom-widget-placement-access";
 import { generateResponsiveGridFor } from "./board/grid-algorithm";
 
 export const boardRouter = createTRPCRouter({
@@ -372,6 +377,11 @@ export const boardRouter = createTRPCRouter({
       }
 
       const { sections: boardSections, items: boardItems, layouts: boardLayouts, ...boardProps } = board;
+      throwIfCustomWidgetBoardDuplicationForbidden(
+        ctx.session.user.permissions.includes("admin"),
+        env.CUSTOM_WIDGETS_ENABLED !== false,
+        boardItems,
+      );
 
       const newBoardId = createId();
 
@@ -855,6 +865,12 @@ export const boardRouter = createTRPCRouter({
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
     const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
+    throwIfCustomWidgetPlacementChangeForbidden({
+      isAdmin: ctx.session.user.permissions.includes("admin"),
+      customWidgetsEnabled: env.CUSTOM_WIDGETS_ENABLED !== false,
+      submittedItems: input.items,
+      storedItems: dbBoard.items,
+    });
 
     await handleTransactionsAsync(ctx.db, {
       async handleAsync(db, schema) {
@@ -1440,6 +1456,12 @@ export const boardRouter = createTRPCRouter({
     .output(z.object({ itemId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+      throwIfCustomWidgetPlacementChangeForbidden({
+        isAdmin: ctx.session.user.permissions.includes("admin"),
+        customWidgetsEnabled: env.CUSTOM_WIDGETS_ENABLED !== false,
+        submittedItems: [{ id: "", kind: input.kind, options: input.options }],
+        storedItems: [],
+      });
 
       if (input.integrationIds.length > 0) {
         const existing = await ctx.db.query.integrations.findMany({

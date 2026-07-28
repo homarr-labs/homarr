@@ -50,7 +50,7 @@ class Record {
 
 const original = {
   passwordAuth: { enabled: true, identityFields: ["email"] },
-  oauth2: { enabled: true, providers: [{ name: "original", clientId: "before" }] },
+  oauth2: { enabled: true, providers: [{ name: "original", clientId: "before", clientSecret: "before-secret" }] },
   rules: {
     listRule: "original-list",
     viewRule: "original-view",
@@ -157,13 +157,17 @@ rawQueries.length = 0;
 settings.rateLimits = structuredClone(original.rateLimits);
 
 migration.up(app);
-const bootstrappedUsers = collections.get("users");
-if (!bootstrappedUsers) throw new Error("Fresh migration did not create the users collection");
+if (!collections.has("users")) throw new Error("Fresh migration did not create the users collection");
 migration.down(app);
-if (collections.get("users") !== bootstrappedUsers) {
-  throw new Error("Fresh rollback removed the users collection required by the bootstrap hook");
-}
-for (const name of ["workshop_migration_state", "workshop_listings", "reports", "comments", "votes", "submissions"]) {
+for (const name of [
+  "users",
+  "workshop_migration_state",
+  "workshop_listings",
+  "reports",
+  "comments",
+  "votes",
+  "submissions",
+]) {
   if (collections.has(name)) throw new Error(`Fresh rollback left collection ${name}`);
 }
 if (JSON.stringify(settings.rateLimits) !== JSON.stringify(original.rateLimits)) {

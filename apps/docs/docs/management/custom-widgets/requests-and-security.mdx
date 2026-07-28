@@ -12,7 +12,9 @@ Requests are keyed by ID. `source`, `kind`, `method`, `trigger`, `auth`, and `pe
 
 The request `path` is appended to the source `baseUrl`, including a base path such as `/api/v2`.
 
-GET, POST, PUT, PATCH, and DELETE work for queries and actions. Kind—not method—controls behavior. Load queries run automatically, manual queries run through `SubFetch`, and actions run only from `ActionButton` or `ToggleSwitch`.
+GET, POST, PUT, and PATCH work for queries and actions. DELETE is restricted to actions so it can never run while a
+board loads. Kind controls the remaining behavior: load queries run automatically, manual queries run through
+`SubFetch`, and actions run only from `ActionButton` or `ToggleSwitch`.
 
 Bind values directly where they are used:
 
@@ -40,3 +42,12 @@ Paths and query-string values must resolve to text, numbers, or booleans. JSON b
 Every request uses Homarr's existing server executor: same-origin source enforcement, network scope, DNS and redirect validation, SSRF protection, board permissions, rate and request limits, body and response limits, timeouts, and encrypted credential injection. Static headers cannot override credentials, cookies, routing, proxy, forwarding, or hop-by-hop headers.
 
 Queries default to view permission and actions to modify. DELETE always requires full permission and confirmation. Actions are never cached, retried, or run on load.
+
+Management and runtime are intentionally separate. A Homarr administrator with board-modify permission places and
+configures the widget. After placement, query and action authorization follows the request's board permission. Public
+boards may execute queries for anonymous viewers, but mutations stay authenticated. This includes shared-cache
+invalidation: `RefreshButton` is disabled for anonymous viewers, while ordinary scheduled query rendering remains
+available.
+
+Responses use bounded, versioned shared-Redis cache keys. Action invalidation advances the shared version so every
+Homarr replica stops serving the previous response without scanning or deleting a key prefix.

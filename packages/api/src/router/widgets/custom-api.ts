@@ -12,9 +12,11 @@ import {
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
+import { CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT } from "@homarr/custom-widgets/server";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
+import { assertCustomWidgetsEnabled } from "../custom-widget/feature-flags";
 import { executeCustomWidgetRequest, invalidateCustomWidgetResponseCache } from "../custom-widget/request-executor";
 import {
   hashRuntimeParams,
@@ -32,6 +34,10 @@ const namedRequestInputSchema = itemInputSchema.extend({
   requestId: z.string().min(1).max(64),
   params: runtimeParamsSchema.default({}),
 });
+const refreshQueriesInputSchema = itemInputSchema.extend({
+  requestIds: z.array(z.string().min(1).max(64)).max(64).default([]),
+  all: z.boolean().default(false),
+});
 
 interface CustomWidgetItemOptions {
   definitionId: string;
@@ -40,7 +46,7 @@ interface CustomWidgetItemOptions {
   refreshInterval?: number;
 }
 
-type RouterContext = Parameters<typeof throwIfActionForbiddenAsync>[0];
+type RouterContext = Parameters<typeof throwIfActionForbiddenAsync>[0] & { clientAddress?: string };
 type ResolvedDefinition = Awaited<ReturnType<typeof resolvePlacedDefinitionAsync>>;
 
 const parseItemOptions = (raw: string): CustomWidgetItemOptions => {
@@ -67,6 +73,7 @@ const parseItemOptions = (raw: string): CustomWidgetItemOptions => {
 };
 
 async function resolvePlacedDefinitionAsync(ctx: RouterContext, itemId: string) {
+  assertCustomWidgetsEnabled();
   const item = await ctx.db.query.items.findFirst({
     where: eq(items.id, itemId),
     columns: { id: true, boardId: true, kind: true, options: true },
@@ -142,27 +149,34 @@ const getAuth = (resolved: ResolvedDefinition, source: IdentifiedSource, mode: "
   };
 };
 
-const withRequestLimit = async <T>(
-  ctx: RouterContext,
-  resolved: ResolvedDefinition,
-  request: IdentifiedRequest,
-  callback: () => Promise<T>,
-) => {
-  const release = await acquireCustomWidgetRequestLimit({
+const acquireRequestLimit = (ctx: RouterContext, resolved: ResolvedDefinition, request: IdentifiedRequest) =>
+  acquireCustomWidgetRequestLimit({
     category: request.kind === "query" ? "query" : request.method === "DELETE" ? "delete" : "action",
     userId: ctx.session?.user.id,
+    anonymousId: ctx.clientAddress,
     itemId: resolved.item.id,
     definitionId: resolved.stored.id,
   });
-  try {
-    return await callback();
-  } finally {
-    await release();
-  }
-};
 
 const getCacheKey = (resolved: ResolvedDefinition, request: IdentifiedRequest, params: Record<string, unknown>) =>
   `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${request.id}:${hashRuntimeParams(params)}`;
+
+async function mapLoadRequests<T, TResult>(
+  requests: readonly T[],
+  execute: (request: T) => Promise<TResult>,
+): Promise<TResult[]> {
+  const results: TResult[] = [];
+  for (let index = 0; index < requests.length; index += CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT) {
+    results.push(
+      ...(await Promise.all(
+        requests
+          .slice(index, index + CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT)
+          .map(async (request) => await execute(request)),
+      )),
+    );
+  }
+  return results;
+}
 
 const executeRequest = async (
   ctx: RouterContext,
@@ -174,20 +188,28 @@ const executeRequest = async (
   const source = findSource(resolved, request.source);
   const values = resolveCustomWidgetRequestValues(request, resolved.configuration, params);
   const targetUrl = renderRequestTarget(source.baseUrl, request, values);
-  return withRequestLimit(ctx, resolved, request, () =>
-    executeCustomWidgetRequest({
-      baseUrl: source.baseUrl,
-      targetUrl,
-      method: request.method,
-      body: renderRequestBody(request, values),
-      staticHeaders: request.headers,
-      auth: getAuth(resolved, source, request.auth),
-      networkScope: source.networkScope,
-      kind: request.kind,
-      cacheKey: request.kind === "query" ? getCacheKey(resolved, request, values) : undefined,
-      cacheTtlSeconds: request.cacheSeconds,
-    }),
-  );
+  try {
+    return await executeCustomWidgetRequest(
+      {
+        baseUrl: source.baseUrl,
+        targetUrl,
+        method: request.method,
+        body: renderRequestBody(request, values),
+        staticHeaders: request.headers,
+        auth: getAuth(resolved, source, request.auth),
+        networkScope: source.networkScope,
+        kind: request.kind,
+        cacheKey: request.kind === "query" ? getCacheKey(resolved, request, values) : undefined,
+        cacheTtlSeconds: request.cacheSeconds,
+      },
+      {
+        acquireRequestLimit: () => acquireRequestLimit(ctx, resolved, request),
+      },
+    );
+  } catch (error) {
+    if (error instanceof TRPCError) throw error;
+    throw new TRPCError({ code: "BAD_GATEWAY", message: "External request failed" });
+  }
 };
 
 export const customApiRouter = createTRPCRouter({
@@ -196,39 +218,37 @@ export const customApiRouter = createTRPCRouter({
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
     );
-    const entries = await Promise.all(
-      loadRequests.map(async ([requestId, request]) => {
-        try {
-          const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {});
-          return [
-            requestId,
-            {
-              data: response.data,
-              status: {
-                loading: false,
-                ok: response.ok,
-                status: response.status,
-                statusText: response.statusText,
-                error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
-              },
+    const entries = await mapLoadRequests(loadRequests, async ([requestId, request]) => {
+      try {
+        const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {});
+        return [
+          requestId,
+          {
+            data: response.data,
+            status: {
+              loading: false,
+              ok: response.ok,
+              status: response.status,
+              statusText: response.statusText,
+              error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
             },
-          ] as const;
-        } catch (error) {
-          return [
-            requestId,
-            {
-              data: null,
-              status: {
-                loading: false,
-                ok: false,
-                status: 0,
-                error: error instanceof Error ? error.message : "Request failed",
-              },
+          },
+        ] as const;
+      } catch {
+        return [
+          requestId,
+          {
+            data: null,
+            status: {
+              loading: false,
+              ok: false,
+              status: 0,
+              error: "Request failed",
             },
-          ] as const;
-        }
-      }),
-    );
+          },
+        ] as const;
+      }
+    });
 
     return {
       type: "customJsx" as const,
@@ -264,6 +284,46 @@ export const customApiRouter = createTRPCRouter({
     };
   }),
 
+  refreshQueries: protectedProcedure.input(refreshQueriesInputSchema).mutation(async ({ ctx, input }) => {
+    const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
+    const available = Object.entries(resolved.definition.requests).flatMap(([requestId, request]) =>
+      request.kind === "query" ? [{ id: requestId, ...request }] : [],
+    );
+    const requested = new Set(input.all ? available.map(({ id }) => id) : input.requestIds);
+    const authorized: IdentifiedRequest[] = [];
+    for (const request of available) {
+      if (!requested.has(request.id)) continue;
+      try {
+        await throwIfActionForbiddenAsync(
+          ctx,
+          eq(boards.id, resolved.item.boardId),
+          request.permission as BoardPermission,
+        );
+        authorized.push(request);
+      } catch (error) {
+        if (!(error instanceof TRPCError) || error.code !== "NOT_FOUND") throw error;
+      }
+    }
+    if (authorized.length === 0) return { requestIds: [] };
+
+    const release = await acquireCustomWidgetRequestLimit({
+      category: "query",
+      userId: ctx.session?.user.id,
+      anonymousId: ctx.clientAddress,
+      itemId: resolved.item.id,
+      definitionId: resolved.stored.id,
+    });
+    try {
+      const version = getCustomWidgetCacheVersion(resolved.stored);
+      await invalidateCustomWidgetResponseCache(
+        authorized.map((request) => `custom-jsx:${resolved.item.id}:${version}:${request.id}:`),
+      );
+    } finally {
+      await release();
+    }
+    return { requestIds: authorized.map(({ id }) => id) };
+  }),
+
   executeAction: protectedProcedure
     .input(namedRequestInputSchema.extend({ confirmed: z.boolean().optional() }))
     .mutation(async ({ ctx, input }) => {
@@ -275,7 +335,7 @@ export const customApiRouter = createTRPCRouter({
       }
       const response = await executeRequest(ctx, resolved, request, input.params);
       if (response.ok && request.invalidates?.length) {
-        invalidateCustomWidgetResponseCache(
+        await invalidateCustomWidgetResponseCache(
           request.invalidates.flatMap((requestId) => [
             `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${requestId}:`,
             `custom-widget:options:${resolved.stored.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${requestId}:`,

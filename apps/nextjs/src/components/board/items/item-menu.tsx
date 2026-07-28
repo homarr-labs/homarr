@@ -30,6 +30,8 @@ export const BoardItemMenu = (props: BoardItemMenuProps) => {
 };
 
 const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuProps) => {
+  const { data: session } = useSession();
+  const canDuplicate = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useScopedI18n("item");
   const t = useI18n();
@@ -135,9 +137,11 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
         >
           {tItem("action.moveResize")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconCopy size={16} />} onClick={() => duplicateItem({ itemId: item.id })}>
-          {tItem("action.duplicate")}
-        </Menu.Item>
+        {canDuplicate && (
+          <Menu.Item leftSection={<IconCopy size={16} />} onClick={() => duplicateItem({ itemId: item.id })}>
+            {tItem("action.duplicate")}
+          </Menu.Item>
+        )}
         <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
         <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>

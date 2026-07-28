@@ -16,7 +16,7 @@ import {
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
-import { ipAddressFromHeaders } from "@homarr/common/server";
+import { rateLimitAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { buildCustomWidgetMcpPrompt } from "@homarr/custom-widgets/authoring-prompt";
 import {
@@ -27,6 +27,7 @@ import {
 import { customJsxExamples, getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 import { db } from "@homarr/db";
 
+import { env } from "~/env";
 import { getPackageVersion } from "~/versions/package-reader";
 import { extractMcpTools } from "../_extract-tools";
 
@@ -85,7 +86,12 @@ function clearAuthFailures(ip: string | null) {
   authFailures.delete(ip ?? "unknown");
 }
 
-const callerStorage = new AsyncLocalStorage<ReturnType<typeof mcpRouter.createCaller>>();
+interface McpCallerContext {
+  caller: ReturnType<typeof mcpRouter.createCaller>;
+  isAdmin: boolean;
+}
+
+const callerStorage = new AsyncLocalStorage<McpCallerContext>();
 
 const emptyObjectSchema = {
   type: "object" as const,
@@ -112,6 +118,23 @@ function getTools() {
   }
   return toolsCache;
 }
+
+function getVisibleTools() {
+  const tools = getTools();
+  if (!isCustomWidgetMcpEnabled()) {
+    return tools.filter((tool) => !tool.name.startsWith("customWidget_"));
+  }
+  return env.WORKSHOP_ENABLED === false
+    ? tools.filter((tool) => !tool.name.startsWith("customWidget_workshop"))
+    : tools;
+}
+
+function requireCustomWidgetMcpAdmin() {
+  if (!isCustomWidgetMcpEnabled()) throw new Error("Resource not found");
+}
+
+const isCustomWidgetMcpEnabled = () =>
+  Boolean(callerStorage.getStore()?.isAdmin) && env.CUSTOM_WIDGETS_ENABLED !== false;
 
 const SAFE_ERROR_MESSAGES: Record<string, string> = {
   UNAUTHORIZED: "You do not have permission to perform this action",
@@ -184,19 +207,22 @@ If \`hasUseAccess\` is false, the API key owner lacks permission for that integr
 const mcpHandler = createMcpHandler(
   (server) => {
     server.server.setRequestHandler(ListPromptsRequestSchema, () => ({
-      prompts: [
-        {
-          name: "homarr-custom-widget-author",
-          description: "Author and iterate on one Homarr Custom JSX v2 widget.",
-          arguments: [
-            { name: "request", description: "The widget the user wants.", required: false },
-            { name: "documentationUrl", description: "External API documentation URL.", required: false },
-          ],
-        },
-      ],
+      prompts: isCustomWidgetMcpEnabled()
+        ? [
+            {
+              name: "homarr-custom-widget-author",
+              description: "Author and iterate on one Homarr Custom JSX v2 widget.",
+              arguments: [
+                { name: "request", description: "The widget the user wants.", required: false },
+                { name: "documentationUrl", description: "External API documentation URL.", required: false },
+              ],
+            },
+          ]
+        : [],
     }));
 
     server.server.setRequestHandler(GetPromptRequestSchema, (request) => {
+      requireCustomWidgetMcpAdmin();
       if (request.params.name !== "homarr-custom-widget-author") throw new Error("Prompt not found");
       return {
         description: "Current Homarr Custom Widget authoring workflow.",
@@ -216,36 +242,49 @@ const mcpHandler = createMcpHandler(
     });
 
     server.server.setRequestHandler(ListResourcesRequestSchema, () => ({
-      resources: [
-        { uri: "homarr://custom-widgets/schema", name: "Custom Widget schema", mimeType: "application/schema+json" },
-        { uri: "homarr://custom-widgets/components", name: "Custom Widget components", mimeType: "application/json" },
-        { uri: "homarr://custom-widgets/skill", name: "Custom Widget skill", mimeType: "text/markdown" },
-        ...customJsxExamples.map((example) => ({
-          uri: `homarr://custom-widgets/examples/${example.id}`,
-          name: `Custom Widget example: ${example.title}`,
-          mimeType: "application/json",
-        })),
-      ],
+      resources: isCustomWidgetMcpEnabled()
+        ? [
+            {
+              uri: "homarr://custom-widgets/schema",
+              name: "Custom Widget schema",
+              mimeType: "application/schema+json",
+            },
+            {
+              uri: "homarr://custom-widgets/components",
+              name: "Custom Widget components",
+              mimeType: "application/json",
+            },
+            { uri: "homarr://custom-widgets/skill", name: "Custom Widget skill", mimeType: "text/markdown" },
+            ...customJsxExamples.map((example) => ({
+              uri: `homarr://custom-widgets/examples/${example.id}`,
+              name: `Custom Widget example: ${example.title}`,
+              mimeType: "application/json",
+            })),
+          ]
+        : [],
     }));
 
     server.server.setRequestHandler(ListResourceTemplatesRequestSchema, () => ({
-      resourceTemplates: [
-        {
-          uriTemplate: "homarr://custom-widgets/components/{name}",
-          name: "Custom Widget component",
-          description: "Metadata for one installed Custom Widget component.",
-          mimeType: "application/json",
-        },
-        {
-          uriTemplate: "homarr://custom-widgets/examples/{name}",
-          name: "Custom Widget example",
-          description: "One canonical Custom Widget example.",
-          mimeType: "application/json",
-        },
-      ],
+      resourceTemplates: isCustomWidgetMcpEnabled()
+        ? [
+            {
+              uriTemplate: "homarr://custom-widgets/components/{name}",
+              name: "Custom Widget component",
+              description: "Metadata for one installed Custom Widget component.",
+              mimeType: "application/json",
+            },
+            {
+              uriTemplate: "homarr://custom-widgets/examples/{name}",
+              name: "Custom Widget example",
+              description: "One canonical Custom Widget example.",
+              mimeType: "application/json",
+            },
+          ]
+        : [],
     }));
 
     server.server.setRequestHandler(ReadResourceRequestSchema, (request) => {
+      requireCustomWidgetMcpAdmin();
       const { uri } = request.params;
       let text: string;
       let mimeType = "application/json";
@@ -271,12 +310,12 @@ const mcpHandler = createMcpHandler(
     });
 
     server.server.setRequestHandler(ListToolsRequestSchema, () => ({
-      tools: getTools(),
+      tools: getVisibleTools(),
     }));
 
     server.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const { name, arguments: args } = request.params;
-      const tools = getTools();
+      const tools = getVisibleTools();
       const tool = tools.find((t) => t.name === name);
 
       if (!tool) {
@@ -286,8 +325,8 @@ const mcpHandler = createMcpHandler(
         };
       }
 
-      const caller = callerStorage.getStore();
-      if (!caller) {
+      const callerContext = callerStorage.getStore();
+      if (!callerContext) {
         return {
           content: [{ type: "text" as const, text: "Authentication context not available" }],
           isError: true,
@@ -295,7 +334,7 @@ const mcpHandler = createMcpHandler(
       }
 
       try {
-        const procedure = tool.pathInRouter.reduce<any>((acc, part) => acc?.[part], caller);
+        const procedure = tool.pathInRouter.reduce<any>((acc, part) => acc?.[part], callerContext.caller);
         if (typeof procedure !== "function") {
           return {
             content: [{ type: "text" as const, text: `Tool "${name}" is not callable` }],
@@ -311,7 +350,9 @@ const mcpHandler = createMcpHandler(
         const message = sanitizeErrorMessage(error);
         logger.warn("MCP tool execution failed", {
           tool: name,
-          error: error instanceof Error ? error.message : String(error),
+          errorName: error instanceof Error ? error.name : "UnknownError",
+          errorCode:
+            error instanceof Error && "code" in error && typeof error.code === "string" ? error.code : undefined,
         });
         return {
           content: [{ type: "text" as const, text: JSON.stringify({ error: message }) }],
@@ -353,7 +394,7 @@ function jsonErrorResponse(status: number, body: Record<string, string>, extraHe
 
 const handler = async (req: NextRequest) => {
   const apiKeyValue = extractApiKeyValue(req);
-  const ipAddress = ipAddressFromHeaders(req.headers);
+  const ipAddress = rateLimitAddressFromHeaders(req.headers);
   const { ua } = userAgent(req);
 
   if (!checkAuthRateLimit(ipAddress)) {
@@ -398,7 +439,9 @@ const handler = async (req: NextRequest) => {
   const ctx = createTRPCContext({ session, headers: req.headers });
   const caller = mcpRouter.createCaller(ctx);
 
-  return callerStorage.run(caller, () => mcpHandler(req as unknown as Request));
+  return callerStorage.run({ caller, isAdmin: session.user.permissions.includes("admin") }, () =>
+    mcpHandler(req as unknown as Request),
+  );
 };
 
 export { handler as GET, handler as POST, handler as DELETE };

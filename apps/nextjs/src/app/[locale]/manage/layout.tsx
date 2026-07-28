@@ -41,6 +41,7 @@ import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
 import { ManageTourProvider } from "~/components/onboarding/manage-tour";
+import { env as nextEnv } from "~/env";
 
 export default async function ManageLayout({ children }: PropsWithChildren) {
   const t = await getScopedI18n("management.navbar");
@@ -79,13 +80,16 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconApi,
       href: "/manage/custom-widgets",
       label: t("items.customWidgets"),
-      hidden: !session?.user.permissions.includes("custom-widget-manage"),
+      hidden: nextEnv.CUSTOM_WIDGETS_ENABLED === false || !session?.user.permissions.includes("admin"),
     },
     {
       icon: IconBuildingStore,
       href: "/manage/workshop",
       label: t("items.workshop"),
-      hidden: !session?.user.permissions.includes("custom-widget-manage"),
+      hidden:
+        nextEnv.CUSTOM_WIDGETS_ENABLED === false ||
+        nextEnv.WORKSHOP_ENABLED === false ||
+        !session?.user.permissions.includes("admin"),
     },
     {
       icon: IconSearch,

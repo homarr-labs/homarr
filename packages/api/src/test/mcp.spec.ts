@@ -70,7 +70,6 @@ const MCP_TOOL_ALLOWLIST = {
     "board_setHomeBoard",
     "board_setMobileHomeBoard",
     "customWidget_delete",
-    "customWidget_deleteLegacy",
     "customWidget_previewAction",
     "customWidget_templatePatch",
     "dnsHole_disable",
@@ -171,19 +170,11 @@ describe("custom widget authoring procedure access", () => {
     session: null,
   });
 
-  test("executes promised public procedures without a session", async () => {
-    await expect(unauthenticatedCaller.customWidget.schema()).resolves.toMatchObject({ type: "object" });
-    await expect(unauthenticatedCaller.customWidget.getAuthoringPrompt()).resolves.toMatchObject({
-      version: 2,
-      prompt: expect.any(String),
-    });
-    await expect(unauthenticatedCaller.customWidget.getSkill()).resolves.toMatchObject({
-      name: expect.any(String),
-    });
-  });
-
-  test("rejects protected and permission-gated authoring procedures without a session", async () => {
+  test("rejects every authoring procedure without a session", async () => {
     const calls = [
+      unauthenticatedCaller.customWidget.schema(),
+      unauthenticatedCaller.customWidget.getAuthoringPrompt(),
+      unauthenticatedCaller.customWidget.getSkill(),
       unauthenticatedCaller.customWidget.list(),
       unauthenticatedCaller.customWidget.validate({ widget: {} }),
       unauthenticatedCaller.customWidget.secretSet({
@@ -196,17 +187,39 @@ describe("custom widget authoring procedure access", () => {
     }
   });
 
-  test("enforces the dedicated permission on secret tools", async () => {
-    const callerWithoutSecretPermission = mcpRouter.createCaller({
+  test("rejects authoring and secret tools for authenticated non-admins", async () => {
+    const nonAdminCaller = mcpRouter.createCaller({
       db: null as never,
       deviceType: undefined,
-      session: { user: { id: "user-1", permissions: ["custom-widget-manage"] } } as never,
+      session: { user: { id: "user-1", permissions: ["board-modify-all"] } } as never,
     });
-    await expect(
-      callerWithoutSecretPermission.customWidget.secretSet({
+    const calls = [
+      nonAdminCaller.customWidget.schema(),
+      nonAdminCaller.customWidget.getAuthoringPrompt(),
+      nonAdminCaller.customWidget.getSkill(),
+      nonAdminCaller.customWidget.secretSet({
         definitionId: "widget",
         secret: { sourceId: "default", kind: "apiKey", value: "secret" },
       }),
-    ).rejects.toEqual(expect.objectContaining<Partial<TRPCError>>({ code: "FORBIDDEN" }));
+    ];
+    for (const call of calls) {
+      await expect(call).rejects.toEqual(expect.objectContaining<Partial<TRPCError>>({ code: "FORBIDDEN" }));
+    }
+  });
+
+  test("allows admins to read authoring resources", async () => {
+    const adminCaller = mcpRouter.createCaller({
+      db: null as never,
+      deviceType: undefined,
+      session: { user: { id: "admin-1", permissions: ["admin"] } } as never,
+    });
+    await expect(adminCaller.customWidget.schema()).resolves.toMatchObject({ type: "object" });
+    await expect(adminCaller.customWidget.getAuthoringPrompt()).resolves.toMatchObject({
+      version: 2,
+      prompt: expect.any(String),
+    });
+    await expect(adminCaller.customWidget.getSkill()).resolves.toMatchObject({
+      name: expect.any(String),
+    });
   });
 });

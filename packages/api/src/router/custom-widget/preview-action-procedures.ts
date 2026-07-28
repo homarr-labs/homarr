@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { customWidgetAdminProcedure } from "./feature-flags";
 import {
   getPreviewRequestSource,
   previewSessionRequestSchema,
@@ -12,10 +12,8 @@ import { renderRequestBody, renderRequestTarget, resolveCustomWidgetRequestValue
 import { acquireCustomWidgetRequestLimit } from "./request-limits";
 import { getPreviewSession } from "./preview-sessions";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
-
 export const previewActionProcedures = {
-  previewAction: manageProcedure
+  previewAction: customWidgetAdminProcedure
     .meta({
       mcp: { enabled: true, description: "Simulate or run one named action in a custom widget preview session." },
     })
@@ -46,15 +44,9 @@ export const previewActionProcedures = {
       if ((request.confirmation || request.method === "DELETE") && input.confirmed !== true) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This action requires confirmation" });
       }
-      const release = await acquireCustomWidgetRequestLimit({
-        category: request.method === "DELETE" ? "delete" : "action",
-        userId: ctx.session.user.id,
-        itemId: `preview:${session.id}`,
-        definitionId: session.definitionId ?? `preview:${session.id}`,
-      });
       const startedAt = Date.now();
-      try {
-        const response = await executeCustomWidgetRequest({
+      const response = await executeCustomWidgetRequest(
+        {
           baseUrl: resolved.source.baseUrl,
           targetUrl,
           method: request.method,
@@ -63,31 +55,38 @@ export const previewActionProcedures = {
           auth: request.auth === "none" ? undefined : resolved.auth,
           networkScope: resolved.source.networkScope,
           kind: "action",
-        });
-        if (response.ok && request.invalidates?.length) {
-          invalidateCustomWidgetResponseCache(
-            request.invalidates.map((requestId) => `custom-jsx:preview:${session.id}:${requestId}:`),
-          );
-        }
-        await recordPreviewJournal(session, {
-          requestId: request.id,
-          kind: "action",
-          method: request.method,
-          path: request.path,
-          status: response.status,
-          durationMs: Date.now() - startedAt,
-          simulated: false,
-        });
-        return {
-          ok: response.ok,
-          status: response.status,
-          statusText: response.statusText,
-          data: response.data,
-          error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
-          simulated: false as const,
-        };
-      } finally {
-        await release();
+        },
+        {
+          acquireRequestLimit: () =>
+            acquireCustomWidgetRequestLimit({
+              category: request.method === "DELETE" ? "delete" : "action",
+              userId: ctx.session.user.id,
+              itemId: `preview:${session.id}`,
+              definitionId: session.definitionId ?? `preview:${session.id}`,
+            }),
+        },
+      );
+      if (response.ok && request.invalidates?.length) {
+        await invalidateCustomWidgetResponseCache(
+          request.invalidates.map((requestId) => `custom-jsx:preview:${session.id}:${requestId}:`),
+        );
       }
+      await recordPreviewJournal(session, {
+        requestId: request.id,
+        kind: "action",
+        method: request.method,
+        path: request.path,
+        status: response.status,
+        durationMs: Date.now() - startedAt,
+        simulated: false,
+      });
+      return {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data,
+        error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
+        simulated: false as const,
+      };
     }),
 };

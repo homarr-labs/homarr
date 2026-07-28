@@ -6,8 +6,8 @@ import { eq, or } from "@homarr/db";
 import { boards, customWidgetDefinitions, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import { collectCustomWidgetRequestReferences } from "@homarr/custom-widgets/core";
 
-import { permissionRequiredProcedure, protectedProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
+import { customWidgetAdminProcedure } from "./feature-flags";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 import { executeCustomWidgetRequest } from "./request-executor";
 import {
@@ -26,10 +26,8 @@ import {
   mapLegacyCustomWidgetListItem,
 } from "./management-query-mappers";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
-
 export const managementQueryProcedures = {
-  list: manageProcedure
+  list: customWidgetAdminProcedure
     .meta({ mcp: { enabled: true, description: "List all Custom JSX widgets." } })
     .query(async ({ ctx }) => {
       const [definitions, legacyDefinitions] = await Promise.all([
@@ -43,11 +41,12 @@ export const managementQueryProcedures = {
         }),
       ]);
       const current = definitions.map(mapCustomWidgetListItem);
-      const legacy = legacyDefinitions.map(mapLegacyCustomWidgetListItem);
+      const currentIds = new Set(definitions.map(({ id }) => id));
+      const legacy = legacyDefinitions.filter(({ id }) => !currentIds.has(id)).map(mapLegacyCustomWidgetListItem);
       return [...current, ...legacy].toSorted((left, right) => left.name.localeCompare(right.name));
     }),
 
-  legacyMigrationPrompt: manageProcedure
+  legacyMigrationPrompt: customWidgetAdminProcedure
     .meta({
       mcp: {
         enabled: true,
@@ -72,7 +71,7 @@ export const managementQueryProcedures = {
       };
     }),
 
-  get: manageProcedure
+  get: customWidgetAdminProcedure
     .meta({ mcp: { enabled: true, description: "Get one Custom JSX widget without secret values." } })
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -96,7 +95,7 @@ export const managementQueryProcedures = {
       };
     }),
 
-  available: protectedProcedure
+  available: customWidgetAdminProcedure
     .input(z.object({ boardId: z.string(), currentId: z.string().optional() }))
     .query(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
@@ -115,7 +114,7 @@ export const managementQueryProcedures = {
       return [...available, mapLegacyAvailableCustomWidget(legacy)];
     }),
 
-  optionRequest: protectedProcedure
+  optionRequest: customWidgetAdminProcedure
     .input(
       z.object({
         boardId: z.string(),
@@ -139,16 +138,10 @@ export const managementQueryProcedures = {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), request.permission);
       const source = definition.sources[request.source];
       if (!source) throw new TRPCError({ code: "NOT_FOUND", message: "Option query source not found" });
-      const release = await acquireCustomWidgetRequestLimit({
-        category: "query",
-        userId: ctx.session.user.id,
-        itemId: `configuration:${input.boardId}`,
-        definitionId: input.definitionId,
-      });
-      try {
-        const values = resolveOptionRequestValues(request, input.params);
-        const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
-        const response = await executeCustomWidgetRequest({
+      const values = resolveOptionRequestValues(request, input.params);
+      const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
+      const response = await executeCustomWidgetRequest(
+        {
           baseUrl: source.baseUrl,
           targetUrl: renderRequestTarget(source.baseUrl, request, values),
           method: request.method,
@@ -173,16 +166,23 @@ export const managementQueryProcedures = {
           kind: "query",
           cacheKey: `custom-widget:options:${input.definitionId}:${getCustomWidgetCacheVersion(stored)}:${request.id}:${hashRuntimeParams(values)}`,
           cacheTtlSeconds: request.cacheSeconds ?? 30,
-        });
-        return {
-          ok: response.ok,
-          status: response.status,
-          data: response.data,
-          error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
-        };
-      } finally {
-        await release();
-      }
+        },
+        {
+          acquireRequestLimit: () =>
+            acquireCustomWidgetRequestLimit({
+              category: "query",
+              userId: ctx.session.user.id,
+              itemId: `configuration:${input.boardId}`,
+              definitionId: input.definitionId,
+            }),
+        },
+      );
+      return {
+        ok: response.ok,
+        status: response.status,
+        data: response.data,
+        error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
+      };
     }),
 };
 

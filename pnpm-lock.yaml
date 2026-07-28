@@ -1483,6 +1483,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      ioredis:
+        specifier: 'catalog:'
+        version: 5.11.1
       typescript:
         specifier: 'catalog:'
         version: '@typescript/typescript6@6.0.2'
@@ -2946,6 +2949,9 @@ importers:
       pocketbase:
         specifier: 'catalog:'
         version: 0.26.9
+      tr46:
+        specifier: 6.0.0
+        version: 6.0.0
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -2956,6 +2962,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      esbuild:
+        specifier: 'catalog:'
+        version: 0.28.0
       typescript:
         specifier: 'catalog:'
         version: '@typescript/typescript6@6.0.2'

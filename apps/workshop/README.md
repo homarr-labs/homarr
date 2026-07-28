@@ -1,105 +1,175 @@
 # Homarr Workshop
 
-Workshop is a small PocketBase service that serves the public documentation site and stores one Custom JSX v2 widget per submission.
+Workshop is the public, community-driven PocketBase service behind the Workshop pages in Homarr's Docusaurus site. It
+stores Custom JSX v2 widgets and Custom CSS submissions. Installation-time validation inside Homarr remains
+authoritative: public content must be reviewed before it is installed.
 
-The runtime image extends `ghcr.io/muchobien/pocketbase:0.39`; Homarr adds only the built documentation, PocketBase
-collections, API rules, and its explicit serve arguments.
+The runtime base is PocketBase 0.39.9 pinned by its multi-platform OCI digest in `apps/workshop/Dockerfile`. Update the
+version and digest together, then run the Workshop integration and production-image smoke suites.
 
-It intentionally has no approval queue, user bans, moderator roles, reusable widget connections, or remote control over
-installed widgets. Submissions publish immediately. Authenticated users can vote, comment, and report; users with
-`isAdmin` enabled can dismiss reports or delete any submission or comment.
+The internal PocketBase field `users.isAdmin` means **Workshop moderator**. It does not grant Homarr administrator
+access. Moderators can review private reports, dismiss reports, and remove submissions or comments.
 
-## Local development
+## Run the complete local stack
+
+From the repository root:
 
 ```sh
-pnpm docker:workshop
+cp .env.example .env
+pnpm install --frozen-lockfile
+pnpm dev:workshop
 ```
 
-Use `docker compose -f apps/workshop/docker-compose.yml logs -f workshop` for logs and
-`docker compose -f apps/workshop/docker-compose.yml stop workshop` to stop it without deleting data.
+This starts persistent PocketBase at `http://127.0.0.1:8090`, waits for health and required collections, and starts
+Docusaurus at `http://127.0.0.1:3003`. Open:
 
-Compose passes the selected port to PocketBase as `PORT`, so it listens on the same port inside and outside the
-container. With the image directly, set both values: `docker run -e PORT=3003 -p 3003:3003 <workshop-image>`.
+- PocketBase administration: `http://127.0.0.1:8090/_/`
+- Workshop: `http://127.0.0.1:3003/workshop`
 
-Open `http://127.0.0.1:18090/_/`, create the first PocketBase superuser, and configure GitHub OAuth on the `users` collection.
+For direct Compose work, copy `apps/workshop/.env.example` to `apps/workshop/.env` and pass it explicitly with
+`docker compose --env-file apps/workshop/.env -f apps/workshop/docker-compose.yml …`.
 
-The `users.isAdmin` field defaults to `false`. Collection rules allow account creation only through OAuth without that
-field and reject all regular-user attempts to change it. Appoint administrators out of band with a PocketBase
-superuser or a deliberate SQLite update; there is no public role-management endpoint or hook.
+Create the first PocketBase superuser in the administration UI, or use:
 
-Users must sign in again after the role changes. Setting the value back to `false` removes Workshop administrator access.
+```sh
+docker compose -f apps/workshop/docker-compose.yml exec workshop \
+  pocketbase superuser create you@example.com 'replace-with-a-strong-password' --dir=/pb_data
+```
 
-The GitHub OAuth application needs one callback for the Workshop host:
+Stopping `pnpm dev:workshop` stops PocketBase and Docusaurus without deleting
+`homarr-workshop_pb_data`. To inspect or stop the service separately:
+
+```sh
+docker compose -f apps/workshop/docker-compose.yml logs -f workshop
+docker compose -f apps/workshop/docker-compose.yml stop workshop
+```
+
+## Connect the Homarr application
+
+Use the same URL contract in the repository-root `.env`, then restart Homarr:
+
+```dotenv
+HOMARR_WEBSITE_URL=http://127.0.0.1:3003
+WORKSHOP_API_URL=http://127.0.0.1:8090
+WORKSHOP_WEB_URL=http://127.0.0.1:3003/workshop
+WORKSHOP_PUBLIC_ORIGIN=http://127.0.0.1:3003
+PB_ALLOWED_ORIGINS=*
+```
+
+```sh
+pnpm dev
+```
+
+`WORKSHOP_API_URL` controls API calls. `WORKSHOP_WEB_URL` controls links from Homarr. `HOMARR_WEBSITE_URL` is the
+documentation/site base. All three must be absolute HTTP(S) URLs. `DOCS_BASE_URL` configures a Docusaurus path such as
+`/docs-site/`. The old Docusaurus-only `WORKSHOP_URL` variable remains a deprecated alias for one release.
+
+## Optional GitHub OAuth
+
+Create a GitHub OAuth application with this callback:
 
 ```text
 https://<workshop-host>/api/oauth2-redirect
 ```
 
-Self-hosted Homarr origins do not need to be registered with GitHub. Keep `PB_ALLOWED_ORIGINS=*` (the default) so localhost and arbitrary self-hosted domains can open the central PocketBase OAuth popup. Set a restricted origin list only if it includes every Homarr origin that should use Workshop sign-in.
+Set both credentials in `.env`:
 
-Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in the repository-root `.env`. Set
-`WORKSHOP_PUBLIC_ORIGIN=https://<workshop-host>` so notification emails link to the public Workshop. Configure the sender
-and SMTP transport in PocketBase. PocketBase emails the submission author about new comments, emails every current
-Workshop administrator about a new report, and emails the author after an administrator deletes their submission. Mail
-failures are logged and never reject a comment, report, or deletion.
+```dotenv
+GITHUB_CLIENT_ID=...
+GITHUB_CLIENT_SECRET=...
+```
 
-GitHub OAuth settings are synchronized from the environment on every PocketBase startup. Restart the Workshop after
-rotating either credential; removing one or both values disables the provider instead of retaining stale credentials.
+OAuth settings synchronize on every PocketBase startup. Restart after rotation. A production deployment must never
+supply only one credential. `PB_ALLOWED_ORIGINS=*` is appropriate for the central community because arbitrary
+self-hosted Homarr origins must open its OAuth popup; a restricted list must include every allowed browser origin.
 
-Run the disposable service integration test from the repository root:
+## Promote a Workshop moderator
+
+Sign in once through GitHub so the user record exists. In the PocketBase administration UI, open the `users` collection
+and set `isAdmin` to `true`. The user must sign in again. Set it back to `false` to remove moderator access.
+
+Regular API rules cannot set this field. Never describe a Workshop moderator as a Homarr administrator: they are
+separate roles in separate services.
+
+## Validation and tests
+
+The browser and shared client validate content with the canonical TypeScript schema. PocketBase independently validates
+direct writes, owns schema and revision fields, and rejects stale compare-and-swap updates. Homarr validates the
+downloaded content again before installation.
+
+Run the disposable integration suite:
 
 ```sh
 pnpm test:workshop
+pnpm --filter @homarr/workshop typecheck
+pnpm --filter @homarr/docs typecheck
 ```
 
-The test uses a separate Compose project and deletes its named volume on exit. It never writes fixture users or admin
-roles into the normal `homarr-workshop_pb_data` volume.
+The integration suite uses a separate Compose project and deletes only its disposable volume.
 
-The Workshop frontend validates submissions with `customWidgetImportSchema` from `@homarr/custom-widgets`, and Homarr
-validates canonical content again before installation. PocketBase independently enforces publication invariants for
-direct API requests, owns schema/revision fields, and rejects stale updates using the submitted expected revision.
-The validated `$schema` is also stored as `widgetSchema` for listing compatibility badges; it must match the downloaded
-manifest before Homarr enables installation.
-PocketBase API rules enforce submission and comment ownership, one vote/report per user and submission, and
-administrator-only moderation. Each new submission receives one real author-owned upvote. Reports are private to
-administrators and are dismissed by changing their status. PocketBase cascade deletion removes related votes, comments,
-and reports when a submission is deleted. Authors and administrators can mark a submission outdated without making it
-un-installable.
+## Backup and restore
 
-## Production docs preview
-
-Build the documentation and serve it from PocketBase using the same production image layout as the hosted Workshop:
+PocketBase data lives in `/pb_data`. Stop writes and copy it into a new, empty host directory for each
+filesystem-level backup:
 
 ```sh
-pnpm docker:docs
+docker compose -f apps/workshop/docker-compose.yml stop workshop
+docker compose -f apps/workshop/docker-compose.yml cp workshop:/pb_data/. ./workshop-backup
+docker compose -f apps/workshop/docker-compose.yml start workshop
 ```
 
-Open `http://127.0.0.1:3003`. Set `DOCS_EXPOSE_PORT` to use another host port. PocketBase data persists in the
-`homarr-workshop_pb_data` named volume.
-
-Point a local Homarr checkout at it with:
+Never copy a backup over a non-empty PocketBase volume: files created after the backup could survive and make the
+restore inconsistent. For a development restore, first verify that the selected backup contains the database, then
+empty the stopped volume before copying it:
 
 ```sh
-WORKSHOP_API_URL=http://127.0.0.1:3003 pnpm dev
+test -f ./workshop-backup/data.db
+docker compose -f apps/workshop/docker-compose.yml stop workshop
+docker compose -f apps/workshop/docker-compose.yml run --rm --no-deps --entrypoint sh workshop \
+  -c 'find /pb_data -mindepth 1 -maxdepth 1 -exec rm -rf {} +'
+docker compose -f apps/workshop/docker-compose.yml cp ./workshop-backup/. workshop:/pb_data
+docker compose -f apps/workshop/docker-compose.yml start workshop
+curl --fail http://127.0.0.1:8090/api/health
+curl --fail 'http://127.0.0.1:8090/api/collections/workshop_listings/records?perPage=1'
 ```
 
-The production Homarr image reads the same variable when the container starts:
+The cleanup command irreversibly empties the selected Compose volume, so confirm the backup path and preserve the
+current volume separately before running it. After the HTTP checks, verify sign-in, reports, and a test installation.
+Production backups must be versioned, access-controlled, restored into a clean staging volume, and validated before a
+release.
+
+## Production image and operations
+
+The production target serves the built documentation from `/pb_public` and PocketBase from the same image. Required
+production configuration:
+
+```dotenv
+HOMARR_WEBSITE_URL=https://homarr.dev
+WORKSHOP_API_URL=https://homarr.dev
+WORKSHOP_WEB_URL=https://homarr.dev/workshop
+WORKSHOP_PUBLIC_ORIGIN=https://homarr.dev
+PB_ALLOWED_ORIGINS=*
+WORKSHOP_REQUIRE_OAUTH=true
+```
+
+Build and smoke-test the combined image locally:
 
 ```sh
-docker run -p 7575:7575 -e WORKSHOP_API_URL=http://127.0.0.1:3003 <homarr-image>
+docker compose -f apps/workshop/docker-compose.yml --profile docs up --build --detach docs
+curl --fail http://127.0.0.1:3003/api/health
+curl --fail http://127.0.0.1:3003/
+curl --fail http://127.0.0.1:3003/workshop
+docker compose -f apps/workshop/docker-compose.yml --profile docs stop docs
 ```
 
-This command starts the profiled `docs` service from `apps/workshop/docker-compose.yml`. It does not start the development `workshop` service. Stop and remove the preview with:
-
-```sh
-docker compose -f apps/workshop/docker-compose.yml --profile docs rm --stop --force docs
-```
-
-Normal startup never deletes data. To intentionally recreate the local database, stop the stack first and then run:
+Normal `up`, `start`, `stop`, and `down` operations retain the named volume. The following command is an intentional,
+irreversible local reset:
 
 ```sh
 docker compose -f apps/workshop/docker-compose.yml down --volumes
 ```
 
-PocketBase data lives in `/pb_data`. Docker Compose persists it in the `pb_data` named volume for both the development Workshop service and the production documentation/Workshop service. The image serves the built Homarr documentation and Workshop UI from `/pb_public`.
-At startup the container repairs ownership of existing data volumes, then runs PocketBase as its non-root user.
+Never run the reset command against production. Release by immutable image digest, back up application and PocketBase
+data first, rehearse restore and rollback in staging, and promote the exact tested digest. The Algolia recrawl workflow
+remains manual until the external Homarr website host can dispatch it after promotion; publishing the image to GHCR does
+not make that image live.

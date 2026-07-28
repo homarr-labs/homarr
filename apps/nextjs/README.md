@@ -1,28 +1,42 @@
-# Create T3 App
+# Homarr web application
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This workspace contains Homarr's Next.js application. It consumes the shared API, authentication, database, board,
+widget, translation, and UI packages from this monorepo.
 
-## What's next? How do I make an app with this?
+Run commands from the repository root:
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+```sh
+pnpm install --frozen-lockfile
+cp .env.example .env
+```
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+Keep infrastructure running in the first terminal:
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+```sh
+pnpm docker:dev
+```
 
-## Learn More
+Apply migrations and start the application in a second terminal:
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+```sh
+pnpm db:migration:sqlite:run
+pnpm dev
+```
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+The app listens on `http://127.0.0.1:3000`. Configure an absolute writable `DB_URL`, `AUTH_SECRET`, and
+`SECRET_ENCRYPTION_KEY` in `.env` before first startup.
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+To test Custom Widgets against a local Community Workshop, run `pnpm dev:workshop` in another terminal and set:
 
-## How do I deploy this?
+```dotenv
+HOMARR_WEBSITE_URL=http://127.0.0.1:3003
+WORKSHOP_API_URL=http://127.0.0.1:8090
+WORKSHOP_WEB_URL=http://127.0.0.1:3003/workshop
+```
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Server-rendered runtime configuration exposes those URLs to the browser, so changing a production container's
+environment does not require rebuilding the Next.js bundle.
+
+See the repository [`README.md`](../../README.md) for validation commands and
+[`apps/docs/docs/advanced/development/getting-started.mdx`](../docs/docs/advanced/development/getting-started.mdx) for
+the full contributor setup.

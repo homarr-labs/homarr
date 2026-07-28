@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 
 import { getCustomWidgetComponentCatalog } from "@homarr/custom-widgets/authoring-resources";
 
-export const dynamic = "force-static";
+import { requireCustomWidgetAdmin } from "../admin";
 
-export function GET() {
+export async function GET() {
+  const denied = await requireCustomWidgetAdmin();
+  if (denied) return denied;
   return NextResponse.json(getCustomWidgetComponentCatalog());
 }

@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { errors } from "undici";
 import { describe, expect, test } from "vitest";
 
 import {
@@ -6,11 +7,11 @@ import {
   assertSafeStaticHeaders,
   classifyAddress,
   executeCustomWidgetRequest,
-  invalidateCustomWidgetResponseCache,
   resolveAndValidateHost,
   resolveSameOriginTarget,
   validateCustomWidgetUrl,
 } from "../server";
+import { isCustomWidgetRequestTimeoutError } from "../server/request-executor";
 
 describe("custom widget network policy", () => {
   test.each([
@@ -48,6 +49,121 @@ describe("custom widget network policy", () => {
           kind: "query",
         }),
       ).resolves.toMatchObject({ ok: true, status: 200, data: { status: "ok" } });
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
+  });
+
+  test.each([
+    ["connect", new errors.ConnectTimeoutError()],
+    ["headers", new errors.HeadersTimeoutError()],
+    ["body", new errors.BodyTimeoutError()],
+    ["generic timeout name", Object.assign(new Error("timed out"), { name: "ProxyTimeoutError" })],
+  ])("recognizes %s timeout errors from the complete request lifecycle", (_label, error) => {
+    expect(isCustomWidgetRequestTimeoutError(error)).toBe(true);
+  });
+
+  test("recognizes an aborted request deadline as a timeout", () => {
+    const controller = new AbortController();
+    controller.abort();
+    expect(isCustomWidgetRequestTimeoutError(new errors.RequestAbortedError(), controller.signal)).toBe(true);
+    expect(isCustomWidgetRequestTimeoutError(new Error("socket failed"))).toBe(false);
+  });
+
+  test("normalizes response-body failures after headers arrive", async () => {
+    const events: Array<{ errorName: string; reason?: "timeout" }> = [];
+    const server = createServer((_request, response) => {
+      response.writeHead(200, { "content-type": "application/json" });
+      response.flushHeaders();
+      response.write('{"status":');
+      setImmediate(() => response.destroy());
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Test server did not expose a TCP port");
+    try {
+      await expect(
+        executeCustomWidgetRequest({
+          baseUrl: `http://127.0.0.1:${address.port}`,
+          method: "GET",
+          networkScope: "loopback",
+          kind: "query",
+          logError: (event) => events.push(event),
+        }),
+      ).rejects.toMatchObject({ code: "BAD_GATEWAY" });
+      expect(events).toHaveLength(1);
+      expect(events[0]?.errorName).toBe("TransportError");
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
+  });
+
+  test("normalizes failures while draining a redirect body", async () => {
+    const server = createServer((_request, response) => {
+      response.writeHead(302, { location: "/target" });
+      response.flushHeaders();
+      response.write("partial redirect body");
+      setImmediate(() => response.destroy());
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Test server did not expose a TCP port");
+    try {
+      await expect(
+        executeCustomWidgetRequest({
+          baseUrl: `http://127.0.0.1:${address.port}`,
+          method: "GET",
+          networkScope: "loopback",
+          kind: "query",
+        }),
+      ).rejects.toMatchObject({ code: "BAD_GATEWAY" });
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
+  });
+
+  test("maps Undici's response-size failure to the domain size limit", async () => {
+    const server = createServer((_request, response) => {
+      response.writeHead(200, { "content-type": "application/json" });
+      response.end(`"${"x".repeat(1024 * 1024)}"`);
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Test server did not expose a TCP port");
+    try {
+      await expect(
+        executeCustomWidgetRequest({
+          baseUrl: `http://127.0.0.1:${address.port}`,
+          method: "GET",
+          networkScope: "loopback",
+          kind: "query",
+        }),
+      ).rejects.toMatchObject({ code: "PAYLOAD_TOO_LARGE" });
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
+    }
+  });
+
+  test("preserves domain errors raised while parsing the response body", async () => {
+    const server = createServer((_request, response) => {
+      response.writeHead(200, { "content-type": "application/json" });
+      response.end("{invalid");
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Test server did not expose a TCP port");
+    try {
+      await expect(
+        executeCustomWidgetRequest({
+          baseUrl: `http://127.0.0.1:${address.port}`,
+          method: "GET",
+          networkScope: "loopback",
+          kind: "query",
+        }),
+      ).rejects.toMatchObject({
+        code: "BAD_REQUEST",
+        message: "Upstream returned invalid JSON",
+      });
     } finally {
       await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
     }
@@ -160,36 +276,6 @@ describe("custom widget network policy", () => {
         }),
       ).rejects.toThrow("redirect limit");
     } finally {
-      await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
-    }
-  });
-
-  test("evicts declared response-cache prefixes after an action", async () => {
-    let calls = 0;
-    const server = createServer((_request, response) => {
-      calls += 1;
-      response.writeHead(200, { "content-type": "application/json" });
-      response.end(JSON.stringify({ calls }));
-    });
-    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
-    const address = server.address();
-    if (!address || typeof address === "string") throw new Error("Test server did not expose a TCP port");
-    const cacheKey = "custom-jsx:item:status:params";
-    const input = {
-      baseUrl: `http://127.0.0.1:${address.port}`,
-      method: "GET" as const,
-      networkScope: "loopback" as const,
-      kind: "query" as const,
-      cacheKey,
-      cacheTtlSeconds: 60,
-    };
-    try {
-      await expect(executeCustomWidgetRequest(input)).resolves.toMatchObject({ data: { calls: 1 } });
-      await expect(executeCustomWidgetRequest(input)).resolves.toMatchObject({ data: { calls: 1 } });
-      invalidateCustomWidgetResponseCache(["custom-jsx:item:status:"]);
-      await expect(executeCustomWidgetRequest(input)).resolves.toMatchObject({ data: { calls: 2 } });
-    } finally {
-      invalidateCustomWidgetResponseCache(["custom-jsx:item:status:"]);
       await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())));
     }
   });

@@ -3,6 +3,7 @@ import { Avatar, Box, Button, Card, Center, Divider, Group, Image, Stack, Text, 
 import { IconApi } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { createId, objectEntries } from "@homarr/common";
 import { getIconUrl, getIntegrationName } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -15,15 +16,23 @@ import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/wid
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import { WorkshopInstallButton } from "~/components/workshop/workshop-install-button";
+import { useRuntimeFeature } from "~/hooks/use-runtime-feature";
 import { useItemActions } from "./item-actions";
 
 export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, innerProps }) => {
+  const { data: session } = useSession();
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
+  const customWidgetsEnabled = useRuntimeFeature("custom-widgets");
+  const workshopEnabled = useRuntimeFeature("workshop");
   const [search, setSearch] = useState("");
   const t = useI18n();
   const { createItem, updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
   const { openModal: openEditModal } = useModalAction(WidgetEditModal);
   const { data: integrationData } = clientApi.integration.all.useQuery();
-  const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery({ boardId: innerProps.boardId });
+  const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery(
+    { boardId: innerProps.boardId },
+    { enabled: isAdmin && customWidgetsEnabled },
+  );
   const settings = useSettings();
 
   const availableKinds = useMemo(() => new Set((integrationData ?? []).map((i) => i.kind)), [integrationData]);
@@ -160,61 +169,67 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
         />
       ))}
 
-      <Divider
-        label={t("customWidget.page.list.title")}
-        labelPosition="center"
-        my="sm"
-        style={{ gridColumn: "1 / -1" }}
-      />
-      {filteredCustomWidgets.map((def) => (
-        <Card
-          key={def.id}
-          h={selectGridCardHeight}
-          withBorder
-          pos="relative"
-          style={{ overflow: "hidden", "--_hover-opacity": "0" }}
-          onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
-          onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
-        >
-          <Stack h="100%" gap="xs">
-            <Group gap="sm" wrap="nowrap" align="flex-start">
-              {def.iconUrl ? (
-                <Image src={def.iconUrl} w={22} h={22} fit="contain" style={{ flexShrink: 0, marginTop: 2 }} />
-              ) : (
-                <IconApi size={22} style={{ flexShrink: 0, marginTop: 2 }} />
-              )}
-              <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
-                {def.name}
-              </Text>
-            </Group>
-            <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
-              {def.description ?? ""}
-            </Text>
-          </Stack>
-          <Box
-            pos="absolute"
-            bottom={0}
-            left={0}
-            right={0}
-            p="xs"
-            style={{
-              opacity: "var(--_hover-opacity)",
-              transition: "opacity 150ms ease",
-              background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
-            }}
-          >
-            <Button onClick={() => handleAddCustomWidget(def)} variant="light" size="xs" fullWidth>
-              {t("item.create.addToBoard")}
-            </Button>
-          </Box>
-        </Card>
-      ))}
+      {isAdmin && customWidgetsEnabled && (
+        <>
+          <Divider
+            label={t("customWidget.page.list.title")}
+            labelPosition="center"
+            my="sm"
+            style={{ gridColumn: "1 / -1" }}
+          />
+          {filteredCustomWidgets.map((def) => (
+            <Card
+              key={def.id}
+              h={selectGridCardHeight}
+              withBorder
+              pos="relative"
+              style={{ overflow: "hidden", "--_hover-opacity": "0" }}
+              onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
+              onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
+            >
+              <Stack h="100%" gap="xs">
+                <Group gap="sm" wrap="nowrap" align="flex-start">
+                  {def.iconUrl ? (
+                    <Image src={def.iconUrl} w={22} h={22} fit="contain" style={{ flexShrink: 0, marginTop: 2 }} />
+                  ) : (
+                    <IconApi size={22} style={{ flexShrink: 0, marginTop: 2 }} />
+                  )}
+                  <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
+                    {def.name}
+                  </Text>
+                </Group>
+                <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
+                  {def.description ?? ""}
+                </Text>
+              </Stack>
+              <Box
+                pos="absolute"
+                bottom={0}
+                left={0}
+                right={0}
+                p="xs"
+                style={{
+                  opacity: "var(--_hover-opacity)",
+                  transition: "opacity 150ms ease",
+                  background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
+                }}
+              >
+                <Button onClick={() => handleAddCustomWidget(def)} variant="light" size="xs" fullWidth>
+                  {t("item.create.addToBoard")}
+                </Button>
+              </Box>
+            </Card>
+          ))}
 
-      <Box style={{ gridColumn: "1 / -1" }}>
-        <WorkshopInstallButton fullWidth>{t("workshop.installDialog")}</WorkshopInstallButton>
-      </Box>
+          {workshopEnabled && (
+            <Box style={{ gridColumn: "1 / -1" }}>
+              <WorkshopInstallButton fullWidth>{t("workshop.installDialog")}</WorkshopInstallButton>
+            </Box>
+          )}
+        </>
+      )}
 
-      {filteredItems.length === 0 && filteredCustomWidgets.length === 0 && (
+      {filteredItems.length === 0 && (!isAdmin || !customWidgetsEnabled || filteredCustomWidgets.length === 0) && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>

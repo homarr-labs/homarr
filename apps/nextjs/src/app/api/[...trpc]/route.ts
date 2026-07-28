@@ -5,7 +5,7 @@ import { createOpenApiFetchHandler } from "trpc-to-openapi";
 import { createTRPCContext } from "@homarr/api";
 import { openApiRouter } from "@homarr/api/open-api";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
-import { ipAddressFromHeaders } from "@homarr/common/server";
+import { rateLimitAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
@@ -14,7 +14,7 @@ const logger = createLogger({ module: "trpcOpenApiRoute" });
 
 const handlerAsync = async (req: NextRequest) => {
   const apiKeyHeaderValue = req.headers.get(API_KEY_HEADER_NAME);
-  const ipAddress = ipAddressFromHeaders(req.headers);
+  const ipAddress = rateLimitAddressFromHeaders(req.headers);
   const { ua } = userAgent(req);
 
   logger.info(

@@ -10,15 +10,35 @@ import {
   getCustomWidgetSecretRequirements,
   getCustomWidgetSourceSetups,
 } from "@homarr/custom-widgets/core";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { WorkshopBackend } from "@homarr/workshop/backend";
-import { validateWorkshopWidget, WORKSHOP_API_URL } from "@homarr/workshop/schema";
+import { resolveHomarrUrlConfig, validateWorkshopWidget } from "@homarr/workshop/schema";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { env } from "../../env";
+import { workshopAdminProcedure } from "./feature-flags";
 import { insertCustomWidgetDefinition } from "./definition-insert";
 import { assertSecretSources } from "./secret-policy";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
-const workshop = new WorkshopBackend(process.env.WORKSHOP_API_URL ?? WORKSHOP_API_URL);
+const logger = createLogger({ module: "custom-widget:workshop" });
+const workshopUrls = resolveHomarrUrlConfig({
+  homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
+  workshopApiUrl: env.WORKSHOP_API_URL,
+});
+const workshop = new WorkshopBackend(workshopUrls.workshopApiUrl);
+
+function throwWorkshopUnavailable(
+  message: string,
+  event: "workshop_widget_lookup_failed" | "workshop_widget_search_failed",
+): never {
+  logger.error(message, {
+    event,
+    errorName: "WorkshopBackendError",
+  });
+  throw new TRPCError({
+    code: "BAD_GATEWAY",
+    message: "Workshop is unavailable",
+  });
+}
 
 async function getWorkshopWidget(submissionId: string) {
   try {
@@ -36,11 +56,7 @@ async function getWorkshopWidget(submissionId: string) {
     return { submission, widget: validation.data };
   } catch (error) {
     if (error instanceof TRPCError) throw error;
-    throw new TRPCError({
-      code: "BAD_GATEWAY",
-      message: error instanceof Error ? error.message : "Workshop is unavailable",
-      cause: error,
-    });
+    throwWorkshopUnavailable("Workshop widget lookup failed", "workshop_widget_lookup_failed");
   }
 }
 
@@ -59,7 +75,7 @@ const sourceOverridesSchema = z.record(
 );
 
 export const workshopProcedures = {
-  workshopSearch: manageProcedure
+  workshopSearch: workshopAdminProcedure
     .meta({ mcp: { enabled: true, description: "Search Workshop for Custom JSX widgets." } })
     .input(workshopSearchInputSchema)
     .query(async ({ input }) => {
@@ -86,16 +102,12 @@ export const workshopProcedures = {
               reportCount: item.reportCount,
             })),
         };
-      } catch (error) {
-        throw new TRPCError({
-          code: "BAD_GATEWAY",
-          message: error instanceof Error ? error.message : "Workshop is unavailable",
-          cause: error,
-        });
+      } catch {
+        throwWorkshopUnavailable("Workshop widget search failed", "workshop_widget_search_failed");
       }
     }),
 
-  workshopGet: manageProcedure
+  workshopGet: workshopAdminProcedure
     .meta({ mcp: { enabled: true, description: "Get and validate one Workshop Custom JSX widget." } })
     .input(z.object({ submissionId: z.string().min(1) }))
     .query(async ({ input }) => {
@@ -119,7 +131,7 @@ export const workshopProcedures = {
       };
     }),
 
-  workshopInstall: manageProcedure
+  workshopInstall: workshopAdminProcedure
     .meta({ mcp: { enabled: true, description: "Install one validated Workshop Custom JSX widget." } })
     .input(
       z.object({
@@ -130,12 +142,6 @@ export const workshopProcedures = {
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.secrets.length > 0 && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Writing Workshop widget credentials requires dedicated permission",
-        });
-      }
       const { widget } = await getWorkshopWidget(input.submissionId);
       const unknownSource = Object.keys(input.sources).find((sourceId) => !widget.sources[sourceId]);
       if (unknownSource) {

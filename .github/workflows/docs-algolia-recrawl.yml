@@ -1,10 +1,9 @@
 name: "[Docs] Algolia Recrawl"
 
+# Automatic recrawls are intentionally disabled until the external homarr.dev
+# host can dispatch this workflow after promoting an immutable Workshop image.
+# Publishing an image to GHCR does not make its documentation live.
 on:
-  workflow_run:
-    workflows: ["[Deployment] Documentation"]
-    types: [completed]
-    branches: [dev]
   workflow_dispatch:
 
 permissions:
@@ -12,11 +11,6 @@ permissions:
 
 jobs:
   recrawl:
-    if: >-
-      ${{
-        (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event != 'pull_request')
-        || github.event_name == 'workflow_dispatch'
-      }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -43,7 +37,7 @@ jobs:
           ALGOLIA_CRAWLER_USER_ID: ${{ secrets.ALGOLIA_CRAWLER_USER_ID }}
           ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
 
-      - name: Wait for GitHub Pages to serve the new deployment
+      - name: Allow the promoted documentation host to settle
         run: sleep 60
 
       - name: Trigger Algolia DocSearch recrawl

@@ -1,5 +1,3 @@
-import { parse as parseSuperJson } from "superjson";
-
 import type { legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import { buildCustomWidgetAiPrompt } from "@homarr/custom-widgets/authoring-prompt";
 
@@ -13,14 +11,17 @@ export function buildLegacyCustomWidgetMigrationPrompt(
     $schema: "homarr-custom-widget-v1",
     name: definition.name,
     description: definition.description,
-    iconUrl: definition.iconUrl,
+    iconUrl: definition.iconUrl ? redactLegacyUrl(definition.iconUrl) : null,
     url: redactLegacyUrl(definition.url),
     authType: definition.authType,
     headerName: definition.headerName,
     method: definition.method,
     requestBody: redactLegacyRequestBody(definition.requestBody),
     displayType: definition.displayType,
-    displayConfig: parseLegacyDisplayConfig(definition.displayConfig),
+    displayConfig: {
+      migrationNote:
+        "The preserved v1 display configuration was intentionally omitted because legacy free-text fields may contain credentials. Reconstruct it from the display type and visible behavior.",
+    },
     configuredSecretKinds,
   };
   return buildCustomWidgetAiPrompt(
@@ -68,12 +69,4 @@ function redactAllValues(value: unknown): unknown {
     return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, redactAllValues(child)]));
   if (value === null) return null;
   return "[REDACTED VALUE]";
-}
-
-function parseLegacyDisplayConfig(value: string): unknown {
-  try {
-    return parseSuperJson(value) as unknown;
-  } catch {
-    return { migrationNote: "The stored v1 display configuration could not be decoded.", raw: value.slice(0, 4_000) };
-  }
 }

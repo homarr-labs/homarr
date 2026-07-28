@@ -9,6 +9,7 @@ import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
+import { useRuntimeFeature } from "~/hooks/use-runtime-feature";
 import { WorkshopBrowser } from "./workshop-browser";
 
 interface WorkshopInstallButtonProps {
@@ -17,6 +18,7 @@ interface WorkshopInstallButtonProps {
 }
 
 export function WorkshopInstallButton({ children, fullWidth }: WorkshopInstallButtonProps = {}) {
+  const workshopEnabled = useRuntimeFeature("workshop");
   const t = useScopedI18n("workshop");
   const stack = useModalsStack(["workshop", "review"]);
   const [pendingWidget, setPendingWidget] = useState<HomarrCustomWidgetV2 | null>(null);
@@ -26,6 +28,8 @@ export function WorkshopInstallButton({ children, fullWidth }: WorkshopInstallBu
     stack.close("review");
     setPendingWidget(null);
   };
+
+  if (!workshopEnabled) return null;
 
   return (
     <>

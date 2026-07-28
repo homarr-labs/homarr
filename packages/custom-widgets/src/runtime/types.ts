@@ -43,6 +43,7 @@ export interface RuntimeInvalidationInput {
   itemId?: string;
   previewSessionId?: string;
   targets: readonly string[];
+  refresh?: boolean;
 }
 
 export interface RuntimeNotification {
@@ -82,6 +83,7 @@ export interface CustomWidgetRuntimeValue {
   previewSessionId?: string;
   previewLiveActions?: boolean;
   queriesDisabled?: boolean;
+  canInvalidateQueries: boolean;
   isEditMode: boolean;
   requestCapabilities: readonly CustomJsxRequestCapability[];
   port: CustomWidgetRuntimePort;

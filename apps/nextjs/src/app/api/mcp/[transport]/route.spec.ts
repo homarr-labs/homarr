@@ -4,6 +4,10 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   authenticate: vi.fn(),
+  rateLimitAddress: vi.fn(() => "127.0.0.1"),
+  toolProcedure: vi.fn(),
+  loggerWarn: vi.fn(),
+  env: { CUSTOM_WIDGETS_ENABLED: true, WORKSHOP_ENABLED: true },
   buildPrompt: vi.fn((request?: string, documentationUrl?: string) =>
     [`Request: ${request ?? ""}`, `Documentation: ${documentationUrl ?? ""}`].join("\n"),
   ),
@@ -13,16 +17,16 @@ const mocks = vi.hoisted(() => ({
 vi.mock("next/server", () => ({ userAgent: () => ({ ua: "MCP route test" }) }));
 vi.mock("@homarr/api/mcp", () => ({
   createTRPCContext: vi.fn(() => ({})),
-  mcpRouter: { createCaller: vi.fn(() => ({})) },
+  mcpRouter: { createCaller: vi.fn(() => ({ board: { getAllBoards: mocks.toolProcedure } })) },
 }));
 vi.mock("@homarr/auth/api-key", () => ({
   API_KEY_HEADER_NAME: "ApiKey",
   getSessionFromApiKeyAsync: mocks.authenticate,
 }));
 vi.mock("@homarr/common", () => ({ extractBaseUrlFromHeaders: () => "http://localhost" }));
-vi.mock("@homarr/common/server", () => ({ ipAddressFromHeaders: () => "127.0.0.1" }));
+vi.mock("@homarr/common/server", () => ({ rateLimitAddressFromHeaders: mocks.rateLimitAddress }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({
-  createLogger: () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn() }),
+  createLogger: () => ({ info: vi.fn(), warn: mocks.loggerWarn, error: vi.fn() }),
 }));
 vi.mock("@homarr/custom-widgets/authoring-prompt", () => ({ buildCustomWidgetMcpPrompt: mocks.buildPrompt }));
 vi.mock("@homarr/custom-widgets/authoring-resources", () => ({
@@ -35,8 +39,30 @@ vi.mock("@homarr/custom-widgets/core", () => ({
   getCustomWidgetJsonSchema: () => ({ type: "object", title: "Custom Widget" }),
 }));
 vi.mock("@homarr/db", () => ({ db: {} }));
+vi.mock("~/env", () => ({ env: mocks.env }));
 vi.mock("~/versions/package-reader", () => ({ getPackageVersion: () => "test-version" }));
-vi.mock("../_extract-tools", () => ({ extractMcpTools: () => [] }));
+vi.mock("../_extract-tools", () => ({
+  extractMcpTools: () => [
+    {
+      name: "board_getAllBoards",
+      description: "List boards",
+      pathInRouter: ["board", "getAllBoards"],
+      inputSchema: { type: "object", properties: {} },
+    },
+    {
+      name: "customWidget_list",
+      description: "List Custom Widgets",
+      pathInRouter: ["customWidget", "list"],
+      inputSchema: { type: "object", properties: {} },
+    },
+    {
+      name: "customWidget_workshopSearch",
+      description: "Search Workshop",
+      pathInRouter: ["customWidget", "workshopSearch"],
+      inputSchema: { type: "object", properties: {} },
+    },
+  ],
+}));
 
 import { POST } from "./route";
 
@@ -48,9 +74,16 @@ interface JsonRpcResponse {
 }
 
 beforeEach(() => {
-  mocks.authenticate.mockResolvedValue({ user: { id: "user-1" } });
+  mocks.authenticate.mockResolvedValue({ user: { id: "user-1", permissions: ["admin"] } });
+  mocks.env.CUSTOM_WIDGETS_ENABLED = true;
+  mocks.env.WORKSHOP_ENABLED = true;
   mocks.buildPrompt.mockClear();
   mocks.getComponent.mockClear();
+  mocks.rateLimitAddress.mockClear();
+  mocks.rateLimitAddress.mockReturnValue("127.0.0.1");
+  mocks.toolProcedure.mockReset();
+  mocks.toolProcedure.mockResolvedValue([]);
+  mocks.loggerWarn.mockClear();
 });
 
 async function callMcp(method: string, params: Record<string, unknown> = {}, id = 1) {
@@ -60,6 +93,8 @@ async function callMcp(method: string, params: Record<string, unknown> = {}, id 
       Accept: "application/json, text/event-stream",
       ApiKey: "key.secret",
       "Content-Type": "application/json",
+      "X-Forwarded-For": "198.51.100.10",
+      "X-Real-IP": "127.0.0.1",
     },
     body: JSON.stringify({ jsonrpc: "2.0", id, method, params }),
   });
@@ -91,6 +126,7 @@ describe("authenticated MCP prompt protocol", () => {
       serverInfo: { name: "homarr", version: "test-version" },
     });
     expect(mocks.authenticate).toHaveBeenCalledWith({}, "key.secret", "127.0.0.1", "MCP route test");
+    expect(mocks.rateLimitAddress).toHaveBeenCalledWith(expect.any(Headers));
   });
 
   test("lists and interpolates the custom-widget authoring prompt", async () => {
@@ -178,6 +214,55 @@ describe("authenticated MCP resource protocol", () => {
   });
 });
 
+describe("non-admin MCP discovery", () => {
+  test("does not list or expose Custom Widget tools, prompts or resources", async () => {
+    mocks.authenticate.mockResolvedValue({ user: { id: "user-1", permissions: ["board-view-all"] } });
+
+    const tools = await callMcp("tools/list");
+    expect(((tools.body.result?.tools ?? []) as Array<{ name: string }>).map(({ name }) => name)).toEqual([
+      "board_getAllBoards",
+    ]);
+
+    const prompts = await callMcp("prompts/list");
+    expect(prompts.body.result).toEqual({ prompts: [] });
+
+    const resources = await callMcp("resources/list");
+    expect(resources.body.result).toEqual({ resources: [] });
+
+    const templates = await callMcp("resources/templates/list");
+    expect(templates.body.result).toEqual({ resourceTemplates: [] });
+
+    const prompt = await callMcp("prompts/get", { name: "homarr-custom-widget-author" });
+    expect(prompt.body.result).toBeUndefined();
+    expect(prompt.body.error).toBeDefined();
+
+    const resource = await callMcp("resources/read", { uri: "homarr://custom-widgets/schema" });
+    expect(resource.body.result).toBeUndefined();
+    expect(resource.body.error).toBeDefined();
+  });
+});
+
+describe("MCP emergency switches", () => {
+  test("removes Custom Widget authoring discovery when Custom Widgets are disabled", async () => {
+    mocks.env.CUSTOM_WIDGETS_ENABLED = false;
+    expect((await callMcp("prompts/list")).body.result).toEqual({ prompts: [] });
+    expect((await callMcp("resources/list")).body.result).toEqual({ resources: [] });
+    const tools = await callMcp("tools/list");
+    expect(((tools.body.result?.tools ?? []) as Array<{ name: string }>).map(({ name }) => name)).toEqual([
+      "board_getAllBoards",
+    ]);
+  });
+
+  test("removes only Workshop tools when Workshop is disabled", async () => {
+    mocks.env.WORKSHOP_ENABLED = false;
+    const tools = await callMcp("tools/list");
+    expect(((tools.body.result?.tools ?? []) as Array<{ name: string }>).map(({ name }) => name)).toEqual([
+      "board_getAllBoards",
+      "customWidget_list",
+    ]);
+  });
+});
+
 describe("MCP protocol errors", () => {
   test.each([
     ["prompts/get", { name: "unknown" }],
@@ -192,5 +277,24 @@ describe("MCP protocol errors", () => {
     const { body } = await callMcp("resources/read", {});
     expect(body.result).toBeUndefined();
     expect(body.error).toEqual(expect.objectContaining({ code: -32603, message: expect.any(String) }));
+  });
+
+  test("does not log sensitive tool error messages", async () => {
+    const failure = Object.assign(new Error("request to https://user:secret@example.test/private failed"), {
+      code: "BAD_GATEWAY",
+    });
+    mocks.toolProcedure.mockRejectedValue(failure);
+
+    const { body } = await callMcp("tools/call", { name: "board_getAllBoards", arguments: {} });
+
+    expect(JSON.stringify(body)).not.toContain("user:secret");
+    expect(mocks.loggerWarn).toHaveBeenCalledWith("MCP tool execution failed", {
+      tool: "board_getAllBoards",
+      errorName: "Error",
+      errorCode: "BAD_GATEWAY",
+    });
+    const metadata = mocks.loggerWarn.mock.calls.at(-1)?.[1] as Record<string, unknown>;
+    expect(metadata).not.toHaveProperty("error");
+    expect(metadata).not.toHaveProperty("message");
   });
 });

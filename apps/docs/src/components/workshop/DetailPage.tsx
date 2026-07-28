@@ -2,8 +2,11 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import Link from "@docusaurus/Link";
 import { useLocation } from "@docusaurus/router";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
+
+import { getRuntimeWorkshopApiUrl } from "@site/src/lib/runtime-config";
 import {
   IconArrowBigDown,
   IconArrowBigUp,
@@ -176,6 +179,7 @@ const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
 
 const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const location = useLocation();
+  const workshopHomeUrl = useBaseUrl("/workshop/");
   const submissionId = parseSubmissionId(location.pathname);
   const backend = useMemo(() => getWorkshopBackend(workshopUrl), [workshopUrl]);
 
@@ -325,7 +329,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
     if (!submission) return;
     try {
       await backend.delete(submission.id);
-      window.location.href = "/workshop/";
+      window.location.href = workshopHomeUrl;
     } catch (caught) {
       setError(errorMessage(caught, "Failed to delete submission"));
     }
@@ -335,7 +339,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
     if (!submission) return;
     try {
       const updated = await backend.toggleOutdated(submission.id, !submission.outdated);
-      setSubmission({ ...submission, outdated: updated.outdated });
+      setSubmission(updated);
       setError(null);
       toast.success(updated.outdated ? "Submission marked as outdated" : "Submission marked as current");
     } catch (caught) {
@@ -453,7 +457,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
       setReportOpen(false);
       setReportExplanation("");
       setError(null);
-      toast.success("Report submitted", { description: "A Workshop administrator can now review it." });
+      toast.success("Report submitted", { description: "A Workshop moderator can now review it." });
     } catch (caught) {
       setReportError(errorMessage(caught, "Failed to submit report"));
     } finally {
@@ -863,7 +867,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
           <DialogHeader>
             <DialogTitle>Report submission</DialogTitle>
             <DialogDescription>
-              Only Workshop administrators can review report details and reporter identities.
+              Only Workshop moderators can review report details and reporter identities.
             </DialogDescription>
           </DialogHeader>
           {reportError && (
@@ -1023,7 +1027,7 @@ export default function MarketplaceDetailPage() {
         <BrowserOnly fallback={<DetailSkeleton />}>
           {() => (
             <WorkshopErrorBoundary>
-              <MarketplaceDetail workshopUrl={configuredWorkshopUrl || window.location.origin} />
+              <MarketplaceDetail workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} />
             </WorkshopErrorBoundary>
           )}
         </BrowserOnly>

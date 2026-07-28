@@ -45,4 +45,26 @@ describe("AI prompt", () => {
     expect(prompt.endsWith(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION)).toBe(true);
     expect(prompt.length).toBeLessThanOrEqual(12_000);
   });
+
+  it("redacts embedded request credentials while retaining harmless request metadata", () => {
+    const prompt = buildCustomWidgetAiPrompt(undefined, null, {
+      requests: {
+        status: {
+          path: "/status?credential=Bearer-sk-secret-123456",
+          headers: {
+            "X-Auth": "Bearer sk-secret-123456",
+            "X-Service": "Basic dXNlcjpwYXNz",
+            "X-Feature-Key": "dashboard-layout",
+          },
+        },
+      },
+      template: "<Text>Bearer ghp_abcdefghijklmnopqrstuvwxyz123456</Text>",
+    });
+
+    expect(prompt).not.toContain("sk-secret-123456");
+    expect(prompt).not.toContain("dXNlcjpwYXNz");
+    expect(prompt).not.toContain("ghp_abcdefghijklmnopqrstuvwxyz123456");
+    expect(prompt).toContain('"X-Auth": "[REDACTED]"');
+    expect(prompt).toContain('"X-Feature-Key": "dashboard-layout"');
+  });
 });

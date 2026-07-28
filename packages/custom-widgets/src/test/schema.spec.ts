@@ -25,10 +25,18 @@ describe("lean Custom Widget schema", () => {
       trigger: "manual",
       permission: "modify",
     });
-    expect(customJsxRequestSchema.parse({ method: "DELETE", path: "/item" })).toMatchObject({
+    expect(customJsxRequestSchema.parse({ kind: "action", method: "DELETE", path: "/item" })).toMatchObject({
+      trigger: "manual",
       permission: "full",
       confirmation: { destructive: true },
     });
+  });
+
+  it("rejects DELETE requests that could execute as automatic queries", () => {
+    expect(customJsxRequestSchema.safeParse({ method: "DELETE", path: "/item" }).success).toBe(false);
+    expect(
+      customJsxRequestSchema.safeParse({ kind: "query", trigger: "manual", method: "DELETE", path: "/item" }).success,
+    ).toBe(false);
   });
 
   it("validates keyed sources, requests and options", () => {
@@ -93,6 +101,80 @@ describe("lean Custom Widget schema", () => {
     expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, stateSchema: {} }).success).toBe(false);
   });
 
+  it.each([
+    "http://127.1",
+    "http://2130706433",
+    "http://0x7f000001",
+    "http://0177.0.0.1",
+    "http://1.2.3",
+    "http://%31%32%37.0.0.1",
+    "https://%65xample.com",
+    "https://example%2ecom",
+    "https://example.com\\@attacker.invalid",
+    "https:\\\\example.com\\api",
+    " https://example.com",
+    "https://exa\tmple.com",
+    "https://example.com\n",
+    "https://example.com\u00a0",
+    "https://@example.com",
+    "https://:@example.com",
+    "https://example。com",
+    "https://１２７.０.０.１",
+    "https://-example.com",
+    "https://example-.com",
+    "https://example..com",
+    "https://example.com:00080",
+    "https://example.com:0000000065535",
+    "https://example.com:65536",
+    "https://[fe80::1%25eth0]",
+    "https://[::ffff:192.168.001.001]",
+  ])("rejects ambiguous persisted URL spelling %s for sources and icons", (url) => {
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        sources: {
+          default: { ...CUSTOM_WIDGET_STARTER.sources.default, baseUrl: url },
+        },
+      }).success,
+    ).toBe(false);
+    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, iconUrl: url }).success).toBe(false);
+  });
+
+  it.each([
+    "https://example.com",
+    "https://example.com.",
+    "https://münich.example",
+    "https://xn--mnich-kva.example",
+    "http://192.168.1.1:0",
+    "https://[2001:db8::1]:65535",
+    "https://[::ffff:192.168.1.1]",
+  ])("accepts unambiguous HTTP URLs %s for sources and icons", (url) => {
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        sources: {
+          default: { ...CUSTOM_WIDGET_STARTER.sources.default, baseUrl: url },
+        },
+      }).success,
+    ).toBe(true);
+    expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, iconUrl: url }).success).toBe(true);
+  });
+
+  it("allows ordinary encoded icon paths and query values while rejecting oversized URLs", () => {
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        iconUrl: "https://example.com/icons/custom%20widget.svg?theme=dark#preview",
+      }).success,
+    ).toBe(true);
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        iconUrl: `https://example.com/${"a".repeat(2048)}`,
+      }).success,
+    ).toBe(false);
+  });
+
   it("keeps auth secrets outside the document", () => {
     const definition = customWidgetDefinitionSchema.parse({
       ...CUSTOM_WIDGET_STARTER,
@@ -104,6 +186,71 @@ describe("lean Custom Widget schema", () => {
     expect(
       getCustomWidgetSecretRequirements(definition.sources).map(({ sourceId, kind }) => `${sourceId}:${kind}`),
     ).toEqual(["default:apiKey", "admin:username", "admin:password"]);
+  });
+
+  it("rejects credentials embedded in request paths, headers, and JSX", () => {
+    const requests = [
+      {
+        status: {
+          path: "/api/status?credential=Bearer-sk-secret-123456",
+        },
+      },
+      {
+        status: {
+          path: "/api/status",
+          headers: { "X-Auth": "Bearer sk-secret-123456" },
+        },
+      },
+      {
+        status: {
+          path: "/api/status",
+          headers: { "X-Service": "Basic dXNlcjpwYXNz" },
+        },
+      },
+      {
+        status: {
+          path: "/api/status",
+          headers: { "X-Service": "ghp_abcdefghijklmnopqrstuvwxyz123456" },
+        },
+      },
+    ];
+    for (const candidate of requests) {
+      expect(customWidgetDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, requests: candidate }).success).toBe(
+        false,
+      );
+    }
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        template: "<Text>Bearer sk-secret-123456</Text>",
+      }).success,
+    ).toBe(false);
+  });
+
+  it("allows harmless key fields, auth modes, headers, and authentication guidance", () => {
+    expect(
+      customWidgetDefinitionSchema.safeParse({
+        ...CUSTOM_WIDGET_STARTER,
+        sources: {
+          default: {
+            ...CUSTOM_WIDGET_STARTER.sources.default,
+            auth: { type: "apiKeyHeader", name: "X-Api-Key" },
+          },
+        },
+        requests: {
+          status: {
+            path: "/api/status?key=status&auth=none",
+            headers: {
+              Accept: "application/json",
+              "X-Api-Version": "2026-07",
+              "X-Feature-Key": "dashboard-layout",
+            },
+            body: { authenticationMode: "none", key: "status", tokenCount: 3 },
+          },
+        },
+        template: "<Stack><Text>Bearer authentication uses source credentials</Text></Stack>",
+      }).success,
+    ).toBe(true);
   });
 
   it("requires installation confirmation for private and placeholder source URLs", () => {

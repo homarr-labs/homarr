@@ -4,6 +4,9 @@ An external agent creates one widget at a time with the Homarr MCP server. The a
 
 Homarr does not create widget packs or drafts for multiple widgets.
 
+The MCP API key must belong to a Homarr administrator. Non-administrator keys do not list Custom Widget tools, prompts,
+or resources. The same administrator requirement applies to the matching HTTP authoring endpoints.
+
 <a className="button button--primary" href="https://www.skills.sh/homarr-labs/homarr/homarr-custom-widget">
   View the Custom Widget Skill on skills.sh
 </a>
@@ -67,7 +70,10 @@ These interfaces do not return an archive URL or archive hash.
 12. Update the saved definition if the final verification finds a problem.
 13. Repeat the procedure for the next widget.
 
-Each source-configuration URL applies to one definition or preview and one source. The user confirms the server URL, network scope, and required credential fields directly in Homarr. The agent receives only request status and never receives plaintext credentials. Preview-scoped values expire with that preview; definition-scoped values persist.
+Each source-configuration URL applies to one definition or preview and one source. It is short-lived, single-use, and
+can only be opened and completed by an authenticated Homarr administrator. The administrator confirms the server URL,
+network scope, and required credential fields directly in Homarr. The agent receives only request status and never
+receives plaintext credentials. Preview-scoped values expire with that preview; definition-scoped values persist.
 
 Agents can install existing widgets without regenerating them:
 

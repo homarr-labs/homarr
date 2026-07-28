@@ -1,9 +1,10 @@
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createRedisClient } from "@homarr/core/infrastructure/redis";
 import type { RedisClient } from "@homarr/core/infrastructure/redis";
-import { CustomWidgetRequestLimiter } from "@homarr/custom-widgets/server";
+import { CustomWidgetDomainError, CustomWidgetRequestLimiter } from "@homarr/custom-widgets/server";
 import type { RequestLimitInput, RequestLimitStore } from "@homarr/custom-widgets/server";
 
+import { useProcessLocalCustomWidgetState } from "../../custom-widget-state-mode";
 import { toTrpcError } from "./domain-error";
 
 const logger = createLogger({ module: "custom-widget:limits" });
@@ -45,12 +46,13 @@ class RedisRequestLimitStore implements RequestLimitStore {
 let limiter: CustomWidgetRequestLimiter | undefined;
 function getLimiter() {
   if (limiter) return limiter;
-  const useLocal = process.env.CI !== undefined || process.env.NODE_ENV === "test";
+  const useLocal = useProcessLocalCustomWidgetState();
   const store = useLocal ? undefined : new RedisRequestLimitStore(createRedisClient());
   limiter = new CustomWidgetRequestLimiter({
     store,
     onStoreError: (error) =>
       logger.error("Custom widget rate limiter is unavailable", {
+        event: "custom_widget_rate_limit_store_unavailable",
         errorName: error instanceof Error ? error.name : "UnknownError",
       }),
   });
@@ -70,6 +72,14 @@ export async function acquireCustomWidgetRequestLimit(input: RequestLimitInput):
       }
     };
   } catch (error) {
+    if (error instanceof CustomWidgetDomainError && error.code === "TOO_MANY_REQUESTS") {
+      logger.warn("Rejected custom widget request at rate or concurrency limit", {
+        event: "custom_widget_rate_limit_rejected",
+        category: input.category,
+        authenticated: Boolean(input.userId),
+        retryAfterMs: error.retryAfterMs,
+      });
+    }
     toTrpcError(error);
   }
 }

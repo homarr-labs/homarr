@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { customWidgetAdminProcedure } from "./feature-flags";
 import {
   getPreviewRequestSource,
   previewSessionRequestSchema,
@@ -9,14 +9,13 @@ import {
   resolvePreviewRequestParams,
 } from "./preview-procedure-helpers";
 import { executeCustomWidgetRequest } from "./request-executor";
+import { invalidateCustomWidgetResponseCache } from "./request-executor";
 import { hashRuntimeParams, renderRequestBody, renderRequestTarget } from "./request-manifest";
 import { acquireCustomWidgetRequestLimit } from "./request-limits";
 import { getPreviewJournal, getPreviewSession, setPreviewSessionLiveActions } from "./preview-sessions";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
-
 export const previewQueryProcedures = {
-  previewQuery: manageProcedure
+  previewQuery: customWidgetAdminProcedure
     .meta({
       mcp: {
         enabled: true,
@@ -35,15 +34,9 @@ export const previewQueryProcedures = {
       const params = resolvePreviewRequestParams(request, session.options, input.params);
       const targetUrl = renderRequestTarget(resolved.source.baseUrl, request, params);
       const body = renderRequestBody(request, params);
-      const release = await acquireCustomWidgetRequestLimit({
-        category: "query",
-        userId: ctx.session.user.id,
-        itemId: `preview:${session.id}`,
-        definitionId: session.definitionId ?? `preview:${session.id}`,
-      });
       const startedAt = Date.now();
-      try {
-        const response = await executeCustomWidgetRequest({
+      const response = await executeCustomWidgetRequest(
+        {
           baseUrl: resolved.source.baseUrl,
           targetUrl,
           method: request.method,
@@ -54,35 +47,75 @@ export const previewQueryProcedures = {
           kind: "query",
           cacheKey: `custom-jsx:preview:${session.id}:${request.id}:${hashRuntimeParams(params)}`,
           cacheTtlSeconds: request.cacheSeconds,
-        });
-        await recordPreviewJournal(session, {
-          requestId: request.id,
-          kind: "query",
-          method: request.method,
-          path: request.path,
-          status: response.status,
-          durationMs: Date.now() - startedAt,
-          simulated: false,
-        });
-        return {
-          ok: response.ok,
-          status: response.status,
-          statusText: response.statusText,
-          data: response.data,
-          error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
-        };
+        },
+        {
+          acquireRequestLimit: () =>
+            acquireCustomWidgetRequestLimit({
+              category: "query",
+              userId: ctx.session.user.id,
+              itemId: `preview:${session.id}`,
+              definitionId: session.definitionId ?? `preview:${session.id}`,
+            }),
+        },
+      );
+      await recordPreviewJournal(session, {
+        requestId: request.id,
+        kind: "query",
+        method: request.method,
+        path: request.path,
+        status: response.status,
+        durationMs: Date.now() - startedAt,
+        simulated: false,
+      });
+      return {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data,
+        error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
+      };
+    }),
+
+  previewRefresh: customWidgetAdminProcedure
+    .input(
+      z.object({
+        sessionId: z.string().min(1),
+        requestIds: z.array(z.string().min(1).max(64)).max(64).default([]),
+        all: z.boolean().default(false),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+      const queryRequestIds = Object.entries(session.requests).flatMap(([requestId, request]) =>
+        request.kind === "query" ? [requestId] : [],
+      );
+      const requested = new Set(input.all ? queryRequestIds : input.requestIds);
+      const requestIds = queryRequestIds.filter((requestId) => requested.has(requestId));
+      if (requestIds.length === 0) return { requestIds };
+
+      const release = await acquireCustomWidgetRequestLimit({
+        category: "query",
+        userId: ctx.session.user.id,
+        itemId: `preview:${session.id}`,
+        definitionId: session.definitionId ?? `preview:${session.id}`,
+      });
+      try {
+        await invalidateCustomWidgetResponseCache(
+          requestIds.map((requestId) => `custom-jsx:preview:${session.id}:${requestId}:`),
+        );
       } finally {
         await release();
       }
+      return { requestIds };
     }),
 
-  setPreviewLiveActions: manageProcedure
+  setPreviewLiveActions: customWidgetAdminProcedure
     .input(z.object({ sessionId: z.string().min(1), enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) =>
       setPreviewSessionLiveActions(input.sessionId, ctx.session.user.id, input.enabled),
     ),
 
-  previewJournal: manageProcedure
+  previewJournal: customWidgetAdminProcedure
     .meta({
       mcp: {
         enabled: true,

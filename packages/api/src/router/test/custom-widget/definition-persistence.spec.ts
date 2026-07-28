@@ -9,24 +9,25 @@ import {
   users,
 } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
-import { BUNDLED_CUSTOM_WIDGETS } from "@homarr/custom-widgets/core";
+import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import { describe, expect, test } from "vitest";
 
 import { customWidgetRouter } from "../../custom-widget/custom-widget-router";
 import { getCustomWidgetConfigurationRequestForUser } from "../../custom-widget/configuration-requests";
+import { serializeCustomWidgetDefinition } from "../../custom-widget/stored-definition";
 
 const userId = createId();
 const session = {
   user: {
     id: userId,
-    permissions: ["custom-widget-manage", "custom-widget-secret-write"],
+    permissions: ["admin"],
     colorScheme: "light",
   },
   expires: new Date().toISOString(),
 } satisfies Session;
-const manageOnlySession = {
+const nonAdminSession = {
   ...session,
-  user: { ...session.user, permissions: ["custom-widget-manage"] },
+  user: { ...session.user, permissions: ["board-modify-all"] },
 } satisfies Session;
 
 const jellyfin = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-jellyfin")?.widget;
@@ -38,11 +39,11 @@ function createCaller(db: ReturnType<typeof createDb>) {
   return customWidgetRouter.createCaller({ db, deviceType: undefined, session });
 }
 
-function createManageOnlyCaller(db: ReturnType<typeof createDb>) {
+function createNonAdminCaller(db: ReturnType<typeof createDb>) {
   return customWidgetRouter.createCaller({
     db,
     deviceType: undefined,
-    session: manageOnlySession,
+    session: nonAdminSession,
   });
 }
 
@@ -54,10 +55,20 @@ async function prepareDatabase() {
 
 function rejectSecretInserts(db: ReturnType<typeof createDb>) {
   db.run(
-    sql.raw(`CREATE TRIGGER reject_custom_widget_secret_insert
-      BEFORE INSERT ON custom_widget_secret
+    sql.raw(`CREATE TRIGGER reject_custom_widget_v2_secret_insert
+      BEFORE INSERT ON custom_widget_v2_secret
       BEGIN
         SELECT RAISE(ABORT, 'forced secret insert failure');
+      END`),
+  );
+}
+
+function rejectDefinitionUpdates(db: ReturnType<typeof createDb>) {
+  db.run(
+    sql.raw(`CREATE TRIGGER reject_custom_widget_v2_definition_update
+      BEFORE UPDATE ON custom_widget_v2_definition
+      BEGIN
+        SELECT RAISE(ABORT, 'forced definition update failure');
       END`),
   );
 }
@@ -88,13 +99,21 @@ async function insertLegacyJellyfin(db: ReturnType<typeof createDb>) {
 const secret = { sourceId: "default", kind: "apiKey" as const, value: "test-secret" };
 
 describe("custom widget definition persistence", () => {
-  test("atomically replaces a confirmed legacy widget while preserving its stable ID and credential", async () => {
+  test("atomically creates a v2 replacement while preserving the legacy widget and its stable ID", async () => {
     const db = await prepareDatabase();
     const legacy = await insertLegacyJellyfin(db);
 
     await createCaller(db).migrateLegacy({ id: legacy.id, widget: jellyfin, secrets: [] });
 
-    expect(await db.query.legacyCustomWidgetDefinitions.findMany()).toHaveLength(0);
+    expect(await db.query.legacyCustomWidgetDefinitions.findFirst()).toMatchObject({
+      id: legacy.id,
+      name: "Legacy Jellyfin",
+      enabled: false,
+    });
+    expect(await db.query.legacyCustomWidgetSecrets.findFirst()).toMatchObject({
+      definitionId: legacy.id,
+      encryptedValue: legacy.encryptedValue,
+    });
     expect(await db.query.customWidgetDefinitions.findFirst()).toMatchObject({
       id: legacy.id,
       enabled: false,
@@ -104,6 +123,20 @@ describe("custom widget definition persistence", () => {
       definitionId: legacy.id,
       sourceId: "default",
       kind: "apiKey",
+      encryptedValue: legacy.encryptedValue,
+    });
+
+    const migratedList = await createCaller(db).list();
+    expect(migratedList).toHaveLength(1);
+    expect(migratedList[0]).toMatchObject({ id: legacy.id, migrationRequired: false });
+
+    await createCaller(db).delete({ id: legacy.id });
+
+    const fallbackList = await createCaller(db).list();
+    expect(fallbackList).toHaveLength(1);
+    expect(fallbackList[0]).toMatchObject({ id: legacy.id, migrationRequired: true });
+    expect(await db.query.legacyCustomWidgetSecrets.findFirst()).toMatchObject({
+      definitionId: legacy.id,
       encryptedValue: legacy.encryptedValue,
     });
   });
@@ -149,6 +182,30 @@ describe("custom widget definition persistence", () => {
     expect(await db.query.customWidgetSecrets.findMany()).toHaveLength(0);
   });
 
+  test("refuses to export a stored definition containing embedded credentials", async () => {
+    const db = await prepareDatabase();
+    const definition = customWidgetDefinitionSchema.parse(jellyfin);
+    const counts = definition.requests.counts;
+    if (!counts) throw new Error("Jellyfin counts request is missing");
+    const id = createId();
+    await db.insert(customWidgetDefinitions).values({
+      id,
+      ...serializeCustomWidgetDefinition({
+        ...definition,
+        requests: {
+          ...definition.requests,
+          counts: {
+            ...counts,
+            headers: { ...counts.headers, "X-Auth": "Bearer sk-secret-123456" },
+          },
+        },
+      }),
+      creatorId: userId,
+    });
+
+    await expect(createCaller(db).export({ id })).rejects.toThrow("Credentials must use source authentication");
+  });
+
   test("rolls back definition and secret changes when a replacement secret cannot be stored", async () => {
     const db = await prepareDatabase();
     const caller = createCaller(db);
@@ -178,6 +235,69 @@ describe("custom widget definition persistence", () => {
     expect(storedDefinition?.name).toBe(originalDefinition?.name);
     expect(storedDefinition?.updatedAt).toEqual(originalDefinition?.updatedAt);
     expect(storedSecret).toEqual(originalSecret);
+  });
+
+  test("keeps the existing secret when setting its replacement fails", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const created = await caller.create({ ...jellyfin, secrets: [secret] });
+    const originalDefinition = await db.query.customWidgetDefinitions.findFirst({
+      where: eq(customWidgetDefinitions.id, created.id),
+    });
+    const originalSecret = await db.query.customWidgetSecrets.findFirst({
+      where: eq(customWidgetSecrets.definitionId, created.id),
+    });
+    rejectSecretInserts(db);
+
+    await expect(
+      caller.secretSet({
+        definitionId: created.id,
+        secret: { ...secret, value: "replacement-secret" },
+      }),
+    ).rejects.toThrow("forced secret insert failure");
+
+    expect(
+      await db.query.customWidgetDefinitions.findFirst({
+        where: eq(customWidgetDefinitions.id, created.id),
+      }),
+    ).toEqual(originalDefinition);
+    expect(
+      await db.query.customWidgetSecrets.findFirst({
+        where: eq(customWidgetSecrets.definitionId, created.id),
+      }),
+    ).toEqual(originalSecret);
+  });
+
+  test("keeps the existing secret when clearing it cannot update the definition revision", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const created = await caller.create({ ...jellyfin, secrets: [secret] });
+    const originalDefinition = await db.query.customWidgetDefinitions.findFirst({
+      where: eq(customWidgetDefinitions.id, created.id),
+    });
+    const originalSecret = await db.query.customWidgetSecrets.findFirst({
+      where: eq(customWidgetSecrets.definitionId, created.id),
+    });
+    rejectDefinitionUpdates(db);
+
+    await expect(
+      caller.secretClear({
+        definitionId: created.id,
+        sourceId: secret.sourceId,
+        kind: secret.kind,
+      }),
+    ).rejects.toThrow("forced definition update failure");
+
+    expect(
+      await db.query.customWidgetDefinitions.findFirst({
+        where: eq(customWidgetDefinitions.id, created.id),
+      }),
+    ).toEqual(originalDefinition);
+    expect(
+      await db.query.customWidgetSecrets.findFirst({
+        where: eq(customWidgetSecrets.definitionId, created.id),
+      }),
+    ).toEqual(originalSecret);
   });
 
   test("configures a source URL and credential together", async () => {
@@ -249,7 +369,7 @@ describe("custom widget definition persistence", () => {
     };
 
     await expect(
-      createManageOnlyCaller(db).previewCreate({
+      createNonAdminCaller(db).previewCreate({
         definitionId: created.id,
         definition: changedDefinition,
         secrets: [],
@@ -260,11 +380,11 @@ describe("custom widget definition persistence", () => {
     ).resolves.toMatchObject({ success: true });
   });
 
-  test("clears persisted credentials when a manage-only source edit changes its binding", async () => {
+  test("clears persisted credentials when an admin source edit changes its binding", async () => {
     const db = await prepareDatabase();
     const created = await createCaller(db).create({ ...jellyfin, secrets: [secret] });
 
-    await createManageOnlyCaller(db).sourceConfigure({
+    await createCaller(db).sourceConfigure({
       definitionId: created.id,
       sourceId: "default",
       baseUrl: "https://other.example/api",
@@ -284,7 +404,7 @@ describe("custom widget definition persistence", () => {
     const caller = createCaller(db);
     const created = await caller.create({ ...jellyfin, secrets: [secret] });
 
-    await createManageOnlyCaller(db).update({
+    await createCaller(db).update({
       id: created.id,
       sources: {
         ...jellyfin.sources,
@@ -299,12 +419,12 @@ describe("custom widget definition persistence", () => {
     ).toHaveLength(0);
   });
 
-  test("requires secret-write permission to create a stored-definition setup link", async () => {
+  test("requires an administrator to create a stored-definition setup link", async () => {
     const db = await prepareDatabase();
     const created = await createCaller(db).create({ ...jellyfin, secrets: [] });
 
     await expect(
-      createManageOnlyCaller(db).configurationRequestUser({ definitionId: created.id, sourceId: "default" }),
+      createNonAdminCaller(db).configurationRequestUser({ definitionId: created.id, sourceId: "default" }),
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 

@@ -2,7 +2,52 @@ import { describe, expect, test } from "vitest";
 
 import { CUSTOM_WIDGET_STARTER } from "@homarr/custom-widgets/core";
 
-import { validateWorkshopWidget, workshopSubmissionInputSchema, workshopSubmissionSummarySchema } from "./schema";
+import {
+  normalizeDocsBaseUrl,
+  normalizeHttpUrl,
+  resolveHomarrUrlConfig,
+  validateWorkshopWidget,
+  workshopSubmissionInputSchema,
+  workshopSubmissionSummarySchema,
+} from "./schema";
+
+describe("Workshop URL configuration", () => {
+  test("normalizes the URL contract and derives Workshop defaults", () => {
+    expect(
+      resolveHomarrUrlConfig({
+        homarrWebsiteUrl: "https://docs.example.com/",
+        workshopApiUrl: "https://api.example.com///",
+      }),
+    ).toEqual({
+      homarrWebsiteUrl: "https://docs.example.com",
+      workshopApiUrl: "https://api.example.com",
+      workshopWebUrl: "https://docs.example.com/workshop",
+    });
+  });
+
+  test("rejects unsafe or ambiguous public URLs", () => {
+    expect(() => normalizeHttpUrl("file:///tmp/workshop", "WORKSHOP_API_URL")).toThrow("HTTP or HTTPS");
+    expect(() => normalizeHttpUrl("https://user:secret@example.com", "WORKSHOP_API_URL")).toThrow("credentials");
+    expect(() => normalizeHttpUrl("https://example.com/?token=secret", "WORKSHOP_API_URL")).toThrow("query string");
+    expect(() => normalizeHttpUrl("\nhttps://example.com", "WORKSHOP_API_URL")).toThrow("control characters");
+  });
+
+  test.each([
+    [undefined, "/"],
+    ["/", "/"],
+    ["/docs", "/docs/"],
+    ["/docs/", "/docs/"],
+  ])("normalizes DOCS_BASE_URL %s", (input, expected) => {
+    expect(normalizeDocsBaseUrl(input)).toBe(expected);
+  });
+
+  test.each(["docs", "/docs?preview=1", "/../docs", "/%2e%2e/private", "/docs path", String.raw`/docs\private`])(
+    "rejects invalid DOCS_BASE_URL %s",
+    (input) => {
+      expect(() => normalizeDocsBaseUrl(input)).toThrow("DOCS_BASE_URL");
+    },
+  );
+});
 
 describe("Workshop widget validation", () => {
   test("accepts a canonical credential-free widget", () => {

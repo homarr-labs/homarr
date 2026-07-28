@@ -1,7 +1,0 @@
-.git
-.next
-.turbo
-**/node_modules
-**/pb_data
-apps/docs/build
-coverage

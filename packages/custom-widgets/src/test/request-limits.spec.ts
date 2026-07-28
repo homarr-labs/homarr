@@ -23,6 +23,51 @@ describe("custom widget request limits", () => {
     await Promise.all(releases.slice(1).map((release) => release()));
   });
 
+  it("keeps anonymous client concurrency buckets independent", async () => {
+    const limiter = new CustomWidgetRequestLimiter();
+    const firstClient = { ...input, userId: undefined, anonymousId: "198.51.100.10" };
+    const secondClient = { ...input, userId: undefined, anonymousId: "198.51.100.11" };
+    const firstClientReleases = await Promise.all(Array.from({ length: 4 }, () => limiter.acquire(firstClient)));
+
+    await expect(limiter.acquire(firstClient)).rejects.toMatchObject({ code: "TOO_MANY_REQUESTS" });
+    const releaseSecondClient = await limiter.acquire(secondClient);
+
+    await releaseSecondClient();
+    await Promise.all(firstClientReleases.map((release) => release()));
+  });
+
+  it("enforces an identity-independent per-definition rate bucket", async () => {
+    const anonymousQuery = { ...input, category: "query" as const, userId: undefined };
+    let increment = 0;
+    const store: RequestLimitStore = {
+      incrementRate: vi.fn(async () => {
+        increment += 1;
+        return {
+          // Each acquisition increments its identity bucket first and its
+          // definition bucket second. Simulate a fresh forged identity while
+          // the shared definition bucket is already exhausted.
+          count: increment === 4 ? 241 : 1,
+          retryAfterMs: 456,
+        };
+      }),
+      acquireConcurrency: vi.fn(async () => true),
+      releaseConcurrency: vi.fn(async () => undefined),
+    };
+    const limiter = new CustomWidgetRequestLimiter({ store });
+    const release = await limiter.acquire({ ...anonymousQuery, anonymousId: "198.51.100.10" });
+    await release();
+
+    await expect(limiter.acquire({ ...anonymousQuery, anonymousId: "203.0.113.20" })).rejects.toMatchObject({
+      code: "TOO_MANY_REQUESTS",
+      retryAfterMs: 456,
+    });
+
+    const incrementRate = vi.mocked(store.incrementRate);
+    expect(incrementRate.mock.calls[0]?.[0]).not.toBe(incrementRate.mock.calls[2]?.[0]);
+    expect(incrementRate.mock.calls[1]?.[0]).toBe(incrementRate.mock.calls[3]?.[0]);
+    expect(store.acquireConcurrency).toHaveBeenCalledTimes(2);
+  });
+
   it("enforces category limits and exposes retry metadata", async () => {
     const store: RequestLimitStore = {
       incrementRate: vi.fn(async () => ({ count: 11, retryAfterMs: 321 })),

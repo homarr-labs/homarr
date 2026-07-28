@@ -5,9 +5,13 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import CustomJsxDisplay from "@homarr/widgets/custom-api/custom-jsx-display";
 
+import { CustomWidgetsUnavailable } from "~/components/custom-widgets/custom-widgets-unavailable";
+import { env } from "~/env";
+
 export default async function CustomWidgetPreviewPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
-  if (!session?.user.permissions.includes("custom-widget-manage")) redirect("/");
+  if (!session?.user.permissions.includes("admin")) redirect("/");
+  if (env.CUSTOM_WIDGETS_ENABLED === false) return <CustomWidgetsUnavailable />;
   const { id } = await params;
   const preview = await api.customWidget.previewGet({ sessionId: id }).catch(() => null);
   if (!preview) notFound();

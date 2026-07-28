@@ -12,8 +12,9 @@ import {
   customWidgetUpdateSchema,
 } from "@homarr/custom-widgets/core";
 
-import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
+import { createTRPCRouter } from "../../trpc";
 import { insertCustomWidgetDefinition } from "./definition-insert";
+import { customWidgetAdminProcedure } from "./feature-flags";
 import { managementQueryProcedures } from "./management-queries";
 import { metadataProcedures } from "./metadata-procedures";
 import { previewActionProcedures } from "./preview-action-procedures";
@@ -30,24 +31,17 @@ import { assertSecretSources, hasSameSecretBinding, requiredSecretKinds } from "
 import { secretProcedures } from "./secret-procedures";
 import { workshopProcedures } from "./workshop-procedures";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
 const logger = createLogger({ module: "custom-widget" });
 
 export const customWidgetRouter = createTRPCRouter({
   ...metadataProcedures,
   ...managementQueryProcedures,
 
-  create: manageProcedure
+  create: customWidgetAdminProcedure
     .meta({ mcp: { enabled: true, description: "Create one validated Custom JSX widget." } })
     .input(customWidgetCreateSchema)
     .mutation(async ({ ctx, input }) => {
       const { secrets, ...candidate } = input;
-      if (secrets.length > 0 && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Writing custom widget secrets requires dedicated permission",
-        });
-      }
       const definition = customWidgetDefinitionSchema.parse(candidate);
       assertSecretSources(definition.sources, secrets);
       const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
@@ -55,7 +49,7 @@ export const customWidgetRouter = createTRPCRouter({
       return { id };
     }),
 
-  update: manageProcedure
+  update: customWidgetAdminProcedure
     .meta({ mcp: { enabled: true, description: "Update one Custom JSX widget." } })
     .input(customWidgetUpdateSchema)
     .mutation(async ({ ctx, input }) => {
@@ -66,12 +60,6 @@ export const customWidgetRouter = createTRPCRouter({
 
       const current = parseStoredCustomWidgetDefinition(existing);
       const { id, secrets, ...changes } = input;
-      if (secrets?.length && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Writing custom widget secrets requires dedicated permission",
-        });
-      }
       const definition = customWidgetDefinitionSchema.parse({ ...current, ...changes });
       if (secrets) assertSecretSources(definition.sources, secrets);
       const definitionChanges = { ...serializeCustomWidgetDefinition(definition), updatedAt: new Date() };
@@ -194,7 +182,7 @@ export const customWidgetRouter = createTRPCRouter({
   ...secretProcedures,
   ...workshopProcedures,
 
-  toggleEnabled: manageProcedure
+  toggleEnabled: customWidgetAdminProcedure
     .input(z.object({ id: z.string(), enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       if (input.enabled) {
@@ -216,7 +204,7 @@ export const customWidgetRouter = createTRPCRouter({
         .where(eq(customWidgetDefinitions.id, input.id));
     }),
 
-  delete: manageProcedure
+  delete: customWidgetAdminProcedure
     .meta({ mcp: { enabled: true, description: "Delete one Custom JSX widget." } })
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -224,7 +212,7 @@ export const customWidgetRouter = createTRPCRouter({
       logger.info("Deleted custom widget definition", { id: input.id });
     }),
 
-  duplicate: manageProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+  duplicate: customWidgetAdminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
       where: eq(customWidgetDefinitions.id, input.id),
     });

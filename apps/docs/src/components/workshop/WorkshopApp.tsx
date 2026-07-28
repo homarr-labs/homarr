@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import Link from "@docusaurus/Link";
 import {
   IconAlertCircle,
   IconArrowBigDown,
@@ -323,7 +324,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
 
   return (
     <Card className="relative flex h-full min-w-0 w-full flex-col">
-      <a href={`/workshop/${submission.id}/`} className="block shrink-0">
+      <Link to={`/workshop/${submission.id}/`} className="block shrink-0">
         {hasScreenshots ? (
           <div className="relative">
             <Badge
@@ -340,13 +341,13 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
             <TypeIcon size={32} className="text-muted-foreground/20" />
           </div>
         )}
-      </a>
+      </Link>
 
       <CardHeader className="flex flex-col gap-2 sm:grid">
         <div className="flex items-center gap-2">
-          <a href={`/workshop/${submission.id}/`} className="min-w-0 hover:underline" title={submission.title}>
+          <Link to={`/workshop/${submission.id}/`} className="min-w-0 hover:underline" title={submission.title}>
             <CardTitle className="truncate">{submission.title}</CardTitle>
-          </a>
+          </Link>
           {!hasScreenshots && (
             <Badge variant="secondary" className="shrink-0 gap-1.5 px-2">
               <span className={cn("size-2 rounded-full", typeDotColors[submission.type])} />
@@ -423,7 +424,7 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
           className="h-10 sm:h-7"
           size="sm"
           nativeButton={false}
-          render={<a href={`/workshop/${submission.id}/`} aria-label={`View ${submission.title} details`} />}
+          render={<Link to={`/workshop/${submission.id}/`} aria-label={`View ${submission.title} details`} />}
         >
           <IconEye size={14} /> View details
         </Button>

@@ -36,7 +36,19 @@
       "outputs": ["migrations/sqlite/migrate.cjs", "migrations/mysql/migrate.cjs", "migrations/postgresql/migrate.cjs"]
     },
     "@homarr/docs#build": {
-      "inputs": ["$TURBO_DEFAULT$", "../../packages/definitions/src/docs/**"],
+      "env": ["DOCS_BASE_URL", "HOMARR_WEBSITE_URL", "WORKSHOP_API_URL", "WORKSHOP_URL", "WORKSHOP_WEB_URL"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../packages/custom-widgets/package.json",
+        "../../packages/custom-widgets/src/**",
+        "../../packages/custom-widgets/tsconfig.json",
+        "../../packages/definitions/package.json",
+        "../../packages/definitions/src/docs/**",
+        "../../packages/definitions/tsconfig.json",
+        "../../packages/workshop/package.json",
+        "../../packages/workshop/src/**",
+        "../../packages/workshop/tsconfig.json"
+      ],
       "outputs": ["build/**", ".docusaurus/**"]
     },
     "dev": {

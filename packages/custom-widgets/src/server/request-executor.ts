@@ -30,9 +30,11 @@ export {
 
 export const MAX_REQUEST_BODY_BYTES = 10 * 1024;
 const REQUEST_TIMEOUT_MS = 10_000;
+const DISPATCHER_CLOSE_GRACE_MS = 1_000;
 const MAX_QUERY_REDIRECTS = 3;
-const MAX_RESPONSE_CACHE_ENTRIES = 1_000;
 export const MAX_REQUEST_DURATION_MS = 45_000;
+const TIMEOUT_ERROR_CODES = new Set(["UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT", "UND_ERR_BODY_TIMEOUT"]);
+const RESPONSE_TOO_LARGE_ERROR_CODE = "UND_ERR_RES_EXCEEDED_MAX_SIZE";
 
 export interface CustomWidgetAuthConfig {
   type: string;
@@ -51,7 +53,7 @@ export interface CustomWidgetHttpRequest {
   kind: "query" | "action";
   cacheKey?: string;
   cacheTtlSeconds?: number;
-  logError?: (event: { origin: string; method: CustomWidgetMethod; errorName: string }) => void;
+  logError?: (event: { origin: string; method: CustomWidgetMethod; errorName: string; reason?: "timeout" }) => void;
 }
 
 export interface CustomWidgetHttpResponse {
@@ -60,9 +62,10 @@ export interface CustomWidgetHttpResponse {
   statusText: string;
   data: unknown;
 }
-const cache = new Map<string, { expiresAt: number; response: CustomWidgetHttpResponse }>();
-const inFlight = new Map<string, Promise<CustomWidgetHttpResponse>>();
-let cacheEpoch = 0;
+
+type RequestHopResult =
+  | { kind: "response"; response: CustomWidgetHttpResponse }
+  | { kind: "redirect"; location: string | null; statusCode: number };
 
 async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
   const controller = new AbortController();
@@ -74,11 +77,19 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
       throw new CustomWidgetDomainError({
         code: "BAD_GATEWAY",
         message: "External request exceeded the total time limit",
-        cause: error,
+        reason: "timeout",
       });
     }
     if (error instanceof CustomWidgetDomainError) throw error;
-    throw error;
+    input.logError?.({
+      origin: safeOrigin(input.baseUrl),
+      method: input.method,
+      errorName: "TransportError",
+    });
+    throw new CustomWidgetDomainError({
+      code: "BAD_GATEWAY",
+      message: "External request failed",
+    });
   } finally {
     clearTimeout(timeout);
   }
@@ -96,15 +107,16 @@ async function performRequestWithinDeadline(
   const maxRedirects = input.kind === "query" ? MAX_QUERY_REDIRECTS : 0;
   for (let redirects = 0; ; redirects += 1) {
     const dispatcher = createPinnedAgent(
-      await resolveAndValidateHost(currentUrl.hostname, input.networkScope),
+      await resolveAndValidateHost(currentUrl.hostname, input.networkScope, { signal: deadlineSignal }),
       REQUEST_TIMEOUT_MS,
     );
     const headers = buildHeaders(input, currentUrl, currentBody);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-    let responseData: Awaited<ReturnType<typeof dispatcher.request>>;
+    let result: RequestHopResult | undefined;
+    let lifecycleFailure: { error: unknown } | undefined;
     try {
-      responseData = await dispatcher.request({
+      const responseData = await dispatcher.request({
         origin: currentUrl.origin,
         path: `${currentUrl.pathname}${currentUrl.search}`,
         method: currentMethod,
@@ -112,58 +124,167 @@ async function performRequestWithinDeadline(
         body: currentBody,
         signal: AbortSignal.any([deadlineSignal, controller.signal]),
       });
-    } catch (error) {
-      await dispatcher.close();
-      if (error instanceof CustomWidgetDomainError) throw error;
-      input.logError?.({
-        origin: currentUrl.origin,
-        method: currentMethod,
-        errorName: error instanceof Error ? error.name : "UnknownError",
-      });
-      throw new CustomWidgetDomainError({
-        code: "BAD_GATEWAY",
-        message: error instanceof Error ? error.message : "External request failed",
-        cause: error,
-      });
-    } finally {
-      clearTimeout(timeout);
-    }
-    if (![301, 302, 303, 307, 308].includes(responseData.statusCode)) {
-      try {
+      if (![301, 302, 303, 307, 308].includes(responseData.statusCode)) {
         const body = await responseData.body.arrayBuffer();
         const response = new Response(body.byteLength > 0 ? body : null, {
           status: responseData.statusCode,
           statusText: STATUS_CODES[responseData.statusCode] ?? "",
           headers: normalizeResponseHeaders(responseData.headers),
         });
-        return {
-          ok: response.ok,
-          status: response.status,
-          statusText: response.statusText,
-          data: await parseResponseBody(response),
+        result = {
+          kind: "response",
+          response: {
+            ok: response.ok,
+            status: response.status,
+            statusText: response.statusText,
+            data: await parseResponseBody(response),
+          },
         };
-      } finally {
-        await dispatcher.close();
+      } else {
+        await responseData.body.dump();
+        result = {
+          kind: "redirect",
+          location: normalizeResponseHeaders(responseData.headers).get("location"),
+          statusCode: responseData.statusCode,
+        };
+      }
+    } catch (error) {
+      lifecycleFailure = { error };
+    } finally {
+      clearTimeout(timeout);
+      try {
+        const closed = await closeDispatcher(dispatcher, deadlineSignal);
+        if (!closed)
+          input.logError?.({
+            origin: currentUrl.origin,
+            method: currentMethod,
+            errorName: "DispatcherCloseTimeout",
+          });
+      } catch {
+        input.logError?.({
+          origin: currentUrl.origin,
+          method: currentMethod,
+          errorName: "DispatcherCloseError",
+        });
       }
     }
-    try {
-      await responseData.body.dump();
-    } finally {
-      await dispatcher.close();
+
+    if (lifecycleFailure) {
+      const { error } = lifecycleFailure;
+      if (error instanceof CustomWidgetDomainError) throw error;
+      if (isResponseTooLargeError(error)) {
+        throw new CustomWidgetDomainError({
+          code: "PAYLOAD_TOO_LARGE",
+          message: "Response exceeds the 1 MiB limit",
+        });
+      }
+      const timedOut = isCustomWidgetRequestTimeoutError(error, deadlineSignal, controller.signal);
+      input.logError?.({
+        origin: currentUrl.origin,
+        method: currentMethod,
+        errorName: timedOut ? "RequestTimeout" : "TransportError",
+        ...(timedOut ? { reason: "timeout" as const } : {}),
+      });
+      throw new CustomWidgetDomainError({
+        code: "BAD_GATEWAY",
+        message: timedOut ? "External request timed out" : "External request failed",
+        ...(timedOut ? { reason: "timeout" as const } : {}),
+      });
     }
+
+    if (!result)
+      throw new CustomWidgetDomainError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "External request did not complete",
+      });
+    if (result.kind === "response") return result.response;
     if (redirects >= maxRedirects)
       throw new CustomWidgetDomainError({ code: "BAD_GATEWAY", message: "Upstream redirect limit exceeded" });
-    const location = normalizeResponseHeaders(responseData.headers).get("location");
-    if (!location)
+    if (!result.location)
       throw new CustomWidgetDomainError({ code: "BAD_GATEWAY", message: "Upstream redirect is missing a location" });
-    const redirected = validateCustomWidgetUrl(new URL(location, currentUrl));
+    const redirected = validateCustomWidgetUrl(new URL(result.location, currentUrl));
     if (redirected.origin !== baseUrl.origin)
       throw new CustomWidgetDomainError({ code: "FORBIDDEN", message: "Cross-origin redirects are not allowed" });
-    if (responseData.statusCode === 303 || ([301, 302].includes(responseData.statusCode) && currentMethod === "POST")) {
+    if (result.statusCode === 303 || ([301, 302].includes(result.statusCode) && currentMethod === "POST")) {
       currentMethod = "GET";
       currentBody = undefined;
     }
     currentUrl = redirected;
+  }
+}
+
+async function closeDispatcher(
+  dispatcher: ReturnType<typeof createPinnedAgent>,
+  deadlineSignal: AbortSignal,
+): Promise<boolean> {
+  const cleanupController = new AbortController();
+  const timeout = setTimeout(() => cleanupController.abort(), DISPATCHER_CLOSE_GRACE_MS);
+  try {
+    await abortable(dispatcher.close(), AbortSignal.any([deadlineSignal, cleanupController.signal]));
+    return true;
+  } catch (error) {
+    detachDispatcherDestroy(dispatcher);
+    if (cleanupController.signal.aborted && !deadlineSignal.aborted) return false;
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function detachDispatcherDestroy(dispatcher: ReturnType<typeof createPinnedAgent>): void {
+  try {
+    void dispatcher.destroy().catch(() => undefined);
+  } catch {
+    // Cleanup is best effort after its bounded grace period.
+  }
+}
+
+function abortable<T>(operation: Promise<T>, signal: AbortSignal): Promise<T> {
+  if (signal.aborted) return Promise.reject(signal.reason ?? createAbortError());
+
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => {
+      signal.removeEventListener("abort", onAbort);
+      reject(signal.reason ?? createAbortError());
+    };
+    signal.addEventListener("abort", onAbort, { once: true });
+    operation.then(
+      (value) => {
+        signal.removeEventListener("abort", onAbort);
+        resolve(value);
+      },
+      (error: unknown) => {
+        signal.removeEventListener("abort", onAbort);
+        reject(error);
+      },
+    );
+  });
+}
+
+function createAbortError(): Error {
+  const error = new Error("Operation aborted");
+  error.name = "AbortError";
+  return error;
+}
+
+export function isCustomWidgetRequestTimeoutError(error: unknown, ...signals: readonly AbortSignal[]): boolean {
+  if (signals.some((signal) => signal.aborted)) return true;
+  if (!(error instanceof Error)) return false;
+  if (error.name.includes("Timeout")) return true;
+  const code = "code" in error && typeof error.code === "string" ? error.code : undefined;
+  return code !== undefined && TIMEOUT_ERROR_CODES.has(code);
+}
+
+function isResponseTooLargeError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  return "code" in error && error.code === RESPONSE_TOO_LARGE_ERROR_CODE;
+}
+
+function safeOrigin(value: string): string {
+  try {
+    return new URL(value).origin;
+  } catch {
+    return "invalid";
   }
 }
 
@@ -195,42 +316,5 @@ function buildHeaders(input: CustomWidgetHttpRequest, url: URL, body: string | u
 }
 
 export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
-  const key = input.kind === "query" ? input.cacheKey : undefined;
-  if (!key) return performRequest(input);
-  const cached = cache.get(key);
-  if (cached && cached.expiresAt > Date.now()) return cached.response;
-  if (cached) cache.delete(key);
-  const pending = inFlight.get(key);
-  if (pending) return pending;
-  const requestEpoch = cacheEpoch;
-  let request: Promise<CustomWidgetHttpResponse>;
-  request = performRequest(input)
-    .then((response) => {
-      if (response.ok && (input.cacheTtlSeconds ?? 0) > 0 && requestEpoch === cacheEpoch) {
-        pruneCache();
-        cache.set(key, { expiresAt: Date.now() + (input.cacheTtlSeconds ?? 0) * 1000, response });
-      }
-      return response;
-    })
-    .finally(() => {
-      if (inFlight.get(key) === request) inFlight.delete(key);
-    });
-  inFlight.set(key, request);
-  return request;
-}
-
-export function invalidateCustomWidgetResponseCache(prefixes: readonly string[]): void {
-  if (prefixes.length === 0) return;
-  cacheEpoch += 1;
-  for (const key of cache.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) cache.delete(key);
-  for (const key of inFlight.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) inFlight.delete(key);
-}
-
-function pruneCache(): void {
-  for (const [key, entry] of cache) if (entry.expiresAt <= Date.now()) cache.delete(key);
-  while (cache.size >= MAX_RESPONSE_CACHE_ENTRIES) {
-    const key = cache.keys().next().value as string | undefined;
-    if (!key) return;
-    cache.delete(key);
-  }
+  return performRequest(input);
 }

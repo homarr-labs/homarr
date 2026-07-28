@@ -1,6 +1,7 @@
 /// <reference path="../pb_data/types.d.ts" />
 
 const cloneJson = (value) => JSON.parse(JSON.stringify(value));
+const cloneRule = (value) => (value === null ? null : String(value));
 
 migrate(
   (app) => {
@@ -31,11 +32,11 @@ migrate(
         ? {
             passwordAuth: cloneJson(users.passwordAuth),
             oauth2: cloneJson(users.oauth2),
-            listRule: users.listRule,
-            viewRule: users.viewRule,
-            createRule: users.createRule,
-            updateRule: users.updateRule,
-            deleteRule: users.deleteRule,
+            listRule: cloneRule(users.listRule),
+            viewRule: cloneRule(users.viewRule),
+            createRule: cloneRule(users.createRule),
+            updateRule: cloneRule(users.updateRule),
+            deleteRule: cloneRule(users.deleteRule),
           }
         : null,
       addedUserFields: [],
@@ -286,6 +287,8 @@ migrate(
         if (field) users.fields.removeById(field.id);
       }
       app.save(users);
+    } else {
+      app.delete(users);
     }
     app.delete(stateCollection);
   },

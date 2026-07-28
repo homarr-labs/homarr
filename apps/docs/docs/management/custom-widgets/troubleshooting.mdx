@@ -4,7 +4,15 @@
 
 The definition does not exist. If it was deleted, remove the unavailable tile from the board.
 
-If the Custom Widgets page shows the definition with a **Migration required** badge, open its action menu and select **Copy migration prompt**. Give that redacted prompt to an LLM, then import the resulting v2 JSON from the same menu. Homarr keeps the legacy definition until the replacement validates and you confirm the migration.
+If the Custom Widgets page shows the definition with a **Migration required** badge, an administrator can open its
+action menu and select **Copy migration prompt**. Give that redacted prompt to an LLM, then import the resulting v2 JSON
+from the same menu. Because arbitrary v1 display text or JSX may contain credentials, the prompt omits that display
+configuration; describe the old widget's visible layout and behavior without including secrets. Other viewers see
+**Contact an administrator** instead of a migration link.
+
+Homarr keeps the v1 definition and encrypted secret after migration. The validated v2 replacement uses the same ID and
+takes precedence; the archived v1 record reappears if the v2 replacement is deleted. There is no v1 permanent-delete
+action during the v2 stabilization period.
 
 Otherwise, install or create a Custom JSX v2 definition.
 
@@ -34,6 +42,15 @@ An invalid definition disables widget preview and Save/Create. The Data, Options
 
 The Diagnostics tab shows the current schema errors.
 
+## Feature unavailable
+
+If every Custom Widget reports that the feature is unavailable, check `CUSTOM_WIDGETS_ENABLED`. Setting it to `false`
+is an emergency stop that preserves definitions, secrets, legacy backups, and board placements while blocking authoring
+and execution.
+
+If Workshop alone is unavailable, check `WORKSHOP_ENABLED` and `WORKSHOP_API_URL`. Disabling Workshop does not disable
+widgets that are already installed.
+
 ## Correct request errors
 
 Check the API source network scope. Check the base URL and credentials.
@@ -43,6 +60,9 @@ Check the request method, path, body, direct value bindings, and board permissio
 For “invalid placeholder,” use `{option:name}` or `{param:name}`. Load queries can only reference options. The preview journal does not show credentials.
 
 The journal shows the method, request ID, path template, status, and duration.
+
+In a multi-instance deployment, all Homarr replicas must share Redis. Versioned cache invalidation is distributed
+through Redis; replicas connected to different Redis databases can serve stale query responses after an action.
 
 ## Correct a Mantine prop warning
 
@@ -57,3 +77,10 @@ Use safe widget options, temporary inputs, or named requests instead.
 The widget option definitions changed and the saved values are invalid. Open the item settings.
 
 Correct the marked configuration values. Homarr does not infer widget option migrations.
+
+## Roll back safely
+
+Before an application upgrade, back up the database and preserve the exact `SECRET_ENCRYPTION_KEY`. The v2 schema keeps
+the physical v1 definition and secret tables readable by a v1 binary. Roll back the application without running
+manual cleanup, verify legacy widgets, and restore the database backup if the migration itself must be reversed.
+PocketBase Workshop data is a separate backup and restore operation.

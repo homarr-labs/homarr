@@ -18,6 +18,7 @@
     "./schema": "./src/schema.ts"
   },
   "scripts": {
+    "build:pocketbase-validator": "node ../../scripts/build-workshop-validator.mjs",
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",
@@ -29,10 +30,12 @@
     "@tanstack/react-query": "catalog:",
     "pocketbase": "catalog:",
     "react": "catalog:",
+    "tr46": "6.0.0",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "esbuild": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

@@ -68,13 +68,17 @@ describe("WorkshopBackend", () => {
   test("lets PocketBase own the complete GitHub popup flow", async () => {
     mocks.authWithOAuth2.mockResolvedValue({
       token: "token",
-      record: { id: "user-id" },
+      record: {
+        id: "user-id",
+        displayName: "octocat",
+        githubUsername: "octocat",
+        githubProfileUrl: "https://github.com/octocat",
+      },
       meta: { username: "octocat" },
     });
-    mocks.update.mockResolvedValue({ id: "user-id", displayName: "octocat" });
 
     const client = new WorkshopBackend("https://workshop.example.com");
-    await client.signInWithGitHub();
+    const user = await client.signInWithGitHub();
 
     expect(mocks.authWithOAuth2).toHaveBeenCalledWith({
       provider: "github",
@@ -82,6 +86,8 @@ describe("WorkshopBackend", () => {
     });
     expect(mocks.authWithOAuth2.mock.calls[0]?.[0]).not.toHaveProperty("requestKey");
     expect(mocks.authWithOAuth2.mock.calls[0]?.[0]).not.toHaveProperty("urlCallback");
+    expect(mocks.update).not.toHaveBeenCalled();
+    expect(user).toMatchObject({ displayName: "octocat", githubUsername: "octocat" });
   });
 
   test("exposes the typed submission collection service", () => {
@@ -148,6 +154,31 @@ describe("WorkshopBackend", () => {
     const payload = mocks.update.mock.calls[0]?.[1];
     expect(payload).not.toHaveProperty("revision");
     expect(payload).not.toHaveProperty("widgetSchema");
+  });
+
+  test("uses the current revision when toggling submission status", async () => {
+    const client = new WorkshopBackend("https://workshop.example.com");
+    const current = {
+      ...listingRecord(),
+      type: "customCss" as const,
+      content: ".dashboard { color: red; }",
+      revision: 4,
+      outdated: false,
+    };
+    const updated = { ...current, revision: 5, outdated: true };
+    vi.spyOn(client, "get")
+      .mockResolvedValueOnce(current as never)
+      .mockResolvedValueOnce(updated as never);
+    mocks.update.mockResolvedValue(updated);
+
+    await expect(client.toggleOutdated(current.id, true)).resolves.toMatchObject({
+      revision: 5,
+      outdated: true,
+    });
+    expect(mocks.update).toHaveBeenCalledWith(current.id, {
+      outdated: true,
+      expectedRevision: 4,
+    });
   });
 
   test("uses PocketBase filtering and pagination when the listing view is current", async () => {

@@ -8,10 +8,9 @@ import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import { and, eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { customWidgetAdminProcedure } from "./feature-flags";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
 const logger = createLogger({ module: "custom-widget" });
 
 const getTemplateRevision = (template: string) => createHash("sha256").update(template).digest("hex").slice(0, 16);
@@ -33,7 +32,7 @@ const validateTemplate = (definition: ReturnType<typeof parseStoredCustomWidgetD
 };
 
 export const templateProcedures = {
-  readTemplate: manageProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+  readTemplate: customWidgetAdminProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
     const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
       where: eq(customWidgetDefinitions.id, input.id),
     });
@@ -48,7 +47,7 @@ export const templateProcedures = {
     };
   }),
 
-  writeTemplate: manageProcedure
+  writeTemplate: customWidgetAdminProcedure
     .input(
       z
         .object({ id: z.string(), template: z.string().optional(), templateLines: z.array(z.string()).optional() })
@@ -74,7 +73,7 @@ export const templateProcedures = {
       return { id: input.id, template, templateLines: template.split("\n"), revision: getTemplateRevision(template) };
     }),
 
-  templatePatch: manageProcedure
+  templatePatch: customWidgetAdminProcedure
     .meta({ mcp: { enabled: true, description: "Patch selected JSX template lines using an optimistic revision." } })
     .input(
       z.object({

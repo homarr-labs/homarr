@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "@docusaurus/Link";
 import {
   IconBrandGithub,
   IconExternalLink,
@@ -52,7 +53,7 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
       setSubmissions(nextSubmissions);
       setError("");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Unable to load Workshop administration");
+      setError(cause instanceof Error ? cause.message : "Unable to load Workshop moderation");
     } finally {
       setLoading(false);
     }
@@ -118,13 +119,13 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
             <IconShield size={18} />
             <span className="text-sm font-medium">Restricted area</span>
           </div>
-          <h1 className="text-3xl font-semibold tracking-tight">Workshop administration</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">Workshop moderation</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
             Review reports and remove unsafe or outdated submissions. PocketBase rules enforce every action.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" nativeButton={false} render={<a href="/workshop" aria-label="Back to Workshop" />}>
+          <Button variant="outline" nativeButton={false} render={<Link to="/workshop" aria-label="Back to Workshop" />}>
             Back to Workshop
           </Button>
           {!user && (
@@ -145,14 +146,14 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
         {user && !user.isAdmin && (
           <Alert variant="destructive" className="mb-5">
             <IconShield />
-            <AlertTitle>Administrator access required</AlertTitle>
+            <AlertTitle>Workshop moderator access required</AlertTitle>
             <AlertDescription>This GitHub account cannot access Workshop moderation.</AlertDescription>
           </Alert>
         )}
         {error && (
           <Alert variant="destructive" className="mb-5">
             <IconFlag />
-            <AlertTitle>Workshop administration failed</AlertTitle>
+            <AlertTitle>Workshop moderation failed</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -265,7 +266,7 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
                         variant="outline"
                         size="sm"
                         nativeButton={false}
-                        render={<a href={`/workshop/${submission.id}`} aria-label={`Inspect ${submission.title}`} />}
+                        render={<Link to={`/workshop/${submission.id}`} aria-label={`Inspect ${submission.title}`} />}
                       >
                         <IconExternalLink size={14} /> Inspect submission
                       </Button>

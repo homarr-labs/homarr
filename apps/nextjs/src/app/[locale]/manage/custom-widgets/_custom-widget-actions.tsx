@@ -23,6 +23,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
 import { WorkshopPublishModal } from "~/components/workshop/workshop-publish-modal";
+import { useRuntimeFeature } from "~/hooks/use-runtime-feature";
 
 const iconProps = { size: 16, stroke: 1.5 };
 
@@ -36,9 +37,9 @@ interface WidgetRef {
 
 export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const t = useScopedI18n("customWidget");
+  const workshopEnabled = useRuntimeFeature("workshop");
   const { openConfirmModal } = useConfirmModal();
   const deleteMutation = clientApi.customWidget.delete.useMutation();
-  const deleteLegacyMutation = clientApi.customWidget.deleteLegacy.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();
   const utils = clientApi.useUtils();
   const [publishOpened, publishControls] = useDisclosure(false);
@@ -146,10 +147,6 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
             showErrorNotification({ title: t("action.delete"), message: t("notification.deleteError") });
           },
         };
-        if (widget.migrationRequired) {
-          deleteLegacyMutation.mutate({ id: widget.id }, callbacks);
-          return;
-        }
         deleteMutation.mutate({ id: widget.id }, callbacks);
       },
     });
@@ -176,9 +173,11 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
               <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
                 {t("action.export")}
               </Menu.Item>
-              <Menu.Item onClick={publishControls.open} leftSection={<IconBuildingStore {...iconProps} />}>
-                {t("action.publishWorkshop")}
-              </Menu.Item>
+              {workshopEnabled && (
+                <Menu.Item onClick={publishControls.open} leftSection={<IconBuildingStore {...iconProps} />}>
+                  {t("action.publishWorkshop")}
+                </Menu.Item>
+              )}
               <Menu.Divider />
             </>
           )}
@@ -196,17 +195,21 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
               <Menu.Divider />
             </>
           )}
-          <Menu.Item
-            color="red"
-            leftSection={<IconTrash {...iconProps} />}
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending || deleteLegacyMutation.isPending}
-          >
-            {t("action.delete")}
-          </Menu.Item>
+          {!widget.migrationRequired && (
+            <Menu.Item
+              color="red"
+              leftSection={<IconTrash {...iconProps} />}
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+            >
+              {t("action.delete")}
+            </Menu.Item>
+          )}
         </Menu.Dropdown>
       </Menu>
-      {widget.valid && <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />}
+      {widget.valid && workshopEnabled && (
+        <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />
+      )}
       {widget.migrationRequired && (
         <>
           <input

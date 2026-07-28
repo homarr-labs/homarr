@@ -63,6 +63,7 @@
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "ioredis": "catalog:",
     "typescript": "catalog:"
   }
 }

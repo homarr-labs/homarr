@@ -17,9 +17,14 @@ The [Community Workshop](pathname:///workshop) is where Homarr users share and d
 **custom CSS themes** and **custom widgets**. You can browse submissions, upvote the ones
 you like, report abuse, and install entries directly into your own Homarr instance.
 
+The central `homarr.dev` Workshop is a public community. Browsing it on the website is public. Browsing, installing,
+publishing, or importing Workshop content **inside a Homarr instance is restricted to Homarr administrators**.
+
 :::warning
 
-The workshop contains community-made content. Widgets may contain unwanted or malicious content and it is your duty to check & verify safety of the content. While we try to remove malicious content as best as we can, we take no responsibility. Always review the widget JSON and all CSS before installing it on your instance and take frequent backups as prevention measures.
+The Workshop contains community-made content. Moderation is not a security boundary. Always review widget capabilities,
+network origins, actions, and CSS before installing. Homarr's installation-time validator is definitive and can reject
+content that the public service accepted earlier. Back up your instance before installing untrusted content.
 
 :::
 
@@ -29,12 +34,12 @@ The workshop contains community-made content. Widgets may contain unwanted or ma
 - Sign in with **GitHub** to upvote/downvote, submit your own creations, or report a submission.
 - Each submission shows its title, description, linked GitHub author, revision, optional screenshots, comments, and full content. Widget pages also summarize API sources, actions, options, network access, and required credentials before installation.
 - A new submission receives one real upvote owned by its author. Votes remain unique per user and submission.
-- Report details and reporter identities are visible only to Workshop administrators. Reported submissions are highlighted in the administration page, where each open report can be dismissed or the submission can be deleted. Reports do not automatically remove a submission.
+- Report details and reporter identities are visible only to Workshop moderators. Reported submissions are highlighted in the moderation page, where each open report can be dismissed or the submission can be deleted. Reports do not automatically remove a submission.
 - The manual **Outdated** badge warns visitors that a submission may need an update.
 
 ## Comments
 
-Comments are publicly readable and appear in chronological conversation bubbles with the author's avatar and GitHub profile. Signed-in users can post; authors can edit or delete their own comments, and Workshop administrators can delete any comment. Failed posts keep the text you typed. When SMTP and `WORKSHOP_PUBLIC_ORIGIN` are configured, the submission author receives one email for a comment from another user. Self-comments, edits, and deletions do not send mail.
+Comments are publicly readable and appear in chronological conversation bubbles with the author's avatar and GitHub profile. Signed-in users can post; authors can edit or delete their own comments, and Workshop moderators can delete any comment. Failed posts keep the text you typed. When SMTP and `WORKSHOP_PUBLIC_ORIGIN` are configured, the submission author receives one email for a comment from another user. Self-comments, edits, and deletions do not send mail.
 
 ## Submitting
 
@@ -49,7 +54,14 @@ Comments are publicly readable and appear in chronological conversation bubbles 
 Submissions are published immediately. Reported entries are reviewed and may be removed.
 Authors can edit a submission later to publish a new revision. The edit form can keep or remove existing screenshots and add new PNG, JPG, or WebP images without changing the Workshop URL.
 
-When SMTP and `WORKSHOP_PUBLIC_ORIGIN` are configured, every current Workshop administrator receives an email when a report is submitted. If an administrator deletes the reported submission, its author receives a separate removal email. Author self-deletion does not send a moderation email.
+When SMTP and `WORKSHOP_PUBLIC_ORIGIN` are configured, every current Workshop moderator receives an email when a report is submitted. If a moderator deletes the reported submission, its author receives a separate removal email. Author self-deletion does not send a moderation email.
+
+:::info Separate roles
+
+A Workshop moderator is a user with PocketBase's internal `isAdmin` field. This role moderates the central community
+and is unrelated to a Homarr instance administrator.
+
+:::
 
 ## Submission guidelines
 
@@ -61,9 +73,9 @@ that primarily promotes unrelated products or services.
 
 You can install workshop entries without leaving Homarr:
 
-- **Custom widgets** — go to **Manage → Custom Widgets**, or use **Install from Workshop** in the
+- **Custom widgets (Homarr administrators only)** — go to **Manage → Custom Widgets**, or use **Install from Workshop** in the
   board widget picker. Pick an entry, review its capabilities, and enter any required local secrets before import.
-- **Custom CSS** — open a board's **Settings → Custom CSS**, click **Install from Workshop**, and
+- **Custom CSS from Workshop (Homarr administrators only)** — open a board's **Settings → Custom CSS**, click **Install from Workshop**, and
   pick a theme to load it into the editor before saving.
 
 Alternatively, open a submission in the Workshop and use **Download widget JSON** or **Copy CSS**. The submission page shows the matching manual installation steps before the source code.
@@ -74,13 +86,33 @@ Custom Widget imports detect required bearer, basic, header, or query credential
 
 Workshop is powered by [PocketBase](https://pocketbase.io). The production image compiles the current Docusaurus site and serves it together with the API from one origin. The deployment lives in `apps/workshop/` with a Dockerfile, Compose configuration, version-controlled migrations, hooks, a smoke test, and ACT-local workflow instructions.
 
-Run `pnpm docker:workshop` for the PocketBase development service or `pnpm docker:docs` for the built documentation and Workshop site. Both use `apps/workshop/docker-compose.yml` and the persistent `pb_data` volume. Normal start and stop commands retain data; `docker compose -f apps/workshop/docker-compose.yml down --volumes` intentionally recreates the database.
+Run `pnpm dev:workshop` for the recommended local stack: persistent PocketBase on port 8090 and Docusaurus on port 3003. The command waits for health and collections and preserves the `pb_data` volume on shutdown. `pnpm docker:docs`
+builds the combined production layout. Normal start and stop commands retain data; `down --volumes` is an intentional,
+irreversible development reset.
 
-Because Workshop is still unreleased, reset an older development volume if it predates the current schema and comments report that their collection context is missing. No compatibility migrations are maintained for these pre-release databases.
+GitHub needs only the central callback `https://<workshop-host>/api/oauth2-redirect`. Keep PocketBase origins unrestricted
+unless every self-hosted Homarr caller is explicitly listed. Configure both `GITHUB_CLIENT_ID` and
+`GITHUB_CLIENT_SECRET`; supplying only one is a startup error. Production also requires
+`WORKSHOP_PUBLIC_ORIGIN`. Configure SMTP for comment, report, and removal notices.
 
-GitHub needs only the central callback `https://<workshop-host>/api/oauth2-redirect`. Keep PocketBase origins unrestricted unless every self-hosted Homarr caller is explicitly listed. Configure `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `WORKSHOP_PUBLIC_ORIGIN`, and PocketBase SMTP settings for authentication, comment email, report alerts, and submission-removal notices.
+The public URL contract is:
 
-Homarr instances use the server-side `WORKSHOP_API_URL` variable to reach the central API. The Docusaurus site uses `WORKSHOP_URL` when its development server runs separately; the combined production image always uses its own origin. Restart the corresponding process after changing either value because both are read at startup.
+| Variable                 | Purpose                                           | Default                       |
+| ------------------------ | ------------------------------------------------- | ----------------------------- |
+| `HOMARR_WEBSITE_URL`     | Documentation/site base used by Homarr links      | `https://homarr.dev`          |
+| `WORKSHOP_API_URL`       | PocketBase API used by Homarr and standalone docs | `HOMARR_WEBSITE_URL`          |
+| `WORKSHOP_WEB_URL`       | Public Workshop page linked from Homarr           | `HOMARR_WEBSITE_URL/workshop` |
+| `DOCS_BASE_URL`          | Docusaurus deployment path                        | `/`                           |
+| `WORKSHOP_PUBLIC_ORIGIN` | PocketBase-generated links and email              | Required in production        |
+| `PB_ALLOWED_ORIGINS`     | PocketBase browser origins                        | `*` for the central community |
+
+The deprecated docs-only `WORKSHOP_URL` alias remains for one release; `WORKSHOP_API_URL` takes precedence. Homarr
+server-renders runtime values for the browser, and the combined image writes a public runtime config at container
+startup. Restart services after changes.
+
+Back up application and PocketBase data before deployment. Publish the combined image by immutable digest, test the
+exact digest in staging, rehearse application rollback and PocketBase restore, then promote that same digest. The
+`WORKSHOP_ENABLED=false` switch disables Homarr's Workshop entry points without affecting installed widgets.
 
 ## Client architecture
 

@@ -7,12 +7,16 @@ const WINDOW_MS = 60_000;
 // Keep the lease above that total and identify every acquisition so a late
 // release can never remove capacity owned by a newer request.
 export const CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS = 60_000;
+export const CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT = 4;
+export const CUSTOM_WIDGET_DEFINITION_CONCURRENCY_LIMIT = 8;
 const CATEGORY_LIMITS = { query: 60, action: 10, delete: 3 } as const;
+const DEFINITION_CATEGORY_LIMITS = { query: 240, action: 40, delete: 12 } as const;
 type RequestCategory = keyof typeof CATEGORY_LIMITS;
 
 export interface RequestLimitInput {
   category: RequestCategory;
   userId?: string;
+  anonymousId?: string;
   itemId: string;
   definitionId: string;
 }
@@ -35,33 +39,45 @@ export class CustomWidgetRequestLimiter {
   public constructor(private readonly options: RequestLimiterOptions = {}) {}
 
   public async acquire(input: RequestLimitInput): Promise<() => Promise<void>> {
-    const identity = input.userId ?? "anonymous";
+    const identity = input.userId ? `user:${input.userId}` : `anonymous:${input.anonymousId ?? "unknown"}`;
     const rateKey = `custom-widget:rate:${input.category}:${hashKey(identity, input.itemId)}`;
+    const definitionRateKey = `custom-widget:rate:v2:definition:${input.category}:${hashKey(input.definitionId)}`;
     const userKey = `custom-widget:concurrency:v2:user-item:${hashKey(identity, input.itemId)}`;
     const definitionKey = `custom-widget:concurrency:v2:definition:${hashKey(input.definitionId)}`;
-    if (!this.options.store) return this.acquireLocal(rateKey, userKey, definitionKey, input.category);
+    if (!this.options.store)
+      return this.acquireLocal(rateKey, definitionRateKey, userKey, definitionKey, input.category);
     try {
-      return await this.acquireStored(rateKey, userKey, definitionKey, input.category, this.options.store);
+      return await this.acquireStored(
+        rateKey,
+        definitionRateKey,
+        userKey,
+        definitionKey,
+        input.category,
+        this.options.store,
+      );
     } catch (error) {
       if (error instanceof CustomWidgetDomainError) throw error;
       this.options.onStoreError?.(error);
       throw new CustomWidgetDomainError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Request limiter is unavailable",
-        cause: error,
       });
     }
   }
 
-  private acquireLocal(rateKey: string, userKey: string, definitionKey: string, category: RequestCategory) {
+  private acquireLocal(
+    rateKey: string,
+    definitionRateKey: string,
+    userKey: string,
+    definitionKey: string,
+    category: RequestCategory,
+  ) {
     const now = Date.now();
-    const recent = (this.rateBuckets.get(rateKey) ?? []).filter((timestamp) => now - timestamp < WINDOW_MS);
-    if (recent.length >= CATEGORY_LIMITS[category]) throwLimit(WINDOW_MS - (now - (recent[0] ?? now)));
-    recent.push(now);
-    this.rateBuckets.set(rateKey, recent);
-    this.acquireLocalConcurrency(userKey, 4);
+    this.acquireLocalRate(rateKey, CATEGORY_LIMITS[category], now);
+    this.acquireLocalRate(definitionRateKey, DEFINITION_CATEGORY_LIMITS[category], now);
+    this.acquireLocalConcurrency(userKey, CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT);
     try {
-      this.acquireLocalConcurrency(definitionKey, 8);
+      this.acquireLocalConcurrency(definitionKey, CUSTOM_WIDGET_DEFINITION_CONCURRENCY_LIMIT);
     } catch (error) {
       this.releaseLocalConcurrency(userKey);
       throw error;
@@ -74,6 +90,7 @@ export class CustomWidgetRequestLimiter {
 
   private async acquireStored(
     rateKey: string,
+    definitionRateKey: string,
     userKey: string,
     definitionKey: string,
     category: RequestCategory,
@@ -82,11 +99,27 @@ export class CustomWidgetRequestLimiter {
     const ownerId = randomUUID();
     const rate = await store.incrementRate(rateKey, WINDOW_MS);
     if (rate.count > CATEGORY_LIMITS[category]) throwLimit(rate.retryAfterMs);
-    if (!(await store.acquireConcurrency(userKey, ownerId, 4, CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS))) {
+    const definitionRate = await store.incrementRate(definitionRateKey, WINDOW_MS);
+    if (definitionRate.count > DEFINITION_CATEGORY_LIMITS[category]) throwLimit(definitionRate.retryAfterMs);
+    if (
+      !(await store.acquireConcurrency(
+        userKey,
+        ownerId,
+        CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT,
+        CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS,
+      ))
+    ) {
       throwLimit(1_000);
     }
     try {
-      if (!(await store.acquireConcurrency(definitionKey, ownerId, 8, CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS))) {
+      if (
+        !(await store.acquireConcurrency(
+          definitionKey,
+          ownerId,
+          CUSTOM_WIDGET_DEFINITION_CONCURRENCY_LIMIT,
+          CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS,
+        ))
+      ) {
         throwLimit(1_000);
       }
     } catch (error) {
@@ -96,6 +129,13 @@ export class CustomWidgetRequestLimiter {
     return async () => {
       await Promise.all([store.releaseConcurrency(userKey, ownerId), store.releaseConcurrency(definitionKey, ownerId)]);
     };
+  }
+
+  private acquireLocalRate(key: string, limit: number, now: number): void {
+    const recent = (this.rateBuckets.get(key) ?? []).filter((timestamp) => now - timestamp < WINDOW_MS);
+    if (recent.length >= limit) throwLimit(WINDOW_MS - (now - (recent[0] ?? now)));
+    recent.push(now);
+    this.rateBuckets.set(key, recent);
   }
 
   private acquireLocalConcurrency(key: string, limit: number): void {

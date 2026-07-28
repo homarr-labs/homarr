@@ -6,16 +6,17 @@ import {
   completeCustomWidgetConfigurationRequest,
   configurePreviewSessionSource,
   getCustomWidgetConfigurationRequest,
+  invalidateCustomWidgetResponseCache,
   parseStoredCustomWidgetDefinition,
   releaseCustomWidgetConfigurationRequest,
   serializeCustomWidgetDefinition,
 } from "@homarr/api/custom-widget-configuration";
 import { encryptSecret } from "@homarr/common/server";
-import { invalidateCustomWidgetResponseCache } from "@homarr/custom-widgets/server";
 import { customWidgetSourceSchema, hasSameCustomWidgetSourceAuthentication } from "@homarr/custom-widgets/core";
 import { and, db, eq, handleTransactionsAsync } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 
+import { requireCustomWidgetAdmin } from "../../admin";
 import { readConfigurationRequestBody } from "../body";
 
 interface RouteContext {
@@ -23,6 +24,8 @@ interface RouteContext {
 }
 
 export async function GET(_request: NextRequest, context: RouteContext) {
+  const denied = await requireCustomWidgetAdmin();
+  if (denied) return denied;
   const { token } = await context.params;
   const request = await getCustomWidgetConfigurationRequest(token);
   if (!request)
@@ -41,6 +44,8 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 }
 
 export async function POST(request: NextRequest, context: RouteContext) {
+  const denied = await requireCustomWidgetAdmin();
+  if (denied) return denied;
   const { token } = await context.params;
   const pending = await getCustomWidgetConfigurationRequest(token);
   if (!pending || pending.status !== "pending") {
@@ -92,7 +97,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
         sourceResult.data,
         secrets,
       );
-      invalidateCustomWidgetResponseCache([`custom-jsx:preview:${claimed.target.id}:`]);
+      await invalidateCustomWidgetResponseCache([`custom-jsx:preview:${claimed.target.id}:`]);
     } else {
       const definition = await db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, claimed.target.id),

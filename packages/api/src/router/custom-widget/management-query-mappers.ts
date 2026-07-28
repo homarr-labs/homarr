@@ -20,6 +20,7 @@ export function mapCustomWidgetListItem(definition: StoredDefinition & { secrets
   const result = safeParseStoredCustomWidgetDefinition(definition);
   if (!result.success) {
     logger.warn("Skipped parsing invalid custom widget definition", {
+      event: "custom_widget_definition_invalid",
       id: definition.id,
       issueCount: result.issues.length,
     });
@@ -88,7 +89,11 @@ export function mapLegacyCustomWidgetListItem(definition: LegacyDefinition) {
 export function mapAvailableCustomWidget(definition: StoredDefinition) {
   const result = safeParseStoredCustomWidgetDefinition(definition);
   if (!result.success) {
-    logger.warn("Excluded invalid custom widget definition from board picker", { id: definition.id });
+    logger.warn("Excluded invalid custom widget definition from board picker", {
+      event: "custom_widget_definition_invalid",
+      id: definition.id,
+      surface: "board-picker",
+    });
     return [];
   }
 

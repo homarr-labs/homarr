@@ -1,6 +1,7 @@
 import { z } from "zod/v4";
 
 import { customWidgetMethods } from "./schema-types";
+import { getCustomWidgetHttpUrlIssue } from "./url-policy";
 
 export const customJsxNetworkScopes = ["public", "private", "loopback"] as const;
 export type CustomJsxNetworkScope = (typeof customJsxNetworkScopes)[number];
@@ -26,10 +27,9 @@ const authSchema = z.union([
 export type CustomWidgetSourceUrlIssue = "invalid" | "protocol" | "credentials" | "queryOrFragment";
 
 export function getCustomWidgetSourceUrlIssue(value: string): CustomWidgetSourceUrlIssue | null {
-  if (!URL.canParse(value)) return "invalid";
+  const issue = getCustomWidgetHttpUrlIssue(value);
+  if (issue) return issue;
   const url = new URL(value);
-  if (url.protocol !== "http:" && url.protocol !== "https:") return "protocol";
-  if (url.username || url.password) return "credentials";
   if (url.search || url.hash) return "queryOrFragment";
   return null;
 }
@@ -45,12 +45,12 @@ export const customWidgetSourceSchema = z.strictObject({
   name: z.string().trim().min(1).max(128).optional(),
   baseUrl: z
     .string()
-    .url()
-    .max(2048)
     .superRefine((value, ctx) => {
       const issue = getCustomWidgetSourceUrlIssue(value);
-      if (issue && issue !== "invalid") ctx.addIssue({ code: "custom", message: sourceUrlIssueMessages[issue] });
-    }),
+      if (issue) ctx.addIssue({ code: "custom", message: sourceUrlIssueMessages[issue] });
+    })
+    .url()
+    .max(2048),
   networkScope: z.enum(customJsxNetworkScopes),
   auth: authSchema.default("none"),
 });
@@ -156,6 +156,15 @@ export const customJsxRequestSchema = z
     cacheSeconds: z.number().int().min(0).max(3600).optional(),
     confirmation: confirmationSchema.optional(),
     invalidates: z.array(customWidgetIdentifierSchema).max(32).optional(),
+  })
+  .superRefine((request, context) => {
+    if (request.method === "DELETE" && request.kind !== "action") {
+      context.addIssue({
+        code: "custom",
+        path: ["kind"],
+        message: "DELETE requests must be manual actions",
+      });
+    }
   })
   .transform((request) => {
     const confirmation =
