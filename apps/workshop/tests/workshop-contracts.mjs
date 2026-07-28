@@ -45,12 +45,17 @@ for (const removedValidator of [
   "packages/workshop/src/pocketbase-validator.ts",
   "scripts/build-workshop-validator.mjs",
 ]) {
+  let artifactExists = true;
   try {
     await access(resolve(removedValidator));
-    throw new Error(`Workshop validator artifact must stay removed: ${removedValidator}`);
   } catch (error) {
-    if (error instanceof Error && error.message.startsWith("Workshop validator artifact")) throw error;
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") {
+      artifactExists = false;
+    } else {
+      throw error;
+    }
   }
+  if (artifactExists) throw new Error(`Workshop validator artifact must stay removed: ${removedValidator}`);
 }
 if (!dockerfile.includes("WORKSHOP_REQUIRE_PUBLIC_ORIGIN=true")) {
   throw new Error("The production Workshop image must require an explicit public origin");
