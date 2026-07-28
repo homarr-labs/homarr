@@ -9,8 +9,10 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
+    "./board-server": "./src/board-server.ts",
     "./query-cache": "./src/query-cache.ts",
     "./server": "./src/server.ts",
+    "./widget-prefetch-server": "./src/widget-prefetch-server.ts",
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
     "./open-api": "./src/open-api.ts",

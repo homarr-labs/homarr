@@ -2,9 +2,8 @@
 
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
-import type { QueryKey } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 import { QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import {
@@ -34,9 +33,14 @@ import {
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
 import { showWarningNotification } from "@homarr/notifications";
-import { widgetImports } from "@homarr/widgets";
+import { widgetQueryRefetchIntervals } from "@homarr/widgets/refetch-intervals";
 
 import { createWidgetQueryPersister } from "./query-cache-persister";
+
+const ReactQueryDevtools = dynamic(
+  () => import("@tanstack/react-query-devtools").then(({ ReactQueryDevtools: DevelopmentTools }) => DevelopmentTools),
+  { ssr: false },
+);
 
 const getWebSocketProtocol = () => {
   if (typeof window === "undefined") {
@@ -71,8 +75,6 @@ export function TRPCReactProvider(props: PropsWithChildren) {
         queries: {
           staleTime: queryCacheDefaultStaleTimeMs,
           gcTime: queryCacheDefaultGcTimeMs,
-          refetchOnWindowFocus: false,
-          refetchOnReconnect: false,
           retry: 3,
         },
         mutations: {
@@ -92,12 +94,10 @@ export function TRPCReactProvider(props: PropsWithChildren) {
       },
     });
     client.setQueryDefaults([["widget"]], { refetchInterval: queryCacheDefaultRefetchIntervalMs });
-    for (const { definition } of Object.values(widgetImports)) {
-      const def = definition as { refetchInterval?: number | null; queryKey?: QueryKey; kind: string };
-      if (def.refetchInterval === undefined) continue;
-      const key = def.queryKey ?? [["widget", def.kind]];
-      const interval = def.refetchInterval === null ? false : def.refetchInterval * 1000;
-      client.setQueryDefaults(key, { refetchInterval: interval });
+    for (const { queryKey, intervalSeconds } of widgetQueryRefetchIntervals) {
+      client.setQueryDefaults(queryKey, {
+        refetchInterval: intervalSeconds === null ? false : intervalSeconds * 1000,
+      });
     }
     return client;
   });
@@ -164,7 +164,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
         }}
       >
         <ReactQueryStreamedHydration transformer={superjson}>{props.children}</ReactQueryStreamedHydration>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
       </PersistQueryClientProvider>
     </clientApi.Provider>
   );

@@ -13,11 +13,13 @@ import { notFound } from "next/navigation";
 import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
-import { api } from "@homarr/api/server";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
+import { eq } from "@homarr/db";
 import { getServerSettingsAsync } from "@homarr/db/queries";
+import { users } from "@homarr/db/schema";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { SettingsProvider } from "@homarr/settings";
@@ -42,6 +44,8 @@ const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
+
+const logger = createLogger({ module: "rootLayout" });
 
 // eslint-disable-next-line no-restricted-syntax
 export const generateMetadata = async (): Promise<Metadata> => ({
@@ -83,7 +87,34 @@ export default async function Layout(props: {
   }
 
   const session = await auth();
-  const user = session ? await api.user.getById({ userId: session.user.id }).catch(() => null) : null;
+  const user = session
+    ? await db.query.users
+        .findFirst({
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+            emailVerified: true,
+            image: true,
+            provider: true,
+            homeBoardId: true,
+            mobileHomeBoardId: true,
+            firstDayOfWeek: true,
+            pingIconsEnabled: true,
+            enableRightClickOnWidgets: true,
+            defaultSearchEngineId: true,
+            openSearchInNewTab: true,
+            ddgBangs: true,
+            completedManageTour: true,
+            completedBoardTour: true,
+          },
+          where: eq(users.id, session.user.id),
+        })
+        .catch((error: unknown) => {
+          logger.error(new Error("Failed to load the authenticated user in the root layout", { cause: error }));
+          return null;
+        })
+    : null;
   const serverSettings = await getServerSettingsAsync(db);
   const colorScheme = await getCurrentColorSchemeAsync();
   const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";

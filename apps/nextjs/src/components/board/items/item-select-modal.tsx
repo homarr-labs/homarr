@@ -1,9 +1,9 @@
-import { useMemo, useState } from "react";
+import { use, useMemo, useState } from "react";
 import { Avatar, Box, Button, Card, Center, Divider, Group, Image, Stack, Text, Tooltip } from "@mantine/core";
 import { IconApi } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { createId, objectEntries } from "@homarr/common";
+import { createId } from "@homarr/common";
 import { getIconUrl, getIntegrationName } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
@@ -11,12 +11,13 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { SelectGridLayout, selectGridCardHeight } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
-import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
+import { loadAllWidgetDefinitions, reduceWidgetOptionsWithDefinition, widgetKinds } from "@homarr/widgets/manifest";
 
 import { useItemActions } from "./item-actions";
 
 export const ItemSelectModal = createModal<void>(({ actions }) => {
+  const widgetDefinitions = use(loadAllWidgetDefinitions());
   const [search, setSearch] = useState("");
   const t = useI18n();
   const { createItem, updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
@@ -29,25 +30,30 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
 
   const items = useMemo(
     () =>
-      objectEntries(widgetImports)
-        .filter(([kind]) => kind !== "customApi")
-        .map(([kind, value]) => ({
-          kind,
-          supportedIntegrations:
-            "supportedIntegrations" in value.definition
-              ? value.definition.supportedIntegrations.filter((integration) => integration !== "mock")
-              : [],
-          icon: value.definition.icon,
-          name: t(`widget.${kind}.name`),
-          description: t(`widget.${kind}.description`),
-        }))
+      widgetKinds
+        .filter((kind) => kind !== "customApi")
+        .map((kind) => {
+          const definition = widgetDefinitions.get(kind);
+          if (!definition) return null;
+
+          return {
+            kind,
+            supportedIntegrations: (definition.supportedIntegrations ?? []).filter(
+              (integration) => integration !== "mock",
+            ),
+            icon: definition.icon,
+            name: t(`widget.${kind}.name`),
+            description: t(`widget.${kind}.description`),
+          };
+        })
+        .filter((item): item is NonNullable<typeof item> => item !== null)
         .sort((itemA, itemB) => {
           if (itemA.kind === "app") return -1;
           if (itemB.kind === "app") return 1;
 
           return itemA.name.localeCompare(itemB.name);
         }),
-    [t],
+    [t, widgetDefinitions],
   );
 
   const filteredItems = useMemo(() => {
@@ -68,25 +74,29 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
 
   const handleAddCustomWidget = (definitionId: string) => {
     const itemId = createId();
-    const defaultOptions = reduceWidgetOptionsWithDefaultValues("customApi", settings);
+    const definition = widgetDefinitions.get("customApi");
+    if (!definition) return;
+
+    const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
     createItem({ id: itemId, kind: "customApi", integrationIds: [] });
     updateItemOptions({ itemId, newOptions: { ...defaultOptions, definitionId } });
     actions.closeModal();
   };
 
   const handleAdd = (kind: WidgetKind) => {
-    const definition = widgetImports[kind].definition;
+    const definition = widgetDefinitions.get(kind);
+    if (!definition) return;
     const hasIntegrationSupport = "supportedIntegrations" in definition;
 
     const matchingIntegrations = hasIntegrationSupport
       ? (integrationData ?? []).filter((integration) =>
-          (definition.supportedIntegrations as string[]).includes(integration.kind),
+          (definition.supportedIntegrations ?? []).includes(integration.kind),
         )
       : [];
 
     const integrationIds = matchingIntegrations.map((i) => i.id);
     const itemId = createId();
-    const defaultOptions = reduceWidgetOptionsWithDefaultValues(kind, settings);
+    const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
 
     createItem({ id: itemId, kind, integrationIds });
     actions.closeModal();
@@ -121,8 +131,8 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
       placeholder={`${t("item.create.search")}...`}
       onSearchKeyDown={(event) => {
         if (event.key === "Enter" && filteredItems.length === 1) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          handleAdd(filteredItems[0]!.kind);
+          const [item] = filteredItems;
+          if (item) handleAdd(item.kind);
         }
       }}
     >

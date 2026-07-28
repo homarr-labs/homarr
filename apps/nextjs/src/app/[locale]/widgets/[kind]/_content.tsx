@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { use, useCallback, useState } from "react";
 import { ActionIcon, Affix, Card } from "@mantine/core";
 import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
@@ -12,8 +12,9 @@ import { showSuccessNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
-import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
+import { getWidgetComponent } from "@homarr/widgets/client";
 import { WidgetError } from "@homarr/widgets/errors";
+import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { Dimensions } from "./_dimension-modal";
@@ -34,7 +35,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
   const t = useI18n();
   const { openModal: openWidgetEditModal } = useModalAction(WidgetEditModal);
   const { openModal: openPreviewDimensionsModal } = useModalAction(PreviewDimensionsModal);
-  const currentDefinition = useMemo(() => widgetImports[kind].definition, [kind]);
+  const currentDefinition = use(loadWidgetDefinition(kind));
   const [editMode, setEditMode] = useState(false);
   const [dimensions, setDimensions] = useState<Dimensions>({
     width: 128,
@@ -45,7 +46,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
     integrationIds: string[];
     advancedOptions: BoardItemAdvancedOptions;
   }>({
-    options: reduceWidgetOptionsWithDefaultValues(kind, settings, {}),
+    options: reduceWidgetOptionsWithDefinition(currentDefinition, settings, {}),
     integrationIds: [],
     advancedOptions: {
       title: null,
@@ -78,7 +79,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
     );
   }, [currentDefinition, integrationData, kind, openWidgetEditModal, settings, state]);
 
-  const Comp = loadWidgetDynamic(kind);
+  const Comp = getWidgetComponent(kind);
 
   const toggleEditMode = useCallback(() => {
     setEditMode((editMode) => !editMode);
@@ -105,7 +106,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
             <ErrorBoundary
               onReset={reset}
               fallbackRender={({ resetErrorBoundary, error }) => (
-                <WidgetError kind={kind} error={error} resetErrorBoundary={resetErrorBoundary} />
+                <WidgetError definition={currentDefinition} error={error} resetErrorBoundary={resetErrorBoundary} />
               )}
             >
               <Comp

@@ -4,7 +4,7 @@ import { Center } from "@mantine/core";
 import { env } from "@homarr/common/env";
 import { db } from "@homarr/db";
 import type { WidgetKind } from "@homarr/definitions";
-import { widgetImports } from "@homarr/widgets";
+import { widgetKinds } from "@homarr/widgets/manifest";
 
 import { WidgetPreviewPageContent } from "./_content";
 
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default async function WidgetPreview(props: Props) {
-  if (!((await props.params).kind in widgetImports || env.NODE_ENV !== "development")) {
+  if (!(widgetKinds.includes((await props.params).kind as WidgetKind) || env.NODE_ENV !== "development")) {
     notFound();
   }
 

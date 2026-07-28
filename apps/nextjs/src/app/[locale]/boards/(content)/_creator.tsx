@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
+import { cache, Suspense } from "react";
 import { TRPCError } from "@trpc/server";
 
 // Placed here because gridstack styles are used for board content
@@ -9,7 +9,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { PersistedClient } from "@tanstack/react-query-persist-client";
 import superjson from "superjson";
 import { queryCacheBuster } from "@homarr/api/query-cache";
-import { getQueryClient } from "@homarr/api/server";
+import { makeQueryClient } from "@homarr/api/shared";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
@@ -29,6 +29,7 @@ import { DynamicClientBoard } from "./_dynamic-client";
 import { BoardContentHeaderActions } from "./_header-actions";
 
 const logger = createLogger({ module: "createBoardContentPage" });
+const getQueryClient = cache(makeQueryClient);
 
 export type Params = Record<string, unknown>;
 

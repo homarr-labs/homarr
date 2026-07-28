@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Badge, Card, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { Badge, Card, Center, Group, Loader, Stack, Text, Tooltip } from "@mantine/core";
 import { IconPuzzle } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
@@ -19,7 +20,10 @@ export const IntegrationSelectGrid = ({ onSelect, enableMockIntegration = false 
   const [search, setSearch] = useState("");
   const t = useI18n();
 
-  const integrations = useMemo(() => buildSortedIntegrations({ enableMockIntegration }), [enableMockIntegration]);
+  const { data: integrations = [], isPending } = useQuery({
+    queryKey: ["widget-integrations", { enableMockIntegration }],
+    queryFn: () => buildSortedIntegrations({ enableMockIntegration }),
+  });
   const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
 
   return (
@@ -28,6 +32,11 @@ export const IntegrationSelectGrid = ({ onSelect, enableMockIntegration = false 
       onSearchChange={setSearch}
       placeholder={`${t("integration.page.list.search")}...`}
     >
+      {isPending && (
+        <Center p="xl">
+          <Loader size="sm" />
+        </Center>
+      )}
       {filtered.map((integration) => (
         <Card
           key={integration.kind}

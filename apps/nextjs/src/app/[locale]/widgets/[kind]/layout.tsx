@@ -1,22 +1,23 @@
 import type { PropsWithChildren } from "react";
 
-import { widgetImports } from "@homarr/widgets";
+import { loadAllWidgetDefinitions } from "@homarr/widgets/manifest";
 
 import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
 
-const getLinks = () => {
-  return Object.entries(widgetImports).map(([key, value]) => {
+const getLinks = async () => {
+  const definitions = await loadAllWidgetDefinitions();
+  return [...definitions].map(([key, definition]) => {
     return {
       href: `/widgets/${key}`,
-      icon: value.definition.icon,
-      label: value.definition.kind,
+      icon: definition.icon,
+      label: key,
     };
   });
 };
 
-export default function WidgetPreviewLayout({ children }: PropsWithChildren) {
-  const links = getLinks();
+export default async function WidgetPreviewLayout({ children }: PropsWithChildren) {
+  const links = await getLinks();
 
   return (
     <ClientShell hasHeader={false}>

@@ -6,7 +6,7 @@ import { getServerSettingsAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
 import { createSettings } from "@homarr/settings/creator";
 
-import { reduceWidgetOptionsWithDefaultValues } from ".";
+import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "./manifest";
 import prefetchForApps from "./app/prefetch";
 import prefetchForBookmarks from "./bookmarks/prefetch";
 import prefetchForDownloads from "./downloads/prefetch";
@@ -37,10 +37,15 @@ export const prefetchForKindAsync = async <TKind extends WidgetKind>(
   }
 
   const serverSettings = await cachedGetServerSettingsAsync(db);
+  const definition = await loadWidgetDefinition(kind);
 
   const itemsWithDefaultOptions = items.map((item) => ({
     ...item,
-    options: reduceWidgetOptionsWithDefaultValues(kind, createSettings({ user: null, serverSettings }), item.options),
+    options: reduceWidgetOptionsWithDefinition(
+      definition,
+      createSettings({ user: null, serverSettings }),
+      item.options,
+    ),
   }));
 
   await callback(queryClient, itemsWithDefaultOptions as never[]);

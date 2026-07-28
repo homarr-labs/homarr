@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Badge, Card, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { Badge, Card, Center, Group, Loader, Stack, Text, Tooltip } from "@mantine/core";
 import { IconBrandDocker, IconCheck, IconPuzzle } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
@@ -42,10 +43,10 @@ export const IntegrationMultiSelectGrid = ({
     [selectedKindsArray, onSelectionChange],
   );
 
-  const integrations = useMemo(
-    () => buildSortedIntegrations({ enableMockIntegration, onboarding }),
-    [enableMockIntegration, onboarding],
-  );
+  const { data: integrations = [], isPending } = useQuery({
+    queryKey: ["widget-integrations", { enableMockIntegration, onboarding }],
+    queryFn: () => buildSortedIntegrations({ enableMockIntegration, onboarding }),
+  });
 
   const sorted = useMemo(() => {
     if (!detectedKinds || detectedKinds.size === 0) return integrations;
@@ -64,6 +65,11 @@ export const IntegrationMultiSelectGrid = ({
       disableScroll={onboarding}
       disableAutoFocus={onboarding}
     >
+      {isPending && (
+        <Center p="xl">
+          <Loader size="sm" />
+        </Center>
+      )}
       {filtered.map((integration) => {
         const isSelected = selectedKinds.has(integration.kind);
         const isDetected = detectedKinds?.has(integration.kind) ?? false;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
@@ -8,7 +8,7 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { widgetImports } from "@homarr/widgets";
+import type { WidgetDefinition } from "@homarr/widgets/definition";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
@@ -19,6 +19,7 @@ import { ItemMoveModal } from "./item-move-modal";
 interface BoardItemMenuProps {
   offset: number;
   item: SectionItem;
+  definition: WidgetDefinition;
   resetErrorBoundary?: () => void;
 }
 
@@ -29,7 +30,7 @@ export const BoardItemMenu = (props: BoardItemMenuProps) => {
   return <BoardItemMenuInner {...props} />;
 };
 
-const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuProps) => {
+const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: BoardItemMenuProps) => {
   const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useScopedI18n("item");
   const t = useI18n();
@@ -40,7 +41,6 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
-  const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
   const { gridstack } = useSectionContext().refs;
   const settings = useSettings();
 
@@ -80,10 +80,10 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
         },
         integrationData: (integrationData ?? []).filter(
           (integration) =>
-            "supportedIntegrations" in currentDefinition &&
-            (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
+            "supportedIntegrations" in definition &&
+            (definition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
         ),
-        integrationSupport: "supportedIntegrations" in currentDefinition,
+        integrationSupport: "supportedIntegrations" in definition,
         settings,
         itemId: item.id,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,

@@ -25,8 +25,8 @@ import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TranslationFunction } from "@homarr/translation";
-import type { WidgetContextMenuAction } from "@homarr/widgets";
-import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
+import type { WidgetContextMenuAction, WidgetDefinition } from "@homarr/widgets/definition";
+import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
@@ -36,11 +36,12 @@ import { ItemMoveModal } from "./item-move-modal";
 
 interface WidgetContextMenuProps {
   item: SectionItem;
+  definition: WidgetDefinition;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   children: ReactNode;
 }
 
-export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetContextMenuProps) => {
+export const WidgetContextMenu = ({ item, definition, widgetStateRef, children }: WidgetContextMenuProps) => {
   const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
@@ -56,13 +57,12 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
     useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
   const { mutate: saveBoard } = clientApi.board.saveBoard.useMutation();
-  const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
   const { gridstack } = useSectionContext().refs;
   const queryClient = useQueryClient();
 
   const widgetQueryKey = useMemo(
-    () => ("queryKey" in currentDefinition ? (currentDefinition.queryKey as QueryKey) : [["widget", item.kind]]),
-    [currentDefinition, item.kind],
+    () => ("queryKey" in definition ? (definition.queryKey as QueryKey) : [["widget", item.kind]]),
+    [definition, item.kind],
   );
   const isWidgetFetching = useIsFetching({ queryKey: widgetQueryKey }) > 0;
   const handleRefetch = useCallback(() => {
@@ -70,18 +70,18 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   }, [queryClient, widgetQueryKey]);
 
   const options = useMemo(
-    () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options) as Record<string, unknown>,
-    [item.kind, settings, item.options],
+    () => reduceWidgetOptionsWithDefinition(definition, settings, item.options),
+    [definition, settings, item.options],
   );
 
   type OptionDef = { type: string; skipContextMenu?: boolean };
   const toggleOptions = useMemo(() => {
-    const rawOptions = currentDefinition.createOptions(settings) as unknown as Record<string, OptionDef>;
+    const rawOptions = definition.createOptions(settings) as unknown as Record<string, OptionDef>;
     return Object.entries(rawOptions).filter(([, def]) => def.type === "switch" && !def.skipContextMenu);
-  }, [currentDefinition, settings]);
+  }, [definition, settings]);
 
   const widgetContextActions = useMemo(() => {
-    const def = currentDefinition as Record<string, unknown>;
+    const def = definition as unknown as Record<string, unknown>;
     if (typeof def.contextActions !== "function") return [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const actions = (def.contextActions as any)({
@@ -94,7 +94,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
       widgetStateRef,
     });
     return (Array.isArray(actions) ? actions : []) as WidgetContextMenuAction[];
-  }, [currentDefinition, options, item, updateItemOptions, isEditMode, board.id, widgetStateRef]);
+  }, [definition, options, item, updateItemOptions, isEditMode, board.id, widgetStateRef]);
 
   const persistBoard = useCallback(
     (updatedItems: typeof board.items) => {
@@ -133,10 +133,10 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
         },
         integrationData: (integrationData ?? []).filter(
           (integration) =>
-            "supportedIntegrations" in currentDefinition &&
-            (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
+            "supportedIntegrations" in definition &&
+            (definition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
         ),
-        integrationSupport: "supportedIntegrations" in currentDefinition,
+        integrationSupport: "supportedIntegrations" in definition,
         settings,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
@@ -150,7 +150,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
     updateItemAdvancedOptions,
     updateItemIntegrations,
     integrationData,
-    currentDefinition,
+    definition,
     settings,
     isEditMode,
     persistBoard,
