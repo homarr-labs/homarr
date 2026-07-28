@@ -28,7 +28,7 @@ export const toScopedStorageVolumeValue = (integrationId: string, value: string)
   return `${integrationId}:${volumeName}`;
 };
 
-const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
+export const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
   return (
     leftDeviceName === rightDeviceName ||
     normalizeStorageDeviceName(leftDeviceName) === normalizeStorageDeviceName(rightDeviceName)
