@@ -112,7 +112,7 @@ export default function MediaServerWidget({
       <WidgetMobileSummary
         value={total}
         label={t("titles.stats.total")}
-        description={`${pending} ${t("titles.stats.pending")}`}
+        description={t("titles.stats.pendingCount", { pending })}
         isStale={hasWarning}
       />
     );

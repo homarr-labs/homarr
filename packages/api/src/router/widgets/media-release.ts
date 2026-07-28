@@ -2,7 +2,7 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { mediaReleaseRequestHandler } from "@homarr/request-handler/media-release";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { getIntegrationQueryProvenance, settleIntegrationQueries } from "../../settle-integrations";
+import { settleIntegrationQueriesWithProvenance } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const mediaReleasesProcedure = publicProcedure.concat(
@@ -12,7 +12,7 @@ const mediaReleasesProcedure = publicProcedure.concat(
 type MediaReleaseIntegration = Parameters<typeof mediaReleaseRequestHandler.handler>[0];
 
 const getMediaReleasesWithProvenanceAsync = async (integrations: MediaReleaseIntegration[]) => {
-  const results = await settleIntegrationQueries(
+  const { results, ...provenance } = await settleIntegrationQueriesWithProvenance(
     integrations,
     async (integration) => {
       const innerHandler = mediaReleaseRequestHandler.handler(integration, {});
@@ -40,7 +40,7 @@ const getMediaReleasesWithProvenanceAsync = async (integrations: MediaReleaseInt
 
   return {
     items,
-    ...getIntegrationQueryProvenance(integrations.length, results),
+    ...provenance,
   };
 };
 

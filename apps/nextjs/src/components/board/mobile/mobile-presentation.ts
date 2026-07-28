@@ -8,6 +8,7 @@ export const resolveMobileItemPresentation = (
   const supportsCompactSummary = mobile?.supportsCompactSummary === true;
   const supportsDetails = mobile?.supportsDetailView === true;
   const usesGenericSummary = supportsDetails && !supportsCompactSummary;
+  const eager = mobile?.eager ?? (item.kind === "app" || item.kind === "bookmarks");
 
   return {
     width: mobile?.width ?? (item.kind === "app" ? 1 : 2),
@@ -15,8 +16,8 @@ export const resolveMobileItemPresentation = (
     displayMode: supportsCompactSummary || usesGenericSummary ? ("mobileSummary" as const) : ("default" as const),
     supportsDetails,
     usesGenericSummary,
-    eager: mobile?.eager ?? (item.kind === "app" || item.kind === "bookmarks"),
-    unmountWhenOffscreen: mobile?.eager === true ? false : (mobile?.unmountWhenOffscreen ?? false),
+    eager,
+    unmountWhenOffscreen: eager ? false : (mobile?.unmountWhenOffscreen ?? false),
   };
 };
 

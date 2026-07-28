@@ -10,6 +10,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
+import { sanitizeFeedDescription } from "./sanitize-description";
 
 const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
   const { data: feedEntries = [] } = clientApi.widget.rssFeed.getFeeds.useQuery(input);
@@ -56,12 +57,11 @@ export default function RssFeed({ options, width, displayMode }: WidgetComponent
               </Text>
               {!options.hideDescription && feedEntry.description && (
                 <Text
-                  className={feedEntry.description}
                   dir={languageDir}
                   c="dimmed"
                   size="sm"
                   lineClamp={options.textLinesClamp}
-                  dangerouslySetInnerHTML={{ __html: feedEntry.description }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeFeedDescription(feedEntry.description) }}
                 />
               )}
 

@@ -4,7 +4,7 @@ import { objectEntries } from "@homarr/common";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
 
 import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
-import * as schema from "./schema";
+import { schema } from "./schema";
 
 type TableKey = {
   [K in keyof typeof schema]: (typeof schema)[K] extends { _: { brand: "Table" } } ? K : never;

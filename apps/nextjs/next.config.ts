@@ -5,6 +5,7 @@ import "@homarr/common/env";
 import "@homarr/core/infrastructure/logs/env";
 import "@homarr/docker/env";
 
+import path from "node:path";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -34,6 +35,10 @@ const nextConfig: NextConfig = {
     webpackMemoryOptimizations: true,
   },
   turbopack: {
+    // Keep Turbopack and output-file tracing inside this monorepo. Without an
+    // explicit root, an unrelated parent lockfile can make Next.js scan the
+    // entire parent directory and stall production builds.
+    root: path.join(import.meta.dirname, "../.."),
     // ponytail: known Turbopack NFT warning from path.join(process.cwd(), …) in
     // src/app/api/backup/{route,shared}.ts. No working placement in 16.2.x
     // (see vercel/next.js#95125). Suppress until upstream fix lands.

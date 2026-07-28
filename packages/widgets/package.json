@@ -75,6 +75,7 @@
     "@tiptap/starter-kit": "catalog:",
     "clsx": "catalog:",
     "dayjs": "catalog:",
+    "isomorphic-dompurify": "catalog:",
     "jsonpath-plus": "catalog:",
     "lucide-react": "catalog:",
     "mantine-datatable": "catalog:",

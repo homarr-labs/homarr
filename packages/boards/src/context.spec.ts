@@ -30,6 +30,17 @@ describe("board layout selection", () => {
     expect(getCurrentLayout(createBoard(), false, viewportWidth)).toBe(expectedLayoutId);
   });
 
+  test("legacy mode falls back to the desktop layout before the client viewport is known", () => {
+    expect(getCurrentLayout(createBoard(), false, undefined)).toBe("large");
+  });
+
+  test("rejects boards without a layout", () => {
+    const board = { ...createBoard(), layouts: [] };
+
+    expect(() => getDesktopLayout(board)).toThrow("Board must have a layout");
+    expect(() => getCurrentLayout(board, false, 390)).toThrow("Board must have a layout");
+  });
+
   test("keeps every saved layout available for reversible mutations", () => {
     expect(getBoardLayouts(createBoard())).toEqual(["small", "medium", "large"]);
   });
