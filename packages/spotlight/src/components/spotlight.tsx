@@ -134,6 +134,7 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
       store={spotlightStore}
     >
       <MantineSpotlight.Search
+        data-homarr-dev-benchmark-spotlight
         placeholder={`${t("search.placeholder")}...`}
         ref={inputRef}
         leftSectionWidth={hasModeCharacter ? 80 : 48}

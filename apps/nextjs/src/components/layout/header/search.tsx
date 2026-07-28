@@ -14,6 +14,7 @@ export const DesktopSearchInput = () => {
 
   return (
     <TextInput
+      data-homarr-dev-benchmark-interaction="search"
       component={UnstyledButton}
       className={classes.desktopSearch}
       w={400}
@@ -29,7 +30,11 @@ export const DesktopSearchInput = () => {
 
 export const MobileSearchButton = () => {
   return (
-    <HeaderButton onClick={openSpotlight} className={classes.mobileSearch}>
+    <HeaderButton
+      data-homarr-dev-benchmark-interaction="search"
+      onClick={openSpotlight}
+      className={classes.mobileSearch}
+    >
       <IconSearch size={20} stroke={1.5} />
     </HeaderButton>
   );
