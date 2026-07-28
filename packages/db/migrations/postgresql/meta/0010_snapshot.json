@@ -294,7 +294,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(64)",
+          "type": "varchar(128)",
           "primaryKey": true,
           "notNull": true
         },
@@ -306,7 +306,7 @@
         },
         "parent_id": {
           "name": "parent_id",
-          "type": "varchar(64)",
+          "type": "varchar(128)",
           "primaryKey": false,
           "notNull": false
         },
@@ -332,7 +332,29 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "assistant_message__thread_id_created_at_idx": {
+          "name": "assistant_message__thread_id_created_at_idx",
+          "columns": [
+            {
+              "expression": "thread_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "assistant_message_thread_id_assistant_thread_id_fk": {
           "name": "assistant_message_thread_id_assistant_thread_id_fk",
@@ -404,7 +426,29 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "assistant_thread__user_id_updated_at_idx": {
+          "name": "assistant_thread__user_id_updated_at_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "assistant_thread_user_id_user_id_fk": {
           "name": "assistant_thread_user_id_user_id_fk",

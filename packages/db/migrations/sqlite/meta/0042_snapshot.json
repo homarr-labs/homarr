@@ -346,7 +346,16 @@
           "default": "(unixepoch())"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "assistant_message__thread_id_created_at_idx": {
+          "name": "assistant_message__thread_id_created_at_idx",
+          "columns": [
+            "thread_id",
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
         "assistant_message_thread_id_assistant_thread_id_fk": {
           "name": "assistant_message_thread_id_assistant_thread_id_fk",
@@ -422,7 +431,16 @@
           "default": "(unixepoch())"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "assistant_thread__user_id_updated_at_idx": {
+          "name": "assistant_thread__user_id_updated_at_idx",
+          "columns": [
+            "user_id",
+            "updated_at"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
         "assistant_thread_user_id_user_id_fk": {
           "name": "assistant_thread_user_id_user_id_fk",

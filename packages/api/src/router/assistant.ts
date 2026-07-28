@@ -195,15 +195,22 @@ const ownedThreadAsync = async (db: Database, threadId: string, userId: string) 
 };
 
 export const assistantRouter = createTRPCRouter({
-  getAvailability: protectedProcedure.query(async ({ ctx }) => {
-    const configuration = await getConfigurationAsync(ctx.db);
-    const requiresApiKey = configuration?.provider === "openrouter" || configuration?.provider === "openai";
-    return {
-      enabled: Boolean(
-        configuration?.enabled && configuration.modelId && (!requiresApiKey || configuration.encryptedApiKey),
-      ),
-    };
-  }),
+  getAvailability: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "Check whether Homarr Assistant is enabled and configured for the current user",
+      },
+    })
+    .query(async ({ ctx }) => {
+      const configuration = await getConfigurationAsync(ctx.db);
+      const requiresApiKey = configuration?.provider === "openrouter" || configuration?.provider === "openai";
+      return {
+        enabled: Boolean(
+          configuration?.enabled && configuration.modelId && (!requiresApiKey || configuration.encryptedApiKey),
+        ),
+      };
+    }),
 
   getAdminConfiguration: adminProcedure.query(async ({ ctx }) => {
     const configuration = await getConfigurationAsync(ctx.db);

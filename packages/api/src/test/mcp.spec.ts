@@ -1,6 +1,9 @@
+// @vitest-environment node
+
 import { expect, test, vi } from "vitest";
 import { extractToolsFromProcedures } from "trpc-to-mcp";
 
+import { assistantRouter } from "../router/assistant";
 import { appRouter } from "../router/app";
 import { boardRouter } from "../router/board";
 import { infoRouter } from "../router/info";
@@ -9,8 +12,21 @@ import { serverSettingsRouter } from "../router/serverSettings";
 import { createTRPCRouter } from "../trpc";
 
 vi.mock("@homarr/auth", () => ({}));
+vi.mock("@homarr/common/server", () => ({
+  decryptSecret: vi.fn(),
+  encryptSecret: vi.fn(),
+}));
+vi.mock("@homarr/core/infrastructure/logs", () => ({
+  createLogger: () => ({
+    error: vi.fn(),
+  }),
+}));
+vi.mock("@homarr/core/infrastructure/db/env", () => ({
+  dbEnv: { DRIVER: "better-sqlite3" },
+}));
 
 const mcpTestRouter = createTRPCRouter({
+  assistant: assistantRouter,
   app: appRouter,
   board: boardRouter,
   info: infoRouter,
@@ -29,6 +45,7 @@ test("MCP tools should contain expected procedures", () => {
   const toolNames = tools.map((tool) => tool.name);
 
   expect(tools.length).toBeGreaterThan(0);
+  expect(toolNames).toContain("assistant_getAvailability");
   expect(toolNames).toContain("app_all");
   expect(toolNames).toContain("app_byId");
   expect(toolNames).toContain("app_create");

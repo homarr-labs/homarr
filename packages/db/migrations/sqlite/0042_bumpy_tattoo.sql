@@ -30,3 +30,7 @@ CREATE TABLE `assistant_thread` (
 	`updated_at` integer DEFAULT (unixepoch()) NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
+--> statement-breakpoint
+CREATE INDEX `assistant_message__thread_id_created_at_idx` ON `assistant_message` (`thread_id`,`created_at`);
+--> statement-breakpoint
+CREATE INDEX `assistant_thread__user_id_updated_at_idx` ON `assistant_thread` (`user_id`,`updated_at`);
