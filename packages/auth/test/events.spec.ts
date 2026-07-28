@@ -135,7 +135,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     test("should add missing group membership", async () => {
       // Arrange
       const db = createDb();
-      await createUserAsync(db);
+      await createUserAsync(db, "oidc");
       await createGroupAsync(db);
       const eventHandler = createSignInEventHandler(db);
 
@@ -155,7 +155,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     test("should remove group membership", async () => {
       // Arrange
       const db = createDb();
-      await createUserAsync(db);
+      await createUserAsync(db, "oidc");
       await createGroupAsync(db);
       await db.insert(groupMembers).values({
         userId: "1",
@@ -179,7 +179,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     test("should not remove group membership for everyone group", async () => {
       // Arrange
       const db = createDb();
-      await createUserAsync(db);
+      await createUserAsync(db, "oidc");
       await createGroupAsync(db, everyoneGroup);
       await db.insert(groupMembers).values({
         userId: "1",
@@ -204,7 +204,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
       // Arrange
       mockEnv.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT = true;
       const db = createDb();
-      await createUserAsync(db);
+      await createUserAsync(db, "oidc");
       await createGroupAsync(db);
       const eventHandler = createSignInEventHandler(db);
 
@@ -229,10 +229,10 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     ["ldap" as const, { name: "test-new" }, undefined],
     ["oidc" as const, { name: "test" }, { preferred_username: "test-new" }],
     ["oidc" as const, { name: "test" }, { preferred_username: "test@example.com", name: "test-new" }],
-  ])("signInEventHandler should update username for %s provider", async (_provider, user, profile) => {
+  ])("signInEventHandler should update username for %s provider", async (provider, user, profile) => {
     // Arrange
     const db = createDb();
-    await createUserAsync(db);
+    await createUserAsync(db, provider);
     const eventHandler = createSignInEventHandler(db);
 
     // Act
@@ -250,6 +250,32 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
       },
     });
     expect(dbUser?.name).toBe("test-new");
+  });
+  test("signInEventHandler should preserve credentials-owned data when the user signs in with linked oidc", async () => {
+    const db = createDb();
+    await createUserAsync(db, "credentials", "local-avatar");
+    await createGroupAsync(db);
+    await db.insert(groupMembers).values({ userId: "1", groupId: "1" });
+    const eventHandler = createSignInEventHandler(db);
+
+    await eventHandler?.({
+      user: { id: "1", name: "test" },
+      profile: {
+        preferred_username: "oidc-name",
+        picture: "oidc-avatar",
+        someRandomGroupsKey: [],
+      },
+      account: null,
+    });
+
+    const dbUser = await db.query.users.findFirst({ where: eq(users.id, "1") });
+    const membership = await db.query.groupMembers.findFirst({ where: eq(groupMembers.userId, "1") });
+    expect(dbUser).toMatchObject({
+      name: "test",
+      image: "local-avatar",
+      provider: "credentials",
+    });
+    expect(membership?.groupId).toBe("1");
   });
   test("signInEventHandler should set color-scheme cookie", async () => {
     // Arrange
@@ -275,11 +301,17 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
   });
 });
 
-const createUserAsync = async (db: Database) =>
+const createUserAsync = async (
+  db: Database,
+  provider: "credentials" | "ldap" | "oidc" = "credentials",
+  image?: string,
+) =>
   await db.insert(users).values({
     id: "1",
     name: "test",
     colorScheme: "dark",
+    image,
+    provider,
   });
 
 const createGroupAsync = async (db: Database, name = "test") =>

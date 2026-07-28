@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Start fra bunden",
           "importOldmarr": "Importer fra Homarr før 1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Gendan fra SQLite backup",
+          "restoreSqliteDescription": "Upload en fuld SQLite database backup fra en tidligere Homarr instans. Dette vil gendanne alle tavler, brugere, apps, integrationer og indstillinger.",
+          "backToOptions": "← Tilbage til opsætningsmuligheder"
         }
       },
       "import": {
@@ -94,12 +94,12 @@
         "subtitle": "Konfigurer serverindstillinger."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Integrationer",
+        "subtitle": "Vælg de tjenester, du bruger.",
+        "description": "Vælg de integrationer, du gerne vil forbinde. Vi konfigurerer dit dashboard med matchende widgets automatisk.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Forsæt",
+          "skip": "Spring over for nu"
         },
         "configure": {
           "progress": "",
@@ -197,6 +197,10 @@
       },
       "pingIconsEnabled": {
         "label": "Brug ikoner til pings"
+      },
+      "enableRightClickOnWidgets": {
+        "label": "",
+        "description": ""
       },
       "defaultSearchEngine": {
         "label": "Standardsøgemaskine"
@@ -1285,6 +1289,14 @@
           "label": "API-nøgle (Secret)",
           "newLabel": "Ny API-nøgle (Key)"
         },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
         "githubAppId": {
           "label": "App Id",
           "newLabel": "Nyt App Id"
@@ -1328,7 +1340,19 @@
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
+      "name": "",
+      "description": ""
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
       "name": "",
       "description": ""
     }
@@ -1602,6 +1626,12 @@
         "refresh": "",
         "options": "",
         "actions": ""
+      },
+      "status": {
+        "success": "",
+        "error": "",
+        "loading": "",
+        "idle": ""
       }
     },
     "create": {
@@ -1875,6 +1905,16 @@
         "customDateFormat": {
           "label": "Brugerdefineret datoformat",
           "description": "Brug ISO 8601 til at formatere dato (dette vil tilsidesætte andre valg)"
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1936,6 +1976,8 @@
         "clear": "Ryd formatering",
         "heading": "Overskrift {level}",
         "align": "Juster tekst: {position}",
+        "directionLtr": "",
+        "directionRtl": "",
         "blockquote": "Citatblok",
         "horizontalLine": "Horisontal linje",
         "bulletList": "Punktopstillet liste",
@@ -2225,7 +2267,8 @@
         "sunrise": "Solopgang",
         "sunset": "Solnedgang",
         "maxWindSpeed": "Maks. vindhastighed: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Maks. vindstød {maxWindGusts} {unit}"
+        "maxWindGusts": "Maks. vindstød {maxWindGusts} {unit}",
+        "humidity": ""
       },
       "kind": {
         "clear": "Skyfrit",
@@ -2689,6 +2732,11 @@
         "user": "Bruger",
         "name": "Navn",
         "id": "Id",
+        "status": "",
+        "directPlay": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
           "title": "Statistik for nørder",
           "video": {
@@ -2754,6 +2802,193 @@
         "internalServerError": ""
       }
     },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "immich-serverStats": {
       "name": "Immich Server Statistik",
       "description": "Information om din Immich instans",
@@ -2782,6 +3017,7 @@
     },
     "immich-albumCarousel": {
       "name": "Immich album",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "Album ID",
@@ -2801,7 +3037,6 @@
         }
       },
       "description": "Diasshow af billeder i dit Immich album",
-      "noAlbumSelected": "Intet album valgt, rediger widget og vælg et album",
       "noPhotos": "Ingen fotos i dette album"
     },
     "downloads": {
@@ -2986,6 +3221,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Åbn links i ny fane"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -3092,6 +3333,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
     },
     "rssFeed": {
       "name": "RSS feeds",
@@ -3336,7 +3606,11 @@
       "name": "Notifikationer",
       "description": "Vis notifikationshistorik fra en integration",
       "noItems": "Ingen notifikationer at vise.",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": ""
+        }
+      }
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",
@@ -3412,6 +3686,40 @@
         "upCount": "",
         "downCount": "",
         "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
       },
       "error": {
         "internalServerError": ""
@@ -3791,6 +4099,11 @@
           "subtitle": "",
           "read": "",
           "write": ""
+        },
+        "storage": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
         },
         "network": {
           "title": "",
@@ -4924,6 +5237,9 @@
     "title": "Containere",
     "table": {
       "updated": "Opdateret {when}",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "Søg {count} containere",
       "selected": "{selectCount} af {totalCount} containere valgt",
       "footer": "Total {count} containere",
@@ -5645,6 +5961,14 @@
                 }
               },
               "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {

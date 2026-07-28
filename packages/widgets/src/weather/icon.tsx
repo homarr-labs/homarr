@@ -5,6 +5,7 @@ import {
   IconCloudRain,
   IconCloudSnow,
   IconCloudStorm,
+  IconDroplets,
   IconMoon,
   IconQuestionMark,
   IconSnowflake,
@@ -51,6 +52,7 @@ interface WeatherDescriptionProps {
   sunset?: string;
   maxWindSpeed?: number;
   maxWindGusts?: number;
+  humidity?: number;
 }
 
 /**
@@ -78,6 +80,7 @@ export const WeatherDescription = ({
   sunset,
   maxWindSpeed,
   maxWindGusts,
+  humidity,
 }: WeatherDescriptionProps) => {
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
@@ -97,6 +100,9 @@ export const WeatherDescription = ({
         <List.Item icon={<IconTemperatureMinus size={15} />}>{`${tCommon("information.min")}: ${minTemp}`}</List.Item>
         <List.Item icon={<IconSun size={15} />}>{`${t("dailyForecast.sunrise")}: ${sunrise}`}</List.Item>
         <List.Item icon={<IconMoon size={15} />}>{`${t("dailyForecast.sunset")}: ${sunset}`}</List.Item>
+        {humidity !== undefined && (
+          <List.Item icon={<IconDroplets size={15} />}>{t("dailyForecast.humidity", { humidity })}</List.Item>
+        )}
         {maxWindSpeed !== undefined && (
           <List.Item icon={<IconWind size={15} />}>
             {t("dailyForecast.maxWindSpeed", {

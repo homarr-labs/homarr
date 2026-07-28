@@ -76,6 +76,33 @@ describe("all should return all apps", () => {
   });
 });
 
+describe("getPaginated should require board modification access", () => {
+  test("should throw FORBIDDEN without board-modify-all", async () => {
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(),
+    });
+
+    await expect(caller.getPaginated({ page: 1, pageSize: 10 })).rejects.toThrow("Permission denied");
+  });
+
+  test("should return apps with board-modify-all", async () => {
+    const db = createDb();
+    const caller = appRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: createDefaultSession(["board-modify-all"]),
+    });
+    await db.insert(apps).values({ id: "1", name: "Homarr", iconUrl: "https://homarr.dev/icon.svg" });
+
+    await expect(caller.getPaginated({ page: 1, pageSize: 10 })).resolves.toMatchObject({
+      totalCount: 1,
+      items: [{ id: "1" }],
+    });
+  });
+});
+
 describe("byId should return an app by id", () => {
   test("should return an app by id when canUserSeeAppAsync returns true", async () => {
     // Arrange

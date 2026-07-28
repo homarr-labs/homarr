@@ -44,7 +44,7 @@ export const createConfiguration = (
   headers: ReadonlyHeaders | null,
   useSecureCookies: boolean,
 ) => {
-  const adapter = createAdapter(db, provider);
+  const adapter = createAdapter(db, provider, env.AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING);
   return NextAuth({
     logger: {
       error: (error) => {

@@ -7,6 +7,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 
 import { env } from "../../env";
 import { createRedirectUri } from "../../redirect";
+import { assertVerifiedEmailForCredentialsLinking } from "./verified-email";
 
 export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profile> => ({
   id: "oidc",
@@ -18,7 +19,8 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
     token_endpoint_auth_method: env.AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD,
   },
   issuer: env.AUTH_OIDC_ISSUER,
-  allowDangerousEmailAccountLinking: env.AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING,
+  allowDangerousEmailAccountLinking:
+    env.AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING || env.AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING,
   authorization: {
     params: {
       scope: env.AUTH_OIDC_SCOPE_OVERWRITE,
@@ -55,6 +57,7 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
     if (!profile.sub) {
       throw new Error(`OIDC provider did not return a sub property='${Object.keys(profile).join(",")}'`);
     }
+    assertVerifiedEmailForCredentialsLinking(profile, env.AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING);
     const name = extractProfileName(profile);
     if (!name) {
       throw new Error(`OIDC provider did not return a name properties='${Object.keys(profile).join(",")}'`);

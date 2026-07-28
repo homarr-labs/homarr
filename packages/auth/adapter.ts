@@ -6,20 +6,24 @@ import { and, eq } from "@homarr/db";
 import { accounts, sessions, users } from "@homarr/db/schema";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 
-export const createAdapter = (db: Database, provider: SupportedAuthProvider | "unknown"): Adapter => {
+export const createAdapter = (
+  db: Database,
+  provider: SupportedAuthProvider | "unknown",
+  enableDangerousCredentialsLinking = false,
+): Adapter => {
   const drizzleAdapter = DrizzleAdapter(db, { usersTable: users, sessionsTable: sessions, accountsTable: accounts });
 
   return {
     ...drizzleAdapter,
-    // We override the default implementation as we want to have a provider
-    // flag in the user instead of the account to not intermingle users from different providers
+    // Keep users isolated by their primary provider. The explicit credentials-linking
+    // opt-in is the only exception and keeps credentials as the primary provider.
     // eslint-disable-next-line no-restricted-syntax
     getUserByEmail: async (email) => {
       if (provider === "unknown") {
         throw new Error("Unable to get user by email for unknown provider");
       }
 
-      const user = await db.query.users.findFirst({
+      let user = await db.query.users.findFirst({
         where: and(eq(users.email, email), eq(users.provider, provider)),
         columns: {
           id: true,
@@ -29,6 +33,22 @@ export const createAdapter = (db: Database, provider: SupportedAuthProvider | "u
           image: true,
         },
       });
+
+      if (!user && provider === "oidc" && enableDangerousCredentialsLinking) {
+        // Credentials accounts do not have an email-verification flow, so their
+        // Auth.js emailVerified field is always null. The OIDC profile's strict
+        // email_verified check is the security boundary for this opt-in.
+        user = await db.query.users.findFirst({
+          where: and(eq(users.email, email), eq(users.provider, "credentials")),
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+            emailVerified: true,
+            image: true,
+          },
+        });
+      }
 
       if (!user) {
         return null;
