@@ -1,8 +1,9 @@
 "use client";
 
 import type { CSSProperties, RefObject } from "react";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Box, Center, Stack, Text, ThemeIcon, Title } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { IconLayoutBoard } from "@tabler/icons-react";
 
 import { getDesktopLayout, useRequiredBoard } from "@homarr/boards/context";
@@ -63,6 +64,8 @@ const getMobilePresentation = (item: SectionItem) => {
 const MobileBoardItem = ({ item }: { item: SectionItem }) => {
   const widgetStateRef = useRef<Record<string, unknown> | null>(null);
   const presentation = getMobilePresentation(item);
+  const [isNearViewport, setIsNearViewport] = useState(presentation.eager);
+  const [detailsOpened, detailsDisclosure] = useDisclosure(false);
 
   return (
     <Box
@@ -71,16 +74,30 @@ const MobileBoardItem = ({ item }: { item: SectionItem }) => {
       data-mobile-board-item={item.id}
       data-mobile-display-mode={presentation.displayMode}
     >
-      <DeferredMobileItem eager={presentation.eager} unmountWhenOffscreen={presentation.unmountWhenOffscreen}>
+      <DeferredMobileItem
+        eager={presentation.eager}
+        unmountWhenOffscreen={presentation.unmountWhenOffscreen}
+        onNearViewportChange={setIsNearViewport}
+      >
         <BoardItemContent
           item={item}
           displayMode={presentation.displayMode}
           disableContextMenu
           isReadOnly
           widgetStateRef={widgetStateRef}
+          onOpenDetails={presentation.usesGenericSummary ? detailsDisclosure.open : undefined}
         />
       </DeferredMobileItem>
-      <MobileWidgetActions item={item} supportsDetails={presentation.supportsDetails} widgetStateRef={widgetStateRef} />
+      <MobileWidgetActions
+        item={item}
+        supportsDetails={presentation.supportsDetails}
+        detailsFromCard={presentation.usesGenericSummary}
+        detailsOpened={detailsOpened}
+        openDetails={detailsDisclosure.open}
+        closeDetails={detailsDisclosure.close}
+        widgetStateRef={widgetStateRef}
+        isNearViewport={isNearViewport}
+      />
     </Box>
   );
 };

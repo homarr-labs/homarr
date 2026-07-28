@@ -22,6 +22,8 @@ import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
+import { WidgetMobileLoading, WidgetMobileSummary } from "../../common/mobile-summary";
+import { hasWidgetDataWarning, throwOnInitialQueryError, WidgetDataState } from "../../common/query-state";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "./component.module.css";
@@ -34,16 +36,30 @@ export default function MediaServerWidget({
   integrationIds,
   isEditMode,
   width,
+  displayMode,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
-  const { data: requestStats } = clientApi.widget.mediaRequests.getStats.useQuery({
+  const {
+    data: requestStats,
+    error,
+    isPending,
+  } = clientApi.widget.mediaRequests.getStatsWithProvenance.useQuery({
     integrationIds,
   });
 
   const board = useRequiredBoard();
 
+  if (isPending) return <WidgetMobileLoading />;
+  throwOnInitialQueryError(error, requestStats !== undefined);
   if (!requestStats) return <WidgetEmptyState />;
-  if (requestStats.users.length === 0 && requestStats.stats.length === 0) throw new NoIntegrationDataError();
+  const hasWarning = hasWidgetDataWarning({
+    error,
+    failedIntegrationCount: requestStats.failedIntegrationCount,
+    staleIntegrationCount: requestStats.staleIntegrationCount,
+  });
+  if (requestStats.users.length === 0 && requestStats.stats.length === 0 && !hasWarning) {
+    throw new NoIntegrationDataError();
+  }
 
   const data = [
     {
@@ -88,9 +104,23 @@ export default function MediaServerWidget({
     },
   ] satisfies { name: keyof RequestStats; icon: Icon; number: number }[];
 
+  if (displayMode === "mobileSummary") {
+    const total = data.find((stat) => stat.name === "total")?.number ?? 0;
+    const pending = data.find((stat) => stat.name === "pending")?.number ?? 0;
+
+    return (
+      <WidgetMobileSummary
+        value={total}
+        label={t("titles.stats.total")}
+        description={`${pending} ${t("titles.stats.pending")}`}
+        isStale={hasWarning}
+      />
+    );
+  }
+
   const isTiny = width < 256;
 
-  return (
+  const content = (
     <Box className={searchClasses.searchRoot}>
       {!isEditMode && <MediaRequestSearchButton integrationIds={integrationIds} />}
       <Stack
@@ -173,6 +203,7 @@ export default function MediaServerWidget({
       </Stack>
     </Box>
   );
+  return <WidgetDataState hasWarning={hasWarning}>{content}</WidgetDataState>;
 }
 
 const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[] }) => {

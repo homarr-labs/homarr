@@ -7,7 +7,12 @@ import { createWidgetDefinition } from "../../definition";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestStats", {
   icon: IconChartBar,
-  mobile: { supportsDetailView: true },
+  mobile: {
+    width: 2,
+    height: 1,
+    supportsCompactSummary: true,
+    supportsDetailView: true,
+  },
   queryKey: [["widget", "mediaRequests"]],
   createOptions() {
     return {};

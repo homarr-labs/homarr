@@ -27,6 +27,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { WidgetMobileLoading, WidgetMobileSummary } from "../../common/mobile-summary";
+import { hasWidgetDataWarning, throwOnInitialQueryError, WidgetDataState } from "../../common/query-state";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "../search-button.module.css";
@@ -39,11 +40,7 @@ export default function MediaServerWidget({
   displayMode,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const t = useScopedI18n("widget.mediaRequests-requestList");
-  const {
-    data: mediaRequests,
-    error,
-    isPending,
-  } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
+  const { data, error, isPending } = clientApi.widget.mediaRequests.getLatestRequestsWithProvenance.useQuery({
     integrationIds,
     statuses:
       options.statusFilter.length > 0
@@ -52,23 +49,38 @@ export default function MediaServerWidget({
     recentDays: options.recentDays,
   });
 
-  if (displayMode === "mobileSummary" && isPending) return <WidgetMobileLoading />;
-  if (displayMode === "mobileSummary" && error && !mediaRequests) throw error;
-  if (!mediaRequests) return <WidgetEmptyState />;
-  if (mediaRequests.length === 0) throw new NoIntegrationDataError();
+  if (isPending) return <WidgetMobileLoading />;
+  throwOnInitialQueryError(error, data !== undefined);
+  if (!data) return <WidgetEmptyState />;
+
+  const hasWarning = hasWidgetDataWarning({
+    error,
+    failedIntegrationCount: data.failedIntegrationCount,
+    staleIntegrationCount: data.staleIntegrationCount,
+  });
+
+  if (data.items.length === 0 && !hasWarning) throw new NoIntegrationDataError();
 
   if (displayMode === "mobileSummary") {
     return (
       <WidgetMobileSummary
-        value={mediaRequests.length}
+        value={data.items.length}
         label={t("name")}
-        description={mediaRequests[0]?.name}
-        isStale={Boolean(error)}
+        description={data.items[0]?.name}
+        isStale={hasWarning}
       />
     );
   }
 
-  return (
+  if (data.items.length === 0) {
+    return (
+      <WidgetDataState hasWarning={hasWarning}>
+        <WidgetEmptyState />
+      </WidgetDataState>
+    );
+  }
+
+  const content = (
     <Box className={classes.searchRoot}>
       {!isEditMode && <MediaRequestSearchButton integrationIds={integrationIds} />}
       <ScrollArea
@@ -77,7 +89,7 @@ export default function MediaServerWidget({
         style={{ pointerEvents: isEditMode ? "none" : undefined }}
       >
         <Stack className="mediaRequests-list-list" gap="xs" p="sm">
-          {mediaRequests.map((mediaRequest) => (
+          {data.items.map((mediaRequest) => (
             <MediaRequestCard
               key={`${mediaRequest.integrationId}-${mediaRequest.id}`}
               request={mediaRequest}
@@ -89,6 +101,7 @@ export default function MediaServerWidget({
       </ScrollArea>
     </Box>
   );
+  return <WidgetDataState hasWarning={hasWarning}>{content}</WidgetDataState>;
 }
 
 const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[] }) => {
@@ -110,7 +123,7 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
 };
 
 interface MediaRequestCardProps {
-  request: RouterOutputs["widget"]["mediaRequests"]["getLatestRequests"][number];
+  request: RouterOutputs["widget"]["mediaRequests"]["getLatestRequestsWithProvenance"]["items"][number];
   isTiny: boolean;
   options: WidgetComponentProps<"mediaRequests-requestList">["options"];
 }

@@ -90,7 +90,10 @@ export default async function BoardSettingsPage(props: Props) {
             <GeneralSettingsContent board={board} />
           </AccordionItemFor>
           <AccordionItemFor value="layout" icon={IconLayout}>
-            <LayoutSettingsContent board={board} />
+            <LayoutSettingsContent
+              board={board}
+              enableAutomaticMobileLayout={boardSettings.enableAutomaticMobileLayout}
+            />
           </AccordionItemFor>
           <AccordionItemFor value="background" icon={IconPhoto}>
             <BackgroundSettingsContent board={board} />

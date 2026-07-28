@@ -10,6 +10,7 @@ import { useTimeAgo } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
+import { hasWidgetDataWarning, throwOnInitialQueryError, WidgetDataState } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 
 export default function NotificationsWidget({
@@ -38,17 +39,20 @@ export default function NotificationsWidget({
     [notificationIntegrations],
   );
 
-  if (displayMode === "mobileSummary") {
-    if (isPending) return <WidgetMobileLoading />;
-    if (error && !notificationIntegrations) throw error;
+  if (isPending) return <WidgetMobileLoading />;
+  throwOnInitialQueryError(error, notificationIntegrations !== undefined);
+  const hasWarning = hasWidgetDataWarning({
+    error,
+    expectedIntegrationCount: integrationIds.length,
+    receivedIntegrationCount: notificationIntegrations?.length,
+  });
 
-    const notifications = notificationIntegrations ?? [];
+  if (displayMode === "mobileSummary") {
     const latestNotification = sortedNotifications[0];
-    const isStale = Boolean(error) || notifications.length < integrationIds.length;
     const summary = latestNotification ? (
-      <NotificationMobileSummary notification={latestNotification} isStale={isStale} />
+      <NotificationMobileSummary notification={latestNotification} isStale={hasWarning} />
     ) : (
-      <WidgetMobileSummary value={0} label={t("name")} description={t("noItems")} isStale={isStale} />
+      <WidgetMobileSummary value={0} label={t("name")} description={t("noItems")} isStale={hasWarning} />
     );
 
     if (!latestNotification?.href) return summary;
@@ -68,7 +72,7 @@ export default function NotificationsWidget({
     );
   }
 
-  return (
+  const content = (
     <ScrollArea className="scroll-area-w100" w="100%" p="sm">
       <Stack w={"100%"} gap="sm">
         {sortedNotifications.length > 0 ? (
@@ -117,6 +121,7 @@ export default function NotificationsWidget({
       </Stack>
     </ScrollArea>
   );
+  return <WidgetDataState hasWarning={hasWarning}>{content}</WidgetDataState>;
 }
 
 const NotificationMobileSummary = ({

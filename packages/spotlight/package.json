@@ -24,6 +24,7 @@
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/boards": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",

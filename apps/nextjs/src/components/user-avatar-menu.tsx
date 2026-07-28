@@ -17,8 +17,10 @@ import {
 
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
+import { requestBoardEditAction } from "@homarr/boards/edit-mode";
 import { hotkeys } from "@homarr/definitions";
 import { createModal, useModalAction } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
@@ -47,22 +49,36 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
 
   const handleSignout = useCallback(async () => {
-    await signOut({
-      redirect: false,
-    });
-    openModal({
-      onTimeout: () => {
-        if (logoutUrl) {
-          window.location.assign(logoutUrl);
-          return;
-        }
-        router.push("/auth/login");
-      },
-    });
-  }, [logoutUrl, openModal, router]);
+    try {
+      const response = await signOut({
+        redirect: false,
+      });
+      if (typeof response.url !== "string" || response.url.length === 0) {
+        throw new Error("Sign out did not return a success URL");
+      }
+
+      return await new Promise<boolean>((resolve) => {
+        openModal({
+          onTimeout: () => {
+            resolve(true);
+            if (logoutUrl) {
+              window.location.replace(logoutUrl);
+              return;
+            }
+            router.replace("/auth/login");
+          },
+        });
+      });
+    } catch {
+      showErrorNotification({
+        title: t("logoutError.title"),
+        message: t("logoutError.message"),
+      });
+      return false;
+    }
+  }, [logoutUrl, openModal, router, t]);
 
   return (
-    // We use keepMounted so we can add event listeners to prevent navigating away without saving the board
     <Menu width={300} withinPortal keepMounted>
       <Menu.Dropdown>
         <AvailableUpdatesMenuItem availableUpdatesPromise={availableUpdatesPromise} />
@@ -100,7 +116,11 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
         )}
         <Menu.Divider />
         {session.status === "authenticated" ? (
-          <Menu.Item onClick={handleSignout} leftSection={<IconLogout size="1rem" />} color="red">
+          <Menu.Item
+            onClick={() => requestBoardEditAction(handleSignout)}
+            leftSection={<IconLogout size="1rem" />}
+            color="red"
+          >
             {t("logout")}
           </Menu.Item>
         ) : (

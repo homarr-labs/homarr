@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, Group, Stack } from "@mantine/core";
+import { useRouter } from "next/navigation";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
@@ -17,6 +18,7 @@ export const CommonSettingsForm = <TKey extends keyof ServerSettings>({
   defaultValues: ServerSettings[TKey];
   children: (form: ReturnType<typeof useForm<ServerSettings[TKey]>>) => React.ReactNode;
 }) => {
+  const router = useRouter();
   const t = useI18n();
   const tSettings = useScopedI18n("management.page.settings");
   const { mutateAsync, isPending } = clientApi.serverSettings.saveSettings.useMutation({
@@ -24,6 +26,7 @@ export const CommonSettingsForm = <TKey extends keyof ServerSettings>({
       showSuccessNotification({
         message: tSettings("notification.success.message"),
       });
+      router.refresh();
     },
     onError() {
       showErrorNotification({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { Box, Button, Divider, Drawer, Group, Menu, ScrollArea, Stack, Text } from "@mantine/core";
@@ -29,7 +29,8 @@ import {
 import { clientApi } from "@homarr/api/client";
 import { signOut, useSession } from "@homarr/auth/client";
 import { getDesktopLayout, useRequiredBoard } from "@homarr/boards/context";
-import { useEditMode } from "@homarr/boards/edit-mode";
+import type { BoardEditAction, BoardEditActionEvent } from "@homarr/boards/edit-mode";
+import { boardEditActionEventName, requestBoardEditAction, useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { hotkeys } from "@homarr/definitions";
@@ -60,6 +61,8 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
   const { hasChangeAccess } = useBoardPermissions(board);
   const isMobile = useIsMobileBoard();
   const t = useI18n();
+
+  usePreventLeaveWithDirty(isEditMode);
 
   if (isMobile) {
     return <MobileMoreMenu showSettings={hasChangeAccess && !demoReadOnly} />;
@@ -215,8 +218,6 @@ const EditModeMenu = ({ demoReadOnly, hidden }: { demoReadOnly: boolean; hidden:
   }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges, hidden]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
-  usePreventLeaveWithDirty(isEditMode);
-
   if (hidden) return null;
 
   return (
@@ -269,6 +270,7 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
   const tProfile = useScopedI18n("common.userAvatar.menu");
   const reduceMotion = useReducedMotion();
   const [opened, disclosure] = useDisclosure(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const moreTriggerRef = useRef<HTMLButtonElement>(null);
   const pendingSectionAnchorId = useRef<string | null>(null);
   const desktopLayout = getDesktopLayout(board);
@@ -289,6 +291,26 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
 
     moreTriggerRef.current?.focus({ preventScroll: true });
   };
+
+  const handleSignOut = useCallback(async () => {
+    setIsSigningOut(true);
+
+    try {
+      const response = await signOut({ redirect: false });
+      if (typeof response.url !== "string" || response.url.length === 0) {
+        throw new Error("Sign out did not return a success URL");
+      }
+      window.location.replace(logoutUrl ?? "/auth/login");
+      return true;
+    } catch {
+      setIsSigningOut(false);
+      showErrorNotification({
+        title: tProfile("logoutError.title"),
+        message: tProfile("logoutError.message"),
+      });
+      return false;
+    }
+  }, [logoutUrl, tProfile]);
 
   return (
     <>
@@ -391,13 +413,8 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
                 size="lg"
                 justify="flex-start"
                 leftSection={<IconLogout size={20} />}
-                onClick={() => {
-                  void signOut({ redirect: false })
-                    .catch(() => undefined)
-                    .then(() => {
-                      window.location.assign(logoutUrl ?? "/auth/login");
-                    });
-                }}
+                loading={isSigningOut}
+                onClick={() => requestBoardEditAction(handleSignOut)}
               >
                 {tProfile("logout")}
               </Button>
@@ -432,62 +449,207 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
   );
 };
 
-const anchorSelector = "a[href]:not([target='_blank'])";
+const anchorSelector = "a[href]:not([target='_blank']):not([download])";
 const usePreventLeaveWithDirty = (isDirty: boolean) => {
   const t = useI18n();
   const { openConfirmModal } = useConfirmModal();
   const router = useRouter();
+  const dependenciesRef = useRef({ openConfirmModal, router, t });
+
+  useEffect(() => {
+    dependenciesRef.current = { openConfirmModal, router, t };
+  }, [openConfirmModal, router, t]);
 
   useEffect(() => {
     if (!isDirty) return;
 
-    const handleClick = (event: Event) => {
-      const target = (event.target as HTMLElement).closest("a");
+    const guardStateKey = "__homarrBoardEditGuard";
+    const guardId = `${Date.now()}-${Math.random()}`;
+    let guardedUrl = window.location.href;
+    let isLeaving = false;
+    let isConfirming = false;
+    let isActionPending = false;
+    let shouldRemoveGuardEntry = true;
+    let didPageHide = false;
+    let departureFallbackTimer: number | undefined;
 
-      if (!target) {
-        console.warn("No anchor element found for click event", event);
-        return;
+    const pushGuardEntry = () => {
+      window.history.pushState(
+        {
+          ...(window.history.state as Record<string, unknown> | null),
+          [guardStateKey]: guardId,
+        },
+        document.title,
+        guardedUrl,
+      );
+    };
+
+    const rearmGuard = () => {
+      window.clearTimeout(departureFallbackTimer);
+      departureFallbackTimer = undefined;
+      isLeaving = false;
+      shouldRemoveGuardEntry = true;
+
+      if (
+        window.location.href === guardedUrl &&
+        (window.history.state as Record<string, unknown> | null)?.[guardStateKey] !== guardId
+      ) {
+        pushGuardEntry();
       }
+    };
 
-      event.preventDefault();
+    const scheduleDepartureFallback = () => {
+      window.clearTimeout(departureFallbackTimer);
+      departureFallbackTimer = window.setTimeout(() => {
+        departureFallbackTimer = undefined;
+        if (!didPageHide) {
+          guardedUrl = window.location.href;
+          rearmGuard();
+        }
+      }, 1_000);
+    };
 
-      openConfirmModal({
-        title: t("board.action.edit.confirmLeave.title"),
-        children: t("board.action.edit.confirmLeave.message"),
-        onConfirm() {
-          router.push(target.href);
+    const openLeaveConfirmation = (action: BoardEditAction) => {
+      if (isConfirming) return;
+      isConfirming = true;
+
+      const dependencies = dependenciesRef.current;
+      dependencies.openConfirmModal({
+        title: dependencies.t("board.action.edit.confirmLeave.title"),
+        children: dependencies.t("board.action.edit.confirmLeave.message"),
+        async onConfirm() {
+          isActionPending = true;
+          isLeaving = true;
+          shouldRemoveGuardEntry = false;
+          didPageHide = false;
+
+          try {
+            const result = await action();
+            if (result === false) {
+              rearmGuard();
+            } else {
+              scheduleDepartureFallback();
+            }
+          } catch {
+            rearmGuard();
+          } finally {
+            isActionPending = false;
+            isConfirming = false;
+          }
+        },
+        onClose() {
+          if (!isActionPending) {
+            isConfirming = false;
+          }
         },
         confirmProps: {
-          children: t("common.action.discard"),
+          children: dependencies.t("common.action.discard"),
         },
       });
     };
 
-    const handlePopState = (event: Event) => {
-      window.history.pushState(null, document.title, window.location.href);
+    pushGuardEntry();
+
+    const handleClick = (event: MouseEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        !(event.target instanceof Element)
+      ) {
+        return;
+      }
+
+      const target = event.target.closest<HTMLAnchorElement>(anchorSelector);
+      if (!target) return;
+
       event.preventDefault();
+      const destination = new URL(target.href, window.location.href);
+
+      openLeaveConfirmation(() => {
+        if (destination.origin === window.location.origin) {
+          dependenciesRef.current.router.replace(`${destination.pathname}${destination.search}${destination.hash}`);
+        } else {
+          window.location.replace(destination.href);
+        }
+        return true;
+      });
+    };
+
+    const handlePopState = () => {
+      if (isActionPending) {
+        if (
+          window.location.href === guardedUrl &&
+          (window.history.state as Record<string, unknown> | null)?.[guardStateKey] !== guardId
+        ) {
+          pushGuardEntry();
+        }
+        return;
+      }
+      if (isLeaving) return;
+
+      pushGuardEntry();
+      openLeaveConfirmation(() => {
+        window.history.go(-2);
+        return true;
+      });
+    };
+
+    const handleBoardEditAction = (event: Event) => {
+      event.preventDefault();
+      openLeaveConfirmation((event as BoardEditActionEvent).detail.action);
+    };
+
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+
+      didPageHide = false;
+      guardedUrl = window.location.href;
+      isLeaving = false;
+      isConfirming = false;
+      shouldRemoveGuardEntry = true;
+      if ((window.history.state as Record<string, unknown> | null)?.[guardStateKey] !== guardId) {
+        pushGuardEntry();
+      }
+    };
+
+    const handlePageHide = () => {
+      didPageHide = true;
     };
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (env.NODE_ENV === "development") return;
+      if (isLeaving || env.NODE_ENV === "development") return;
 
       event.preventDefault();
       event.returnValue = true;
     };
 
-    const anchors = document.querySelectorAll(anchorSelector);
-    anchors.forEach((link) => {
-      link.addEventListener("click", handleClick);
-    });
+    document.addEventListener("click", handleClick, true);
+    document.addEventListener(boardEditActionEventName, handleBoardEditAction);
     window.addEventListener("popstate", handlePopState);
+    window.addEventListener("pagehide", handlePageHide);
+    window.addEventListener("pageshow", handlePageShow);
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      anchors.forEach((link) => {
-        link.removeEventListener("click", handleClick);
-      });
+      document.removeEventListener("click", handleClick, true);
+      document.removeEventListener(boardEditActionEventName, handleBoardEditAction);
       window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("pagehide", handlePageHide);
+      window.removeEventListener("pageshow", handlePageShow);
       window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.clearTimeout(departureFallbackTimer);
+
+      if (
+        shouldRemoveGuardEntry &&
+        window.location.href === guardedUrl &&
+        (window.history.state as Record<string, unknown> | null)?.[guardStateKey] === guardId
+      ) {
+        window.history.back();
+      }
     };
   }, [isDirty]);
 };

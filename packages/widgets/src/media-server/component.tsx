@@ -25,6 +25,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
+import { hasWidgetDataWarning, throwOnInitialQueryError, WidgetDataState } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 
 export default function MediaServerWidget({ displayMode, ...props }: WidgetComponentProps<"mediaServer">) {
@@ -43,10 +44,9 @@ const MediaServerMobileSummary = ({
   });
 
   if (isPending) return <WidgetMobileLoading />;
-  if (error && !data) throw error;
+  throwOnInitialQueryError(error, data !== undefined);
 
   const currentStreams = data ?? [];
-  const hasPartialFailure = currentStreams.length < integrationIds.length;
   const playingSessions = currentStreams
     .flatMap((stream) => stream.sessions)
     .filter((session) => session.currentlyPlaying !== null);
@@ -56,7 +56,11 @@ const MediaServerMobileSummary = ({
       value={playingSessions.length}
       label={t("items.currentlyPlaying")}
       description={playingSessions[0]?.currentlyPlaying?.name}
-      isStale={Boolean(error) || hasPartialFailure}
+      isStale={hasWidgetDataWarning({
+        error,
+        expectedIntegrationCount: integrationIds.length,
+        receivedIntegrationCount: currentStreams.length,
+      })}
     />
   );
 };
@@ -65,10 +69,11 @@ const MediaServerTable = ({
   options,
   integrationIds,
 }: Pick<WidgetComponentProps<"mediaServer">, "options" | "integrationIds">) => {
-  const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
+  const { data: queryData, error } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
     integrationIds,
     showOnlyPlaying: options.showOnlyPlaying,
   });
+  const currentStreams = queryData ?? [];
 
   const t = useScopedI18n("widget.mediaServer");
   const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(
@@ -292,8 +297,14 @@ const MediaServerTable = ({
       integrationName: session?.integrationName,
     };
   });
+  throwOnInitialQueryError(error, queryData !== undefined);
+  const hasWarning = hasWidgetDataWarning({
+    error,
+    expectedIntegrationCount: integrationIds.length,
+    receivedIntegrationCount: currentStreams.length,
+  });
 
-  return (
+  const content = (
     <Stack gap={0} h="100%" display="flex">
       <MantineReactTable table={table} />
       <Group
@@ -317,6 +328,7 @@ const MediaServerTable = ({
       </Group>
     </Stack>
   );
+  return <WidgetDataState hasWarning={hasWarning}>{content}</WidgetDataState>;
 };
 
 const ItemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {

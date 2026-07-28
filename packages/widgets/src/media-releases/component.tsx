@@ -16,6 +16,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
 
 import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
+import { hasWidgetDataWarning, throwOnInitialQueryError, WidgetDataState } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 
 export default function MediaReleasesWidget({
@@ -23,29 +24,33 @@ export default function MediaReleasesWidget({
   integrationIds,
   displayMode,
 }: WidgetComponentProps<"mediaReleases">) {
-  const { data, error, isPending } = clientApi.widget.mediaRelease.getMediaReleases.useQuery({
+  const { data, error, isPending } = clientApi.widget.mediaRelease.getMediaReleasesWithProvenance.useQuery({
     integrationIds,
   });
   const t = useI18n("widget.mediaReleases");
 
-  if (displayMode === "mobileSummary") {
-    if (isPending) return <WidgetMobileLoading />;
-    if (error && !data) throw error;
+  if (isPending) return <WidgetMobileLoading />;
+  throwOnInitialQueryError(error, data !== undefined);
 
-    const releases = data ?? [];
+  const releases = data?.items ?? [];
+  const hasWarning = hasWidgetDataWarning({
+    error,
+    failedIntegrationCount: data?.failedIntegrationCount,
+    staleIntegrationCount: data?.staleIntegrationCount,
+  });
+
+  if (displayMode === "mobileSummary") {
     return (
       <WidgetMobileSummary
         value={releases.length}
         label={t("name")}
         description={releases[0]?.title}
-        isStale={Boolean(error)}
+        isStale={hasWarning}
       />
     );
   }
 
-  const releases = data ?? [];
-
-  return (
+  const content = (
     <Stack p="xs" gap="sm">
       {releases.map((item, index) => (
         <Fragment key={item.id}>
@@ -55,10 +60,11 @@ export default function MediaReleasesWidget({
       ))}
     </Stack>
   );
+  return <WidgetDataState hasWarning={hasWarning}>{content}</WidgetDataState>;
 }
 
 interface ItemProps {
-  item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"][number];
+  item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleasesWithProvenance"]["items"][number];
   options: WidgetComponentProps<"mediaReleases">["options"];
 }
 

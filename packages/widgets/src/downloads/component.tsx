@@ -50,6 +50,7 @@ import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/i
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
+import { hasWidgetDataWarning, throwOnInitialQueryError, WidgetDataState } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 
 dayjs.extend(relativeTime);
@@ -129,7 +130,7 @@ const DownloadClientsMobileSummary = ({
   });
 
   if (isPending) return <WidgetMobileLoading />;
-  if (error && !data) throw error;
+  throwOnInitialQueryError(error, data !== undefined);
 
   const currentItems = data ?? [];
   const selectedClients = currentItems.filter(({ integration }) => integrationIds.includes(integration.id));
@@ -148,7 +149,11 @@ const DownloadClientsMobileSummary = ({
       value={visibleItemCount}
       label={t("name")}
       description={`${t("items.downSpeed.columnTitle")}: ${formatByteRate(totalDownloadSpeed)}`}
-      isStale={Boolean(error) || currentItems.length < integrationIds.length}
+      isStale={hasWidgetDataWarning({
+        error,
+        expectedIntegrationCount: integrationIds.length,
+        receivedIntegrationCount: currentItems.length,
+      })}
     />
   );
 };
@@ -163,10 +168,11 @@ const DownloadClientsTable = ({
     integrationIds.includes(id) ? [id] : [],
   );
 
-  const { data: currentItems = [] } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
+  const { data: queryData, error: queryError } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
     integrationIds,
     limitPerIntegration: options.limitPerIntegration,
   });
+  const currentItems = queryData ?? [];
 
   const t = useScopedI18n("widget.downloads");
   const tCommon = useScopedI18n("common");
@@ -694,15 +700,24 @@ const DownloadClientsTable = ({
       { up: 0, down: 0 },
     );
 
+  throwOnInitialQueryError(queryError, queryData !== undefined);
+  const hasWarning = hasWidgetDataWarning({
+    error: queryError,
+    expectedIntegrationCount: integrationIds.length,
+    receivedIntegrationCount: currentItems.length,
+  });
+
   if (options.columns.length === 0)
     return (
-      <Center h="100%">
-        <Text>{t("errors.noColumns")}</Text>
-      </Center>
+      <WidgetDataState hasWarning={hasWarning}>
+        <Center h="100%">
+          <Text>{t("errors.noColumns")}</Text>
+        </Center>
+      </WidgetDataState>
     );
 
   //The actual widget
-  return (
+  const content = (
     <Stack gap={0} h="100%" display="flex">
       <MantineReactTable table={table} />
       <Group
@@ -728,6 +743,7 @@ const DownloadClientsTable = ({
       <ItemInfoModal items={data} currentIndex={clickedIndex} opened={opened} onClose={close} />
     </Stack>
   );
+  return <WidgetDataState hasWarning={hasWarning}>{content}</WidgetDataState>;
 };
 
 interface ItemInfoModalProps {

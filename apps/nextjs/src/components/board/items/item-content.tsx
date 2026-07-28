@@ -1,6 +1,6 @@
 import type { MutableRefObject } from "react";
 import { useRef } from "react";
-import { Badge, Card } from "@mantine/core";
+import { Badge, Card, Center, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
@@ -10,6 +10,8 @@ import { ErrorBoundary } from "react-error-boundary";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useSettings } from "@homarr/settings";
+import { useI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import type { WidgetDisplayMode } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
@@ -26,7 +28,9 @@ interface BoardItemContentProps {
   displayMode?: WidgetDisplayMode;
   disableContextMenu?: boolean;
   isReadOnly?: boolean;
+  disableItemConfiguration?: boolean;
   widgetStateRef?: MutableRefObject<Record<string, unknown> | null>;
+  onOpenDetails?: () => void;
 }
 
 const getOverflowFromKind = (kind: SectionItem["kind"]) => {
@@ -40,7 +44,9 @@ export const BoardItemContent = ({
   displayMode = "default",
   disableContextMenu = false,
   isReadOnly = false,
+  disableItemConfiguration = false,
   widgetStateRef: externalWidgetStateRef,
+  onOpenDetails,
 }: BoardItemContentProps) => {
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const board = useRequiredBoard();
@@ -72,7 +78,9 @@ export const BoardItemContent = ({
         height={height}
         displayMode={displayMode}
         isReadOnly={isReadOnly}
+        disableItemConfiguration={disableItemConfiguration}
         widgetStateRef={widgetStateRef}
+        onOpenDetails={onOpenDetails}
       />
     </Card>
   );
@@ -116,13 +124,23 @@ interface InnerContentProps {
   height: number;
   displayMode: WidgetDisplayMode;
   isReadOnly: boolean;
+  disableItemConfiguration: boolean;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
+  onOpenDetails?: () => void;
 }
 
-const InnerContent = ({ item, displayMode, isReadOnly, ...dimensions }: InnerContentProps) => {
+const InnerContent = ({
+  item,
+  displayMode,
+  isReadOnly,
+  disableItemConfiguration,
+  onOpenDetails,
+  ...dimensions
+}: InnerContentProps) => {
   const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
+  const t = useI18n();
   const Comp = loadWidgetDynamic(item.kind);
   const { definition } = widgetImports[item.kind];
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options);
@@ -132,6 +150,14 @@ const InnerContent = ({ item, displayMode, isReadOnly, ...dimensions }: InnerCon
     updateItemOptions({ itemId: item.id, newOptions });
   const widgetSupportsIntegrations =
     "supportedIntegrations" in definition && definition.supportedIntegrations.length >= 1;
+  const hasNativeMobileSummary =
+    "mobile" in definition &&
+    definition.mobile !== undefined &&
+    "supportsCompactSummary" in definition.mobile &&
+    definition.mobile.supportsCompactSummary === true;
+  const useGenericMobileSummary = displayMode === "mobileSummary" && !hasNativeMobileSummary;
+  const title = item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`);
+  const showItemMenu = !isReadOnly && !disableItemConfiguration;
   const queryClient = useQueryClient();
 
   return (
@@ -144,7 +170,7 @@ const InnerContent = ({ item, displayMode, isReadOnly, ...dimensions }: InnerCon
           }}
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
-              {!isReadOnly && <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />}
+              {showItemMenu && <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />}
               <WidgetError kind={item.kind} error={error} resetErrorBoundary={resetErrorBoundary} />
             </>
           )}
@@ -157,31 +183,78 @@ const InnerContent = ({ item, displayMode, isReadOnly, ...dimensions }: InnerCon
               (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />
-          {!isReadOnly && <BoardItemMenu offset={4} item={newItem} />}
-          <Comp
-            options={options as never}
-            integrationIds={item.integrationIds}
-            isEditMode={isEditMode}
-            boardId={board.id}
-            itemId={item.id}
-            isReadOnly={isReadOnly}
-            setOptions={(partialNewOptions) => {
-              if (isReadOnly) return;
-              updateOptions({
-                newOptions: {
-                  ...options,
-                  ...partialNewOptions.newOptions,
-                },
-              });
-            }}
-            displayMode={displayMode}
-            {...dimensions}
-          />
+          {showItemMenu && <BoardItemMenu offset={4} item={newItem} />}
+          {useGenericMobileSummary ? (
+            <GenericMobileSummary
+              icon={definition.icon}
+              title={title}
+              widgetName={t(`widget.${item.kind}.name`)}
+              detailsLabel={t("board.mobile.details")}
+              onOpenDetails={onOpenDetails}
+            />
+          ) : (
+            <Comp
+              options={options as never}
+              integrationIds={item.integrationIds}
+              isEditMode={isEditMode}
+              boardId={board.id}
+              itemId={item.id}
+              isReadOnly={isReadOnly}
+              setOptions={(partialNewOptions) => {
+                if (isReadOnly) return;
+                updateOptions({
+                  newOptions: {
+                    ...options,
+                    ...partialNewOptions.newOptions,
+                  },
+                });
+              }}
+              displayMode={displayMode}
+              {...dimensions}
+            />
+          )}
         </ErrorBoundary>
       )}
     </QueryErrorResetBoundary>
   );
 };
+
+const GenericMobileSummary = ({
+  icon: Icon,
+  title,
+  widgetName,
+  detailsLabel,
+  onOpenDetails,
+}: {
+  icon: TablerIcon;
+  title: string;
+  widgetName: string;
+  detailsLabel: string;
+  onOpenDetails?: () => void;
+}) => (
+  <UnstyledButton
+    h="100%"
+    w="100%"
+    p="sm"
+    onClick={onOpenDetails}
+    aria-label={`${detailsLabel}: ${title}`}
+    data-mobile-generic-summary
+  >
+    <Center h="100%">
+      <Stack align="center" gap={4} maw="100%">
+        <ThemeIcon variant="light" size={36} radius="xl">
+          <Icon size={20} aria-hidden />
+        </ThemeIcon>
+        <Text fw={600} size="sm" ta="center" lineClamp={1} w="100%">
+          {widgetName}
+        </Text>
+        <Text c="dimmed" size="xs" ta="center" lineClamp={1} w="100%">
+          {detailsLabel}
+        </Text>
+      </Stack>
+    </Center>
+  </UnstyledButton>
+);
 
 const Throw = ({ when, error }: { when: boolean; error: Error }) => {
   if (when) throw error;

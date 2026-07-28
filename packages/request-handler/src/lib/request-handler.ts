@@ -5,6 +5,7 @@ interface Options<TData, TInput extends Record<string, unknown>> {
 }
 
 type CacheEntry<TData> = { data: TData; timestamp: Date; expiresAt: number };
+type RequestResult<TData> = Pick<CacheEntry<TData>, "data" | "timestamp"> & { isStale: boolean };
 
 const MAX_CACHE_SIZE = 1000;
 const DEFAULT_TTL_MS = 10_000;
@@ -20,21 +21,21 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
   options: Options<TData, TInput>,
 ) => {
   const cache = new Map<string, CacheEntry<TData>>();
-  const inflight = new Map<string, Promise<CacheEntry<TData>>>();
+  const inflight = new Map<string, Promise<RequestResult<TData>>>();
 
   return {
     invalidateCache: () => {
       cache.clear();
       inflight.clear();
     },
-    handler: (input: TInput) => ({
-      async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
+    handler: (input: TInput) => {
+      const getDataWithProvenanceAsync = async (): Promise<RequestResult<TData>> => {
         const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
         const key = JSON.stringify(input);
 
         const cached = cache.get(key);
         if (cached && Date.now() < cached.expiresAt) {
-          return { data: cached.data, timestamp: cached.timestamp };
+          return { data: cached.data, timestamp: cached.timestamp, isStale: false };
         }
 
         const existing = inflight.get(key);
@@ -51,19 +52,27 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
             const entry: CacheEntry<TData> = { data, timestamp: new Date(), expiresAt: Date.now() + ttl };
             cache.set(key, entry);
             inflight.delete(key);
-            return entry;
+            return { data: entry.data, timestamp: entry.timestamp, isStale: false };
           })
           .catch((err) => {
             inflight.delete(key);
             if (options.fallbackToStaleOnError && cached) {
-              return cached;
+              return { data: cached.data, timestamp: cached.timestamp, isStale: true };
             }
             throw err;
           });
 
         inflight.set(key, promise);
         return promise;
-      },
-    }),
+      };
+
+      return {
+        async getDataAsync(): Promise<Pick<RequestResult<TData>, "data" | "timestamp">> {
+          const { data, timestamp } = await getDataWithProvenanceAsync();
+          return { data, timestamp };
+        },
+        getDataWithProvenanceAsync,
+      };
+    },
   };
 };

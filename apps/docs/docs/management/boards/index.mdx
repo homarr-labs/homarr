@@ -84,22 +84,28 @@ Homarr will fall back to the Homarr logo if nothing is set.
 
 ### Layout
 
-In this section you can configure the number of columns in the desktop layout.
+The available controls depend on the server-wide **Use automatic mobile layout** setting under `Management` > `Settings` > `Boards`.
 
 Items and sections can be moved and resized on desktop while the board is in edit mode.
 Changing the column count automatically adjusts item positions and sizes to fit the new grid.
 
 <img src={layoutLargeImage} height={256} />
 
-#### Mobile layout
+#### Automatic mobile layout
 
-Phones use an automatic, read-only layout with exactly two columns in both portrait and landscape. Tablets use this layout at widths up to 48em. Items follow the visual order of the desktop layout and are limited to two columns wide and three rows high.
+When automatic mobile layout is enabled, the board settings contain one desktop column-count control. Phones use an automatic, read-only layout with exactly two columns in both portrait and landscape. Tablets use this layout at widths up to 48em. Items follow the visual order of the desktop layout and are limited to two columns wide and three rows high.
 
-Named categories and dynamic sections appear as lightweight headings and section shortcuts, but never as layout containers. Their items are included directly in the automatic grid, even when a category is collapsed on desktop. Layout and widget configuration stay locked on mobile; links, refresh actions, automations, and widget details remain interactive.
+Named categories and dynamic sections appear as lightweight headings and section shortcuts, but never as layout containers. Their items are included directly in the automatic grid, even when a category is collapsed on desktop. Layout and item-configuration menus stay locked on mobile; links, refresh actions, automations, notebook content and checklists, and widget details remain interactive according to the user's normal permissions.
 
 App items use compact tiles. Widgets can opt into a compact summary, and larger widgets provide a full-screen detail view. Widgets farther down a long board are loaded shortly before they enter the viewport while their space is preserved with a skeleton.
 
 To rearrange, add, remove, resize, or configure board items, open the board on a larger screen.
+
+#### Saved responsive layouts
+
+When automatic mobile layout is disabled, each board uses its saved responsive layouts. Board editors can add named layouts, choose their column counts and viewport breakpoints, and edit the selected layout directly on mobile.
+
+Enabling automatic mode does not delete these layouts. Homarr continues to maintain item and section placements for them, so an administrator can switch the server back to responsive mode later without losing the previous mobile arrangement.
 
 ### Background
 

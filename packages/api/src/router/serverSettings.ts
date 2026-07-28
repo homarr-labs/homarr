@@ -19,6 +19,7 @@ import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 const boardServerSettingsSchema = z.object({
   homeBoardId: z.string().nullable(),
   mobileHomeBoardId: z.string().nullable(),
+  enableAutomaticMobileLayout: z.boolean(),
   enableStatusByDefault: z.boolean(),
   forceDisableStatus: z.boolean(),
 }) satisfies z.ZodType<ServerSettings["board"]>;
@@ -39,7 +40,7 @@ export const serverSettingsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get global board defaults, including desktop/mobile home board IDs and status behavior. Requires admin permission",
+          "Get global board defaults, including desktop/mobile home board IDs, automatic mobile layout mode, and status behavior. Requires admin permission",
       },
     })
     .input(z.void())
@@ -54,7 +55,7 @@ export const serverSettingsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Update global board defaults. Requires admin permission. Optional fields: homeBoardId, mobileHomeBoardId, enableStatusByDefault, forceDisableStatus. Home board IDs must reference public boards or be null",
+          "Update global board defaults. Requires admin permission. Optional fields: homeBoardId, mobileHomeBoardId, enableAutomaticMobileLayout, enableStatusByDefault, forceDisableStatus. Home board IDs must reference public boards or be null",
       },
     })
     .input(boardServerSettingsUpdateSchema)
@@ -103,10 +104,19 @@ export const serverSettingsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
-      await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
+      const next = {
         ...current,
         ...input.value,
-      } as ServerSettings[keyof ServerSettings]);
+      } as ServerSettings[keyof ServerSettings];
+      const existing = await ctx.db.query.serverSettings.findFirst({
+        where: eq(serverSettings.settingKey, input.settingsKey),
+      });
+
+      if (existing) {
+        await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, next);
+      } else {
+        await insertServerSettingByKeyAsync(ctx.db, input.settingsKey, next);
+      }
     }),
   initSettings: onboardingProcedure
     .requiresStep("settings")

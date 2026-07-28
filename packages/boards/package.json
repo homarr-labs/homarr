@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",
+    "@homarr/settings": "workspace:^0.1.0",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

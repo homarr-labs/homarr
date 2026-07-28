@@ -1,7 +1,7 @@
 import { Badge, Box, Card } from "@mantine/core";
 import combineClasses from "clsx";
 
-import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { BoardDynamicSectionMenu } from "./dynamic/dynamic-menu";
@@ -14,7 +14,6 @@ interface Props {
 
 export const BoardDynamicSection = ({ section }: Props) => {
   const board = useRequiredBoard();
-  const currentLayoutId = useCurrentLayout();
   const options = section.options;
 
   return (
@@ -52,8 +51,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
             {options.title}
           </Badge>
         )}
-        {/* Use unique key by layout to reinitialize gridstack */}
-        <GridStack key={`${currentLayoutId}-${section.id}`} section={section} className="min-row" />
+        <GridStack section={section} className="min-row" />
       </Card>
       <BoardDynamicSectionMenu section={section} />
     </Box>

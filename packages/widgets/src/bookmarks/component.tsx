@@ -7,13 +7,16 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
+import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
+import { WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
 
-export default function BookmarksWidget({ options, itemId }: WidgetComponentProps<"bookmarks">) {
+export default function BookmarksWidget({ options, itemId, displayMode }: WidgetComponentProps<"bookmarks">) {
   const board = useRequiredBoard();
+  const t = useI18n();
   const { data = [] } = clientApi.app.byIds.useQuery(options.items, {
     select(data) {
       return data.toSorted((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
@@ -40,6 +43,21 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
       })),
     [data],
   );
+
+  if (displayMode === "mobileSummary") {
+    return (
+      <WidgetMobileSummary
+        value={data.length}
+        label={options.title || t("widget.bookmarks.name")}
+        description={
+          data
+            .map((app) => app.name)
+            .slice(0, 2)
+            .join(" · ") || t("board.mobile.details")
+        }
+      />
+    );
+  }
 
   return (
     <Stack h="100%" gap="sm" p="sm">
