@@ -94,7 +94,7 @@ catalog:
   "@types/ws": ^8.18.1
   "@types/xml2js": ^0.4.14
   posthog-js: ^1.399.1
-  posthog-node: ^5.40.0
+  posthog-node: ^5.46.1
   "@vitejs/plugin-react": ^6.0.3
   "@vitest/coverage-v8": ^4.1.10
   "@vitest/ui": ^4.1.10
