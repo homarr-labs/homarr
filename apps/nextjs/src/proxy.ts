@@ -1,10 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { api } from "@homarr/api/server";
-import { localeCookieKey } from "@homarr/definitions";
-import type { SupportedLanguage } from "@homarr/translation";
-import { supportedLanguages } from "@homarr/translation";
+import { getDefaultLocaleForProxyAsync, getOnboardingStepForProxyAsync } from "@homarr/db/proxy-reader";
+import { localeCookieKey } from "@homarr/definitions/cookie";
+import type { SupportedLanguage } from "@homarr/translation/languages";
+import { supportedLanguages } from "@homarr/translation/languages";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
 
 let isOnboardingFinished = false;
@@ -14,8 +14,8 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   if (!isOnboardingFinished && !pathname.endsWith("/init")) {
-    const currentOnboardingStep = await api.onboard.currentStep();
-    if (currentOnboardingStep.current !== "finish") {
+    const currentOnboardingStep = await getOnboardingStepForProxyAsync();
+    if (currentOnboardingStep !== "finish") {
       return NextResponse.redirect(new URL("/init", request.url));
     }
 
@@ -26,7 +26,10 @@ export async function proxy(request: NextRequest) {
   const currentLocale = request.cookies.get(localeCookieKey)?.value;
   let defaultLocale: SupportedLanguage = "en";
   if (!currentLocale || !supportedLanguages.includes(currentLocale as SupportedLanguage)) {
-    defaultLocale = await api.serverSettings.getCulture().then((culture) => culture.defaultLocale);
+    const configuredLocale = await getDefaultLocaleForProxyAsync();
+    if (supportedLanguages.includes(configuredLocale as SupportedLanguage)) {
+      defaultLocale = configuredLocale as SupportedLanguage;
+    }
   }
 
   // We don't want to fallback to accept-language header so we clear it
