@@ -7,6 +7,7 @@ const repositoryRoot = resolve(import.meta.dirname, "..");
 const outfile = resolve(repositoryRoot, "apps/workshop/pb_hooks/widget-validator.bundle.cjs");
 
 await build({
+  absWorkingDir: repositoryRoot,
   entryPoints: [resolve(repositoryRoot, "packages/workshop/src/pocketbase-validator.ts")],
   bundle: true,
   platform: "neutral",

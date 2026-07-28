@@ -397,7 +397,8 @@ jobs:
     needs: [container, preview-arm64]
     if: |
       (
-        (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+        github.event_name == 'merge_group' ||
+        github.event_name == 'pull_request' ||
         (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
       )
     runs-on: ubuntu-latest
@@ -410,7 +411,12 @@ jobs:
       PREVIEW_TAG: pr-${{ github.event.pull_request.number || inputs.pr_number }}
     steps:
       - name: Log in to GHCR
-        if: "!env.ACT"
+        if: |
+          !env.ACT &&
+          (
+            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
+          )
         uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
@@ -418,12 +424,17 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
-        if: "!env.ACT"
+        if: |
+          !env.ACT &&
+          (
+            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
+          )
         uses: docker/setup-buildx-action@v4
 
       - name: Verify PR head before publication
         id: publication-preflight
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/github-script@v8
         env:
           EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -449,7 +460,14 @@ jobs:
       - name: Publish preview manifest
         if: |
           !env.ACT &&
-          (github.event_name != 'pull_request' || steps.publication-preflight.outputs.publish == 'true')
+          (
+            (
+              github.event_name == 'pull_request' &&
+              github.event.pull_request.head.repo.full_name == github.repository &&
+              steps.publication-preflight.outputs.publish == 'true'
+            ) ||
+            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
+          )
         env:
           AMD64_DIGEST: ${{ needs.container.outputs.digest }}
           ARM64_DIGEST: ${{ needs.preview-arm64.outputs.digest }}
@@ -461,7 +479,14 @@ jobs:
       - name: Verify preview manifest platforms
         if: |
           !env.ACT &&
-          (github.event_name != 'pull_request' || steps.publication-preflight.outputs.publish == 'true')
+          (
+            (
+              github.event_name == 'pull_request' &&
+              github.event.pull_request.head.repo.full_name == github.repository &&
+              steps.publication-preflight.outputs.publish == 'true'
+            ) ||
+            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
+          )
         run: |
           image="${PREVIEW_IMAGE}:${PREVIEW_TAG}"
           manifest="$(docker buildx imagetools inspect "$image" --raw)"
@@ -471,6 +496,12 @@ jobs:
               <<<"$manifest" >/dev/null
           done
           docker buildx imagetools inspect "$image"
+
+      - name: Confirm multi-platform preview validation
+        if: |
+          github.event_name == 'merge_group' ||
+          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
+        run: echo "Both platform image builds completed; registry publication is intentionally disabled for this event."
 
   cleanup:
     name: Clean up preview image
