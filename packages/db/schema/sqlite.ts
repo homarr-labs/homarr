@@ -479,34 +479,46 @@ export const assistantConfigurations = sqliteTable("assistant_configuration", {
     .default(sql`(unixepoch())`),
 });
 
-export const assistantThreads = sqliteTable("assistant_thread", {
-  id: text().notNull().primaryKey(),
-  userId: text()
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  title: text(),
-  modelId: text(),
-  status: text().$type<"regular" | "archived">().notNull().default("regular"),
-  createdAt: int({ mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
-  updatedAt: int({ mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
-});
+export const assistantThreads = sqliteTable(
+  "assistant_thread",
+  {
+    id: text().notNull().primaryKey(),
+    userId: text()
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    title: text(),
+    modelId: text(),
+    status: text().$type<"regular" | "archived">().notNull().default("regular"),
+    createdAt: int({ mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+    updatedAt: int({ mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (thread) => ({
+    userUpdatedAtIdx: index("assistant_thread__user_id_updated_at_idx").on(thread.userId, thread.updatedAt),
+  }),
+);
 
-export const assistantMessages = sqliteTable("assistant_message", {
-  id: text().notNull().primaryKey(),
-  threadId: text()
-    .notNull()
-    .references(() => assistantThreads.id, { onDelete: "cascade" }),
-  parentId: text(),
-  format: text().notNull().default("ai-sdk/v6"),
-  content: text().default(emptySuperJSON).notNull(),
-  createdAt: int({ mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
-});
+export const assistantMessages = sqliteTable(
+  "assistant_message",
+  {
+    id: text().notNull().primaryKey(),
+    threadId: text()
+      .notNull()
+      .references(() => assistantThreads.id, { onDelete: "cascade" }),
+    parentId: text(),
+    format: text().notNull().default("ai-sdk/v6"),
+    content: text().default(emptySuperJSON).notNull(),
+    createdAt: int({ mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (message) => ({
+    threadCreatedAtIdx: index("assistant_message__thread_id_created_at_idx").on(message.threadId, message.createdAt),
+  }),
+);
 
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
   user: one(users, {
