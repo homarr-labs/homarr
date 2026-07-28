@@ -68,20 +68,6 @@ onRecordUpdateRequest((event) => {
 }, "users");
 
 onRecordCreateRequest((event) => {
-  try {
-    const { validateAndNormalizeSubmission } = require(`${__hooks}/workshop-utils.js`);
-    validateAndNormalizeSubmission(event.record);
-  } catch (error) {
-    console.log(
-      JSON.stringify({
-        event: "workshop_submission_rejected",
-        operation: "create",
-        type: event.record.getString("type"),
-        errorName: error && error.name ? error.name : "ValidationError",
-      }),
-    );
-    throw error;
-  }
   event.record.set("revision", 1);
   event.record.set("expectedRevision", 0);
   event.record.set("changelog", "");
@@ -90,26 +76,12 @@ onRecordCreateRequest((event) => {
 }, "submissions");
 
 onRecordUpdateRequest((event) => {
-  const { rejectRequest, validateAndNormalizeSubmission } = require(`${__hooks}/workshop-utils.js`);
+  const { rejectRequest } = require(`${__hooks}/workshop-utils.js`);
   const original = event.record.original();
   const currentRevision = original.getInt("revision");
   const expectedRevision = event.record.getInt("expectedRevision");
   if (!Number.isSafeInteger(expectedRevision) || expectedRevision < 1) {
     rejectRequest("Submission changed since it was read");
-  }
-  try {
-    validateAndNormalizeSubmission(event.record);
-  } catch (error) {
-    console.log(
-      JSON.stringify({
-        event: "workshop_submission_rejected",
-        operation: "update",
-        submissionId: event.record.id,
-        type: event.record.getString("type"),
-        errorName: error && error.name ? error.name : "ValidationError",
-      }),
-    );
-    throw error;
   }
   event.record.set("expectedRevision", expectedRevision);
   event.record.set("revision", currentRevision + 1);

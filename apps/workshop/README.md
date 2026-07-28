@@ -93,9 +93,10 @@ separate roles in separate services.
 
 ## Validation and tests
 
-The browser and shared client validate content with the canonical TypeScript schema. PocketBase independently validates
-direct writes, owns schema and revision fields, and rejects stale compare-and-swap updates. Homarr validates the
-downloaded content again before installation.
+The official browser and shared client validate content with the canonical TypeScript schema and send the matching
+schema identifier. PocketBase stores submission content without parsing, normalizing, or validating it; it only owns
+revision fields and rejects stale compare-and-swap updates. Homarr validates downloaded content again before
+installation, so direct API submissions that bypass the official client can be rejected there.
 
 Run the disposable integration suite:
 

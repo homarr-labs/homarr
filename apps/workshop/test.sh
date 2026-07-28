@@ -17,7 +17,6 @@ node apps/workshop/tests/workshop-rate-limit-migration.mjs
 node apps/workshop/tests/entrypoint-url.mjs
 node apps/workshop/tests/workshop-identity.mjs
 node apps/workshop/tests/workshop-oauth-hook.mjs
-node scripts/build-workshop-validator.mjs
 
 cleanup() {
   if [ -n "$ROLLBACK_CONTAINER" ]; then
@@ -86,27 +85,6 @@ docker compose -p "$WORKSHOP_TEST_PROJECT" -f apps/workshop/docker-compose.yml e
   workshop-test@example.invalid 'WorkshopLocalTest123!' --dir=/pb_data
 
 WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_TEST_PORT" node apps/workshop/tests/workshop.integration.mjs
-
-# PocketBase rate limits use the client IP as the counter key. Run the
-# differential corpus in restart-separated shards so the adversarial coverage
-# can grow without weakening the production write limits.
-for corpus_shard in 0 1; do
-  PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
-    -f apps/workshop/docker-compose.yml restart workshop
-  for attempt in $(seq 1 60); do
-    if curl --fail --silent "http://127.0.0.1:$WORKSHOP_TEST_PORT/api/health" >/dev/null; then
-      break
-    fi
-    if [ "$attempt" -eq 60 ]; then
-      exit 1
-    fi
-    sleep 1
-  done
-
-  WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_TEST_PORT" \
-    WORKSHOP_CORPUS_SHARD="$corpus_shard" WORKSHOP_CORPUS_SHARD_COUNT=2 pnpm exec tsx \
-    apps/workshop/tests/workshop-validator-corpus.mts
-done
 
 for client_id in workshop-test-client workshop-rotated-client; do
   GITHUB_CLIENT_ID="$client_id" GITHUB_CLIENT_SECRET="workshop-test-secret" PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" \

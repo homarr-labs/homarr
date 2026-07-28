@@ -1,35 +1,19 @@
-const CUSTOM_WIDGET_SCHEMA = "homarr-custom-widget-v2";
-const CUSTOM_CSS_SCHEMA = "homarr-custom-css-v1";
-const MAX_CSS_LENGTH = 16_384;
-const MAX_CONTENT_LENGTH = 1_000_000;
 const GITHUB_USERNAME_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/;
 
 const rejectRequest = (message) => {
   throw new BadRequestError(message);
 };
 
-const validateAndNormalizeSubmission = (record) => {
-  const type = record.getString("type");
-  const content = record.getString("content");
-  if (!content || content.length > MAX_CONTENT_LENGTH) rejectRequest("Submission content is invalid");
-  record.set("title", record.getString("title").trim());
-  record.set("description", record.getString("description").trim());
-  record.set("changelog", record.getString("changelog").trim());
-  if (type === "customCss") {
-    if (!content.trim() || content.length > MAX_CSS_LENGTH) rejectRequest("Custom CSS is empty or too large");
-    record.set("widgetSchema", CUSTOM_CSS_SCHEMA);
-    return;
-  }
-  if (type !== "customWidget") rejectRequest("Submission type is invalid");
-  const { validateWidgetManifest } = require(`${__hooks}/widget-validator.js`);
-  record.set("content", validateWidgetManifest(content));
-  record.set("widgetSchema", CUSTOM_WIDGET_SCHEMA);
-};
-
 const normalizedIdentityText = (...values) => {
   for (const value of values) {
     if (typeof value !== "string") continue;
-    const normalized = value.replace(/[\u0000-\u001f\u007f]/g, "").trim();
+    const normalized = [...value]
+      .filter((character) => {
+        const code = character.codePointAt(0) || 0;
+        return code > 31 && code !== 127;
+      })
+      .join("")
+      .trim();
     if (normalized) return normalized;
   }
   return "";
@@ -91,5 +75,4 @@ module.exports = {
   escapeHtml,
   rejectRequest,
   sendEmail,
-  validateAndNormalizeSubmission,
 };

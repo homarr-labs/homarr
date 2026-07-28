@@ -75,11 +75,13 @@ Mutations remain authenticated and enforce each request's view, modify, or full 
 
 The workbench keeps one continuous layout with visual source, request, and option editors. Advanced raw JSON remains available for experts and AI paste. Invalid values stay inline and disable both preview and Save/Create until they are corrected.
 
-Exports, imports, Workshop, MCP, and storage all validate the same schema. Widgets saved in the v1 format remain
-visible to administrators with a **Migration required** badge after upgrading. Use **Copy migration prompt**, give the
-redacted prompt to an LLM, then import its v2 JSON from that widget's action menu. The prompt keeps safe request
-metadata but deliberately omits the v1 display configuration because legacy free-text and JSX can contain hard-coded
-credentials. Add a credential-free description of the widget's visible layout and behavior when sending the prompt.
+Exports, imports, the official Workshop client, and MCP validate the same schema. PocketBase stores community
+submissions without interpreting their content, and Homarr validates them before installation. Widgets saved in the v1
+format remain visible to administrators with a **Migration required** badge after upgrading. Use **Copy migration
+prompt**, give the redacted prompt to an LLM, then import its v2 JSON from that widget's action menu. The prompt keeps
+safe request metadata but deliberately omits the v1 display configuration because legacy free-text and JSX can contain
+hard-coded credentials. Add a credential-free description of the widget's visible layout and behavior when sending the
+prompt.
 
 Homarr keeps the original v1 definition and encrypted secret as a compatibility backup even after the validated v2
 replacement is created. The v2 record uses the same stable ID and takes precedence. The archived v1 copy stays hidden

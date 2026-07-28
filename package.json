@@ -26,7 +26,6 @@
     "dev": "pnpm -F nextjs dev",
     "dev:docs": "pnpm -F @homarr/docs dev",
     "dev:workshop": "node ./scripts/dev-workshop.mjs",
-    "build:workshop-validator": "pnpm --filter @homarr/workshop build:pocketbase-validator",
     "docker:docs": "docker compose -f apps/workshop/docker-compose.yml up --build docs",
     "docker:workshop": "docker compose -f apps/workshop/docker-compose.yml up --build workshop",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",

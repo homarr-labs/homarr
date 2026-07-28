@@ -74,7 +74,7 @@ describe("Workshop widget validation", () => {
     ).toBe(true);
   });
 
-  test("uses canonical direct-binding validation before publication", () => {
+  test("validates direct bindings in the official client before publication", () => {
     const widget = {
       ...CUSTOM_WIDGET_STARTER,
       requests: {

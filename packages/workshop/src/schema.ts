@@ -1,10 +1,14 @@
-import { customWidgetImportSchema } from "@homarr/custom-widgets/core";
+import { CUSTOM_WIDGET_SCHEMA, customWidgetImportSchema } from "@homarr/custom-widgets/core";
 import { z } from "zod/v4";
 
 export const HOMARR_WEBSITE_URL = "https://homarr.dev";
 export const WORKSHOP_API_URL = HOMARR_WEBSITE_URL;
 export const WORKSHOP_WEB_URL = `${HOMARR_WEBSITE_URL}/workshop`;
 export const WORKSHOP_CSS_SCHEMA = "homarr-custom-css-v1";
+export const WORKSHOP_SCHEMA_BY_TYPE = {
+  customWidget: CUSTOM_WIDGET_SCHEMA,
+  customCss: WORKSHOP_CSS_SCHEMA,
+} as const;
 export const MAX_WORKSHOP_CSS_LENGTH = 16_384;
 export const MAX_WORKSHOP_CONTENT_LENGTH = 1_000_000;
 export const MAX_WORKSHOP_SCREENSHOTS = 5;

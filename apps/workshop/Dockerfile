@@ -12,10 +12,8 @@ COPY apps/docs ./apps/docs
 COPY packages/custom-widgets ./packages/custom-widgets
 COPY packages/definitions ./packages/definitions
 COPY packages/workshop ./packages/workshop
-COPY scripts/build-workshop-validator.mjs ./scripts/build-workshop-validator.mjs
 COPY tooling/typescript ./tooling/typescript
 RUN pnpm config set store-dir /pnpm/store && pnpm install --filter @homarr/docs... --frozen-lockfile
-RUN pnpm build:workshop-validator
 
 FROM dependencies AS website
 ARG HOMARR_WEBSITE_URL=https://homarr.dev
@@ -51,9 +49,6 @@ ENTRYPOINT ["workshop-entrypoint"]
 FROM pocketbase-runtime AS development
 COPY --chown=pocketbase:pocketbase apps/workshop/pb_migrations /pb_migrations
 COPY --chown=pocketbase:pocketbase apps/workshop/pb_hooks /pb_hooks
-COPY --from=dependencies --chown=pocketbase:pocketbase \
-  /app/apps/workshop/pb_hooks/widget-validator.bundle.cjs \
-  /pb_hooks/widget-validator.bundle.cjs
 EXPOSE 8090
 HEALTHCHECK --interval=10s --timeout=5s --start-period=15s --retries=6 CMD wget -q --spider "http://127.0.0.1:${PORT}/api/health" || exit 1
 
@@ -62,9 +57,6 @@ ENV WORKSHOP_REQUIRE_PUBLIC_ORIGIN=true
 COPY --from=website /app/workshop-public /pb_public
 COPY apps/workshop/pb_migrations /pb_migrations
 COPY apps/workshop/pb_hooks /pb_hooks
-COPY --from=dependencies \
-  /app/apps/workshop/pb_hooks/widget-validator.bundle.cjs \
-  /pb_hooks/widget-validator.bundle.cjs
 RUN chown -R pocketbase:pocketbase /pb_hooks /pb_migrations /pb_public
 EXPOSE 8090
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD wget -q --spider "http://127.0.0.1:${PORT}/api/health" || exit 1

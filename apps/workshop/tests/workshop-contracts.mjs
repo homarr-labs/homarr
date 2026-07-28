@@ -9,25 +9,10 @@ if (typeof clientExport !== "string") throw new Error("Workshop client export is
 await access(resolve("packages/workshop", clientExport));
 
 const hook = await read("apps/workshop/pb_hooks/workshop.pb.js");
-const hookUtils = await read("apps/workshop/pb_hooks/workshop-utils.js");
-const widgetValidator = await read("apps/workshop/pb_hooks/widget-validator.js");
-const canonicalWidgetValidator = await read("packages/workshop/src/pocketbase-validator.ts");
 const dockerfile = await read("apps/workshop/Dockerfile");
-const schema = await read("packages/workshop/src/schema.ts");
 const workshopApp = await read("apps/docs/src/components/workshop/WorkshopApp.tsx");
 const workshopAdmin = await read("apps/docs/src/components/workshop/WorkshopAdmin.tsx");
 const workshopDetail = await read("apps/docs/src/components/workshop/DetailPage.tsx");
-const constantValue = (source, name) => {
-  const match = source.match(new RegExp(`(?:export )?const ${name} = ([\\d_]+)`));
-  if (!match?.[1]) throw new Error(`Workshop limit ${name} is missing or is not a numeric literal`);
-  return Number(match[1].replaceAll("_", ""));
-};
-if (constantValue(hookUtils, "MAX_CSS_LENGTH") !== constantValue(schema, "MAX_WORKSHOP_CSS_LENGTH")) {
-  throw new Error("PocketBase and shared Workshop CSS limits must match");
-}
-if (constantValue(hookUtils, "MAX_CONTENT_LENGTH") !== constantValue(schema, "MAX_WORKSHOP_CONTENT_LENGTH")) {
-  throw new Error("PocketBase and shared Workshop content limits must match");
-}
 if (!hook.includes("require(`${__hooks}/workshop-utils.js`)")) {
   throw new Error("Workshop handlers must load shared helpers inside their isolated PocketBase contexts");
 }
@@ -51,18 +36,27 @@ if (
 if (!hook.includes("workshop_report_reopened") || !hook.includes("status = 'dismissed'")) {
   throw new Error("Workshop must permit a fresh report after a previous report was dismissed");
 }
-if (
-  !widgetValidator.includes("widget-validator.bundle.cjs") ||
-  !canonicalWidgetValidator.includes("customWidgetDefinitionSchema.safeParse")
-) {
-  throw new Error("Workshop direct writes must use the bundled canonical Custom Widget validator");
+if (hook.includes("validateAndNormalizeSubmission") || hook.includes("workshop_submission_rejected")) {
+  throw new Error("PocketBase must not interpret or validate Workshop submission content");
 }
-await access(resolve("apps/workshop/pb_hooks/widget-validator.bundle.cjs"));
+for (const removedValidator of [
+  "apps/workshop/pb_hooks/widget-validator.js",
+  "apps/workshop/pb_hooks/widget-validator.bundle.cjs",
+  "packages/workshop/src/pocketbase-validator.ts",
+  "scripts/build-workshop-validator.mjs",
+]) {
+  try {
+    await access(resolve(removedValidator));
+    throw new Error(`Workshop validator artifact must stay removed: ${removedValidator}`);
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith("Workshop validator artifact")) throw error;
+  }
+}
 if (!dockerfile.includes("WORKSHOP_REQUIRE_PUBLIC_ORIGIN=true")) {
   throw new Error("The production Workshop image must require an explicit public origin");
 }
-if (!dockerfile.includes("COPY --from=dependencies") || !dockerfile.includes("widget-validator.bundle.cjs")) {
-  throw new Error("The production Workshop image must copy the freshly generated canonical validator");
+if (dockerfile.includes("widget-validator") || dockerfile.includes("build-workshop-validator")) {
+  throw new Error("The Workshop image must not build or copy a submission validator");
 }
 if (hook.includes('findAllRecords("users")') || !hook.includes('findRecordsByFilter("users"')) {
   throw new Error("Workshop report notifications must use a filtered, bounded administrator query");

@@ -96,7 +96,7 @@ describe("WorkshopBackend", () => {
     expect(mocks.autoCancellation).toHaveBeenCalledWith(false);
   });
 
-  test("leaves schema and initial revision ownership to PocketBase", async () => {
+  test("sends the exported schema while leaving initial revision ownership to PocketBase", async () => {
     const client = new WorkshopBackend("https://workshop.example.com");
     client.pocketBase.authStore.save("token", { id: "author-id" } as never);
     mocks.create.mockResolvedValue({ id: "submission-id" });
@@ -113,7 +113,7 @@ describe("WorkshopBackend", () => {
 
     const payload = mocks.create.mock.calls[0]?.[0] as FormData;
     expect(payload.get("author")).toBe("author-id");
-    expect(payload.get("widgetSchema")).toBeNull();
+    expect(payload.get("widgetSchema")).toBe("homarr-custom-css-v1");
     expect(payload.get("revision")).toBeNull();
   });
 

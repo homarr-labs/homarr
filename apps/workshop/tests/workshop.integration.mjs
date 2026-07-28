@@ -163,7 +163,7 @@ const submission = await request("/api/collections/submissions/records", {
     type: "customWidget",
     title: "Workshop runtime probe",
     description: "PocketBase integration test",
-    widgetSchema: "homarr-custom-css-v1",
+    widgetSchema: widget.$schema,
     content: JSON.stringify(widget),
     author: author.id,
     revision: 999,
@@ -179,38 +179,8 @@ if (
   submission.changelog !== "" ||
   submission.outdated !== false
 ) {
-  throw new Error("Submission publication was not validated and normalized server-side");
+  throw new Error("Submission publication metadata was not initialized server-side");
 }
-await expectStatus(
-  "/api/collections/submissions/records",
-  {
-    method: "POST",
-    headers: visitorSession.headers,
-    body: JSON.stringify({
-      type: "customCss",
-      title: "Oversized stylesheet",
-      content: "x".repeat(16_385),
-      widgetSchema: "homarr-custom-widget-v2",
-      author: visitor.id,
-    }),
-  },
-  400,
-);
-await expectStatus(
-  "/api/collections/submissions/records",
-  {
-    method: "POST",
-    headers: visitorSession.headers,
-    body: JSON.stringify({
-      type: "customWidget",
-      title: "Invalid widget payload",
-      content: ".dashboard { color: red; }",
-      widgetSchema: "homarr-custom-widget-v2",
-      author: visitor.id,
-    }),
-  },
-  400,
-);
 const ownerVotes = await request("/api/collections/votes/records", { headers: authorSession.headers });
 if (
   ownerVotes.items.length !== 1 ||

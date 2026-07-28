@@ -25,6 +25,7 @@ import {
   WORKSHOP_API_URL,
   MAX_WORKSHOP_SCREENSHOTS,
   WORKSHOP_REQUEST_TIMEOUT_MS,
+  WORKSHOP_SCHEMA_BY_TYPE,
   workshopCommentSchema,
   workshopReportSchema,
   workshopSubmissionDetailSchema,
@@ -437,6 +438,7 @@ export class WorkshopBackend {
     const data = new FormData();
     Object.entries(parsed).forEach(([key, value]) => data.set(key, typeof value === "string" ? value : String(value)));
     data.set("author", this.currentUser?.id ?? "");
+    data.set("widgetSchema", WORKSHOP_SCHEMA_BY_TYPE[parsed.type]);
     screenshots.forEach((file) => data.append("screenshots", file));
     try {
       const result = await this.pocketBase.collection("submissions").create(data);
