@@ -7,8 +7,11 @@ WORKDIR /app
 RUN apk add --no-cache libc6-compat curl bash && apk update
 
 RUN corepack enable pnpm
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY .npmrc pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY patches ./patches
+COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
+# @homarr/definitions generates documentation types during install.
+COPY --parents ./packages/definitions/src ./
 # Workaround for pnpm/pnpm#5268: pnpm fetch crashes when patchedDependencies
 # are configured with nodeLinker: hoisted. The applyPatchToDir function tries
 # to chdir into node_modules/<pkg> which doesn't exist during fetch (only the
@@ -22,11 +25,12 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm fetch && \
     sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml
 
-COPY . .
 # Follow the pnpm fetch pattern from https://pnpm.io/cli/fetch
 # --frozen-lockfile is omitted as recommended by the pnpm fetch docs
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm install --recursive
+
+COPY . .
 
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
