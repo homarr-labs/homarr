@@ -128,6 +128,7 @@ interface OpenModalOptions {
   keepMounted?: boolean;
   onClose?: () => void;
   title?: stringOrTranslation;
+  onClose?: () => void;
 }
 
 export const useModalAction = <TModal extends ModalDefinition>(modal: TModal) => {
@@ -148,6 +149,10 @@ export const useConfirmModal = () => {
   const { openModal } = useModalAction(ConfirmModal);
 
   return {
-    openConfirmModal: (props: ConfirmModalProps) => openModal(props, { title: props.title }),
+    openConfirmModal: (props: ConfirmModalProps) =>
+      openModal(props, {
+        title: props.title,
+        onClose: props.onClose,
+      }),
   };
 };

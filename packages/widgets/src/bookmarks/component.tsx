@@ -111,7 +111,7 @@ export default function BookmarksWidget({
   return (
     <Stack h="100%" mih={0} gap="sm" p={height < 120 ? "xs" : "sm"}>
       {options.title.length > 0 && (
-        <Title order={4} px="0.25rem" lineClamp={displayMode === "advanced" ? undefined : 1}>
+        <Title order={4} px="0.25rem" lineClamp={1}>
           {options.title}
         </Title>
       )}
@@ -283,14 +283,14 @@ const AdvancedBookmarksLayout = ({
                     style={{ width: 40, height: 40, flex: "0 0 auto" }}
                   />
                   <Stack gap={3} miw={0}>
-                    <Text fw={700} size="sm">
+                    <Text fw={700} size="sm" truncate="end">
                       {app.name}
                     </Text>
                     <Anchor component="span" size="xs" truncate="end">
                       {getBookmarkHostname(app.href)}
                     </Anchor>
                     {app.description && (
-                      <Text size="xs" c="dimmed">
+                      <Text size="xs" c="dimmed" lineClamp={3}>
                         {app.description}
                       </Text>
                     )}

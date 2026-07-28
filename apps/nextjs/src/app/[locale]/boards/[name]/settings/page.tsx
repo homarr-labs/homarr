@@ -53,7 +53,7 @@ export default async function BoardSettingsPage(props: Props) {
   }
 
   return (
-    <Container size="xl">
+    <Container size="xl" px={{ base: "md", md: "xl" }}>
       <Stack>
         <Title>{t("title", { boardName: capitalize(board.name) })}</Title>
         <BoardSettingsForm

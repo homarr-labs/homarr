@@ -20,6 +20,19 @@ interface Options<TIntegration extends IntegrationLike, TResult> {
   throwOnAllFailures?: boolean;
 }
 
+export interface IntegrationQueryProvenance {
+  failedIntegrationCount: number;
+  staleIntegrationCount: number;
+}
+
+export const getIntegrationQueryProvenance = (
+  selectedIntegrationCount: number,
+  results: readonly { isStale?: boolean }[],
+): IntegrationQueryProvenance => ({
+  failedIntegrationCount: Math.max(0, selectedIntegrationCount - results.length),
+  staleIntegrationCount: results.filter((result) => result.isStale === true).length,
+});
+
 export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
   integrations: TIntegration[],
   fn: (integration: TIntegration) => Promise<TResult>,

@@ -21,6 +21,7 @@ import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
   getServerSettingByKeyAsync,
   insertServerSettingByKeyAsync,
+  shouldEnableAutomaticMobileLayoutForUpgrade,
   updateServerSettingByKeyAsync,
 } from "../queries/server-setting";
 
@@ -155,19 +156,33 @@ const seedDefaultSearchEnginesAsync = async (db: Database) => {
   console.log("Set Homarr docs as the default search engine");
 };
 
-const seedServerSettingsAsync = async (db: Database) => {
+export const seedServerSettingsAsync = async (db: Database) => {
   const serverSettingsData = await db.query.serverSettings.findMany();
+  const existingLayouts = await db.query.layouts.findMany({
+    columns: {
+      boardId: true,
+      name: true,
+      breakpoint: true,
+    },
+  });
+  const defaultsForThisInstance = {
+    ...defaultServerSettings,
+    board: {
+      ...defaultServerSettings.board,
+      enableAutomaticMobileLayout: shouldEnableAutomaticMobileLayoutForUpgrade(existingLayouts),
+    },
+  };
 
   for (const settingsKey of defaultServerSettingsKeys) {
     const currentDbEntry = serverSettingsData.find((setting) => setting.settingKey === settingsKey);
     if (!currentDbEntry) {
-      await insertServerSettingByKeyAsync(db, settingsKey, defaultServerSettings[settingsKey]);
+      await insertServerSettingByKeyAsync(db, settingsKey, defaultsForThisInstance[settingsKey]);
       console.log(`Created serverSetting through seed key=${settingsKey}`);
       continue;
     }
 
-    const currentSettings = await getServerSettingByKeyAsync(db, settingsKey);
-    const defaultSettings = defaultServerSettings[settingsKey];
+    const currentSettings = SuperJSON.parse<(typeof defaultServerSettings)[typeof settingsKey]>(currentDbEntry.value);
+    const defaultSettings = defaultsForThisInstance[settingsKey];
     const missingKeys = objectKeys(defaultSettings).filter((key) => !(key in currentSettings));
 
     if (missingKeys.length === 0) {

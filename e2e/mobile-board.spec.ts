@@ -1,6 +1,7 @@
+import type { Page } from "@playwright/test";
 import { chromium, devices, expect } from "@playwright/test";
 import { createId } from "@paralleldrive/cuid2";
-import SuperJSON from "superjson";
+import { stringify } from "superjson";
 import { describe, test } from "vitest";
 
 import { eq } from "drizzle-orm";
@@ -18,9 +19,34 @@ const adminCredentials = {
 
 const boardName = "mobile-e2e";
 
+const setAutomaticMobileLayoutAsync = async (page: Page, enabled: boolean) => {
+  await page.goto(new URL("/manage/settings", page.url()).toString());
+  const toggle = page.getByRole("switch", { name: "Use automatic mobile layout" });
+  await expect(toggle).toBeVisible();
+
+  if ((await toggle.isChecked()) !== enabled) {
+    if (enabled) {
+      await toggle.check();
+    } else {
+      await toggle.uncheck();
+    }
+
+    await toggle.locator("xpath=ancestor::form").getByRole("button", { name: "Save", exact: true }).click();
+    await expect(page.getByText("Settings saved successfully")).toBeVisible();
+  }
+
+  await page.reload();
+  if (enabled) {
+    await expect(page.getByRole("switch", { name: "Use automatic mobile layout" })).toBeChecked();
+  } else {
+    await expect(page.getByRole("switch", { name: "Use automatic mobile layout" })).not.toBeChecked();
+  }
+};
+
 const seedMobileBoardAsync = async (db: SqliteDatabase, userId: string) => {
   const boardId = createId();
-  const layoutId = createId();
+  const desktopLayoutId = createId();
+  const mobileLayoutId = createId();
   const firstSectionId = createId();
   const secondSectionId = createId();
 
@@ -29,13 +55,22 @@ const seedMobileBoardAsync = async (db: SqliteDatabase, userId: string) => {
     name: boardName,
     creatorId: userId,
   });
-  await db.insert(sqliteSchema.layouts).values({
-    id: layoutId,
-    name: "Desktop",
-    boardId,
-    columnCount: 12,
-    breakpoint: 0,
-  });
+  await db.insert(sqliteSchema.layouts).values([
+    {
+      id: desktopLayoutId,
+      name: "Desktop",
+      boardId,
+      columnCount: 12,
+      breakpoint: 1200,
+    },
+    {
+      id: mobileLayoutId,
+      name: "Mobile",
+      boardId,
+      columnCount: 4,
+      breakpoint: 0,
+    },
+  ]);
   await db.insert(sqliteSchema.sections).values([
     {
       id: firstSectionId,
@@ -60,22 +95,33 @@ const seedMobileBoardAsync = async (db: SqliteDatabase, userId: string) => {
     return {
       id,
       boardId,
-      kind: index === 0 ? ("notebook" as const) : ("clock" as const),
-      options: SuperJSON.stringify(index === 0 ? { content: "<p>Mobile notes</p>" } : {}),
-      advancedOptions: SuperJSON.stringify({}),
+      kind: index === 0 ? ("notebook" as const) : index === 1 ? ("rssFeed" as const) : ("clock" as const),
+      options: stringify(index === 0 ? { content: "<p>Mobile notes</p>" } : {}),
+      advancedOptions: stringify({}),
     };
   });
   await db.insert(sqliteSchema.items).values(itemRows);
   await db.insert(sqliteSchema.itemLayouts).values(
-    itemRows.map((item, index) => ({
-      itemId: item.id,
-      layoutId,
-      sectionId: index < 18 ? firstSectionId : secondSectionId,
-      xOffset: (index % 6) * 2,
-      yOffset: Math.floor((index % 18) / 6) * 2,
-      width: 2,
-      height: 2,
-    })),
+    itemRows.flatMap((item, index) => [
+      {
+        itemId: item.id,
+        layoutId: desktopLayoutId,
+        sectionId: index < 18 ? firstSectionId : secondSectionId,
+        xOffset: (index % 6) * 2,
+        yOffset: Math.floor((index % 18) / 6) * 2,
+        width: 2,
+        height: 2,
+      },
+      {
+        itemId: item.id,
+        layoutId: mobileLayoutId,
+        sectionId: index < 18 ? firstSectionId : secondSectionId,
+        xOffset: (index % 2) * 2,
+        yOffset: Math.floor((index % 18) / 2) * 2,
+        width: 2,
+        height: 2,
+      },
+    ]),
   );
   await db
     .update(sqliteSchema.users)
@@ -112,6 +158,7 @@ describe("Automatic mobile board", () => {
       await loginPage.locator("#password").fill(adminCredentials.password);
       await loginPage.locator("button[type='submit']").click();
       await loginPage.waitForURL((url) => !url.pathname.includes("/auth/login"), { timeout: 15_000 });
+      await setAutomaticMobileLayoutAsync(loginPage, true);
       const storageState = await loginContext.storageState();
 
       const mobileViewports = [
@@ -150,6 +197,7 @@ describe("Automatic mobile board", () => {
         await expect(page.locator("[data-mobile-board-item]"), viewport.name).toHaveCount(36);
         await expect(page.locator(".grid-stack-item"), viewport.name).toHaveCount(0);
         await expect(page.getByRole("button", { name: /search/i }), viewport.name).toBeVisible();
+        await expect(page.getByRole("button", { name: "Edit item", exact: true }), viewport.name).toHaveCount(0);
 
         const layoutMetrics = await page.evaluate(() => {
           const grids = Array.from(document.querySelectorAll<HTMLElement>("[data-mobile-board] > div"));
@@ -201,6 +249,10 @@ describe("Automatic mobile board", () => {
         }
 
         if (viewport.width === 390) {
+          await page.getByRole("button", { name: `Current board: ${boardName}` }).click();
+          await expect(page.getByRole("menuitem", { name: boardName })).toBeDisabled();
+          await page.keyboard.press("Escape");
+
           await page.getByRole("button", { name: "More" }).click();
           const moreDrawer = page.getByRole("dialog", { name: "More" });
           await expect(moreDrawer.getByRole("button", { name: "Second section" })).toBeVisible();
@@ -209,11 +261,19 @@ describe("Automatic mobile board", () => {
 
           const notebookActions = page.getByRole("button", { name: /Actions for Notebook/i });
           await notebookActions.click();
-          await page.getByRole("button", { name: "Open widget details" }).click();
+          await page.getByRole("button", { name: "Open widget details", exact: true }).click();
           const details = page.getByRole("dialog", { name: "Notebook" });
           await expect(details).toBeVisible();
+          await expect(details.getByRole("button", { name: "Edit" })).toBeVisible();
           await details.getByRole("button", { name: "Close" }).click();
           await expect(notebookActions).toBeFocused();
+
+          const rssSummary = page.getByRole("button", { name: "Open widget details: RSS feeds" });
+          await rssSummary.click();
+          const rssDetails = page.getByRole("dialog", { name: "RSS feeds" });
+          await expect(rssDetails).toBeVisible();
+          await rssDetails.getByRole("button", { name: "Close" }).click();
+          await expect(rssSummary).toBeFocused();
 
           const rtlOverflow = await page.evaluate(() => {
             document.documentElement.dir = "rtl";
@@ -233,7 +293,56 @@ describe("Automatic mobile board", () => {
       await desktopPage.goto(`${baseUrl}/boards/${boardName}`);
       await expect(desktopPage.locator("[data-mobile-board]")).toHaveCount(0);
       await expect(desktopPage.locator(".grid-stack-item")).toHaveCount(36);
+
+      await desktopPage.getByRole("button", { name: "Edit item", exact: true }).click();
+      await desktopPage.setViewportSize({ width: 390, height: 844 });
+      await expect(desktopPage.locator("[data-mobile-board]")).toBeVisible();
+      await desktopPage.getByRole("button", { name: "More" }).click();
+      await desktopPage.getByRole("dialog", { name: "More" }).getByRole("link", { name: "Settings" }).click();
+      const unsavedChangesDialog = desktopPage.getByRole("dialog", { name: "Unsaved changes" });
+      await expect(unsavedChangesDialog).toBeVisible();
+      await desktopPage.keyboard.press("Escape");
+      await expect(unsavedChangesDialog).toBeHidden();
+      await desktopPage.goBack();
+      await expect(unsavedChangesDialog).toBeVisible();
+      await desktopPage.goBack();
+      await expect(desktopPage.getByRole("dialog", { name: "Unsaved changes" })).toHaveCount(1);
+      await desktopPage.keyboard.press("Escape");
+      await expect(unsavedChangesDialog).toBeHidden();
+      await desktopPage.setViewportSize({ width: 800, height: 900 });
+      await desktopPage.getByRole("button", { name: "Edit item", exact: true }).click();
+      await expect(desktopPage.getByText("The board was successfully saved")).toBeVisible();
+      await expect
+        .poll(() => desktopPage.evaluate(() => window.history.state?.["__homarrBoardEditGuard"] ?? null))
+        .toBeNull();
+
+      await setAutomaticMobileLayoutAsync(desktopPage, false);
       await desktopContext.close();
+
+      const legacyMobileContext = await browser.newContext({
+        storageState,
+        viewport: { width: 390, height: 844 },
+        userAgent: devices["iPhone 13"].userAgent,
+        hasTouch: true,
+        isMobile: true,
+      });
+      const legacyMobilePage = await legacyMobileContext.newPage();
+      await legacyMobilePage.goto(`${baseUrl}/boards/${boardName}`);
+      await expect(legacyMobilePage.locator("[data-mobile-board]")).toHaveCount(0);
+      await expect(legacyMobilePage.locator(".grid-stack-item")).toHaveCount(36);
+      await expect(legacyMobilePage.getByRole("button", { name: "Edit item" })).toBeVisible();
+      await expect(legacyMobilePage.getByRole("button", { name: "More" })).toHaveCount(0);
+      await legacyMobilePage.getByRole("button", { name: "First section" }).click();
+      await legacyMobilePage.getByRole("button", { name: "Second section" }).click();
+      await expect
+        .poll(async () =>
+          legacyMobilePage
+            .locator(".grid-stack")
+            .first()
+            .evaluate((element) => getComputedStyle(element).getPropertyValue("--gridstack-column-count").trim()),
+        )
+        .toBe("4");
+      await legacyMobileContext.close();
     } finally {
       await loginContext.close();
       await browser.close();

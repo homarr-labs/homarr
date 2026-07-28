@@ -14,6 +14,20 @@ describe("item actions create-item", () => {
     vi.restoreAllMocks();
   });
 
+  test("clips oversized widgets to each layout's column count", () => {
+    const board = new BoardMockBuilder()
+      .addLayout({ id: "mobile", name: "Mobile", role: "mobile", columnCount: 3, breakpoint: 0 })
+      .addEmptySection({ id: "section" })
+      .build();
+    const baseLayout = board.layouts.find((layout) => layout.role === "base");
+
+    const result = createItemCallback({ kind: "mediaMissing" })(board);
+
+    const createdItem = result.items.at(0);
+    expect(createdItem?.layouts.find((layout) => layout.layoutId === "mobile")?.width).toBe(3);
+    expect(createdItem?.layouts.find((layout) => layout.layoutId === baseLayout?.id)?.width).toBe(4);
+  });
+
   test("should add it to first section", () => {
     // Arrange
     const itemKind = "clock";

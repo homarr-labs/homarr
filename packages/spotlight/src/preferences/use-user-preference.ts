@@ -7,6 +7,7 @@ import type { DayOfWeek } from "@mantine/dates";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import { requestBoardEditAction } from "@homarr/boards/edit-mode";
 import type { ColorScheme } from "@homarr/definitions";
 import { showErrorNotification } from "@homarr/notifications";
 import type { SettingsContextProps } from "@homarr/settings/creator";
@@ -160,7 +161,7 @@ export const useUserPreferences = () => {
 
   const clientSetters: Partial<Record<UserPreferenceKey, (value: unknown) => void>> = {
     colorScheme: (value) => setColorScheme(value as ColorScheme),
-    locale: (value) => changeLocale(value as typeof currentLocale),
+    locale: (value) => requestBoardEditAction(() => changeLocale(value as typeof currentLocale)),
     fullPreferencesPage: () => undefined,
   };
 
