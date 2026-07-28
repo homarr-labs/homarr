@@ -20,22 +20,17 @@ import {
   useSystemChartData,
 } from "./chart";
 import { chartAxisFormatters, formatByteRate, formatGB, formatPercent, formatStorageBytes } from "./format";
-import type { BeszelTooltipLayer } from "./tooltip";
 import { makeTooltipProps } from "./tooltip";
 import { useLiveStats } from "./use-live-stats";
 
 const CHART_HEIGHT = 180;
 const MB = 1024 * 1024;
-const makeTooltipSet = (layer: BeszelTooltipLayer) => ({
-  percent: makeTooltipProps(formatPercent, false, layer),
-  gigabytes: makeTooltipProps(formatGB, true, layer),
-  rate: makeTooltipProps(formatByteRate, true, layer),
-  percentTotal: makeTooltipProps(formatPercent, true, layer),
-  bytesTotal: makeTooltipProps(formatStorageBytes, true, layer),
-});
-const tooltipSets = {
-  background: makeTooltipSet("background"),
-  modal: makeTooltipSet("modal"),
+const tooltips = {
+  percent: makeTooltipProps(formatPercent),
+  gigabytes: makeTooltipProps(formatGB, true),
+  rate: makeTooltipProps(formatByteRate, true),
+  percentTotal: makeTooltipProps(formatPercent, true),
+  bytesTotal: makeTooltipProps(formatStorageBytes, true),
 };
 
 const ChartSkeleton = () => (
@@ -66,7 +61,6 @@ interface BeszelStatsViewProps {
   visibility: BeszelStatsVisibility;
   columns: 1 | 2;
   onSwitchToHistorical?: () => void;
-  tooltipLayer?: BeszelTooltipLayer;
 }
 
 const whenVisible = <T,>(visible: boolean, data: T | undefined) => (visible ? data : undefined);
@@ -78,14 +72,11 @@ export function BeszelStatsView({
   visibility,
   columns,
   onSwitchToHistorical,
-  tooltipLayer = "background",
 }: BeszelStatsViewProps) {
   const t = useScopedI18n("widget.beszelSystemStats");
   const locale = useCurrentIntlLocale();
   const showDocker = visibility.dockerCpu || visibility.dockerMemory || visibility.dockerNetwork;
   const isLive = timePeriod === "1m";
-  const tooltips = tooltipSets[tooltipLayer];
-
   const historicalQuery = clientApi.widget.beszel.getSystemStats.useQuery(
     { integrationIds, systemId, timePeriod, includeDocker: showDocker },
     { refetchInterval: isLive ? false : 5_000, enabled: !isLive && systemId !== "" },
