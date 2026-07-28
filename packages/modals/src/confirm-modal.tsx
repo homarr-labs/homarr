@@ -16,6 +16,7 @@ export interface ConfirmModalProps {
   children: ReactNode;
   onConfirm?: () => MaybePromise<void>;
   onCancel?: () => MaybePromise<void>;
+  onClose?: () => void;
   closeOnConfirm?: boolean;
   closeOnCancel?: boolean;
   cancelProps?: ButtonProps & ComponentPropsWithoutRef<"button">;

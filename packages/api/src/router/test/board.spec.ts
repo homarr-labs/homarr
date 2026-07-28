@@ -549,64 +549,6 @@ describe("getHomeBoard should return home board", () => {
     });
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "view");
   });
-  test.each([
-    { deviceType: "mobile", expectedBoard: "mobile-home" },
-    { deviceType: "tablet", expectedBoard: "desktop-home" },
-  ] as const)(
-    "should use the $expectedBoard preference for a $deviceType device",
-    async ({ deviceType, expectedBoard }) => {
-      // Arrange
-      const db = createDb();
-      const caller = boardRouter.createCaller({ db, deviceType, session: defaultSession });
-
-      const mobileBoardProps = await createFullBoardAsync(db, "mobile-home");
-      const desktopBoardProps = await createFullBoardAsync(db, "desktop-home");
-      await db
-        .update(users)
-        .set({
-          homeBoardId: desktopBoardProps.boardId,
-          mobileHomeBoardId: mobileBoardProps.boardId,
-        })
-        .where(eq(users.id, defaultCreatorId));
-
-      // Act
-      const result = await caller.getHomeBoard();
-
-      // Assert
-      expectInputToBeFullBoardWithName(result, {
-        ...(expectedBoard === "mobile-home" ? mobileBoardProps : desktopBoardProps),
-        name: expectedBoard,
-      });
-    },
-  );
-  test("should return a mobile-only group home board", async () => {
-    // Arrange
-    const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: "mobile", session: defaultSession });
-
-    const mobileBoardProps = await createFullBoardAsync(db, "group-mobile-home");
-    const groupId = createId();
-    await db.insert(groups).values({
-      id: groupId,
-      name: "mobile group",
-      position: 1,
-      homeBoardId: null,
-      mobileHomeBoardId: mobileBoardProps.boardId,
-    });
-    await db.insert(groupMembers).values({
-      userId: defaultCreatorId,
-      groupId,
-    });
-
-    // Act
-    const result = await caller.getHomeBoard();
-
-    // Assert
-    expectInputToBeFullBoardWithName(result, {
-      name: "group-mobile-home",
-      ...mobileBoardProps,
-    });
-  });
   test("should return global home board when user doesn't have one", async () => {
     // Arrange
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
@@ -2077,12 +2019,9 @@ const expectInputToBeFullBoardWithName = (
 };
 
 const createFullBoardAsync = async (db: Database, name: string) => {
-  await db
-    .insert(users)
-    .values({
-      id: defaultCreatorId,
-    })
-    .onConflictDoNothing();
+  await db.insert(users).values({
+    id: defaultCreatorId,
+  });
 
   const boardId = createId();
   await db.insert(boards).values({

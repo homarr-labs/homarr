@@ -1,5 +1,6 @@
 "use client";
 
+import { requestBoardEditAction } from "@homarr/boards/edit-mode";
 import { useChangeLocale, useCurrentLocale } from "@homarr/translation/client";
 
 import { LanguageCombobox } from "./language-combobox";
@@ -16,7 +17,7 @@ export const CurrentLanguageCombobox = ({ width, withinPortal }: CurrentLanguage
   return (
     <LanguageCombobox
       value={currentLocale}
-      onChange={changeLocale}
+      onChange={(locale) => requestBoardEditAction(() => changeLocale(locale))}
       isPending={isPending}
       width={width}
       withinPortal={withinPortal}

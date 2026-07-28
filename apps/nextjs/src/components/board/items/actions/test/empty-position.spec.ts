@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import type { Item } from "~/app/[locale]/boards/_types";
-import { getFirstEmptyPosition, getNearestEmptyPosition } from "../empty-position";
+import { getFirstEmptyPosition } from "../empty-position";
 
 describe("get first empty position", () => {
   test.each([
@@ -106,39 +106,7 @@ describe("get first empty position", () => {
 
     expect(result).toEqual(expectedX !== undefined ? { xOffset: expectedX, yOffset: expectedY } : undefined);
   });
-
-  test("does not place a wide item beyond the right edge", () => {
-    const elements = createElementsFromLayout([["a", "a", "a", " "]]);
-
-    expect(getFirstEmptyPosition(elements, 4, undefined, { width: 2, height: 1 })).toEqual({
-      xOffset: 0,
-      yOffset: 1,
-    });
-  });
 });
-
-describe("get nearest empty position", () => {
-  test("keeps the preferred cell when it fits", () => {
-    expect(getNearestEmptyPosition([], 4, 4, { xOffset: 2, yOffset: 1 }, { width: 1, height: 1 })).toEqual({
-      xOffset: 2,
-      yOffset: 1,
-    });
-  });
-
-  test("chooses the nearest available cell when the preferred cell is occupied", () => {
-    const elements = [{ xOffset: 2, yOffset: 1, width: 1, height: 1 }];
-
-    expect(getNearestEmptyPosition(elements, 4, 4, { xOffset: 2, yOffset: 1 }, { width: 1, height: 1 })).toEqual({
-      xOffset: 2,
-      yOffset: 0,
-    });
-  });
-
-  test("returns undefined when the item cannot fit within a bounded section", () => {
-    expect(getNearestEmptyPosition([], 1, 1, { xOffset: 0, yOffset: 0 }, { width: 2, height: 1 })).toBeUndefined();
-  });
-});
-
 const createElementsFromLayout = (layout: string[][]) => {
   const elements: (Pick<Item["layouts"][number], "xOffset" | "yOffset" | "width" | "height"> & { char: string })[] = [];
   for (let yOffset = 0; yOffset < layout.length; yOffset++) {

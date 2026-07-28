@@ -56,6 +56,33 @@ describe("getAll server settings", () => {
 });
 
 describe("saveSettings", () => {
+  test("saveSettings should persist settings when defaults are not seeded", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+
+    await caller.saveSettings({
+      settingsKey: "board",
+      value: {
+        enableAutomaticMobileLayout: false,
+      },
+    });
+
+    const dbSettings = await db.select().from(serverSettings);
+    expect(dbSettings).toStrictEqual([
+      {
+        settingKey: "board",
+        value: stringify({
+          ...defaultServerSettings.board,
+          enableAutomaticMobileLayout: false,
+        }),
+      },
+    ]);
+  });
+
   test("saveSettings should update settings and return true when it updated only one", async () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
@@ -103,6 +130,27 @@ describe("board settings API", () => {
     await expect(caller.getBoardSettings()).resolves.toStrictEqual(defaultServerSettings.board);
   });
 
+  test("getBoardSettings should backfill the automatic layout default for legacy values", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+    const legacyBoardSettings = {
+      homeBoardId: defaultServerSettings.board.homeBoardId,
+      mobileHomeBoardId: defaultServerSettings.board.mobileHomeBoardId,
+      enableStatusByDefault: defaultServerSettings.board.enableStatusByDefault,
+      forceDisableStatus: defaultServerSettings.board.forceDisableStatus,
+    };
+    await db.insert(serverSettings).values({
+      settingKey: "board",
+      value: stringify(legacyBoardSettings),
+    });
+
+    await expect(caller.getBoardSettings()).resolves.toStrictEqual(defaultServerSettings.board);
+  });
+
   test("updateBoardSettings should insert settings when defaults are not persisted", async () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
@@ -145,6 +193,7 @@ describe("board settings API", () => {
     await caller.updateBoardSettings({ homeBoardId: boardId });
     const result = await caller.updateBoardSettings({
       mobileHomeBoardId: boardId,
+      enableAutomaticMobileLayout: false,
       enableStatusByDefault: false,
     });
 
@@ -152,6 +201,7 @@ describe("board settings API", () => {
       ...defaultServerSettings.board,
       homeBoardId: boardId,
       mobileHomeBoardId: boardId,
+      enableAutomaticMobileLayout: false,
       enableStatusByDefault: false,
     });
     const dbSettings = await db.select().from(serverSettings);

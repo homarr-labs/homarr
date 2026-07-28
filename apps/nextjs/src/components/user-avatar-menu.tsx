@@ -21,9 +21,17 @@ interface UserAvatarMenuProps {
   children: ReactNode;
   availableUpdates?: RouterOutputs["updateChecker"]["getAvailableUpdates"];
   isDockerEnabled?: boolean;
+  opened: boolean;
+  onOpenChange: (opened: boolean) => void;
 }
 
-export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled }: UserAvatarMenuProps) => {
+export const UserAvatarMenu = ({
+  children,
+  availableUpdates,
+  isDockerEnabled,
+  opened,
+  onOpenChange,
+}: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
   const session = useSession();
 
@@ -40,7 +48,7 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled }: 
 
   return (
     // We use keepMounted so we can add event listeners to prevent navigating away without saving the board
-    <Menu width={300} withinPortal keepMounted>
+    <Menu width={300} withinPortal keepMounted opened={opened} onChange={onOpenChange}>
       <Menu.Dropdown>
         <AvailableUpdatesMenuItem availableUpdates={availableUpdates} />
         <Menu.Item component={Link} href="/boards" leftSection={<IconHome size="1rem" />}>

@@ -5,6 +5,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Box, Group, Skeleton, Stack } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
+import { useSettings } from "@homarr/settings";
+
 export const mobileBoardMediaQuery = "(max-width: 48em)";
 
 export type MobileBoardDeviceClass = "phone" | "tablet" | "desktop";
@@ -70,6 +72,7 @@ export const MobileBoardViewportProvider = ({
   initialDeviceClass,
   children,
 }: PropsWithChildren<{ initialDeviceClass: MobileBoardDeviceClass }>) => {
+  const { enableAutomaticMobileLayout } = useSettings();
   const [hasResolvedClientWidth, setHasResolvedClientWidth] = useState(false);
   const matchesMobileWidth = useMediaQuery(mobileBoardMediaQuery, initialDeviceClass === "phone", {
     getInitialValueInEffect: true,
@@ -87,11 +90,42 @@ export const MobileBoardViewportProvider = ({
 
   return (
     <MobileBoardViewportContext.Provider value={viewport}>
-      {viewport.isResolved ? children : <MobileBoardViewportSkeleton />}
+      {shouldShowMobileBoardViewportSkeleton({
+        enableAutomaticMobileLayout,
+        isResolved: viewport.isResolved,
+      }) ? (
+        <MobileBoardViewportSkeleton />
+      ) : (
+        children
+      )}
     </MobileBoardViewportContext.Provider>
   );
 };
 
 export const useMobileBoardViewport = () => useContext(MobileBoardViewportContext);
 
-export const useIsMobileBoard = () => useMobileBoardViewport().isMobile;
+export const resolveIsAutomaticMobileBoard = ({
+  isMobileViewport,
+  enableAutomaticMobileLayout,
+}: {
+  isMobileViewport: boolean;
+  enableAutomaticMobileLayout: boolean;
+}) => isMobileViewport && enableAutomaticMobileLayout;
+
+export const shouldShowMobileBoardViewportSkeleton = ({
+  enableAutomaticMobileLayout,
+  isResolved,
+}: {
+  enableAutomaticMobileLayout: boolean;
+  isResolved: boolean;
+}) => enableAutomaticMobileLayout && !isResolved;
+
+export const useIsMobileBoard = () => {
+  const viewport = useMobileBoardViewport();
+  const { enableAutomaticMobileLayout } = useSettings();
+
+  return resolveIsAutomaticMobileBoard({
+    isMobileViewport: viewport.isMobile,
+    enableAutomaticMobileLayout,
+  });
+};
