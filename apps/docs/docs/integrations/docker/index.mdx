@@ -57,8 +57,9 @@ In Windows, you'll need to adjust the slashes: `-v //var/run/docker.sock:/var/ru
 
 ### Using Podman
 
-Homarr can also connect to Podman's [Docker-compatible API](https://docs.podman.io/en/latest/markdown/podman-system-service.1.html).
+On Linux, Homarr can connect to Podman's [Docker-compatible API](https://docs.podman.io/en/latest/markdown/podman-system-service.1.html).
 The Podman API socket must be running and mounted into the Homarr container.
+The socket grants full access to Podman, including arbitrary code execution as the user running the API, so only mount it into trusted containers.
 
 For rootless Podman, enable the socket for the user that runs Homarr:
 
@@ -91,7 +92,8 @@ services:
       - "7575:7575"
 ```
 
-Run this compose project as the same user that owns the rootless Podman socket.
+Start Homarr with `podman compose up -d`.
+Run the compose project as the same user that owns the rootless Podman socket so `$XDG_RUNTIME_DIR` resolves to the correct path.
 To keep the user socket available after logout and across reboots, enable lingering with `loginctl enable-linger <user>`.
 
 For rootful Podman, enable the system socket with `sudo systemctl enable --now podman.socket`.
