@@ -339,11 +339,9 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
                 justify="flex-start"
                 leftSection={<IconLogout size={20} />}
                 onClick={() => {
-                  void signOut({ redirect: false })
-                    .catch(() => undefined)
-                    .then(() => {
-                      window.location.assign(logoutUrl ?? "/auth/login");
-                    });
+                  void signOut({ redirect: false }).then(() => {
+                    window.location.assign(logoutUrl ?? "/auth/login");
+                  });
                 }}
               >
                 {tProfile("logout")}
