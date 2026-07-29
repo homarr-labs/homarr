@@ -37,11 +37,7 @@ describe("settleIntegrationQueries", () => {
 
   it("does not treat an empty integration list as a failure", async () => {
     await expect(
-      settleIntegrationQueries(
-        [],
-        vi.fn(async () => "unused"),
-        { throwOnAllFailure: true },
-      ),
+      settleIntegrationQueries([], vi.fn(async () => "unused"), { throwOnAllFailure: true }),
     ).resolves.toEqual([]);
   });
 });
