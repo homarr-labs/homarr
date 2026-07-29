@@ -122,6 +122,29 @@ describe("persisted update checker cache", () => {
     expect(mocks.listReleases).toHaveBeenCalledTimes(1);
   });
 
+  test("deduplicates concurrent checks across simulated processes", async () => {
+    let completeGitHubRequest: (() => void) | undefined;
+    mocks.listReleases.mockImplementation(
+      async () =>
+        await new Promise<typeof successfulResponse>((resolve) => {
+          completeGitHubRequest = () => resolve(successfulResponse);
+        }),
+    );
+    const firstHandler = await loadHandlerAsync();
+    vi.resetModules();
+    const secondHandler = await loadHandlerAsync();
+
+    const firstRequest = firstHandler.getDataAsync();
+    await vi.waitFor(() => expect(mocks.listReleases).toHaveBeenCalledOnce());
+    const secondRequest = secondHandler.getDataAsync();
+    completeGitHubRequest?.();
+
+    const results = await Promise.all([firstRequest, secondRequest]);
+
+    expect(results[0].data).toEqual(results[1].data);
+    expect(mocks.listReleases).toHaveBeenCalledTimes(1);
+  });
+
   test("refreshes at the 24-hour boundary, not before it", async () => {
     let now = 1_000;
     vi.spyOn(Date, "now").mockImplementation(() => now);
@@ -150,18 +173,27 @@ describe("persisted update checker cache", () => {
     expect(mocks.listReleases).toHaveBeenCalledTimes(1);
   });
 
-  test("serves stale data and suppresses retries for 24 hours after a provider failure", async () => {
+  test("serves stale data and retries only after 24 hours following a provider failure", async () => {
+    let now = 1_000;
+    vi.spyOn(Date, "now").mockImplementation(() => now);
     mocks.listReleases.mockResolvedValueOnce(successfulResponse).mockRejectedValue(new Error("GitHub unavailable"));
     const handler = await loadHandlerAsync();
     const fresh = await handler.getDataAsync();
     mocks.removeFreshResult();
 
     const stale = await handler.getDataAsync();
+    now += 24 * 60 * 60 * 1_000 - 1;
     const repeated = await handler.getDataAsync();
 
     expect(stale.data).toEqual(fresh.data);
     expect(repeated.data).toEqual(fresh.data);
     expect(mocks.listReleases).toHaveBeenCalledTimes(2);
+
+    now += 1;
+    const retried = await handler.getDataAsync();
+
+    expect(retried.data).toEqual(fresh.data);
+    expect(mocks.listReleases).toHaveBeenCalledTimes(3);
   });
 
   test("does not contact GitHub when external connections are disabled", async () => {

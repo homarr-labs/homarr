@@ -8,13 +8,17 @@ describe("Health checks", () => {
     // Arrange
     const homarrContainer = await createHomarrContainer().start();
 
-    // Act
-    const readyResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/api/health/ready`);
-    const liveResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/api/health/live`);
+    try {
+      // Act
+      const readyResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/api/health/ready`);
+      const liveResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/api/health/live`);
 
-    // Assert
-    expect(readyResponse.status).toBe(200);
-    expect(liveResponse.status).toBe(200);
+      // Assert
+      expect(readyResponse.status).toBe(200);
+      expect(liveResponse.status).toBe(200);
+    } finally {
+      await homarrContainer.stop();
+    }
   }, 60_000);
 
   test("ready and live should return 200 OK with external redis", async () => {
@@ -29,18 +33,22 @@ describe("Health checks", () => {
       },
     }).start();
 
-    // Act
-    const readyResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/api/health/ready`);
-    const liveResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/api/health/live`);
+    try {
+      // Act
+      const readyResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/api/health/ready`);
+      const liveResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/api/health/live`);
 
-    // Assert
-    expect(
-      readyResponse.status,
-      `Expected ready to return OK statusCode=${readyResponse.status} content=${await readyResponse.text()}`,
-    ).toBe(200);
-    expect(
-      liveResponse.status,
-      `Expected live to return OK statusCode=${liveResponse.status} content=${await liveResponse.text()}`,
-    ).toBe(200);
+      // Assert
+      expect(
+        readyResponse.status,
+        `Expected ready to return OK statusCode=${readyResponse.status} content=${await readyResponse.text()}`,
+      ).toBe(200);
+      expect(
+        liveResponse.status,
+        `Expected live to return OK statusCode=${liveResponse.status} content=${await liveResponse.text()}`,
+      ).toBe(200);
+    } finally {
+      await Promise.all([homarrContainer.stop(), redisContainer.stop()]);
+    }
   }, 60_000);
 });

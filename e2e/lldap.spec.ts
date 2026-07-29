@@ -37,45 +37,45 @@ describe("LLDAP authorization", () => {
     const context = await browser.newContext();
     const page = await context.newPage();
 
-    const onboardingActions = new OnboardingActions(page, db);
-    await onboardingActions.skipOnboardingAsync({
-      group: defaultCredentials.group,
-    });
+    try {
+      const onboardingActions = new OnboardingActions(page, db);
+      await onboardingActions.skipOnboardingAsync({
+        group: defaultCredentials.group,
+      });
 
-    // Act
-    await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}/auth/login`);
-    await page.getByLabel("Username").fill(defaultCredentials.username);
-    await page.locator("#password").fill(defaultCredentials.password);
-    await page.locator("css=button[type='submit']").click();
+      // Act
+      const baseUrl = `http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`;
+      await page.goto(`${baseUrl}/auth/login`);
+      await page.getByLabel("Username").fill(defaultCredentials.username);
+      await page.locator("#password").fill(defaultCredentials.password);
+      await page.locator("css=button[type='submit']").click();
 
-    // Assert
-    await page.waitForURL(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
-    const users = await db.query.users.findMany({
-      with: {
-        groups: {
-          with: {
-            group: true,
+      // Assert
+      await page.waitForURL(baseUrl, { timeout: 60_000 });
+      const users = await db.query.users.findMany({
+        with: {
+          groups: {
+            with: {
+              group: true,
+            },
           },
         },
-      },
-    });
-    expect(users).toHaveLength(1);
-    const user = users[0]!;
-    expect(user).toEqual(
-      expect.objectContaining({
-        name: defaultCredentials.username,
-        email: defaultCredentials.email,
-        provider: "ldap",
-      }),
-    );
+      });
+      expect(users).toHaveLength(1);
+      const user = users[0]!;
+      expect(user).toEqual(
+        expect.objectContaining({
+          name: defaultCredentials.username,
+          email: defaultCredentials.email,
+          provider: "ldap",
+        }),
+      );
 
-    const groups = user.groups.map((g) => g.group.name);
-    expect(groups).toContain(defaultCredentials.group);
-
-    // Cleanup
-    await browser.close();
-    await homarrContainer.stop();
-    await lldapContainer.stop();
+      const groups = user.groups.map((g) => g.group.name);
+      expect(groups).toContain(defaultCredentials.group);
+    } finally {
+      await Promise.all([browser.close(), homarrContainer.stop(), lldapContainer.stop()]);
+    }
   }, 120_000);
 });
 

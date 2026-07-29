@@ -1,11 +1,9 @@
-import { createLogger } from "@homarr/core/infrastructure/logs";
-
-const logger = createLogger({ module: "instrumentation" });
-
 export async function register() {
   if (process.env.NEXT_RUNTIME !== "nodejs") return;
   if (process.env.NODE_ENV !== "production") return;
 
+  const { createLogger } = await import("@homarr/core/infrastructure/logs");
+  const logger = createLogger({ module: "instrumentation" });
   const services = [
     { name: "tasks", start: () => import("@homarr/tasks") },
     { name: "websocket", start: () => import("@homarr/websocket") },
