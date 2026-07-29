@@ -9,12 +9,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("calendar", {
   icon: IconCalendar,
-  mobile: {
-    width: 2,
-    height: 1,
-    supportsCompactSummary: true,
-    supportsDetailView: true,
-  },
   createOptions() {
     return optionsBuilder.from((factory) => ({
       releaseType: factory.multiSelect({

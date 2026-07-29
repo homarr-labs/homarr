@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
-import { Box, Button, Divider, Drawer, Group, Menu, ScrollArea, Stack, Text } from "@mantine/core";
-import { useDisclosure, useHotkeys, useReducedMotion } from "@mantine/hooks";
+import { Box, Group, Menu, ScrollArea } from "@mantine/core";
+import { useHotkeys } from "@mantine/hooks";
 import {
   IconBox,
   IconBoxAlignTop,
@@ -17,18 +17,11 @@ import {
   IconReplace,
   IconResize,
   IconSettings,
-  IconDotsVertical,
-  IconHome,
-  IconLogin,
-  IconList,
-  IconLogout,
-  IconTool,
-  IconUser,
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { signOut, useSession } from "@homarr/auth/client";
-import { getDesktopLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useSession } from "@homarr/auth/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
@@ -39,18 +32,14 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
-import { useAuthContext } from "~/app/[locale]/_client-providers/session";
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useBoardPermissions } from "~/components/board/permissions/client";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
-import { createMobileBoardElements } from "~/components/board/mobile/mobile-layout";
 import { useIsMobileBoard } from "~/components/board/use-mobile-board";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
-import { CurrentColorSchemeCombobox } from "~/components/color-scheme/current-color-scheme-combobox";
-import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { HeaderButton } from "~/components/layout/header/button";
 
 export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
@@ -58,11 +47,6 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
   const isMobile = useIsMobileBoard();
-  const t = useI18n();
-
-  if (isMobile) {
-    return <MobileMoreMenu showSettings={hasChangeAccess && !demoReadOnly} />;
-  }
 
   if (!hasChangeAccess) {
     return <SelectBoardsMenu />;
@@ -76,7 +60,7 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
 
       {!demoReadOnly && (
         <OnboardingTour.Target id="board-settings">
-          <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("item.menu.label.settings")}>
+          <HeaderButton href={`/boards/${board.name}/settings`}>
             <IconSettings stroke={1.5} />
           </HeaderButton>
         </OnboardingTour.Target>
@@ -141,7 +125,7 @@ const AddMenu = () => {
   return (
     <Menu position="bottom-end">
       <Menu.Target>
-        <HeaderButton w="auto" px={4} aria-label={t("common.action.add")}>
+        <HeaderButton w="auto" px={4}>
           <Group gap={4} wrap="nowrap">
             <IconPlus stroke={1.5} />
             <IconChevronDown color="gray" size={16} />
@@ -180,7 +164,6 @@ const EditModeMenu = ({ demoReadOnly, hidden }: { demoReadOnly: boolean; hidden:
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
-  const tItem = useScopedI18n("item");
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onSuccess() {
       showSuccessNotification({
@@ -220,7 +203,7 @@ const EditModeMenu = ({ demoReadOnly, hidden }: { demoReadOnly: boolean; hidden:
 
   return (
     <OnboardingTour.Target id="board-edit-mode">
-      <HeaderButton onClick={toggle} loading={isPending} aria-label={tItem("action.edit")}>
+      <HeaderButton onClick={toggle} loading={isPending}>
         {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
       </HeaderButton>
     </OnboardingTour.Target>
@@ -229,14 +212,13 @@ const EditModeMenu = ({ demoReadOnly, hidden }: { demoReadOnly: boolean; hidden:
 
 const SelectBoardsMenu = () => {
   const { data: boards = [] } = clientApi.board.getAllBoards.useQuery();
-  const t = useI18n();
 
   return (
     <OnboardingTour.Target id="board-switcher">
       <Box>
         <Menu position="bottom-end">
           <Menu.Target>
-            <HeaderButton w="auto" px={4} aria-label={t("board.mobile.currentBoard")}>
+            <HeaderButton w="auto" px={4}>
               <IconReplace stroke={1.5} />
             </HeaderButton>
           </Menu.Target>
@@ -257,145 +239,6 @@ const SelectBoardsMenu = () => {
         </Menu>
       </Box>
     </OnboardingTour.Target>
-  );
-};
-
-const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
-  const board = useRequiredBoard();
-  const { data: session } = useSession();
-  const { logoutUrl } = useAuthContext();
-  const t = useI18n();
-  const tProfile = useScopedI18n("common.userAvatar.menu");
-  const reduceMotion = useReducedMotion();
-  const [opened, disclosure] = useDisclosure(false);
-  const desktopLayout = getDesktopLayout(board);
-  const sections = useMemo(
-    () => createMobileBoardElements(board, desktopLayout.id).filter((element) => element.type === "sectionHeading"),
-    [board, desktopLayout.id],
-  );
-
-  const jumpToSection = (anchorId: string) => {
-    disclosure.close();
-    requestAnimationFrame(() => {
-      const heading = document.getElementById(anchorId);
-      heading?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-      heading?.focus({ preventScroll: true });
-    });
-  };
-
-  return (
-    <>
-      <HeaderButton onClick={disclosure.open} aria-label={t("board.mobile.more")}>
-        <IconDotsVertical stroke={1.5} />
-      </HeaderButton>
-      <Drawer
-        opened={opened}
-        onClose={disclosure.close}
-        title={t("board.mobile.more")}
-        position="bottom"
-        size="auto"
-        padding="md"
-        overlayProps={{ backgroundOpacity: 0.45, blur: 2 }}
-      >
-        <Stack gap="xs" pb="calc(var(--mantine-spacing-sm) + env(safe-area-inset-bottom))">
-          <Button
-            component={Link}
-            href="/boards"
-            variant="subtle"
-            size="lg"
-            justify="flex-start"
-            leftSection={<IconHome size={20} />}
-          >
-            {tProfile("homeBoard")}
-          </Button>
-          <CurrentColorSchemeCombobox w="100%" />
-          <CurrentLanguageCombobox width="100%" withinPortal={false} />
-          {session ? (
-            <>
-              <Button
-                component={Link}
-                href={`/manage/users/${session.user.id}/general`}
-                variant="subtle"
-                size="lg"
-                justify="flex-start"
-                leftSection={<IconUser size={20} />}
-              >
-                {tProfile("preferences")}
-              </Button>
-              <Button
-                component={Link}
-                href="/manage"
-                variant="subtle"
-                size="lg"
-                justify="flex-start"
-                leftSection={<IconTool size={20} />}
-              >
-                {tProfile("management")}
-              </Button>
-              <Button
-                variant="subtle"
-                color="red"
-                size="lg"
-                justify="flex-start"
-                leftSection={<IconLogout size={20} />}
-                onClick={() => {
-                  void signOut({ redirect: false }).then(() => {
-                    window.location.assign(logoutUrl ?? "/auth/login");
-                  });
-                }}
-              >
-                {tProfile("logout")}
-              </Button>
-            </>
-          ) : (
-            <Button
-              component={Link}
-              href="/auth/login"
-              variant="subtle"
-              size="lg"
-              justify="flex-start"
-              leftSection={<IconLogin size={20} />}
-            >
-              {tProfile("login")}
-            </Button>
-          )}
-          {showSettings && (
-            <Button
-              component={Link}
-              href={`/boards/${board.name}/settings`}
-              variant="subtle"
-              size="lg"
-              justify="flex-start"
-              leftSection={<IconSettings size={20} />}
-            >
-              {t("item.menu.label.settings")}
-            </Button>
-          )}
-          {sections.length >= 2 && (
-            <>
-              {showSettings && <Divider />}
-              <Group gap="xs" px="sm" pt="xs">
-                <IconList size={18} aria-hidden />
-                <Text size="sm" fw={600}>
-                  {t("board.mobile.sections")}
-                </Text>
-              </Group>
-              {sections.map((section) => (
-                <Button
-                  key={section.id}
-                  variant="subtle"
-                  size="lg"
-                  justify="flex-start"
-                  onClick={() => jumpToSection(section.anchorId)}
-                >
-                  {section.title}
-                </Button>
-              ))}
-            </>
-          )}
-        </Stack>
-      </Drawer>
-    </>
   );
 };
 

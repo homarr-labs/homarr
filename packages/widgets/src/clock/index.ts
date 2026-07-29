@@ -6,11 +6,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("clock", {
   icon: IconClock,
-  mobile: {
-    width: 2,
-    height: 1,
-    supportsCompactSummary: true,
-  },
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

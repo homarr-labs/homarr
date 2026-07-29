@@ -11,7 +11,6 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useSettings } from "@homarr/settings";
 import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
-import type { WidgetDisplayMode } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
@@ -24,9 +23,6 @@ import { removePersistedWidgetQueries } from "./widget-query-recovery";
 
 interface BoardItemContentProps {
   item: SectionItem;
-  displayMode?: WidgetDisplayMode;
-  disableContextMenu?: boolean;
-  widgetStateRef?: MutableRefObject<Record<string, unknown> | null>;
 }
 
 const getOverflowFromKind = (kind: SectionItem["kind"]) => {
@@ -35,55 +31,36 @@ const getOverflowFromKind = (kind: SectionItem["kind"]) => {
   return undefined;
 };
 
-export const BoardItemContent = ({
-  item,
-  displayMode = "default",
-  disableContextMenu = false,
-  widgetStateRef: externalWidgetStateRef,
-}: BoardItemContentProps) => {
+export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const board = useRequiredBoard();
-  const internalWidgetStateRef = useRef<Record<string, unknown> | null>(null);
-  const widgetStateRef = externalWidgetStateRef ?? internalWidgetStateRef;
-  const content = (
-    <Card
-      ref={ref}
-      className={combineClasses(
-        classes.itemCard,
-        `${item.kind}-wrapper`,
-        "grid-stack-item-content",
-        item.advancedOptions.customCssClasses.join(" "),
-      )}
-      radius={board.itemRadius}
-      styles={{
-        root: {
-          "--opacity": board.opacity / 100,
-          containerType: "size",
-          overflow: getOverflowFromKind(item.kind),
-          "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-        },
-      }}
-      p={0}
-    >
-      <InnerContent
-        item={item}
-        width={width}
-        height={height}
-        displayMode={displayMode}
-        widgetStateRef={widgetStateRef}
-      />
-    </Card>
-  );
+  const widgetStateRef = useRef<Record<string, unknown> | null>(null);
 
   return (
     <>
-      {disableContextMenu ? (
-        content
-      ) : (
-        <WidgetContextMenu item={item} widgetStateRef={widgetStateRef}>
-          {content}
-        </WidgetContextMenu>
-      )}
+      <WidgetContextMenu item={item} widgetStateRef={widgetStateRef}>
+        <Card
+          ref={ref}
+          className={combineClasses(
+            classes.itemCard,
+            `${item.kind}-wrapper`,
+            "grid-stack-item-content",
+            item.advancedOptions.customCssClasses.join(" "),
+          )}
+          radius={board.itemRadius}
+          styles={{
+            root: {
+              "--opacity": board.opacity / 100,
+              containerType: "size",
+              overflow: getOverflowFromKind(item.kind),
+              "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+            },
+          }}
+          p={0}
+        >
+          <InnerContent item={item} width={width} height={height} widgetStateRef={widgetStateRef} />
+        </Card>
+      </WidgetContextMenu>
       {item.advancedOptions.title?.trim() && (
         <Badge
           pos="absolute"
@@ -113,11 +90,10 @@ interface InnerContentProps {
   item: SectionItem;
   width: number;
   height: number;
-  displayMode: WidgetDisplayMode;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
 }
 
-const InnerContent = ({ item, displayMode, ...dimensions }: InnerContentProps) => {
+const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
   const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
@@ -170,7 +146,6 @@ const InnerContent = ({ item, displayMode, ...dimensions }: InnerContentProps) =
                 },
               })
             }
-            displayMode={displayMode}
             {...dimensions}
           />
         </ErrorBoundary>

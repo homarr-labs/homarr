@@ -7,12 +7,6 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("smartHome-entityState", {
   icon: IconBinaryTree,
-  mobile: {
-    width: 1,
-    height: 1,
-    supportsCompactSummary: true,
-    eager: true,
-  },
   createOptions() {
     return optionsBuilder.from((factory) => ({
       entityId: factory.text({

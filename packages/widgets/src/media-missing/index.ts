@@ -9,12 +9,6 @@ const pageSizeOptions = ["10", "20", "30", "50"] as const;
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaMissing", {
   icon: IconMovie,
-  mobile: {
-    width: 2,
-    height: 1,
-    supportsCompactSummary: true,
-    supportsDetailView: true,
-  },
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showMissing: factory.switch({ defaultValue: true }),

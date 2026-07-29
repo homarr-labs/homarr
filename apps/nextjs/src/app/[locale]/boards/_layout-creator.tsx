@@ -10,9 +10,9 @@ import { EditModeProvider } from "@homarr/boards/edit-mode";
 import { userAgent } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
-import type { MobileBoardDeviceClass } from "~/components/board/use-mobile-board";
 import { MobileBoardViewportProvider } from "~/components/board/use-mobile-board";
 import { MainHeader } from "~/components/layout/header";
+import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
 import { ClientShell } from "~/components/layout/shell";
 import { BoardTourProvider } from "~/components/onboarding/board-tour";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
@@ -21,7 +21,6 @@ import type { Params } from "./(content)/_creator";
 import { CustomCss } from "./(content)/_custom-css";
 import { BoardReadyProvider } from "./(content)/_ready-context";
 import { BoardMantineProvider } from "./(content)/_theme";
-import { BoardSwitcherLogo } from "./_board-switcher-logo";
 
 const logger = createLogger({ module: "createBoardLayout" });
 
@@ -34,14 +33,12 @@ interface CreateBoardLayoutProps<TParams extends Params> {
   headerActions: JSX.Element;
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
   withTour?: boolean;
-  mobileProfileInActions?: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
   headerActions,
   getInitialBoardAsync: getInitialBoard,
   withTour = false,
-  mobileProfileInActions = false,
 }: CreateBoardLayoutProps<TParams>) => {
   const Layout = async ({
     params,
@@ -68,36 +65,23 @@ export const createBoardLayout = <TParams extends Params>({
       throw error;
     });
     const [colorScheme, requestHeaders] = await Promise.all([getCurrentColorSchemeAsync(), headers()]);
-    const deviceType = userAgent(new Headers(requestHeaders)).device.type;
-    const initialDeviceClass: MobileBoardDeviceClass =
-      deviceType === "mobile" ? "phone" : deviceType === "tablet" ? "tablet" : "desktop";
+    const initialIsMobile = userAgent(new Headers(requestHeaders)).device.type === "mobile";
 
     return (
-      <MobileBoardViewportProvider initialDeviceClass={initialDeviceClass}>
+      <MobileBoardViewportProvider initialIsMobile={initialIsMobile}>
         <BoardProvider initialBoard={initialBoard}>
           <BoardReadyProvider>
             <EditModeProvider>
               <BoardMantineProvider defaultColorScheme={colorScheme}>
                 <CustomCss />
                 <BoardTourWrapper hasSession={withTour && !!session}>
-                  <ClientShell hasNavigation={false} withSafeArea>
+                  <ClientShell hasNavigation={false}>
                     <MainHeader
-                      logo={<BoardSwitcherLogo />}
-                      logoHref={null}
+                      logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
                       actions={headerActions}
                       hasNavigation={false}
-                      withSafeArea
-                      hideUserOnMobileBoard={mobileProfileInActions}
                     />
-                    <AppShellMain
-                      style={{
-                        paddingRight: "calc(var(--mantine-spacing-md) + env(safe-area-inset-right))",
-                        paddingBottom: "calc(var(--mantine-spacing-md) + env(safe-area-inset-bottom))",
-                        paddingLeft: "calc(var(--mantine-spacing-md) + env(safe-area-inset-left))",
-                      }}
-                    >
-                      {children}
-                    </AppShellMain>
+                    <AppShellMain>{children}</AppShellMain>
                   </ClientShell>
                 </BoardTourWrapper>
               </BoardMantineProvider>

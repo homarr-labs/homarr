@@ -12,16 +12,6 @@ import type { TablerIcon } from "@homarr/ui";
 import type { WidgetImports } from ".";
 import type { inferOptionsFromCreator, inferOptionsFromDefinition, WidgetOptionsRecord } from "./options";
 
-export type WidgetDisplayMode = "default" | "mobileSummary" | "mobileDetail";
-
-export interface WidgetMobilePresentation {
-  width: 1 | 2;
-  height: 1 | 2 | 3;
-  supportsCompactSummary?: boolean;
-  supportsDetailView?: boolean;
-  eager?: boolean;
-}
-
 export interface WidgetContextMenuAction {
   key: string;
   label: stringOrTranslation;
@@ -79,7 +69,6 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
 
 export interface WidgetDefinition {
   icon: TablerIcon;
-  mobile?: WidgetMobilePresentation;
   queryKey?: QueryKey;
   refetchInterval?: number | null;
   supportedIntegrations?: IntegrationKind[];
@@ -109,7 +98,6 @@ export interface WidgetProps<TKind extends WidgetKind> {
 
 export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> & {
   boardId: string | undefined; // undefined when in preview mode
-  displayMode?: WidgetDisplayMode;
   isEditMode: boolean;
   setOptions: ({ newOptions }: { newOptions: Partial<inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>> }) => void;
   width: number;

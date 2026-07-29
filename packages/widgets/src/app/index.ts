@@ -15,12 +15,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
-  mobile: {
-    width: 1,
-    height: 1,
-    supportsCompactSummary: true,
-    eager: true,
-  },
   createOptions(settings) {
     return optionsBuilder.from(
       (factory) => ({

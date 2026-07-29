@@ -67,8 +67,6 @@ import * as customApi from "./custom-api";
 
 export type {
   WidgetDefinition,
-  WidgetDisplayMode,
-  WidgetMobilePresentation,
   WidgetContextMenuAction,
   WidgetContextActionProps,
   WidgetOptionsSettings,

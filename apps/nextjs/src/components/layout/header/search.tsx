@@ -28,10 +28,8 @@ export const DesktopSearchInput = () => {
 };
 
 export const MobileSearchButton = () => {
-  const t = useI18n();
-
   return (
-    <HeaderButton onClick={openSpotlight} className={classes.mobileSearch} aria-label={t("search.placeholder")}>
+    <HeaderButton onClick={openSpotlight} className={classes.mobileSearch}>
       <IconSearch size={20} stroke={1.5} />
     </HeaderButton>
   );
