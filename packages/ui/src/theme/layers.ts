@@ -1,6 +1,5 @@
-// Keep this module server-safe: Mantine's getDefaultZIndex helper is client-only.
-const mantineModalZIndex = 200;
+import { getDefaultZIndex } from "@mantine/core";
 
-export const appShellHeaderZIndex = mantineModalZIndex + 1;
+export const appShellHeaderZIndex = getDefaultZIndex("modal") + 1;
 export const modalZIndex = appShellHeaderZIndex + 1;
 export const managedModalZIndex = modalZIndex + 1;
