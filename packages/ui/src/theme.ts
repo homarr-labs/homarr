@@ -1,6 +1,5 @@
 import { createTheme, rem } from "@mantine/core";
 
-import { modalZIndex } from "./theme/layers";
 import { modalComponent } from "./theme/modal";
 
 export const theme = createTheme({
@@ -100,11 +99,6 @@ export const theme = createTheme({
       defaultProps: {
         zIndex: 1000,
         overlayProps: { radius: "sm", blur: 2 },
-      },
-    },
-    Drawer: {
-      defaultProps: {
-        zIndex: modalZIndex,
       },
     },
     Modal: modalComponent,
