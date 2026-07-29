@@ -55,6 +55,66 @@ services:
 With docker run, add this parameter: `-v /var/run/docker.sock:/var/run/docker.sock`.
 In Windows, you'll need to adjust the slashes: `-v //var/run/docker.sock:/var/run/docker.sock`
 
+### Using Podman
+
+Homarr can also connect to Podman's [Docker-compatible API](https://docs.podman.io/en/latest/markdown/podman-system-service.1.html).
+The Podman API socket must be running and mounted into the Homarr container.
+
+For rootless Podman, enable the socket for the user that runs Homarr:
+
+```bash
+systemctl --user enable --now podman.socket
+```
+
+The rootless socket is located at `$XDG_RUNTIME_DIR/podman/podman.sock` (usually `/run/user/<uid>/podman/podman.sock`).
+You can confirm the path with:
+
+```bash
+podman info --format '{{.Host.RemoteSocket.Path}}'
+```
+
+Mount that socket into the Homarr container and point `DOCKER_SOCKET_PATHS` to its path **inside** the container:
+
+```yaml
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    volumes:
+      - ${XDG_RUNTIME_DIR}/podman/podman.sock:/var/run/podman.sock
+      - ./homarr/appdata:/appdata
+    environment:
+      SECRET_ENCRYPTION_KEY: your_64_character_hex_string
+      DOCKER_SOCKET_PATHS: /var/run/podman.sock
+    ports:
+      - "7575:7575"
+```
+
+Run this compose project as the same user that owns the rootless Podman socket.
+To keep the user socket available after logout and across reboots, enable lingering with `loginctl enable-linger <user>`.
+
+For rootful Podman, enable the system socket with `sudo systemctl enable --now podman.socket`.
+Its default path is `/run/podman/podman.sock`; mount that path instead.
+
+:::note SELinux
+On systems with SELinux enabled, Podman's documentation recommends disabling label separation for a container that accesses the API socket.
+Add the following to the Homarr service:
+
+```yaml
+security_opt:
+  - label=disable
+```
+
+:::
+
+You can connect Homarr to multiple Docker-compatible sockets by mounting each socket and listing their in-container paths, separated by commas:
+
+```yaml
+environment:
+  DOCKER_SOCKET_PATHS: /var/run/docker.sock,/var/run/podman.sock
+```
+
 ### Managing your Docker containers within Homarr
 Homarr allows you to interact with Docker containers running on your system.
 Each container row has an action menu with the following options:
