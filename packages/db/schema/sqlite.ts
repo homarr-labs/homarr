@@ -468,7 +468,23 @@ export const serverSettings = sqliteTable("serverSetting", {
 export const assistantConfigurations = sqliteTable("assistant_configuration", {
   id: text().notNull().primaryKey().default("default"),
   enabled: int({ mode: "boolean" }).notNull().default(false),
-  provider: text().$type<"openrouter" | "openai" | "ollama" | "lm-studio" | "custom">().notNull().default("openrouter"),
+  provider: text()
+    .$type<
+      | "openrouter"
+      | "openai"
+      | "anthropic"
+      | "google-gemini"
+      | "xai"
+      | "groq"
+      | "mistral"
+      | "deepseek"
+      | "together"
+      | "ollama"
+      | "lm-studio"
+      | "custom"
+    >()
+    .notNull()
+    .default("openrouter"),
   baseUrl: text().notNull().default("https://openrouter.ai/api/v1"),
   modelDiscoveryPath: text().default("/models"),
   encryptedApiKey: text().$type<`${string}.${string}`>(),

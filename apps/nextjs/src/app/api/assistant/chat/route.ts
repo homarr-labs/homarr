@@ -14,6 +14,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq } from "@homarr/db";
 import { db } from "@homarr/db";
 import { assistantConfigurations, assistantThreads } from "@homarr/db/schema";
+import { assistantProviderRequiresApiKey } from "@homarr/definitions";
 
 import { browserToolContracts } from "~/components/assistant/assistant-tool-contracts";
 
@@ -134,7 +135,7 @@ export async function POST(request: Request) {
   const configuration = await db.query.assistantConfigurations.findFirst({
     where: eq(assistantConfigurations.id, "default"),
   });
-  const requiresApiKey = configuration?.provider === "openrouter" || configuration?.provider === "openai";
+  const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
   if (!configuration?.enabled || !configuration.modelId || (requiresApiKey && !configuration.encryptedApiKey)) {
     return Response.json({ error: "Homarr Assistant is not configured." }, { status: 503 });
   }
