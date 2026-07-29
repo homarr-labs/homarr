@@ -269,7 +269,6 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
   const tProfile = useScopedI18n("common.userAvatar.menu");
   const reduceMotion = useReducedMotion();
   const [opened, disclosure] = useDisclosure(false);
-  const moreTriggerRef = useRef<HTMLButtonElement>(null);
   const pendingSectionAnchorId = useRef<string | null>(null);
   const desktopLayout = getDesktopLayout(board);
   const sections = useMemo(
@@ -285,14 +284,14 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
   const focusPendingSection = () => {
     const anchorId = pendingSectionAnchorId.current;
     pendingSectionAnchorId.current = null;
-    if (anchorId && focusMobileBoardSection({ anchorId, reduceMotion })) return;
+    if (!anchorId) return;
 
-    moreTriggerRef.current?.focus({ preventScroll: true });
+    focusMobileBoardSection({ anchorId, reduceMotion });
   };
 
   return (
     <>
-      <HeaderButton ref={moreTriggerRef} onClick={disclosure.open} aria-label={t("board.mobile.more")}>
+      <HeaderButton onClick={disclosure.open} aria-label={t("board.mobile.more")}>
         <IconDotsVertical stroke={1.5} />
       </HeaderButton>
       <Drawer
@@ -303,7 +302,6 @@ const MobileMoreMenu = ({ showSettings }: { showSettings: boolean }) => {
         size="auto"
         padding="md"
         overlayProps={{ backgroundOpacity: 0.45, blur: 2 }}
-        returnFocus={false}
         onExitTransitionEnd={focusPendingSection}
         styles={{
           content: {
