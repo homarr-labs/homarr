@@ -8,22 +8,12 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
-import { useIsMobileBoard } from "~/components/board/use-mobile-board";
-import { BoardLogo, BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
+import { BoardLogo } from "~/components/layout/logo/board-logo";
 
 export const BoardSwitcherLogo = () => {
   const board = useRequiredBoard();
+  const { data: boards = [] } = clientApi.board.getAllBoards.useQuery();
   const t = useI18n();
-  const isMobileBoard = useIsMobileBoard();
-  const { data: boards = [] } = clientApi.board.getAllBoards.useQuery(undefined, { enabled: isMobileBoard });
-
-  if (!isMobileBoard) {
-    return (
-      <UnstyledButton component={Link} href="/">
-        <BoardLogoWithTitle size="md" hideTitleOnMobile />
-      </UnstyledButton>
-    );
-  }
 
   return (
     <Menu position="bottom-start" width={280}>
@@ -36,7 +26,7 @@ export const BoardSwitcherLogo = () => {
         >
           <Group gap="xs" wrap="nowrap">
             <BoardLogo size={28} />
-            <Text fw={600} truncate title={board.name}>
+            <Text fw={600} truncate>
               {board.name}
             </Text>
             <IconChevronDown size={16} aria-hidden />
@@ -56,9 +46,7 @@ export const BoardSwitcherLogo = () => {
                 leftSection={isCurrent ? <IconCheck size={20} /> : <IconLayoutBoard size={20} />}
                 aria-current={isCurrent ? "page" : undefined}
               >
-                <Text truncate title={availableBoard.name}>
-                  {availableBoard.name}
-                </Text>
+                {availableBoard.name}
               </Menu.Item>
             );
           })}
