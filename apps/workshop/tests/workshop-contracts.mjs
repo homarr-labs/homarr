@@ -97,34 +97,13 @@ for (const required of [
   if (!migration.includes(required)) throw new Error(`Workshop rollback is missing state restoration: ${required}`);
 }
 
-const hardeningMigration = await read("apps/workshop/pb_migrations/1784240001_workshop_write_rate_limits.js");
 for (const operation of ["create", "update", "delete"]) {
   for (const collection of ["submissions", "votes", "comments", "reports"]) {
     const label = `${collection}:${operation}`;
-    if (!hardeningMigration.includes(label)) throw new Error(`Workshop write rate limit is missing: ${label}`);
+    if (!migration.includes(label)) throw new Error(`Workshop write rate limit is missing: ${label}`);
   }
 }
-if (!hardeningMigration.includes("users:update")) throw new Error("Workshop user file updates must be rate limited");
-for (const required of [
-  "writeRateLimits",
-  "managedRules(settings.rateLimits.rules)",
-  "settings.rateLimits.enabled = state.enabled",
-  "...cloneJson(state.managedRules)",
-]) {
-  if (!hardeningMigration.includes(required)) {
-    throw new Error(`Workshop write rate-limit rollback is missing persistent state restoration: ${required}`);
-  }
-}
-
-const accessHardeningMigration = await read("apps/workshop/pb_migrations/1784240002_workshop_access_hardening.js");
-const rateLimitCompatibilityMigration = await read(
-  "apps/workshop/pb_migrations/1784240003_workshop_rate_limit_rollback_compatibility.js",
-);
-for (const required of ["writeRateLimits", "legacyCreateRules", "rate-limit compatibility state is unavailable"]) {
-  if (!rateLimitCompatibilityMigration.includes(required)) {
-    throw new Error(`Workshop rate-limit compatibility migration is missing: ${required}`);
-  }
-}
+if (!migration.includes("users:update")) throw new Error("Workshop user file updates must be rate limited");
 for (const protectedField of [
   "email:changed",
   "displayName:changed",
@@ -132,11 +111,11 @@ for (const protectedField of [
   "githubUsername:changed",
   "githubProfileUrl:changed",
 ]) {
-  if (!accessHardeningMigration.includes(protectedField)) {
+  if (!migration.includes(protectedField)) {
     throw new Error(`Workshop OAuth identity field remains caller-controlled: ${protectedField}`);
   }
 }
-if (accessHardeningMigration.includes("@request.body.avatar:changed")) {
+if (migration.includes("@request.body.avatar:changed")) {
   throw new Error("Workshop access rules must not use the unsupported :changed modifier for file fields");
 }
 if (
@@ -153,12 +132,12 @@ for (const protectedField of [
   "changelog:changed",
   "screenshots:changed",
 ]) {
-  if (!accessHardeningMigration.includes(protectedField)) {
+  if (!migration.includes(protectedField)) {
     throw new Error(`Workshop moderators can still rewrite submissions: ${protectedField}`);
   }
 }
 for (const protectedField of ["category:changed", "explanation:changed"]) {
-  if (!accessHardeningMigration.includes(protectedField)) {
+  if (!migration.includes(protectedField)) {
     throw new Error(`Workshop moderators can still rewrite reports: ${protectedField}`);
   }
 }

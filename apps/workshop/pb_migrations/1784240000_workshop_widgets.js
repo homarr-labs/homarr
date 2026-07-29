@@ -2,6 +2,41 @@
 
 const cloneJson = (value) => JSON.parse(JSON.stringify(value));
 const cloneRule = (value) => (value === null ? null : String(value));
+const adminRule = "@request.auth.isAdmin = true";
+const identityFieldsUnchanged = [
+  "@request.body.email:changed = false",
+  "@request.body.displayName:changed = false",
+  "@request.body.avatarUrl:changed = false",
+  "@request.body.githubUsername:changed = false",
+  "@request.body.githubProfileUrl:changed = false",
+].join(" && ");
+const immutableSubmissionFields = [
+  "@request.body.author:changed = false",
+  "@request.body.type:changed = false",
+  "@request.body.widgetSchema:changed = false",
+].join(" && ");
+const moderatorSubmissionFieldsUnchanged = [
+  "@request.body.title:changed = false",
+  "@request.body.description:changed = false",
+  "@request.body.content:changed = false",
+  "@request.body.changelog:changed = false",
+  "@request.body.screenshots:changed = false",
+].join(" && ");
+const workshopRateLimits = [
+  { label: "submissions:create", audience: "@auth", duration: 60, maxRequests: 10 },
+  { label: "submissions:update", audience: "@auth", duration: 60, maxRequests: 30 },
+  { label: "submissions:delete", audience: "@auth", duration: 60, maxRequests: 10 },
+  { label: "votes:create", audience: "@auth", duration: 10, maxRequests: 20 },
+  { label: "votes:update", audience: "@auth", duration: 10, maxRequests: 20 },
+  { label: "votes:delete", audience: "@auth", duration: 10, maxRequests: 20 },
+  { label: "comments:create", audience: "@auth", duration: 60, maxRequests: 20 },
+  { label: "comments:update", audience: "@auth", duration: 60, maxRequests: 20 },
+  { label: "comments:delete", audience: "@auth", duration: 60, maxRequests: 20 },
+  { label: "reports:create", audience: "@auth", duration: 60, maxRequests: 5 },
+  { label: "reports:update", audience: "@auth", duration: 60, maxRequests: 30 },
+  { label: "reports:delete", audience: "@auth", duration: 60, maxRequests: 30 },
+  { label: "users:update", audience: "@auth", duration: 60, maxRequests: 20 },
+];
 
 migrate(
   (app) => {
@@ -63,11 +98,10 @@ migrate(
     addUserField(new URLField({ name: "githubProfileUrl" }));
     addUserField(new BoolField({ name: "isAdmin" }));
 
-    const adminRule = "@request.auth.isAdmin = true";
     users.listRule = "";
     users.viewRule = "";
     users.createRule = '@request.context = "oauth2" && @request.body.isAdmin:isset = false';
-    users.updateRule = "id = @request.auth.id && @request.body.isAdmin:isset = false";
+    users.updateRule = `id = @request.auth.id && @request.body.isAdmin:isset = false && ${identityFieldsUnchanged}`;
     users.deleteRule = null;
     app.save(users);
     const stateRecord = new Record(stateCollection);
@@ -80,7 +114,9 @@ migrate(
       listRule: "",
       viewRule: "",
       createRule: "@request.auth.id != '' && @request.body.author = @request.auth.id",
-      updateRule: `(author = @request.auth.id || ${adminRule}) && @request.body.author:changed = false && @request.body.type:changed = false && @request.body.widgetSchema:changed = false`,
+      updateRule:
+        `(author = @request.auth.id && ${immutableSubmissionFields}) || ` +
+        `(${adminRule} && author != @request.auth.id && ${immutableSubmissionFields} && ${moderatorSubmissionFieldsUnchanged})`,
       deleteRule: `author = @request.auth.id || ${adminRule}`,
       fields: [
         { type: "select", name: "type", required: true, maxSelect: 1, values: ["customWidget", "customCss"] },
@@ -183,7 +219,12 @@ migrate(
       listRule: adminRule,
       viewRule: adminRule,
       createRule: "@request.auth.id != '' && @request.body.reporter = @request.auth.id",
-      updateRule: `${adminRule} && @request.body.reporter:changed = false && @request.body.submission:changed = false`,
+      updateRule:
+        `${adminRule} && ` +
+        "@request.body.reporter:changed = false && " +
+        "@request.body.submission:changed = false && " +
+        "@request.body.category:changed = false && " +
+        "@request.body.explanation:changed = false",
       deleteRule: adminRule,
       fields: [
         {
@@ -243,12 +284,9 @@ migrate(
     settings.rateLimits.enabled = true;
     settings.rateLimits.rules = [
       ...settings.rateLimits.rules.filter(
-        (rule) => !["submissions:create", "votes:create", "comments:create", "reports:create"].includes(rule.label),
+        (rule) => !workshopRateLimits.some((workshopRule) => workshopRule.label === rule.label),
       ),
-      { label: "submissions:create", audience: "@auth", duration: 60, maxRequests: 10 },
-      { label: "votes:create", audience: "@auth", duration: 10, maxRequests: 20 },
-      { label: "comments:create", audience: "@auth", duration: 60, maxRequests: 20 },
-      { label: "reports:create", audience: "@auth", duration: 60, maxRequests: 5 },
+      ...workshopRateLimits,
     ];
     app.save(settings);
   },

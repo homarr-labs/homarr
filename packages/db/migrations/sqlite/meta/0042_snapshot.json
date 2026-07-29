@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "30bbf6f8-3a3c-4cb0-994e-9d8494e4fcd0",
+  "id": "51923913-fdc0-4ae7-9127-e86587e0b51f",
   "prevId": "852e049b-72cc-4d7f-8be9-931c042fe019",
   "tables": {
     "account": {
@@ -515,193 +515,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "legacy_custom_widget_definition": {
-      "name": "legacy_custom_widget_definition",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "icon_url": {
-          "name": "icon_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "url": {
-          "name": "url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "auth_type": {
-          "name": "auth_type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'none'"
-        },
-        "header_name": {
-          "name": "header_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "method": {
-          "name": "method",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'GET'"
-        },
-        "request_body": {
-          "name": "request_body",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "display_type": {
-          "name": "display_type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'singleValue'"
-        },
-        "display_config": {
-          "name": "display_config",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'{\"json\": {}}'"
-        },
-        "enabled": {
-          "name": "enabled",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(unixepoch())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(unixepoch())"
-        },
-        "creator_id": {
-          "name": "creator_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "legacy_cw_definition_creator_id_user_id_fk": {
-          "name": "legacy_cw_definition_creator_id_user_id_fk",
-          "tableFrom": "legacy_custom_widget_definition",
-          "tableTo": "user",
-          "columnsFrom": ["creator_id"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "legacy_custom_widget_secret": {
-      "name": "legacy_custom_widget_secret",
-      "columns": {
-        "kind": {
-          "name": "kind",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "value": {
-          "name": "value",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "definition_id": {
-          "name": "definition_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "legacy_cw_secret_definition_id_fk": {
-          "name": "legacy_cw_secret_definition_id_fk",
-          "tableFrom": "legacy_custom_widget_secret",
-          "tableTo": "legacy_custom_widget_definition",
-          "columnsFrom": ["definition_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "legacy_custom_widget_secret_definition_id_kind_pk": {
-          "columns": ["definition_id", "kind"],
-          "name": "legacy_custom_widget_secret_definition_id_kind_pk"
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "custom_widget_definition": {
-      "name": "custom_widget_definition",
+    "custom_widget_v2_definition": {
+      "name": "custom_widget_v2_definition",
       "columns": {
         "id": {
           "name": "id",
@@ -793,9 +608,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "custom_widget_definition_creator_id_user_id_fk": {
-          "name": "custom_widget_definition_creator_id_user_id_fk",
-          "tableFrom": "custom_widget_definition",
+        "custom_widget_v2_definition_creator_id_user_id_fk": {
+          "name": "custom_widget_v2_definition_creator_id_user_id_fk",
+          "tableFrom": "custom_widget_v2_definition",
           "tableTo": "user",
           "columnsFrom": ["creator_id"],
           "columnsTo": ["id"],
@@ -807,8 +622,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "custom_widget_secret": {
-      "name": "custom_widget_secret",
+    "custom_widget_v2_secret": {
+      "name": "custom_widget_v2_secret",
       "columns": {
         "source_id": {
           "name": "source_id",
@@ -848,10 +663,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "cw_secret_definition_id_fk": {
-          "name": "cw_secret_definition_id_fk",
-          "tableFrom": "custom_widget_secret",
-          "tableTo": "custom_widget_definition",
+        "custom_widget_v2_secret_definition_id_fk": {
+          "name": "custom_widget_v2_secret_definition_id_fk",
+          "tableFrom": "custom_widget_v2_secret",
+          "tableTo": "custom_widget_v2_definition",
           "columnsFrom": ["definition_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -859,9 +674,9 @@
         }
       },
       "compositePrimaryKeys": {
-        "custom_widget_secret_definition_id_source_id_kind_pk": {
+        "custom_widget_v2_secret_definition_id_source_id_kind_pk": {
           "columns": ["definition_id", "source_id", "kind"],
-          "name": "custom_widget_secret_definition_id_source_id_kind_pk"
+          "name": "custom_widget_v2_secret_definition_id_source_id_kind_pk"
         }
       },
       "uniqueConstraints": {},
@@ -1653,6 +1468,191 @@
         }
       },
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "custom_widget_definition": {
+      "name": "custom_widget_definition",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "icon_url": {
+          "name": "icon_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "auth_type": {
+          "name": "auth_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'none'"
+        },
+        "header_name": {
+          "name": "header_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "method": {
+          "name": "method",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'GET'"
+        },
+        "request_body": {
+          "name": "request_body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "display_type": {
+          "name": "display_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'singleValue'"
+        },
+        "display_config": {
+          "name": "display_config",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'{\"json\": {}}'"
+        },
+        "enabled": {
+          "name": "enabled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "creator_id": {
+          "name": "creator_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "custom_widget_definition_creator_id_user_id_fk": {
+          "name": "custom_widget_definition_creator_id_user_id_fk",
+          "tableFrom": "custom_widget_definition",
+          "tableTo": "user",
+          "columnsFrom": ["creator_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "custom_widget_secret": {
+      "name": "custom_widget_secret",
+      "columns": {
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "definition_id": {
+          "name": "definition_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "custom_widget_secret_definition_id_custom_widget_definition_id_fk": {
+          "name": "custom_widget_secret_definition_id_custom_widget_definition_id_fk",
+          "tableFrom": "custom_widget_secret",
+          "tableTo": "custom_widget_definition",
+          "columnsFrom": ["definition_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "custom_widget_secret_definition_id_kind_pk": {
+          "columns": ["definition_id", "kind"],
+          "name": "custom_widget_secret_definition_id_kind_pk"
+        }
+      },
       "uniqueConstraints": {},
       "checkConstraints": {}
     },

@@ -13,7 +13,6 @@ ROLLBACK_CONTAINER=""
 
 node apps/workshop/tests/workshop-contracts.mjs
 node apps/workshop/tests/workshop-migration.mjs
-node apps/workshop/tests/workshop-rate-limit-migration.mjs
 node apps/workshop/tests/entrypoint-url.mjs
 node apps/workshop/tests/workshop-identity.mjs
 node apps/workshop/tests/workshop-oauth-hook.mjs

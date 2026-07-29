@@ -70,7 +70,7 @@ describe("PostgreSql Migration", () => {
     await postgreSqlContainer.stop();
   }, 40_000);
 
-  test("preserves v1 and already-created v2 custom widgets, secrets, and board references", async () => {
+  test("Custom Widget v2 migration preserves v1 data and board references", async () => {
     const postgreSqlContainer = await new PostgreSqlContainer("postgres:latest").start();
     const pool = new Pool({
       user: postgreSqlContainer.getUsername(),
@@ -140,20 +140,19 @@ describe("PostgreSql Migration", () => {
         legacyPlacementOptions,
       ]);
 
-      await applyMigration(pool, "0010_custom_widget_v2_reset.sql");
+      await applyMigration(pool, "0010_custom_widget_v2_tables.sql");
       await pool.query(`
-        INSERT INTO "custom_widget_definition" (
+        INSERT INTO "custom_widget_v2_definition" (
           "id", "name", "sources", "requests", "options", "template", "enabled",
           "created_at", "updated_at", "creator_id"
         ) VALUES (
           'legacy-weather', 'Weather v2', '[]', '[]', '[]', '<Text>Weather</Text>', true,
           '2023-11-14 00:00:02', '2023-11-14 00:00:03', 'owner'
         );
-        INSERT INTO "custom_widget_secret" (
+        INSERT INTO "custom_widget_v2_secret" (
           "source_id", "kind", "encrypted_value", "updated_at", "definition_id"
         ) VALUES ('weather', 'apiKey', 'encrypted.v2-value', '2023-11-14 00:00:03', 'legacy-weather');
       `);
-      await applyMigration(pool, "0011_custom_widget_v1_compatibility.sql");
 
       expect(
         (await pool.query("SELECT id, name, url, enabled, creator_id FROM custom_widget_definition")).rows,

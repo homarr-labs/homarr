@@ -60,7 +60,7 @@ describe("Mysql Migration", () => {
     await mysqlContainer.stop();
   }, 90_000);
 
-  test("preserves v1 and already-created v2 custom widgets, secrets, and board references", async () => {
+  test("Custom Widget v2 migration preserves v1 data and board references", async () => {
     const mysqlContainer = await new MySqlContainer("mysql:latest").start();
     const connection = mysql.createConnection({
       host: mysqlContainer.getHost(),
@@ -132,20 +132,19 @@ describe("Mysql Migration", () => {
         legacyPlacementOptions,
       ]);
 
-      await applyMigration(connection, "0044_custom_widget_v2_reset.sql");
+      await applyMigration(connection, "0044_custom_widget_v2_tables.sql");
       await sql.query(`
-        INSERT INTO \`custom_widget_definition\` (
+        INSERT INTO \`custom_widget_v2_definition\` (
           \`id\`, \`name\`, \`sources\`, \`requests\`, \`options\`, \`template\`, \`enabled\`,
           \`created_at\`, \`updated_at\`, \`creator_id\`
         ) VALUES (
           'legacy-weather', 'Weather v2', '[]', '[]', '[]', '<Text>Weather</Text>', true,
           '2023-11-14 00:00:02', '2023-11-14 00:00:03', 'owner'
         );
-        INSERT INTO \`custom_widget_secret\` (
+        INSERT INTO \`custom_widget_v2_secret\` (
           \`source_id\`, \`kind\`, \`encrypted_value\`, \`updated_at\`, \`definition_id\`
         ) VALUES ('weather', 'apiKey', 'encrypted.v2-value', '2023-11-14 00:00:03', 'legacy-weather');
       `);
-      await applyMigration(connection, "0045_custom_widget_v1_compatibility.sql");
 
       const [definitions] = await sql.query<mysql.RowDataPacket[]>(
         "SELECT id, name, url, enabled, creator_id FROM custom_widget_definition",

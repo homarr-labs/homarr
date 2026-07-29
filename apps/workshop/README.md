@@ -44,6 +44,13 @@ docker compose -f apps/workshop/docker-compose.yml logs -f workshop
 docker compose -f apps/workshop/docker-compose.yml stop workshop
 ```
 
+### Pre-release migration reset
+
+The v2 branch consolidates the unreleased Workshop migrations into one initial migration. A PocketBase volume that ran
+an earlier v2 Workshop migration chain is unsupported. Back up anything you need, then use the intentional local reset
+command near the end of this document and start the stack again. Startup never deletes a volume automatically. This
+exception applies only to disposable pre-release volumes and must not be used for production data.
+
 ## Connect the Homarr application
 
 Use the same URL contract in the repository-root `.env`, then restart Homarr:

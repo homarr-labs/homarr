@@ -45,7 +45,7 @@ test("SQLite migrations seed the five disabled bundled custom widgets", async ()
   connection.close();
 });
 
-test("Custom JSX compatibility migration preserves v1 and already-created v2 data", () => {
+test("Custom Widget v2 migration preserves v1 data and board references", () => {
   const connection = new BetterSqlite3(":memory:");
   const legacyPlacementOptions = SuperJSON.stringify({ definitionId: "legacy-weather", refreshInterval: 30 });
   connection.exec(`
@@ -99,18 +99,17 @@ test("Custom JSX compatibility migration preserves v1 and already-created v2 dat
     .prepare("INSERT INTO item (id, kind, options) VALUES ('weather-item', 'customApi', ?)")
     .run(legacyPlacementOptions);
 
-  applyMigration(connection, "0042_custom_widget_v2_reset.sql");
+  applyMigration(connection, "0042_custom_widget_v2_tables.sql");
   connection.exec(`
-    INSERT INTO custom_widget_definition (
+    INSERT INTO custom_widget_v2_definition (
       id, name, sources, requests, options, template, enabled, created_at, updated_at, creator_id
     ) VALUES (
       'legacy-weather', 'Weather v2', '[]', '[]', '[]', '<Text>Weather</Text>', true,
       1700000002, 1700000003, 'owner'
     );
-    INSERT INTO custom_widget_secret (source_id, kind, encrypted_value, updated_at, definition_id)
+    INSERT INTO custom_widget_v2_secret (source_id, kind, encrypted_value, updated_at, definition_id)
     VALUES ('weather', 'apiKey', 'encrypted.v2-value', 1700000003, 'legacy-weather');
   `);
-  applyMigration(connection, "0043_custom_widget_v1_compatibility.sql");
 
   expect(connection.prepare("SELECT * FROM custom_widget_definition").get()).toMatchObject({
     id: "legacy-weather",

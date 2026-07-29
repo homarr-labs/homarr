@@ -300,14 +300,7 @@
       "idx": 42,
       "version": "6",
       "when": 1784305283910,
-      "tag": "0042_custom_widget_v2_reset",
-      "breakpoints": true
-    },
-    {
-      "idx": 43,
-      "version": "6",
-      "when": 1785225790467,
-      "tag": "0043_custom_widget_v1_compatibility",
+      "tag": "0042_custom_widget_v2_tables",
       "breakpoints": true
     }
   ]

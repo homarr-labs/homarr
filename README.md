@@ -42,6 +42,10 @@ pnpm dev
 Homarr is available at `http://127.0.0.1:3000`. The foreground infrastructure command starts Redis and the optional
 database services from `development/development.docker-compose.yml`; stop it with Ctrl+C after stopping Homarr.
 
+The unreleased v2 Custom Widget migration history is intentionally consolidated before release. A development database
+that already applied the earlier `custom_widget_v2_reset` migration is unsupported: back up anything you need, reset
+only that disposable database, and run the migration command again. Homarr never deletes or resets it automatically.
+
 ## Run PocketBase and documentation locally
 
 The integrated command starts persistent PocketBase on port 8090, waits for its health endpoint and Workshop

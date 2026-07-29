@@ -76,14 +76,7 @@
       "idx": 10,
       "version": "7",
       "when": 1784305412862,
-      "tag": "0010_custom_widget_v2_reset",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1785225823345,
-      "tag": "0011_custom_widget_v1_compatibility",
+      "tag": "0010_custom_widget_v2_tables",
       "breakpoints": true
     }
   ]
