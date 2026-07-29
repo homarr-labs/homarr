@@ -1,8 +1,7 @@
-import type { Board, CategorySection, DynamicSectionItem, ItemLayout, SectionItem } from "~/app/[locale]/boards/_types";
+import type { Board, DynamicSectionItem, ItemLayout, SectionItem } from "~/app/[locale]/boards/_types";
 
 export const mobileColumnCount = 2;
 const mobileMaxHeight = 3;
-const mobileSectionAnchorPrefix = "mobile-board-section-";
 
 type PositionedElement = DynamicSectionItem | SectionItem;
 type PositionedLayout = {
@@ -12,16 +11,6 @@ type PositionedLayout = {
   width: number;
   height: number;
 };
-
-export type MobileBoardSectionHeading = {
-  type: "sectionHeading";
-  id: string;
-  sectionId: string;
-  title: string;
-  anchorId: string;
-};
-
-export type MobileBoardElement = SectionItem | MobileBoardSectionHeading;
 
 const comparePosition = (elementA: PositionedElement, elementB: PositionedElement) =>
   elementA.yOffset - elementB.yOffset || elementA.xOffset - elementB.xOffset;
@@ -39,8 +28,6 @@ export const getMobileRootSection = (board: Board) =>
     yOffset: 0,
   };
 
-export const getMobileSectionAnchorId = (sectionId: string) => `${mobileSectionAnchorPrefix}${sectionId}`;
-
 const getLayout = <TLayout extends PositionedLayout>(
   layouts: TLayout[],
   desktopLayoutId: string,
@@ -51,20 +38,7 @@ const getLayout = <TLayout extends PositionedLayout>(
     (layoutA, layoutB) => (layoutPriority.get(layoutB.layoutId) ?? -1) - (layoutPriority.get(layoutA.layoutId) ?? -1),
   )[0];
 
-const createSectionHeading = (section: CategorySection | DynamicSectionItem): MobileBoardSectionHeading | null => {
-  const title = (section.kind === "category" ? section.name : section.options.title).trim();
-  if (title.length === 0) return null;
-
-  return {
-    type: "sectionHeading",
-    id: `section-heading-${section.id}`,
-    sectionId: section.id,
-    title,
-    anchorId: getMobileSectionAnchorId(section.id),
-  };
-};
-
-export const createMobileBoardElements = (board: Board, desktopLayoutId: string): MobileBoardElement[] => {
+export const createMobileBoardItems = (board: Board, desktopLayoutId: string): SectionItem[] => {
   const rootSections = getMobileRootSections(board);
   const defaultSectionId = rootSections[0]?.id ?? "mobile";
   const layoutPriority = new Map(
@@ -106,66 +80,38 @@ export const createMobileBoardElements = (board: Board, desktopLayoutId: string)
     elementsBySection.set(parentSectionId, elements);
   }
 
-  const result: MobileBoardElement[] = [];
+  const result: SectionItem[] = [];
   const visitedItems = new Set<string>();
   const visitedSections = new Set<string>();
 
-  const createSectionElements = (
-    section: CategorySection | DynamicSectionItem | (typeof rootSections)[number],
-  ): { elements: MobileBoardElement[]; items: SectionItem[] } => {
-    if (visitedSections.has(section.id)) return { elements: [], items: [] };
-    const sectionId = section.id;
+  const appendSectionItems = (sectionId: string) => {
+    if (visitedSections.has(sectionId)) return;
     visitedSections.add(sectionId);
 
-    const sectionElements: MobileBoardElement[] = [];
-    const sectionItems: SectionItem[] = [];
     for (const element of (elementsBySection.get(sectionId) ?? []).toSorted(comparePosition)) {
       if (element.type === "section") {
-        const nestedResult = createSectionElements(element);
-        sectionElements.push(...nestedResult.elements);
-        sectionItems.push(...nestedResult.items);
+        appendSectionItems(element.id);
         continue;
       }
 
       if (!visitedItems.has(element.id)) {
         visitedItems.add(element.id);
-        sectionElements.push(element);
-        sectionItems.push(element);
+        result.push(element);
       }
     }
-
-    if (sectionItems.length === 0) return { elements: [], items: [] };
-
-    const heading = section.kind === "empty" ? null : createSectionHeading(section);
-    return {
-      elements: heading ? [heading, ...sectionElements] : sectionElements,
-      items: sectionItems,
-    };
   };
 
-  rootSections.forEach((section) => result.push(...createSectionElements(section).elements));
-  dynamicSections
-    .toSorted(comparePosition)
-    .forEach((section) => result.push(...createSectionElements(section).elements));
+  rootSections.forEach((section) => appendSectionItems(section.id));
+  dynamicSections.toSorted(comparePosition).forEach((section) => appendSectionItems(section.id));
   items.toSorted(comparePosition).forEach((item) => {
     if (!visitedItems.has(item.id)) result.push(item);
   });
 
-  let itemIndex = 0;
-  return result.map((element) => {
-    if (element.type === "sectionHeading") return element;
-
-    return {
-      ...element,
-      xOffset: 0,
-      yOffset: itemIndex++,
-      width: Math.max(1, Math.min(element.width, mobileColumnCount)),
-      height: Math.max(1, Math.min(element.height, mobileMaxHeight)),
-    };
-  });
+  return result.map((item, index) => ({
+    ...item,
+    xOffset: 0,
+    yOffset: index,
+    width: Math.max(1, Math.min(item.width, mobileColumnCount)),
+    height: Math.max(1, Math.min(item.height, mobileMaxHeight)),
+  }));
 };
-
-export const createMobileBoardItems = (board: Board, desktopLayoutId: string): SectionItem[] =>
-  createMobileBoardElements(board, desktopLayoutId).filter(
-    (element): element is SectionItem => element.type === "item",
-  );

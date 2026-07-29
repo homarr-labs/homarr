@@ -5,12 +5,7 @@ import { BoardMockBuilder } from "../items/actions/test/mocks/board-mock";
 import { DynamicSectionMockBuilder } from "../items/actions/test/mocks/dynamic-section-mock";
 import { EmptySectionMockBuilder } from "../items/actions/test/mocks/empty-section-mock";
 import { ItemMockBuilder } from "../items/actions/test/mocks/item-mock";
-import {
-  createMobileBoardElements,
-  createMobileBoardItems,
-  getMobileRootSection,
-  getMobileSectionAnchorId,
-} from "./mobile-layout";
+import { createMobileBoardItems, getMobileRootSection } from "./mobile-layout";
 
 describe("createMobileBoardItems", () => {
   test("selects the first root section in visual order", () => {
@@ -97,87 +92,5 @@ describe("createMobileBoardItems", () => {
 
     expect(result.map((item) => item.id)).toEqual(["second", "first"]);
     expect(result[1]).toMatchObject({ width: 1, height: 1 });
-  });
-
-  test("emits named category and dynamic section headings in visual order", () => {
-    const board = new BoardMockBuilder().build();
-    const desktopLayoutId = board.layouts.at(0)?.id;
-    if (!desktopLayoutId) throw new Error("Expected a desktop layout");
-
-    const category = new CategorySectionMockBuilder({ id: "category", name: "  Services  ", yOffset: 0 }).build();
-    const dynamicSection = new DynamicSectionMockBuilder({
-      id: "dynamic",
-      options: { title: "Monitoring", borderColor: "", customCssClasses: [] },
-    })
-      .addLayout({ layoutId: desktopLayoutId, parentSectionId: category.id, xOffset: 1, yOffset: 0 })
-      .build();
-    const nestedDynamicSection = new DynamicSectionMockBuilder({
-      id: "nested-dynamic",
-      options: { title: "Details", borderColor: "", customCssClasses: [] },
-    })
-      .addLayout({ layoutId: desktopLayoutId, parentSectionId: dynamicSection.id, xOffset: 0, yOffset: 1 })
-      .build();
-
-    board.sections.push(category, dynamicSection, nestedDynamicSection);
-    board.items.push(
-      new ItemMockBuilder({ id: "before-dynamic" })
-        .addLayout({ layoutId: desktopLayoutId, sectionId: category.id, xOffset: 0, yOffset: 0 })
-        .build(),
-      new ItemMockBuilder({ id: "inside-dynamic" })
-        .addLayout({ layoutId: desktopLayoutId, sectionId: dynamicSection.id, xOffset: 0, yOffset: 0 })
-        .build(),
-      new ItemMockBuilder({ id: "inside-nested" })
-        .addLayout({ layoutId: desktopLayoutId, sectionId: nestedDynamicSection.id })
-        .build(),
-    );
-
-    const result = createMobileBoardElements(board, desktopLayoutId);
-
-    expect(
-      result.map((element) => (element.type === "sectionHeading" ? `heading:${element.title}` : `item:${element.id}`)),
-    ).toEqual([
-      "heading:Services",
-      "item:before-dynamic",
-      "heading:Monitoring",
-      "item:inside-dynamic",
-      "heading:Details",
-      "item:inside-nested",
-    ]);
-    expect(result[0]).toMatchObject({
-      type: "sectionHeading",
-      sectionId: category.id,
-      anchorId: getMobileSectionAnchorId(category.id),
-    });
-  });
-
-  test("omits headings for empty and unnamed sections while preserving their items", () => {
-    const board = new BoardMockBuilder().build();
-    const desktopLayoutId = board.layouts.at(0)?.id;
-    if (!desktopLayoutId) throw new Error("Expected a desktop layout");
-
-    const emptyNamedCategory = new CategorySectionMockBuilder({
-      id: "empty-category",
-      name: "Empty",
-      yOffset: 0,
-    }).build();
-    const unnamedCategory = new CategorySectionMockBuilder({ id: "unnamed-category", name: "  ", yOffset: 1 }).build();
-    const unnamedDynamicSection = new DynamicSectionMockBuilder({ id: "unnamed-dynamic" })
-      .addLayout({ layoutId: desktopLayoutId, parentSectionId: unnamedCategory.id })
-      .build();
-
-    board.sections.push(emptyNamedCategory, unnamedCategory, unnamedDynamicSection);
-    board.items.push(
-      new ItemMockBuilder({ id: "inside-unnamed" })
-        .addLayout({ layoutId: desktopLayoutId, sectionId: unnamedDynamicSection.id })
-        .build(),
-      new ItemMockBuilder({ id: "orphan" })
-        .addLayout({ layoutId: desktopLayoutId, sectionId: "missing-section" })
-        .build(),
-    );
-
-    const result = createMobileBoardElements(board, desktopLayoutId);
-
-    expect(result.map((element) => element.type)).toEqual(["item", "item"]);
-    expect(result.map((element) => element.id)).toEqual(["inside-unnamed", "orphan"]);
   });
 });

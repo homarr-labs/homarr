@@ -69,8 +69,6 @@ import * as wud from "./wud";
 export type {
   NormalizedWidgetQuery,
   WidgetDefinition,
-  WidgetDisplayMode,
-  WidgetMobilePresentation,
   WidgetContextMenuAction,
   WidgetContextActionProps,
   WidgetOptionsSettings,
