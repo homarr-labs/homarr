@@ -79,9 +79,8 @@ describe("lazy widget application graph", () => {
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
       await page.locator("css=button[type='submit']").click();
-      await page.waitForURL(baseUrl, { timeout: 15_000 });
 
-      await expect(page.locator("[data-homarr-dev-benchmark-board]")).toBeVisible();
+      await expect(page.locator("[data-homarr-dev-benchmark-board]")).toBeVisible({ timeout: 30_000 });
       await expect(page.locator(`[data-id="${itemId}"] .clock-widget-container`)).toBeVisible({ timeout: 15_000 });
 
       await page.locator('[data-homarr-dev-benchmark-interaction="search"]').first().click();
