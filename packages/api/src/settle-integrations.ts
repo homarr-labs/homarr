@@ -20,21 +20,11 @@ interface Options<TIntegration extends IntegrationLike, TResult> {
   throwOnAllFailures?: boolean;
 }
 
-export interface IntegrationQueryProvenance {
-  failedIntegrationCount: number;
-  staleIntegrationCount: number;
-}
-
-interface IntegrationQuerySettlement<TResult> {
-  results: TResult[];
-  failedIntegrationCount: number;
-}
-
-const settleIntegrationQueriesInternal = async <TIntegration extends IntegrationLike, TResult>(
+export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
   integrations: TIntegration[],
   fn: (integration: TIntegration) => Promise<TResult>,
   options?: Options<TIntegration, TResult>,
-): Promise<IntegrationQuerySettlement<TResult>> => {
+): Promise<TResult[]> {
   const settled = await Promise.allSettled(integrations.map(async (integration) => fn(integration)));
   const results: TResult[] = [];
   const errors: unknown[] = [];
@@ -73,32 +63,5 @@ const settleIntegrationQueriesInternal = async <TIntegration extends Integration
     });
   }
 
-  return {
-    results,
-    failedIntegrationCount: settled.filter((result) => result.status === "rejected").length,
-  };
-};
-
-export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
-  integrations: TIntegration[],
-  fn: (integration: TIntegration) => Promise<TResult>,
-  options?: Options<TIntegration, TResult>,
-): Promise<TResult[]> {
-  return (await settleIntegrationQueriesInternal(integrations, fn, options)).results;
-}
-
-export async function settleIntegrationQueriesWithProvenance<
-  TIntegration extends IntegrationLike,
-  TResult extends { isStale?: boolean },
->(
-  integrations: TIntegration[],
-  fn: (integration: TIntegration) => Promise<TResult>,
-  options?: Options<TIntegration, TResult>,
-): Promise<IntegrationQuerySettlement<TResult> & IntegrationQueryProvenance> {
-  const settlement = await settleIntegrationQueriesInternal(integrations, fn, options);
-
-  return {
-    ...settlement,
-    staleIntegrationCount: settlement.results.filter((result) => result.isStale === true).length,
-  };
+  return results;
 }

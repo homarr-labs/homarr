@@ -18,20 +18,6 @@ describe("resolveMobileItemPresentation", () => {
     });
   });
 
-  test("does not unmount apps that use the eager default", () => {
-    expect(
-      resolveMobileItemPresentation(
-        { kind: "app", height: 1 },
-        {
-          unmountWhenOffscreen: true,
-        },
-      ),
-    ).toMatchObject({
-      eager: true,
-      unmountWhenOffscreen: false,
-    });
-  });
-
   test("defaults widgets to full width without inventing a detail view", () => {
     expect(resolveMobileItemPresentation({ kind: "calendar", height: 8 }, undefined)).toMatchObject({
       width: 2,

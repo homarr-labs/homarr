@@ -26,15 +26,15 @@ const MobileBoardViewportContext = createContext<MobileBoardViewport>({
 export const resolveMobileBoardViewport = ({
   deviceClass,
   matchesMobileWidth,
-  hasMounted,
+  hasResolvedClientWidth,
 }: {
   deviceClass: MobileBoardDeviceClass;
   matchesMobileWidth: boolean;
-  hasMounted: boolean;
+  hasResolvedClientWidth: boolean;
 }): MobileBoardViewport => ({
   deviceClass,
   isMobile: deviceClass === "phone" || matchesMobileWidth,
-  isResolved: deviceClass !== "tablet" || hasMounted,
+  isResolved: deviceClass !== "tablet" || hasResolvedClientWidth,
 });
 
 const MobileBoardViewportSkeleton = () => (
@@ -73,19 +73,19 @@ export const MobileBoardViewportProvider = ({
   children,
 }: PropsWithChildren<{ initialDeviceClass: MobileBoardDeviceClass }>) => {
   const { enableAutomaticMobileLayout } = useSettings();
-  const [hasMounted, setHasMounted] = useState(false);
+  const [hasResolvedClientWidth, setHasResolvedClientWidth] = useState(false);
   const matchesMobileWidth = useMediaQuery(mobileBoardMediaQuery, initialDeviceClass === "phone", {
     getInitialValueInEffect: true,
   });
 
   useEffect(() => {
-    setHasMounted(true);
+    setHasResolvedClientWidth(true);
   }, []);
 
   const viewport = resolveMobileBoardViewport({
     deviceClass: initialDeviceClass,
     matchesMobileWidth,
-    hasMounted,
+    hasResolvedClientWidth,
   });
 
   return (
