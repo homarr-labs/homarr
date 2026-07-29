@@ -43,7 +43,11 @@ export const IntegrationMultiSelectGrid = ({
     [selectedKindsArray, onSelectionChange],
   );
 
-  const { data: integrations = [], isPending } = useQuery({
+  const {
+    data: integrations = [],
+    isPending,
+    isError,
+  } = useQuery({
     queryKey: ["widget-integrations", { enableMockIntegration, onboarding }],
     queryFn: () => buildSortedIntegrations({ enableMockIntegration, onboarding }),
   });
@@ -136,7 +140,14 @@ export const IntegrationMultiSelectGrid = ({
         );
       })}
 
-      {!isPending && filtered.length === 0 && (
+      {isError && (
+        <Center p="xl">
+          <Text c="red" role="alert">
+            {t("common.error")}
+          </Text>
+        </Center>
+      )}
+      {!isPending && !isError && filtered.length === 0 && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>

@@ -52,4 +52,22 @@ describe("Next instrumentation", () => {
     expect(tasksStarted).not.toHaveBeenCalled();
     expect(websocketStarted).not.toHaveBeenCalled();
   });
+
+  test("isolates embedded service startup failures", async () => {
+    const websocketStarted = vi.fn();
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("NEXT_RUNTIME", "nodejs");
+    vi.doMock("@homarr/tasks", () => {
+      throw new Error("task startup failed");
+    });
+    vi.doMock("@homarr/websocket", () => {
+      websocketStarted();
+      return {};
+    });
+
+    const { register } = await import("./instrumentation");
+
+    await expect(register()).resolves.toBeUndefined();
+    expect(websocketStarted).toHaveBeenCalledOnce();
+  });
 });

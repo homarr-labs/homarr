@@ -5,6 +5,7 @@ import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
+import type { FallbackProps } from "react-error-boundary";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -33,6 +34,12 @@ const getOverflowFromKind = (kind: SectionItem["kind"]) => {
   return undefined;
 };
 
+const WidgetDefinitionLoadError = ({ error, resetErrorBoundary }: FallbackProps) => (
+  <Center className={classes.itemCard} h="100%">
+    <WidgetError error={error} resetErrorBoundary={resetErrorBoundary} />
+  </Center>
+);
+
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const { ref, width, height } = useElementSize<HTMLDivElement>();
   const board = useRequiredBoard();
@@ -40,21 +47,23 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
 
   return (
     <>
-      <Suspense
-        fallback={
-          <Center ref={ref} className={classes.itemCard} h="100%">
-            <Loader size="sm" />
-          </Center>
-        }
-      >
-        <LoadedBoardItemContent
-          item={item}
-          width={width}
-          height={height}
-          widgetStateRef={widgetStateRef}
-          innerRef={ref}
-        />
-      </Suspense>
+      <ErrorBoundary resetKeys={[item.kind]} fallbackRender={WidgetDefinitionLoadError}>
+        <Suspense
+          fallback={
+            <Center ref={ref} className={classes.itemCard} h="100%">
+              <Loader size="sm" />
+            </Center>
+          }
+        >
+          <LoadedBoardItemContent
+            item={item}
+            width={width}
+            height={height}
+            widgetStateRef={widgetStateRef}
+            innerRef={ref}
+          />
+        </Suspense>
+      </ErrorBoundary>
       {item.advancedOptions.title?.trim() && (
         <Badge
           pos="absolute"
