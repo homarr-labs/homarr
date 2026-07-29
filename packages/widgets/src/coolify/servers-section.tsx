@@ -15,7 +15,6 @@ interface ServersSectionProps {
   isTiny: boolean;
   showIp: boolean;
   onToggleIp: () => void;
-  isMobileDetail: boolean;
 }
 
 export function ServersSection({
@@ -25,7 +24,6 @@ export function ServersSection({
   isTiny,
   showIp,
   onToggleIp,
-  isMobileDetail,
 }: ServersSectionProps) {
   const t = useScopedI18n("widget.coolify");
   const tCommon = useScopedI18n("common");
@@ -42,11 +40,9 @@ export function ServersSection({
             </Badge>
           </Group>
           <ActionIcon
-            size={isMobileDetail ? 44 : "xs"}
+            size="xs"
             variant="subtle"
             c="dimmed"
-            aria-label={`${showIp ? tCommon("action.hide") : tCommon("action.show")} IP`}
-            aria-pressed={showIp}
             onClick={(event) => {
               event.stopPropagation();
               onToggleIp();
@@ -69,7 +65,6 @@ export function ServersSection({
                 baseUrl={baseUrl}
                 isTiny={isTiny}
                 showIp={showIp}
-                isMobileDetail={isMobileDetail}
               />
             ))}
           </Stack>
@@ -89,12 +84,10 @@ interface ServerRowProps {
   baseUrl: string;
   isTiny: boolean;
   showIp: boolean;
-  isMobileDetail: boolean;
 }
 
-function ServerRow({ server, counts, baseUrl, isTiny, showIp, isMobileDetail }: ServerRowProps) {
+function ServerRow({ server, counts, baseUrl, isTiny, showIp }: ServerRowProps) {
   const t = useScopedI18n("widget.coolify");
-  const tApp = useScopedI18n("widget.app");
   const isBuildServer = server.settings?.is_build_server === true;
   const isOnline = server.is_reachable !== false;
   const serverUrl = `${baseUrl}/server/${server.uuid}`;
@@ -117,15 +110,7 @@ function ServerRow({ server, counts, baseUrl, isTiny, showIp, isMobileDetail }: 
         )}
       </Group>
       <Group wrap="nowrap" gap={4} ml={16}>
-        <ActionIcon
-          component="a"
-          href={serverUrl}
-          target="_blank"
-          size={isMobileDetail ? 44 : "xs"}
-          variant="subtle"
-          c="dimmed"
-          aria-label={`${tApp("option.openInNewTab.label")}: ${server.name}`}
-        >
+        <ActionIcon component="a" href={serverUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
           <IconExternalLink size={12} />
         </ActionIcon>
         <Text fz="10px" c="dimmed">

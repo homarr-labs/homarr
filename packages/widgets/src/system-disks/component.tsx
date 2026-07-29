@@ -9,18 +9,13 @@ import { formatBytesPair } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 import { filterStorageVolumes } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
 type DisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
 
-const getDisplayText = (
-  item: { used: string; available: string; percentage: number },
-  displayMode: DisplayMode,
-  formatFree: (value: number) => string,
-) => {
+const getDisplayText = (item: { used: string; available: string; percentage: number }, displayMode: DisplayMode) => {
   switch (displayMode) {
     case "percentage":
       return `${Math.round(item.percentage)}%`;
@@ -34,7 +29,7 @@ const getDisplayText = (
       return `${item.used} / ${item.available}`;
     }
     case "free":
-      return formatFree(Math.round(100 - item.percentage));
+      return `${Math.round(100 - item.percentage)}% free`;
     default:
       return `${Math.round(item.percentage)}%`;
   }
@@ -124,21 +119,12 @@ const SystemDiskCard = ({
   );
 };
 
-export default function SystemResources({
-  integrationIds,
-  options,
-  displayMode: widgetDisplayMode,
-}: WidgetComponentProps<"systemDisks">) {
-  const t = useI18n();
+export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemDisks">) {
   const queryInput = { integrationIds };
-  const { data, error, isPending } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
-  const hasPartialFailure = (data?.length ?? 0) < integrationIds.length;
-  const formatFree = (value: number) => t("widget.systemDisks.status.free", { value });
+  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
 
-  if (widgetDisplayMode === "mobileSummary" && isPending) return <WidgetMobileLoading />;
-  if (widgetDisplayMode === "mobileSummary" && error && !data) throw error;
+  const lastItem = data.at(-1);
 
-  const lastItem = data?.at(-1);
   if (!lastItem) return <WidgetEmptyState />;
 
   const rawFileSystem = lastItem.healthInfo.fileSystem;
@@ -151,36 +137,17 @@ export default function SystemResources({
 
   if (fileSystem.length === 0) return <WidgetEmptyState />;
 
-  if (widgetDisplayMode === "mobileSummary") {
-    const disk = fileSystem.toSorted((diskA, diskB) => diskB.percentage - diskA.percentage)[0];
-    if (!disk) return <WidgetEmptyState />;
-
-    const smartItem = smart.find((item) => item.deviceName === disk.deviceName);
-    const isHealthy = smartItem?.healthy ?? true;
-    const temperature =
-      options.showTemperatureIfAvailable && smartItem?.temperature ? `${smartItem.temperature}°C` : undefined;
-
-    return (
-      <WidgetMobileSummary
-        value={getDisplayText(disk, options.displayMode, formatFree)}
-        label={disk.deviceName}
-        description={isHealthy ? temperature : t("widget.systemDisks.status.unhealthy")}
-        isStale={Boolean(error) || hasPartialFailure}
-      />
-    );
-  }
-
   return (
     <Stack gap="xs" p="xs" h="100%">
       {fileSystem.map((item) => {
-        const smartItem = smart.find((smartEntry) => smartEntry.deviceName === item.deviceName);
+        const smartItem = smart.find((smart) => smart.deviceName === item.deviceName);
 
         return (
           <SystemDiskCard
             key={`disk-${item.deviceName}`}
             deviceName={item.deviceName}
             percentage={item.percentage}
-            displayText={getDisplayText(item, options.displayMode, formatFree)}
+            displayText={getDisplayText(item, options.displayMode)}
             temperature={options.showTemperatureIfAvailable ? smartItem?.temperature : undefined}
             healthy={smartItem?.healthy ?? true} // fall back to healthy if no information is available
             showBackgroundBar={options.showBackgroundBar}

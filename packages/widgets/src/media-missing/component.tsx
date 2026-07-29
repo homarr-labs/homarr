@@ -23,7 +23,7 @@ import type { MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/typ
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
+import { WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
@@ -37,13 +37,11 @@ export default function MediaMissingWidget({
 }: WidgetComponentProps<"mediaMissing">) {
   const t = useScopedI18n("widget.mediaMissing");
   const pageSize = Number(options.pageSize);
-  const { data, error, isPending } = clientApi.widget.mediaOrganizer.getData.useQuery(
+  const { data } = clientApi.widget.mediaOrganizer.getData.useQuery(
     { integrationIds, pageSize },
     { staleTime: 60 * 1000, refetchOnWindowFocus: false, refetchOnReconnect: false },
   );
 
-  if (displayMode === "mobileSummary" && isPending) return <WidgetMobileLoading />;
-  if (displayMode === "mobileSummary" && error && !data) throw error;
   if (!data) return <WidgetEmptyState />;
   if (data.length === 0) throw new NoIntegrationDataError();
   if (!options.showMissing && !options.showQueued)
@@ -66,14 +64,7 @@ export default function MediaMissingWidget({
       : { value: queuedCount, label: t("tab.queued") };
     const description = options.showMissing && options.showQueued ? `${queuedCount} ${t("tab.queued")}` : undefined;
 
-    return (
-      <WidgetMobileSummary
-        value={primary.value}
-        label={primary.label}
-        description={description}
-        isStale={Boolean(error)}
-      />
-    );
+    return <WidgetMobileSummary value={primary.value} label={primary.label} description={description} />;
   }
 
   const isThin = width > 0 && width < 160;

@@ -301,7 +301,6 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                       size="sm"
                       color="green"
                       variant="light"
-                      aria-label={`${t("widget.dnsHoleControls.controls.enable")}: ${data.integration.name}`}
                     >
                       <IconPlayerPlay size={12} />
                     </ActionIcon>
@@ -312,7 +311,6 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                       size="sm"
                       color="red"
                       variant="light"
-                      aria-label={`${t("widget.dnsHoleControls.controls.disable")}: ${data.integration.name}`}
                     >
                       <IconPlayerStop size={12} />
                     </ActionIcon>
@@ -325,7 +323,6 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                     size="sm"
                     color="yellow"
                     variant="light"
-                    aria-label={`${t("widget.dnsHoleControls.controls.setTimer")}: ${data.integration.name}`}
                   >
                     <IconClockPause size={12} />
                   </ActionIcon>
@@ -384,7 +381,6 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
               bd={0}
               ms={"auto"}
               variant="subtle"
-              aria-label={`${t("widget.dnsHoleControls.controls.setTimer")}: ${data.integration.name}`}
               onClick={() => {
                 setSelectedIntegrationIds([data.integration.id]);
                 open();

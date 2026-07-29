@@ -26,7 +26,7 @@ import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
-import { WidgetMobileLoading, WidgetMobileSummary } from "../../common/mobile-summary";
+import { WidgetMobileSummary } from "../../common/mobile-summary";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "../search-button.module.css";
@@ -39,11 +39,7 @@ export default function MediaServerWidget({
   displayMode,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const t = useScopedI18n("widget.mediaRequests-requestList");
-  const {
-    data: mediaRequests,
-    error,
-    isPending,
-  } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
+  const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
     integrationIds,
     statuses:
       options.statusFilter.length > 0
@@ -52,20 +48,11 @@ export default function MediaServerWidget({
     recentDays: options.recentDays,
   });
 
-  if (displayMode === "mobileSummary" && isPending) return <WidgetMobileLoading />;
-  if (displayMode === "mobileSummary" && error && !mediaRequests) throw error;
   if (!mediaRequests) return <WidgetEmptyState />;
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
 
   if (displayMode === "mobileSummary") {
-    return (
-      <WidgetMobileSummary
-        value={mediaRequests.length}
-        label={t("name")}
-        description={mediaRequests[0]?.name}
-        isStale={Boolean(error)}
-      />
-    );
+    return <WidgetMobileSummary value={mediaRequests.length} label={t("name")} description={mediaRequests[0]?.name} />;
   }
 
   return (
@@ -244,8 +231,7 @@ const DecisionButtons = ({ requestId, integrationId }: DecisionButtonsProps) => 
           className="mediaRequests-list-item-pending-button-approve"
           variant="light"
           color="green"
-          size={44}
-          aria-label={t("pending.approve")}
+          size="xs"
           onClick={() => {
             handleDecision("approve");
           }}
@@ -258,8 +244,7 @@ const DecisionButtons = ({ requestId, integrationId }: DecisionButtonsProps) => 
           className="mediaRequests-list-item-pending-button-decline"
           variant="light"
           color="red"
-          size={44}
-          aria-label={t("pending.decline")}
+          size="xs"
           onClick={() => {
             handleDecision("decline");
           }}

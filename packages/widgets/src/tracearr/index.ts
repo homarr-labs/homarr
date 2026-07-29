@@ -5,8 +5,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("tracearr", {
   icon: IconActivityHeartbeat,
-  mobile: { supportsDetailView: true },
-  queryKey: [["widget", "tracearr"]],
   refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from((factory) => ({

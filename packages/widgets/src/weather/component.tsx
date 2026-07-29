@@ -1,6 +1,6 @@
 "use client";
 
-import { Group, Popover, Stack, Text, UnstyledButton } from "@mantine/core";
+import { Box, Group, HoverCard, Stack, Text } from "@mantine/core";
 import { IconArrowDownRight, IconArrowUpRight, IconDroplets, IconMapPin, IconWind } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import dayjs from "dayjs";
@@ -53,24 +53,16 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
   return (
     <>
       <Group className="weather-day-group" gap="sm">
-        <Popover withArrow shadow="md">
-          <Popover.Target>
-            <UnstyledButton
-              aria-label={`${t("name")}: ${getPreferredUnit(
-                weather.current.temperature,
-                options.isFormatFahrenheit,
-                options.disableTemperatureDecimals,
-              )}`}
-              mih={44}
-              miw={44}
-            >
+        <HoverCard>
+          <HoverCard.Target>
+            <Box>
               <AnimatedWeatherIcon size={30} code={weather.current.weathercode} />
-            </UnstyledButton>
-          </Popover.Target>
-          <Popover.Dropdown>
+            </Box>
+          </HoverCard.Target>
+          <HoverCard.Dropdown>
             <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
-          </Popover.Dropdown>
-        </Popover>
+          </HoverCard.Dropdown>
+        </HoverCard>
         <Text fz={30}>
           {getPreferredUnit(
             weather.current.temperature,
@@ -140,8 +132,6 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
 };
 
 const WeeklyForecast = ({ options, weather }: WeatherProps) => {
-  const t = useScopedI18n("widget.weather");
-
   return (
     <>
       <Group className="weather-forecast-city-temp-group" wrap="nowrap" gap="md">
@@ -154,24 +144,16 @@ const WeeklyForecast = ({ options, weather }: WeatherProps) => {
           </Group>
         )}
         <Group gap="xs" wrap="nowrap">
-          <Popover withArrow shadow="md">
-            <Popover.Target>
-              <UnstyledButton
-                aria-label={`${t("name")}: ${getPreferredUnit(
-                  weather.current.temperature,
-                  options.isFormatFahrenheit,
-                  options.disableTemperatureDecimals,
-                )}`}
-                mih={44}
-                miw={44}
-              >
+          <HoverCard>
+            <HoverCard.Target>
+              <Box>
                 <AnimatedWeatherIcon size={16} code={weather.current.weathercode} />
-              </UnstyledButton>
-            </Popover.Target>
-            <Popover.Dropdown>
+              </Box>
+            </HoverCard.Target>
+            <HoverCard.Dropdown>
               <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
-            </Popover.Dropdown>
-          </Popover>
+            </HoverCard.Dropdown>
+          </HoverCard>
           <Text fz={16}>
             {getPreferredUnit(
               weather.current.temperature,
@@ -188,38 +170,28 @@ const WeeklyForecast = ({ options, weather }: WeatherProps) => {
 
 function Forecast({ weather, options }: WeatherProps) {
   const dateFormat = options.dateFormat;
-  const t = useScopedI18n("widget.weather");
   return (
     <Group className="weather-forecast-days-group" w="100%" justify="space-evenly" wrap="nowrap" pb="sm">
       {weather.daily.slice(0, options.forecastDayCount).map((dayWeather, index) => (
-        <Popover key={dayWeather.time} withArrow shadow="md">
-          <Popover.Target>
-            <UnstyledButton
-              aria-label={`${t("name")}: ${dayjs(dayWeather.time).format(dateFormat)}, ${getPreferredUnit(
-                dayWeather.maxTemp,
-                options.isFormatFahrenheit,
-                options.disableTemperatureDecimals,
-              )}`}
-              mih={44}
+        <HoverCard key={dayWeather.time} withArrow shadow="md">
+          <HoverCard.Target>
+            <Stack
+              className={combineClasses(
+                "weather-forecast-day-stack",
+                `weather-forecast-day${index}`,
+                `weather-forecast-weekday${dayjs(dayWeather.time).day()}`,
+              )}
+              gap="0"
+              align="center"
             >
-              <Stack
-                className={combineClasses(
-                  "weather-forecast-day-stack",
-                  `weather-forecast-day${index}`,
-                  `weather-forecast-weekday${dayjs(dayWeather.time).day()}`,
-                )}
-                gap="0"
-                align="center"
-              >
-                <Text fz="xl">{dayjs(dayWeather.time).format("dd")}</Text>
-                <AnimatedWeatherIcon size={16} code={dayWeather.weatherCode} />
-                <Text fz={16}>
-                  {getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
-                </Text>
-              </Stack>
-            </UnstyledButton>
-          </Popover.Target>
-          <Popover.Dropdown>
+              <Text fz="xl">{dayjs(dayWeather.time).format("dd")}</Text>
+              <AnimatedWeatherIcon size={16} code={dayWeather.weatherCode} />
+              <Text fz={16}>
+                {getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
+              </Text>
+            </Stack>
+          </HoverCard.Target>
+          <HoverCard.Dropdown>
             <WeatherDescription
               useImperialSpeed={options.useImperialSpeed}
               dateFormat={dateFormat}
@@ -241,8 +213,8 @@ function Forecast({ weather, options }: WeatherProps) {
               maxWindGusts={dayWeather.maxWindGusts}
               humidity={dayWeather.humidity}
             />
-          </Popover.Dropdown>
-        </Popover>
+          </HoverCard.Dropdown>
+        </HoverCard>
       ))}
     </Group>
   );

@@ -8,8 +8,6 @@ import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("timetable", {
   icon: IconBusStop,
-  mobile: { supportsDetailView: true },
-  queryKey: [["widget", "timetable"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       baseUrl: factory.text({

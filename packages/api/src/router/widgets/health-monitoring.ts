@@ -27,19 +27,15 @@ export const healthMonitoringRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...healthMonitoringIntegrationKinds))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(
-        ctx.integrations,
-        async (integration) => {
-          const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
-          return {
-            integrationId: integration.id,
-            integrationName: integration.name,
-            healthInfo: data,
-            updatedAt: timestamp,
-          };
-        },
-        { throwOnAllFailure: true },
-      );
+      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
+        return {
+          integrationId: integration.id,
+          integrationName: integration.name,
+          healthInfo: data,
+          updatedAt: timestamp,
+        };
+      });
     }),
   listStorageVolumes: publicProcedure
     .meta({

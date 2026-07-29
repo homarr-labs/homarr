@@ -13,8 +13,6 @@ const timeIntervalOptions = stockPriceTimeFrames.interval;
 
 export const { definition, componentLoader } = createWidgetDefinition("stockPrice", {
   icon: IconBuildingBank,
-  mobile: { supportsDetailView: true },
-  queryKey: [["widget", "stockPrice"]],
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({

@@ -14,21 +14,16 @@ import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { WidgetMobileLoading } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
-export default function AppWidget({ options, isEditMode, height, width, displayMode }: WidgetComponentProps<"app">) {
+export default function AppWidget({ options, isEditMode, height, width }: WidgetComponentProps<"app">) {
   const t = useI18n();
   const settings = useSettings();
   const board = useRequiredBoard();
-  const {
-    data: app,
-    error,
-    isPending,
-  } = clientApi.app.byId.useQuery({
+  const { data: app } = clientApi.app.byId.useQuery({
     id: options.appId,
   });
   useRegisterSpotlightContextResults(
@@ -53,14 +48,10 @@ export default function AppWidget({ options, isEditMode, height, width, displayM
     [app, options.openInNewTab],
   );
 
-  if (displayMode === "mobileSummary" && isPending) return <WidgetMobileLoading />;
-  if (displayMode === "mobileSummary" && error && !app) throw error;
   if (!app) return <WidgetEmptyState />;
 
-  const isMobileSummary = displayMode === "mobileSummary";
-  const isTiny = !isMobileSummary && (height < 100 || width < 100);
-  const layout = isMobileSummary ? "column" : options.layout;
-  const isColumnLayout = layout.startsWith("column");
+  const isTiny = height < 100 || width < 100;
+  const isColumnLayout = options.layout.startsWith("column");
 
   return (
     <AppLink
@@ -85,7 +76,7 @@ export default function AppWidget({ options, isEditMode, height, width, displayM
           className={combineClasses("app-flex-wrapper", app.name, app.id, app.href && classes.appWithUrl)}
           h="100%"
           w="100%"
-          direction={layout}
+          direction={options.layout}
           justify="center"
           align="center"
           gap={isColumnLayout ? 0 : "sm"}
@@ -102,7 +93,7 @@ export default function AppWidget({ options, isEditMode, height, width, displayM
                 {app.name}
               </Text>
             )}
-            {!isMobileSummary && options.descriptionDisplayMode === "normal" && (
+            {options.descriptionDisplayMode === "normal" && (
               <Text
                 className="app-description"
                 size={isTiny ? rem(8) : "sm"}

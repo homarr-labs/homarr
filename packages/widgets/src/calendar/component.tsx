@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { Box, useMantineTheme } from "@mantine/core";
+import { Center, Stack, Text, useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import dayjs from "dayjs";
@@ -13,7 +13,6 @@ import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
@@ -41,11 +40,9 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
     releaseType: options.releaseType,
     showUnmonitored: options.showUnmonitored,
   };
-  const { data, error, isPending } = clientApi.widget.calendar.findAllEvents.useQuery(input);
-  const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
+  const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input);
 
-  if (displayMode === "mobileSummary" && isPending) return <WidgetMobileLoading />;
-  if (displayMode === "mobileSummary" && error && !data) throw error;
+  const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
 
   return (
     <CalendarBase
@@ -55,7 +52,6 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
       setMonth={setMonth}
       options={options}
       displayMode={displayMode}
-      isStale={Boolean(error) || (data?.length ?? 0) < integrationIds.length}
     />
   );
 };
@@ -67,18 +63,9 @@ interface CalendarBaseProps {
   setMonth: (date: Date) => void;
   options: WidgetComponentProps<"calendar">["options"];
   displayMode?: WidgetComponentProps<"calendar">["displayMode"];
-  isStale?: boolean;
 }
 
-const CalendarBase = ({
-  isEditMode,
-  events,
-  month,
-  setMonth,
-  options,
-  displayMode,
-  isStale = false,
-}: CalendarBaseProps) => {
+const CalendarBase = ({ isEditMode, events, month, setMonth, options, displayMode }: CalendarBaseProps) => {
   const params = useParams();
   const locale = params.locale as string;
   const { firstDayOfWeek } = useSettings();
@@ -96,32 +83,30 @@ const CalendarBase = ({
       .filter((event) => event.startDate.getTime() >= Date.now())
       .toSorted((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime())[0];
     const link = nextEvent?.links[0];
-    const summary = (
-      <WidgetMobileSummary
-        value={nextEvent?.title ?? normalizedEvents.length}
-        label={
-          nextEvent
-            ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(nextEvent.startDate)
-            : t("name")
-        }
-        isStale={isStale}
-      />
-    );
-
-    if (!link) return summary;
 
     return (
-      <Box
-        component="a"
-        href={link.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        h="100%"
-        display="block"
-        style={{ color: "inherit", textDecoration: "none" }}
-      >
-        {summary}
-      </Box>
+      <Center h="100%" p="md">
+        <Stack align="center" gap={4} maw="100%">
+          <Text
+            component={link ? "a" : "span"}
+            href={link?.href}
+            target={link ? "_blank" : undefined}
+            rel={link ? "noopener noreferrer" : undefined}
+            fw={700}
+            size="lg"
+            lineClamp={1}
+            maw="100%"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            {nextEvent?.title ?? normalizedEvents.length}
+          </Text>
+          <Text c="dimmed" size="sm" lineClamp={1}>
+            {nextEvent
+              ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(nextEvent.startDate)
+              : t("name")}
+          </Text>
+        </Stack>
+      </Center>
     );
   }
 

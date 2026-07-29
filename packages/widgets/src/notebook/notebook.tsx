@@ -89,14 +89,7 @@ const controlIconProps = {
   stroke: 1.5,
 };
 
-export function Notebook({
-  options,
-  setOptions,
-  isEditMode,
-  isReadOnly = false,
-  boardId,
-  itemId,
-}: WidgetComponentProps<"notebook">) {
+export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: WidgetComponentProps<"notebook">) {
   const [content, setContent] = useState(options.content);
   const previousContentRef = useRef(content);
 
@@ -104,7 +97,7 @@ export function Notebook({
   const { data: session } = useSession();
   const { hasChangeAccess } = constructBoardPermissions(board, session);
 
-  const canChange = !isEditMode && !isReadOnly && hasChangeAccess;
+  const canChange = !isEditMode && hasChangeAccess;
   const [isEditing, setIsEditing] = useState(false);
 
   const { primaryColor } = useMantineTheme();

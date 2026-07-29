@@ -5,8 +5,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("speedtestTracker", {
   icon: IconSpeedboat,
-  mobile: { supportsDetailView: true },
-  queryKey: [["widget", "speedtestTracker"]],
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from(

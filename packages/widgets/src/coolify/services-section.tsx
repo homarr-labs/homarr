@@ -13,10 +13,9 @@ interface ServicesSectionProps {
   services: CoolifyServiceWithContext[];
   baseUrl: string;
   isTiny: boolean;
-  isMobileDetail: boolean;
 }
 
-export function ServicesSection({ services, baseUrl, isTiny, isMobileDetail }: ServicesSectionProps) {
+export function ServicesSection({ services, baseUrl, isTiny }: ServicesSectionProps) {
   const t = useScopedI18n("widget.coolify");
   const tCommon = useScopedI18n("common");
   const runningServices = services.filter((svc) => parseStatus(svc.status ?? "") === "running").length;
@@ -35,14 +34,7 @@ export function ServicesSection({ services, baseUrl, isTiny, isMobileDetail }: S
         {services.length > 0 ? (
           <Stack gap={4}>
             {services.map((service) => (
-              <ResourceRow
-                key={service.uuid}
-                item={service}
-                baseUrl={baseUrl}
-                isTiny={isTiny}
-                resourceType="service"
-                isMobileDetail={isMobileDetail}
-              />
+              <ResourceRow key={service.uuid} item={service} baseUrl={baseUrl} isTiny={isTiny} resourceType="service" />
             ))}
           </Stack>
         ) : (

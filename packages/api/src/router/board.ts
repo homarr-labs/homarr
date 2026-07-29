@@ -1592,9 +1592,6 @@ const getHomeIdBoardAsync = async (
   user: InferSelectModel<typeof users> | null,
   deviceType: DeviceType,
 ) => {
-  // Mobile home-board selection remains device-based because the server does
-  // not know the resolved CSS viewport. Tablet rendering is resolved against
-  // 48em on the client and must not be guessed here.
   const settingKey = deviceType === "mobile" ? "mobileHomeBoardId" : "homeBoardId";
 
   if (!user) {
@@ -1616,7 +1613,8 @@ const getHomeIdBoardAsync = async (
       and(
         eq(groupMembers.userId, user.id),
         not(eq(groups.name, everyoneGroup)),
-        or(not(isNull(groups[settingKey])), not(isNull(groups.homeBoardId))),
+        not(isNull(groups[settingKey])),
+        not(isNull(groups.homeBoardId)),
       ),
     )
     .orderBy(asc(groups.position))

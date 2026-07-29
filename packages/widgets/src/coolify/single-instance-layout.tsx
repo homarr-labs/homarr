@@ -18,16 +18,9 @@ interface SingleInstanceLayoutProps {
   options: CoolifyOptions;
   isTiny: boolean;
   widgetKey: string;
-  isMobileDetail: boolean;
 }
 
-export function SingleInstanceLayout({
-  instance,
-  options,
-  isTiny,
-  widgetKey,
-  isMobileDetail,
-}: SingleInstanceLayoutProps) {
+export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: SingleInstanceLayoutProps) {
   const t = useScopedI18n("widget.coolify");
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${widgetKey}`,
@@ -72,24 +65,13 @@ export function SingleInstanceLayout({
               isTiny={isTiny}
               showIp={showIp}
               onToggleIp={() => setShowIp((prev) => !prev)}
-              isMobileDetail={isMobileDetail}
             />
           )}
           {options.showApplications && (
-            <ApplicationsSection
-              applications={instance.instanceInfo.applications}
-              baseUrl={baseUrl}
-              isTiny={isTiny}
-              isMobileDetail={isMobileDetail}
-            />
+            <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
           )}
           {options.showServices && (
-            <ServicesSection
-              services={instance.instanceInfo.services}
-              baseUrl={baseUrl}
-              isTiny={isTiny}
-              isMobileDetail={isMobileDetail}
-            />
+            <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
           )}
         </Accordion>
 

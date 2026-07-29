@@ -1,12 +1,15 @@
 import { z } from "zod/v4";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 import { calendarMonthRequestHandler } from "@homarr/request-handler/calendar";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
+
+const logger = createLogger({ module: "calendarRouter" });
 
 export const calendarRouter = createTRPCRouter({
   findAllEvents: publicProcedure
@@ -27,9 +30,8 @@ export const calendarRouter = createTRPCRouter({
     )
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("calendar")))
     .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries(
-        ctx.integrations,
-        async (integration) => {
+      const settled = await Promise.allSettled(
+        ctx.integrations.map(async (integration) => {
           const { integrationIds: _integrationIds, ...handlerInput } = input;
           const innerHandler = calendarMonthRequestHandler.handler(integration, handlerInput);
           const { data } = await innerHandler.getDataAsync();
@@ -42,8 +44,25 @@ export const calendarRouter = createTRPCRouter({
               kind: integration.kind,
             },
           };
-        },
-        { throwOnAllFailure: true },
+        }),
       );
+
+      return settled.flatMap((result, index) => {
+        if (result.status === "fulfilled") {
+          return [result.value];
+        }
+        const integration = ctx.integrations[index];
+        logger.warn(
+          new ErrorWithMetadata(
+            "Calendar integration request failed; skipping events for this integration",
+            {
+              integrationId: integration?.id,
+              integrationKind: integration?.kind,
+            },
+            { cause: result.reason },
+          ),
+        );
+        return [];
+      });
     }),
 });

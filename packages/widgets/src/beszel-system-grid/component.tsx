@@ -39,7 +39,6 @@ import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
-import { BeszelSystemsMobileSummary } from "../beszel/_shared/mobile-summary";
 
 interface SizeConfig {
   iconSize: number;
@@ -367,23 +366,7 @@ const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius, onClick 
   );
 };
 
-export default function BeszelSystemGridWidget({ displayMode, ...props }: WidgetComponentProps<"beszelSystemGrid">) {
-  const t = useScopedI18n("widget.beszelSystemGrid");
-
-  if (displayMode === "mobileSummary") {
-    return (
-      <BeszelSystemsMobileSummary
-        integrationIds={props.integrationIds}
-        statusFilter={props.options.statusFilter}
-        label={t("name")}
-      />
-    );
-  }
-
-  return <BeszelSystemGridContent {...props} />;
-}
-
-function BeszelSystemGridContent({
+export default function BeszelSystemGridWidget({
   options,
   integrationIds,
   isEditMode,

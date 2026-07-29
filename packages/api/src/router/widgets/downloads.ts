@@ -24,18 +24,14 @@ export const downloadsRouter = createTRPCRouter({
     .concat(createDownloadClientIntegrationMiddleware("query"))
     .input(z.object({ limitPerIntegration: z.number().default(50) }))
     .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries(
-        ctx.integrations,
-        async (integration) => {
-          const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
-          const { data, timestamp } = await innerHandler.getDataAsync();
-          return {
-            integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
-            data,
-          };
-        },
-        { throwOnAllFailure: true },
-      );
+      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
+        const { data, timestamp } = await innerHandler.getDataAsync();
+        return {
+          integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
+          data,
+        };
+      });
     }),
   pause: protectedProcedure
     .meta({

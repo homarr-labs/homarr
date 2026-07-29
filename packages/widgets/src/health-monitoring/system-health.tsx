@@ -83,12 +83,7 @@ export const SystemHealthMonitoring = ({
             p="sm"
             pos="relative"
           >
-            <Box
-              className="health-monitoring-information-card-section"
-              pos="absolute"
-              top={8}
-              style={{ insetInlineStart: 8 }}
-            >
+            <Box className="health-monitoring-information-card-section" pos="absolute" top={8} right={8}>
               <Indicator
                 className="health-monitoring-updates-reboot-indicator"
                 inline
@@ -104,12 +99,10 @@ export const SystemHealthMonitoring = ({
                   className="health-monitoring-information-icon-avatar"
                   variant={"light"}
                   color="var(--mantine-color-text)"
-                  size={44}
+                  size="sm"
                   radius={board.itemRadius}
-                  aria-label={t("widget.healthMonitoring.popover.information")}
-                  onClick={open}
                 >
-                  <IconInfoCircle className="health-monitoring-information-icon" size={24} />
+                  <IconInfoCircle className="health-monitoring-information-icon" size={30} onClick={open} />
                 </ActionIcon>
               </Indicator>
               <Modal
@@ -118,10 +111,6 @@ export const SystemHealthMonitoring = ({
                 size="auto"
                 title={t("widget.healthMonitoring.popover.information")}
                 centered
-                closeButtonProps={{
-                  "aria-label": t("common.action.close"),
-                  size: 44,
-                }}
               >
                 <Stack gap="10px" className="health-monitoring-modal-stack">
                   <Divider />

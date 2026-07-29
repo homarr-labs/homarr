@@ -6,11 +6,10 @@ import { IconBrowserOff, IconProtocol } from "@tabler/icons-react";
 import { objectEntries } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
-import { WidgetMobileSummary } from "../common/mobile-summary";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
-export default function IFrameWidget({ options, isEditMode, displayMode }: WidgetComponentProps<"iframe">) {
+export default function IFrameWidget({ options, isEditMode }: WidgetComponentProps<"iframe">) {
   const t = useI18n();
   const { embedUrl, allowScrolling, ...permissions } = options;
   const allowedPermissions = getAllowedPermissions(permissions);
@@ -20,11 +19,6 @@ export default function IFrameWidget({ options, isEditMode, displayMode }: Widge
   if (!isSupportedProtocol(embedUrl)) {
     return <UnsupportedProtocol />;
   }
-  const frameLabel = getFrameLabel(embedUrl);
-
-  if (displayMode === "mobileSummary") {
-    return <WidgetMobileSummary value={frameLabel} label={t("widget.iframe.name")} />;
-  }
 
   return (
     <Box h="100%" w="100%">
@@ -32,7 +26,7 @@ export default function IFrameWidget({ options, isEditMode, displayMode }: Widge
         style={isEditMode ? { userSelect: "none", pointerEvents: "none" } : undefined}
         className={classes.iframe}
         src={embedUrl}
-        title={`${t("widget.iframe.name")}: ${frameLabel}`}
+        title="widget iframe"
         allow={allowedPermissions}
         scrolling={allowScrolling ? "yes" : "no"}
         sandbox={sandboxFlags.join(" ")}
@@ -44,14 +38,6 @@ export default function IFrameWidget({ options, isEditMode, displayMode }: Widge
 }
 
 const supportedProtocols = ["http", "https"];
-
-const getFrameLabel = (url: string) => {
-  try {
-    return new URL(url).hostname;
-  } catch {
-    return url;
-  }
-};
 
 const isSupportedProtocol = (url: string) => {
   try {

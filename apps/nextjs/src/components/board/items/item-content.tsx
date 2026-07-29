@@ -26,7 +26,6 @@ interface BoardItemContentProps {
   item: SectionItem;
   displayMode?: WidgetDisplayMode;
   disableContextMenu?: boolean;
-  isReadOnly?: boolean;
   widgetStateRef?: MutableRefObject<Record<string, unknown> | null>;
 }
 
@@ -40,7 +39,6 @@ export const BoardItemContent = ({
   item,
   displayMode = "default",
   disableContextMenu = false,
-  isReadOnly = false,
   widgetStateRef: externalWidgetStateRef,
 }: BoardItemContentProps) => {
   const { ref, width, height } = useElementSize<HTMLDivElement>();
@@ -72,7 +70,6 @@ export const BoardItemContent = ({
         width={width}
         height={height}
         displayMode={displayMode}
-        isReadOnly={isReadOnly}
         widgetStateRef={widgetStateRef}
       />
     </Card>
@@ -91,8 +88,9 @@ export const BoardItemContent = ({
         <Badge
           pos="absolute"
           // It's 4 because of the mantine-react-table that has z-index 3
-          style={{ zIndex: 4, insetInlineStart: 16 }}
+          style={{ zIndex: 4 }}
           top={2}
+          left={16}
           size="xs"
           radius={board.itemRadius}
           styles={{
@@ -116,11 +114,10 @@ interface InnerContentProps {
   width: number;
   height: number;
   displayMode: WidgetDisplayMode;
-  isReadOnly: boolean;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
 }
 
-const InnerContent = ({ item, displayMode, isReadOnly, ...dimensions }: InnerContentProps) => {
+const InnerContent = ({ item, displayMode, ...dimensions }: InnerContentProps) => {
   const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
@@ -145,7 +142,7 @@ const InnerContent = ({ item, displayMode, isReadOnly, ...dimensions }: InnerCon
           }}
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
-              {!isReadOnly && <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />}
+              <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />
               <WidgetError kind={item.kind} error={error} resetErrorBoundary={resetErrorBoundary} />
             </>
           )}
@@ -158,23 +155,21 @@ const InnerContent = ({ item, displayMode, isReadOnly, ...dimensions }: InnerCon
               (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />
-          {!isReadOnly && <BoardItemMenu offset={4} item={newItem} />}
+          <BoardItemMenu offset={4} item={newItem} />
           <Comp
             options={options as never}
             integrationIds={item.integrationIds}
             isEditMode={isEditMode}
             boardId={board.id}
             itemId={item.id}
-            isReadOnly={isReadOnly}
-            setOptions={(partialNewOptions) => {
-              if (isReadOnly) return;
+            setOptions={(partialNewOptions) =>
               updateOptions({
                 newOptions: {
                   ...options,
                   ...partialNewOptions.newOptions,
                 },
-              });
-            }}
+              })
+            }
             displayMode={displayMode}
             {...dimensions}
           />

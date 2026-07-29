@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { Suspense } from "react";
 import { TRPCError } from "@trpc/server";
 
@@ -15,7 +14,6 @@ import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { isNullOrWhitespace } from "@homarr/common";
-import { userAgent } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { WidgetKind } from "@homarr/definitions";
@@ -29,7 +27,6 @@ import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { DynamicClientBoard } from "./_dynamic-client";
 import { BoardContentHeaderActions } from "./_header-actions";
-import { shouldPrefetchWidgetForRequest } from "./_prefetch-policy";
 
 const logger = createLogger({ module: "createBoardContentPage" });
 
@@ -54,8 +51,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       const resolvedParams = await params;
       const queryClient = getQueryClient();
 
-      const [board, session, requestHeaders] = await Promise.all([getInitialBoard(resolvedParams), auth(), headers()]);
-      const deviceType = userAgent(new Headers(requestHeaders)).device.type;
+      const [board, session] = await Promise.all([getInitialBoard(resolvedParams), auth()]);
 
       const itemsMap = board.items.reduce((acc, item) => {
         const existing = acc.get(item.kind);
@@ -69,19 +65,17 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
 
       const [integrations] = await Promise.all([
         getIntegrationsWithPermissionsAsync(session),
-        ...Array.from(itemsMap)
-          .filter(([kind]) => shouldPrefetchWidgetForRequest(kind, deviceType))
-          .map(([kind, items]) =>
-            prefetchForKindAsync(kind, queryClient, items).catch((error) => {
-              logger.error(
-                new ErrorWithMetadata(
-                  "Failed to prefetch widget",
-                  { widgetKind: kind, itemCount: items.length },
-                  { cause: error },
-                ),
-              );
-            }),
-          ),
+        ...Array.from(itemsMap).map(([kind, items]) =>
+          prefetchForKindAsync(kind, queryClient, items).catch((error) => {
+            logger.error(
+              new ErrorWithMetadata(
+                "Failed to prefetch widget",
+                { widgetKind: kind, itemCount: items.length },
+                { cause: error },
+              ),
+            );
+          }),
+        ),
       ]);
 
       const userId = session?.user.id ?? "anonymous";

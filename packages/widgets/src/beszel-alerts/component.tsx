@@ -13,7 +13,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
-import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
 
 const alertIconMap: Record<string, LucideIcon> = {
   CPU: Cpu,
@@ -36,7 +35,6 @@ export default function BeszelAlertsWidget({
   options,
   integrationIds,
   isEditMode,
-  displayMode,
 }: WidgetComponentProps<"beszelAlerts">) {
   const t = useScopedI18n("widget.beszelAlerts");
   const alertsInput = useMemo(
@@ -70,31 +68,13 @@ export default function BeszelAlertsWidget({
   const triggeredAlerts = alerts.filter((a) => a.triggered);
   const okAlerts = alerts.filter((a) => !a.triggered);
 
-  const failedResults = results.filter((result) => "error" in result);
-
   if (alertsError) throw alertsError;
-  if (results.length > 0 && failedResults.length === results.length) {
-    throw new Error(String(failedResults[0]?.error ?? "Unable to connect to Beszel"));
-  }
 
   if (isPending) {
-    if (displayMode === "mobileSummary") return <WidgetMobileLoading />;
-
     return (
       <Center h="100%">
         <Loader size="sm" />
       </Center>
-    );
-  }
-
-  if (displayMode === "mobileSummary") {
-    return (
-      <WidgetMobileSummary
-        value={triggeredAlerts.length}
-        label={t("status.triggered")}
-        description={`${alerts.length} ${t("name")}`}
-        isStale={failedResults.length > 0}
-      />
     );
   }
 

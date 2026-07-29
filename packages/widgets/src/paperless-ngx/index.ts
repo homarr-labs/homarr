@@ -5,7 +5,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("paperlessNgx", {
   icon: IconFileText,
-  queryKey: [["widget", "paperlessNgx"]],
   refetchInterval: null,
   supportedIntegrations: ["paperlessNgx"],
   integrationsRequired: true,

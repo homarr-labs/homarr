@@ -309,21 +309,14 @@ function openJsonInBrowser(json: unknown) {
 }
 
 function RawDisplay({ data }: { data: Record<string, unknown> }) {
-  const tApp = useScopedI18n("widget.app");
   const maxHeight = (data.maxHeight as number) ?? 300;
   const jsonString = JSON.stringify(data.data, null, 2);
-  const openJsonLabel = `${tApp("option.openInNewTab.label")}: JSON`;
 
   return (
     <Stack gap={4} p="xs">
       <Group justify="flex-end">
-        <Tooltip label={openJsonLabel}>
-          <ActionIcon
-            variant="subtle"
-            size={44}
-            aria-label={openJsonLabel}
-            onClick={() => openJsonInBrowser(data.data)}
-          >
+        <Tooltip label="Open in browser JSON viewer">
+          <ActionIcon variant="subtle" size="sm" onClick={() => openJsonInBrowser(data.data)}>
             <IconExternalLink size={14} />
           </ActionIcon>
         </Tooltip>

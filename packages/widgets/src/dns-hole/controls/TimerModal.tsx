@@ -42,21 +42,12 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
         setMinutes(0);
       }}
       title={t("widget.dnsHoleControls.controls.setTimer")}
-      closeButtonProps={{
-        "aria-label": t("common.action.close"),
-        size: 44,
-      }}
     >
       <Flex direction="column" align="center" justify="center">
         <Stack align="flex-end">
           <Group>
             <Text>{t("widget.dnsHoleControls.controls.hours")}</Text>
-            <ActionIcon
-              size={44}
-              variant="default"
-              aria-label={`${t("widget.dnsHoleControls.controls.hours")} −`}
-              onClick={() => hoursHandlers.current?.decrement()}
-            >
+            <ActionIcon size={35} variant="default" onClick={() => hoursHandlers.current?.decrement()}>
               –
             </ActionIcon>
             <NumberInput
@@ -67,26 +58,15 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
               max={999}
               min={0}
               step={1}
-              aria-label={t("widget.dnsHoleControls.controls.hours")}
               styles={{ input: { width: rem(54), textAlign: "center" } }}
             />
-            <ActionIcon
-              size={44}
-              variant="default"
-              aria-label={`${t("widget.dnsHoleControls.controls.hours")} +`}
-              onClick={() => hoursHandlers.current?.increment()}
-            >
+            <ActionIcon size={35} variant="default" onClick={() => hoursHandlers.current?.increment()}>
               +
             </ActionIcon>
           </Group>
           <Group>
             <Text>{t("widget.dnsHoleControls.controls.minutes")}</Text>
-            <ActionIcon
-              size={44}
-              variant="default"
-              aria-label={`${t("widget.dnsHoleControls.controls.minutes")} −`}
-              onClick={() => minutesHandlers.current?.decrement()}
-            >
+            <ActionIcon size={35} variant="default" onClick={() => minutesHandlers.current?.decrement()}>
               –
             </ActionIcon>
             <NumberInput
@@ -97,15 +77,9 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
               max={59}
               min={0}
               step={1}
-              aria-label={t("widget.dnsHoleControls.controls.minutes")}
               styles={{ input: { width: rem(54), textAlign: "center" } }}
             />
-            <ActionIcon
-              size={44}
-              variant="default"
-              aria-label={`${t("widget.dnsHoleControls.controls.minutes")} +`}
-              onClick={() => minutesHandlers.current?.increment()}
-            >
+            <ActionIcon size={35} variant="default" onClick={() => minutesHandlers.current?.increment()}>
               +
             </ActionIcon>
           </Group>
@@ -117,7 +91,7 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
           variant="light"
           color="red"
           leftSection={<IconClockPause size={20} />}
-          mih={44}
+          h="2rem"
           w="12rem"
           onClick={handleSetTimer}
         >

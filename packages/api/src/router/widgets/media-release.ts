@@ -9,24 +9,20 @@ export const mediaReleaseRouter = createTRPCRouter({
   getMediaReleases: publicProcedure
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRelease")))
     .query(async ({ ctx }) => {
-      const results = await settleIntegrationQueries(
-        ctx.integrations,
-        async (integration) => {
-          const innerHandler = mediaReleaseRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getDataAsync();
+      const results = await settleIntegrationQueries(ctx.integrations, async (integration) => {
+        const innerHandler = mediaReleaseRequestHandler.handler(integration, {});
+        const { data, timestamp } = await innerHandler.getDataAsync();
 
-          return {
-            integration: {
-              id: integration.id,
-              name: integration.name,
-              kind: integration.kind,
-              updatedAt: timestamp,
-            },
-            releases: data,
-          };
-        },
-        { throwOnAllFailure: true },
-      );
+        return {
+          integration: {
+            id: integration.id,
+            name: integration.name,
+            kind: integration.kind,
+            updatedAt: timestamp,
+          },
+          releases: data,
+        };
+      });
       return results.flatMap((result) =>
         result.releases.map((release) => ({
           ...release,
