@@ -48,22 +48,13 @@ export const BoardSwitcherLogo = () => {
         <ScrollArea.Autosize mah={320}>
           {boards.map((availableBoard) => {
             const isCurrent = availableBoard.id === board.id;
-            if (isCurrent) {
-              return (
-                <Menu.Item key={availableBoard.id} leftSection={<IconCheck size={20} />} aria-current="page" disabled>
-                  <Text truncate title={availableBoard.name}>
-                    {availableBoard.name}
-                  </Text>
-                </Menu.Item>
-              );
-            }
-
             return (
               <Menu.Item
                 key={availableBoard.id}
                 component={Link}
                 href={`/boards/${availableBoard.name}`}
-                leftSection={<IconLayoutBoard size={20} />}
+                leftSection={isCurrent ? <IconCheck size={20} /> : <IconLayoutBoard size={20} />}
+                aria-current={isCurrent ? "page" : undefined}
               >
                 <Text truncate title={availableBoard.name}>
                   {availableBoard.name}

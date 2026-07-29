@@ -10,7 +10,6 @@ export const widgetKind = "dnsHoleSummary";
 export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
   supportsAdvancedFocus: false,
   icon: IconAd,
-  mobile: { unmountWhenOffscreen: true },
   queryKey: [["widget", "dnsHole"]],
   refetchInterval: 5,
   createOptions() {
