@@ -65,7 +65,8 @@ export const createBoardLayout = <TParams extends Params>({
       throw error;
     });
     const [colorScheme, requestHeaders] = await Promise.all([getCurrentColorSchemeAsync(), headers()]);
-    const initialIsMobile = userAgent(new Headers(requestHeaders)).device.type === "mobile";
+    const deviceType = userAgent(new Headers(requestHeaders)).device.type;
+    const initialIsMobile = deviceType === "mobile" || deviceType === "tablet";
 
     return (
       <MobileBoardViewportProvider initialIsMobile={initialIsMobile}>
