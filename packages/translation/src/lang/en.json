@@ -4179,6 +4179,7 @@
         }
       },
       "edit": {
+        "label": "Toggle board edit mode",
         "notification": {
           "success": {
             "title": "Changes applied successfully",

@@ -203,7 +203,7 @@ const EditModeMenu = ({ demoReadOnly, hidden }: { demoReadOnly: boolean; hidden:
 
   return (
     <OnboardingTour.Target id="board-edit-mode">
-      <HeaderButton onClick={toggle} loading={isPending}>
+      <HeaderButton onClick={toggle} loading={isPending} aria-label={t("label")}>
         {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
       </HeaderButton>
     </OnboardingTour.Target>

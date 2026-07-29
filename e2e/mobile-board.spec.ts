@@ -176,7 +176,7 @@ describe("Automatic mobile board", () => {
       await expect(items).toHaveCount(2);
       await expect(mobilePage.locator(".grid-stack-item")).toHaveCount(0);
       await expect(mobilePage.getByText("Normal notebook content")).toBeVisible();
-      await expect(mobilePage.getByRole("button", { name: "Edit item", exact: true })).toHaveCount(0);
+      await expect(mobilePage.getByRole("button", { name: "Toggle board edit mode", exact: true })).toHaveCount(0);
       await expect(mobilePage.getByRole("button", { name: /open widget details/i })).toHaveCount(0);
       await expect(mobilePage.getByRole("button", { name: /actions for/i })).toHaveCount(0);
       await expect(mobilePage.locator("[data-mobile-generic-summary], [data-mobile-display-mode]")).toHaveCount(0);
@@ -218,7 +218,7 @@ describe("Automatic mobile board", () => {
       await legacyPage.goto(`${baseUrl}/boards/${boardName}`);
       await expect(legacyPage.locator("[data-mobile-board]")).toHaveCount(0);
       await expect(legacyPage.locator(".grid-stack-item")).toHaveCount(2);
-      await expect(legacyPage.getByRole("button", { name: "Edit item", exact: true })).toBeVisible();
+      await expect(legacyPage.getByRole("button", { name: "Toggle board edit mode", exact: true })).toBeVisible();
       await legacyContext.close();
     } finally {
       await loginContext.close();
