@@ -18,8 +18,6 @@ import { isNullOrWhitespace } from "@homarr/common";
 import { userAgent } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { db } from "@homarr/db";
-import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
 import { getQueryCacheAsync } from "@homarr/redis";
 import { getI18n } from "@homarr/translation/server";
@@ -56,12 +54,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       const resolvedParams = await params;
       const queryClient = getQueryClient();
 
-      const [board, session, requestHeaders, boardSettings] = await Promise.all([
-        getInitialBoard(resolvedParams),
-        auth(),
-        headers(),
-        getServerSettingByKeyAsync(db, "board"),
-      ]);
+      const [board, session, requestHeaders] = await Promise.all([getInitialBoard(resolvedParams), auth(), headers()]);
       const deviceType = userAgent(new Headers(requestHeaders)).device.type;
 
       const itemsMap = board.items.reduce((acc, item) => {
@@ -77,9 +70,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       const [integrations] = await Promise.all([
         getIntegrationsWithPermissionsAsync(session),
         ...Array.from(itemsMap)
-          .filter(([kind]) =>
-            shouldPrefetchWidgetForRequest(kind, deviceType, boardSettings.enableAutomaticMobileLayout),
-          )
+          .filter(([kind]) => shouldPrefetchWidgetForRequest(kind, deviceType))
           .map(([kind, items]) =>
             prefetchForKindAsync(kind, queryClient, items).catch((error) => {
               logger.error(

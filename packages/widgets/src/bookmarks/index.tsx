@@ -10,13 +10,8 @@ import { BookmarkAddButton } from "./add-button";
 
 export const { definition, componentLoader } = createWidgetDefinition("bookmarks", {
   icon: IconBookmark,
-  mobile: {
-    width: 2,
-    height: 1,
-    supportsCompactSummary: true,
-    supportsDetailView: true,
-  },
-  queryKey: [["app", "byIds"]],
+  mobile: { supportsDetailView: true },
+  queryKey: [["app"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       title: factory.text(),

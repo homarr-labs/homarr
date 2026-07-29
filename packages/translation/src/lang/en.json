@@ -1495,10 +1495,6 @@
         "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Logout",
-        "logoutError": {
-          "title": "Logout failed",
-          "message": "Your session is still active. Please try again."
-        },
         "login": "Login",
         "homeBoard": "Your home board",
         "loggedOut": "Logged out",
@@ -4413,15 +4409,7 @@
             "description": "Configure the layout used on desktop and larger screens."
           },
           "mobile": {
-            "automaticDescription": "On mobile, items are automatically arranged in two columns and cannot be moved or resized. Named categories and dynamic sections appear as headings, never as layout containers."
-          },
-          "responsive": {
-            "title": "Responsive layouts",
-            "description": "Automatic mobile layout is disabled for this server. Configure the saved layouts selected at each viewport breakpoint; these layouts can also be edited directly on mobile.",
-            "defaultName": "New layout",
-            "action": {
-              "add": "Add layout"
-            }
+            "description": "On mobile, items are automatically arranged in two columns and cannot be moved or resized. Named categories and dynamic sections appear as headings, never as layout containers."
           }
         },
         "background": {
@@ -4870,13 +4858,6 @@
               "label": "Global home board",
               "mobileLabel": "Global mobile board",
               "description": "Only public boards are available for selection"
-            },
-            "mobileLayout": {
-              "title": "Mobile layout",
-              "enable": {
-                "label": "Use automatic mobile layout",
-                "description": "Arrange every board into a read-only two-column layout on phones and small tablets. Turn this off to use saved responsive layouts and mobile layout editing. Saved responsive layouts are kept when this is enabled."
-              }
             },
             "status": {
               "title": "App status",

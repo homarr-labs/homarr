@@ -3,7 +3,6 @@ import { z } from "zod/v4";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import { mediaRequestStatusConfiguration } from "@homarr/integrations/types";
-import type { MediaRequestListInput } from "@homarr/request-handler/media-request-list";
 import {
   mediaRequestListInputSchema,
   mediaRequestListRequestHandler,
@@ -11,93 +10,11 @@ import {
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { getIntegrationQueryProvenance, settleIntegrationQueries } from "../../settle-integrations";
+import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
-const latestRequestsProcedure = publicProcedure
-  .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
-  .input(mediaRequestListInputSchema);
-const requestStatsProcedure = publicProcedure.concat(
-  createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")),
-);
-
-type MediaRequestIntegration = Parameters<typeof mediaRequestListRequestHandler.handler>[0];
-type MediaRequestStatsIntegration = Parameters<typeof mediaRequestStatsRequestHandler.handler>[0];
-
-const getLatestRequestsWithProvenanceAsync = async (
-  integrations: MediaRequestIntegration[],
-  input: MediaRequestListInput,
-) => {
-  const results = await settleIntegrationQueries(
-    integrations,
-    async (integration) => {
-      const { data, isStale } = await mediaRequestListRequestHandler
-        .handler(integration, input)
-        .getDataWithProvenanceAsync();
-      return {
-        integration: { id: integration.id, name: integration.name, kind: integration.kind },
-        data,
-        isStale,
-      };
-    },
-    { throwOnAllFailure: true },
-  );
-  const items = results
-    .flatMap(({ data, integration }) =>
-      data.map((request) => ({
-        ...request,
-        integrationId: integration.id,
-      })),
-    )
-    .toSorted((dataA, dataB) => {
-      if (dataA.status === dataB.status) {
-        return dataB.createdAt.getTime() - dataA.createdAt.getTime();
-      }
-
-      return (
-        mediaRequestStatusConfiguration[dataA.status].position - mediaRequestStatusConfiguration[dataB.status].position
-      );
-    });
-
-  return {
-    items,
-    ...getIntegrationQueryProvenance(integrations.length, results),
-  };
-};
-
-const getRequestStatsWithProvenanceAsync = async (integrations: MediaRequestStatsIntegration[]) => {
-  const results = await settleIntegrationQueries(
-    integrations,
-    async (integration) => {
-      const { data, isStale } = await mediaRequestStatsRequestHandler
-        .handler(integration, {})
-        .getDataWithProvenanceAsync();
-      return {
-        integration: { id: integration.id, name: integration.name, kind: integration.kind },
-        data,
-        isStale,
-      };
-    },
-    { throwOnAllFailure: true },
-  );
-
-  return {
-    stats: results.flatMap((result) => result.data.stats),
-    users: results
-      .flatMap((result) =>
-        result.data.users.map((user) => ({
-          ...user,
-          integration: result.integration,
-        })),
-      )
-      .toSorted(({ requestCount: countA }, { requestCount: countB }) => countB - countA),
-    integrations: results.map((result) => result.integration),
-    ...getIntegrationQueryProvenance(integrations.length, results),
-  };
-};
-
 export const mediaRequestsRouter = createTRPCRouter({
-  getLatestRequests: latestRequestsProcedure
+  getLatestRequests: publicProcedure
     .meta({
       mcp: {
         enabled: true,
@@ -105,13 +22,36 @@ export const mediaRequestsRouter = createTRPCRouter({
           "Get latest media requests from Overseerr/Jellyseerr with their status (pending, approved, declined, failed, completed). REQUIRED: integrationIds (array of Overseerr/Jellyseerr integration IDs from integration_all). OPTIONAL: statuses (array of statuses to include, must be non-empty) and recentDays (number 0-365; 0 disables the time filter).",
       },
     })
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
+    .input(mediaRequestListInputSchema)
     .query(async ({ ctx, input }) => {
-      return (await getLatestRequestsWithProvenanceAsync(ctx.integrations, input)).items;
+      const results = await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const { data } = await mediaRequestListRequestHandler.handler(integration, input).getDataAsync();
+          return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
+        },
+        { throwOnAllFailure: true },
+      );
+      return results
+        .flatMap(({ data, integration }) =>
+          data.map((request) => ({
+            ...request,
+            integrationId: integration.id,
+          })),
+        )
+        .toSorted((dataA, dataB) => {
+          if (dataA.status === dataB.status) {
+            return dataB.createdAt.getTime() - dataA.createdAt.getTime();
+          }
+
+          return (
+            mediaRequestStatusConfiguration[dataA.status].position -
+            mediaRequestStatusConfiguration[dataB.status].position
+          );
+        });
     }),
-  getLatestRequestsWithProvenance: latestRequestsProcedure.query(async ({ ctx, input }) => {
-    return await getLatestRequestsWithProvenanceAsync(ctx.integrations, input);
-  }),
-  getStats: requestStatsProcedure
+  getStats: publicProcedure
     .meta({
       mcp: {
         enabled: true,
@@ -119,17 +59,30 @@ export const mediaRequestsRouter = createTRPCRouter({
           "Get media request statistics including total counts and top requesters. REQUIRED: integrationIds (array of Overseerr/Jellyseerr integration IDs from integration_all)",
       },
     })
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
-      const result = await getRequestStatsWithProvenanceAsync(ctx.integrations);
+      const results = await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const { data } = await mediaRequestStatsRequestHandler.handler(integration, {}).getDataAsync();
+          return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
+        },
+        { throwOnAllFailure: true },
+      );
       return {
-        stats: result.stats,
-        users: result.users,
-        integrations: result.integrations,
+        stats: results.flatMap((result) => result.data.stats),
+        users: results
+          .map((result) =>
+            result.data.users.map((user) => ({
+              ...user,
+              integration: result.integration,
+            })),
+          )
+          .flat()
+          .toSorted(({ requestCount: countA }, { requestCount: countB }) => countB - countA),
+        integrations: results.map((result) => result.integration),
       };
     }),
-  getStatsWithProvenance: requestStatsProcedure.query(async ({ ctx }) => {
-    return await getRequestStatsWithProvenanceAsync(ctx.integrations);
-  }),
   answerRequest: protectedProcedure
     .meta({
       mcp: {

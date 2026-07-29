@@ -11,7 +11,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
-import { hasWidgetDataWarning, throwOnInitialQueryError, WidgetDataState } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
@@ -118,15 +117,11 @@ function UptimeKumaContent({ integrationIds, options, width, displayMode }: Upti
   } = clientApi.widget.uptimeKuma.getDashboard.useQuery({
     integrationIds,
   });
+  const hasPartialFailure = (dashboardData?.length ?? 0) < integrationIds.length;
 
-  if (isPending) return <WidgetMobileLoading />;
-  throwOnInitialQueryError(error, dashboardData !== undefined);
+  if (displayMode === "mobileSummary" && isPending) return <WidgetMobileLoading />;
+  if (displayMode === "mobileSummary" && error && !dashboardData) throw error;
   if (!dashboardData) return <WidgetEmptyState />;
-  const hasWarning = hasWidgetDataWarning({
-    error,
-    expectedIntegrationCount: integrationIds.length,
-    receivedIntegrationCount: dashboardData.length,
-  });
 
   const combined = dashboardData.reduce<UptimeKumaDashboardData>(
     (acc, item) => ({
@@ -168,13 +163,13 @@ function UptimeKumaContent({ integrationIds, options, width, displayMode }: Upti
           value={formatNumber(combined[primaryStat], 0)}
           label={t(`stats.${primaryStat}`)}
           description={supportingDescription}
-          isStale={hasWarning}
+          isStale={Boolean(error) || hasPartialFailure}
         />
       );
     }
 
     if (!hasContent) {
-      return <WidgetMobileSummary value="—" label={t("name")} isStale={hasWarning} />;
+      return <WidgetMobileSummary value="—" label={t("name")} isStale={Boolean(error) || hasPartialFailure} />;
     }
 
     return (
@@ -182,7 +177,7 @@ function UptimeKumaContent({ integrationIds, options, width, displayMode }: Upti
         value={`${formatNumber(uptimeValue, 1)}%`}
         label={t("averageUptime")}
         description={supportingDescription}
-        isStale={hasWarning}
+        isStale={Boolean(error) || hasPartialFailure}
       />
     );
   }
@@ -191,7 +186,7 @@ function UptimeKumaContent({ integrationIds, options, width, displayMode }: Upti
     heroLayoutBySecondaryStats[String(visibleStatKeys.length > 0) as keyof typeof heroLayoutBySecondaryStats];
   const heroRingClass = heroVariantByRing[String(options.showUptimeRing) as keyof typeof heroVariantByRing];
 
-  const content = (
+  return (
     <div className={classes.root}>
       {showHero && (
         <div className={`${classes.hero} ${heroLayoutClass} ${heroRingClass}`}>
@@ -246,7 +241,6 @@ function UptimeKumaContent({ integrationIds, options, width, displayMode }: Upti
       )}
     </div>
   );
-  return <WidgetDataState hasWarning={hasWarning}>{content}</WidgetDataState>;
 }
 
 function clampPercent(value: number): number {

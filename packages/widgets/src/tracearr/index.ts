@@ -5,7 +5,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("tracearr", {
   icon: IconActivityHeartbeat,
-  mobile: { supportsDetailView: true, unmountWhenOffscreen: true },
+  mobile: { supportsDetailView: true },
   queryKey: [["widget", "tracearr"]],
   refetchInterval: 5,
   createOptions() {

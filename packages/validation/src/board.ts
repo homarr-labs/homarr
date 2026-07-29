@@ -24,7 +24,7 @@ export const boardNameSchema = z
   .min(1)
   .max(255)
   .regex(/^[A-Za-z0-9-_]*$/);
-export const boardColumnCountSchema = z.number().int().min(1).max(24);
+export const boardColumnCountSchema = z.number().min(1).max(24);
 
 export const boardByNameSchema = z.object({
   name: boardNameSchema,
@@ -73,46 +73,6 @@ export const boardSavePartialSettingsSchema = z
 export const boardSaveLayoutSchema = z.object({
   id: z.string(),
   columnCount: boardColumnCountSchema,
-});
-
-const responsiveBoardLayoutsSchema = z
-  .array(
-    z.object({
-      id: z.string(),
-      name: z.string().trim().nonempty().max(32),
-      columnCount: boardColumnCountSchema,
-      breakpoint: z.number().int().min(0).max(32767),
-    }),
-  )
-  .min(1)
-  .superRefine((layouts, context) => {
-    const seenBreakpoints = new Set<number>();
-    const seenIds = new Set<string>();
-
-    layouts.forEach((layout, index) => {
-      if (seenIds.has(layout.id)) {
-        context.addIssue({
-          code: "custom",
-          message: "Each responsive layout must have a unique ID",
-          path: [index, "id"],
-        });
-      }
-      seenIds.add(layout.id);
-
-      if (seenBreakpoints.has(layout.breakpoint)) {
-        context.addIssue({
-          code: "custom",
-          message: "Each responsive layout must have a unique breakpoint",
-          path: [index, "breakpoint"],
-        });
-      }
-      seenBreakpoints.add(layout.breakpoint);
-    });
-  });
-
-export const boardSaveLayoutsSchema = z.object({
-  id: z.string(),
-  layouts: responsiveBoardLayoutsSchema,
 });
 
 export const boardSaveSchema = z.object({

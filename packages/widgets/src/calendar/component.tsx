@@ -14,7 +14,6 @@ import { useSettings } from "@homarr/settings";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
-import { hasWidgetDataWarning, throwOnInitialQueryError, WidgetDataState } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
@@ -45,8 +44,8 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
   const { data, error, isPending } = clientApi.widget.calendar.findAllEvents.useQuery(input);
   const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
 
-  if (isPending) return <WidgetMobileLoading />;
-  throwOnInitialQueryError(error, data !== undefined);
+  if (displayMode === "mobileSummary" && isPending) return <WidgetMobileLoading />;
+  if (displayMode === "mobileSummary" && error && !data) throw error;
 
   return (
     <CalendarBase
@@ -56,11 +55,7 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
       setMonth={setMonth}
       options={options}
       displayMode={displayMode}
-      isStale={hasWidgetDataWarning({
-        error,
-        expectedIntegrationCount: integrationIds.length,
-        receivedIntegrationCount: data?.length,
-      })}
+      isStale={Boolean(error) || (data?.length ?? 0) < integrationIds.length}
     />
   );
 };
@@ -130,7 +125,7 @@ const CalendarBase = ({
     );
   }
 
-  const calendar = (
+  return (
     <Calendar
       defaultDate={new Date()}
       onPreviousMonth={(month) => setMonth(new Date(month))}
@@ -210,7 +205,6 @@ const CalendarBase = ({
       }}
     />
   );
-  return <WidgetDataState hasWarning={isStale}>{calendar}</WidgetDataState>;
 };
 
 /**

@@ -51,8 +51,6 @@ import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/i
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
-import { hasWidgetDataWarning, throwOnInitialQueryError } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 
 dayjs.extend(relativeTime);
@@ -280,57 +278,7 @@ function SpeedCell({
   );
 }
 
-export default function DownloadsWidget(props: WidgetComponentProps<"downloads">) {
-  if (props.displayMode === "mobileSummary") {
-    return <DownloadsMobileSummary integrationIds={props.integrationIds} options={props.options} />;
-  }
-
-  return <DownloadClientsWidget {...props} />;
-}
-
-function DownloadsMobileSummary({
-  integrationIds,
-  options,
-}: Pick<WidgetComponentProps<"downloads">, "integrationIds" | "options">) {
-  const t = useScopedI18n("widget.downloads");
-  const { data, error, isPending } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
-    integrationIds,
-    limitPerIntegration: options.limitPerIntegration,
-  });
-
-  if (isPending) return <WidgetMobileLoading />;
-  throwOnInitialQueryError(error, data !== undefined);
-
-  const currentItems = data ?? [];
-  const selectedClients = currentItems.filter(({ integration }) => integrationIds.includes(integration.id));
-  const visibleItemCount = selectedClients.reduce(
-    (total, { data: clientData }) =>
-      total +
-      clientData.items
-        .filter(({ category }) => matchesCategoryFilter(category, options.categoryFilter, options.filterIsWhitelist))
-        .filter((item) => showCompletedItem(item, options)).length,
-    0,
-  );
-  const totalDownloadSpeed = selectedClients.reduce(
-    (total, { data: clientData }) => total + (clientData.status.rates.down ?? 0),
-    0,
-  );
-
-  return (
-    <WidgetMobileSummary
-      value={visibleItemCount}
-      label={t("name")}
-      description={`${t("items.downSpeed.columnTitle")}: ${formatByteRate(totalDownloadSpeed)}`}
-      isStale={hasWidgetDataWarning({
-        error,
-        expectedIntegrationCount: integrationIds.length,
-        receivedIntegrationCount: currentItems.length,
-      })}
-    />
-  );
-}
-
-function DownloadClientsWidget({
+export default function DownloadClientsWidget({
   isEditMode,
   integrationIds,
   options,

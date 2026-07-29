@@ -1,13 +1,12 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { getActiveQueryCacheBoardId, setActiveQueryCacheBoardId } from "@homarr/api/query-cache";
-import { useSettings } from "@homarr/settings";
 
 import { updateBoardName } from "./updater";
 
@@ -74,6 +73,10 @@ export const useOptionalBoard = () => {
   return context?.board ?? null;
 };
 
+export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]) => {
+  return getDesktopLayout(board).id;
+};
+
 export const getDesktopLayout = (board: RouterOutputs["board"]["getBoardByName"]) => {
   const layout = board.layouts
     .toSorted(
@@ -88,57 +91,9 @@ export const getDesktopLayout = (board: RouterOutputs["board"]["getBoardByName"]
   return layout;
 };
 
-export const getCurrentLayout = (
-  board: RouterOutputs["board"]["getBoardByName"],
-  enableAutomaticMobileLayout: boolean,
-  viewportWidth?: number,
-) => {
-  if (enableAutomaticMobileLayout || viewportWidth === undefined) {
-    return getDesktopLayout(board).id;
-  }
+export const useCurrentLayout = () => getCurrentLayout(useRequiredBoard());
 
-  const sortedLayouts = board.layouts.toSorted((layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint);
-  const layout = sortedLayouts.find((candidate) => candidate.breakpoint <= viewportWidth) ?? sortedLayouts.at(-1);
-
-  if (!layout) {
-    throw new Error("Board must have a layout");
-  }
-
-  return layout.id;
-};
-
-export const useCurrentLayout = () => {
-  const board = useRequiredBoard();
-  const { enableAutomaticMobileLayout } = useSettings();
-  const [currentLayout, setCurrentLayout] = useState(() =>
-    getCurrentLayout(
-      board,
-      enableAutomaticMobileLayout,
-      !enableAutomaticMobileLayout && typeof window !== "undefined" ? window.innerWidth : undefined,
-    ),
-  );
-
-  const updateCurrentLayout = useCallback(() => {
-    setCurrentLayout(getCurrentLayout(board, enableAutomaticMobileLayout, window.innerWidth));
-  }, [board, enableAutomaticMobileLayout]);
-
-  useEffect(() => {
-    updateCurrentLayout();
-
-    if (enableAutomaticMobileLayout) return;
-
-    window.addEventListener("resize", updateCurrentLayout);
-
-    return () => {
-      window.removeEventListener("resize", updateCurrentLayout);
-    };
-  }, [enableAutomaticMobileLayout, updateCurrentLayout]);
-
-  return currentLayout;
-};
-
-export const getBoardLayouts = (board: RouterOutputs["board"]["getBoardByName"]) =>
-  board.layouts.map((layout) => layout.id);
+export const getBoardLayouts = (board: RouterOutputs["board"]["getBoardByName"]) => [getCurrentLayout(board)];
 
 export const useLayouts = () => {
   const board = useRequiredBoard();

@@ -2,7 +2,7 @@
 
 import { describe, expect, it, vi } from "vitest";
 
-import { getIntegrationQueryProvenance, settleIntegrationQueries } from "./settle-integrations";
+import { settleIntegrationQueries } from "./settle-integrations";
 
 const integrations = [
   { id: "first", name: "First", kind: "mock" },
@@ -74,21 +74,5 @@ describe("settleIntegrationQueries", () => {
         { throwOnAllFailure: true },
       ),
     ).resolves.toEqual([]);
-  });
-});
-
-describe("getIntegrationQueryProvenance", () => {
-  it("counts dropped and stale integration results independently", () => {
-    expect(getIntegrationQueryProvenance(4, [{ isStale: false }, { isStale: true }, { isStale: true }])).toEqual({
-      failedIntegrationCount: 1,
-      staleIntegrationCount: 2,
-    });
-  });
-
-  it("does not report failures for complete current results", () => {
-    expect(getIntegrationQueryProvenance(2, [{ isStale: false }, {}])).toEqual({
-      failedIntegrationCount: 0,
-      staleIntegrationCount: 0,
-    });
   });
 });

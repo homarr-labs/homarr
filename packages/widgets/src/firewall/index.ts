@@ -7,7 +7,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("firewall", {
   icon: IconWall,
-  mobile: { supportsDetailView: true, unmountWhenOffscreen: true },
+  mobile: { supportsDetailView: true },
   queryKey: [["widget", "firewall"]],
   refetchInterval: 5,
   createOptions() {
