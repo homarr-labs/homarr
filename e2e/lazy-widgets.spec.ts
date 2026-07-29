@@ -83,7 +83,7 @@ describe("lazy widget application graph", () => {
       await expect(page.locator("[data-homarr-dev-benchmark-board]")).toBeVisible({ timeout: 30_000 });
       await expect(page.locator(`[data-id="${itemId}"] .clock-widget-container`)).toBeVisible({ timeout: 15_000 });
 
-      await page.locator('[data-homarr-dev-benchmark-interaction="search"]').first().click();
+      await page.keyboard.press("Control+K");
       await expect(page.locator("[data-homarr-dev-benchmark-spotlight]")).toBeVisible();
       await page.keyboard.press("Escape");
       await expect(page.locator("[data-homarr-dev-benchmark-spotlight]")).not.toBeVisible();
