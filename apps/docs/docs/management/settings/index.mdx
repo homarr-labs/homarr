@@ -21,8 +21,9 @@ It is available to signed-in users from the header, the user menu, and the `Cmd/
 
 ### Configure a model provider
 
-Homarr supports OpenRouter, OpenAI, Ollama, LM Studio, and custom services that implement the OpenAI
-Chat Completions API.
+Homarr includes presets for OpenRouter, OpenAI, Anthropic Claude, Google Gemini, xAI, Groq, Mistral AI,
+DeepSeek, Together AI, Ollama, and LM Studio. A custom preset connects any other service that implements
+the OpenAI Chat Completions API.
 
 1. Choose a provider preset or **Custom endpoint**.
 2. Confirm the API base URL. It usually ends in `/v1`.
@@ -51,6 +52,11 @@ model server.
 The configured endpoint must support streaming Chat Completions and structured tool calls for the full
 assistant experience. Model discovery alone does not guarantee tool support, except when OpenRouter
 explicitly advertises the model's `tools` capability.
+
+The Claude preset uses Anthropic's OpenAI SDK compatibility layer. Anthropic describes that layer as
+suited to testing and comparison rather than as its full native API; unsupported OpenAI fields may be
+ignored. Streaming responses and tool calls are supported, which are the capabilities Homarr Assistant
+uses. Choose OpenRouter or another provider when you prefer a provider-neutral production endpoint.
 
 ### Conversations and tools
 

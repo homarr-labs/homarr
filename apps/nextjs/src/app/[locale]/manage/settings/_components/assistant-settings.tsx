@@ -28,51 +28,25 @@ import {
   IconPlus,
   IconRobot,
   IconShieldLock,
+  IconTool,
   IconTrash,
   IconWorld,
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { assistantProviderIds, assistantProviderPresets } from "@homarr/definitions";
+import type { AssistantProvider, AssistantProviderCategory } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-const providerPresets = {
-  openrouter: {
-    baseUrl: "https://openrouter.ai/api/v1",
-    discoveryPath: "/models",
-    requiresApiKey: true,
-  },
-  openai: {
-    baseUrl: "https://api.openai.com/v1",
-    discoveryPath: "/models",
-    requiresApiKey: true,
-  },
-  ollama: {
-    baseUrl: "http://localhost:11434/v1",
-    discoveryPath: "/models",
-    requiresApiKey: false,
-  },
-  "lm-studio": {
-    baseUrl: "http://localhost:1234/v1",
-    discoveryPath: "/models",
-    requiresApiKey: false,
-  },
-  custom: {
-    baseUrl: "",
-    discoveryPath: "/models",
-    requiresApiKey: false,
-  },
-} as const;
-
-type Provider = keyof typeof providerPresets;
 type HeaderEntry = { id: number; name: string; value: string };
 
 export const AssistantSettings = () => {
   const t = useScopedI18n("management.page.settings.section.assistant");
   const utils = clientApi.useUtils();
   const { data: configuration, isLoading } = clientApi.assistant.getAdminConfiguration.useQuery();
-  const [provider, setProvider] = useState<Provider>("openrouter");
-  const [baseUrl, setBaseUrl] = useState<string>(providerPresets.openrouter.baseUrl);
+  const [provider, setProvider] = useState<AssistantProvider>("openrouter");
+  const [baseUrl, setBaseUrl] = useState<string>(assistantProviderPresets.openrouter.baseUrl);
   const [modelDiscoveryPath, setModelDiscoveryPath] = useState<string>("/models");
   const [apiKey, setApiKey] = useState("");
   const [clearApiKey, setClearApiKey] = useState(false);
@@ -84,7 +58,7 @@ export const AssistantSettings = () => {
 
   useEffect(() => {
     setProvider(configuration?.provider ?? "openrouter");
-    setBaseUrl(configuration?.baseUrl ?? providerPresets.openrouter.baseUrl);
+    setBaseUrl(configuration?.baseUrl ?? assistantProviderPresets.openrouter.baseUrl);
     setModelDiscoveryPath(configuration?.modelDiscoveryPath ?? "");
     setModelId(configuration?.modelId ?? "");
     setEnabled(configuration?.enabled ?? false);
@@ -109,11 +83,25 @@ export const AssistantSettings = () => {
       })),
     [models],
   );
+  const providerOptions = useMemo(
+    () =>
+      (["hosted", "local", "custom"] satisfies AssistantProviderCategory[]).map((category) => ({
+        group: t(`provider.groups.${category}`),
+        items: assistantProviderIds
+          .filter((providerId) => assistantProviderPresets[providerId].category === category)
+          .map((providerId) => ({
+            value: providerId,
+            label: t(`provider.options.${providerId}.label`),
+          })),
+      })),
+    [t],
+  );
+  const selectedModel = models?.find((model) => model.id === modelId);
 
   const destinationChanged =
     configuration?.connectionConfigured === true &&
     (configuration.provider !== provider || configuration.baseUrl !== baseUrl.trim().replace(/\/$/, ""));
-  const preset = providerPresets[provider];
+  const preset = assistantProviderPresets[provider];
   const headerValuesValid = headers.every((header) => header.name.trim().length > 0 && header.value.length > 0);
   const hasEffectiveApiKey =
     apiKey.trim().length > 0 || (!destinationChanged && configuration?.apiKeyConfigured === true && !clearApiKey);
@@ -177,12 +165,12 @@ export const AssistantSettings = () => {
   const pending = isLoading || updateConnection.isPending || saveConfiguration.isPending || clearCredentials.isPending;
 
   const changeProvider = (value: string | null) => {
-    if (!value || !(value in providerPresets)) return;
-    const nextProvider = value as Provider;
-    const nextPreset = providerPresets[nextProvider];
+    if (!value || !(value in assistantProviderPresets)) return;
+    const nextProvider = value as AssistantProvider;
+    const nextPreset = assistantProviderPresets[nextProvider];
     setProvider(nextProvider);
     setBaseUrl(nextPreset.baseUrl);
-    setModelDiscoveryPath(nextPreset.discoveryPath);
+    setModelDiscoveryPath(nextPreset.modelDiscoveryPath ?? "");
     setEnabled(false);
   };
 
@@ -243,10 +231,9 @@ export const AssistantSettings = () => {
               description={t(`provider.options.${provider}.description`)}
               value={provider}
               onChange={changeProvider}
-              data={Object.keys(providerPresets).map((value) => ({
-                value,
-                label: t(`provider.options.${value as Provider}.label`),
-              }))}
+              data={providerOptions}
+              searchable
+              allowDeselect={false}
             />
             <TextInput
               label={t("baseUrl.title")}
@@ -286,6 +273,7 @@ export const AssistantSettings = () => {
               )}
             </Group>
             <PasswordInput
+              aria-label={t("apiKey.title")}
               value={apiKey}
               onChange={(event) => {
                 setApiKey(event.currentTarget.value);
@@ -399,6 +387,7 @@ export const AssistantSettings = () => {
               </Button>
             </Group>
             <Autocomplete
+              aria-label={t("model.title")}
               value={modelId}
               onChange={setModelId}
               data={modelOptions}
@@ -412,6 +401,39 @@ export const AssistantSettings = () => {
               }
               limit={100}
             />
+            {discoveryError && (
+              <Alert color="yellow" icon={<IconAlertTriangle size={18} />} title={t("model.discoveryFailed")}>
+                {discoveryError.message}
+              </Alert>
+            )}
+            {selectedModel && (
+              <Card withBorder padding="sm" radius="md">
+                <Group justify="space-between" align="flex-start" wrap="nowrap">
+                  <div>
+                    <Text fw={600}>{selectedModel.name}</Text>
+                    {selectedModel.description && (
+                      <Text size="sm" c="dimmed" lineClamp={2}>
+                        {selectedModel.description}
+                      </Text>
+                    )}
+                  </div>
+                  <Group gap="xs" justify="flex-end">
+                    {selectedModel.contextLength && (
+                      <Badge variant="light">
+                        {t("model.context", { count: selectedModel.contextLength.toLocaleString() })}
+                      </Badge>
+                    )}
+                    <Badge
+                      variant="light"
+                      color={selectedModel.toolSupport === "confirmed" ? "green" : "gray"}
+                      leftSection={<IconTool size={12} />}
+                    >
+                      {selectedModel.toolSupport === "confirmed" ? t("model.toolsConfirmed") : t("model.toolsUnknown")}
+                    </Badge>
+                  </Group>
+                </Group>
+              </Card>
+            )}
           </Stack>
 
           <Switch

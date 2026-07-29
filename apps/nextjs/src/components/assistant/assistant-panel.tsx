@@ -15,10 +15,13 @@ import {
 import { ActionIcon, Box, Button, Drawer, Group, ScrollArea, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import {
+  IconActivityHeartbeat,
+  IconApps,
   IconArchive,
   IconArrowUp,
   IconCheck,
   IconCopy,
+  IconCommand,
   IconMenu2,
   IconHistory,
   IconPlayerStop,
@@ -26,6 +29,7 @@ import {
   IconRefresh,
   IconRestore,
   IconRobot,
+  IconSearch,
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
@@ -143,6 +147,15 @@ const UserMessage = () => (
   </MessagePrimitive.Root>
 );
 
+const RuntimeError = () => {
+  const t = useScopedI18n("common.assistant");
+  return (
+    <MessagePrimitive.Error>
+      <Box className={classes.messageError}>{t("responseError")}</Box>
+    </MessagePrimitive.Error>
+  );
+};
+
 const AssistantMessage = () => (
   <MessagePrimitive.Root className={`${classes.message} ${classes.assistantMessage}`}>
     <MessagePrimitive.Parts
@@ -151,6 +164,7 @@ const AssistantMessage = () => (
         tools: { Fallback: ToolPart },
       }}
     />
+    <RuntimeError />
     <MessageActions />
   </MessagePrimitive.Root>
 );
@@ -236,14 +250,14 @@ const ThreadHistory = ({ opened, onClose }: { opened: boolean; onClose: () => vo
       </Group>
       <Group gap="xs" px="xs" mt="xs">
         <IconHistory size={14} />
-        <Text size="xs" fw={700} c="dimmed" tt="uppercase">
+        <Text size="sm" fw={600} c="dimmed">
           {t("conversations")}
         </Text>
       </Group>
       <ScrollArea flex={1} type="auto">
         <Stack gap={3}>
           <ThreadListPrimitive.Items components={{ ThreadListItem }} />
-          <Text size="xs" fw={700} c="dimmed" tt="uppercase" px="xs" mt="sm">
+          <Text size="sm" fw={600} c="dimmed" px="xs" mt="sm">
             {t("archived")}
           </Text>
           <ThreadListPrimitive.Items archived components={{ ThreadListItem: ArchivedThreadListItem }} />
@@ -258,16 +272,44 @@ const EmptyThread = () => {
   return (
     <ThreadPrimitive.Empty>
       <Box className={classes.empty}>
-        <Stack align="center" gap="sm" maw={340}>
-          <ThemeIcon size={52} radius="xl" variant="light" color="red">
-            <IconRobot size={27} />
-          </ThemeIcon>
-          <Text size="xl" fw={700}>
-            {t("emptyTitle")}
-          </Text>
-          <Text size="sm" c="dimmed">
-            {t("emptyDescription")}
-          </Text>
+        <Stack align="center" gap="lg" maw={560} w="100%">
+          <Stack align="center" gap="xs" maw={430}>
+            <ThemeIcon size={52} radius="xl" variant="light" color="red">
+              <IconRobot size={27} />
+            </ThemeIcon>
+            <Text size="xl" fw={700}>
+              {t("emptyTitle")}
+            </Text>
+            <Text size="sm" c="dimmed">
+              {t("emptyDescription")}
+            </Text>
+          </Stack>
+          <Box className={classes.suggestions}>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send asChild>
+              <Button
+                variant="default"
+                className={classes.suggestion}
+                leftSection={<IconActivityHeartbeat size={18} />}
+              >
+                {t("suggestions.health.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.explore.prompt")} send asChild>
+              <Button variant="default" className={classes.suggestion} leftSection={<IconApps size={18} />}>
+                {t("suggestions.explore.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.media.prompt")} send asChild>
+              <Button variant="default" className={classes.suggestion} leftSection={<IconSearch size={18} />}>
+                {t("suggestions.media.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.command.prompt")} send asChild>
+              <Button variant="default" className={classes.suggestion} leftSection={<IconCommand size={18} />}>
+                {t("suggestions.command.label")}
+              </Button>
+            </ThreadPrimitive.Suggestion>
+          </Box>
         </Stack>
       </Box>
     </ThreadPrimitive.Empty>

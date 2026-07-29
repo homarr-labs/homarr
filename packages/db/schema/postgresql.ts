@@ -484,7 +484,20 @@ export const assistantConfigurations = pgTable("assistant_configuration", {
   id: varchar({ length: 64 }).notNull().primaryKey().default("default"),
   enabled: boolean().notNull().default(false),
   provider: varchar({ length: 32 })
-    .$type<"openrouter" | "openai" | "ollama" | "lm-studio" | "custom">()
+    .$type<
+      | "openrouter"
+      | "openai"
+      | "anthropic"
+      | "google-gemini"
+      | "xai"
+      | "groq"
+      | "mistral"
+      | "deepseek"
+      | "together"
+      | "ollama"
+      | "lm-studio"
+      | "custom"
+    >()
     .notNull()
     .default("openrouter"),
   baseUrl: varchar({ length: 2048 }).notNull().default("https://openrouter.ai/api/v1"),

@@ -79,6 +79,15 @@
   overflow-wrap: anywhere;
 }
 
+.messageError {
+  margin-top: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--mantine-radius-md);
+  color: var(--mantine-color-red-text);
+  background: var(--mantine-color-red-light);
+  font-size: var(--mantine-font-size-sm);
+}
+
 .tool {
   margin-block: 0.5rem;
   padding: 0.7rem 0.8rem;
@@ -105,10 +114,9 @@
   align-items: flex-end;
   gap: 0.5rem;
   padding: 0.45rem;
-  border: 1px solid var(--mantine-color-default-border);
   border-radius: 1rem;
-  background: var(--mantine-color-body);
-  box-shadow: var(--mantine-shadow-lg);
+  background: var(--mantine-color-default);
+  box-shadow: var(--mantine-shadow-sm);
   pointer-events: auto;
 }
 
@@ -130,7 +138,24 @@
   min-height: 60vh;
   align-items: center;
   justify-content: center;
+  padding: 3rem 1rem 8rem;
   text-align: center;
+}
+
+.suggestions {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.suggestion {
+  height: auto;
+  min-height: 3.25rem;
+  justify-content: flex-start;
+  padding: 0.7rem 0.9rem;
+  text-align: start;
+  white-space: normal;
 }
 
 .mobileHistoryButton,
@@ -172,5 +197,19 @@
 
   .historyClose {
     display: inline-flex;
+  }
+
+  .suggestions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .history {
+    transition: none;
+  }
+
+  .viewport {
+    scroll-behavior: auto;
   }
 }

@@ -7,12 +7,13 @@ import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { and, desc, eq, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { assistantConfigurations, assistantMessages, assistantThreads } from "@homarr/db/schema";
+import { assistantProviderIds, assistantProviderPresets, assistantProviderRequiresApiKey } from "@homarr/definitions";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
 const configurationId = "default";
-const providerSchema = z.enum(["openrouter", "openai", "ollama", "lm-studio", "custom"]);
+const providerSchema = z.enum(assistantProviderIds);
 
 const modelSchema = z.object({
   id: z.string(),
@@ -27,12 +28,16 @@ const modelSchema = z.object({
 type CompatibleModel = {
   id?: unknown;
   name?: unknown;
+  display_name?: unknown;
   model?: unknown;
   description?: unknown;
   context_length?: unknown;
+  max_context_length?: unknown;
+  max_input_tokens?: unknown;
   supported_parameters?: unknown;
   architecture?: { output_modalities?: unknown };
   pricing?: { prompt?: unknown; completion?: unknown };
+  capabilities?: { function_calling?: unknown };
 };
 
 type AssistantConfiguration = typeof assistantConfigurations.$inferSelect;
@@ -108,7 +113,13 @@ const decryptCustomHeaders = (encryptedHeaders: `${string}.${string}` | null) =>
 const getProviderHeaders = (configuration: AssistantConfiguration) => {
   const headers: Record<string, string> = {};
   if (configuration.encryptedApiKey) {
-    headers.Authorization = `Bearer ${decryptSecret(configuration.encryptedApiKey)}`;
+    const apiKey = decryptSecret(configuration.encryptedApiKey);
+    if (assistantProviderPresets[configuration.provider].discoveryAuthentication === "anthropic") {
+      headers["X-Api-Key"] = apiKey;
+      headers["anthropic-version"] = "2023-06-01";
+    } else {
+      headers.Authorization = `Bearer ${apiKey}`;
+    }
   }
   if (configuration.provider === "openrouter") {
     headers["HTTP-Referer"] ??= "https://homarr.dev";
@@ -149,13 +160,13 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
     });
   }
 
-  let body: { data?: CompatibleModel[]; models?: CompatibleModel[] };
+  let body: { data?: CompatibleModel[]; models?: CompatibleModel[] } | CompatibleModel[];
   try {
     body = (await response.json()) as typeof body;
   } catch {
     throw new TRPCError({ code: "BAD_GATEWAY", message: "The model endpoint returned invalid JSON." });
   }
-  const models = body.data ?? body.models ?? [];
+  const models = Array.isArray(body) ? body : (body.data ?? body.models ?? []);
   return models
     .filter((model) => {
       if (configuration.provider !== "openrouter") return true;
@@ -168,16 +179,31 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
     .flatMap((model) => {
       const id = typeof model.id === "string" ? model.id : typeof model.model === "string" ? model.model : null;
       if (!id) return [];
-      const name = typeof model.name === "string" ? model.name : id;
+      const name =
+        typeof model.name === "string" ? model.name : typeof model.display_name === "string" ? model.display_name : id;
+      const contextLength =
+        typeof model.context_length === "number"
+          ? model.context_length
+          : typeof model.max_context_length === "number"
+            ? model.max_context_length
+            : typeof model.max_input_tokens === "number"
+              ? model.max_input_tokens
+              : null;
+      const toolSupport =
+        configuration.provider === "openrouter" ||
+        model.capabilities?.function_calling === true ||
+        configuration.provider === "anthropic"
+          ? ("confirmed" as const)
+          : ("unknown" as const);
       return [
         {
           id,
           name,
           description: typeof model.description === "string" ? model.description : null,
-          contextLength: typeof model.context_length === "number" ? model.context_length : null,
+          contextLength,
           promptPrice: typeof model.pricing?.prompt === "string" ? model.pricing.prompt : null,
           completionPrice: typeof model.pricing?.completion === "string" ? model.pricing.completion : null,
-          toolSupport: configuration.provider === "openrouter" ? ("confirmed" as const) : ("unknown" as const),
+          toolSupport,
         },
       ];
     })
@@ -204,7 +230,7 @@ export const assistantRouter = createTRPCRouter({
     })
     .query(async ({ ctx }) => {
       const configuration = await getConfigurationAsync(ctx.db);
-      const requiresApiKey = configuration?.provider === "openrouter" || configuration?.provider === "openai";
+      const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
       return {
         enabled: Boolean(
           configuration?.enabled && configuration.modelId && (!requiresApiKey || configuration.encryptedApiKey),
@@ -318,7 +344,7 @@ export const assistantRouter = createTRPCRouter({
       if (!configuration) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Save a provider connection first." });
       }
-      const requiresApiKey = configuration.provider === "openrouter" || configuration.provider === "openai";
+      const requiresApiKey = assistantProviderRequiresApiKey(configuration.provider);
       if (input.enabled && requiresApiKey && !configuration.encryptedApiKey) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This provider requires an API key." });
       }
