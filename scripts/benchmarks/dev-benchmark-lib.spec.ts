@@ -26,6 +26,10 @@ describe("development benchmark measurements", () => {
     });
   });
 
+  it("averages both middle values for an even sample count", () => {
+    expect(summarize([100, 200]).medianMs).toBe(150);
+  });
+
   it("requires a successful authenticated board hydration and interaction", () => {
     expect(
       validateBrowserMeasurement({

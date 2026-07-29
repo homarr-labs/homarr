@@ -136,7 +136,7 @@ export const IntegrationMultiSelectGrid = ({
         );
       })}
 
-      {filtered.length === 0 && (
+      {!isPending && filtered.length === 0 && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>

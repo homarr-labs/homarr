@@ -152,7 +152,12 @@ const createProxyReaderAsync = async (): Promise<ProxyReader> => {
 let proxyReaderPromise: Promise<ProxyReader> | null = null;
 
 const getProxyReaderAsync = () => {
-  proxyReaderPromise ??= createProxyReaderAsync();
+  if (!proxyReaderPromise) {
+    proxyReaderPromise = createProxyReaderAsync().catch((error: unknown) => {
+      proxyReaderPromise = null;
+      throw error;
+    });
+  }
   return proxyReaderPromise;
 };
 

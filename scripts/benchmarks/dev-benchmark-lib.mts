@@ -30,7 +30,11 @@ export const summarize = (numbers: Array<number | null | undefined>): NumericSum
     return { count: 0, medianMs: null, p95Ms: null, standardDeviationMs: null, outliersMs: [] };
   }
 
-  const medianIndex = Math.floor(sorted.length / 2);
+  const middleIndex = Math.floor(sorted.length / 2);
+  let medianMs = sorted[middleIndex] ?? 0;
+  if (sorted.length % 2 === 0) {
+    medianMs = ((sorted[middleIndex - 1] ?? 0) + medianMs) / 2;
+  }
   const p95Index = Math.min(sorted.length - 1, Math.ceil(sorted.length * 0.95) - 1);
   const mean = sorted.reduce((total, value) => total + value, 0) / sorted.length;
   const variance = sorted.reduce((total, value) => total + (value - mean) ** 2, 0) / sorted.length;
@@ -41,7 +45,7 @@ export const summarize = (numbers: Array<number | null | undefined>): NumericSum
 
   return {
     count: sorted.length,
-    medianMs: sorted[medianIndex] ?? 0,
+    medianMs,
     p95Ms: sorted[p95Index] ?? 0,
     standardDeviationMs: Math.round(Math.sqrt(variance)),
     outliersMs: sorted.filter((value) => value > outlierLimit),

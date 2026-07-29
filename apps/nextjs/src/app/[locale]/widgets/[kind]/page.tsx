@@ -1,7 +1,7 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { Center } from "@mantine/core";
+import { Center, Loader } from "@mantine/core";
 
-import { env } from "@homarr/common/env";
 import { db } from "@homarr/db";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetKinds } from "@homarr/widgets/manifest";
@@ -13,7 +13,8 @@ interface Props {
 }
 
 export default async function WidgetPreview(props: Props) {
-  if (!(widgetKinds.includes((await props.params).kind as WidgetKind) || env.NODE_ENV !== "development")) {
+  const { kind } = await props.params;
+  if (!widgetKinds.includes(kind as WidgetKind)) {
     notFound();
   }
 
@@ -26,11 +27,11 @@ export default async function WidgetPreview(props: Props) {
     },
   });
 
-  const sort = (await props.params).kind as WidgetKind;
-
   return (
     <Center h="100vh">
-      <WidgetPreviewPageContent kind={sort} integrationData={integrationData} />
+      <Suspense fallback={<Loader size="sm" />}>
+        <WidgetPreviewPageContent kind={kind as WidgetKind} integrationData={integrationData} />
+      </Suspense>
     </Center>
   );
 }

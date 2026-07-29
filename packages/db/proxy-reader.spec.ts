@@ -44,6 +44,7 @@ describe("proxy database pools", () => {
     vi.resetModules();
     vi.clearAllMocks();
     for (const key of Object.keys(mocks.dbEnv)) delete mocks.dbEnv[key];
+    mocks.mysqlCreatePool.mockReturnValue({});
   });
 
   it("bounds MySQL URL pools instead of falling back to the driver defaults", async () => {
@@ -107,5 +108,21 @@ describe("proxy database pools", () => {
     await initializeProxyReader();
 
     expect(mocks.postgresPool).toHaveBeenCalledWith(expect.objectContaining({ max: 1 }));
+  });
+
+  it("retries initialization after a transient driver failure", async () => {
+    Object.assign(mocks.dbEnv, {
+      DRIVER: "mysql2",
+      URL: "mysql://homarr:test@localhost:3306/homarr",
+    });
+    mocks.mysqlCreatePool.mockImplementationOnce(() => {
+      throw new Error("database unavailable");
+    });
+
+    const { getOnboardingStepForProxyAsync } = await import("./proxy-reader");
+
+    await expect(getOnboardingStepForProxyAsync()).rejects.toThrow("database unavailable");
+    await expect(getOnboardingStepForProxyAsync()).resolves.toBe("finish");
+    expect(mocks.mysqlCreatePool).toHaveBeenCalledTimes(2);
   });
 });

@@ -89,7 +89,7 @@ export const IntegrationSelectGrid = ({ onSelect, enableMockIntegration = false 
         </Card>
       ))}
 
-      {filtered.length === 0 && (
+      {!isPending && filtered.length === 0 && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>
