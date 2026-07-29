@@ -62,7 +62,10 @@ describe("LLDAP authorization", () => {
         },
       });
       expect(users).toHaveLength(1);
-      const user = users[0]!;
+      const user = users[0];
+      if (!user) {
+        throw new Error("Expected LDAP login to create one user");
+      }
       expect(user).toEqual(
         expect.objectContaining({
           name: defaultCredentials.username,
