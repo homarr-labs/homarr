@@ -10,7 +10,7 @@ export const widgetKind = "dnsHoleControls";
 export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
   supportsAdvancedFocus: false,
   icon: IconDeviceGamepad,
-  mobile: { supportsDetailView: true, unmountWhenOffscreen: true },
+  mobile: { supportsDetailView: true },
   queryKey: [["widget", "dnsHole"]],
   refetchInterval: 5,
   createOptions() {

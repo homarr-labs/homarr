@@ -6,7 +6,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("customApi", {
   icon: IconApi,
-  mobile: { supportsDetailView: true, unmountWhenOffscreen: true },
+  mobile: { supportsDetailView: true },
   queryKey: [["widget", "customApi"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({

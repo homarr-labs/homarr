@@ -3,7 +3,6 @@ import { describe, expect, test } from "vitest";
 import {
   isMobileContextActionVisible,
   resolveMobileItemPresentation,
-  shouldKeepMobileWidgetActionsMounted,
   shouldRenderMobileWidgetActions,
 } from "./mobile-presentation";
 
@@ -43,7 +42,7 @@ describe("resolveMobileItemPresentation", () => {
     });
   });
 
-  test("uses a compact one-row fallback when only details are configured", () => {
+  test("keeps automatic footprint defaults when only details are configured", () => {
     expect(
       resolveMobileItemPresentation(
         { kind: "calendar", height: 7 },
@@ -53,10 +52,8 @@ describe("resolveMobileItemPresentation", () => {
       ),
     ).toMatchObject({
       width: 2,
-      height: 1,
-      displayMode: "mobileSummary",
+      height: 3,
       supportsDetails: true,
-      usesGenericSummary: true,
     });
   });
 
@@ -78,7 +75,6 @@ describe("resolveMobileItemPresentation", () => {
       height: 1,
       displayMode: "mobileSummary",
       supportsDetails: false,
-      usesGenericSummary: false,
       eager: true,
       unmountWhenOffscreen: false,
     });
@@ -102,42 +98,6 @@ describe("shouldRenderMobileWidgetActions", () => {
     { supportsDetails: false, supportsRefresh: false, visibleContextActionCount: 1 },
   ])("renders an action trigger for an explicit capability", (capabilities) => {
     expect(shouldRenderMobileWidgetActions(capabilities)).toBe(true);
-  });
-});
-
-describe("shouldKeepMobileWidgetActionsMounted", () => {
-  test("does not expose actions before a deferred widget is near the viewport", () => {
-    expect(
-      shouldKeepMobileWidgetActionsMounted({
-        isNearViewport: false,
-        actionsOpened: false,
-        detailsOpened: false,
-        isOpeningDetails: false,
-        isCompletingAction: false,
-        actionTriggerHasFocus: false,
-      }),
-    ).toBe(false);
-  });
-
-  test.each([
-    ["near the viewport", { isNearViewport: true }],
-    ["showing its action drawer", { actionsOpened: true }],
-    ["showing its detail view", { detailsOpened: true }],
-    ["transitioning to details", { isOpeningDetails: true }],
-    ["completing an action", { isCompletingAction: true }],
-    ["retaining keyboard focus", { actionTriggerHasFocus: true }],
-  ])("keeps actions mounted while %s", (_label, activeState) => {
-    expect(
-      shouldKeepMobileWidgetActionsMounted({
-        isNearViewport: false,
-        actionsOpened: false,
-        detailsOpened: false,
-        isOpeningDetails: false,
-        isCompletingAction: false,
-        actionTriggerHasFocus: false,
-        ...activeState,
-      }),
-    ).toBe(true);
   });
 });
 

@@ -5,56 +5,66 @@ import { useEffect, useRef, useState } from "react";
 import { Skeleton } from "@mantine/core";
 
 import classes from "./mobile-board.module.css";
-import { observeMobileViewportProximity } from "./mobile-viewport-observer";
 
 interface DeferredMobileItemProps extends PropsWithChildren {
   eager: boolean;
   unmountWhenOffscreen: boolean;
-  onNearViewportChange?: (isNearViewport: boolean) => void;
 }
 
-export { getMobilePreloadRootMargin, mobilePreloadViewportMultiplier } from "./mobile-viewport-observer";
+export const mobilePreloadViewportMultiplier = 2;
 
-export const DeferredMobileItem = ({
-  eager,
-  unmountWhenOffscreen,
-  onNearViewportChange,
-  children,
-}: DeferredMobileItemProps) => {
+export const getMobilePreloadRootMargin = (viewportHeight: number) =>
+  `${Math.max(0, Math.round(viewportHeight * mobilePreloadViewportMultiplier))}px 0px`;
+
+export const DeferredMobileItem = ({ eager, unmountWhenOffscreen, children }: DeferredMobileItemProps) => {
   const [hasMounted, setHasMounted] = useState(eager);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const hasMountedOnceRef = useRef(eager);
 
   useEffect(() => {
     if (eager) {
+      hasMountedOnceRef.current = true;
       setHasMounted(true);
-      onNearViewportChange?.(true);
       return;
     }
 
     const element = wrapperRef.current;
-    if (!element) {
+    if (!element || typeof IntersectionObserver === "undefined") {
       setHasMounted(true);
-      onNearViewportChange?.(true);
       return;
     }
 
-    return observeMobileViewportProximity(
-      element,
-      (isNearViewport) => {
-        onNearViewportChange?.(isNearViewport);
+    let observer: IntersectionObserver | null = null;
+    const observe = () => {
+      if (hasMountedOnceRef.current && !unmountWhenOffscreen) return;
+      observer?.disconnect();
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          const isNearViewport = entry?.isIntersecting ?? false;
 
-        if (isNearViewport) {
-          setHasMounted(true);
-          return;
-        }
+          if (isNearViewport) {
+            hasMountedOnceRef.current = true;
+            setHasMounted(true);
+            if (!unmountWhenOffscreen) observer?.disconnect();
+            return;
+          }
 
-        if (unmountWhenOffscreen && !element.contains(document.activeElement)) {
-          setHasMounted(false);
-        }
-      },
-      { once: !unmountWhenOffscreen },
-    );
-  }, [eager, onNearViewportChange, unmountWhenOffscreen]);
+          if (unmountWhenOffscreen && !element.contains(document.activeElement)) {
+            setHasMounted(false);
+          }
+        },
+        { rootMargin: getMobilePreloadRootMargin(window.innerHeight) },
+      );
+      observer.observe(element);
+    };
+
+    observe();
+    window.addEventListener("resize", observe);
+    return () => {
+      window.removeEventListener("resize", observe);
+      observer?.disconnect();
+    };
+  }, [eager, unmountWhenOffscreen]);
 
   return (
     <div ref={wrapperRef} className={classes.deferredItem} aria-busy={!hasMounted}>

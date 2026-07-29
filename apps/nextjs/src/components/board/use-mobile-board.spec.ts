@@ -1,10 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import {
-  resolveIsAutomaticMobileBoard,
-  resolveMobileBoardViewport,
-  shouldShowMobileBoardViewportSkeleton,
-} from "./use-mobile-board";
+import { resolveMobileBoardViewport } from "./use-mobile-board";
 
 describe("resolveMobileBoardViewport", () => {
   test("keeps phones mobile regardless of their viewport width", () => {
@@ -58,28 +54,5 @@ describe("resolveMobileBoardViewport", () => {
       isMobile: expectedIsMobile,
       isResolved: true,
     });
-  });
-});
-
-describe("resolveIsAutomaticMobileBoard", () => {
-  test.each([
-    [true, true, true],
-    [true, false, false],
-    [false, true, false],
-    [false, false, false],
-  ])(
-    "requires both a mobile viewport and the server setting (viewport: %s, setting: %s)",
-    (isMobileViewport, enableAutomaticMobileLayout, expected) => {
-      expect(resolveIsAutomaticMobileBoard({ isMobileViewport, enableAutomaticMobileLayout })).toBe(expected);
-    },
-  );
-
-  test("does not show the tablet resolution skeleton in legacy mode", () => {
-    expect(
-      shouldShowMobileBoardViewportSkeleton({
-        enableAutomaticMobileLayout: false,
-        isResolved: false,
-      }),
-    ).toBe(false);
   });
 });

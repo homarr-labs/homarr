@@ -4,21 +4,14 @@ import type { WidgetContextMenuAction, WidgetMobilePresentation } from "@homarr/
 export const resolveMobileItemPresentation = (
   item: { kind: WidgetKind; height: number },
   mobile: WidgetMobilePresentation | undefined,
-) => {
-  const supportsCompactSummary = mobile?.supportsCompactSummary === true;
-  const supportsDetails = mobile?.supportsDetailView === true;
-  const usesGenericSummary = supportsDetails && !supportsCompactSummary;
-
-  return {
-    width: mobile?.width ?? (item.kind === "app" ? 1 : 2),
-    height: mobile?.height ?? (item.kind === "app" || usesGenericSummary ? 1 : Math.max(1, Math.min(item.height, 3))),
-    displayMode: supportsCompactSummary || usesGenericSummary ? ("mobileSummary" as const) : ("default" as const),
-    supportsDetails,
-    usesGenericSummary,
-    eager: mobile?.eager ?? (item.kind === "app" || item.kind === "bookmarks"),
-    unmountWhenOffscreen: mobile?.eager === true ? false : (mobile?.unmountWhenOffscreen ?? false),
-  };
-};
+) => ({
+  width: mobile?.width ?? (item.kind === "app" ? 1 : 2),
+  height: mobile?.height ?? (item.kind === "app" ? 1 : Math.max(1, Math.min(item.height, 3))),
+  displayMode: mobile?.supportsCompactSummary ? ("mobileSummary" as const) : ("default" as const),
+  supportsDetails: mobile?.supportsDetailView === true,
+  eager: mobile?.eager ?? (item.kind === "app" || item.kind === "bookmarks"),
+  unmountWhenOffscreen: mobile?.eager === true ? false : (mobile?.unmountWhenOffscreen ?? false),
+});
 
 export const shouldRenderMobileWidgetActions = ({
   supportsDetails,
@@ -29,25 +22,6 @@ export const shouldRenderMobileWidgetActions = ({
   supportsRefresh: boolean;
   visibleContextActionCount: number;
 }) => supportsDetails || supportsRefresh || visibleContextActionCount > 0;
-
-interface ShouldKeepMobileWidgetActionsMountedInput {
-  isNearViewport: boolean;
-  actionsOpened: boolean;
-  detailsOpened: boolean;
-  isOpeningDetails: boolean;
-  isCompletingAction: boolean;
-  actionTriggerHasFocus: boolean;
-}
-
-export const shouldKeepMobileWidgetActionsMounted = ({
-  isNearViewport,
-  actionsOpened,
-  detailsOpened,
-  isOpeningDetails,
-  isCompletingAction,
-  actionTriggerHasFocus,
-}: ShouldKeepMobileWidgetActionsMountedInput) =>
-  isNearViewport || actionsOpened || detailsOpened || isOpeningDetails || isCompletingAction || actionTriggerHasFocus;
 
 export const isMobileContextActionVisible = (action: WidgetContextMenuAction) =>
   action.mobileVisible === true && !action.hidden;
