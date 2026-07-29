@@ -13,10 +13,9 @@ interface ApplicationsSectionProps {
   applications: CoolifyApplicationWithContext[];
   baseUrl: string;
   isTiny: boolean;
-  isMobileDetail: boolean;
 }
 
-export function ApplicationsSection({ applications, baseUrl, isTiny, isMobileDetail }: ApplicationsSectionProps) {
+export function ApplicationsSection({ applications, baseUrl, isTiny }: ApplicationsSectionProps) {
   const t = useScopedI18n("widget.coolify");
   const tCommon = useScopedI18n("common");
   const runningApps = applications.filter((app) => parseStatus(app.status ?? "") === "running").length;
@@ -35,14 +34,7 @@ export function ApplicationsSection({ applications, baseUrl, isTiny, isMobileDet
         {applications.length > 0 ? (
           <Stack gap={4}>
             {applications.map((app) => (
-              <ResourceRow
-                key={app.uuid}
-                item={app}
-                baseUrl={baseUrl}
-                isTiny={isTiny}
-                resourceType="application"
-                isMobileDetail={isMobileDetail}
-              />
+              <ResourceRow key={app.uuid} item={app} baseUrl={baseUrl} isTiny={isTiny} resourceType="application" />
             ))}
           </Stack>
         ) : (

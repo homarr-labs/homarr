@@ -6,12 +6,6 @@ import { defaultContent } from "./default-content";
 
 export const { definition, componentLoader } = createWidgetDefinition("notebook", {
   icon: IconNotes,
-  mobile: {
-    width: 2,
-    height: 1,
-    supportsCompactSummary: true,
-    supportsDetailView: true,
-  },
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

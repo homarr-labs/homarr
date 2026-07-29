@@ -1,7 +1,7 @@
 "use client";
 
 import type { MutableRefObject } from "react";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { ActionIcon, Box, Button, Drawer, Loader, Modal, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconDotsVertical, IconMaximize, IconRefresh } from "@tabler/icons-react";
@@ -18,9 +18,8 @@ import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/wid
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { BoardItemContent } from "../items/item-content";
-import { useHasNestedDialog } from "./mobile-dialog-stack";
+import { useItemActions } from "../items/item-actions";
 import classes from "./mobile-board.module.css";
-import { isMobileContextActionVisible, shouldRenderMobileWidgetActions } from "./mobile-presentation";
 
 interface MobileWidgetActionsProps {
   item: SectionItem;
@@ -31,16 +30,18 @@ interface MobileWidgetActionsProps {
 export const MobileWidgetActions = ({ item, supportsDetails, widgetStateRef }: MobileWidgetActionsProps) => {
   const [actionsOpened, actionsDisclosure] = useDisclosure(false);
   const [detailsOpened, detailsDisclosure] = useDisclosure(false);
-  const actionTriggerRef = useRef<HTMLButtonElement | null>(null);
-  const detailsDialogRef = useRef<HTMLDivElement | null>(null);
-  const openDetailsAfterActionsRef = useRef(false);
-  const hasNestedDialog = useHasNestedDialog(detailsOpened, detailsDialogRef);
   const t = useI18n();
   const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
+  const { updateItemOptions } = useItemActions();
   const definition = widgetImports[item.kind].definition;
-  const queryKey = "queryKey" in definition ? (definition.queryKey as QueryKey | undefined) : undefined;
+  const queryClient = useQueryClient();
+  const queryKey = useMemo(
+    () => ("queryKey" in definition ? (definition.queryKey as QueryKey) : [["widget", item.kind]]),
+    [definition, item.kind],
+  );
+  const isFetching = useIsFetching({ queryKey }) > 0;
   const options = useMemo(
     () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options) as Record<string, unknown>,
     [item.kind, item.options, settings],
@@ -50,32 +51,36 @@ export const MobileWidgetActions = ({ item, supportsDetails, widgetStateRef }: M
 
     return definition.contextActions({
       options,
-      setOptions: () => undefined,
+      setOptions: (partial: Record<string, unknown>) =>
+        updateItemOptions({
+          itemId: item.id,
+          newOptions: { ...options, ...partial },
+        }),
       integrationIds: item.integrationIds,
       context: { isEditMode, boardId: board.id, itemId: item.id },
       widgetStateRef,
     } as never) as WidgetContextMenuAction[];
-  }, [board.id, definition, isEditMode, item.id, item.integrationIds, options, widgetStateRef]);
-  const visibleContextActions = contextActions.filter(isMobileContextActionVisible);
+  }, [board.id, definition, isEditMode, item.id, item.integrationIds, options, updateItemOptions, widgetStateRef]);
+  const visibleContextActions = contextActions.filter((action) => !action.hidden);
   const title = item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`);
-  const hasActions = shouldRenderMobileWidgetActions({
-    supportsDetails,
-    supportsRefresh: queryKey !== undefined,
-    visibleContextActionCount: visibleContextActions.length,
-  });
+  const hasActions = item.kind !== "app" || supportsDetails || visibleContextActions.length > 0;
 
   if (!hasActions) return null;
+
+  const refresh = () => {
+    void queryClient.refetchQueries({ queryKey, type: "all" });
+    actionsDisclosure.close();
+  };
 
   return (
     <>
       <ActionIcon
-        ref={actionTriggerRef}
         className={classes.widgetAction}
         variant="filled"
         color="dark"
         radius="xl"
         size={44}
-        aria-label={t("board.mobile.actions", { title })}
+        aria-label={t("board.mobile.actions")}
         onClick={actionsDisclosure.open}
       >
         <IconDotsVertical size={20} />
@@ -89,21 +94,6 @@ export const MobileWidgetActions = ({ item, supportsDetails, widgetStateRef }: M
         size="auto"
         padding="md"
         overlayProps={{ backgroundOpacity: 0.45, blur: 2 }}
-        styles={{
-          content: {
-            paddingLeft: "env(safe-area-inset-left)",
-            paddingRight: "env(safe-area-inset-right)",
-          },
-        }}
-        onExitTransitionEnd={() => {
-          if (!openDetailsAfterActionsRef.current) return;
-          openDetailsAfterActionsRef.current = false;
-          detailsDisclosure.open();
-        }}
-        closeButtonProps={{
-          "aria-label": t("common.action.close"),
-          size: 44,
-        }}
       >
         <Stack gap="xs" pb="calc(var(--mantine-spacing-sm) + env(safe-area-inset-bottom))">
           {supportsDetails && (
@@ -113,8 +103,8 @@ export const MobileWidgetActions = ({ item, supportsDetails, widgetStateRef }: M
               size="lg"
               leftSection={<IconMaximize size={20} />}
               onClick={() => {
-                openDetailsAfterActionsRef.current = true;
                 actionsDisclosure.close();
+                detailsDisclosure.open();
               }}
             >
               {t("board.mobile.details")}
@@ -140,74 +130,37 @@ export const MobileWidgetActions = ({ item, supportsDetails, widgetStateRef }: M
               </Button>
             );
           })}
-          {queryKey && <MobileWidgetRefreshAction queryKey={queryKey} onComplete={actionsDisclosure.close} />}
+          <Button
+            variant="subtle"
+            justify="flex-start"
+            size="lg"
+            disabled={isFetching}
+            leftSection={isFetching ? <Loader size={20} /> : <IconRefresh size={20} />}
+            onClick={refresh}
+          >
+            {t("item.menu.label.refresh")}
+          </Button>
         </Stack>
       </Drawer>
 
       <Modal
-        ref={detailsDialogRef}
         opened={detailsOpened}
         onClose={detailsDisclosure.close}
         title={title}
         fullScreen
         padding="md"
-        returnFocus={false}
-        trapFocus={!hasNestedDialog}
-        closeOnEscape={!hasNestedDialog}
-        onExitTransitionEnd={() => actionTriggerRef.current?.focus()}
-        closeButtonProps={{
-          "aria-label": t("common.action.close"),
-          size: 44,
-        }}
         styles={{
-          content: {
-            display: "flex",
-            flexDirection: "column",
-            height: "100dvh",
-            paddingTop: "env(safe-area-inset-top)",
-            paddingLeft: "env(safe-area-inset-left)",
-            paddingRight: "env(safe-area-inset-right)",
-          },
           body: {
-            flex: "1 1 auto",
-            minHeight: 0,
+            height: "calc(100dvh - 4rem)",
             overflowY: "auto",
             paddingBottom: "calc(var(--mantine-spacing-md) + env(safe-area-inset-bottom))",
           },
         }}
       >
         <Box className={classes.detailContent}>
-          <BoardItemContent
-            item={item}
-            displayMode="mobileDetail"
-            disableContextMenu
-            isReadOnly
-            widgetStateRef={widgetStateRef}
-          />
+          <BoardItemContent item={item} displayMode="mobileDetail" disableContextMenu widgetStateRef={widgetStateRef} />
         </Box>
       </Modal>
     </>
-  );
-};
-
-const MobileWidgetRefreshAction = ({ queryKey, onComplete }: { queryKey: QueryKey; onComplete: () => void }) => {
-  const t = useI18n();
-  const queryClient = useQueryClient();
-  const isFetching = useIsFetching({ queryKey }) > 0;
-
-  return (
-    <Button
-      variant="subtle"
-      justify="flex-start"
-      size="lg"
-      disabled={isFetching}
-      leftSection={isFetching ? <Loader size={20} /> : <IconRefresh size={20} />}
-      onClick={() => {
-        void queryClient.refetchQueries({ queryKey, type: "all" });
-        onComplete();
-      }}
-    >
-      {t("item.menu.label.refresh")}
-    </Button>
   );
 };
