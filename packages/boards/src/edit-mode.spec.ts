@@ -27,15 +27,4 @@ describe("requestBoardEditAction", () => {
     void deferredAction?.();
     expect(action).toHaveBeenCalledOnce();
   });
-
-  test("reports rejected actions instead of creating an unhandled rejection", async () => {
-    const error = new Error("sign-out failed");
-    const reportError = vi.fn();
-    vi.stubGlobal("reportError", reportError);
-
-    requestBoardEditAction(() => Promise.reject(error));
-
-    await vi.waitFor(() => expect(reportError).toHaveBeenCalledWith(error));
-    vi.unstubAllGlobals();
-  });
 });

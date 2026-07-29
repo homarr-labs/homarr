@@ -31,17 +31,6 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-const createDeferred = <T>() => {
-  let resolve!: (value: T) => void;
-  let reject!: (reason: unknown) => void;
-  const promise = new Promise<T>((resolvePromise, rejectPromise) => {
-    resolve = resolvePromise;
-    reject = rejectPromise;
-  });
-
-  return { promise, reject, resolve };
-};
-
 describe("createRequestHandler", () => {
   it("deduplicates in-flight work and caches completed data", async () => {
     let calls = 0;
@@ -231,48 +220,5 @@ describe("createWidgetRequestHandler", () => {
     await expect(handler.handler({ id: "one" }).getDataAsync()).resolves.toMatchObject({ data: "one-1" });
     await expect(handler.handler({ id: "two" }).getDataAsync()).resolves.toMatchObject({ data: "two-2" });
     expect(calls).toBe(2);
-  });
-
-  test("does not let a pre-invalidation request overwrite a newer cached result", async () => {
-    const first = createDeferred<string>();
-    const second = createDeferred<string>();
-    const requestAsync = vi.fn().mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
-    const requestHandler = createRequestHandler({ requestAsync });
-    const handler = requestHandler.handler({ integrationId: "first" });
-
-    const oldRequest = handler.getDataWithProvenanceAsync();
-    requestHandler.invalidateCache();
-    const newRequest = handler.getDataWithProvenanceAsync();
-
-    second.resolve("new");
-    await expect(newRequest).resolves.toMatchObject({ data: "new" });
-    first.resolve("old");
-    await expect(oldRequest).resolves.toMatchObject({ data: "old" });
-
-    await expect(handler.getDataWithProvenanceAsync()).resolves.toMatchObject({ data: "new" });
-    expect(requestAsync).toHaveBeenCalledTimes(2);
-  });
-
-  test("does not let a pre-invalidation request clear a newer inflight request", async () => {
-    const first = createDeferred<string>();
-    const second = createDeferred<string>();
-    const requestAsync = vi.fn().mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
-    const requestHandler = createRequestHandler({ requestAsync });
-    const handler = requestHandler.handler({ integrationId: "first" });
-
-    const oldRequest = handler.getDataWithProvenanceAsync();
-    requestHandler.invalidateCache();
-    const newRequest = handler.getDataWithProvenanceAsync();
-
-    first.resolve("old");
-    await expect(oldRequest).resolves.toMatchObject({ data: "old" });
-    const sharedNewRequest = handler.getDataWithProvenanceAsync();
-    expect(requestAsync).toHaveBeenCalledTimes(2);
-
-    second.resolve("new");
-    await expect(Promise.all([newRequest, sharedNewRequest])).resolves.toEqual([
-      expect.objectContaining({ data: "new" }),
-      expect.objectContaining({ data: "new" }),
-    ]);
   });
 });

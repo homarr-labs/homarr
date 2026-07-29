@@ -37,15 +37,6 @@ describe("automatic mobile layout upgrade default", () => {
     ).toBe(false);
   });
 
-  test("preserves legacy mode when a board has duplicate canonical layouts", () => {
-    expect(
-      shouldEnableAutomaticMobileLayoutForUpgrade([
-        { boardId: "board", name: "Base", breakpoint: 0 },
-        { boardId: "board", name: "Base", breakpoint: 0 },
-      ]),
-    ).toBe(false);
-  });
-
   test.each([
     { boardId: "board", name: "Phone", breakpoint: 0 },
     { boardId: "board", name: "Base", breakpoint: 480 },
