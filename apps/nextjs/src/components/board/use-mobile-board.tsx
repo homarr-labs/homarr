@@ -4,6 +4,8 @@ import type { PropsWithChildren } from "react";
 import { createContext, useContext } from "react";
 import { useMediaQuery } from "@mantine/hooks";
 
+import { useSettings } from "@homarr/settings";
+
 export const mobileBoardMediaQuery = "(max-width: 48em)";
 
 const InitialMobileBoardContext = createContext<boolean | undefined>(undefined);
@@ -17,5 +19,8 @@ export const MobileBoardViewportProvider = ({
 
 export const useIsMobileBoard = () => {
   const initialIsMobile = useContext(InitialMobileBoardContext);
-  return useMediaQuery(mobileBoardMediaQuery, initialIsMobile, { getInitialValueInEffect: true });
+  const { enableAutomaticMobileLayout } = useSettings();
+  const isMobileViewport = useMediaQuery(mobileBoardMediaQuery, initialIsMobile, { getInitialValueInEffect: true });
+
+  return enableAutomaticMobileLayout && isMobileViewport;
 };

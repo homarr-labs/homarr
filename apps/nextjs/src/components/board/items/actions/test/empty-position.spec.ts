@@ -106,6 +106,10 @@ describe("get first empty position", () => {
 
     expect(result).toEqual(expectedX !== undefined ? { xOffset: expectedX, yOffset: expectedY } : undefined);
   });
+
+  test("does not place an item wider than the layout", () => {
+    expect(getFirstEmptyPosition([], 1, undefined, { width: 2, height: 1 })).toBeUndefined();
+  });
 });
 const createElementsFromLayout = (layout: string[][]) => {
   const elements: (Pick<Item["layouts"][number], "xOffset" | "yOffset" | "width" | "height"> & { char: string })[] = [];
