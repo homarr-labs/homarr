@@ -5,10 +5,10 @@ import { and, eq, inArray } from "@homarr/db";
 import {
   getServerSettingByKeyAsync,
   getServerSettingsAsync,
-  insertServerSettingByKeyAsync,
+  mergeServerSettingByKeyAsync,
   updateServerSettingByKeyAsync,
 } from "@homarr/db/queries";
-import { boards, serverSettings } from "@homarr/db/schema";
+import { boards } from "@homarr/db/schema";
 import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettingsKeys } from "@homarr/server-settings";
 import { settingsInitSchema } from "@homarr/validation/settings";
@@ -19,6 +19,7 @@ import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 const boardServerSettingsSchema = z.object({
   homeBoardId: z.string().nullable(),
   mobileHomeBoardId: z.string().nullable(),
+  enableAutomaticMobileLayout: z.boolean(),
   enableStatusByDefault: z.boolean(),
   forceDisableStatus: z.boolean(),
 }) satisfies z.ZodType<ServerSettings["board"]>;
@@ -39,7 +40,7 @@ export const serverSettingsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get global board defaults, including desktop/mobile home board IDs and status behavior. Requires admin permission",
+          "Get global board defaults, including desktop/mobile home board IDs, automatic mobile layout mode, and status behavior. Requires admin permission",
       },
     })
     .input(z.void())
@@ -54,7 +55,7 @@ export const serverSettingsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Update global board defaults. Requires admin permission. Optional fields: homeBoardId, mobileHomeBoardId, enableStatusByDefault, forceDisableStatus. Home board IDs must reference public boards or be null",
+          "Update global board defaults. Requires admin permission. Optional fields: homeBoardId, mobileHomeBoardId, enableAutomaticMobileLayout, enableStatusByDefault, forceDisableStatus. Home board IDs must reference public boards or be null",
       },
     })
     .input(boardServerSettingsUpdateSchema)
@@ -81,17 +82,9 @@ export const serverSettingsRouter = createTRPCRouter({
 
       const current = await getServerSettingByKeyAsync(ctx.db, "board");
       const next = { ...current, ...input };
-      const existing = await ctx.db.query.serverSettings.findFirst({
-        where: eq(serverSettings.settingKey, "board"),
-      });
+      await mergeServerSettingByKeyAsync(ctx.db, "board", next, input);
 
-      if (existing) {
-        await updateServerSettingByKeyAsync(ctx.db, "board", next);
-      } else {
-        await insertServerSettingByKeyAsync(ctx.db, "board", next);
-      }
-
-      return next;
+      return await getServerSettingByKeyAsync(ctx.db, "board");
     }),
   saveSettings: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -103,10 +96,11 @@ export const serverSettingsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
-      await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
+      const next = {
         ...current,
         ...input.value,
-      } as ServerSettings[keyof ServerSettings]);
+      } as ServerSettings[keyof ServerSettings];
+      await mergeServerSettingByKeyAsync(ctx.db, input.settingsKey, next, input.value);
     }),
   initSettings: onboardingProcedure
     .requiresStep("settings")

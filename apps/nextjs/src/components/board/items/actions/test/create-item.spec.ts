@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 
 import * as boardContext from "@homarr/boards/context";
 
@@ -10,6 +10,10 @@ import { ItemMockBuilder } from "./mocks/item-mock";
 import { LayoutMockBuilder } from "./mocks/layout-mock";
 
 describe("item actions create-item", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test("should add it to first section", () => {
     // Arrange
     const itemKind = "clock";
@@ -106,6 +110,26 @@ describe("item actions create-item", () => {
       layout.columnCount,
       9999,
       { height: 1, width: 1 },
+    );
+  });
+
+  test("clamps wide widgets to each retained layout", () => {
+    const desktopLayout = new LayoutMockBuilder({ id: "desktop", columnCount: 12 }).build();
+    const mobileLayout = new LayoutMockBuilder({ id: "mobile", columnCount: 1 }).build();
+    const board = new BoardMockBuilder()
+      .addLayout(desktopLayout)
+      .addLayout(mobileLayout)
+      .addEmptySection({ id: "root", yOffset: 0 })
+      .build();
+
+    const result = createItemCallback({ kind: "mediaMissing" })(board);
+    const item = result.items.at(0);
+
+    expect(item?.layouts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ layoutId: desktopLayout.id, width: 4 }),
+        expect.objectContaining({ layoutId: mobileLayout.id, width: 1 }),
+      ]),
     );
   });
 });

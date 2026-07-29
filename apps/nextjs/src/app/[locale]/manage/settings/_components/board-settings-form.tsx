@@ -33,6 +33,13 @@ export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSett
             {...form.getInputProps("mobileHomeBoardId")}
           />
 
+          <Text fw={500}>{tBoard("mobileLayout.title")}</Text>
+          <Switch
+            {...form.getInputProps("enableAutomaticMobileLayout", { type: "checkbox" })}
+            label={tBoard("mobileLayout.enable.label")}
+            description={tBoard("mobileLayout.enable.description")}
+          />
+
           <Text fw={500}>{tBoard("status.title")}</Text>
           <Switch
             {...form.getInputProps("enableStatusByDefault", { type: "checkbox" })}

@@ -4391,7 +4391,15 @@
             "description": "Configure the layout used on desktop and larger screens."
           },
           "mobile": {
-            "description": "On mobile, items are automatically arranged in two columns and cannot be moved or resized. Categories and dynamic sections are flattened into the item list."
+            "automaticDescription": "On mobile, the normal widgets are arranged in two columns and cannot be moved or resized. Categories and dynamic sections are flattened into the item list."
+          },
+          "responsive": {
+            "title": "Responsive layouts",
+            "description": "Automatic mobile layout is disabled for this server. Configure the saved layouts selected at each viewport breakpoint; these layouts can also be edited directly on mobile.",
+            "defaultName": "New layout",
+            "action": {
+              "add": "Add layout"
+            }
           }
         },
         "background": {
@@ -4840,6 +4848,13 @@
               "label": "Global home board",
               "mobileLabel": "Global mobile board",
               "description": "Only public boards are available for selection"
+            },
+            "mobileLayout": {
+              "title": "Mobile layout",
+              "enable": {
+                "label": "Use automatic mobile layout",
+                "description": "Squeeze every board into a read-only two-column grid on phones and small tablets without changing widget content. Turn this off to use saved responsive layouts and mobile layout editing. Saved layouts are kept while automatic mode is enabled."
+              }
             },
             "status": {
               "title": "App status",

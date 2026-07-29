@@ -4,6 +4,8 @@ import type { BoxProps } from "@mantine/core";
 import { Box } from "@mantine/core";
 import combineClasses from "clsx";
 
+import { useCurrentLayout } from "@homarr/boards/context";
+
 import type { DynamicSectionItem, Section } from "~/app/[locale]/boards/_types";
 import { SectionContent } from "../content";
 import { SectionProvider } from "../section-context";
@@ -15,6 +17,12 @@ interface Props extends BoxProps {
 }
 
 export const GridStack = ({ section, ...props }: Props) => {
+  const currentLayoutId = useCurrentLayout();
+
+  return <GridStackForLayout key={currentLayoutId} section={section} {...props} />;
+};
+
+const GridStackForLayout = ({ section, ...props }: Props) => {
   const { items, innerSections } = useSectionItems(section.id);
   const itemIds = [...items, ...innerSections].map((item) => item.id);
 
