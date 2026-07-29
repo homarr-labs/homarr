@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { AppShellHeader, Group, UnstyledButton } from "@mantine/core";
 
 import { Spotlight } from "@homarr/spotlight";
-import { appShellHeaderZIndex, Link } from "@homarr/ui";
+import { Link } from "@homarr/ui";
 
 import { ClientBurger } from "./header/burger";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";
@@ -31,7 +31,7 @@ export const MainHeader = ({
   return (
     <AppShellHeader
       maw="100vw"
-      zIndex={appShellHeaderZIndex}
+      zIndex={201}
       style={{
         overflowX: "hidden",
         paddingTop: withSafeArea ? "env(safe-area-inset-top)" : undefined,
