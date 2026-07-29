@@ -27,6 +27,7 @@ export const defaultServerSettings = {
   board: {
     homeBoardId: null as string | null,
     mobileHomeBoardId: null as string | null,
+    enableAutomaticMobileLayout: true,
     enableStatusByDefault: true,
     forceDisableStatus: false,
   },

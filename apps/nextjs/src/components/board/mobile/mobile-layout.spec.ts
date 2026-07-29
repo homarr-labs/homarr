@@ -93,4 +93,25 @@ describe("createMobileBoardItems", () => {
     expect(result.map((item) => item.id)).toEqual(["second", "first"]);
     expect(result[1]).toMatchObject({ width: 1, height: 1 });
   });
+
+  test("keeps useful desktop footprints within the two-by-three mobile limit", () => {
+    const board = new BoardMockBuilder().build();
+    const desktopLayoutId = board.layouts.at(0)?.id;
+    if (!desktopLayoutId) throw new Error("Expected a desktop layout");
+    const rootSection = new EmptySectionMockBuilder({ id: "root" }).build();
+    board.sections.push(rootSection);
+    board.items.push(
+      new ItemMockBuilder({ id: "two-by-two" })
+        .addLayout({ layoutId: desktopLayoutId, sectionId: rootSection.id, width: 2, height: 2 })
+        .build(),
+      new ItemMockBuilder({ id: "one-by-one" })
+        .addLayout({ layoutId: desktopLayoutId, sectionId: rootSection.id, xOffset: 2, width: 1, height: 1 })
+        .build(),
+    );
+
+    expect(createMobileBoardItems(board, desktopLayoutId)).toMatchObject([
+      { id: "two-by-two", width: 2, height: 2 },
+      { id: "one-by-one", width: 1, height: 1 },
+    ]);
+  });
 });
