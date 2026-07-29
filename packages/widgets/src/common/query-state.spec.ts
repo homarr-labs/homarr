@@ -1,14 +1,6 @@
-import { MantineProvider } from "@mantine/core";
-import { createElement } from "react";
-import type { ComponentProps } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 
-import { hasWidgetDataWarning, throwOnInitialQueryError, WidgetDataState } from "./query-state";
-
-vi.mock("@homarr/translation/client", () => ({
-  useI18n: () => () => "Some widget data may be stale",
-}));
+import { hasWidgetDataWarning, throwOnInitialQueryError } from "./query-state";
 
 describe("widget query state", () => {
   test.each([
@@ -38,23 +30,5 @@ describe("widget query state", () => {
 
   test("keeps cached data visible after a refresh error", () => {
     expect(() => throwOnInitialQueryError(new Error("refresh failed"), true)).not.toThrow();
-  });
-
-  test("places the warning after widget controls in keyboard focus order", () => {
-    const markup = renderToStaticMarkup(
-      createElement(
-        MantineProvider,
-        null,
-        createElement(
-          WidgetDataState,
-          { hasWarning: true } as ComponentProps<typeof WidgetDataState>,
-          createElement("button", { type: "button" }, "Widget action"),
-        ),
-      ),
-    );
-    const document = new DOMParser().parseFromString(markup, "text/html");
-    const focusableElements = [...document.querySelectorAll("button, [tabindex='0']")];
-
-    expect(focusableElements.map((element) => element.tagName)).toStrictEqual(["BUTTON", "OUTPUT"]);
   });
 });

@@ -55,8 +55,6 @@ import { CurrentColorSchemeCombobox } from "~/components/color-scheme/current-co
 import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { HeaderButton } from "~/components/layout/header/button";
 
-import { classifyGuardedNavigation, removeGuardHistoryEntry, replaceGuardedSameDocumentUrl } from "./_guarded-history";
-
 export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
@@ -76,9 +74,9 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
 
   return (
     <>
-      {isEditMode && <AddMenu />}
+      {isEditMode && !isMobile && <AddMenu />}
 
-      <EditModeMenu demoReadOnly={demoReadOnly} />
+      <EditModeMenu demoReadOnly={demoReadOnly} hidden={isMobile} />
 
       {!demoReadOnly && (
         <OnboardingTour.Target id="board-settings">
@@ -103,7 +101,6 @@ const AddMenu = () => {
   const { addDynamicSection } = useDynamicSectionActions();
   const { createItem } = useItemActions();
   const t = useI18n();
-  const canCreateApp = session?.user.permissions.includes("app-create") ?? false;
 
   const handleAddCategory = useCallback(
     () =>
@@ -119,7 +116,7 @@ const AddMenu = () => {
           submitLabel: t("section.category.create.submit"),
         },
         {
-          title: (translate) => translate("section.category.create.title"),
+          title: (t) => t("section.category.create.title"),
         },
       ),
     [addCategoryToEnd, openCategoryEditModal, t],
@@ -137,9 +134,9 @@ const AddMenu = () => {
           options: { appId: app.id },
         });
       },
-      withCreate: canCreateApp,
+      withCreate: session?.user.permissions.includes("app-create") ?? false,
     });
-  }, [openAppSelectModal, createItem, canCreateApp]);
+  }, [openAppSelectModal, createItem]);
 
   const handleAddIntegration = useCallback(() => {
     openIntegrationSelectModal({});
@@ -182,7 +179,7 @@ const AddMenu = () => {
   );
 };
 
-const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
+const EditModeMenu = ({ demoReadOnly, hidden }: { demoReadOnly: boolean; hidden: boolean }) => {
   const [isEditMode, { open, close }] = useEditMode();
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
@@ -212,14 +209,16 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   }, [utils, board.name, close]);
 
   const toggle = useCallback(() => {
+    if (hidden) return;
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
       return saveBoard(board);
     }
     open();
-  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
+  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges, hidden]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
+  if (hidden) return null;
 
   return (
     <OnboardingTour.Target id="board-edit-mode">
@@ -567,18 +566,8 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
       const target = event.target.closest<HTMLAnchorElement>(anchorSelector);
       if (!target) return;
 
-      const destination = new URL(target.href, window.location.href);
-      const current = new URL(window.location.href);
-      const navigationKind = classifyGuardedNavigation(destination, current);
-      if (navigationKind === "same-url") return;
-      if (navigationKind === "same-document") {
-        event.preventDefault();
-        guardedUrl = destination.href;
-        replaceGuardedSameDocumentUrl(destination, { key: guardStateKey, id: guardId });
-        return;
-      }
-
       event.preventDefault();
+      const destination = new URL(target.href, window.location.href);
 
       openLeaveConfirmation(() => {
         if (destination.origin === window.location.origin) {
@@ -659,7 +648,7 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
         window.location.href === guardedUrl &&
         (window.history.state as Record<string, unknown> | null)?.[guardStateKey] === guardId
       ) {
-        removeGuardHistoryEntry(guardedUrl, guardStateKey);
+        window.history.back();
       }
     };
   }, [isDirty]);

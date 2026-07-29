@@ -43,13 +43,11 @@ export function WidgetDataState({ children, hasWarning }: WidgetDataStateProps) 
 
   return (
     <Box pos="relative" h="100%" w="100%">
-      {children}
       {hasWarning && (
-        <Tooltip label={label} position="left" withArrow events={{ hover: true, focus: true, touch: true }}>
+        <Tooltip label={label} position="left" withArrow>
           <Center
             component="output"
             aria-label={label}
-            tabIndex={0}
             pos="absolute"
             bottom={4}
             w={28}
@@ -69,6 +67,7 @@ export function WidgetDataState({ children, hasWarning }: WidgetDataStateProps) 
           </Center>
         </Tooltip>
       )}
+      {children}
     </Box>
   );
 }

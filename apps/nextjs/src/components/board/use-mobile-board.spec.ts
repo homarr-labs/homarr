@@ -12,7 +12,7 @@ describe("resolveMobileBoardViewport", () => {
       resolveMobileBoardViewport({
         deviceClass: "phone",
         matchesMobileWidth: false,
-        hasMounted: true,
+        hasResolvedClientWidth: true,
       }),
     ).toEqual({
       deviceClass: "phone",
@@ -29,7 +29,7 @@ describe("resolveMobileBoardViewport", () => {
       resolveMobileBoardViewport({
         deviceClass: "tablet",
         matchesMobileWidth,
-        hasMounted: true,
+        hasResolvedClientWidth: true,
       }).isMobile,
     ).toBe(expectedIsMobile);
   });
@@ -39,7 +39,7 @@ describe("resolveMobileBoardViewport", () => {
       resolveMobileBoardViewport({
         deviceClass: "tablet",
         matchesMobileWidth: false,
-        hasMounted: false,
+        hasResolvedClientWidth: false,
       }).isResolved,
     ).toBe(false);
   });
@@ -52,7 +52,7 @@ describe("resolveMobileBoardViewport", () => {
       resolveMobileBoardViewport({
         deviceClass: "desktop",
         matchesMobileWidth,
-        hasMounted: true,
+        hasResolvedClientWidth: true,
       }),
     ).toMatchObject({
       isMobile: expectedIsMobile,
@@ -73,9 +73,7 @@ describe("resolveIsAutomaticMobileBoard", () => {
       expect(resolveIsAutomaticMobileBoard({ isMobileViewport, enableAutomaticMobileLayout })).toBe(expected);
     },
   );
-});
 
-describe("shouldShowMobileBoardViewportSkeleton", () => {
   test("does not show the tablet resolution skeleton in legacy mode", () => {
     expect(
       shouldShowMobileBoardViewportSkeleton({
@@ -83,14 +81,5 @@ describe("shouldShowMobileBoardViewportSkeleton", () => {
         isResolved: false,
       }),
     ).toBe(false);
-  });
-
-  test("shows a skeleton while an automatic mobile viewport is unresolved", () => {
-    expect(
-      shouldShowMobileBoardViewportSkeleton({
-        enableAutomaticMobileLayout: true,
-        isResolved: false,
-      }),
-    ).toBe(true);
   });
 });

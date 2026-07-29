@@ -24,7 +24,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { WidgetMobileLoading, WidgetMobileSummary } from "../common/mobile-summary";
-import { hasWidgetDataWarning, WidgetDataState } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
@@ -60,11 +59,6 @@ export default function MediaMissingWidget({
   const queued = data.flatMap((entry) => entry.queued.map((item) => ({ item, integrationId: entry.integrationId })));
   const missingCount = data.reduce((sum, entry) => sum + entry.missingCount, 0);
   const queuedCount = data.reduce((sum, entry) => sum + entry.queuedCount, 0);
-  const hasDataWarning = hasWidgetDataWarning({
-    error,
-    expectedIntegrationCount: integrationIds.length,
-    receivedIntegrationCount: data.length,
-  });
 
   if (displayMode === "mobileSummary") {
     const primary = options.showMissing
@@ -77,7 +71,7 @@ export default function MediaMissingWidget({
         value={primary.value}
         label={primary.label}
         description={description}
-        isStale={hasDataWarning}
+        isStale={Boolean(error)}
       />
     );
   }
@@ -112,37 +106,35 @@ export default function MediaMissingWidget({
   );
 
   return (
-    <WidgetDataState hasWarning={hasDataWarning}>
-      <Tabs
-        defaultValue={options.showMissing ? "missing" : "queued"}
-        h="100%"
-        style={{ display: "flex", flexDirection: "column" }}
-      >
-        <Tabs.List grow>
-          {options.showMissing && (
-            <Tabs.Tab value="missing" px={isThin ? 6 : undefined} leftSection={<IconQuestionMark size={14} />}>
-              {tabLabel(t("tab.missing"), missing.length, missingCount)}
-            </Tabs.Tab>
-          )}
-          {options.showQueued && (
-            <Tabs.Tab value="queued" px={isThin ? 6 : undefined} leftSection={<IconDownload size={14} />}>
-              {tabLabel(t("tab.queued"), queued.length, queuedCount)}
-            </Tabs.Tab>
-          )}
-        </Tabs.List>
-
+    <Tabs
+      defaultValue={options.showMissing ? "missing" : "queued"}
+      h="100%"
+      style={{ display: "flex", flexDirection: "column" }}
+    >
+      <Tabs.List grow>
         {options.showMissing && (
-          <Tabs.Panel value="missing" flex={1} style={{ overflow: "hidden" }}>
-            {renderPanel(missing, t("empty.missing"))}
-          </Tabs.Panel>
+          <Tabs.Tab value="missing" px={isThin ? 6 : undefined} leftSection={<IconQuestionMark size={14} />}>
+            {tabLabel(t("tab.missing"), missing.length, missingCount)}
+          </Tabs.Tab>
         )}
         {options.showQueued && (
-          <Tabs.Panel value="queued" flex={1} style={{ overflow: "hidden" }}>
-            {renderPanel(queued, t("empty.queued"))}
-          </Tabs.Panel>
+          <Tabs.Tab value="queued" px={isThin ? 6 : undefined} leftSection={<IconDownload size={14} />}>
+            {tabLabel(t("tab.queued"), queued.length, queuedCount)}
+          </Tabs.Tab>
         )}
-      </Tabs>
-    </WidgetDataState>
+      </Tabs.List>
+
+      {options.showMissing && (
+        <Tabs.Panel value="missing" flex={1} style={{ overflow: "hidden" }}>
+          {renderPanel(missing, t("empty.missing"))}
+        </Tabs.Panel>
+      )}
+      {options.showQueued && (
+        <Tabs.Panel value="queued" flex={1} style={{ overflow: "hidden" }}>
+          {renderPanel(queued, t("empty.queued"))}
+        </Tabs.Panel>
+      )}
+    </Tabs>
   );
 }
 

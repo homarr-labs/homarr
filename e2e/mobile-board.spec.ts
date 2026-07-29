@@ -161,40 +161,15 @@ describe("Automatic mobile board", () => {
       await setAutomaticMobileLayoutAsync(loginPage, true);
       const storageState = await loginContext.storageState();
 
-      const iPhoneUserAgent = devices["iPhone 13"].userAgent;
-      const mobileViewports: {
-        name: string;
-        width: number;
-        height: number;
-        userAgent: string;
-        phone: boolean;
-        checksZoomOverflow?: boolean;
-        checksInteractions?: boolean;
-        reducedMotion?: boolean;
-      }[] = [
-        {
-          name: "small phone",
-          width: 320,
-          height: 568,
-          userAgent: iPhoneUserAgent,
-          phone: true,
-          checksZoomOverflow: true,
-        },
-        {
-          name: "phone",
-          width: 390,
-          height: 844,
-          userAgent: iPhoneUserAgent,
-          phone: true,
-          checksInteractions: true,
-          reducedMotion: true,
-        },
-        { name: "large phone", width: 430, height: 932, userAgent: iPhoneUserAgent, phone: true },
+      const mobileViewports = [
+        { name: "small phone", width: 320, height: 568, userAgent: devices["iPhone 13"].userAgent, phone: true },
+        { name: "phone", width: 390, height: 844, userAgent: devices["iPhone 13"].userAgent, phone: true },
+        { name: "large phone", width: 430, height: 932, userAgent: devices["iPhone 13"].userAgent, phone: true },
         {
           name: "phone landscape",
           width: 844,
           height: 390,
-          userAgent: iPhoneUserAgent,
+          userAgent: devices["iPhone 13"].userAgent,
           phone: true,
         },
         {
@@ -213,7 +188,7 @@ describe("Automatic mobile board", () => {
           userAgent: viewport.userAgent,
           hasTouch: true,
           isMobile: viewport.phone,
-          reducedMotion: viewport.reducedMotion ? "reduce" : "no-preference",
+          reducedMotion: viewport.width === 390 ? "reduce" : "no-preference",
         });
         const page = await context.newPage();
         await page.goto(`${baseUrl}/boards/${boardName}`);
@@ -259,7 +234,7 @@ describe("Automatic mobile board", () => {
         expect(layoutMetrics.outOfBoundsControls, viewport.name).toBe(0);
         expect(layoutMetrics.layoutControls, viewport.name).toBe(0);
 
-        if (viewport.checksZoomOverflow) {
+        if (viewport.width === 320) {
           await page.evaluate(() => {
             document.documentElement.style.fontSize = "200%";
           });
@@ -273,7 +248,7 @@ describe("Automatic mobile board", () => {
           expect(zoomOverflow.items).toBe(0);
         }
 
-        if (viewport.checksInteractions) {
+        if (viewport.width === 390) {
           await page.getByRole("button", { name: `Current board: ${boardName}` }).click();
           await expect(page.getByRole("menuitem", { name: boardName })).toBeDisabled();
           await page.keyboard.press("Escape");

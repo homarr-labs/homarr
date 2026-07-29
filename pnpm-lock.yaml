@@ -2656,9 +2656,6 @@ importers:
       dayjs:
         specifier: 'catalog:'
         version: 1.11.21
-      isomorphic-dompurify:
-        specifier: 'catalog:'
-        version: 3.18.0(@noble/hashes@2.0.1)
       jsonpath-plus:
         specifier: 'catalog:'
         version: 10.4.0

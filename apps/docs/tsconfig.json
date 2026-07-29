@@ -26,5 +26,5 @@
     "**/*.md",
     "**/*.mdx",
   ],
-  "exclude": ["node_modules", "build", ".docusaurus"],
+  "exclude": ["node_modules"],
 }

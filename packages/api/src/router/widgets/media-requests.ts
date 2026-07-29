@@ -11,7 +11,7 @@ import {
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueriesWithProvenance } from "../../settle-integrations";
+import { getIntegrationQueryProvenance, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const latestRequestsProcedure = publicProcedure
@@ -28,7 +28,7 @@ const getLatestRequestsWithProvenanceAsync = async (
   integrations: MediaRequestIntegration[],
   input: MediaRequestListInput,
 ) => {
-  const { results, ...provenance } = await settleIntegrationQueriesWithProvenance(
+  const results = await settleIntegrationQueries(
     integrations,
     async (integration) => {
       const { data, isStale } = await mediaRequestListRequestHandler
@@ -61,12 +61,12 @@ const getLatestRequestsWithProvenanceAsync = async (
 
   return {
     items,
-    ...provenance,
+    ...getIntegrationQueryProvenance(integrations.length, results),
   };
 };
 
 const getRequestStatsWithProvenanceAsync = async (integrations: MediaRequestStatsIntegration[]) => {
-  const { results, ...provenance } = await settleIntegrationQueriesWithProvenance(
+  const results = await settleIntegrationQueries(
     integrations,
     async (integration) => {
       const { data, isStale } = await mediaRequestStatsRequestHandler
@@ -92,7 +92,7 @@ const getRequestStatsWithProvenanceAsync = async (integrations: MediaRequestStat
       )
       .toSorted(({ requestCount: countA }, { requestCount: countB }) => countB - countA),
     integrations: results.map((result) => result.integration),
-    ...provenance,
+    ...getIntegrationQueryProvenance(integrations.length, results),
   };
 };
 

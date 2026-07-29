@@ -22,11 +22,9 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
 ) => {
   const cache = new Map<string, CacheEntry<TData>>();
   const inflight = new Map<string, Promise<RequestResult<TData>>>();
-  let cacheGeneration = 0;
 
   return {
     invalidateCache: () => {
-      cacheGeneration += 1;
       cache.clear();
       inflight.clear();
     },
@@ -43,29 +41,21 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
         const existing = inflight.get(key);
         if (existing) return existing;
 
-        const requestGeneration = cacheGeneration;
-        let promise: Promise<RequestResult<TData>>;
-        const isCurrentRequest = () => requestGeneration === cacheGeneration && inflight.get(key) === promise;
-
-        promise = options
+        const promise = options
           .requestAsync(input)
           .then((data) => {
-            const entry: CacheEntry<TData> = { data, timestamp: new Date(), expiresAt: Date.now() + ttl };
-
-            if (isCurrentRequest()) {
-              if (cache.size >= MAX_CACHE_SIZE) evictExpired(cache);
-              if (cache.size >= MAX_CACHE_SIZE) {
-                const oldest = cache.keys().next().value;
-                if (oldest) cache.delete(oldest);
-              }
-              cache.set(key, entry);
-              inflight.delete(key);
+            if (cache.size >= MAX_CACHE_SIZE) evictExpired(cache);
+            if (cache.size >= MAX_CACHE_SIZE) {
+              const oldest = cache.keys().next().value;
+              if (oldest) cache.delete(oldest);
             }
-
+            const entry: CacheEntry<TData> = { data, timestamp: new Date(), expiresAt: Date.now() + ttl };
+            cache.set(key, entry);
+            inflight.delete(key);
             return { data: entry.data, timestamp: entry.timestamp, isStale: false };
           })
           .catch((err) => {
-            if (isCurrentRequest()) inflight.delete(key);
+            inflight.delete(key);
             if (options.fallbackToStaleOnError && cached) {
               return { data: cached.data, timestamp: cached.timestamp, isStale: true };
             }
