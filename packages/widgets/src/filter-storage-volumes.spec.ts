@@ -3,7 +3,6 @@ import { describe, expect, test } from "vitest";
 import {
   filterStorageVolumes,
   normalizeStorageDeviceName,
-  storageDeviceNamesMatch,
   toScopedStorageVolumeValue,
 } from "./filter-storage-volumes";
 import { matchFileSystemAndSmart } from "./health-monitoring/system-health";
@@ -28,14 +27,6 @@ describe("normalizeStorageDeviceName", () => {
   test("does not collapse unrelated md devices", () => {
     expect(normalizeStorageDeviceName("/dev/md0")).toBe("/dev/md0");
     expect(normalizeStorageDeviceName("/dev/md1")).toBe("/dev/md1");
-  });
-});
-
-describe("storageDeviceNamesMatch", () => {
-  test("matches partitions to their base SMART device without merging unrelated devices", () => {
-    expect(storageDeviceNamesMatch("/dev/sda1", "/dev/sda")).toBe(true);
-    expect(storageDeviceNamesMatch("/dev/nvme0n1p2", "/dev/nvme0n1")).toBe(true);
-    expect(storageDeviceNamesMatch("/dev/md0", "/dev/md1")).toBe(false);
   });
 });
 

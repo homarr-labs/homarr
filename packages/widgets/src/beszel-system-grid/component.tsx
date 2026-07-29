@@ -398,13 +398,11 @@ function BeszelSystemGridContent({
     data: results = [],
     error: systemsError,
     isPending,
-    isLoadingError: systemsLoadingError,
-    isRefetchError: systemsRefetchError,
   } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
 
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
 
-  if (systemsLoadingError) throw systemsError;
+  if (systemsError) throw systemsError;
 
   if (isPending) {
     return (
@@ -417,7 +415,7 @@ function BeszelSystemGridContent({
   if (filteredSystems.length === 0) {
     return (
       <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
-        <BeszelIntegrationErrorIndicator results={results} isStale={systemsRefetchError} />
+        <BeszelIntegrationErrorIndicator results={results} />
         <Center h="100%">
           <Stack align="center" gap="xs">
             <IconServerOff size={28} opacity={0.5} />
@@ -441,7 +439,7 @@ function BeszelSystemGridContent({
 
   return (
     <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
-      <BeszelIntegrationErrorIndicator results={results} isStale={systemsRefetchError} />
+      <BeszelIntegrationErrorIndicator results={results} />
       <Box
         h="100%"
         style={{

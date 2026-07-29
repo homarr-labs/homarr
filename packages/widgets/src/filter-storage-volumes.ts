@@ -28,14 +28,18 @@ export const toScopedStorageVolumeValue = (integrationId: string, value: string)
   return `${integrationId}:${volumeName}`;
 };
 
-export const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
+const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
   return (
     leftDeviceName === rightDeviceName ||
     normalizeStorageDeviceName(leftDeviceName) === normalizeStorageDeviceName(rightDeviceName)
   );
 };
 
-const matchesVisibleStorageVolume = (visibleVolume: string, integrationId: string, deviceName: string): boolean => {
+const matchesVisibleStorageVolume = (
+  visibleVolume: string,
+  integrationId: string,
+  deviceName: string,
+): boolean => {
   const separatorIndex = visibleVolume.indexOf(":");
   if (separatorIndex === -1) {
     return storageDeviceNamesMatch(visibleVolume, deviceName);

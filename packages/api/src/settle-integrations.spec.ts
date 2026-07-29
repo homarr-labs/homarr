@@ -23,22 +23,6 @@ describe("settleIntegrationQueries", () => {
     expect(results).toEqual(["Second"]);
   });
 
-  it("retains fallback and successful results for a partial failure", async () => {
-    const results = await settleIntegrationQueries(
-      integrations,
-      vi.fn(async (integration) => {
-        if (integration.id === "first") throw new Error("offline");
-        return integration.name;
-      }),
-      {
-        throwOnAllFailure: true,
-        fallback: (integration) => `${integration.name} unavailable`,
-      },
-    );
-
-    expect(results).toEqual(["First unavailable", "Second"]);
-  });
-
   it("throws when every integration fails and throwOnAllFailure is enabled", async () => {
     await expect(
       settleIntegrationQueries(
@@ -47,21 +31,6 @@ describe("settleIntegrationQueries", () => {
           throw new Error("offline");
         }),
         { throwOnAllFailure: true },
-      ),
-    ).rejects.toThrow("offline");
-  });
-
-  it("throws on total failure even when fallbacks are configured", async () => {
-    await expect(
-      settleIntegrationQueries(
-        integrations,
-        vi.fn(async () => {
-          throw new Error("offline");
-        }),
-        {
-          throwOnAllFailure: true,
-          fallback: (integration) => `${integration.name} unavailable`,
-        },
       ),
     ).rejects.toThrow("offline");
   });

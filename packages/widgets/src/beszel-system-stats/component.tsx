@@ -47,8 +47,6 @@ function BeszelSystemStatsContent({
     data: systemsResult = [],
     isPending: systemsPending,
     error: systemsError,
-    isLoadingError: systemsLoadingError,
-    isRefetchError: systemsRefetchError,
   } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
 
   const systems = useMemo(
@@ -80,7 +78,7 @@ function BeszelSystemStatsContent({
     [setOptions, isReadOnly, hasChangeAccess, boardId, itemId, saveItemOptions],
   );
 
-  if (systemsLoadingError) throw systemsError;
+  if (systemsError) throw systemsError;
   if (systemsPending)
     return (
       <Center h="100%">
@@ -91,7 +89,7 @@ function BeszelSystemStatsContent({
   if (systems.length === 0) {
     return (
       <Box h="100%" pos="relative">
-        <BeszelIntegrationErrorIndicator results={systemsResult} isStale={systemsRefetchError} />
+        <BeszelIntegrationErrorIndicator results={systemsResult} />
         <Center h="100%">
           <Stack align="center" gap="xs">
             <IconServerOff size={28} opacity={0.5} />
@@ -127,7 +125,7 @@ function BeszelSystemStatsContent({
   return (
     <Box h="100%" pos="relative">
       <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
-        <BeszelIntegrationErrorIndicator results={systemsResult} isStale={systemsRefetchError} />
+        <BeszelIntegrationErrorIndicator results={systemsResult} />
       </Box>
       <ScrollArea
         h="100%"

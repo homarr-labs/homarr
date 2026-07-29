@@ -99,8 +99,6 @@ function BeszelSystemTableContent({
     data: results = [],
     error: systemsError,
     isPending,
-    isLoadingError: systemsLoadingError,
-    isRefetchError: systemsRefetchError,
   } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
   const size = getSizeConfig(width);
 
@@ -304,7 +302,7 @@ function BeszelSystemTableContent({
     openModal({ integrationId, systemId: record.id }, { title: record.name });
   };
 
-  if (systemsLoadingError) throw systemsError;
+  if (systemsError) throw systemsError;
 
   if (isPending) {
     return (
@@ -317,7 +315,7 @@ function BeszelSystemTableContent({
   return (
     <div style={{ position: "relative", height: "100%" }}>
       <div style={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}>
-        <BeszelIntegrationErrorIndicator results={results} isStale={systemsRefetchError} />
+        <BeszelIntegrationErrorIndicator results={results} />
       </div>
       <DataTable
         style={{ pointerEvents: isEditMode ? "none" : undefined }}
