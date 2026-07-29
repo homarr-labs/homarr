@@ -97,7 +97,7 @@ Run the compose project as the same user that owns the rootless Podman socket so
 To keep the user socket available after logout and across reboots, enable lingering with `loginctl enable-linger <user>`.
 
 For rootful Podman, enable the system socket with `sudo systemctl enable --now podman.socket`.
-Its default path is `/run/podman/podman.sock`; mount that path instead.
+Its default path is `/run/podman/podman.sock`; mount that path instead and start Homarr with `sudo podman compose up -d`.
 
 :::note SELinux
 On systems with SELinux enabled, Podman's documentation recommends disabling label separation for a container that accesses the API socket.
@@ -113,8 +113,14 @@ security_opt:
 You can connect Homarr to multiple Docker-compatible sockets by mounting each socket and listing their in-container paths, separated by commas:
 
 ```yaml
-environment:
-  DOCKER_SOCKET_PATHS: /var/run/docker.sock,/var/run/podman.sock
+services:
+  homarr:
+    image: ghcr.io/homarr-labs/homarr:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${XDG_RUNTIME_DIR}/podman/podman.sock:/var/run/podman.sock
+    environment:
+      DOCKER_SOCKET_PATHS: /var/run/docker.sock,/var/run/podman.sock
 ```
 
 ### Managing your Docker containers within Homarr
