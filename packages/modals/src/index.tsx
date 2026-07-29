@@ -2,13 +2,12 @@
 
 import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState } from "react";
-import { Modal } from "@mantine/core";
+import { getDefaultZIndex, Modal } from "@mantine/core";
 import { randomId } from "@mantine/hooks";
 
 import type { stringOrTranslation } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { managedModalZIndex } from "@homarr/ui";
 
 import type { ConfirmModalProps } from "./confirm-modal";
 import { ConfirmModal } from "./confirm-modal";
@@ -100,7 +99,7 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
   return (
     <Modal
       key={modal.id}
-      zIndex={managedModalZIndex}
+      zIndex={getDefaultZIndex("modal") + 1}
       style={{
         userSelect: modal.id === state.current?.id ? undefined : "none",
       }}
