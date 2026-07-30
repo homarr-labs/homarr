@@ -2018,6 +2018,7 @@
       "stopSpeaking": "Stop reading",
       "helpful": "Helpful",
       "notHelpful": "Not helpful",
+      "feedbackError": "Your feedback could not be saved. Try again.",
       "exportMarkdown": "Export as Markdown",
       "dictate": "Dictate message",
       "stopDictation": "Stop dictation",
@@ -2027,6 +2028,7 @@
       "removeAttachment": "Remove attachment",
       "downloadFile": "Download {name}",
       "attachedImage": "Attached image",
+      "externalImageBlocked": "External image blocked for privacy",
       "quoteSelection": "Quote",
       "dismissQuote": "Remove quote",
       "attachments": {

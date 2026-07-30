@@ -5,7 +5,7 @@ import { z } from "zod/v4";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
-import { and, asc, desc, eq, inArray } from "@homarr/db";
+import { and, asc, desc, eq, handleTransactionsAsync, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import {
   apps,
@@ -359,6 +359,29 @@ const ownedThreadAsync = async (db: Database, threadId: string, userId: string) 
   return thread;
 };
 
+const addFeedbackToMessageContent = (serializedContent: string, type: "positive" | "negative") => {
+  let content: unknown;
+  try {
+    content = parse(serializedContent);
+  } catch {
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "The stored message is invalid." });
+  }
+  if (!content || typeof content !== "object" || Array.isArray(content)) {
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "The stored message is invalid." });
+  }
+  const metadata =
+    "metadata" in content &&
+    content.metadata &&
+    typeof content.metadata === "object" &&
+    !Array.isArray(content.metadata)
+      ? content.metadata
+      : {};
+  return stringify({
+    ...content,
+    metadata: { ...metadata, submittedFeedback: { type } },
+  });
+};
+
 export const assistantRouter = createTRPCRouter({
   getAvailability: protectedProcedure
     .meta({
@@ -377,24 +400,40 @@ export const assistantRouter = createTRPCRouter({
       };
     }),
 
-  getContextEntities: protectedProcedure.query(async ({ ctx }) => {
-    return await getAssistantContextEntitiesAsync(ctx);
-  }),
+  getContextEntities: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Lists the apps, integrations, boards, and widgets the signed-in user may reference. Integration entries are permission-filtered. Use returned IDs as inputs for other tools.",
+      },
+    })
+    .query(async ({ ctx }) => {
+      return await getAssistantContextEntitiesAsync(ctx);
+    }),
 
-  getModelCapabilities: protectedProcedure.query(async ({ ctx }) => {
-    const configuration = await getConfigurationAsync(ctx.db);
-    if (!configuration?.enabled || !configuration.modelId) {
-      return { imageInput: "unsupported" as const, inputModalities: [] as string[] };
-    }
-    const model = await getSelectedModelDetailsAsync(configuration).catch(() => null);
-    if (!model || model.inputModalities.length === 0) {
-      return { imageInput: "unknown" as const, inputModalities: [] as string[] };
-    }
-    return {
-      imageInput: model.inputModalities.includes("image") ? ("supported" as const) : ("unsupported" as const),
-      inputModalities: model.inputModalities,
-    };
-  }),
+  getModelCapabilities: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Returns the configured assistant model's discovered input modalities and whether image input is supported, unsupported, or unknown.",
+      },
+    })
+    .query(async ({ ctx }) => {
+      const configuration = await getConfigurationAsync(ctx.db);
+      if (!configuration?.enabled || !configuration.modelId) {
+        return { imageInput: "unsupported" as const, inputModalities: [] as string[] };
+      }
+      const model = await getSelectedModelDetailsAsync(configuration).catch(() => null);
+      if (!model || model.inputModalities.length === 0) {
+        return { imageInput: "unknown" as const, inputModalities: [] as string[] };
+      }
+      return {
+        imageInput: model.inputModalities.includes("image") ? ("supported" as const) : ("unsupported" as const),
+        inputModalities: model.inputModalities,
+      };
+    }),
 
   getAdminConfiguration: adminProcedure.query(async ({ ctx }) => {
     const configuration = await getConfigurationAsync(ctx.db);
@@ -642,30 +681,38 @@ export const assistantRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const thread = await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
-      const message = await ctx.db.query.assistantMessages.findFirst({
-        where: and(eq(assistantMessages.id, input.messageId), eq(assistantMessages.threadId, thread.id)),
+      await handleTransactionsAsync(ctx.db, {
+        handleAsync: async (db, schema) => {
+          await db.transaction(async (transaction) => {
+            const table = schema.assistantMessages;
+            const [message] = await transaction
+              .select({ content: table.content })
+              .from(table)
+              .where(and(eq(table.id, input.messageId), eq(table.threadId, thread.id)))
+              .for("update");
+            if (!message) throw new TRPCError({ code: "NOT_FOUND", message: "Message not found." });
+            await transaction
+              .update(table)
+              .set({ content: addFeedbackToMessageContent(message.content, input.type) })
+              .where(and(eq(table.id, input.messageId), eq(table.threadId, thread.id)));
+          });
+        },
+        handleSync: (db) => {
+          db.transaction((transaction) => {
+            const message = transaction
+              .select({ content: assistantMessages.content })
+              .from(assistantMessages)
+              .where(and(eq(assistantMessages.id, input.messageId), eq(assistantMessages.threadId, thread.id)))
+              .get();
+            if (!message) throw new TRPCError({ code: "NOT_FOUND", message: "Message not found." });
+            transaction
+              .update(assistantMessages)
+              .set({ content: addFeedbackToMessageContent(message.content, input.type) })
+              .where(and(eq(assistantMessages.id, input.messageId), eq(assistantMessages.threadId, thread.id)))
+              .run();
+          });
+        },
       });
-      if (!message) throw new TRPCError({ code: "NOT_FOUND", message: "Message not found." });
-      const content = parse(message.content);
-      if (!content || typeof content !== "object" || Array.isArray(content)) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "The stored message is invalid." });
-      }
-      const metadata =
-        "metadata" in content &&
-        content.metadata &&
-        typeof content.metadata === "object" &&
-        !Array.isArray(content.metadata)
-          ? content.metadata
-          : {};
-      await ctx.db
-        .update(assistantMessages)
-        .set({
-          content: stringify({
-            ...content,
-            metadata: { ...metadata, submittedFeedback: { type: input.type } },
-          }),
-        })
-        .where(and(eq(assistantMessages.id, input.messageId), eq(assistantMessages.threadId, thread.id)));
     }),
 
   deleteMessages: protectedProcedure

@@ -29,6 +29,7 @@ import { lastAssistantMessageIsCompleteWithApprovalResponses } from "ai";
 
 import { clientApi, fetchApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import { createId } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -99,7 +100,7 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
       if (file.size > sizeLimit) {
         throw new Error(isImage ? "Images must be smaller than 1 MB." : "Documents must be smaller than 350 KB.");
       }
-      const id = crypto.randomUUID();
+      const id = createId();
       pendingAttachmentIds.add(id);
       return {
         id,
@@ -286,10 +287,12 @@ const AssistantThreadRuntime = () => {
     () => ({
       submit: ({ message, type }: { message: ThreadMessage; type: "positive" | "negative" }) => {
         if (!threadId) return;
-        void fetchApi.assistant.submitFeedback.mutate({ threadId, messageId: message.id, type });
+        void fetchApi.assistant.submitFeedback
+          .mutate({ threadId, messageId: message.id, type })
+          .catch(() => showErrorNotification({ title: t("responseError.title"), message: t("feedbackError") }));
       },
     }),
-    [threadId],
+    [t, threadId],
   );
   const onError = useCallback(
     () =>

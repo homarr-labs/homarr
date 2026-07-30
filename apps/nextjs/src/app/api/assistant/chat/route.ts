@@ -9,7 +9,6 @@ import { z } from "zod/v4";
 
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import { getAssistantContextEntitiesAsync, getSelectedModelDetailsAsync } from "@homarr/api/assistant";
-import type { AssistantContextEntity } from "@homarr/api/assistant";
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { decryptSecret } from "@homarr/common/server";
@@ -27,6 +26,7 @@ import type {
 } from "~/components/assistant/assistant-message-metadata";
 
 import { extractMcpTools } from "../../mcp/_extract-tools";
+import { getRequestedMentionIds, sanitizeAttachmentFilename } from "./assistant-chat-input";
 
 export const maxDuration = 60;
 
@@ -49,8 +49,6 @@ const allowedAttachmentMediaTypes = new Set([
   "text/plain",
   "text/xml",
 ]);
-const mentionPattern = /:(app|integration|board|widget)\[[^\]\n]{1,1024}\](?:\{name=([^}\n]{1,1024})\})?/gu;
-
 const requestSchema = z.object({
   id: z.string().min(1).max(64),
   messages: z
@@ -148,28 +146,6 @@ const createProviderTelemetryExtractor = (): MetadataExtractor => {
   };
 };
 
-const getMessageText = (message: { parts: unknown[] }) =>
-  message.parts
-    .flatMap((part) => {
-      const value = asRecord(part);
-      return value?.type === "text" && typeof value.text === "string" ? [value.text] : [];
-    })
-    .join("\n");
-
-const getRequestedMentionIds = (messages: { role: "user" | "assistant"; parts: unknown[] }[]) => {
-  const mentions = new Map<string, { type: AssistantContextEntity["type"]; id: string }>();
-  for (const message of messages) {
-    if (message.role !== "user") continue;
-    for (const match of getMessageText(message).matchAll(mentionPattern)) {
-      const type = match[1] as AssistantContextEntity["type"];
-      const id = match[2];
-      if (id) mentions.set(`${type}:${id}`, { type, id });
-      if (mentions.size >= 30) return [...mentions.values()];
-    }
-  }
-  return [...mentions.values()];
-};
-
 const getMentionContextAsync = async (
   context: Awaited<ReturnType<typeof createTRPCContext>>,
   messages: { role: "user" | "assistant"; parts: unknown[] }[],
@@ -235,10 +211,11 @@ const prepareMessagesForModel = (messages: UIMessage[]) =>
       const prefix = `data:${part.mediaType};base64,`;
       if (!part.url.startsWith(prefix)) return [];
       const text = Buffer.from(part.url.slice(prefix.length), "base64").toString("utf8");
+      const safeName = sanitizeAttachmentFilename(part.filename);
       return [
         {
           type: "text" as const,
-          text: `<attachment name="${part.filename ?? "document"}" media-type="${part.mediaType}">\n${text}\n</attachment>`,
+          text: `<attachment name="${safeName}" media-type="${part.mediaType}">\n${text}\n</attachment>`,
         },
       ];
     }),
