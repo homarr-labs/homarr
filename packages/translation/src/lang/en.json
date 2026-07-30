@@ -4873,7 +4873,7 @@
             }
           },
           "assistant": {
-            "title": "Homarr Assistant",
+            "title": "Assistant",
             "description": "Connect an OpenAI-compatible model endpoint for the instance-wide assistant.",
             "security": {
               "title": "Server-side secrets",
@@ -4958,11 +4958,12 @@
               "required": "Required by this provider. The value is encrypted and write-only.",
               "optional": "Optional for local endpoints. Leave it blank when the service does not require bearer authentication.",
               "placeholder": "Enter an API key",
-              "configured": "A key is configured. Enter a new key to replace it.",
-              "configuredBadge": "Key configured",
+              "replacementPlaceholder": "Enter a replacement API key",
+              "configuredBadge": "Saved key active",
               "pendingRemoval": "Removal pending",
-              "clear": "Remove stored API key when saving",
-              "keep": "Keep stored API key"
+              "remove": "Remove saved API key",
+              "removeDescription": "Deletes the saved key after you click Save provider connection.",
+              "removalPendingDescription": "The saved key will be deleted when you save the provider connection."
             },
             "headers": {
               "title": "Additional request headers",
@@ -4994,7 +4995,7 @@
               "toolsUnknown": "Verify tool support"
             },
             "enabled": {
-              "label": "Enable Homarr Assistant",
+              "label": "Enable Assistant",
               "description": "Shows the assistant to all signed-in users. Existing Homarr permissions still apply to every internal tool call."
             },
             "save": "Save assistant",
