@@ -172,14 +172,30 @@ export const AssistantConfiguration = () => {
 
   const pending = isLoading || updateConnection.isPending || saveConfiguration.isPending || clearCredentials.isPending;
 
+  const clearDraftConnectionState = () => {
+    setApiKey("");
+    setClearApiKey(false);
+    setHeaders([]);
+    setClearHeaders(false);
+    setModelId("");
+    setEnabled(false);
+  };
+
   const changeProvider = (value: string | null) => {
     if (!value || !(value in assistantProviderPresets)) return;
     const nextProvider = value as AssistantProvider;
     const nextPreset = assistantProviderPresets[nextProvider];
+    clearDraftConnectionState();
     setProvider(nextProvider);
     setBaseUrl(nextPreset.baseUrl);
     setModelDiscoveryPath(nextPreset.modelDiscoveryPath ?? "");
-    setEnabled(false);
+  };
+
+  const changeBaseUrl = (value: string) => {
+    if (value !== baseUrl) {
+      clearDraftConnectionState();
+    }
+    setBaseUrl(value);
   };
 
   const addHeader = () => {
@@ -249,7 +265,7 @@ export const AssistantConfiguration = () => {
               description={t("baseUrl.description")}
               leftSection={<IconWorld size={16} />}
               value={baseUrl}
-              onChange={(event) => setBaseUrl(event.currentTarget.value)}
+              onChange={(event) => changeBaseUrl(event.currentTarget.value)}
               placeholder="https://provider.example/v1"
             />
           </SimpleGrid>
