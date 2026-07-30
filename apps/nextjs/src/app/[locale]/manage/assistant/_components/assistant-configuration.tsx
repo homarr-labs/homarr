@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ActionIcon,
   Alert,
-  Autocomplete,
   Badge,
   Button,
   Card,
@@ -33,7 +32,12 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { assistantProviderIds, assistantProviderPresets } from "@homarr/definitions";
+import {
+  assistantProviderIds,
+  assistantProviderPresets,
+  getAssistantModelOptionLabel,
+  resolveAssistantModelId,
+} from "@homarr/definitions";
 import type { AssistantProvider, AssistantProviderCategory } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -97,7 +101,7 @@ export const AssistantConfiguration = () => {
     () =>
       (models ?? []).map((model) => ({
         value: model.id,
-        label: model.name === model.id ? model.id : `${model.name} (${model.id})`,
+        label: getAssistantModelOptionLabel(model),
       })),
     [models],
   );
@@ -115,6 +119,15 @@ export const AssistantConfiguration = () => {
     [t],
   );
   const selectedModel = connectionChanged ? undefined : models?.find((model) => model.id === modelId);
+  const hasDiscoveredModels = !connectionChanged && (models?.length ?? 0) > 0;
+
+  useEffect(() => {
+    if (!models || models.length === 0) return;
+    const resolvedModelId = resolveAssistantModelId(models, modelId);
+    if (resolvedModelId && resolvedModelId !== modelId) {
+      setModelId(resolvedModelId);
+    }
+  }, [modelId, models]);
 
   const preset = assistantProviderPresets[provider];
   const headerValuesValid = headers.every((header) => header.name.trim().length > 0 && header.value.length > 0);
@@ -443,26 +456,37 @@ export const AssistantConfiguration = () => {
                 {t("model.refresh")}
               </Button>
             </Group>
-            <Autocomplete
-              aria-label={t("model.title")}
-              value={modelId}
-              onChange={setModelId}
-              data={modelControlsDisabled ? [] : modelOptions}
-              disabled={modelControlsDisabled}
-              placeholder={t("model.placeholder")}
-              description={
-                connectionPending
-                  ? t("model.saveConnectionFirst")
-                  : isDiscovering
-                    ? t("model.discovering")
-                    : discoveryError
-                      ? t("model.manualFallback")
-                      : models
-                        ? t("model.discovered", { count: models.length })
+            {hasDiscoveredModels ? (
+              <Select
+                aria-label={t("model.title")}
+                value={modelId || null}
+                onChange={(value) => setModelId(value ?? "")}
+                data={modelControlsDisabled ? [] : modelOptions}
+                disabled={modelControlsDisabled}
+                placeholder={t("model.placeholder")}
+                description={t("model.discovered", { count: models?.length ?? 0 })}
+                searchable
+                allowDeselect={false}
+                limit={100}
+              />
+            ) : (
+              <TextInput
+                aria-label={t("model.title")}
+                value={modelId}
+                onChange={(event) => setModelId(event.currentTarget.value)}
+                disabled={modelControlsDisabled}
+                placeholder={t("model.placeholder")}
+                description={
+                  connectionPending
+                    ? t("model.saveConnectionFirst")
+                    : isDiscovering
+                      ? t("model.discovering")
+                      : discoveryError || models?.length === 0
+                        ? t("model.manualFallback")
                         : t("model.manual")
-              }
-              limit={100}
-            />
+                }
+              />
+            )}
             {discoveryError && !connectionPending && (
               <Alert color="yellow" icon={<IconAlertTriangle size={18} />} title={t("model.discoveryFailed")}>
                 {discoveryError.message}

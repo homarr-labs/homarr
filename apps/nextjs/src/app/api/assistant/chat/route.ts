@@ -27,6 +27,7 @@ import type {
 
 import { extractMcpTools } from "../../mcp/_extract-tools";
 import { getRequestedMentionIds, sanitizeAttachmentFilename } from "./assistant-chat-input";
+import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 
 export const maxDuration = 60;
 
@@ -35,8 +36,6 @@ const getToolApprovalSecret = () =>
   Buffer.from(
     hkdfSync("sha256", Buffer.from(env.SECRET_ENCRYPTION_KEY, "hex"), "", "assistant-tool-approval", 32),
   ).toString("base64url");
-const safeStreamError =
-  "The model endpoint stopped the response. Try again, or ask an administrator to verify its URL, model, and credentials.";
 const allowedAttachmentMediaTypes = new Set([
   "image/gif",
   "image/jpeg",
@@ -314,8 +313,6 @@ export async function POST(request: Request) {
   if (!configuration?.enabled || !configuration.modelId || (requiresApiKey && !configuration.encryptedApiKey)) {
     return Response.json({ error: "Homarr Assistant is not configured." }, { status: 503 });
   }
-  const modelId = configuration.modelId;
-
   const thread = await db.query.assistantThreads.findFirst({
     where: and(eq(assistantThreads.id, parsed.data.id), eq(assistantThreads.userId, session.user.id)),
   });
@@ -330,6 +327,7 @@ export async function POST(request: Request) {
     getSelectedModelDetailsAsync(configuration).catch(() => null),
     getMentionContextAsync(context, parsed.data.messages),
   ]);
+  const modelId = selectedModel?.id ?? configuration.modelId;
   if (
     selectedModel &&
     selectedModel.inputModalities.length > 0 &&
@@ -488,6 +486,9 @@ export async function POST(request: Request) {
       },
       onError: ({ error }) => {
         logger.error("Assistant response stream failed", {
+          requestId,
+          provider: configuration.provider,
+          modelId,
           error: error instanceof Error ? error.message : String(error),
         });
       },
@@ -555,7 +556,7 @@ export async function POST(request: Request) {
           },
         };
       },
-      onError: () => safeStreamError,
+      onError: getAssistantStreamErrorMessage,
     });
   } catch (error) {
     logger.error("Assistant response could not start", {
