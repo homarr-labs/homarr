@@ -259,7 +259,7 @@ export const AssistantProvider = ({ children }: PropsWithChildren) => {
   const t = useScopedI18n("common.assistant");
   const session = useSession();
   const [opened, setOpened] = useState(false);
-  const { data } = clientApi.assistant.getAvailability.useQuery(undefined, {
+  const { data, isLoading: isAvailabilityLoading } = clientApi.assistant.getAvailability.useQuery(undefined, {
     enabled: session.status === "authenticated",
     staleTime: 60_000,
   });
@@ -268,19 +268,32 @@ export const AssistantProvider = ({ children }: PropsWithChildren) => {
   const open = useCallback(() => setOpened(true), []);
   const close = useCallback(() => setOpened(false), []);
   const toggle = useCallback(() => setOpened((current) => !current), []);
-  useHotkeys([[hotkeys.openAssistant, open]]);
+  const openIfEnabled = useCallback(() => {
+    if (enabled) {
+      open();
+    }
+  }, [enabled, open]);
+  useHotkeys([[hotkeys.openAssistant, openIfEnabled]]);
 
   const spotlightItem = useMemo(
     () => ({
       id: "homarr-assistant",
       name: t("spotlight"),
       icon: "/logo/logo.png",
-      interaction: () => ({ type: "javaScript" as const, onSelect: open }),
+      description: enabled
+        ? t("spotlightDescription")
+        : session.status !== "authenticated"
+          ? t("unavailable.signIn")
+          : isAvailabilityLoading
+            ? t("unavailable.checking")
+            : t("unavailable.notConfigured"),
+      unavailable: !enabled,
+      interaction: () => (enabled ? { type: "javaScript" as const, onSelect: open } : { type: "none" as const }),
     }),
-    [open, t],
+    [enabled, isAvailabilityLoading, open, session.status, t],
   );
-  useRegisterSpotlightContextResults("homarr-assistant", enabled ? [spotlightItem] : [], [enabled, spotlightItem]);
-  useRegisterSpotlightContextActions("homarr-assistant", enabled ? [spotlightItem] : [], [enabled, spotlightItem]);
+  useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
+  useRegisterSpotlightContextActions("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const value = useMemo(() => ({ enabled, opened, open, close, toggle }), [close, enabled, open, opened, toggle]);
 

@@ -10,6 +10,7 @@ import {
   Card,
   Divider,
   Group,
+  Image,
   LoadingOverlay,
   PasswordInput,
   Select,
@@ -18,7 +19,6 @@ import {
   Switch,
   Text,
   TextInput,
-  Title,
   Tooltip,
 } from "@mantine/core";
 import {
@@ -26,7 +26,6 @@ import {
   IconDatabaseSearch,
   IconKey,
   IconPlus,
-  IconRobot,
   IconShieldLock,
   IconTool,
   IconTrash,
@@ -41,7 +40,16 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 type HeaderEntry = { id: number; name: string; value: string };
 
-export const AssistantSettings = () => {
+const ProviderIcon = ({ providerId, size = 20 }: { providerId: AssistantProvider; size?: number }) => {
+  const iconUrl = assistantProviderPresets[providerId].iconUrl;
+  return iconUrl ? (
+    <Image src={iconUrl} alt="" aria-hidden w={size} h={size} fit="contain" />
+  ) : (
+    <IconWorld size={size} aria-hidden />
+  );
+};
+
+export const AssistantConfiguration = () => {
   const t = useScopedI18n("management.page.settings.section.assistant");
   const utils = clientApi.useUtils();
   const { data: configuration, isLoading } = clientApi.assistant.getAdminConfiguration.useQuery();
@@ -200,12 +208,6 @@ export const AssistantSettings = () => {
 
   return (
     <Stack>
-      <Group gap="sm">
-        <IconRobot size={26} />
-        <Title order={2}>{t("title")}</Title>
-      </Group>
-      <Text c="dimmed">{t("description")}</Text>
-
       <Card pos="relative" withBorder>
         <LoadingOverlay visible={pending} />
         <Stack gap="lg">
@@ -234,6 +236,13 @@ export const AssistantSettings = () => {
               data={providerOptions}
               searchable
               allowDeselect={false}
+              leftSection={<ProviderIcon providerId={provider} />}
+              renderOption={({ option }) => (
+                <Group gap="sm" wrap="nowrap">
+                  <ProviderIcon providerId={option.value as AssistantProvider} />
+                  <Text size="sm">{option.label}</Text>
+                </Group>
+              )}
             />
             <TextInput
               label={t("baseUrl.title")}
