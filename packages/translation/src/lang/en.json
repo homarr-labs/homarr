@@ -4992,13 +4992,29 @@
               "title": "Server-side secrets",
               "description": "API keys and additional header values are encrypted in the Homarr database. They are never returned to browsers. Model requests are sent from the Homarr server directly to the configured endpoint."
             },
+            "overview": {
+              "connectionReady": "Connection ready",
+              "unsavedChanges": "Unsaved changes",
+              "setupRequired": "Setup required",
+              "keyProtected": "Key protected",
+              "available": "Available",
+              "disabled": "Disabled",
+              "noModel": "No model selected"
+            },
             "connection": {
               "title": "Provider connection",
+              "endpointTitle": "Provider and endpoint",
               "description": "Choose a preset or connect any service that implements the OpenAI Chat Completions API.",
               "saved": "Connection saved",
               "notSaved": "Not configured",
               "save": "Save provider connection",
               "clearCredentials": "Remove all credentials"
+            },
+            "credentials": {
+              "title": "Credentials",
+              "description": "Add the secrets this endpoint needs. Stored values stay encrypted and cannot be read back.",
+              "required": "Key required",
+              "optional": "Key optional"
             },
             "provider": {
               "title": "Provider",
@@ -5074,9 +5090,35 @@
               "replacementPlaceholder": "Enter a replacement API key",
               "configuredBadge": "Saved key active",
               "pendingRemoval": "Removal pending",
+              "savedTitle": "Encrypted API key saved",
+              "savedDescription": "Homarr can use this key, but it cannot display or recover its value.",
+              "replace": "Replace key",
               "remove": "Remove saved API key",
               "removeDescription": "Deletes the saved key after you click Save provider connection.",
-              "removalPendingDescription": "The saved key will be deleted when you save the provider connection."
+              "removalPendingDescription": "The saved key will be deleted when you save the provider connection.",
+              "replaceFlow": {
+                "title": "Replace the saved API key",
+                "description": "Enter the new key first. You will review the endpoint and impact before anything changes.",
+                "enterStep": "Enter new key",
+                "reviewStep": "Review change",
+                "newKey": "New API key",
+                "newKeyDescription": "The existing key remains active until you confirm the replacement.",
+                "cancel": "Cancel replacement",
+                "review": "Review replacement",
+                "warningTitle": "The current key will stop being used",
+                "warningDescription": "Confirming replaces the encrypted key for this endpoint. Homarr cannot restore the previous value, and model discovery and assistant requests will use the new key immediately.",
+                "provider": "Provider",
+                "endpoint": "Destination",
+                "back": "Edit new key",
+                "confirm": "Replace API key"
+              },
+              "removeFlow": {
+                "title": "Remove the saved API key?",
+                "description": "This provider requires an API key. Removing it can stop model discovery and assistant responses until another key is saved.",
+                "optionalDescription": "The endpoint will stop receiving bearer authentication after this key is removed. Confirm that it accepts unauthenticated requests or uses another stored header.",
+                "cancel": "Keep saved key",
+                "confirm": "Remove API key"
+              }
             },
             "headers": {
               "title": "Additional request headers",
@@ -5087,6 +5129,9 @@
               "valuePlaceholder": "Secret or routing value",
               "remove": "Remove header",
               "configured": "Additional encrypted headers are configured. Adding headers replaces the complete stored set.",
+              "empty": "No additional headers are stored for this provider.",
+              "savedBadge": "Headers saved",
+              "pendingRemoval": "Removal pending",
               "clear": "Remove stored headers when saving",
               "keep": "Keep stored headers"
             },
@@ -5095,6 +5140,7 @@
               "description": "Select a discovered model or enter an exact endpoint model ID.",
               "placeholder": "Model ID",
               "refresh": "Refresh models",
+              "chooseModel": "Choose the model used for new conversations.",
               "discoveryPath": "Model discovery path",
               "discoveryPathDescription": "Appended to the API base URL. Leave blank to disable discovery and use a manual model ID.",
               "manual": "Enter a model ID manually or save the connection to discover models.",
@@ -5110,6 +5156,13 @@
             "enabled": {
               "label": "Enable Assistant",
               "description": "Shows the assistant to all signed-in users. Existing Homarr permissions still apply to every internal tool call."
+            },
+            "clearCredentials": {
+              "title": "Remove all assistant credentials",
+              "warningTitle": "The assistant will be disabled",
+              "description": "This permanently removes the stored API key and additional headers, clears the selected model, and disables the assistant. The encrypted values cannot be recovered.",
+              "cancel": "Keep credentials",
+              "confirm": "Remove credentials"
             },
             "save": "Save assistant",
             "notification": {
