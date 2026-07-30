@@ -16,7 +16,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq } from "@homarr/db";
 import { db } from "@homarr/db";
 import { assistantConfigurations, assistantThreads } from "@homarr/db/schema";
-import { assistantProviderRequiresApiKey } from "@homarr/definitions";
+import { assistantProviderRequiresApiKey, assistantReasoningModes } from "@homarr/definitions";
 
 import { browserToolContracts } from "~/components/assistant/assistant-tool-contracts";
 import type {
@@ -50,6 +50,8 @@ const allowedAttachmentMediaTypes = new Set([
 ]);
 const requestSchema = z.object({
   id: z.string().min(1).max(64),
+  modelId: z.string().trim().min(1).max(256).optional(),
+  reasoning: z.enum(assistantReasoningModes).default("auto"),
   messages: z
     .array(
       z
@@ -324,10 +326,17 @@ export async function POST(request: Request) {
   const context = createTRPCContext({ headers: request.headers, session });
   const requestStartedAt = Date.now();
   const requestId = crypto.randomUUID();
+  const requestedModelId = parsed.data.modelId ?? configuration.modelId;
   const [selectedModel, mentionContext] = await Promise.all([
-    getSelectedModelDetailsAsync(configuration).catch(() => null),
+    getSelectedModelDetailsAsync(configuration, requestedModelId).catch(() => null),
     getMentionContextAsync(context, parsed.data.messages),
   ]);
+  if (requestedModelId !== configuration.modelId && !selectedModel) {
+    return Response.json(
+      { error: "The selected model is not available from the configured provider." },
+      { status: 400 },
+    );
+  }
   const modelId = selectedModel?.id ?? configuration.modelId;
   if (
     selectedModel &&
@@ -436,6 +445,7 @@ export async function POST(request: Request) {
       abortSignal: request.signal,
       timeout: { totalMs: 55_000, stepMs: 30_000, toolMs: 30_000 },
       maxRetries: 2,
+      reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
       toolApproval,
       experimental_toolApprovalSecret: getToolApprovalSecret(),
       onChunk: ({ chunk }) => {

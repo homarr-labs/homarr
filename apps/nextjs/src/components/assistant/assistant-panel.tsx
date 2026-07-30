@@ -43,6 +43,7 @@ import {
   Popover,
   RingProgress,
   ScrollArea,
+  Select,
   Stack,
   Text,
   ThemeIcon,
@@ -56,6 +57,7 @@ import {
   IconApps,
   IconArrowUp,
   IconAt,
+  IconBrain,
   IconCheck,
   IconChevronDown,
   IconChevronLeft,
@@ -68,6 +70,7 @@ import {
   IconFileExport,
   IconLink,
   IconMessage,
+  IconMinus,
   IconPaperclip,
   IconPencil,
   IconHistory,
@@ -77,6 +80,7 @@ import {
   IconRefresh,
   IconRobot,
   IconSearch,
+  IconSparkles,
   IconThumbDown,
   IconThumbUp,
   IconTool,
@@ -87,23 +91,32 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 
 import { clientApi } from "@homarr/api/client";
+import { assistantReasoningModes } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
+import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 import { getToolResultPresentation } from "./assistant-tool-result";
 
 interface AssistantPanelProps {
   opened: boolean;
   onOpen: () => void;
   onClose: () => void;
-  onMarkRead: () => void;
+  onDismissActivity: () => void;
+  activityDismissed: boolean;
   isRunning: boolean;
   unreadCount: number;
   latestAssistantText: string;
   latestUserText: string;
   latestStatus: MessageStatus | undefined;
+  modelId: string | null;
+  models: AssistantRuntimeModelOption[];
+  modelOptionsLoading: boolean;
+  reasoning: AssistantReasoningMode;
+  onModelChange: (modelId: string) => void;
+  onReasoningChange: (reasoning: AssistantReasoningMode) => void;
 }
 
 const markdownRemarkPlugins = [remarkGfm, remarkBreaks];
@@ -1171,7 +1184,64 @@ const ComposerTriggers = () => {
   );
 };
 
-const Composer = () => {
+type ComposerProps = Pick<
+  AssistantPanelProps,
+  "modelId" | "models" | "modelOptionsLoading" | "reasoning" | "onModelChange" | "onReasoningChange"
+>;
+
+const RuntimeControls = ({
+  modelId,
+  models,
+  modelOptionsLoading,
+  reasoning,
+  onModelChange,
+  onReasoningChange,
+}: ComposerProps) => {
+  const t = useScopedI18n("common.assistant");
+  return (
+    <Group className={classes.runtimeControls} gap={6} wrap="nowrap">
+      <Select
+        className={classes.modelSelect}
+        classNames={{ input: classes.runtimeSelectInput }}
+        size="xs"
+        value={modelId}
+        onChange={(value) => {
+          if (value) onModelChange(value);
+        }}
+        data={models.map((model) => ({ value: model.id, label: model.name }))}
+        searchable
+        allowDeselect={false}
+        disabled={modelOptionsLoading || models.length === 0}
+        leftSection={modelOptionsLoading ? <Loader size={13} /> : <IconSparkles size={14} />}
+        aria-label={t("runtime.model")}
+        placeholder={t("runtime.model")}
+        nothingFoundMessage={t("runtime.noModels")}
+        comboboxProps={{ withinPortal: true, position: "top-start" }}
+      />
+      <Select
+        className={classes.reasoningSelect}
+        classNames={{ input: classes.runtimeSelectInput }}
+        size="xs"
+        value={reasoning}
+        onChange={(value) => {
+          if (value && assistantReasoningModes.includes(value as AssistantReasoningMode)) {
+            onReasoningChange(value as AssistantReasoningMode);
+          }
+        }}
+        data={assistantReasoningModes.map((mode) => ({
+          value: mode,
+          label: t(`runtime.reasoning.${mode}`),
+        }))}
+        allowDeselect={false}
+        leftSection={<IconBrain size={14} />}
+        aria-label={t("runtime.thinking")}
+        comboboxProps={{ withinPortal: true, position: "top-end" }}
+      />
+    </Group>
+  );
+};
+
+const Composer = (props: ComposerProps) => {
   const t = useScopedI18n("common.assistant");
   const running = useAuiState((state) => state.thread.isRunning);
   return (
@@ -1220,13 +1290,16 @@ const Composer = () => {
                 </ComposerPrimitive.Send>
               )}
             </Group>
-            <Group className={classes.composerHints} gap="xs">
-              <Text size="xs" c="dimmed">
-                {t("mentions.hint")}
-              </Text>
-              <Text size="xs" c="dimmed">
-                {t("commands.hint")}
-              </Text>
+            <Group className={classes.composerFooter} justify="space-between" gap="xs" wrap="nowrap">
+              <RuntimeControls {...props} />
+              <Group className={classes.composerHints} gap="xs" wrap="nowrap">
+                <Text size="xs" c="dimmed">
+                  {t("mentions.hint")}
+                </Text>
+                <Text size="xs" c="dimmed">
+                  {t("commands.hint")}
+                </Text>
+              </Group>
             </Group>
           </ComposerPrimitive.Root>
         </ComposerPrimitive.AttachmentDropzone>
@@ -1242,12 +1315,25 @@ const AssistantActivityBar = ({
   latestUserText,
   latestStatus,
   onOpen,
-  onMarkRead,
-}: Omit<AssistantPanelProps, "opened" | "onClose">) => {
+  onDismissActivity,
+  activityDismissed,
+}: Pick<
+  AssistantPanelProps,
+  | "isRunning"
+  | "unreadCount"
+  | "latestAssistantText"
+  | "latestUserText"
+  | "latestStatus"
+  | "onOpen"
+  | "onDismissActivity"
+  | "activityDismissed"
+>) => {
   const t = useScopedI18n("common.assistant");
   const needsApproval = latestStatus?.type === "requires-action";
   const failed = latestStatus?.type === "incomplete" && latestStatus.reason !== "cancelled";
-  const visible = isRunning || unreadCount > 0 || needsApproval;
+  const visible =
+    !activityDismissed &&
+    (isRunning || unreadCount > 0 || needsApproval || latestStatus !== undefined || latestAssistantText.length > 0);
 
   if (!visible) return null;
 
@@ -1304,7 +1390,7 @@ const AssistantActivityBar = ({
           className={classes.activityDismiss}
           variant="subtle"
           color="gray"
-          onClick={onMarkRead}
+          onClick={onDismissActivity}
           aria-label={t("activity.dismiss")}
         >
           <IconX size={15} />
@@ -1318,12 +1404,19 @@ export const AssistantPanel = ({
   opened,
   onOpen,
   onClose,
-  onMarkRead,
+  onDismissActivity,
+  activityDismissed,
   isRunning,
   unreadCount,
   latestAssistantText,
   latestUserText,
   latestStatus,
+  modelId,
+  models,
+  modelOptionsLoading,
+  reasoning,
+  onModelChange,
+  onReasoningChange,
 }: AssistantPanelProps) => {
   const t = useScopedI18n("common.assistant");
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -1354,7 +1447,8 @@ export const AssistantPanel = ({
       {!opened && (
         <AssistantActivityBar
           onOpen={onOpen}
-          onMarkRead={onMarkRead}
+          onDismissActivity={onDismissActivity}
+          activityDismissed={activityDismissed}
           isRunning={isRunning}
           unreadCount={unreadCount}
           latestAssistantText={latestAssistantText}
@@ -1393,15 +1487,17 @@ export const AssistantPanel = ({
                     </ActionIcon>
                   </ThreadListPrimitive.New>
                 </Tooltip>
-                <ActionIcon
-                  className={classes.panelAction}
-                  variant="subtle"
-                  color="gray"
-                  onClick={onClose}
-                  aria-label={t("close")}
-                >
-                  <IconX size={18} />
-                </ActionIcon>
+                <Tooltip label={t("minimize")}>
+                  <ActionIcon
+                    className={classes.panelAction}
+                    variant="subtle"
+                    color="gray"
+                    onClick={onClose}
+                    aria-label={t("minimize")}
+                  >
+                    <IconMinus size={18} />
+                  </ActionIcon>
+                </Tooltip>
               </Group>
             </Group>
             <ThreadPrimitive.Root className={classes.thread}>
@@ -1428,7 +1524,14 @@ export const AssistantPanel = ({
                   </ActionIcon>
                 </ThreadPrimitive.ScrollToBottom>
               </ThreadPrimitive.Viewport>
-              <Composer />
+              <Composer
+                modelId={modelId}
+                models={models}
+                modelOptionsLoading={modelOptionsLoading}
+                reasoning={reasoning}
+                onModelChange={onModelChange}
+                onReasoningChange={onReasoningChange}
+              />
             </ThreadPrimitive.Root>
           </dialog>
         </FocusTrap>
