@@ -15,7 +15,8 @@ It is available to signed-in users from the user menu and the `Cmd/Ctrl + K` com
 
 While a response is running, a compact activity bar appears at the bottom of the page and the user-menu
 avatar shows a thinking indicator. The activity bar can be opened to follow the response. Completed
-responses add an unread count to the user menu until they are opened or dismissed.
+responses add an unread count to the user menu until they are opened or dismissed. The expanded
+conversation has a minimize action that returns it to the activity bar without interrupting a response.
 
 `Cmd/Ctrl + Shift + K` opens the compact conversation panel directly.
 
@@ -83,7 +84,11 @@ as part of the prompt.
 
 Type `@` in the composer to add permission-checked context. The nested menu contains apps, integrations,
 boards, widgets, and tools available to the current user. Homarr validates every referenced ID again on
-the server before adding it to the model context. Type `/` for common prompt shortcuts.
+the server before adding it to the model context. Type `/` for common prompt shortcuts. The compact
+controls below the composer can switch between models discovered from the configured endpoint. Model
+selection is stored on the conversation after a completed request. Thinking mode can be left on
+**Auto**, disabled, or set from minimal through high; explicit levels are sent using the AI SDK's
+provider-neutral reasoning setting and still depend on support from the chosen model and endpoint.
 
 Each completed response includes a circular context-window meter. Select it to open request details when
 the provider reports them: input, output, cached-input and reasoning tokens, used and remaining context,

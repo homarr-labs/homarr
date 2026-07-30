@@ -39,6 +39,8 @@ import {
 } from "@homarr/spotlight";
 
 import { AssistantPanel } from "./assistant-panel";
+import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
+import { sendAssistantPrompt as sendPromptThroughComposer } from "./assistant-send";
 import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
 import type { AssistantUIMessage } from "./assistant-message-metadata";
@@ -55,6 +57,18 @@ interface AssistantContextValue {
 }
 
 const AssistantContext = createContext<AssistantContextValue | null>(null);
+interface AssistantPreferencesContextValue {
+  defaultModelId: string | null;
+  modelId: string | null;
+  models: AssistantRuntimeModelOption[];
+  reasoning: AssistantReasoningMode;
+  isLoading: boolean;
+  setModelId: (modelId: string) => void;
+  setReasoning: (reasoning: AssistantReasoningMode) => void;
+  getRequestBody: () => { modelId?: string; reasoning: AssistantReasoningMode };
+}
+
+const AssistantPreferencesContext = createContext<AssistantPreferencesContextValue | null>(null);
 const ignoreUnsupportedArchiveAction = () => Promise.resolve();
 const assistantImageAttachmentTypes = ["image/gif", "image/jpeg", "image/png", "image/webp"];
 const assistantDocumentAttachmentTypes = [
@@ -143,6 +157,67 @@ export const useHomarrAssistant = () => {
 
 export const useOptionalHomarrAssistant = () => useContext(AssistantContext);
 
+const useAssistantPreferences = () => {
+  const value = useContext(AssistantPreferencesContext);
+  if (!value) throw new Error("useAssistantPreferences must be used within AssistantPreferencesProvider");
+  return value;
+};
+
+const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
+  const { data, isLoading } = clientApi.assistant.getRuntimeOptions.useQuery(undefined, {
+    staleTime: 10 * 60_000,
+  });
+  const [modelId, setModelIdState] = useState<string | null>(null);
+  const [reasoning, setReasoningState] = useState<AssistantReasoningMode>("auto");
+  const preferencesRef = useRef<{ modelId: string | null; reasoning: AssistantReasoningMode }>({
+    modelId: null,
+    reasoning: "auto",
+  });
+  const models = useMemo<AssistantRuntimeModelOption[]>(
+    () => data?.models.map(({ id, name, inputModalities }) => ({ id, name, inputModalities })) ?? [],
+    [data?.models],
+  );
+
+  const setModelId = useCallback((nextModelId: string) => {
+    preferencesRef.current.modelId = nextModelId;
+    setModelIdState(nextModelId);
+  }, []);
+  const setReasoning = useCallback((nextReasoning: AssistantReasoningMode) => {
+    preferencesRef.current.reasoning = nextReasoning;
+    setReasoningState(nextReasoning);
+  }, []);
+  const getRequestBody = useCallback(() => {
+    const current = preferencesRef.current;
+    return {
+      ...(current.modelId ? { modelId: current.modelId } : {}),
+      reasoning: current.reasoning,
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!data) return;
+    const currentModelId = preferencesRef.current.modelId;
+    if (currentModelId && data.models.some((model) => model.id === currentModelId)) return;
+    setModelId(data.defaultModelId);
+  }, [data, setModelId]);
+
+  const value = useMemo(
+    () => ({
+      defaultModelId: data?.defaultModelId ?? null,
+      modelId,
+      models,
+      reasoning,
+      isLoading,
+      setModelId,
+      setReasoning,
+      getRequestBody,
+    }),
+    [data?.defaultModelId, getRequestBody, isLoading, modelId, models, reasoning, setModelId, setReasoning],
+  );
+
+  return <AssistantPreferencesContext.Provider value={value}>{children}</AssistantPreferencesContext.Provider>;
+};
+
 const threadAdapter: RemoteThreadListAdapter = {
   async list() {
     const threads = await fetchApi.assistant.listThreads.query();
@@ -172,6 +247,11 @@ const threadAdapter: RemoteThreadListAdapter = {
   },
   async rename(threadId, title) {
     await fetchApi.assistant.renameThread.mutate({ threadId, title });
+  },
+  async updateCustom(threadId, custom) {
+    const modelId = custom?.modelId;
+    if (typeof modelId !== "string") return;
+    await fetchApi.assistant.updateThreadModel.mutate({ threadId, modelId });
   },
   // assistant-ui requires these callbacks even when the product does not expose archiving.
   archive: ignoreUnsupportedArchiveAction,
@@ -267,14 +347,25 @@ const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapte
 const AssistantThreadRuntime = () => {
   const t = useScopedI18n("common.assistant");
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
-  const transport = useMemo(() => new AssistantChatTransport({ api: "/api/assistant/chat" }), []);
+  const preferences = useAssistantPreferences();
+  const transport = useMemo(
+    () =>
+      new AssistantChatTransport({
+        api: "/api/assistant/chat",
+        body: preferences.getRequestBody,
+      }),
+    [preferences.getRequestBody],
+  );
   const history = useMemo(() => createHistoryAdapter(threadId), [threadId]);
-  const { data: modelCapabilities } = clientApi.assistant.getModelCapabilities.useQuery(undefined, {
-    staleTime: 10 * 60_000,
-  });
+  const selectedModel = preferences.models.find((model) => model.id === preferences.modelId);
   const attachments = useMemo(
-    () => createAssistantAttachmentAdapter(modelCapabilities?.imageInput !== "unsupported"),
-    [modelCapabilities?.imageInput],
+    () =>
+      createAssistantAttachmentAdapter(
+        selectedModel === undefined ||
+          selectedModel.inputModalities.length === 0 ||
+          selectedModel.inputModalities.includes("image"),
+      ),
+    [selectedModel],
   );
   const feedback = useMemo(
     () => ({
@@ -367,9 +458,33 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
     <AssistantRuntimeProvider runtime={runtime}>
       <AssistantTools toolkit={toolkit} />
       <AssistantRuntimeEvents />
+      <AssistantPreferenceSync />
       {children}
     </AssistantRuntimeProvider>
   );
+};
+
+const AssistantPreferenceSync = () => {
+  const preferences = useAssistantPreferences();
+  const threadId = useAuiState((state) => state.threadListItem.remoteId);
+  const threadModelId = useAuiState((state) => state.threadListItem.custom?.modelId);
+  const previousSyncKeyRef = useRef<string | null>(null);
+  const modelCatalogKey = preferences.models.map((model) => model.id).join("\0");
+
+  useEffect(() => {
+    if (preferences.models.length === 0) return;
+    const syncKey = `${threadId ?? "new"}:${modelCatalogKey}`;
+    if (previousSyncKeyRef.current === syncKey) return;
+    previousSyncKeyRef.current = syncKey;
+    const storedModelId = typeof threadModelId === "string" ? threadModelId : null;
+    const nextModelId =
+      storedModelId && preferences.models.some((model) => model.id === storedModelId)
+        ? storedModelId
+        : preferences.defaultModelId;
+    if (nextModelId) preferences.setModelId(nextModelId);
+  }, [modelCatalogKey, preferences, threadId, threadModelId]);
+
+  return null;
 };
 
 const AssistantTools = ({ toolkit }: { toolkit: Toolkit }) => {
@@ -407,8 +522,11 @@ const getNotificationKey = (message: ThreadMessage | undefined) => {
 const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const t = useScopedI18n("common.assistant");
   const [opened, setOpened] = useState(false);
+  const [activityDismissed, setActivityDismissed] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [queuedPrompt, setQueuedPrompt] = useState<string | null>(null);
   const aui = useAui();
+  const preferences = useAssistantPreferences();
   const messages = useAuiState((state) => state.thread.messages);
   const isRunning = useAuiState((state) => state.thread.isRunning);
   const isLoading = useAuiState((state) => state.thread.isLoading);
@@ -417,6 +535,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const latestAssistantText = getMessageText(latestAssistantMessage);
   const latestUserText = getMessageText(latestUserMessage);
   const latestStatus = latestAssistantMessage?.role === "assistant" ? latestAssistantMessage.status : undefined;
+  const assistantIsRunning = isRunning || queuedPrompt !== null;
   const notificationKey = getNotificationKey(latestAssistantMessage);
   const initializedRef = useRef(false);
   const lastNotifiedKeyRef = useRef<string | null>(null);
@@ -427,30 +546,54 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   }, [notificationKey]);
   const open = useCallback(() => {
     markRead();
+    setActivityDismissed(false);
     setOpened(true);
   }, [markRead]);
   const close = useCallback(() => setOpened(false), []);
   const toggle = useCallback(() => {
-    setOpened((current) => {
-      if (!current) markRead();
-      return !current;
-    });
-  }, [markRead]);
+    if (opened) close();
+    else open();
+  }, [close, open, opened]);
   const sendPrompt = useCallback(
     (prompt: string) => {
       const text = prompt.trim();
       if (text.length === 0) return;
-      if (isRunning || latestStatus?.type === "requires-action") {
+      if (assistantIsRunning || latestStatus?.type === "requires-action") {
         showWarningNotification({
           title: t("busy.title"),
           message: t("busy.description"),
         });
         return;
       }
-      aui.thread().append({ role: "user", content: [{ type: "text", text }] });
+      setActivityDismissed(false);
+      if (isLoading) {
+        setQueuedPrompt(text);
+        return;
+      }
+      sendPromptThroughComposer(aui.composer(), text);
     },
-    [aui, isRunning, latestStatus?.type, t],
+    [assistantIsRunning, aui, isLoading, latestStatus?.type, t],
   );
+  const selectModel = useCallback(
+    (modelId: string) => {
+      preferences.setModelId(modelId);
+      const threadListItem = aui.threadListItem();
+      if (!threadListItem.getState().remoteId) return;
+      threadListItem.updateCustom({ ...threadListItem.getState().custom, modelId });
+    },
+    [aui, preferences],
+  );
+
+  useEffect(() => {
+    if (assistantIsRunning) setActivityDismissed(false);
+  }, [assistantIsRunning]);
+
+  useEffect(() => {
+    if (isLoading || isRunning || queuedPrompt === null) return;
+    const prompt = queuedPrompt;
+    setQueuedPrompt(null);
+    sendPromptThroughComposer(aui.composer(), prompt);
+  }, [aui, isLoading, isRunning, queuedPrompt]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -462,6 +605,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     }
 
     if (notificationKey === null || notificationKey === lastNotifiedKeyRef.current) return;
+    setActivityDismissed(false);
 
     if (opened) {
       lastNotifiedKeyRef.current = notificationKey;
@@ -489,8 +633,8 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   useRegisterSpotlightContextActions("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const value = useMemo(
-    () => ({ enabled: true, opened, isRunning, unreadCount, open, close, toggle, sendPrompt }),
-    [close, isRunning, open, opened, sendPrompt, toggle, unreadCount],
+    () => ({ enabled: true, opened, isRunning: assistantIsRunning, unreadCount, open, close, toggle, sendPrompt }),
+    [assistantIsRunning, close, open, opened, sendPrompt, toggle, unreadCount],
   );
 
   return (
@@ -500,12 +644,22 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
         opened={opened}
         onOpen={open}
         onClose={close}
-        onMarkRead={markRead}
-        isRunning={isRunning}
+        onDismissActivity={() => {
+          markRead();
+          setActivityDismissed(true);
+        }}
+        activityDismissed={activityDismissed}
+        isRunning={assistantIsRunning}
         unreadCount={unreadCount}
         latestAssistantText={latestAssistantText}
-        latestUserText={latestUserText}
+        latestUserText={queuedPrompt ?? latestUserText}
         latestStatus={latestStatus}
+        modelId={preferences.modelId}
+        models={preferences.models}
+        modelOptionsLoading={preferences.isLoading}
+        reasoning={preferences.reasoning}
+        onModelChange={selectModel}
+        onReasoningChange={preferences.setReasoning}
       />
     </AssistantContext.Provider>
   );
@@ -559,9 +713,11 @@ export const AssistantProvider = ({ children }: PropsWithChildren) => {
 
   if (enabled) {
     return (
-      <AssistantRuntime>
-        <EnabledAssistantProvider>{children}</EnabledAssistantProvider>
-      </AssistantRuntime>
+      <AssistantPreferencesProvider>
+        <AssistantRuntime>
+          <EnabledAssistantProvider>{children}</EnabledAssistantProvider>
+        </AssistantRuntime>
+      </AssistantPreferencesProvider>
     );
   }
 

@@ -16,6 +16,9 @@ export const assistantProviderIds = [
 export type AssistantProvider = (typeof assistantProviderIds)[number];
 export type AssistantProviderCategory = "hosted" | "local" | "custom";
 
+export const assistantReasoningModes = ["auto", "none", "minimal", "low", "medium", "high"] as const;
+export type AssistantReasoningMode = (typeof assistantReasoningModes)[number];
+
 export interface AssistantModelOption {
   id: string;
   name: string;
