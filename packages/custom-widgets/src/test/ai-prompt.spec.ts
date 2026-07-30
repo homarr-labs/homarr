@@ -69,4 +69,18 @@ describe("AI prompt", () => {
     expect(prompt).toContain('"X-Auth": "[REDACTED]"');
     expect(prompt).toContain('"X-Feature-Key": "dashboard-layout"');
   });
+
+  it("redacts credentials embedded directly in the free-form request", () => {
+    const prompt = buildCustomWidgetAiPrompt(
+      undefined,
+      null,
+      null,
+      "Use Authorization: Bearer sk-secret-123456 and token=ghp_abcdefghijklmnopqrstuvwxyz123456",
+    );
+
+    expect(prompt).not.toContain("sk-secret-123456");
+    expect(prompt).not.toContain("ghp_abcdefghijklmnopqrstuvwxyz123456");
+    expect(prompt).toContain("Authorization: Bearer [REDACTED]");
+    expect(prompt).toContain("token=[REDACTED]");
+  });
 });

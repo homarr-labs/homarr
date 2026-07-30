@@ -248,6 +248,72 @@ describe("Custom Widget MCP agent", () => {
     );
   });
 
+  it("accepts a repaired preview followed by final validation and a fresh preview", () => {
+    const toolsUsed = [
+      "customWidget_getAuthoringPrompt",
+      "customWidget_getSkill",
+      "customWidget_schema",
+      "customWidget_validate",
+      "customWidget_previewCreate",
+      "customWidget_validate",
+      "customWidget_previewCreate",
+      "customWidget_previewQuery",
+      "customWidget_previewJournal",
+    ];
+
+    expect(
+      getCustomWidgetMcpWorkflowIssues({
+        output: {
+          status: "pass",
+          summary: "The repaired widget passed a fresh preview.",
+          definitionId: null,
+          previewUrl: "http://localhost:3000/manage/custom-widgets/preview/session-repaired",
+          iterations: 2,
+          evidence: [...new Set(toolsUsed)].map((name) => ({
+            tool: name,
+            outcome: name === "customWidget_validate" ? ("repaired" as const) : ("passed" as const),
+            detail: `${name} completed.`,
+          })),
+          remainingIssues: [],
+        },
+        toolExecutions: successfulExecutions(toolsUsed),
+        persist: false,
+      }),
+    ).toEqual([]);
+  });
+
+  it("does not report journal ordering when the journal was never run", () => {
+    const toolsUsed = [
+      "customWidget_getAuthoringPrompt",
+      "customWidget_getSkill",
+      "customWidget_schema",
+      "customWidget_validate",
+      "customWidget_previewCreate",
+      "customWidget_previewQuery",
+    ];
+
+    const issues = getCustomWidgetMcpWorkflowIssues({
+      output: {
+        status: "pass",
+        summary: "The agent incorrectly skipped the journal.",
+        definitionId: null,
+        previewUrl: "http://localhost:3000/manage/custom-widgets/preview/session-no-journal",
+        iterations: 1,
+        evidence: toolsUsed.map((name) => ({
+          tool: name,
+          outcome: "passed" as const,
+          detail: `${name} completed.`,
+        })),
+        remainingIssues: [],
+      },
+      toolExecutions: successfulExecutions(toolsUsed),
+      persist: false,
+    });
+
+    expect(issues).toContain("Required tool was not used: customWidget_previewJournal");
+    expect(issues).not.toContain("customWidget_previewJournal must run after all preview requests");
+  });
+
   it("allows secure preview configuration to pause before authenticated requests can run", () => {
     const toolsUsed = [
       "customWidget_getAuthoringPrompt",

@@ -23,7 +23,7 @@ export const customWidgetMcpAgentResultSchema = z.strictObject({
   status: z.enum(["pass", "needs-user-configuration", "fail"]),
   summary: z.string().min(1).max(1_000),
   definitionId: z.string().min(1).nullable(),
-  previewUrl: z.string().url().nullable(),
+  previewUrl: z.url().nullable(),
   iterations: z.number().int().min(1).max(20),
   evidence: z
     .array(
@@ -168,7 +168,8 @@ export function getCustomWidgetMcpWorkflowIssues(args: {
     issues.push("customWidget_get must run before validating an edit");
   }
   const previewCreate = firstSuccessfulIndex("customWidget_previewCreate");
-  if (finalValidation >= 0 && previewCreate >= 0 && finalValidation > previewCreate) {
+  const finalPreviewCreate = lastSuccessfulIndex("customWidget_previewCreate");
+  if (finalValidation >= 0 && finalPreviewCreate >= 0 && finalValidation > finalPreviewCreate) {
     issues.push("The final validation must run before customWidget_previewCreate");
   }
   const previewChecks = [
@@ -194,10 +195,12 @@ export function getCustomWidgetMcpWorkflowIssues(args: {
       }
     }
     const finalJournal = lastSuccessfulIndex("customWidget_previewJournal");
-    for (const tool of ["customWidget_previewQuery", "customWidget_previewAction"]) {
-      if (lastSuccessfulIndex(tool) > finalJournal) {
-        issues.push("customWidget_previewJournal must run after all preview requests");
-        break;
+    if (finalJournal >= 0) {
+      for (const tool of ["customWidget_previewQuery", "customWidget_previewAction"]) {
+        if (lastSuccessfulIndex(tool) > finalJournal) {
+          issues.push("customWidget_previewJournal must run after all preview requests");
+          break;
+        }
       }
     }
   }

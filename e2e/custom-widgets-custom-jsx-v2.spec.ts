@@ -414,6 +414,7 @@ describe("Custom JSX v2 workbench", () => {
 
       await page.reload();
       const migratedCard = page
+        .getByRole("main")
         .getByText(legacyWidgetName, { exact: true })
         .locator("xpath=ancestor::*[contains(@class, 'mantine-Card-root')]");
       await expect(migratedCard.getByText("Migration required", { exact: true })).not.toBeVisible();
@@ -441,6 +442,7 @@ describe("Custom JSX v2 workbench", () => {
 
       await page.reload();
       const resurfacedLegacyCard = page
+        .getByRole("main")
         .getByText(legacyWidgetName, { exact: true })
         .locator("xpath=ancestor::*[contains(@class, 'mantine-Card-root')]");
       await expect(resurfacedLegacyCard.getByText("Migration required", { exact: true })).toBeVisible();

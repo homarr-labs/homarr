@@ -47,6 +47,7 @@ const program = ts.createProgram({ rootNames: [...config.fileNames, import.meta.
 const checker = program.getTypeChecker();
 const source = program.getSourceFile(import.meta.filename);
 if (!source) throw new Error("Unable to inspect the component catalog generator");
+const sourceNode: ts.Node = source;
 
 const moduleSymbols = new Map<string, ts.Symbol>();
 for (const declaration of source.statements) {
@@ -163,7 +164,7 @@ function inspectMantineComponent(component: CatalogSourceComponent): InspectedCo
   const rootName = component.name.split(".")[0];
   let symbol =
     moduleSymbol && checker.getExportsOfModule(moduleSymbol).find((candidate) => candidate.name === rootName);
-  let location = symbol?.valueDeclaration ?? symbol?.declarations?.[0] ?? source;
+  let location: ts.Node = symbol?.valueDeclaration ?? symbol?.declarations?.[0] ?? sourceNode;
   let type = symbol && checker.getTypeOfSymbolAtLocation(symbol, location);
   for (const segment of component.name.split(".").slice(1)) {
     symbol = type?.getProperty(segment);
@@ -311,7 +312,7 @@ function mergeGlobalProp(name: string, candidates: UninternedPropDescriptor[]): 
   const fallback = createFallbackProp(name, "global");
   const type = mostFrequent(candidates.map((candidate) => candidate.type)) ?? fallback.type;
   const descriptions = candidates.flatMap(({ description }) => (description ? [description] : []));
-  const literalValues = uniqueLiterals(candidates.flatMap(({ literalValues }) => literalValues ?? []));
+  const literalValues = uniqueLiterals(candidates.flatMap((candidate) => candidate.literalValues ?? []));
   return {
     name,
     type,
