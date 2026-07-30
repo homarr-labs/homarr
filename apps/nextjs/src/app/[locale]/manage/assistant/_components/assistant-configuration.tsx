@@ -72,13 +72,18 @@ export const AssistantConfiguration = () => {
     setEnabled(configuration?.enabled ?? false);
   }, [configuration]);
 
+  const destinationChanged =
+    configuration?.connectionConfigured === true &&
+    (configuration.provider !== provider || configuration.baseUrl !== baseUrl.trim().replace(/\/$/, ""));
+
   const {
     data: models,
     error: discoveryError,
     isFetching: isDiscovering,
     refetch: discoverModels,
   } = clientApi.assistant.discoverModels.useQuery(undefined, {
-    enabled: configuration?.connectionConfigured === true && configuration.modelDiscoveryPath !== null,
+    enabled:
+      configuration?.connectionConfigured === true && configuration.modelDiscoveryPath !== null && !destinationChanged,
     staleTime: 5 * 60_000,
     retry: false,
   });
@@ -104,17 +109,16 @@ export const AssistantConfiguration = () => {
       })),
     [t],
   );
-  const selectedModel = models?.find((model) => model.id === modelId);
+  const selectedModel = destinationChanged ? undefined : models?.find((model) => model.id === modelId);
 
-  const destinationChanged =
-    configuration?.connectionConfigured === true &&
-    (configuration.provider !== provider || configuration.baseUrl !== baseUrl.trim().replace(/\/$/, ""));
   const preset = assistantProviderPresets[provider];
   const headerValuesValid = headers.every((header) => header.name.trim().length > 0 && header.value.length > 0);
   const hasEffectiveApiKey =
     apiKey.trim().length > 0 || (!destinationChanged && configuration?.apiKeyConfigured === true && !clearApiKey);
   const connectionValid =
     baseUrl.trim().length > 0 && headerValuesValid && (!preset.requiresApiKey || hasEffectiveApiKey);
+  const modelControlsDisabled = configuration?.connectionConfigured !== true || destinationChanged;
+  const canSaveConfiguration = !modelControlsDisabled && modelId.trim().length > 0;
 
   const updateConnection = clientApi.assistant.updateConnection.useMutation({
     onSuccess: async ({ credentialsClearedForDestinationChange }) => {
@@ -220,6 +224,11 @@ export const AssistantConfiguration = () => {
       customHeaders,
       clearCustomHeaders: clearHeaders,
     });
+  };
+
+  const saveAssistantConfiguration = () => {
+    if (!canSaveConfiguration) return;
+    saveConfiguration.mutate({ enabled, modelId: modelId.trim() });
   };
 
   return (
@@ -405,7 +414,7 @@ export const AssistantConfiguration = () => {
                 size="compact-sm"
                 leftSection={<IconDatabaseSearch size={14} />}
                 loading={isDiscovering}
-                disabled={!configuration?.connectionConfigured || configuration.modelDiscoveryPath === null}
+                disabled={modelControlsDisabled || configuration?.modelDiscoveryPath === null}
                 onClick={() => void discoverModels()}
               >
                 {t("model.refresh")}
@@ -415,18 +424,21 @@ export const AssistantConfiguration = () => {
               aria-label={t("model.title")}
               value={modelId}
               onChange={setModelId}
-              data={modelOptions}
+              data={modelControlsDisabled ? [] : modelOptions}
+              disabled={modelControlsDisabled}
               placeholder={t("model.placeholder")}
               description={
-                discoveryError
-                  ? t("model.manualFallback")
-                  : models
-                    ? t("model.discovered", { count: models.length })
-                    : t("model.manual")
+                modelControlsDisabled
+                  ? t("model.saveConnectionFirst")
+                  : discoveryError
+                    ? t("model.manualFallback")
+                    : models
+                      ? t("model.discovered", { count: models.length })
+                      : t("model.manual")
               }
               limit={100}
             />
-            {discoveryError && (
+            {discoveryError && !modelControlsDisabled && (
               <Alert color="yellow" icon={<IconAlertTriangle size={18} />} title={t("model.discoveryFailed")}>
                 {discoveryError.message}
               </Alert>
@@ -464,16 +476,13 @@ export const AssistantConfiguration = () => {
           <Switch
             checked={enabled}
             onChange={(event) => setEnabled(event.currentTarget.checked)}
-            disabled={!configuration?.connectionConfigured || modelId.trim().length === 0}
+            disabled={!canSaveConfiguration}
             label={t("enabled.label")}
             description={t("enabled.description")}
           />
 
           <Group justify="flex-end">
-            <Button
-              onClick={() => saveConfiguration.mutate({ enabled, modelId: modelId.trim() })}
-              disabled={!configuration?.connectionConfigured || modelId.trim().length === 0}
-            >
+            <Button onClick={saveAssistantConfiguration} disabled={!canSaveConfiguration}>
               {t("save")}
             </Button>
           </Group>
