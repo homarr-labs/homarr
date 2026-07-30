@@ -1153,10 +1153,19 @@ export const AssistantPanel = ({
     if (opened && event.key === "Escape") onClose();
   });
   useEffect(() => {
-    if (!opened) return;
-    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    if (!opened) {
+      const rememberOutsideFocus = () => {
+        if (document.activeElement instanceof HTMLElement) {
+          previousFocusRef.current = document.activeElement;
+        }
+      };
+      rememberOutsideFocus();
+      document.addEventListener("focusin", rememberOutsideFocus);
+      return () => document.removeEventListener("focusin", rememberOutsideFocus);
+    }
+    const restoreTarget = previousFocusRef.current;
     return () => {
-      previousFocusRef.current?.focus();
+      restoreTarget?.focus();
       previousFocusRef.current = null;
     };
   }, [opened]);
