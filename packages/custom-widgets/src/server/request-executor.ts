@@ -86,7 +86,7 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
     }
     if (error instanceof CustomWidgetDomainError) throw error;
     input.logError?.({
-      origin: safeOrigin(input.baseUrl),
+      origin: URL.canParse(input.baseUrl) ? new URL(input.baseUrl).origin : "invalid",
       method: input.method,
       errorName: "TransportError",
     });
@@ -176,7 +176,7 @@ async function performRequestWithinDeadline(
     if (lifecycleFailure) {
       const { error } = lifecycleFailure;
       if (error instanceof CustomWidgetDomainError) throw error;
-      if (isResponseTooLargeError(error)) {
+      if (error instanceof Error && "code" in error && error.code === RESPONSE_TOO_LARGE_ERROR_CODE) {
         throw new CustomWidgetDomainError({
           code: "PAYLOAD_TOO_LARGE",
           message: "Response exceeds the 1 MiB limit",
@@ -223,19 +223,6 @@ export function isCustomWidgetRequestTimeoutError(error: unknown, ...signals: re
   if (error.name.includes("Timeout")) return true;
   const code = "code" in error && typeof error.code === "string" ? error.code : undefined;
   return code !== undefined && TIMEOUT_ERROR_CODES.has(code);
-}
-
-function isResponseTooLargeError(error: unknown): boolean {
-  if (!(error instanceof Error)) return false;
-  return "code" in error && error.code === RESPONSE_TOO_LARGE_ERROR_CODE;
-}
-
-function safeOrigin(value: string): string {
-  try {
-    return new URL(value).origin;
-  } catch {
-    return "invalid";
-  }
 }
 
 function normalizeResponseHeaders(values: Record<string, string | string[] | undefined>) {
