@@ -11,12 +11,8 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
 
 import classes from "./assistant-panel.module.css";
-import {
-  type AskUserArgs,
-  type AskUserResult,
-  type ConfigureAppArgs,
-  normalizeAssistantAppIconUrl,
-} from "./assistant-tool-contracts";
+import { normalizeAssistantAppIconUrl } from "./assistant-tool-contracts";
+import type { AskUserArgs, AskUserResult, ConfigureAppArgs } from "./assistant-tool-contracts";
 
 type AppValues = z.infer<typeof appManageSchema>;
 
