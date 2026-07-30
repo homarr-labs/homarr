@@ -2,7 +2,7 @@
   position: fixed;
   z-index: 290;
   inset-inline-start: 50%;
-  bottom: max(1rem, env(safe-area-inset-bottom));
+  bottom: max(1rem, env(safe-area-inset-bottom, 0px));
   display: flex;
   width: min(31rem, calc(100vw - 1rem));
   min-height: 3.5rem;
@@ -540,14 +540,14 @@
 
 @media (max-width: 48em) {
   .activityBar {
-    bottom: max(0.5rem, env(safe-area-inset-bottom));
+    bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
   }
 
   .floatingPanel {
-    bottom: max(0.5rem, env(safe-area-inset-bottom));
+    bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
     width: calc(100vw - 1rem);
-    height: min(44rem, calc(100dvh - 1rem - env(safe-area-inset-bottom)));
-    min-height: min(20rem, calc(100dvh - 1rem - env(safe-area-inset-bottom)));
+    height: min(44rem, calc(100dvh - 1rem - env(safe-area-inset-bottom, 0px)));
+    min-height: min(20rem, calc(100dvh - 1rem - env(safe-area-inset-bottom, 0px)));
   }
 
   .panelHeader {

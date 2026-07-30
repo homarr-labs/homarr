@@ -46,6 +46,8 @@ test("MCP tools should contain expected procedures", () => {
 
   expect(tools.length).toBeGreaterThan(0);
   expect(toolNames).toContain("assistant_getAvailability");
+  expect(toolNames).toContain("assistant_getContextEntities");
+  expect(toolNames).toContain("assistant_getModelCapabilities");
   expect(toolNames).toContain("app_all");
   expect(toolNames).toContain("app_byId");
   expect(toolNames).toContain("app_create");

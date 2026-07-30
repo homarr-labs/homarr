@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type {
   FileMessagePartProps,
   ImageMessagePartProps,
@@ -35,6 +35,7 @@ import {
   Button,
   Collapse,
   Divider,
+  FocusTrap,
   Group,
   Loader,
   Popover,
@@ -184,7 +185,24 @@ const FilePart = ({ data, filename, mimeType }: FileMessagePartProps) => {
 
 const ImagePart = ({ image, filename }: ImageMessagePartProps) => {
   const t = useScopedI18n("common.assistant");
-  return <Box component="img" src={image} alt={filename ?? t("attachedImage")} className={classes.messageImage} />;
+  const source = (() => {
+    if (/^data:image\/(?:gif|jpeg|png|webp);base64,/u.test(image)) return image;
+    try {
+      const url = new URL(image, window.location.origin);
+      return url.origin === window.location.origin ? url.href : null;
+    } catch {
+      return null;
+    }
+  })();
+  if (!source) {
+    return (
+      <Group className={classes.messageFile} gap="xs" wrap="nowrap">
+        <IconAlertTriangle size={16} />
+        <Text size="xs">{t("externalImageBlocked")}</Text>
+      </Group>
+    );
+  }
+  return <Box component="img" src={source} alt={filename ?? t("attachedImage")} className={classes.messageImage} />;
 };
 
 const ToolPart = ({
@@ -1007,6 +1025,7 @@ const Composer = () => {
                 className={classes.composerInput}
                 placeholder={t("composerPlaceholder")}
                 rows={1}
+                data-autofocus
               />
               {running ? (
                 <ComposerPrimitive.Cancel asChild>
@@ -1128,10 +1147,19 @@ export const AssistantPanel = ({
   latestStatus,
 }: AssistantPanelProps) => {
   const t = useScopedI18n("common.assistant");
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useWindowEvent("keydown", (event) => {
     if (opened && event.key === "Escape") onClose();
   });
+  useEffect(() => {
+    if (!opened) return;
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    return () => {
+      previousFocusRef.current?.focus();
+      previousFocusRef.current = null;
+    };
+  }, [opened]);
 
   return (
     <>
@@ -1147,73 +1175,75 @@ export const AssistantPanel = ({
         />
       )}
       {opened && (
-        <dialog className={classes.floatingPanel} aria-label={t("title")} open>
-          <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
-            <Group className={classes.panelIdentity} gap="xs" wrap="nowrap">
-              <ThemeIcon variant="light" color="red" radius="xl">
-                <IconRobot size={18} />
-              </ThemeIcon>
-              <div className={classes.panelIdentityText}>
-                <Text fw={700} lh={1.1} lineClamp={1}>
-                  {t("title")}
-                </Text>
-                <Text size="xs" c="dimmed" lineClamp={1}>
-                  {isRunning ? t("activity.thinking") : t("subtitle")}
-                </Text>
-              </div>
-            </Group>
-            <Group className={classes.panelActions} gap={2} wrap="nowrap">
-              <ConversationHistory />
-              <Tooltip label={t("newConversation")}>
-                <ThreadListPrimitive.New asChild>
-                  <ActionIcon
-                    className={classes.panelAction}
-                    variant="subtle"
-                    color="gray"
-                    aria-label={t("newConversation")}
-                  >
-                    <IconPlus size={17} />
-                  </ActionIcon>
-                </ThreadListPrimitive.New>
-              </Tooltip>
-              <ActionIcon
-                className={classes.panelAction}
-                variant="subtle"
-                color="gray"
-                onClick={onClose}
-                aria-label={t("close")}
-              >
-                <IconX size={18} />
-              </ActionIcon>
-            </Group>
-          </Group>
-          <ThreadPrimitive.Root className={classes.thread}>
-            <ThreadPrimitive.Viewport className={classes.viewport}>
-              <Box className={classes.messages}>
-                <EmptyThread />
-                <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
-              </Box>
-              <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
-                <SelectionToolbarPrimitive.Quote asChild>
-                  <Button variant="filled" color="dark" size="compact-sm" leftSection={<IconQuote size={14} />}>
-                    {t("quoteSelection")}
-                  </Button>
-                </SelectionToolbarPrimitive.Quote>
-              </SelectionToolbarPrimitive.Root>
-              <ThreadPrimitive.ScrollToBottom asChild>
+        <FocusTrap active>
+          <dialog className={classes.floatingPanel} aria-label={t("title")} open>
+            <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
+              <Group className={classes.panelIdentity} gap="xs" wrap="nowrap">
+                <ThemeIcon variant="light" color="red" radius="xl">
+                  <IconRobot size={18} />
+                </ThemeIcon>
+                <div className={classes.panelIdentityText}>
+                  <Text fw={700} lh={1.1} lineClamp={1}>
+                    {t("title")}
+                  </Text>
+                  <Text size="xs" c="dimmed" lineClamp={1}>
+                    {isRunning ? t("activity.thinking") : t("subtitle")}
+                  </Text>
+                </div>
+              </Group>
+              <Group className={classes.panelActions} gap={2} wrap="nowrap">
+                <ConversationHistory />
+                <Tooltip label={t("newConversation")}>
+                  <ThreadListPrimitive.New asChild>
+                    <ActionIcon
+                      className={classes.panelAction}
+                      variant="subtle"
+                      color="gray"
+                      aria-label={t("newConversation")}
+                    >
+                      <IconPlus size={17} />
+                    </ActionIcon>
+                  </ThreadListPrimitive.New>
+                </Tooltip>
                 <ActionIcon
-                  className={classes.scrollToBottom}
-                  variant="default"
-                  radius="xl"
-                  aria-label={t("scrollToLatest")}
+                  className={classes.panelAction}
+                  variant="subtle"
+                  color="gray"
+                  onClick={onClose}
+                  aria-label={t("close")}
                 >
-                  <IconArrowUp size={16} style={{ transform: "rotate(180deg)" }} />
+                  <IconX size={18} />
                 </ActionIcon>
-              </ThreadPrimitive.ScrollToBottom>
-            </ThreadPrimitive.Viewport>
-            <Composer />
-          </ThreadPrimitive.Root>
-        </dialog>
+              </Group>
+            </Group>
+            <ThreadPrimitive.Root className={classes.thread}>
+              <ThreadPrimitive.Viewport className={classes.viewport}>
+                <Box className={classes.messages}>
+                  <EmptyThread />
+                  <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
+                </Box>
+                <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
+                  <SelectionToolbarPrimitive.Quote asChild>
+                    <Button variant="filled" color="dark" size="compact-sm" leftSection={<IconQuote size={14} />}>
+                      {t("quoteSelection")}
+                    </Button>
+                  </SelectionToolbarPrimitive.Quote>
+                </SelectionToolbarPrimitive.Root>
+                <ThreadPrimitive.ScrollToBottom asChild>
+                  <ActionIcon
+                    className={classes.scrollToBottom}
+                    variant="default"
+                    radius="xl"
+                    aria-label={t("scrollToLatest")}
+                  >
+                    <IconArrowUp size={16} style={{ transform: "rotate(180deg)" }} />
+                  </ActionIcon>
+                </ThreadPrimitive.ScrollToBottom>
+              </ThreadPrimitive.Viewport>
+              <Composer />
+            </ThreadPrimitive.Root>
+          </dialog>
+        </FocusTrap>
       )}
     </>
   );
