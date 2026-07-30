@@ -234,7 +234,7 @@ describe("Custom JSX v2 workbench", () => {
 
       await addCustomWidgetToBoard(page, baseUrl, "E2E Custom JSX v2");
       await expect(page.getByText("E2E Widget")).toBeVisible({ timeout: 15_000 });
-      await expect(page.getByText("42")).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText("42", { exact: true })).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText("Widget definition not found")).not.toBeVisible();
     } finally {
       await Promise.allSettled([browser?.close(), homarrContainer?.stop(), mockApi?.close()]);
