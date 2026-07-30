@@ -1,0 +1,84 @@
+import { describe, expect, test } from "vitest";
+import type { UIMessage } from "ai";
+
+import { getForcedAssistantToolName, withAssistantToolPolicy } from "./assistant-tool-policy";
+
+const assistantMessage = (...parts: UIMessage["parts"]): UIMessage => ({
+  id: "assistant-message",
+  role: "assistant",
+  parts,
+});
+
+describe("withAssistantToolPolicy", () => {
+  test("tells models to call approval-gated mutations without a prose confirmation", () => {
+    const description = withAssistantToolPolicy("Create a Homarr app.", true);
+
+    expect(description).toContain("call this tool immediately");
+    expect(description).toContain("does not execute until the user selects Approve and run");
+    expect(description).toContain("Never ask for confirmation in prose");
+  });
+
+  test("does not alter read-only tool descriptions", () => {
+    expect(withAssistantToolPolicy("List all Homarr apps.", false)).toBe("List all Homarr apps.");
+  });
+});
+
+describe("getForcedAssistantToolName", () => {
+  test("continues directly from the reviewed app form to app creation", () => {
+    expect(
+      getForcedAssistantToolName([
+        assistantMessage({
+          type: "dynamic-tool",
+          toolName: "configure_app",
+          toolCallId: "configure-1",
+          input: { name: "YouTube" },
+          state: "output-available",
+          output: {
+            name: "YouTube",
+            iconUrl: "/api/icons/youtube.svg",
+            href: "https://youtube.com",
+          },
+        }),
+      ]),
+    ).toBe("app_create");
+  });
+
+  test("waits for the user to finish reviewing the app form", () => {
+    expect(
+      getForcedAssistantToolName([
+        assistantMessage({
+          type: "dynamic-tool",
+          toolName: "configure_app",
+          toolCallId: "configure-1",
+          input: { name: "YouTube" },
+          state: "input-available",
+        }),
+      ]),
+    ).toBeUndefined();
+  });
+
+  test("does not repeat app creation after the mutation tool has been called", () => {
+    expect(
+      getForcedAssistantToolName([
+        assistantMessage(
+          {
+            type: "dynamic-tool",
+            toolName: "configure_app",
+            toolCallId: "configure-1",
+            input: { name: "YouTube" },
+            state: "output-available",
+            output: { name: "YouTube", href: "https://youtube.com" },
+          },
+          {
+            type: "dynamic-tool",
+            toolName: "app_create",
+            toolCallId: "create-1",
+            input: { name: "YouTube", href: "https://youtube.com" },
+            state: "approval-requested",
+            approval: { id: "approval-1" },
+          },
+        ),
+      ]),
+    ).toBeUndefined();
+  });
+});

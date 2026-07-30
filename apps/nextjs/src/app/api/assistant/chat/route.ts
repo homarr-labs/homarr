@@ -28,6 +28,7 @@ import type {
 import { extractMcpTools } from "../../mcp/_extract-tools";
 import { getRequestedMentionIds, sanitizeAttachmentFilename } from "./assistant-chat-input";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
+import { getForcedAssistantToolName, withAssistantToolPolicy } from "./assistant-tool-policy";
 
 export const maxDuration = 60;
 
@@ -88,15 +89,18 @@ Homarr concepts:
 
 Action rules:
 - Prefer read-only tools before actions.
-- When required information is missing or the user must choose between meaningful alternatives, call ask_user. Do not ask the question only in prose and do not tell the user to type yes or no. For a confirmation-style question, offer Yes, No, and Alternative options and leave the freeform Other answer enabled.
-- Mutating Homarr tools already pause for native user approval. Once the requested change is sufficiently specified, call the mutation immediately so the approval UI appears. Never ask for a second textual confirmation first.
+- When required information is missing or the user must choose between meaningful alternatives, call ask_user. Do not ask the question only in prose. Offer distinct choices and leave the freeform Other answer enabled.
+- Mutating Homarr tools already pause for native user approval. Calling a mutation only proposes the action; it cannot execute until the user selects Approve and run. Once the requested change is sufficiently specified, call the mutation immediately so the approval UI appears.
+- A prose response such as "Please confirm if you would like me to proceed", "Would you like me to proceed?", or a parameter summary that asks for confirmation is incorrect. Never ask for a second textual confirmation before an approval-gated tool call.
 - Do not retry a denied action.
 - Before creating an app, call configure_app with the best defaults so the user can review Homarr's native app form. Its icon picker searches Homarr's local icon repository. Use the returned values for app_create.
 - When choosing an app icon without configure_app, call the Homarr icon findIcons tool first and use one of its returned local icon URLs. Never invent a third-party icon CDN URL.
 - Browser tools can navigate within Homarr or open existing Homarr UI. Never navigate to an arbitrary external URL.
 - Keep responses concise and lead with the result. Summarize tool output instead of dumping JSON.
 - Use well-formed GitHub-flavored Markdown. Put each list item on its own line and leave a blank line before lists.
-- If configuration or a service is unavailable, say what the user or administrator can do next.`;
+- If configuration or a service is unavailable, say what the user or administrator can do next.
+
+Critical approval protocol: when a mutation's inputs are known, your next response must contain the mutation tool call, not a confirmation question. Homarr itself obtains approval after the tool call and before execution.`;
 
 const asRecord = (value: unknown): Record<string, unknown> | null =>
   typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
@@ -355,10 +359,11 @@ export async function POST(request: Request) {
 
   const homarrTools = Object.fromEntries(
     mcpTools.map((mcpTool) => {
+      const requiresApproval = procedureTypes.get(mcpTool.pathInRouter.join(".")) === "mutation";
       return [
         mcpTool.name,
         tool({
-          description: mcpTool.description,
+          description: withAssistantToolPolicy(mcpTool.description, requiresApproval),
           inputSchema: jsonSchema(
             (mcpTool.inputSchema ?? { type: "object", properties: {} }) as Parameters<typeof jsonSchema>[0],
           ),
@@ -413,6 +418,8 @@ export async function POST(request: Request) {
       ];
     }),
   ) satisfies ToolSet;
+  const availableTools = { ...homarrTools, ...frontendTools };
+  const forcedToolName = getForcedAssistantToolName(parsed.data.messages as UIMessage[]);
 
   try {
     const customHeaders = configuration.encryptedHeaders
@@ -443,7 +450,14 @@ export async function POST(request: Request) {
       model: provider(modelId),
       instructions: `${assistantInstructions}${mentionContext}`,
       messages: await convertToModelMessages(prepareMessagesForModel(parsed.data.messages as UIMessage[])),
-      tools: { ...homarrTools, ...frontendTools },
+      tools: availableTools,
+      prepareStep: ({ stepNumber }) => {
+        if (stepNumber !== 0 || forcedToolName === undefined || !(forcedToolName in availableTools)) return undefined;
+        return {
+          activeTools: [forcedToolName],
+          toolChoice: { type: "tool", toolName: forcedToolName },
+        };
+      },
       stopWhen: stepCountIs(8),
       abortSignal: request.signal,
       timeout: { totalMs: 55_000, stepMs: 30_000, toolMs: 30_000 },
