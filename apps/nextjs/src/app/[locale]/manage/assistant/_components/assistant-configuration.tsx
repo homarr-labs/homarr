@@ -1,30 +1,42 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  Accordion,
   ActionIcon,
   Alert,
   Badge,
+  Box,
   Button,
-  Card,
   Divider,
   Group,
   Image,
   LoadingOverlay,
+  Modal,
+  Paper,
   PasswordInput,
   Select,
   SimpleGrid,
+  Skeleton,
   Stack,
+  Stepper,
   Switch,
   Text,
   TextInput,
+  ThemeIcon,
   Tooltip,
 } from "@mantine/core";
 import {
   IconAlertTriangle,
+  IconArrowLeft,
+  IconCheck,
+  IconCircleCheck,
   IconDatabaseSearch,
   IconKey,
+  IconLock,
   IconPlus,
+  IconShieldCheck,
   IconShieldLock,
   IconTool,
   IconTrash,
@@ -42,7 +54,11 @@ import type { AssistantProvider, AssistantProviderCategory } from "@homarr/defin
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import classes from "./assistant-configuration.module.css";
+import { getAssistantConnectionState } from "./assistant-configuration-state";
+
 type HeaderEntry = { id: number; name: string; value: string };
+type CredentialFlow = "idle" | "replace" | "remove";
 
 const ProviderIcon = ({ providerId, size = 20 }: { providerId: AssistantProvider; size?: number }) => {
   const iconUrl = assistantProviderPresets[providerId].iconUrl;
@@ -53,6 +69,64 @@ const ProviderIcon = ({ providerId, size = 20 }: { providerId: AssistantProvider
   );
 };
 
+interface ConfigurationSectionProps {
+  number: number;
+  title: string;
+  description: string;
+  status?: ReactNode;
+  actions?: ReactNode;
+  children: ReactNode;
+}
+
+const ConfigurationSection = ({ number, title, description, status, actions, children }: ConfigurationSectionProps) => (
+  <section className={classes.section}>
+    <Group className={classes.sectionHeader} justify="space-between" align="flex-start">
+      <Group className={classes.sectionHeading} gap="sm" align="flex-start" wrap="nowrap">
+        <Box className={classes.stepNumber} aria-hidden>
+          {number}
+        </Box>
+        <Box>
+          <Text fw={650}>{title}</Text>
+          <Text size="sm" c="dimmed" maw="66ch">
+            {description}
+          </Text>
+        </Box>
+      </Group>
+      {status}
+    </Group>
+    <Stack className={classes.sectionBody} gap="md">
+      {children}
+    </Stack>
+    {actions && <Box className={classes.sectionActions}>{actions}</Box>}
+  </section>
+);
+
+const ConfigurationSkeleton = () => (
+  <Stack className={classes.configuration} gap="md" aria-label="Loading assistant configuration">
+    <Paper withBorder p="md">
+      <Group justify="space-between">
+        <Group>
+          <Skeleton circle h={36} />
+          <Stack gap={5}>
+            <Skeleton h={14} w={180} />
+            <Skeleton h={10} w={280} />
+          </Stack>
+        </Group>
+        <Skeleton h={24} w={110} radius="xl" />
+      </Group>
+    </Paper>
+    {[1, 2, 3].map((number) => (
+      <Paper key={number} withBorder p="md">
+        <Stack gap="sm">
+          <Skeleton h={18} w={220} />
+          <Skeleton h={12} w="65%" />
+          <Skeleton h={42} />
+        </Stack>
+      </Paper>
+    ))}
+  </Stack>
+);
+
 export const AssistantConfiguration = () => {
   const t = useScopedI18n("management.page.settings.section.assistant");
   const utils = clientApi.useUtils();
@@ -61,12 +135,15 @@ export const AssistantConfiguration = () => {
   const [baseUrl, setBaseUrl] = useState<string>(assistantProviderPresets.openrouter.baseUrl);
   const [modelDiscoveryPath, setModelDiscoveryPath] = useState<string>("/models");
   const [apiKey, setApiKey] = useState("");
-  const [clearApiKey, setClearApiKey] = useState(false);
+  const [credentialFlow, setCredentialFlow] = useState<CredentialFlow>("idle");
+  const [credentialStep, setCredentialStep] = useState(0);
   const [headers, setHeaders] = useState<HeaderEntry[]>([]);
   const [clearHeaders, setClearHeaders] = useState(false);
   const [nextHeaderId, setNextHeaderId] = useState(1);
   const [modelId, setModelId] = useState("");
   const [enabled, setEnabled] = useState(false);
+  const [clearCredentialsOpened, setClearCredentialsOpened] = useState(false);
+  const replacementKeyInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setProvider(configuration?.provider ?? "openrouter");
@@ -74,6 +151,9 @@ export const AssistantConfiguration = () => {
     setModelDiscoveryPath(configuration?.modelDiscoveryPath ?? "");
     setModelId(configuration?.modelId ?? "");
     setEnabled(configuration?.enabled ?? false);
+    setApiKey("");
+    setCredentialFlow("idle");
+    setCredentialStep(0);
   }, [configuration]);
 
   const normalizedBaseUrl = baseUrl.trim().replace(/\/$/, "");
@@ -129,20 +209,31 @@ export const AssistantConfiguration = () => {
     }
   }, [modelId, models]);
 
+  useEffect(() => {
+    if (credentialFlow !== "replace" || credentialStep !== 0) return;
+    const animationFrame = requestAnimationFrame(() => replacementKeyInputRef.current?.focus());
+    return () => cancelAnimationFrame(animationFrame);
+  }, [credentialFlow, credentialStep]);
+
   const preset = assistantProviderPresets[provider];
   const headerValuesValid = headers.every((header) => header.name.trim().length > 0 && header.value.length > 0);
-  const hasEffectiveApiKey =
-    apiKey.trim().length > 0 || (!destinationChanged && configuration?.apiKeyConfigured === true && !clearApiKey);
+  const { hasStoredApiKey, connectionPending, connectionReady } = getAssistantConnectionState({
+    connectionConfigured: configuration?.connectionConfigured === true,
+    destinationChanged,
+    providerRequiresApiKey: preset.requiresApiKey,
+    apiKeyConfigured: configuration?.apiKeyConfigured === true,
+  });
+  const hasEffectiveApiKey = apiKey.trim().length > 0 || hasStoredApiKey;
   const connectionValid =
     baseUrl.trim().length > 0 && headerValuesValid && (!preset.requiresApiKey || hasEffectiveApiKey);
-  const connectionPending = configuration?.connectionConfigured !== true || connectionChanged;
   const modelControlsDisabled = connectionPending || isDiscovering;
   const canSaveConfiguration = !modelControlsDisabled && modelId.trim().length > 0;
 
   const updateConnection = clientApi.assistant.updateConnection.useMutation({
     onSuccess: async ({ credentialsClearedForDestinationChange }) => {
       setApiKey("");
-      setClearApiKey(false);
+      setCredentialFlow("idle");
+      setCredentialStep(0);
       setHeaders([]);
       setClearHeaders(false);
       await Promise.all([
@@ -176,6 +267,7 @@ export const AssistantConfiguration = () => {
 
   const clearCredentials = clientApi.assistant.clearCredentials.useMutation({
     onSuccess: async () => {
+      setClearCredentialsOpened(false);
       setApiKey("");
       setHeaders([]);
       setModelId("");
@@ -193,11 +285,16 @@ export const AssistantConfiguration = () => {
     onError: (error) => showErrorNotification({ title: t("notification.error.title"), message: error.message }),
   });
 
-  const pending = isLoading || updateConnection.isPending || saveConfiguration.isPending || clearCredentials.isPending;
+  const pending = updateConnection.isPending || saveConfiguration.isPending || clearCredentials.isPending;
+
+  const resetCredentialFlow = () => {
+    setApiKey("");
+    setCredentialFlow("idle");
+    setCredentialStep(0);
+  };
 
   const clearDraftConnectionState = () => {
-    setApiKey("");
-    setClearApiKey(false);
+    resetCredentialFlow();
     setHeaders([]);
     setClearHeaders(false);
     setModelId("");
@@ -229,13 +326,6 @@ export const AssistantConfiguration = () => {
     setModelDiscoveryPath(value);
   };
 
-  const changeApiKeyRemoval = (remove: boolean) => {
-    if (remove) {
-      setApiKey("");
-    }
-    setClearApiKey(remove);
-  };
-
   const addHeader = () => {
     setHeaders((current) => [...current, { id: nextHeaderId, name: "", value: "" }]);
     setNextHeaderId((current) => current + 1);
@@ -246,14 +336,14 @@ export const AssistantConfiguration = () => {
     setHeaders((current) => current.map((header) => (header.id === id ? { ...header, [field]: value } : header)));
   };
 
-  const saveConnection = () => {
+  const saveConnection = (clearApiKey = false) => {
     const customHeaders =
       headers.length > 0 ? Object.fromEntries(headers.map((header) => [header.name.trim(), header.value])) : undefined;
     updateConnection.mutate({
       provider,
       baseUrl,
       modelDiscoveryPath: modelDiscoveryPath.trim() || null,
-      apiKey: apiKey.trim() || undefined,
+      apiKey: clearApiKey ? undefined : apiKey.trim() || undefined,
       clearApiKey,
       customHeaders,
       clearCustomHeaders: clearHeaders,
@@ -265,27 +355,70 @@ export const AssistantConfiguration = () => {
     saveConfiguration.mutate({ enabled, modelId: modelId.trim() });
   };
 
+  if (isLoading) {
+    return <ConfigurationSkeleton />;
+  }
+
   return (
-    <Stack>
-      <Card pos="relative" withBorder>
-        <LoadingOverlay visible={pending} />
-        <Stack gap="lg">
-          <Alert icon={<IconShieldLock size={18} />} color="blue" title={t("security.title")}>
-            {t("security.description")}
-          </Alert>
-
-          <Group justify="space-between" align="flex-start">
-            <div>
-              <Text fw={600}>{t("connection.title")}</Text>
-              <Text size="sm" c="dimmed">
-                {t("connection.description")}
-              </Text>
-            </div>
-            <Badge variant="light" color={configuration?.connectionConfigured ? "green" : "gray"}>
-              {configuration?.connectionConfigured ? t("connection.saved") : t("connection.notSaved")}
-            </Badge>
+    <>
+      <Stack className={classes.configuration} gap="md">
+        <Paper className={classes.summary} withBorder p="md" radius="md" pos="relative">
+          <LoadingOverlay visible={pending} />
+          <Group justify="space-between" align="center">
+            <Group className={classes.summaryProvider} gap="sm" wrap="nowrap">
+              <ThemeIcon variant="default" size="lg" radius="md">
+                <ProviderIcon providerId={provider} size={22} />
+              </ThemeIcon>
+              <Box className={classes.summaryProviderText}>
+                <Group gap="xs">
+                  <Text fw={650}>{t(`provider.options.${provider}.label`)}</Text>
+                  <Badge
+                    size="sm"
+                    variant="light"
+                    color={connectionReady ? "green" : connectionChanged ? "yellow" : "gray"}
+                  >
+                    {connectionReady
+                      ? t("overview.connectionReady")
+                      : connectionChanged
+                        ? t("overview.unsavedChanges")
+                        : t("overview.setupRequired")}
+                  </Badge>
+                </Group>
+                <Text className={classes.summaryEndpoint} size="sm" c="dimmed" truncate>
+                  {configuration?.modelId ?? t("overview.noModel")} · {normalizedBaseUrl}
+                </Text>
+              </Box>
+            </Group>
+            <Group className={classes.summaryActions} gap="xs">
+              {hasStoredApiKey && (
+                <Badge variant="light" color="teal" leftSection={<IconLock size={12} />}>
+                  {t("overview.keyProtected")}
+                </Badge>
+              )}
+              <Badge variant="filled" color={configuration?.enabled ? "green" : "gray"}>
+                {configuration?.enabled ? t("overview.available") : t("overview.disabled")}
+              </Badge>
+            </Group>
           </Group>
+        </Paper>
 
+        <Group gap="xs" align="flex-start" wrap="nowrap">
+          <IconShieldCheck size={18} color="var(--mantine-color-blue-6)" aria-hidden />
+          <Text className={classes.securityNote} size="sm" c="dimmed">
+            {t("security.description")}
+          </Text>
+        </Group>
+
+        <ConfigurationSection
+          number={1}
+          title={t("connection.endpointTitle")}
+          description={t("connection.description")}
+          status={
+            <Badge variant="light" color={connectionChanged ? "yellow" : "gray"}>
+              {t(`provider.options.${provider}.label`)}
+            </Badge>
+          }
+        >
           <SimpleGrid cols={{ base: 1, sm: 2 }}>
             <Select
               label={t("provider.title")}
@@ -325,218 +458,418 @@ export const AssistantConfiguration = () => {
               {t("destinationChanged.description")}
             </Alert>
           )}
+        </ConfigurationSection>
 
-          <Stack gap="xs">
-            <Group justify="space-between" align="flex-end">
-              <div>
-                <Text fw={600}>{t("apiKey.title")}</Text>
-                <Text size="sm" c="dimmed">
-                  {preset.requiresApiKey ? t("apiKey.required") : t("apiKey.optional")}
-                </Text>
-              </div>
-              {configuration?.apiKeyConfigured && (
-                <Badge variant="light" color={clearApiKey ? "yellow" : "green"}>
-                  {clearApiKey ? t("apiKey.pendingRemoval") : t("apiKey.configuredBadge")}
-                </Badge>
-              )}
-            </Group>
-            <PasswordInput
-              aria-label={t("apiKey.title")}
-              value={apiKey}
-              onChange={(event) => {
-                setApiKey(event.currentTarget.value);
-                setClearApiKey(false);
-              }}
-              leftSection={<IconKey size={16} />}
-              placeholder={
-                configuration?.apiKeyConfigured ? t("apiKey.replacementPlaceholder") : t("apiKey.placeholder")
-              }
-              autoComplete="new-password"
-            />
-            {configuration?.apiKeyConfigured && (
-              <Switch
-                checked={clearApiKey}
-                onChange={(event) => changeApiKeyRemoval(event.currentTarget.checked)}
-                color="red"
-                label={t("apiKey.remove")}
-                description={clearApiKey ? t("apiKey.removalPendingDescription") : t("apiKey.removeDescription")}
-              />
-            )}
-          </Stack>
-
-          <Divider />
-
-          <Stack gap="xs">
-            <Group justify="space-between" align="flex-start">
-              <div>
-                <Text fw={600}>{t("headers.title")}</Text>
-                <Text size="sm" c="dimmed">
-                  {t("headers.description")}
-                </Text>
-              </div>
-              <Button variant="subtle" size="compact-sm" leftSection={<IconPlus size={14} />} onClick={addHeader}>
-                {t("headers.add")}
-              </Button>
-            </Group>
-            {configuration?.customHeadersConfigured && headers.length === 0 && (
-              <Alert color={clearHeaders ? "yellow" : "gray"}>{t("headers.configured")}</Alert>
-            )}
-            {headers.map((header) => (
-              <Group key={header.id} align="flex-end" wrap="wrap">
-                <TextInput
-                  flex={1}
-                  miw="12rem"
-                  label={t("headers.name")}
-                  value={header.name}
-                  onChange={(event) => updateHeader(header.id, "name", event.currentTarget.value)}
-                  placeholder="X-Provider-Header"
-                />
-                <PasswordInput
-                  flex={2}
-                  miw="12rem"
-                  label={t("headers.value")}
-                  value={header.value}
-                  onChange={(event) => updateHeader(header.id, "value", event.currentTarget.value)}
-                  placeholder={t("headers.valuePlaceholder")}
-                  autoComplete="off"
-                />
-                <Tooltip label={t("headers.remove")}>
-                  <ActionIcon
-                    size="lg"
-                    variant="subtle"
-                    color="red"
-                    aria-label={t("headers.remove")}
-                    onClick={() => setHeaders((current) => current.filter((item) => item.id !== header.id))}
-                  >
-                    <IconTrash size={17} />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-            ))}
-            {configuration?.customHeadersConfigured && headers.length === 0 && (
+        <ConfigurationSection
+          number={2}
+          title={t("credentials.title")}
+          description={t("credentials.description")}
+          status={
+            <Badge variant="light" color={hasStoredApiKey ? "green" : preset.requiresApiKey ? "yellow" : "gray"}>
+              {hasStoredApiKey
+                ? t("apiKey.configuredBadge")
+                : preset.requiresApiKey
+                  ? t("credentials.required")
+                  : t("credentials.optional")}
+            </Badge>
+          }
+          actions={
+            <Group justify="space-between">
               <Button
                 variant="subtle"
-                color={clearHeaders ? "gray" : "red"}
-                onClick={() => setClearHeaders(!clearHeaders)}
+                color="red"
+                onClick={() => setClearCredentialsOpened(true)}
+                disabled={!configuration?.apiKeyConfigured && !configuration?.customHeadersConfigured}
               >
-                {clearHeaders ? t("headers.keep") : t("headers.clear")}
-              </Button>
-            )}
-          </Stack>
-
-          <Group justify="space-between">
-            <Button onClick={saveConnection} disabled={!connectionValid}>
-              {t("connection.save")}
-            </Button>
-            {(configuration?.apiKeyConfigured || configuration?.customHeadersConfigured) && (
-              <Button variant="subtle" color="red" onClick={() => clearCredentials.mutate()}>
                 {t("connection.clearCredentials")}
               </Button>
-            )}
-          </Group>
-
-          <Divider />
-
-          <Stack gap="xs">
-            <Group justify="space-between" align="flex-start">
-              <div>
-                <Text fw={600}>{t("model.title")}</Text>
-                <Text size="sm" c="dimmed">
-                  {t("model.description")}
-                </Text>
-              </div>
-              <Button
-                variant="subtle"
-                size="compact-sm"
-                leftSection={<IconDatabaseSearch size={14} />}
-                loading={isDiscovering}
-                disabled={modelControlsDisabled || configuration?.modelDiscoveryPath === null}
-                onClick={() => void discoverModels()}
+              {credentialFlow === "idle" && (
+                <Button
+                  leftSection={<IconCheck size={16} />}
+                  onClick={() => saveConnection()}
+                  disabled={!connectionValid}
+                  loading={updateConnection.isPending}
+                >
+                  {t("connection.save")}
+                </Button>
+              )}
+            </Group>
+          }
+        >
+          {hasStoredApiKey && credentialFlow === "idle" ? (
+            <Group className={classes.credentialSummary} justify="space-between" align="center">
+              <Group className={classes.credentialSummaryContent} gap="sm" wrap="nowrap">
+                <ThemeIcon color="teal" variant="light" radius="xl">
+                  <IconShieldLock size={18} />
+                </ThemeIcon>
+                <Box>
+                  <Text fw={600} size="sm">
+                    {t("apiKey.savedTitle")}
+                  </Text>
+                  <Text size="sm" c="dimmed">
+                    {t("apiKey.savedDescription")}
+                  </Text>
+                </Box>
+              </Group>
+              <Group className={classes.credentialActions} gap="xs">
+                <Button
+                  variant="light"
+                  leftSection={<IconKey size={16} />}
+                  onClick={() => {
+                    setCredentialFlow("replace");
+                    setCredentialStep(0);
+                  }}
+                >
+                  {t("apiKey.replace")}
+                </Button>
+                <Button variant="subtle" color="red" onClick={() => setCredentialFlow("remove")}>
+                  {t("apiKey.remove")}
+                </Button>
+              </Group>
+            </Group>
+          ) : credentialFlow === "replace" ? (
+            <Box className={classes.credentialFlow}>
+              <Stepper
+                className={classes.credentialStepper}
+                active={credentialStep}
+                size="sm"
+                allowNextStepsSelect={false}
               >
-                {t("model.refresh")}
+                <Stepper.Step label={t("apiKey.replaceFlow.enterStep")}>
+                  <Stack gap="md">
+                    <Box>
+                      <Text fw={650}>{t("apiKey.replaceFlow.title")}</Text>
+                      <Text size="sm" c="dimmed">
+                        {t("apiKey.replaceFlow.description")}
+                      </Text>
+                    </Box>
+                    <PasswordInput
+                      label={t("apiKey.replaceFlow.newKey")}
+                      description={t("apiKey.replaceFlow.newKeyDescription")}
+                      value={apiKey}
+                      onChange={(event) => setApiKey(event.currentTarget.value)}
+                      leftSection={<IconKey size={16} />}
+                      placeholder={t("apiKey.replacementPlaceholder")}
+                      autoComplete="new-password"
+                      ref={replacementKeyInputRef}
+                    />
+                    <Box className={classes.flowActions}>
+                      <Button variant="default" onClick={resetCredentialFlow}>
+                        {t("apiKey.replaceFlow.cancel")}
+                      </Button>
+                      <Button
+                        rightSection={<IconCheck size={16} />}
+                        disabled={apiKey.trim().length === 0}
+                        onClick={() => setCredentialStep(1)}
+                      >
+                        {t("apiKey.replaceFlow.review")}
+                      </Button>
+                    </Box>
+                  </Stack>
+                </Stepper.Step>
+                <Stepper.Step label={t("apiKey.replaceFlow.reviewStep")}>
+                  <Stack gap="md">
+                    <Alert
+                      color="yellow"
+                      icon={<IconAlertTriangle size={18} />}
+                      title={t("apiKey.replaceFlow.warningTitle")}
+                    >
+                      {t("apiKey.replaceFlow.warningDescription")}
+                    </Alert>
+                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
+                      <Box>
+                        <Text size="xs" c="dimmed">
+                          {t("apiKey.replaceFlow.provider")}
+                        </Text>
+                        <Text size="sm" fw={600}>
+                          {t(`provider.options.${provider}.label`)}
+                        </Text>
+                      </Box>
+                      <Box>
+                        <Text size="xs" c="dimmed">
+                          {t("apiKey.replaceFlow.endpoint")}
+                        </Text>
+                        <Text size="sm" fw={600} truncate>
+                          {normalizedBaseUrl}
+                        </Text>
+                      </Box>
+                    </SimpleGrid>
+                    <Box className={classes.flowActions}>
+                      <Button
+                        variant="default"
+                        leftSection={<IconArrowLeft size={16} />}
+                        onClick={() => setCredentialStep(0)}
+                      >
+                        {t("apiKey.replaceFlow.back")}
+                      </Button>
+                      <Button
+                        color="yellow"
+                        variant="filled"
+                        leftSection={<IconKey size={16} />}
+                        onClick={() => saveConnection()}
+                        disabled={!connectionValid}
+                        loading={updateConnection.isPending}
+                      >
+                        {t("apiKey.replaceFlow.confirm")}
+                      </Button>
+                    </Box>
+                  </Stack>
+                </Stepper.Step>
+              </Stepper>
+            </Box>
+          ) : credentialFlow === "remove" ? (
+            <Alert color="red" icon={<IconAlertTriangle size={18} />} title={t("apiKey.removeFlow.title")}>
+              <Stack gap="md">
+                <Text size="sm">
+                  {preset.requiresApiKey
+                    ? t("apiKey.removeFlow.description")
+                    : t("apiKey.removeFlow.optionalDescription")}
+                </Text>
+                <Box className={classes.flowActions}>
+                  <Button variant="default" onClick={resetCredentialFlow}>
+                    {t("apiKey.removeFlow.cancel")}
+                  </Button>
+                  <Button color="red" loading={updateConnection.isPending} onClick={() => saveConnection(true)}>
+                    {t("apiKey.removeFlow.confirm")}
+                  </Button>
+                </Box>
+              </Stack>
+            </Alert>
+          ) : (
+            <PasswordInput
+              label={t("apiKey.title")}
+              description={preset.requiresApiKey ? t("apiKey.required") : t("apiKey.optional")}
+              value={apiKey}
+              onChange={(event) => setApiKey(event.currentTarget.value)}
+              leftSection={<IconKey size={16} />}
+              placeholder={t("apiKey.placeholder")}
+              autoComplete="new-password"
+            />
+          )}
+
+          <Accordion variant="contained" radius="md">
+            <Accordion.Item value="headers">
+              <Accordion.Control className={classes.advancedControl} icon={<IconShieldLock size={18} />}>
+                <Group justify="space-between" wrap="nowrap">
+                  <Box>
+                    <Text size="sm" fw={600}>
+                      {t("headers.title")}
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      {t("headers.description")}
+                    </Text>
+                  </Box>
+                  {configuration?.customHeadersConfigured && (
+                    <Badge variant="light" color={clearHeaders ? "yellow" : "green"}>
+                      {clearHeaders ? t("headers.pendingRemoval") : t("headers.savedBadge")}
+                    </Badge>
+                  )}
+                </Group>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Stack gap="sm">
+                  <Group justify="space-between" align="center">
+                    <Text size="sm" c="dimmed">
+                      {configuration?.customHeadersConfigured ? t("headers.configured") : t("headers.empty")}
+                    </Text>
+                    <Button variant="light" size="compact-sm" leftSection={<IconPlus size={14} />} onClick={addHeader}>
+                      {t("headers.add")}
+                    </Button>
+                  </Group>
+                  {headers.map((header) => (
+                    <Group key={header.id} align="flex-end" wrap="wrap">
+                      <TextInput
+                        flex={1}
+                        miw="12rem"
+                        label={t("headers.name")}
+                        value={header.name}
+                        onChange={(event) => updateHeader(header.id, "name", event.currentTarget.value)}
+                        placeholder="X-Provider-Header"
+                      />
+                      <PasswordInput
+                        flex={2}
+                        miw="12rem"
+                        label={t("headers.value")}
+                        value={header.value}
+                        onChange={(event) => updateHeader(header.id, "value", event.currentTarget.value)}
+                        placeholder={t("headers.valuePlaceholder")}
+                        autoComplete="off"
+                      />
+                      <Tooltip label={t("headers.remove")}>
+                        <ActionIcon
+                          size="lg"
+                          variant="subtle"
+                          color="red"
+                          aria-label={t("headers.remove")}
+                          onClick={() => setHeaders((current) => current.filter((item) => item.id !== header.id))}
+                        >
+                          <IconTrash size={17} />
+                        </ActionIcon>
+                      </Tooltip>
+                    </Group>
+                  ))}
+                  {configuration?.customHeadersConfigured && headers.length === 0 && (
+                    <Button
+                      variant="light"
+                      color={clearHeaders ? "gray" : "red"}
+                      onClick={() => setClearHeaders(!clearHeaders)}
+                    >
+                      {clearHeaders ? t("headers.keep") : t("headers.clear")}
+                    </Button>
+                  )}
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+        </ConfigurationSection>
+
+        <ConfigurationSection
+          number={3}
+          title={t("model.title")}
+          description={t("model.description")}
+          status={
+            configuration?.modelId ? (
+              <Badge variant="light" color={configuration.enabled ? "green" : "gray"}>
+                {configuration.enabled ? t("overview.available") : t("overview.disabled")}
+              </Badge>
+            ) : (
+              <Badge variant="light" color="gray">
+                {t("overview.noModel")}
+              </Badge>
+            )
+          }
+          actions={
+            <Group justify="flex-end">
+              <Button
+                leftSection={<IconCircleCheck size={16} />}
+                onClick={saveAssistantConfiguration}
+                disabled={!canSaveConfiguration}
+                loading={saveConfiguration.isPending}
+              >
+                {t("save")}
               </Button>
             </Group>
-            {hasDiscoveredModels ? (
-              <Select
-                aria-label={t("model.title")}
-                value={modelId || null}
-                onChange={(value) => setModelId(value ?? "")}
-                data={modelControlsDisabled ? [] : modelOptions}
-                disabled={modelControlsDisabled}
-                placeholder={t("model.placeholder")}
-                description={t("model.discovered", { count: models?.length ?? 0 })}
-                searchable
-                allowDeselect={false}
-                limit={100}
-              />
-            ) : (
-              <TextInput
-                aria-label={t("model.title")}
-                value={modelId}
-                onChange={(event) => setModelId(event.currentTarget.value)}
-                disabled={modelControlsDisabled}
-                placeholder={t("model.placeholder")}
-                description={
-                  connectionPending
-                    ? t("model.saveConnectionFirst")
-                    : isDiscovering
-                      ? t("model.discovering")
-                      : discoveryError || models?.length === 0
-                        ? t("model.manualFallback")
-                        : t("model.manual")
-                }
-              />
-            )}
-            {discoveryError && !connectionPending && (
-              <Alert color="yellow" icon={<IconAlertTriangle size={18} />} title={t("model.discoveryFailed")}>
-                {discoveryError.message}
-              </Alert>
-            )}
-            {selectedModel && (
-              <Card withBorder padding="sm" radius="md">
-                <Group justify="space-between" align="flex-start" wrap="nowrap">
-                  <div>
-                    <Text fw={600}>{selectedModel.name}</Text>
-                    {selectedModel.description && (
-                      <Text size="sm" c="dimmed" lineClamp={2}>
-                        {selectedModel.description}
-                      </Text>
-                    )}
-                  </div>
-                  <Group gap="xs" justify="flex-end">
-                    {selectedModel.contextLength && (
-                      <Badge variant="light">
-                        {t("model.context", { count: selectedModel.contextLength.toLocaleString() })}
-                      </Badge>
-                    )}
-                    <Badge
-                      variant="light"
-                      color={selectedModel.toolSupport === "confirmed" ? "green" : "gray"}
-                      leftSection={<IconTool size={12} />}
-                    >
-                      {selectedModel.toolSupport === "confirmed" ? t("model.toolsConfirmed") : t("model.toolsUnknown")}
-                    </Badge>
-                  </Group>
-                </Group>
-              </Card>
-            )}
-          </Stack>
+          }
+        >
+          <Group justify="space-between" align="center">
+            <Text size="sm" c="dimmed">
+              {connectionPending ? t("model.saveConnectionFirst") : t("model.chooseModel")}
+            </Text>
+            <Button
+              variant="light"
+              size="compact-sm"
+              leftSection={<IconDatabaseSearch size={14} />}
+              loading={isDiscovering}
+              disabled={modelControlsDisabled || configuration?.modelDiscoveryPath === null}
+              onClick={() => void discoverModels()}
+            >
+              {t("model.refresh")}
+            </Button>
+          </Group>
+          {hasDiscoveredModels ? (
+            <Select
+              label={t("model.title")}
+              value={modelId || null}
+              onChange={(value) => setModelId(value ?? "")}
+              data={modelControlsDisabled ? [] : modelOptions}
+              disabled={modelControlsDisabled}
+              placeholder={t("model.placeholder")}
+              description={t("model.discovered", { count: models?.length ?? 0 })}
+              searchable
+              allowDeselect={false}
+              limit={100}
+            />
+          ) : (
+            <TextInput
+              label={t("model.title")}
+              value={modelId}
+              onChange={(event) => setModelId(event.currentTarget.value)}
+              disabled={modelControlsDisabled}
+              placeholder={t("model.placeholder")}
+              description={
+                connectionPending
+                  ? t("model.saveConnectionFirst")
+                  : isDiscovering
+                    ? t("model.discovering")
+                    : discoveryError || models?.length === 0
+                      ? t("model.manualFallback")
+                      : t("model.manual")
+              }
+            />
+          )}
+          {discoveryError && !connectionPending && (
+            <Alert color="yellow" icon={<IconAlertTriangle size={18} />} title={t("model.discoveryFailed")}>
+              {discoveryError.message}
+            </Alert>
+          )}
+          {selectedModel && (
+            <Group className={classes.selectedModel} justify="space-between" align="flex-start" wrap="nowrap">
+              <Box className={classes.selectedModelText}>
+                <Text fw={600}>{selectedModel.name}</Text>
+                {selectedModel.description && (
+                  <Text size="sm" c="dimmed" lineClamp={2}>
+                    {selectedModel.description}
+                  </Text>
+                )}
+              </Box>
+              <Group className={classes.selectedModelBadges} gap="xs" justify="flex-end">
+                {selectedModel.contextLength && (
+                  <Badge variant="light">
+                    {t("model.context", { count: selectedModel.contextLength.toLocaleString() })}
+                  </Badge>
+                )}
+                <Badge
+                  variant="light"
+                  color={selectedModel.toolSupport === "confirmed" ? "green" : "gray"}
+                  leftSection={<IconTool size={12} />}
+                >
+                  {selectedModel.toolSupport === "confirmed" ? t("model.toolsConfirmed") : t("model.toolsUnknown")}
+                </Badge>
+              </Group>
+            </Group>
+          )}
 
-          <Switch
-            checked={enabled}
-            onChange={(event) => setEnabled(event.currentTarget.checked)}
-            disabled={!canSaveConfiguration}
-            label={t("enabled.label")}
-            description={t("enabled.description")}
-          />
+          <Group className={classes.enableRow} justify="space-between" align="center" wrap="nowrap">
+            <Box>
+              <Text size="sm" fw={600}>
+                {t("enabled.label")}
+              </Text>
+              <Text size="sm" c="dimmed">
+                {t("enabled.description")}
+              </Text>
+            </Box>
+            <Switch
+              checked={enabled}
+              onChange={(event) => setEnabled(event.currentTarget.checked)}
+              disabled={!canSaveConfiguration}
+              aria-label={t("enabled.label")}
+              size="md"
+            />
+          </Group>
+        </ConfigurationSection>
+      </Stack>
 
+      <Modal
+        opened={clearCredentialsOpened}
+        onClose={() => setClearCredentialsOpened(false)}
+        title={t("clearCredentials.title")}
+        centered
+      >
+        <Stack>
+          <Alert color="red" icon={<IconAlertTriangle size={18} />} title={t("clearCredentials.warningTitle")}>
+            {t("clearCredentials.description")}
+          </Alert>
+          <Divider />
           <Group justify="flex-end">
-            <Button onClick={saveAssistantConfiguration} disabled={!canSaveConfiguration}>
-              {t("save")}
+            <Button variant="default" onClick={() => setClearCredentialsOpened(false)}>
+              {t("clearCredentials.cancel")}
+            </Button>
+            <Button color="red" loading={clearCredentials.isPending} onClick={() => clearCredentials.mutate()}>
+              {t("clearCredentials.confirm")}
             </Button>
           </Group>
         </Stack>
-      </Card>
-    </Stack>
+      </Modal>
+    </>
   );
 };
