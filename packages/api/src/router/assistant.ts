@@ -407,16 +407,6 @@ export const assistantRouter = createTRPCRouter({
         .where(eq(assistantThreads.id, input.threadId));
     }),
 
-  setThreadStatus: protectedProcedure
-    .input(z.object({ threadId: z.string().max(64), status: z.enum(["regular", "archived"]) }))
-    .mutation(async ({ ctx, input }) => {
-      await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
-      await ctx.db
-        .update(assistantThreads)
-        .set({ status: input.status, updatedAt: new Date() })
-        .where(eq(assistantThreads.id, input.threadId));
-    }),
-
   deleteThread: protectedProcedure
     .input(z.object({ threadId: z.string().max(64) }))
     .mutation(async ({ ctx, input }) => {

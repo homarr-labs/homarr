@@ -1981,11 +1981,7 @@
         "signIn": "Sign in to use Homarr Assistant."
       },
       "newConversation": "New conversation",
-      "archivedConversation": "Archived conversation",
       "conversations": "Conversations",
-      "archived": "Archived",
-      "archive": "Archive",
-      "restore": "Restore",
       "delete": "Delete",
       "closeHistory": "Close conversation history",
       "openHistory": "Open conversation history",
