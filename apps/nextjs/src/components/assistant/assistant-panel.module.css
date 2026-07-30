@@ -405,14 +405,12 @@
   border-inline-start: 2px solid var(--mantine-color-default-border);
 }
 
-.reasoning summary,
-.telemetry summary {
+.reasoning summary {
   cursor: pointer;
   list-style: none;
 }
 
-.reasoning summary::-webkit-details-marker,
-.telemetry summary::-webkit-details-marker {
+.reasoning summary::-webkit-details-marker {
   display: none;
 }
 
@@ -507,15 +505,72 @@
 }
 
 .telemetry {
-  margin-top: 0.65rem;
-  padding: 0.5rem 0.6rem;
-  border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-md);
-  background: color-mix(in srgb, var(--mantine-color-default) 60%, transparent);
+  margin-top: 0.45rem;
+  padding-inline: 0.15rem;
 }
 
-.telemetrySummary {
-  user-select: none;
+.telemetryFacts {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.modelBadge {
+  max-width: min(100%, 14rem);
+}
+
+.contextMeter {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--mantine-color-text);
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.contextMeter:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.contextMeter:active {
+  transform: scale(0.96);
+}
+
+.contextMeter:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.contextMeterLabel {
+  font-size: 0.55rem;
+  line-height: 1;
+}
+
+.telemetryPopover {
+  max-height: min(32rem, calc(100dvh - 2rem));
+  overflow-y: auto;
+}
+
+.contextStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.contextStats > div {
+  min-width: 0;
+  padding: 0.45rem 0.5rem;
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.contextStats :global(.mantine-Text-root) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .usageGrid {
@@ -813,8 +868,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .activityBar,
-  .floatingPanel {
+  .floatingPanel,
+  .contextMeter {
     animation: none;
+    transition: none;
   }
 
   .viewport {

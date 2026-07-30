@@ -13,8 +13,6 @@ import type {
 } from "@assistant-ui/react";
 import {
   AssistantRuntimeProvider,
-  WebSpeechDictationAdapter,
-  WebSpeechSynthesisAdapter,
   defineToolkit,
   Tools,
   useAui,
@@ -278,11 +276,6 @@ const AssistantThreadRuntime = () => {
     () => createAssistantAttachmentAdapter(modelCapabilities?.imageInput !== "unsupported"),
     [modelCapabilities?.imageInput],
   );
-  const speech = useMemo(() => new WebSpeechSynthesisAdapter(), []);
-  const dictation = useMemo(
-    () => (WebSpeechDictationAdapter.isSupported() ? new WebSpeechDictationAdapter() : undefined),
-    [],
-  );
   const feedback = useMemo(
     () => ({
       submit: ({ message, type }: { message: ThreadMessage; type: "positive" | "negative" }) => {
@@ -311,8 +304,6 @@ const AssistantThreadRuntime = () => {
     adapters: {
       history,
       attachments,
-      speech,
-      ...(dictation ? { dictation } : {}),
       feedback,
     },
   });
