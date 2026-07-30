@@ -72,9 +72,14 @@ export const AssistantConfiguration = () => {
     setEnabled(configuration?.enabled ?? false);
   }, [configuration]);
 
+  const normalizedBaseUrl = baseUrl.trim().replace(/\/$/, "");
+  const normalizedModelDiscoveryPath = modelDiscoveryPath.trim() || null;
   const destinationChanged =
     configuration?.connectionConfigured === true &&
-    (configuration.provider !== provider || configuration.baseUrl !== baseUrl.trim().replace(/\/$/, ""));
+    (configuration.provider !== provider || configuration.baseUrl !== normalizedBaseUrl);
+  const connectionChanged =
+    configuration?.connectionConfigured === true &&
+    (destinationChanged || configuration.modelDiscoveryPath !== normalizedModelDiscoveryPath);
 
   const {
     data: models,
@@ -83,7 +88,7 @@ export const AssistantConfiguration = () => {
     refetch: discoverModels,
   } = clientApi.assistant.discoverModels.useQuery(undefined, {
     enabled:
-      configuration?.connectionConfigured === true && configuration.modelDiscoveryPath !== null && !destinationChanged,
+      configuration?.connectionConfigured === true && configuration.modelDiscoveryPath !== null && !connectionChanged,
     staleTime: 5 * 60_000,
     retry: false,
   });
@@ -109,7 +114,7 @@ export const AssistantConfiguration = () => {
       })),
     [t],
   );
-  const selectedModel = destinationChanged ? undefined : models?.find((model) => model.id === modelId);
+  const selectedModel = connectionChanged ? undefined : models?.find((model) => model.id === modelId);
 
   const preset = assistantProviderPresets[provider];
   const headerValuesValid = headers.every((header) => header.name.trim().length > 0 && header.value.length > 0);
@@ -117,7 +122,8 @@ export const AssistantConfiguration = () => {
     apiKey.trim().length > 0 || (!destinationChanged && configuration?.apiKeyConfigured === true && !clearApiKey);
   const connectionValid =
     baseUrl.trim().length > 0 && headerValuesValid && (!preset.requiresApiKey || hasEffectiveApiKey);
-  const modelControlsDisabled = configuration?.connectionConfigured !== true || destinationChanged;
+  const connectionPending = configuration?.connectionConfigured !== true || connectionChanged;
+  const modelControlsDisabled = connectionPending || isDiscovering;
   const canSaveConfiguration = !modelControlsDisabled && modelId.trim().length > 0;
 
   const updateConnection = clientApi.assistant.updateConnection.useMutation({
@@ -202,6 +208,14 @@ export const AssistantConfiguration = () => {
     setBaseUrl(value);
   };
 
+  const changeModelDiscoveryPath = (value: string) => {
+    if (value !== modelDiscoveryPath) {
+      setModelId("");
+      setEnabled(false);
+    }
+    setModelDiscoveryPath(value);
+  };
+
   const addHeader = () => {
     setHeaders((current) => [...current, { id: nextHeaderId, name: "", value: "" }]);
     setNextHeaderId((current) => current + 1);
@@ -282,7 +296,7 @@ export const AssistantConfiguration = () => {
             label={t("model.discoveryPath")}
             description={t("model.discoveryPathDescription")}
             value={modelDiscoveryPath}
-            onChange={(event) => setModelDiscoveryPath(event.currentTarget.value)}
+            onChange={(event) => changeModelDiscoveryPath(event.currentTarget.value)}
             placeholder="/models"
           />
 
@@ -428,17 +442,19 @@ export const AssistantConfiguration = () => {
               disabled={modelControlsDisabled}
               placeholder={t("model.placeholder")}
               description={
-                modelControlsDisabled
+                connectionPending
                   ? t("model.saveConnectionFirst")
-                  : discoveryError
-                    ? t("model.manualFallback")
-                    : models
-                      ? t("model.discovered", { count: models.length })
-                      : t("model.manual")
+                  : isDiscovering
+                    ? t("model.discovering")
+                    : discoveryError
+                      ? t("model.manualFallback")
+                      : models
+                        ? t("model.discovered", { count: models.length })
+                        : t("model.manual")
               }
               limit={100}
             />
-            {discoveryError && !modelControlsDisabled && (
+            {discoveryError && !connectionPending && (
               <Alert color="yellow" icon={<IconAlertTriangle size={18} />} title={t("model.discoveryFailed")}>
                 {discoveryError.message}
               </Alert>
