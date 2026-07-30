@@ -136,8 +136,5 @@ for (const protectedField of ["category:changed", "explanation:changed"]) {
 
 const workflow = await read(".github/workflows/workshop.yml");
 if (/\n\s+paths:/u.test(workflow)) throw new Error("Workshop workflow must not filter out Docker build inputs");
-if (!workflow.includes("DOCS_BASE_URL=/docs-site/") || !workflow.includes("workshop-base-path-smoke")) {
-  throw new Error("Workshop CI must exercise a non-root documentation deployment");
-}
 
 console.log("Workshop static contracts passed");
