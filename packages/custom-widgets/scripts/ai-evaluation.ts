@@ -212,15 +212,21 @@ export function getScenarioAcceptanceIssues(
   const requestIdsByLabel = new Map([...candidateMatches].map(([label, [requestId]]) => [label, requestId] as const));
   for (const rule of testCase.acceptance.requestRules) {
     const match = candidateMatches.get(rule.label);
-    const invalidatedRequestId = rule.invalidatesRequest ? requestIdsByLabel.get(rule.invalidatesRequest) : undefined;
-    if (
-      !match ||
-      (rule.invalidatesRequest && (!invalidatedRequestId || !match[1].invalidates?.includes(invalidatedRequestId)))
-    ) {
+    if (!match) {
       issues.push({
         path: ["requests"],
         message: `Missing grounded ${rule.label} request (${rule.pathIncludes}).`,
       });
+      continue;
+    }
+    if (rule.invalidatesRequest) {
+      const invalidatedRequestId = requestIdsByLabel.get(rule.invalidatesRequest);
+      if (!invalidatedRequestId || !match[1].invalidates?.includes(invalidatedRequestId)) {
+        issues.push({
+          path: ["requests"],
+          message: `The ${rule.label} request must invalidate the ${rule.invalidatesRequest} request.`,
+        });
+      }
     }
   }
 

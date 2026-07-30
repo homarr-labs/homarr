@@ -141,7 +141,7 @@ describe("AI authoring evaluation", () => {
       },
     });
     expect(getScenarioAcceptanceIssues(testCase, wrongInvalidation).map(({ message }) => message)).toContain(
-      "Missing grounded start action request (/start).",
+      "The start action request must invalidate the container list request.",
     );
   });
 
