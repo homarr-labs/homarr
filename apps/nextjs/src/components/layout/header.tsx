@@ -5,7 +5,6 @@ import { Spotlight } from "@homarr/spotlight";
 import { Link } from "@homarr/ui";
 
 import { ClientBurger } from "./header/burger";
-import { AssistantHeaderButton } from "../assistant/assistant-trigger";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";
 import { TourTarget } from "./header/tour-target";
 import { UserButton } from "./header/user";
@@ -32,7 +31,6 @@ export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
         </TourTarget>
         <Group h="100%" align="center" justify="end" style={{ flex: 1 }} wrap="nowrap">
           {actions}
-          <AssistantHeaderButton />
           <MobileSearchButton />
           <TourTarget id="board-user-menu">
             <UserButton />
