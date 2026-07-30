@@ -739,7 +739,7 @@
         "invalidDefinitionDescription": "This stored widget no longer matches the current Custom Widget schema. Delete it and recreate or import a valid definition.",
         "migrationRequired": "Migration required",
         "migrationDescription": "This v1 custom widget is preserved but cannot run until it is migrated to Custom JSX v2.",
-        "migrationInstructions": "Open Actions, copy the redacted migration prompt into an LLM, then import the v2 JSON it produces. Existing board placements keep working after migration.",
+        "migrationInstructions": "Open Actions, copy the redacted migration prompt into an LLM, then copy its single JSON response and choose Paste migrated widget. Existing board placements keep working after migration.",
         "missingCredentials": "{count, plural, one {Credential missing} other {# credentials missing}}",
         "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Edit it to configure the encrypted values."
       },
@@ -769,7 +769,8 @@
       "publishWorkshop": "Publish to Workshop",
       "migrate": "Migrate Custom Widget",
       "copyMigrationPrompt": "Copy LLM migration prompt",
-      "importMigration": "Import migrated v2 JSON"
+      "pasteMigration": "Paste migrated widget",
+      "importMigration": "Import migrated JSON file"
     },
     "field": {
       "name": "Name",
@@ -976,6 +977,7 @@
       },
       "ai": {
         "title": "Create or fix with any AI",
+        "description": "Copy one prompt, then paste the AI's single JSON block. Homarr loads its JSX into the editor automatically.",
         "request": "What should this widget do?",
         "documentationUrl": "API documentation URL (optional)",
         "paste": "Paste AI response",
@@ -1076,7 +1078,7 @@
       "imported": "Widget imported successfully.",
       "migrated": "Legacy widget migrated successfully. Existing board placements now use the v2 definition.",
       "migrationError": "Failed to migrate the legacy widget. Ensure the file uses the homarr-custom-widget-v2 schema.",
-      "migrationPromptCopied": "A redacted migration prompt was copied. Paste it into an LLM, save the returned v2 JSON, then import it here.",
+      "migrationPromptCopied": "A redacted migration prompt was copied. Paste it into an LLM, copy its single JSON response, then choose Paste migrated widget here.",
       "migrationPromptCopyError": "Failed to copy the migration prompt.",
       "aiPromptCopied": "AI prompt copied to clipboard",
       "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
@@ -1151,7 +1153,9 @@
     "sort": "Sort",
     "sortTop": "Top rated",
     "sortNewest": "Newest",
-    "unavailable": "Workshop is unavailable. Your installed widgets are unaffected.",
+    "unavailableTitle": "Homarr Workshop seems to be unavailable",
+    "unavailable": "The community service may be temporarily down. Try again in a moment. Your installed widgets are unaffected.",
+    "retry": "Try again",
     "empty": "No widgets match this search.",
     "emptyCss": "No CSS themes match this search.",
     "noDescription": "No description",
@@ -4199,7 +4203,7 @@
         "sources": "{count, plural, one {# source} other {# sources}}",
         "requests": "{count, plural, one {# request} other {# requests}}",
         "migrationRequired": "Migration required",
-        "migrationDescription": "This placed v1 widget cannot run yet. Copy its redacted prompt to an LLM and import the returned v2 JSON.",
+        "migrationDescription": "This placed v1 widget cannot run yet. Copy its redacted prompt to an LLM, then paste the single JSON response into Homarr.",
         "manageMigration": "Open Manage custom widgets",
         "contactAdmin": "Contact an administrator."
       },

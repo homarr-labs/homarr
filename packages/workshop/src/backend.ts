@@ -257,6 +257,13 @@ function workshopError(error: unknown, fallback: string) {
     /invalid|missing|not found|failed/iu.test(rawMessage)
   )
     return new Error("GitHub sign-in is not configured correctly on the Workshop server.", { cause: error });
+  if (
+    (error instanceof ClientResponseError && error.status === 0) ||
+    /networkerror|failed to fetch|fetch failed|load failed|connection (?:refused|reset)|econn(?:refused|reset)|offline/iu.test(
+      rawMessage,
+    )
+  )
+    return new Error("Homarr Workshop seems to be unavailable right now. Try again in a moment.", { cause: error });
   if (error instanceof ClientResponseError) {
     const sdkMessage = error.data?.message || error.message;
     const originalMessage =

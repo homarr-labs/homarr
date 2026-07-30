@@ -6,9 +6,10 @@ The definition does not exist. If it was deleted, remove the unavailable tile fr
 
 If the Custom Widgets page shows the definition with a **Migration required** badge, an administrator can open its
 action menu and select **Copy migration prompt**. Give that redacted prompt to an LLM, then import the resulting v2 JSON
-from the same menu. Because arbitrary v1 display text or JSX may contain credentials, the prompt omits that display
-configuration; describe the old widget's visible layout and behavior without including secrets. Other viewers see
-**Contact an administrator** instead of a migration link.
+from the same menu. The LLM returns one complete JSON block; copy it once and select **Paste migrated widget**. Homarr
+places its `template` value into the JSX editor automatically. Because arbitrary v1 display text or JSX may contain
+credentials, the prompt omits that display configuration; describe the old widget's visible layout and behavior without
+including secrets. Other viewers see **Contact an administrator** instead of a migration link.
 
 Homarr keeps the v1 definition and encrypted secret after migration. The validated v2 replacement uses the same ID and
 takes precedence; the archived v1 record reappears if the v2 replacement is deleted. There is no v1 permanent-delete

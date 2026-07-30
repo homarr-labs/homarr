@@ -13,15 +13,12 @@ describe("reference widget capabilities", () => {
     expect(parsed.requests.detail?.trigger).toBe("manual");
   });
 
-  it("round-trips the full Pokédex through the exact two-block AI paste format", () => {
+  it("round-trips the full Pokédex through the single-block AI paste format", () => {
     const pokedex = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-pokedex")?.widget;
     if (!pokedex) throw new Error("Pokédex seed was not found");
-    const { template, ...manifest } = pokedex;
-    const parsed = parseCustomWidgetAiResponse(
-      `\`\`\`json\n${JSON.stringify({ ...manifest, template: "__HOMARR_TEMPLATE__" }, null, 2)}\n\`\`\`\n\n\`\`\`jsx\n${template}\n\`\`\``,
-    );
+    const parsed = parseCustomWidgetAiResponse(`\`\`\`json\n${JSON.stringify(pokedex, null, 2)}\n\`\`\``);
     expect(parsed.success).toBe(true);
-    if (parsed.success) expect(parsed.widget.template).toBe(template);
+    if (parsed.success) expect(parsed.widget.template).toBe(pokedex.template);
   });
 
   it("validates a polished Portainer dashboard with start, stop, and restart actions", () => {
@@ -38,10 +35,10 @@ describe("reference widget capabilities", () => {
   });
 
   it("round-trips the Portainer dashboard through AI paste", () => {
-    const { template, ...manifest } = PORTAINER_REFERENCE_WIDGET;
     const parsed = parseCustomWidgetAiResponse(
-      `\`\`\`json\n${JSON.stringify({ ...manifest, template: "__HOMARR_TEMPLATE__" }, null, 2)}\n\`\`\`\n\n\`\`\`jsx\n${template}\n\`\`\``,
+      `\`\`\`json\n${JSON.stringify(PORTAINER_REFERENCE_WIDGET, null, 2)}\n\`\`\``,
     );
     expect(parsed.success).toBe(true);
+    if (parsed.success) expect(parsed.widget.template).toBe(PORTAINER_REFERENCE_WIDGET.template);
   });
 });

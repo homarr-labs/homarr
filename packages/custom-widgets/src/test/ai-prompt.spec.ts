@@ -18,7 +18,9 @@ describe("AI prompt", () => {
     expect(prompt).toContain("Example — Service dashboard");
     expect(prompt).toContain("Example — Search and action");
     expect(prompt).toContain("visual hierarchy");
-    expect(prompt).toContain('template set exactly to "__HOMARR_TEMPLATE__"');
+    expect(prompt).toContain("Put the complete JSX directly in its template string");
+    expect(prompt).toContain("copy one code block and paste it into Homarr once");
+    expect(prompt).not.toContain("fenced block followed by");
     expect(prompt).toContain('trigger="manual"');
     expect(prompt).toContain("never write `=> {` anywhere");
     expect(prompt).toContain('"choicesFrom"');

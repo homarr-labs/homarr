@@ -7,12 +7,11 @@ import {
   parseCustomWidgetClipboardDetailed,
 } from "../core";
 
-const response = (manifest: unknown, jsx = "<Text>Ready</Text>") =>
-  `\`\`\`json\n${JSON.stringify(manifest, null, 2)}\n\`\`\`\n\`\`\`jsx\n${jsx}\n\`\`\``;
+const response = (manifest: unknown) => `\`\`\`json\n${JSON.stringify(manifest, null, 2)}\n\`\`\``;
 
 describe("Custom Widget imports", () => {
-  it("accepts exactly one lean manifest and JSX block", () => {
-    const result = parseCustomWidgetAiResponse(response({ ...CUSTOM_WIDGET_STARTER, template: "__HOMARR_TEMPLATE__" }));
+  it("accepts one complete JSON block and loads its template", () => {
+    const result = parseCustomWidgetAiResponse(response({ ...CUSTOM_WIDGET_STARTER, template: "<Text>Ready</Text>" }));
     expect(result.success).toBe(true);
     if (result.success) expect(result.widget.template).toBe("<Text>Ready</Text>");
   });
@@ -25,7 +24,7 @@ describe("Custom Widget imports", () => {
         requests: [],
         optionsSchema: {},
         defaultOptions: {},
-        template: "__HOMARR_TEMPLATE__",
+        template: "<Text>Ready</Text>",
       }),
     );
     expect(result.success).toBe(false);
@@ -34,10 +33,18 @@ describe("Custom Widget imports", () => {
   it("reports missing fences and removed local state", () => {
     expect(parseCustomWidgetAiResponse(JSON.stringify(CUSTOM_WIDGET_STARTER)).success).toBe(false);
     const result = parseCustomWidgetAiResponse(
-      response({ ...CUSTOM_WIDGET_STARTER, stateSchema: {}, template: "__HOMARR_TEMPLATE__" }),
+      response({ ...CUSTOM_WIDGET_STARTER, stateSchema: {}, template: "<Text>Ready</Text>" }),
     );
     expect(result.success).toBe(false);
     if (!result.success) expect(result.issues.some(({ code }) => code === "REMOVED_LOCAL_STATE")).toBe(true);
+  });
+
+  it("rejects additional code blocks", () => {
+    const result = parseCustomWidgetAiResponse(
+      `${response({ ...CUSTOM_WIDGET_STARTER, template: "<Text>Ready</Text>" })}\n\`\`\`jsx\n<Text>Old format</Text>\n\`\`\``,
+    );
+    expect(result.success).toBe(false);
+    if (!result.success) expect(result.issues.some(({ code }) => code === "AI_SINGLE_JSON_BLOCK_REQUIRED")).toBe(true);
   });
 
   it("returns a capability review from keyed records", () => {

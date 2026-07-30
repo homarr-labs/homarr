@@ -5,6 +5,7 @@ import { ActionIcon, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconBuildingStore,
+  IconClipboard,
   IconCopy,
   IconDots,
   IconDownload,
@@ -63,22 +64,37 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
     }
   };
 
+  const queueMigratedWidget = (text: string) => {
+    const result = parseCustomWidgetClipboardDetailed(text);
+    if (!result.success) {
+      showErrorNotification({
+        title: t("action.migrate"),
+        message: formatCustomWidgetImportIssues(result.issues),
+      });
+      return;
+    }
+    setMigratedWidget(result.widget);
+    migrationControls.open();
+  };
+
+  const pasteMigratedWidget = async () => {
+    try {
+      queueMigratedWidget(await navigator.clipboard.readText());
+    } catch {
+      showErrorNotification({
+        title: t("action.migrate"),
+        message: t("notification.migrationError"),
+      });
+    }
+  };
+
   const handleMigrationFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.addEventListener("load", (loadEvent) => {
       try {
-        const result = parseCustomWidgetClipboardDetailed(loadEvent.target?.result as string);
-        if (!result.success) {
-          showErrorNotification({
-            title: t("action.migrate"),
-            message: formatCustomWidgetImportIssues(result.issues),
-          });
-          return;
-        }
-        setMigratedWidget(result.widget);
-        migrationControls.open();
+        queueMigratedWidget(loadEvent.target?.result as string);
       } catch {
         showErrorNotification({
           title: t("action.migrate"),
@@ -185,6 +201,9 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
             <>
               <Menu.Item onClick={() => void copyMigrationPrompt()} leftSection={<IconSparkles {...iconProps} />}>
                 {t("action.copyMigrationPrompt")}
+              </Menu.Item>
+              <Menu.Item onClick={() => void pasteMigratedWidget()} leftSection={<IconClipboard {...iconProps} />}>
+                {t("action.pasteMigration")}
               </Menu.Item>
               <Menu.Item
                 onClick={() => migrationFileInputRef.current?.click()}

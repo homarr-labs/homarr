@@ -26,6 +26,9 @@ export function CustomWidgetAiCard(props: AiCardProps) {
           <IconSparkles size={18} />
           <Text fw={600}>{t("title")}</Text>
         </Group>
+        <Text size="sm" c="dimmed">
+          {t("description")}
+        </Text>
         <Textarea
           label={t("request")}
           value={props.request}

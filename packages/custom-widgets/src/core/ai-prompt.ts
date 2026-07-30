@@ -11,7 +11,7 @@ export const CUSTOM_WIDGET_MANTINE_VERSION = customJsxAuthoringCatalog.mantineVe
 const CUSTOM_WIDGET_AI_PROMPT_LIMIT = 12_000;
 
 export const CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION =
-  "Return exactly one complete `json` fenced block followed by one complete `jsx` fenced block. Do not include prose outside those blocks.";
+  "Return exactly one complete `json` fenced block containing the entire widget. Put the complete JSX source directly in the `template` string and JSON-escape it correctly. Do not include prose or additional code blocks.";
 
 const RECOMMENDED_COMPONENTS = [
   "Stack",
@@ -81,14 +81,13 @@ const leanShape = `{
     "category": { "label": "Category", "control": "text", "default": "all" },
     "limit": { "label": "Result limit", "control": "number", "default": 20, "min": 1, "max": 100 }
   },
-  "template": "__HOMARR_TEMPLATE__"
+  "template": "<Stack><Text>{data.items?.name}</Text></Stack>"
 }`;
 
 function compactExample(index: number) {
   const example = customJsxExamples[index];
   if (!example) return "";
-  const { template, ...manifest } = example.widget;
-  return `Example — ${example.title}:\n\n\`\`\`json\n${JSON.stringify({ ...manifest, template: "__HOMARR_TEMPLATE__" }, null, 2)}\n\`\`\`\n\n\`\`\`jsx\n${template}\n\`\`\``;
+  return `Example — ${example.title}:\n\n\`\`\`json\n${JSON.stringify(example.widget, null, 2)}\n\`\`\``;
 }
 
 const AUTHORING_PROMPT = `You are writing one safe Homarr Custom JSX v2 dashboard widget for Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}.
@@ -122,7 +121,7 @@ ${compactExample(0)}
 
 ${compactExample(1)}
 
-Output the manifest with template set exactly to "__HOMARR_TEMPLATE__", then put the complete template in the JSX block.`;
+Output one complete JSON manifest. Put the complete JSX directly in its template string so the user can copy one code block and paste it into Homarr once.`;
 
 export const CUSTOM_WIDGET_AUTHORING_PROMPT = AUTHORING_PROMPT;
 

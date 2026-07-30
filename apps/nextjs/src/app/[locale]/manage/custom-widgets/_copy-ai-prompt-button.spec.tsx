@@ -18,7 +18,7 @@ describe("Copy AI prompt", () => {
     const prompt = buildCustomWidgetAiPrompt(undefined, null, null, "Create a Pokédex");
     expect(prompt.length).toBeLessThanOrEqual(12_000);
     expect(prompt).toContain("exactly one complete `json` fenced block");
-    expect(prompt).toContain("one complete `jsx` fenced block");
+    expect(prompt).toContain("Put the complete JSX source directly in the `template` string");
   });
 
   it("keeps AI actions and section navigation readable on narrow screens", () => {

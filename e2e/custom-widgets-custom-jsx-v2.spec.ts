@@ -377,12 +377,9 @@ describe("Custom JSX v2 workbench", () => {
       expect(prompt).not.toContain("nested-secret");
       expect(prompt).not.toContain("private-filter");
 
+      await page.evaluate((widget) => navigator.clipboard.writeText(JSON.stringify(widget)), migratedWidget);
       await legacyCard.getByRole("button", { name: "Actions" }).click();
-      await page.getByLabel("Import migrated v2 JSON").setInputFiles({
-        name: "legacy-widget-v2.json",
-        mimeType: "application/json",
-        buffer: Buffer.from(JSON.stringify(migratedWidget)),
-      });
+      await page.getByRole("menuitem", { name: "Paste migrated widget" }).click();
       const migrationDialog = page.getByRole("dialog", { name: "Review migrated v2 replacement" });
       await migrationDialog.getByRole("button", { name: "Confirm v2 replacement" }).click();
       await expect(

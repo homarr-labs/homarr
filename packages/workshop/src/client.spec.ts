@@ -247,6 +247,16 @@ describe("WorkshopBackend", () => {
     expect(result.items).toHaveLength(1);
     expect(mocks.getFullList).toHaveBeenCalledTimes(2);
   });
+
+  test("replaces low-level network errors with an actionable Workshop outage message", async () => {
+    mocks.getList.mockRejectedValueOnce(new Error("NetworkError when attempting to fetch resource."));
+
+    const client = new WorkshopBackend("https://workshop.example.com");
+
+    await expect(client.list({ type: "customWidget" })).rejects.toThrow(
+      "Homarr Workshop seems to be unavailable right now. Try again in a moment.",
+    );
+  });
 });
 
 function listingRecord() {

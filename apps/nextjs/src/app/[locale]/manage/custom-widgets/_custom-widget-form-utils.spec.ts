@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 
 import {
+  applyDefinition,
   filterSecretsForSourceAuthentication,
   getChangedSecrets,
   getCustomWidgetPreviewOptionIssues,
@@ -23,6 +24,28 @@ const definition = customWidgetDefinitionSchema.parse({
 });
 
 describe("Custom Widget workbench preview options", () => {
+  it("loads a complete pasted widget template into the JSX editor field", () => {
+    const setValues = vi.fn();
+    applyDefinition(
+      {
+        values: {
+          name: "",
+          description: "",
+          iconUrl: "",
+          sources: "{}",
+          requests: "{}",
+          options: "{}",
+          template: "",
+          secrets: [],
+        },
+        setValues,
+      } as never,
+      definition,
+    );
+
+    expect(setValues).toHaveBeenCalledWith(expect.objectContaining({ template: "<Text>Preview</Text>" }));
+  });
+
   it("shows the default source first regardless of manifest key order", () => {
     expect(
       parseSources(
