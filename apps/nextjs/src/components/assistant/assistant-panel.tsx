@@ -41,7 +41,7 @@ import {
   Group,
   Loader,
   Popover,
-  Progress,
+  RingProgress,
   ScrollArea,
   Stack,
   Text,
@@ -68,7 +68,6 @@ import {
   IconFileExport,
   IconLink,
   IconMessage,
-  IconMicrophone,
   IconPaperclip,
   IconPencil,
   IconHistory,
@@ -78,7 +77,6 @@ import {
   IconRefresh,
   IconRobot,
   IconSearch,
-  IconSpeakerphone,
   IconThumbDown,
   IconThumbUp,
   IconTool,
@@ -462,20 +460,6 @@ const AssistantMessageActions = () => {
               </ActionIcon>
             </ActionBarPrimitive.Copy>
           </Tooltip>
-          <Tooltip label={t("speak")}>
-            <ActionBarPrimitive.Speak asChild>
-              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("speak")}>
-                <IconSpeakerphone size={14} />
-              </ActionIcon>
-            </ActionBarPrimitive.Speak>
-          </Tooltip>
-          <Tooltip label={t("stopSpeaking")}>
-            <ActionBarPrimitive.StopSpeaking asChild>
-              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("stopSpeaking")}>
-                <IconPlayerStop size={14} />
-              </ActionIcon>
-            </ActionBarPrimitive.StopSpeaking>
-          </Tooltip>
           <Tooltip label={t("helpful")}>
             <ActionBarPrimitive.FeedbackPositive asChild>
               <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("helpful")}>
@@ -586,18 +570,39 @@ const formatCost = (cost: number) => {
   return `$${cost.toFixed(cost < 0.01 ? 4 : 3)}`;
 };
 
+const getContextColor = (percentage: number) => {
+  if (percentage >= 90) return "red";
+  if (percentage >= 75) return "orange";
+  return "blue";
+};
+
 const RequestTelemetry = () => {
   const t = useScopedI18n("common.assistant");
+  const [opened, setOpened] = useState(false);
   const metadata = useAuiState((state) => state.message.metadata);
   const telemetry = getAssistantTelemetry(metadata);
   const usage = getAssistantUsage(metadata);
   if (!telemetry) return null;
 
+  const contextLength = telemetry.contextLength ?? 0;
+  const contextUsed = telemetry.contextUsed ?? 0;
+  const hasContextWindow = telemetry.contextLength !== undefined && telemetry.contextUsed !== undefined;
+  const contextPercentage = hasContextWindow
+    ? Math.min(
+        100,
+        Math.max(0, Math.round((telemetry.contextUtilization ?? contextUsed / Math.max(contextLength, 1)) * 100)),
+      )
+    : 0;
+  const contextRemaining = hasContextWindow ? Math.max(contextLength - contextUsed, 0) : undefined;
+  const contextLabel = hasContextWindow
+    ? `${t("usage.contextWindow")}: ${contextUsed.toLocaleString()} / ${contextLength.toLocaleString()} (${contextPercentage}%)`
+    : `${t("usage.contextWindow")}: ${t("usage.notReported")}`;
+
   return (
-    <details className={classes.telemetry}>
-      <summary className={classes.telemetrySummary}>
-        <Group gap="xs" wrap="wrap">
-          <Badge size="xs" variant="light" color="gray">
+    <Box className={classes.telemetry}>
+      <Group justify="space-between" align="center" gap="xs" wrap="nowrap">
+        <Group className={classes.telemetryFacts} gap="xs" wrap="wrap">
+          <Badge className={classes.modelBadge} size="xs" variant="light" color="gray">
             {telemetry.modelId}
           </Badge>
           <Badge size="xs" variant="outline" color="gray">
@@ -618,147 +623,218 @@ const RequestTelemetry = () => {
               {formatCost(telemetry.cost)}
             </Text>
           )}
-          {usage?.totalTokens !== undefined && (
-            <Text size="xs" c="dimmed">
-              {usage.totalTokens.toLocaleString()} {t("usage.tokens")}
-            </Text>
-          )}
-          <IconChevronDown size={13} />
         </Group>
-      </summary>
-      <Stack gap="sm" mt="xs">
-        {telemetry.contextLength !== undefined && telemetry.contextUsed !== undefined && (
-          <Box>
-            <Group justify="space-between" gap="xs">
-              <Text size="xs" fw={600}>
-                {t("usage.contextWindow")}
-              </Text>
-              <Text size="xs" c="dimmed">
-                {telemetry.contextUsed.toLocaleString()} / {telemetry.contextLength.toLocaleString()}
-              </Text>
-            </Group>
-            <Progress value={(telemetry.contextUtilization ?? 0) * 100} size="sm" mt={5} />
-          </Box>
-        )}
-        <Box className={classes.usageGrid}>
-          <div>
-            <Text size="xs" c="dimmed">
-              {t("usage.input")}
-            </Text>
-            <Text size="sm" fw={600}>
-              {usage?.inputTokens?.toLocaleString() ?? t("usage.notReported")}
-            </Text>
-          </div>
-          <div>
-            <Text size="xs" c="dimmed">
-              {t("usage.output")}
-            </Text>
-            <Text size="sm" fw={600}>
-              {usage?.outputTokens?.toLocaleString() ?? t("usage.notReported")}
-            </Text>
-          </div>
-          <div>
-            <Text size="xs" c="dimmed">
-              {t("usage.cached")}
-            </Text>
-            <Text size="sm" fw={600}>
-              {usage?.cachedInputTokens?.toLocaleString() ?? t("usage.notReported")}
-            </Text>
-          </div>
-          <div>
-            <Text size="xs" c="dimmed">
-              {t("usage.reasoning")}
-            </Text>
-            <Text size="sm" fw={600}>
-              {usage?.reasoningTokens?.toLocaleString() ?? t("usage.notReported")}
-            </Text>
-          </div>
-          <div>
-            <Text size="xs" c="dimmed">
-              {t("usage.cacheWrite")}
-            </Text>
-            <Text size="sm" fw={600}>
-              {usage?.cacheWriteTokens?.toLocaleString() ?? t("usage.notReported")}
-            </Text>
-          </div>
-        </Box>
-        <Divider />
-        <Group gap="lg" align="flex-start">
-          <div>
-            <Text size="xs" c="dimmed">
-              {t("usage.firstOutput")}
-            </Text>
-            <Text size="sm" fw={600}>
-              {telemetry.timeToFirstOutputMs !== undefined
-                ? formatDuration(telemetry.timeToFirstOutputMs)
-                : t("usage.notReported")}
-            </Text>
-          </div>
-          <div>
-            <Text size="xs" c="dimmed">
-              {t("usage.cost")}
-            </Text>
-            <Text size="sm" fw={600}>
-              {telemetry.cost !== undefined ? formatCost(telemetry.cost) : t("usage.notReported")}
-            </Text>
-            {telemetry.costType && (
-              <Text size="xs" c="dimmed">
-                {t(`usage.${telemetry.costType}`)}
-              </Text>
-            )}
-          </div>
-          {telemetry.upstreamCost !== undefined && (
-            <div>
-              <Text size="xs" c="dimmed">
-                {t("usage.upstreamCost")}
-              </Text>
-              <Text size="sm" fw={600}>
-                {formatCost(telemetry.upstreamCost)}
-              </Text>
-            </div>
-          )}
-          {telemetry.finishReason && (
-            <div>
-              <Text size="xs" c="dimmed">
-                {t("usage.finishReason")}
-              </Text>
-              <Text size="sm" fw={600}>
-                {telemetry.finishReason}
-              </Text>
-            </div>
-          )}
-        </Group>
-        {telemetry.steps.length > 0 && (
-          <Stack gap={4}>
-            <Text size="xs" fw={600}>
-              {t("usage.agentSteps")}
-            </Text>
-            {telemetry.steps.map((step) => (
-              <Box key={step.index} className={classes.stepRow}>
-                <Group justify="space-between" gap="xs">
-                  <Text size="xs">
-                    {t("usage.step", { number: step.index })}
-                    {step.routedProvider ? ` · ${step.routedProvider}` : ""}
+
+        <Popover
+          opened={opened}
+          onChange={setOpened}
+          width="min(20rem, calc(100vw - 1.5rem))"
+          position="bottom-end"
+          shadow="md"
+          withArrow
+          trapFocus
+          returnFocus
+        >
+          <Popover.Target>
+            <UnstyledButton
+              className={classes.contextMeter}
+              aria-label={contextLabel}
+              aria-expanded={opened}
+              aria-haspopup="dialog"
+              title={contextLabel}
+              onClick={() => setOpened((value) => !value)}
+            >
+              <RingProgress
+                size={40}
+                thickness={4}
+                roundCaps
+                sections={
+                  hasContextWindow ? [{ value: contextPercentage, color: getContextColor(contextPercentage) }] : []
+                }
+                label={
+                  <Text className={classes.contextMeterLabel} ta="center" fw={700}>
+                    {hasContextWindow ? `${contextPercentage}%` : "–"}
+                  </Text>
+                }
+              />
+            </UnstyledButton>
+          </Popover.Target>
+          <Popover.Dropdown className={classes.telemetryPopover}>
+            <Stack gap="sm">
+              <Group justify="space-between" gap="xs">
+                <div>
+                  <Text size="sm" fw={700}>
+                    {t("usage.contextWindow")}
                   </Text>
                   <Text size="xs" c="dimmed">
-                    {formatDuration(step.durationMs)}
-                    {step.outputTokensPerSecond !== undefined
-                      ? ` · ${step.outputTokensPerSecond.toFixed(1)} tok/s`
-                      : ""}
-                    {step.cost !== undefined ? ` · ${formatCost(step.cost)}` : ""}
+                    {t("usage.requestDetails")}
                   </Text>
-                </Group>
-                {step.generationId && (
-                  <Text size="xs" c="dimmed" className={classes.generationId} title={step.generationId}>
-                    {t("usage.generation")}: {step.generationId}
+                </div>
+                <Badge size="sm" variant="light" color={getContextColor(contextPercentage)}>
+                  {hasContextWindow ? `${contextPercentage}%` : t("usage.notReported")}
+                </Badge>
+              </Group>
+
+              <Box className={classes.contextStats}>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.used")}
                   </Text>
-                )}
+                  <Text size="sm" fw={600}>
+                    {telemetry.contextUsed?.toLocaleString() ?? t("usage.notReported")}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.remaining")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {contextRemaining?.toLocaleString() ?? t("usage.notReported")}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.capacity")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {telemetry.contextLength?.toLocaleString() ?? t("usage.notReported")}
+                  </Text>
+                </div>
               </Box>
-            ))}
-          </Stack>
-        )}
-      </Stack>
-    </details>
+
+              <Divider />
+              <Box className={classes.usageGrid}>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.input")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {usage?.inputTokens?.toLocaleString() ?? t("usage.notReported")}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.output")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {usage?.outputTokens?.toLocaleString() ?? t("usage.notReported")}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.cached")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {usage?.cachedInputTokens?.toLocaleString() ?? t("usage.notReported")}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.reasoning")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {usage?.reasoningTokens?.toLocaleString() ?? t("usage.notReported")}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.cacheWrite")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {usage?.cacheWriteTokens?.toLocaleString() ?? t("usage.notReported")}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.tokens")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {usage?.totalTokens?.toLocaleString() ?? t("usage.notReported")}
+                  </Text>
+                </div>
+              </Box>
+
+              <Divider />
+              <Group gap="lg" align="flex-start">
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.firstOutput")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {telemetry.timeToFirstOutputMs !== undefined
+                      ? formatDuration(telemetry.timeToFirstOutputMs)
+                      : t("usage.notReported")}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.cost")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {telemetry.cost !== undefined ? formatCost(telemetry.cost) : t("usage.notReported")}
+                  </Text>
+                  {telemetry.costType && (
+                    <Text size="xs" c="dimmed">
+                      {t(`usage.${telemetry.costType}`)}
+                    </Text>
+                  )}
+                </div>
+                {telemetry.upstreamCost !== undefined && (
+                  <div>
+                    <Text size="xs" c="dimmed">
+                      {t("usage.upstreamCost")}
+                    </Text>
+                    <Text size="sm" fw={600}>
+                      {formatCost(telemetry.upstreamCost)}
+                    </Text>
+                  </div>
+                )}
+                {telemetry.finishReason && (
+                  <div>
+                    <Text size="xs" c="dimmed">
+                      {t("usage.finishReason")}
+                    </Text>
+                    <Text size="sm" fw={600}>
+                      {telemetry.finishReason}
+                    </Text>
+                  </div>
+                )}
+              </Group>
+
+              {telemetry.steps.length > 0 && (
+                <Stack gap={4}>
+                  <Text size="xs" fw={600}>
+                    {t("usage.agentSteps")}
+                  </Text>
+                  {telemetry.steps.map((step) => (
+                    <Box key={step.index} className={classes.stepRow}>
+                      <Group justify="space-between" gap="xs">
+                        <Text size="xs">
+                          {t("usage.step", { number: step.index })}
+                          {step.routedProvider ? ` · ${step.routedProvider}` : ""}
+                        </Text>
+                        <Text size="xs" c="dimmed">
+                          {formatDuration(step.durationMs)}
+                          {step.outputTokensPerSecond !== undefined
+                            ? ` · ${step.outputTokensPerSecond.toFixed(1)} tok/s`
+                            : ""}
+                          {step.cost !== undefined ? ` · ${formatCost(step.cost)}` : ""}
+                        </Text>
+                      </Group>
+                      {step.generationId && (
+                        <Text size="xs" c="dimmed" className={classes.generationId} title={step.generationId}>
+                          {t("usage.generation")}: {step.generationId}
+                        </Text>
+                      )}
+                    </Box>
+                  ))}
+                </Stack>
+              )}
+            </Stack>
+          </Popover.Dropdown>
+        </Popover>
+      </Group>
+    </Box>
   );
 };
 
@@ -1123,18 +1199,6 @@ const Composer = () => {
                     </ActionIcon>
                   </ComposerPrimitive.AddAttachment>
                 </Tooltip>
-                <Tooltip label={t("dictate")}>
-                  <ComposerPrimitive.Dictate asChild>
-                    <ActionIcon variant="subtle" color="gray" size="lg" aria-label={t("dictate")}>
-                      <IconMicrophone size={17} />
-                    </ActionIcon>
-                  </ComposerPrimitive.Dictate>
-                </Tooltip>
-                <ComposerPrimitive.StopDictation asChild>
-                  <ActionIcon variant="light" color="red" size="lg" aria-label={t("stopDictation")}>
-                    <IconPlayerStop size={17} />
-                  </ActionIcon>
-                </ComposerPrimitive.StopDictation>
               </Group>
               <ComposerPrimitive.Input
                 className={classes.composerInput}

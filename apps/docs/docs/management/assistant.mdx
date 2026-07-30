@@ -70,7 +70,7 @@ page layout until it is opened. Users can start, revisit, and delete conversatio
 conversation menu in the floating panel.
 
 Messages support copy, edit-and-resend, response regeneration and branch navigation, Markdown export,
-helpful/not-helpful feedback, text-to-speech, and browser speech dictation when the browser supports it.
+and helpful/not-helpful feedback.
 Selecting text in a message exposes a quote action that carries the selected passage into the next prompt.
 Files returned by a compatible model can be downloaded directly from the message.
 Assistant responses render GitHub-flavored Markdown, including headings, links, lists, task lists, tables,
@@ -85,9 +85,10 @@ Type `@` in the composer to add permission-checked context. The nested menu cont
 boards, widgets, and tools available to the current user. Homarr validates every referenced ID again on
 the server before adding it to the model context. Type `/` for common prompt shortcuts.
 
-Each completed response includes expandable request details when the provider reports them: input,
-output, cached-input and reasoning tokens, context-window utilization, time to first output, total
-duration, output speed, agent-step timing, and cost. OpenRouter-reported cost is labeled as reported.
+Each completed response includes a circular context-window meter. Select it to open request details when
+the provider reports them: input, output, cached-input and reasoning tokens, used and remaining context,
+time to first output, total duration, output speed, agent-step timing, and cost. OpenRouter-reported cost
+is labeled as reported.
 OpenRouter responses also show the routed provider, generation identifier, and upstream inference cost when
 the endpoint supplies those fields.
 When a provider omits cost but model discovery includes prompt and completion pricing, Homarr labels the
