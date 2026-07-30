@@ -30,14 +30,17 @@ Homarr includes presets for OpenRouter, OpenAI, Anthropic Claude, Google Gemini,
 DeepSeek, Together AI, Ollama, and LM Studio. Provider icons make the presets easy to identify. A custom
 preset connects any other service that implements the OpenAI Chat Completions API.
 
-1. Choose a provider preset or **Custom endpoint**.
-2. Confirm the API base URL. It usually ends in `/v1`.
-3. Add an API key if the service requires bearer authentication.
-4. Add any provider-specific authentication or routing headers.
-5. Save the provider connection.
-6. Refresh the model list and select a discovered model. Homarr displays the friendly model name but
+The management page presents setup as three compact sections: provider and endpoint, credentials, then
+model and availability. A status summary at the top shows whether the connection is ready, whether a key
+is protected, which model is selected, and whether users can open the assistant.
+
+1. Choose a provider preset or **Custom endpoint**, then confirm the API base URL. It usually ends in `/v1`.
+2. Add an API key if the service requires bearer authentication. Additional authentication or routing
+   headers are available in the collapsed advanced section.
+3. Save the provider connection.
+4. Refresh the model list and select a discovered model. Homarr displays the friendly model name but
    stores and sends the provider's exact model ID.
-7. Enable the assistant and save the configuration.
+5. Enable the assistant and save the configuration.
 
 The model discovery path defaults to `/models` and is appended to the API base URL. Leave it blank when
 the service does not expose model discovery. A manual model ID can still be used when discovery is
@@ -47,6 +50,13 @@ API keys and additional header values are encrypted in the Homarr database. They
 the server for discovery and model requests, and they are never returned to the browser. Changing the
 provider or base URL clears existing credentials unless replacements are submitted with the change. This
 prevents credentials for one service from being sent to another endpoint.
+
+When a key is already stored, the page shows its protected state instead of an ambiguous empty password
+field. **Replace key** starts a two-step flow: enter the new key, then review the provider, destination,
+and impact before confirming. The existing key remains active until confirmation, and its value cannot be
+restored after replacement. Removing only the API key also requires explicit confirmation. **Remove all
+credentials** uses a separate destructive confirmation because it also clears the selected model and
+disables the assistant.
 
 :::info Container networking
 
