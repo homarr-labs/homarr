@@ -9,8 +9,15 @@ tags:
 # Assistant
 
 Administrators can configure the instance-wide AI assistant from **Management → Assistant**.
-It is available to signed-in users from the user menu and the `Cmd/Ctrl + K` command menu.
-`Cmd/Ctrl + Shift + K` opens it directly.
+It is available to signed-in users from the user menu and the `Cmd/Ctrl + K` command menu. Selecting
+**Ask Homarr Assistant** in the command menu turns its search field into a prompt composer. Press
+`Enter` to send the prompt in the background without opening the conversation.
+
+While a response is running, a compact activity bar appears at the bottom of the page and the user-menu
+avatar shows a thinking indicator. The activity bar can be opened to follow the response. Completed
+responses add an unread count to the user menu until they are opened or dismissed.
+
+`Cmd/Ctrl + Shift + K` opens the compact conversation panel directly.
 
 When the assistant is unavailable, its command-menu result remains visible but disabled and explains that
 an administrator must configure and enable it.
@@ -56,8 +63,9 @@ uses. Choose OpenRouter or another provider when you prefer a provider-neutral p
 
 ## Conversations and tools
 
-Conversations and messages are stored per user in the Homarr database. Users can start, revisit, archive,
-and delete conversations from the assistant panel.
+Conversations and messages are stored per user in the Homarr database. The assistant stays out of the
+page layout until it is opened. Users can start, revisit, archive, and delete conversations from the
+conversation menu in the floating panel.
 
 The assistant can use the same internal tool definitions as the [Homarr MCP server](./mcp).
 Each tool call runs as the signed-in user, so normal Homarr permission checks still apply. Read-only

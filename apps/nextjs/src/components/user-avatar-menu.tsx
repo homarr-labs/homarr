@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { Badge, Center, Indicator, Loader, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys, useTimeout } from "@mantine/hooks";
 import {
   IconBrandDocker,
@@ -84,7 +84,23 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
         {Boolean(session.data) && (
           <>
             {assistant?.enabled && (
-              <Menu.Item leftSection={<IconRobot size="1rem" />} onClick={assistant.open}>
+              <Menu.Item
+                leftSection={
+                  assistant.isRunning ? <Loader type="bars" color="red" size="xs" /> : <IconRobot size="1rem" />
+                }
+                rightSection={
+                  assistant.unreadCount > 0 ? (
+                    <Badge size="sm" variant="filled" color="red" circle>
+                      {assistant.unreadCount > 99 ? "99+" : assistant.unreadCount}
+                    </Badge>
+                  ) : assistant.isRunning ? (
+                    <Text size="xs" c="dimmed">
+                      {t("assistantThinking")}
+                    </Text>
+                  ) : undefined
+                }
+                onClick={assistant.open}
+              >
                 {t("assistant")}
               </Menu.Item>
             )}
@@ -117,7 +133,28 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
           </Menu.Item>
         )}
       </Menu.Dropdown>
-      <Menu.Target>{children}</Menu.Target>
+      <Menu.Target>
+        <Indicator
+          inline
+          disabled={!assistant?.isRunning && !assistant?.unreadCount}
+          color="red"
+          size={20}
+          offset={4}
+          label={
+            assistant?.isRunning ? (
+              <Loader type="bars" color="white" size={10} />
+            ) : assistant?.unreadCount ? (
+              assistant.unreadCount > 99 ? (
+                "99+"
+              ) : (
+                assistant.unreadCount
+              )
+            ) : undefined
+          }
+        >
+          {children}
+        </Indicator>
+      </Menu.Target>
     </Menu>
   );
 };

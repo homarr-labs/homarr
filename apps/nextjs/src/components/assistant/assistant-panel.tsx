@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import type { ToolCallMessagePartProps } from "@assistant-ui/react";
+import type { MessageStatus } from "@assistant-ui/react";
 import {
   ActionBarPrimitive,
   ComposerPrimitive,
@@ -13,8 +14,22 @@ import {
   ThreadPrimitive,
   useAuiState,
 } from "@assistant-ui/react";
-import { ActionIcon, Box, Button, Drawer, Group, ScrollArea, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+import {
+  ActionIcon,
+  Badge,
+  Box,
+  Button,
+  Group,
+  Loader,
+  Popover,
+  ScrollArea,
+  Stack,
+  Text,
+  ThemeIcon,
+  Tooltip,
+  UnstyledButton,
+} from "@mantine/core";
+import { useWindowEvent } from "@mantine/hooks";
 import {
   IconActivityHeartbeat,
   IconAlertTriangle,
@@ -22,9 +37,9 @@ import {
   IconArchive,
   IconArrowUp,
   IconCheck,
+  IconChevronUp,
   IconCopy,
   IconCommand,
-  IconMenu2,
   IconHistory,
   IconPlayerStop,
   IconPlus,
@@ -42,7 +57,14 @@ import classes from "./assistant-panel.module.css";
 
 interface AssistantPanelProps {
   opened: boolean;
+  onOpen: () => void;
   onClose: () => void;
+  onMarkRead: () => void;
+  isRunning: boolean;
+  unreadCount: number;
+  latestAssistantText: string;
+  latestUserText: string;
+  latestStatus: MessageStatus | undefined;
 }
 
 const TextPart = () => <MessagePartPrimitive.Text className={classes.messageText} />;
@@ -194,13 +216,24 @@ const AssistantMessage = () => (
   </MessagePrimitive.Root>
 );
 
+const HistorySelectContext = createContext<() => void>(() => undefined);
+
 const ThreadListItem = () => {
   const t = useScopedI18n("common.assistant");
+  const onSelect = useContext(HistorySelectContext);
   return (
     <ThreadListItemPrimitive.Root className={classes.historyItem}>
       <Group gap={4} wrap="nowrap">
         <ThreadListItemPrimitive.Trigger asChild>
-          <Button variant="subtle" color="gray" size="compact-sm" justify="flex-start" flex={1} style={{ minWidth: 0 }}>
+          <Button
+            variant="subtle"
+            color="gray"
+            size="compact-sm"
+            justify="flex-start"
+            flex={1}
+            style={{ minWidth: 0 }}
+            onClick={onSelect}
+          >
             <ThreadListItemPrimitive.Title fallback={t("newConversation")} />
           </Button>
         </ThreadListItemPrimitive.Trigger>
@@ -221,11 +254,20 @@ const ThreadListItem = () => {
 
 const ArchivedThreadListItem = () => {
   const t = useScopedI18n("common.assistant");
+  const onSelect = useContext(HistorySelectContext);
   return (
     <ThreadListItemPrimitive.Root className={classes.historyItem}>
       <Group gap={4} wrap="nowrap">
         <ThreadListItemPrimitive.Trigger asChild>
-          <Button variant="subtle" color="gray" size="compact-sm" justify="flex-start" flex={1} style={{ minWidth: 0 }}>
+          <Button
+            variant="subtle"
+            color="gray"
+            size="compact-sm"
+            justify="flex-start"
+            flex={1}
+            style={{ minWidth: 0 }}
+            onClick={onSelect}
+          >
             <ThreadListItemPrimitive.Title fallback={t("archivedConversation")} />
           </Button>
         </ThreadListItemPrimitive.Trigger>
@@ -244,51 +286,66 @@ const ArchivedThreadListItem = () => {
   );
 };
 
-const ThreadHistory = ({ opened, onClose }: { opened: boolean; onClose: () => void }) => {
+const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
   const t = useScopedI18n("common.assistant");
-  const isMobile = useMediaQuery("(max-width: 48em)");
-  const hidden = isMobile && !opened;
   return (
-    <Stack
-      className={classes.history}
-      gap="xs"
-      p="sm"
-      data-opened={opened}
-      inert={hidden ? true : undefined}
-      aria-hidden={hidden || undefined}
+    <HistorySelectContext.Provider value={onSelect}>
+      <Stack className={classes.historyMenu} gap="xs" p="xs">
+        <Group gap="xs" wrap="nowrap" px={4} pt={4}>
+          <ThreadListPrimitive.New asChild>
+            <Button variant="light" leftSection={<IconPlus size={16} />} fullWidth onClick={onSelect}>
+              {t("newConversation")}
+            </Button>
+          </ThreadListPrimitive.New>
+        </Group>
+        <Group gap="xs" px="xs" mt="xs">
+          <IconHistory size={14} />
+          <Text size="sm" fw={600} c="dimmed">
+            {t("conversations")}
+          </Text>
+        </Group>
+        <ScrollArea h="min(24rem, 55dvh)" type="auto" offsetScrollbars>
+          <Stack gap={3}>
+            <ThreadListPrimitive.Items components={{ ThreadListItem }} />
+            <Text size="sm" fw={600} c="dimmed" px="xs" mt="sm">
+              {t("archived")}
+            </Text>
+            <ThreadListPrimitive.Items archived components={{ ThreadListItem: ArchivedThreadListItem }} />
+          </Stack>
+        </ScrollArea>
+      </Stack>
+    </HistorySelectContext.Provider>
+  );
+};
+
+const ConversationHistory = () => {
+  const t = useScopedI18n("common.assistant");
+  const [opened, setOpened] = useState(false);
+  return (
+    <Popover
+      opened={opened}
+      onChange={setOpened}
+      position="bottom-end"
+      width="min(22rem, calc(100vw - 1rem))"
+      shadow="md"
+      withinPortal
     >
-      <Group gap="xs" wrap="nowrap">
-        <ThreadListPrimitive.New asChild>
-          <Button variant="light" leftSection={<IconPlus size={16} />} fullWidth onClick={onClose}>
-            {t("newConversation")}
-          </Button>
-        </ThreadListPrimitive.New>
-        <ActionIcon
-          className={classes.historyClose}
+      <Popover.Target>
+        <Button
+          className={classes.historyButton}
           variant="subtle"
           color="gray"
-          onClick={onClose}
-          aria-label={t("closeHistory")}
+          size="compact-sm"
+          leftSection={<IconHistory size={16} />}
+          onClick={() => setOpened((current) => !current)}
         >
-          <IconX size={17} />
-        </ActionIcon>
-      </Group>
-      <Group gap="xs" px="xs" mt="xs">
-        <IconHistory size={14} />
-        <Text size="sm" fw={600} c="dimmed">
           {t("conversations")}
-        </Text>
-      </Group>
-      <ScrollArea flex={1} type="auto">
-        <Stack gap={3}>
-          <ThreadListPrimitive.Items components={{ ThreadListItem }} />
-          <Text size="sm" fw={600} c="dimmed" px="xs" mt="sm">
-            {t("archived")}
-          </Text>
-          <ThreadListPrimitive.Items archived components={{ ThreadListItem: ArchivedThreadListItem }} />
-        </Stack>
-      </ScrollArea>
-    </Stack>
+        </Button>
+      </Popover.Target>
+      <Popover.Dropdown p={0}>
+        <ThreadHistory onSelect={() => setOpened(false)} />
+      </Popover.Dropdown>
+    </Popover>
   );
 };
 
@@ -366,67 +423,160 @@ const Composer = () => {
   );
 };
 
-export const AssistantPanel = ({ opened, onClose }: AssistantPanelProps) => {
+const AssistantActivityBar = ({
+  isRunning,
+  unreadCount,
+  latestAssistantText,
+  latestUserText,
+  latestStatus,
+  onOpen,
+  onMarkRead,
+}: Omit<AssistantPanelProps, "opened" | "onClose">) => {
   const t = useScopedI18n("common.assistant");
-  const [historyOpened, setHistoryOpened] = useState(false);
+  const needsApproval = latestStatus?.type === "requires-action";
+  const failed = latestStatus?.type === "incomplete" && latestStatus.reason !== "cancelled";
+  const visible = isRunning || unreadCount > 0 || needsApproval;
+
+  if (!visible) return null;
+
+  const title = isRunning
+    ? t("activity.thinking")
+    : needsApproval
+      ? t("activity.approval")
+      : failed
+        ? t("activity.failed")
+        : t("activity.ready");
+  const detail = isRunning
+    ? latestUserText || t("activity.working")
+    : latestAssistantText || (failed ? t("responseError.description") : t("activity.completed"));
+
   return (
-    <Drawer
-      opened={opened}
-      onClose={onClose}
-      position="right"
-      size="min(52rem, 100vw)"
-      zIndex={300}
-      className={classes.drawer}
-      classNames={{ content: classes.content, body: classes.body }}
-      title={
-        <Group gap="xs">
-          <ThemeIcon variant="light" color="red" radius="xl">
-            <IconRobot size={18} />
-          </ThemeIcon>
-          <div>
-            <Text fw={700} lh={1.1}>
-              {t("title")}
+    <Box component="output" className={classes.activityBar} aria-live="polite">
+      <UnstyledButton className={classes.activityTrigger} onClick={onOpen} aria-label={t("activity.expand")}>
+        <Group gap="sm" wrap="nowrap">
+          {isRunning ? (
+            <ThemeIcon variant="light" color="red" radius="xl">
+              <Loader type="bars" size="sm" color="red" />
+            </ThemeIcon>
+          ) : (
+            <ThemeIcon variant="light" color={failed ? "red" : needsApproval ? "yellow" : "green"} radius="xl">
+              {failed ? (
+                <IconAlertTriangle size={17} />
+              ) : needsApproval ? (
+                <IconRobot size={17} />
+              ) : (
+                <IconCheck size={17} />
+              )}
+            </ThemeIcon>
+          )}
+          <Stack gap={0} className={classes.activityCopy}>
+            <Group gap="xs" wrap="nowrap">
+              <Text size="sm" fw={700}>
+                {title}
+              </Text>
+              {unreadCount > 0 && (
+                <Badge size="xs" variant="filled" color="red" circle>
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </Badge>
+              )}
+            </Group>
+            <Text size="xs" c="dimmed" lineClamp={1}>
+              {detail}
             </Text>
-            <Text size="xs" c="dimmed">
-              {t("subtitle")}
-            </Text>
-          </div>
+          </Stack>
+          <IconChevronUp size={17} className={classes.activityExpandIcon} />
         </Group>
-      }
-      closeButtonProps={{ icon: <IconX size={18} />, "aria-label": t("close") }}
-    >
-      <Box className={classes.shell}>
-        <ThreadHistory opened={historyOpened} onClose={() => setHistoryOpened(false)} />
-        <ThreadPrimitive.Root className={classes.thread}>
-          <ActionIcon
-            className={classes.mobileHistoryButton}
-            variant="default"
-            onClick={() => setHistoryOpened(true)}
-            aria-label={t("openHistory")}
-          >
-            <IconMenu2 size={17} />
-          </ActionIcon>
-          <ThreadPrimitive.Viewport className={classes.viewport}>
-            <Box className={classes.messages}>
-              <EmptyThread />
-              <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
-            </Box>
-            <ThreadPrimitive.ScrollToBottom asChild>
-              <ActionIcon
-                pos="absolute"
-                bottom={110}
-                left="50%"
-                variant="default"
-                radius="xl"
-                aria-label={t("scrollToLatest")}
-              >
-                <IconArrowUp size={16} style={{ transform: "rotate(180deg)" }} />
+      </UnstyledButton>
+      {!isRunning && !needsApproval && (
+        <ActionIcon variant="subtle" color="gray" size="sm" onClick={onMarkRead} aria-label={t("activity.dismiss")}>
+          <IconX size={15} />
+        </ActionIcon>
+      )}
+    </Box>
+  );
+};
+
+export const AssistantPanel = ({
+  opened,
+  onOpen,
+  onClose,
+  onMarkRead,
+  isRunning,
+  unreadCount,
+  latestAssistantText,
+  latestUserText,
+  latestStatus,
+}: AssistantPanelProps) => {
+  const t = useScopedI18n("common.assistant");
+
+  useWindowEvent("keydown", (event) => {
+    if (opened && event.key === "Escape") onClose();
+  });
+
+  return (
+    <>
+      {!opened && (
+        <AssistantActivityBar
+          onOpen={onOpen}
+          onMarkRead={onMarkRead}
+          isRunning={isRunning}
+          unreadCount={unreadCount}
+          latestAssistantText={latestAssistantText}
+          latestUserText={latestUserText}
+          latestStatus={latestStatus}
+        />
+      )}
+      {opened && (
+        <dialog className={classes.floatingPanel} aria-label={t("title")} open>
+          <Group className={classes.panelHeader} justify="space-between" wrap="nowrap">
+            <Group gap="xs" wrap="nowrap">
+              <ThemeIcon variant="light" color="red" radius="xl">
+                <IconRobot size={18} />
+              </ThemeIcon>
+              <div>
+                <Text fw={700} lh={1.1}>
+                  {t("title")}
+                </Text>
+                <Text size="xs" c="dimmed" lineClamp={1}>
+                  {isRunning ? t("activity.thinking") : t("subtitle")}
+                </Text>
+              </div>
+            </Group>
+            <Group gap={2} wrap="nowrap">
+              <ConversationHistory />
+              <Tooltip label={t("newConversation")}>
+                <ThreadListPrimitive.New asChild>
+                  <ActionIcon variant="subtle" color="gray" aria-label={t("newConversation")}>
+                    <IconPlus size={17} />
+                  </ActionIcon>
+                </ThreadListPrimitive.New>
+              </Tooltip>
+              <ActionIcon variant="subtle" color="gray" onClick={onClose} aria-label={t("close")}>
+                <IconX size={18} />
               </ActionIcon>
-            </ThreadPrimitive.ScrollToBottom>
-          </ThreadPrimitive.Viewport>
-          <Composer />
-        </ThreadPrimitive.Root>
-      </Box>
-    </Drawer>
+            </Group>
+          </Group>
+          <ThreadPrimitive.Root className={classes.thread}>
+            <ThreadPrimitive.Viewport className={classes.viewport}>
+              <Box className={classes.messages}>
+                <EmptyThread />
+                <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
+              </Box>
+              <ThreadPrimitive.ScrollToBottom asChild>
+                <ActionIcon
+                  className={classes.scrollToBottom}
+                  variant="default"
+                  radius="xl"
+                  aria-label={t("scrollToLatest")}
+                >
+                  <IconArrowUp size={16} style={{ transform: "rotate(180deg)" }} />
+                </ActionIcon>
+              </ThreadPrimitive.ScrollToBottom>
+            </ThreadPrimitive.Viewport>
+            <Composer />
+          </ThreadPrimitive.Root>
+        </dialog>
+      )}
+    </>
   );
 };

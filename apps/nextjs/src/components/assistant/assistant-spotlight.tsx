@@ -1,0 +1,63 @@
+"use client";
+
+import { Group, Kbd, Stack, Text, ThemeIcon } from "@mantine/core";
+import { IconArrowUp, IconRobot } from "@tabler/icons-react";
+
+import { useScopedI18n } from "@homarr/translation/client";
+
+interface AssistantPromptInteractionOptions {
+  sendPrompt: (prompt: string) => void;
+}
+
+const AssistantPromptDetail = () => {
+  const t = useScopedI18n("common.assistant");
+  return (
+    <Group px="md" py="sm" wrap="nowrap">
+      <ThemeIcon color="red" variant="light" radius="xl">
+        <IconRobot size={17} />
+      </ThemeIcon>
+      <Stack gap={1}>
+        <Text fw={600}>{t("spotlightPrompt.title")}</Text>
+        <Text size="xs" c="dimmed">
+          {t("spotlightPrompt.description")}
+        </Text>
+      </Stack>
+    </Group>
+  );
+};
+
+const AssistantPromptAction = ({ hasPrompt }: { hasPrompt: boolean }) => {
+  const t = useScopedI18n("common.assistant");
+  return (
+    <Group w="100%" px="md" py="xs" justify="space-between" wrap="nowrap" opacity={hasPrompt ? 1 : 0.6}>
+      <Group gap="sm" wrap="nowrap">
+        <IconArrowUp size={18} />
+        <Text>{hasPrompt ? t("spotlightPrompt.send") : t("spotlightPrompt.empty")}</Text>
+      </Group>
+      <Kbd size="sm">Enter</Kbd>
+    </Group>
+  );
+};
+
+export const createAssistantPromptInteraction = ({ sendPrompt }: AssistantPromptInteractionOptions) =>
+  ({
+    type: "children",
+    option: {},
+    DetailComponent: AssistantPromptDetail,
+    useActions: (_options: Record<string, unknown>, query: string) => {
+      const prompt = query.trim();
+      return [
+        {
+          key: "send-assistant-prompt",
+          Component: () => <AssistantPromptAction hasPrompt={prompt.length > 0} />,
+          useInteraction: () => ({
+            type: "javaScript" as const,
+            onSelect: () => {
+              if (prompt.length > 0) sendPrompt(prompt);
+            },
+            closeSpotlightOnTrigger: prompt.length > 0,
+          }),
+        },
+      ];
+    },
+  }) as const;

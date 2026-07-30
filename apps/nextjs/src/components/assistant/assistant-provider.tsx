@@ -1,9 +1,15 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { MessageFormatAdapter, RemoteThreadListAdapter, ThreadHistoryAdapter, Toolkit } from "@assistant-ui/react";
+import type {
+  MessageFormatAdapter,
+  RemoteThreadListAdapter,
+  ThreadHistoryAdapter,
+  ThreadMessage,
+  Toolkit,
+} from "@assistant-ui/react";
 import {
   AssistantRuntimeProvider,
   defineToolkit,
@@ -21,7 +27,7 @@ import { lastAssistantMessageIsCompleteWithApprovalResponses } from "ai";
 import { clientApi, fetchApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { hotkeys } from "@homarr/definitions";
-import { showErrorNotification } from "@homarr/notifications";
+import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import {
   openMediaRequestSearch,
@@ -31,14 +37,18 @@ import {
 } from "@homarr/spotlight";
 
 import { AssistantPanel } from "./assistant-panel";
+import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
 
 interface AssistantContextValue {
   enabled: boolean;
   opened: boolean;
+  isRunning: boolean;
+  unreadCount: number;
   open: () => void;
   close: () => void;
   toggle: () => void;
+  sendPrompt: (prompt: string) => void;
 }
 
 const AssistantContext = createContext<AssistantContextValue | null>(null);
@@ -267,58 +277,189 @@ const AssistantTools = ({ toolkit }: { toolkit: Toolkit }) => {
   return null;
 };
 
-export const AssistantProvider = ({ children }: PropsWithChildren) => {
-  const t = useScopedI18n("common.assistant");
-  const session = useSession();
-  const [opened, setOpened] = useState(false);
-  const { data, isLoading: isAvailabilityLoading } = clientApi.assistant.getAvailability.useQuery(undefined, {
-    enabled: session.status === "authenticated",
-    staleTime: 60_000,
-  });
-  const enabled = Boolean(data?.enabled && session.status === "authenticated");
+const getMessageText = (message: ThreadMessage | undefined) =>
+  message?.content
+    .filter((part) => part.type === "text")
+    .map((part) => part.text)
+    .join("\n")
+    .trim() ?? "";
 
-  const open = useCallback(() => setOpened(true), []);
+const getLatestMessage = (messages: readonly ThreadMessage[], role: ThreadMessage["role"]) =>
+  messages.findLast((message) => message.role === role);
+
+const getNotificationKey = (message: ThreadMessage | undefined) => {
+  if (message?.role !== "assistant") return null;
+  if (message.status.type === "running") return null;
+  return `${message.id}:${message.status.type}:${"reason" in message.status ? message.status.reason : ""}`;
+};
+
+const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
+  const t = useScopedI18n("common.assistant");
+  const [opened, setOpened] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const aui = useAui();
+  const messages = useAuiState((state) => state.thread.messages);
+  const isRunning = useAuiState((state) => state.thread.isRunning);
+  const isLoading = useAuiState((state) => state.thread.isLoading);
+  const latestAssistantMessage = getLatestMessage(messages, "assistant");
+  const latestUserMessage = getLatestMessage(messages, "user");
+  const latestAssistantText = getMessageText(latestAssistantMessage);
+  const latestUserText = getMessageText(latestUserMessage);
+  const latestStatus = latestAssistantMessage?.role === "assistant" ? latestAssistantMessage.status : undefined;
+  const notificationKey = getNotificationKey(latestAssistantMessage);
+  const initializedRef = useRef(false);
+  const lastNotifiedKeyRef = useRef<string | null>(null);
+
+  const markRead = useCallback(() => {
+    lastNotifiedKeyRef.current = notificationKey;
+    setUnreadCount(0);
+  }, [notificationKey]);
+  const open = useCallback(() => {
+    markRead();
+    setOpened(true);
+  }, [markRead]);
   const close = useCallback(() => setOpened(false), []);
-  const toggle = useCallback(() => setOpened((current) => !current), []);
-  const openIfEnabled = useCallback(() => {
-    if (enabled) {
-      open();
+  const toggle = useCallback(() => {
+    setOpened((current) => {
+      if (!current) markRead();
+      return !current;
+    });
+  }, [markRead]);
+  const sendPrompt = useCallback(
+    (prompt: string) => {
+      const text = prompt.trim();
+      if (text.length === 0) return;
+      if (isRunning || latestStatus?.type === "requires-action") {
+        showWarningNotification({
+          title: t("busy.title"),
+          message: t("busy.description"),
+        });
+        return;
+      }
+      aui.thread().append({ role: "user", content: [{ type: "text", text }] });
+    },
+    [aui, isRunning, latestStatus?.type, t],
+  );
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      lastNotifiedKeyRef.current = notificationKey;
+      return;
     }
-  }, [enabled, open]);
-  useHotkeys([[hotkeys.openAssistant, openIfEnabled]]);
+
+    if (notificationKey === null || notificationKey === lastNotifiedKeyRef.current) return;
+
+    if (opened) {
+      lastNotifiedKeyRef.current = notificationKey;
+      setUnreadCount(0);
+      return;
+    }
+
+    lastNotifiedKeyRef.current = notificationKey;
+    setUnreadCount((current) => current + 1);
+  }, [isLoading, notificationKey, opened]);
+
+  useHotkeys([[hotkeys.openAssistant, open]]);
 
   const spotlightItem = useMemo(
     () => ({
       id: "homarr-assistant",
       name: t("spotlight"),
       icon: "/logo/logo.png",
-      description: enabled
-        ? t("spotlightDescription")
-        : session.status !== "authenticated"
-          ? t("unavailable.signIn")
-          : isAvailabilityLoading
-            ? t("unavailable.checking")
-            : t("unavailable.notConfigured"),
-      unavailable: !enabled,
-      interaction: () => (enabled ? { type: "javaScript" as const, onSelect: open } : { type: "none" as const }),
+      description: t("spotlightDescription"),
+      interaction: () => createAssistantPromptInteraction({ sendPrompt }),
     }),
-    [enabled, isAvailabilityLoading, open, session.status, t],
+    [sendPrompt, t],
   );
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
   useRegisterSpotlightContextActions("homarr-assistant", [spotlightItem], [spotlightItem]);
 
-  const value = useMemo(() => ({ enabled, opened, open, close, toggle }), [close, enabled, open, opened, toggle]);
+  const value = useMemo(
+    () => ({ enabled: true, opened, isRunning, unreadCount, open, close, toggle, sendPrompt }),
+    [close, isRunning, open, opened, sendPrompt, toggle, unreadCount],
+  );
 
   return (
     <AssistantContext.Provider value={value}>
-      {enabled ? (
-        <AssistantRuntime>
-          {children}
-          <AssistantPanel opened={opened} onClose={close} />
-        </AssistantRuntime>
-      ) : (
-        children
-      )}
+      {children}
+      <AssistantPanel
+        opened={opened}
+        onOpen={open}
+        onClose={close}
+        onMarkRead={markRead}
+        isRunning={isRunning}
+        unreadCount={unreadCount}
+        latestAssistantText={latestAssistantText}
+        latestUserText={latestUserText}
+        latestStatus={latestStatus}
+      />
     </AssistantContext.Provider>
   );
+};
+
+interface DisabledAssistantProviderProps extends PropsWithChildren {
+  description: string;
+}
+
+const DisabledAssistantProvider = ({ children, description }: DisabledAssistantProviderProps) => {
+  const t = useScopedI18n("common.assistant");
+  const spotlightItem = useMemo(
+    () => ({
+      id: "homarr-assistant",
+      name: t("spotlight"),
+      icon: "/logo/logo.png",
+      description,
+      unavailable: true,
+      interaction: () => ({ type: "none" as const }),
+    }),
+    [description, t],
+  );
+  useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
+  useRegisterSpotlightContextActions("homarr-assistant", [spotlightItem], [spotlightItem]);
+
+  const value = useMemo(
+    () => ({
+      enabled: false,
+      opened: false,
+      isRunning: false,
+      unreadCount: 0,
+      open: () => undefined,
+      close: () => undefined,
+      toggle: () => undefined,
+      sendPrompt: () => undefined,
+    }),
+    [],
+  );
+
+  return <AssistantContext.Provider value={value}>{children}</AssistantContext.Provider>;
+};
+
+export const AssistantProvider = ({ children }: PropsWithChildren) => {
+  const t = useScopedI18n("common.assistant");
+  const session = useSession();
+  const { data, isLoading } = clientApi.assistant.getAvailability.useQuery(undefined, {
+    enabled: session.status === "authenticated",
+    staleTime: 60_000,
+  });
+  const enabled = Boolean(data?.enabled && session.status === "authenticated");
+
+  if (enabled) {
+    return (
+      <AssistantRuntime>
+        <EnabledAssistantProvider>{children}</EnabledAssistantProvider>
+      </AssistantRuntime>
+    );
+  }
+
+  const unavailableDescription =
+    session.status !== "authenticated"
+      ? t("unavailable.signIn")
+      : isLoading
+        ? t("unavailable.checking")
+        : t("unavailable.notConfigured");
+
+  return <DisabledAssistantProvider description={unavailableDescription}>{children}</DisabledAssistantProvider>;
 };

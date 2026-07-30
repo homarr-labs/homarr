@@ -1,28 +1,75 @@
-.content {
-  height: 100dvh;
+.activityBar {
+  position: fixed;
+  z-index: 290;
+  inset-inline-start: 50%;
+  bottom: 1rem;
+  display: flex;
+  width: min(31rem, calc(100vw - 1rem));
+  min-height: 3.5rem;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.4rem 0.35rem 0.5rem;
+  transform: translateX(-50%);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-lg);
   background: var(--mantine-color-body);
+  animation: assistant-activity-in 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.body {
-  display: flex;
-  height: calc(100dvh - 4.25rem);
-  padding: 0;
-  overflow: hidden;
-}
-
-.shell {
-  position: relative;
-  display: flex;
-  width: 100%;
+.activityTrigger {
   min-width: 0;
+  flex: 1;
+  padding: 0.15rem;
+  border-radius: var(--mantine-radius-md);
+  text-align: start;
 }
 
-.history {
-  width: 15rem;
-  flex: 0 0 15rem;
-  border-inline-end: 1px solid var(--mantine-color-default-border);
-  background: color-mix(in srgb, var(--mantine-color-body) 92%, var(--mantine-color-gray-6));
-  transition: transform 180ms ease;
+.activityTrigger:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.activityCopy {
+  min-width: 0;
+  flex: 1;
+}
+
+.activityExpandIcon {
+  flex: 0 0 auto;
+  color: var(--mantine-color-dimmed);
+}
+
+.floatingPanel {
+  position: fixed;
+  z-index: 290;
+  inset-inline-start: 50%;
+  bottom: 1rem;
+  display: flex;
+  width: min(46rem, calc(100vw - 2rem));
+  height: min(36rem, calc(100dvh - 5rem));
+  min-height: 22rem;
+  margin: 0;
+  transform: translateX(-50%);
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: var(--mantine-radius-lg);
+  color: var(--mantine-color-text);
+  background: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-xl);
+  animation: assistant-panel-in 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.panelHeader {
+  min-height: 3.75rem;
+  flex: 0 0 auto;
+  padding: 0.65rem 0.75rem 0.65rem 0.9rem;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.historyMenu {
+  background: var(--mantine-color-body);
 }
 
 .historyItem {
@@ -37,6 +84,7 @@
   position: relative;
   display: flex;
   min-width: 0;
+  min-height: 0;
   flex: 1;
   flex-direction: column;
 }
@@ -52,21 +100,21 @@
 
 .messages {
   width: 100%;
-  max-width: 52rem;
+  max-width: 44rem;
   margin-inline: auto;
-  padding: 1.25rem 1rem 8.75rem;
+  padding: 0.75rem 1rem 1.5rem;
 }
 
 .message {
-  margin-block: 1rem;
+  margin-block: 0.9rem;
 }
 
 .userMessage {
   width: fit-content;
-  max-width: 90%;
+  max-width: 86%;
   margin-inline-start: auto;
-  padding: 0.7rem 0.9rem;
-  border-radius: 1rem 1rem 0.3rem 1rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.9rem 0.9rem 0.25rem 0.9rem;
   background: var(--mantine-color-red-light);
 }
 
@@ -75,7 +123,7 @@
 }
 
 .messageText {
-  line-height: 1.65;
+  line-height: 1.6;
   overflow-wrap: anywhere;
 }
 
@@ -102,32 +150,32 @@
 }
 
 .composerWrap {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  padding: 2.5rem 1rem 1rem;
-  background: var(--mantine-color-body);
+  flex: 0 0 auto;
+  padding: 0.65rem 0.75rem 0.75rem;
   border-top: 1px solid var(--mantine-color-default-border);
-  pointer-events: none;
+  background: var(--mantine-color-body);
 }
 
 .composer {
   display: flex;
   width: 100%;
-  max-width: 52rem;
+  max-width: 44rem;
   margin-inline: auto;
   align-items: flex-end;
   gap: 0.5rem;
-  padding: 0.45rem;
-  border-radius: 1rem;
+  padding: 0.4rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-lg);
   background: var(--mantine-color-default);
-  box-shadow: var(--mantine-shadow-sm);
-  pointer-events: auto;
+}
+
+.composer:focus-within {
+  border-color: var(--mantine-primary-color-filled);
 }
 
 .composerInput {
   min-height: 2.5rem;
-  max-height: 12rem;
+  max-height: 9rem;
   flex: 1;
   resize: none;
   border: 0;
@@ -140,10 +188,10 @@
 
 .empty {
   display: flex;
-  min-height: 60vh;
+  min-height: 23rem;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1rem 8rem;
+  padding: 2rem 1rem;
   text-align: center;
 }
 
@@ -151,67 +199,98 @@
   display: grid;
   width: 100%;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.65rem;
+  gap: 0.55rem;
 }
 
 .suggestion {
   height: auto;
-  min-height: 3.25rem;
+  min-height: 3rem;
   justify-content: flex-start;
-  padding: 0.7rem 0.9rem;
+  padding: 0.65rem 0.8rem;
   text-align: start;
   white-space: normal;
 }
 
-.mobileHistoryButton,
-.historyClose {
-  display: none;
+.scrollToBottom {
+  position: absolute;
+  inset-inline-start: 50%;
+  bottom: 0.75rem;
+  transform: translateX(-50%);
+}
+
+@keyframes assistant-activity-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes assistant-panel-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 0.75rem) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
 }
 
 @media (max-width: 48em) {
-  .history {
-    position: absolute;
-    z-index: 4;
-    inset-block: 0;
-    inset-inline-start: 0;
-    width: min(20rem, 88vw);
-    transform: translateX(-105%);
-    visibility: hidden;
-    transition:
-      transform 180ms ease,
-      visibility 180ms ease;
-    box-shadow: var(--mantine-shadow-xl);
+  .activityBar {
+    bottom: 0.5rem;
   }
 
-  [dir="rtl"] .history {
-    transform: translateX(105%);
+  .floatingPanel {
+    bottom: 0.5rem;
+    width: calc(100vw - 1rem);
+    height: min(44rem, calc(100dvh - 1rem));
+    min-height: 20rem;
   }
 
-  .history[data-opened="true"] {
-    transform: translateX(0);
-    visibility: visible;
-  }
-
-  .mobileHistoryButton {
-    position: absolute;
-    z-index: 3;
-    top: 0.65rem;
-    inset-inline-start: 0.65rem;
-    display: inline-flex;
-  }
-
-  .historyClose {
-    display: inline-flex;
+  .panelHeader {
+    padding-inline-start: 0.7rem;
   }
 
   .suggestions {
     grid-template-columns: 1fr;
   }
+
+  .empty {
+    min-height: 32rem;
+    padding-block: 1.5rem;
+  }
+}
+
+@media (max-width: 30em) {
+  .historyButton {
+    max-width: 2.25rem;
+    padding-inline: 0.5rem;
+  }
+
+  .historyButton :global(.mantine-Button-section) {
+    margin-inline-end: 0;
+  }
+
+  .historyButton :global(.mantine-Button-label) {
+    display: none;
+  }
+
+  .messages {
+    padding-inline: 0.75rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .history {
-    transition: none;
+  .activityBar,
+  .floatingPanel {
+    animation: none;
   }
 
   .viewport {
