@@ -5974,6 +5974,7 @@
               "discoveryPathDescription": "Appended to the API base URL. Leave blank to disable discovery and use a manual model ID.",
               "manual": "Enter a model ID manually or save the connection to discover models.",
               "manualFallback": "Discovery is unavailable. You can still enter a model ID manually.",
+              "saveConnectionFirst": "Save the provider connection before choosing a model.",
               "discovered": "Discovered {count} models. Tool support depends on the selected endpoint and model.",
               "discoveryFailed": "Model discovery did not complete",
               "context": "{count} token context",
