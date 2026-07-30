@@ -159,17 +159,22 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
               <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
                 {t(`items.${status}` as never)}
               </Badge>
-              {bitrateLabel && (
-                <Text size="10px" c="dimmed">
-                  {bitrateLabel}
-                </Text>
-              )}
-              {currentlyPlaying.location && (
-                <Group gap={4} align="center">
-                  {currentlyPlaying.location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />}
-                  <Text size="10px" c="dimmed" tt="uppercase">
-                    {currentlyPlaying.location}
-                  </Text>
+              {(currentlyPlaying.location ?? bitrateLabel) && (
+                <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                  <Group gap={4} align="center">
+                    {currentlyPlaying.location &&
+                      (currentlyPlaying.location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />)}
+                    {currentlyPlaying.location && (
+                      <Text size="10px" c="dimmed" tt="uppercase">
+                        {currentlyPlaying.location}
+                      </Text>
+                    )}
+                  </Group>
+                  {bitrateLabel && (
+                    <Text size="10px" c="dimmed">
+                      {bitrateLabel}
+                    </Text>
+                  )}
                 </Group>
               )}
             </Stack>
