@@ -26,6 +26,35 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 
+type TranscodingDecision = NonNullable<
+  NonNullable<StreamSession["currentlyPlaying"]>["metadata"]
+>["transcoding"];
+
+type PlaybackStatus = "directPlay" | "directStream" | "transcodeVideo" | "transcodeAudio" | "transcoding";
+
+function getPlaybackStatus(transcoding: TranscodingDecision | undefined): PlaybackStatus {
+  if (!transcoding) return "directPlay";
+  const { isVideoDirect, isAudioDirect, containerChanged } = transcoding;
+
+  if (isVideoDirect && isAudioDirect) return containerChanged ? "directStream" : "directPlay";
+  if (!isVideoDirect && isAudioDirect) return "transcodeVideo";
+  if (isVideoDirect && !isAudioDirect) return "transcodeAudio";
+  return "transcoding";
+}
+
+const playbackStatusColorMap = {
+  directPlay: "green",
+  directStream: "teal",
+  transcodeVideo: "orange",
+  transcodeAudio: "yellow",
+  transcoding: "red",
+} satisfies Record<PlaybackStatus, string>;
+
+function formatBitrate(bitrateKbps: number | null | undefined): string | null {
+  if (!bitrateKbps || bitrateKbps <= 0) return null;
+  return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
+}
+
 export default function MediaServerWidget({ options, integrationIds }: WidgetComponentProps<"mediaServer">) {
   const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
     integrationIds,
@@ -122,17 +151,19 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
           const currentlyPlaying = row.original.currentlyPlaying;
           if (!currentlyPlaying) return null;
 
-          const isTranscoding = Boolean(
-            currentlyPlaying.metadata?.transcoding.target.videoCodec ??
-              currentlyPlaying.metadata?.transcoding.target.audioCodec ??
-              currentlyPlaying.metadata?.transcoding.container,
-          );
+          const status = getPlaybackStatus(currentlyPlaying.metadata?.transcoding);
+          const bitrateLabel = formatBitrate(currentlyPlaying.metadata?.bitrateKbps);
 
           return (
             <Stack gap={4} align="flex-start">
-              <Badge size="xs" variant="light" color={isTranscoding ? "orange" : "green"}>
-                {isTranscoding ? t("items.transcoding") : t("items.directPlay")}
+              <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
+                {t(`items.${status}` as never)}
               </Badge>
+              {bitrateLabel && (
+                <Text size="10px" c="dimmed">
+                  {bitrateLabel}
+                </Text>
+              )}
               {currentlyPlaying.location && (
                 <Group gap={4} align="center">
                   {currentlyPlaying.location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />}
