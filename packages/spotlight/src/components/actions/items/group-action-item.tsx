@@ -26,6 +26,7 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
   option,
 }: SpotlightGroupActionItemProps<TOption>) => {
   const interaction = group.useInteraction(option, query);
+  const unavailable = "unavailable" in option && option.unavailable === true;
   // Avoid passing React's special `key` prop via spread
 
   const { key: _reactKey, ...optionProps } = option as unknown as { key?: unknown } & Record<string, unknown>;
@@ -65,6 +66,7 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
         (interaction.type !== "javaScript" || interaction.closeSpotlightOnTrigger !== false)
       }
       className={classes.spotlightAction}
+      aria-disabled={unavailable || undefined}
     >
       <group.Component {...(optionProps as TOption)} />
     </Spotlight.Action>

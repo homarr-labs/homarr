@@ -1508,6 +1508,12 @@
       "open": "Open Homarr Assistant",
       "close": "Close assistant",
       "spotlight": "Ask Homarr Assistant",
+      "spotlightDescription": "Start or continue a conversation with your Homarr instance.",
+      "unavailable": {
+        "checking": "Checking whether the assistant is available…",
+        "notConfigured": "An administrator must configure and enable the assistant first.",
+        "signIn": "Sign in to use Homarr Assistant."
+      },
       "newConversation": "New conversation",
       "archivedConversation": "Archived conversation",
       "conversations": "Conversations",
@@ -4590,6 +4596,7 @@
         "customWidgets": "Custom Widgets",
         "searchEngies": "Search engines",
         "medias": "Medias",
+        "assistant": "Assistant",
         "users": {
           "label": "Users",
           "items": {
@@ -4988,7 +4995,7 @@
               "label": "Enable Homarr Assistant",
               "description": "Shows the assistant to all signed-in users. Existing Homarr permissions still apply to every internal tool call."
             },
-            "save": "Save assistant settings",
+            "save": "Save assistant",
             "notification": {
               "connectionSaved": {
                 "title": "Provider connection saved",
@@ -5893,6 +5900,9 @@
       },
       "medias": {
         "label": "Medias"
+      },
+      "assistant": {
+        "label": "Assistant"
       },
       "apps": {
         "label": "Apps",
