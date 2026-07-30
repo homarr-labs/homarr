@@ -54,7 +54,7 @@ describe("legacy custom widget migration prompt", () => {
         displayType: "customJsx",
         displayConfig: stringifySuperJson({
           type: "customJsx",
-          template: "<Text>Bearer sk-secret-123456</Text>",
+          template: "<Text>LEGACY_PRIVATE_MARKER Bearer sk-secret-123456</Text>",
         }),
         enabled: true,
         createdAt: new Date(0),
@@ -65,7 +65,7 @@ describe("legacy custom widget migration prompt", () => {
     );
 
     expect(prompt).toContain("display configuration was intentionally omitted");
-    expect(prompt).not.toContain("<Text>");
+    expect(prompt).not.toContain("LEGACY_PRIVATE_MARKER");
     expect(prompt).not.toContain("Bearer sk-secret-123456");
     expect(prompt).not.toContain("sk-secret-123456");
   });
