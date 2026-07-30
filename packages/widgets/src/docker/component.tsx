@@ -21,6 +21,9 @@ import { DataTable, useDataTableColumns } from "mantine-datatable";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { useOptionalBoard } from "@homarr/boards/context";
 import { formatBytes, useTimeAgo } from "@homarr/common";
 import type { ContainerState } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
@@ -228,6 +231,9 @@ export default function DockerWidget({
   const tWidget = useScopedI18n("widget.dockerContainers");
   const router = useRouter();
   const { openModal } = useModalAction(AddDockerAppToHomarr);
+  const board = useOptionalBoard();
+  const { data: session } = useSession();
+  const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const isTiny = width <= 256;
 
   const { data, refetch, isFetching } = clientApi.docker.getContainers.useQuery();
@@ -275,9 +281,9 @@ export default function DockerWidget({
   const persistLayout = useCallback(
     (newOptions: Partial<Pick<typeof options, "columnOrder" | "columnWidths">>) => {
       setOptions({ newOptions });
-      if (boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
+      if (hasChangeAccess && boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
     },
-    [boardId, itemId, saveItemOptions, setOptions],
+    [boardId, hasChangeAccess, itemId, saveItemOptions, setOptions],
   );
 
   const savedOrder = useMemo(() => parseColumnOrder(options.columnOrder), [options.columnOrder]);
@@ -424,6 +430,7 @@ export default function DockerWidget({
           loaderBackgroundBlur={2}
           fz={width < 400 ? "xs" : "sm"}
           records={sortedContainers}
+          noRecordsText={tWidget("empty.noContainers")}
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
           textSelectionDisabled
@@ -603,7 +610,14 @@ function ContainerContextMenu({
           onClose();
         }}
       >
-        <Menu opened shadow="md" position="bottom-start" withinPortal={false} closeOnItemClick={false}>
+        <Menu
+          opened
+          shadow="md"
+          position="bottom-start"
+          withinPortal={false}
+          closeOnItemClick={false}
+          onClose={onClose}
+        >
           <Menu.Target>
             <Box pos="fixed" style={{ left: state.x, top: state.y, width: 1, height: 1 }} />
           </Menu.Target>

@@ -20,6 +20,9 @@ import {
 } from "lucide-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { useOptionalBoard } from "@homarr/boards/context";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -131,6 +134,9 @@ export default function BeszelSystemTableWidget({
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
   const { openModal } = useModalAction(BeszelSystemStatsModal);
+  const board = useOptionalBoard();
+  const { data: session } = useSession();
+  const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const {
     data: results = [],
     error: systemsError,
@@ -148,9 +154,9 @@ export default function BeszelSystemTableWidget({
   const persistLayout = useCallback(
     (newOptions: Partial<Pick<typeof options, "columnOrder" | "columnWidths">>) => {
       setOptions({ newOptions });
-      if (boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
+      if (hasChangeAccess && boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
     },
-    [boardId, itemId, saveItemOptions, setOptions],
+    [boardId, hasChangeAccess, itemId, saveItemOptions, setOptions],
   );
 
   const savedOrder = useMemo(() => parseColumnOrder(options.columnOrder), [options.columnOrder]);
