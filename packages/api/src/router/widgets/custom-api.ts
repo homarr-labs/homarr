@@ -16,7 +16,6 @@ import { CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT } from "@homarr/custom-widget
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
-import { assertCustomWidgetsEnabled } from "../custom-widget/feature-flags";
 import { executeCustomWidgetRequest, invalidateCustomWidgetResponseCache } from "../custom-widget/request-executor";
 import {
   hashRuntimeParams,
@@ -73,7 +72,6 @@ const parseItemOptions = (raw: string): CustomWidgetItemOptions => {
 };
 
 async function resolvePlacedDefinitionAsync(ctx: RouterContext, itemId: string) {
-  assertCustomWidgetsEnabled();
   const item = await ctx.db.query.items.findFirst({
     where: eq(items.id, itemId),
     columns: { id: true, boardId: true, kind: true, options: true },

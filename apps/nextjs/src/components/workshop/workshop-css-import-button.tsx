@@ -5,13 +5,9 @@ import { Button, Modal } from "@mantine/core";
 import { IconDownload } from "@tabler/icons-react";
 
 import { WorkshopBrowser } from "./workshop-browser";
-import { useRuntimeFeature } from "~/hooks/use-runtime-feature";
 
 export function WorkshopCssImportButton({ onImport }: { onImport(css: string): void }) {
-  const workshopEnabled = useRuntimeFeature("workshop");
   const [opened, setOpened] = useState(false);
-
-  if (!workshopEnabled) return null;
 
   return (
     <>

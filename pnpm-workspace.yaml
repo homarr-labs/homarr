@@ -3,9 +3,6 @@ packages:
   - packages/*
   - tooling/*
 catalog:
-  "@ai-sdk/mcp": 1.0.0
-  "@ai-sdk/provider": 3.0.2
-  "@openrouter/ai-sdk-provider": 2.9.1
   "@codemirror/autocomplete": ^6.20.3
   "@codemirror/commands": ^6.10.3
   "@codemirror/lang-css": ^6.3.1
@@ -117,7 +114,6 @@ catalog:
   "@xterm/addon-fit": 0.11.0
   "@xterm/xterm": ^6.0.0
   adm-zip: 0.5.18
-  ai: 6.0.33
   acorn: ^8.16.0
   acorn-jsx: ^5.3.2
   jszip: ^3.10.1

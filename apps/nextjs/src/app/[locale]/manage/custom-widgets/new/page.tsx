@@ -5,8 +5,6 @@ import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { CustomWidgetsUnavailable } from "~/components/custom-widgets/custom-widgets-unavailable";
-import { env } from "~/env";
 import { CustomWidgetBetaBanner } from "../_beta-banner";
 import { CustomWidgetForm } from "../_custom-widget-form";
 import { FormErrorBoundary } from "../_form-error-boundary";
@@ -16,8 +14,6 @@ export default async function NewCustomWidgetPage() {
   if (!session || !session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
-  if (env.CUSTOM_WIDGETS_ENABLED === false) return <CustomWidgetsUnavailable />;
-
   const t = await getScopedI18n("customWidget");
 
   return (

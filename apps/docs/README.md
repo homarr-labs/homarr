@@ -22,8 +22,8 @@ pnpm dev:docs
 # Or from within this directory
 pnpm dev
 
-# PocketBase on 8090 plus docs on 3003
-pnpm dev:workshop
+# Point the docs at a local PocketBase instance
+WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
 ```
 
 The standalone docs use `WORKSHOP_API_URL` for PocketBase, `HOMARR_WEBSITE_URL` for the public site origin, and

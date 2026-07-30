@@ -55,14 +55,20 @@ Homarr becomes the instance administrator.
 
 ### Run PocketBase and documentation
 
-Use the integrated local Workshop command in a second terminal:
+Start PocketBase in another terminal:
 
 ```sh
-pnpm dev:workshop
+cp apps/workshop/.env.example apps/workshop/.env
+docker compose --env-file apps/workshop/.env -f apps/workshop/docker-compose.yml up --build workshop
 ```
 
-It starts persistent PocketBase on port 8090, waits for health and the required collections, then starts Docusaurus on
-port 3003. It also propagates shutdown without deleting the PocketBase volume.
+Then start Docusaurus in a third terminal:
+
+```sh
+WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
+```
+
+PocketBase runs on port 8090 and Docusaurus on port 3003. Stopping the services preserves the PocketBase volume.
 
 Open `http://127.0.0.1:8090/_/` and create the first PocketBase superuser. The Workshop UI is available at
 `http://127.0.0.1:3003/workshop`.
@@ -97,7 +103,7 @@ pnpm dev:docs
 
 - `pnpm dev` — Next.js on port 3000.
 - `pnpm dev:docs` — Docusaurus only on port 3003.
-- `pnpm dev:workshop` — persistent PocketBase plus Docusaurus.
+- `pnpm docker:workshop` — local PocketBase through Docker Compose.
 - `pnpm cli` — Homarr operations CLI.
 - `pnpm db:migration:sqlite:run` — create or update a SQLite database.
 - `pnpm db:studio` — inspect the database.

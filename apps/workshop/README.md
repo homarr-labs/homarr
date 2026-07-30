@@ -10,24 +10,26 @@ version and digest together, then run the Workshop integration and production-im
 The internal PocketBase field `users.isAdmin` means **Workshop moderator**. It does not grant Homarr administrator
 access. Moderators can review private reports, dismiss reports, and remove submissions or comments.
 
-## Run the complete local stack
+## Run locally
 
 From the repository root:
 
 ```sh
-cp .env.example .env
+cp apps/workshop/.env.example apps/workshop/.env
 pnpm install --frozen-lockfile
-pnpm dev:workshop
+docker compose --env-file apps/workshop/.env -f apps/workshop/docker-compose.yml up --build workshop
 ```
 
-This starts persistent PocketBase at `http://127.0.0.1:8090`, waits for health and required collections, and starts
-Docusaurus at `http://127.0.0.1:3003`. Open:
+This starts persistent PocketBase at `http://127.0.0.1:8090`. Start Docusaurus in another terminal:
+
+```sh
+WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
+```
+
+Open:
 
 - PocketBase administration: `http://127.0.0.1:8090/_/`
 - Workshop: `http://127.0.0.1:3003/workshop`
-
-For direct Compose work, copy `apps/workshop/.env.example` to `apps/workshop/.env` and pass it explicitly with
-`docker compose --env-file apps/workshop/.env -f apps/workshop/docker-compose.yml …`.
 
 Create the first PocketBase superuser in the administration UI, or use:
 
@@ -36,8 +38,7 @@ docker compose -f apps/workshop/docker-compose.yml exec workshop \
   pocketbase superuser create you@example.com 'replace-with-a-strong-password' --dir=/pb_data
 ```
 
-Stopping `pnpm dev:workshop` stops PocketBase and Docusaurus without deleting
-`homarr-workshop_pb_data`. To inspect or stop the service separately:
+Stopping the Compose process preserves `homarr-workshop_pb_data`. To inspect or stop the service separately:
 
 ```sh
 docker compose -f apps/workshop/docker-compose.yml logs -f workshop

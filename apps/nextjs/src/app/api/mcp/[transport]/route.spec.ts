@@ -7,7 +7,6 @@ const mocks = vi.hoisted(() => ({
   rateLimitAddress: vi.fn(() => "127.0.0.1"),
   toolProcedure: vi.fn(),
   loggerWarn: vi.fn(),
-  env: { CUSTOM_WIDGETS_ENABLED: true, WORKSHOP_ENABLED: true },
   buildPrompt: vi.fn((request?: string, documentationUrl?: string) =>
     [`Request: ${request ?? ""}`, `Documentation: ${documentationUrl ?? ""}`].join("\n"),
   ),
@@ -39,7 +38,6 @@ vi.mock("@homarr/custom-widgets/core", () => ({
   getCustomWidgetJsonSchema: () => ({ type: "object", title: "Custom Widget" }),
 }));
 vi.mock("@homarr/db", () => ({ db: {} }));
-vi.mock("~/env", () => ({ env: mocks.env }));
 vi.mock("~/versions/package-reader", () => ({ getPackageVersion: () => "test-version" }));
 vi.mock("../_extract-tools", () => ({
   extractMcpTools: () => [
@@ -75,8 +73,6 @@ interface JsonRpcResponse {
 
 beforeEach(() => {
   mocks.authenticate.mockResolvedValue({ user: { id: "user-1", permissions: ["admin"] } });
-  mocks.env.CUSTOM_WIDGETS_ENABLED = true;
-  mocks.env.WORKSHOP_ENABLED = true;
   mocks.buildPrompt.mockClear();
   mocks.getComponent.mockClear();
   mocks.rateLimitAddress.mockClear();
@@ -239,27 +235,6 @@ describe("non-admin MCP discovery", () => {
     const resource = await callMcp("resources/read", { uri: "homarr://custom-widgets/schema" });
     expect(resource.body.result).toBeUndefined();
     expect(resource.body.error).toBeDefined();
-  });
-});
-
-describe("MCP emergency switches", () => {
-  test("removes Custom Widget authoring discovery when Custom Widgets are disabled", async () => {
-    mocks.env.CUSTOM_WIDGETS_ENABLED = false;
-    expect((await callMcp("prompts/list")).body.result).toEqual({ prompts: [] });
-    expect((await callMcp("resources/list")).body.result).toEqual({ resources: [] });
-    const tools = await callMcp("tools/list");
-    expect(((tools.body.result?.tools ?? []) as Array<{ name: string }>).map(({ name }) => name)).toEqual([
-      "board_getAllBoards",
-    ]);
-  });
-
-  test("removes only Workshop tools when Workshop is disabled", async () => {
-    mocks.env.WORKSHOP_ENABLED = false;
-    const tools = await callMcp("tools/list");
-    expect(((tools.body.result?.tools ?? []) as Array<{ name: string }>).map(({ name }) => name)).toEqual([
-      "board_getAllBoards",
-      "customWidget_list",
-    ]);
   });
 });
 

@@ -53,23 +53,20 @@ export default function CustomApiWidget({
     if (isEditMode && errorCode === "NOT_FOUND") {
       return <Unavailable message={t("editModePending")} />;
     }
-    const isFeatureDisabled = errorCode === "SERVICE_UNAVAILABLE";
-    const isUnavailable = errorCode === "NOT_FOUND" || errorCode === "FORBIDDEN" || isFeatureDisabled;
+    const isUnavailable = errorCode === "NOT_FOUND" || errorCode === "FORBIDDEN";
     return (
       <Unavailable
         message={
           migrationRequired
             ? t("migrationRequired")
-            : isFeatureDisabled
-              ? t("temporarilyDisabled")
-              : isUnavailable
-                ? t("definitionNotFound")
-                : errorCode === "PRECONDITION_FAILED"
-                  ? t("configurationNeedsRepair")
-                  : tCustomJsx("requestFailed")
+            : isUnavailable
+              ? t("definitionNotFound")
+              : errorCode === "PRECONDITION_FAILED"
+                ? t("configurationNeedsRepair")
+                : tCustomJsx("requestFailed")
         }
         danger={!isUnavailable && !migrationRequired}
-        removeLabel={isUnavailable && !isFeatureDisabled ? t("removeFromBoard") : undefined}
+        removeLabel={isUnavailable ? t("removeFromBoard") : undefined}
         actionLabel={migrationRequired && isAdmin ? t("manageMigration") : undefined}
         actionHref={migrationRequired && isAdmin ? "/manage/custom-widgets" : undefined}
         supplementaryMessage={migrationRequired && !isAdmin ? t("contactAdmin") : undefined}

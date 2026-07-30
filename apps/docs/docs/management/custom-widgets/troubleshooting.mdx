@@ -43,14 +43,10 @@ An invalid definition disables widget preview and Save/Create. The Data, Options
 
 The Diagnostics tab shows the current schema errors.
 
-## Feature unavailable
+## Workshop unavailable
 
-If every Custom Widget reports that the feature is unavailable, check `CUSTOM_WIDGETS_ENABLED`. Setting it to `false`
-is an emergency stop that preserves definitions, secrets, legacy backups, and board placements while blocking authoring
-and execution.
-
-If Workshop alone is unavailable, check `WORKSHOP_ENABLED` and `WORKSHOP_API_URL`. Disabling Workshop does not disable
-widgets that are already installed.
+If Workshop is unavailable, check `WORKSHOP_API_URL` and PocketBase health. Widgets that are already installed continue
+to work.
 
 ## Correct request errors
 

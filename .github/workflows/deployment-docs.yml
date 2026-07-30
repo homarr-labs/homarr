@@ -1,136 +1,56 @@
-name: "[Publish] Documentation and Workshop"
+name: "[Deployment] Documentation"
 
 on:
   push:
-    branches: ["v2"]
+    branches: ["dev"]
     paths:
       - "apps/docs/**"
-      - "apps/workshop/**"
-      - "packages/custom-widgets/**"
-      - "packages/workshop/**"
-      - "packages/definitions/**"
-      - "tooling/typescript/**"
-      - "patches/**"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - "pnpm-workspace.yaml"
-      - "turbo.json"
-      - ".dockerignore"
+      - "packages/definitions/src/docs/**"
       - ".github/workflows/deployment-docs.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
-  packages: write
+  pages: write
   id-token: write
 
 concurrency:
-  group: workshop-image-${{ github.ref }}
-  cancel-in-progress: true
+  group: "pages"
+  cancel-in-progress: false
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ghcr.io/homarr-labs/homarr-workshop
+  SKIP_ENV_VALIDATION: true
   TURBO_API: ${{ secrets.TURBO_API }}
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
 
 jobs:
-  publish:
-    name: Publish immutable multi-platform image
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-    outputs:
-      digest: ${{ steps.build.outputs.digest }}
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Log in to GHCR
-        uses: docker/login-action@v4
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and publish by immutable commit tag
-        id: build
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: apps/workshop/Dockerfile
-          target: production
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
-          labels: |
-            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.revision=${{ github.sha }}
-          provenance: mode=max
-          sbom: true
-          cache-from: type=gha,scope=workshop-production
-          cache-to: type=gha,scope=workshop-production,mode=max
-          secrets: |
-            TURBO_API=${{ secrets.TURBO_API }}
-            TURBO_TEAM=${{ secrets.TURBO_TEAM }}
-            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
-            TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
-
-      - name: Smoke-test the published digest
+      - name: Setup
+        uses: ./tooling/github/setup
+      - name: Build docs
+        run: pnpm turbo build --filter=@homarr/docs
         env:
-          IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
-        run: |
-          manifest="$(docker buildx imagetools inspect "${IMAGE_NAME}@${IMAGE_DIGEST}" --raw)"
-          for architecture in amd64 arm64; do
-            jq --exit-status --arg architecture "$architecture" \
-              'any(.manifests[]; .platform.os == "linux" and .platform.architecture == $architecture)' \
-              <<<"$manifest" >/dev/null
-          done
-          docker run --detach --name workshop-smoke --platform linux/amd64 \
-            --publish 127.0.0.1:18090:8090 \
-            --env HOMARR_WEBSITE_URL=http://127.0.0.1:18090 \
-            --env WORKSHOP_API_URL=http://127.0.0.1:18090 \
-            --env WORKSHOP_WEB_URL=http://127.0.0.1:18090/workshop \
-            --env WORKSHOP_PUBLIC_ORIGIN=http://127.0.0.1:18090 \
-            --env WORKSHOP_REQUIRE_OAUTH=false \
-            "${IMAGE_NAME}@${IMAGE_DIGEST}"
-          for attempt in $(seq 1 60); do
-            if curl --fail --silent http://127.0.0.1:18090/api/health >/dev/null; then
-              break
-            fi
-            if [ "$attempt" -eq 60 ]; then
-              docker logs workshop-smoke
-              exit 1
-            fi
-            sleep 1
-          done
-          curl --fail --silent --show-error http://127.0.0.1:18090/ >/dev/null
-          curl --location --fail --silent --show-error http://127.0.0.1:18090/workshop >/dev/null
-          curl --fail --silent --show-error \
-            'http://127.0.0.1:18090/api/collections/workshop_listings/records?page=1&perPage=1' >/dev/null
-          curl --fail --silent --show-error http://127.0.0.1:18090/workshop-runtime-config.js \
-            | grep --fixed-strings 'workshopApiUrl: "http://127.0.0.1:18090"'
+          CI: "true"
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: "apps/docs/build"
 
-      - name: Stop smoke container
-        if: always()
-        run: docker rm --force workshop-smoke >/dev/null 2>&1 || true
-
-      - name: Record immutable promotion input
-        env:
-          IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
-        run: |
-          {
-            echo "### Workshop image candidate"
-            echo
-            echo "\`${IMAGE_NAME}@${IMAGE_DIGEST}\`"
-            echo
-            echo "This workflow publishes but does not deploy. Promote this exact digest only after staging acceptance and rollback rehearsal."
-          } >>"$GITHUB_STEP_SUMMARY"
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

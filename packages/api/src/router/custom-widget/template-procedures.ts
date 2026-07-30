@@ -8,7 +8,7 @@ import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import { and, eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
-import { customWidgetAdminProcedure } from "./feature-flags";
+import { permissionRequiredProcedure } from "../../trpc";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
 const logger = createLogger({ module: "custom-widget" });
@@ -32,22 +32,26 @@ const validateTemplate = (definition: ReturnType<typeof parseStoredCustomWidgetD
 };
 
 export const templateProcedures = {
-  readTemplate: customWidgetAdminProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-    const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
-      where: eq(customWidgetDefinitions.id, input.id),
-    });
-    if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
-    const template = parseStoredCustomWidgetDefinition(definition).template;
-    return {
-      id: definition.id,
-      name: definition.name,
-      template,
-      templateLines: template.split("\n"),
-      revision: getTemplateRevision(template),
-    };
-  }),
+  readTemplate: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+        where: eq(customWidgetDefinitions.id, input.id),
+      });
+      if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      const template = parseStoredCustomWidgetDefinition(definition).template;
+      return {
+        id: definition.id,
+        name: definition.name,
+        template,
+        templateLines: template.split("\n"),
+        revision: getTemplateRevision(template),
+      };
+    }),
 
-  writeTemplate: customWidgetAdminProcedure
+  writeTemplate: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z
         .object({ id: z.string(), template: z.string().optional(), templateLines: z.array(z.string()).optional() })
@@ -73,7 +77,8 @@ export const templateProcedures = {
       return { id: input.id, template, templateLines: template.split("\n"), revision: getTemplateRevision(template) };
     }),
 
-  templatePatch: customWidgetAdminProcedure
+  templatePatch: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Patch selected JSX template lines using an optimistic revision." } })
     .input(
       z.object({

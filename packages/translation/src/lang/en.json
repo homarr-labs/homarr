@@ -727,10 +727,6 @@
       }
     },
     "page": {
-      "disabled": {
-        "title": "Custom Widgets are unavailable",
-        "message": "Custom Widgets are temporarily disabled by the server administrator. Definitions, secrets, and board placements remain preserved."
-      },
       "list": {
         "title": "Custom Widgets",
         "noResults": "No custom widgets yet. Create your first one!",
@@ -4189,7 +4185,6 @@
       },
       "noDefinition": "No definition selected",
       "definitionNotFound": "Custom widget unavailable",
-      "temporarilyDisabled": "Custom Widgets are temporarily disabled by the server administrator.",
       "migrationRequired": "This legacy custom widget is preserved, but it must be migrated to Custom JSX v2 from Manage custom widgets before it can run.",
       "manageMigration": "Open Manage custom widgets",
       "contactAdmin": "Contact an administrator.",

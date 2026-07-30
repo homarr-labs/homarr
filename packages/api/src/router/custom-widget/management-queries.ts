@@ -7,7 +7,7 @@ import { boards, customWidgetDefinitions, legacyCustomWidgetDefinitions } from "
 import { collectCustomWidgetRequestReferences } from "@homarr/custom-widgets/core";
 
 import { throwIfActionForbiddenAsync } from "../board/board-access";
-import { customWidgetAdminProcedure } from "./feature-flags";
+import { permissionRequiredProcedure } from "../../trpc";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 import { executeCustomWidgetRequest } from "./request-executor";
 import {
@@ -27,7 +27,8 @@ import {
 } from "./management-query-mappers";
 
 export const managementQueryProcedures = {
-  list: customWidgetAdminProcedure
+  list: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "List all Custom JSX widgets." } })
     .query(async ({ ctx }) => {
       const [definitions, legacyDefinitions] = await Promise.all([
@@ -46,7 +47,8 @@ export const managementQueryProcedures = {
       return [...current, ...legacy].toSorted((left, right) => left.name.localeCompare(right.name));
     }),
 
-  legacyMigrationPrompt: customWidgetAdminProcedure
+  legacyMigrationPrompt: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({
       mcp: {
         enabled: true,
@@ -71,7 +73,8 @@ export const managementQueryProcedures = {
       };
     }),
 
-  get: customWidgetAdminProcedure
+  get: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Get one Custom JSX widget without secret values." } })
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -95,7 +98,8 @@ export const managementQueryProcedures = {
       };
     }),
 
-  available: customWidgetAdminProcedure
+  available: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(z.object({ boardId: z.string(), currentId: z.string().optional() }))
     .query(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
@@ -114,7 +118,8 @@ export const managementQueryProcedures = {
       return [...available, mapLegacyAvailableCustomWidget(legacy)];
     }),
 
-  optionRequest: customWidgetAdminProcedure
+  optionRequest: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z.object({
         boardId: z.string(),

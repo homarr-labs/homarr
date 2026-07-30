@@ -117,10 +117,9 @@ URL also requires the same authenticated administrator; the URL is short-lived, 
 Custom Widget response caches and action invalidation use shared Redis state, so multiple Homarr replicas see the same
 versioned cache generation. Deployments must point every replica at the same Redis service.
 
-Set `CUSTOM_WIDGETS_ENABLED=false` to stop authoring and runtime execution while preserving definitions, secrets, board
-placements, and v1 backups. Re-enable it after correcting the incident. Before upgrading, back up the database and
-`SECRET_ENCRYPTION_KEY`; a v1 binary can still read preserved v1 tables during application rollback. Widgets created
-only in v2 may be unavailable to the rolled-back binary, but do not replace the v1 backup.
+Before upgrading, back up the database and `SECRET_ENCRYPTION_KEY`; a v1 binary can still read preserved v1 tables
+during application rollback. Widgets created only in v2 may be unavailable to the rolled-back binary, but do not
+replace the v1 backup.
 
 ## Bundled examples
 

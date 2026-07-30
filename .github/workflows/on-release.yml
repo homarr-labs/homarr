@@ -5,6 +5,39 @@ on:
     types: [released]
 
 jobs:
+  trigger-docs-release:
+    name: Trigger Documentation Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Obtain token
+        id: obtainToken
+        uses: actions/create-github-app-token@v3
+        with:
+          private-key: ${{ secrets.HOMARR_DOCS_RELEASE_APP_PRIVATE_KEY }}
+          client-id: ${{ vars.HOMARR_DOCS_RELEASE_APP_ID }}
+          owner: homarr-labs
+          repositories: |
+            documentation
+          permission-contents: write # required to dispatch repository workflow
+      - name: Trigger documentation release
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+          SOURCE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/homarr-labs/documentation/dispatches \
+            -d @- <<EOF
+          {
+            "event_type": "trigger-release",
+            "client_payload": {
+              "tag": "${SOURCE_TAG}"
+            }
+          }
+          EOF
+
   update-bug-report-template:
     name: Update Bug Report Template
     runs-on: ubuntu-latest
@@ -15,7 +48,7 @@ jobs:
         uses: actions/create-github-app-token@v3
         with:
           private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          client-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to commit to branch
           permission-pull-requests: write # required to create pr & enable automerge
       - name: Checkout code

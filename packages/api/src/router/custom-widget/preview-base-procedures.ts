@@ -12,7 +12,7 @@ import {
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
-import { customWidgetAdminProcedure } from "./feature-flags";
+import { permissionRequiredProcedure } from "../../trpc";
 import { createPreviewSession, getPreviewSession } from "./preview-sessions";
 import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
@@ -24,7 +24,8 @@ const previewCreateInputSchema = z.object({
   options: z.record(z.string(), z.unknown()).optional(),
 });
 
-const previewCreateProcedure = customWidgetAdminProcedure
+const previewCreateProcedure = permissionRequiredProcedure
+  .requiresPermission("admin")
   .meta({ mcp: { enabled: true, description: "Create a short-lived preview session for one unsaved custom widget." } })
   .input(previewCreateInputSchema)
   .mutation(async ({ ctx, input }) => {
@@ -118,25 +119,28 @@ const previewCreateProcedure = customWidgetAdminProcedure
 
 export const previewBaseProcedures = {
   previewCreate: previewCreateProcedure,
-  previewGet: customWidgetAdminProcedure.input(z.object({ sessionId: z.string() })).query(async ({ ctx, input }) => {
-    const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
-    return {
-      id: session.id,
-      name: session.name,
-      expiresAt: session.expiresAt,
-      template: session.template,
-      optionDefinitions: session.optionDefinitions,
-      options: session.options,
-      requests: Object.entries(session.requests).map(([id, request]) => ({
-        id,
-        kind: request.kind,
-        method: request.method,
-        minimumBoardPermission: request.permission,
-        trigger: request.trigger,
-        confirmation: getCustomWidgetConfirmation(request),
-        invalidates: request.invalidates,
-      })),
-      liveActions: session.liveActions,
-    };
-  }),
+  previewGet: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ sessionId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+      return {
+        id: session.id,
+        name: session.name,
+        expiresAt: session.expiresAt,
+        template: session.template,
+        optionDefinitions: session.optionDefinitions,
+        options: session.options,
+        requests: Object.entries(session.requests).map(([id, request]) => ({
+          id,
+          kind: request.kind,
+          method: request.method,
+          minimumBoardPermission: request.permission,
+          trigger: request.trigger,
+          confirmation: getCustomWidgetConfirmation(request),
+          invalidates: request.invalidates,
+        })),
+        liveActions: session.liveActions,
+      };
+    }),
 };

@@ -29,13 +29,12 @@
     "generate:components": "pnpm generate:catalog",
     "generate": "pnpm generate:catalog",
     "evaluate:ai": "bun ./scripts/evaluate-ai-authoring.ts",
-    "evaluate:mcp": "tsx ./scripts/evaluate-mcp-agent.ts",
     "test:ai": "bun ./scripts/evaluate-ai-authoring.ts --ci",
     "test:reference-apis": "tsx ./scripts/verify-reference-apis.ts",
     "format": "oxfmt .",
     "lint": "oxlint",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.scripts.json"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@codemirror/autocomplete": "catalog:",
@@ -62,14 +61,10 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@ai-sdk/mcp": "catalog:",
-    "@ai-sdk/provider": "catalog:",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@openrouter/ai-sdk-provider": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "ai": "catalog:",
     "jsdom": "catalog:",
     "react-dom": "catalog:",
     "typescript": "catalog:",

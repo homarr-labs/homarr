@@ -24,7 +24,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
 import { WorkshopPublishModal } from "~/components/workshop/workshop-publish-modal";
-import { useRuntimeFeature } from "~/hooks/use-runtime-feature";
 
 const iconProps = { size: 16, stroke: 1.5 };
 
@@ -38,7 +37,6 @@ interface WidgetRef {
 
 export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const t = useScopedI18n("customWidget");
-  const workshopEnabled = useRuntimeFeature("workshop");
   const { openConfirmModal } = useConfirmModal();
   const deleteMutation = clientApi.customWidget.delete.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();
@@ -189,11 +187,9 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
               <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
                 {t("action.export")}
               </Menu.Item>
-              {workshopEnabled && (
-                <Menu.Item onClick={publishControls.open} leftSection={<IconBuildingStore {...iconProps} />}>
-                  {t("action.publishWorkshop")}
-                </Menu.Item>
-              )}
+              <Menu.Item onClick={publishControls.open} leftSection={<IconBuildingStore {...iconProps} />}>
+                {t("action.publishWorkshop")}
+              </Menu.Item>
               <Menu.Divider />
             </>
           )}
@@ -226,9 +222,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           )}
         </Menu.Dropdown>
       </Menu>
-      {widget.valid && workshopEnabled && (
-        <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />
-      )}
+      {widget.valid && <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />}
       {widget.migrationRequired && (
         <>
           <input

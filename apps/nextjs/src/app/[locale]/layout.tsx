@@ -149,8 +149,6 @@ export default async function Layout(props: {
         <meta name="homarr-website-url" content={publicUrls.homarrWebsiteUrl} />
         <meta name="homarr-workshop-api-url" content={publicUrls.workshopApiUrl} />
         <meta name="homarr-workshop-web-url" content={publicUrls.workshopWebUrl} />
-        <meta name="homarr-custom-widgets-enabled" content={String(env.CUSTOM_WIDGETS_ENABLED !== false)} />
-        <meta name="homarr-workshop-enabled" content={String(env.WORKSHOP_ENABLED !== false)} />
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
       </head>

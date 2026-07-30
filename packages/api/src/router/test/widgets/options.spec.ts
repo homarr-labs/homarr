@@ -1,14 +1,11 @@
 import SuperJSON from "superjson";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { eq } from "@homarr/db";
 import { boards, items, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
-
-const mocks = vi.hoisted(() => ({ env: { CUSTOM_WIDGETS_ENABLED: true } }));
-vi.mock("../../../env", () => ({ env: mocks.env }));
 
 import { optionsRouter } from "../../widgets/options";
 
@@ -42,10 +39,6 @@ async function setup(kind: "customApi" | "weather") {
 }
 
 describe("saveItemOptions Custom Widget access", () => {
-  beforeEach(() => {
-    mocks.env.CUSTOM_WIDGETS_ENABLED = true;
-  });
-
   test("rejects direct Custom Widget reconfiguration by a non-admin board modifier", async () => {
     const { db, userId, boardId, itemId } = await setup("customApi");
     const caller = optionsRouter.createCaller({ db, deviceType: undefined, session: createSession(userId) });
@@ -80,16 +73,6 @@ describe("saveItemOptions Custom Widget access", () => {
 
     const stored = await db.query.items.findFirst({ where: eq(items.id, itemId) });
     expect(SuperJSON.parse(stored?.options ?? "")).toMatchObject({ refreshInterval: 60 });
-  });
-
-  test("rejects direct admin reconfiguration while the emergency switch is off", async () => {
-    const { db, userId, boardId, itemId } = await setup("customApi");
-    mocks.env.CUSTOM_WIDGETS_ENABLED = false;
-    const caller = optionsRouter.createCaller({ db, deviceType: undefined, session: createSession(userId, true) });
-
-    await expect(
-      caller.saveItemOptions({ boardId, itemId, newOptions: { refreshInterval: 60 } }),
-    ).rejects.toMatchObject({ code: "SERVICE_UNAVAILABLE" });
   });
 
   test("allows normalized missing defaults without treating them as reconfiguration", async () => {

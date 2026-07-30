@@ -10,7 +10,6 @@ interface BoardPlacement {
 
 interface CustomWidgetPlacementGuardInput {
   isAdmin: boolean;
-  customWidgetsEnabled: boolean;
   submittedItems: readonly BoardPlacement[];
   storedItems: readonly BoardPlacement[];
 }
@@ -22,15 +21,7 @@ const throwAdminRequired = () => {
   });
 };
 
-const throwFeatureDisabled = () => {
-  throw new TRPCError({
-    code: "SERVICE_UNAVAILABLE",
-    message: "Custom Widgets are temporarily disabled by the server administrator",
-  });
-};
-
-const assertAuthoringAllowed = (isAdmin: boolean, customWidgetsEnabled: boolean) => {
-  if (!customWidgetsEnabled) throwFeatureDisabled();
+const assertAuthoringAllowed = (isAdmin: boolean) => {
   if (!isAdmin) throwAdminRequired();
 };
 
@@ -41,7 +32,6 @@ const assertAuthoringAllowed = (isAdmin: boolean, customWidgetsEnabled: boolean)
  */
 export const throwIfCustomWidgetPlacementChangeForbidden = ({
   isAdmin,
-  customWidgetsEnabled,
   submittedItems,
   storedItems,
 }: CustomWidgetPlacementGuardInput) => {
@@ -50,14 +40,14 @@ export const throwIfCustomWidgetPlacementChangeForbidden = ({
     const stored = storedById.get(submitted.id);
 
     if (!stored) {
-      if (submitted.kind === "customApi") assertAuthoringAllowed(isAdmin, customWidgetsEnabled);
+      if (submitted.kind === "customApi") assertAuthoringAllowed(isAdmin);
       continue;
     }
 
     const wasCustomWidget = stored.kind === "customApi";
     const isCustomWidget = submitted.kind === "customApi";
     if (wasCustomWidget !== isCustomWidget) {
-      if (isCustomWidget) assertAuthoringAllowed(isAdmin, customWidgetsEnabled);
+      if (isCustomWidget) assertAuthoringAllowed(isAdmin);
       else if (!isAdmin) throwAdminRequired();
       continue;
     }
@@ -65,17 +55,16 @@ export const throwIfCustomWidgetPlacementChangeForbidden = ({
       wasCustomWidget &&
       !isDeepStrictEqual(normalizeCustomWidgetOptions(submitted.options), normalizeCustomWidgetOptions(stored.options))
     ) {
-      assertAuthoringAllowed(isAdmin, customWidgetsEnabled);
+      assertAuthoringAllowed(isAdmin);
     }
   }
 };
 
 export const throwIfCustomWidgetBoardDuplicationForbidden = (
   isAdmin: boolean,
-  customWidgetsEnabled: boolean,
   items: readonly Pick<BoardPlacement, "kind">[],
 ) => {
-  if (items.some((item) => item.kind === "customApi")) assertAuthoringAllowed(isAdmin, customWidgetsEnabled);
+  if (items.some((item) => item.kind === "customApi")) assertAuthoringAllowed(isAdmin);
 };
 
 function normalizeCustomWidgetOptions(options: Record<string, unknown>) {

@@ -15,7 +15,7 @@ import { WorkshopBackend } from "@homarr/workshop/backend";
 import { resolveHomarrUrlConfig, validateWorkshopWidget } from "@homarr/workshop/schema";
 
 import { env } from "../../env";
-import { workshopAdminProcedure } from "./feature-flags";
+import { permissionRequiredProcedure } from "../../trpc";
 import { insertCustomWidgetDefinition } from "./definition-insert";
 import { assertSecretSources } from "./secret-policy";
 
@@ -75,7 +75,8 @@ const sourceOverridesSchema = z.record(
 );
 
 export const workshopProcedures = {
-  workshopSearch: workshopAdminProcedure
+  workshopSearch: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Search Workshop for Custom JSX widgets." } })
     .input(workshopSearchInputSchema)
     .query(async ({ input }) => {
@@ -107,7 +108,8 @@ export const workshopProcedures = {
       }
     }),
 
-  workshopGet: workshopAdminProcedure
+  workshopGet: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Get and validate one Workshop Custom JSX widget." } })
     .input(z.object({ submissionId: z.string().min(1) }))
     .query(async ({ input }) => {
@@ -131,7 +133,8 @@ export const workshopProcedures = {
       };
     }),
 
-  workshopInstall: workshopAdminProcedure
+  workshopInstall: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Install one validated Workshop Custom JSX widget." } })
     .input(
       z.object({

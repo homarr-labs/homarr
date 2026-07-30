@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { customWidgetAdminProcedure } from "./feature-flags";
+import { permissionRequiredProcedure } from "../../trpc";
 import {
   getPreviewRequestSource,
   previewSessionRequestSchema,
@@ -15,7 +15,8 @@ import { acquireCustomWidgetRequestLimit } from "./request-limits";
 import { getPreviewJournal, getPreviewSession, setPreviewSessionLiveActions } from "./preview-sessions";
 
 export const previewQueryProcedures = {
-  previewQuery: customWidgetAdminProcedure
+  previewQuery: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({
       mcp: {
         enabled: true,
@@ -76,7 +77,8 @@ export const previewQueryProcedures = {
       };
     }),
 
-  previewRefresh: customWidgetAdminProcedure
+  previewRefresh: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z.object({
         sessionId: z.string().min(1),
@@ -109,13 +111,15 @@ export const previewQueryProcedures = {
       return { requestIds };
     }),
 
-  setPreviewLiveActions: customWidgetAdminProcedure
+  setPreviewLiveActions: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(z.object({ sessionId: z.string().min(1), enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) =>
       setPreviewSessionLiveActions(input.sessionId, ctx.session.user.id, input.enabled),
     ),
 
-  previewJournal: customWidgetAdminProcedure
+  previewJournal: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({
       mcp: {
         enabled: true,

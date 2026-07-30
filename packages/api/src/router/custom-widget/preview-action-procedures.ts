@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { customWidgetAdminProcedure } from "./feature-flags";
+import { permissionRequiredProcedure } from "../../trpc";
 import {
   getPreviewRequestSource,
   previewSessionRequestSchema,
@@ -13,7 +13,8 @@ import { acquireCustomWidgetRequestLimit } from "./request-limits";
 import { getPreviewSession } from "./preview-sessions";
 
 export const previewActionProcedures = {
-  previewAction: customWidgetAdminProcedure
+  previewAction: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({
       mcp: { enabled: true, description: "Simulate or run one named action in a custom widget preview session." },
     })

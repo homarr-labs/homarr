@@ -14,7 +14,7 @@ import {
 
 import { createTRPCRouter } from "../../trpc";
 import { insertCustomWidgetDefinition } from "./definition-insert";
-import { customWidgetAdminProcedure } from "./feature-flags";
+import { permissionRequiredProcedure } from "../../trpc";
 import { managementQueryProcedures } from "./management-queries";
 import { metadataProcedures } from "./metadata-procedures";
 import { previewActionProcedures } from "./preview-action-procedures";
@@ -37,7 +37,8 @@ export const customWidgetRouter = createTRPCRouter({
   ...metadataProcedures,
   ...managementQueryProcedures,
 
-  create: customWidgetAdminProcedure
+  create: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Create one validated Custom JSX widget." } })
     .input(customWidgetCreateSchema)
     .mutation(async ({ ctx, input }) => {
@@ -49,7 +50,8 @@ export const customWidgetRouter = createTRPCRouter({
       return { id };
     }),
 
-  update: customWidgetAdminProcedure
+  update: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Update one Custom JSX widget." } })
     .input(customWidgetUpdateSchema)
     .mutation(async ({ ctx, input }) => {
@@ -182,7 +184,8 @@ export const customWidgetRouter = createTRPCRouter({
   ...secretProcedures,
   ...workshopProcedures,
 
-  toggleEnabled: customWidgetAdminProcedure
+  toggleEnabled: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(z.object({ id: z.string(), enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       if (input.enabled) {
@@ -204,7 +207,8 @@ export const customWidgetRouter = createTRPCRouter({
         .where(eq(customWidgetDefinitions.id, input.id));
     }),
 
-  delete: customWidgetAdminProcedure
+  delete: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Delete one Custom JSX widget." } })
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -212,20 +216,23 @@ export const customWidgetRouter = createTRPCRouter({
       logger.info("Deleted custom widget definition", { id: input.id });
     }),
 
-  duplicate: customWidgetAdminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
-      where: eq(customWidgetDefinitions.id, input.id),
-    });
-    if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
-    const current = parseStoredCustomWidgetDefinition(existing);
-    const id = createId();
-    await ctx.db.insert(customWidgetDefinitions).values({
-      id,
-      ...serializeCustomWidgetDefinition({ ...current, name: `${current.name} (copy)` }),
-      creatorId: ctx.session.user.id,
-    });
-    return { id, name: `${current.name} (copy)` };
-  }),
+  duplicate: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+        where: eq(customWidgetDefinitions.id, input.id),
+      });
+      if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
+      const current = parseStoredCustomWidgetDefinition(existing);
+      const id = createId();
+      await ctx.db.insert(customWidgetDefinitions).values({
+        id,
+        ...serializeCustomWidgetDefinition({ ...current, name: `${current.name} (copy)` }),
+        creatorId: ctx.session.user.id,
+      });
+      return { id, name: `${current.name} (copy)` };
+    }),
 
   ...templateProcedures,
   ...transferProcedures,

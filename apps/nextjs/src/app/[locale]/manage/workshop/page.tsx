@@ -13,7 +13,6 @@ import { env } from "~/env";
 export default async function WorkshopPage() {
   const session = await auth();
   if (!session?.user.permissions.includes("admin")) redirect(session ? "/" : "/auth/login");
-  if (env.CUSTOM_WIDGETS_ENABLED === false || env.WORKSHOP_ENABLED === false) redirect("/");
   const t = await getScopedI18n("workshop");
   const { workshopWebUrl } = resolveHomarrUrlConfig({
     homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,

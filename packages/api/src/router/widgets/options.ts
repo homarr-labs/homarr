@@ -7,7 +7,6 @@ import { getServerSettingsAsync } from "@homarr/db/queries";
 import { boards, items } from "@homarr/db/schema";
 
 import type { WidgetOptionsSettings } from "../../../../widgets/src";
-import { env } from "../../env";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { throwIfCustomWidgetPlacementChangeForbidden } from "../board/custom-widget-placement-access";
@@ -51,7 +50,6 @@ export const optionsRouter = createTRPCRouter({
       const updatedOptions = { ...options, ...input.newOptions };
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: ctx.session.user.permissions.includes("admin"),
-        customWidgetsEnabled: env.CUSTOM_WIDGETS_ENABLED !== false,
         submittedItems: [{ id: item.id, kind: item.kind, options: updatedOptions }],
         storedItems: [{ id: item.id, kind: item.kind, options }],
       });

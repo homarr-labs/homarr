@@ -16,14 +16,11 @@ import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/wid
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import { WorkshopInstallButton } from "~/components/workshop/workshop-install-button";
-import { useRuntimeFeature } from "~/hooks/use-runtime-feature";
 import { useItemActions } from "./item-actions";
 
 export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, innerProps }) => {
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
-  const customWidgetsEnabled = useRuntimeFeature("custom-widgets");
-  const workshopEnabled = useRuntimeFeature("workshop");
   const [search, setSearch] = useState("");
   const t = useI18n();
   const { createItem, updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
@@ -31,7 +28,7 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
   const { data: integrationData } = clientApi.integration.all.useQuery();
   const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery(
     { boardId: innerProps.boardId },
-    { enabled: isAdmin && customWidgetsEnabled },
+    { enabled: isAdmin },
   );
   const settings = useSettings();
 
@@ -169,7 +166,7 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
         />
       ))}
 
-      {isAdmin && customWidgetsEnabled && (
+      {isAdmin && (
         <>
           <Divider
             label={t("customWidget.page.list.title")}
@@ -221,15 +218,13 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
             </Card>
           ))}
 
-          {workshopEnabled && (
-            <Box style={{ gridColumn: "1 / -1" }}>
-              <WorkshopInstallButton fullWidth>{t("workshop.installDialog")}</WorkshopInstallButton>
-            </Box>
-          )}
+          <Box style={{ gridColumn: "1 / -1" }}>
+            <WorkshopInstallButton fullWidth>{t("workshop.installDialog")}</WorkshopInstallButton>
+          </Box>
         </>
       )}
 
-      {filteredItems.length === 0 && (!isAdmin || !customWidgetsEnabled || filteredCustomWidgets.length === 0) && (
+      {filteredItems.length === 0 && (!isAdmin || filteredCustomWidgets.length === 0) && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>

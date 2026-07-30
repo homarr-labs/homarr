@@ -9,8 +9,6 @@ import { Link } from "@homarr/ui";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { CustomWidgetsUnavailable } from "~/components/custom-widgets/custom-widgets-unavailable";
-import { env } from "~/env";
 import { CustomWidgetBetaBanner } from "./_beta-banner";
 import { WorkshopInstallButton } from "~/components/workshop/workshop-install-button";
 import { ImportCustomWidgetButton } from "./_import-custom-widget-button";
@@ -22,8 +20,6 @@ export default async function CustomWidgetsPage() {
   if (!session || !session.user.permissions.includes("admin")) {
     redirect(session ? "/" : "/auth/login");
   }
-  if (env.CUSTOM_WIDGETS_ENABLED === false) return <CustomWidgetsUnavailable />;
-
   const definitions = await api.customWidget.list();
   const t = await getScopedI18n("customWidget");
 

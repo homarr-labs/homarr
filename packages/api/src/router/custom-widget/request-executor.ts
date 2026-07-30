@@ -18,7 +18,6 @@ import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "@homarr/
 import { CustomWidgetDomainError } from "@homarr/custom-widgets/server";
 
 import { toTrpcError } from "./domain-error";
-import { assertCustomWidgetsEnabled } from "./feature-flags";
 import { invalidateCustomWidgetResponseCache, withCustomWidgetResponseCache } from "./response-cache";
 
 export type {
@@ -84,7 +83,6 @@ export async function executeCustomWidgetRequest(
   input: CustomWidgetHttpRequest,
   options: CustomWidgetRequestExecutionOptions = {},
 ): Promise<CustomWidgetHttpResponse> {
-  assertCustomWidgetsEnabled();
   try {
     return await withCustomWidgetResponseCache(input, async () => {
       const release = await options.acquireRequestLimit?.();

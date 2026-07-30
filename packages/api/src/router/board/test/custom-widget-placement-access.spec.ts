@@ -20,7 +20,6 @@ describe("Custom Widget placement access", () => {
     expect(() =>
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: false,
-        customWidgetsEnabled: true,
         submittedItems: [{ ...placement, options: { ...placement.options, configurationVersion: 1 } }],
         storedItems: [],
       }),
@@ -39,7 +38,6 @@ describe("Custom Widget placement access", () => {
     expect(() =>
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: false,
-        customWidgetsEnabled: true,
         submittedItems: [submitted],
         storedItems: [placement],
       }),
@@ -55,7 +53,6 @@ describe("Custom Widget placement access", () => {
     expect(() =>
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: false,
-        customWidgetsEnabled: true,
         submittedItems: [submitted],
         storedItems: [placement],
       }),
@@ -66,7 +63,6 @@ describe("Custom Widget placement access", () => {
     expect(() =>
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: false,
-        customWidgetsEnabled: true,
         submittedItems: [],
         storedItems: [placement],
       }),
@@ -77,7 +73,6 @@ describe("Custom Widget placement access", () => {
     expect(() =>
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: true,
-        customWidgetsEnabled: true,
         submittedItems: [{ ...placement, options: { definitionId: "definition-2" } }],
         storedItems: [],
       }),
@@ -85,18 +80,17 @@ describe("Custom Widget placement access", () => {
   });
 
   test("duplicating a board with Custom Widgets requires admin", () => {
-    expect(() => throwIfCustomWidgetBoardDuplicationForbidden(false, true, [placement])).toThrowError(
+    expect(() => throwIfCustomWidgetBoardDuplicationForbidden(false, [placement])).toThrowError(
       "Only administrators can add or configure Custom Widgets",
     );
-    expect(() => throwIfCustomWidgetBoardDuplicationForbidden(true, true, [placement])).not.toThrow();
-    expect(() => throwIfCustomWidgetBoardDuplicationForbidden(false, true, [{ kind: "weather" }])).not.toThrow();
+    expect(() => throwIfCustomWidgetBoardDuplicationForbidden(true, [placement])).not.toThrow();
+    expect(() => throwIfCustomWidgetBoardDuplicationForbidden(false, [{ kind: "weather" }])).not.toThrow();
   });
 
   test("treats missing persisted v2 defaults as equivalent during presentation-only edits", () => {
     expect(() =>
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: false,
-        customWidgetsEnabled: true,
         submittedItems: [placement],
         storedItems: [
           {
@@ -111,27 +105,5 @@ describe("Custom Widget placement access", () => {
         ],
       }),
     ).not.toThrow();
-  });
-
-  test("blocks authoring but still allows removal while the emergency switch is off", () => {
-    expect(() =>
-      throwIfCustomWidgetPlacementChangeForbidden({
-        isAdmin: true,
-        customWidgetsEnabled: false,
-        submittedItems: [placement],
-        storedItems: [],
-      }),
-    ).toThrowError("temporarily disabled");
-    expect(() =>
-      throwIfCustomWidgetPlacementChangeForbidden({
-        isAdmin: false,
-        customWidgetsEnabled: false,
-        submittedItems: [],
-        storedItems: [placement],
-      }),
-    ).not.toThrow();
-    expect(() => throwIfCustomWidgetBoardDuplicationForbidden(true, false, [placement])).toThrowError(
-      "temporarily disabled",
-    );
   });
 });

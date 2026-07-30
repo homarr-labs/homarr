@@ -8,22 +8,26 @@ import { customWidgetDefinitions, customWidgetSecrets, legacyCustomWidgetDefinit
 import { customWidgetImportSchema, customWidgetSecretsInputSchema } from "@homarr/custom-widgets/core";
 
 import { insertCustomWidgetDefinition } from "./definition-insert";
-import { customWidgetAdminProcedure } from "./feature-flags";
+import { permissionRequiredProcedure } from "../../trpc";
 import { assertSecretSources, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition, serializeCustomWidgetDefinition } from "./stored-definition";
 
 const logger = createLogger({ module: "custom-widget" });
 
 export const transferProcedures = {
-  export: customWidgetAdminProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-    const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
-      where: eq(customWidgetDefinitions.id, input.id),
-    });
-    if (!definition) throw new TRPCError({ code: "NOT_FOUND" });
-    return parseStoredCustomWidgetDefinition(definition);
-  }),
+  export: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+        where: eq(customWidgetDefinitions.id, input.id),
+      });
+      if (!definition) throw new TRPCError({ code: "NOT_FOUND" });
+      return parseStoredCustomWidgetDefinition(definition);
+    }),
 
-  import: customWidgetAdminProcedure
+  import: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(z.object({ widget: customWidgetImportSchema, secrets: customWidgetSecretsInputSchema.default([]) }))
     .mutation(async ({ ctx, input }) => {
       assertSecretSources(input.widget.sources, input.secrets);
@@ -32,7 +36,8 @@ export const transferProcedures = {
       return { id };
     }),
 
-  migrateLegacy: customWidgetAdminProcedure
+  migrateLegacy: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({
       mcp: {
         enabled: true,

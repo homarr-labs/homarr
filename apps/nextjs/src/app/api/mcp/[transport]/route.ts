@@ -27,7 +27,6 @@ import {
 import { customJsxExamples, getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 import { db } from "@homarr/db";
 
-import { env } from "~/env";
 import { getPackageVersion } from "~/versions/package-reader";
 import { extractMcpTools } from "../_extract-tools";
 
@@ -124,17 +123,14 @@ function getVisibleTools() {
   if (!isCustomWidgetMcpEnabled()) {
     return tools.filter((tool) => !tool.name.startsWith("customWidget_"));
   }
-  return env.WORKSHOP_ENABLED === false
-    ? tools.filter((tool) => !tool.name.startsWith("customWidget_workshop"))
-    : tools;
+  return tools;
 }
 
 function requireCustomWidgetMcpAdmin() {
   if (!isCustomWidgetMcpEnabled()) throw new Error("Resource not found");
 }
 
-const isCustomWidgetMcpEnabled = () =>
-  Boolean(callerStorage.getStore()?.isAdmin) && env.CUSTOM_WIDGETS_ENABLED !== false;
+const isCustomWidgetMcpEnabled = () => Boolean(callerStorage.getStore()?.isAdmin);
 
 const SAFE_ERROR_MESSAGES: Record<string, string> = {
   UNAUTHORIZED: "You do not have permission to perform this action",

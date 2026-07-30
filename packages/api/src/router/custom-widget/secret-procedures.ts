@@ -10,7 +10,7 @@ import {
 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
 
-import { customWidgetAdminProcedure } from "./feature-flags";
+import { permissionRequiredProcedure } from "../../trpc";
 import {
   createCustomWidgetConfigurationRequest,
   getCustomWidgetConfigurationRequestForUser,
@@ -41,7 +41,8 @@ const secretRequestInputSchema = z
   });
 
 export const secretProcedures = {
-  secretSet: customWidgetAdminProcedure
+  secretSet: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Set one encrypted secret for a custom widget source." } })
     .input(z.object({ definitionId: z.string(), secret: customWidgetSecretInputSchema }))
     .mutation(async ({ ctx, input }) => {
@@ -55,7 +56,8 @@ export const secretProcedures = {
       return { sourceId: input.secret.sourceId, kind: input.secret.kind, isSet: true };
     }),
 
-  sourceConfigure: customWidgetAdminProcedure
+  sourceConfigure: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Configure one custom widget API source and its credentials." } })
     .input(
       z.object({
@@ -96,7 +98,8 @@ export const secretProcedures = {
       };
     }),
 
-  configurationRequestUser: customWidgetAdminProcedure
+  configurationRequestUser: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Create or check a short-lived user source-configuration request." } })
     .input(secretRequestInputSchema)
     .mutation(async ({ ctx, input }) => {
@@ -159,7 +162,8 @@ export const secretProcedures = {
       };
     }),
 
-  secretClear: customWidgetAdminProcedure
+  secretClear: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z.object({ definitionId: z.string(), sourceId: z.string(), kind: z.enum(["apiKey", "username", "password"]) }),
     )

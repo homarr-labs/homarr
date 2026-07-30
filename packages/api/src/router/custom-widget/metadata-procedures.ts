@@ -4,14 +4,16 @@ import { CUSTOM_WIDGET_MCP_AUTHORING_PROMPT } from "@homarr/custom-widgets/autho
 import { getCustomWidgetSkill } from "@homarr/custom-widgets/authoring-resources";
 import { customWidgetImportSchema, getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 
-import { customWidgetAdminProcedure } from "./feature-flags";
+import { permissionRequiredProcedure } from "../../trpc";
 
 export const metadataProcedures = {
-  schema: customWidgetAdminProcedure
+  schema: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Get the current Custom JSX widget JSON Schema." } })
     .query(() => getCustomWidgetJsonSchema()),
 
-  getAuthoringPrompt: customWidgetAdminProcedure
+  getAuthoringPrompt: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Get the current Custom Widget authoring instructions." } })
     .query(() => ({
       version: 2,
@@ -24,11 +26,13 @@ export const metadataProcedures = {
       httpResources: ["/api/custom-widgets/schema", "/api/custom-widgets/components", "/api/custom-widgets/skill"],
     })),
 
-  getSkill: customWidgetAdminProcedure
+  getSkill: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Get the portable Homarr Custom Widget skill." } })
     .query(() => getCustomWidgetSkill()),
 
-  validate: customWidgetAdminProcedure
+  validate: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Validate one Custom JSX widget without saving it." } })
     .input(z.object({ widget: z.unknown() }))
     .query(({ input }) => {

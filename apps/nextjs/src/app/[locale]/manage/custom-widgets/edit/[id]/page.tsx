@@ -5,9 +5,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { CustomWidgetsUnavailable } from "~/components/custom-widgets/custom-widgets-unavailable";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
-import { env } from "~/env";
 import { CustomWidgetBetaBanner } from "../../_beta-banner";
 import { CustomWidgetForm } from "../../_custom-widget-form";
 import { FormErrorBoundary } from "../../_form-error-boundary";
@@ -21,8 +19,6 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
   if (!session || !session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
-  if (env.CUSTOM_WIDGETS_ENABLED === false) return <CustomWidgetsUnavailable />;
-
   const params = await props.params;
   const definition = await api.customWidget.get({ id: params.id }).catch(catchTrpcNotFound);
 

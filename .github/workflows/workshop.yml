@@ -2,7 +2,6 @@ name: Workshop
 
 on:
   pull_request:
-  merge_group:
   push:
     branches: [dev, v2]
 
@@ -11,9 +10,8 @@ permissions:
 
 jobs:
   validate:
-    name: Workshop integration
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
@@ -28,42 +26,3 @@ jobs:
       - run: pnpm --filter @homarr/docs typecheck
       - run: pnpm test:workshop
       - run: docker build --target production -f apps/workshop/Dockerfile .
-      - name: Build and smoke-test a non-root documentation deployment
-        run: |
-          docker build \
-            --build-arg DOCS_BASE_URL=/docs-site/ \
-            --tag homarr-workshop:base-path-smoke \
-            --target production \
-            --file apps/workshop/Dockerfile \
-            .
-          docker run --detach --name workshop-base-path-smoke \
-            --publish 127.0.0.1:18093:8090 \
-            --env DOCS_BASE_URL=/docs-site/ \
-            --env HOMARR_WEBSITE_URL=http://127.0.0.1:18093 \
-            --env WORKSHOP_API_URL=http://127.0.0.1:18093 \
-            --env WORKSHOP_WEB_URL=http://127.0.0.1:18093/docs-site/workshop \
-            --env WORKSHOP_PUBLIC_ORIGIN=http://127.0.0.1:18093 \
-            --env WORKSHOP_REQUIRE_OAUTH=false \
-            homarr-workshop:base-path-smoke
-          for attempt in $(seq 1 60); do
-            if curl --fail --silent http://127.0.0.1:18093/api/health >/dev/null; then
-              break
-            fi
-            if [ "$attempt" -eq 60 ]; then
-              docker logs workshop-base-path-smoke
-              exit 1
-            fi
-            sleep 1
-          done
-          curl --fail --silent --show-error http://127.0.0.1:18093/docs-site/ \
-            | grep --fixed-strings '/docs-site/assets/'
-          curl --location --fail --silent --show-error http://127.0.0.1:18093/docs-site/workshop/ \
-            | grep --fixed-strings '/docs-site/workshop/'
-          curl --fail --silent --show-error \
-            http://127.0.0.1:18093/docs-site/workshop-runtime-config.js \
-            | grep --fixed-strings 'workshopWebUrl: "http://127.0.0.1:18093/docs-site/workshop"'
-          curl --fail --silent --show-error \
-            'http://127.0.0.1:18093/api/collections/workshop_listings/records?page=1&perPage=1' >/dev/null
-      - name: Stop non-root documentation smoke container
-        if: always()
-        run: docker rm --force workshop-base-path-smoke >/dev/null 2>&1 || true

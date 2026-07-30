@@ -10,7 +10,6 @@ import type { WorkshopUser } from "@homarr/workshop/schema";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { createWorkshopClient } from "./workshop-client";
-import { useRuntimeFeature } from "~/hooks/use-runtime-feature";
 import {
   getPrivateWorkshopSourceNames,
   publishWorkshopDefinition,
@@ -26,7 +25,6 @@ export function WorkshopPublishModal({
   onClose(): void;
   widget: { id: string; name: string };
 }) {
-  const workshopEnabled = useRuntimeFeature("workshop");
   const t = useScopedI18n("workshop");
   const client = useMemo(createWorkshopClient, []);
   const [user, setUser] = useState<WorkshopUser | null>(null);
@@ -37,16 +35,15 @@ export function WorkshopPublishModal({
   const [error, setError] = useState<string | null>(null);
   const [published, setPublished] = useState(false);
   const [sourceUrlsReviewed, setSourceUrlsReviewed] = useState(false);
-  const definition = clientApi.customWidget.export.useQuery({ id: widget.id }, { enabled: opened && workshopEnabled });
+  const definition = clientApi.customWidget.export.useQuery({ id: widget.id }, { enabled: opened });
   const privateSourceNames = getPrivateWorkshopSourceNames(definition.data);
   const definitionFingerprint = definition.data ? serializeWorkshopDefinition(definition.data) : null;
 
   useEffect(() => {
-    if (!workshopEnabled) return;
     const unsubscribe = client.subscribeToAuth(setUser);
     void client.refreshAuth().then(setUser);
     return unsubscribe;
-  }, [client, workshopEnabled]);
+  }, [client]);
   useEffect(() => {
     if (!opened) return;
     setTitle(widget.name);
@@ -88,8 +85,6 @@ export function WorkshopPublishModal({
       setError(cause instanceof Error ? cause.message : t("publish.error"));
     }
   };
-
-  if (!workshopEnabled) return null;
 
   return (
     <Modal opened={opened} onClose={onClose} title={t("publish.title")} size="lg">
