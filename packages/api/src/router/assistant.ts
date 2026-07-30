@@ -34,13 +34,13 @@ const configurationId = "default";
 const providerSchema = z.enum(assistantProviderIds);
 
 const modelSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  description: z.string().nullable(),
-  contextLength: z.number().nullable(),
-  promptPrice: z.string().nullable(),
-  completionPrice: z.string().nullable(),
-  inputModalities: z.array(z.string()),
+  id: z.string().min(1).max(256),
+  name: z.string().min(1).max(256),
+  description: z.string().max(2048).nullable(),
+  contextLength: z.number().int().positive().max(Number.MAX_SAFE_INTEGER).nullable(),
+  promptPrice: z.string().max(64).nullable(),
+  completionPrice: z.string().max(64).nullable(),
+  inputModalities: z.array(z.string().max(32)).max(16),
   toolSupport: z.enum(["confirmed", "unknown"]),
 });
 
@@ -71,7 +71,7 @@ export type AssistantContextEntity = {
   boardId?: string;
 };
 
-const selectedModelCache = new Map<string, { expiresAt: number; value: z.infer<typeof modelSchema> | null }>();
+const modelListCache = new Map<string, { expiresAt: number; value: z.infer<typeof modelSchema>[] }>();
 
 const customHeadersSchema = z
   .record(
@@ -197,7 +197,7 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
   } catch {
     throw new TRPCError({ code: "BAD_GATEWAY", message: "The model endpoint returned invalid JSON." });
   }
-  const models = Array.isArray(body) ? body : (body.data ?? body.models ?? []);
+  const models = (Array.isArray(body) ? body : (body.data ?? body.models ?? [])).slice(0, 1_000);
   return models
     .filter((model) => {
       if (configuration.provider !== "openrouter") return true;
@@ -209,15 +209,21 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
     })
     .flatMap((model) => {
       const id = typeof model.id === "string" ? model.id : typeof model.model === "string" ? model.model : null;
-      if (!id) return [];
+      if (!id || id.length > 256) return [];
       const name =
         typeof model.name === "string" ? model.name : typeof model.display_name === "string" ? model.display_name : id;
       const contextLength =
-        typeof model.context_length === "number"
+        typeof model.context_length === "number" &&
+        Number.isSafeInteger(model.context_length) &&
+        model.context_length > 0
           ? model.context_length
-          : typeof model.max_context_length === "number"
+          : typeof model.max_context_length === "number" &&
+              Number.isSafeInteger(model.max_context_length) &&
+              model.max_context_length > 0
             ? model.max_context_length
-            : typeof model.max_input_tokens === "number"
+            : typeof model.max_input_tokens === "number" &&
+                Number.isSafeInteger(model.max_input_tokens) &&
+                model.max_input_tokens > 0
               ? model.max_input_tokens
               : null;
       const toolSupport =
@@ -231,15 +237,17 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
         : Array.isArray(model.input_modalities)
           ? model.input_modalities
           : [];
-      const inputModalities = rawInputModalities.filter((modality): modality is string => typeof modality === "string");
+      const inputModalities = rawInputModalities
+        .filter((modality): modality is string => typeof modality === "string" && modality.length <= 32)
+        .slice(0, 16);
       return [
         {
           id,
-          name,
-          description: typeof model.description === "string" ? model.description : null,
+          name: name.slice(0, 256),
+          description: typeof model.description === "string" ? model.description.slice(0, 2048) : null,
           contextLength,
-          promptPrice: typeof model.pricing?.prompt === "string" ? model.pricing.prompt : null,
-          completionPrice: typeof model.pricing?.completion === "string" ? model.pricing.completion : null,
+          promptPrice: typeof model.pricing?.prompt === "string" ? model.pricing.prompt.slice(0, 64) : null,
+          completionPrice: typeof model.pricing?.completion === "string" ? model.pricing.completion.slice(0, 64) : null,
           inputModalities,
           toolSupport,
         },
@@ -248,25 +256,34 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
     .toSorted((left, right) => left.name.localeCompare(right.name));
 };
 
-export const getSelectedModelDetailsAsync = async (configuration: AssistantConfiguration) => {
-  if (!configuration.modelId || !configuration.modelDiscoveryPath) return null;
-
-  const cacheKey = [
+const getModelListCacheKey = (configuration: AssistantConfiguration) =>
+  [
     configuration.provider,
     configuration.baseUrl,
     configuration.modelDiscoveryPath,
-    configuration.modelId,
     configuration.updatedAt.getTime(),
   ].join(":");
-  const cached = selectedModelCache.get(cacheKey);
-  if (cached && cached.expiresAt > Date.now()) return cached.value;
 
-  const models = await fetchModelsAsync(configuration);
-  const resolvedModelId = resolveAssistantModelId(models, configuration.modelId);
-  const value = models.find((model) => model.id === resolvedModelId) ?? null;
-  selectedModelCache.clear();
-  selectedModelCache.set(cacheKey, { expiresAt: Date.now() + 10 * 60_000, value });
+export const getAssistantModelsAsync = async (configuration: AssistantConfiguration, refresh = false) => {
+  if (!configuration.modelDiscoveryPath) return [];
+  const cacheKey = getModelListCacheKey(configuration);
+  const cached = modelListCache.get(cacheKey);
+  if (!refresh && cached && cached.expiresAt > Date.now()) return cached.value;
+
+  const value = await fetchModelsAsync(configuration);
+  modelListCache.clear();
+  modelListCache.set(cacheKey, { expiresAt: Date.now() + 10 * 60_000, value });
   return value;
+};
+
+export const getSelectedModelDetailsAsync = async (
+  configuration: AssistantConfiguration,
+  requestedModelId = configuration.modelId,
+) => {
+  if (!requestedModelId || !configuration.modelDiscoveryPath) return null;
+  const models = await getAssistantModelsAsync(configuration);
+  const resolvedModelId = resolveAssistantModelId(models, requestedModelId);
+  return models.find((model) => model.id === resolvedModelId) ?? null;
 };
 
 export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): Promise<AssistantContextEntity[]> => {
@@ -427,12 +444,13 @@ export const assistantRouter = createTRPCRouter({
           "Returns the configured assistant model's discovered input modalities and whether image input is supported, unsupported, or unknown.",
       },
     })
-    .query(async ({ ctx }) => {
+    .input(z.object({ modelId: z.string().trim().min(1).max(256).optional() }).optional())
+    .query(async ({ ctx, input }) => {
       const configuration = await getConfigurationAsync(ctx.db);
       if (!configuration?.enabled || !configuration.modelId) {
         return { imageInput: "unsupported" as const, inputModalities: [] as string[] };
       }
-      const model = await getSelectedModelDetailsAsync(configuration).catch(() => null);
+      const model = await getSelectedModelDetailsAsync(configuration, input?.modelId).catch(() => null);
       if (!model || model.inputModalities.length === 0) {
         return { imageInput: "unknown" as const, inputModalities: [] as string[] };
       }
@@ -441,6 +459,30 @@ export const assistantRouter = createTRPCRouter({
         inputModalities: model.inputModalities,
       };
     }),
+
+  getRuntimeOptions: protectedProcedure.query(async ({ ctx }) => {
+    const configuration = await getConfigurationAsync(ctx.db);
+    if (!configuration?.enabled || !configuration.modelId) {
+      throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Homarr Assistant is not configured." });
+    }
+    const discoveredModels = await getAssistantModelsAsync(configuration).catch(() => []);
+    const resolvedDefaultId = resolveAssistantModelId(discoveredModels, configuration.modelId) ?? configuration.modelId;
+    const defaultModel = discoveredModels.find((model) => model.id === resolvedDefaultId) ?? {
+      id: resolvedDefaultId,
+      name: resolvedDefaultId,
+      description: null,
+      contextLength: null,
+      promptPrice: null,
+      completionPrice: null,
+      inputModalities: [],
+      toolSupport: "unknown" as const,
+    };
+    return {
+      provider: configuration.provider,
+      defaultModelId: defaultModel.id,
+      models: [defaultModel, ...discoveredModels.filter((model) => model.id !== defaultModel.id)],
+    };
+  }),
 
   getAdminConfiguration: adminProcedure.query(async ({ ctx }) => {
     const configuration = await getConfigurationAsync(ctx.db);
@@ -540,7 +582,7 @@ export const assistantRouter = createTRPCRouter({
     if (!configuration) {
       throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Save a provider connection first." });
     }
-    return await fetchModelsAsync(configuration);
+    return await getAssistantModelsAsync(configuration, true);
   }),
 
   updateConfiguration: adminProcedure
@@ -588,6 +630,31 @@ export const assistantRouter = createTRPCRouter({
         updatedAt: now,
       });
       return { id };
+    }),
+
+  updateThreadModel: protectedProcedure
+    .input(z.object({ threadId: z.string().max(64), modelId: z.string().trim().min(1).max(256) }))
+    .mutation(async ({ ctx, input }) => {
+      const [thread, configuration] = await Promise.all([
+        ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id),
+        getConfigurationAsync(ctx.db),
+      ]);
+      if (!configuration?.enabled || !configuration.modelId) {
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Homarr Assistant is not configured." });
+      }
+      const selectedModel = await getSelectedModelDetailsAsync(configuration, input.modelId).catch(() => null);
+      if (input.modelId !== configuration.modelId && !selectedModel) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "The selected model is not available from the configured provider.",
+        });
+      }
+      const modelId = selectedModel?.id ?? configuration.modelId;
+      await ctx.db
+        .update(assistantThreads)
+        .set({ modelId, updatedAt: new Date() })
+        .where(eq(assistantThreads.id, thread.id));
+      return { modelId };
     }),
 
   getThread: protectedProcedure.input(z.object({ threadId: z.string().max(64) })).query(async ({ ctx, input }) => {

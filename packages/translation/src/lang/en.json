@@ -1508,6 +1508,7 @@
       "subtitle": "Connected to this Homarr instance",
       "open": "Open Homarr Assistant",
       "close": "Close assistant",
+      "minimize": "Minimize assistant",
       "spotlight": "Ask Homarr Assistant",
       "spotlightDescription": "Type and send a prompt without leaving the command menu.",
       "spotlightPrompt": {
@@ -1548,6 +1549,19 @@
         }
       },
       "composerPlaceholder": "Ask Homarr Assistant…",
+      "runtime": {
+        "model": "Model",
+        "noModels": "No models available",
+        "thinking": "Thinking mode",
+        "reasoning": {
+          "auto": "Thinking: Auto",
+          "none": "Thinking: Off",
+          "minimal": "Thinking: Minimal",
+          "low": "Thinking: Low",
+          "medium": "Thinking: Medium",
+          "high": "Thinking: High"
+        }
+      },
       "stop": "Stop response",
       "send": "Send message",
       "copy": "Copy response",

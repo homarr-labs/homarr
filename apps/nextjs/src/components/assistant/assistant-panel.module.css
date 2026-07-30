@@ -675,6 +675,42 @@
   padding-inline: 0.45rem;
 }
 
+.composerFooter {
+  min-width: 0;
+  padding-inline: 0.2rem;
+}
+
+.runtimeControls {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.modelSelect {
+  width: min(15rem, 52%);
+  min-width: 8rem;
+}
+
+.reasoningSelect {
+  width: 8.75rem;
+  flex: 0 0 auto;
+}
+
+.runtimeSelectInput {
+  border-color: transparent;
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+  font-weight: 600;
+}
+
+.runtimeSelectInput:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.runtimeSelectInput:focus,
+.runtimeSelectInput:focus-within {
+  border-color: var(--mantine-primary-color-filled);
+}
+
 .triggerPopover {
   position: absolute;
   z-index: 5;
@@ -815,6 +851,24 @@
     padding: 0.6rem 0.55rem;
   }
 
+  .composerFooter {
+    padding-inline: 0.1rem;
+  }
+
+  .composerHints {
+    display: none;
+  }
+
+  .runtimeControls {
+    width: 100%;
+  }
+
+  .modelSelect {
+    width: auto;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
   .suggestions {
     grid-template-columns: 1fr;
   }
@@ -861,8 +915,8 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .composerHints {
-    display: none;
+  .reasoningSelect {
+    width: 7.75rem;
   }
 }
 

@@ -10,6 +10,7 @@ import {
   apps,
   assistantConfigurations,
   assistantMessages,
+  assistantThreads,
   boards,
   integrations,
   integrationUserPermissions,
@@ -141,6 +142,59 @@ describe("assistantRouter.updateConfiguration", () => {
 });
 
 describe("assistant conversation features", () => {
+  test("returns safe runtime model options to signed-in users", async () => {
+    const db = await createConfiguredAssistantAsync();
+    await db
+      .update(assistantConfigurations)
+      .set({
+        baseUrl: "https://models.example/v1",
+        encryptedHeaders: null,
+        updatedAt: new Date("2026-07-30T14:00:00.000Z"),
+      })
+      .where(eq(assistantConfigurations.id, "default"));
+    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        Response.json({
+          data: [
+            {
+              id: "example/model",
+              name: "Example Model",
+              supported_parameters: ["tools"],
+              architecture: { input_modalities: ["text", "image"], output_modalities: ["text"] },
+            },
+            {
+              id: "example/no-tools",
+              name: "No tools",
+              supported_parameters: [],
+              architecture: { output_modalities: ["text"] },
+            },
+          ],
+        }),
+      ),
+    );
+
+    try {
+      const options = await caller.getRuntimeOptions();
+
+      expect(options).toEqual({
+        provider: "openrouter",
+        defaultModelId: "example/model",
+        models: [
+          expect.objectContaining({
+            id: "example/model",
+            name: "Example Model",
+            inputModalities: ["text", "image"],
+          }),
+        ],
+      });
+      expect(JSON.stringify(options)).not.toContain("encrypted");
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   test("returns permission-checked entities for composer mentions", async () => {
     const db = await createConfiguredAssistantAsync();
     await db.insert(users).values({ id: adminSession.user.id });
@@ -170,6 +224,53 @@ describe("assistant conversation features", () => {
         expect.objectContaining({ id: "integration-1", type: "integration", label: "Media server" }),
       ]),
     );
+  });
+
+  test("persists a discovered model choice on the owned conversation", async () => {
+    const db = await createConfiguredAssistantAsync();
+    await db.insert(users).values({ id: adminSession.user.id });
+    await db
+      .update(assistantConfigurations)
+      .set({
+        baseUrl: "https://thread-models.example/v1",
+        encryptedHeaders: null,
+        updatedAt: new Date("2026-07-30T15:00:00.000Z"),
+      })
+      .where(eq(assistantConfigurations.id, "default"));
+    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const thread = await caller.createThread();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        Response.json({
+          data: [
+            {
+              id: "example/model",
+              name: "Default",
+              supported_parameters: ["tools"],
+              architecture: { output_modalities: ["text"] },
+            },
+            {
+              id: "example/reasoning",
+              name: "Reasoning",
+              supported_parameters: ["tools"],
+              architecture: { output_modalities: ["text"] },
+            },
+          ],
+        }),
+      ),
+    );
+
+    try {
+      await caller.updateThreadModel({ threadId: thread.id, modelId: "example/reasoning" });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+
+    const storedThread = await db.query.assistantThreads.findFirst({
+      where: eq(assistantThreads.id, thread.id),
+    });
+    expect(storedThread?.modelId).toBe("example/reasoning");
   });
 
   test("persists feedback on an owned assistant message", async () => {
