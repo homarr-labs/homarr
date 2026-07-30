@@ -505,7 +505,6 @@ export const assistantThreads = sqliteTable(
       .references(() => users.id, { onDelete: "cascade" }),
     title: text(),
     modelId: text(),
-    status: text().$type<"regular" | "archived">().notNull().default("regular"),
     createdAt: int({ mode: "timestamp" })
       .notNull()
       .default(sql`(unixepoch())`),

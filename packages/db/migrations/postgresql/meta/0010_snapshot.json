@@ -404,13 +404,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "status": {
-          "name": "status",
-          "type": "varchar(16)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'regular'"
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",

@@ -406,14 +406,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'regular'"
-        },
         "created_at": {
           "name": "created_at",
           "type": "integer",

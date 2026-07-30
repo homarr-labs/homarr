@@ -52,6 +52,7 @@ interface AssistantContextValue {
 }
 
 const AssistantContext = createContext<AssistantContextValue | null>(null);
+const ignoreUnsupportedArchiveAction = () => Promise.resolve();
 
 export const useHomarrAssistant = () => {
   const value = useContext(AssistantContext);
@@ -69,7 +70,7 @@ const threadAdapter: RemoteThreadListAdapter = {
     return {
       threads: threads.map((thread) => ({
         remoteId: thread.id,
-        status: thread.status,
+        status: "regular",
         title: thread.title ?? undefined,
         lastMessageAt: thread.updatedAt,
         custom: { modelId: thread.modelId },
@@ -84,7 +85,7 @@ const threadAdapter: RemoteThreadListAdapter = {
     const { thread } = await fetchApi.assistant.getThread.query({ threadId });
     return {
       remoteId: thread.id,
-      status: thread.status,
+      status: "regular",
       title: thread.title ?? undefined,
       lastMessageAt: thread.updatedAt,
       custom: { modelId: thread.modelId },
@@ -93,12 +94,9 @@ const threadAdapter: RemoteThreadListAdapter = {
   async rename(threadId, title) {
     await fetchApi.assistant.renameThread.mutate({ threadId, title });
   },
-  async archive(threadId) {
-    await fetchApi.assistant.setThreadStatus.mutate({ threadId, status: "archived" });
-  },
-  async unarchive(threadId) {
-    await fetchApi.assistant.setThreadStatus.mutate({ threadId, status: "regular" });
-  },
+  // assistant-ui requires these callbacks even when the product does not expose archiving.
+  archive: ignoreUnsupportedArchiveAction,
+  unarchive: ignoreUnsupportedArchiveAction,
   async delete(threadId) {
     await fetchApi.assistant.deleteThread.mutate({ threadId });
   },

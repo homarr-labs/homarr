@@ -142,11 +142,7 @@ export async function POST(request: Request) {
   }
 
   const thread = await db.query.assistantThreads.findFirst({
-    where: and(
-      eq(assistantThreads.id, parsed.data.id),
-      eq(assistantThreads.userId, session.user.id),
-      eq(assistantThreads.status, "regular"),
-    ),
+    where: and(eq(assistantThreads.id, parsed.data.id), eq(assistantThreads.userId, session.user.id)),
   });
   if (!thread) {
     return Response.json({ error: "Conversation not found." }, { status: 404 });
