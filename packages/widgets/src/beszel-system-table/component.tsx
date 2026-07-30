@@ -2,10 +2,10 @@
 
 import "./styles.css";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Center, Group, Indicator, Loader, Progress, Text } from "@mantine/core";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
-import { DataTable } from "mantine-datatable";
+import { DataTable, useDataTableColumns } from "mantine-datatable";
 import {
   Activity,
   Battery,
@@ -21,6 +21,7 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -42,6 +43,21 @@ import { DiskUsage } from "../beszel/_shared/disk-usage";
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
 type SystemRowWithKey = BeszelSystemRow & { _key: string };
+
+const columnAccessors = [
+  "name",
+  "cpu",
+  "memory",
+  "disk",
+  "gpu",
+  "loadAvg",
+  "netBytes",
+  "temp",
+  "battery",
+  "services",
+  "uptime",
+  "agentVersion",
+] as const satisfies readonly (keyof BeszelSystemRow)[];
 
 interface SizeConfig {
   iconSize: number;
@@ -70,11 +86,48 @@ const getSizeConfig = (width: number): SizeConfig => {
   };
 };
 
+export const parseColumnOrder = (value: string): string[] => {
+  if (!value) return [];
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+
+    const allowed = new Set<string>(columnAccessors);
+    return parsed.filter(
+      (accessor, index): accessor is string =>
+        typeof accessor === "string" && allowed.has(accessor) && parsed.indexOf(accessor) === index,
+    );
+  } catch {
+    return [];
+  }
+};
+
+export const parseColumnWidths = (value: string): Record<string, number> => {
+  if (!value) return {};
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return {};
+
+    const allowed = new Set<string>(columnAccessors);
+    return Object.fromEntries(
+      Object.entries(parsed).filter(
+        (entry): entry is [string, number] =>
+          allowed.has(entry[0]) && typeof entry[1] === "number" && Number.isFinite(entry[1]) && entry[1] > 0,
+      ),
+    );
+  } catch {
+    return {};
+  }
+};
+
 export default function BeszelSystemTableWidget({
   options,
   integrationIds,
   isEditMode,
   width,
+  boardId,
+  itemId,
+  setOptions,
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
   const { openModal } = useModalAction(BeszelSystemStatsModal);
@@ -83,7 +136,25 @@ export default function BeszelSystemTableWidget({
     error: systemsError,
     isPending,
   } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
-  const size = getSizeConfig(width);
+  const size = useMemo(() => getSizeConfig(width), [width]);
+
+  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
+    onError: () =>
+      showErrorNotification({
+        title: t("error.layoutSaveTitle"),
+        message: t("error.layoutSaveMessage"),
+      }),
+  });
+  const persistLayout = useCallback(
+    (newOptions: Partial<Pick<typeof options, "columnOrder" | "columnWidths">>) => {
+      setOptions({ newOptions });
+      if (boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
+    },
+    [boardId, itemId, saveItemOptions, setOptions],
+  );
+
+  const savedOrder = useMemo(() => parseColumnOrder(options.columnOrder), [options.columnOrder]);
+  const savedWidths = useMemo(() => parseColumnWidths(options.columnWidths), [options.columnWidths]);
 
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
 
@@ -91,6 +162,12 @@ export default function BeszelSystemTableWidget({
     columnAccessor: options.sortBy,
     direction: options.sortDirection as "asc" | "desc",
   });
+  useEffect(() => {
+    setSortStatus({
+      columnAccessor: options.sortBy,
+      direction: options.sortDirection as "asc" | "desc",
+    });
+  }, [options.sortBy, options.sortDirection]);
 
   const sortedSystems = useMemo(() => {
     const accessor = sortStatus.columnAccessor as keyof BeszelSystemRow;
@@ -122,6 +199,8 @@ export default function BeszelSystemTableWidget({
     const cols: (DataTableColumn<SystemRowWithKey> | false)[] = [
       {
         accessor: "name",
+        width: 160,
+        ellipsis: true,
         title: (
           <Group gap={4} wrap="nowrap">
             <Server size={size.iconSize} />
@@ -130,7 +209,7 @@ export default function BeszelSystemTableWidget({
         ),
         sortable: true,
         render: (record) => (
-          <Group gap={8} wrap="nowrap">
+          <Group gap={8} wrap="nowrap" style={{ overflow: "hidden" }}>
             <Indicator color={statusColorMap[record.status]} size={7} />
             <Text size={size.fontSize} fw={500} truncate>
               {record.name}
@@ -140,6 +219,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showCpu && {
         accessor: "cpu",
+        width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
             <Cpu size={size.iconSize} />
@@ -151,6 +231,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showMemory && {
         accessor: "memory",
+        width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
             <MemoryStick size={size.iconSize} />
@@ -162,6 +243,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showDisk && {
         accessor: "disk",
+        width: 160,
         title: (
           <Group gap={4} wrap="nowrap">
             <HardDrive size={size.iconSize} />
@@ -181,6 +263,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showGpu && {
         accessor: "gpu",
+        width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
             <Monitor size={size.iconSize} />
@@ -192,6 +275,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showLoadAvg && {
         accessor: "loadAvg",
+        width: 100,
         title: (
           <Group gap={4} wrap="nowrap">
             <Activity size={size.iconSize} />
@@ -208,6 +292,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showNet && {
         accessor: "netBytes",
+        width: 100,
         title: (
           <Group gap={4} wrap="nowrap">
             <Network size={size.iconSize} />
@@ -223,6 +308,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showTemp && {
         accessor: "temp",
+        width: 80,
         title: (
           <Group gap={4} wrap="nowrap">
             <Thermometer size={size.iconSize} />
@@ -234,6 +320,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showBattery && {
         accessor: "battery",
+        width: 70,
         title: (
           <Group gap={4} wrap="nowrap">
             <Battery size={size.iconSize} />
@@ -244,6 +331,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showServices && {
         accessor: "services",
+        width: 80,
         title: (
           <Group gap={4} wrap="nowrap">
             <Server size={size.iconSize} />
@@ -255,6 +343,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showUptime && {
         accessor: "uptime",
+        width: 90,
         title: (
           <Group gap={4} wrap="nowrap">
             <Activity size={size.iconSize} />
@@ -266,6 +355,7 @@ export default function BeszelSystemTableWidget({
       },
       options.showAgent && {
         accessor: "agentVersion",
+        width: 90,
         title: (
           <Group gap={4} wrap="nowrap">
             <Wifi size={size.iconSize} />
@@ -280,10 +370,87 @@ export default function BeszelSystemTableWidget({
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
   }, [options, t, size]);
 
-  const handleRowClick = ({ record }: { record: SystemRowWithKey }) => {
-    const integrationId = record._key.split(":")[0] ?? "";
-    openModal({ integrationId, systemId: record.id }, { title: record.name });
-  };
+  const visibleAccessors = useMemo(() => columns.map(({ accessor }) => String(accessor)), [columns]);
+  const visibleAccessorSet = useMemo(() => new Set(visibleAccessors), [visibleAccessors]);
+  const restoredOrder = useMemo(
+    () => [
+      ...savedOrder.filter((accessor) => visibleAccessorSet.has(accessor)),
+      ...visibleAccessors.filter((accessor) => !savedOrder.includes(accessor)),
+    ],
+    [savedOrder, visibleAccessors, visibleAccessorSet],
+  );
+  const storeKey = `beszel-system-table-${itemId ?? "preview"}-${[...visibleAccessors].toSorted().join(",")}`;
+  const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths } =
+    useDataTableColumns<SystemRowWithKey>({
+      key: storeKey,
+      columns,
+    });
+
+  const lastStoreKey = useRef(storeKey);
+  const hydrated = useRef(false);
+  useEffect(() => {
+    if (lastStoreKey.current !== storeKey) {
+      lastStoreKey.current = storeKey;
+      hydrated.current = false;
+    }
+    if (hydrated.current) return;
+
+    if (restoredOrder.length > 0) setColumnsOrder(restoredOrder);
+    const visibleWidths = Object.entries(savedWidths)
+      .filter(([accessor]) => visibleAccessorSet.has(accessor))
+      .map(([accessor, columnWidth]) => ({ accessor, width: columnWidth }));
+    if (visibleWidths.length > 0) setMultipleColumnWidths(visibleWidths);
+
+    requestAnimationFrame(() => {
+      hydrated.current = true;
+    });
+  }, [restoredOrder, savedWidths, setColumnsOrder, setMultipleColumnWidths, storeKey, visibleAccessorSet]);
+
+  const previousOrder = useRef(columnsOrder);
+  const previousWidths = useRef(columnsWidth);
+  useEffect(() => {
+    if (!hydrated.current) return;
+
+    const orderChanged = JSON.stringify(columnsOrder) !== JSON.stringify(previousOrder.current);
+    const widthsChanged = JSON.stringify(columnsWidth) !== JSON.stringify(previousWidths.current);
+    previousOrder.current = columnsOrder;
+    previousWidths.current = columnsWidth;
+    if (!orderChanged && !widthsChanged) return;
+
+    const newLayout: Partial<Pick<typeof options, "columnOrder" | "columnWidths">> = {};
+    if (orderChanged) {
+      const fullOrder = [...savedOrder, ...columnAccessors.filter((accessor) => !savedOrder.includes(accessor))];
+      const reorderedVisibleColumns = [...columnsOrder];
+      const mergedOrder = fullOrder.map((accessor) =>
+        visibleAccessorSet.has(accessor) ? (reorderedVisibleColumns.shift() ?? accessor) : accessor,
+      );
+      newLayout.columnOrder = JSON.stringify(mergedOrder);
+    }
+    if (widthsChanged) {
+      const widthMap: Record<string, number> = { ...savedWidths };
+      for (const entry of columnsWidth) {
+        const accessor = Object.keys(entry)[0];
+        if (!accessor || !visibleAccessorSet.has(accessor)) continue;
+        const columnWidth = entry[accessor as keyof typeof entry];
+        if (typeof columnWidth === "number" && Number.isFinite(columnWidth) && columnWidth > 0) {
+          widthMap[accessor] = columnWidth;
+        } else if (typeof columnWidth === "string" && columnWidth.endsWith("px")) {
+          const parsedWidth = Number.parseInt(columnWidth, 10);
+          if (Number.isFinite(parsedWidth) && parsedWidth > 0) widthMap[accessor] = parsedWidth;
+        }
+      }
+      newLayout.columnWidths = JSON.stringify(widthMap);
+    }
+    persistLayout(newLayout);
+  }, [columnsOrder, columnsWidth, persistLayout, savedOrder, savedWidths, visibleAccessorSet]);
+
+  const handleRowClick = useCallback(
+    ({ record }: { record: SystemRowWithKey }) => {
+      const integrationId = record._key.split(":")[0] ?? "";
+      openModal({ integrationId, systemId: record.id }, { title: record.name });
+    },
+    [openModal],
+  );
 
   if (systemsError) throw systemsError;
 
@@ -305,15 +472,28 @@ export default function BeszelSystemTableWidget({
         withTableBorder={false}
         borderRadius={0}
         highlightOnHover
+        striped="odd"
+        stripedColor={{ dark: "dark.7", light: "gray.0" }}
+        highlightOnHoverColor={{ dark: "dark.5", light: "gray.1" }}
+        verticalAlign="center"
         fz={size.fontSize}
         records={sortedSystems}
-        columns={columns}
+        columns={effectiveColumns}
         sortStatus={sortStatus}
         onSortStatusChange={setSortStatus}
         noRecordsText={t("noRecords")}
         idAccessor="_key"
         height="100%"
         className="beszel-table"
+        storeColumnsKey={storeKey}
+        textSelectionDisabled
+        defaultColumnProps={{
+          noWrap: true,
+          draggable: true,
+          resizable: true,
+          cellsStyle: () => ({ padding: `${size.cellPadding}px 8px` }),
+        }}
+        scrollAreaProps={{ type: "auto", scrollbarSize: 6 }}
         onRowClick={isEditMode ? undefined : handleRowClick}
       />
     </div>
