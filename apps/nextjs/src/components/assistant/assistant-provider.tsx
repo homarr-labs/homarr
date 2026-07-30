@@ -21,6 +21,7 @@ import { lastAssistantMessageIsCompleteWithApprovalResponses } from "ai";
 import { clientApi, fetchApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { hotkeys } from "@homarr/definitions";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import {
   openMediaRequestSearch,
@@ -177,12 +178,23 @@ const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapte
 });
 
 const AssistantThreadRuntime = () => {
+  const t = useScopedI18n("common.assistant");
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
   const transport = useMemo(() => new AssistantChatTransport({ api: "/api/assistant/chat" }), []);
   const history = useMemo(() => createHistoryAdapter(threadId), [threadId]);
+  const onError = useCallback(
+    () =>
+      showErrorNotification({
+        title: t("responseError.title"),
+        message: t("responseError.description"),
+        autoClose: 10_000,
+      }),
+    [t],
+  );
 
   return useChatRuntime<UIMessage>({
     transport,
+    onError,
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
     adapters: { history },
   });

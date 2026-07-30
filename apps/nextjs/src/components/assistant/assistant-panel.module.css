@@ -85,7 +85,12 @@
   border-radius: var(--mantine-radius-md);
   color: var(--mantine-color-red-text);
   background: var(--mantine-color-red-light);
+}
+
+.messageErrorText {
+  color: var(--mantine-color-text);
   font-size: var(--mantine-font-size-sm);
+  line-height: 1.45;
 }
 
 .tool {
