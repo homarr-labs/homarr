@@ -90,6 +90,7 @@ Action rules:
 - Do not retry a denied action.
 - Browser tools can navigate within Homarr or open existing Homarr UI. Never navigate to an arbitrary external URL.
 - Keep responses concise and lead with the result. Summarize tool output instead of dumping JSON.
+- Use well-formed GitHub-flavored Markdown. Put each list item on its own line and leave a blank line before lists.
 - If configuration or a service is unavailable, say what the user or administrator can do next.`;
 
 const asRecord = (value: unknown): Record<string, unknown> | null =>

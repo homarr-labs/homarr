@@ -152,6 +152,153 @@
 .messageText {
   line-height: 1.6;
   overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.messageMarkdown {
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.messageMarkdown > :first-child {
+  margin-top: 0;
+}
+
+.messageMarkdown > :last-child {
+  margin-bottom: 0;
+}
+
+.messageMarkdown p {
+  margin-block: 0.55rem;
+}
+
+.messageMarkdown h1,
+.messageMarkdown h2,
+.messageMarkdown h3,
+.messageMarkdown h4 {
+  margin: 1rem 0 0.4rem;
+  line-height: 1.25;
+}
+
+.messageMarkdown h1 {
+  font-size: var(--mantine-font-size-xl);
+}
+
+.messageMarkdown h2 {
+  font-size: var(--mantine-font-size-lg);
+}
+
+.messageMarkdown h3,
+.messageMarkdown h4 {
+  font-size: var(--mantine-font-size-md);
+}
+
+.messageMarkdown ul,
+.messageMarkdown ol {
+  margin-block: 0.55rem;
+  padding-inline-start: 1.35rem;
+}
+
+.messageMarkdown li {
+  padding-inline-start: 0.18rem;
+}
+
+.messageMarkdown li + li {
+  margin-top: 0.3rem;
+}
+
+.messageMarkdown li > p {
+  margin-block: 0.2rem;
+}
+
+.messageMarkdown a {
+  color: var(--mantine-primary-color-filled);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.messageMarkdown blockquote {
+  margin: 0.75rem 0;
+  padding: 0.45rem 0.75rem;
+  border-inline-start: 3px solid var(--mantine-color-red-filled);
+  color: var(--mantine-color-dimmed);
+  background: color-mix(in srgb, var(--mantine-color-default) 60%, transparent);
+}
+
+.messageMarkdown code {
+  padding: 0.08rem 0.28rem;
+  border-radius: var(--mantine-radius-xs);
+  background: var(--mantine-color-default);
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 0.88em;
+}
+
+.messageMarkdown pre {
+  max-width: 100%;
+  margin-block: 0.75rem;
+  overflow: auto;
+  padding: 0.75rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-default);
+  line-height: 1.5;
+}
+
+.messageMarkdown pre code {
+  padding: 0;
+  background: transparent;
+  font-size: var(--mantine-font-size-xs);
+}
+
+.messageMarkdown hr {
+  margin-block: 1rem;
+  border: 0;
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.messageMarkdown img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-block: 0.65rem;
+  border-radius: var(--mantine-radius-md);
+}
+
+.messageMarkdown input[type="checkbox"] {
+  margin-inline: -1.1rem 0.45rem;
+  accent-color: var(--mantine-primary-color-filled);
+}
+
+.markdownTableWrap {
+  max-width: 100%;
+  margin-block: 0.75rem;
+  overflow-x: auto;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+}
+
+.markdownTableWrap table {
+  width: 100%;
+  min-width: 24rem;
+  border-collapse: collapse;
+  font-size: var(--mantine-font-size-sm);
+}
+
+.markdownTableWrap th,
+.markdownTableWrap td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.markdownTableWrap th {
+  background: var(--mantine-color-default);
+  font-weight: 650;
+}
+
+.markdownTableWrap tr:last-child td {
+  border-bottom: 0;
 }
 
 .messageQuote {
@@ -187,6 +334,49 @@
 .toolHeader {
   width: 100%;
   text-align: start;
+}
+
+.toolResultText,
+.toolResultProperties,
+.toolResultCollection {
+  margin-top: 0.65rem;
+}
+
+.toolResultText {
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+  white-space: pre-wrap;
+}
+
+.toolResultProperties {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: 0.4rem;
+}
+
+.toolResultProperty,
+.toolResultItem {
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.toolResultCollection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+  gap: 0.4rem;
+}
+
+.toolResultIdentity {
+  min-width: 0;
+}
+
+.toolResultMore {
+  align-self: center;
+  justify-self: center;
 }
 
 .disclosureIcon {

@@ -1,5 +1,6 @@
 "use client";
 
+import type { ComponentPropsWithoutRef } from "react";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type {
   FileMessagePartProps,
@@ -27,6 +28,7 @@ import {
   unstable_useMentionAdapter,
   unstable_useSlashCommandAdapter,
 } from "@assistant-ui/react";
+import { MarkdownTextPrimitive } from "@assistant-ui/react-markdown";
 import {
   ActionIcon,
   Anchor,
@@ -83,12 +85,16 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
+import remarkBreaks from "remark-breaks";
+import remarkGfm from "remark-gfm";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
+import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
+import { getToolResultPresentation } from "./assistant-tool-result";
 
 interface AssistantPanelProps {
   opened: boolean;
@@ -102,7 +108,34 @@ interface AssistantPanelProps {
   latestStatus: MessageStatus | undefined;
 }
 
-const TextPart = () => <MessagePartPrimitive.Text className={classes.messageText} />;
+const markdownRemarkPlugins = [remarkGfm, remarkBreaks];
+
+const MarkdownLink = ({ href, children, ...props }: ComponentPropsWithoutRef<"a">) => {
+  const external = href !== undefined && /^https?:\/\//iu.test(href);
+  return (
+    <a href={href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} {...props}>
+      {children}
+    </a>
+  );
+};
+
+const MarkdownTable = ({ children, ...props }: ComponentPropsWithoutRef<"table">) => (
+  <div className={classes.markdownTableWrap}>
+    <table {...props}>{children}</table>
+  </div>
+);
+
+const AssistantTextPart = () => (
+  <MarkdownTextPrimitive
+    className={classes.messageMarkdown}
+    preprocess={normalizeAssistantMarkdown}
+    remarkPlugins={markdownRemarkPlugins}
+    components={{ a: MarkdownLink, table: MarkdownTable }}
+    defer
+  />
+);
+
+const UserTextPart = () => <MessagePartPrimitive.Text className={classes.messageText} />;
 
 const Attachment = ({ removable = false }: { removable?: boolean }) => {
   const t = useScopedI18n("common.assistant");
@@ -205,6 +238,87 @@ const ImagePart = ({ image, filename }: ImageMessagePartProps) => {
   return <Box component="img" src={source} alt={filename ?? t("attachedImage")} className={classes.messageImage} />;
 };
 
+const formatToolResultValue = (value: string | number | boolean) =>
+  typeof value === "number" ? value.toLocaleString() : String(value);
+
+const ToolResultPreview = ({ result }: { result: unknown }) => {
+  const presentation = getToolResultPresentation(result);
+  if (!presentation) return null;
+
+  if (presentation.type === "text") {
+    return (
+      <Text size="sm" className={classes.toolResultText}>
+        {presentation.text}
+      </Text>
+    );
+  }
+
+  if (presentation.type === "properties") {
+    return (
+      <Box className={classes.toolResultProperties}>
+        {presentation.fields.map((field) => (
+          <Box key={field.label} className={classes.toolResultProperty}>
+            <Text size="xs" c="dimmed" lineClamp={1}>
+              {field.label}
+            </Text>
+            <Text size="sm" fw={600} lineClamp={2}>
+              {formatToolResultValue(field.value)}
+            </Text>
+          </Box>
+        ))}
+      </Box>
+    );
+  }
+
+  const hiddenCount = Math.max(0, presentation.totalCount - presentation.items.length);
+  return (
+    <Box className={classes.toolResultCollection}>
+      {presentation.items.map((item, index) => (
+        <Box key={`${item.title}-${index}`} className={classes.toolResultItem}>
+          <Group gap="xs" justify="space-between" wrap="nowrap">
+            <Box className={classes.toolResultIdentity}>
+              <Text size="sm" fw={650} lineClamp={1}>
+                {item.title}
+              </Text>
+              {item.description && (
+                <Text size="xs" c="dimmed" lineClamp={1}>
+                  {item.description}
+                </Text>
+              )}
+            </Box>
+            {item.badges.length > 0 && (
+              <Group gap={4} wrap="nowrap">
+                {item.badges.map((badge) => (
+                  <Badge key={badge} size="xs" variant="light" color="gray">
+                    {badge}
+                  </Badge>
+                ))}
+              </Group>
+            )}
+          </Group>
+          {item.fields.length > 0 && (
+            <Group gap="xs" mt={6} wrap="wrap">
+              {item.fields.map((field) => (
+                <Text key={field.label} size="xs" c="dimmed">
+                  {field.label}:{" "}
+                  <Text component="span" inherit c="var(--mantine-color-text)" fw={600}>
+                    {formatToolResultValue(field.value)}
+                  </Text>
+                </Text>
+              ))}
+            </Group>
+          )}
+        </Box>
+      ))}
+      {hiddenCount > 0 && (
+        <Badge className={classes.toolResultMore} size="sm" variant="outline" color="gray">
+          +{hiddenCount}
+        </Badge>
+      )}
+    </Box>
+  );
+};
+
 const ToolPart = ({
   toolName,
   args,
@@ -286,6 +400,7 @@ const ToolPart = ({
           </Group>
         </Stack>
       )}
+      {successful && result !== undefined && <ToolResultPreview result={result} />}
       <Collapse expanded={opened || awaitingApproval}>
         <Stack gap="xs" mt="sm">
           <Box>
@@ -452,7 +567,7 @@ const UserMessage = () => {
           )}
         </MessagePrimitive.Quote>
         <MessagePrimitive.Attachments components={{ Attachment: SentAttachment }} />
-        <MessagePrimitive.Parts components={{ Text: TextPart, File: FilePart, Image: ImagePart }} />
+        <MessagePrimitive.Parts components={{ Text: UserTextPart, File: FilePart, Image: ImagePart }} />
       </Box>
       <Group justify="flex-end" gap="xs">
         <BranchPicker />
@@ -683,7 +798,7 @@ const AssistantMessage = () => (
   <MessagePrimitive.Root className={`${classes.message} ${classes.assistantMessage}`}>
     <MessagePrimitive.Parts
       components={{
-        Text: TextPart,
+        Text: AssistantTextPart,
         Reasoning: ReasoningPart,
         Source: SourcePart,
         File: FilePart,
