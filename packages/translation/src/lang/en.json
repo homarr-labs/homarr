@@ -1951,6 +1951,7 @@
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
         "assistant": "Homarr Assistant",
+        "assistantThinking": "Thinking",
         "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Logout",
@@ -1966,7 +1967,13 @@
       "open": "Open Homarr Assistant",
       "close": "Close assistant",
       "spotlight": "Ask Homarr Assistant",
-      "spotlightDescription": "Start or continue a conversation with your Homarr instance.",
+      "spotlightDescription": "Type and send a prompt without leaving the command menu.",
+      "spotlightPrompt": {
+        "title": "Ask Assistant",
+        "description": "Type a prompt above. Enter sends it in the background.",
+        "send": "Send prompt",
+        "empty": "Type a prompt above"
+      },
       "unavailable": {
         "checking": "Checking whether the assistant is available…",
         "notConfigured": "An administrator must configure and enable the assistant first.",
@@ -2010,6 +2017,20 @@
         "title": "The assistant could not finish",
         "description": "Try again. If the problem continues, ask an administrator to verify the configured model endpoint.",
         "retry": "Try again"
+      },
+      "busy": {
+        "title": "The assistant is already working",
+        "description": "Wait for the current response or open it to stop the run."
+      },
+      "activity": {
+        "thinking": "Assistant is thinking",
+        "working": "Working on your prompt",
+        "ready": "Response ready",
+        "completed": "Open the response",
+        "approval": "Approval needed",
+        "failed": "Assistant needs attention",
+        "expand": "Open the assistant response",
+        "dismiss": "Dismiss assistant activity"
       },
       "scrollToLatest": "Scroll to latest",
       "approvalRequired": "Approval required",
