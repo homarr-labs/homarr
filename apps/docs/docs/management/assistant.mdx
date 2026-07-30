@@ -67,10 +67,32 @@ Conversations and messages are stored per user in the Homarr database. The assis
 page layout until it is opened. Users can start, revisit, and delete conversations from the
 conversation menu in the floating panel.
 
+Messages support copy, edit-and-resend, response regeneration and branch navigation, Markdown export,
+helpful/not-helpful feedback, text-to-speech, and browser speech dictation when the browser supports it.
+Selecting text in a message exposes a quote action that carries the selected passage into the next prompt.
+Files returned by a compatible model can be downloaded directly from the message.
+Images up to 1 MB and text, Markdown, CSV, HTML, XML, or JSON documents up to 350 KB can be attached by
+using the paperclip or dropping files onto the composer. A request can contain up to five attachments.
+Image understanding depends on the selected model; document text is extracted locally by Homarr and sent
+as part of the prompt.
+
+Type `@` in the composer to add permission-checked context. The nested menu contains apps, integrations,
+boards, widgets, and tools available to the current user. Homarr validates every referenced ID again on
+the server before adding it to the model context. Type `/` for common prompt shortcuts.
+
+Each completed response includes expandable request details when the provider reports them: input,
+output, cached-input and reasoning tokens, context-window utilization, time to first output, total
+duration, output speed, agent-step timing, and cost. OpenRouter-reported cost is labeled as reported.
+OpenRouter responses also show the routed provider, generation identifier, and upstream inference cost when
+the endpoint supplies those fields.
+When a provider omits cost but model discovery includes prompt and completion pricing, Homarr labels the
+calculated value as estimated. Missing provider data is shown as not reported rather than inferred.
+
 The assistant can use the same internal tool definitions as the [Homarr MCP server](./mcp).
 Each tool call runs as the signed-in user, so normal Homarr permission checks still apply. Read-only
 procedures can run during the agent loop. Mutating procedures require an explicit approval in the
-conversation before they execute.
+conversation before they execute. Tool cards expose their status, timing, validated input, result, and
+error state without flooding the conversation with raw JSON by default.
 
 Homarr also exposes a small set of browser-only actions to the assistant. These actions can navigate to
 safe internal routes and open Homarr interfaces such as the command menu and media request search.

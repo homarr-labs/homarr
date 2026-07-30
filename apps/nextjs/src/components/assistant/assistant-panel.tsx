@@ -1,27 +1,44 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
-import type { ToolCallMessagePartProps } from "@assistant-ui/react";
+import { createContext, useContext, useMemo, useState } from "react";
+import type {
+  FileMessagePartProps,
+  ImageMessagePartProps,
+  ReasoningMessagePartProps,
+  SourceMessagePartProps,
+  ToolCallMessagePartProps,
+  Unstable_TriggerItem,
+} from "@assistant-ui/react";
 import type { MessageStatus } from "@assistant-ui/react";
 import {
   ActionBarPrimitive,
+  AttachmentPrimitive,
+  BranchPickerPrimitive,
   ComposerPrimitive,
   ErrorPrimitive,
   MessagePartPrimitive,
   MessagePrimitive,
+  SelectionToolbarPrimitive,
   ThreadListItemPrimitive,
   ThreadListPrimitive,
   ThreadPrimitive,
+  useAui,
   useAuiState,
+  unstable_useMentionAdapter,
+  unstable_useSlashCommandAdapter,
 } from "@assistant-ui/react";
 import {
   ActionIcon,
+  Anchor,
   Badge,
   Box,
   Button,
+  Collapse,
+  Divider,
   Group,
   Loader,
   Popover,
+  Progress,
   ScrollArea,
   Stack,
   Text,
@@ -35,23 +52,42 @@ import {
   IconAlertTriangle,
   IconApps,
   IconArrowUp,
+  IconAt,
   IconCheck,
+  IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
   IconChevronUp,
   IconCopy,
+  IconDownload,
   IconCommand,
+  IconFile,
+  IconFileExport,
+  IconLink,
+  IconMessage,
+  IconMicrophone,
+  IconPaperclip,
+  IconPencil,
   IconHistory,
   IconPlayerStop,
   IconPlus,
+  IconQuote,
   IconRefresh,
   IconRobot,
   IconSearch,
+  IconSpeakerphone,
+  IconThumbDown,
+  IconThumbUp,
+  IconTool,
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
+import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
 
 interface AssistantPanelProps {
   opened: boolean;
@@ -67,6 +103,90 @@ interface AssistantPanelProps {
 
 const TextPart = () => <MessagePartPrimitive.Text className={classes.messageText} />;
 
+const Attachment = ({ removable = false }: { removable?: boolean }) => {
+  const t = useScopedI18n("common.assistant");
+  return (
+    <AttachmentPrimitive.Root className={classes.attachment}>
+      <AttachmentPrimitive.unstable_Thumb className={classes.attachmentThumb} />
+      <Text size="xs" lineClamp={1} className={classes.attachmentName}>
+        <AttachmentPrimitive.Name />
+      </Text>
+      {removable && (
+        <AttachmentPrimitive.Remove asChild>
+          <ActionIcon variant="subtle" color="gray" size="xs" aria-label={t("removeAttachment")}>
+            <IconX size={12} />
+          </ActionIcon>
+        </AttachmentPrimitive.Remove>
+      )}
+    </AttachmentPrimitive.Root>
+  );
+};
+const SentAttachment = () => <Attachment />;
+
+const ReasoningPart = ({ text, status }: ReasoningMessagePartProps) => {
+  const t = useScopedI18n("common.assistant");
+  return (
+    <details className={classes.reasoning} open={status.type === "running"}>
+      <summary>
+        <Group gap="xs" wrap="nowrap">
+          <Loader type="bars" size="xs" color="gray" style={{ opacity: status.type === "running" ? 1 : 0 }} />
+          <Text size="xs" fw={600} c="dimmed">
+            {t("reasoning")}
+          </Text>
+        </Group>
+      </summary>
+      <Text size="sm" c="dimmed" className={classes.reasoningText}>
+        {text}
+      </Text>
+    </details>
+  );
+};
+
+const SourcePart = (source: SourceMessagePartProps) => (
+  <Anchor
+    className={classes.source}
+    href={source.url}
+    target={source.url ? "_blank" : undefined}
+    rel={source.url ? "noreferrer" : undefined}
+    size="xs"
+  >
+    <IconLink size={13} />
+    {source.title}
+  </Anchor>
+);
+
+const FilePart = ({ data, filename, mimeType }: FileMessagePartProps) => {
+  const t = useScopedI18n("common.assistant");
+  const downloadable = data.startsWith("data:");
+  const displayName = filename ?? mimeType;
+  return (
+    <Group className={classes.messageFile} gap="xs" wrap="nowrap">
+      <IconFile size={16} />
+      <Text size="xs" lineClamp={1} flex={1}>
+        {displayName}
+      </Text>
+      {downloadable && (
+        <ActionIcon
+          component="a"
+          href={data}
+          download={filename ?? "assistant-file"}
+          variant="subtle"
+          color="gray"
+          size="xs"
+          aria-label={t("downloadFile", { name: displayName })}
+        >
+          <IconDownload size={13} />
+        </ActionIcon>
+      )}
+    </Group>
+  );
+};
+
+const ImagePart = ({ image, filename }: ImageMessagePartProps) => {
+  const t = useScopedI18n("common.assistant");
+  return <Box component="img" src={image} alt={filename ?? t("attachedImage")} className={classes.messageImage} />;
+};
+
 const ToolPart = ({
   toolName,
   args,
@@ -75,8 +195,10 @@ const ToolPart = ({
   status,
   approval,
   respondToApproval,
+  timing,
 }: ToolCallMessagePartProps) => {
   const t = useScopedI18n("common.assistant");
+  const [opened, setOpened] = useState(false);
   const completed = status?.type === "complete";
   const awaitingApproval = approval !== undefined && approval.approved === undefined && !approval.resolution;
   const denied = approval?.approved === false;
@@ -86,40 +208,56 @@ const ToolPart = ({
       status?.type === "incomplete" ||
       (typeof result === "object" && result !== null && "error" in result));
   const successful = completed && !denied && !failed;
+  const duration = timing?.completedAt !== undefined ? Math.max(0, timing.completedAt - timing.startedAt) : undefined;
   return (
     <Box className={classes.tool}>
-      <Group justify="space-between" wrap="nowrap" gap="xs">
-        <Group gap="xs" wrap="nowrap">
-          <ThemeIcon
-            size="sm"
-            radius="xl"
-            variant="light"
-            color={denied || failed ? "red" : successful ? "green" : "gray"}
-          >
-            {denied || failed ? <IconX size={13} /> : successful ? <IconCheck size={13} /> : <IconRobot size={13} />}
-          </ThemeIcon>
-          <Text size="sm" fw={600}>
-            {toolName.replaceAll("_", " ")}
-          </Text>
+      <UnstyledButton
+        className={classes.toolHeader}
+        onClick={() => setOpened((current) => !current)}
+        aria-expanded={opened || awaitingApproval}
+      >
+        <Group justify="space-between" wrap="nowrap" gap="xs">
+          <Group gap="xs" wrap="nowrap">
+            <ThemeIcon
+              size="sm"
+              radius="xl"
+              variant="light"
+              color={denied || failed ? "red" : successful ? "green" : "gray"}
+            >
+              {denied || failed ? <IconX size={13} /> : successful ? <IconCheck size={13} /> : <IconRobot size={13} />}
+            </ThemeIcon>
+            <Text size="sm" fw={600}>
+              {toolName.replaceAll("_", " ")}
+            </Text>
+          </Group>
+          <Group gap={6} wrap="nowrap">
+            {duration !== undefined && (
+              <Text size="xs" c="dimmed">
+                {duration < 1000 ? `${duration} ms` : `${(duration / 1000).toFixed(1)} s`}
+              </Text>
+            )}
+            <Text size="xs" c="dimmed">
+              {awaitingApproval
+                ? t("approvalRequired")
+                : denied
+                  ? t("denied")
+                  : failed
+                    ? t("failed")
+                    : successful
+                      ? t("complete")
+                      : t("working")}
+            </Text>
+            <IconChevronDown
+              size={14}
+              className={classes.disclosureIcon}
+              data-opened={opened || awaitingApproval || undefined}
+            />
+          </Group>
         </Group>
-        <Text size="xs" c="dimmed">
-          {awaitingApproval
-            ? t("approvalRequired")
-            : denied
-              ? t("denied")
-              : failed
-                ? t("failed")
-                : successful
-                  ? t("complete")
-                  : t("working")}
-        </Text>
-      </Group>
+      </UnstyledButton>
       {awaitingApproval && (
         <Stack gap="xs" mt="sm">
           <Text size="sm">{t("approvalDescription")}</Text>
-          <Text size="xs" c="dimmed" ff="monospace">
-            {JSON.stringify(args)}
-          </Text>
           <Group gap="xs">
             <Button size="compact-sm" onClick={() => respondToApproval({ approved: true })}>
               {t("allowOnce")}
@@ -130,44 +268,366 @@ const ToolPart = ({
           </Group>
         </Stack>
       )}
-      {!awaitingApproval && !denied && result !== undefined && (
-        <Text size="xs" c="dimmed" mt={6} lineClamp={3}>
-          {typeof result === "string" ? result : JSON.stringify(result)}
-        </Text>
-      )}
+      <Collapse expanded={opened || awaitingApproval}>
+        <Stack gap="xs" mt="sm">
+          <Box>
+            <Text size="xs" fw={600} c="dimmed">
+              {t("toolInput")}
+            </Text>
+            <Text className={classes.codeBlock} size="xs" component="pre">
+              {JSON.stringify(args, null, 2)}
+            </Text>
+          </Box>
+          {!denied && result !== undefined && (
+            <Box>
+              <Text size="xs" fw={600} c="dimmed">
+                {t("toolOutput")}
+              </Text>
+              <Text className={classes.codeBlock} size="xs" component="pre">
+                {typeof result === "string" ? result : JSON.stringify(result, null, 2)}
+              </Text>
+            </Box>
+          )}
+        </Stack>
+      </Collapse>
     </Box>
   );
 };
 
-const MessageActions = () => {
+const BranchPicker = () => {
   const t = useScopedI18n("common.assistant");
   return (
-    <ActionBarPrimitive.Root hideWhenRunning>
+    <BranchPickerPrimitive.Root hideWhenSingleBranch className={classes.branchPicker}>
+      <BranchPickerPrimitive.Previous asChild>
+        <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("previousResponse")}>
+          <IconChevronLeft size={14} />
+        </ActionIcon>
+      </BranchPickerPrimitive.Previous>
+      <Text size="xs" c="dimmed">
+        <BranchPickerPrimitive.Number /> / <BranchPickerPrimitive.Count />
+      </Text>
+      <BranchPickerPrimitive.Next asChild>
+        <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("nextResponse")}>
+          <IconChevronRight size={14} />
+        </ActionIcon>
+      </BranchPickerPrimitive.Next>
+    </BranchPickerPrimitive.Root>
+  );
+};
+
+const AssistantMessageActions = () => {
+  const t = useScopedI18n("common.assistant");
+  return (
+    <Group className={classes.messageActions} gap="xs" justify="space-between">
+      <BranchPicker />
+      <ActionBarPrimitive.Root hideWhenRunning>
+        <Group gap={2}>
+          <Tooltip label={t("copy")}>
+            <ActionBarPrimitive.Copy asChild>
+              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("copy")}>
+                <IconCopy size={14} />
+              </ActionIcon>
+            </ActionBarPrimitive.Copy>
+          </Tooltip>
+          <Tooltip label={t("speak")}>
+            <ActionBarPrimitive.Speak asChild>
+              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("speak")}>
+                <IconSpeakerphone size={14} />
+              </ActionIcon>
+            </ActionBarPrimitive.Speak>
+          </Tooltip>
+          <Tooltip label={t("stopSpeaking")}>
+            <ActionBarPrimitive.StopSpeaking asChild>
+              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("stopSpeaking")}>
+                <IconPlayerStop size={14} />
+              </ActionIcon>
+            </ActionBarPrimitive.StopSpeaking>
+          </Tooltip>
+          <Tooltip label={t("helpful")}>
+            <ActionBarPrimitive.FeedbackPositive asChild>
+              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("helpful")}>
+                <IconThumbUp size={14} />
+              </ActionIcon>
+            </ActionBarPrimitive.FeedbackPositive>
+          </Tooltip>
+          <Tooltip label={t("notHelpful")}>
+            <ActionBarPrimitive.FeedbackNegative asChild>
+              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("notHelpful")}>
+                <IconThumbDown size={14} />
+              </ActionIcon>
+            </ActionBarPrimitive.FeedbackNegative>
+          </Tooltip>
+          <Tooltip label={t("exportMarkdown")}>
+            <ActionBarPrimitive.ExportMarkdown asChild>
+              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("exportMarkdown")}>
+                <IconFileExport size={14} />
+              </ActionIcon>
+            </ActionBarPrimitive.ExportMarkdown>
+          </Tooltip>
+          <Tooltip label={t("regenerate")}>
+            <ActionBarPrimitive.Reload asChild>
+              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("regenerate")}>
+                <IconRefresh size={14} />
+              </ActionIcon>
+            </ActionBarPrimitive.Reload>
+          </Tooltip>
+        </Group>
+      </ActionBarPrimitive.Root>
+    </Group>
+  );
+};
+
+const UserMessageActions = () => {
+  const t = useScopedI18n("common.assistant");
+  return (
+    <ActionBarPrimitive.Root hideWhenRunning className={classes.userActions}>
       <Group gap={2}>
-        <Tooltip label={t("copy")}>
+        <Tooltip label={t("copyMessage")}>
           <ActionBarPrimitive.Copy asChild>
-            <ActionIcon variant="subtle" color="gray" size="sm">
+            <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("copyMessage")}>
               <IconCopy size={14} />
             </ActionIcon>
           </ActionBarPrimitive.Copy>
         </Tooltip>
-        <Tooltip label={t("regenerate")}>
-          <ActionBarPrimitive.Reload asChild>
-            <ActionIcon variant="subtle" color="gray" size="sm">
-              <IconRefresh size={14} />
+        <Tooltip label={t("editMessage")}>
+          <ActionBarPrimitive.Edit asChild>
+            <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("editMessage")}>
+              <IconPencil size={14} />
             </ActionIcon>
-          </ActionBarPrimitive.Reload>
+          </ActionBarPrimitive.Edit>
         </Tooltip>
       </Group>
     </ActionBarPrimitive.Root>
   );
 };
 
-const UserMessage = () => (
-  <MessagePrimitive.Root className={`${classes.message} ${classes.userMessage}`}>
-    <MessagePrimitive.Parts components={{ Text: TextPart }} />
-  </MessagePrimitive.Root>
-);
+const EditComposer = () => {
+  const t = useScopedI18n("common.assistant");
+  return (
+    <ComposerPrimitive.Root className={classes.editComposer}>
+      <ComposerPrimitive.Input className={classes.editComposerInput} rows={2} />
+      <Group gap="xs" justify="flex-end">
+        <ComposerPrimitive.Cancel asChild>
+          <Button size="compact-sm" variant="default">
+            {t("cancelEdit")}
+          </Button>
+        </ComposerPrimitive.Cancel>
+        <ComposerPrimitive.Send asChild>
+          <Button size="compact-sm">{t("updateMessage")}</Button>
+        </ComposerPrimitive.Send>
+      </Group>
+    </ComposerPrimitive.Root>
+  );
+};
+
+const UserMessage = () => {
+  const isEditing = useAuiState((state) => state.composer.isEditing);
+  if (isEditing) return <EditComposer />;
+  return (
+    <MessagePrimitive.Root className={`${classes.message} ${classes.userMessageWrap}`}>
+      <Box className={classes.userMessage}>
+        <MessagePrimitive.Quote>
+          {(quote) => (
+            <Text component="blockquote" className={classes.messageQuote} size="sm">
+              {quote.text}
+            </Text>
+          )}
+        </MessagePrimitive.Quote>
+        <MessagePrimitive.Attachments components={{ Attachment: SentAttachment }} />
+        <MessagePrimitive.Parts components={{ Text: TextPart, File: FilePart, Image: ImagePart }} />
+      </Box>
+      <Group justify="flex-end" gap="xs">
+        <BranchPicker />
+        <UserMessageActions />
+      </Group>
+    </MessagePrimitive.Root>
+  );
+};
+
+const formatDuration = (milliseconds: number) =>
+  milliseconds < 1000 ? `${Math.round(milliseconds)} ms` : `${(milliseconds / 1000).toFixed(1)} s`;
+
+const formatCost = (cost: number) => {
+  if (cost === 0) return "$0";
+  if (cost < 0.0001) return `<$0.0001`;
+  return `$${cost.toFixed(cost < 0.01 ? 4 : 3)}`;
+};
+
+const RequestTelemetry = () => {
+  const t = useScopedI18n("common.assistant");
+  const metadata = useAuiState((state) => state.message.metadata);
+  const telemetry = getAssistantTelemetry(metadata);
+  const usage = getAssistantUsage(metadata);
+  if (!telemetry) return null;
+
+  return (
+    <details className={classes.telemetry}>
+      <summary className={classes.telemetrySummary}>
+        <Group gap="xs" wrap="wrap">
+          <Badge size="xs" variant="light" color="gray">
+            {telemetry.modelId}
+          </Badge>
+          <Badge size="xs" variant="outline" color="gray">
+            {telemetry.provider}
+          </Badge>
+          {telemetry.durationMs !== undefined && (
+            <Text size="xs" c="dimmed">
+              {formatDuration(telemetry.durationMs)}
+            </Text>
+          )}
+          {telemetry.outputTokensPerSecond !== undefined && (
+            <Text size="xs" c="dimmed">
+              {telemetry.outputTokensPerSecond.toFixed(1)} tok/s
+            </Text>
+          )}
+          {telemetry.cost !== undefined && (
+            <Text size="xs" c="dimmed">
+              {formatCost(telemetry.cost)}
+            </Text>
+          )}
+          {usage?.totalTokens !== undefined && (
+            <Text size="xs" c="dimmed">
+              {usage.totalTokens.toLocaleString()} {t("usage.tokens")}
+            </Text>
+          )}
+          <IconChevronDown size={13} />
+        </Group>
+      </summary>
+      <Stack gap="sm" mt="xs">
+        {telemetry.contextLength !== undefined && telemetry.contextUsed !== undefined && (
+          <Box>
+            <Group justify="space-between" gap="xs">
+              <Text size="xs" fw={600}>
+                {t("usage.contextWindow")}
+              </Text>
+              <Text size="xs" c="dimmed">
+                {telemetry.contextUsed.toLocaleString()} / {telemetry.contextLength.toLocaleString()}
+              </Text>
+            </Group>
+            <Progress value={(telemetry.contextUtilization ?? 0) * 100} size="sm" mt={5} />
+          </Box>
+        )}
+        <Box className={classes.usageGrid}>
+          <div>
+            <Text size="xs" c="dimmed">
+              {t("usage.input")}
+            </Text>
+            <Text size="sm" fw={600}>
+              {usage?.inputTokens?.toLocaleString() ?? t("usage.notReported")}
+            </Text>
+          </div>
+          <div>
+            <Text size="xs" c="dimmed">
+              {t("usage.output")}
+            </Text>
+            <Text size="sm" fw={600}>
+              {usage?.outputTokens?.toLocaleString() ?? t("usage.notReported")}
+            </Text>
+          </div>
+          <div>
+            <Text size="xs" c="dimmed">
+              {t("usage.cached")}
+            </Text>
+            <Text size="sm" fw={600}>
+              {usage?.cachedInputTokens?.toLocaleString() ?? t("usage.notReported")}
+            </Text>
+          </div>
+          <div>
+            <Text size="xs" c="dimmed">
+              {t("usage.reasoning")}
+            </Text>
+            <Text size="sm" fw={600}>
+              {usage?.reasoningTokens?.toLocaleString() ?? t("usage.notReported")}
+            </Text>
+          </div>
+          <div>
+            <Text size="xs" c="dimmed">
+              {t("usage.cacheWrite")}
+            </Text>
+            <Text size="sm" fw={600}>
+              {usage?.cacheWriteTokens?.toLocaleString() ?? t("usage.notReported")}
+            </Text>
+          </div>
+        </Box>
+        <Divider />
+        <Group gap="lg" align="flex-start">
+          <div>
+            <Text size="xs" c="dimmed">
+              {t("usage.firstOutput")}
+            </Text>
+            <Text size="sm" fw={600}>
+              {telemetry.timeToFirstOutputMs !== undefined
+                ? formatDuration(telemetry.timeToFirstOutputMs)
+                : t("usage.notReported")}
+            </Text>
+          </div>
+          <div>
+            <Text size="xs" c="dimmed">
+              {t("usage.cost")}
+            </Text>
+            <Text size="sm" fw={600}>
+              {telemetry.cost !== undefined ? formatCost(telemetry.cost) : t("usage.notReported")}
+            </Text>
+            {telemetry.costType && (
+              <Text size="xs" c="dimmed">
+                {t(`usage.${telemetry.costType}`)}
+              </Text>
+            )}
+          </div>
+          {telemetry.upstreamCost !== undefined && (
+            <div>
+              <Text size="xs" c="dimmed">
+                {t("usage.upstreamCost")}
+              </Text>
+              <Text size="sm" fw={600}>
+                {formatCost(telemetry.upstreamCost)}
+              </Text>
+            </div>
+          )}
+          {telemetry.finishReason && (
+            <div>
+              <Text size="xs" c="dimmed">
+                {t("usage.finishReason")}
+              </Text>
+              <Text size="sm" fw={600}>
+                {telemetry.finishReason}
+              </Text>
+            </div>
+          )}
+        </Group>
+        {telemetry.steps.length > 0 && (
+          <Stack gap={4}>
+            <Text size="xs" fw={600}>
+              {t("usage.agentSteps")}
+            </Text>
+            {telemetry.steps.map((step) => (
+              <Box key={step.index} className={classes.stepRow}>
+                <Group justify="space-between" gap="xs">
+                  <Text size="xs">
+                    {t("usage.step", { number: step.index })}
+                    {step.routedProvider ? ` · ${step.routedProvider}` : ""}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {formatDuration(step.durationMs)}
+                    {step.outputTokensPerSecond !== undefined
+                      ? ` · ${step.outputTokensPerSecond.toFixed(1)} tok/s`
+                      : ""}
+                    {step.cost !== undefined ? ` · ${formatCost(step.cost)}` : ""}
+                  </Text>
+                </Group>
+                {step.generationId && (
+                  <Text size="xs" c="dimmed" className={classes.generationId} title={step.generationId}>
+                    {t("usage.generation")}: {step.generationId}
+                  </Text>
+                )}
+              </Box>
+            ))}
+          </Stack>
+        )}
+      </Stack>
+    </details>
+  );
+};
 
 const RuntimeError = () => {
   const t = useScopedI18n("common.assistant");
@@ -206,11 +666,16 @@ const AssistantMessage = () => (
     <MessagePrimitive.Parts
       components={{
         Text: TextPart,
+        Reasoning: ReasoningPart,
+        Source: SourcePart,
+        File: FilePart,
+        Image: ImagePart,
         tools: { Fallback: ToolPart },
       }}
     />
     <RuntimeError />
-    <MessageActions />
+    <RequestTelemetry />
+    <AssistantMessageActions />
   </MessagePrimitive.Root>
 );
 
@@ -355,27 +820,219 @@ const EmptyThread = () => {
   );
 };
 
+const contextIcons = {
+  app: IconApps,
+  integration: IconLink,
+  board: IconMessage,
+  widget: IconTool,
+  tools: IconTool,
+};
+
+const TriggerItem = ({ item, index }: { item: Unstable_TriggerItem; index: number }) => {
+  const Icon =
+    typeof item.metadata?.icon === "string" && item.metadata.icon in contextIcons
+      ? contextIcons[item.metadata.icon as keyof typeof contextIcons]
+      : IconAt;
+  return (
+    <ComposerPrimitive.Unstable_TriggerPopoverItem className={classes.triggerItem} item={item} index={index}>
+      <ThemeIcon size="sm" variant="light" color="gray">
+        <Icon size={13} />
+      </ThemeIcon>
+      <div className={classes.triggerItemText}>
+        <Text size="sm" fw={600} lineClamp={1}>
+          {item.label}
+        </Text>
+        {item.description && (
+          <Text size="xs" c="dimmed" lineClamp={1}>
+            {item.description}
+          </Text>
+        )}
+      </div>
+    </ComposerPrimitive.Unstable_TriggerPopoverItem>
+  );
+};
+
+const ComposerTriggers = () => {
+  const t = useScopedI18n("common.assistant");
+  const aui = useAui();
+  const { data: entities = [], isLoading } = clientApi.assistant.getContextEntities.useQuery(undefined, {
+    staleTime: 60_000,
+  });
+  const categories = useMemo(
+    () =>
+      (["app", "integration", "board", "widget"] as const).map((type) => ({
+        id: type,
+        label: t(`mentions.${type}`),
+        items: entities
+          .filter((entity) => entity.type === type)
+          .map((entity) => ({
+            id: entity.id,
+            type: entity.type,
+            label: entity.label,
+            description: entity.description,
+            icon: entity.type,
+          })),
+      })),
+    [entities, t],
+  );
+  const mention = unstable_useMentionAdapter({
+    categories,
+    includeModelContextTools: {
+      category: { id: "tools", label: t("mentions.tools") },
+      formatLabel: (name) => name.replaceAll("_", " "),
+      icon: "tools",
+    },
+    iconMap: contextIcons,
+    fallbackIcon: IconAt,
+  });
+  const slash = unstable_useSlashCommandAdapter({
+    removeOnExecute: true,
+    commands: [
+      {
+        id: "health",
+        label: "/health",
+        description: t("commands.health"),
+        execute: () => aui.composer().setText(t("suggestions.health.prompt")),
+      },
+      {
+        id: "explore",
+        label: "/explore",
+        description: t("commands.explore"),
+        execute: () => aui.composer().setText(t("suggestions.explore.prompt")),
+      },
+      {
+        id: "media",
+        label: "/media",
+        description: t("commands.media"),
+        execute: () => aui.composer().setText(t("suggestions.media.prompt")),
+      },
+    ],
+  });
+
+  return (
+    <>
+      <ComposerPrimitive.Unstable_TriggerPopover
+        className={classes.triggerPopover}
+        char="@"
+        adapter={mention.adapter}
+        isLoading={isLoading}
+        aria-label={t("mentions.menu")}
+      >
+        <ComposerPrimitive.Unstable_TriggerPopover.Directive {...mention.directive} />
+        <ComposerPrimitive.Unstable_TriggerPopoverCategories className={classes.triggerList}>
+          {(items) =>
+            items.map((category) => {
+              const Icon = contextIcons[category.id as keyof typeof contextIcons] ?? IconAt;
+              return (
+                <ComposerPrimitive.Unstable_TriggerPopoverCategoryItem
+                  key={category.id}
+                  categoryId={category.id}
+                  className={classes.triggerItem}
+                >
+                  <ThemeIcon size="sm" variant="light" color="gray">
+                    <Icon size={13} />
+                  </ThemeIcon>
+                  <Text size="sm" fw={600} flex={1}>
+                    {category.label}
+                  </Text>
+                  <IconChevronRight size={14} />
+                </ComposerPrimitive.Unstable_TriggerPopoverCategoryItem>
+              );
+            })
+          }
+        </ComposerPrimitive.Unstable_TriggerPopoverCategories>
+        <ComposerPrimitive.Unstable_TriggerPopoverItems className={classes.triggerList}>
+          {(items) =>
+            items.map((item, index) => <TriggerItem key={`${item.type}:${item.id}`} item={item} index={index} />)
+          }
+        </ComposerPrimitive.Unstable_TriggerPopoverItems>
+      </ComposerPrimitive.Unstable_TriggerPopover>
+      <ComposerPrimitive.Unstable_TriggerPopover
+        className={classes.triggerPopover}
+        char="/"
+        adapter={slash.adapter}
+        aria-label={t("commands.menu")}
+      >
+        <ComposerPrimitive.Unstable_TriggerPopover.Action {...slash.action} />
+        <ComposerPrimitive.Unstable_TriggerPopoverItems className={classes.triggerList}>
+          {(items) => items.map((item, index) => <TriggerItem key={item.id} item={item} index={index} />)}
+        </ComposerPrimitive.Unstable_TriggerPopoverItems>
+      </ComposerPrimitive.Unstable_TriggerPopover>
+    </>
+  );
+};
+
 const Composer = () => {
   const t = useScopedI18n("common.assistant");
   const running = useAuiState((state) => state.thread.isRunning);
   return (
     <Box className={classes.composerWrap}>
-      <ComposerPrimitive.Root className={classes.composer}>
-        <ComposerPrimitive.Input className={classes.composerInput} placeholder={t("composerPlaceholder")} rows={1} />
-        {running ? (
-          <ComposerPrimitive.Cancel asChild>
-            <ActionIcon color="red" variant="light" size="lg" aria-label={t("stop")}>
-              <IconPlayerStop size={18} />
-            </ActionIcon>
-          </ComposerPrimitive.Cancel>
-        ) : (
-          <ComposerPrimitive.Send asChild>
-            <ActionIcon color="red" variant="filled" size="lg" aria-label={t("send")}>
-              <IconArrowUp size={18} />
-            </ActionIcon>
-          </ComposerPrimitive.Send>
-        )}
-      </ComposerPrimitive.Root>
+      <ComposerPrimitive.Unstable_TriggerPopoverRoot>
+        <ComposerPrimitive.AttachmentDropzone className={classes.composerDropzone}>
+          <ComposerPrimitive.Root className={classes.composer}>
+            <ComposerTriggers />
+            <ComposerPrimitive.Quote className={classes.composerQuote}>
+              <IconQuote size={15} />
+              <ComposerPrimitive.QuoteText className={classes.composerQuoteText} />
+              <ComposerPrimitive.QuoteDismiss asChild>
+                <ActionIcon variant="subtle" color="gray" size="xs" aria-label={t("dismissQuote")}>
+                  <IconX size={12} />
+                </ActionIcon>
+              </ComposerPrimitive.QuoteDismiss>
+            </ComposerPrimitive.Quote>
+            <ComposerPrimitive.Attachments>{() => <Attachment removable />}</ComposerPrimitive.Attachments>
+            <Group className={classes.composerRow} gap="xs" wrap="nowrap" align="flex-end">
+              <Group gap={2} wrap="nowrap">
+                <Tooltip label={t("attachments.add")}>
+                  <ComposerPrimitive.AddAttachment asChild>
+                    <ActionIcon variant="subtle" color="gray" size="lg" aria-label={t("attachments.add")}>
+                      <IconPaperclip size={17} />
+                    </ActionIcon>
+                  </ComposerPrimitive.AddAttachment>
+                </Tooltip>
+                <Tooltip label={t("dictate")}>
+                  <ComposerPrimitive.Dictate asChild>
+                    <ActionIcon variant="subtle" color="gray" size="lg" aria-label={t("dictate")}>
+                      <IconMicrophone size={17} />
+                    </ActionIcon>
+                  </ComposerPrimitive.Dictate>
+                </Tooltip>
+                <ComposerPrimitive.StopDictation asChild>
+                  <ActionIcon variant="light" color="red" size="lg" aria-label={t("stopDictation")}>
+                    <IconPlayerStop size={17} />
+                  </ActionIcon>
+                </ComposerPrimitive.StopDictation>
+              </Group>
+              <ComposerPrimitive.Input
+                className={classes.composerInput}
+                placeholder={t("composerPlaceholder")}
+                rows={1}
+              />
+              {running ? (
+                <ComposerPrimitive.Cancel asChild>
+                  <ActionIcon color="red" variant="light" size="lg" aria-label={t("stop")}>
+                    <IconPlayerStop size={18} />
+                  </ActionIcon>
+                </ComposerPrimitive.Cancel>
+              ) : (
+                <ComposerPrimitive.Send asChild>
+                  <ActionIcon color="red" variant="filled" size="lg" aria-label={t("send")}>
+                    <IconArrowUp size={18} />
+                  </ActionIcon>
+                </ComposerPrimitive.Send>
+              )}
+            </Group>
+            <Group className={classes.composerHints} gap="xs">
+              <Text size="xs" c="dimmed">
+                {t("mentions.hint")}
+              </Text>
+              <Text size="xs" c="dimmed">
+                {t("commands.hint")}
+              </Text>
+            </Group>
+          </ComposerPrimitive.Root>
+        </ComposerPrimitive.AttachmentDropzone>
+      </ComposerPrimitive.Unstable_TriggerPopoverRoot>
     </Box>
   );
 };
@@ -536,6 +1193,13 @@ export const AssistantPanel = ({
                 <EmptyThread />
                 <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
               </Box>
+              <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
+                <SelectionToolbarPrimitive.Quote asChild>
+                  <Button variant="filled" color="dark" size="compact-sm" leftSection={<IconQuote size={14} />}>
+                    {t("quoteSelection")}
+                  </Button>
+                </SelectionToolbarPrimitive.Quote>
+              </SelectionToolbarPrimitive.Root>
               <ThreadPrimitive.ScrollToBottom asChild>
                 <ActionIcon
                   className={classes.scrollToBottom}

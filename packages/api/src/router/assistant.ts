@@ -2,14 +2,27 @@ import { TRPCError } from "@trpc/server";
 import { parse, stringify } from "superjson";
 import { z } from "zod/v4";
 
+import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
-import { and, desc, eq, inArray } from "@homarr/db";
+import { and, asc, desc, eq, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
-import { assistantConfigurations, assistantMessages, assistantThreads } from "@homarr/db/schema";
+import {
+  apps,
+  assistantConfigurations,
+  assistantMessages,
+  assistantThreads,
+  groupMembers,
+  integrationGroupPermissions,
+  integrations,
+  integrationUserPermissions,
+  items,
+} from "@homarr/db/schema";
 import { assistantProviderIds, assistantProviderPresets, assistantProviderRequiresApiKey } from "@homarr/definitions";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import type { createTRPCContext } from "../trpc";
+import { boardRouter } from "./board";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
 const configurationId = "default";
@@ -22,6 +35,7 @@ const modelSchema = z.object({
   contextLength: z.number().nullable(),
   promptPrice: z.string().nullable(),
   completionPrice: z.string().nullable(),
+  inputModalities: z.array(z.string()),
   toolSupport: z.enum(["confirmed", "unknown"]),
 });
 
@@ -35,12 +49,24 @@ type CompatibleModel = {
   max_context_length?: unknown;
   max_input_tokens?: unknown;
   supported_parameters?: unknown;
-  architecture?: { output_modalities?: unknown };
+  input_modalities?: unknown;
+  architecture?: { input_modalities?: unknown; output_modalities?: unknown };
   pricing?: { prompt?: unknown; completion?: unknown };
   capabilities?: { function_calling?: unknown };
 };
 
 type AssistantConfiguration = typeof assistantConfigurations.$inferSelect;
+type AssistantContext = Awaited<ReturnType<typeof createTRPCContext>>;
+
+export type AssistantContextEntity = {
+  id: string;
+  type: "app" | "integration" | "board" | "widget";
+  label: string;
+  description: string;
+  boardId?: string;
+};
+
+const selectedModelCache = new Map<string, { expiresAt: number; value: z.infer<typeof modelSchema> | null }>();
 
 const customHeadersSchema = z
   .record(
@@ -195,6 +221,12 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
         configuration.provider === "anthropic"
           ? ("confirmed" as const)
           : ("unknown" as const);
+      const rawInputModalities = Array.isArray(model.architecture?.input_modalities)
+        ? model.architecture.input_modalities
+        : Array.isArray(model.input_modalities)
+          ? model.input_modalities
+          : [];
+      const inputModalities = rawInputModalities.filter((modality): modality is string => typeof modality === "string");
       return [
         {
           id,
@@ -203,11 +235,118 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
           contextLength,
           promptPrice: typeof model.pricing?.prompt === "string" ? model.pricing.prompt : null,
           completionPrice: typeof model.pricing?.completion === "string" ? model.pricing.completion : null,
+          inputModalities,
           toolSupport,
         },
       ];
     })
     .toSorted((left, right) => left.name.localeCompare(right.name));
+};
+
+export const getSelectedModelDetailsAsync = async (configuration: AssistantConfiguration) => {
+  if (!configuration.modelId || !configuration.modelDiscoveryPath) return null;
+
+  const cacheKey = [
+    configuration.provider,
+    configuration.baseUrl,
+    configuration.modelDiscoveryPath,
+    configuration.modelId,
+    configuration.updatedAt.getTime(),
+  ].join(":");
+  const cached = selectedModelCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) return cached.value;
+
+  const value = (await fetchModelsAsync(configuration)).find((model) => model.id === configuration.modelId) ?? null;
+  selectedModelCache.clear();
+  selectedModelCache.set(cacheKey, { expiresAt: Date.now() + 10 * 60_000, value });
+  return value;
+};
+
+export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): Promise<AssistantContextEntity[]> => {
+  if (!ctx.session) return [];
+
+  const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, ctx.session.user.id),
+  });
+  const [availableBoards, availableIntegrations, availableApps] = await Promise.all([
+    boardRouter.createCaller(ctx).getAllBoards(),
+    ctx.db.query.integrations.findMany({
+      columns: { id: true, name: true, kind: true },
+      with: {
+        userPermissions: {
+          where: eq(integrationUserPermissions.userId, ctx.session.user.id),
+        },
+        groupPermissions: {
+          where: inArray(
+            integrationGroupPermissions.groupId,
+            groupsOfCurrentUser.map((group) => group.groupId).concat(""),
+          ),
+        },
+      },
+      orderBy: asc(integrations.name),
+      limit: 250,
+    }),
+    ctx.db.query.apps.findMany({
+      columns: { id: true, name: true, description: true },
+      orderBy: asc(apps.name),
+      limit: 250,
+    }),
+  ]);
+  const boardsById = new Map(availableBoards.map((board) => [board.id, board]));
+  const availableItems =
+    availableBoards.length === 0
+      ? []
+      : await ctx.db.query.items.findMany({
+          columns: { id: true, boardId: true, kind: true },
+          where: inArray(
+            items.boardId,
+            availableBoards.map((board) => board.id),
+          ),
+          orderBy: asc(items.kind),
+          limit: 500,
+        });
+
+  return [
+    ...availableApps.map(
+      (app): AssistantContextEntity => ({
+        id: app.id,
+        type: "app",
+        label: app.name,
+        description: app.description ?? "Homarr app",
+      }),
+    ),
+    ...availableIntegrations
+      .filter((integration) => constructIntegrationPermissions(integration, ctx.session).hasUseAccess)
+      .map(
+        (integration): AssistantContextEntity => ({
+          id: integration.id,
+          type: "integration",
+          label: integration.name,
+          description: `${integration.kind} integration`,
+        }),
+      ),
+    ...availableBoards.map(
+      (board): AssistantContextEntity => ({
+        id: board.id,
+        type: "board",
+        label: board.name,
+        description: board.isHome ? "Home board" : board.isMobileHome ? "Mobile home board" : "Homarr board",
+      }),
+    ),
+    ...availableItems.flatMap((item): AssistantContextEntity[] => {
+      const board = boardsById.get(item.boardId);
+      if (!board) return [];
+      return [
+        {
+          id: item.id,
+          type: "widget",
+          label: `${item.kind} · ${board.name}`,
+          description: `${item.kind} widget on ${board.name}`,
+          boardId: board.id,
+        },
+      ];
+    }),
+  ];
 };
 
 const ownedThreadAsync = async (db: Database, threadId: string, userId: string) => {
@@ -237,6 +376,25 @@ export const assistantRouter = createTRPCRouter({
         ),
       };
     }),
+
+  getContextEntities: protectedProcedure.query(async ({ ctx }) => {
+    return await getAssistantContextEntitiesAsync(ctx);
+  }),
+
+  getModelCapabilities: protectedProcedure.query(async ({ ctx }) => {
+    const configuration = await getConfigurationAsync(ctx.db);
+    if (!configuration?.enabled || !configuration.modelId) {
+      return { imageInput: "unsupported" as const, inputModalities: [] as string[] };
+    }
+    const model = await getSelectedModelDetailsAsync(configuration).catch(() => null);
+    if (!model || model.inputModalities.length === 0) {
+      return { imageInput: "unknown" as const, inputModalities: [] as string[] };
+    }
+    return {
+      imageInput: model.inputModalities.includes("image") ? ("supported" as const) : ("unsupported" as const),
+      inputModalities: model.inputModalities,
+    };
+  }),
 
   getAdminConfiguration: adminProcedure.query(async ({ ctx }) => {
     const configuration = await getConfigurationAsync(ctx.db);
@@ -472,6 +630,42 @@ export const assistantRouter = createTRPCRouter({
         .update(assistantThreads)
         .set({ title, updatedAt: new Date() })
         .where(eq(assistantThreads.id, thread.id));
+    }),
+
+  submitFeedback: protectedProcedure
+    .input(
+      z.object({
+        threadId: z.string().max(64),
+        messageId: z.string().min(1).max(128),
+        type: z.enum(["positive", "negative"]),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const thread = await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
+      const message = await ctx.db.query.assistantMessages.findFirst({
+        where: and(eq(assistantMessages.id, input.messageId), eq(assistantMessages.threadId, thread.id)),
+      });
+      if (!message) throw new TRPCError({ code: "NOT_FOUND", message: "Message not found." });
+      const content = parse(message.content);
+      if (!content || typeof content !== "object" || Array.isArray(content)) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "The stored message is invalid." });
+      }
+      const metadata =
+        "metadata" in content &&
+        content.metadata &&
+        typeof content.metadata === "object" &&
+        !Array.isArray(content.metadata)
+          ? content.metadata
+          : {};
+      await ctx.db
+        .update(assistantMessages)
+        .set({
+          content: stringify({
+            ...content,
+            metadata: { ...metadata, submittedFeedback: { type: input.type } },
+          }),
+        })
+        .where(and(eq(assistantMessages.id, input.messageId), eq(assistantMessages.threadId, thread.id)));
     }),
 
   deleteMessages: protectedProcedure
