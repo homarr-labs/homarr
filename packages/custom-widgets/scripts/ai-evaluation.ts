@@ -159,6 +159,20 @@ export function getJudgeResponseFormat() {
   };
 }
 
+function matchesScenarioRequestRule(
+  request: HomarrCustomWidgetV2["requests"][string],
+  rule: CustomWidgetAiEvaluationCase["acceptance"]["requestRules"][number],
+) {
+  if (!request.path.includes(rule.pathIncludes)) return false;
+  if (rule.kind && request.kind !== rule.kind) return false;
+  if (rule.method && request.method !== rule.method) return false;
+  if (rule.trigger && request.trigger !== rule.trigger) return false;
+  const references = collectCustomWidgetRequestReferences(request);
+  if (rule.optionReference && !references.options.has(rule.optionReference)) return false;
+  if (rule.parameterReference && !references.params.has(rule.parameterReference)) return false;
+  return true;
+}
+
 export function getScenarioAcceptanceIssues(
   testCase: CustomWidgetAiEvaluationCase,
   widget: HomarrCustomWidgetV2,
@@ -182,27 +196,27 @@ export function getScenarioAcceptanceIssues(
     }
   }
 
-  const matchedRequestIds = new Set<string>();
-  const requestIdsByLabel = new Map<string, string>();
+  const requestEntries = Object.entries(widget.requests);
+  const candidateMatches = new Map<string, [string, HomarrCustomWidgetV2["requests"][string]]>();
+  const candidateRequestIds = new Set<string>();
   for (const rule of testCase.acceptance.requestRules) {
-    const match = Object.entries(widget.requests).find(([requestId, request]) => {
-      if (matchedRequestIds.has(requestId)) return false;
-      if (!request.path.includes(rule.pathIncludes)) return false;
-      if (rule.kind && request.kind !== rule.kind) return false;
-      if (rule.method && request.method !== rule.method) return false;
-      if (rule.trigger && request.trigger !== rule.trigger) return false;
-      const references = collectCustomWidgetRequestReferences(request);
-      if (rule.optionReference && !references.options.has(rule.optionReference)) return false;
-      if (rule.parameterReference && !references.params.has(rule.parameterReference)) return false;
-      const invalidatedRequestId = rule.invalidatesRequest ? requestIdsByLabel.get(rule.invalidatesRequest) : undefined;
-      if (rule.invalidatesRequest && (!invalidatedRequestId || !request.invalidates?.includes(invalidatedRequestId)))
-        return false;
-      return true;
-    });
+    const match = requestEntries.find(
+      ([requestId, request]) => !candidateRequestIds.has(requestId) && matchesScenarioRequestRule(request, rule),
+    );
     if (match) {
-      matchedRequestIds.add(match[0]);
-      requestIdsByLabel.set(rule.label, match[0]);
-    } else {
+      candidateMatches.set(rule.label, match);
+      candidateRequestIds.add(match[0]);
+    }
+  }
+
+  const requestIdsByLabel = new Map([...candidateMatches].map(([label, [requestId]]) => [label, requestId] as const));
+  for (const rule of testCase.acceptance.requestRules) {
+    const match = candidateMatches.get(rule.label);
+    const invalidatedRequestId = rule.invalidatesRequest ? requestIdsByLabel.get(rule.invalidatesRequest) : undefined;
+    if (
+      !match ||
+      (rule.invalidatesRequest && (!invalidatedRequestId || !match[1].invalidates?.includes(invalidatedRequestId)))
+    ) {
       issues.push({
         path: ["requests"],
         message: `Missing grounded ${rule.label} request (${rule.pathIncludes}).`,

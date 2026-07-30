@@ -105,6 +105,18 @@ describe("AI authoring evaluation", () => {
     if (!testCase) throw new Error("Expected the Portainer evaluation case");
     const portainer = customWidgetDefinitionSchema.parse(PORTAINER_REFERENCE_WIDGET);
     expect(getScenarioAcceptanceIssues(testCase, portainer)).toEqual([]);
+    expect(
+      getScenarioAcceptanceIssues(
+        {
+          ...testCase,
+          acceptance: {
+            ...testCase.acceptance,
+            requestRules: testCase.acceptance.requestRules.toReversed(),
+          },
+        },
+        portainer,
+      ),
+    ).toEqual([]);
 
     const wrongBinding = customWidgetDefinitionSchema.parse({
       ...portainer,
