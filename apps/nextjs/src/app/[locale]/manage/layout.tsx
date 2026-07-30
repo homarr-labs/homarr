@@ -21,6 +21,7 @@ import {
   IconMailForward,
   IconPhotoFilled,
   IconPointerFilled,
+  IconRobot,
   IconSearch,
   IconSettingsFilled,
   IconUserFilled,
@@ -177,6 +178,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           hidden: !session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3",
         },
       ],
+    },
+    {
+      label: t("items.assistant"),
+      href: "/manage/assistant",
+      icon: IconRobot,
+      hidden: !session?.user.permissions.includes("admin"),
     },
     {
       label: t("items.settings"),

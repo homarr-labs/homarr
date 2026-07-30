@@ -21,4 +21,13 @@ describe("assistant provider presets", () => {
       expect(assistantProviderRequiresApiKey(provider)).toBe(assistantProviderPresets[provider].category === "hosted");
     }
   });
+
+  test.each(assistantProviderIds.filter((provider) => provider !== "custom"))(
+    "%s has a Dashboard Icons provider mark",
+    (provider) => {
+      const iconUrl = assistantProviderPresets[provider].iconUrl;
+      expect(iconUrl).not.toBeNull();
+      expect(() => new URL(iconUrl ?? "")).not.toThrow();
+    },
+  );
 });
