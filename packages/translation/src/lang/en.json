@@ -5975,6 +5975,7 @@
               "manual": "Enter a model ID manually or save the connection to discover models.",
               "manualFallback": "Discovery is unavailable. You can still enter a model ID manually.",
               "saveConnectionFirst": "Save the provider connection before choosing a model.",
+              "discovering": "Refreshing the models available from this provider…",
               "discovered": "Discovered {count} models. Tool support depends on the selected endpoint and model.",
               "discoveryFailed": "Model discovery did not complete",
               "context": "{count} token context",
