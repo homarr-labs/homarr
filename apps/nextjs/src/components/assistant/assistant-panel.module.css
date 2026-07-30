@@ -2,7 +2,7 @@
   position: fixed;
   z-index: 290;
   inset-inline-start: 50%;
-  bottom: 1rem;
+  bottom: max(1rem, env(safe-area-inset-bottom));
   display: flex;
   width: min(31rem, calc(100vw - 1rem));
   min-height: 3.5rem;
@@ -39,6 +39,11 @@
   color: var(--mantine-color-dimmed);
 }
 
+.activityDismiss {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
 .floatingPanel {
   position: fixed;
   z-index: 290;
@@ -68,6 +73,24 @@
   border-bottom: 1px solid var(--mantine-color-default-border);
 }
 
+.panelIdentity,
+.panelIdentityText {
+  min-width: 0;
+}
+
+.panelIdentity {
+  flex: 1;
+}
+
+.panelActions {
+  flex: 0 0 auto;
+}
+
+.panelAction {
+  width: 2.625rem;
+  height: 2.625rem;
+}
+
 .historyMenu {
   background: var(--mantine-color-body);
 }
@@ -90,6 +113,7 @@
 }
 
 .viewport {
+  position: relative;
   display: flex;
   min-height: 0;
   flex: 1;
@@ -186,6 +210,11 @@
   font: inherit;
 }
 
+.composerInput::placeholder {
+  color: var(--mantine-color-dimmed);
+  opacity: 1;
+}
+
 .empty {
   display: flex;
   min-height: 23rem;
@@ -212,10 +241,14 @@
 }
 
 .scrollToBottom {
-  position: absolute;
-  inset-inline-start: 50%;
+  position: sticky;
   bottom: 0.75rem;
-  transform: translateX(-50%);
+  z-index: 1;
+  flex: 0 0 auto;
+  align-self: center;
+  margin-top: -2.5rem;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--mantine-shadow-sm);
 }
 
 @keyframes assistant-activity-in {
@@ -244,18 +277,34 @@
 
 @media (max-width: 48em) {
   .activityBar {
-    bottom: 0.5rem;
+    bottom: max(0.5rem, env(safe-area-inset-bottom));
   }
 
   .floatingPanel {
-    bottom: 0.5rem;
+    bottom: max(0.5rem, env(safe-area-inset-bottom));
     width: calc(100vw - 1rem);
-    height: min(44rem, calc(100dvh - 1rem));
-    min-height: min(20rem, calc(100dvh - 1rem));
+    height: min(44rem, calc(100dvh - 1rem - env(safe-area-inset-bottom)));
+    min-height: min(20rem, calc(100dvh - 1rem - env(safe-area-inset-bottom)));
   }
 
   .panelHeader {
-    padding-inline-start: 0.7rem;
+    min-height: 3.5rem;
+    padding: 0.5rem;
+    padding-inline-start: 0.65rem;
+  }
+
+  .composerWrap {
+    padding: 0.5rem;
+  }
+
+  .composer {
+    gap: 0.25rem;
+    padding: 0.25rem 0.3rem;
+  }
+
+  .composerInput {
+    min-height: 2.625rem;
+    padding: 0.6rem 0.55rem;
   }
 
   .suggestions {
@@ -263,15 +312,17 @@
   }
 
   .empty {
-    min-height: 32rem;
+    min-height: 26rem;
     padding-block: 1.5rem;
   }
 }
 
 @media (max-width: 30em) {
   .historyButton {
-    max-width: 2.25rem;
-    padding-inline: 0.5rem;
+    width: 2.625rem;
+    max-width: 2.625rem;
+    height: 2.625rem;
+    padding-inline: 0.75rem;
   }
 
   .historyButtonSection {
@@ -283,7 +334,15 @@
   }
 
   .messages {
-    padding-inline: 0.75rem;
+    padding: 0.5rem 0.75rem 1rem;
+  }
+
+  .message {
+    margin-block: 0.7rem;
+  }
+
+  .userMessage {
+    max-width: 92%;
   }
 }
 

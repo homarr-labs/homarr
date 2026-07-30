@@ -339,6 +339,7 @@ const ConversationHistory = () => {
           leftSection={<IconHistory size={16} />}
           classNames={{ section: classes.historyButtonSection, label: classes.historyButtonLabel }}
           onClick={() => setOpened((current) => !current)}
+          aria-label={opened ? t("closeHistory") : t("openHistory")}
         >
           {t("conversations")}
         </Button>
@@ -489,7 +490,13 @@ const AssistantActivityBar = ({
         </Group>
       </UnstyledButton>
       {!isRunning && !needsApproval && (
-        <ActionIcon variant="subtle" color="gray" size="sm" onClick={onMarkRead} aria-label={t("activity.dismiss")}>
+        <ActionIcon
+          className={classes.activityDismiss}
+          variant="subtle"
+          color="gray"
+          onClick={onMarkRead}
+          aria-label={t("activity.dismiss")}
+        >
           <IconX size={15} />
         </ActionIcon>
       )}
@@ -529,13 +536,13 @@ export const AssistantPanel = ({
       )}
       {opened && (
         <dialog className={classes.floatingPanel} aria-label={t("title")} open>
-          <Group className={classes.panelHeader} justify="space-between" wrap="nowrap">
-            <Group gap="xs" wrap="nowrap">
+          <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
+            <Group className={classes.panelIdentity} gap="xs" wrap="nowrap">
               <ThemeIcon variant="light" color="red" radius="xl">
                 <IconRobot size={18} />
               </ThemeIcon>
-              <div>
-                <Text fw={700} lh={1.1}>
+              <div className={classes.panelIdentityText}>
+                <Text fw={700} lh={1.1} lineClamp={1}>
                   {t("title")}
                 </Text>
                 <Text size="xs" c="dimmed" lineClamp={1}>
@@ -543,16 +550,27 @@ export const AssistantPanel = ({
                 </Text>
               </div>
             </Group>
-            <Group gap={2} wrap="nowrap">
+            <Group className={classes.panelActions} gap={2} wrap="nowrap">
               <ConversationHistory />
               <Tooltip label={t("newConversation")}>
                 <ThreadListPrimitive.New asChild>
-                  <ActionIcon variant="subtle" color="gray" aria-label={t("newConversation")}>
+                  <ActionIcon
+                    className={classes.panelAction}
+                    variant="subtle"
+                    color="gray"
+                    aria-label={t("newConversation")}
+                  >
                     <IconPlus size={17} />
                   </ActionIcon>
                 </ThreadListPrimitive.New>
               </Tooltip>
-              <ActionIcon variant="subtle" color="gray" onClick={onClose} aria-label={t("close")}>
+              <ActionIcon
+                className={classes.panelAction}
+                variant="subtle"
+                color="gray"
+                onClick={onClose}
+                aria-label={t("close")}
+              >
                 <IconX size={18} />
               </ActionIcon>
             </Group>
