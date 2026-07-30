@@ -25,7 +25,6 @@ CREATE TABLE `assistant_thread` (
 	`user_id` text NOT NULL,
 	`title` text,
 	`model_id` text,
-	`status` text DEFAULT 'regular' NOT NULL,
 	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
 	`updated_at` integer DEFAULT (unixepoch()) NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade

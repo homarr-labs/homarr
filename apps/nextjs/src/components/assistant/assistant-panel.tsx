@@ -34,7 +34,6 @@ import {
   IconActivityHeartbeat,
   IconAlertTriangle,
   IconApps,
-  IconArchive,
   IconArrowUp,
   IconCheck,
   IconChevronUp,
@@ -44,7 +43,6 @@ import {
   IconPlayerStop,
   IconPlus,
   IconRefresh,
-  IconRestore,
   IconRobot,
   IconSearch,
   IconTrash,
@@ -237,45 +235,6 @@ const ThreadListItem = () => {
             <ThreadListItemPrimitive.Title fallback={t("newConversation")} />
           </Button>
         </ThreadListItemPrimitive.Trigger>
-        <ThreadListItemPrimitive.Archive asChild>
-          <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("archive")}>
-            <IconArchive size={14} />
-          </ActionIcon>
-        </ThreadListItemPrimitive.Archive>
-        <ThreadListItemPrimitive.Delete asChild>
-          <ActionIcon variant="subtle" color="red" size="sm" aria-label={t("delete")}>
-            <IconTrash size={14} />
-          </ActionIcon>
-        </ThreadListItemPrimitive.Delete>
-      </Group>
-    </ThreadListItemPrimitive.Root>
-  );
-};
-
-const ArchivedThreadListItem = () => {
-  const t = useScopedI18n("common.assistant");
-  const onSelect = useContext(HistorySelectContext);
-  return (
-    <ThreadListItemPrimitive.Root className={classes.historyItem}>
-      <Group gap={4} wrap="nowrap">
-        <ThreadListItemPrimitive.Trigger asChild>
-          <Button
-            variant="subtle"
-            color="gray"
-            size="compact-sm"
-            justify="flex-start"
-            flex={1}
-            style={{ minWidth: 0 }}
-            onClick={onSelect}
-          >
-            <ThreadListItemPrimitive.Title fallback={t("archivedConversation")} />
-          </Button>
-        </ThreadListItemPrimitive.Trigger>
-        <ThreadListItemPrimitive.Unarchive asChild>
-          <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("restore")}>
-            <IconRestore size={14} />
-          </ActionIcon>
-        </ThreadListItemPrimitive.Unarchive>
         <ThreadListItemPrimitive.Delete asChild>
           <ActionIcon variant="subtle" color="red" size="sm" aria-label={t("delete")}>
             <IconTrash size={14} />
@@ -307,10 +266,6 @@ const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
         <ScrollArea h="min(24rem, 55dvh)" type="auto" offsetScrollbars>
           <Stack gap={3}>
             <ThreadListPrimitive.Items components={{ ThreadListItem }} />
-            <Text size="sm" fw={600} c="dimmed" px="xs" mt="sm">
-              {t("archived")}
-            </Text>
-            <ThreadListPrimitive.Items archived components={{ ThreadListItem: ArchivedThreadListItem }} />
           </Stack>
         </ScrollArea>
       </Stack>

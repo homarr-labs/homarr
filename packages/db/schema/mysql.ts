@@ -518,7 +518,6 @@ export const assistantThreads = mysqlTable(
       .references(() => users.id, { onDelete: "cascade" }),
     title: varchar({ length: 256 }),
     modelId: varchar({ length: 256 }),
-    status: varchar({ length: 16 }).$type<"regular" | "archived">().notNull().default("regular"),
     createdAt: timestamp().notNull().defaultNow(),
     updatedAt: timestamp().notNull().defaultNow(),
   },

@@ -16,7 +16,6 @@ CREATE TABLE `assistant_thread` (
 	`user_id` varchar(64) NOT NULL,
 	`title` varchar(256),
 	`model_id` varchar(256),
-	`status` varchar(16) DEFAULT 'regular' NOT NULL,
 	`created_at` timestamp DEFAULT (now()) NOT NULL,
 	`updated_at` timestamp DEFAULT (now()) NOT NULL,
 	CONSTRAINT `assistant_thread_id` PRIMARY KEY(`id`)
