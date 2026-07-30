@@ -73,6 +73,9 @@ Messages support copy, edit-and-resend, response regeneration and branch navigat
 helpful/not-helpful feedback, text-to-speech, and browser speech dictation when the browser supports it.
 Selecting text in a message exposes a quote action that carries the selected passage into the next prompt.
 Files returned by a compatible model can be downloaded directly from the message.
+Assistant responses render GitHub-flavored Markdown, including headings, links, lists, task lists, tables,
+quotes, inline code, and fenced code blocks. Line breaks are preserved, and Homarr repairs common streamed
+responses where a provider returns escaped line breaks or places a bold-label list on one line.
 Images up to 1 MB and text, Markdown, CSV, HTML, XML, or JSON documents up to 350 KB can be attached by
 using the paperclip or dropping files onto the composer. A request can contain up to five attachments.
 Image understanding depends on the selected model; document text is extracted locally by Homarr and sent
@@ -94,7 +97,9 @@ The assistant can use the same internal tool definitions as the [Homarr MCP serv
 Each tool call runs as the signed-in user, so normal Homarr permission checks still apply. Read-only
 procedures can run during the agent loop. Mutating procedures require an explicit approval in the
 conversation before they execute. Tool cards expose their status, timing, validated input, result, and
-error state without flooding the conversation with raw JSON by default.
+error state without flooding the conversation with raw JSON by default. Common collection and widget
+results are summarized inline as compact responsive cards, while the full structured result remains
+available in the tool card details.
 
 Homarr also exposes a small set of browser-only actions to the assistant. These actions can navigate to
 safe internal routes and open Homarr interfaces such as the command menu and media request search.
