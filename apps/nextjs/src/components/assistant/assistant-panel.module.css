@@ -47,7 +47,7 @@
   display: flex;
   width: min(46rem, calc(100vw - 2rem));
   height: min(36rem, calc(100dvh - 5rem));
-  min-height: 22rem;
+  min-height: min(22rem, calc(100dvh - 5rem));
   margin: 0;
   transform: translateX(-50%);
   flex-direction: column;
@@ -251,7 +251,7 @@
     bottom: 0.5rem;
     width: calc(100vw - 1rem);
     height: min(44rem, calc(100dvh - 1rem));
-    min-height: 20rem;
+    min-height: min(20rem, calc(100dvh - 1rem));
   }
 
   .panelHeader {
@@ -274,11 +274,11 @@
     padding-inline: 0.5rem;
   }
 
-  .historyButton :global(.mantine-Button-section) {
+  .historyButtonSection {
     margin-inline-end: 0;
   }
 
-  .historyButton :global(.mantine-Button-label) {
+  .historyButtonLabel {
     display: none;
   }
 

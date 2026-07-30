@@ -1994,6 +1994,7 @@
       },
       "unavailable": {
         "checking": "Checking whether the assistant is available…",
+        "error": "The assistant's availability could not be checked. Try again.",
         "notConfigured": "An administrator must configure and enable the assistant first.",
         "signIn": "Sign in to use Homarr Assistant."
       },
