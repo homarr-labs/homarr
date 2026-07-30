@@ -101,7 +101,7 @@ export function buildRepairPrompt(
   const diagnostics = issues
     .map((issue) => `${issue.path?.length ? `${issue.path.join(".")}: ` : ""}${issue.message}`)
     .join("\n");
-  return `${originalPrompt}\n\nYour previous response did not validate. Correct only the generic contract/runtime problems below while preserving a polished design.\n\nDiagnostics:\n${diagnostics}\n\nPrevious response:\n${previousResponse}`;
+  return `${originalPrompt}\n\nYour previous response did not meet the release quality bar. Correct every diagnosed contract, runtime, goal-fulfillment, visual, and UX problem below. Preserve grounded API behavior and the strongest working parts, but redesign weak areas when the feedback requires it.\n\nDiagnostics:\n${diagnostics}\n\nPrevious response:\n${previousResponse}`;
 }
 
 export function buildJudgePrompt(testCase: CustomWidgetAiEvaluationCase, widget: HomarrCustomWidgetV2): string {
@@ -183,6 +183,7 @@ export function getScenarioAcceptanceIssues(
   }
 
   const matchedRequestIds = new Set<string>();
+  const requestIdsByLabel = new Map<string, string>();
   for (const rule of testCase.acceptance.requestRules) {
     const match = Object.entries(widget.requests).find(([requestId, request]) => {
       if (matchedRequestIds.has(requestId)) return false;
@@ -191,18 +192,17 @@ export function getScenarioAcceptanceIssues(
       if (rule.method && request.method !== rule.method) return false;
       if (rule.trigger && request.trigger !== rule.trigger) return false;
       const references = collectCustomWidgetRequestReferences(request);
-      if (rule.optionReference && references.options.size === 0) return false;
-      if (rule.parameterReference && references.params.size === 0) return false;
-      if (
-        rule.invalidates &&
-        !request.invalidates?.some((invalidatedRequestId) => widget.requests[invalidatedRequestId]?.kind === "query")
-      ) {
+      if (rule.optionReference && !references.options.has(rule.optionReference)) return false;
+      if (rule.parameterReference && !references.params.has(rule.parameterReference)) return false;
+      const invalidatedRequestId = rule.invalidatesRequest ? requestIdsByLabel.get(rule.invalidatesRequest) : undefined;
+      if (rule.invalidatesRequest && (!invalidatedRequestId || !request.invalidates?.includes(invalidatedRequestId)))
         return false;
-      }
       return true;
     });
-    if (match) matchedRequestIds.add(match[0]);
-    else {
+    if (match) {
+      matchedRequestIds.add(match[0]);
+      requestIdsByLabel.set(rule.label, match[0]);
+    } else {
       issues.push({
         path: ["requests"],
         message: `Missing grounded ${rule.label} request (${rule.pathIncludes}).`,

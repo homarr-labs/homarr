@@ -11,9 +11,9 @@ export interface CustomWidgetAiEvaluationCase {
       kind?: "query" | "action";
       method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
       trigger?: "load" | "manual";
-      optionReference?: boolean;
-      parameterReference?: boolean;
-      invalidates?: boolean;
+      optionReference?: string;
+      parameterReference?: string;
+      invalidatesRequest?: string;
     }>;
     templateComponents: readonly string[];
   };
@@ -36,7 +36,7 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
           pathIncludes: "/api/v2/pokemon/",
           kind: "query",
           trigger: "manual",
-          parameterReference: true,
+          parameterReference: "name",
         },
       ],
       templateComponents: ["TextInput", "SubFetch", "Image", "Progress"],
@@ -56,31 +56,34 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
           label: "container list",
           pathIncludes: "/containers/json",
           kind: "query",
-          optionReference: true,
+          optionReference: "endpointId",
         },
         {
           label: "start action",
           pathIncludes: "/start",
           kind: "action",
           method: "POST",
-          parameterReference: true,
-          invalidates: true,
+          optionReference: "endpointId",
+          parameterReference: "id",
+          invalidatesRequest: "container list",
         },
         {
           label: "stop action",
           pathIncludes: "/stop",
           kind: "action",
           method: "POST",
-          parameterReference: true,
-          invalidates: true,
+          optionReference: "endpointId",
+          parameterReference: "id",
+          invalidatesRequest: "container list",
         },
         {
           label: "restart action",
           pathIncludes: "/restart",
           kind: "action",
           method: "POST",
-          parameterReference: true,
-          invalidates: true,
+          optionReference: "endpointId",
+          parameterReference: "id",
+          invalidatesRequest: "container list",
         },
       ],
       templateComponents: ["ActionButton", "Badge", "RefreshButton"],
@@ -100,13 +103,13 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
           label: "competition standings",
           pathIncludes: "/standings",
           kind: "query",
-          optionReference: true,
+          optionReference: "competition",
         },
         {
           label: "competition fixtures",
           pathIncludes: "/matches",
           kind: "query",
-          optionReference: true,
+          optionReference: "competition",
         },
       ],
       templateComponents: ["Table", "Image", "Badge", "RefreshButton"],
@@ -142,29 +145,29 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
           label: "sensor state",
           pathIncludes: "/api/states/",
           kind: "query",
-          optionReference: true,
+          optionReference: "sensorEntity",
         },
         {
           label: "light state",
           pathIncludes: "/api/states/",
           kind: "query",
-          optionReference: true,
+          optionReference: "lightEntity",
         },
         {
           label: "light on action",
           pathIncludes: "/api/services/light/turn_on",
           kind: "action",
           method: "POST",
-          optionReference: true,
-          invalidates: true,
+          optionReference: "lightEntity",
+          invalidatesRequest: "light state",
         },
         {
           label: "light off action",
           pathIncludes: "/api/services/light/turn_off",
           kind: "action",
           method: "POST",
-          optionReference: true,
-          invalidates: true,
+          optionReference: "lightEntity",
+          invalidatesRequest: "light state",
         },
       ],
       templateComponents: ["ToggleSwitch", "Badge", "SimpleGrid"],

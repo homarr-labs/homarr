@@ -13,6 +13,7 @@ import {
 } from "../../scripts/ai-evaluation";
 import type { CustomWidgetJudgeResult } from "../../scripts/ai-evaluation";
 import { BUNDLED_CUSTOM_WIDGETS, CUSTOM_WIDGET_STARTER, customWidgetDefinitionSchema } from "../core";
+import { PORTAINER_REFERENCE_WIDGET } from "./fixtures/reference-widgets";
 
 const categoryNames = [
   "schemaAndBindings",
@@ -76,6 +77,8 @@ describe("AI authoring evaluation", () => {
     ]);
     expect(prompt).toContain("requests.list.path: Required");
     expect(prompt).toContain("bad response");
+    expect(prompt).toContain("visual, and UX problem");
+    expect(prompt).toContain("redesign weak areas");
   });
 
   it("requires grounded scenario capabilities before model judging", () => {
@@ -94,6 +97,39 @@ describe("AI authoring evaluation", () => {
         expect.stringContaining("manual Pokémon detail"),
         expect.stringContaining("SubFetch"),
       ]),
+    );
+  });
+
+  it("requires the exact option bindings and invalidation target for scenario actions", () => {
+    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "portainer-containers");
+    if (!testCase) throw new Error("Expected the Portainer evaluation case");
+    const portainer = customWidgetDefinitionSchema.parse(PORTAINER_REFERENCE_WIDGET);
+    expect(getScenarioAcceptanceIssues(testCase, portainer)).toEqual([]);
+
+    const wrongBinding = customWidgetDefinitionSchema.parse({
+      ...portainer,
+      requests: {
+        ...portainer.requests,
+        start: {
+          ...portainer.requests.start,
+          path: portainer.requests.start?.path.replace("{option:endpointId}", "{option:showAll}"),
+        },
+      },
+    });
+    expect(getScenarioAcceptanceIssues(testCase, wrongBinding).map(({ message }) => message)).toContain(
+      "Missing grounded start action request (/start).",
+    );
+
+    const wrongInvalidation = customWidgetDefinitionSchema.parse({
+      ...portainer,
+      requests: {
+        ...portainer.requests,
+        health: { path: "/api/status" },
+        start: { ...portainer.requests.start, invalidates: ["health"] },
+      },
+    });
+    expect(getScenarioAcceptanceIssues(testCase, wrongInvalidation).map(({ message }) => message)).toContain(
+      "Missing grounded start action request (/start).",
     );
   });
 

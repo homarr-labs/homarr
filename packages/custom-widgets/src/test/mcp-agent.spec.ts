@@ -339,10 +339,141 @@ describe("Custom Widget MCP agent", () => {
           })),
           remainingIssues: [],
         },
-        toolExecutions: successfulExecutions(toolsUsed),
+        toolExecutions: successfulExecutions(toolsUsed).map((entry) =>
+          entry.tool === "customWidget_configurationRequestUser"
+            ? { ...entry, configurationStatus: "pending" as const }
+            : entry,
+        ),
         persist: false,
       }),
     ).toEqual([]);
+  });
+
+  it("resumes preview checks after secure user configuration reports completion", async () => {
+    let configurationCalls = 0;
+    const sequence = [
+      "customWidget_getAuthoringPrompt",
+      "customWidget_getSkill",
+      "customWidget_schema",
+      "customWidget_validate",
+      "customWidget_previewCreate",
+      "customWidget_configurationRequestUser",
+      "customWidget_configurationRequestUser",
+      "customWidget_previewQuery",
+      "customWidget_previewJournal",
+    ];
+    const output = {
+      status: "pass" as const,
+      summary: "The user completed secure source configuration and the authenticated preview passed.",
+      definitionId: null,
+      previewUrl: "http://localhost:3000/manage/custom-widgets/preview/session-configured",
+      iterations: 2,
+      evidence: [...new Set(sequence)].map((name) => ({
+        tool: name,
+        outcome: "passed" as const,
+        detail: `${name} completed.`,
+      })),
+      remainingIssues: [],
+    };
+    const responses = [
+      ...sequence.map((toolName, index) => {
+        if (toolName === "customWidget_configurationRequestUser") {
+          return toolCall(
+            toolName,
+            index,
+            configurationCalls++ === 0
+              ? { previewSessionId: "preview-1", sourceId: "default" }
+              : { requestId: "configuration-1" },
+          );
+        }
+        return toolCall(toolName, index, toolName === "customWidget_previewQuery" ? { requestId: "query-1" } : {});
+      }),
+      finalResult(output),
+    ];
+    let responseIndex = 0;
+    let configurationResults = 0;
+    const model = new MockLanguageModelV3({
+      doGenerate: async () => responses[responseIndex++] ?? finalResult(output),
+    });
+    const tools = Object.fromEntries(
+      sequence.map((name) => [
+        name,
+        tool({
+          description: name,
+          inputSchema: z.object({
+            requestId: z.string().optional(),
+            previewSessionId: z.string().optional(),
+            sourceId: z.string().optional(),
+          }),
+          execute: () => {
+            if (name === "customWidget_validate") return mcpOutput({ valid: true });
+            if (name === "customWidget_previewCreate") return mcpOutput({ success: true });
+            if (name === "customWidget_previewQuery") return mcpOutput({ ok: true });
+            if (name === "customWidget_configurationRequestUser") {
+              configurationResults += 1;
+              return mcpOutput({
+                requestId: "configuration-1",
+                status: configurationResults === 1 ? "pending" : "completed",
+              });
+            }
+            return mcpOutput({});
+          },
+        }),
+      ]),
+    );
+
+    const result = await createCustomWidgetMcpAgent({ model, tools }).generate({ prompt: "Build a Jellyfin widget" });
+    const toolExecutions = getCustomWidgetMcpToolExecutions(result.steps);
+    expect(
+      toolExecutions
+        .filter(({ tool: toolName }) => toolName === "customWidget_configurationRequestUser")
+        .map(({ configurationStatus }) => configurationStatus),
+    ).toEqual(["pending", "completed"]);
+    expect(
+      getCustomWidgetMcpWorkflowIssues({
+        output: result.output,
+        toolExecutions,
+        persist: false,
+      }),
+    ).toEqual([]);
+  });
+
+  it("rejects success while secure user configuration is still pending", () => {
+    const toolsUsed = [
+      "customWidget_getAuthoringPrompt",
+      "customWidget_getSkill",
+      "customWidget_schema",
+      "customWidget_validate",
+      "customWidget_previewCreate",
+      "customWidget_configurationRequestUser",
+      "customWidget_previewQuery",
+      "customWidget_previewJournal",
+    ];
+    const toolExecutions = successfulExecutions(toolsUsed).map((entry) =>
+      entry.tool === "customWidget_configurationRequestUser"
+        ? { ...entry, configurationStatus: "pending" as const }
+        : entry,
+    );
+
+    expect(
+      getCustomWidgetMcpWorkflowIssues({
+        output: {
+          status: "pass",
+          summary: "The agent claimed the authenticated preview passed before configuration completed.",
+          definitionId: null,
+          previewUrl: "http://localhost:3000/manage/custom-widgets/preview/session-pending",
+          iterations: 1,
+          evidence: toolsUsed.map((name) => ({
+            tool: name,
+            outcome: "passed" as const,
+            detail: `${name} completed.`,
+          })),
+          remainingIssues: [],
+        },
+        toolExecutions,
+        persist: false,
+      }),
+    ).toContain("A passing result requires the user configuration request to report completed");
   });
 
   it("never exposes a credential-writing tool to the model", async () => {

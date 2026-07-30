@@ -96,7 +96,10 @@ OPENROUTER_API_KEY=... pnpm --filter @homarr/custom-widgets test:ai
 
 The suite uses DeepSeek V4 Pro to author Pokédex, Portainer, football, Jellyfin, and Home Assistant widgets. Before DeepSeek V4 Flash judges a result, it must pass Homarr's real clipboard parser, canonical schema, and deterministic scenario checks for the documented API routes, authentication, bindings, actions, and essential runtime components. It saves every response, validated widget manifest, and detailed category scores under `packages/custom-widgets/.ai-evaluations/`.
 
-The run has a hard budget of ten generation attempts across all scenarios. Override the models or budget with `OPENROUTER_GENERATOR_MODEL`, `OPENROUTER_JUDGE_MODEL`, and `CUSTOM_WIDGET_AI_MAX_LOOPS`. Generated artifacts are local and ignored by Git; promote a reviewed, validated result into the bundled-widget source deliberately.
+Each scenario stops as soon as it passes and has a hard limit of ten generation attempts. Override the models or
+per-scenario limit with `OPENROUTER_GENERATOR_MODEL`, `OPENROUTER_JUDGE_MODEL`, and
+`CUSTOM_WIDGET_AI_MAX_LOOPS`. Generated artifacts are local and ignored by Git; promote a reviewed, validated result
+into the bundled-widget source deliberately.
 
 To exercise the connected MCP workflow with the Vercel AI SDK agent, start Homarr and create an API key for an administrator:
 
@@ -112,7 +115,8 @@ and validation results, one successful preview call for every scenario query and
 calls. It can repair and retest a widget, but it does not persist by default. Add `--persist` to create a passing widget,
 or `--definition=<id> --persist` to test the edit/debug/update path. Authenticated sources use
 `customWidget_configurationRequestUser`; credential-writing tools are not exposed to the model and plaintext credentials
-never enter its context. The deterministic unit suite separately proves the repair, persistence, and secure
-source-configuration loop without contacting a model or changing a Homarr instance.
+never enter its context. A passing result is rejected until that request reports `completed` and the required preview
+queries and simulated actions succeed afterward. The deterministic unit suite separately proves the repair, persistence,
+and secure source-configuration loop without contacting a model or changing a Homarr instance.
 
 The reference API check uses a real PokeAPI list/detail request and a read-only Portainer container query when `PORTAINER_BASE_URL` and `PORTAINER_API_KEY` are set. Use `pnpm --filter @homarr/custom-widgets test:reference-apis -- --pokeapi-only` for the public PokeAPI check alone. To exercise start, restart, and stop against a disposable container, also set `PORTAINER_TEST_CONTAINER_ID` and the explicit safeguard `PORTAINER_ALLOW_MUTATIONS=1`; the script restores the container's original running state.

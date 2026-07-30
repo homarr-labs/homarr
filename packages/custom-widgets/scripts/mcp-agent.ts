@@ -44,6 +44,7 @@ export interface CustomWidgetMcpToolExecution {
   tool: string;
   succeeded: boolean;
   requestId?: string;
+  configurationStatus?: "pending" | "completed";
 }
 
 interface AgentToolStep {
@@ -55,7 +56,7 @@ const AGENT_INSTRUCTIONS = `You are the Homarr Custom Widget release evaluator. 
 
 Read the live authoring prompt, skill, and schema before authoring. Never invent a tool, API route, validation result, preview result, or credential. Validate every revision. Create a preview, execute every load query that can run, simulate actions instead of causing side effects, and inspect the preview journal. Repair validation, request, runtime, and template problems and repeat the failed checks.
 
-Never put plaintext credentials in a widget, response, summary, or tool argument. For an authenticated source without existing credentials, create a user configuration request with customWidget_configurationRequestUser and report needs-user-configuration. Do not call secret-writing tools.
+Never put plaintext credentials in a widget, response, summary, or tool argument. For an authenticated source without existing credentials, create a user configuration request with customWidget_configurationRequestUser. If the user completes it while the workflow is active, check the same request until it reports completed and then resume the preview checks. Otherwise report needs-user-configuration. Never repeat its URL or request token in the structured result. Do not call secret-writing tools.
 
 Revise unsaved definitions in your working context; do not mutate a stored template while debugging. Persist only when the user prompt explicitly says persistence is allowed and all runnable checks pass. For edits, read the current definition first and update the same definition. Return the required structured result with evidence tied to successful tool calls. A pass must have no remaining issues.`;
 
@@ -105,10 +106,16 @@ export function getCustomWidgetMcpToolExecutions(steps: readonly AgentToolStep[]
   return steps.flatMap(({ toolCalls }) =>
     toolCalls.map((call) => {
       const requestId = asRecord(call.input)?.requestId;
+      const output = results.get(call.toolCallId)?.output;
+      const status = asRecord(getMcpToolPayload(output))?.status;
       return {
         tool: call.toolName,
-        succeeded: isSuccessfulMcpToolOutput(call.toolName, results.get(call.toolCallId)?.output),
+        succeeded: isSuccessfulMcpToolOutput(call.toolName, output),
         ...(typeof requestId === "string" ? { requestId } : {}),
+        ...(call.toolName === "customWidget_configurationRequestUser" &&
+        (status === "pending" || status === "completed")
+          ? { configurationStatus: status }
+          : {}),
       };
     }),
   );
@@ -147,6 +154,9 @@ export function getCustomWidgetMcpWorkflowIssues(args: {
     if (!args.persist && !args.definitionId) required.push("customWidget_previewCreate");
     if (args.persist && !args.definitionId) required.push("customWidget_create");
   }
+  if (hasTool("customWidget_configurationRequestUser") && !required.includes("customWidget_configurationRequestUser")) {
+    required.push("customWidget_configurationRequestUser");
+  }
   for (const tool of required) {
     if (!hasTool(tool)) issues.push(`Required tool was not used: ${tool}`);
     else if (!hasSuccessfulTool(tool)) issues.push(`Required tool did not complete successfully: ${tool}`);
@@ -183,11 +193,22 @@ export function getCustomWidgetMcpWorkflowIssues(args: {
     }
   }
   if (args.output.status === "pass") {
+    const completedConfiguration = args.toolExecutions.findLastIndex(
+      (entry) =>
+        entry.tool === "customWidget_configurationRequestUser" &&
+        entry.succeeded &&
+        entry.configurationStatus === "completed",
+    );
+    if (hasTool("customWidget_configurationRequestUser") && completedConfiguration < 0) {
+      issues.push("A passing result requires the user configuration request to report completed");
+    }
+    const verifiedExecutions =
+      completedConfiguration >= 0 ? args.toolExecutions.slice(completedConfiguration + 1) : args.toolExecutions;
     for (const [tool, requiredCount] of [
       ["customWidget_previewQuery", args.requiredQueryCount ?? 1],
       ["customWidget_previewAction", args.requiredActionCount ?? 0],
     ] as const) {
-      const completed = args.toolExecutions.filter((entry) => entry.tool === tool && entry.succeeded);
+      const completed = verifiedExecutions.filter((entry) => entry.tool === tool && entry.succeeded);
       const distinctRequestIds = new Set(completed.flatMap(({ requestId }) => (requestId ? [requestId] : [])));
       const completedCount = distinctRequestIds.size > 0 ? distinctRequestIds.size : completed.length;
       if (completedCount < requiredCount) {
@@ -246,7 +267,13 @@ export function getCustomWidgetMcpWorkflowIssues(args: {
     } else if (!evidenceTools.has("customWidget_configurationRequestUser")) {
       issues.push("Structured evidence is missing customWidget_configurationRequestUser");
     }
-    const configurationRequest = lastSuccessfulIndex("customWidget_configurationRequestUser");
+    const finalConfiguration = args.toolExecutions.findLast(
+      (entry) => entry.tool === "customWidget_configurationRequestUser" && entry.succeeded,
+    );
+    if (finalConfiguration?.configurationStatus !== "pending") {
+      issues.push("User configuration status requires a pending configuration request");
+    }
+    const configurationRequest = firstSuccessfulIndex("customWidget_configurationRequestUser");
     const targetCreation = args.persist ? lastSuccessfulIndex(persistenceTool) : previewCreate;
     if (!args.definitionId && targetCreation >= 0 && configurationRequest < targetCreation) {
       issues.push("customWidget_configurationRequestUser must run after its definition or preview target exists");
@@ -258,13 +285,18 @@ export function getCustomWidgetMcpWorkflowIssues(args: {
 function isSuccessfulMcpToolOutput(tool: string, output: unknown) {
   const record = asRecord(output);
   if (!record || record.isError === true) return false;
-  const payload = decodeMcpTextPayload(record) ?? record;
+  const payload = getMcpToolPayload(output);
   if (tool === "customWidget_validate") return asRecord(payload)?.valid === true;
   if (tool === "customWidget_previewCreate") return asRecord(payload)?.success === true;
   if (tool === "customWidget_previewQuery" || tool === "customWidget_previewAction") {
     return asRecord(payload)?.ok === true;
   }
   return output !== undefined;
+}
+
+function getMcpToolPayload(output: unknown) {
+  const record = asRecord(output);
+  return record ? (decodeMcpTextPayload(record) ?? record) : undefined;
 }
 
 function decodeMcpTextPayload(output: Record<string, unknown>) {
