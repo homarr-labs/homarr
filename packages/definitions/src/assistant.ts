@@ -16,6 +16,17 @@ export const assistantProviderIds = [
 export type AssistantProvider = (typeof assistantProviderIds)[number];
 export type AssistantProviderCategory = "hosted" | "local" | "custom";
 
+export interface AssistantModelOption {
+  id: string;
+  name: string;
+}
+
+export const getAssistantModelOptionLabel = (model: AssistantModelOption) =>
+  model.name === model.id ? model.id : `${model.name} (${model.id})`;
+
+export const resolveAssistantModelId = (models: AssistantModelOption[], value: string) =>
+  models.find((model) => model.id === value || getAssistantModelOptionLabel(model) === value)?.id ?? null;
+
 const providerIconBaseUrl = "https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@latest/icons";
 
 interface AssistantProviderPreset {
