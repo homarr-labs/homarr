@@ -271,6 +271,8 @@ export const assistantRouter = createTRPCRouter({
       const existing = await getConfigurationAsync(ctx.db);
       const destinationChanged =
         existing !== undefined && (existing.provider !== input.provider || existing.baseUrl !== baseUrl);
+      const connectionChanged =
+        existing !== undefined && (destinationChanged || existing.modelDiscoveryPath !== modelDiscoveryPath);
       const encryptedApiKey = input.apiKey
         ? encryptSecret(input.apiKey)
         : input.clearApiKey || destinationChanged
@@ -291,8 +293,8 @@ export const assistantRouter = createTRPCRouter({
             modelDiscoveryPath,
             encryptedApiKey,
             encryptedHeaders,
-            modelId: destinationChanged ? null : existing.modelId,
-            enabled: destinationChanged ? false : existing.enabled,
+            modelId: connectionChanged ? null : existing.modelId,
+            enabled: connectionChanged ? false : existing.enabled,
             updatedAt: new Date(),
           })
           .where(eq(assistantConfigurations.id, configurationId));
