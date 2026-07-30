@@ -2024,7 +2024,11 @@
       "send": "Send message",
       "copy": "Copy response",
       "regenerate": "Regenerate response",
-      "responseError": "The response stopped unexpectedly. Try again, or ask an administrator to verify the model endpoint.",
+      "responseError": {
+        "title": "The assistant could not finish",
+        "description": "Try again. If the problem continues, ask an administrator to verify the configured model endpoint.",
+        "retry": "Try again"
+      },
       "scrollToLatest": "Scroll to latest",
       "approvalRequired": "Approval required",
       "complete": "Complete",

@@ -27,7 +27,8 @@ const getToolApprovalSecret = () =>
   Buffer.from(
     hkdfSync("sha256", Buffer.from(env.SECRET_ENCRYPTION_KEY, "hex"), "", "assistant-tool-approval", 32),
   ).toString("base64url");
-const safeStreamError = "The model endpoint stopped the response. Check its URL, model, and credentials.";
+const safeStreamError =
+  "The model endpoint stopped the response. Try again, or ask an administrator to verify its URL, model, and credentials.";
 
 const requestSchema = z.object({
   id: z.string().min(1).max(64),
@@ -267,9 +268,15 @@ export async function POST(request: Request) {
     });
 
     return result.toUIMessageStreamResponse({ onError: () => safeStreamError });
-  } catch {
+  } catch (error) {
+    logger.error("Assistant response could not start", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return Response.json(
-      { error: "The configured model endpoint could not start this response. Check its URL, model, and credentials." },
+      {
+        error:
+          "The configured model endpoint could not start this response. Try again, or ask an administrator to verify its URL, model, and credentials.",
+      },
       { status: 502 },
     );
   }

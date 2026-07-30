@@ -5,6 +5,7 @@ import type { ToolCallMessagePartProps } from "@assistant-ui/react";
 import {
   ActionBarPrimitive,
   ComposerPrimitive,
+  ErrorPrimitive,
   MessagePartPrimitive,
   MessagePrimitive,
   ThreadListItemPrimitive,
@@ -16,6 +17,7 @@ import { ActionIcon, Box, Button, Drawer, Group, ScrollArea, Stack, Text, ThemeI
 import { useMediaQuery } from "@mantine/hooks";
 import {
   IconActivityHeartbeat,
+  IconAlertTriangle,
   IconApps,
   IconArchive,
   IconArrowUp,
@@ -151,7 +153,30 @@ const RuntimeError = () => {
   const t = useScopedI18n("common.assistant");
   return (
     <MessagePrimitive.Error>
-      <Box className={classes.messageError}>{t("responseError")}</Box>
+      <ErrorPrimitive.Root className={classes.messageError}>
+        <Group align="flex-start" wrap="nowrap">
+          <ThemeIcon color="red" variant="light" radius="xl" size="md">
+            <IconAlertTriangle size={17} />
+          </ThemeIcon>
+          <Stack gap="xs" flex={1}>
+            <Text size="sm" fw={700}>
+              {t("responseError.title")}
+            </Text>
+            <ErrorPrimitive.Message className={classes.messageErrorText} />
+            <ActionBarPrimitive.Reload asChild>
+              <Button
+                variant="light"
+                color="red"
+                size="compact-sm"
+                w="fit-content"
+                leftSection={<IconRefresh size={14} />}
+              >
+                {t("responseError.retry")}
+              </Button>
+            </ActionBarPrimitive.Reload>
+          </Stack>
+        </Group>
+      </ErrorPrimitive.Root>
     </MessagePrimitive.Error>
   );
 };
