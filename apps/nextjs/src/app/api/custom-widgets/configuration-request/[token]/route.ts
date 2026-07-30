@@ -13,16 +13,14 @@ import { customWidgetSourceSchema } from "@homarr/custom-widgets/core";
 import { invalidateCustomWidgetResponseCache } from "@homarr/custom-widgets/server";
 import { db } from "@homarr/db";
 
-import { requireCustomWidgetAdmin } from "../../admin";
+import { adminRoute } from "../../admin";
 import { readConfigurationRequestBody } from "../body";
 
 interface RouteContext {
   params: Promise<{ token: string }>;
 }
 
-export async function GET(_request: NextRequest, context: RouteContext) {
-  const denied = await requireCustomWidgetAdmin();
-  if (denied) return denied;
+const getConfigurationRequest = async (_request: NextRequest, context: RouteContext): Promise<Response> => {
   const { token } = await context.params;
   const request = await getCustomWidgetConfigurationRequest(token);
   if (!request)
@@ -38,11 +36,9 @@ export async function GET(_request: NextRequest, context: RouteContext) {
     },
     { headers: { "Cache-Control": "no-store" } },
   );
-}
+};
 
-export async function POST(request: NextRequest, context: RouteContext) {
-  const denied = await requireCustomWidgetAdmin();
-  if (denied) return denied;
+const completeConfigurationRequest = async (request: NextRequest, context: RouteContext): Promise<Response> => {
   const { token } = await context.params;
   const pending = await getCustomWidgetConfigurationRequest(token);
   if (!pending || pending.status !== "pending") {
@@ -128,4 +124,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
   } finally {
     await releaseCustomWidgetConfigurationRequest(token);
   }
-}
+};
+
+export const GET = adminRoute(getConfigurationRequest);
+export const POST = adminRoute(completeConfigurationRequest);

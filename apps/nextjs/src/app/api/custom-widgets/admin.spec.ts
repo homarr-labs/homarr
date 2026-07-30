@@ -8,7 +8,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@homarr/auth/next", () => ({ auth: mocks.auth }));
 
-import { requireCustomWidgetAdmin } from "./admin";
+import { adminRoute } from "./admin";
 
 beforeEach(() => {
   mocks.auth.mockResolvedValue({ user: { permissions: ["admin"] } });
@@ -16,7 +16,11 @@ beforeEach(() => {
 
 describe("Custom Widget HTTP resource access", () => {
   test("allows authenticated administrators", async () => {
-    await expect(requireCustomWidgetAdmin()).resolves.toBeNull();
+    const handler = vi.fn(async () => Response.json({ ok: true }));
+    const response = await adminRoute(handler)();
+
+    expect(response.status).toBe(200);
+    expect(handler).toHaveBeenCalledOnce();
   });
 
   test.each([
@@ -24,7 +28,10 @@ describe("Custom Widget HTTP resource access", () => {
     ["authenticated non-admins", { user: { permissions: ["board-modify-all"] } }],
   ])("denies %s", async (_label, session) => {
     mocks.auth.mockResolvedValue(session);
-    const response = await requireCustomWidgetAdmin();
-    expect(response?.status).toBe(403);
+    const handler = vi.fn(async () => Response.json({ ok: true }));
+    const response = await adminRoute(handler)();
+
+    expect(response.status).toBe(403);
+    expect(handler).not.toHaveBeenCalled();
   });
 });
