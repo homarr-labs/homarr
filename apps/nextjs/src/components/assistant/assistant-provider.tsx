@@ -23,7 +23,6 @@ import {
 import { AssistantChatTransport, useChatRuntime } from "@assistant-ui/react-ai-sdk";
 import { useHotkeys } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
-import { lastAssistantMessageIsCompleteWithApprovalResponses } from "ai";
 
 import { clientApi, fetchApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -38,6 +37,8 @@ import {
   useRegisterSpotlightContextResults,
 } from "@homarr/spotlight";
 
+import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
+import { AssistantAskUserTool, AssistantConfigureAppTool } from "./assistant-human-tools";
 import { AssistantPanel } from "./assistant-panel";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 import { sendAssistantPrompt as sendPromptThroughComposer } from "./assistant-send";
@@ -391,7 +392,7 @@ const AssistantThreadRuntime = () => {
   return useChatRuntime<AssistantUIMessage>({
     transport,
     onError,
-    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
+    sendAutomaticallyWhen: shouldAutomaticallyContinueAssistant,
     adapters: {
       history,
       attachments,
@@ -410,6 +411,18 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
   const toolkit = useMemo(
     () =>
       defineToolkit({
+        ask_user: {
+          type: "human",
+          display: "standalone",
+          ...browserToolContracts.ask_user,
+          render: AssistantAskUserTool,
+        },
+        configure_app: {
+          type: "human",
+          display: "standalone",
+          ...browserToolContracts.configure_app,
+          render: AssistantConfigureAppTool,
+        },
         navigate_to_route: {
           type: "frontend",
           ...browserToolContracts.navigate_to_route,

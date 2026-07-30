@@ -129,6 +129,9 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
       shortcut={hotkeys.openSpotlight}
       yOffset={8}
       overlayProps={{ blur: 2, backgroundOpacity: 0.2 }}
+      onSpotlightOpen={() => {
+        requestAnimationFrame(() => inputRef.current?.focus());
+      }}
       onSpotlightClose={() => {
         setMode(defaultMode);
         clearChildrenStack();

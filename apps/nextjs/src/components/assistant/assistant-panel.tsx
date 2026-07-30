@@ -357,7 +357,7 @@ const ToolPart = ({
       <UnstyledButton
         className={classes.toolHeader}
         onClick={() => setOpened((current) => !current)}
-        aria-expanded={opened || awaitingApproval}
+        aria-expanded={opened}
       >
         <Group justify="space-between" wrap="nowrap" gap="xs">
           <Group gap="xs" wrap="nowrap">
@@ -399,20 +399,34 @@ const ToolPart = ({
         </Group>
       </UnstyledButton>
       {awaitingApproval && (
-        <Stack gap="xs" mt="sm">
-          <Text size="sm">{t("approvalDescription")}</Text>
-          <Group gap="xs">
-            <Button size="compact-sm" onClick={() => respondToApproval({ approved: true })}>
-              {t("allowOnce")}
+        <Box className={classes.approvalPanel}>
+          <Text size="sm" fw={600}>
+            {t("approvalDescription")}
+          </Text>
+          <ToolResultPreview result={args} />
+          <Group className={classes.approvalActions} gap="sm" grow wrap="nowrap">
+            <Button
+              size="md"
+              fullWidth
+              leftSection={<IconCheck size={18} />}
+              onClick={() => respondToApproval({ approved: true })}
+            >
+              {t("approveAndRun")}
             </Button>
-            <Button size="compact-sm" variant="default" onClick={() => respondToApproval({ approved: false })}>
+            <Button
+              size="md"
+              fullWidth
+              variant="default"
+              leftSection={<IconX size={18} />}
+              onClick={() => respondToApproval({ approved: false })}
+            >
               {t("deny")}
             </Button>
           </Group>
-        </Stack>
+        </Box>
       )}
       {successful && result !== undefined && <ToolResultPreview result={result} />}
-      <Collapse expanded={opened || awaitingApproval}>
+      <Collapse expanded={opened}>
         <Stack gap="xs" mt="sm">
           <Box>
             <Text size="xs" fw={600} c="dimmed">

@@ -1,0 +1,217 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import type { ToolCallMessagePartProps } from "@assistant-ui/react";
+import { Box, Button, Group, Skeleton, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
+import { IconCheck, IconMessageQuestion, IconPencil, IconX } from "@tabler/icons-react";
+import type { z } from "zod/v4";
+
+import { AppForm } from "@homarr/forms-collection";
+import { useScopedI18n } from "@homarr/translation/client";
+import type { appManageSchema } from "@homarr/validation/app";
+
+import classes from "./assistant-panel.module.css";
+import {
+  type AskUserArgs,
+  type AskUserResult,
+  type ConfigureAppArgs,
+  normalizeAssistantAppIconUrl,
+} from "./assistant-tool-contracts";
+
+type AppValues = z.infer<typeof appManageSchema>;
+
+const toAppValues = (args: ConfigureAppArgs | undefined): AppValues => ({
+  name: args?.name ?? "",
+  description: args?.description ?? "",
+  iconUrl: normalizeAssistantAppIconUrl(args?.iconUrl),
+  href: args?.href ?? "",
+  pingUrl: args?.pingUrl ?? "",
+});
+
+export const AssistantAskUserTool = ({
+  args,
+  result,
+  addResult,
+}: ToolCallMessagePartProps<AskUserArgs, AskUserResult>) => {
+  const t = useScopedI18n("common.assistant.askUser");
+  const [showOther, setShowOther] = useState(false);
+  const [other, setOther] = useState("");
+  const otherInputRef = useRef<HTMLInputElement>(null);
+  const options = Array.isArray(args?.options) ? args.options : [];
+
+  useEffect(() => {
+    if (showOther) otherInputRef.current?.focus();
+  }, [showOther]);
+
+  if (result) {
+    return (
+      <Box className={classes.humanToolCompleted}>
+        <ThemeIcon size="sm" radius="xl" variant="light" color="green">
+          <IconCheck size={13} />
+        </ThemeIcon>
+        <Box>
+          <Text size="xs" c="dimmed">
+            {t("answered")}
+          </Text>
+          <Text size="sm" fw={600}>
+            {result.answer}
+          </Text>
+        </Box>
+      </Box>
+    );
+  }
+
+  if (!args?.question || options.length < 2) {
+    return (
+      <Box className={classes.humanTool} aria-label={t("preparing")}>
+        <Stack gap="xs">
+          <Skeleton height={18} width="62%" />
+          <Skeleton height={52} />
+          <Skeleton height={52} />
+        </Stack>
+      </Box>
+    );
+  }
+
+  const submitOther = () => {
+    const answer = other.trim();
+    if (!answer) return;
+    addResult({ answer, source: "other" });
+  };
+
+  return (
+    <Box className={classes.humanTool}>
+      <Group align="flex-start" wrap="nowrap" gap="sm">
+        <ThemeIcon size="lg" radius="xl" variant="light" color="red">
+          <IconMessageQuestion size={18} />
+        </ThemeIcon>
+        <Box flex={1} miw={0}>
+          <Text fw={700} className={classes.humanToolQuestion}>
+            {args.question}
+          </Text>
+          {args.description && (
+            <Text size="sm" c="dimmed" mt={3}>
+              {args.description}
+            </Text>
+          )}
+        </Box>
+      </Group>
+
+      <Stack gap="xs" mt="md">
+        {options.map((option, index) => (
+          <Button
+            key={`${option.id}:${index}`}
+            className={classes.humanToolOption}
+            variant="default"
+            size="md"
+            fullWidth
+            justify="space-between"
+            onClick={() => addResult({ answer: option.label, optionId: option.id, source: "option" })}
+          >
+            <Box ta="start">
+              <Text component="span" size="sm" fw={650}>
+                {option.label}
+              </Text>
+              {option.description && (
+                <Text component="span" display="block" size="xs" c="dimmed" fw={400}>
+                  {option.description}
+                </Text>
+              )}
+            </Box>
+          </Button>
+        ))}
+
+        {args.allowOther !== false &&
+          (showOther ? (
+            <Group align="flex-end" gap="xs" wrap="nowrap">
+              <TextInput
+                ref={otherInputRef}
+                className={classes.humanToolOtherInput}
+                value={other}
+                onChange={(event) => setOther(event.currentTarget.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+                    event.preventDefault();
+                    submitOther();
+                  }
+                }}
+                label={t("otherLabel")}
+                placeholder={t("otherPlaceholder")}
+              />
+              <Button size="md" onClick={submitOther} disabled={!other.trim()}>
+                {t("submit")}
+              </Button>
+              <Button
+                size="md"
+                variant="default"
+                px="sm"
+                aria-label={t("cancelOther")}
+                onClick={() => {
+                  setShowOther(false);
+                  setOther("");
+                }}
+              >
+                <IconX size={17} />
+              </Button>
+            </Group>
+          ) : (
+            <Button
+              className={classes.humanToolOption}
+              variant="default"
+              size="md"
+              fullWidth
+              leftSection={<IconPencil size={17} />}
+              justify="flex-start"
+              onClick={() => setShowOther(true)}
+            >
+              {t("other")}
+            </Button>
+          ))}
+      </Stack>
+    </Box>
+  );
+};
+
+export const AssistantConfigureAppTool = ({
+  args,
+  result,
+  addResult,
+}: ToolCallMessagePartProps<ConfigureAppArgs, AppValues>) => {
+  const t = useScopedI18n("common.assistant.configureApp");
+
+  if (result) {
+    return (
+      <Box className={classes.humanToolCompleted}>
+        <ThemeIcon size="sm" radius="xl" variant="light" color="green">
+          <IconCheck size={13} />
+        </ThemeIcon>
+        <Box miw={0}>
+          <Text size="xs" c="dimmed">
+            {t("ready")}
+          </Text>
+          <Text size="sm" fw={600} truncate>
+            {result.name}
+          </Text>
+        </Box>
+      </Box>
+    );
+  }
+
+  return (
+    <Box className={classes.appTool}>
+      <Stack gap={2} mb="md">
+        <Text fw={700}>{t("title")}</Text>
+        <Text size="sm" c="dimmed">
+          {t("description")}
+        </Text>
+      </Stack>
+      <AppForm
+        initialValues={toAppValues(args)}
+        buttonLabels={{ submit: t("continue") }}
+        showBackToOverview={false}
+        handleSubmit={(values) => addResult(values)}
+        isPending={false}
+      />
+    </Box>
+  );
+};

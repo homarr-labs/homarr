@@ -2124,13 +2124,28 @@
         "dismiss": "Dismiss assistant activity"
       },
       "scrollToLatest": "Scroll to latest",
+      "askUser": {
+        "preparing": "Preparing question",
+        "answered": "Your answer",
+        "other": "Other",
+        "otherLabel": "Your answer",
+        "otherPlaceholder": "Type another answer…",
+        "submit": "Send answer",
+        "cancelOther": "Cancel other answer"
+      },
+      "configureApp": {
+        "title": "Review app details",
+        "description": "Choose a local icon and adjust anything before the assistant requests creation approval.",
+        "continue": "Use these details",
+        "ready": "App details ready"
+      },
       "approvalRequired": "Approval required",
       "complete": "Complete",
       "denied": "Denied",
       "failed": "Failed",
       "working": "Working",
-      "approvalDescription": "This action changes Homarr. Review the input before allowing it.",
-      "allowOnce": "Allow once",
+      "approvalDescription": "Review this change before it runs.",
+      "approveAndRun": "Approve and run",
       "deny": "Deny"
     },
     "dangerZone": "Danger zone",

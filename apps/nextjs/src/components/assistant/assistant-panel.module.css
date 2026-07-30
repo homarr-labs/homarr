@@ -336,6 +336,61 @@
   text-align: start;
 }
 
+.approvalPanel {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.approvalActions {
+  margin-top: 0.85rem;
+}
+
+.humanTool,
+.appTool {
+  width: 100%;
+  margin-block: 0.65rem;
+  padding: 1rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-default);
+}
+
+.humanToolQuestion {
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+
+.humanToolOption {
+  height: auto;
+  min-height: 3.25rem;
+  padding-block: 0.55rem;
+  padding-inline: 0.8rem;
+  white-space: normal;
+}
+
+.humanToolOption :global(.mantine-Button-inner),
+.humanToolOption :global(.mantine-Button-label) {
+  width: 100%;
+}
+
+.humanToolOtherInput {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.humanToolCompleted {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.65rem;
+  margin-block: 0.5rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-default);
+}
+
 .toolResultText,
 .toolResultProperties,
 .toolResultCollection {
@@ -917,6 +972,15 @@
 
   .reasoningSelect {
     width: 7.75rem;
+  }
+
+  .approvalActions {
+    flex-direction: column;
+  }
+
+  .humanTool,
+  .appTool {
+    padding: 0.8rem;
   }
 }
 
