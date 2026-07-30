@@ -6,6 +6,7 @@ import { extractToolsFromProcedures } from "trpc-to-mcp";
 import { assistantRouter } from "../router/assistant";
 import { appRouter } from "../router/app";
 import { boardRouter } from "../router/board";
+import { iconsRouter } from "../router/icons";
 import { infoRouter } from "../router/info";
 import { inviteRouter } from "../router/invite";
 import { serverSettingsRouter } from "../router/serverSettings";
@@ -29,6 +30,7 @@ const mcpTestRouter = createTRPCRouter({
   assistant: assistantRouter,
   app: appRouter,
   board: boardRouter,
+  icon: iconsRouter,
   info: infoRouter,
   invite: inviteRouter,
   serverSettings: serverSettingsRouter,
@@ -53,6 +55,7 @@ test("MCP tools should contain expected procedures", () => {
   expect(toolNames).toContain("app_create");
   expect(toolNames).toContain("board_savePartialBoardSettings");
   expect(toolNames).toContain("board_duplicateBoard");
+  expect(toolNames).toContain("icon_findIcons");
   expect(toolNames).toContain("info_getInfo");
   expect(toolNames).toContain("invite_getAll");
   expect(toolNames).toContain("serverSettings_getBoardSettings");

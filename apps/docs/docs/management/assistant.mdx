@@ -102,10 +102,19 @@ calculated value as estimated. Missing provider data is shown as not reported ra
 The assistant can use the same internal tool definitions as the [Homarr MCP server](./mcp).
 Each tool call runs as the signed-in user, so normal Homarr permission checks still apply. Read-only
 procedures can run during the agent loop. Mutating procedures require an explicit approval in the
-conversation before they execute. Tool cards expose their status, timing, validated input, result, and
-error state without flooding the conversation with raw JSON by default. Common collection and widget
-results are summarized inline as compact responsive cards, while the full structured result remains
-available in the tool card details.
+conversation before they execute. The approval appears as a large **Approve and run** or **Deny** action;
+the assistant does not require a second typed confirmation first. Tool cards expose their status, timing,
+validated input, result, and error state without flooding the conversation with raw JSON by default.
+Common collection and widget results are summarized inline as compact responsive cards, while the full
+structured result remains available in the tool card details.
+
+When the assistant genuinely needs missing information or a choice, it can pause with a structured
+question. Users can select one of the proposed answers or choose **Other** and enter their own response.
+Submitting the answer resumes the same agent run automatically.
+
+App creation uses Homarr's native app form inside the conversation. The form reuses the local icon picker,
+including automatic matching and searches through the `icon.findIcons` procedure, before the final
+`app.create` approval is requested. The model is instructed not to invent external icon CDN URLs.
 
 Homarr also exposes a small set of browser-only actions to the assistant. These actions can navigate to
 safe internal routes and open Homarr interfaces such as the command menu and media request search.
