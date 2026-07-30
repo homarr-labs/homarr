@@ -216,6 +216,13 @@ export const AssistantConfiguration = () => {
     setModelDiscoveryPath(value);
   };
 
+  const changeApiKeyRemoval = (remove: boolean) => {
+    if (remove) {
+      setApiKey("");
+    }
+    setClearApiKey(remove);
+  };
+
   const addHeader = () => {
     setHeaders((current) => [...current, { id: nextHeaderId, name: "", value: "" }]);
     setNextHeaderId((current) => current + 1);
@@ -328,17 +335,19 @@ export const AssistantConfiguration = () => {
                 setClearApiKey(false);
               }}
               leftSection={<IconKey size={16} />}
-              placeholder={configuration?.apiKeyConfigured ? t("apiKey.configured") : t("apiKey.placeholder")}
+              placeholder={
+                configuration?.apiKeyConfigured ? t("apiKey.replacementPlaceholder") : t("apiKey.placeholder")
+              }
               autoComplete="new-password"
             />
             {configuration?.apiKeyConfigured && (
-              <Button
-                variant="subtle"
-                color={clearApiKey ? "gray" : "red"}
-                onClick={() => setClearApiKey(!clearApiKey)}
-              >
-                {clearApiKey ? t("apiKey.keep") : t("apiKey.clear")}
-              </Button>
+              <Switch
+                checked={clearApiKey}
+                onChange={(event) => changeApiKeyRemoval(event.currentTarget.checked)}
+                color="red"
+                label={t("apiKey.remove")}
+                description={clearApiKey ? t("apiKey.removalPendingDescription") : t("apiKey.removeDescription")}
+              />
             )}
           </Stack>
 
