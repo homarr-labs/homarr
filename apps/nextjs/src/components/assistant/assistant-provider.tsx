@@ -440,7 +440,7 @@ const DisabledAssistantProvider = ({ children, description }: DisabledAssistantP
 export const AssistantProvider = ({ children }: PropsWithChildren) => {
   const t = useScopedI18n("common.assistant");
   const session = useSession();
-  const { data, isLoading } = clientApi.assistant.getAvailability.useQuery(undefined, {
+  const { data, isLoading, isError } = clientApi.assistant.getAvailability.useQuery(undefined, {
     enabled: session.status === "authenticated",
     staleTime: 60_000,
   });
@@ -459,7 +459,9 @@ export const AssistantProvider = ({ children }: PropsWithChildren) => {
       ? t("unavailable.signIn")
       : isLoading
         ? t("unavailable.checking")
-        : t("unavailable.notConfigured");
+        : isError
+          ? t("unavailable.error")
+          : t("unavailable.notConfigured");
 
   return <DisabledAssistantProvider description={unavailableDescription}>{children}</DisabledAssistantProvider>;
 };

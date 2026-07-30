@@ -337,6 +337,7 @@ const ConversationHistory = () => {
           color="gray"
           size="compact-sm"
           leftSection={<IconHistory size={16} />}
+          classNames={{ section: classes.historyButtonSection, label: classes.historyButtonLabel }}
           onClick={() => setOpened((current) => !current)}
         >
           {t("conversations")}
