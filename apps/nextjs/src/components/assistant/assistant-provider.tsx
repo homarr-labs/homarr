@@ -4,6 +4,7 @@ import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type {
+  AttachmentAdapter,
   MessageFormatAdapter,
   RemoteThreadListAdapter,
   ThreadHistoryAdapter,
@@ -12,16 +13,18 @@ import type {
 } from "@assistant-ui/react";
 import {
   AssistantRuntimeProvider,
+  WebSpeechDictationAdapter,
+  WebSpeechSynthesisAdapter,
   defineToolkit,
   Tools,
   useAui,
+  useAuiEvent,
   useAuiState,
   useRemoteThreadListRuntime,
 } from "@assistant-ui/react";
 import { AssistantChatTransport, useChatRuntime } from "@assistant-ui/react-ai-sdk";
 import { useHotkeys } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
-import type { UIMessage } from "ai";
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from "ai";
 
 import { clientApi, fetchApi } from "@homarr/api/client";
@@ -39,6 +42,7 @@ import {
 import { AssistantPanel } from "./assistant-panel";
 import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
+import type { AssistantUIMessage } from "./assistant-message-metadata";
 
 interface AssistantContextValue {
   enabled: boolean;
@@ -53,6 +57,82 @@ interface AssistantContextValue {
 
 const AssistantContext = createContext<AssistantContextValue | null>(null);
 const ignoreUnsupportedArchiveAction = () => Promise.resolve();
+const assistantImageAttachmentTypes = ["image/gif", "image/jpeg", "image/png", "image/webp"];
+const assistantDocumentAttachmentTypes = [
+  "application/json",
+  "text/csv",
+  "text/html",
+  "text/markdown",
+  "text/plain",
+  "text/xml",
+];
+
+const fileToDataUrlAsync = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => resolve(String(reader.result)), { once: true });
+    reader.addEventListener("error", () => reject(new Error("The attachment could not be read.")), { once: true });
+    reader.readAsDataURL(file);
+  });
+
+const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapter => {
+  const pendingAttachmentIds = new Set<string>();
+
+  return {
+    accept: [...(allowImages ? assistantImageAttachmentTypes : []), ...assistantDocumentAttachmentTypes].join(","),
+    async add({ file }) {
+      if (pendingAttachmentIds.size >= 5) {
+        throw new Error("A message can include up to 5 attachments.");
+      }
+      const isImage = file.type.startsWith("image/");
+      if (isImage && !allowImages) {
+        throw new Error("The selected model does not support image input.");
+      }
+      if (
+        (!isImage && !assistantDocumentAttachmentTypes.includes(file.type)) ||
+        (isImage && !assistantImageAttachmentTypes.includes(file.type))
+      ) {
+        throw new Error("This file type is not supported.");
+      }
+      const sizeLimit = isImage ? 1_000_000 : 350_000;
+      if (file.size === 0) throw new Error("Empty files cannot be attached.");
+      if (file.size > sizeLimit) {
+        throw new Error(isImage ? "Images must be smaller than 1 MB." : "Documents must be smaller than 350 KB.");
+      }
+      const id = crypto.randomUUID();
+      pendingAttachmentIds.add(id);
+      return {
+        id,
+        type: isImage ? "image" : "document",
+        name: file.name,
+        file,
+        contentType: file.type,
+        status: { type: "requires-action", reason: "composer-send" },
+      };
+    },
+    async send(attachment) {
+      try {
+        return {
+          ...attachment,
+          status: { type: "complete" },
+          content: [
+            {
+              type: "file",
+              filename: attachment.name,
+              mimeType: attachment.contentType ?? "application/octet-stream",
+              data: await fileToDataUrlAsync(attachment.file),
+            },
+          ],
+        };
+      } finally {
+        pendingAttachmentIds.delete(attachment.id);
+      }
+    },
+    async remove(attachment) {
+      pendingAttachmentIds.delete(attachment.id);
+    },
+  };
+};
 
 export const useHomarrAssistant = () => {
   const value = useContext(AssistantContext);
@@ -190,6 +270,27 @@ const AssistantThreadRuntime = () => {
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
   const transport = useMemo(() => new AssistantChatTransport({ api: "/api/assistant/chat" }), []);
   const history = useMemo(() => createHistoryAdapter(threadId), [threadId]);
+  const { data: modelCapabilities } = clientApi.assistant.getModelCapabilities.useQuery(undefined, {
+    staleTime: 10 * 60_000,
+  });
+  const attachments = useMemo(
+    () => createAssistantAttachmentAdapter(modelCapabilities?.imageInput !== "unsupported"),
+    [modelCapabilities?.imageInput],
+  );
+  const speech = useMemo(() => new WebSpeechSynthesisAdapter(), []);
+  const dictation = useMemo(
+    () => (WebSpeechDictationAdapter.isSupported() ? new WebSpeechDictationAdapter() : undefined),
+    [],
+  );
+  const feedback = useMemo(
+    () => ({
+      submit: ({ message, type }: { message: ThreadMessage; type: "positive" | "negative" }) => {
+        if (!threadId) return;
+        void fetchApi.assistant.submitFeedback.mutate({ threadId, messageId: message.id, type });
+      },
+    }),
+    [threadId],
+  );
   const onError = useCallback(
     () =>
       showErrorNotification({
@@ -200,11 +301,17 @@ const AssistantThreadRuntime = () => {
     [t],
   );
 
-  return useChatRuntime<UIMessage>({
+  return useChatRuntime<AssistantUIMessage>({
     transport,
     onError,
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
-    adapters: { history },
+    adapters: {
+      history,
+      attachments,
+      speech,
+      ...(dictation ? { dictation } : {}),
+      feedback,
+    },
   });
 };
 
@@ -265,6 +372,7 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
   return (
     <AssistantRuntimeProvider runtime={runtime}>
       <AssistantTools toolkit={toolkit} />
+      <AssistantRuntimeEvents />
       {children}
     </AssistantRuntimeProvider>
   );
@@ -272,6 +380,17 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
 
 const AssistantTools = ({ toolkit }: { toolkit: Toolkit }) => {
   useAui({ tools: Tools({ toolkit }) });
+  return null;
+};
+
+const AssistantRuntimeEvents = () => {
+  const t = useScopedI18n("common.assistant");
+  useAuiEvent("composer.attachmentAddError", ({ message }) => {
+    showErrorNotification({
+      title: t("attachments.errorTitle"),
+      message,
+    });
+  });
   return null;
 };
 

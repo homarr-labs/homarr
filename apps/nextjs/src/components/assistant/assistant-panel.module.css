@@ -133,10 +133,13 @@
   margin-block: 0.9rem;
 }
 
-.userMessage {
+.userMessageWrap {
   width: fit-content;
   max-width: 86%;
   margin-inline-start: auto;
+}
+
+.userMessage {
   padding: 0.65rem 0.85rem;
   border-radius: 0.9rem 0.9rem 0.25rem 0.9rem;
   background: var(--mantine-color-red-light);
@@ -149,6 +152,14 @@
 .messageText {
   line-height: 1.6;
   overflow-wrap: anywhere;
+}
+
+.messageQuote {
+  margin: 0 0 0.55rem;
+  padding-inline-start: 0.65rem;
+  border-inline-start: 2px solid var(--mantine-color-red-filled);
+  color: var(--mantine-color-dimmed);
+  white-space: pre-wrap;
 }
 
 .messageError {
@@ -173,6 +184,170 @@
   background: var(--mantine-color-default);
 }
 
+.toolHeader {
+  width: 100%;
+  text-align: start;
+}
+
+.disclosureIcon {
+  flex: 0 0 auto;
+  transition: transform 150ms ease;
+}
+
+.disclosureIcon[data-opened] {
+  transform: rotate(180deg);
+}
+
+.codeBlock {
+  max-height: 12rem;
+  margin: 0.25rem 0 0;
+  overflow: auto;
+  padding: 0.5rem;
+  border-radius: var(--mantine-radius-sm);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--mantine-color-body);
+}
+
+.reasoning {
+  margin-block: 0.45rem;
+  padding: 0.45rem 0.6rem;
+  border-inline-start: 2px solid var(--mantine-color-default-border);
+}
+
+.reasoning summary,
+.telemetry summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.reasoning summary::-webkit-details-marker,
+.telemetry summary::-webkit-details-marker {
+  display: none;
+}
+
+.reasoningText {
+  margin-top: 0.45rem;
+  white-space: pre-wrap;
+}
+
+.source {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-inline-end: 0.4rem;
+}
+
+.messageFile,
+.attachment {
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-default);
+}
+
+.messageImage {
+  display: block;
+  width: auto;
+  max-width: min(100%, 28rem);
+  max-height: 22rem;
+  margin-block: 0.5rem;
+  border-radius: var(--mantine-radius-md);
+  object-fit: contain;
+}
+
+.attachment {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0.35rem 0.35rem 0;
+}
+
+.attachmentThumb {
+  display: grid;
+  width: 1.7rem;
+  height: 1.7rem;
+  place-items: center;
+  border-radius: var(--mantine-radius-sm);
+  color: var(--mantine-color-dimmed);
+  background: var(--mantine-color-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.attachmentName {
+  max-width: 12rem;
+}
+
+.messageActions {
+  min-height: 1.75rem;
+  margin-top: 0.3rem;
+}
+
+.userActions {
+  min-height: 1.75rem;
+}
+
+.branchPicker {
+  display: flex;
+  min-height: 1.75rem;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.editComposer {
+  margin-block: 0.9rem;
+  padding: 0.65rem;
+  border: 1px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-default);
+}
+
+.editComposerInput {
+  width: 100%;
+  min-height: 4.5rem;
+  resize: vertical;
+  border: 0;
+  outline: 0;
+  color: var(--mantine-color-text);
+  background: transparent;
+  font: inherit;
+}
+
+.telemetry {
+  margin-top: 0.65rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: color-mix(in srgb, var(--mantine-color-default) 60%, transparent);
+}
+
+.telemetrySummary {
+  user-select: none;
+}
+
+.usageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.75rem;
+}
+
+.stepRow {
+  padding: 0.3rem 0.4rem;
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.generationId {
+  overflow: hidden;
+  margin-top: 0.2rem;
+  font-family: var(--mantine-font-family-monospace);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .composerWrap {
   flex: 0 0 auto;
   padding: 0.65rem 0.75rem 0.75rem;
@@ -181,16 +356,57 @@
 }
 
 .composer {
+  position: relative;
   display: flex;
   width: 100%;
   max-width: 44rem;
   margin-inline: auto;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: stretch;
   gap: 0.5rem;
   padding: 0.4rem;
   border: 1px solid var(--mantine-color-default-border);
   border-radius: var(--mantine-radius-lg);
   background: var(--mantine-color-default);
+}
+
+.composerDropzone[data-dragging] .composer {
+  border-color: var(--mantine-primary-color-filled);
+  box-shadow: 0 0 0 2px var(--mantine-primary-color-light);
+}
+
+.composerQuote {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.5rem;
+  border-inline-start: 2px solid var(--mantine-color-red-filled);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.composerQuoteText {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selectionToolbar {
+  z-index: 400;
+  padding: 0.2rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.composerRow {
+  width: 100%;
 }
 
 .composer:focus-within {
@@ -208,6 +424,53 @@
   color: var(--mantine-color-text);
   background: transparent;
   font: inherit;
+}
+
+.composerHints {
+  padding-inline: 0.45rem;
+}
+
+.triggerPopover {
+  position: absolute;
+  z-index: 5;
+  inset-inline: 0;
+  bottom: calc(100% + 0.45rem);
+  max-height: min(22rem, 45dvh);
+  overflow: auto;
+  padding: 0.35rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-lg);
+}
+
+.triggerList {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.triggerItem {
+  display: flex;
+  width: 100%;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.55rem;
+  border: 0;
+  border-radius: var(--mantine-radius-sm);
+  color: var(--mantine-color-text);
+  background: transparent;
+  text-align: start;
+}
+
+.triggerItem:hover,
+.triggerItem[data-highlighted] {
+  background: var(--mantine-color-default-hover);
+}
+
+.triggerItemText {
+  min-width: 0;
+  flex: 1;
 }
 
 .composerInput::placeholder {
@@ -342,7 +605,19 @@
   }
 
   .userMessage {
+    max-width: 100%;
+  }
+
+  .userMessageWrap {
     max-width: 92%;
+  }
+
+  .usageGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .composerHints {
+    display: none;
   }
 }
 
