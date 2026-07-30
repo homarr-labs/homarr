@@ -3,6 +3,7 @@ import {
   customWidgetDefinitionSchema,
   getCustomWidgetDefaultOptions,
   getCustomWidgetRequiredSecretKinds,
+  parseCustomWidgetAiResponse,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
@@ -54,6 +55,12 @@ export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrC
     options: JSON.stringify(widget.options, null, 2),
     template: widget.template,
   });
+}
+
+export function applyCustomWidgetAiResponse(form: CustomWidgetWorkbenchForm, response: string) {
+  const result = parseCustomWidgetAiResponse(response);
+  if (result.success) applyDefinition(form, result.widget);
+  return result;
 }
 
 export function parseSources(value: string): Array<CustomWidgetSource & { id: string }> {

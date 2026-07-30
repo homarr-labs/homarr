@@ -7,6 +7,7 @@ import { buildCustomWidgetAiPrompt } from "../src/core/ai-prompt";
 import { customWidgetDefinitionSchema } from "../src/core/custom-jsx-schema";
 import type { HomarrCustomWidgetV2 } from "../src/core/custom-jsx-schema";
 import { formatCustomWidgetImportIssues, parseCustomWidgetAiResponse } from "../src/core/import";
+import { collectCustomWidgetRequestReferences } from "../src/core/request-schema";
 import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
 
 export const DEFAULT_GENERATOR_MODEL = "deepseek/deepseek-v4-pro";
@@ -158,6 +159,65 @@ export function getJudgeResponseFormat() {
   };
 }
 
+export function getScenarioAcceptanceIssues(
+  testCase: CustomWidgetAiEvaluationCase,
+  widget: HomarrCustomWidgetV2,
+): Array<{ path?: Array<string | number>; message: string }> {
+  const issues: Array<{ path?: Array<string | number>; message: string }> = [];
+  const expectedAuth = testCase.acceptance.sourceAuth;
+  if (expectedAuth) {
+    const matches = Object.values(widget.sources).some((source) => {
+      const actualType = typeof source.auth === "string" ? source.auth : source.auth.type;
+      if (actualType !== expectedAuth.type) return false;
+      return (
+        expectedAuth.name === undefined ||
+        (typeof source.auth !== "string" && source.auth.name.toLowerCase() === expectedAuth.name.toLowerCase())
+      );
+    });
+    if (!matches) {
+      issues.push({
+        path: ["sources"],
+        message: `The scenario requires ${expectedAuth.type}${expectedAuth.name ? ` '${expectedAuth.name}'` : ""} authentication.`,
+      });
+    }
+  }
+
+  const matchedRequestIds = new Set<string>();
+  for (const rule of testCase.acceptance.requestRules) {
+    const match = Object.entries(widget.requests).find(([requestId, request]) => {
+      if (matchedRequestIds.has(requestId)) return false;
+      if (!request.path.includes(rule.pathIncludes)) return false;
+      if (rule.kind && request.kind !== rule.kind) return false;
+      if (rule.method && request.method !== rule.method) return false;
+      if (rule.trigger && request.trigger !== rule.trigger) return false;
+      const references = collectCustomWidgetRequestReferences(request);
+      if (rule.optionReference && references.options.size === 0) return false;
+      if (rule.parameterReference && references.params.size === 0) return false;
+      if (
+        rule.invalidates &&
+        !request.invalidates?.some((invalidatedRequestId) => widget.requests[invalidatedRequestId]?.kind === "query")
+      ) {
+        return false;
+      }
+      return true;
+    });
+    if (match) matchedRequestIds.add(match[0]);
+    else {
+      issues.push({
+        path: ["requests"],
+        message: `Missing grounded ${rule.label} request (${rule.pathIncludes}).`,
+      });
+    }
+  }
+
+  for (const component of testCase.acceptance.templateComponents) {
+    if (!widget.template.includes(`<${component}`)) {
+      issues.push({ path: ["template"], message: `The ${testCase.id} scenario requires ${component}.` });
+    }
+  }
+  return issues;
+}
+
 export async function evaluateCustomWidgetCase(args: {
   testCase: CustomWidgetAiEvaluationCase;
   apiKey: string;
@@ -201,6 +261,14 @@ export async function evaluateCustomWidgetCase(args: {
 
     const canonical = customWidgetDefinitionSchema.parse(parsed.widget);
     await writeWidgetFiles(caseDirectory, canonical, `attempt-${attempt}`);
+    const acceptanceIssues = getScenarioAcceptanceIssues(args.testCase, canonical);
+    if (acceptanceIssues.length > 0) {
+      errors.push(
+        `Attempt ${attempt}: deterministic acceptance failed — ${acceptanceIssues.map(({ message }) => message).join("; ")}`,
+      );
+      prompt = buildRepairPrompt(originalPrompt, response, acceptanceIssues);
+      continue;
+    }
     let judge: CustomWidgetJudgeResult;
     try {
       const judgeRaw = await callOpenRouter({

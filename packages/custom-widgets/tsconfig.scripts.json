@@ -1,0 +1,14 @@
+{
+  "extends": "@homarr/tsconfig/base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/scripts-tsbuildinfo.json"
+  },
+  "include": [
+    "scripts/ai-evaluation-cases.ts",
+    "scripts/ai-evaluation.ts",
+    "scripts/evaluate-ai-authoring.ts",
+    "scripts/evaluate-mcp-agent.ts",
+    "scripts/mcp-agent.ts"
+  ],
+  "exclude": ["node_modules"]
+}
