@@ -3,26 +3,17 @@
 onBootstrap((event) => {
   const clientId = String($os.getenv("GITHUB_CLIENT_ID") || "").trim();
   const clientSecret = String($os.getenv("GITHUB_CLIENT_SECRET") || "").trim();
-  const requireOAuth = ["1", "true", "yes", "on"].includes(
-    String($os.getenv("WORKSHOP_REQUIRE_OAUTH") || "")
-      .trim()
-      .toLowerCase(),
-  );
   if (Boolean(clientId) !== Boolean(clientSecret)) {
     console.log(JSON.stringify({ event: "workshop_oauth_configuration_rejected", reason: "partial_credentials" }));
     throw new Error("GitHub OAuth requires both GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET");
   }
   const configured = Boolean(clientId && clientSecret);
-  if (requireOAuth && !configured) {
-    console.log(JSON.stringify({ event: "workshop_oauth_configuration_rejected", reason: "required_but_disabled" }));
-    throw new Error("GitHub OAuth is required but no credentials were configured");
-  }
   event.next();
   const users = event.app.findCollectionByNameOrId("users");
   users.oauth2.enabled = configured;
   users.oauth2.providers = configured ? [{ name: "github", clientId, clientSecret }] : [];
   event.app.save(users);
-  console.log(JSON.stringify({ event: "workshop_oauth_synchronized", enabled: configured, required: requireOAuth }));
+  console.log(JSON.stringify({ event: "workshop_oauth_synchronized", enabled: configured }));
 });
 
 onRecordAuthWithOAuth2Request((event) => {

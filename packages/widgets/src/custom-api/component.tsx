@@ -82,7 +82,6 @@ export default function CustomApiWidget({
         ...query.data,
         widgetDefinitionId: definitionId,
         widgetItemId: itemId,
-        canInvalidateQueries: Boolean(session),
         isEditMode,
       }}
     />

@@ -85,17 +85,16 @@ Restart `pnpm dev` after changing `.env`. GitHub OAuth is optional locally. See
 [`apps/workshop/README.md`](https://github.com/homarr-labs/homarr/blob/HEAD/apps/workshop/README.md) for OAuth,
 Workshop moderator promotion, logs, tests, backup, restore, stopping, and intentional volume reset.
 
-### URL and base-path testing
+### URL testing
 
-Docusaurus reads `HOMARR_WEBSITE_URL`, `WORKSHOP_API_URL`, `WORKSHOP_WEB_URL`, and `DOCS_BASE_URL` at startup/build.
-Homarr renders its public URL values into the page at server startup, so Docker overrides do not rely on
-`NEXT_PUBLIC_*` build variables. Test a separate API origin and non-root documentation path before release:
+Docusaurus reads `HOMARR_WEBSITE_URL` and `WORKSHOP_API_URL` when it starts or builds. Homarr also reads
+`WORKSHOP_WEB_URL` when its server starts, so these values do not rely on `NEXT_PUBLIC_*` build variables. Test a
+separate API origin before release:
 
 ```sh
 HOMARR_WEBSITE_URL=http://127.0.0.1:3003 \
 WORKSHOP_API_URL=http://127.0.0.1:8090 \
-WORKSHOP_WEB_URL=http://127.0.0.1:3003/docs-site/workshop \
-DOCS_BASE_URL=/docs-site/ \
+WORKSHOP_WEB_URL=http://127.0.0.1:3003/workshop \
 pnpm dev:docs
 ```
 

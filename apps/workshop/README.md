@@ -69,8 +69,8 @@ pnpm dev
 ```
 
 `WORKSHOP_API_URL` controls API calls. `WORKSHOP_WEB_URL` controls links from Homarr. `HOMARR_WEBSITE_URL` is the
-documentation/site base. All three must be absolute HTTP(S) URLs. `DOCS_BASE_URL` configures a Docusaurus path such as
-`/docs-site/`. The old Docusaurus-only `WORKSHOP_URL` variable remains a deprecated alias for one release.
+documentation/site base. All three must be absolute HTTP(S) URLs. The old Docusaurus-only `WORKSHOP_URL` variable
+remains a deprecated alias for one release.
 
 ## Optional GitHub OAuth
 
@@ -158,7 +158,6 @@ WORKSHOP_API_URL=https://homarr.dev
 WORKSHOP_WEB_URL=https://homarr.dev/workshop
 WORKSHOP_PUBLIC_ORIGIN=https://homarr.dev
 PB_ALLOWED_ORIGINS=*
-WORKSHOP_REQUIRE_OAUTH=true
 ```
 
 Build and smoke-test the combined image locally:

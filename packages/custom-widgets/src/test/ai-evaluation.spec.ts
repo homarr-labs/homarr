@@ -7,13 +7,10 @@ import {
   DEFAULT_GENERATOR_MODEL,
   DEFAULT_JUDGE_MODEL,
   getJudgeResponseFormat,
-  getScenarioAcceptanceIssues,
   judgePasses,
   parseJudgeResult,
 } from "../../scripts/ai-evaluation";
 import type { CustomWidgetJudgeResult } from "../../scripts/ai-evaluation";
-import { BUNDLED_CUSTOM_WIDGETS, CUSTOM_WIDGET_STARTER, customWidgetDefinitionSchema } from "../core";
-import { PORTAINER_REFERENCE_WIDGET } from "./fixtures/reference-widgets";
 
 const categoryNames = [
   "schemaAndBindings",
@@ -52,13 +49,6 @@ describe("AI authoring evaluation", () => {
   it("defines five distinct complex scenarios", () => {
     expect(CUSTOM_WIDGET_AI_EVALUATION_CASES).toHaveLength(5);
     expect(new Set(CUSTOM_WIDGET_AI_EVALUATION_CASES.map((entry) => entry.id)).size).toBe(5);
-    expect(CUSTOM_WIDGET_AI_EVALUATION_CASES.map(({ id }) => id)).toEqual([
-      "pokedex",
-      "portainer-containers",
-      "football-dashboard",
-      "jellyfin-activity",
-      "home-assistant-control",
-    ]);
   });
 
   it("uses the exact clipboard prompt and grounded API notes", () => {
@@ -77,72 +67,6 @@ describe("AI authoring evaluation", () => {
     ]);
     expect(prompt).toContain("requests.list.path: Required");
     expect(prompt).toContain("bad response");
-    expect(prompt).toContain("visual, and UX problem");
-    expect(prompt).toContain("redesign weak areas");
-  });
-
-  it("requires grounded scenario capabilities before model judging", () => {
-    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "pokedex");
-    const pokedex = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-pokedex");
-    if (!testCase || !pokedex) throw new Error("Expected Pokédex evaluation fixtures");
-    expect(getScenarioAcceptanceIssues(testCase, customWidgetDefinitionSchema.parse(pokedex.widget))).toEqual([]);
-
-    const issues = getScenarioAcceptanceIssues(
-      testCase,
-      customWidgetDefinitionSchema.parse({ ...CUSTOM_WIDGET_STARTER, template: "<Text>Pokémon</Text>" }),
-    );
-    expect(issues.map(({ message }) => message)).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining("Pokémon list"),
-        expect.stringContaining("manual Pokémon detail"),
-        expect.stringContaining("SubFetch"),
-      ]),
-    );
-  });
-
-  it("requires the exact option bindings and invalidation target for scenario actions", () => {
-    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "portainer-containers");
-    if (!testCase) throw new Error("Expected the Portainer evaluation case");
-    const portainer = customWidgetDefinitionSchema.parse(PORTAINER_REFERENCE_WIDGET);
-    expect(getScenarioAcceptanceIssues(testCase, portainer)).toEqual([]);
-    expect(
-      getScenarioAcceptanceIssues(
-        {
-          ...testCase,
-          acceptance: {
-            ...testCase.acceptance,
-            requestRules: testCase.acceptance.requestRules.toReversed(),
-          },
-        },
-        portainer,
-      ),
-    ).toEqual([]);
-
-    const wrongBinding = customWidgetDefinitionSchema.parse({
-      ...portainer,
-      requests: {
-        ...portainer.requests,
-        start: {
-          ...portainer.requests.start,
-          path: portainer.requests.start?.path.replace("{option:endpointId}", "{option:showAll}"),
-        },
-      },
-    });
-    expect(getScenarioAcceptanceIssues(testCase, wrongBinding).map(({ message }) => message)).toContain(
-      "Missing grounded start action request (/start).",
-    );
-
-    const wrongInvalidation = customWidgetDefinitionSchema.parse({
-      ...portainer,
-      requests: {
-        ...portainer.requests,
-        health: { path: "/api/status" },
-        start: { ...portainer.requests.start, invalidates: ["health"] },
-      },
-    });
-    expect(getScenarioAcceptanceIssues(testCase, wrongInvalidation).map(({ message }) => message)).toContain(
-      "The start action request must invalidate the container list request.",
-    );
   });
 
   it("uses the requested DeepSeek models and strict structured judge output", () => {

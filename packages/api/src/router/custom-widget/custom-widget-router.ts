@@ -12,9 +12,8 @@ import {
   customWidgetUpdateSchema,
 } from "@homarr/custom-widgets/core";
 
-import { createTRPCRouter } from "../../trpc";
+import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 import { insertCustomWidgetDefinition } from "./definition-insert";
-import { permissionRequiredProcedure } from "../../trpc";
 import { managementQueryProcedures } from "./management-queries";
 import { metadataProcedures } from "./metadata-procedures";
 import { previewActionProcedures } from "./preview-action-procedures";

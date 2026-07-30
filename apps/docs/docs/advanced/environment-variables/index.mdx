@@ -108,15 +108,12 @@ External redis is currently not supported with Proxmox Community Scripts
 The advanced deployments environment variables should only be used if you know what you are doing.
 :::
 
-| Environment Variable             | Description                                                                                                                         |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `DB_MIGRATIONS_DISABLED`         | Disable db migrations. For example for helm charts.                                                                                 |
-| `DOCS_BASE_URL`                  | Docusaurus deployment path. It must start with `/` and is normalized with a trailing slash. Default: `/`.                           |
-| `WORKSHOP_PUBLIC_ORIGIN`         | Origin used in PocketBase-generated links and email. It must be set explicitly in production.                                       |
-| `WORKSHOP_REQUIRE_PUBLIC_ORIGIN` | Require `WORKSHOP_PUBLIC_ORIGIN` at startup. The production Workshop image enables this automatically.                              |
-| `PB_ALLOWED_ORIGINS`             | Browser origins accepted by PocketBase. The central public community defaults to `*` so self-hosted Homarr instances can use OAuth. |
-| `WORKSHOP_REQUIRE_OAUTH`         | Fail Workshop production readiness when GitHub OAuth is disabled. Both GitHub OAuth credentials are always required together.       |
+| Environment Variable     | Description                                                                                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts.                                                                                 |
+| `WORKSHOP_PUBLIC_ORIGIN` | Origin used in PocketBase-generated links and email. It must be set explicitly in production.                                       |
+| `PB_ALLOWED_ORIGINS`     | Browser origins accepted by PocketBase. The central public community defaults to `*` so self-hosted Homarr instances can use OAuth. |
 
 All public URL variables reject non-HTTP protocols, embedded credentials, query strings, and fragments, and normalize
-trailing slashes at startup. The Docusaurus-only `WORKSHOP_URL` name is accepted as a deprecated alias for
+trailing slashes when Homarr or Docusaurus starts. The Docusaurus-only `WORKSHOP_URL` name is accepted as a deprecated alias for
 `WORKSHOP_API_URL` for one release. `WORKSHOP_API_URL` takes precedence.

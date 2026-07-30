@@ -5,6 +5,7 @@ export {
   assertSafeStaticHeaders,
   classifyAddress,
   executeCustomWidgetRequest,
+  invalidateCustomWidgetResponseCache,
   MAX_REQUEST_DURATION_MS,
   MAX_REQUEST_BODY_BYTES,
   MAX_RESPONSE_BODY_BYTES,

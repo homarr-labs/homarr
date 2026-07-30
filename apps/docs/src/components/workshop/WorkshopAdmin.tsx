@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Link from "@docusaurus/Link";
 import {
   IconBrandGithub,
   IconExternalLink,
@@ -125,7 +124,7 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" nativeButton={false} render={<Link to="/workshop" aria-label="Back to Workshop" />}>
+          <Button variant="outline" nativeButton={false} render={<a href="/workshop" aria-label="Back to Workshop" />}>
             Back to Workshop
           </Button>
           {!user && (
@@ -266,7 +265,7 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
                         variant="outline"
                         size="sm"
                         nativeButton={false}
-                        render={<Link to={`/workshop/${submission.id}`} aria-label={`Inspect ${submission.title}`} />}
+                        render={<a href={`/workshop/${submission.id}`} aria-label={`Inspect ${submission.title}`} />}
                       >
                         <IconExternalLink size={14} /> Inspect submission
                       </Button>

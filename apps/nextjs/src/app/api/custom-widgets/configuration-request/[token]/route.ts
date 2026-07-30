@@ -7,10 +7,10 @@ import {
   configureCustomWidgetSourceFromRequest,
   configurePreviewSessionSource,
   getCustomWidgetConfigurationRequest,
-  invalidateCustomWidgetResponseCache,
   releaseCustomWidgetConfigurationRequest,
 } from "@homarr/api/custom-widget-configuration";
 import { customWidgetSourceSchema } from "@homarr/custom-widgets/core";
+import { invalidateCustomWidgetResponseCache } from "@homarr/custom-widgets/server";
 import { db } from "@homarr/db";
 
 import { requireCustomWidgetAdmin } from "../../admin";
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
         sourceResult.data,
         secrets,
       );
-      await invalidateCustomWidgetResponseCache([`custom-jsx:preview:${claimed.target.id}:`]);
+      invalidateCustomWidgetResponseCache([`custom-jsx:preview:${claimed.target.id}:`]);
     } else {
       const result = await configureCustomWidgetSourceFromRequest(db, {
         definitionId: claimed.target.id,

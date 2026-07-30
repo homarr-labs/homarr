@@ -94,8 +94,8 @@ irreversible development reset.
 
 GitHub needs only the central callback `https://<workshop-host>/api/oauth2-redirect`. Keep PocketBase origins unrestricted
 unless every self-hosted Homarr caller is explicitly listed. Configure both `GITHUB_CLIENT_ID` and
-`GITHUB_CLIENT_SECRET`; supplying only one is a startup error. Production also requires
-`WORKSHOP_PUBLIC_ORIGIN`. Configure SMTP for comment, report, and removal notices.
+`GITHUB_CLIENT_SECRET`; supplying only one is a startup error. Set `WORKSHOP_PUBLIC_ORIGIN` in production so generated
+links and email use the public host. Configure SMTP for comment, report, and removal notices.
 
 The public URL contract is:
 
@@ -104,13 +104,11 @@ The public URL contract is:
 | `HOMARR_WEBSITE_URL`     | Documentation/site base used by Homarr links      | `https://homarr.dev`          |
 | `WORKSHOP_API_URL`       | PocketBase API used by Homarr and standalone docs | `HOMARR_WEBSITE_URL`          |
 | `WORKSHOP_WEB_URL`       | Public Workshop page linked from Homarr           | `HOMARR_WEBSITE_URL/workshop` |
-| `DOCS_BASE_URL`          | Docusaurus deployment path                        | `/`                           |
 | `WORKSHOP_PUBLIC_ORIGIN` | PocketBase-generated links and email              | Required in production        |
 | `PB_ALLOWED_ORIGINS`     | PocketBase browser origins                        | `*` for the central community |
 
-The deprecated docs-only `WORKSHOP_URL` alias remains for one release; `WORKSHOP_API_URL` takes precedence. Homarr
-server-renders runtime values for the browser, and the combined image writes a public runtime config at container
-startup. Restart services after changes.
+The deprecated docs-only `WORKSHOP_URL` alias remains for one release; `WORKSHOP_API_URL` takes precedence. Restart
+services after changing these values.
 
 Back up application and PocketBase data before deployment. Publish the combined image by immutable digest, test the
 exact digest in staging, rehearse application rollback and PocketBase restore, then promote that same digest.

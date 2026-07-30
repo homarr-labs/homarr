@@ -45,9 +45,15 @@ export const previewActionProcedures = {
       if ((request.confirmation || request.method === "DELETE") && input.confirmed !== true) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This action requires confirmation" });
       }
+      const release = await acquireCustomWidgetRequestLimit({
+        category: request.method === "DELETE" ? "delete" : "action",
+        userId: ctx.session.user.id,
+        itemId: `preview:${session.id}`,
+        definitionId: session.definitionId ?? `preview:${session.id}`,
+      });
       const startedAt = Date.now();
-      const response = await executeCustomWidgetRequest(
-        {
+      try {
+        const response = await executeCustomWidgetRequest({
           baseUrl: resolved.source.baseUrl,
           targetUrl,
           method: request.method,
@@ -56,38 +62,31 @@ export const previewActionProcedures = {
           auth: request.auth === "none" ? undefined : resolved.auth,
           networkScope: resolved.source.networkScope,
           kind: "action",
-        },
-        {
-          acquireRequestLimit: () =>
-            acquireCustomWidgetRequestLimit({
-              category: request.method === "DELETE" ? "delete" : "action",
-              userId: ctx.session.user.id,
-              itemId: `preview:${session.id}`,
-              definitionId: session.definitionId ?? `preview:${session.id}`,
-            }),
-        },
-      );
-      if (response.ok && request.invalidates?.length) {
-        await invalidateCustomWidgetResponseCache(
-          request.invalidates.map((requestId) => `custom-jsx:preview:${session.id}:${requestId}:`),
-        );
+        });
+        if (response.ok && request.invalidates?.length) {
+          invalidateCustomWidgetResponseCache(
+            request.invalidates.map((requestId) => `custom-jsx:preview:${session.id}:${requestId}:`),
+          );
+        }
+        await recordPreviewJournal(session, {
+          requestId: request.id,
+          kind: "action",
+          method: request.method,
+          path: request.path,
+          status: response.status,
+          durationMs: Date.now() - startedAt,
+          simulated: false,
+        });
+        return {
+          ok: response.ok,
+          status: response.status,
+          statusText: response.statusText,
+          data: response.data,
+          error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
+          simulated: false as const,
+        };
+      } finally {
+        await release();
       }
-      await recordPreviewJournal(session, {
-        requestId: request.id,
-        kind: "action",
-        method: request.method,
-        path: request.path,
-        status: response.status,
-        durationMs: Date.now() - startedAt,
-        simulated: false,
-      });
-      return {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        data: response.data,
-        error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
-        simulated: false as const,
-      };
     }),
 };

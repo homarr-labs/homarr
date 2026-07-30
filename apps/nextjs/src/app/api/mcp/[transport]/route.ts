@@ -16,7 +16,7 @@ import {
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
-import { rateLimitAddressFromHeaders } from "@homarr/common/server";
+import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { buildCustomWidgetMcpPrompt } from "@homarr/custom-widgets/authoring-prompt";
 import {
@@ -390,7 +390,7 @@ function jsonErrorResponse(status: number, body: Record<string, string>, extraHe
 
 const handler = async (req: NextRequest) => {
   const apiKeyValue = extractApiKeyValue(req);
-  const ipAddress = rateLimitAddressFromHeaders(req.headers);
+  const ipAddress = ipAddressFromHeaders(req.headers);
   const { ua } = userAgent(req);
 
   if (!checkAuthRateLimit(ipAddress)) {

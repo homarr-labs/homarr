@@ -15,15 +15,12 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { resolveCustomWidgetInvalidationTargets } from "./widget-invalidation";
-
 interface WidgetDefinitionProviderProps {
   itemId?: string;
   definitionId?: string;
   previewSessionId?: string;
   previewLiveActions?: boolean;
   queriesDisabled?: boolean;
-  canInvalidateQueries?: boolean;
   isEditMode?: boolean;
   requestCapabilities?: readonly CustomJsxRequestCapability[];
   setQueryState?(requestId: string, value: CustomWidgetPublishedQueryState | null): void;
@@ -67,7 +64,6 @@ export function InactiveWidgetDefinitionProvider({
   return (
     <CustomWidgetRuntimeProvider
       definitionId={definitionId}
-      canInvalidateQueries={false}
       isEditMode={isEditMode ?? false}
       requestCapabilities={[]}
       port={INACTIVE_PORT}
@@ -110,85 +106,29 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
             params: input.params,
             confirmed: input.confirmed,
           }),
-    invalidate: async ({ itemId, previewSessionId, targets, refresh }) => {
-      const invalidation = resolveCustomWidgetInvalidationTargets(props.requestCapabilities ?? [], targets);
+    invalidate: async ({ itemId, previewSessionId, targets }) => {
       if (previewSessionId) {
-        if (refresh && invalidation.requestIds.length > 0) {
-          await fetchApi.customWidget.previewRefresh.mutate({
-            sessionId: previewSessionId,
-            requestIds: invalidation.requestIds,
-            all: invalidation.all,
-          });
-        }
-        const tasks: Promise<unknown>[] = [];
-        if (invalidation.requestIds.length > 0) {
-          tasks.push(
-            queryClient.invalidateQueries({
-              predicate: (query) => {
-                const key = query.queryKey;
-                return (
-                  key[0] === "custom-widget" &&
-                  key[1] === previewSessionId &&
-                  invalidation.requestIds.includes(String(key[2]))
-                );
-              },
-            }),
-          );
-        }
-        if (invalidation.refreshParent) {
-          tasks.push(
-            ...invalidation.loadRequestIds.map(async (requestId) => {
-              try {
-                const result = await fetchApi.customWidget.previewQuery.query({
-                  sessionId: previewSessionId,
-                  requestId,
-                  params: {},
-                });
-                props.setQueryState?.(requestId, {
-                  data: result.data,
-                  status: {
-                    loading: false,
-                    ok: result.ok,
-                    status: result.status,
-                    statusText: result.statusText,
-                    error: result.error,
-                  },
-                });
-              } catch {
-                props.setQueryState?.(requestId, {
-                  data: null,
-                  status: { loading: false, ok: false, status: 0, error: messages.requestFailed },
-                });
-              }
-            }),
-          );
-        }
-        await Promise.all(tasks);
+        await queryClient.invalidateQueries({
+          predicate: (query) => {
+            const key = query.queryKey;
+            return key[0] === "custom-widget" && key[1] === previewSessionId && targets.includes(String(key[2]));
+          },
+        });
         return;
       }
       if (!itemId) return;
-      if (invalidation.requestIds.length === 0 && !invalidation.refreshParent) return;
-      if (refresh && invalidation.requestIds.length > 0) {
-        await fetchApi.widget.customApi.refreshQueries.mutate({
-          itemId,
-          requestIds: invalidation.requestIds,
-          all: invalidation.all,
-        });
-      }
-      const tasks: Promise<unknown>[] = [];
-      if (invalidation.requestIds.length > 0) {
-        tasks.push(
-          queryClient.invalidateQueries({
-            predicate: (query) => {
-              const key = query.queryKey;
-              return (
-                key[0] === "custom-widget" && key[1] === itemId && invalidation.requestIds.includes(String(key[2]))
-              );
-            },
-          }),
-        );
-      }
-      if (invalidation.refreshParent) {
+      if (targets.length === 0) return;
+      const tasks: Promise<unknown>[] = [
+        queryClient.invalidateQueries({
+          predicate: (query) => {
+            const key = query.queryKey;
+            return key[0] === "custom-widget" && key[1] === itemId && targets.includes(String(key[2]));
+          },
+        }),
+      ];
+      if (
+        (props.requestCapabilities ?? []).some((request) => request.trigger === "load" && targets.includes(request.id))
+      ) {
         tasks.push(utils.widget.customApi.getData.invalidate({ itemId }));
       }
       await Promise.all(tasks);
@@ -214,7 +154,6 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
       previewSessionId={props.previewSessionId}
       previewLiveActions={props.previewLiveActions}
       queriesDisabled={props.queriesDisabled}
-      canInvalidateQueries={props.canInvalidateQueries ?? Boolean(props.previewSessionId)}
       isEditMode={props.isEditMode ?? false}
       requestCapabilities={props.requestCapabilities ?? []}
       port={port}

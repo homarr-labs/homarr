@@ -3,7 +3,6 @@ import { describe, expect, test } from "vitest";
 import { CUSTOM_WIDGET_STARTER } from "@homarr/custom-widgets/core";
 
 import {
-  normalizeDocsBaseUrl,
   normalizeHttpUrl,
   resolveHomarrUrlConfig,
   validateWorkshopWidget,
@@ -31,23 +30,6 @@ describe("Workshop URL configuration", () => {
     expect(() => normalizeHttpUrl("https://example.com/?token=secret", "WORKSHOP_API_URL")).toThrow("query string");
     expect(() => normalizeHttpUrl("\nhttps://example.com", "WORKSHOP_API_URL")).toThrow("control characters");
   });
-
-  test.each([
-    [undefined, "/"],
-    ["/", "/"],
-    ["/docs", "/docs/"],
-    ["/docs/", "/docs/"],
-    ["/docs..preview", "/docs..preview/"],
-  ])("normalizes DOCS_BASE_URL %s", (input, expected) => {
-    expect(normalizeDocsBaseUrl(input)).toBe(expected);
-  });
-
-  test.each(["docs", "/docs?preview=1", "/../docs", "/%2e%2e/private", "/docs path", String.raw`/docs\private`])(
-    "rejects invalid DOCS_BASE_URL %s",
-    (input) => {
-      expect(() => normalizeDocsBaseUrl(input)).toThrow("DOCS_BASE_URL");
-    },
-  );
 });
 
 describe("Workshop widget validation", () => {

@@ -26,8 +26,8 @@ pnpm dev
 WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
 ```
 
-The standalone docs use `WORKSHOP_API_URL` for PocketBase, `HOMARR_WEBSITE_URL` for the public site origin, and
-`DOCS_BASE_URL` for the deployment path. The old `WORKSHOP_URL` name is a deprecated one-release alias.
+The standalone docs use `WORKSHOP_API_URL` for PocketBase and `HOMARR_WEBSITE_URL` for the public site origin. The old
+`WORKSHOP_URL` name is a deprecated one-release alias.
 
 ## Build
 

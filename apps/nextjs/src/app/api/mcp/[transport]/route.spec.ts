@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   authenticate: vi.fn(),
-  rateLimitAddress: vi.fn(() => "127.0.0.1"),
+  ipAddress: vi.fn(() => "127.0.0.1"),
   toolProcedure: vi.fn(),
   loggerWarn: vi.fn(),
   buildPrompt: vi.fn((request?: string, documentationUrl?: string) =>
@@ -23,7 +23,7 @@ vi.mock("@homarr/auth/api-key", () => ({
   getSessionFromApiKeyAsync: mocks.authenticate,
 }));
 vi.mock("@homarr/common", () => ({ extractBaseUrlFromHeaders: () => "http://localhost" }));
-vi.mock("@homarr/common/server", () => ({ rateLimitAddressFromHeaders: mocks.rateLimitAddress }));
+vi.mock("@homarr/common/server", () => ({ ipAddressFromHeaders: mocks.ipAddress }));
 vi.mock("@homarr/core/infrastructure/logs", () => ({
   createLogger: () => ({ info: vi.fn(), warn: mocks.loggerWarn, error: vi.fn() }),
 }));
@@ -75,8 +75,8 @@ beforeEach(() => {
   mocks.authenticate.mockResolvedValue({ user: { id: "user-1", permissions: ["admin"] } });
   mocks.buildPrompt.mockClear();
   mocks.getComponent.mockClear();
-  mocks.rateLimitAddress.mockClear();
-  mocks.rateLimitAddress.mockReturnValue("127.0.0.1");
+  mocks.ipAddress.mockClear();
+  mocks.ipAddress.mockReturnValue("127.0.0.1");
   mocks.toolProcedure.mockReset();
   mocks.toolProcedure.mockResolvedValue([]);
   mocks.loggerWarn.mockClear();
@@ -122,7 +122,7 @@ describe("authenticated MCP prompt protocol", () => {
       serverInfo: { name: "homarr", version: "test-version" },
     });
     expect(mocks.authenticate).toHaveBeenCalledWith({}, "key.secret", "127.0.0.1", "MCP route test");
-    expect(mocks.rateLimitAddress).toHaveBeenCalledWith(expect.any(Headers));
+    expect(mocks.ipAddress).toHaveBeenCalledWith(expect.any(Headers));
   });
 
   test("lists and interpolates the custom-widget authoring prompt", async () => {

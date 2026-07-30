@@ -37,7 +37,7 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM \
     --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN \
     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
-    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}" pnpm turbo build --filter='!@homarr/docs'
+    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}" pnpm build
 
 FROM base AS runner
 WORKDIR /app

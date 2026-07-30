@@ -28,12 +28,11 @@ export class OnboardingActions {
   }
 
   public async startOnboardingAsync(type: "scratch" | "before 1.0") {
-    const name = type === "scratch" ? "Start from scratch" : "Import from Homarr before 1.0";
-    await this.page.getByRole("button", { name, exact: true }).click();
+    await this.page.locator("button", { hasText: type }).click();
   }
 
   public async processUserStepAsync(input: { username: string; password: string; confirmPassword: string }) {
-    await this.page.getByLabel("Username").waitFor({ state: "visible" });
+    await this.page.waitForSelector("text=administrator user");
 
     await this.page.getByLabel("Username").fill(input.username);
     await this.page.getByLabel("Password", { exact: true }).fill(input.password);

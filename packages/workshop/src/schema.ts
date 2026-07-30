@@ -68,19 +68,6 @@ export function resolveHomarrUrlConfig(input: HomarrUrlConfigInput = {}): Homarr
   return { homarrWebsiteUrl, workshopApiUrl, workshopWebUrl };
 }
 
-export function normalizeDocsBaseUrl(value = "/"): string {
-  if (
-    !value.startsWith("/") ||
-    /[^A-Za-z0-9._~/-]/u.test(value) ||
-    value.split("/").some((segment) => segment === "." || segment === "..")
-  ) {
-    throw new Error("DOCS_BASE_URL must be a safe path that starts with '/'");
-  }
-
-  const path = value.replace(/^\/+|\/+$/gu, "");
-  return path ? `/${path}/` : "/";
-}
-
 export const workshopReportCategorySchema = z.enum(["malicious", "spam", "copyright", "inappropriate", "other"]);
 export const workshopSubmissionTypeSchema = z.enum(["customWidget", "customCss"]);
 export type WorkshopSubmissionType = z.infer<typeof workshopSubmissionTypeSchema>;

@@ -1,11 +1,10 @@
-import { TRPCError } from "@trpc/server";
-
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import {
   assertJsonBudget as assertDomainJsonBudget,
   assertSafeStaticHeaders as assertDomainSafeStaticHeaders,
   classifyAddress,
   executeCustomWidgetRequest as executeDomainRequest,
+  invalidateCustomWidgetResponseCache as invalidateDomainResponseCache,
   MAX_REQUEST_BODY_BYTES,
   MAX_RESPONSE_BODY_BYTES,
   MAX_RESPONSE_JSON_DEPTH,
@@ -15,10 +14,8 @@ import {
   validateCustomWidgetUrl as validateDomainUrl,
 } from "@homarr/custom-widgets/server";
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "@homarr/custom-widgets/server";
-import { CustomWidgetDomainError } from "@homarr/custom-widgets/server";
 
 import { toTrpcError } from "./domain-error";
-import { invalidateCustomWidgetResponseCache, withCustomWidgetResponseCache } from "./response-cache";
 
 export type {
   CustomWidgetAuthConfig,
@@ -34,10 +31,6 @@ export {
 };
 
 const logger = createLogger({ module: "custom-widget:http" });
-
-export interface CustomWidgetRequestExecutionOptions {
-  acquireRequestLimit?: () => Promise<() => Promise<void>>;
-}
 
 export function assertJsonBudget(value: unknown): void {
   try {
@@ -79,64 +72,16 @@ export async function resolveAndValidateHost(hostname: string, scope: CustomWidg
   }
 }
 
-export async function executeCustomWidgetRequest(
-  input: CustomWidgetHttpRequest,
-  options: CustomWidgetRequestExecutionOptions = {},
-): Promise<CustomWidgetHttpResponse> {
+export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
   try {
-    return await withCustomWidgetResponseCache(input, async () => {
-      const release = await options.acquireRequestLimit?.();
-      try {
-        return await executeDomainRequest({
-          ...input,
-          cacheKey: undefined,
-          cacheTtlSeconds: undefined,
-          logError: (event) => {
-            if (event.reason === "timeout") return;
-            logger.error("Custom widget request failed", {
-              event: "custom_widget_request_failed",
-              ...event,
-            });
-          },
-        });
-      } finally {
-        await release?.();
-      }
+    return await executeDomainRequest({
+      ...input,
+      logError: (event) => logger.error("Custom widget request failed", event),
     });
   } catch (error) {
-    if (error instanceof CustomWidgetDomainError) {
-      logger.warn("Custom widget request rejected", {
-        event:
-          error.reason === "timeout"
-            ? "custom_widget_request_timeout"
-            : error.code === "FORBIDDEN"
-              ? "custom_widget_network_scope_rejected"
-              : error.code === "BAD_GATEWAY"
-                ? "custom_widget_upstream_failed"
-                : "custom_widget_request_rejected",
-        code: error.code,
-        origin: safeOrigin(input.baseUrl),
-        method: input.method,
-      });
-      toTrpcError(error);
-    }
-    if (error instanceof TRPCError) throw error;
-    logger.error("Custom widget request failed", {
-      event: "custom_widget_request_failed",
-      errorName: "UnexpectedTransportError",
-      origin: safeOrigin(input.baseUrl),
-      method: input.method,
-    });
-    throw new TRPCError({ code: "BAD_GATEWAY", message: "External request failed" });
+    toTrpcError(error);
   }
 }
 
-export { invalidateCustomWidgetResponseCache };
-
-function safeOrigin(value: string): string {
-  try {
-    return new URL(value).origin;
-  } catch {
-    return "invalid";
-  }
-}
+export const invalidateCustomWidgetResponseCache = (prefixes: readonly string[]) =>
+  invalidateDomainResponseCache(prefixes);

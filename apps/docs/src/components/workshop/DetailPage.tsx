@@ -2,11 +2,9 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import Link from "@docusaurus/Link";
 import { useLocation } from "@docusaurus/router";
-import useBaseUrl from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 
-import { getRuntimeWorkshopApiUrl } from "@site/src/lib/runtime-config";
 import {
   IconArrowBigDown,
   IconArrowBigUp,
@@ -179,7 +177,6 @@ const WidgetSafetySummary = ({ widget }: { widget: HomarrCustomWidgetV2 }) => {
 
 const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const location = useLocation();
-  const workshopHomeUrl = useBaseUrl("/workshop/");
   const submissionId = parseSubmissionId(location.pathname);
   const backend = useMemo(() => getWorkshopBackend(workshopUrl), [workshopUrl]);
 
@@ -329,7 +326,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
     if (!submission) return;
     try {
       await backend.delete(submission.id);
-      window.location.href = workshopHomeUrl;
+      window.location.href = "/workshop/";
     } catch (caught) {
       setError(errorMessage(caught, "Failed to delete submission"));
     }
@@ -1027,7 +1024,7 @@ export default function MarketplaceDetailPage() {
         <BrowserOnly fallback={<DetailSkeleton />}>
           {() => (
             <WorkshopErrorBoundary>
-              <MarketplaceDetail workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} />
+              <MarketplaceDetail workshopUrl={configuredWorkshopUrl || window.location.origin} />
             </WorkshopErrorBoundary>
           )}
         </BrowserOnly>

@@ -6,8 +6,8 @@ import { eq, or } from "@homarr/db";
 import { boards, customWidgetDefinitions, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import { collectCustomWidgetRequestReferences } from "@homarr/custom-widgets/core";
 
-import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { permissionRequiredProcedure } from "../../trpc";
+import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 import { executeCustomWidgetRequest } from "./request-executor";
 import {
@@ -143,10 +143,16 @@ export const managementQueryProcedures = {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), request.permission);
       const source = definition.sources[request.source];
       if (!source) throw new TRPCError({ code: "NOT_FOUND", message: "Option query source not found" });
-      const values = resolveOptionRequestValues(request, input.params);
-      const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
-      const response = await executeCustomWidgetRequest(
-        {
+      const release = await acquireCustomWidgetRequestLimit({
+        category: "query",
+        userId: ctx.session.user.id,
+        itemId: `configuration:${input.boardId}`,
+        definitionId: input.definitionId,
+      });
+      try {
+        const values = resolveOptionRequestValues(request, input.params);
+        const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
+        const response = await executeCustomWidgetRequest({
           baseUrl: source.baseUrl,
           targetUrl: renderRequestTarget(source.baseUrl, request, values),
           method: request.method,
@@ -171,23 +177,16 @@ export const managementQueryProcedures = {
           kind: "query",
           cacheKey: `custom-widget:options:${input.definitionId}:${getCustomWidgetCacheVersion(stored)}:${request.id}:${hashRuntimeParams(values)}`,
           cacheTtlSeconds: request.cacheSeconds ?? 30,
-        },
-        {
-          acquireRequestLimit: () =>
-            acquireCustomWidgetRequestLimit({
-              category: "query",
-              userId: ctx.session.user.id,
-              itemId: `configuration:${input.boardId}`,
-              definitionId: input.definitionId,
-            }),
-        },
-      );
-      return {
-        ok: response.ok,
-        status: response.status,
-        data: response.data,
-        error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
-      };
+        });
+        return {
+          ok: response.ok,
+          status: response.status,
+          data: response.data,
+          error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`,
+        };
+      } finally {
+        await release();
+      }
     }),
 };
 

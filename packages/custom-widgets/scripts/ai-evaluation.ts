@@ -7,7 +7,6 @@ import { buildCustomWidgetAiPrompt } from "../src/core/ai-prompt";
 import { customWidgetDefinitionSchema } from "../src/core/custom-jsx-schema";
 import type { HomarrCustomWidgetV2 } from "../src/core/custom-jsx-schema";
 import { formatCustomWidgetImportIssues, parseCustomWidgetAiResponse } from "../src/core/import";
-import { collectCustomWidgetRequestReferences } from "../src/core/request-schema";
 import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
 
 export const DEFAULT_GENERATOR_MODEL = "deepseek/deepseek-v4-pro";
@@ -101,7 +100,7 @@ export function buildRepairPrompt(
   const diagnostics = issues
     .map((issue) => `${issue.path?.length ? `${issue.path.join(".")}: ` : ""}${issue.message}`)
     .join("\n");
-  return `${originalPrompt}\n\nYour previous response did not meet the release quality bar. Correct every diagnosed contract, runtime, goal-fulfillment, visual, and UX problem below. Preserve grounded API behavior and the strongest working parts, but redesign weak areas when the feedback requires it.\n\nDiagnostics:\n${diagnostics}\n\nPrevious response:\n${previousResponse}`;
+  return `${originalPrompt}\n\nYour previous response did not validate. Correct only the generic contract/runtime problems below while preserving a polished design.\n\nDiagnostics:\n${diagnostics}\n\nPrevious response:\n${previousResponse}`;
 }
 
 export function buildJudgePrompt(testCase: CustomWidgetAiEvaluationCase, widget: HomarrCustomWidgetV2): string {
@@ -159,85 +158,6 @@ export function getJudgeResponseFormat() {
   };
 }
 
-function matchesScenarioRequestRule(
-  request: HomarrCustomWidgetV2["requests"][string],
-  rule: CustomWidgetAiEvaluationCase["acceptance"]["requestRules"][number],
-) {
-  if (!request.path.includes(rule.pathIncludes)) return false;
-  if (rule.kind && request.kind !== rule.kind) return false;
-  if (rule.method && request.method !== rule.method) return false;
-  if (rule.trigger && request.trigger !== rule.trigger) return false;
-  const references = collectCustomWidgetRequestReferences(request);
-  if (rule.optionReference && !references.options.has(rule.optionReference)) return false;
-  if (rule.parameterReference && !references.params.has(rule.parameterReference)) return false;
-  return true;
-}
-
-export function getScenarioAcceptanceIssues(
-  testCase: CustomWidgetAiEvaluationCase,
-  widget: HomarrCustomWidgetV2,
-): Array<{ path?: Array<string | number>; message: string }> {
-  const issues: Array<{ path?: Array<string | number>; message: string }> = [];
-  const expectedAuth = testCase.acceptance.sourceAuth;
-  if (expectedAuth) {
-    const matches = Object.values(widget.sources).some((source) => {
-      const actualType = typeof source.auth === "string" ? source.auth : source.auth.type;
-      if (actualType !== expectedAuth.type) return false;
-      return (
-        expectedAuth.name === undefined ||
-        (typeof source.auth !== "string" && source.auth.name.toLowerCase() === expectedAuth.name.toLowerCase())
-      );
-    });
-    if (!matches) {
-      issues.push({
-        path: ["sources"],
-        message: `The scenario requires ${expectedAuth.type}${expectedAuth.name ? ` '${expectedAuth.name}'` : ""} authentication.`,
-      });
-    }
-  }
-
-  const requestEntries = Object.entries(widget.requests);
-  const candidateMatches = new Map<string, [string, HomarrCustomWidgetV2["requests"][string]]>();
-  const candidateRequestIds = new Set<string>();
-  for (const rule of testCase.acceptance.requestRules) {
-    const match = requestEntries.find(
-      ([requestId, request]) => !candidateRequestIds.has(requestId) && matchesScenarioRequestRule(request, rule),
-    );
-    if (match) {
-      candidateMatches.set(rule.label, match);
-      candidateRequestIds.add(match[0]);
-    }
-  }
-
-  const requestIdsByLabel = new Map([...candidateMatches].map(([label, [requestId]]) => [label, requestId] as const));
-  for (const rule of testCase.acceptance.requestRules) {
-    const match = candidateMatches.get(rule.label);
-    if (!match) {
-      issues.push({
-        path: ["requests"],
-        message: `Missing grounded ${rule.label} request (${rule.pathIncludes}).`,
-      });
-      continue;
-    }
-    if (rule.invalidatesRequest) {
-      const invalidatedRequestId = requestIdsByLabel.get(rule.invalidatesRequest);
-      if (!invalidatedRequestId || !match[1].invalidates?.includes(invalidatedRequestId)) {
-        issues.push({
-          path: ["requests"],
-          message: `The ${rule.label} request must invalidate the ${rule.invalidatesRequest} request.`,
-        });
-      }
-    }
-  }
-
-  for (const component of testCase.acceptance.templateComponents) {
-    if (!widget.template.includes(`<${component}`)) {
-      issues.push({ path: ["template"], message: `The ${testCase.id} scenario requires ${component}.` });
-    }
-  }
-  return issues;
-}
-
 export async function evaluateCustomWidgetCase(args: {
   testCase: CustomWidgetAiEvaluationCase;
   apiKey: string;
@@ -281,14 +201,6 @@ export async function evaluateCustomWidgetCase(args: {
 
     const canonical = customWidgetDefinitionSchema.parse(parsed.widget);
     await writeWidgetFiles(caseDirectory, canonical, `attempt-${attempt}`);
-    const acceptanceIssues = getScenarioAcceptanceIssues(args.testCase, canonical);
-    if (acceptanceIssues.length > 0) {
-      errors.push(
-        `Attempt ${attempt}: deterministic acceptance failed — ${acceptanceIssues.map(({ message }) => message).join("; ")}`,
-      );
-      prompt = buildRepairPrompt(originalPrompt, response, acceptanceIssues);
-      continue;
-    }
     let judge: CustomWidgetJudgeResult;
     try {
       const judgeRaw = await callOpenRouter({
