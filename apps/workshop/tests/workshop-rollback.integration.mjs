@@ -19,7 +19,6 @@ const baselineUser = {
   password: "WorkshopRollbackUser123!",
   note: "retained across the Workshop migration chain",
 };
-const baselineRateLimitLabel = "rollback_sentinel:create";
 const workshopCollections = [
   "workshop_migration_state",
   "submissions",
@@ -51,7 +50,6 @@ const collectionList = async () => {
   return new Map(result.items.map((collection) => [collection.name, collection]));
 };
 const collection = (name) => request(`/api/collections/${name}`, { headers: rootHeaders });
-const settings = () => request("/api/settings", { headers: rootHeaders });
 const records = (name) =>
   request(`/api/collections/${name}/records?perPage=200`, {
     headers: rootHeaders,
@@ -75,18 +73,6 @@ const userConfig = (users) => ({
   fieldNames: users.fields.map((field) => field.name).toSorted(),
 });
 const readSnapshot = async () => JSON.parse(await readFile(snapshotPath, "utf8"));
-
-const assertManagedRateLimits = (currentSettings) => {
-  assert.equal(currentSettings.rateLimits?.enabled, true, "Workshop migration did not enable rate limits");
-  const rateLimitLabels = new Set(currentSettings.rateLimits?.rules?.map((rule) => rule.label));
-  for (const operation of ["create", "update", "delete"]) {
-    for (const name of ["submissions", "votes", "comments", "reports"]) {
-      assert.ok(rateLimitLabels.has(`${name}:${operation}`), `Missing migrated rate limit ${name}:${operation}`);
-    }
-  }
-  assert.ok(rateLimitLabels.has("users:update"), "Missing migrated users:update rate limit");
-  return rateLimitLabels;
-};
 
 const assertBaselineData = async () => {
   const userRecords = await records("users");
@@ -124,10 +110,6 @@ const assertMigrated = async () => {
     "OAuth identity update rule is not hardened",
   );
 
-  const currentSettings = await settings();
-  const rateLimitLabels = assertManagedRateLimits(currentSettings);
-  assert.ok(rateLimitLabels.has(baselineRateLimitLabel), "Workshop migration removed an unrelated rate-limit rule");
-
   const stateRecords = await records("workshop_migration_state");
   assert.equal(stateRecords.items.length, 1, "Workshop migration state snapshot is missing");
   const migrationState = JSON.parse(stateRecords.items[0].snapshot);
@@ -150,7 +132,6 @@ const assertMigrated = async () => {
     "rollback-baseline-secret",
     "Workshop migration state did not retain the OAuth secret required for rollback",
   );
-  assert.deepEqual(migrationState.rateLimits, before.rateLimits);
   await assertBaselineData();
 };
 
@@ -163,10 +144,7 @@ if (phase === "fresh-prepare") {
   for (const name of [...workshopCollections, "users", "rollback_sentinel"]) {
     assert.ok(!collections.has(name), `Fresh database unexpectedly contains collection ${name}`);
   }
-  const currentSettings = await settings();
-  await writeFile(snapshotPath, JSON.stringify({ freshRateLimits: normalized(currentSettings.rateLimits) }), {
-    mode: 0o600,
-  });
+  await writeFile(snapshotPath, "{}", { mode: 0o600 });
   console.log("Workshop fresh rollback baseline captured");
 } else if (phase === "fresh-migrated") {
   const collections = await collectionList();
@@ -180,7 +158,6 @@ if (phase === "fresh-prepare") {
       `Fresh migration is missing user field ${name}`,
     );
   }
-  assertManagedRateLimits(await settings());
   const stateRecords = await records("workshop_migration_state");
   assert.equal(stateRecords.items.length, 1, "Fresh migration state snapshot is missing");
   const migrationState = JSON.parse(stateRecords.items[0].snapshot);
@@ -188,18 +165,11 @@ if (phase === "fresh-prepare") {
   assert.equal(migrationState.users, null, "Fresh migration retained nonexistent user settings");
   console.log("Workshop fresh migration chain verified");
 } else if (phase === "fresh-restored") {
-  const before = await readSnapshot();
   const collections = await collectionList();
   for (const name of [...workshopCollections, "users", "rollback_sentinel"]) {
     assert.ok(!collections.has(name), `Fresh rollback left collection ${name}`);
   }
   assert.ok(collections.has("_superusers"), "Fresh rollback removed PocketBase superuser data");
-  const currentSettings = await settings();
-  assert.deepEqual(
-    normalized(currentSettings.rateLimits),
-    before.freshRateLimits,
-    "Fresh rollback did not restore the original rate-limit settings",
-  );
   console.log("Workshop fresh rollback state verified");
 } else if (phase === "prepare") {
   const collections = await collectionList();
@@ -246,16 +216,6 @@ if (phase === "fresh-prepare") {
       fields: [{ type: "text", name: "value", required: true, max: 100 }],
     }),
   });
-  await request("/api/settings", {
-    method: "PATCH",
-    headers: rootHeaders,
-    body: JSON.stringify({
-      rateLimits: {
-        enabled: false,
-        rules: [{ label: baselineRateLimitLabel, audience: "", duration: 17, maxRequests: 23 }],
-      },
-    }),
-  });
   await request("/api/collections/users/records", {
     method: "POST",
     headers: rootHeaders,
@@ -275,21 +235,11 @@ if (phase === "fresh-prepare") {
   });
 
   const users = await collection("users");
-  const currentSettings = await settings();
   assert.equal(users.passwordAuth?.enabled, true);
   assert.equal(users.oauth2?.enabled, true);
   assert.ok(users.oauth2?.providers?.some((provider) => provider.name === "github"));
-  assert.equal(currentSettings.rateLimits?.enabled, false);
-  assert.deepEqual(
-    currentSettings.rateLimits?.rules?.map((rule) => rule.label),
-    [baselineRateLimitLabel],
-  );
   await assertBaselineData();
-  await writeFile(
-    snapshotPath,
-    JSON.stringify({ users: userConfig(users), rateLimits: normalized(currentSettings.rateLimits) }),
-    { mode: 0o600 },
-  );
+  await writeFile(snapshotPath, JSON.stringify({ users: userConfig(users) }), { mode: 0o600 });
   console.log("Workshop rollback baseline prepared");
 } else if (phase === "migrated") {
   await assertMigrated();
@@ -306,12 +256,6 @@ if (phase === "fresh-prepare") {
 
   const users = await collection("users");
   assert.deepEqual(userConfig(users), before.users, "Rollback did not restore user rules, fields, password, or OAuth");
-  const currentSettings = await settings();
-  assert.deepEqual(
-    normalized(currentSettings.rateLimits),
-    before.rateLimits,
-    "Rollback did not restore the original rate-limit settings",
-  );
   await assertBaselineData();
   console.log("Workshop full rollback state verified");
 }

@@ -22,21 +22,6 @@ const moderatorSubmissionFieldsUnchanged = [
   "@request.body.changelog:changed = false",
   "@request.body.screenshots:changed = false",
 ].join(" && ");
-const workshopRateLimits = [
-  { label: "submissions:create", audience: "@auth", duration: 60, maxRequests: 10 },
-  { label: "submissions:update", audience: "@auth", duration: 60, maxRequests: 30 },
-  { label: "submissions:delete", audience: "@auth", duration: 60, maxRequests: 10 },
-  { label: "votes:create", audience: "@auth", duration: 10, maxRequests: 20 },
-  { label: "votes:update", audience: "@auth", duration: 10, maxRequests: 20 },
-  { label: "votes:delete", audience: "@auth", duration: 10, maxRequests: 20 },
-  { label: "comments:create", audience: "@auth", duration: 60, maxRequests: 20 },
-  { label: "comments:update", audience: "@auth", duration: 60, maxRequests: 20 },
-  { label: "comments:delete", audience: "@auth", duration: 60, maxRequests: 20 },
-  { label: "reports:create", audience: "@auth", duration: 60, maxRequests: 5 },
-  { label: "reports:update", audience: "@auth", duration: 60, maxRequests: 30 },
-  { label: "reports:delete", audience: "@auth", duration: 60, maxRequests: 30 },
-  { label: "users:update", audience: "@auth", duration: 60, maxRequests: 20 },
-];
 
 migrate(
   (app) => {
@@ -49,7 +34,6 @@ migrate(
       users = new Collection({ type: "auth", name: "users" });
     }
 
-    const settings = app.settings();
     const stateCollection = new Collection({
       type: "base",
       name: "workshop_migration_state",
@@ -75,7 +59,6 @@ migrate(
           }
         : null,
       addedUserFields: [],
-      rateLimits: cloneJson(settings.rateLimits),
     };
     const addUserField = (field) => {
       if (users.fields.getByName(field.name)) return;
@@ -280,15 +263,6 @@ migrate(
       `,
     });
     app.save(listings);
-
-    settings.rateLimits.enabled = true;
-    settings.rateLimits.rules = [
-      ...settings.rateLimits.rules.filter(
-        (rule) => !workshopRateLimits.some((workshopRule) => workshopRule.label === rule.label),
-      ),
-      ...workshopRateLimits,
-    ];
-    app.save(settings);
   },
   (app) => {
     let stateCollection;
@@ -305,11 +279,6 @@ migrate(
         app.delete(app.findCollectionByNameOrId(name));
       } catch {}
     }
-
-    const settings = app.settings();
-    settings.rateLimits.enabled = state.rateLimits.enabled;
-    settings.rateLimits.rules = state.rateLimits.rules;
-    app.save(settings);
 
     const users = app.findCollectionByNameOrId("users");
     if (state.usersExisted) {

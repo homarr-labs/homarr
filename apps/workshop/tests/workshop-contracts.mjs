@@ -89,7 +89,6 @@ for (const required of [
   "cloneRule(users.listRule)",
   "CREATE TRIGGER submissions_revision_cas",
   "NEW.expectedRevision != OLD.revision",
-  "state.rateLimits.enabled",
   "users.passwordAuth = state.users.passwordAuth",
   "users.oauth2 = state.users.oauth2",
   "app.delete(users)",
@@ -97,13 +96,6 @@ for (const required of [
   if (!migration.includes(required)) throw new Error(`Workshop rollback is missing state restoration: ${required}`);
 }
 
-for (const operation of ["create", "update", "delete"]) {
-  for (const collection of ["submissions", "votes", "comments", "reports"]) {
-    const label = `${collection}:${operation}`;
-    if (!migration.includes(label)) throw new Error(`Workshop write rate limit is missing: ${label}`);
-  }
-}
-if (!migration.includes("users:update")) throw new Error("Workshop user file updates must be rate limited");
 for (const protectedField of [
   "email:changed",
   "displayName:changed",

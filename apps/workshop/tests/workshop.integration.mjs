@@ -34,15 +34,6 @@ for (const required of ["submissions", "votes", "comments", "reports", "workshop
 for (const removed of ["workshop_admin_actions", "workshop_admins"]) {
   if (collectionNames.has(removed)) throw new Error(`Removed Workshop collection still exists: ${removed}`);
 }
-const settings = await request("/api/settings", { headers: rootHeaders });
-const rateLimitLabels = new Set(settings.rateLimits?.rules?.map((rule) => rule.label));
-for (const operation of ["create", "update", "delete"]) {
-  for (const collection of ["submissions", "votes", "comments", "reports"]) {
-    const label = `${collection}:${operation}`;
-    if (!rateLimitLabels.has(label)) throw new Error(`Missing Workshop write rate limit: ${label}`);
-  }
-}
-if (!rateLimitLabels.has("users:update")) throw new Error("Workshop user/file updates are not rate limited");
 
 // Production uses GitHub OAuth. Password auth is enabled only in this disposable database.
 const usersCollection = await request("/api/collections/users", { headers: rootHeaders });
