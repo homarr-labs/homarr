@@ -18,7 +18,12 @@ import {
   integrationUserPermissions,
   items,
 } from "@homarr/db/schema";
-import { assistantProviderIds, assistantProviderPresets, assistantProviderRequiresApiKey } from "@homarr/definitions";
+import {
+  assistantProviderIds,
+  assistantProviderPresets,
+  assistantProviderRequiresApiKey,
+  resolveAssistantModelId,
+} from "@homarr/definitions";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import type { createTRPCContext } from "../trpc";
@@ -256,7 +261,9 @@ export const getSelectedModelDetailsAsync = async (configuration: AssistantConfi
   const cached = selectedModelCache.get(cacheKey);
   if (cached && cached.expiresAt > Date.now()) return cached.value;
 
-  const value = (await fetchModelsAsync(configuration)).find((model) => model.id === configuration.modelId) ?? null;
+  const models = await fetchModelsAsync(configuration);
+  const resolvedModelId = resolveAssistantModelId(models, configuration.modelId);
+  const value = models.find((model) => model.id === resolvedModelId) ?? null;
   selectedModelCache.clear();
   selectedModelCache.set(cacheKey, { expiresAt: Date.now() + 10 * 60_000, value });
   return value;
@@ -547,9 +554,15 @@ export const assistantRouter = createTRPCRouter({
       if (input.enabled && requiresApiKey && !configuration.encryptedApiKey) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This provider requires an API key." });
       }
+      const discoveredModels = configuration.modelDiscoveryPath
+        ? await fetchModelsAsync(configuration).catch(() => null)
+        : null;
+      const modelId = discoveredModels
+        ? (resolveAssistantModelId(discoveredModels, input.modelId) ?? input.modelId)
+        : input.modelId;
       await ctx.db
         .update(assistantConfigurations)
-        .set({ enabled: input.enabled, modelId: input.modelId, updatedAt: new Date() })
+        .set({ enabled: input.enabled, modelId, updatedAt: new Date() })
         .where(eq(assistantConfigurations.id, configurationId));
     }),
 

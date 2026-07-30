@@ -1,6 +1,12 @@
 import { describe, expect, test } from "vitest";
 
-import { assistantProviderIds, assistantProviderPresets, assistantProviderRequiresApiKey } from "@homarr/definitions";
+import {
+  assistantProviderIds,
+  assistantProviderPresets,
+  assistantProviderRequiresApiKey,
+  getAssistantModelOptionLabel,
+  resolveAssistantModelId,
+} from "@homarr/definitions";
 
 describe("assistant provider presets", () => {
   test("defines one complete preset for every provider", () => {
@@ -30,4 +36,15 @@ describe("assistant provider presets", () => {
       expect(() => new URL(iconUrl ?? "")).not.toThrow();
     },
   );
+
+  test("keeps the display label separate from the provider model ID", () => {
+    const model = {
+      id: "deepseek/deepseek-v4-pro",
+      name: "DeepSeek: DeepSeek V4 Pro",
+    };
+
+    expect(getAssistantModelOptionLabel(model)).toBe("DeepSeek: DeepSeek V4 Pro (deepseek/deepseek-v4-pro)");
+    expect(resolveAssistantModelId([model], model.id)).toBe(model.id);
+    expect(resolveAssistantModelId([model], getAssistantModelOptionLabel(model))).toBe(model.id);
+  });
 });

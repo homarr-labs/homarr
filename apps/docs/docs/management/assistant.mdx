@@ -33,11 +33,13 @@ preset connects any other service that implements the OpenAI Chat Completions AP
 3. Add an API key if the service requires bearer authentication.
 4. Add any provider-specific authentication or routing headers.
 5. Save the provider connection.
-6. Refresh the model list or enter an exact model ID manually.
+6. Refresh the model list and select a discovered model. Homarr displays the friendly model name but
+   stores and sends the provider's exact model ID.
 7. Enable the assistant and save the configuration.
 
 The model discovery path defaults to `/models` and is appended to the API base URL. Leave it blank when
-the service does not expose model discovery. A manual model ID can still be used.
+the service does not expose model discovery. A manual model ID can still be used when discovery is
+disabled, unavailable, or returns no models.
 
 API keys and additional header values are encrypted in the Homarr database. They are decrypted only on
 the server for discovery and model requests, and they are never returned to the browser. Changing the

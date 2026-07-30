@@ -5,6 +5,7 @@ import { parse } from "superjson";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
+import { eq } from "@homarr/db";
 import {
   apps,
   assistantConfigurations,
@@ -98,6 +99,44 @@ describe("assistantRouter.updateConnection", () => {
       modelDiscoveryPath: "/models",
       modelId: "example/model",
     });
+  });
+});
+
+describe("assistantRouter.updateConfiguration", () => {
+  test("normalizes legacy model labels to the discovered provider ID", async () => {
+    const db = await createConfiguredAssistantAsync();
+    await db
+      .update(assistantConfigurations)
+      .set({ encryptedHeaders: null })
+      .where(eq(assistantConfigurations.id, "default"));
+    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        Response.json({
+          data: [
+            {
+              id: "deepseek/deepseek-v4-pro",
+              name: "DeepSeek: DeepSeek V4 Pro",
+              supported_parameters: ["tools"],
+              architecture: { output_modalities: ["text"] },
+            },
+          ],
+        }),
+      ),
+    );
+
+    try {
+      await caller.updateConfiguration({
+        enabled: true,
+        modelId: "DeepSeek: DeepSeek V4 Pro (deepseek/deepseek-v4-pro)",
+      });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+
+    const [configuration] = await db.select().from(assistantConfigurations);
+    expect(configuration?.modelId).toBe("deepseek/deepseek-v4-pro");
   });
 });
 
