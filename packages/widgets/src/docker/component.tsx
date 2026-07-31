@@ -2,7 +2,7 @@
 
 import "./styles.css";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ActionIcon, Avatar, Badge, Box, Center, Group, Menu, Portal, Stack, Text, Tooltip } from "@mantine/core";
 import {
@@ -17,7 +17,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
-import { DataTable, useDataTableColumns } from "mantine-datatable";
+import { DataTable } from "mantine-datatable";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -33,6 +33,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { usePersistedTableLayout } from "../common/use-persisted-table-layout";
 
 type DockerContainer = RouterOutputs["docker"]["getContainers"]["containers"][number];
 type ContainerAction = "start" | "stop" | "restart" | "remove";
@@ -53,40 +54,6 @@ const columnAccessors = ["name", "state", "host", "cpuUsage", "memoryUsage", "ac
 
 const createContainerLogsPath = (container: Pick<DockerContainer, "id" | "name">) =>
   `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}`;
-
-export const parseColumnOrder = (value: string): string[] => {
-  if (!value) return [];
-  try {
-    const parsed: unknown = JSON.parse(value);
-    if (!Array.isArray(parsed)) return [];
-
-    const allowed = new Set<string>(columnAccessors);
-    return parsed.filter(
-      (accessor, index): accessor is string =>
-        typeof accessor === "string" && allowed.has(accessor) && parsed.indexOf(accessor) === index,
-    );
-  } catch {
-    return [];
-  }
-};
-
-export const parseColumnWidths = (value: string): Record<string, number> => {
-  if (!value) return {};
-  try {
-    const parsed: unknown = JSON.parse(value);
-    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return {};
-
-    const allowed = new Set<string>(columnAccessors);
-    return Object.fromEntries(
-      Object.entries(parsed).filter(
-        (entry): entry is [string, number] =>
-          allowed.has(entry[0]) && typeof entry[1] === "number" && Number.isFinite(entry[1]) && entry[1] > 0,
-      ),
-    );
-  } catch {
-    return {};
-  }
-};
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useScopedI18n("docker.field.state.option");
@@ -286,9 +253,6 @@ export default function DockerWidget({
     [boardId, hasChangeAccess, itemId, saveItemOptions, setOptions],
   );
 
-  const savedOrder = useMemo(() => parseColumnOrder(options.columnOrder), [options.columnOrder]);
-  const savedWidths = useMemo(() => parseColumnWidths(options.columnWidths), [options.columnWidths]);
-
   const defaultDirection = options.descendingDefaultSort ? "desc" : "asc";
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus<DockerContainer>>({
     columnAccessor: options.defaultSort,
@@ -325,79 +289,15 @@ export default function DockerWidget({
       selectedColumns.has(String(accessor)),
     );
   }, [actionHandlers, isEditMode, options.enableRowSorting, selectedColumns, t]);
-  const visibleAccessors = useMemo(() => columns.map(({ accessor }) => String(accessor)), [columns]);
-  const visibleAccessorSet = useMemo(() => new Set(visibleAccessors), [visibleAccessors]);
-  const restoredOrder = useMemo(
-    () => [
-      ...savedOrder.filter((accessor) => visibleAccessorSet.has(accessor)),
-      ...visibleAccessors.filter((accessor) => !savedOrder.includes(accessor)),
-    ],
-    [savedOrder, visibleAccessors, visibleAccessorSet],
-  );
-  const storeKey = `docker-containers-${itemId ?? "preview"}-${[...visibleAccessors].toSorted().join(",")}`;
-  const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths } =
-    useDataTableColumns<DockerContainer>({
-      key: storeKey,
-      columns,
-    });
-
-  const lastStoreKey = useRef(storeKey);
-  const hydrated = useRef(false);
-  useEffect(() => {
-    if (lastStoreKey.current !== storeKey) {
-      lastStoreKey.current = storeKey;
-      hydrated.current = false;
-    }
-    if (hydrated.current) return;
-
-    if (restoredOrder.length > 0) setColumnsOrder(restoredOrder);
-    const visibleWidths = Object.entries(savedWidths)
-      .filter(([accessor]) => visibleAccessorSet.has(accessor))
-      .map(([accessor, columnWidth]) => ({ accessor, width: columnWidth }));
-    if (visibleWidths.length > 0) setMultipleColumnWidths(visibleWidths);
-
-    requestAnimationFrame(() => {
-      hydrated.current = true;
-    });
-  }, [restoredOrder, savedWidths, setColumnsOrder, setMultipleColumnWidths, storeKey, visibleAccessorSet]);
-
-  const previousOrder = useRef(columnsOrder);
-  const previousWidths = useRef(columnsWidth);
-  useEffect(() => {
-    if (!hydrated.current) return;
-
-    const orderChanged = JSON.stringify(columnsOrder) !== JSON.stringify(previousOrder.current);
-    const widthsChanged = JSON.stringify(columnsWidth) !== JSON.stringify(previousWidths.current);
-    previousOrder.current = columnsOrder;
-    previousWidths.current = columnsWidth;
-    if (!orderChanged && !widthsChanged) return;
-
-    const newLayout: Partial<Pick<typeof options, "columnOrder" | "columnWidths">> = {};
-    if (orderChanged) {
-      const fullOrder = [...savedOrder, ...columnAccessors.filter((accessor) => !savedOrder.includes(accessor))];
-      const reorderedVisibleColumns = [...columnsOrder];
-      const mergedOrder = fullOrder.map((accessor) =>
-        visibleAccessorSet.has(accessor) ? (reorderedVisibleColumns.shift() ?? accessor) : accessor,
-      );
-      newLayout.columnOrder = JSON.stringify(mergedOrder);
-    }
-    if (widthsChanged) {
-      const widthMap: Record<string, number> = { ...savedWidths };
-      for (const entry of columnsWidth) {
-        const accessor = Object.keys(entry)[0];
-        if (!accessor || !visibleAccessorSet.has(accessor)) continue;
-        const columnWidth = entry[accessor as keyof typeof entry];
-        if (typeof columnWidth === "number" && Number.isFinite(columnWidth) && columnWidth > 0) {
-          widthMap[accessor] = columnWidth;
-        } else if (typeof columnWidth === "string" && columnWidth.endsWith("px")) {
-          const parsedWidth = Number.parseInt(columnWidth, 10);
-          if (Number.isFinite(parsedWidth) && parsedWidth > 0) widthMap[accessor] = parsedWidth;
-        }
-      }
-      newLayout.columnWidths = JSON.stringify(widthMap);
-    }
-    persistLayout(newLayout);
-  }, [columnsOrder, columnsWidth, persistLayout, savedOrder, savedWidths, visibleAccessorSet]);
+  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+    columns,
+    columnAccessors,
+    columnOrder: options.columnOrder,
+    columnWidths: options.columnWidths,
+    itemId,
+    storeKeyPrefix: "docker-containers",
+    onLayoutChange: persistLayout,
+  });
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const closeContextMenu = useCallback(() => setContextMenu(null), []);

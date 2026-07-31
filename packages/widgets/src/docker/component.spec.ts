@@ -1,18 +1,19 @@
 import { describe, expect, test } from "vitest";
 
-import { parseColumnOrder, parseColumnWidths } from "./component";
+import { parseColumnOrder, parseColumnWidths } from "../common/use-persisted-table-layout";
+
+const columnAccessors = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"];
 
 describe("Docker table column layout options", () => {
   test("ignores malformed column layout JSON", () => {
-    expect(parseColumnOrder("{")).toEqual([]);
-    expect(parseColumnWidths("[]")).toEqual({});
+    expect(parseColumnOrder("{", columnAccessors)).toEqual([]);
+    expect(parseColumnWidths("[]", columnAccessors)).toEqual({});
   });
 
   test("removes stale and duplicate column accessors", () => {
-    expect(parseColumnOrder(JSON.stringify(["memoryUsage", "removed", "name", "memoryUsage"]))).toEqual([
-      "memoryUsage",
-      "name",
-    ]);
+    expect(
+      parseColumnOrder(JSON.stringify(["memoryUsage", "removed", "name", "memoryUsage"]), columnAccessors),
+    ).toEqual(["memoryUsage", "name"]);
   });
 
   test("keeps only finite positive widths for known columns", () => {
@@ -25,6 +26,7 @@ describe("Docker table column layout options", () => {
           removed: 100,
           actions: null,
         }),
+        columnAccessors,
       ),
     ).toEqual({ name: 180 });
   });
