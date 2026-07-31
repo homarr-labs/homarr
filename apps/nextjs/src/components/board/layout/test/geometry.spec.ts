@@ -1,11 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import {
-  getLayoutRowCount,
-  getLogicalItemStyle,
-  getLogicalTrackSize,
-  normalizeGridPlacement,
-} from "../index";
+import { getLayoutRowCount, getLogicalItemStyle, getLogicalTrackSize, normalizeGridPlacement } from "../index";
 
 describe("fixed dashboard geometry", () => {
   test("keeps a 1x1 item exactly 200px with a fixed 24px gap", () => {

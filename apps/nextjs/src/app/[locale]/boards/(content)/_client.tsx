@@ -95,7 +95,8 @@ export const ClientBoard = () => {
   const laneWidths = [leftColumnCount, mainColumnCount, rightColumnCount]
     .filter((columnCount) => columnCount > 0)
     .map(getLogicalTrackSize);
-  const logicalWidth = laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * LOGICAL_GRID_GAP;
+  const logicalWidth =
+    laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * LOGICAL_GRID_GAP;
   const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId);
   const initialAvailableWidth = Math.max(1, initialViewportWidth - APP_SHELL_INLINE_PADDING);
   const gridTemplateColumns = [

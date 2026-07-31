@@ -1699,7 +1699,9 @@ const getUpdatedBoardLayout = (
   const mainRoot = rootByLane.get("main");
   if (!mainRoot) throw new Error(`Board "${board.id}" has no main canvas root`);
 
-  const sourceRootById = new Map(emptyRoots.map((section) => [section.id, getRootSectionLane(section.xOffset)] as const));
+  const sourceRootById = new Map(
+    emptyRoots.map((section) => [section.id, getRootSectionLane(section.xOffset)] as const),
+  );
   const targetLaneBySourceLane = new Map<BoardLane, BoardLane>(
     boardLanes.map((lane) => [
       lane,
@@ -1787,10 +1789,7 @@ interface BoardLayoutGeometry {
   rightGutterColumnCount: number;
 }
 
-const getRootSectionForLane = (
-  board: Awaited<ReturnType<typeof getFullBoardWithWhereAsync>>,
-  lane: BoardLane,
-) => {
+const getRootSectionForLane = (board: Awaited<ReturnType<typeof getFullBoardWithWhereAsync>>, lane: BoardLane) => {
   const roots = board.sections.filter(
     (section) => section.kind === "empty" && getRootSectionLane(section.xOffset) === lane,
   );
