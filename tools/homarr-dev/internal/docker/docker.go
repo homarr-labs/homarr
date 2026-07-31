@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const developmentEncryptionKeyEnv = "HOMARR_DEV_SECRET_ENCRYPTION_KEY"
@@ -236,41 +237,70 @@ func developmentEncryptionKey() (string, error) {
 func persistedDevelopmentEncryptionKey(configDir string) (string, error) {
 	dir := filepath.Join(configDir, "homarr-dev")
 	path := filepath.Join(dir, "secret-encryption-key")
-	if data, err := os.ReadFile(path); err == nil {
-		return validateDevelopmentEncryptionKey(strings.TrimSpace(string(data)))
-	} else if !os.IsNotExist(err) {
-		return "", fmt.Errorf("read development encryption key: %w", err)
+	if key, found, err := readDevelopmentEncryptionKey(path); found || err != nil {
+		return key, err
 	}
 
 	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return "", fmt.Errorf("create development config directory: %w", err)
+	}
+	lockPath := path + ".lock"
+	for attempts := 0; ; attempts++ {
+		if err := os.Mkdir(lockPath, 0o700); err == nil {
+			break
+		} else if !os.IsExist(err) {
+			return "", fmt.Errorf("lock development encryption key: %w", err)
+		}
+		if key, found, err := readDevelopmentEncryptionKey(path); found || err != nil {
+			return key, err
+		}
+		if attempts == 99 {
+			return "", fmt.Errorf("timed out waiting for development encryption key lock %q", lockPath)
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	defer func() { _ = os.Remove(lockPath) }()
+
+	if key, found, err := readDevelopmentEncryptionKey(path); found || err != nil {
+		return key, err
 	}
 	keyBytes := make([]byte, 32)
 	if _, err := rand.Read(keyBytes); err != nil {
 		return "", fmt.Errorf("generate development encryption key: %w", err)
 	}
 	key := hex.EncodeToString(keyBytes)
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600)
-	if os.IsExist(err) {
-		data, readErr := os.ReadFile(path)
-		if readErr != nil {
-			return "", fmt.Errorf("read development encryption key: %w", readErr)
-		}
-		return validateDevelopmentEncryptionKey(strings.TrimSpace(string(data)))
-	}
+	file, err := os.CreateTemp(dir, "secret-encryption-key-*.tmp")
 	if err != nil {
 		return "", fmt.Errorf("create development encryption key: %w", err)
 	}
+	tempPath := file.Name()
+	defer func() { _ = os.Remove(tempPath) }()
 	if _, err := file.WriteString(key + "\n"); err != nil {
 		_ = file.Close()
-		_ = os.Remove(path)
 		return "", fmt.Errorf("write development encryption key: %w", err)
 	}
 	if err := file.Close(); err != nil {
-		_ = os.Remove(path)
 		return "", fmt.Errorf("close development encryption key: %w", err)
 	}
+	if err := os.Chmod(tempPath, 0o600); err != nil {
+		return "", fmt.Errorf("secure development encryption key: %w", err)
+	}
+	if err := os.Rename(tempPath, path); err != nil {
+		return "", fmt.Errorf("persist development encryption key: %w", err)
+	}
 	return key, nil
+}
+
+func readDevelopmentEncryptionKey(path string) (string, bool, error) {
+	data, err := os.ReadFile(path)
+	if os.IsNotExist(err) {
+		return "", false, nil
+	}
+	if err != nil {
+		return "", false, fmt.Errorf("read development encryption key: %w", err)
+	}
+	key, err := validateDevelopmentEncryptionKey(strings.TrimSpace(string(data)))
+	return key, true, err
 }
 
 func validateDevelopmentEncryptionKey(key string) (string, error) {

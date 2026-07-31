@@ -96,3 +96,30 @@ func TestPersistedDevelopmentEncryptionKeyRejectsInvalidValue(t *testing.T) {
 		t.Fatal("expected invalid persisted key to fail")
 	}
 }
+
+func TestPersistedDevelopmentEncryptionKeyConcurrentCreation(t *testing.T) {
+	configDir := t.TempDir()
+	type result struct {
+		key string
+		err error
+	}
+	results := make(chan result, 20)
+	for range 20 {
+		go func() {
+			key, err := persistedDevelopmentEncryptionKey(configDir)
+			results <- result{key: key, err: err}
+		}()
+	}
+	var first string
+	for range 20 {
+		result := <-results
+		if result.err != nil {
+			t.Fatal(result.err)
+		}
+		if first == "" {
+			first = result.key
+		} else if result.key != first {
+			t.Fatal("concurrent callers received different keys")
+		}
+	}
+}
