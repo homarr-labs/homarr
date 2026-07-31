@@ -39,19 +39,19 @@ const subsonicFailed = (message: string, code = 70) =>
     "subsonic-response": { status: "failed", error: { code, message } },
   });
 
+const makeAlbums = (count: number, songCount: number) =>
+  Array.from({ length: count }, (_, index) => ({
+    id: `album-${index}`,
+    name: `Album ${index}`,
+    songCount,
+  }));
+
 beforeEach(() => {
   mockFetch.mockReset();
 });
 
 describe("NavidromeIntegration.getDashboardDataAsync", () => {
   test("paginates album list and counts songs", async () => {
-    const makeAlbums = (count: number, songCount: number) =>
-      Array.from({ length: count }, (_, i) => ({
-        id: `album-${i}`,
-        name: `Album ${i}`,
-        songCount,
-      }));
-
     mockFetch.mockImplementation((url) => {
       const urlStr = toUrlString(url);
 
