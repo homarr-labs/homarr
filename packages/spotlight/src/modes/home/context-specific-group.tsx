@@ -4,6 +4,12 @@ import { createGroup } from "../../lib/group";
 import type { ContextSpecificItem } from "./context";
 import { useSpotlightContextResults } from "./context";
 
+export const shouldShowContextSpecificResult = (query: string, option: ContextSpecificItem) => {
+  if (option.alwaysVisible) return true;
+  if (query.length === 0) return false;
+  return option.name.toLowerCase().includes(query.toLowerCase());
+};
+
 export const contextSpecificSearchGroups = createGroup<ContextSpecificItem>({
   title: (t) => t("search.mode.home.group.local.title"),
   keyPath: "id",
@@ -29,12 +35,10 @@ export const contextSpecificSearchGroups = createGroup<ContextSpecificItem>({
       </Group>
     );
   },
-  useInteraction(option) {
-    return option.interaction();
+  useInteraction(option, query) {
+    return option.interaction(query);
   },
-  filter(query, option) {
-    return option.name.toLowerCase().includes(query.toLowerCase());
-  },
+  filter: shouldShowContextSpecificResult,
   useOptions() {
     return useSpotlightContextResults();
   },
