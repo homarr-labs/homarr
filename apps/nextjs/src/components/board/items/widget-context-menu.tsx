@@ -94,11 +94,13 @@ type WidgetContextMenuDropdownProps = Omit<WidgetContextMenuProps, "children"> &
 };
 
 const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings }: WidgetContextMenuDropdownProps) => {
+  const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const tItem = useScopedI18n("item");
   const tMenu = useScopedI18n("item.menu.label");
   const t = useI18n();
+  const canConfigureWidget = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const hasSupportedIntegrations =
     "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) > 0;
   const { openModal } = useModalAction(LazyWidgetEditModal);
@@ -129,9 +131,10 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
 
   type OptionDef = { type: string; skipContextMenu?: boolean };
   const toggleOptions = useMemo(() => {
+    if (!canConfigureWidget) return [];
     const rawOptions = definition.createOptions(settings) as unknown as Record<string, OptionDef>;
     return Object.entries(rawOptions).filter(([, def]) => def.type === "switch" && !def.skipContextMenu);
-  }, [definition, settings]);
+  }, [canConfigureWidget, definition, settings]);
 
   const widgetContextActions = useMemo(() => {
     const def = definition as unknown as Record<string, unknown>;
@@ -278,13 +281,15 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
           >
             {tItem("action.moveResize")}
           </Menu.Item>
-          <Menu.Item
-            closeMenuOnClick
-            leftSection={<IconCopy size={16} />}
-            onClick={() => duplicateItem({ itemId: item.id })}
-          >
-            {tItem("action.duplicate")}
-          </Menu.Item>
+          {canConfigureWidget && (
+            <Menu.Item
+              closeMenuOnClick
+              leftSection={<IconCopy size={16} />}
+              onClick={() => duplicateItem({ itemId: item.id })}
+            >
+              {tItem("action.duplicate")}
+            </Menu.Item>
+          )}
         </>
       )}
 

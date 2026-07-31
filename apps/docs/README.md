@@ -93,7 +93,7 @@ pnpm verify:search
 | Layer | Technology |
 |---|---|
 | Site generator | Docusaurus 3 (`@docusaurus/preset-classic`) |
-| Styling | Tailwind CSS 3 + Docusaurus Infima |
+| Styling | Tailwind CSS 4 + Docusaurus Infima |
 | Icons | `@tabler/icons-react` |
 | Diagrams | Mermaid (`@docusaurus/theme-mermaid`) |
 | Search | Algolia DocSearch |

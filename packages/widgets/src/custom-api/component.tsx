@@ -5,6 +5,7 @@ import { Button, Center, Loader, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
@@ -21,6 +22,8 @@ export default function CustomApiWidget({
 }: WidgetComponentProps<"customApi">) {
   const t = useScopedI18n("widget.customApi");
   const tCustomJsx = useScopedI18n("widget.customApi.customJsx");
+  const { data: session } = useSession();
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const definitionId = options.definitionId;
   const safeInterval = Number.isFinite(options.refreshInterval) ? options.refreshInterval : 30;
   const intervalMs = Math.max(1_000, safeInterval * 1_000);
@@ -64,8 +67,9 @@ export default function CustomApiWidget({
         }
         danger={!isUnavailable && !migrationRequired}
         removeLabel={isUnavailable ? t("removeFromBoard") : undefined}
-        actionLabel={migrationRequired ? t("manageMigration") : undefined}
-        actionHref={migrationRequired ? "/manage/custom-widgets" : undefined}
+        actionLabel={migrationRequired && isAdmin ? t("manageMigration") : undefined}
+        actionHref={migrationRequired && isAdmin ? "/manage/custom-widgets" : undefined}
+        supplementaryMessage={migrationRequired && !isAdmin ? t("contactAdmin") : undefined}
         onRemove={removeItem}
       />
     );
@@ -90,6 +94,7 @@ function Unavailable({
   removeLabel,
   actionLabel,
   actionHref,
+  supplementaryMessage,
   onRemove,
 }: {
   message: string;
@@ -97,6 +102,7 @@ function Unavailable({
   removeLabel?: string;
   actionLabel?: string;
   actionHref?: string;
+  supplementaryMessage?: string;
   onRemove?: () => void;
 }) {
   return (
@@ -106,6 +112,11 @@ function Unavailable({
         <Text c="dimmed" size="sm" ta="center">
           {message}
         </Text>
+        {supplementaryMessage && (
+          <Text size="sm" fw={600} ta="center">
+            {supplementaryMessage}
+          </Text>
+        )}
         {actionLabel && actionHref && (
           <Button component={Link} href={actionHref} size="compact-sm" color="yellow" variant="light">
             {actionLabel}

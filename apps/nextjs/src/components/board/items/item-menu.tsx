@@ -32,6 +32,8 @@ export const BoardItemMenu = (props: BoardItemMenuProps) => {
 };
 
 const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: BoardItemMenuProps) => {
+  const { data: session } = useSession();
+  const canDuplicate = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useScopedI18n("item");
   const t = useI18n();

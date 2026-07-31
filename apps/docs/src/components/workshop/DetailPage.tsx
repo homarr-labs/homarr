@@ -4,6 +4,7 @@ import Link from "@docusaurus/Link";
 import { useLocation } from "@docusaurus/router";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
+
 import {
   IconArrowBigDown,
   IconArrowBigUp,
@@ -335,7 +336,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
     if (!submission) return;
     try {
       const updated = await backend.toggleOutdated(submission.id, !submission.outdated);
-      setSubmission({ ...submission, outdated: updated.outdated });
+      setSubmission(updated);
       setError(null);
       toast.success(updated.outdated ? "Submission marked as outdated" : "Submission marked as current");
     } catch (caught) {
@@ -453,7 +454,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
       setReportOpen(false);
       setReportExplanation("");
       setError(null);
-      toast.success("Report submitted", { description: "A Workshop administrator can now review it." });
+      toast.success("Report submitted", { description: "A Workshop moderator can now review it." });
     } catch (caught) {
       setReportError(errorMessage(caught, "Failed to submit report"));
     } finally {
@@ -863,7 +864,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
           <DialogHeader>
             <DialogTitle>Report submission</DialogTitle>
             <DialogDescription>
-              Only Workshop administrators can review report details and reporter identities.
+              Only Workshop moderators can review report details and reporter identities.
             </DialogDescription>
           </DialogHeader>
           {reportError && (

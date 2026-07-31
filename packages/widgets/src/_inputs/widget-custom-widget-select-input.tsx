@@ -17,6 +17,7 @@ import {
 import { IconAlertTriangle, IconApi } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
@@ -32,6 +33,8 @@ export const WidgetCustomWidgetSelectInput = ({
 }: CommonWidgetInputProps<"customWidgetSelect">) => {
   const t = useWidgetInputTranslation(kind, property);
   const labels = useScopedI18n("widget.customApi.picker");
+  const { data: session } = useSession();
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const form = useFormContext();
   const board = useOptionalBoard();
   const currentValue = form.values.options[property] as string;
@@ -153,9 +156,15 @@ export const WidgetCustomWidgetSelectInput = ({
           title={labels("migrationRequired")}
         >
           <Text size="xs">{labels("migrationDescription")}</Text>
-          <Anchor component={Link} href="/manage/custom-widgets" size="xs" fw={600}>
-            {labels("manageMigration")}
-          </Anchor>
+          {isAdmin ? (
+            <Anchor component={Link} href="/manage/custom-widgets" size="xs" fw={600}>
+              {labels("manageMigration")}
+            </Anchor>
+          ) : (
+            <Text size="xs" fw={600}>
+              {labels("contactAdmin")}
+            </Text>
+          )}
         </Alert>
       )}
     </Stack>

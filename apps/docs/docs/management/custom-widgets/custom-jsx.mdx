@@ -38,7 +38,8 @@ Bounded regex literals are supported for string matching, splitting, search, and
 
 - `SubFetch` runs a manual query with its `params`. Set `triggerContent` to a card or image to make that content the accessible click and keyboard trigger instead of showing the default load button.
 - `ActionButton` and `ToggleSwitch` run actions.
-- `RefreshButton` renders a compact, accessible icon control that refreshes load queries.
+- `RefreshButton` renders a compact, accessible icon control that refreshes load queries for authenticated viewers. It
+  is disabled for anonymous public-board viewers because refreshing invalidates shared server cache state.
 - `Icon`/`TablerIcon` resolves installed safe icons.
 
 Always include responsive loading, empty, error, and success states. Runtime failures remain inside the widget tile.

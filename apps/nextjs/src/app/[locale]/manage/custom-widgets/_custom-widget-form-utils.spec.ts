@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 
 import {
+  applyCustomWidgetAiResponse,
   filterSecretsForSourceAuthentication,
   getChangedSecrets,
   getCustomWidgetPreviewOptionIssues,
@@ -23,6 +24,40 @@ const definition = customWidgetDefinitionSchema.parse({
 });
 
 describe("Custom Widget workbench preview options", () => {
+  it("loads one complete AI response into every editor field, including JSX", () => {
+    const setValues = vi.fn();
+    const result = applyCustomWidgetAiResponse(
+      {
+        values: {
+          name: "",
+          description: "",
+          iconUrl: "",
+          sources: "{}",
+          requests: "{}",
+          options: "{}",
+          template: "",
+          secrets: [],
+        },
+        setValues,
+      } as never,
+      `\`\`\`json\n${JSON.stringify(definition)}\n\`\`\``,
+    );
+
+    if (!result.success) throw new Error("Expected the complete AI response to be accepted");
+    expect(setValues).toHaveBeenCalledOnce();
+    const values = setValues.mock.calls[0]?.[0];
+    expect(values).toMatchObject({
+      name: "Preview options",
+      description: "",
+      iconUrl: "",
+      template: "<Text>Preview</Text>",
+      secrets: [],
+    });
+    expect(JSON.parse(values?.sources as string)).toEqual(result.widget.sources);
+    expect(JSON.parse(values?.requests as string)).toEqual(result.widget.requests);
+    expect(JSON.parse(values?.options as string)).toEqual(result.widget.options);
+  });
+
   it("shows the default source first regardless of manifest key order", () => {
     expect(
       parseSources(

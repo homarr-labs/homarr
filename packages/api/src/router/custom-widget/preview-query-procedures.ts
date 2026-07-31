@@ -13,10 +13,9 @@ import { hashRuntimeParams, renderRequestBody, renderRequestTarget } from "./req
 import { acquireCustomWidgetRequestLimit } from "./request-limits";
 import { getPreviewJournal, getPreviewSession, setPreviewSessionLiveActions } from "./preview-sessions";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
-
 export const previewQueryProcedures = {
-  previewQuery: manageProcedure
+  previewQuery: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({
       mcp: {
         enabled: true,
@@ -76,13 +75,15 @@ export const previewQueryProcedures = {
       }
     }),
 
-  setPreviewLiveActions: manageProcedure
+  setPreviewLiveActions: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(z.object({ sessionId: z.string().min(1), enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) =>
       setPreviewSessionLiveActions(input.sessionId, ctx.session.user.id, input.enabled),
     ),
 
-  previewJournal: manageProcedure
+  previewJournal: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({
       mcp: {
         enabled: true,

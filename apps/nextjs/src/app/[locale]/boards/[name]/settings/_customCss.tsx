@@ -9,6 +9,7 @@ import "~/styles/prismjs.scss";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 import { useForm } from "@homarr/form";
+import { useSession } from "@homarr/auth/client";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import { WorkshopCssImportButton } from "~/components/workshop/workshop-css-import-button";
@@ -22,6 +23,8 @@ interface Props {
 }
 
 export const CustomCssSettingsContent = ({ board }: Props) => {
+  const { data: session } = useSession();
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const t = useI18n();
   const customCssT = useScopedI18n("board.field.customCss");
   const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
@@ -48,7 +51,7 @@ export const CustomCssSettingsContent = ({ board }: Props) => {
         </Alert>
 
         <Group justify="space-between">
-          <WorkshopCssImportButton onImport={(css) => form.setFieldValue("customCss", css)} />
+          {isAdmin ? <WorkshopCssImportButton onImport={(css) => form.setFieldValue("customCss", css)} /> : <span />}
           <Button type="submit" loading={isPending}>
             {t("common.action.saveChanges")}
           </Button>

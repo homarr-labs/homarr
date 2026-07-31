@@ -1,12 +1,17 @@
 import type { HomarrCustomWidgetV2 } from "./custom-jsx-schema";
 import { customJsxAuthoringCatalog } from "./component-catalog";
+import {
+  getCustomWidgetCredentialKeyRisk,
+  isHarmlessCustomWidgetCredentialSetting,
+  redactCustomWidgetCredentialLiterals,
+} from "./definition-security";
 import { customJsxExamples } from "./examples";
 
 export const CUSTOM_WIDGET_MANTINE_VERSION = customJsxAuthoringCatalog.mantineVersion;
 const CUSTOM_WIDGET_AI_PROMPT_LIMIT = 12_000;
 
 export const CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION =
-  "Return exactly one complete `json` fenced block followed by one complete `jsx` fenced block. Do not include prose outside those blocks.";
+  "Return exactly one complete `json` fenced block containing the entire widget. Put the complete JSX source directly in the `template` string and JSON-escape it correctly. Do not include prose or additional code blocks.";
 
 const RECOMMENDED_COMPONENTS = [
   "Stack",
@@ -76,14 +81,13 @@ const leanShape = `{
     "category": { "label": "Category", "control": "text", "default": "all" },
     "limit": { "label": "Result limit", "control": "number", "default": 20, "min": 1, "max": 100 }
   },
-  "template": "__HOMARR_TEMPLATE__"
+  "template": "<Stack><Text>{data.items?.name}</Text></Stack>"
 }`;
 
 function compactExample(index: number) {
   const example = customJsxExamples[index];
   if (!example) return "";
-  const { template, ...manifest } = example.widget;
-  return `Example — ${example.title}:\n\n\`\`\`json\n${JSON.stringify({ ...manifest, template: "__HOMARR_TEMPLATE__" }, null, 2)}\n\`\`\`\n\n\`\`\`jsx\n${template}\n\`\`\``;
+  return `Example — ${example.title}:\n\n\`\`\`json\n${JSON.stringify(example.widget, null, 2)}\n\`\`\``;
 }
 
 const AUTHORING_PROMPT = `You are writing one safe Homarr Custom JSX v2 dashboard widget for Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}.
@@ -93,7 +97,7 @@ ${leanShape}
 
 Sources are keyed by name and must include "default". Auth is "none", "bearer", "basic", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Use the stable public API URL for public services and a clear suggested URL for self-hosted services; Homarr asks the installer for their own server URL. Never put credentials in the manifest.
 
-Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. DELETE requires full permission and receives confirmation automatically. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Paths and query values must be primitive; JSON bodies may bind structured options.
+Requests are keyed by ID. Defaults are source "default", kind "query", method "GET", query trigger "load", inherited auth, and permission "view" for queries or "modify" for actions. Actions are always manual. DELETE is valid only for actions, requires full permission, and receives confirmation automatically. Use {option:name} or {"$option":"name"} for saved options. Use {param:name} or {"$param":"name"} only for invocation-time params supplied by SubFetch, ActionButton, or ToggleSwitch. Load queries cannot use params. Values and primitive types are inferred from references; do not declare parameters or option bindings. Paths and query values must be primitive; JSON bodies may bind structured options.
 
 Options are keyed by name. Every option has label, control, and default. Controls: text, textarea, number, switch, select, multiSelect, slider, date, time, color, icon, url, duration, timeZone, json. Select choices use \`"choices": [{"label":"...","value":"..."}]\`. Dynamic choices must use \`"choicesFrom": {"request":"requestId","itemsPath":"optional.path","valuePath":"id","labelPath":"name"}\`, never an object under \`choices\`. Options are configured outside the widget and read through \`options.name\`; a bound control writes only to \`inputs.name\` and never changes an option.
 
@@ -117,7 +121,7 @@ ${compactExample(0)}
 
 ${compactExample(1)}
 
-Output the manifest with template set exactly to "__HOMARR_TEMPLATE__", then put the complete template in the JSX block.`;
+Output one complete JSON manifest. Put the complete JSX directly in its template string so the user can copy one code block and paste it into Homarr once.`;
 
 export const CUSTOM_WIDGET_AUTHORING_PROMPT = AUTHORING_PROMPT;
 
@@ -165,25 +169,42 @@ export function buildCustomWidgetAiPrompt(
   return `${truncatePromptText(sections.join("\n\n"), CUSTOM_WIDGET_AI_PROMPT_LIMIT - footer.length)}${footer}`;
 }
 
-const sensitiveKey =
-  /(^|[-_])(authorization|api[-_]?keys?|passwords?|passwds?|secrets?|tokens?|access[-_]?tokens?|refresh[-_]?tokens?|client[-_]?secrets?)($|[-_])/iu;
-
-function redactValue(value: unknown, key = ""): unknown {
-  if (sensitiveKey.test(key)) return "[REDACTED]";
-  if (Array.isArray(value)) return value.map((entry) => redactValue(entry));
+function redactValue(value: unknown, path: Array<string | number> = []): unknown {
+  if (Array.isArray(value)) return value.map((entry, index) => redactValue(entry, [...path, index]));
   if (value !== null && typeof value === "object")
     return Object.fromEntries(
-      Object.entries(value).map(([entryKey, entry]) => [entryKey, redactValue(entry, entryKey)]),
+      Object.entries(value).map(([entryKey, entry]) => {
+        const entryPath = [...path, entryKey];
+        const risk = getCustomWidgetCredentialKeyRisk(entryKey);
+        if (
+          risk === "strong" &&
+          !isSchemaAuthenticationControl(entryPath) &&
+          !isHarmlessCustomWidgetCredentialSetting(entry)
+        ) {
+          return [entryKey, "[REDACTED]"];
+        }
+        if (
+          risk === "ambiguous" &&
+          typeof entry === "string" &&
+          redactCustomWidgetCredentialLiterals(entry) !== entry
+        ) {
+          return [entryKey, "[REDACTED]"];
+        }
+        return [entryKey, redactValue(entry, entryPath)];
+      }),
     );
   if (typeof value === "string") {
+    const key = typeof path.at(-1) === "string" ? (path.at(-1) as string) : "";
     if (["sources", "requests", "options"].includes(key)) {
       try {
-        return redactValue(JSON.parse(value) as unknown);
+        return redactValue(JSON.parse(value) as unknown, path);
       } catch {
         /* Keep invalid editor JSON useful. */
       }
     }
-    return key === "baseUrl" || key === "iconUrl" ? redactUrl(value) : redactText(value);
+    return key === "baseUrl" || key === "iconUrl"
+      ? redactCustomWidgetCredentialLiterals(redactUrl(value))
+      : redactText(value);
   }
   return value;
 }
@@ -210,13 +231,18 @@ function redactUrl(value: string): string {
 }
 
 function redactText(value: string): string {
-  return value
-    .replace(/\bhttps?:\/\/[^\s"'<>]+/giu, (candidate) => redactUrl(candidate))
-    .replace(/\b(authorization\s*:\s*bearer)\s+[^\s,;]+/giu, "$1 [REDACTED]")
-    .replace(
-      /\b(api[ _-]?key|access[ _-]?token|refresh[ _-]?token|client[ _-]?secret|token|password|passwd|secret)["']?\s*[:=]\s*["']?[^\s,;"'}]+/giu,
-      "$1: [REDACTED]",
-    );
+  return redactCustomWidgetCredentialLiterals(
+    value.replace(/\bhttps?:\/\/[^\s"'<>]+/giu, (candidate) => redactUrl(candidate)),
+  );
+}
+
+function isSchemaAuthenticationControl(path: Array<string | number>): boolean {
+  return (
+    path.length === 3 &&
+    path[2] === "auth" &&
+    (path[0] === "sources" || path[0] === "requests") &&
+    typeof path[1] === "string"
+  );
 }
 
 function formatBudgetedCodeSection(label: string, content: string, budget: number): string | null {

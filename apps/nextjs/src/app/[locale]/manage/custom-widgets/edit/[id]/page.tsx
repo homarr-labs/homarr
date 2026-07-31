@@ -16,10 +16,9 @@ interface EditCustomWidgetPageProps {
 
 export default async function EditCustomWidgetPage(props: EditCustomWidgetPageProps) {
   const session = await auth();
-  if (!session || !session.user.permissions.includes("custom-widget-manage")) {
+  if (!session || !session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
-
   const params = await props.params;
   const definition = await api.customWidget.get({ id: params.id }).catch(catchTrpcNotFound);
 

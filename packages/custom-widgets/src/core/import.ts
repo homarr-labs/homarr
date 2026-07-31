@@ -69,10 +69,6 @@ function removedStateIssues(value: Record<string, unknown>): CustomWidgetImportI
   );
 }
 
-function isTemplatePlaceholder(value: unknown) {
-  return typeof value === "string" && value.replace(/[\\*_`\s]/gu, "").toUpperCase() === "HOMARRTEMPLATE";
-}
-
 type ParsedWidgetValue =
   | { success: true; value: Record<string, unknown> }
   | { success: false; issue: CustomWidgetImportIssue };
@@ -100,24 +96,10 @@ export function parseCustomWidgetClipboard(text: string): HomarrCustomWidgetV2 |
 export function parseCustomWidgetClipboardDetailed(text: string): CustomWidgetParseResult {
   const blocks = extractFencedBlocks(text);
   const jsonBlock = blocks.find((block) => block.language === "json" || block.language === "");
-  const jsxBlock = blocks.find((block) => block.language === "jsx" || block.language === "tsx");
   const source = jsonBlock?.content ?? text;
   const parsedValue = parseWidgetValue(source);
   if (!parsedValue.success) return { success: false, issues: [parsedValue.issue] };
   const widget = { ...parsedValue.value };
-  if (jsonBlock && isTemplatePlaceholder(widget.template) && !jsxBlock) {
-    return {
-      success: false,
-      issues: [
-        {
-          code: "MISSING_JSX_BLOCK",
-          path: ["template"],
-          message: "The manifest uses a template placeholder but no fenced JSX block was provided.",
-        },
-      ],
-    };
-  }
-  if (jsxBlock && isTemplatePlaceholder(widget.template)) widget.template = jsxBlock.content.trim();
   const removedIssues = removedStateIssues(widget);
   if (removedIssues.length > 0) return { success: false, issues: removedIssues };
   const parsed = customWidgetImportSchema.safeParse(widget);
@@ -128,20 +110,17 @@ export function parseCustomWidgetClipboardDetailed(text: string): CustomWidgetPa
 export function parseCustomWidgetAiResponse(text: string): CustomWidgetParseResult {
   const blocks = extractFencedBlocks(text);
   const jsonBlocks = blocks.filter((block) => block.language === "json" || block.language === "");
-  const jsxBlocks = blocks.filter((block) => block.language === "jsx" || block.language === "tsx");
   const formatIssues: CustomWidgetImportIssue[] = [];
   if (jsonBlocks.length !== 1)
     formatIssues.push({ code: "AI_JSON_BLOCK_REQUIRED", message: "Expected exactly one fenced json block." });
-  if (jsxBlocks.length !== 1)
-    formatIssues.push({ code: "AI_JSX_BLOCK_REQUIRED", message: "Expected exactly one fenced jsx block." });
+  if (blocks.length !== jsonBlocks.length)
+    formatIssues.push({
+      code: "AI_SINGLE_JSON_BLOCK_REQUIRED",
+      message: "Expected one JSON block only. Put the complete JSX directly in its template field.",
+    });
   const source = jsonBlocks[0]?.content ?? text;
   const parsedValue = parseWidgetValue(source);
   if (!parsedValue.success) {
-    if (/\\_/u.test(source))
-      formatIssues.push({
-        code: "INVALID_JSON_ESCAPE",
-        message: 'JSON does not allow \\_ escapes. The template placeholder must be "__HOMARR_TEMPLATE__".',
-      });
     if (/"(?:stateSchema|defaultState)"\s*:/u.test(source))
       formatIssues.push({
         code: "REMOVED_LOCAL_STATE",
@@ -153,15 +132,6 @@ export function parseCustomWidgetAiResponse(text: string): CustomWidgetParseResu
   const removedIssues = removedStateIssues(widget);
   if (removedIssues.length > 0) formatIssues.push(...removedIssues);
   const warnings: CustomWidgetImportIssue[] = [];
-  if (jsxBlocks[0]) {
-    if (isTemplatePlaceholder(widget.template) || !widget.template) widget.template = jsxBlocks[0].content.trim();
-    else if (widget.template !== jsxBlocks[0].content.trim())
-      formatIssues.push({
-        code: "AI_TEMPLATE_PLACEHOLDER_REQUIRED",
-        path: ["template"],
-        message: 'The manifest template must be "__HOMARR_TEMPLATE__" when a separate JSX block is returned.',
-      });
-  }
   if (formatIssues.length > 0) return { success: false, issues: formatIssues.slice(0, MAX_IMPORT_ISSUES) };
   const parsed = customWidgetImportSchema.safeParse(widget);
   if (!parsed.success) return { success: false, issues: zodIssues(parsed.error) };

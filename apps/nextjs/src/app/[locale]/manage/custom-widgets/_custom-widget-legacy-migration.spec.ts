@@ -12,6 +12,8 @@ describe("legacy custom widget migration UI", () => {
     expect(list).toContain('t("page.list.migrationInstructions")');
     expect(actions).toContain("legacyMigrationPrompt.fetch");
     expect(actions).toContain("navigator.clipboard.writeText(result.prompt)");
+    expect(actions).toContain("navigator.clipboard.readText()");
+    expect(actions).toContain('t("action.pasteMigration")');
     expect(actions).toContain("parseCustomWidgetClipboardDetailed");
     expect(actions).toContain("legacyId={widget.id}");
   });

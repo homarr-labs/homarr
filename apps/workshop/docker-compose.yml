@@ -10,9 +10,10 @@ services:
     environment:
       PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
       PORT: ${PB_EXPOSE_PORT:-8090}
+      WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:-http://localhost:3003/workshop}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
-      WORKSHOP_PUBLIC_ORIGIN: ${WORKSHOP_PUBLIC_ORIGIN:-http://localhost:8090}
+      WORKSHOP_PUBLIC_ORIGIN: ${WORKSHOP_PUBLIC_ORIGIN:-http://localhost:3003}
     ports:
       - "127.0.0.1:${PB_EXPOSE_PORT:-8090}:${PB_EXPOSE_PORT:-8090}"
     volumes:
@@ -29,9 +30,13 @@ services:
       context: ../..
       dockerfile: apps/workshop/Dockerfile
       target: production
+      args:
+        HOMARR_WEBSITE_URL: ${HOMARR_WEBSITE_URL:-http://localhost:3003}
+        WORKSHOP_API_URL: ${WORKSHOP_API_URL:-http://localhost:3003}
     environment:
       PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
       PORT: ${DOCS_EXPOSE_PORT:-3003}
+      WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:-http://localhost:3003/workshop}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
       WORKSHOP_PUBLIC_ORIGIN: ${WORKSHOP_PUBLIC_ORIGIN:-http://localhost:3003}

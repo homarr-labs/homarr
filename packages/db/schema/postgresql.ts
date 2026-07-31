@@ -502,10 +502,10 @@ export const onboarding = pgTable("onboarding", {
 
 /**
  * Read-only v1 definitions retained during the Custom JSX v2 upgrade.
- * They remain separate so legacy code can never execute in the v2 runtime.
+ * Their original physical table names keep the database readable by a v1 binary.
  */
 export const legacyCustomWidgetDefinitions = pgTable(
-  "legacy_custom_widget_definition",
+  "custom_widget_definition",
   {
     id: varchar({ length: 64 }).notNull().primaryKey(),
     name: varchar({ length: 256 }).notNull(),
@@ -527,13 +527,13 @@ export const legacyCustomWidgetDefinitions = pgTable(
     creatorFk: foreignKey({
       columns: [table.creatorId],
       foreignColumns: [users.id],
-      name: "legacy_cw_definition_creator_id_user_id_fk",
+      name: "custom_widget_definition_creator_id_user_id_fk",
     }).onDelete("set null"),
   }),
 );
 
 export const legacyCustomWidgetSecrets = pgTable(
-  "legacy_custom_widget_secret",
+  "custom_widget_secret",
   {
     kind: varchar({ length: 64 }).$type<CustomWidgetSecretKind>().notNull(),
     encryptedValue: text("value").$type<`${string}.${string}`>().notNull(),
@@ -545,12 +545,12 @@ export const legacyCustomWidgetSecrets = pgTable(
     definitionFk: foreignKey({
       columns: [table.definitionId],
       foreignColumns: [legacyCustomWidgetDefinitions.id],
-      name: "legacy_cw_secret_definition_id_fk",
+      name: "custom_widget_secret_definition_id_custom_widget_definition_id_fk",
     }).onDelete("cascade"),
   }),
 );
 
-export const customWidgetDefinitions = pgTable("custom_widget_definition", {
+export const customWidgetDefinitions = pgTable("custom_widget_v2_definition", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: varchar({ length: 256 }).notNull(),
   description: text(),
@@ -566,7 +566,7 @@ export const customWidgetDefinitions = pgTable("custom_widget_definition", {
 });
 
 export const customWidgetSecrets = pgTable(
-  "custom_widget_secret",
+  "custom_widget_v2_secret",
   {
     sourceId: varchar({ length: 64 }).notNull(),
     kind: varchar({ length: 64 }).$type<CustomWidgetSecretKind>().notNull(),
@@ -583,7 +583,7 @@ export const customWidgetSecrets = pgTable(
     definitionFk: foreignKey({
       columns: [table.definitionId],
       foreignColumns: [customWidgetDefinitions.id],
-      name: "cw_secret_definition_id_fk",
+      name: "custom_widget_v2_secret_definition_id_fk",
     }).onDelete("cascade"),
   }),
 );

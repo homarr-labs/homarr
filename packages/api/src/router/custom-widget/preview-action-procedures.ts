@@ -12,10 +12,9 @@ import { renderRequestBody, renderRequestTarget, resolveCustomWidgetRequestValue
 import { acquireCustomWidgetRequestLimit } from "./request-limits";
 import { getPreviewSession } from "./preview-sessions";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
-
 export const previewActionProcedures = {
-  previewAction: manageProcedure
+  previewAction: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({
       mcp: { enabled: true, description: "Simulate or run one named action in a custom widget preview session." },
     })

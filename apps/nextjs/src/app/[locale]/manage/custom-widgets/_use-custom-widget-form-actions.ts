@@ -6,17 +6,13 @@ import { useRouter } from "next/navigation";
 import type { UseFormReturnType } from "@mantine/form";
 
 import { clientApi } from "@homarr/api/client";
-import {
-  customWidgetDefinitionSchema,
-  formatCustomWidgetImportIssues,
-  parseCustomWidgetAiResponse,
-} from "@homarr/custom-widgets/core";
+import { formatCustomWidgetImportIssues } from "@homarr/custom-widgets/core";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import {
-  applyDefinition,
+  applyCustomWidgetAiResponse,
   buildDefinition,
   getChangedSecrets,
   getDefinitionDefaults,
@@ -167,11 +163,10 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
 
   const pasteAiResponse = async () => {
     try {
-      const result = parseCustomWidgetAiResponse(await navigator.clipboard.readText());
+      const result = applyCustomWidgetAiResponse(input.form, await navigator.clipboard.readText());
       if (!result.success) {
         throw new Error(formatCustomWidgetImportIssues(result.issues));
       }
-      applyDefinition(input.form, customWidgetDefinitionSchema.parse(result.widget));
       input.setOptionsSnapshot(getDefinitionDefaults(result.widget));
       input.setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
       showSuccessNotification({

@@ -66,6 +66,11 @@ loopbackAddresses.addAddress("::1", "ipv6");
 
 type AddressFamily = 4 | 6;
 export type ResolvedAddress = { address: string; family: AddressFamily };
+export type HostResolver = (hostname: string) => Promise<ResolvedAddress[]>;
+export interface ResolveHostOptions {
+  signal?: AbortSignal;
+  resolver?: HostResolver;
+}
 type AddressClass = "public" | "private" | "loopback" | "blocked";
 const normalizeHostname = (value: string) =>
   value.startsWith("[") && value.endsWith("]") ? value.slice(1, -1) : value;
@@ -83,12 +88,19 @@ export function classifyAddress(address: string): AddressClass {
 export async function resolveAndValidateHost(
   hostname: string,
   scope: CustomJsxNetworkScope,
+  options: ResolveHostOptions = {},
 ): Promise<ResolvedAddress[]> {
   const normalized = normalizeHostname(hostname);
   const family = isIP(normalized) as AddressFamily | 0;
+  throwIfAborted(options.signal);
   const addresses = family
     ? [{ address: normalized, family }]
-    : ((await lookup(normalized, { all: true, verbatim: true })) as ResolvedAddress[]);
+    : await abortable(
+        options.resolver?.(normalized) ??
+          (lookup(normalized, { all: true, verbatim: true }) as Promise<ResolvedAddress[]>),
+        options.signal,
+      );
+  throwIfAborted(options.signal);
   if (!addresses.length)
     throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Target host did not resolve" });
   for (const address of addresses) {
@@ -104,6 +116,39 @@ export async function resolveAndValidateHost(
       });
   }
   return addresses;
+}
+
+function throwIfAborted(signal?: AbortSignal): void {
+  if (signal?.aborted) throw signal.reason ?? createAbortError();
+}
+
+function abortable<T>(operation: Promise<T>, signal?: AbortSignal): Promise<T> {
+  if (!signal) return operation;
+  if (signal.aborted) return Promise.reject(signal.reason ?? createAbortError());
+
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => {
+      signal.removeEventListener("abort", onAbort);
+      reject(signal.reason ?? createAbortError());
+    };
+    signal.addEventListener("abort", onAbort, { once: true });
+    operation.then(
+      (value) => {
+        signal.removeEventListener("abort", onAbort);
+        resolve(value);
+      },
+      (error: unknown) => {
+        signal.removeEventListener("abort", onAbort);
+        reject(error);
+      },
+    );
+  });
+}
+
+function createAbortError(): Error {
+  const error = new Error("Operation aborted");
+  error.name = "AbortError";
+  return error;
 }
 
 export function validateCustomWidgetUrl(value: string | URL): URL {

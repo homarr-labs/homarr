@@ -6,7 +6,7 @@ import { eq, or } from "@homarr/db";
 import { boards, customWidgetDefinitions, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import { collectCustomWidgetRequestReferences } from "@homarr/custom-widgets/core";
 
-import { permissionRequiredProcedure, protectedProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 import { executeCustomWidgetRequest } from "./request-executor";
@@ -26,10 +26,9 @@ import {
   mapLegacyCustomWidgetListItem,
 } from "./management-query-mappers";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
-
 export const managementQueryProcedures = {
-  list: manageProcedure
+  list: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "List all Custom JSX widgets." } })
     .query(async ({ ctx }) => {
       const [definitions, legacyDefinitions] = await Promise.all([
@@ -43,11 +42,13 @@ export const managementQueryProcedures = {
         }),
       ]);
       const current = definitions.map(mapCustomWidgetListItem);
-      const legacy = legacyDefinitions.map(mapLegacyCustomWidgetListItem);
+      const currentIds = new Set(definitions.map(({ id }) => id));
+      const legacy = legacyDefinitions.filter(({ id }) => !currentIds.has(id)).map(mapLegacyCustomWidgetListItem);
       return [...current, ...legacy].toSorted((left, right) => left.name.localeCompare(right.name));
     }),
 
-  legacyMigrationPrompt: manageProcedure
+  legacyMigrationPrompt: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({
       mcp: {
         enabled: true,
@@ -72,7 +73,8 @@ export const managementQueryProcedures = {
       };
     }),
 
-  get: manageProcedure
+  get: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Get one Custom JSX widget without secret values." } })
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -96,7 +98,8 @@ export const managementQueryProcedures = {
       };
     }),
 
-  available: protectedProcedure
+  available: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(z.object({ boardId: z.string(), currentId: z.string().optional() }))
     .query(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
@@ -115,7 +118,8 @@ export const managementQueryProcedures = {
       return [...available, mapLegacyAvailableCustomWidget(legacy)];
     }),
 
-  optionRequest: protectedProcedure
+  optionRequest: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z.object({
         boardId: z.string(),

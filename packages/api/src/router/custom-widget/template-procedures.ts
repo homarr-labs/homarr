@@ -11,7 +11,6 @@ import { customWidgetDefinitions } from "@homarr/db/schema";
 import { permissionRequiredProcedure } from "../../trpc";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
 const logger = createLogger({ module: "custom-widget" });
 
 const getTemplateRevision = (template: string) => createHash("sha256").update(template).digest("hex").slice(0, 16);
@@ -33,22 +32,26 @@ const validateTemplate = (definition: ReturnType<typeof parseStoredCustomWidgetD
 };
 
 export const templateProcedures = {
-  readTemplate: manageProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-    const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
-      where: eq(customWidgetDefinitions.id, input.id),
-    });
-    if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
-    const template = parseStoredCustomWidgetDefinition(definition).template;
-    return {
-      id: definition.id,
-      name: definition.name,
-      template,
-      templateLines: template.split("\n"),
-      revision: getTemplateRevision(template),
-    };
-  }),
+  readTemplate: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+        where: eq(customWidgetDefinitions.id, input.id),
+      });
+      if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      const template = parseStoredCustomWidgetDefinition(definition).template;
+      return {
+        id: definition.id,
+        name: definition.name,
+        template,
+        templateLines: template.split("\n"),
+        revision: getTemplateRevision(template),
+      };
+    }),
 
-  writeTemplate: manageProcedure
+  writeTemplate: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z
         .object({ id: z.string(), template: z.string().optional(), templateLines: z.array(z.string()).optional() })
@@ -74,7 +77,8 @@ export const templateProcedures = {
       return { id: input.id, template, templateLines: template.split("\n"), revision: getTemplateRevision(template) };
     }),
 
-  templatePatch: manageProcedure
+  templatePatch: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Patch selected JSX template lines using an optimistic revision." } })
     .input(
       z.object({
