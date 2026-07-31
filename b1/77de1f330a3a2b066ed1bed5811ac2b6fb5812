@@ -1,0 +1,22 @@
+packages/integrations/src/navidrome/navidrome-integration.ts
+  s_5126ece19484bf::t_2109f680b5e30c 83
+  s_5126ece19484bf::t_773cd1b576d61a 75-82,84-100
+packages/integrations/src/navidrome/test/navidrome-integration.spec.ts
+  s_5126ece19484bf::t_1b9087167d4f43 260-265,284-289,335
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "b177de1f330a3a2b066ed1bed5811ac2b6fb5812",
+  "prompts": {},
+  "sessions": {
+    "s_5126ece19484bf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019faf09-9790-7e51-a9e2-60e0f621e2b9",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
