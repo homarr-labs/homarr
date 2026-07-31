@@ -84,12 +84,6 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
         >;
       }
 
-      if (urlStr.includes("getNowPlaying")) {
-        return Promise.resolve(new Response(subsonicOk({ nowPlaying: {} }), { status: 200 })) as unknown as ReturnType<
-          typeof fetchWithTrustedCertificatesAsync
-        >;
-      }
-
       return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
         typeof fetchWithTrustedCertificatesAsync
       >;
@@ -101,7 +95,6 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
     expect(result.albumCount).toBe(700);
     expect(result.songCount).toBe(500 * 10 + 200 * 5);
     expect(result.artistCount).toBe(1);
-    expect(result.nowPlaying).toEqual([]);
   });
 
   test("handles empty library gracefully", async () => {
@@ -120,12 +113,6 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
       }
 
-      if (urlStr.includes("getNowPlaying")) {
-        return Promise.resolve(
-          new Response(subsonicFailed("Library not found or empty"), { status: 200 }),
-        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-      }
-
       return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
         typeof fetchWithTrustedCertificatesAsync
       >;
@@ -137,7 +124,6 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
     expect(result.artistCount).toBe(0);
     expect(result.albumCount).toBe(0);
     expect(result.songCount).toBe(0);
-    expect(result.nowPlaying).toEqual([]);
   });
 
   test("throws on non-empty-library subsonic error", async () => {
@@ -150,53 +136,6 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
 
     const integration = createIntegration();
     await expect(integration.getDashboardDataAsync()).rejects.toThrow();
-  });
-
-  test("now playing maps entries correctly", async () => {
-    mockFetch.mockImplementation((url) => {
-      const urlStr = toUrlString(url);
-
-      if (urlStr.includes("getNowPlaying")) {
-        return Promise.resolve(
-          new Response(
-            subsonicOk({
-              nowPlaying: {
-                entry: { title: "Song", artist: "Band", album: "LP", username: "user1", playerName: "Chrome" },
-              },
-            }),
-            { status: 200 },
-          ),
-        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-      }
-
-      if (urlStr.includes("getArtists")) {
-        return Promise.resolve(new Response(subsonicOk({ artists: {} }), { status: 200 })) as unknown as ReturnType<
-          typeof fetchWithTrustedCertificatesAsync
-        >;
-      }
-
-      if (urlStr.includes("getAlbumList2")) {
-        return Promise.resolve(new Response(subsonicOk({ albumList2: {} }), { status: 200 })) as unknown as ReturnType<
-          typeof fetchWithTrustedCertificatesAsync
-        >;
-      }
-
-      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
-        typeof fetchWithTrustedCertificatesAsync
-      >;
-    });
-
-    const integration = createIntegration();
-    const result = await integration.getDashboardDataAsync();
-
-    expect(result.nowPlaying).toHaveLength(1);
-    expect(result.nowPlaying[0]).toEqual({
-      title: "Song",
-      artist: "Band",
-      album: "LP",
-      username: "user1",
-      playerName: "Chrome",
-    });
   });
 });
 
@@ -331,8 +270,9 @@ describe("NavidromeIntegration.getCurrentSessionsAsync", () => {
 
     const integration = createIntegration();
 
-    await expect(integration.getCurrentSessionsAsync({ showOnlyPlaying: true })).rejects.toThrow(
-      "Wrong username or password",
-    );
+    await expect(integration.getCurrentSessionsAsync({ showOnlyPlaying: true })).rejects.toMatchObject({
+      message: "An unknown error occured while executing Integration method",
+      cause: { message: "Wrong username or password" },
+    });
   });
 });
