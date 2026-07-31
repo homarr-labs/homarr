@@ -72,24 +72,32 @@ export class NavidromeIntegration extends Integration implements IMediaServerInt
   public async getCurrentSessionsAsync(_options: CurrentSessionsInput): Promise<StreamSession[]> {
     const nowPlaying = await this.getNowPlayingAsync();
 
-    return nowPlaying.map((entry): StreamSession => ({
-      sessionId: `${entry.username}-${entry.playerName}`,
-      sessionName: entry.playerName,
-      user: {
-        userId: entry.username,
-        username: entry.username,
-        profilePictureUrl: null,
-      },
-      currentlyPlaying: {
-        type: "audio",
-        name: entry.title,
-        seasonName: entry.artist || undefined,
-        episodeName: null,
-        albumName: entry.album,
-        episodeCount: null,
-        metadata: null,
-      },
-    }));
+    return nowPlaying.map(
+      (entry): StreamSession => ({
+        sessionId: `${entry.username}-${entry.playerName}`,
+        sessionName: entry.playerName,
+        user: {
+          userId: entry.username,
+          username: entry.username,
+          profilePictureUrl: null,
+        },
+        currentlyPlaying: {
+          type: "audio",
+          name: entry.title,
+          seasonName: entry.artist || undefined,
+          episodeName: null,
+          albumName: entry.album,
+          episodeCount: null,
+          playback: {
+            state: null,
+            positionMs: null,
+            durationMs: null,
+          },
+          location: null,
+          metadata: null,
+        },
+      }),
+    );
   }
 
   private async getArtistCountAsync(): Promise<number> {
