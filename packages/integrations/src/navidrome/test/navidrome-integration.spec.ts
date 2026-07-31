@@ -1,5 +1,11 @@
+// @vitest-environment node
 import { Response } from "undici";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+
+vi.hoisted(() => {
+  process.env.SKIP_ENV_VALIDATION = "true";
+  process.env.SECRET_ENCRYPTION_KEY = "0".repeat(64);
+});
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
@@ -84,7 +90,7 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
         >;
       }
 
-      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+      return Promise.reject(new Error(`Unexpected dashboard request: ${urlStr}`)) as unknown as ReturnType<
         typeof fetchWithTrustedCertificatesAsync
       >;
     });
@@ -113,7 +119,7 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
       }
 
-      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+      return Promise.reject(new Error(`Unexpected dashboard request: ${urlStr}`)) as unknown as ReturnType<
         typeof fetchWithTrustedCertificatesAsync
       >;
     });
