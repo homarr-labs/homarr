@@ -1,6 +1,27 @@
 /// <reference path="../pb_data/types.d.ts" />
 
 const cloneJson = (value) => JSON.parse(JSON.stringify(value));
+const cloneRule = (value) => (value === null ? null : String(value));
+const adminRule = "@request.auth.isAdmin = true";
+const identityFieldsUnchanged = [
+  "@request.body.email:changed = false",
+  "@request.body.displayName:changed = false",
+  "@request.body.avatarUrl:changed = false",
+  "@request.body.githubUsername:changed = false",
+  "@request.body.githubProfileUrl:changed = false",
+].join(" && ");
+const immutableSubmissionFields = [
+  "@request.body.author:changed = false",
+  "@request.body.type:changed = false",
+  "@request.body.widgetSchema:changed = false",
+].join(" && ");
+const moderatorSubmissionFieldsUnchanged = [
+  "@request.body.title:changed = false",
+  "@request.body.description:changed = false",
+  "@request.body.content:changed = false",
+  "@request.body.changelog:changed = false",
+  "@request.body.screenshots:changed = false",
+].join(" && ");
 
 migrate(
   (app) => {
@@ -13,7 +34,6 @@ migrate(
       users = new Collection({ type: "auth", name: "users" });
     }
 
-    const settings = app.settings();
     const stateCollection = new Collection({
       type: "base",
       name: "workshop_migration_state",
@@ -31,15 +51,14 @@ migrate(
         ? {
             passwordAuth: cloneJson(users.passwordAuth),
             oauth2: cloneJson(users.oauth2),
-            listRule: users.listRule,
-            viewRule: users.viewRule,
-            createRule: users.createRule,
-            updateRule: users.updateRule,
-            deleteRule: users.deleteRule,
+            listRule: cloneRule(users.listRule),
+            viewRule: cloneRule(users.viewRule),
+            createRule: cloneRule(users.createRule),
+            updateRule: cloneRule(users.updateRule),
+            deleteRule: cloneRule(users.deleteRule),
           }
         : null,
       addedUserFields: [],
-      rateLimits: cloneJson(settings.rateLimits),
     };
     const addUserField = (field) => {
       if (users.fields.getByName(field.name)) return;
@@ -62,11 +81,10 @@ migrate(
     addUserField(new URLField({ name: "githubProfileUrl" }));
     addUserField(new BoolField({ name: "isAdmin" }));
 
-    const adminRule = "@request.auth.isAdmin = true";
     users.listRule = "";
     users.viewRule = "";
     users.createRule = '@request.context = "oauth2" && @request.body.isAdmin:isset = false';
-    users.updateRule = "id = @request.auth.id && @request.body.isAdmin:isset = false";
+    users.updateRule = `id = @request.auth.id && @request.body.isAdmin:isset = false && ${identityFieldsUnchanged}`;
     users.deleteRule = null;
     app.save(users);
     const stateRecord = new Record(stateCollection);
@@ -79,7 +97,9 @@ migrate(
       listRule: "",
       viewRule: "",
       createRule: "@request.auth.id != '' && @request.body.author = @request.auth.id",
-      updateRule: `(author = @request.auth.id || ${adminRule}) && @request.body.author:changed = false && @request.body.type:changed = false && @request.body.widgetSchema:changed = false`,
+      updateRule:
+        `(author = @request.auth.id && ${immutableSubmissionFields}) || ` +
+        `(${adminRule} && author != @request.auth.id && ${immutableSubmissionFields} && ${moderatorSubmissionFieldsUnchanged})`,
       deleteRule: `author = @request.auth.id || ${adminRule}`,
       fields: [
         { type: "select", name: "type", required: true, maxSelect: 1, values: ["customWidget", "customCss"] },
@@ -182,7 +202,12 @@ migrate(
       listRule: adminRule,
       viewRule: adminRule,
       createRule: "@request.auth.id != '' && @request.body.reporter = @request.auth.id",
-      updateRule: `${adminRule} && @request.body.reporter:changed = false && @request.body.submission:changed = false`,
+      updateRule:
+        `${adminRule} && ` +
+        "@request.body.reporter:changed = false && " +
+        "@request.body.submission:changed = false && " +
+        "@request.body.category:changed = false && " +
+        "@request.body.explanation:changed = false",
       deleteRule: adminRule,
       fields: [
         {
@@ -238,18 +263,6 @@ migrate(
       `,
     });
     app.save(listings);
-
-    settings.rateLimits.enabled = true;
-    settings.rateLimits.rules = [
-      ...settings.rateLimits.rules.filter(
-        (rule) => !["submissions:create", "votes:create", "comments:create", "reports:create"].includes(rule.label),
-      ),
-      { label: "submissions:create", audience: "@auth", duration: 60, maxRequests: 10 },
-      { label: "votes:create", audience: "@auth", duration: 10, maxRequests: 20 },
-      { label: "comments:create", audience: "@auth", duration: 60, maxRequests: 20 },
-      { label: "reports:create", audience: "@auth", duration: 60, maxRequests: 5 },
-    ];
-    app.save(settings);
   },
   (app) => {
     let stateCollection;
@@ -267,11 +280,6 @@ migrate(
       } catch {}
     }
 
-    const settings = app.settings();
-    settings.rateLimits.enabled = state.rateLimits.enabled;
-    settings.rateLimits.rules = state.rateLimits.rules;
-    app.save(settings);
-
     const users = app.findCollectionByNameOrId("users");
     if (state.usersExisted) {
       users.passwordAuth = state.users.passwordAuth;
@@ -286,6 +294,8 @@ migrate(
         if (field) users.fields.removeById(field.id);
       }
       app.save(users);
+    } else {
+      app.delete(users);
     }
     app.delete(stateCollection);
   },

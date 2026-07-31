@@ -7,7 +7,7 @@ import CustomJsxDisplay from "@homarr/widgets/custom-api/custom-jsx-display";
 
 export default async function CustomWidgetPreviewPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
-  if (!session?.user.permissions.includes("custom-widget-manage")) redirect("/");
+  if (!session?.user.permissions.includes("admin")) redirect("/");
   const { id } = await params;
   const preview = await api.customWidget.previewGet({ sessionId: id }).catch(() => null);
   if (!preview) notFound();

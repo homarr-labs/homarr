@@ -5,6 +5,7 @@ import { ActionIcon, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconBuildingStore,
+  IconClipboard,
   IconCopy,
   IconDots,
   IconDownload,
@@ -38,7 +39,6 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const t = useScopedI18n("customWidget");
   const { openConfirmModal } = useConfirmModal();
   const deleteMutation = clientApi.customWidget.delete.useMutation();
-  const deleteLegacyMutation = clientApi.customWidget.deleteLegacy.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();
   const utils = clientApi.useUtils();
   const [publishOpened, publishControls] = useDisclosure(false);
@@ -62,22 +62,37 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
     }
   };
 
+  const queueMigratedWidget = (text: string) => {
+    const result = parseCustomWidgetClipboardDetailed(text);
+    if (!result.success) {
+      showErrorNotification({
+        title: t("action.migrate"),
+        message: formatCustomWidgetImportIssues(result.issues),
+      });
+      return;
+    }
+    setMigratedWidget(result.widget);
+    migrationControls.open();
+  };
+
+  const pasteMigratedWidget = async () => {
+    try {
+      queueMigratedWidget(await navigator.clipboard.readText());
+    } catch {
+      showErrorNotification({
+        title: t("action.migrate"),
+        message: t("notification.migrationError"),
+      });
+    }
+  };
+
   const handleMigrationFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.addEventListener("load", (loadEvent) => {
       try {
-        const result = parseCustomWidgetClipboardDetailed(loadEvent.target?.result as string);
-        if (!result.success) {
-          showErrorNotification({
-            title: t("action.migrate"),
-            message: formatCustomWidgetImportIssues(result.issues),
-          });
-          return;
-        }
-        setMigratedWidget(result.widget);
-        migrationControls.open();
+        queueMigratedWidget(loadEvent.target?.result as string);
       } catch {
         showErrorNotification({
           title: t("action.migrate"),
@@ -146,10 +161,6 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
             showErrorNotification({ title: t("action.delete"), message: t("notification.deleteError") });
           },
         };
-        if (widget.migrationRequired) {
-          deleteLegacyMutation.mutate({ id: widget.id }, callbacks);
-          return;
-        }
         deleteMutation.mutate({ id: widget.id }, callbacks);
       },
     });
@@ -187,6 +198,9 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
               <Menu.Item onClick={() => void copyMigrationPrompt()} leftSection={<IconSparkles {...iconProps} />}>
                 {t("action.copyMigrationPrompt")}
               </Menu.Item>
+              <Menu.Item onClick={() => void pasteMigratedWidget()} leftSection={<IconClipboard {...iconProps} />}>
+                {t("action.pasteMigration")}
+              </Menu.Item>
               <Menu.Item
                 onClick={() => migrationFileInputRef.current?.click()}
                 leftSection={<IconUpload {...iconProps} />}
@@ -196,14 +210,16 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
               <Menu.Divider />
             </>
           )}
-          <Menu.Item
-            color="red"
-            leftSection={<IconTrash {...iconProps} />}
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending || deleteLegacyMutation.isPending}
-          >
-            {t("action.delete")}
-          </Menu.Item>
+          {!widget.migrationRequired && (
+            <Menu.Item
+              color="red"
+              leftSection={<IconTrash {...iconProps} />}
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+            >
+              {t("action.delete")}
+            </Menu.Item>
+          )}
         </Menu.Dropdown>
       </Menu>
       {widget.valid && <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />}

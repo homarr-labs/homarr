@@ -12,6 +12,7 @@ import {
 } from "./request-schema";
 import type { CustomJsxRequest } from "./request-schema";
 import { customWidgetSecretKinds } from "./schema-types";
+import { getCustomWidgetHttpUrlIssue } from "./url-policy";
 
 export * from "./options-schema";
 export * from "./request-schema";
@@ -67,12 +68,12 @@ export const customWidgetDefinitionSchema = z
     description: z.string().max(512).optional(),
     iconUrl: z
       .string()
+      .refine(
+        (value) => getCustomWidgetHttpUrlIssue(value) === null,
+        "Widget icons must use an unambiguous HTTP or HTTPS URL without embedded credentials",
+      )
       .url()
-      .refine((value) => {
-        if (!URL.canParse(value)) return false;
-        const url = new URL(value);
-        return (url.protocol === "http:" || url.protocol === "https:") && !url.username && !url.password;
-      }, "Widget icons must use HTTP or HTTPS without embedded credentials")
+      .max(2048)
       .optional(),
     sources: customWidgetSourcesSchema,
     requests: customWidgetRequestsSchema,

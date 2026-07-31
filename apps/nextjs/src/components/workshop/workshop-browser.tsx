@@ -28,6 +28,7 @@ import {
   IconBuildingStore,
   IconDownload,
   IconFlag,
+  IconRefresh,
   IconSearch,
   IconThumbDown,
   IconThumbUp,
@@ -217,7 +218,20 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
           <Skeleton h={280} />
         </SimpleGrid>
       ) : list.isError ? (
-        <Alert color="red">{list.error instanceof Error ? list.error.message : t("unavailable")}</Alert>
+        <Alert color="yellow" icon={<IconAlertTriangle size={18} />} title={t("unavailableTitle")}>
+          <Stack gap="sm" align="flex-start">
+            <Text size="sm">{t("unavailable")}</Text>
+            <Button
+              size="xs"
+              variant="light"
+              leftSection={<IconRefresh size={14} />}
+              loading={list.isFetching}
+              onClick={() => void list.refetch()}
+            >
+              {t("retry")}
+            </Button>
+          </Stack>
+        </Alert>
       ) : list.data?.items.length ? (
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
           {list.data.items.map((item) => (

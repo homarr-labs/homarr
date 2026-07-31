@@ -92,6 +92,10 @@ MCP supports two authentication methods:
 
 API key authentication is simpler and recommended for most setups. The API key inherits the permissions of the user who created it. Tools that require higher privileges will return permission errors if the key lacks access.
 
+Custom Widget and Workshop authoring are different: their tools, prompts, and resources are exposed only when the API
+key owner is a Homarr administrator. Non-administrator keys cannot discover or invoke those capabilities. Creating an
+API key never elevates the owner.
+
 ## Testing the Connection
 
 Verify your MCP endpoint is working:
@@ -168,6 +172,9 @@ The tools table on the MCP tab is dynamically generated - it always reflects the
 
 An agent creates one `homarr-custom-widget-v2` definition at a time. Start with the native prompt `homarr-custom-widget-author`.
 
+The API key owner must be a Homarr administrator. The same rule applies to management, import, migration, preview,
+secrets, publication, Workshop installation, and the HTTP authoring resources.
+
 Then, read the live schema and component resources. These resources describe the installed Mantine components.
 
 1. Call `customWidget_getAuthoringPrompt` and `customWidget_schema`.
@@ -194,7 +201,8 @@ Discovery resources:
 - `homarr://custom-widgets/examples/{name}`
 - `homarr://custom-widgets/skill`
 
-An HTTP-only harness can use the matching `/api/custom-widgets/authoring-prompt`, `/schema`, `/components`, and `/skill` endpoints instead of MCP resource URIs.
+An authenticated administrator can use the matching `/api/custom-widgets/authoring-prompt`, `/schema`, `/components`,
+and `/skill` endpoints instead of MCP resource URIs. These endpoints are not public schema downloads.
 
 The Custom Widget tools are:
 
@@ -219,7 +227,13 @@ The Custom Widget tools are:
 - `customWidget_getAuthoringPrompt`
 - `customWidget_getSkill`
 
-The `custom-widget-manage` permission permits authoring. A direct credential write also requires the `custom-widget-secret-write` permission.
+Custom Widget permissions are not assignable group capabilities. Administrator status is required for the complete
+authoring surface. A source-configuration URL is short-lived and single-use, requires the same logged-in administrator
+to open and complete it, and never returns plaintext credentials to the agent.
+
+Adding a `customApi` item through `board_addItem`, changing its definition or options, and duplicating a board that
+contains one also require an administrator with board-modify access. Existing placements continue to render and run
+authorized requests according to normal board permissions.
 
 Homarr applies its request security controls during request execution. These controls include SSRF, DNS, redirect, size, timeout, rate, and permission controls.
 

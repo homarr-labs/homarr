@@ -16,7 +16,12 @@ export {
   validateCustomWidgetUrl,
 } from "./request-executor";
 export type { CustomWidgetAuthConfig, CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-executor";
-export { CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS, CustomWidgetRequestLimiter } from "./request-limits";
+export {
+  CUSTOM_WIDGET_DEFINITION_CONCURRENCY_LIMIT,
+  CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS,
+  CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT,
+  CustomWidgetRequestLimiter,
+} from "./request-limits";
 export type { RequestLimitInput, RequestLimiterOptions, RequestLimitStore } from "./request-limits";
 export { CustomWidgetPreviewSessionService } from "./preview-sessions";
 export type {

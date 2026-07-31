@@ -30,6 +30,21 @@ describe("createDocumentationLink should generate correct URLs", () => {
 });
 
 describe("createDocumentationLink parameter validation", () => {
+  test("uses the server-rendered website URL at runtime", () => {
+    const meta = document.createElement("meta");
+    meta.name = "homarr-website-url";
+    meta.content = "https://docs.example.com/base/";
+    document.head.append(meta);
+
+    try {
+      expect(createDocumentationLink("/docs/getting-started")).toBe(
+        "https://docs.example.com/base/docs/getting-started",
+      );
+    } finally {
+      meta.remove();
+    }
+  });
+
   test("should work with only path parameter", () => {
     const result = createDocumentationLink("/docs/getting-started");
     expect(result).toBe("https://homarr.dev/docs/getting-started");

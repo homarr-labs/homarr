@@ -50,7 +50,7 @@ class Record {
 
 const original = {
   passwordAuth: { enabled: true, identityFields: ["email"] },
-  oauth2: { enabled: true, providers: [{ name: "original", clientId: "before" }] },
+  oauth2: { enabled: true, providers: [{ name: "original", clientId: "before", clientSecret: "before-secret" }] },
   rules: {
     listRule: "original-list",
     viewRule: "original-view",
@@ -58,13 +58,11 @@ const original = {
     updateRule: "original-update",
     deleteRule: "original-delete",
   },
-  rateLimits: { enabled: false, rules: [{ label: "original", audience: "", duration: 1, maxRequests: 1 }] },
 };
 const users = new Collection({ type: "auth", name: "users", fields: [{ type: "text", name: "existing" }] });
 users.passwordAuth = structuredClone(original.passwordAuth);
 users.oauth2 = structuredClone(original.oauth2);
 Object.assign(users, original.rules);
-const settings = { rateLimits: structuredClone(original.rateLimits) };
 const collections = new Map([[users.id, users]]);
 const records = new Map();
 const rawQueries = [];
@@ -99,9 +97,6 @@ const app = {
     collections.delete(collection.id);
     records.delete(collection.id);
   },
-  settings() {
-    return settings;
-  },
 };
 
 let migration;
@@ -122,7 +117,7 @@ vm.runInNewContext(source, sandbox);
 if (!migration) throw new Error("Workshop migration did not register");
 
 migration.up(app);
-if (!collections.has("workshop_migration_state") || settings.rateLimits.enabled !== true) {
+if (!collections.has("workshop_migration_state")) {
   throw new Error("Workshop migration did not capture state before applying changes");
 }
 if (
@@ -145,8 +140,6 @@ for (const [name, value] of Object.entries(original.rules)) {
 }
 if (users.fields.values.map((field) => field.name).join(",") !== "existing")
   throw new Error("Workshop user fields were not removed on rollback");
-if (JSON.stringify(settings.rateLimits) !== JSON.stringify(original.rateLimits))
-  throw new Error("Rate limits were not restored");
 for (const name of ["workshop_migration_state", "workshop_listings", "reports", "comments", "votes", "submissions"]) {
   if (collections.has(name)) throw new Error(`Rollback left collection ${name}`);
 }
@@ -154,20 +147,20 @@ for (const name of ["workshop_migration_state", "workshop_listings", "reports", 
 collections.clear();
 records.clear();
 rawQueries.length = 0;
-settings.rateLimits = structuredClone(original.rateLimits);
 
 migration.up(app);
-const bootstrappedUsers = collections.get("users");
-if (!bootstrappedUsers) throw new Error("Fresh migration did not create the users collection");
+if (!collections.has("users")) throw new Error("Fresh migration did not create the users collection");
 migration.down(app);
-if (collections.get("users") !== bootstrappedUsers) {
-  throw new Error("Fresh rollback removed the users collection required by the bootstrap hook");
-}
-for (const name of ["workshop_migration_state", "workshop_listings", "reports", "comments", "votes", "submissions"]) {
+for (const name of [
+  "users",
+  "workshop_migration_state",
+  "workshop_listings",
+  "reports",
+  "comments",
+  "votes",
+  "submissions",
+]) {
   if (collections.has(name)) throw new Error(`Fresh rollback left collection ${name}`);
-}
-if (JSON.stringify(settings.rateLimits) !== JSON.stringify(original.rateLimits)) {
-  throw new Error("Fresh rollback did not restore rate limits");
 }
 
 console.log("Workshop migration up/down restoration passed");

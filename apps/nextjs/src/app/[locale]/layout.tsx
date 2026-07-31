@@ -24,7 +24,7 @@ import { SettingsProvider } from "@homarr/settings";
 import { SpotlightProvider } from "@homarr/spotlight";
 import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
-import { WORKSHOP_API_URL } from "@homarr/workshop/schema";
+import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
 import { Analytics } from "~/components/layout/analytics";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
@@ -54,7 +54,7 @@ export const generateMetadata = async (): Promise<Metadata> => ({
     title: "Homarr Dashboard",
     description:
       "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
-    url: "https://homarr.dev",
+    url: env.HOMARR_WEBSITE_URL,
     siteName: "Homarr",
   },
   icons: {
@@ -89,6 +89,11 @@ export default async function Layout(props: {
   const serverSettings = await getServerSettingsAsync(db);
   const colorScheme = await getCurrentColorSchemeAsync();
   const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
+  const publicUrls = resolveHomarrUrlConfig({
+    homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
+    workshopApiUrl: env.WORKSHOP_API_URL,
+    workshopWebUrl: env.WORKSHOP_WEB_URL,
+  });
 
   const StackedProvider = composeWrappers([
     (innerProps) => {
@@ -141,7 +146,8 @@ export default async function Layout(props: {
       suppressHydrationWarning
     >
       <head>
-        <meta name="homarr-workshop-api-url" content={env.WORKSHOP_API_URL ?? WORKSHOP_API_URL} />
+        <meta name="homarr-website-url" content={publicUrls.homarrWebsiteUrl} />
+        <meta name="homarr-workshop-api-url" content={publicUrls.workshopApiUrl} />
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
       </head>

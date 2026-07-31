@@ -18,7 +18,9 @@ describe("AI prompt", () => {
     expect(prompt).toContain("Example — Service dashboard");
     expect(prompt).toContain("Example — Search and action");
     expect(prompt).toContain("visual hierarchy");
-    expect(prompt).toContain('template set exactly to "__HOMARR_TEMPLATE__"');
+    expect(prompt).toContain("Put the complete JSX directly in its template string");
+    expect(prompt).toContain("copy one code block and paste it into Homarr once");
+    expect(prompt).not.toContain("fenced block followed by");
     expect(prompt).toContain('trigger="manual"');
     expect(prompt).toContain("never write `=> {` anywhere");
     expect(prompt).toContain('"choicesFrom"');
@@ -44,5 +46,41 @@ describe("AI prompt", () => {
     expect(prompt).not.toContain("sensitive");
     expect(prompt.endsWith(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION)).toBe(true);
     expect(prompt.length).toBeLessThanOrEqual(12_000);
+  });
+
+  it("redacts embedded request credentials while retaining harmless request metadata", () => {
+    const prompt = buildCustomWidgetAiPrompt(undefined, null, {
+      requests: {
+        status: {
+          path: "/status?credential=Bearer-sk-secret-123456",
+          headers: {
+            "X-Auth": "Bearer sk-secret-123456",
+            "X-Service": "Basic dXNlcjpwYXNz",
+            "X-Feature-Key": "dashboard-layout",
+          },
+        },
+      },
+      template: "<Text>Bearer ghp_abcdefghijklmnopqrstuvwxyz123456</Text>",
+    });
+
+    expect(prompt).not.toContain("sk-secret-123456");
+    expect(prompt).not.toContain("dXNlcjpwYXNz");
+    expect(prompt).not.toContain("ghp_abcdefghijklmnopqrstuvwxyz123456");
+    expect(prompt).toContain('"X-Auth": "[REDACTED]"');
+    expect(prompt).toContain('"X-Feature-Key": "dashboard-layout"');
+  });
+
+  it("redacts credentials embedded directly in the free-form request", () => {
+    const prompt = buildCustomWidgetAiPrompt(
+      undefined,
+      null,
+      null,
+      "Use Authorization: Bearer sk-secret-123456 and token=ghp_abcdefghijklmnopqrstuvwxyz123456",
+    );
+
+    expect(prompt).not.toContain("sk-secret-123456");
+    expect(prompt).not.toContain("ghp_abcdefghijklmnopqrstuvwxyz123456");
+    expect(prompt).toContain("Authorization: Bearer [REDACTED]");
+    expect(prompt).toContain("token=[REDACTED]");
   });
 });

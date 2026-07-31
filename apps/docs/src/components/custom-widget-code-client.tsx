@@ -84,7 +84,6 @@ export function BundledCustomWidgetGalleryClient() {
   const [selectedId, setSelectedId] = useState(BUNDLED_CUSTOM_WIDGETS[0]?.id ?? null);
   const selected = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === selectedId) ?? BUNDLED_CUSTOM_WIDGETS[0];
   if (!selected) return null;
-  const manifest = { ...selected.widget, template: "__HOMARR_TEMPLATE__" };
 
   return (
     <MantineProvider forceColorScheme={colorMode}>
@@ -103,19 +102,11 @@ export function BundledCustomWidgetGalleryClient() {
         </Text>
         <ReadOnlyCustomWidgetCode
           id={`${selected.id}-manifest`}
-          label="widget.json"
+          label="Complete widget.json"
           language="json"
-          value={JSON.stringify(manifest, null, 2)}
+          value={JSON.stringify(selected.widget, null, 2)}
           messages={messages}
-          height="340px"
-        />
-        <ReadOnlyCustomWidgetCode
-          id={`${selected.id}-template`}
-          label="widget.jsx"
-          language="jsx"
-          value={selected.widget.template}
-          messages={messages}
-          height="340px"
+          height="680px"
         />
       </Stack>
     </MantineProvider>

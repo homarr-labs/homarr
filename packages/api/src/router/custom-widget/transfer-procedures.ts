@@ -7,39 +7,37 @@ import { eq, handleTransactionsAsync } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import { customWidgetImportSchema, customWidgetSecretsInputSchema } from "@homarr/custom-widgets/core";
 
-import { permissionRequiredProcedure } from "../../trpc";
 import { insertCustomWidgetDefinition } from "./definition-insert";
+import { permissionRequiredProcedure } from "../../trpc";
 import { assertSecretSources, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition, serializeCustomWidgetDefinition } from "./stored-definition";
 
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
 const logger = createLogger({ module: "custom-widget" });
 
 export const transferProcedures = {
-  export: manageProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-    const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
-      where: eq(customWidgetDefinitions.id, input.id),
-    });
-    if (!definition) throw new TRPCError({ code: "NOT_FOUND" });
-    return parseStoredCustomWidgetDefinition(definition);
-  }),
+  export: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+        where: eq(customWidgetDefinitions.id, input.id),
+      });
+      if (!definition) throw new TRPCError({ code: "NOT_FOUND" });
+      return parseStoredCustomWidgetDefinition(definition);
+    }),
 
-  import: manageProcedure
+  import: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(z.object({ widget: customWidgetImportSchema, secrets: customWidgetSecretsInputSchema.default([]) }))
     .mutation(async ({ ctx, input }) => {
-      if (input.secrets.length > 0 && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Writing imported widget secrets requires dedicated permission",
-        });
-      }
       assertSecretSources(input.widget.sources, input.secrets);
       const id = await insertCustomWidgetDefinition(ctx.db, input.widget, ctx.session.user.id, input.secrets);
       logger.info("Imported custom widget definition", { id, name: input.widget.name });
       return { id };
     }),
 
-  migrateLegacy: manageProcedure
+  migrateLegacy: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({
       mcp: {
         enabled: true,
@@ -55,12 +53,6 @@ export const transferProcedures = {
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.secrets.length > 0 && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Writing migrated widget secrets requires dedicated permission",
-        });
-      }
       assertSecretSources(input.widget.sources, input.secrets);
       const [legacy, current] = await Promise.all([
         ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
@@ -108,40 +100,20 @@ export const transferProcedures = {
           await database.transaction(async (transaction) => {
             await transaction.insert(schema.customWidgetDefinitions).values(definitionRow);
             if (secretRows.length > 0) await transaction.insert(schema.customWidgetSecrets).values(secretRows);
-            await transaction
-              .delete(schema.legacyCustomWidgetDefinitions)
-              .where(eq(schema.legacyCustomWidgetDefinitions.id, legacy.id));
           });
         },
         handleSync(database) {
           database.transaction((transaction) => {
             transaction.insert(customWidgetDefinitions).values(definitionRow).run();
             if (secretRows.length > 0) transaction.insert(customWidgetSecrets).values(secretRows).run();
-            transaction
-              .delete(legacyCustomWidgetDefinitions)
-              .where(eq(legacyCustomWidgetDefinitions.id, legacy.id))
-              .run();
           });
         },
       });
-      logger.info("Migrated legacy custom widget definition", {
+      logger.info("Created v2 replacement for preserved legacy custom widget definition", {
         id: legacy.id,
         preservedSecretCount: preservedSecrets.length,
       });
       return { id: legacy.id, preservedSecretCount: preservedSecrets.length };
-    }),
-
-  deleteLegacy: manageProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description: "Permanently delete one preserved legacy Custom Widget that will not be migrated.",
-      },
-    })
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.delete(legacyCustomWidgetDefinitions).where(eq(legacyCustomWidgetDefinitions.id, input.id));
-      logger.info("Deleted legacy custom widget definition", { id: input.id });
     }),
 };
 

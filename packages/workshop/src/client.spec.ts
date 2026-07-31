@@ -68,13 +68,17 @@ describe("WorkshopBackend", () => {
   test("lets PocketBase own the complete GitHub popup flow", async () => {
     mocks.authWithOAuth2.mockResolvedValue({
       token: "token",
-      record: { id: "user-id" },
+      record: {
+        id: "user-id",
+        displayName: "octocat",
+        githubUsername: "octocat",
+        githubProfileUrl: "https://github.com/octocat",
+      },
       meta: { username: "octocat" },
     });
-    mocks.update.mockResolvedValue({ id: "user-id", displayName: "octocat" });
 
     const client = new WorkshopBackend("https://workshop.example.com");
-    await client.signInWithGitHub();
+    const user = await client.signInWithGitHub();
 
     expect(mocks.authWithOAuth2).toHaveBeenCalledWith({
       provider: "github",
@@ -82,6 +86,8 @@ describe("WorkshopBackend", () => {
     });
     expect(mocks.authWithOAuth2.mock.calls[0]?.[0]).not.toHaveProperty("requestKey");
     expect(mocks.authWithOAuth2.mock.calls[0]?.[0]).not.toHaveProperty("urlCallback");
+    expect(mocks.update).not.toHaveBeenCalled();
+    expect(user).toMatchObject({ displayName: "octocat", githubUsername: "octocat" });
   });
 
   test("exposes the typed submission collection service", () => {
@@ -90,7 +96,7 @@ describe("WorkshopBackend", () => {
     expect(mocks.autoCancellation).toHaveBeenCalledWith(false);
   });
 
-  test("leaves schema and initial revision ownership to PocketBase", async () => {
+  test("sends the exported schema while leaving initial revision ownership to PocketBase", async () => {
     const client = new WorkshopBackend("https://workshop.example.com");
     client.pocketBase.authStore.save("token", { id: "author-id" } as never);
     mocks.create.mockResolvedValue({ id: "submission-id" });
@@ -107,7 +113,7 @@ describe("WorkshopBackend", () => {
 
     const payload = mocks.create.mock.calls[0]?.[0] as FormData;
     expect(payload.get("author")).toBe("author-id");
-    expect(payload.get("widgetSchema")).toBeNull();
+    expect(payload.get("widgetSchema")).toBe("homarr-custom-css-v1");
     expect(payload.get("revision")).toBeNull();
   });
 
@@ -148,6 +154,31 @@ describe("WorkshopBackend", () => {
     const payload = mocks.update.mock.calls[0]?.[1];
     expect(payload).not.toHaveProperty("revision");
     expect(payload).not.toHaveProperty("widgetSchema");
+  });
+
+  test("uses the current revision when toggling submission status", async () => {
+    const client = new WorkshopBackend("https://workshop.example.com");
+    const current = {
+      ...listingRecord(),
+      type: "customCss" as const,
+      content: ".dashboard { color: red; }",
+      revision: 4,
+      outdated: false,
+    };
+    const updated = { ...current, revision: 5, outdated: true };
+    vi.spyOn(client, "get")
+      .mockResolvedValueOnce(current as never)
+      .mockResolvedValueOnce(updated as never);
+    mocks.update.mockResolvedValue(updated);
+
+    await expect(client.toggleOutdated(current.id, true)).resolves.toMatchObject({
+      revision: 5,
+      outdated: true,
+    });
+    expect(mocks.update).toHaveBeenCalledWith(current.id, {
+      outdated: true,
+      expectedRevision: 4,
+    });
   });
 
   test("uses PocketBase filtering and pagination when the listing view is current", async () => {
@@ -215,6 +246,16 @@ describe("WorkshopBackend", () => {
 
     expect(result.items).toHaveLength(1);
     expect(mocks.getFullList).toHaveBeenCalledTimes(2);
+  });
+
+  test("replaces low-level network errors with an actionable Workshop outage message", async () => {
+    mocks.getList.mockRejectedValueOnce(new Error("NetworkError when attempting to fetch resource."));
+
+    const client = new WorkshopBackend("https://workshop.example.com");
+
+    await expect(client.list({ type: "customWidget" })).rejects.toThrow(
+      "Homarr Workshop seems to be unavailable right now. Try again in a moment.",
+    );
   });
 });
 

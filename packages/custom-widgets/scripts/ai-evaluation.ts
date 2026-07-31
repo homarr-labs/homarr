@@ -267,15 +267,7 @@ export function parseJudgeResult(raw: string): CustomWidgetJudgeResult {
 }
 
 async function writeWidgetFiles(directory: string, widget: HomarrCustomWidgetV2, basename: string) {
-  const { template, ...manifest } = widget;
-  await Promise.all([
-    writeFile(
-      path.join(directory, `${basename}.widget.json`),
-      JSON.stringify({ ...manifest, template: "__HOMARR_TEMPLATE__" }, null, 2),
-      "utf8",
-    ),
-    writeFile(path.join(directory, `${basename}.widget.jsx`), template, "utf8"),
-  ]);
+  await writeFile(path.join(directory, `${basename}.widget.json`), JSON.stringify(widget, null, 2), "utf8");
 }
 
 async function callOpenRouter(args: {

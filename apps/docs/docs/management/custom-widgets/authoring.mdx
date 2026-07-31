@@ -27,11 +27,12 @@ Every option has a default. Supported controls include text, textarea, number, s
 
 Enter the desired widget and optional API documentation URL, then select **Copy AI prompt**. The single self-contained prompt is below 12,000 characters, starts with your request, includes the lean contract and two polished examples, and never claims that an offline chat has MCP tools.
 
-The model must return exactly:
+The model must return one fenced `json` block containing the complete widget, including the JSX in its `template`
+field. Copy that single block and select **Paste AI response**. Homarr fills the visual builders and the JSX editor
+without any placeholder replacement or second paste.
 
-1. One fenced `json` block with `template: "__HOMARR_TEMPLATE__"`.
-2. One fenced `jsx` block with the readable template.
-
-Select **Paste AI response**. Homarr fills the visual builders and shows all actionable schema or JSX errors inline. Enter credentials separately. The prompt deliberately recommends a focused Mantine component set, visual hierarchy, responsive layout, theme compatibility, and loading, empty, failure, and success states.
+Homarr shows all actionable schema or JSX errors inline. Enter credentials separately. The prompt deliberately
+recommends a focused Mantine component set, visual hierarchy, responsive layout, theme compatibility, and loading,
+empty, failure, and success states.
 
 Connected agents should use the skills.sh skill and retrieve the live schema and individual component metadata only as needed.

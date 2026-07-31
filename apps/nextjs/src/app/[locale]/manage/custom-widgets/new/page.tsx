@@ -11,10 +11,9 @@ import { FormErrorBoundary } from "../_form-error-boundary";
 
 export default async function NewCustomWidgetPage() {
   const session = await auth();
-  if (!session || !session.user.permissions.includes("custom-widget-manage")) {
+  if (!session || !session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
-
   const t = await getScopedI18n("customWidget");
 
   return (

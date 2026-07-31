@@ -1,9 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { encryptSecret } from "@homarr/common/server";
-import { and, eq, handleTransactionsAsync } from "@homarr/db";
-import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
+import { eq } from "@homarr/db";
+import { customWidgetDefinitions } from "@homarr/db/schema";
 import {
   customWidgetSecretInputSchema,
   customWidgetSecretsInputSchema,
@@ -16,12 +15,10 @@ import {
   createCustomWidgetConfigurationRequest,
   getCustomWidgetConfigurationRequestForUser,
 } from "./configuration-requests";
-import { assertSecretSources, hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
+import { assertSecretSources, requiredSecretKinds } from "./secret-policy";
+import { clearCustomWidgetSecret, configureCustomWidgetSource, setCustomWidgetSecret } from "./secret-persistence";
 import { getPreviewSession } from "./preview-sessions";
-import { parseStoredCustomWidgetDefinition, serializeCustomWidgetDefinition } from "./stored-definition";
-
-const manageProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-manage");
-const secretWriteProcedure = permissionRequiredProcedure.requiresPermission("custom-widget-secret-write");
+import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
 const secretRequestInputSchema = z
   .object({
@@ -44,7 +41,8 @@ const secretRequestInputSchema = z
   });
 
 export const secretProcedures = {
-  secretSet: secretWriteProcedure
+  secretSet: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Set one encrypted secret for a custom widget source." } })
     .input(z.object({ definitionId: z.string(), secret: customWidgetSecretInputSchema }))
     .mutation(async ({ ctx, input }) => {
@@ -54,30 +52,12 @@ export const secretProcedures = {
       if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
       const definition = parseStoredCustomWidgetDefinition(existing);
       assertSecretSources(definition.sources, [input.secret]);
-      await ctx.db
-        .delete(customWidgetSecrets)
-        .where(
-          and(
-            eq(customWidgetSecrets.definitionId, input.definitionId),
-            eq(customWidgetSecrets.sourceId, input.secret.sourceId),
-            eq(customWidgetSecrets.kind, input.secret.kind),
-          ),
-        );
-      await ctx.db.insert(customWidgetSecrets).values({
-        definitionId: input.definitionId,
-        sourceId: input.secret.sourceId,
-        kind: input.secret.kind,
-        encryptedValue: encryptSecret(input.secret.value),
-        updatedAt: new Date(),
-      });
-      await ctx.db
-        .update(customWidgetDefinitions)
-        .set({ updatedAt: new Date() })
-        .where(eq(customWidgetDefinitions.id, input.definitionId));
+      await setCustomWidgetSecret(ctx.db, input.definitionId, input.secret);
       return { sourceId: input.secret.sourceId, kind: input.secret.kind, isSet: true };
     }),
 
-  sourceConfigure: manageProcedure
+  sourceConfigure: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Configure one custom widget API source and its credentials." } })
     .input(
       z.object({
@@ -89,9 +69,6 @@ export const secretProcedures = {
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.secrets.length > 0 && !ctx.session.user.permissions.includes("custom-widget-secret-write")) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "Writing source credentials requires dedicated permission" });
-      }
       const stored = await ctx.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.definitionId),
       });
@@ -105,91 +82,24 @@ export const secretProcedures = {
         networkScope: input.networkScope ?? current.networkScope,
       });
       assertSecretSources({ [input.sourceId]: source }, input.secrets);
-      const updated = { ...definition, sources: { ...definition.sources, [input.sourceId]: source } };
-      const definitionChanges = { ...serializeCustomWidgetDefinition(updated), updatedAt: new Date() };
-      const bindingChanged = !hasSameSecretBinding(current, source);
-      const secretRows = input.secrets.map((secret) => ({
+      const configuredSource = await configureCustomWidgetSource(ctx.db, {
         definitionId: input.definitionId,
         sourceId: input.sourceId,
-        kind: secret.kind,
-        encryptedValue: encryptSecret(secret.value),
-        updatedAt: new Date(),
-      }));
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            await transaction
-              .update(schema.customWidgetDefinitions)
-              .set(definitionChanges)
-              .where(eq(schema.customWidgetDefinitions.id, input.definitionId));
-            if (bindingChanged) {
-              await transaction
-                .delete(schema.customWidgetSecrets)
-                .where(
-                  and(
-                    eq(schema.customWidgetSecrets.definitionId, input.definitionId),
-                    eq(schema.customWidgetSecrets.sourceId, input.sourceId),
-                  ),
-                );
-            }
-            for (const secret of secretRows) {
-              await transaction
-                .delete(schema.customWidgetSecrets)
-                .where(
-                  and(
-                    eq(schema.customWidgetSecrets.definitionId, input.definitionId),
-                    eq(schema.customWidgetSecrets.sourceId, input.sourceId),
-                    eq(schema.customWidgetSecrets.kind, secret.kind),
-                  ),
-                );
-              await transaction.insert(schema.customWidgetSecrets).values(secret);
-            }
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            transaction
-              .update(customWidgetDefinitions)
-              .set(definitionChanges)
-              .where(eq(customWidgetDefinitions.id, input.definitionId))
-              .run();
-            if (bindingChanged) {
-              transaction
-                .delete(customWidgetSecrets)
-                .where(
-                  and(
-                    eq(customWidgetSecrets.definitionId, input.definitionId),
-                    eq(customWidgetSecrets.sourceId, input.sourceId),
-                  ),
-                )
-                .run();
-            }
-            for (const secret of secretRows) {
-              transaction
-                .delete(customWidgetSecrets)
-                .where(
-                  and(
-                    eq(customWidgetSecrets.definitionId, input.definitionId),
-                    eq(customWidgetSecrets.sourceId, input.sourceId),
-                    eq(customWidgetSecrets.kind, secret.kind),
-                  ),
-                )
-                .run();
-              transaction.insert(customWidgetSecrets).values(secret).run();
-            }
-          });
-        },
+        baseUrl: source.baseUrl,
+        networkScope: input.networkScope,
+        secrets: input.secrets,
       });
       return {
         definitionId: input.definitionId,
         sourceId: input.sourceId,
-        baseUrl: source.baseUrl,
-        networkScope: source.networkScope,
+        baseUrl: configuredSource.baseUrl,
+        networkScope: configuredSource.networkScope,
         configuredSecrets: input.secrets.map(({ kind }) => kind),
       };
     }),
 
-  configurationRequestUser: manageProcedure
+  configurationRequestUser: permissionRequiredProcedure
+    .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Create or check a short-lived user source-configuration request." } })
     .input(secretRequestInputSchema)
     .mutation(async ({ ctx, input }) => {
@@ -203,12 +113,6 @@ export const secretProcedures = {
       let source: { id: string; name: string; auth: string | { type: string }; value: CustomWidgetSource } | undefined;
       let target: { type: "definition"; id: string } | { type: "preview"; id: string };
       if (input.definitionId) {
-        if (!ctx.session.user.permissions.includes("custom-widget-secret-write")) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message: "Creating a stored credential setup link requires dedicated permission",
-          });
-        }
         const stored = await ctx.db.query.customWidgetDefinitions.findFirst({
           where: eq(customWidgetDefinitions.id, input.definitionId),
         });
@@ -258,7 +162,8 @@ export const secretProcedures = {
       };
     }),
 
-  secretClear: secretWriteProcedure
+  secretClear: permissionRequiredProcedure
+    .requiresPermission("admin")
     .input(
       z.object({ definitionId: z.string(), sourceId: z.string(), kind: z.enum(["apiKey", "username", "password"]) }),
     )
@@ -267,19 +172,7 @@ export const secretProcedures = {
         where: eq(customWidgetDefinitions.id, input.definitionId),
       });
       if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
-      await ctx.db
-        .delete(customWidgetSecrets)
-        .where(
-          and(
-            eq(customWidgetSecrets.definitionId, input.definitionId),
-            eq(customWidgetSecrets.sourceId, input.sourceId),
-            eq(customWidgetSecrets.kind, input.kind),
-          ),
-        );
-      await ctx.db
-        .update(customWidgetDefinitions)
-        .set({ updatedAt: new Date() })
-        .where(eq(customWidgetDefinitions.id, input.definitionId));
+      await clearCustomWidgetSecret(ctx.db, input);
       return { sourceId: input.sourceId, kind: input.kind, isSet: false };
     }),
 };

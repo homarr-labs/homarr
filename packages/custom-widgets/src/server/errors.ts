@@ -10,17 +10,19 @@ export type CustomWidgetDomainErrorCode =
 
 export class CustomWidgetDomainError extends Error {
   public readonly code: CustomWidgetDomainErrorCode;
+  public readonly reason?: "timeout";
   public readonly retryAfterMs?: number;
 
   public constructor(input: {
     code: CustomWidgetDomainErrorCode;
     message: string;
-    cause?: unknown;
+    reason?: "timeout";
     retryAfterMs?: number;
   }) {
-    super(input.message, { cause: input.cause });
+    super(input.message);
     this.name = "CustomWidgetDomainError";
     this.code = input.code;
+    this.reason = input.reason;
     this.retryAfterMs = input.retryAfterMs;
   }
 }

@@ -25,6 +25,7 @@ import {
   WORKSHOP_API_URL,
   MAX_WORKSHOP_SCREENSHOTS,
   WORKSHOP_REQUEST_TIMEOUT_MS,
+  WORKSHOP_SCHEMA_BY_TYPE,
   workshopCommentSchema,
   workshopReportSchema,
   workshopSubmissionDetailSchema,
@@ -156,24 +157,6 @@ const requestSignal = (signal?: AbortSignal) =>
       : [AbortSignal.timeout(WORKSHOP_REQUEST_TIMEOUT_MS)],
   );
 
-function oauthText(...values: unknown[]) {
-  return values.find((value): value is string => typeof value === "string" && value.trim().length > 0)?.trim();
-}
-
-function githubProfile(meta: Record<string, unknown> | undefined, record: { id: string }) {
-  const rawUser =
-    meta?.rawUser && typeof meta.rawUser === "object" ? (meta.rawUser as Record<string, unknown>) : undefined;
-  const displayName = oauthText(meta?.name, meta?.username, rawUser?.name, rawUser?.login);
-  const avatarUrl = oauthText(meta?.avatarUrl, meta?.avatarURL, rawUser?.avatar_url);
-  const githubUsername = oauthText(meta?.username, rawUser?.login);
-  return {
-    displayName: (displayName ?? `GitHub user ${String(record.id ?? "").slice(0, 8)}`).slice(0, 100),
-    avatarUrl: avatarUrl?.startsWith("https://") ? avatarUrl : undefined,
-    githubUsername,
-    githubProfileUrl: githubUsername ? `https://github.com/${encodeURIComponent(githubUsername)}` : undefined,
-  };
-}
-
 const timestamp = (value: string) => (Number.isNaN(Date.parse(value)) ? 0 : Date.parse(value));
 
 function sortListings(items: WorkshopSubmissionSummary[], sort: WorkshopListOptions["sort"]) {
@@ -274,6 +257,13 @@ function workshopError(error: unknown, fallback: string) {
     /invalid|missing|not found|failed/iu.test(rawMessage)
   )
     return new Error("GitHub sign-in is not configured correctly on the Workshop server.", { cause: error });
+  if (
+    (error instanceof ClientResponseError && error.status === 0) ||
+    /networkerror|failed to fetch|fetch failed|load failed|connection (?:refused|reset)|econn(?:refused|reset)|offline/iu.test(
+      rawMessage,
+    )
+  )
+    return new Error("Homarr Workshop seems to be unavailable right now. Try again in a moment.", { cause: error });
   if (error instanceof ClientResponseError) {
     const sdkMessage = error.data?.message || error.message;
     const originalMessage =
@@ -349,9 +339,7 @@ export class WorkshopBackend {
         provider: "github",
         createData: { displayName: "GitHub user" },
       });
-      const profile = githubProfile(auth.meta, auth.record);
-      const updated = await this.pocketBase.collection("users").update(auth.record.id, profile);
-      this.pocketBase.authStore.save(auth.token, updated);
+      this.pocketBase.authStore.save(auth.token, auth.record);
       return this.currentUser;
     } catch (error) {
       throw workshopError(error, "GitHub sign-in failed");
@@ -457,6 +445,7 @@ export class WorkshopBackend {
     const data = new FormData();
     Object.entries(parsed).forEach(([key, value]) => data.set(key, typeof value === "string" ? value : String(value)));
     data.set("author", this.currentUser?.id ?? "");
+    data.set("widgetSchema", WORKSHOP_SCHEMA_BY_TYPE[parsed.type]);
     screenshots.forEach((file) => data.append("screenshots", file));
     try {
       const result = await this.pocketBase.collection("submissions").create(data);
@@ -578,7 +567,8 @@ export class WorkshopBackend {
 
   public async toggleOutdated(id: string, outdated: boolean) {
     try {
-      await this.pocketBase.collection("submissions").update(id, { outdated });
+      const current = await this.get(id);
+      await this.pocketBase.collection("submissions").update(id, { outdated, expectedRevision: current.revision });
       return this.get(id);
     } catch (error) {
       throw workshopError(error, "Failed to update submission status");

@@ -49,6 +49,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const t = useI18n();
   const settings = useSettings();
   const isRightClickEnabled = settings.enableRightClickOnWidgets;
+  const canConfigureWidget = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const { openModal } = useModalAction(WidgetEditModal);
   const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
   const { openConfirmModal } = useConfirmModal();
@@ -76,9 +77,10 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
 
   type OptionDef = { type: string; skipContextMenu?: boolean };
   const toggleOptions = useMemo(() => {
+    if (!canConfigureWidget) return [];
     const rawOptions = currentDefinition.createOptions(settings) as unknown as Record<string, OptionDef>;
     return Object.entries(rawOptions).filter(([, def]) => def.type === "switch" && !def.skipContextMenu);
-  }, [currentDefinition, settings]);
+  }, [canConfigureWidget, currentDefinition, settings]);
 
   const widgetContextActions = useMemo(() => {
     const def = currentDefinition as Record<string, unknown>;
@@ -227,13 +229,15 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
             >
               {tItem("action.moveResize")}
             </Menu.Item>
-            <Menu.Item
-              closeMenuOnClick
-              leftSection={<IconCopy size={16} />}
-              onClick={() => duplicateItem({ itemId: item.id })}
-            >
-              {tItem("action.duplicate")}
-            </Menu.Item>
+            {canConfigureWidget && (
+              <Menu.Item
+                closeMenuOnClick
+                leftSection={<IconCopy size={16} />}
+                onClick={() => duplicateItem({ itemId: item.id })}
+              >
+                {tItem("action.duplicate")}
+              </Menu.Item>
+            )}
           </>
         )}
 

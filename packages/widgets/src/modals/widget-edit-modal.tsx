@@ -92,6 +92,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   const { openModal } = useModalAction(WidgetAdvancedOptionsModal);
 
   const canModifyApps = session?.user.permissions.includes("app-modify-all") ?? false;
+  const canConfigureWidget = innerProps.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const appId = innerProps.appId;
   const showAppTab = innerProps.kind === "app" && canModifyApps && Boolean(appId);
 
@@ -120,7 +121,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
 
   const widgetFormContent = (
     <Stack>
-      {innerProps.integrationSupport && (
+      {canConfigureWidget && innerProps.integrationSupport && (
         <WidgetIntegrationSelect
           label={t("item.edit.field.integrations.label")}
           data={innerProps.integrationData}
@@ -131,32 +132,33 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
           {...form.getInputProps("integrationIds")}
         />
       )}
-      {Object.entries(options).map(([key, value]) => {
-        const Input = getInputForType(value.type);
+      {canConfigureWidget &&
+        Object.entries(options).map(([key, value]) => {
+          const Input = getInputForType(value.type);
 
-        if (
-          !Input ||
-          value.shouldHide?.(
-            form.values.options as never,
-            innerProps.integrationData
-              .filter(({ id }) => form.values.integrationIds.includes(id))
-              .map(({ kind }) => kind),
-          )
-        ) {
-          return null;
-        }
+          if (
+            !Input ||
+            value.shouldHide?.(
+              form.values.options as never,
+              innerProps.integrationData
+                .filter(({ id }) => form.values.integrationIds.includes(id))
+                .map(({ kind }) => kind),
+            )
+          ) {
+            return null;
+          }
 
-        return (
-          <Input
-            key={key}
-            kind={innerProps.kind}
-            property={key}
-            options={value as never}
-            initialOptions={innerProps.value.options}
-            itemId={innerProps.itemId}
-          />
-        );
-      })}
+          return (
+            <Input
+              key={key}
+              kind={innerProps.kind}
+              property={key}
+              options={value as never}
+              initialOptions={innerProps.value.options}
+              itemId={innerProps.itemId}
+            />
+          );
+        })}
       {showAppTab ? (
         <Button
           variant="subtle"

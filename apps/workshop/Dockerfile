@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.10
 
-ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.39
+ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.39.9@sha256:c0667fe6c5197ff226ff642120ab1ad870c3f2f27300940a61e5a7fa082b6816
 
 FROM node:24.18.0-alpine AS dependencies
 WORKDIR /app
@@ -16,6 +16,10 @@ COPY tooling/typescript ./tooling/typescript
 RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --filter @homarr/docs... --frozen-lockfile
 
 FROM dependencies AS website
+ARG HOMARR_WEBSITE_URL=https://homarr.dev
+ARG WORKSHOP_API_URL=https://homarr.dev
+ENV HOMARR_WEBSITE_URL=$HOMARR_WEBSITE_URL
+ENV WORKSHOP_API_URL=$WORKSHOP_API_URL
 RUN CI=true SKIP_ENV_VALIDATION=true pnpm turbo build --filter=@homarr/docs
 
 FROM ${POCKETBASE_IMAGE} AS pocketbase-runtime

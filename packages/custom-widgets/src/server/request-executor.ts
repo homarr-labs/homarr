@@ -12,6 +12,7 @@ import {
   resolveSameOriginTarget,
   validateCustomWidgetUrl,
 } from "./network-policy";
+import { closeDispatcher } from "./request-dispatcher-lifecycle";
 import { parseResponseBody } from "./response";
 
 export {
@@ -33,6 +34,8 @@ const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_QUERY_REDIRECTS = 3;
 const MAX_RESPONSE_CACHE_ENTRIES = 1_000;
 export const MAX_REQUEST_DURATION_MS = 45_000;
+const TIMEOUT_ERROR_CODES = new Set(["UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT", "UND_ERR_BODY_TIMEOUT"]);
+const RESPONSE_TOO_LARGE_ERROR_CODE = "UND_ERR_RES_EXCEEDED_MAX_SIZE";
 
 export interface CustomWidgetAuthConfig {
   type: string;
@@ -51,7 +54,7 @@ export interface CustomWidgetHttpRequest {
   kind: "query" | "action";
   cacheKey?: string;
   cacheTtlSeconds?: number;
-  logError?: (event: { origin: string; method: CustomWidgetMethod; errorName: string }) => void;
+  logError?: (event: { origin: string; method: CustomWidgetMethod; errorName: string; reason?: "timeout" }) => void;
 }
 
 export interface CustomWidgetHttpResponse {
@@ -64,6 +67,10 @@ const cache = new Map<string, { expiresAt: number; response: CustomWidgetHttpRes
 const inFlight = new Map<string, Promise<CustomWidgetHttpResponse>>();
 let cacheEpoch = 0;
 
+type RequestHopResult =
+  | { kind: "response"; response: CustomWidgetHttpResponse }
+  | { kind: "redirect"; location: string | null; statusCode: number };
+
 async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), MAX_REQUEST_DURATION_MS);
@@ -74,11 +81,19 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
       throw new CustomWidgetDomainError({
         code: "BAD_GATEWAY",
         message: "External request exceeded the total time limit",
-        cause: error,
+        reason: "timeout",
       });
     }
     if (error instanceof CustomWidgetDomainError) throw error;
-    throw error;
+    input.logError?.({
+      origin: URL.canParse(input.baseUrl) ? new URL(input.baseUrl).origin : "invalid",
+      method: input.method,
+      errorName: "TransportError",
+    });
+    throw new CustomWidgetDomainError({
+      code: "BAD_GATEWAY",
+      message: "External request failed",
+    });
   } finally {
     clearTimeout(timeout);
   }
@@ -96,15 +111,16 @@ async function performRequestWithinDeadline(
   const maxRedirects = input.kind === "query" ? MAX_QUERY_REDIRECTS : 0;
   for (let redirects = 0; ; redirects += 1) {
     const dispatcher = createPinnedAgent(
-      await resolveAndValidateHost(currentUrl.hostname, input.networkScope),
+      await resolveAndValidateHost(currentUrl.hostname, input.networkScope, { signal: deadlineSignal }),
       REQUEST_TIMEOUT_MS,
     );
     const headers = buildHeaders(input, currentUrl, currentBody);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-    let responseData: Awaited<ReturnType<typeof dispatcher.request>>;
+    let result: RequestHopResult | undefined;
+    let lifecycleFailure: { error: unknown } | undefined;
     try {
-      responseData = await dispatcher.request({
+      const responseData = await dispatcher.request({
         origin: currentUrl.origin,
         path: `${currentUrl.pathname}${currentUrl.search}`,
         method: currentMethod,
@@ -112,59 +128,101 @@ async function performRequestWithinDeadline(
         body: currentBody,
         signal: AbortSignal.any([deadlineSignal, controller.signal]),
       });
-    } catch (error) {
-      await dispatcher.close();
-      if (error instanceof CustomWidgetDomainError) throw error;
-      input.logError?.({
-        origin: currentUrl.origin,
-        method: currentMethod,
-        errorName: error instanceof Error ? error.name : "UnknownError",
-      });
-      throw new CustomWidgetDomainError({
-        code: "BAD_GATEWAY",
-        message: error instanceof Error ? error.message : "External request failed",
-        cause: error,
-      });
-    } finally {
-      clearTimeout(timeout);
-    }
-    if (![301, 302, 303, 307, 308].includes(responseData.statusCode)) {
-      try {
+      if (![301, 302, 303, 307, 308].includes(responseData.statusCode)) {
         const body = await responseData.body.arrayBuffer();
         const response = new Response(body.byteLength > 0 ? body : null, {
           status: responseData.statusCode,
           statusText: STATUS_CODES[responseData.statusCode] ?? "",
           headers: normalizeResponseHeaders(responseData.headers),
         });
-        return {
-          ok: response.ok,
-          status: response.status,
-          statusText: response.statusText,
-          data: await parseResponseBody(response),
+        result = {
+          kind: "response",
+          response: {
+            ok: response.ok,
+            status: response.status,
+            statusText: response.statusText,
+            data: await parseResponseBody(response),
+          },
         };
-      } finally {
-        await dispatcher.close();
+      } else {
+        await responseData.body.dump();
+        result = {
+          kind: "redirect",
+          location: normalizeResponseHeaders(responseData.headers).get("location"),
+          statusCode: responseData.statusCode,
+        };
+      }
+    } catch (error) {
+      lifecycleFailure = { error };
+    } finally {
+      clearTimeout(timeout);
+      try {
+        const closed = await closeDispatcher(dispatcher, deadlineSignal);
+        if (!closed)
+          input.logError?.({
+            origin: currentUrl.origin,
+            method: currentMethod,
+            errorName: "DispatcherCloseTimeout",
+          });
+      } catch {
+        input.logError?.({
+          origin: currentUrl.origin,
+          method: currentMethod,
+          errorName: "DispatcherCloseError",
+        });
       }
     }
-    try {
-      await responseData.body.dump();
-    } finally {
-      await dispatcher.close();
+
+    if (lifecycleFailure) {
+      const { error } = lifecycleFailure;
+      if (error instanceof CustomWidgetDomainError) throw error;
+      if (error instanceof Error && "code" in error && error.code === RESPONSE_TOO_LARGE_ERROR_CODE) {
+        throw new CustomWidgetDomainError({
+          code: "PAYLOAD_TOO_LARGE",
+          message: "Response exceeds the 1 MiB limit",
+        });
+      }
+      const timedOut = isCustomWidgetRequestTimeoutError(error, deadlineSignal, controller.signal);
+      input.logError?.({
+        origin: currentUrl.origin,
+        method: currentMethod,
+        errorName: timedOut ? "RequestTimeout" : "TransportError",
+        ...(timedOut ? { reason: "timeout" as const } : {}),
+      });
+      throw new CustomWidgetDomainError({
+        code: "BAD_GATEWAY",
+        message: timedOut ? "External request timed out" : "External request failed",
+        ...(timedOut ? { reason: "timeout" as const } : {}),
+      });
     }
+
+    if (!result)
+      throw new CustomWidgetDomainError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "External request did not complete",
+      });
+    if (result.kind === "response") return result.response;
     if (redirects >= maxRedirects)
       throw new CustomWidgetDomainError({ code: "BAD_GATEWAY", message: "Upstream redirect limit exceeded" });
-    const location = normalizeResponseHeaders(responseData.headers).get("location");
-    if (!location)
+    if (!result.location)
       throw new CustomWidgetDomainError({ code: "BAD_GATEWAY", message: "Upstream redirect is missing a location" });
-    const redirected = validateCustomWidgetUrl(new URL(location, currentUrl));
+    const redirected = validateCustomWidgetUrl(new URL(result.location, currentUrl));
     if (redirected.origin !== baseUrl.origin)
       throw new CustomWidgetDomainError({ code: "FORBIDDEN", message: "Cross-origin redirects are not allowed" });
-    if (responseData.statusCode === 303 || ([301, 302].includes(responseData.statusCode) && currentMethod === "POST")) {
+    if (result.statusCode === 303 || ([301, 302].includes(result.statusCode) && currentMethod === "POST")) {
       currentMethod = "GET";
       currentBody = undefined;
     }
     currentUrl = redirected;
   }
+}
+
+export function isCustomWidgetRequestTimeoutError(error: unknown, ...signals: readonly AbortSignal[]): boolean {
+  if (signals.some((signal) => signal.aborted)) return true;
+  if (!(error instanceof Error)) return false;
+  if (error.name.includes("Timeout")) return true;
+  const code = "code" in error && typeof error.code === "string" ? error.code : undefined;
+  return code !== undefined && TIMEOUT_ERROR_CODES.has(code);
 }
 
 function normalizeResponseHeaders(values: Record<string, string | string[] | undefined>) {
