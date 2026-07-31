@@ -1,0 +1,37 @@
+apps/docs/docs/widgets/audio-stats/index.mdx
+  s_5126ece19484bf::t_1e7a2cef402f6b 2-3,7-13,15,19,26-37,44
+apps/docs/docs/widgets/media-server/index.ts
+  s_5126ece19484bf::t_1e7a2cef402f6b 13
+apps/docs/docs/widgets/media-server/index.mdx
+  s_5126ece19484bf::t_1e7a2cef402f6b 17,43-45
+packages/definitions/src/integration.ts
+  s_5126ece19484bf::t_1e7a2cef402f6b 421
+apps/docs/docs/integrations/navidrome/index.mdx
+  s_5126ece19484bf::t_1e7a2cef402f6b 13,18,21,27
+packages/integrations/src/navidrome/navidrome-integration.ts
+  s_5126ece19484bf::t_1e7a2cef402f6b 11-12,36,67,79-107
+  s_5126ece19484bf::t_0b49b7e3cafe24 108-109
+packages/api/src/router/widgets/media-server.ts
+  s_5126ece19484bf::t_1e7a2cef402f6b 20
+packages/widgets/src/audio-stats/audio-stats-content.tsx
+  s_5126ece19484bf::t_1e7a2cef402f6b 4,59
+packages/integrations/src/navidrome/test/navidrome-integration.spec.ts
+  s_5126ece19484bf::t_1e7a2cef402f6b 37,39,140,142-143,152-167,175-240,245-263,273
+  s_5126ece19484bf::t_11da42fefc0b5a 274-275
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "d90c85d2b76ecbdc2f597bfa6f251d4e16c0b381",
+  "prompts": {},
+  "sessions": {
+    "s_5126ece19484bf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019faf09-9790-7e51-a9e2-60e0f621e2b9",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
