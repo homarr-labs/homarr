@@ -257,6 +257,12 @@ describe("NavidromeIntegration.getCurrentSessionsAsync", () => {
           episodeName: null,
           albumName: "LP",
           episodeCount: null,
+          playback: {
+            state: null,
+            positionMs: null,
+            durationMs: null,
+          },
+          location: null,
           metadata: null,
         },
       },
@@ -275,6 +281,12 @@ describe("NavidromeIntegration.getCurrentSessionsAsync", () => {
           episodeName: null,
           albumName: "Second Album",
           episodeCount: null,
+          playback: {
+            state: null,
+            positionMs: null,
+            durationMs: null,
+          },
+          location: null,
           metadata: null,
         },
       },
@@ -302,7 +314,7 @@ describe("NavidromeIntegration.getCurrentSessionsAsync", () => {
     expect(result).toEqual([]);
   });
 
-  test("throws on subsonic auth failure", async () => {
+  test("normalizes subsonic auth failures", async () => {
     mockFetch.mockImplementation((url) => {
       const urlStr = toUrlString(url);
 
@@ -320,7 +332,7 @@ describe("NavidromeIntegration.getCurrentSessionsAsync", () => {
     const integration = createIntegration();
 
     await expect(integration.getCurrentSessionsAsync({ showOnlyPlaying: true })).rejects.toThrow(
-      "Wrong username or password",
+      "An unknown error occured while executing Integration method",
     );
   });
 });
