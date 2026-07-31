@@ -19,9 +19,6 @@ export interface NavidromeDisplayOptions {
   showArtists: boolean;
   showAlbums: boolean;
   showSongs: boolean;
-  showNowPlaying: boolean;
-  showNowPlayingList: boolean;
-  maxNowPlayingItems: number;
   compactMode?: boolean;
 }
 

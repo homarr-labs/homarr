@@ -1,5 +1,4 @@
 import { IconHeadphones, IconServerOff } from "@tabler/icons-react";
-import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -23,14 +22,6 @@ export const { definition, componentLoader } = createWidgetDefinition("audioStat
         showArtists: factory.switch({ defaultValue: true, withDescription: true }),
         showAlbums: factory.switch({ defaultValue: true, withDescription: true }),
         showSongs: factory.switch({ defaultValue: true, withDescription: true }),
-        showNowPlaying: factory.switch({ defaultValue: true, withDescription: true }),
-        showNowPlayingList: factory.switch({ defaultValue: true, withDescription: true }),
-        maxNowPlayingItems: factory.number({
-          defaultValue: 3,
-          validate: z.number().min(1).max(5),
-          step: 1,
-          withDescription: true,
-        }),
         showLibraryCount: factory.switch({ defaultValue: true, withDescription: true }),
         showAudiobooks: factory.switch({ defaultValue: true, withDescription: true }),
         showPodcasts: factory.switch({ defaultValue: true, withDescription: true }),
@@ -42,9 +33,6 @@ export const { definition, componentLoader } = createWidgetDefinition("audioStat
         showArtists: hideUnlessNavidrome,
         showAlbums: hideUnlessNavidrome,
         showSongs: hideUnlessNavidrome,
-        showNowPlaying: hideUnlessNavidrome,
-        showNowPlayingList: hideUnlessNavidrome,
-        maxNowPlayingItems: hideUnlessNavidrome,
         showLibraryCount: hideUnlessAudiobookshelf,
         showAudiobooks: hideUnlessAudiobookshelf,
         showPodcasts: hideUnlessAudiobookshelf,

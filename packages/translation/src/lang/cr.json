@@ -3079,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "crwdns3442:0crwdne3442:0",
           "description": "crwdns3444:0crwdne3444:0"
+        },
+        "columnOrder": {
+          "label": "crwdns6121:0crwdne6121:0"
+        },
+        "columnWidths": {
+          "label": "crwdns6123:0crwdne6123:0"
         }
       },
       "errors": {
         "noColumns": "crwdns1194:0crwdne1194:0",
-        "noCommunications": "crwdns1196:0crwdne1196:0"
+        "noCommunications": "crwdns1196:0crwdne1196:0",
+        "noItems": "crwdns6125:0crwdne6125:0",
+        "actionFailed": "crwdns6127:0crwdne6127:0",
+        "actionFailedMessage": "crwdns6129:0crwdne6129:0"
       },
       "items": {
         "actions": {
@@ -3106,7 +3115,8 @@
           "detailsTitle": "crwdns1214:0crwdne1214:0"
         },
         "id": {
-          "columnTitle": "crwdns1216:0crwdne1216:0"
+          "columnTitle": "crwdns1216:0crwdne1216:0",
+          "detailsTitle": "crwdns6131:0crwdne6131:0"
         },
         "integration": {
           "columnTitle": "crwdns1218:0crwdne1218:0"
@@ -3140,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "crwdns1246:0crwdne1246:0",
-          "detailsTitle": "crwdns1248:0crwdne1248:0"
+          "detailsTitle": "crwdns1248:0crwdne1248:0",
+          "eta": "crwdns6133:0crwdne6133:0"
         },
         "type": {
           "columnTitle": "crwdns1250:0crwdne1250:0",
@@ -3184,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": "crwdns1300:0crwdne1300:0"
+      "globalRatio": "crwdns1300:0crwdne1300:0",
+      "contextMenu": {
+        "copyName": "crwdns6135:0crwdne6135:0",
+        "copyId": "crwdns6137:0crwdne6137:0",
+        "clearFilters": "crwdns6139:0crwdne6139:0"
+      },
+      "footer": {
+        "filter": "crwdns6141:0crwdne6141:0"
+      },
+      "stats": {
+        "show": "crwdns6143:0crwdne6143:0",
+        "hide": "crwdns6145:0crwdne6145:0",
+        "overallProgress": "crwdns6147:0crwdne6147:0",
+        "totalSize": "crwdns6149:0crwdne6149:0",
+        "clients": "crwdns6151:0count={count}crwdne6151:0"
+      },
+      "disconnected": "crwdns6153:0crwdne6153:0"
     },
     "mediaReleases": {
       "name": "crwdns3532:0crwdne3532:0",

@@ -3079,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "",
           "description": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Spalten in Elementen auswählen",
-        "noCommunications": "Kann keine Daten von der Integration laden"
+        "noCommunications": "Kann keine Daten von der Integration laden",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3115,8 @@
           "detailsTitle": "Aktueller Index im Client"
         },
         "id": {
-          "columnTitle": "ID"
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": ""
@@ -3140,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "Endzeit",
-          "detailsTitle": "Zeit danach/zur Fertigstellung"
+          "detailsTitle": "Zeit danach/zur Fertigstellung",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Typ",
@@ -3184,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": "Globales Verhältnis"
+      "globalRatio": "Globales Verhältnis",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "",
