@@ -42,6 +42,14 @@ const waitForConcurrentUpdateCheckAsync = async () => {
 };
 
 const getCachedAvailableUpdatesAsync = async (): Promise<UpdateCheckCacheEntry> => {
+  if (env.NO_EXTERNAL_CONNECTION) {
+    return {
+      availableUpdates: [],
+      attemptedAt: Date.now(),
+      checkedAt: null,
+    };
+  }
+
   const cached = await freshUpdateCheckChannel.getAsync();
   if (cached) return cached;
 

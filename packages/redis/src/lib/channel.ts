@@ -139,11 +139,17 @@ export const createLockChannel = (name: string) => {
   return {
     acquireAsync: async (ttlSeconds: number) => {
       const token = createId();
-      const result = await getSetClient.set(name, token, "EX", ttlSeconds, "NX");
+      const client = getSetClient as typeof getSetClient | null;
+      if (!client) return token;
+
+      const result = await client.set(name, token, "EX", ttlSeconds, "NX");
       return result === "OK" ? token : null;
     },
     releaseAsync: async (token: string) => {
-      await getSetClient.eval(
+      const client = getSetClient as typeof getSetClient | null;
+      if (!client) return;
+
+      await client.eval(
         "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end",
         1,
         name,

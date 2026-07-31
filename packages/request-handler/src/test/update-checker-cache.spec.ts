@@ -11,10 +11,12 @@ const mocks = vi.hoisted(() => {
   const values = new Map<string, StoredValue>();
   const locks = new Set<string>();
   const listReleases = vi.fn();
+  const redisOperation = vi.fn();
 
   return {
     env: { NO_EXTERNAL_CONNECTION: false },
     listReleases,
+    redisOperation,
     values,
     locks,
     removeFreshResult() {
@@ -28,6 +30,7 @@ vi.mock("@homarr/common/env", () => ({ env: mocks.env }));
 vi.mock("@homarr/redis", () => ({
   createGetSetChannel: (name: string) => ({
     getAsync: async () => {
+      mocks.redisOperation();
       const stored = mocks.values.get(name);
       if (!stored) return null;
       if (stored.expiresAt !== null && Date.now() >= stored.expiresAt) {
@@ -37,22 +40,26 @@ vi.mock("@homarr/redis", () => ({
       return stored.value;
     },
     setAsync: async (value: unknown, options?: { ttlSeconds?: number }) => {
+      mocks.redisOperation();
       mocks.values.set(name, {
         value,
         expiresAt: options?.ttlSeconds ? Date.now() + options.ttlSeconds * 1_000 : null,
       });
     },
     removeAsync: async () => {
+      mocks.redisOperation();
       mocks.values.delete(name);
     },
   }),
   createLockChannel: (name: string) => ({
     acquireAsync: async () => {
+      mocks.redisOperation();
       if (mocks.locks.has(name)) return null;
       mocks.locks.add(name);
       return "test-lock-token";
     },
     releaseAsync: async () => {
+      mocks.redisOperation();
       mocks.locks.delete(name);
     },
   }),
@@ -94,6 +101,7 @@ describe("persisted update checker cache", () => {
     vi.restoreAllMocks();
     mocks.env.NO_EXTERNAL_CONNECTION = false;
     mocks.listReleases.mockReset();
+    mocks.redisOperation.mockReset();
     mocks.values.clear();
     mocks.locks.clear();
   });
@@ -202,5 +210,6 @@ describe("persisted update checker cache", () => {
 
     await expect(handler.getDataAsync()).resolves.toMatchObject({ data: { availableUpdates: [] } });
     expect(mocks.listReleases).not.toHaveBeenCalled();
+    expect(mocks.redisOperation).not.toHaveBeenCalled();
   });
 });
