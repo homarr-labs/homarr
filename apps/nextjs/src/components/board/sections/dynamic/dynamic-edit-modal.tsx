@@ -1,6 +1,6 @@
 "use client";
 
-import { CloseButton, ColorInput, Stack, TextInput, useMantineTheme } from "@mantine/core";
+import { CloseButton, ColorInput, Stack, Switch, TextInput, useMantineTheme } from "@mantine/core";
 import type { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
@@ -18,7 +18,7 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
   const t = useI18n();
   const theme = useMantineTheme();
 
-  const form = useZodForm(dynamicSectionOptionsSchema, {
+  const form = useZodForm(dynamicSectionOptionsSchema.unwrap(), {
     mode: "controlled",
     initialValues: { ...innerProps.value },
   });
@@ -32,6 +32,21 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
     >
       <Stack>
         <TextInput label={t("section.dynamic.option.title.label")} data-autofocus {...form.getInputProps("title")} />
+        <Switch
+          label={t("section.option.showLabel.label")}
+          description={t("section.option.showLabel.description")}
+          {...form.getInputProps("showLabel", { type: "checkbox" })}
+        />
+        <Switch
+          label={t("section.option.collapsible.label")}
+          description={t("section.option.collapsible.description")}
+          {...form.getInputProps("collapsible", { type: "checkbox" })}
+        />
+        <Switch
+          label={t("section.option.showOpenAll.label")}
+          description={t("section.option.showOpenAll.description")}
+          {...form.getInputProps("showOpenAll", { type: "checkbox" })}
+        />
         <TextMultiSelect
           label={t("section.dynamic.option.customCssClasses.label")}
           {...form.getInputProps("customCssClasses")}

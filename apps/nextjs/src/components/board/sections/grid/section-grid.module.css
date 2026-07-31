@@ -1,0 +1,77 @@
+.viewport {
+  position: relative;
+  overflow: visible;
+}
+
+.staticGrid,
+.editorGrid {
+  position: relative;
+  overflow: visible;
+}
+
+.editorGrid {
+  position: absolute;
+  inset: 0 auto auto 0;
+}
+
+.editorGrid:not(:global(.grid-stack-editing)) {
+  visibility: hidden;
+}
+
+.staticItem {
+  overflow: visible;
+  transition:
+    left 220ms ease,
+    top 220ms ease,
+    width 220ms ease,
+    height 220ms ease;
+}
+
+.editorEntry {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  cursor: grab;
+}
+
+.editorEntry:active {
+  cursor: grabbing;
+}
+
+.editorEntry:focus-visible,
+.editorEntry[data-keyboard-editing="true"] {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+  border-radius: var(--mantine-radius-md);
+}
+
+.editorLoading {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+}
+
+.editorLoadingItem {
+  background-color: var(--mantine-color-default);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+}
+
+.liveRegion {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .staticItem {
+    transition: none;
+  }
+}

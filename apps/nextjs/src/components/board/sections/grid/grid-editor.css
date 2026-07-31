@@ -1,0 +1,36 @@
+.grid-stack.grid-stack-editing > .grid-stack-placeholder > .placeholder-content {
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 20%, transparent);
+  border: 2px dashed var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+}
+
+.grid-stack.grid-stack-editing > .grid-stack-item.ui-draggable-dragging {
+  filter: drop-shadow(var(--mantine-shadow-lg));
+}
+
+.grid-stack.grid-stack-editing > .grid-stack-item > .ui-resizable-handle {
+  z-index: 8;
+}
+
+.grid-stack.grid-stack-editing > .grid-stack-item > .ui-resizable-e,
+.grid-stack.grid-stack-editing > .grid-stack-item > .ui-resizable-w {
+  width: 28px;
+}
+
+.grid-stack.grid-stack-editing > .grid-stack-item > .ui-resizable-s {
+  height: 28px;
+}
+
+.grid-stack.grid-stack-editing > .grid-stack-item > .ui-resizable-se,
+.grid-stack.grid-stack-editing > .grid-stack-item > .ui-resizable-sw {
+  width: 28px;
+  height: 28px;
+  background-size: 12px 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-stack.grid-stack-editing,
+  .grid-stack.grid-stack-editing .grid-stack-item {
+    transition: none !important;
+  }
+}

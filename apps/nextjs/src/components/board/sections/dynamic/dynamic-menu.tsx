@@ -1,11 +1,13 @@
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconArrowsMove, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
+import { useOpenItemMoveModal } from "../../items/item-move-modal";
+import { useSectionContext } from "../section-context";
 import { useDynamicSectionActions } from "./dynamic-actions";
 import { DynamicSectionEditModal } from "./dynamic-edit-modal";
 
@@ -14,9 +16,13 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
   const tDynamic = useScopedI18n("section.dynamic");
   const tItem = useScopedI18n("item");
   const { openModal } = useModalAction(DynamicSectionEditModal);
+  const openMoveModal = useOpenItemMoveModal();
   const { updateDynamicSection, removeDynamicSection } = useDynamicSectionActions();
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
+  const { section: parentSection } = useSectionContext();
+  const label = section.options.title || tDynamic("action.create");
+  const menuRightOffset = parentSection.kind === "dynamic" ? 44 : 4;
 
   if (!isEditMode) return null;
 
@@ -50,17 +56,28 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
           radius={"xl"}
           pos="absolute"
           top={4}
-          right={4}
+          right={menuRightOffset}
           style={{ zIndex: 10 }}
-          aria-label={tItem("menu.label.settings")}
+          aria-label={tItem("menu.label.settingsFor", { name: label })}
         >
-          <IconDotsVertical size={"1rem"} />
+          <IconLayoutKanban size={"1rem"} />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
         <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
         <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
           {tItem("action.edit")}
+        </Menu.Item>
+        <Menu.Item
+          leftSection={<IconArrowsMove size={16} />}
+          onClick={() =>
+            openMoveModal({
+              entry: section,
+              sourceSectionId: section.parentSectionId,
+            })
+          }
+        >
+          {tItem("action.moveResize")}
         </Menu.Item>
         <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
