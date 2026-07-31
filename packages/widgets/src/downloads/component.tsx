@@ -54,7 +54,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
-import { usePersistedTableLayout } from "../common/use-persisted-table-layout";
+import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 
 dayjs.extend(relativeTime);
 
@@ -338,13 +338,13 @@ export default function DownloadClientsWidget({
   const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
     onError: () => showErrorNotification({ title: t("errors.actionFailed"), message: t("errors.actionFailedMessage") }),
   });
-  const persistOption = useCallback(
-    (newOptions: Partial<Pick<typeof options, "columnOrder" | "columnWidths">>) => {
-      setOptions({ newOptions });
-      if (hasChangeAccess && boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
-    },
-    [setOptions, hasChangeAccess, boardId, itemId, saveItemOptions],
-  );
+  const persistOption = useTableLayoutPersistence({
+    boardId,
+    hasChangeAccess,
+    itemId,
+    saveItemOptions,
+    setOptions,
+  });
 
   let defaultSortDirection: DataTableSortStatus<ExtendedDownloadClientItem>["direction"] = "asc";
   if (options.descendingDefaultSort) defaultSortDirection = "desc";

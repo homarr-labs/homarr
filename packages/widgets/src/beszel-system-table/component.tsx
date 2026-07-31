@@ -26,7 +26,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
-import { usePersistedTableLayout } from "../common/use-persisted-table-layout";
+import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
 import {
@@ -116,13 +116,13 @@ export default function BeszelSystemTableWidget({
         message: t("error.layoutSaveMessage"),
       }),
   });
-  const persistLayout = useCallback(
-    (newOptions: Partial<Pick<typeof options, "columnOrder" | "columnWidths">>) => {
-      setOptions({ newOptions });
-      if (hasChangeAccess && boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
-    },
-    [boardId, hasChangeAccess, itemId, saveItemOptions, setOptions],
-  );
+  const persistLayout = useTableLayoutPersistence({
+    boardId,
+    hasChangeAccess,
+    itemId,
+    saveItemOptions,
+    setOptions,
+  });
 
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
 

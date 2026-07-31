@@ -1,12 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import type { DataTableColumn } from "mantine-datatable";
 import { useDataTableColumns } from "mantine-datatable";
 
-interface TableLayoutOptions {
+interface TableLayoutOptions extends Record<string, unknown> {
   columnOrder?: string;
   columnWidths?: string;
+}
+
+interface UseTableLayoutPersistenceProps {
+  boardId: string | undefined;
+  hasChangeAccess: boolean;
+  itemId: string | undefined;
+  saveItemOptions: (input: { boardId: string; itemId: string; newOptions: TableLayoutOptions }) => void;
+  setOptions: (input: { newOptions: TableLayoutOptions }) => void;
 }
 
 interface UsePersistedTableLayoutProps<T> {
@@ -20,6 +28,21 @@ interface UsePersistedTableLayoutProps<T> {
 }
 
 const layoutSaveDelay = 350;
+
+export const useTableLayoutPersistence = ({
+  boardId,
+  hasChangeAccess,
+  itemId,
+  saveItemOptions,
+  setOptions,
+}: UseTableLayoutPersistenceProps) =>
+  useCallback(
+    (newOptions: TableLayoutOptions) => {
+      setOptions({ newOptions });
+      if (hasChangeAccess && boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
+    },
+    [boardId, hasChangeAccess, itemId, saveItemOptions, setOptions],
+  );
 
 const toPixelWidth = (width: string | number): number | undefined => {
   if (typeof width === "number" && Number.isFinite(width) && width > 0) return width;
@@ -147,11 +170,22 @@ export const usePersistedTableLayout = <T>({
 
   const pendingLayout = useRef<TableLayoutOptions>({});
   const saveTimeout = useRef<number | undefined>(undefined);
+  const onLayoutChangeRef = useRef(onLayoutChange);
+  useEffect(() => {
+    onLayoutChangeRef.current = onLayoutChange;
+  }, [onLayoutChange]);
+  const flushPendingLayout = useCallback(() => {
+    const layout = pendingLayout.current;
+    pendingLayout.current = {};
+    saveTimeout.current = undefined;
+    if (Object.keys(layout).length > 0) onLayoutChangeRef.current(layout);
+  }, []);
   useEffect(
     () => () => {
       window.clearTimeout(saveTimeout.current);
+      flushPendingLayout();
     },
-    [],
+    [flushPendingLayout],
   );
   useEffect(() => {
     if (!hydrated.current) return;
@@ -179,11 +213,8 @@ export const usePersistedTableLayout = <T>({
 
     pendingLayout.current = { ...pendingLayout.current, ...newLayout };
     window.clearTimeout(saveTimeout.current);
-    saveTimeout.current = window.setTimeout(() => {
-      onLayoutChange(pendingLayout.current);
-      pendingLayout.current = {};
-    }, layoutSaveDelay);
-  }, [columnAccessors, columnsOrder, columnsWidth, onLayoutChange, savedOrder, savedWidths, visibleAccessorSet]);
+    saveTimeout.current = window.setTimeout(flushPendingLayout, layoutSaveDelay);
+  }, [columnAccessors, columnsOrder, columnsWidth, flushPendingLayout, savedOrder, savedWidths, visibleAccessorSet]);
 
   return { effectiveColumns, storeKey };
 };

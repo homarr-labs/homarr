@@ -30,7 +30,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
-import { usePersistedTableLayout } from "../common/use-persisted-table-layout";
+import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 
 type DockerContainer = RouterOutputs["docker"]["getContainers"]["containers"][number];
 type ContainerAction = "start" | "stop" | "restart" | "remove";
@@ -242,13 +242,13 @@ export default function DockerWidget({
         message: tWidget("error.layoutSaveMessage"),
       }),
   });
-  const persistLayout = useCallback(
-    (newOptions: Partial<Pick<typeof options, "columnOrder" | "columnWidths">>) => {
-      setOptions({ newOptions });
-      if (hasChangeAccess && boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
-    },
-    [boardId, hasChangeAccess, itemId, saveItemOptions, setOptions],
-  );
+  const persistLayout = useTableLayoutPersistence({
+    boardId,
+    hasChangeAccess,
+    itemId,
+    saveItemOptions,
+    setOptions,
+  });
 
   const defaultDirection = options.descendingDefaultSort ? "desc" : "asc";
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus<DockerContainer>>({
