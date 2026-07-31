@@ -1,9 +1,6 @@
 "use client";
 
-import "./styles.css";
-
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { ActionIcon, Avatar, Badge, Box, Center, Group, Menu, Portal, Stack, Text, Tooltip } from "@mantine/core";
 import {
   IconBrandDocker,
@@ -17,7 +14,6 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
-import { DataTable } from "mantine-datatable";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -33,6 +29,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { HomarrDataTable } from "../common/homarr-data-table";
 import { usePersistedTableLayout } from "../common/use-persisted-table-layout";
 
 type DockerContainer = RouterOutputs["docker"]["getContainers"]["containers"][number];
@@ -51,6 +48,7 @@ interface ContainerActionHandlers {
 }
 
 const columnAccessors = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"] as const;
+const containerMenuWidth = 240;
 
 const createContainerLogsPath = (container: Pick<DockerContainer, "id" | "name">) =>
   `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}`;
@@ -196,7 +194,6 @@ export default function DockerWidget({
 }: WidgetComponentProps<"dockerContainers">) {
   const t = useScopedI18n("docker");
   const tWidget = useScopedI18n("widget.dockerContainers");
-  const router = useRouter();
   const { openModal } = useModalAction(AddDockerAppToHomarr);
   const board = useOptionalBoard();
   const { data: session } = useSession();
@@ -222,8 +219,8 @@ export default function DockerWidget({
     [removeContainer, restartContainer, startContainer, stopContainer],
   );
   const handleOpenLogs = useCallback(
-    (container: DockerContainer) => router.push(createContainerLogsPath(container)),
-    [router],
+    (container: DockerContainer) => window.location.assign(createContainerLogsPath(container)),
+    [],
   );
   const handleAddToHomarr = useCallback(
     (container: DockerContainer) => openModal({ selectedContainers: [container] }),
@@ -317,35 +314,19 @@ export default function DockerWidget({
   return (
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
       <Box style={{ flex: 1, minHeight: 0 }}>
-        <DataTable
-          style={{ pointerEvents: isEditMode ? "none" : undefined }}
-          withTableBorder={false}
-          borderRadius={0}
-          highlightOnHover
-          striped="odd"
-          stripedColor={{ dark: "dark.7", light: "gray.0" }}
-          highlightOnHoverColor={{ dark: "dark.5", light: "gray.1" }}
-          verticalAlign="center"
+        <HomarrDataTable
+          isEditMode={isEditMode}
+          cellPadding={width < 400 ? "2px 8px" : "4px 8px"}
+          rowCursor="default"
           fetching={isFetching && containers.length === 0}
-          loaderBackgroundBlur={2}
           fz={width < 400 ? "xs" : "sm"}
           records={sortedContainers}
           noRecordsText={tWidget("empty.noContainers")}
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
-          textSelectionDisabled
           sortStatus={sortStatus}
           onSortStatusChange={options.enableRowSorting && !isEditMode ? setSortStatus : undefined}
           idAccessor="id"
-          height="100%"
-          className="docker-containers-table"
-          defaultColumnProps={{
-            noWrap: true,
-            draggable: true,
-            resizable: true,
-            cellsStyle: () => ({ padding: width < 400 ? "2px 8px" : "4px 8px" }),
-          }}
-          scrollAreaProps={{ type: "auto", scrollbarSize: 6 }}
           onRowContextMenu={isEditMode ? undefined : handleContextMenu}
           onScroll={() => {
             if (contextMenu) closeContextMenu();
@@ -414,7 +395,7 @@ function ContainerMenuButton({
           <IconDots size={16} />
         </ActionIcon>
       </Menu.Target>
-      <Menu.Dropdown>
+      <Menu.Dropdown w={containerMenuWidth} miw={containerMenuWidth} maw={containerMenuWidth}>
         <ContainerActionItems container={container} handlers={handlers} onClose={close} />
       </Menu.Dropdown>
     </Menu>
@@ -442,7 +423,9 @@ function ContainerActionItems({
 
   return (
     <>
-      <Menu.Label>{container.name}</Menu.Label>
+      <Menu.Label title={container.name} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        {container.name}
+      </Menu.Label>
       <Menu.Item
         leftSection={<IconFileText size={14} />}
         onClick={() => {
@@ -521,7 +504,12 @@ function ContainerContextMenu({
           <Menu.Target>
             <Box pos="fixed" style={{ left: state.x, top: state.y, width: 1, height: 1 }} />
           </Menu.Target>
-          <Menu.Dropdown onClick={(event) => event.stopPropagation()}>
+          <Menu.Dropdown
+            w={containerMenuWidth}
+            miw={containerMenuWidth}
+            maw={containerMenuWidth}
+            onClick={(event) => event.stopPropagation()}
+          >
             <ContainerActionItems container={state.container} handlers={handlers} onClose={onClose} />
           </Menu.Dropdown>
         </Menu>

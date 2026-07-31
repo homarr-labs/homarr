@@ -1,11 +1,8 @@
 "use client";
 
-import "./styles.css";
-
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Center, Group, Indicator, Loader, Progress, Text } from "@mantine/core";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
-import { DataTable } from "mantine-datatable";
 import {
   Activity,
   Battery,
@@ -28,6 +25,7 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { HomarrDataTable } from "../common/homarr-data-table";
 import { usePersistedTableLayout } from "../common/use-persisted-table-layout";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
@@ -179,7 +177,7 @@ export default function BeszelSystemTableWidget({
         ),
         sortable: true,
         render: (record) => (
-          <Group gap={8} wrap="nowrap" style={{ overflow: "hidden" }}>
+          <Group gap={8} wrap="nowrap" style={{ overflow: "hidden", paddingInlineStart: 4 }}>
             <Indicator color={statusColorMap[record.status]} size={7} />
             <Text size={size.fontSize} fw={500} truncate>
               {record.name}
@@ -387,15 +385,9 @@ export default function BeszelSystemTableWidget({
       <div style={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}>
         <BeszelIntegrationErrorIndicator results={results} />
       </div>
-      <DataTable
-        style={{ pointerEvents: isEditMode ? "none" : undefined }}
-        withTableBorder={false}
-        borderRadius={0}
-        highlightOnHover
-        striped="odd"
-        stripedColor={{ dark: "dark.7", light: "gray.0" }}
-        highlightOnHoverColor={{ dark: "dark.5", light: "gray.1" }}
-        verticalAlign="center"
+      <HomarrDataTable
+        isEditMode={isEditMode}
+        cellPadding={`${size.cellPadding}px 8px`}
         fz={size.fontSize}
         records={sortedSystems}
         columns={effectiveColumns}
@@ -403,17 +395,7 @@ export default function BeszelSystemTableWidget({
         onSortStatusChange={setSortStatus}
         noRecordsText={t("noRecords")}
         idAccessor="_key"
-        height="100%"
-        className="beszel-table"
         storeColumnsKey={storeKey}
-        textSelectionDisabled
-        defaultColumnProps={{
-          noWrap: true,
-          draggable: true,
-          resizable: true,
-          cellsStyle: () => ({ padding: `${size.cellPadding}px 8px` }),
-        }}
-        scrollAreaProps={{ type: "auto", scrollbarSize: 6 }}
         onRowClick={isEditMode ? undefined : handleRowClick}
       />
     </div>
