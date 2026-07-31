@@ -740,30 +740,70 @@
   flex: 1 1 auto;
 }
 
-.modelSelect {
-  width: min(15rem, 52%);
-  min-width: 8rem;
+.runtimeButtonGroup {
+  min-width: 0;
+  max-width: 100%;
 }
 
-.reasoningSelect {
-  width: 8.75rem;
-  flex: 0 0 auto;
-}
-
-.runtimeSelectInput {
-  border-color: transparent;
-  border-radius: var(--mantine-radius-md);
+.runtimeButton {
+  min-width: 0;
+  border-color: var(--mantine-color-default-border);
+  color: var(--mantine-color-text);
   background: var(--mantine-color-body);
   font-weight: 600;
 }
 
-.runtimeSelectInput:hover {
+.runtimeButton:hover {
   background: var(--mantine-color-default-hover);
 }
 
-.runtimeSelectInput:focus,
-.runtimeSelectInput:focus-within {
-  border-color: var(--mantine-primary-color-filled);
+.runtimeButtonLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modelButton {
+  min-width: 8rem;
+  max-width: 15rem;
+  flex: 1 1 auto;
+}
+
+.reasoningButton {
+  min-width: 7.5rem;
+  max-width: 10.5rem;
+  flex: 0 1 auto;
+}
+
+.modelDropdown {
+  max-width: calc(100vw - 2rem);
+}
+
+.modelOptions {
+  max-height: min(18rem, 42dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.modelOption {
+  padding-block: 0.45rem;
+}
+
+.modelOptionText {
+  min-width: 0;
+  flex: 1;
+}
+
+.runtimeOptionCheck {
+  flex: 0 0 auto;
+  color: var(--mantine-primary-color-filled);
+}
+
+.runtimeMenuItem[data-selected] {
+  color: var(--mantine-primary-color-filled);
+  background: var(--mantine-primary-color-light);
+  font-weight: 600;
 }
 
 .triggerPopover {
@@ -918,10 +958,17 @@
     width: 100%;
   }
 
-  .modelSelect {
-    width: auto;
+  .runtimeButtonGroup {
+    width: 100%;
+  }
+
+  .modelButton {
     min-width: 0;
-    flex: 1 1 auto;
+    max-width: none;
+  }
+
+  .reasoningButton {
+    max-width: 9rem;
   }
 
   .suggestions {
@@ -970,8 +1017,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .reasoningSelect {
-    width: 7.75rem;
+  .reasoningButton {
+    min-width: 2.5rem;
+    max-width: 7.75rem;
   }
 
   .approvalActions {
