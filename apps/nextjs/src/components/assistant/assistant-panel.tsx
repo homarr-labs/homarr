@@ -36,19 +36,21 @@ import {
   Box,
   Button,
   Collapse,
+  Combobox,
   Divider,
   FocusTrap,
   Group,
   Loader,
+  Menu,
   Popover,
   RingProgress,
   ScrollArea,
-  Select,
   Stack,
   Text,
   ThemeIcon,
   Tooltip,
   UnstyledButton,
+  useCombobox,
 } from "@mantine/core";
 import { useWindowEvent } from "@mantine/hooks";
 import {
@@ -1212,45 +1214,123 @@ const RuntimeControls = ({
   onReasoningChange,
 }: ComposerProps) => {
   const t = useScopedI18n("common.assistant");
+  const [modelSearch, setModelSearch] = useState("");
+  const selectedModel = models.find((model) => model.id === modelId);
+  const normalizedModelSearch = modelSearch.trim().toLocaleLowerCase();
+  const visibleModels =
+    normalizedModelSearch.length === 0
+      ? models
+      : models.filter(
+          (model) =>
+            model.name.toLocaleLowerCase().includes(normalizedModelSearch) ||
+            model.id.toLocaleLowerCase().includes(normalizedModelSearch),
+        );
+  const modelCombobox = useCombobox({
+    onDropdownOpen: () => {
+      modelCombobox.selectActiveOption();
+      requestAnimationFrame(() => modelCombobox.focusSearchInput());
+    },
+    onDropdownClose: () => {
+      modelCombobox.resetSelectedOption();
+      setModelSearch("");
+    },
+  });
+
+  const selectModel = (value: string) => {
+    if (!models.some((model) => model.id === value)) return;
+    onModelChange(value);
+    modelCombobox.closeDropdown();
+  };
+
   return (
-    <Group className={classes.runtimeControls} gap={6} wrap="nowrap">
-      <Select
-        className={classes.modelSelect}
-        classNames={{ input: classes.runtimeSelectInput }}
-        size="xs"
-        value={modelId}
-        onChange={(value) => {
-          if (value) onModelChange(value);
-        }}
-        data={models.map((model) => ({ value: model.id, label: model.name }))}
-        searchable
-        allowDeselect={false}
-        disabled={modelOptionsLoading || models.length === 0}
-        leftSection={modelOptionsLoading ? <Loader size={13} /> : <IconSparkles size={14} />}
-        aria-label={t("runtime.model")}
-        placeholder={t("runtime.model")}
-        nothingFoundMessage={t("runtime.noModels")}
-        comboboxProps={{ withinPortal: true, position: "top-start" }}
-      />
-      <Select
-        className={classes.reasoningSelect}
-        classNames={{ input: classes.runtimeSelectInput }}
-        size="xs"
-        value={reasoning}
-        onChange={(value) => {
-          if (value && assistantReasoningModes.includes(value as AssistantReasoningMode)) {
-            onReasoningChange(value as AssistantReasoningMode);
-          }
-        }}
-        data={assistantReasoningModes.map((mode) => ({
-          value: mode,
-          label: t(`runtime.reasoning.${mode}`),
-        }))}
-        allowDeselect={false}
-        leftSection={<IconBrain size={14} />}
-        aria-label={t("runtime.thinking")}
-        comboboxProps={{ withinPortal: true, position: "top-end" }}
-      />
+    <Group className={classes.runtimeControls} gap={0} wrap="nowrap">
+      <Button.Group
+        className={classes.runtimeButtonGroup}
+        aria-label={`${t("runtime.model")}, ${t("runtime.thinking")}`}
+      >
+        <Combobox store={modelCombobox} onOptionSubmit={selectModel} withinPortal position="top-start" width={320}>
+          <Combobox.Target>
+            <Button
+              className={classes.modelButton}
+              classNames={{ root: classes.runtimeButton, label: classes.runtimeButtonLabel }}
+              variant="default"
+              size="compact-sm"
+              disabled={modelOptionsLoading || models.length === 0}
+              leftSection={modelOptionsLoading ? <Loader size={13} /> : <IconSparkles size={14} />}
+              rightSection={<Combobox.Chevron size="xs" />}
+              onClick={() => modelCombobox.toggleDropdown()}
+              aria-label={`${t("runtime.model")}: ${selectedModel?.name ?? t("runtime.noModels")}`}
+              title={selectedModel?.name}
+            >
+              {selectedModel?.name ?? t("runtime.model")}
+            </Button>
+          </Combobox.Target>
+          <Combobox.Dropdown className={classes.modelDropdown}>
+            <Combobox.Search
+              value={modelSearch}
+              onChange={(event) => {
+                setModelSearch(event.currentTarget.value);
+                modelCombobox.updateSelectedOptionIndex();
+              }}
+              placeholder={t("runtime.model")}
+              aria-label={t("runtime.model")}
+            />
+            <Combobox.Options className={classes.modelOptions}>
+              {visibleModels.map((model) => (
+                <Combobox.Option
+                  className={classes.modelOption}
+                  key={model.id}
+                  value={model.id}
+                  active={model.id === modelId}
+                >
+                  <Group gap="xs" wrap="nowrap">
+                    <Stack gap={0} className={classes.modelOptionText}>
+                      <Text size="sm" fw={model.id === modelId ? 650 : 500} lineClamp={1}>
+                        {model.name}
+                      </Text>
+                      <Text size="xs" c="dimmed" lineClamp={1}>
+                        {model.id}
+                      </Text>
+                    </Stack>
+                    {model.id === modelId && <IconCheck size={15} className={classes.runtimeOptionCheck} />}
+                  </Group>
+                </Combobox.Option>
+              ))}
+              {visibleModels.length === 0 && <Combobox.Empty>{t("runtime.noModels")}</Combobox.Empty>}
+            </Combobox.Options>
+          </Combobox.Dropdown>
+        </Combobox>
+        <Menu position="top-end" width={210} withinPortal>
+          <Menu.Target>
+            <Button
+              className={classes.reasoningButton}
+              classNames={{ root: classes.runtimeButton, label: classes.runtimeButtonLabel }}
+              variant="default"
+              size="compact-sm"
+              leftSection={<IconBrain size={14} />}
+              rightSection={<IconChevronUp size={14} />}
+              aria-label={`${t("runtime.thinking")}: ${t(`runtime.reasoning.${reasoning}`)}`}
+              title={t(`runtime.reasoning.${reasoning}`)}
+            >
+              {t(`runtime.reasoning.${reasoning}`)}
+            </Button>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Label>{t("runtime.thinking")}</Menu.Label>
+            {assistantReasoningModes.map((mode) => (
+              <Menu.Item
+                key={mode}
+                className={classes.runtimeMenuItem}
+                data-selected={mode === reasoning || undefined}
+                rightSection={mode === reasoning ? <IconCheck size={15} /> : null}
+                onClick={() => onReasoningChange(mode)}
+              >
+                {t(`runtime.reasoning.${mode}`)}
+              </Menu.Item>
+            ))}
+          </Menu.Dropdown>
+        </Menu>
+      </Button.Group>
     </Group>
   );
 };
