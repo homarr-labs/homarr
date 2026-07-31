@@ -338,7 +338,21 @@ export default function BeszelSystemTableWidget({
     ];
 
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
-  }, [options, t, size]);
+  }, [
+    options.showAgent,
+    options.showBattery,
+    options.showCpu,
+    options.showDisk,
+    options.showGpu,
+    options.showLoadAvg,
+    options.showMemory,
+    options.showNet,
+    options.showServices,
+    options.showTemp,
+    options.showUptime,
+    size,
+    t,
+  ]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,

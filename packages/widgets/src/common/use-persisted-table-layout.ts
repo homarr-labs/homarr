@@ -21,6 +21,29 @@ interface UsePersistedTableLayoutProps<T> {
 
 const layoutSaveDelay = 350;
 
+const toPixelWidth = (width: string | number): number | undefined => {
+  if (typeof width === "number" && Number.isFinite(width) && width > 0) return width;
+  if (typeof width !== "string" || !width.endsWith("px")) return undefined;
+
+  const parsedWidth = Number.parseInt(width, 10);
+  return Number.isFinite(parsedWidth) && parsedWidth > 0 ? parsedWidth : undefined;
+};
+
+const getColumnWidthMap = (
+  columnsWidth: Record<string, string | number>[],
+  visibleAccessorSet: ReadonlySet<string>,
+): Record<string, number> => {
+  const widths: Record<string, number> = {};
+  for (const entry of columnsWidth) {
+    for (const [accessor, width] of Object.entries(entry)) {
+      if (!visibleAccessorSet.has(accessor)) continue;
+      const pixelWidth = toPixelWidth(width);
+      if (pixelWidth !== undefined) widths[accessor] = pixelWidth;
+    }
+  }
+  return widths;
+};
+
 export const parseColumnOrder = (value: string, columnAccessors: readonly string[]): string[] => {
   if (!value) return [];
   try {
@@ -84,6 +107,8 @@ export const usePersistedTableLayout = <T>({
 
   const lastStoreKey = useRef(storeKey);
   const hydrated = useRef(false);
+  const previousOrder = useRef(columnsOrder);
+  const previousWidths = useRef(columnsWidth);
   useEffect(() => {
     if (lastStoreKey.current !== storeKey) {
       lastStoreKey.current = storeKey;
@@ -91,20 +116,35 @@ export const usePersistedTableLayout = <T>({
     }
     if (hydrated.current) return;
 
-    if (restoredOrder.length > 0) setColumnsOrder(restoredOrder);
-    const visibleWidths = Object.entries(savedWidths)
-      .filter(([accessor]) => visibleAccessorSet.has(accessor))
-      .map(([accessor, width]) => ({ accessor, width }));
-    if (visibleWidths.length > 0) setMultipleColumnWidths(visibleWidths);
+    const orderMatches =
+      columnsOrder.length === restoredOrder.length &&
+      columnsOrder.every((accessor, index) => accessor === restoredOrder[index]);
+    const currentWidths = getColumnWidthMap(columnsWidth, visibleAccessorSet);
+    const visibleWidths = Object.entries(savedWidths).filter(([accessor]) => visibleAccessorSet.has(accessor));
+    const widthsMatch = visibleWidths.every(([accessor, width]) => currentWidths[accessor] === width);
 
-    const animationFrame = requestAnimationFrame(() => {
+    if (orderMatches && widthsMatch) {
+      previousOrder.current = columnsOrder;
+      previousWidths.current = columnsWidth;
       hydrated.current = true;
-    });
-    return () => cancelAnimationFrame(animationFrame);
-  }, [restoredOrder, savedWidths, setColumnsOrder, setMultipleColumnWidths, storeKey, visibleAccessorSet]);
+      return;
+    }
 
-  const previousOrder = useRef(columnsOrder);
-  const previousWidths = useRef(columnsWidth);
+    if (!orderMatches) setColumnsOrder(restoredOrder);
+    if (!widthsMatch) {
+      setMultipleColumnWidths(visibleWidths.map(([accessor, width]) => ({ accessor, width })));
+    }
+  }, [
+    columnsOrder,
+    columnsWidth,
+    restoredOrder,
+    savedWidths,
+    setColumnsOrder,
+    setMultipleColumnWidths,
+    storeKey,
+    visibleAccessorSet,
+  ]);
+
   const pendingLayout = useRef<TableLayoutOptions>({});
   const saveTimeout = useRef<number | undefined>(undefined);
   useEffect(
@@ -133,17 +173,7 @@ export const usePersistedTableLayout = <T>({
     }
     if (widthsChanged) {
       const widthMap: Record<string, number> = { ...savedWidths };
-      for (const entry of columnsWidth) {
-        const accessor = Object.keys(entry)[0];
-        if (!accessor || !visibleAccessorSet.has(accessor)) continue;
-        const width = entry[accessor];
-        if (typeof width === "number" && Number.isFinite(width) && width > 0) {
-          widthMap[accessor] = width;
-        } else if (typeof width === "string" && width.endsWith("px")) {
-          const parsedWidth = Number.parseInt(width, 10);
-          if (Number.isFinite(parsedWidth) && parsedWidth > 0) widthMap[accessor] = parsedWidth;
-        }
-      }
+      Object.assign(widthMap, getColumnWidthMap(columnsWidth, visibleAccessorSet));
       newLayout.columnWidths = JSON.stringify(widthMap);
     }
 
