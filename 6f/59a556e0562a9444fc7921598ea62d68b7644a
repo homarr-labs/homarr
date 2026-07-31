@@ -1,0 +1,30 @@
+packages/widgets/src/docker/component.spec.ts
+  s_e69b825ec6dfea::t_d301f01d94a508 3-5,9-10,14-16,29
+packages/widgets/src/beszel-system-table/component.tsx
+  s_e69b825ec6dfea::t_d301f01d94a508 5,8,31,343-351
+packages/widgets/src/beszel-system-table/component.spec.ts
+  s_e69b825ec6dfea::t_d301f01d94a508 3-5,9-10,14-17,30
+packages/widgets/src/docker/component.tsx
+  s_e69b825ec6dfea::t_d301f01d94a508 5,20,36,292-300
+packages/widgets/src/common/use-persisted-table-layout.ts
+  s_e69b825ec6dfea::t_a1a0eb6543c678 109
+  s_e69b825ec6dfea::t_34443353aa2859 108,110-115,150-155
+  s_e69b825ec6dfea::t_00b81229ce7720 67-68,156
+  s_e69b825ec6dfea::t_d301f01d94a508 1-66,69-107,116-149,157-159
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "6f59a556e0562a9444fc7921598ea62d68b7644a",
+  "prompts": {},
+  "sessions": {
+    "s_e69b825ec6dfea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb3a0-792a-7381-8801-1495fcc9663b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
