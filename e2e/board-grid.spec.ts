@@ -367,7 +367,7 @@ describe("Board grid", () => {
       expect(gridLayoutsOverlap(persistedFirstLayout, persistedSecondLayout)).toBe(false);
 
       await page.goto(`${baseUrl}/boards/${fixture.boardName}/settings?tab=layout`);
-      const gutterPreview = page.getByLabel("Dashboard layout preview");
+      const gutterPreview = page.getByLabel("Dashboard layout preview").filter({ visible: true });
       await expect(gutterPreview).toBeVisible();
       const rightGutterSwitch = page.getByRole("switch", { name: "Right sidebar" });
       await rightGutterSwitch.check();
