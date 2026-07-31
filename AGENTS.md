@@ -46,6 +46,8 @@ homarr/
 ├── tooling/
 │   ├── typescript/      # Base tsconfig
 │   └── github/          # CI setup action
+├── tools/
+│   └── homarr-dev/      # Go CLI for local and PR Docker images
 ├── development/         # Dev docker-compose (Redis, MySQL, PostgreSQL)
 ├── e2e/                 # E2E test specs
 └── Dockerfile           # Multi-stage production build
@@ -68,6 +70,7 @@ When modifying user-facing code, you MUST also update the corresponding document
 ## Monorepo Commands
 
 - `pnpm dev` — Next.js app only
+- `pnpm dev:setup` — install dependencies, prepare Redis and SQLite, and install the `homarr` developer CLI
 - `pnpm dev:docs` — Docusaurus docs site only
 - `pnpm turbo build` — build all packages
 - `pnpm turbo build --filter=@homarr/docs` — build docs only
@@ -81,3 +84,8 @@ When modifying user-facing code, you MUST also update the corresponding document
 - UI: Mantine (not Tailwind) — Tailwind is only used in docs app
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
+- Run `homarr dev` to browse local `homarr:*` images and remote PR images.
+- Run `homarr build <name>` from a Homarr checkout to build `homarr:<name>` with rebuild provenance.
+- Run `homarr build --pr <number>` to build a PR locally from a temporary checkout.
+- Run Go checks from `tools/homarr-dev` with `go test ./...` and `go vet ./...`.
+- Changes to `tools/homarr-dev` are validated by the fast-gate job in `.github/workflows/ci.yml`.

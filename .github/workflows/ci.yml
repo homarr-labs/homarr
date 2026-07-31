@@ -78,6 +78,16 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
 
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: tools/homarr-dev/go.mod
+          cache-dependency-path: tools/homarr-dev/go.sum
+
+      - name: Validate developer CLI
+        working-directory: tools/homarr-dev
+        run: go test -race ./... && go vet ./...
+
       - name: Copy environment defaults
         run: cp .env.example .env
 
