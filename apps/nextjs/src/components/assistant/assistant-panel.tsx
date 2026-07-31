@@ -1,7 +1,7 @@
 "use client";
 
-import type { ComponentPropsWithoutRef } from "react";
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import type { ComponentPropsWithoutRef, RefObject } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type {
   FileMessagePartProps,
   ImageMessagePartProps,
@@ -27,6 +27,7 @@ import {
   useAuiState,
   unstable_useMentionAdapter,
   unstable_useSlashCommandAdapter,
+  unstable_useTriggerPopoverScopeContext,
 } from "@assistant-ui/react";
 import { MarkdownTextPrimitive } from "@assistant-ui/react-markdown";
 import {
@@ -100,6 +101,7 @@ import classes from "./assistant-panel.module.css";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
+import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
 
 interface AssistantPanelProps {
@@ -1066,6 +1068,34 @@ const contextIcons = {
   tools: IconTool,
 };
 
+const TriggerPopoverAutoScroll = ({ viewportRef }: { viewportRef: RefObject<HTMLDivElement | null> }) => {
+  const { activeCategoryId, categories, highlightedIndex, isSearchMode, items, open, query } =
+    unstable_useTriggerPopoverScopeContext();
+
+  useLayoutEffect(() => {
+    if (!open) return;
+
+    const viewport = viewportRef.current;
+    const highlightedItem = viewport?.querySelector<HTMLElement>("[data-highlighted]");
+    if (!viewport || !highlightedItem) return;
+
+    const viewportRect = viewport.getBoundingClientRect();
+    const itemRect = highlightedItem.getBoundingClientRect();
+    const viewportTop = viewportRect.top + viewport.clientTop;
+    const viewportBottom = viewportTop + viewport.clientHeight;
+
+    viewport.scrollTop = getNearestTriggerScrollTop({
+      scrollTop: viewport.scrollTop,
+      viewportTop,
+      viewportBottom,
+      itemTop: itemRect.top,
+      itemBottom: itemRect.bottom,
+    });
+  }, [activeCategoryId, categories, highlightedIndex, isSearchMode, items, open, query, viewportRef]);
+
+  return null;
+};
+
 const TriggerItem = ({ item, index }: { item: Unstable_TriggerItem; index: number }) => {
   const Icon =
     typeof item.metadata?.icon === "string" && item.metadata.icon in contextIcons
@@ -1093,6 +1123,8 @@ const TriggerItem = ({ item, index }: { item: Unstable_TriggerItem; index: numbe
 const ComposerTriggers = () => {
   const t = useScopedI18n("common.assistant");
   const aui = useAui();
+  const mentionViewportRef = useRef<HTMLDivElement>(null);
+  const slashViewportRef = useRef<HTMLDivElement>(null);
   const { data: entities = [], isLoading } = clientApi.assistant.getContextEntities.useQuery(undefined, {
     staleTime: 60_000,
   });
@@ -1150,12 +1182,14 @@ const ComposerTriggers = () => {
   return (
     <>
       <ComposerPrimitive.Unstable_TriggerPopover
+        ref={mentionViewportRef}
         className={classes.triggerPopover}
         char="@"
         adapter={mention.adapter}
         isLoading={isLoading}
         aria-label={t("mentions.menu")}
       >
+        <TriggerPopoverAutoScroll viewportRef={mentionViewportRef} />
         <ComposerPrimitive.Unstable_TriggerPopover.Directive {...mention.directive} />
         <ComposerPrimitive.Unstable_TriggerPopoverCategories className={classes.triggerList}>
           {(items) =>
@@ -1186,11 +1220,13 @@ const ComposerTriggers = () => {
         </ComposerPrimitive.Unstable_TriggerPopoverItems>
       </ComposerPrimitive.Unstable_TriggerPopover>
       <ComposerPrimitive.Unstable_TriggerPopover
+        ref={slashViewportRef}
         className={classes.triggerPopover}
         char="/"
         adapter={slash.adapter}
         aria-label={t("commands.menu")}
       >
+        <TriggerPopoverAutoScroll viewportRef={slashViewportRef} />
         <ComposerPrimitive.Unstable_TriggerPopover.Action {...slash.action} />
         <ComposerPrimitive.Unstable_TriggerPopoverItems className={classes.triggerList}>
           {(items) => items.map((item, index) => <TriggerItem key={item.id} item={item} index={index} />)}
