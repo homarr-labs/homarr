@@ -14,7 +14,7 @@ Build and launch local Homarr images and GHCR pull-request builds, then manage t
 pnpm dev:setup
 ```
 
-This installs monorepo dependencies, creates and migrates the local SQLite database, starts or reuses Redis, installs `homarr` to `~/.local/bin`, and generates Fish completions when Fish is configured.
+This installs monorepo dependencies, creates and migrates the local SQLite database, starts or reuses Redis, installs `homarr` to `~/.local/bin`, and generates Fish completions when Fish is configured. Add `~/.local/bin` to `PATH` to invoke `homarr` directly; setup prints the absolute command when it is not available on `PATH`.
 
 ## Build
 

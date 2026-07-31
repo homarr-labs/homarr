@@ -105,11 +105,11 @@ var buildCmd = &cobra.Command{
 }
 
 var rebuildCmd = &cobra.Command{
-	Use:   "rebuild [name]",
+	Use:   "rebuild <name>",
 	Short: "Rebuild a local image from its recorded checkout or pull request",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		images, err := docker.ListLocalImages()
+		images, err := docker.ListLocalImages(cmd.Context())
 		if err != nil {
 			return err
 		}
@@ -123,7 +123,7 @@ var rebuildCmd = &cobra.Command{
 }
 
 var logsCmd = &cobra.Command{
-	Use:   "logs [container]",
+	Use:   "logs <container>",
 	Short: "Follow logs of a running instance",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -132,7 +132,7 @@ var logsCmd = &cobra.Command{
 }
 
 var stopCmd = &cobra.Command{
-	Use:   "stop [container]",
+	Use:   "stop <container>",
 	Short: "Stop a running instance",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -141,7 +141,7 @@ var stopCmd = &cobra.Command{
 }
 
 var restartCmd = &cobra.Command{
-	Use:   "restart [container]",
+	Use:   "restart <container>",
 	Short: "Restart a running instance",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -150,7 +150,7 @@ var restartCmd = &cobra.Command{
 }
 
 var removeCmd = &cobra.Command{
-	Use:   "remove [container]",
+	Use:   "remove <container>",
 	Short: "Force-remove an instance",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -159,7 +159,7 @@ var removeCmd = &cobra.Command{
 }
 
 var openCmd = &cobra.Command{
-	Use:   "open [container]",
+	Use:   "open <container>",
 	Short: "Open a running instance in the browser",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -168,11 +168,19 @@ var openCmd = &cobra.Command{
 			return err
 		}
 		for _, container := range containers {
-			if container.Name == args[0] && container.Running() && container.HostPort() != "" {
-				return platform.OpenURL("http://localhost:" + container.HostPort())
+			if container.Name != args[0] {
+				continue
 			}
+			if !container.Running() {
+				return fmt.Errorf("container %q is not running", args[0])
+			}
+			port := container.HostPort()
+			if port == "" {
+				return fmt.Errorf("container %q does not publish the Homarr port", args[0])
+			}
+			return platform.OpenURL("http://localhost:" + port)
 		}
-		return fmt.Errorf("running container %q has no Homarr port", args[0])
+		return fmt.Errorf("container %q was not found", args[0])
 	},
 }
 
@@ -253,10 +261,14 @@ func runLaunch(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("tag and --pr cannot be used together")
 	}
 	if flagPR == 0 && tag == "" {
-		return cmd.Usage()
+		if err := cmd.Usage(); err != nil {
+			return err
+		}
+		return fmt.Errorf("provide a tag or --pr")
 	}
 
 	plan, err := run.BuildPlan(run.Options{
+		Context:    cmd.Context(),
 		PR:         flagPR,
 		Tag:        tag,
 		Demo:       flagDemo,
@@ -266,8 +278,6 @@ func runLaunch(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-
-	run.SetTerminalChrome(plan.TabTitle)
 
 	fmt.Printf("Starting Homarr (%s)\n", plan.Label)
 	fmt.Printf("  Image     : %s\n", plan.Image)

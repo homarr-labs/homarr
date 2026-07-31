@@ -56,8 +56,8 @@ func parseImageList(output []byte) ([]Image, error) {
 	return images, nil
 }
 
-func ListLocalImages() ([]Image, error) {
-	out, err := exec.Command("docker", "image", "ls", "--filter", "reference=homarr:*", "--format", "{{json .}}").Output()
+func ListLocalImages(ctx context.Context) ([]Image, error) {
+	out, err := exec.CommandContext(ctx, "docker", "image", "ls", "--filter", "reference=homarr:*", "--format", "{{json .}}").Output()
 	if err != nil {
 		return nil, fmt.Errorf("list local Homarr images: %w", err)
 	}
@@ -65,7 +65,7 @@ func ListLocalImages() ([]Image, error) {
 	if err != nil {
 		return nil, err
 	}
-	labelsByImage, err := inspectImageLabels(images)
+	labelsByImage, err := inspectImageLabels(ctx, images)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func ListLocalImages() ([]Image, error) {
 	return images, nil
 }
 
-func inspectImageLabels(images []Image) ([]map[string]string, error) {
+func inspectImageLabels(ctx context.Context, images []Image) ([]map[string]string, error) {
 	if len(images) == 0 {
 		return nil, nil
 	}
@@ -85,7 +85,7 @@ func inspectImageLabels(images []Image) ([]map[string]string, error) {
 	for _, image := range images {
 		args = append(args, image.Reference())
 	}
-	out, err := exec.Command("docker", args...).Output()
+	out, err := exec.CommandContext(ctx, "docker", args...).Output()
 	if err != nil {
 		return nil, fmt.Errorf("inspect local Homarr images: %w", err)
 	}
@@ -133,10 +133,6 @@ func BuildCommand(ctx context.Context, options BuildOptions) (*exec.Cmd, error) 
 	command := exec.CommandContext(ctx, "docker", args...)
 	command.Dir = contextPath
 	return command, nil
-}
-
-func Build(options BuildOptions) error {
-	return BuildContext(context.Background(), options, os.Stdout, os.Stderr)
 }
 
 func BuildContext(ctx context.Context, options BuildOptions, stdout, stderr io.Writer) error {

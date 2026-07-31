@@ -115,3 +115,21 @@ func TestRebuildCanBeCanceled(t *testing.T) {
 		t.Fatalf("cancel state: canceled=%v status=%q", canceled, got.status)
 	}
 }
+
+func TestCompletedPullWithoutPlanDoesNotPanic(t *testing.T) {
+	m := newPRsModel()
+	m.pulling = true
+	m.pullCancel = func() {}
+
+	updated, cmd := m.Update(pullEvent{done: true})
+	got := updated.(prsModel)
+	if got.pulling || cmd != nil {
+		t.Fatalf("pulling=%v cmd=%v", got.pulling, cmd)
+	}
+}
+
+func TestTruncateTextPreservesUTF8(t *testing.T) {
+	if got := truncateText("🦞homarr", 2); got != "🦞h" {
+		t.Fatalf("truncateText() = %q", got)
+	}
+}

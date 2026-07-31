@@ -26,3 +26,14 @@ func TestRunLaunchRejectsNegativePR(t *testing.T) {
 		t.Fatalf("error = %v", err)
 	}
 }
+
+func TestRunLaunchRejectsMissingImage(t *testing.T) {
+	previousPR := flagPR
+	t.Cleanup(func() { flagPR = previousPR })
+	flagPR = 0
+
+	err := runLaunch(runCmd, nil)
+	if err == nil || !strings.Contains(err.Error(), "provide a tag or --pr") {
+		t.Fatalf("error = %v", err)
+	}
+}

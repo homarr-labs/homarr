@@ -47,7 +47,7 @@ func TestListPRsExcludesBotsIntegration(t *testing.T) {
 		t.Skip("set HOMARR_INTEGRATION_TEST=1 to query GitHub")
 	}
 
-	prs, err := ListPRs(50, false)
+	prs, err := ListPRs(t.Context(), 50, false)
 	if err != nil {
 		t.Fatal(err)
 	}

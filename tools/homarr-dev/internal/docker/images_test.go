@@ -17,7 +17,7 @@ func TestParseImageListFiltersHomarrTags(t *testing.T) {
 }
 
 func TestInspectImageLabelsWithNoImages(t *testing.T) {
-	labels, err := inspectImageLabels(nil)
+	labels, err := inspectImageLabels(t.Context(), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -53,7 +53,7 @@ func TestListLocalImagesIntegration(t *testing.T) {
 	if wantTag == "" {
 		t.Skip("set HOMARR_TEST_LOCAL_IMAGE to a local homarr image tag")
 	}
-	images, err := ListLocalImages()
+	images, err := ListLocalImages(t.Context())
 	if err != nil {
 		t.Fatal(err)
 	}

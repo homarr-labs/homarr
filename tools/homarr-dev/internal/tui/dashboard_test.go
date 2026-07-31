@@ -16,6 +16,7 @@ func TestDashboardRendersRowsAndLogs(t *testing.T) {
 		"homarr-test:pr-6441",
 		"7575",
 		"http://localhost:7575",
+		"Up 2 minutes",
 	}})
 	m.logs.SetWidth(104)
 	m.logs.SetHeight(5)
@@ -35,8 +36,8 @@ func TestDashboardRendersRowsAndLogs(t *testing.T) {
 func TestDashboardArrowNavigation(t *testing.T) {
 	m := newDashModel()
 	m.table.SetRows([]table.Row{
-		{"homarr_first", "running", "homarr:first", "7575", ""},
-		{"homarr_second", "running", "homarr:second", "7576", ""},
+		{"homarr_first", "running", "homarr:first", "7575", "", "Up 1 minute"},
+		{"homarr_second", "running", "homarr:second", "7576", "", "Up 1 minute"},
 	})
 
 	updated, _ := m.Update(tea.KeyPressMsg(tea.Key{Code: tea.KeyDown}))
@@ -48,7 +49,7 @@ func TestDashboardArrowNavigation(t *testing.T) {
 
 func TestDashboardIgnoresStaleLogs(t *testing.T) {
 	m := newDashModel()
-	m.table.SetRows([]table.Row{{"homarr_current", "running", "homarr:current", "7575", ""}})
+	m.table.SetRows([]table.Row{{"homarr_current", "running", "homarr:current", "7575", "", "Up 1 minute"}})
 	m.logs.SetWidth(104)
 	m.logs.SetHeight(5)
 	m.logs.SetContent("current logs")

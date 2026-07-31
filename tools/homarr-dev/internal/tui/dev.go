@@ -109,6 +109,10 @@ type rebuildDoneMsg struct {
 	err      error
 	canceled bool
 }
+type runningRefreshedMsg struct {
+	rows       []prRow
+	generation int
+}
 type pullReadyMsg struct{}
 type prLogTickMsg struct{}
 type pullEvent struct {
@@ -129,7 +133,7 @@ func splitDockerProgress(data []byte, atEOF bool) (advance int, token []byte, er
 	return 0, nil, nil
 }
 
-func startPull(cmd *exec.Cmd, events chan<- pullEvent) tea.Cmd {
+func startPull(ctx context.Context, cmd *exec.Cmd, events chan<- pullEvent) tea.Cmd {
 	return func() tea.Msg {
 		reader, writer, err := os.Pipe()
 		if err != nil {
@@ -150,7 +154,7 @@ func startPull(cmd *exec.Cmd, events chan<- pullEvent) tea.Cmd {
 			scanner.Split(splitDockerProgress)
 			for scanner.Scan() {
 				line := strings.TrimSpace(scanner.Text())
-				if line != "" {
+				if line != "" && ctx.Err() == nil && len(events) < cap(events)-1 {
 					events <- pullEvent{line: line}
 				}
 			}
@@ -180,8 +184,10 @@ func prLogTick() tea.Cmd {
 
 func loadDev(includeBots bool) tea.Cmd {
 	return func() tea.Msg {
-		prs, prErr := gh.ListPRs(50, includeBots)
-		images, imgErr := docker.ListLocalImages()
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		prs, prErr := gh.ListPRs(ctx, 50, includeBots)
+		images, imgErr := docker.ListLocalImages(ctx)
 		return prsLoadedMsg{prs: prs, images: images, prErr: prErr, imgErr: imgErr}
 	}
 }
@@ -422,7 +428,7 @@ func (m *prsModel) refreshSelectedLogs() tea.Cmd {
 }
 
 func (m *prsModel) beginPull(row prRow) tea.Cmd {
-	plan, err := run.BuildPlan(run.Options{PR: row.pr.Number, Demo: m.demo})
+	plan, err := run.BuildPlan(run.Options{Context: context.Background(), PR: row.pr.Number, Demo: m.demo})
 	if err != nil {
 		m.status = err.Error()
 		return nil
@@ -433,7 +439,7 @@ func (m *prsModel) beginPull(row prRow) tea.Cmd {
 		}
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	events := make(chan pullEvent)
+	events := make(chan pullEvent, 128)
 	m.pulling = true
 	m.pullPlan = plan
 	m.pullCancel = cancel
@@ -450,7 +456,7 @@ func (m *prsModel) beginPull(row prRow) tea.Cmd {
 		m.status = fmt.Sprintf("pulling latest image for PR #%d…", row.pr.Number)
 	}
 	m.layout()
-	return tea.Batch(startPull(docker.PullCommandContext(ctx, plan.Image, plan.Platform), events), m.spinner.Tick)
+	return tea.Batch(startPull(ctx, docker.PullCommandContext(ctx, plan.Image, plan.Platform), events), m.spinner.Tick)
 }
 
 func (m *prsModel) appendPullLine(line string) {
@@ -488,24 +494,27 @@ func (m prsModel) Init() tea.Cmd {
 	return tea.Batch(loadDev(m.includeBots), m.spinner.Tick)
 }
 
-func refreshRunning(rows []prRow) []prRow {
-	containers, _ := docker.List()
-	for i, r := range rows {
-		name := fmt.Sprintf("homarr_pr_%d", r.pr.Number)
-		if r.kind == "local" {
-			name = "homarr_" + r.local.Tag
-		}
-		r.running = false
-		r.port = ""
-		for _, c := range containers {
-			if c.Name == name && c.Running() {
-				r.running = true
-				r.port = c.HostPort()
+func refreshRunning(rows []prRow, generation int) tea.Cmd {
+	return func() tea.Msg {
+		containers, _ := docker.List()
+		updated := append([]prRow(nil), rows...)
+		for index, row := range updated {
+			name := fmt.Sprintf("homarr_pr_%d", row.pr.Number)
+			if row.kind == "local" {
+				name = "homarr_" + row.local.Tag
 			}
+			row.running = false
+			row.port = ""
+			for _, container := range containers {
+				if container.Name == name && container.Running() {
+					row.running = true
+					row.port = container.HostPort()
+				}
+			}
+			updated[index] = row
 		}
-		rows[i] = r
+		return runningRefreshedMsg{rows: updated, generation: generation}
 	}
-	return rows
 }
 
 func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -542,9 +551,8 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		for _, image := range msg.images {
 			m.rows = append(m.rows, prRow{kind: "local", local: image, imageState: "yes"})
 		}
-		m.rows = refreshRunning(m.rows)
 		m.applyFilter()
-		return m, m.startImageChecks()
+		return m, tea.Batch(m.startImageChecks(), refreshRunning(m.rows, m.imageGen))
 	case imageCheckedMsg:
 		if msg.gen != m.imageGen {
 			return m, nil
@@ -566,11 +574,19 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, m.startImageChecks()
 	case prActionMsg:
 		m.status = msg.text
-		m.rows = refreshRunning(m.rows)
+		return m, refreshRunning(m.rows, m.imageGen)
+	case runningRefreshedMsg:
+		if msg.generation != m.imageGen {
+			return m, nil
+		}
+		m.rows = msg.rows
 		m.applyFilter()
 		return m, m.refreshSelectedLogs()
 	case rebuildDoneMsg:
 		m.rebuilding = false
+		if m.rebuildCancel != nil {
+			m.rebuildCancel()
+		}
 		m.rebuildCancel = nil
 		m.loading = true
 		if msg.canceled {
@@ -604,6 +620,9 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.pulling = false
 		m.pullEvents = nil
+		if m.pullCancel != nil {
+			m.pullCancel()
+		}
 		m.pullCancel = nil
 		m.layout()
 		if msg.err != nil {
@@ -619,6 +638,9 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.pullCanceled = false
 		plan := m.pullPlan
 		m.pullPlan = nil
+		if plan == nil {
+			return m, nil
+		}
 		for i := range m.rows {
 			if m.rows[i].pr.Number == plan.PRNumber {
 				m.rows[i].imageState = "yes"
@@ -731,7 +753,7 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 				return m, m.beginPull(*row)
 			}
-			plan, err := run.BuildPlan(run.Options{Tag: row.local.Tag, Demo: m.demo})
+			plan, err := run.BuildPlan(run.Options{Context: context.Background(), Tag: row.local.Tag, Demo: m.demo})
 			if err != nil {
 				m.status = err.Error()
 				return m, nil
@@ -897,10 +919,11 @@ func (m prsModel) selectedDetailView() string {
 }
 
 func truncateText(value string, length int) string {
-	if len(value) <= length {
+	runes := []rune(value)
+	if len(runes) <= length {
 		return value
 	}
-	return value[:length]
+	return string(runes[:length])
 }
 
 func (m prsModel) View() tea.View {

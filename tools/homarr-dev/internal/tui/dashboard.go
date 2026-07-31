@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -40,6 +41,7 @@ type dashModel struct {
 
 type tickMsg time.Time
 type actionMsg string
+type rowsMsg []table.Row
 type logsMsg struct {
 	name    string
 	content string
@@ -54,12 +56,18 @@ func fetchLogs(name string) tea.Cmd {
 		if name == "" {
 			return logsMsg{}
 		}
-		out, err := exec.Command("docker", "logs", "--tail", "200", name).CombinedOutput()
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		out, err := exec.CommandContext(ctx, "docker", "logs", "--tail", "200", name).CombinedOutput()
 		if err != nil {
 			return logsMsg{name: name, content: "logs unavailable: " + err.Error()}
 		}
 		return logsMsg{name: name, content: string(out)}
 	}
+}
+
+func loadRows() tea.Cmd {
+	return func() tea.Msg { return rowsMsg(refreshRows()) }
 }
 
 func refreshRows() []table.Row {
@@ -103,7 +111,6 @@ func dashboardColumns(width int) []table.Column {
 func newDashModel() dashModel {
 	t := table.New(
 		table.WithColumns(dashboardColumns(104)),
-		table.WithRows(refreshRows()),
 		table.WithFocused(true),
 		table.WithHeight(10),
 		table.WithWidth(104),
@@ -122,8 +129,7 @@ func newDashModel() dashModel {
 	styles.Focused.Prompt = styles.Focused.Prompt.Foreground(lipgloss.Color("212")).Bold(true)
 	styles.Focused.Text = styles.Focused.Text.Foreground(lipgloss.Color("229"))
 	filter.SetStyles(styles)
-	rows := refreshRows()
-	return dashModel{table: t, allRows: rows, filter: filter, logs: logs, showLogs: true, follow: true, width: 104, height: 30}
+	return dashModel{table: t, filter: filter, logs: logs, showLogs: true, follow: true, width: 104, height: 30}
 }
 
 func (m *dashModel) applyFilter() {
@@ -141,11 +147,6 @@ func (m *dashModel) applyFilter() {
 	m.table.SetRows(rows)
 }
 
-func (m *dashModel) refresh() {
-	m.allRows = refreshRows()
-	m.applyFilter()
-}
-
 func (m dashModel) selected() string {
 	row := m.table.SelectedRow()
 	if len(row) == 0 {
@@ -154,8 +155,16 @@ func (m dashModel) selected() string {
 	return row[0]
 }
 
+func (m dashModel) selectedPort() string {
+	row := m.table.SelectedRow()
+	if len(row) < 4 {
+		return ""
+	}
+	return row[3]
+}
+
 func (m dashModel) Init() tea.Cmd {
-	return tea.Batch(tick(), fetchLogs(m.selected()))
+	return tea.Batch(tick(), loadRows(), fetchLogs(m.selected()))
 }
 
 func (m dashModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -170,8 +179,11 @@ func (m dashModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.layout()
 		return m, nil
 	case tickMsg:
-		m.refresh()
-		return m, tea.Batch(tick(), fetchLogs(m.selected()))
+		return m, tea.Batch(tick(), loadRows())
+	case rowsMsg:
+		m.allRows = []table.Row(msg)
+		m.applyFilter()
+		return m, fetchLogs(m.selected())
 	case logsMsg:
 		if msg.name != "" && msg.name != m.selected() {
 			return m, nil
@@ -184,8 +196,7 @@ func (m dashModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case actionMsg:
 		m.status = string(msg)
 		m.confirmRemove = ""
-		m.refresh()
-		return m, nil
+		return m, loadRows()
 	case tea.KeyPressMsg:
 		if m.filtering {
 			switch msg.Key().Code {
@@ -278,7 +289,7 @@ func (m dashModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "o":
 			if name != "" {
-				if port := portOf(name); port != "" {
+				if port := m.selectedPort(); port != "" {
 					if err := platform.OpenURL("http://localhost:" + port); err != nil {
 						m.status = "open failed: " + err.Error()
 					}
@@ -286,7 +297,7 @@ func (m dashModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "c":
 			if name != "" {
-				if port := portOf(name); port != "" {
+				if port := m.selectedPort(); port != "" {
 					url := "http://localhost:" + port
 					if err := platform.CopyText(url); err != nil {
 						m.status = "copy failed: " + err.Error()
@@ -296,8 +307,7 @@ func (m dashModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		case "r":
-			m.refresh()
-			return m, fetchLogs(name)
+			return m, loadRows()
 		case "k":
 			m.table.MoveUp(1)
 			return m, fetchLogs(m.selected())
@@ -348,16 +358,6 @@ func (m dashModel) selectedDetailView() string {
 	return title + "\n" + helpStyle.Render(meta)
 }
 
-func portOf(name string) string {
-	containers, _ := docker.List()
-	for _, c := range containers {
-		if c.Name == name {
-			return c.HostPort()
-		}
-	}
-	return ""
-}
-
 func (m dashModel) View() tea.View {
 	var b strings.Builder
 	running := 0
@@ -372,7 +372,7 @@ func (m dashModel) View() tea.View {
 		b.WriteString(m.filter.View() + "\n\n")
 	}
 	if len(m.table.Rows()) == 0 {
-		message := "no homarr containers — start one with `homarr <tag>` or `homarr --pr N`"
+		message := "no homarr containers — start one with `homarr run <tag>` or `homarr run --pr N`"
 		if len(m.allRows) > 0 {
 			message = "no instances match " + m.filter.Value()
 		}

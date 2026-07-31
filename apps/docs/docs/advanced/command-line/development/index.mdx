@@ -1,0 +1,37 @@
+# Developer Docker CLI
+
+The host-side developer CLI builds and runs local Homarr images and pull-request previews. It is installed from a Homarr checkout with `pnpm dev:setup` and is separate from the recovery CLI included in production images.
+
+## Browse development images
+
+```bash
+homarr dev
+```
+
+The interactive browser combines local `homarr:*` images with open pull requests and their GHCR preview status. Select an image to start or stop it, use `R` to rebuild a local image, or use `p` to pull a remote preview.
+
+## Build images
+
+```bash
+homarr build <name>
+homarr build --pr <number> [name]
+```
+
+The first command builds the current checkout as `homarr:<name>`. The pull-request form clones the requested branch into a temporary directory and defaults to `homarr:pr-<number>` when `name` is omitted.
+
+## Rebuild images
+
+```bash
+homarr rebuild <name>
+```
+
+Images built by this CLI record their source checkout, revision, and optional pull-request number. Rebuild uses that provenance to select the original checkout or create a fresh temporary pull-request checkout.
+
+## Run images
+
+```bash
+homarr run <name>
+homarr run --pr <number>
+```
+
+Add `--detach` to run in the background, `--demo` to enable demo data, or repeat `--env KEY=VALUE` to provide additional environment variables.

@@ -1,6 +1,7 @@
 package gh
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os/exec"
@@ -76,8 +77,8 @@ func rollupState(checks []rawCheck) string {
 	return "SUCCESS"
 }
 
-func ListPRs(limit int, includeBots bool) ([]PR, error) {
-	out, err := exec.Command("gh", "pr", "list",
+func ListPRs(ctx context.Context, limit int, includeBots bool) ([]PR, error) {
+	out, err := exec.CommandContext(ctx, "gh", "pr", "list",
 		"--repo", Repo,
 		"--state", "open",
 		"--limit", fmt.Sprint(limit),
@@ -110,8 +111,8 @@ func ListPRs(limit int, includeBots bool) ([]PR, error) {
 	return prs, nil
 }
 
-func GetPR(number int) (*PR, error) {
-	out, err := exec.Command("gh", "pr", "view", fmt.Sprint(number),
+func GetPR(ctx context.Context, number int) (*PR, error) {
+	out, err := exec.CommandContext(ctx, "gh", "pr", "view", fmt.Sprint(number),
 		"--repo", Repo,
 		"--json", "number,title,author,headRefName,updatedAt,isDraft,statusCheckRollup",
 	).Output()

@@ -12,6 +12,8 @@ import (
 	"strings"
 )
 
+const defaultDevelopmentEncryptionKey = "cdca265c289df60f6605a2fc9c43cfa8eb6efdc98b203cad2c3f2970aca09fbe"
+
 type Container struct {
 	ID     string
 	Name   string
@@ -82,8 +84,12 @@ func List() ([]Container, error) {
 }
 
 func FindFreePort(start int) int {
+	if start > 65535 {
+		return 0
+	}
 	used := usedDockerPorts()
-	for port := start; ; port++ {
+	start = max(start, 1)
+	for port := start; port <= 65535; port++ {
 		if used[port] {
 			continue
 		}
@@ -93,36 +99,43 @@ func FindFreePort(start int) int {
 			return port
 		}
 	}
+	return 0
 }
 
 func usedDockerPorts() map[int]bool {
-	used := make(map[int]bool)
 	out, err := exec.Command("docker", "ps", "--format", "{{.Ports}}").Output()
 	if err != nil {
-		return used
+		return make(map[int]bool)
 	}
-	for _, mapping := range strings.Split(string(out), ",") {
-		left, _, found := strings.Cut(mapping, "->")
-		if !found {
-			continue
-		}
-		colon := strings.LastIndex(left, ":")
-		if colon < 0 {
-			continue
-		}
-		ports := strings.SplitN(strings.TrimSpace(left[colon+1:]), "-", 2)
-		first, err := strconv.Atoi(ports[0])
-		if err != nil {
-			continue
-		}
-		last := first
-		if len(ports) == 2 {
-			if parsed, err := strconv.Atoi(ports[1]); err == nil {
-				last = parsed
+	return parseUsedDockerPorts(out)
+}
+
+func parseUsedDockerPorts(out []byte) map[int]bool {
+	used := make(map[int]bool)
+	for _, line := range strings.Split(string(out), "\n") {
+		for _, mapping := range strings.Split(line, ",") {
+			left, _, found := strings.Cut(mapping, "->")
+			if !found {
+				continue
 			}
-		}
-		for port := first; port <= last; port++ {
-			used[port] = true
+			colon := strings.LastIndex(left, ":")
+			if colon < 0 {
+				continue
+			}
+			ports := strings.SplitN(strings.TrimSpace(left[colon+1:]), "-", 2)
+			first, err := strconv.Atoi(ports[0])
+			if err != nil {
+				continue
+			}
+			last := first
+			if len(ports) == 2 {
+				if parsed, err := strconv.Atoi(ports[1]); err == nil {
+					last = parsed
+				}
+			}
+			for port := first; port <= last; port++ {
+				used[port] = true
+			}
 		}
 	}
 	return used
@@ -162,8 +175,12 @@ func Start(opts StartOptions) error {
 
 	_ = exec.Command("docker", "rm", "-f", opts.Name).Run()
 
+	encryptionKey := os.Getenv("HOMARR_DEV_SECRET_ENCRYPTION_KEY")
+	if encryptionKey == "" {
+		encryptionKey = defaultDevelopmentEncryptionKey
+	}
 	args := []string{"run", "--rm", "--name", opts.Name,
-		"-e", "SECRET_ENCRYPTION_KEY=cdca265c289df60f6605a2fc9c43cfa8eb6efdc98b203cad2c3f2970aca09fbe",
+		"-e", "SECRET_ENCRYPTION_KEY=" + encryptionKey,
 	}
 	if opts.Platform != "" {
 		args = append(args, "--platform", opts.Platform)
