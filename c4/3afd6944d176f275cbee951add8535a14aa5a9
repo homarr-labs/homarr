@@ -1,0 +1,19 @@
+packages/integrations/test/home-assistant.spec.ts
+  s_5126ece19484bf::t_5fbae9f95af87a 41,55-56,74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "c43afd6944d176f275cbee951add8535a14aa5a9",
+  "prompts": {},
+  "sessions": {
+    "s_5126ece19484bf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019faf09-9790-7e51-a9e2-60e0f621e2b9",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
