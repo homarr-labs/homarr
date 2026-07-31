@@ -296,7 +296,9 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
         <Group gap={4} wrap="nowrap">
           <IconVideo size={16} style={{ flexShrink: 0 }} />
           <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-            {t("footer.streams", { count: flatSessions.length.toString() })}
+            {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
+              count: flatSessions.length,
+            })}
           </Text>
           {totalBitrateLabel && (
             <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
