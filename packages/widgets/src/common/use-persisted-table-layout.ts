@@ -9,6 +9,12 @@ interface TableLayoutOptions extends Record<string, unknown> {
   columnWidths?: string;
 }
 
+interface PendingTableLayout {
+  layout: TableLayoutOptions;
+  onLayoutChange: (layout: TableLayoutOptions) => void;
+  storeKey: string;
+}
+
 interface UseTableLayoutPersistenceProps {
   boardId: string | undefined;
   hasChangeAccess: boolean;
@@ -168,25 +174,19 @@ export const usePersistedTableLayout = <T>({
     visibleAccessorSet,
   ]);
 
-  const pendingLayout = useRef<TableLayoutOptions>({});
+  const pendingLayout = useRef<PendingTableLayout | undefined>(undefined);
   const saveTimeout = useRef<number | undefined>(undefined);
-  const onLayoutChangeRef = useRef(onLayoutChange);
-  useEffect(() => {
-    onLayoutChangeRef.current = onLayoutChange;
-  }, [onLayoutChange]);
   const flushPendingLayout = useCallback(() => {
-    const layout = pendingLayout.current;
-    pendingLayout.current = {};
+    const pending = pendingLayout.current;
+    pendingLayout.current = undefined;
+    window.clearTimeout(saveTimeout.current);
     saveTimeout.current = undefined;
-    if (Object.keys(layout).length > 0) onLayoutChangeRef.current(layout);
+    if (pending) pending.onLayoutChange(pending.layout);
   }, []);
-  useEffect(
-    () => () => {
-      window.clearTimeout(saveTimeout.current);
-      flushPendingLayout();
-    },
-    [flushPendingLayout],
-  );
+  useEffect(() => {
+    if (pendingLayout.current && pendingLayout.current.storeKey !== storeKey) flushPendingLayout();
+  }, [flushPendingLayout, storeKey]);
+  useEffect(() => () => flushPendingLayout(), [flushPendingLayout]);
   useEffect(() => {
     if (!hydrated.current) return;
 
@@ -211,10 +211,23 @@ export const usePersistedTableLayout = <T>({
       newLayout.columnWidths = JSON.stringify(widthMap);
     }
 
-    pendingLayout.current = { ...pendingLayout.current, ...newLayout };
+    if (pendingLayout.current && pendingLayout.current.storeKey !== storeKey) flushPendingLayout();
+    pendingLayout.current = pendingLayout.current
+      ? { ...pendingLayout.current, layout: { ...pendingLayout.current.layout, ...newLayout } }
+      : { layout: newLayout, onLayoutChange, storeKey };
     window.clearTimeout(saveTimeout.current);
     saveTimeout.current = window.setTimeout(flushPendingLayout, layoutSaveDelay);
-  }, [columnAccessors, columnsOrder, columnsWidth, flushPendingLayout, savedOrder, savedWidths, visibleAccessorSet]);
+  }, [
+    columnAccessors,
+    columnsOrder,
+    columnsWidth,
+    flushPendingLayout,
+    onLayoutChange,
+    savedOrder,
+    savedWidths,
+    storeKey,
+    visibleAccessorSet,
+  ]);
 
   return { effectiveColumns, storeKey };
 };
