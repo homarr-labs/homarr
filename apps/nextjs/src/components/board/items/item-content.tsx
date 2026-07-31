@@ -126,7 +126,13 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
               {isEditMode && <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />}
-              <WidgetError kind={item.kind} error={error} resetErrorBoundary={resetErrorBoundary} />
+              <div
+                className={itemContentClasses.editModeInertContent}
+                data-board-grid-inert-content={isEditMode ? "true" : undefined}
+                inert={isEditMode}
+              >
+                <WidgetError kind={item.kind} error={error} resetErrorBoundary={resetErrorBoundary} />
+              </div>
             </>
           )}
         >
@@ -139,22 +145,28 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             }
           />
           {isEditMode && <BoardItemMenu offset={4} item={newItem} />}
-          <Comp
-            options={options as never}
-            integrationIds={item.integrationIds}
-            isEditMode={isEditMode}
-            boardId={board.id}
-            itemId={item.id}
-            setOptions={(partialNewOptions) =>
-              updateOptions({
-                newOptions: {
-                  ...options,
-                  ...partialNewOptions.newOptions,
-                },
-              })
-            }
-            {...dimensions}
-          />
+          <div
+            className={itemContentClasses.editModeInertContent}
+            data-board-grid-inert-content={isEditMode ? "true" : undefined}
+            inert={isEditMode}
+          >
+            <Comp
+              options={options as never}
+              integrationIds={item.integrationIds}
+              isEditMode={isEditMode}
+              boardId={board.id}
+              itemId={item.id}
+              setOptions={(partialNewOptions) =>
+                updateOptions({
+                  newOptions: {
+                    ...options,
+                    ...partialNewOptions.newOptions,
+                  },
+                })
+              }
+              {...dimensions}
+            />
+          </div>
         </ErrorBoundary>
       )}
     </QueryErrorResetBoundary>

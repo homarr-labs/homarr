@@ -14,6 +14,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { getLogicalTrackSize, LOGICAL_GRID_GAP, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import { useSectionContext } from "../section-context";
+import { getDropSwapPlacements } from "./grid-drop-swap";
 import { useBoardGridPortalHost } from "./grid-portal-host";
 import { decorateGridResizeHandles } from "./grid-resize-handles";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
@@ -54,6 +55,11 @@ export default function GridEditor({
   const gridRef = useRef<GridStack | null>(null);
   const applyingControlledLayoutRef = useRef(false);
   const placementsRef = useRef(placements);
+  const dragSnapshotRef = useRef<{
+    grid: GridStack;
+    itemId: string;
+    placements: SectionGridPlacement[];
+  } | null>(null);
   const entriesRef = useRef([...items, ...innerSections]);
   const acceptWidgetRef = useRef<(element: Element) => boolean>(() => false);
   const dimensionsRef = useRef({ columnCount, fixedRowCount, rowCount });
@@ -205,12 +211,43 @@ export default function GridEditor({
     wrapper.classList.add("grid-stack-editing");
 
     const handleStop = (_event: Event, element: GridItemHTMLElement) => {
-      eventHandlersRef.current.commitGrid(element.gridstackNode?.grid ?? grid);
-      eventHandlersRef.current.announceNode(element.gridstackNode);
-      decorateGrid(element.gridstackNode?.grid ?? grid, placementsRef.current);
-      restoreContentHeight(grid);
+      const changedGrid = element.gridstackNode?.grid ?? grid;
+      const dragSnapshot = dragSnapshotRef.current;
+      dragSnapshotRef.current = null;
+      queueMicrotask(() => {
+        if (dragSnapshot?.grid === changedGrid) {
+          const swapped = getDropSwapPlacements(
+            dragSnapshot.placements,
+            getGridPlacements(changedGrid),
+            dragSnapshot.itemId,
+          );
+          if (swapped) {
+            applyingControlledLayoutRef.current = true;
+            try {
+              changedGrid.load(swapped.map(toGridStackWidget), shellCallback);
+            } finally {
+              applyingControlledLayoutRef.current = false;
+            }
+          }
+        }
+
+        eventHandlersRef.current.commitGrid(changedGrid);
+        eventHandlersRef.current.announceNode(element.gridstackNode);
+        decorateGrid(changedGrid, placementsRef.current);
+        restoreContentHeight(grid);
+      });
     };
-    const handleDragStart = () => {
+    const handleDragStart = (_event: Event, element: GridItemHTMLElement) => {
+      const changedGrid = element.gridstackNode?.grid ?? grid;
+      const itemId = element.getAttribute("data-grid-item-id") ?? element.gridstackNode?.id;
+      if (itemId) {
+        dragSnapshotRef.current = {
+          grid: changedGrid,
+          itemId: String(itemId),
+          placements: getGridPlacements(changedGrid),
+        };
+      }
+
       const currentDimensions = dimensionsRef.current;
       if (currentDimensions.fixedRowCount) return;
 
@@ -224,6 +261,7 @@ export default function GridEditor({
       previousNode: GridStackNode | undefined,
       newNode: GridStackNode | undefined,
     ) => {
+      dragSnapshotRef.current = null;
       queueMicrotask(() => {
         if (applyingControlledLayoutRef.current) return;
         const snapshots = uniqueGrids([previousNode?.grid, newNode?.grid ?? grid])
@@ -358,7 +396,7 @@ const decorateItem = (element: GridItemHTMLElement, type: SectionGridPlacement["
   element.setAttribute("data-grid-y", String(node.y ?? 0));
   element.setAttribute("data-grid-w", String(node.w ?? 1));
   element.setAttribute("data-grid-h", String(node.h ?? 1));
-  decorateGridResizeHandles(element);
+  decorateGridResizeHandles(element, { minW: node.minW, minH: node.minH });
 };
 
 const getElementItemType = (element: Element): SectionGridPlacement["type"] | undefined => {

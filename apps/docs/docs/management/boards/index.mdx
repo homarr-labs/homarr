@@ -142,8 +142,10 @@ Once the minimum of the next layout is reached, the layout will change.
 View mode renders a static board without executing the drag-and-drop editor.
 After the board is interactive, Homarr prepares the editor in the background for users who can modify it.
 Entering edit mode keeps the static board visible until that preparation finishes, then enables collision-aware movement and resizing without changing the board geometry.
-Drag from anywhere on a tile except its buttons or controls.
-When a tile grows or moves into occupied space, nearby tiles are compacted out of the way.
+Widget content is inert in edit mode, so dragging anywhere on the content moves the tile instead of activating the widget; the tile's settings button remains available.
+Dropping a tile into the exact slot of an equally-sized tile swaps their positions.
+For other collisions, or when a tile grows into occupied space, nearby tiles are compacted out of the way.
+Resize handles stop at the tile's minimum allowed size while the pointer is still moving.
 Exit edit mode to save the resulting positions.
 
 Keyboard users can focus a tile, press Enter or Space, then use arrow keys to move and Shift plus arrow keys to resize.

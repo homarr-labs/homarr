@@ -129,7 +129,10 @@ const GridPortalContent = ({ itemId, ownerSectionId, container, integrations, an
     if (!itemElement) return;
 
     itemElement.gridstackNode?.grid?.refreshDragHandles(itemElement);
-    decorateGridResizeHandles(itemElement);
+    decorateGridResizeHandles(itemElement, {
+      minW: itemElement.gridstackNode?.minW,
+      minH: itemElement.gridstackNode?.minH,
+    });
   }, [container, ownerSectionId]);
 
   if (!entry || !section || !currentLayout) return null;
