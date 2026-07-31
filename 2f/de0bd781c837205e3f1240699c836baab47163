@@ -1,0 +1,21 @@
+packages/db/collection.ts
+  s_5126ece19484bf::t_5696a70af3a997 9-10,41,55
+packages/db/test/schema.spec.ts
+  s_5126ece19484bf::t_5696a70af3a997 14-16,69,90,150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "2fde0bd781c837205e3f1240699c836baab47163",
+  "prompts": {},
+  "sessions": {
+    "s_5126ece19484bf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019faf09-9790-7e51-a9e2-60e0f621e2b9",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
