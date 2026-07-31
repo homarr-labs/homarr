@@ -208,6 +208,8 @@ describe("Board grid", () => {
       await expect(firstItem.locator(`[data-grid-id="${fixture.firstItemId}"]`)).toHaveAttribute("role", "group");
       await expectTargetSizeAsync(getEditorEntry(firstItem));
       await expectTargetSizeAsync(firstItem.locator(':scope > [data-testid="board-grid-resize-handle"]'));
+      await expectLogicalTargetSizeAsync(firstItem.locator(':scope > [data-testid="board-grid-resize-handle"]'), 44);
+      await expect(firstItem.locator("[data-board-grid-inert-content]")).toHaveAttribute("inert", "");
 
       await page.getByRole("button", { name: "Add board content" }).click();
       await expect(page.getByRole("menuitem", { name: "New section", exact: true })).toBeVisible();
@@ -220,7 +222,11 @@ describe("Board grid", () => {
 
       const railBoxBeforeMainDrag = await expectBoundingBoxAsync(rail);
       const canvasScale = await readCanvasScaleAsync(canvas);
-      await dragLocatorByAsync(page, getEditorEntry(firstItem), logicalCellPitch * canvasScale * 4, 0);
+      await dragLocatorByAsync(page, getEditorEntry(firstItem), logicalCellPitch * canvasScale, 0);
+      await expect(firstItem).toHaveAttribute("data-grid-x", "1");
+      await expect(secondItem).toHaveAttribute("data-grid-x", "0");
+
+      await dragLocatorByAsync(page, getEditorEntry(firstItem), logicalCellPitch * canvasScale * 3, 0);
       await expect(firstItem).toHaveAttribute("data-grid-x", "4");
       expect(gridLayoutsOverlap(await readGridLayoutAsync(firstItem), await readGridLayoutAsync(secondItem))).toBe(
         false,
@@ -279,7 +285,23 @@ describe("Board grid", () => {
       await expect(railKeyboardEntry).toHaveAttribute("data-keyboard-editing", "false");
 
       const dynamicResizeHandle = dynamicSection.locator(':scope > [data-testid="board-grid-resize-handle"]');
-      await dragLocatorByAsync(page, dynamicResizeHandle, 0, logicalCellPitch * canvasScale);
+      await expectLogicalTargetSizeAsync(dynamicResizeHandle, 44);
+      await dragLocatorByAsync(page, dynamicResizeHandle, 0, -logicalCellPitch * canvasScale);
+      await expect(dynamicSection).toHaveAttribute("data-grid-h", "1");
+
+      const minimumSectionBox = await expectBoundingBoxAsync(dynamicSection);
+      const minimumHandleBox = await expectBoundingBoxAsync(dynamicResizeHandle);
+      const resizeStartX = minimumHandleBox.x + minimumHandleBox.width / 2;
+      const resizeStartY = minimumHandleBox.y + minimumHandleBox.height / 2;
+      await page.mouse.move(resizeStartX, resizeStartY);
+      await page.mouse.down();
+      await page.mouse.move(resizeStartX, resizeStartY - logicalCellPitch * canvasScale * 2, { steps: 12 });
+      const constrainedSectionBox = await expectBoundingBoxAsync(dynamicSection);
+      expect(Math.abs(constrainedSectionBox.height - minimumSectionBox.height)).toBeLessThan(1);
+      await page.mouse.up();
+      await expect(dynamicSection).toHaveAttribute("data-grid-h", "1");
+
+      await dragLocatorByAsync(page, dynamicResizeHandle, 0, logicalCellPitch * canvasScale * 2);
       await expect(dynamicSection).toHaveAttribute("data-grid-h", "3");
       await expect(belowItem).toHaveAttribute("data-grid-y", "3");
       expect(gridLayoutsOverlap(await readGridLayoutAsync(dynamicSection), await readGridLayoutAsync(belowItem))).toBe(
@@ -914,6 +936,15 @@ const expectTargetSizeAsync = async (locator: Locator) => {
   const box = await expectBoundingBoxAsync(locator);
   expect(box.width).toBeGreaterThanOrEqual(24);
   expect(box.height).toBeGreaterThanOrEqual(24);
+};
+
+const expectLogicalTargetSizeAsync = async (locator: Locator, minimumSize: number) => {
+  const dimensions = await locator.evaluate((element) => ({
+    width: (element as HTMLElement).offsetWidth,
+    height: (element as HTMLElement).offsetHeight,
+  }));
+  expect(dimensions.width).toBeGreaterThanOrEqual(minimumSize);
+  expect(dimensions.height).toBeGreaterThanOrEqual(minimumSize);
 };
 
 const readGridLayoutAsync = async (locator: Locator) => {
