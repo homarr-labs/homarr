@@ -2736,7 +2736,7 @@
         }
       },
       "footer": {
-        "streams": "{count} active streams",
+        "streams": "{count, plural, one {# active stream} other {# active streams}}",
         "totalBitrate": "Total: {bitrate}"
       },
       "items": {
