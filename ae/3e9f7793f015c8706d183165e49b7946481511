@@ -1,0 +1,25 @@
+tools/homarr-dev/internal/docker/docker.go
+  s_1c2c60ab8959b8::t_5370f6833d0360 5-6,13,18,169-173,225-278,280-282
+  s_1c2c60ab8959b8::t_a419a08691d137 279
+  s_1c2c60ab8959b8::t_069d5f98dbe6b5 283
+tools/homarr-dev/README.md
+  s_1c2c60ab8959b8::t_a419a08691d137 40
+tools/homarr-dev/internal/docker/docker_test.go
+  s_1c2c60ab8959b8::t_5370f6833d0360 4,6-8,47-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "ae3e9f7793f015c8706d183165e49b7946481511",
+  "prompts": {},
+  "sessions": {
+    "s_1c2c60ab8959b8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_04800f60fffebifl2JH2wvlokh",
+        "model": "gpt-5.6-sol-fast"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
