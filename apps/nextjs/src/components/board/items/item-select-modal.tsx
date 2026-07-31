@@ -21,11 +21,11 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   const t = useI18n();
   const { createItem, updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
   const { openModal: openEditModal } = useModalAction(WidgetEditModal);
-  const { data: integrationData } = clientApi.integration.all.useQuery();
+  const { data: integrationData = [] } = clientApi.integration.all.useQuery();
   const { data: customWidgetDefs } = clientApi.customWidget.all.useQuery();
   const settings = useSettings();
 
-  const availableKinds = useMemo(() => new Set((integrationData ?? []).map((i) => i.kind)), [integrationData]);
+  const availableKinds = useMemo(() => new Set(integrationData.map((i) => i.kind)), [integrationData]);
 
   const items = useMemo(
     () =>
@@ -79,7 +79,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
     const hasIntegrationSupport = "supportedIntegrations" in definition;
 
     const matchingIntegrations = hasIntegrationSupport
-      ? (integrationData ?? []).filter((integration) =>
+      ? integrationData.filter((integration) =>
           (definition.supportedIntegrations as string[]).includes(integration.kind),
         )
       : [];

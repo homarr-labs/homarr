@@ -16,7 +16,7 @@ import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
+import { useIntegrations, useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useTimeAgo } from "@homarr/common";
@@ -32,7 +32,7 @@ import { WidgetEditModal } from "@homarr/widgets/modals";
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
-import { ItemMoveModal } from "./item-move-modal";
+import { useOpenItemMoveModal } from "./item-move-modal";
 
 interface WidgetContextMenuProps {
   item: SectionItem;
@@ -50,14 +50,14 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
   const settings = useSettings();
   const isRightClickEnabled = settings.enableRightClickOnWidgets;
   const { openModal } = useModalAction(WidgetEditModal);
-  const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
+  const openMoveModal = useOpenItemMoveModal();
   const { openConfirmModal } = useConfirmModal();
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
-  const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
+  const integrationData = useIntegrations();
   const { mutate: saveBoard } = clientApi.board.saveBoard.useMutation();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
-  const { gridstack } = useSectionContext().refs;
+  const { section } = useSectionContext();
   const queryClient = useQueryClient();
 
   const widgetQueryKey = useMemo(
@@ -131,7 +131,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
             );
           }
         },
-        integrationData: (integrationData ?? []).filter(
+        integrationData: integrationData.filter(
           (integration) =>
             "supportedIntegrations" in currentDefinition &&
             (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
@@ -221,8 +221,10 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
               closeMenuOnClick
               leftSection={<IconLayoutKanban size={16} />}
               onClick={() => {
-                if (!gridstack.current) return;
-                openMoveModal({ item, columnCount: gridstack.current.getColumn(), gridStack: gridstack.current });
+                openMoveModal({
+                  entry: item,
+                  sourceSectionId: section.id,
+                });
               }}
             >
               {tItem("action.moveResize")}
@@ -254,12 +256,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
               />
             </Group>
           </Menu.Item>
-          <Menu.Item
-            closeMenuOnClick
-            leftSection={<IconSettings size={16} />}
-            onClick={openEditModal}
-            disabled={isPending}
-          >
+          <Menu.Item closeMenuOnClick leftSection={<IconSettings size={16} />} onClick={openEditModal}>
             {tMenu("settings")}
           </Menu.Item>
         </>

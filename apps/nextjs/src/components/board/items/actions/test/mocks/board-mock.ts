@@ -45,6 +45,8 @@ export class BoardMockBuilder {
           id: createId(),
           name: "Base",
           columnCount: 12,
+          leftGutterColumnCount: 0,
+          rightGutterColumnCount: 0,
           breakpoint: 0,
         },
       ],

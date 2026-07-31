@@ -30,6 +30,7 @@ import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-transla
 
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
+import { ViewportHint } from "~/components/layout/viewport-hint";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
@@ -144,6 +145,7 @@ export default async function Layout(props: {
       </head>
       <body className={[fontSans.className, fontSans.variable].join(" ")} suppressHydrationWarning>
         <Analytics enabled={serverSettings.analytics.enableGeneral} />
+        <ViewportHint />
         <StackedProvider>
           <Notifications pauseResetOnHover="notification" />
           <ServiceWorkerRegistration />

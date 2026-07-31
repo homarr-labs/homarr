@@ -2,8 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
+import { useIntegrations, useSession } from "@homarr/auth/client";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
@@ -14,7 +13,7 @@ import { WidgetEditModal } from "@homarr/widgets/modals";
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
-import { ItemMoveModal } from "./item-move-modal";
+import { useOpenItemMoveModal } from "./item-move-modal";
 
 interface BoardItemMenuProps {
   offset: number;
@@ -34,15 +33,17 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
   const tItem = useScopedI18n("item");
   const t = useI18n();
   const { openModal } = useModalAction(WidgetEditModal);
-  const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
+  const openMoveModal = useOpenItemMoveModal();
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
-  const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
+  const integrationData = useIntegrations();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
-  const { gridstack } = useSectionContext().refs;
+  const { section } = useSectionContext();
   const settings = useSettings();
+  const label = item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`);
+  const menuRightOffset = section.kind === "dynamic" ? offset + 40 : offset;
 
   // Reset error boundary on next render if item has been edited
   useEffect(() => {
@@ -52,7 +53,7 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
     }
   }, [item, resetErrorBoundary]);
 
-  if (!isEditMode || isPending) return null;
+  if (!isEditMode) return null;
 
   const openEditModal = () => {
     openModal(
@@ -78,7 +79,7 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
           });
           refResetErrorBoundaryOnNextRender.current = true;
         },
-        integrationData: (integrationData ?? []).filter(
+        integrationData: integrationData.filter(
           (integration) =>
             "supportedIntegrations" in currentDefinition &&
             (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
@@ -89,8 +90,8 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       {
-        title(t) {
-          return `${t("item.edit.title")} - ${t(`widget.${item.kind}.name`)}`;
+        title(translate) {
+          return `${translate("item.edit.title")} - ${translate(`widget.${item.kind}.name`)}`;
         },
       },
     );
@@ -114,9 +115,9 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
           radius={"xl"}
           pos="absolute"
           top={offset}
-          right={offset}
+          right={menuRightOffset}
           style={{ zIndex: 10 }}
-          aria-label={tItem("menu.label.settings")}
+          aria-label={tItem("menu.label.settingsFor", { name: label })}
         >
           <IconDotsVertical size={"1rem"} />
         </ActionIcon>
@@ -129,8 +130,10 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
         <Menu.Item
           leftSection={<IconLayoutKanban size={16} />}
           onClick={() => {
-            if (!gridstack.current) return;
-            openMoveModal({ item, columnCount: gridstack.current.getColumn(), gridStack: gridstack.current });
+            openMoveModal({
+              entry: item,
+              sourceSectionId: section.id,
+            });
           }}
         >
           {tItem("action.moveResize")}

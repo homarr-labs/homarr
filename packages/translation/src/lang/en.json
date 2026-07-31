@@ -1549,10 +1549,35 @@
     }
   },
   "section": {
+    "option": {
+      "showLabel": {
+        "label": "Show label",
+        "description": "Display the section label above its contents."
+      },
+      "collapsible": {
+        "label": "Allow collapse",
+        "description": "Let viewers expand and collapse this section."
+      },
+      "showOpenAll": {
+        "label": "Show open-all action",
+        "description": "Show an action that opens every app in this section in new tabs."
+      }
+    },
+    "action": {
+      "openAllInNewTabs": "Open all in tabs",
+      "openAllInNewTabsFor": "Open all apps in {name} in tabs"
+    },
+    "openAllInNewTabs": {
+      "title": "Open all in tabs",
+      "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
+    },
     "dynamic": {
+      "untitled": "Untitled section",
       "action": {
-        "create": "New dynamic section",
-        "remove": "Remove dynamic section"
+        "create": "New section",
+        "remove": "Remove section",
+        "expand": "Expand",
+        "collapse": "Collapse"
       },
       "option": {
         "title": {
@@ -1566,48 +1591,8 @@
         }
       },
       "remove": {
-        "title": "Remove dynamic section",
-        "message": "Are you sure you want to remove this dynamic section? Items will be moved at the same location in the parent section."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Name"
-        }
-      },
-      "action": {
-        "create": "New category",
-        "edit": "Rename category",
-        "remove": "Remove category",
-        "moveUp": "Move up",
-        "moveDown": "Move down",
-        "createAbove": "New category above",
-        "createBelow": "New category below",
-        "openAllInNewTabs": "Open all in tabs"
-      },
-      "create": {
-        "title": "New category",
-        "submit": "Add category"
-      },
-      "remove": {
-        "title": "Remove category",
-        "message": "Are you sure you want to remove the category {name}?"
-      },
-      "edit": {
-        "title": "Rename category",
-        "submit": "Rename category"
-      },
-      "menu": {
-        "label": {
-          "create": "New category",
-          "changePosition": "Change position",
-          "settings": "Settings"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "Open all in tabs",
-        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
+        "title": "Remove section",
+        "message": "Remove this section? Its contents will move into the surrounding area."
       }
     }
   },
@@ -1623,6 +1608,7 @@
     "menu": {
       "label": {
         "settings": "Settings",
+        "settingsFor": "Settings for {name}",
         "refresh": "Refresh",
         "options": "Options",
         "actions": "Actions"
@@ -1641,7 +1627,21 @@
     },
     "moveResize": {
       "title": "Move / resize item",
+      "entryLabel": "{name}, column {column}, row {row}",
+      "target": {
+        "numbered": "{name}, destination {index}",
+        "located": "{name}, {location}, destination {index}"
+      },
+      "keyboard": {
+        "instructions": "Press Enter or Space to start keyboard editing. Use arrow keys to move, Shift plus arrow keys to resize, and Escape to stop.",
+        "started": "Keyboard editing started. Use arrow keys to move, Shift plus arrow keys to resize, and Escape to stop.",
+        "stopped": "Keyboard editing stopped.",
+        "boundary": "That change does not fit inside this section."
+      },
       "field": {
+        "section": {
+          "label": "Section or rail"
+        },
         "width": {
           "label": "Width"
         },
@@ -4150,6 +4150,9 @@
   },
   "board": {
     "action": {
+      "addContent": "Add board content",
+      "settings": "Board settings",
+      "switch": "Switch board",
       "duplicate": {
         "title": "Duplicate board",
         "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
@@ -4165,6 +4168,9 @@
         }
       },
       "edit": {
+        "enter": "Edit board",
+        "save": "Save board",
+        "exit": "Exit edit mode",
         "notification": {
           "success": {
             "title": "Changes applied successfully",
@@ -4173,6 +4179,10 @@
           "error": {
             "title": "Unable to apply changes",
             "message": "The board could not be saved"
+          },
+          "loadError": {
+            "title": "Unable to start editing",
+            "message": "The board editor could not be loaded. Your dashboard is still available in view mode."
           }
         },
         "confirmLeave": {
@@ -4242,6 +4252,12 @@
           "createAndUse": "Create and use"
         }
       }
+    },
+    "landmark": {
+      "canvas": "Dashboard canvas",
+      "leftRail": "Left dashboard rail",
+      "rightRail": "Right dashboard rail",
+      "items": "Dashboard items"
     },
     "field": {
       "pageTitle": {
@@ -4496,6 +4512,26 @@
       "breakpoint": {
         "label": "Breakpoint",
         "description": "Layout will be used on all screens larger than this breakpoint until the next bigger breakpoint."
+      },
+      "gutters": {
+        "label": "Fixed sidebars",
+        "description": "Reserve up to three dashboard columns on either side. The remaining canvas reflows automatically.",
+        "left": {
+          "label": "Left sidebar",
+          "description": "Keep this area visible while the dashboard scrolls.",
+          "thumbLabel": "Left sidebar width"
+        },
+        "right": {
+          "label": "Right sidebar",
+          "description": "Keep this area visible while the dashboard scrolls.",
+          "thumbLabel": "Right sidebar width"
+        },
+        "width": {
+          "label": "Width in columns"
+        },
+        "preview": {
+          "label": "Dashboard layout preview"
+        }
       }
     }
   },
