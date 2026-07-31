@@ -10,19 +10,21 @@ import { AddingIntegration } from '@site/src/components/integrations/adding';
 import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
 import { navidromeIntegration } from '.';
 import { audioStatsWidget } from '@site/docs/widgets/audio-stats';
+import { mediaServerWidget } from '@site/docs/widgets/media-server';
 
 
 <IntegrationHeader
     integration={navidromeIntegration}
-    categories={['Media']}
+    categories={['Media', 'Media server']}
 />
 
-Navidrome provides music library statistics including artist, album, and song counts, as well as now playing information via the Subsonic API.
+Navidrome provides music library statistics including artist, album, and song counts, as well as now playing audio streams via the Subsonic API.
 
 ### Widgets & Capabilities
 <IntegrationCapabilites
     items={[
         { widget: audioStatsWidget },
+        { widget: mediaServerWidget },
     ]}
 />
 

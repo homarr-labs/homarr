@@ -6,6 +6,8 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
+import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import type { NavidromeDashboardData, NavidromeNowPlayingEntry, SubsonicResponseBody } from "./navidrome-types";
 import { subsonicResponseSchema } from "./navidrome-types";
 
@@ -22,7 +24,7 @@ const subsonicAuthErrorCodes = new Set([40, 41]);
 const asArray = <TValue>(value: TValue | TValue[] | undefined): TValue[] =>
   [value].flat().filter((item): item is TValue => item !== undefined);
 
-export class NavidromeIntegration extends Integration {
+export class NavidromeIntegration extends Integration implements IMediaServerIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const url = this.url("/rest/ping.view", this.getAuthParams());
     const response = await input.fetchAsync(url);
@@ -65,6 +67,29 @@ export class NavidromeIntegration extends Integration {
       songCount: libraryCounts.songCount,
       nowPlaying,
     };
+  }
+
+  public async getCurrentSessionsAsync(_options: CurrentSessionsInput): Promise<StreamSession[]> {
+    const nowPlaying = await this.getNowPlayingAsync();
+
+    return nowPlaying.map((entry): StreamSession => ({
+      sessionId: `${entry.username}-${entry.playerName}`,
+      sessionName: entry.playerName,
+      user: {
+        userId: entry.username,
+        username: entry.username,
+        profilePictureUrl: null,
+      },
+      currentlyPlaying: {
+        type: "audio",
+        name: entry.title,
+        seasonName: entry.artist || undefined,
+        episodeName: null,
+        albumName: entry.album,
+        episodeCount: null,
+        metadata: null,
+      },
+    }));
   }
 
   private async getArtistCountAsync(): Promise<number> {
