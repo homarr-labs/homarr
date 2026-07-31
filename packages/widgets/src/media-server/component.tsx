@@ -274,6 +274,12 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
     };
   });
 
+  const totalBitrateKbps = flatSessions.reduce(
+    (sum, session) => sum + (session.currentlyPlaying?.metadata?.bitrateKbps ?? 0),
+    0,
+  );
+  const totalBitrateLabel = options.showBitrate ? formatBitrate(totalBitrateKbps) : null;
+
   return (
     <Stack gap={0} h="100%" display="flex">
       <MantineReactTable table={table} />
@@ -282,19 +288,32 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
         h={30}
         px="xs"
         pr="md"
-        justify="flex-end"
+        justify="space-between"
         style={{
           borderTop: "1px solid var(--border-color)",
         }}
       >
-        {uniqueIntegrations.map((integration) => (
-          <Group key={integration.integrationKind} gap="xs" align="center">
-            <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
-            <Text className="media-server-name" size="sm">
-              {integration.integrationName}
+        <Group gap={4} wrap="nowrap">
+          <IconVideo size={16} style={{ flexShrink: 0 }} />
+          <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+            {t("footer.streams", { count: flatSessions.length.toString() })}
+          </Text>
+          {totalBitrateLabel && (
+            <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+              {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
             </Text>
-          </Group>
-        ))}
+          )}
+        </Group>
+        <Group gap="xs">
+          {uniqueIntegrations.map((integration) => (
+            <Group key={integration.integrationKind} gap="xs" align="center">
+              <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
+              <Text className="media-server-name" size="sm">
+                {integration.integrationName}
+              </Text>
+            </Group>
+          ))}
+        </Group>
       </Group>
     </Stack>
   );
