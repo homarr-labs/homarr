@@ -572,6 +572,35 @@ describe("getBoardByName should return board by name", () => {
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "view");
   });
 
+  it("normalizes legacy category behavior options in the response", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId } = await createFullBoardAsync(db, "default");
+    await db
+      .update(sections)
+      .set({
+        kind: "category",
+        name: "Media",
+      })
+      .where(eq(sections.id, sectionId));
+
+    const result = await caller.getBoardByName({ name: "default" });
+    const section = expectToBeDefined(result.sections[0]);
+
+    expect(result.id).toBe(boardId);
+    expect(section.kind).toBe("category");
+    if (section.kind === "category") {
+      expect(section.collapsed).toBe(true);
+      expect(section.options).toEqual({
+        showLabel: true,
+        collapsible: true,
+        showOpenAll: true,
+        railPlacement: "main",
+        columnCount: 2,
+      });
+    }
+  });
+
   it("should throw error when not present", async () => {
     // Arrange
     const db = createDb();
@@ -882,6 +911,68 @@ describe("saveBoard should save full board", () => {
       expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
     },
   );
+  it("should add and update category behavior options", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId } = await createFullBoardAsync(db, "default");
+    const sectionId = createId();
+
+    await caller.saveBoard({
+      id: boardId,
+      sections: [
+        {
+          id: sectionId,
+          kind: "category",
+          name: "Navigation",
+          xOffset: 0,
+          yOffset: 0,
+          collapsed: false,
+          options: {
+            showLabel: true,
+            collapsible: true,
+            showOpenAll: true,
+            railPlacement: "left",
+            columnCount: 3,
+          },
+        },
+      ],
+      items: [],
+    });
+
+    await caller.saveBoard({
+      id: boardId,
+      sections: [
+        {
+          id: sectionId,
+          kind: "category",
+          name: "Navigation",
+          xOffset: 0,
+          yOffset: 0,
+          collapsed: false,
+          options: {
+            showLabel: false,
+            collapsible: false,
+            showOpenAll: false,
+            railPlacement: "right",
+            columnCount: 4,
+          },
+        },
+      ],
+      items: [],
+    });
+
+    const section = await db.query.sections.findFirst({
+      where: eq(sections.id, sectionId),
+    });
+
+    expect(SuperJSON.parse(section?.options ?? "")).toEqual({
+      showLabel: false,
+      collapsible: false,
+      showOpenAll: false,
+      railPlacement: "right",
+      columnCount: 4,
+    });
+  });
   it("should add item when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
@@ -1328,12 +1419,16 @@ const createExistingLayout = (id: string) => ({
   id,
   name: "Base",
   columnCount: 10,
+  leftGutterColumnCount: 0,
+  rightGutterColumnCount: 0,
   breakpoint: 0,
 });
 const createNewLayout = (columnCount: number) => ({
   id: createId(),
   name: "New layout",
   columnCount,
+  leftGutterColumnCount: 0,
+  rightGutterColumnCount: 0,
   breakpoint: 1400,
 });
 describe("saveLayouts should save layout changes", () => {
@@ -1444,6 +1539,59 @@ describe("saveLayouts should save layout changes", () => {
       a: itemId,
     });
     await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layoutId, assignments.inDynamicSection);
+  });
+  test("should reserve gutter columns and return gutter contents to the canvas when disabled", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "gutters");
+
+    await db
+      .update(itemLayouts)
+      .set({
+        xOffset: 9,
+      })
+      .where(and(eq(itemLayouts.itemId, itemId), eq(itemLayouts.layoutId, layoutId)));
+
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [
+        {
+          ...createExistingLayout(layoutId),
+          leftGutterColumnCount: 2,
+        },
+      ],
+    });
+
+    const enabledLayout = expectToBeDefined(await db.query.layouts.findFirst({ where: eq(layouts.id, layoutId) }));
+    expect(enabledLayout.leftGutterColumnCount).toBe(2);
+    const leftRoot = expectToBeDefined(
+      await db.query.sections.findFirst({
+        where: and(eq(sections.boardId, boardId), eq(sections.kind, "empty"), eq(sections.xOffset, -1)),
+      }),
+    );
+    const reflowedMainItem = expectToBeDefined(
+      await db.query.itemLayouts.findFirst({
+        where: and(eq(itemLayouts.itemId, itemId), eq(itemLayouts.layoutId, layoutId)),
+      }),
+    );
+    expect(reflowedMainItem.xOffset + reflowedMainItem.width).toBeLessThanOrEqual(8);
+
+    const gutterItemId = await addItemAsync(db, {
+      boardId,
+      layoutId,
+      sectionId: leftRoot.id,
+    });
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [createExistingLayout(layoutId)],
+    });
+
+    const returnedItem = expectToBeDefined(
+      await db.query.itemLayouts.findFirst({
+        where: and(eq(itemLayouts.itemId, gutterItemId), eq(itemLayouts.layoutId, layoutId)),
+      }),
+    );
+    expect(returnedItem.sectionId).toBe(sectionId);
   });
   test("should remove layout when not present in input", async () => {
     // Arrange

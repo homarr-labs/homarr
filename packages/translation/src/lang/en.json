@@ -1642,6 +1642,10 @@
       "name": "Traefik",
       "description": "Cloud-native reverse proxy and load balancer"
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Monitor which of your Docker containers have image updates available"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Document management system for archiving and organizing scanned documents"
@@ -1857,10 +1861,35 @@
     }
   },
   "section": {
-    "dynamic": {
+    "option": {
+      "showLabel": {
+        "label": "Show label",
+        "description": "Display the container label above its contents."
+      },
+      "collapsible": {
+        "label": "Allow collapse",
+        "description": "Let viewers expand and collapse this container."
+      },
+      "showOpenAll": {
+        "label": "Show open-all action",
+        "description": "Show an action that opens every app in this container in new tabs."
+      }
+    },
+    "action": {
+      "openAllInNewTabs": "Open all in tabs",
+      "openAllInNewTabsFor": "Open all apps in {name} in tabs"
+    },
+    "openAllInNewTabs": {
+      "title": "Open all in tabs",
+      "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
+    },
+    "container": {
+      "untitled": "Untitled container",
       "action": {
-        "create": "New dynamic section",
-        "remove": "Remove dynamic section"
+        "create": "New container",
+        "remove": "Remove container",
+        "expand": "Expand",
+        "collapse": "Collapse"
       },
       "option": {
         "title": {
@@ -1874,48 +1903,8 @@
         }
       },
       "remove": {
-        "title": "Remove dynamic section",
-        "message": "Are you sure you want to remove this dynamic section? Items will be moved at the same location in the parent section."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Name"
-        }
-      },
-      "action": {
-        "create": "New category",
-        "edit": "Rename category",
-        "remove": "Remove category",
-        "moveUp": "Move up",
-        "moveDown": "Move down",
-        "createAbove": "New category above",
-        "createBelow": "New category below",
-        "openAllInNewTabs": "Open all in tabs"
-      },
-      "create": {
-        "title": "New category",
-        "submit": "Add category"
-      },
-      "remove": {
-        "title": "Remove category",
-        "message": "Are you sure you want to remove the category {name}?"
-      },
-      "edit": {
-        "title": "Rename category",
-        "submit": "Rename category"
-      },
-      "menu": {
-        "label": {
-          "create": "New category",
-          "changePosition": "Change position",
-          "settings": "Settings"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "Open all in tabs",
-        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
+        "title": "Remove container",
+        "message": "Remove this container? Its contents will move into the surrounding area."
       }
     }
   },
@@ -1931,6 +1920,7 @@
     "menu": {
       "label": {
         "settings": "Settings",
+        "settingsFor": "Settings for {name}",
         "refresh": "Refresh",
         "options": "Options",
         "actions": "Actions"
@@ -1949,7 +1939,21 @@
     },
     "moveResize": {
       "title": "Move / resize item",
+      "entryLabel": "{name}, column {column}, row {row}",
+      "target": {
+        "numbered": "{name}, destination {index}",
+        "located": "{name}, {location}, destination {index}"
+      },
+      "keyboard": {
+        "instructions": "Press Enter or Space to start keyboard editing. Use arrow keys to move, Shift plus arrow keys to resize, and Escape to stop.",
+        "started": "Keyboard editing started. Use arrow keys to move, Shift plus arrow keys to resize, and Escape to stop.",
+        "stopped": "Keyboard editing stopped.",
+        "boundary": "That change does not fit inside this section."
+      },
       "field": {
+        "section": {
+          "label": "Section or rail"
+        },
         "width": {
           "label": "Width"
         },
@@ -2101,6 +2105,38 @@
         }
       }
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Show how many watched containers have updates available.",
+      "title": "What's Up Docker",
+      "monitored": "Monitored",
+      "updatesAvailable": "{count, plural, one {# update available} other {# updates available}}",
+      "updateAvailable": "Update available",
+      "openReleaseNotes": "Open release notes",
+      "option": {
+        "showTitle": {
+          "label": "Show title"
+        },
+        "showRing": {
+          "label": "Show update ring"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Show container update list",
+          "description": "Lists each monitored container that has an image update available"
+        }
+      }
+    },
     "dnsHoleSummary": {
       "name": "DNS Hole Summary",
       "description": "Displays the summary of your DNS Hole",
@@ -2213,6 +2249,16 @@
         "customDateFormat": {
           "label": "Custom date format",
           "description": "Use ISO 8601 to format date (this will override other options)"
+        },
+        "showWeather": {
+          "label": "Show weather",
+          "description": "Display a small animated weather icon and temperature in the corner of the card"
+        },
+        "weatherLocation": {
+          "label": "Weather location"
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": "Use Fahrenheit"
         }
       }
     },
@@ -2565,7 +2611,8 @@
         "sunrise": "Sunrise",
         "sunset": "Sunset",
         "maxWindSpeed": "Max wind speed: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}"
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}",
+        "humidity": "Humidity: {humidity}%"
       },
       "kind": {
         "clear": "Clear",
@@ -2725,10 +2772,21 @@
         },
         "descendingDefaultSort": {
           "label": "Invert sorting"
+        },
+        "columnOrder": {
+          "label": "Column order"
+        },
+        "columnWidths": {
+          "label": "Column widths"
         }
       },
       "error": {
-        "internalServerError": "Failed to fetch containers stats"
+        "internalServerError": "Failed to fetch containers stats",
+        "layoutSaveTitle": "Table layout not saved",
+        "layoutSaveMessage": "The Docker table layout could not be saved. Try moving or resizing the column again."
+      },
+      "empty": {
+        "noContainers": "No containers found"
       }
     },
     "coolify": {
@@ -3022,7 +3080,19 @@
         "showOnlyPlaying": {
           "label": "Show only currently playing",
           "description": "Disabling this will not work for plex"
+        },
+        "showBitrate": {
+          "label": "Show bitrate",
+          "description": "Show the current playback bitrate next to the location"
+        },
+        "showLocation": {
+          "label": "Show location",
+          "description": "Show whether the stream is on your LAN or WAN"
         }
+      },
+      "footer": {
+        "streams": "{count, plural, one {# active stream} other {# active streams}}",
+        "totalBitrate": "Total: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Currently playing",
@@ -3031,6 +3101,9 @@
         "id": "Id",
         "status": "Status",
         "directPlay": "Direct play",
+        "directStream": "Direct stream",
+        "transcodeVideo": "Transcoding video",
+        "transcodeAudio": "Transcoding audio",
         "transcoding": "Transcoding",
         "paused": "Paused",
         "remaining": "{minutes} min left",
@@ -3314,10 +3387,11 @@
     },
     "immich-albumCarousel": {
       "name": "Immich Album",
+      "allPhotos": "All photos",
       "option": {
         "albumId": {
           "label": "Album",
-          "description": "Select the Immich album to show in the slideshow."
+          "description": "Select an Immich album or All photos. An empty selection also shows random photos from your full library."
         },
         "rotationIntervalSeconds": {
           "label": "Interval in seconds",
@@ -3332,9 +3406,8 @@
           "description": "Show photos in a random order instead of always starting with the same album order."
         }
       },
-      "description": "Slideshow of pictures in your Immich album",
-      "noAlbumSelected": "No album selected, edit widget and choose an album",
-      "noPhotos": "No photos in this album"
+      "description": "Slideshow of pictures from an Immich album or your full library",
+      "noPhotos": "No photos found"
     },
     "downloads": {
       "name": "Download Client",
@@ -3376,11 +3449,20 @@
         "limitPerIntegration": {
           "label": "Limit items per integration",
           "description": "This will limit the number of items shown per integration, not globally"
+        },
+        "columnOrder": {
+          "label": "Column order"
+        },
+        "columnWidths": {
+          "label": "Column widths"
         }
       },
       "errors": {
         "noColumns": "Select Columns in Items",
-        "noCommunications": "Can't load data from integration"
+        "noCommunications": "Can't load data from integration",
+        "noItems": "No downloads found",
+        "actionFailed": "Action failed",
+        "actionFailedMessage": "The action could not be completed. Please try again."
       },
       "items": {
         "actions": {
@@ -3403,7 +3485,8 @@
           "detailsTitle": "Current index within client"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": "Item ID"
         },
         "integration": {
           "columnTitle": "Integration"
@@ -3437,7 +3520,8 @@
         },
         "time": {
           "columnTitle": "Finish time",
-          "detailsTitle": "Time since/to completion"
+          "detailsTitle": "Time since/to completion",
+          "eta": "ETA"
         },
         "type": {
           "columnTitle": "Type",
@@ -3481,7 +3565,23 @@
           }
         }
       },
-      "globalRatio": "Global Ratio"
+      "globalRatio": "Global Ratio",
+      "contextMenu": {
+        "copyName": "Copy name",
+        "copyId": "Copy ID",
+        "clearFilters": "Clear filters"
+      },
+      "footer": {
+        "filter": "Filter downloads"
+      },
+      "stats": {
+        "show": "Show global stats",
+        "hide": "Hide global stats",
+        "overallProgress": "Overall queue progress",
+        "totalSize": "Total queue size",
+        "clients": "{count, plural, one {# client} other {# clients}}"
+      },
+      "disconnected": "(disconnected)"
     },
     "mediaReleases": {
       "name": "Media releases",
@@ -4038,18 +4138,6 @@
           "label": "Show songs",
           "description": "Show the total number of songs in your music library (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Show now playing",
-          "description": "Show tracks currently being played (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Show now playing list",
-          "description": "Show individual tracks instead of only the active stream count (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Max now playing items",
-          "description": "Maximum number of tracks to show in the now playing list (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Show library count",
           "description": "Show the number of libraries on your instance (Audiobookshelf)"
@@ -4083,8 +4171,6 @@
       "podcasts": "Podcasts",
       "listeningTime": "Listening Time",
       "activeSessions": "Active Sessions",
-      "nowPlaying": "Now Playing",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Failed to fetch audio stats data"
       }
@@ -4261,11 +4347,19 @@
         },
         "showAgent": {
           "label": "Show agent version"
+        },
+        "columnOrder": {
+          "label": "Column order"
+        },
+        "columnWidths": {
+          "label": "Column widths"
         }
       },
       "noRecords": "No systems found",
       "error": {
-        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
+        "layoutSaveTitle": "Unable to save table layout",
+        "layoutSaveMessage": "Your column order or widths could not be saved. Please try again."
       },
       "column": {
         "system": "System",
@@ -4472,6 +4566,8 @@
   "board": {
     "action": {
       "addContent": "Add board content",
+      "settings": "Board settings",
+      "switch": "Switch board",
       "duplicate": {
         "title": "Duplicate board",
         "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
@@ -4487,6 +4583,9 @@
         }
       },
       "edit": {
+        "enter": "Edit board",
+        "save": "Save board",
+        "exit": "Exit edit mode",
         "notification": {
           "success": {
             "title": "Changes applied successfully",
@@ -4495,6 +4594,10 @@
           "error": {
             "title": "Unable to apply changes",
             "message": "The board could not be saved"
+          },
+          "loadError": {
+            "title": "Unable to start editing",
+            "message": "The board editor could not be loaded. Your dashboard is still available in view mode."
           }
         },
         "confirmLeave": {
@@ -4564,6 +4667,12 @@
           "createAndUse": "Create and use"
         }
       }
+    },
+    "landmark": {
+      "canvas": "Dashboard canvas",
+      "leftRail": "Left dashboard rail",
+      "rightRail": "Right dashboard rail",
+      "items": "Dashboard items"
     },
     "field": {
       "pageTitle": {
@@ -4818,6 +4927,26 @@
       "breakpoint": {
         "label": "Breakpoint",
         "description": "Layout will be used on all screens larger than this breakpoint until the next bigger breakpoint."
+      },
+      "gutters": {
+        "label": "Fixed sidebars",
+        "description": "Reserve up to three dashboard columns on either side. The remaining canvas reflows automatically.",
+        "left": {
+          "label": "Left sidebar",
+          "description": "Keep this area visible while the dashboard scrolls.",
+          "thumbLabel": "Left sidebar width"
+        },
+        "right": {
+          "label": "Right sidebar",
+          "description": "Keep this area visible while the dashboard scrolls.",
+          "thumbLabel": "Right sidebar width"
+        },
+        "width": {
+          "label": "Width in columns"
+        },
+        "preview": {
+          "label": "Dashboard layout preview"
+        }
       }
     }
   },
@@ -5666,6 +5795,7 @@
       },
       "remove": {
         "label": "Remove",
+        "confirm": "Click again to remove permanently",
         "notification": {
           "success": {
             "title": "Containers removed",

@@ -1,33 +1,121 @@
 "use client";
 
-import { Box, Stack } from "@mantine/core";
+import { Box } from "@mantine/core";
 
-import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useCurrentLayout, useInitialViewportWidth, useRequiredBoard } from "@homarr/boards/context";
+import { useEditMode } from "@homarr/boards/edit-mode";
+import { useScopedI18n } from "@homarr/translation/client";
 
-import { BoardCategorySection } from "~/components/board/sections/category-section";
+import {
+  getBoardLaneColumnCount,
+  getInitialBoardLogicalHeight,
+  getLogicalTrackSize,
+  LOGICAL_GRID_GAP,
+  getRootSectionForLane,
+} from "~/components/board/layout";
+import { ScaledBoardCanvas } from "~/components/board/layout/scaled-board-canvas";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
+import { BoardGridEditorBoundary } from "~/components/board/sections/grid/board-grid-editor-boundary";
+import { BoardGridPortalHost, BoardGridPortalRenderer } from "~/components/board/sections/grid/grid-portal-host";
+import { BoardSectionCollapseProvider } from "~/components/board/sections/section-collapse";
 import { BoardBackgroundVideo } from "~/components/layout/background";
+import classes from "./_client.module.css";
+
+const APP_SHELL_INLINE_PADDING = 32;
 
 export const ClientBoard = () => {
   const board = useRequiredBoard();
+  const t = useScopedI18n("board.landmark");
+  const [isEditMode] = useEditMode();
   const currentLayoutId = useCurrentLayout();
+  const initialViewportWidth = useInitialViewportWidth();
+  const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId) ?? board.layouts.at(0);
+  if (!currentLayout) throw new Error("Expected the board to contain a layout");
 
-  const fullWidthSortedSections = board.sections
-    .filter((section) => section.kind === "empty" || section.kind === "category")
-    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset);
+  const mainSection = getRootSectionForLane(board, "main");
+  const leftSection = getRootSectionForLane(board, "left");
+  const rightSection = getRootSectionForLane(board, "right");
+  if (!mainSection) throw new Error("Expected the board to contain a main canvas section");
+
+  const leftColumnCount = getBoardLaneColumnCount(currentLayout, "left");
+  const mainColumnCount = getBoardLaneColumnCount(currentLayout, "main");
+  const rightColumnCount = getBoardLaneColumnCount(currentLayout, "right");
+  const laneWidths = [leftColumnCount, mainColumnCount, rightColumnCount]
+    .filter((columnCount) => columnCount > 0)
+    .map(getLogicalTrackSize);
+  const logicalWidth =
+    laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * LOGICAL_GRID_GAP;
+  const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId) + LOGICAL_GRID_GAP;
+  const initialAvailableWidth = Math.max(1, initialViewportWidth - APP_SHELL_INLINE_PADDING);
+  const gridTemplateColumns = [
+    leftColumnCount > 0 ? `${getLogicalTrackSize(leftColumnCount)}px` : null,
+    `${getLogicalTrackSize(mainColumnCount)}px`,
+    rightColumnCount > 0 ? `${getLogicalTrackSize(rightColumnCount)}px` : null,
+  ]
+    .filter((value) => value !== null)
+    .join(" ");
 
   return (
     <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
       <BoardBackgroundVideo />
-      <Stack h="100%">
-        {fullWidthSortedSections.map((section) =>
-          section.kind === "empty" ? (
-            <BoardEmptySection key={`${currentLayoutId}-${section.id}`} section={section} />
-          ) : (
-            <BoardCategorySection key={`${currentLayoutId}-${section.id}`} section={section} />
-          ),
-        )}
-      </Stack>
+      <BoardSectionCollapseProvider>
+        <BoardGridPortalHost>
+          <ScaledBoardCanvas
+            logicalWidth={logicalWidth}
+            initialLogicalHeight={initialLogicalHeight}
+            initialAvailableWidth={initialAvailableWidth}
+            label={board.name}
+          >
+            <BoardGridEditorBoundary key={currentLayoutId}>
+              <BoardGridPortalRenderer />
+              <div className={classes.columns} style={{ gridTemplateColumns, paddingTop: LOGICAL_GRID_GAP }}>
+                {leftColumnCount > 0 && leftSection && (
+                  <aside
+                    className={`${classes.lane} ${classes.gutter}`}
+                    aria-label={t("leftRail")}
+                    data-board-gutter="left"
+                    data-board-editing={isEditMode ? "true" : undefined}
+                  >
+                    <BoardEmptySection
+                      key={`${currentLayoutId}-${leftSection.id}`}
+                      section={leftSection}
+                      columnCount={leftColumnCount}
+                      requestedRowCount={0}
+                      railPlacement="left"
+                    />
+                  </aside>
+                )}
+
+                <section className={classes.lane} aria-label={t("canvas")}>
+                  <BoardEmptySection
+                    key={`${currentLayoutId}-${mainSection.id}`}
+                    section={mainSection}
+                    columnCount={mainColumnCount}
+                    requestedRowCount={0}
+                  />
+                </section>
+
+                {rightColumnCount > 0 && rightSection && (
+                  <aside
+                    className={`${classes.lane} ${classes.gutter}`}
+                    aria-label={t("rightRail")}
+                    data-board-gutter="right"
+                    data-board-editing={isEditMode ? "true" : undefined}
+                  >
+                    <BoardEmptySection
+                      key={`${currentLayoutId}-${rightSection.id}`}
+                      section={rightSection}
+                      columnCount={rightColumnCount}
+                      requestedRowCount={0}
+                      railPlacement="right"
+                    />
+                  </aside>
+                )}
+              </div>
+            </BoardGridEditorBoundary>
+          </ScaledBoardCanvas>
+        </BoardGridPortalHost>
+      </BoardSectionCollapseProvider>
     </Box>
   );
 };

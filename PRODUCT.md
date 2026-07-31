@@ -10,7 +10,7 @@ Homarr is used by self-hosters and administrators who assemble dashboards for se
 
 ## Product Purpose
 
-Homarr provides one place to organize, observe, and operate self-hosted services. Success means a user can build a useful dashboard quickly, understand its state, recover from configuration errors, and extend it without requiring a bespoke Homarr feature for every service.
+Homarr provides one place to organize, observe, and operate self-hosted services. Success means a user can build a useful dashboard quickly, understand its state, recover from configuration errors, and extend it without requiring a bespoke Homarr feature for every service. Boards must load immediately, stay visually stable, keep widgets legible across screen sizes, and make editing feel direct and forgiving.
 
 ## Brand Personality
 
@@ -27,7 +27,9 @@ Avoid decorative admin dashboards, wizard flows that fight ordinary scrolling, h
 3. Make simple tasks short without limiting advanced use cases.
 4. Isolate failures so one service or widget cannot disrupt the dashboard.
 5. Use the existing Mantine design language consistently across management and board surfaces.
+6. Keep spatial actions direct: moving, resizing, nesting, and using fixed rails happen on the canvas with immediate feedback.
+7. Preserve predictable widget composition with fixed logical tile sizes and horizontal scrolling before controls become inaccessible.
 
 ## Accessibility & Inclusion
 
-Target WCAG 2.2 AA. Support keyboard navigation, screen readers, visible focus, sufficient contrast, reduced motion, non-color status cues, responsive layouts, and actionable error messages.
+Target WCAG 2.2 AA. Support keyboard navigation, screen readers, visible focus, sufficient contrast, reduced motion, non-color status cues, responsive layouts, actionable error messages, and keyboard equivalents for drag and resize operations.

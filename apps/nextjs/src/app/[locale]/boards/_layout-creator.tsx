@@ -1,4 +1,5 @@
 import type { JSX, PropsWithChildren } from "react";
+import { cookies, headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { AppShellMain } from "@mantine/core";
 import { TRPCError } from "@trpc/server";
@@ -6,6 +7,7 @@ import { TRPCError } from "@trpc/server";
 import { auth } from "@homarr/auth/next";
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
+import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ModalProvider } from "@homarr/modals";
 
@@ -63,9 +65,15 @@ export const createBoardLayout = <TParams extends Params>({
       throw error;
     });
     const colorScheme = await getCurrentColorSchemeAsync();
+    const initialViewportWidth = await getInitialViewportWidthAsync();
+    const initialLayoutId = getLayoutIdForViewportWidth(initialBoard.layouts, initialViewportWidth);
 
     return (
-      <BoardProvider initialBoard={initialBoard}>
+      <BoardProvider
+        initialBoard={initialBoard}
+        initialLayoutId={initialLayoutId}
+        initialViewportWidth={initialViewportWidth}
+      >
         <BoardReadyProvider>
           <EditModeProvider>
             <BoardMantineProvider defaultColorScheme={colorScheme}>
@@ -90,4 +98,23 @@ export const createBoardLayout = <TParams extends Params>({
   };
 
   return Layout;
+};
+
+const getInitialViewportWidthAsync = async () => {
+  const cookieValue = (await cookies()).get(boardViewportWidthCookieName)?.value;
+  const cookieWidth = Number(cookieValue);
+  if (Number.isInteger(cookieWidth) && cookieWidth >= 200 && cookieWidth <= 10_000) {
+    return cookieWidth;
+  }
+
+  const requestHeaders = await headers();
+  const clientHintWidth = Number(requestHeaders.get("sec-ch-viewport-width"));
+  if (Number.isInteger(clientHintWidth) && clientHintWidth >= 200 && clientHintWidth <= 10_000) {
+    return clientHintWidth;
+  }
+
+  const userAgent = requestHeaders.get("user-agent") ?? "";
+  if (/iPad|Tablet|PlayBook|Silk/i.test(userAgent)) return 1024;
+  if (/Mobi|Android|iPhone|iPod|IEMobile|Opera Mini/i.test(userAgent)) return 390;
+  return 1440;
 };

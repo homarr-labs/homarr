@@ -1,5 +1,6 @@
 import type { MutableRefObject } from "react";
 import { useRef } from "react";
+import dynamic from "next/dynamic";
 import { Badge, Card } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
@@ -17,8 +18,11 @@ import type { SectionItem } from "~/app/[locale]/boards/_types";
 import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
-import { BoardItemMenu } from "./item-menu";
 import { WidgetContextMenu } from "./widget-context-menu";
+
+const BoardItemMenu = dynamic(() => import("./item-menu").then((module) => module.BoardItemMenu), {
+  ssr: false,
+});
 
 interface BoardItemContentProps {
   item: SectionItem;
@@ -40,6 +44,9 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
       <WidgetContextMenu item={item} widgetStateRef={widgetStateRef}>
         <Card
           ref={ref}
+          w="100%"
+          h="100%"
+          data-grid-item-content
           className={combineClasses(
             classes.itemCard,
             `${item.kind}-wrapper`,
@@ -117,7 +124,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
           }}
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
-              <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />
+              {isEditMode && <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />}
               <WidgetError kind={item.kind} error={error} resetErrorBoundary={resetErrorBoundary} />
             </>
           )}
@@ -130,7 +137,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
               (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />
-          <BoardItemMenu offset={4} item={newItem} />
+          {isEditMode && <BoardItemMenu offset={4} item={newItem} />}
           <Comp
             options={options as never}
             integrationIds={item.integrationIds}

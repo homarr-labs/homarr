@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 
 import * as boardContext from "@homarr/boards/context";
 
@@ -10,6 +10,10 @@ import { ItemMockBuilder } from "./mocks/item-mock";
 import { LayoutMockBuilder } from "./mocks/layout-mock";
 
 describe("item actions create-item", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test("should add it to first section", () => {
     // Arrange
     const itemKind = "clock";
@@ -52,7 +56,7 @@ describe("item actions create-item", () => {
         ],
       }),
     );
-    expect(emptyPositionSpy).toHaveBeenCalledWith([], layout.columnCount, 9999, { height: 1, width: 1 });
+    expect(emptyPositionSpy).toHaveBeenCalledWith([], layout.columnCount, undefined, { height: 1, width: 1 });
   });
   test("should correctly pass dynamic section and items to getFirstEmptyPosition", () => {
     // Arrange
@@ -94,8 +98,10 @@ describe("item actions create-item", () => {
 
     // Assert
     expect(result.items.length).toBe(3);
-    const item = result.items.find((item) => item.id !== itemInFirstSection.id && item.id !== otherItem.id);
-    expect(item).toEqual(
+    const createdItem = result.items.find(
+      (candidate) => candidate.id !== itemInFirstSection.id && candidate.id !== otherItem.id,
+    );
+    expect(createdItem).toEqual(
       expect.objectContaining({
         kind: itemKind,
         layouts: [{ ...emptyPosition, height: 1, width: 1, sectionId: firstSectionId, layoutId }],
@@ -104,8 +110,35 @@ describe("item actions create-item", () => {
     expect(spy).toHaveBeenCalledWith(
       [expect.objectContaining(itemAndSectionPosition), expect.objectContaining(itemAndSectionPosition)],
       layout.columnCount,
-      9999,
+      undefined,
       { height: 1, width: 1 },
     );
+  });
+
+  test("clamps wide defaults and places below a full automatic canvas", () => {
+    const board = new BoardMockBuilder().addEmptySection({ id: "canvas", yOffset: 0 }).build();
+    const layout = board.layouts[0];
+    if (!layout) throw new Error("Expected a board layout");
+    layout.id = "layout";
+    layout.columnCount = 1;
+    board.items.push(
+      new ItemMockBuilder({ id: "existing" })
+        .addLayout({ layoutId: layout.id, sectionId: "canvas", width: 1, height: 1 })
+        .build(),
+    );
+
+    const result = createItemCallback({ id: "created", kind: "mediaMissing" })(board);
+    const created = result.items.find((item) => item.id === "created");
+
+    expect(created?.layouts).toEqual([
+      expect.objectContaining({
+        layoutId: layout.id,
+        sectionId: "canvas",
+        width: 1,
+        height: 3,
+        xOffset: 0,
+        yOffset: 1,
+      }),
+    ]);
   });
 });
