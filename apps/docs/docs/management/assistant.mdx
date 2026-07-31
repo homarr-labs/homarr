@@ -95,11 +95,11 @@ as part of the prompt.
 
 Type `@` in the composer to add permission-checked context. The nested menu contains apps, integrations,
 boards, widgets, and tools available to the current user. Homarr validates every referenced ID again on
-the server before adding it to the model context. Type `/` for common prompt shortcuts. The compact
-controls below the composer can switch between models discovered from the configured endpoint. Model
-selection is stored on the conversation after a completed request. Thinking mode can be left on
-**Auto**, disabled, or set from minimal through high; explicit levels are sent using the AI SDK's
-provider-neutral reasoning setting and still depend on support from the chosen model and endpoint.
+the server before adding it to the model context. Type `/` for common prompt shortcuts. The joined
+controls below the composer open a searchable model picker and the thinking-level menu. Model selection
+is stored on the conversation after a completed request. Thinking mode can be left on **Auto**, disabled,
+or set from minimal through high; explicit levels are sent using the AI SDK's provider-neutral reasoning
+setting and still depend on support from the chosen model and endpoint.
 
 Each completed response includes a circular context-window meter. Select it to open request details when
 the provider reports them: input, output, cached-input and reasoning tokens, used and remaining context,
