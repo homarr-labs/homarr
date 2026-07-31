@@ -177,13 +177,13 @@
       },
       "password": {
         "label": "Parola",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Sugestii pentru parolă",
         "suggestion": {
-          "length": "",
+          "length": "Cel puțin 8 caractere",
           "lowercase": "Să includă litere mici",
           "uppercase": "Să includă litere mari",
           "number": "Să includă cifre",
-          "special": ""
+          "special": "Include un simbol special"
         }
       },
       "passwordConfirm": {
@@ -209,7 +209,7 @@
         "label": ""
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Activează bang-urile DuckDuckGo"
       }
     },
     "error": {
@@ -302,10 +302,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Bang-urile DuckDuckGo au fost activate cu succes"
           },
           "error": {
-            "message": ""
+            "message": "Nu s-a putut activa bang-urile DuckDuckGo"
           }
         }
       },
@@ -987,47 +987,47 @@
         "placeholder": ""
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Obține cheia API"
       }
     },
     "action": {
       "create": ""
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} widget-uri",
+      "noWidgets": "Niciun widget",
+      "detected": "Detectat prin Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
+      "dnsHole": "DNS",
+      "mediaService": "Media",
+      "calendar": "Calendar",
+      "mediaSearch": "Căutare",
+      "mediaRelease": "Lansări",
+      "mediaRequest": "Solicitări",
+      "downloadClient": "Descărcări",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Diverse",
+      "smartHomeServer": "Casă inteligentă",
+      "indexerManager": "Indexator",
+      "healthMonitoring": "Monitorizare",
+      "search": "Căutare",
+      "mediaTranscoding": "Transcodare",
+      "networkController": "Rețea",
+      "releasesProvider": "Lansări",
+      "notifications": "Notificări",
+      "firewall": "Firewall",
+      "timetable": "Orar",
+      "photoService": "Fotografii",
+      "documents": "Documente",
+      "notes": "Notițe",
+      "mediaMonitoring": "Monitorizare",
+      "speedtest": "Test de viteză",
+      "analytics": "Analiză",
       "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "mediaLibrary": "Bibliotecă media",
+      "uptimeMonitoring": "Monitorizare uptime"
     },
     "testConnection": {
       "action": {
@@ -1310,8 +1310,8 @@
           "newLabel": ""
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Slug pagină de stare",
+          "newLabel": "Nou slug pagină de stare"
         }
       }
     },
@@ -1321,15 +1321,15 @@
       "full": ""
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Server auto-găzduit de audiobooks și podcasturi"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Server auto-găzduit de streaming muzical cu compatibilitate API Subsonic"
     },
     "uptimeKuma": {
-      "name": "",
+      "name": "Uptime Kuma",
       "description": "",
       "secret": {
         "slug": {
@@ -1398,7 +1398,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Niciun fișier media încărcat"
     }
   },
   "common": {
@@ -1409,7 +1409,7 @@
       "add": "Adaugă",
       "apply": "Aplică",
       "backToOverview": "",
-      "skip": "",
+      "skip": "Omite",
       "change": "",
       "create": "Creează",
       "createAnother": "",
@@ -1431,8 +1431,8 @@
       "checkLogs": "",
       "tryAgain": "Încearcă din nou",
       "loading": "",
-      "show": "",
-      "hide": ""
+      "show": "Arată",
+      "hide": "Ascunde"
     },
     "here": "",
     "iconPicker": {
@@ -1444,7 +1444,7 @@
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Auto",
         "light": "",
         "dark": ""
       }
@@ -1602,7 +1602,7 @@
         "label": {
           "create": "",
           "changePosition": "Schimbă locația",
-          "settings": ""
+          "settings": "Setări"
         }
       },
       "openAllInNewTabs": {
@@ -1659,11 +1659,11 @@
     "edit": {
       "title": "",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Editează widget-ul",
+        "app": "Editează aplicația"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Modificările acestei aplicații se vor aplica în toate locurile unde este utilizată pe toate planșele."
       },
       "advancedOptions": {
         "label": "",
@@ -1776,7 +1776,7 @@
           "label": ""
         },
         "withBorder": {
-          "label": ""
+          "label": "Arată chenarul"
         },
         "items": {
           "label": "",
@@ -2474,34 +2474,34 @@
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Monitorizează starea dispozitivelor UPS printr-un server NUT",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Arată bateria"
         },
         "showLoad": {
-          "label": ""
+          "label": "Arată încărcarea"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Arată tensiunea"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Online",
+        "onBattery": "Pe baterie",
+        "lowBattery": "Baterie descărcată",
+        "charging": "Încărcare",
+        "unknown": "Necunoscut"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Autonomie",
+        "load": "Încărcare",
+        "input": "Intrare",
+        "output": "Ieșire"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nu s-au putut prelua datele UPS"
       }
     },
     "tracearr": {
@@ -2584,77 +2584,77 @@
             "today": "",
             "24h": "",
             "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "30d": "Ultimele 30 de zile",
+            "month": "Luna aceasta",
+            "lastMonth": "Luna trecută"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Eveniment",
+          "description": "Afișează totalul aparițiilor unui anumit eveniment",
+          "placeholder": "Selectați un eveniment",
+          "loading": "Se încarcă evenimentele...",
+          "noEvents": "Niciun eveniment găsit",
+          "none": "Niciun eveniment",
+          "configureWebsiteFirst": "Selectați mai întâi un site pentru a încărca evenimentele"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Tip de grafic",
+          "description": "Stil de afișare pentru grafic",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Grafic cu bare",
+            "sparkline": "Grafic sparkline"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Stil grafic",
+          "description": "Cum se afișează seria de evenimente în grafic",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Unul lângă altul",
+            "overlay": "Suprapunere (subset)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Vizualizare",
+          "description": "Ce se afișează în corpul widget-ului",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Grafic",
+            "events": "Grafic evenimente",
+            "topPages": "Top pagini",
+            "topReferrers": "Top referreri"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Evenimente",
+          "description": "Selectați unul sau mai multe evenimente pentru grafic",
+          "placeholder": "Selectați evenimente...",
+          "loading": "Se încarcă evenimentele...",
+          "noEvents": "Niciun eveniment găsit",
+          "configureWebsiteFirst": "Selectați mai întâi un site pentru a încărca evenimentele"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Elemente de afișat",
+          "description": "Numărul maxim de elemente de top de afișat (max 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "evenimente",
+        "label": "evenimente"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Direct"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Direct"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Selectați evenimente pentru grafic"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Nicio integrare Umami configurată",
+        "noWebsite": "Niciun site configurat",
+        "noData": "Nicio dată disponibilă",
+        "internalServerError": "Eroare la preluarea datelor Umami"
       }
     },
     "common": {
@@ -3079,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "",
           "description": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "",
-        "noCommunications": ""
+        "noCommunications": "",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3115,8 @@
           "detailsTitle": ""
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integrare"
@@ -3140,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "",
+          "eta": ""
         },
         "type": {
           "columnTitle": "",
@@ -3184,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "",
@@ -3883,110 +3910,110 @@
       "executeFailed": ""
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Sisteme Beszel (Tabel)",
+      "description": "Vizualizare tabel a tuturor sistemelor monitorizate Beszel cu coloane sortabile și indicatori de stare",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Filtru stare"
         },
         "sortBy": {
-          "label": ""
+          "label": "Sortează după"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Direcție sortare"
         },
         "showCpu": {
-          "label": ""
+          "label": "Arată CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Arată memoria"
         },
         "showDisk": {
-          "label": ""
+          "label": "Arată discul"
         },
         "showGpu": {
-          "label": ""
+          "label": "Arată GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Arată media de încărcare"
         },
         "showNet": {
-          "label": ""
+          "label": "Arată rețeaua"
         },
         "showTemp": {
-          "label": ""
+          "label": "Arată temperatura"
         },
         "showBattery": {
-          "label": ""
+          "label": "Arată bateria"
         },
         "showServices": {
-          "label": ""
+          "label": "Arată serviciile"
         },
         "showUptime": {
-          "label": ""
+          "label": "Arată uptime"
         },
         "showAgent": {
-          "label": ""
+          "label": "Arată versiunea agentului"
         }
       },
-      "noRecords": "",
+      "noRecords": "Niciun sistem găsit",
       "error": {
         "internalServerError": ""
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "Sistem",
+        "cpu": "CPU",
+        "memory": "Memorie",
+        "disk": "Disc",
+        "gpu": "GPU",
+        "loadAvg": "Încărcare medie",
+        "net": "Rețea",
+        "temp": "Temp",
+        "battery": "Bat.",
+        "services": "Servicii",
+        "uptime": "Uptime",
+        "agent": "Agent"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Sisteme Beszel (Grilă)",
+      "description": "Vizualizare grilă carduri a tuturor sistemelor monitorizate Beszel cu metrici în timp real",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Filtru stare"
         },
         "showCpu": {
-          "label": ""
+          "label": "Arată CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Arată memoria"
         },
         "showDisk": {
-          "label": ""
+          "label": "Arată discul"
         },
         "showGpu": {
-          "label": ""
+          "label": "Arată GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Arată media de încărcare"
         },
         "showNet": {
-          "label": ""
+          "label": "Arată rețeaua"
         },
         "showTemp": {
-          "label": ""
+          "label": "Arată temperatura"
         },
         "showBattery": {
-          "label": ""
+          "label": "Arată bateria"
         },
         "showServices": {
-          "label": ""
+          "label": "Arată serviciile"
         },
         "showUptime": {
-          "label": ""
+          "label": "Arată uptime"
         },
         "showAgent": {
-          "label": ""
+          "label": "Arată versiunea agentului"
         }
       },
       "error": {
@@ -3996,78 +4023,78 @@
         "noSystems": ""
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "CPU",
+        "memory": "Memorie",
+        "disk": "Disc",
+        "gpu": "GPU",
+        "loadAvg": "Încărcare medie",
+        "net": "Rețea",
+        "temp": "Temp",
+        "battery": "Bat.",
+        "services": "Servicii",
+        "uptime": "Uptime",
+        "agent": "Agent"
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Alerte Beszel",
+      "description": "Vizualizează configurațiile și istoricul alertelor Beszel",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Arată istoricul alertelor"
         },
         "maxHistoryItems": {
-          "label": ""
+          "label": "Număr maxim elemente istoric"
         }
       },
-      "empty": "",
+      "empty": "Nicio alertă configurată",
       "error": {
         "internalServerError": ""
       },
-      "history": "",
-      "resolved": "",
+      "history": "Istoric",
+      "resolved": "Rezolvat",
       "status": {
-        "triggered": "",
-        "ok": ""
+        "triggered": "Declanșat",
+        "ok": "OK"
       }
     },
     "beszelSystemStats": {
-      "name": "",
-      "description": "",
+      "name": "Statistici sistem Beszel",
+      "description": "Grafice de serie temporală pentru CPU, memorie, disc, rețea și Docker container metrics",
       "option": {
         "systemId": {
           "label": "",
           "description": ""
         },
         "timePeriod": {
-          "label": ""
+          "label": "Perioadă de timp"
         },
         "showCpu": {
-          "label": ""
+          "label": "Arată graficul CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Arată graficul memoriei"
         },
         "showDisk": {
-          "label": ""
+          "label": "Arată graficul discului"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Arată graficul I/O disc"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Arată graficul rețelei"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Arată graficul CPU Docker"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Arată graficul memoriei Docker"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Arată graficul rețelei Docker"
         }
       },
-      "selectSystem": "",
+      "selectSystem": "Selectează sistemul",
       "empty": {
         "noSystems": ""
       },
@@ -4079,26 +4106,26 @@
       },
       "chart": {
         "cpu": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Utilizare CPU",
+          "subtitle": "Utilizarea medie a CPU la nivel de sistem",
+          "series": "CPU"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
-          "series": "",
-          "cache": ""
+          "title": "Utilizare memorie",
+          "subtitle": "Utilizare precisă la momentul înregistrării",
+          "series": "Utilizat",
+          "cache": "Cache/Tampoane"
         },
         "disk": {
-          "title": "",
+          "title": "Utilizare disc",
           "subtitle": "",
           "series": ""
         },
         "diskIO": {
-          "title": "",
-          "subtitle": "",
-          "read": "",
-          "write": ""
+          "title": "I/O disc",
+          "subtitle": "Debit al sistemului de fișiere rădăcină",
+          "read": "Citire",
+          "write": "Scriere"
         },
         "storage": {
           "title": "",
@@ -4106,22 +4133,22 @@
           "series": ""
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Lățime de bandă",
+          "subtitle": "Trafic de rețea al interfețelor publice",
+          "sent": "Trimis",
+          "recv": "Primit"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Utilizare CPU Docker",
+          "subtitle": "Utilizarea medie a CPU a containerelor"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Utilizare memorie Docker",
+          "subtitle": "Utilizarea memoriei containerelor Docker"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "I/O rețea Docker",
+          "subtitle": "Trafic de rețea al containerelor Docker"
         }
       }
     }
@@ -4528,7 +4555,7 @@
             "api": "",
             "certificates": "",
             "tasks": "",
-            "backup": ""
+            "backup": "Copie de rezervă"
           }
         },
         "settings": "Setări",
@@ -4609,7 +4636,7 @@
           "private": ""
         },
         "noResults": {
-          "title": ""
+          "title": "Nicio planșă încă"
         },
         "modal": {
           "createBoard": {
@@ -4643,20 +4670,20 @@
               "firstDayOfWeek": "Prima zi a săptămâni",
               "accessibility": "Accesibilitate",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Tururi de inițiere",
+                "description": "Resetați tururile de inițiere pentru a le revedea la următoarea vizită în zona de administrare sau pe planșă.",
+                "reset": "Resetați tururile de inițiere",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Tururi resetate",
+                  "message": "Tururile de inițiere vor fi afișate din nou la următoarea vizită"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Finalizat",
+                  "notStarted": "Neînceput"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Administrare",
+                  "dashboard": "Planșă"
                 }
               }
             }
@@ -4844,7 +4871,7 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "auto": "",
+                "auto": "Auto",
                 "light": "",
                 "dark": ""
               }
@@ -5075,122 +5102,122 @@
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Copie de rezervă completă a bazei de date",
+          "metaTitle": "Copie de rezervă și restaurare",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Exportă baza de date",
+            "description": "Descarcă o copie de rezervă completă a bazei tale de date SQLite, incluzând toate setările, utilizatorii, planșele și secretele de integrare criptate. Copia de rezervă este împachetată ca fișier ZIP cu cheia de criptare și metadate.",
+            "button": "Descarcă copia de rezervă",
+            "error": "Export eșuat",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Export date sensibile",
+              "warningTitle": "Acest export conține întreaga ta bază de date.",
+              "warningBody": "Copia de rezervă include toți utilizatorii, secretele de integrare (criptate), cheile API, configurațiile planșelor și datele aplicațiilor. Păstrează fișierul exportat în siguranță și nu-l partaja.",
+              "typePrompt": "Tastați „{phrase}” pentru a continua",
+              "submit": "Exportă baza de date",
+              "cancel": "Anulează"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Restaurează baza de date",
+            "description": "Încarcă o copie de rezervă ZIP exportată anterior pentru a restaura baza de date. Aceasta va înlocui întreaga ta bază de date. Dacă copia de rezervă a fost creată cu o cheie de criptare diferită, secretele vor fi re-criptate automat.",
+            "warning": "Restaurarea unei copii de rezervă va înlocui complet baza de date curentă și va reporni aplicația. Această acțiune nu poate fi anulată.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Trage fișierul ZIP aici sau apasă pentru a căuta",
+              "description": "Sunt acceptate doar fișiere .zip de la o copie de rezervă SQLite Homarr"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Schimbă fișierul",
+            "button": "Restaurează baza de date",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Restaurare completă",
+              "message": "Baza de date a fost restaurată cu succes. Aplicația se repornește..."
             },
-            "error": ""
+            "error": "Import eșuat"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Conținutul copiei de rezervă",
+            "exported": "Exportat {date}",
+            "loading": "Se analizează fișierul de rezervă...",
+            "errorTitle": "Eroare de previzualizare",
+            "entity": "Entitate",
+            "count": "Număr",
+            "boards": "Planșe",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Planșe",
+              "user": "Utilizatori",
+              "app": "Aplicații",
+              "integration": "Integrări",
+              "item": "Widget-uri",
+              "media": "Media",
+              "search_engine": "Motoare de căutare"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Nu s-a putut analiza fișierul de rezervă",
+            "invalidMissingMetadata": "Copie de rezervă invalidă: lipsește metadata.json",
+            "invalidMissingDb": "Copie de rezervă invalidă: lipsește db.sqlite"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Trage aici fișierul ZIP al copiei de rezervă",
+              "description": "Acceptă fișiere .zip de la o copie de rezervă SQLite Homarr (max 256 MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Se analizează copia de rezervă...",
+            "changeFile": "Schimbă fișierul",
+            "continueToRestore": "Continuă la restaurare",
+            "tryAgain": "Încearcă din nou",
+            "analysisError": "Eroare de analiză",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Conținutul copiei de rezervă",
+              "exported": "Exportat {date}",
+              "entity": "Entitate",
+              "count": "Număr",
+              "boards": "Planșe",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Planșe",
+                "user": "Utilizatori",
+                "app": "Aplicații",
+                "integration": "Integrări",
+                "item": "Widget-uri",
+                "media": "Media",
+                "search_engine": "Motoare de căutare"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "{count} migrare aplicată",
+              "migrationsAppliedPlural": "{count} migrări aplicate",
+              "migrationsOlderVersion": "Această copie de rezervă provine de la o versiune mai veche a Homarr. {count, plural, one {A fost aplicată o migrare de schemă} few {Au fost aplicate {count} migrări de schemă} other {Au fost aplicate {count} migrări de schemă}} pentru a o aduce la zi.",
+              "migrationsOlderVersionPlural": "Această copie de rezervă provine de la o versiune mai veche Homarr. Au fost aplicate {count} migrări de schemă pentru a o aduce la zi.",
+              "migrationsUpToDate": "Schema bazei de date este actualizată ({count} migrări aplicate)",
+              "upToDate": "Actualizat",
+              "migrationsPending": "{count} în așteptare"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Se aplică migrările ({current}/{total})",
+              "migrationLabel": "Migrarea {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Acțiune distructivă",
+              "warningTitle": "Aceasta va înlocui permanent întreaga ta bază de date.",
+              "warningBody": "Toate planșele, utilizatorii, aplicațiile, integrările, setările și sesiunile curente vor fi pierdute. Această acțiune nu poate fi anulată. Aplicația va reporni după restaurare.",
+              "typePrompt": "Tastați „{phrase}” pentru a continua",
+              "cancel": "Anulează",
+              "submit": "Restaurează baza de date"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Se restaurează baza de date...",
+              "extracting": "Se extrage arhiva de rezervă",
+              "migrating": "Se aplică migrările bazei de date",
+              "encrypting": "Se re-criptează secretele integrărilor",
+              "swapping": "Se înlocuiește fișierul bazei de date",
+              "restarting": "Se repornește serverul"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Restaurare completă",
+              "message": "Baza de date a fost restaurată cu succes. Serverul se repornește — vă rugăm să reîmprospătați pagina în câteva secunde."
             },
             "failed": {
-              "title": ""
+              "title": "Restaurare eșuată"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Copie de rezervă invalidă: lipsește metadata.json",
+            "invalidMissingDb": "Copie de rezervă invalidă: lipsește db.sqlite",
+            "analyzeError": "Nu s-a putut analiza copia de rezervă"
           }
         }
       },
@@ -5277,15 +5304,15 @@
         "label": "Porturi"
       },
       "host": {
-        "label": ""
+        "label": "Gazdă"
       }
     },
     "action": {
       "title": "",
       "logs": {
-        "label": "",
+        "label": "Vezi jurnalele",
         "page": {
-          "title": ""
+          "title": "Jurnale {name}"
         }
       },
       "start": {
@@ -5715,7 +5742,7 @@
         "docker": {
           "label": "",
           "logs": {
-            "label": ""
+            "label": "Jurnale"
           }
         },
         "kubernetes": {
@@ -5826,7 +5853,7 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Comută modul de aspect",
                 "light": "",
                 "dark": ""
               },
@@ -5867,104 +5894,104 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Preferințe",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Selectați o preferință de schimbat",
+                "backHint": "Apăsați Backspace sau butonul înapoi pentru a reveni",
+                "backAction": "Înapoi"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Nu s-a putut actualiza preferința"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Deschide preferințele"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Activat",
+                "disabled": "Dezactivat"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Niciuna",
+                "unavailable": "Selectat în prezent (indisponibil)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "Niciunul",
+                "unavailable": "Selectat în prezent (indisponibil)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Schemă de culori",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selectați schema de culori"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Limbă",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selectați limba preferată"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Motor de căutare implicit",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selectați motorul de căutare implicit"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Deschide rezultatele căutării într-o filă nouă",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Deschide rezultatele căutării într-o filă nouă"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "Activează bang-urile DuckDuckGo",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Activează bang-urile DuckDuckGo"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Prima zi a săptămânii",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selectați prima zi a săptămânii"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Planșa principală",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selectați planșa principală"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Planșa principală pentru mobil",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selectați planșa principală pentru mobil"
                   }
                 }
               },
               "pingIconsEnabled": {
-                "label": "",
+                "label": "Folosește pictograme pentru ping-uri",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Folosește pictograme pentru ping-uri"
                   }
                 }
               },
@@ -5977,36 +6004,36 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Deschide pagina completă de preferințe"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Căutați filme sau seriale pentru a le solicita",
         "requestMovie": "",
         "requestSeries": "",
         "openIn": "",
         "group": {
-          "title": ""
+          "title": "Filme și seriale"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Căutați filme sau seriale",
+            "description": "Începeți să tastați pentru a căuta în integrările de solicitare media",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Adăugați o integrare Overseerr, Jellyseerr sau Seerr pentru a activa căutarea media.",
+              "scoped": "Acest widget nu are o integrare de solicitare media accesibilă."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Disponibil",
+          "partiallyAvailable": "Parțial",
+          "processing": "În procesare",
+          "requested": "Solicitat",
+          "pending": "Solicitat"
         }
       },
       "external": {
@@ -6014,13 +6041,13 @@
         "group": {
           "searchEngine": {
             "title": "",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Sfat: puteți folosi orice bang DuckDuckGo și aici, de ex. !ceva",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Caută „{query}” cu {label}",
+              "pressEnterToOpen": "Apăsați Enter pentru a deschide",
+              "engineSelected": "{label} selectat (!{bang})",
+              "typeQueryToContinue": "Tastați termenul de căutare pentru a continua",
+              "emptyBangHint": "Tastați un bang, de ex. !yt, apoi apăsați Spațiu pentru a selecta"
             },
             "children": {
               "action": {
@@ -6284,10 +6311,10 @@
               "header": {
                 "season": "",
                 "episodes": "",
-                "status": ""
+                "status": "Stare"
               },
               "status": {
-                "requested": ""
+                "requested": "Solicitat"
               }
             },
             "button": {
@@ -6400,69 +6427,69 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Citiți documentația",
+    "next": "Următorul",
+    "prev": "Înapoi",
+    "done": "Gata",
+    "skip": "Omite turul",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Bun venit în Homarr!",
+        "description": "Acesta este centrul tău de control. De aici gestionezi planșele, aplicațiile, integrările, utilizatorii și setările serverului. Haideți să facem un tur al fiecărei secțiuni."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Planșele tale",
+        "description": "Aici sunt toate planșele tale. Fiecare planșă are propriul aspect, fundal și setări de acces. Poți vedea cine a creat-o și dacă este publică sau privată."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Crează o planșă",
+        "description": "Apasă aici pentru a crea o planșă nouă sau pentru a importa una dintr-o instalare anterioară Homarr. Fiecare planșă primește propriul URL pe care îl poți partaja."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Aplicațiile tale",
+        "description": "Acestea sunt toate aplicațiile pe care le-ai adăugat — link-uri către serviciile tale auto-găzduite. Fiecare aplicație are o pictogramă, opțional o verificare de stare și o insignă de stare pe planșă."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Adaugă o aplicație",
+        "description": "Înregistrează un serviciu nou aici. Dă-i un nume, URL și pictogramă — va apărea ca o piesă pe planșele tale cu monitorizare live a stării."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Integrările tale",
+        "description": "Acestea sunt serviciile conectate la Homarr — Sonarr, Radarr, Plex, Jellyfin și peste 50 altele. Toate credențialele sunt criptate în repaus."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Adaugă o integrare",
+        "description": "Conectează un serviciu nou aici. Alege tipul, introdu URL-ul și cheia API — Homarr validează conexiunea înainte de salvare."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Utilizatorii tăi",
+        "description": "Vezi toți cei care au acces. Organizează utilizatorii în grupuri și controlează cine poate vizualiza sau edita fiecare planșă."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Crează un utilizator",
+        "description": "Adaugă un cont de utilizator nou aici. Poți folosi și link-uri de invitație pentru o integrare ușoară. Acesta este turul — ești gata!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Aceasta este planșa ta",
+        "description": "Un panou de tip drag-and-drop unde aranjezi aplicații și widget-uri. Apasă Ctrl+K oricând pentru a căuta aplicații, planșe și acțiuni."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Mod editare",
+        "description": "Apasă aici pentru a intra în modul editare. Poți apoi să adaugi widget-uri, aplicații și secțiuni — trage pentru a repoziționa, redimensionează cu mânerul din colț. Apasă din nou pentru a salva modificările."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Setări planșă",
+        "description": "Schimbă numele planșei, coloanele, fundalul, culorile și cine poate accesa. Fiecare planșă poate fi publică sau privată."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Comută planșele",
+        "description": "Sari între planșe. Crează planșe separate pentru scopuri diferite — media, rețea, per utilizator sau orice dorești."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Profilul tău",
+        "description": "Schimbă schema de culori, limba, planșa principală și preferințele. Poți de asemenea să sari în zona de administrare de aici."
       }
     }
   }
