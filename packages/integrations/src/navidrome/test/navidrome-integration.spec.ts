@@ -1,5 +1,11 @@
+// @vitest-environment node
 import { Response } from "undici";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+
+vi.hoisted(() => {
+  process.env.SKIP_ENV_VALIDATION = "true";
+  process.env.SECRET_ENCRYPTION_KEY = "0".repeat(64);
+});
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
@@ -34,10 +40,17 @@ const subsonicOk = <T extends Record<string, unknown>>(data: T) =>
     "subsonic-response": { status: "ok", version: "1.16.1", ...data },
   });
 
-const subsonicFailed = (message: string) =>
+const subsonicFailed = (message: string, code = 70) =>
   JSON.stringify({
-    "subsonic-response": { status: "failed", error: { code: 70, message } },
+    "subsonic-response": { status: "failed", error: { code, message } },
   });
+
+const makeAlbums = (count: number, songCount: number) =>
+  Array.from({ length: count }, (_, index) => ({
+    id: `album-${index}`,
+    name: `Album ${index}`,
+    songCount,
+  }));
 
 beforeEach(() => {
   mockFetch.mockReset();
@@ -45,13 +58,6 @@ beforeEach(() => {
 
 describe("NavidromeIntegration.getDashboardDataAsync", () => {
   test("paginates album list and counts songs", async () => {
-    const makeAlbums = (count: number, songCount: number) =>
-      Array.from({ length: count }, (_, i) => ({
-        id: `album-${i}`,
-        name: `Album ${i}`,
-        songCount,
-      }));
-
     mockFetch.mockImplementation((url) => {
       const urlStr = toUrlString(url);
 
@@ -84,13 +90,7 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
         >;
       }
 
-      if (urlStr.includes("getNowPlaying")) {
-        return Promise.resolve(new Response(subsonicOk({ nowPlaying: {} }), { status: 200 })) as unknown as ReturnType<
-          typeof fetchWithTrustedCertificatesAsync
-        >;
-      }
-
-      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+      return Promise.reject(new Error(`Unexpected dashboard request: ${urlStr}`)) as unknown as ReturnType<
         typeof fetchWithTrustedCertificatesAsync
       >;
     });
@@ -101,7 +101,6 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
     expect(result.albumCount).toBe(700);
     expect(result.songCount).toBe(500 * 10 + 200 * 5);
     expect(result.artistCount).toBe(1);
-    expect(result.nowPlaying).toEqual([]);
   });
 
   test("handles empty library gracefully", async () => {
@@ -120,13 +119,7 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
       }
 
-      if (urlStr.includes("getNowPlaying")) {
-        return Promise.resolve(
-          new Response(subsonicFailed("Library not found or empty"), { status: 200 }),
-        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
-      }
-
-      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+      return Promise.reject(new Error(`Unexpected dashboard request: ${urlStr}`)) as unknown as ReturnType<
         typeof fetchWithTrustedCertificatesAsync
       >;
     });
@@ -137,7 +130,6 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
     expect(result.artistCount).toBe(0);
     expect(result.albumCount).toBe(0);
     expect(result.songCount).toBe(0);
-    expect(result.nowPlaying).toEqual([]);
   });
 
   test("throws on non-empty-library subsonic error", async () => {
@@ -151,8 +143,10 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
     const integration = createIntegration();
     await expect(integration.getDashboardDataAsync()).rejects.toThrow();
   });
+});
 
-  test("now playing maps entries correctly", async () => {
+describe("NavidromeIntegration.getCurrentSessionsAsync", () => {
+  test("maps now playing entries to stream sessions", async () => {
     mockFetch.mockImplementation((url) => {
       const urlStr = toUrlString(url);
 
@@ -161,7 +155,22 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
           new Response(
             subsonicOk({
               nowPlaying: {
-                entry: { title: "Song", artist: "Band", album: "LP", username: "user1", playerName: "Chrome" },
+                entry: [
+                  {
+                    title: "Song",
+                    artist: "Band",
+                    album: "LP",
+                    username: "user1",
+                    playerName: "Chrome",
+                  },
+                  {
+                    title: "Second Song",
+                    artist: "Second Artist",
+                    album: "Second Album",
+                    username: "user2",
+                    playerName: "Mobile",
+                  },
+                ],
               },
             }),
             { status: 200 },
@@ -169,14 +178,72 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
       }
 
-      if (urlStr.includes("getArtists")) {
-        return Promise.resolve(new Response(subsonicOk({ artists: {} }), { status: 200 })) as unknown as ReturnType<
-          typeof fetchWithTrustedCertificatesAsync
-        >;
-      }
+      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+        typeof fetchWithTrustedCertificatesAsync
+      >;
+    });
 
-      if (urlStr.includes("getAlbumList2")) {
-        return Promise.resolve(new Response(subsonicOk({ albumList2: {} }), { status: 200 })) as unknown as ReturnType<
+    const integration = createIntegration();
+    const result = await integration.getCurrentSessionsAsync({ showOnlyPlaying: true });
+
+    expect(result).toEqual([
+      {
+        sessionId: "user1-Chrome",
+        sessionName: "Chrome",
+        user: {
+          userId: "user1",
+          username: "user1",
+          profilePictureUrl: null,
+        },
+        currentlyPlaying: {
+          type: "audio",
+          name: "Song",
+          seasonName: "Band",
+          episodeName: null,
+          albumName: "LP",
+          episodeCount: null,
+          playback: {
+            state: null,
+            positionMs: null,
+            durationMs: null,
+          },
+          location: null,
+          metadata: null,
+        },
+      },
+      {
+        sessionId: "user2-Mobile",
+        sessionName: "Mobile",
+        user: {
+          userId: "user2",
+          username: "user2",
+          profilePictureUrl: null,
+        },
+        currentlyPlaying: {
+          type: "audio",
+          name: "Second Song",
+          seasonName: "Second Artist",
+          episodeName: null,
+          albumName: "Second Album",
+          episodeCount: null,
+          playback: {
+            state: null,
+            positionMs: null,
+            durationMs: null,
+          },
+          location: null,
+          metadata: null,
+        },
+      },
+    ]);
+  });
+
+  test("returns an empty array when there are no now playing entries", async () => {
+    mockFetch.mockImplementation((url) => {
+      const urlStr = toUrlString(url);
+
+      if (urlStr.includes("getNowPlaying")) {
+        return Promise.resolve(new Response(subsonicOk({ nowPlaying: {} }), { status: 200 })) as unknown as ReturnType<
           typeof fetchWithTrustedCertificatesAsync
         >;
       }
@@ -187,15 +254,31 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
     });
 
     const integration = createIntegration();
-    const result = await integration.getDashboardDataAsync();
+    const result = await integration.getCurrentSessionsAsync({ showOnlyPlaying: false });
 
-    expect(result.nowPlaying).toHaveLength(1);
-    expect(result.nowPlaying[0]).toEqual({
-      title: "Song",
-      artist: "Band",
-      album: "LP",
-      username: "user1",
-      playerName: "Chrome",
+    expect(result).toEqual([]);
+  });
+
+  test("throws on subsonic auth failure", async () => {
+    mockFetch.mockImplementation((url) => {
+      const urlStr = toUrlString(url);
+
+      if (urlStr.includes("getNowPlaying")) {
+        return Promise.resolve(
+          new Response(subsonicFailed("Wrong username or password", 40), { status: 200 }),
+        ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
+      }
+
+      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+        typeof fetchWithTrustedCertificatesAsync
+      >;
+    });
+
+    const integration = createIntegration();
+
+    await expect(integration.getCurrentSessionsAsync({ showOnlyPlaying: true })).rejects.toMatchObject({
+      message: "An unknown error occured while executing Integration method",
+      cause: { message: "Wrong username or password" },
     });
   });
 });

@@ -19,6 +19,7 @@ import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { BoardItemMenu } from "./item-menu";
 import { WidgetContextMenu } from "./widget-context-menu";
+import { removePersistedWidgetQueries } from "./widget-query-recovery";
 
 interface BoardItemContentProps {
   item: SectionItem;
@@ -112,7 +113,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
       {({ reset }) => (
         <ErrorBoundary
           onReset={() => {
-            void queryClient.invalidateQueries({ queryKey: [["widget"]] });
+            removePersistedWidgetQueries(queryClient);
             reset();
           }}
           fallbackRender={({ resetErrorBoundary, error }) => (

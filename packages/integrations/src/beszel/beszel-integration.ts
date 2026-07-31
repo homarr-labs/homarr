@@ -1,5 +1,6 @@
 import { ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import type { Response as UndiciResponse } from "undici";
 
@@ -81,10 +82,46 @@ export const normalizeRealtimeSnapshot = (
   return events;
 };
 
-interface BeszelSession {
+export interface BeszelSession {
   token: string;
   userId: string;
+  /** Epoch milliseconds, taken from the token's `exp` claim. Undefined when it could not be read. */
+  expiresAt?: number;
 }
+
+/**
+ * Re-authenticate this long before the token actually lapses, so a request can never be sent
+ * with a token that expires while it is in flight.
+ */
+const sessionExpiryLeewayMs = 60_000;
+
+/**
+ * Reads the expiration out of a PocketBase auth token.
+ *
+ * @returns expiry as epoch milliseconds, or null when the token is malformed or carries no
+ * numeric `exp` claim — in which case we fall back to the existing 401 retry path.
+ */
+export const parseTokenExpiration = (token: string): number | null => {
+  const payload = token.split(".")[1];
+  if (!payload) return null;
+
+  try {
+    const decoded = Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8");
+    const { exp } = JSON.parse(decoded) as { exp?: unknown };
+    return typeof exp === "number" && Number.isFinite(exp) ? exp * 1000 : null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Beszel answers requests carrying an expired token with `200` and an empty list rather than `401`,
+ * because its collection rules filter on `@request.auth.id` instead of rejecting. The 401 retry in
+ * `fetchWithAuthAsync` therefore never fires, so a stored session would otherwise be trusted
+ * forever. Sessions have to expire themselves.
+ */
+export const isSessionExpired = (session: BeszelSession, now = Date.now()) =>
+  session.expiresAt !== undefined && session.expiresAt - sessionExpiryLeewayMs <= now;
 
 export class BeszelIntegration extends Integration {
   private readonly sessionStore: SessionStore<BeszelSession>;
@@ -96,9 +133,17 @@ export class BeszelIntegration extends Integration {
 
   private async authenticateAsync(): Promise<BeszelSession> {
     const existingSession = await this.sessionStore.getAsync();
-    if (existingSession) {
+    if (existingSession && !isSessionExpired(existingSession)) {
       logger.debug("Using stored Beszel session", { integrationId: this.integration.id });
       return existingSession;
+    }
+
+    if (existingSession) {
+      logger.info("Stored Beszel session expired, re-authenticating", {
+        integrationId: this.integration.id,
+        expiresAt: existingSession.expiresAt,
+      });
+      await this.sessionStore.clearAsync();
     }
 
     const authUrl = this.url("/api/collections/users/auth-with-password");
@@ -119,9 +164,30 @@ export class BeszelIntegration extends Integration {
     }
 
     const data = (await response.json()) as BeszelAuthResponse;
-    const session: BeszelSession = { token: data.token, userId: data.record.id };
-    await this.sessionStore.setAsync(session);
-    logger.debug("Saved Beszel session", { integrationId: this.integration.id, userId: session.userId });
+    const expiresAt = parseTokenExpiration(data.token) ?? undefined;
+
+    // A token that has already lapsed by the time it reaches us means our clock and Beszel's
+    // disagree by more than the token lifetime. Re-authenticating would only mint another dead
+    // token, and using this one would silently produce the empty responses this check exists to
+    // prevent — so fail loudly instead.
+    if (expiresAt !== undefined && expiresAt <= Date.now()) {
+      logger.warn("Beszel issued an already-expired token", { integrationId: this.integration.id, expiresAt });
+      throw new ErrorWithMetadata("Beszel issued an already-expired authentication token, check for clock skew", {
+        integrationId: this.integration.id,
+        expiresAt,
+      });
+    }
+
+    const session: BeszelSession = { token: data.token, userId: data.record.id, expiresAt };
+    // Give the stored entry the token's own lifetime, so the cache cannot outlive the credential
+    // even if the session is never read again before it lapses.
+    const ttlSeconds = expiresAt === undefined ? undefined : Math.max(1, Math.ceil((expiresAt - Date.now()) / 1000));
+    await this.sessionStore.setAsync(session, ttlSeconds === undefined ? undefined : { ttlSeconds });
+    logger.debug("Saved Beszel session", {
+      integrationId: this.integration.id,
+      userId: session.userId,
+      expiresAt,
+    });
     return session;
   }
 

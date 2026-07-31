@@ -4,6 +4,7 @@ description: 'Allows you to view and manage your Downloads from both Torrent and
 hide_title: true
 ---
 
+import { aria2Integration } from '@site/docs/integrations/aria2';
 import { delugeIntegration } from '@site/docs/integrations/deluge';
 import { nzbgetIntegration } from '@site/docs/integrations/nzbget';
 import { qBittorentIntegration } from '@site/docs/integrations/q-bittorent';
@@ -14,9 +15,6 @@ import { AddingWidget } from '@site/src/components/widgets/adding';
 import { WidgetConfig } from '@site/src/components/widgets/configuration';
 import { WidgetHeader } from '@site/src/components/widgets/header';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { IconAd } from "@tabler/icons-react";
-import TabItem from '@theme/TabItem';
-import Tabs from '@theme/Tabs';
 import { downloadsWidget } from '.';
 
 
@@ -25,15 +23,36 @@ import { downloadsWidget } from '.';
   categories={['Torrent client', 'Usenet client', 'Downloads']}
 />
 
-This widget displays a list of torrents or usenet-articles that are currently being downloaded, along with their progress and other relevant information.
+This widget displays a list of torrents or usenet-articles that are currently being downloaded, along with their progress and other relevant information. It supports 7 download client integrations and provides a rich, responsive table interface.
 
 ### Screenshots
 
 import downloadsCard from './img/screenshot.png';
+import contextMenuImg from './img/context-menu.png';
 
 <div>
-    <img src={downloadsCard} alt="downloads" width={128 * 4} />
+    <img src={downloadsCard} alt="Downloads widget showing torrent and usenet items" width={128 * 4} />
 </div>
+
+#### Right-click context menu
+
+<div>
+    <img src={contextMenuImg} alt="Downloads widget context menu with pause, delete, and copy actions" width={128 * 4} />
+</div>
+
+### Features
+
+- **Responsive table** — columns automatically adapt to widget width, hiding less important columns at smaller sizes
+- **Sortable columns** — click any column header to sort ascending/descending
+- **Column customization** — choose which columns to display via the widget options panel
+- **Right-click context menu** — pause, resume, delete downloads, or copy download names directly from the context menu
+- **Row expansion** — click any row to see full details inline without opening a separate modal
+- **Hover tooltips** — hover a download name to see size, speeds, ETA, ratio, and category
+- **Global stats bar** — toggle a summary bar showing queue progress, total size, speeds, ratio, and per-state counts
+- **Client filtering** — filter downloads by integration or status using the footer filter panel
+- **Global controls** — pause/resume all downloads across all clients from the footer bar
+- **Status indicators** — color-coded badges show download state at a glance
+- **Speed overview** — total download and upload speeds displayed in the footer
 
 ### Supported Integrations
 
@@ -53,15 +72,22 @@ import downloadsCard from './img/screenshot.png';
   integration: qBittorentIntegration,
   note: "Torrent client"
 }, {
+  integration: aria2Integration,
+  note: "Multi-protocol download client"
+}, {
   integration: slskdIntegration,
-  note: "Soulseek client"
+  note: "Soulseek client (read-only)"
 }]} />
 
 ### Interactions
 
-- Pause / Resume one download by clicking on the according icon.
-- Delete one download by clicking on the trash icon. (Can also delete the files)
-- Pause / Resume all downloads by using the bottom button.
+- **Right-click** any download to open a context menu with pause/resume, delete, and copy actions
+- **Click** any row to expand it and see full download details inline
+- **Hover** a download name for a quick stats tooltip
+- **Stats toggle** — show or hide the global stats bar from the footer
+- **Pause / Resume** all downloads using the footer controls
+- **Filter** by integration or status using the filter button in the footer
+- **Sort** by clicking column headers (with persistent sort direction)
 
 ### Adding the widget
 
