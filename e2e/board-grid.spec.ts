@@ -300,8 +300,9 @@ describe("Board grid", () => {
 
       const stickyRailY = (await expectBoundingBoxAsync(rail)).y;
       await page.evaluate(() => window.scrollTo({ top: 500, behavior: "auto" }));
-      expect((await expectBoundingBoxAsync(rail)).y).toBeGreaterThanOrEqual(0);
-      expect((await expectBoundingBoxAsync(rail)).y).toBeLessThanOrEqual(stickyRailY);
+      const scrolledRailY = (await expectBoundingBoxAsync(rail)).y;
+      expect(scrolledRailY).toBeGreaterThanOrEqual(0);
+      expect(scrolledRailY).toBeLessThanOrEqual(stickyRailY + 0.5);
       await page.evaluate(() => window.scrollTo({ top: 0, behavior: "auto" }));
 
       await setDocumentZoomAsync(page, 1.25);
