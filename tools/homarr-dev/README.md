@@ -11,17 +11,19 @@ Build and launch local Homarr images and GHCR pull-request builds, then manage t
 ## Setup
 
 ```sh
-pnpm dev:setup
+pnpm install
+pnpm db:migration:sqlite:run
 ```
 
-This installs monorepo dependencies, creates and migrates the local SQLite database, starts or reuses Redis, installs `homarr` to `~/.local/bin`, and generates Fish completions when Fish is configured. Add `~/.local/bin` to `PATH` to invoke `homarr` directly; setup prints the absolute command when it is not available on `PATH`.
+The migration command also seeds a new database. Use `pnpm db:seed` explicitly when you need to reseed an existing database. Start Redis separately with `pnpm docker:dev:up` when it is needed.
+The examples below use `pnpm dev:cli -- ...`, which works from POSIX shells and PowerShell. If you prefer a global command, install it with `pnpm dev:cli:install` and add your Go bin directory to `PATH`.
 
 ## Build
 
 ```sh
-homarr build feature
-homarr build --pr 6441
-homarr rebuild feature
+pnpm dev:cli -- build feature
+pnpm dev:cli -- build --pr 6441
+pnpm dev:cli -- rebuild feature
 ```
 
 Checkout builds are tagged as `homarr:<name>`. The source checkout and revision are recorded on the image so `homarr rebuild` and the development dashboard can rebuild it later. PR builds use a temporary checkout and default to `homarr:pr-<number>`.
@@ -29,15 +31,17 @@ Checkout builds are tagged as `homarr:<name>`. The source checkout and revision 
 ## Launch
 
 ```sh
-homarr run dev
-homarr run --detach dev
-homarr run --pr 6441
-homarr run --pr 6441 --demo
-homarr run --env FOO=bar --env FEATURE=true dev
+pnpm dev:cli -- run dev
+pnpm dev:cli -- run --detach dev
+pnpm dev:cli -- run --pr 6441
+pnpm dev:cli -- run --pr 6441 --demo
+pnpm dev:cli -- run --env FOO=bar --env FEATURE=true dev
 ```
 
 PR launches always pull the latest GHCR tag before starting. Local tags remain local.
 The first launch generates a per-user encryption key in the OS config directory and reuses it for later launches. Set `HOMARR_DEV_SECRET_ENCRYPTION_KEY` to a 64-character hexadecimal key to override it.
+
+The command reference below assumes the optional `homarr` installation. Without it, prefix each command with `pnpm dev:cli --` (for example, `pnpm dev:cli -- dev`).
 
 ## Commands
 
