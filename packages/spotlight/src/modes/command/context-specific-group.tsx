@@ -29,8 +29,8 @@ export const contextSpecificActionsSearchGroups = createGroup<ContextSpecificIte
       </Group>
     );
   },
-  useInteraction(option) {
-    return option.interaction();
+  useInteraction(option, query) {
+    return option.interaction(query);
   },
   filter(query, option) {
     return option.name.toLowerCase().includes(query.toLowerCase());

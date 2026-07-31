@@ -7,6 +7,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 interface AssistantPromptInteractionOptions {
   sendPrompt: (prompt: string) => void;
+  prompt?: string;
 }
 
 const AssistantPromptDetail = () => {
@@ -39,25 +40,35 @@ const AssistantPromptAction = ({ hasPrompt }: { hasPrompt: boolean }) => {
   );
 };
 
-export const createAssistantPromptInteraction = ({ sendPrompt }: AssistantPromptInteractionOptions) =>
-  ({
+export const createAssistantPromptInteraction = ({ sendPrompt, prompt = "" }: AssistantPromptInteractionOptions) => {
+  const trimmedPrompt = prompt.trim();
+  if (trimmedPrompt.length > 0) {
+    return {
+      type: "javaScript" as const,
+      onSelect: () => sendPrompt(trimmedPrompt),
+      closeSpotlightOnTrigger: true,
+    };
+  }
+
+  return {
     type: "children",
     option: {},
     DetailComponent: AssistantPromptDetail,
     useActions: (_options: Record<string, unknown>, query: string) => {
-      const prompt = query.trim();
+      const nextPrompt = query.trim();
       return [
         {
           key: "send-assistant-prompt",
-          Component: () => <AssistantPromptAction hasPrompt={prompt.length > 0} />,
+          Component: () => <AssistantPromptAction hasPrompt={nextPrompt.length > 0} />,
           useInteraction: () => ({
             type: "javaScript" as const,
             onSelect: () => {
-              if (prompt.length > 0) sendPrompt(prompt);
+              if (nextPrompt.length > 0) sendPrompt(nextPrompt);
             },
-            closeSpotlightOnTrigger: prompt.length > 0,
+            closeSpotlightOnTrigger: nextPrompt.length > 0,
           }),
         },
       ];
     },
-  }) as const;
+  } as const;
+};

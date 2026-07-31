@@ -30,12 +30,7 @@ import { createId } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import {
-  openMediaRequestSearch,
-  openSpotlight,
-  useRegisterSpotlightContextActions,
-  useRegisterSpotlightContextResults,
-} from "@homarr/spotlight";
+import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResults } from "@homarr/spotlight";
 
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
 import { AssistantAskUserTool, AssistantConfigureAppTool } from "./assistant-human-tools";
@@ -638,12 +633,12 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
       name: t("spotlight"),
       icon: "/logo/logo.png",
       description: t("spotlightDescription"),
-      interaction: () => createAssistantPromptInteraction({ sendPrompt }),
+      alwaysVisible: true,
+      interaction: (query: string) => createAssistantPromptInteraction({ sendPrompt, prompt: query }),
     }),
     [sendPrompt, t],
   );
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
-  useRegisterSpotlightContextActions("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const value = useMemo(
     () => ({ enabled: true, opened, isRunning: assistantIsRunning, unreadCount, open, close, toggle, sendPrompt }),
@@ -691,12 +686,12 @@ const DisabledAssistantProvider = ({ children, description }: DisabledAssistantP
       icon: "/logo/logo.png",
       description,
       unavailable: true,
-      interaction: () => ({ type: "none" as const }),
+      alwaysVisible: true,
+      interaction: (_query: string) => ({ type: "none" as const }),
     }),
     [description, t],
   );
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
-  useRegisterSpotlightContextActions("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const value = useMemo(
     () => ({

@@ -16,6 +16,7 @@ import type { inferSearchInteractionOptions } from "../lib/interaction";
 import type { SearchMode } from "../lib/mode";
 import { searchModes } from "../modes";
 import { useHomeEmptyGroupsWithPreferences } from "../modes/help/home-empty-groups";
+import { contextSpecificSearchGroups } from "../modes/home/context-specific-group";
 import {
   mediaRequestSearchEvent,
   mediaRequestSearchScopeAtom,
@@ -225,7 +226,9 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
               pushChildrenOptions(options);
             }}
             query={query}
-            groups={mode === defaultMode && query.length === 0 ? [...homeEmptyGroups] : groups}
+            groups={
+              mode === defaultMode && query.length === 0 ? [...homeEmptyGroups, contextSpecificSearchGroups] : groups
+            }
           />
         )}
       </MantineSpotlight.ActionsList>

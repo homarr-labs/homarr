@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Badge, Center, Indicator, Loader, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { Badge, Center, Indicator, Kbd, Loader, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys, useTimeout } from "@mantine/hooks";
 import {
   IconBrandDocker,
@@ -35,6 +35,12 @@ interface UserAvatarMenuProps {
   availableUpdatesPromise?: Promise<RouterOutputs["updateChecker"]["getAvailableUpdates"]>;
   isDockerEnabled?: boolean;
 }
+
+const formatHotkeyLabel = (hotkey: string) =>
+  hotkey
+    .split("+")
+    .map((key) => (key === "mod" ? "Mod" : `${key.charAt(0).toUpperCase()}${key.slice(1)}`))
+    .join(" + ");
 
 export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnabled }: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
@@ -97,7 +103,9 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
                     <Text size="xs" c="dimmed">
                       {t("assistantThinking")}
                     </Text>
-                  ) : undefined
+                  ) : (
+                    <Kbd size="xs">{formatHotkeyLabel(hotkeys.openAssistant)}</Kbd>
+                  )
                 }
                 onClick={assistant.open}
               >
