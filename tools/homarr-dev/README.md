@@ -37,6 +37,7 @@ homarr run --env FOO=bar --env FEATURE=true dev
 ```
 
 PR launches always pull the latest GHCR tag before starting. Local tags remain local.
+The first launch generates a per-user encryption key in the OS config directory and reuses it for later launches. Set `HOMARR_DEV_SECRET_ENCRYPTION_KEY` to a 64-character hexadecimal key to override it.
 
 ## Commands
 

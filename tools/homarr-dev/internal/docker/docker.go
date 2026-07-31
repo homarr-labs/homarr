@@ -2,17 +2,20 @@ package docker
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
 
-const defaultDevelopmentEncryptionKey = "cdca265c289df60f6605a2fc9c43cfa8eb6efdc98b203cad2c3f2970aca09fbe"
+const developmentEncryptionKeyEnv = "HOMARR_DEV_SECRET_ENCRYPTION_KEY"
 
 type Container struct {
 	ID     string
@@ -163,6 +166,11 @@ type StartOptions struct {
 }
 
 func Start(opts StartOptions) error {
+	encryptionKey, err := developmentEncryptionKey()
+	if err != nil {
+		return err
+	}
+
 	if opts.PullAlways {
 		cmd := PullCommand(opts.Image, opts.Platform)
 		cmd.Stdin = os.Stdin
@@ -175,10 +183,6 @@ func Start(opts StartOptions) error {
 
 	_ = exec.Command("docker", "rm", "-f", opts.Name).Run()
 
-	encryptionKey := os.Getenv("HOMARR_DEV_SECRET_ENCRYPTION_KEY")
-	if encryptionKey == "" {
-		encryptionKey = defaultDevelopmentEncryptionKey
-	}
 	args := []string{"run", "--rm", "--name", opts.Name,
 		"-e", "SECRET_ENCRYPTION_KEY=" + encryptionKey,
 	}
@@ -216,6 +220,65 @@ func Start(opts StartOptions) error {
 		return fmt.Errorf("%w: %s", err, cleanOutput(stderr.data))
 	}
 	return nil
+}
+
+func developmentEncryptionKey() (string, error) {
+	if key := os.Getenv(developmentEncryptionKeyEnv); key != "" {
+		return validateDevelopmentEncryptionKey(key)
+	}
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", fmt.Errorf("locate user config directory: %w", err)
+	}
+	return persistedDevelopmentEncryptionKey(configDir)
+}
+
+func persistedDevelopmentEncryptionKey(configDir string) (string, error) {
+	dir := filepath.Join(configDir, "homarr-dev")
+	path := filepath.Join(dir, "secret-encryption-key")
+	if data, err := os.ReadFile(path); err == nil {
+		return validateDevelopmentEncryptionKey(strings.TrimSpace(string(data)))
+	} else if !os.IsNotExist(err) {
+		return "", fmt.Errorf("read development encryption key: %w", err)
+	}
+
+	if err := os.MkdirAll(dir, 0o700); err != nil {
+		return "", fmt.Errorf("create development config directory: %w", err)
+	}
+	keyBytes := make([]byte, 32)
+	if _, err := rand.Read(keyBytes); err != nil {
+		return "", fmt.Errorf("generate development encryption key: %w", err)
+	}
+	key := hex.EncodeToString(keyBytes)
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600)
+	if os.IsExist(err) {
+		data, readErr := os.ReadFile(path)
+		if readErr != nil {
+			return "", fmt.Errorf("read development encryption key: %w", readErr)
+		}
+		return validateDevelopmentEncryptionKey(strings.TrimSpace(string(data)))
+	}
+	if err != nil {
+		return "", fmt.Errorf("create development encryption key: %w", err)
+	}
+	if _, err := file.WriteString(key + "\n"); err != nil {
+		_ = file.Close()
+		_ = os.Remove(path)
+		return "", fmt.Errorf("write development encryption key: %w", err)
+	}
+	if err := file.Close(); err != nil {
+		_ = os.Remove(path)
+		return "", fmt.Errorf("close development encryption key: %w", err)
+	}
+	return key, nil
+}
+
+func validateDevelopmentEncryptionKey(key string) (string, error) {
+	decoded, err := hex.DecodeString(key)
+	if err != nil || len(decoded) != 32 {
+		return "", fmt.Errorf("development encryption key must contain exactly 64 hexadecimal characters")
+	}
+	return key, nil
 }
 
 type tailBuffer struct {
