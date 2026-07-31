@@ -1907,14 +1907,14 @@
           "description": "Usa ISO 8601 per formattare la data (questo sovrascriverà altre opzioni)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Mostra meteo",
+          "description": "Mostra una piccola icona animata del meteo e la temperatura nell'angolo della scheda"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Località meteo"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Usa Fahrenheit"
         }
       }
     },
@@ -3079,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "Limite elementi per integrazione",
           "description": "Ciò limiterà il numero di elementi mostrati per integrazione, non globalmente"
+        },
+        "columnOrder": {
+          "label": "Ordine delle colonne"
+        },
+        "columnWidths": {
+          "label": "Larghezza delle colonne"
         }
       },
       "errors": {
         "noColumns": "Seleziona colonne in elementi",
-        "noCommunications": "Impossibile caricare i dati dall'integrazione"
+        "noCommunications": "Impossibile caricare i dati dall'integrazione",
+        "noItems": "Nessun download trovato",
+        "actionFailed": "Azione non riuscita",
+        "actionFailedMessage": "L'azione non può essere completata. Per favore riprova."
       },
       "items": {
         "actions": {
@@ -3106,7 +3115,8 @@
           "detailsTitle": "Indice corrente all'interno del client"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": "ID elemento"
         },
         "integration": {
           "columnTitle": "Integrazione"
@@ -3140,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "Ora di fine",
-          "detailsTitle": "Tempo dal/al completamento"
+          "detailsTitle": "Tempo dal/al completamento",
+          "eta": "ETA"
         },
         "type": {
           "columnTitle": "Tipo",
@@ -3184,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": "Rapporto globale"
+      "globalRatio": "Rapporto globale",
+      "contextMenu": {
+        "copyName": "Copia nome",
+        "copyId": "Copia ID",
+        "clearFilters": "Resetta filtri"
+      },
+      "footer": {
+        "filter": "Filtro download"
+      },
+      "stats": {
+        "show": "Mostra statistiche globali",
+        "hide": "Nascondi statistiche globali",
+        "overallProgress": "Avanzamento complessivo della coda",
+        "totalSize": "Dimensione totale della coda",
+        "clients": "{count, plural, one {# cliente} other {# clienti}}"
+      },
+      "disconnected": "(disconnesso)"
     },
     "mediaReleases": {
       "name": "Comunicati stampa",

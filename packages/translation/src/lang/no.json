@@ -3079,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "Begrens elementer per integrasjon",
           "description": "Dette begrenser antall elementer vist per integrasjon, ikke globalt"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Velg kolonner i elementer",
-        "noCommunications": "Kan ikke laste inn data fra integrasjon"
+        "noCommunications": "Kan ikke laste inn data fra integrasjon",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3115,8 @@
           "detailsTitle": "Gjeldende indeks i klienten"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integrasjon"
@@ -3140,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "Fullfør tid",
-          "detailsTitle": "Tid siden/til fullførelse"
+          "detailsTitle": "Tid siden/til fullførelse",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Type",
@@ -3184,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": "Global ratio"
+      "globalRatio": "Global ratio",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Medieutgivelser",
