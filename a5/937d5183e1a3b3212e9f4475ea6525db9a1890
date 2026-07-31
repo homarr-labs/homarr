@@ -1,0 +1,22 @@
+packages/widgets/src/common/use-persisted-table-layout.ts
+  s_e69b825ec6dfea::t_8ef35daf24b634 12-17,177,180-182,184,186-188,214-217,220-230
+  s_e69b825ec6dfea::t_6646f96b3c9d6d 189
+packages/widgets/src/common/use-persisted-table-layout.spec.ts
+  s_e69b825ec6dfea::t_6115b4f600456b 1-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "a5937d5183e1a3b3212e9f4475ea6525db9a1890",
+  "prompts": {},
+  "sessions": {
+    "s_e69b825ec6dfea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb3a0-792a-7381-8801-1495fcc9663b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
