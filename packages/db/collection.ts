@@ -6,6 +6,8 @@ import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
 import * as schema from "./schema";
 
+const tables = { ...schema };
+
 type TableKey = {
   [K in keyof typeof schema]: (typeof schema)[K] extends { _: { brand: "Table" } } ? K : never;
 }[keyof typeof schema];
@@ -36,7 +38,7 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
         for (const [key, values] of objectEntries(context)) {
           if (values.length >= 1) {
             transaction
-              .insert(schema[key])
+              .insert(tables[key])
               .values(values as never)
               .run();
           }
@@ -50,7 +52,7 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
         for (const [key, values] of objectEntries(context)) {
           if (values.length >= 1) {
             // Below is actually the mysqlSchema when the driver is mysql
-            await transaction.insert(schema[key] as never).values(values as never);
+            await transaction.insert(tables[key] as never).values(values as never);
           }
         }
       });
