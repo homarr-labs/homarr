@@ -290,7 +290,7 @@ describe("Board grid", () => {
       // row limit, and items can occupy empty rows below their original position.
       for (let targetRow = 1; targetRow <= 8; targetRow += 1) {
         await firstItem.evaluate((element) => element.scrollIntoView({ block: "center", behavior: "instant" }));
-        await dragLocatorByAsync(page, getEditorEntry(firstItem), 0, logicalCellPitch * canvasScale);
+        await dragLocatorByAsync(page, getEditorEntry(firstItem), 0, logicalCellPitch * canvasScale + 2);
         await expect(firstItem).toHaveAttribute("data-grid-y", String(targetRow));
       }
       await expect(firstItem).toHaveAttribute("data-grid-y", "8");
