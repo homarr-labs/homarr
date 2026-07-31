@@ -55,17 +55,15 @@ export class NavidromeIntegration extends Integration implements IMediaServerInt
   }
 
   public async getDashboardDataAsync(): Promise<NavidromeDashboardData> {
-    const [artistCount, libraryCounts, nowPlaying] = await Promise.all([
+    const [artistCount, libraryCounts] = await Promise.all([
       this.getArtistCountAsync(),
       this.getAlbumAndSongCountsAsync(),
-      this.getNowPlayingAsync(),
     ]);
 
     return {
       artistCount,
       albumCount: libraryCounts.albumCount,
       songCount: libraryCounts.songCount,
-      nowPlaying,
     };
   }
 

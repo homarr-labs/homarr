@@ -3779,18 +3779,6 @@
           "label": "Show songs",
           "description": "Show the total number of songs in your music library (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Show now playing",
-          "description": "Show tracks currently being played (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Show now playing list",
-          "description": "Show individual tracks instead of only the active stream count (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Max now playing items",
-          "description": "Maximum number of tracks to show in the now playing list (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Show library count",
           "description": "Show the number of libraries on your instance (Audiobookshelf)"
@@ -3824,8 +3812,6 @@
       "podcasts": "Podcasts",
       "listeningTime": "Listening Time",
       "activeSessions": "Active Sessions",
-      "nowPlaying": "Now Playing",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Failed to fetch audio stats data"
       }
