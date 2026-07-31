@@ -1,0 +1,34 @@
+packages/widgets/src/common/homarr-data-table.css
+  s_e69b825ec6dfea::t_0c0b81dac1dfc2 1-7,11,15,19,25,31-32,37-38,40,43-46,49-52
+apps/docs/docs/widgets/docker-containers/index.mdx
+  s_e69b825ec6dfea::t_de6c9fb6792e1e 43
+apps/docs/docs/widgets/downloads/index.mdx
+  s_e69b825ec6dfea::t_de6c9fb6792e1e 47
+packages/widgets/src/docker/component.tsx
+  s_e69b825ec6dfea::t_0c0b81dac1dfc2 32,51,222-223,317-320,398,426-428,507-512
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_e69b825ec6dfea::t_de6c9fb6792e1e 26
+packages/widgets/src/beszel-system-table/component.tsx
+  s_e69b825ec6dfea::t_0c0b81dac1dfc2 28,180,388-390
+packages/widgets/src/downloads/component.tsx
+  s_e69b825ec6dfea::t_e6cbe68efc1367 342
+  s_e69b825ec6dfea::t_0c0b81dac1dfc2 6,46-48,56-57,168-184,303-305,344,346,671-679,751-753
+packages/widgets/src/common/homarr-data-table.tsx
+  s_e69b825ec6dfea::t_0c0b81dac1dfc2 1-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "e63618d00dee48b11bd566b6fa65b69df1b99e86",
+  "prompts": {},
+  "sessions": {
+    "s_e69b825ec6dfea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb3a0-792a-7381-8801-1495fcc9663b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
