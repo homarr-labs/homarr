@@ -23,9 +23,10 @@
 
 .grid-stack.grid-stack-editing > .grid-stack-item > .ui-resizable-se,
 .grid-stack.grid-stack-editing > .grid-stack-item > .ui-resizable-sw {
-  width: 28px;
-  height: 28px;
-  background-size: 12px 12px;
+  width: 44px;
+  height: 44px;
+  background-size: 16px 16px;
+  z-index: 9;
 }
 
 @media (prefers-reduced-motion: reduce) {
