@@ -620,7 +620,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     setUnreadCount((current) => current + 1);
   }, [isLoading, notificationKey, opened]);
 
-  useHotkeys([[hotkeys.openAssistant, open]]);
+  useHotkeys([[hotkeys.openAssistant, open, { preventDefault: true }]]);
 
   const spotlightItem = useMemo(
     () => ({
