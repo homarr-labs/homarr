@@ -46,8 +46,9 @@ The command reference below assumes the optional `homarr` installation. Without 
 ## Commands
 
 ```text
-homarr dash                Interactive instance dashboard
-homarr dev                 Interactive local and remote image browser
+homarr                     Interactive local and remote image browser
+homarr dev                 Explicit alias for the main browser
+homarr dash                Start on the instance dashboard
 homarr build <name>        Build this checkout as homarr:<name>
 homarr build --pr <number> Build a PR locally from a temporary checkout
 homarr rebuild <name>      Rebuild from recorded provenance
@@ -76,6 +77,7 @@ f              Follow or pause inline logs
 Page Up/Down   Scroll inline logs
 b              Show or hide bot PRs
 r              Refresh
+d              Switch to the instance dashboard
 q              Quit; during a pull, cancel it
 ```
 
@@ -95,5 +97,6 @@ x              Remove with confirmation
 o              Open in browser
 c              Copy URL
 r              Refresh
+d              Switch to the development browser
 q              Quit
 ```
