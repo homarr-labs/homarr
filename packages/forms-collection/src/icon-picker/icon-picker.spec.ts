@@ -1,15 +1,24 @@
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
-import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { MantineProvider } from "@mantine/core";
 
 import type { Root } from "react-dom/client";
+
+const { findIconsQuery } = vi.hoisted(() => ({
+  findIconsQuery: vi.fn(() => ({
+    data: { icons: [], countIcons: 0 },
+    isLoading: false,
+    isError: false,
+    refetch: vi.fn(),
+  })),
+}));
 
 vi.mock("@homarr/api/client", () => ({
   clientApi: {
     icon: {
       findIcons: {
-        useQuery: () => ({ data: { icons: [], countIcons: 0 }, isLoading: false, isError: false, refetch: vi.fn() }),
+        useQuery: findIconsQuery,
       },
     },
   },
@@ -64,6 +73,10 @@ describe("IconPicker", () => {
     container?.remove();
   });
 
+  beforeEach(() => {
+    findIconsQuery.mockClear();
+  });
+
   const renderPicker = async (onChange: (value: string) => void) => {
     container = document.createElement("div");
     document.body.appendChild(container);
@@ -87,9 +100,11 @@ describe("IconPicker", () => {
 
     await act(async () => {
       setInputValue(input, directIconUrl);
+      await new Promise((resolve) => setTimeout(resolve, 150));
     });
 
     expect(onChange).toHaveBeenCalledWith(directIconUrl);
+    expect(findIconsQuery.mock.calls.some(([query]) => query.searchText === directIconUrl)).toBe(false);
   });
 
   test("keeps normal icon names in search mode", async () => {
@@ -100,10 +115,12 @@ describe("IconPicker", () => {
 
     await act(async () => {
       setInputValue(input, "shopify");
+      await new Promise((resolve) => setTimeout(resolve, 150));
     });
 
     expect(onChange).not.toHaveBeenCalled();
     expect(input.value).toBe("shopify");
+    expect(findIconsQuery.mock.calls.some(([query]) => query.searchText === "shopify")).toBe(true);
   });
 });
 
