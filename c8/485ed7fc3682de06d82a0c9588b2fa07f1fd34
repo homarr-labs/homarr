@@ -1,0 +1,63 @@
+tools/homarr-dev/internal/run/run_test.go
+  s_1c2c60ab8959b8::t_53b3980c24f56a 12
+  s_1c2c60ab8959b8::t_6db09b6e82dd60 21-27
+tools/homarr-dev/internal/tui/dashboard_test.go
+  s_1c2c60ab8959b8::t_bce03565d4a058 19,39-40,52
+tools/homarr-dev/internal/docker/images.go
+  s_1c2c60ab8959b8::t_fbbb6a29412a77 59-60,68,80,88
+apps/docs/docs/advanced/development/getting-started.mdx
+  s_1c2c60ab8959b8::t_55a0e66c2c0dc9 19,21,70
+scripts/setup-dev.sh
+  s_1c2c60ab8959b8::t_8e88fea118cbe7 13-16,37-39,41-52,69-75
+  s_1c2c60ab8959b8::t_0c29814f243511 17-24
+tools/homarr-dev/main.go
+  s_1c2c60ab8959b8::t_fbbb6a29412a77 112
+  s_1c2c60ab8959b8::t_6486f76e33221e 271
+  s_1c2c60ab8959b8::t_9a7b27b1c183e1 108,126,135,144,153,162,171-172,174-181,183,264-267
+tools/homarr-dev/internal/run/run.go
+  s_1c2c60ab8959b8::t_6486f76e33221e 4,13,36-39,54
+  s_1c2c60ab8959b8::t_53b3980c24f56a 19,40-43,67
+  s_1c2c60ab8959b8::t_5d8e47646f9086 68-69,111-113
+tools/homarr-dev/internal/tui/dev_test.go
+  s_1c2c60ab8959b8::t_a19c314b1de920 118-135
+tools/homarr-dev/internal/docker/images_test.go
+  s_1c2c60ab8959b8::t_fbbb6a29412a77 20,56
+tools/homarr-dev/internal/tui/dashboard.go
+  s_1c2c60ab8959b8::t_87cf444b43b1c5 4,44,59-61,69-72,132,158-165,167,182-186,199,292,300,310,375
+tools/homarr-dev/README.md
+  s_1c2c60ab8959b8::t_0c29814f243511 17
+tools/homarr-dev/main_test.go
+  s_1c2c60ab8959b8::t_9a7b27b1c183e1 29-39
+tools/homarr-dev/internal/docker/docker.go
+  s_1c2c60ab8959b8::t_2d4705b991b78b 108,110-114
+  s_1c2c60ab8959b8::t_6db09b6e82dd60 87-89
+  s_1c2c60ab8959b8::t_0757b1c5e132ee 15-16,91-92,102,115-137,178-181,183
+tools/homarr-dev/internal/gh/gh_test.go
+  s_1c2c60ab8959b8::t_fbbb6a29412a77 50
+apps/docs/docs/advanced/command-line/development/index.mdx
+  s_1c2c60ab8959b8::t_55a0e66c2c0dc9 1-37
+tools/homarr-dev/internal/docker/docker_test.go
+  s_1c2c60ab8959b8::t_2d4705b991b78b 28-36
+  s_1c2c60ab8959b8::t_6db09b6e82dd60 37-42
+tools/homarr-dev/internal/tui/dev.go
+  s_1c2c60ab8959b8::t_5e13cc3a81cc62 112-115,136,157,442,459,497-512,514,516,555,577-582,587-589,623-625,641-643,922-923,926
+  s_1c2c60ab8959b8::t_6486f76e33221e 187-190,431,756
+tools/homarr-dev/internal/gh/gh.go
+  s_1c2c60ab8959b8::t_fbbb6a29412a77 4,80-81,114-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "c8485ed7fc3682de06d82a0c9588b2fa07f1fd34",
+  "prompts": {},
+  "sessions": {
+    "s_1c2c60ab8959b8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_04800f60fffebifl2JH2wvlokh",
+        "model": "gpt-5.6-sol-fast"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
