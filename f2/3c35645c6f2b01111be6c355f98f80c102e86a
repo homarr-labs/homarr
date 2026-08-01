@@ -1,0 +1,33 @@
+tools/homarr-dev/internal/tui/dev.go
+  s_1c2c60ab8959b8::t_4a8854346b42a1 170-171,179-183
+  s_1c2c60ab8959b8::t_bd426f0883259f 157,160-164,795-796
+  s_5126ece19484bf::t_1d8721cf68fc82 184-185
+tools/homarr-dev/internal/tui/dev_test.go
+  s_1c2c60ab8959b8::t_4a8854346b42a1 4,103-105
+  s_1c2c60ab8959b8::t_bd426f0883259f 87,89,97,102
+  s_5126ece19484bf::t_9a1fc8a8e13d39 106-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "f23c35645c6f2b01111be6c355f98f80c102e86a",
+  "prompts": {},
+  "sessions": {
+    "s_1c2c60ab8959b8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_04800f60fffebifl2JH2wvlokh",
+        "model": "gpt-5.6-sol-fast"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5126ece19484bf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019faf09-9790-7e51-a9e2-60e0f621e2b9",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
