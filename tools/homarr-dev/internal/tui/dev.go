@@ -154,20 +154,33 @@ func startPull(ctx context.Context, cmd *exec.Cmd, events chan<- pullEvent) tea.
 			defer reader.Close()
 			scanner := bufio.NewScanner(reader)
 			scanner.Split(splitDockerProgress)
+			lastLine := ""
 			for scanner.Scan() {
 				line := strings.TrimSpace(scanner.Text())
-				if line != "" && ctx.Err() == nil && len(events) < cap(events)-1 {
-					events <- pullEvent{line: line}
+				if line != "" {
+					lastLine = line
+					if ctx.Err() == nil && len(events) < cap(events)-1 {
+						events <- pullEvent{line: line}
+					}
 				}
 			}
 			err := cmd.Wait()
 			if err == nil {
 				err = scanner.Err()
+			} else {
+				err = pullCommandError(err, lastLine)
 			}
 			events <- pullEvent{done: true, err: err}
 		}()
 		return pullReadyMsg{}
 	}
+}
+
+func pullCommandError(err error, lastLine string) error {
+	if lastLine == "" {
+		return err
+	}
+	return fmt.Errorf("%w: %s", err, lastLine)
 }
 
 func waitPull(events <-chan pullEvent) tea.Cmd {
@@ -779,8 +792,8 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 			if row.kind == "remote" {
-				if row.imageState != "yes" {
-					m.status = fmt.Sprintf("PR #%d cannot start: image is %s", row.pr.Number, row.imageState)
+				if row.imageState == "checking" {
+					m.status = fmt.Sprintf("PR #%d image check is still in progress", row.pr.Number)
 					return m, nil
 				}
 				return m, m.beginPull(*row)

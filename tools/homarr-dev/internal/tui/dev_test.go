@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -83,9 +84,9 @@ func TestRemotePRBuildUsesTemporaryPRWorkflow(t *testing.T) {
 	}
 }
 
-func TestPRWithoutImageDoesNotLaunch(t *testing.T) {
+func TestPRImageCheckInProgressDoesNotLaunch(t *testing.T) {
 	m := newPRsModel()
-	m.rows = []prRow{{kind: "remote", pr: gh.PR{Number: 6441, Title: "No image"}, imageState: "no"}}
+	m.rows = []prRow{{kind: "remote", pr: gh.PR{Number: 6441, Title: "Pending image"}, imageState: "checking"}}
 	m.table.SetRows(buildTableRows(m.rows))
 
 	updated, cmd := m.Update(tea.KeyPressMsg(tea.Key{Code: tea.KeyEnter}))
@@ -93,8 +94,15 @@ func TestPRWithoutImageDoesNotLaunch(t *testing.T) {
 	if cmd != nil {
 		t.Fatal("unavailable image returned a launch command")
 	}
-	if !strings.Contains(got.status, "cannot start") {
+	if !strings.Contains(got.status, "still in progress") {
 		t.Fatalf("status = %q, want launch rejection", got.status)
+	}
+}
+
+func TestPullErrorIncludesLastDockerMessage(t *testing.T) {
+	err := pullCommandError(errors.New("exit status 1"), "manifest unknown")
+	if !strings.Contains(err.Error(), "manifest unknown") {
+		t.Fatalf("pull error = %v", err)
 	}
 }
 
