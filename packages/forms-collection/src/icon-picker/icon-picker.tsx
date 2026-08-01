@@ -29,7 +29,6 @@ import { supportedLanguages } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { UploadMedia } from "../upload-media/upload-media";
-import { isDirectIconUrl } from "./icon-url";
 import classes from "./icon-picker.module.css";
 
 interface IconPickerProps {
@@ -167,7 +166,7 @@ export const IconPicker = ({
             value={inputValue}
             onChange={(event) => {
               const nextValue = event.currentTarget.value;
-              if (isDirectIconUrl(nextValue)) {
+              if (/^https?:\/\//i.test(nextValue.trim())) {
                 startTransition(() => {
                   setValue(nextValue);
                   setQuery("");
