@@ -59,6 +59,30 @@ func TestPRImageChecksAreBounded(t *testing.T) {
 	}
 }
 
+func TestPRLoadedReusesImageChecksUnlessRefreshIsForced(t *testing.T) {
+	m := newPRsModel()
+	m.rows = []prRow{{kind: "remote", pr: gh.PR{Number: 1}, imageState: "yes"}}
+
+	updated, _ := m.Update(prsLoadedMsg{prs: []gh.PR{{Number: 1}, {Number: 2}}})
+	cached := updated.(prsModel)
+	if cached.rows[0].imageState != "yes" || len(cached.imageQueue) != 0 || cached.imageActive != 1 {
+		t.Fatalf("cached states were not reused: rows=%#v queue=%v active=%d", cached.rows, cached.imageQueue, cached.imageActive)
+	}
+
+	updated, _ = cached.Update(prsLoadedMsg{prs: []gh.PR{{Number: 1}, {Number: 2}}, refresh: true})
+	refreshed := updated.(prsModel)
+	if refreshed.rows[0].imageState != "checking" || refreshed.imageActive != 2 {
+		t.Fatalf("forced refresh reused image states: rows=%#v active=%d", refreshed.rows, refreshed.imageActive)
+	}
+}
+
+func TestRemotePRBuildUsesTemporaryPRWorkflow(t *testing.T) {
+	image, action, status := localBuildForRow(prRow{kind: "remote", pr: gh.PR{Number: 6441}})
+	if image.Tag != "pr-6441" || image.PRNumber != 6441 || action != "built" || !strings.Contains(status, "building PR #6441 locally") {
+		t.Fatalf("image=%#v action=%q status=%q", image, action, status)
+	}
+}
+
 func TestPRWithoutImageDoesNotLaunch(t *testing.T) {
 	m := newPRsModel()
 	m.rows = []prRow{{kind: "remote", pr: gh.PR{Number: 6441, Title: "No image"}, imageState: "no"}}

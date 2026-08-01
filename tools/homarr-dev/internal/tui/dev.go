@@ -90,10 +90,11 @@ type prsModel struct {
 }
 
 type prsLoadedMsg struct {
-	prs    []gh.PR
-	images []docker.Image
-	prErr  error
-	imgErr error
+	prs     []gh.PR
+	images  []docker.Image
+	prErr   error
+	imgErr  error
+	refresh bool
 }
 type imageCheckedMsg struct {
 	number int
@@ -108,6 +109,7 @@ type rebuildDoneMsg struct {
 	image    docker.Image
 	err      error
 	canceled bool
+	action   string
 }
 type runningRefreshedMsg struct {
 	rows       []prRow
@@ -182,13 +184,19 @@ func prLogTick() tea.Cmd {
 	return tea.Tick(2*time.Second, func(time.Time) tea.Msg { return prLogTickMsg{} })
 }
 
-func loadDev(includeBots bool) tea.Cmd {
+func loadDev(includeBots, refresh bool) tea.Cmd {
 	return func() tea.Msg {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
-		prs, prErr := gh.ListPRs(ctx, 50, includeBots)
+		var prs []gh.PR
+		var prErr error
+		if refresh {
+			prs, prErr = gh.RefreshPRs(ctx, 50, includeBots)
+		} else {
+			prs, prErr = gh.ListPRs(ctx, 50, includeBots)
+		}
 		images, imgErr := docker.ListLocalImages(ctx)
-		return prsLoadedMsg{prs: prs, images: images, prErr: prErr, imgErr: imgErr}
+		return prsLoadedMsg{prs: prs, images: images, prErr: prErr, imgErr: imgErr, refresh: refresh}
 	}
 }
 
@@ -409,6 +417,14 @@ func (m prsModel) selectedPR() *prRow {
 	return row
 }
 
+func localBuildForRow(row prRow) (docker.Image, string, string) {
+	if row.kind == "remote" {
+		image := docker.Image{Tag: fmt.Sprintf("pr-%d", row.pr.Number), PRNumber: row.pr.Number}
+		return image, "built", fmt.Sprintf("building PR #%d locally as %s…", row.pr.Number, image.Reference())
+	}
+	return row.local, "rebuilt", "rebuilding " + row.local.Reference() + "…"
+}
+
 func (m *prsModel) refreshSelectedLogs() tea.Cmd {
 	row := m.selectedRow()
 	if row == nil || !row.running {
@@ -491,7 +507,7 @@ func (m prsModel) pullCompletion() (complete, total int, percent float64) {
 }
 
 func (m prsModel) Init() tea.Cmd {
-	return tea.Batch(loadDev(m.includeBots), m.spinner.Tick)
+	return tea.Batch(loadDev(m.includeBots, false), m.spinner.Tick)
 }
 
 func refreshRunning(rows []prRow, generation int) tea.Cmd {
@@ -540,13 +556,25 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		} else if msg.imgErr != nil {
 			m.status = "local images unavailable: " + msg.imgErr.Error()
 		}
+		imageStates := make(map[int]string, len(m.rows))
+		if !msg.refresh || msg.prErr != nil {
+			for _, row := range m.rows {
+				if row.kind == "remote" && (row.imageState == "yes" || row.imageState == "no") {
+					imageStates[row.pr.Number] = row.imageState
+				}
+			}
+		}
 		m.rows = make([]prRow, 0, len(msg.prs)+len(msg.images))
 		m.imageGen++
 		m.imageQueue = m.imageQueue[:0]
 		m.imageActive = 0
 		for _, pr := range msg.prs {
-			m.rows = append(m.rows, prRow{kind: "remote", pr: pr, imageState: "checking"})
-			m.imageQueue = append(m.imageQueue, pr.Number)
+			imageState := imageStates[pr.Number]
+			if imageState == "" {
+				imageState = "checking"
+				m.imageQueue = append(m.imageQueue, pr.Number)
+			}
+			m.rows = append(m.rows, prRow{kind: "remote", pr: pr, imageState: imageState})
 		}
 		for _, image := range msg.images {
 			m.rows = append(m.rows, prRow{kind: "local", local: image, imageState: "yes"})
@@ -589,14 +617,18 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.rebuildCancel = nil
 		m.loading = true
-		if msg.canceled {
-			m.status = "rebuild canceled"
-		} else if msg.err != nil {
-			m.status = "rebuild failed: " + msg.err.Error()
-		} else {
-			m.status = "rebuilt " + msg.image.Reference()
+		action := msg.action
+		if action == "" {
+			action = "rebuilt"
 		}
-		return m, tea.Batch(loadDev(m.includeBots), m.spinner.Tick)
+		if msg.canceled {
+			m.status = action + " canceled"
+		} else if msg.err != nil {
+			m.status = action + " failed: " + msg.err.Error()
+		} else {
+			m.status = action + " " + msg.image.Reference()
+		}
+		return m, tea.Batch(loadDev(m.includeBots, false), m.spinner.Tick)
 	case logsMsg:
 		if !m.showLogs || msg.name == "" || msg.name != m.logsName {
 			return m, nil
@@ -767,7 +799,7 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "r":
 			m.loading = true
 			m.status = "refreshing…"
-			return m, tea.Batch(loadDev(m.includeBots), m.spinner.Tick)
+			return m, tea.Batch(loadDev(m.includeBots, true), m.spinner.Tick)
 		case "/":
 			m.filtering = true
 			m.layout()
@@ -814,18 +846,18 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "R":
 			row := m.selectedRow()
-			if row == nil || row.kind != "local" {
-				m.status = "rebuild is only available for local images"
+			if row == nil {
+				m.status = "select an image to build"
 				return m, nil
 			}
-			image := row.local
+			image, action, status := localBuildForRow(*row)
 			ctx, cancel := context.WithCancel(context.Background())
 			m.rebuilding = true
 			m.rebuildCancel = cancel
-			m.status = "rebuilding " + image.Reference() + "…"
+			m.status = status
 			rebuild := func() tea.Msg {
 				err := run.RebuildImageContext(ctx, image, io.Discard, io.Discard)
-				return rebuildDoneMsg{image: image, err: err, canceled: ctx.Err() != nil}
+				return rebuildDoneMsg{image: image, err: err, canceled: ctx.Err() != nil, action: action}
 			}
 			return m, tea.Batch(rebuild, m.spinner.Tick)
 		case "m":
@@ -849,7 +881,7 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				m.status = "refreshing (bots hidden)…"
 			}
-			return m, tea.Batch(loadDev(m.includeBots), m.spinner.Tick)
+			return m, tea.Batch(loadDev(m.includeBots, false), m.spinner.Tick)
 		}
 	}
 	var cmd tea.Cmd
@@ -1003,7 +1035,7 @@ func (m prsModel) View() tea.View {
 	if m.rebuilding {
 		b.WriteString("\n\n" + helpStyle.Render("q/esc cancel rebuild"))
 	} else if !m.pulling {
-		b.WriteString("\n\n" + helpStyle.Render("/ filter · ↑/↓ select · enter start/stop · R rebuild local · p pull remote · m demo · o PR · a app"))
+		b.WriteString("\n\n" + helpStyle.Render("/ filter · ↑/↓ select · enter start/stop · R build locally · p pull remote · m demo · o PR · a app"))
 		b.WriteString("\n" + helpStyle.Render("b "+botState+" · r refresh · q quit"))
 		b.WriteString("\n" + helpStyle.Render("l toggle logs · f follow · pgup/pgdn scroll"))
 	}
