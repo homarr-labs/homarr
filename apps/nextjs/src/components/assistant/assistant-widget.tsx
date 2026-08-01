@@ -147,7 +147,7 @@ const CompactAssistantWidget = ({ onOpen }: { onOpen: () => void }) => {
           <ActionIcon
             variant="light"
             color="red"
-            size="lg"
+            size={44}
             radius="md"
             onClick={onOpen}
             aria-label={t("widget.assistant.compact.open")}

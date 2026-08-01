@@ -985,11 +985,11 @@ const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
             {t("conversations")}
           </Text>
         </Group>
-        <ScrollArea h="min(24rem, 55dvh)" type="auto" offsetScrollbars>
+        <ScrollArea.Autosize mah="min(24rem, 55dvh)" type="auto" offsetScrollbars>
           <Stack gap={3}>
             <ThreadListPrimitive.Items components={{ ThreadListItem }} />
           </Stack>
-        </ScrollArea>
+        </ScrollArea.Autosize>
       </Stack>
     </HistorySelectContext.Provider>
   );
@@ -1002,6 +1002,7 @@ const ConversationHistory = () => {
     <Popover
       opened={opened}
       onChange={setOpened}
+      onDismiss={() => setOpened(false)}
       position="bottom-end"
       width="min(22rem, calc(100vw - 1rem))"
       shadow="md"
@@ -1016,6 +1017,12 @@ const ConversationHistory = () => {
           leftSection={<IconHistory size={16} />}
           classNames={{ section: classes.historyButtonSection, label: classes.historyButtonLabel }}
           onClick={() => setOpened((current) => !current)}
+          onKeyDown={(event) => {
+            if (event.key === "Escape" && opened) {
+              event.stopPropagation();
+              setOpened(false);
+            }
+          }}
           aria-label={opened ? t("closeHistory") : t("openHistory")}
         >
           {t("conversations")}
