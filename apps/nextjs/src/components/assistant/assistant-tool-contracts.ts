@@ -1,10 +1,42 @@
 import { z } from "zod/v4";
 
+import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
+
 const askUserOptionSchema = z.object({
   id: z.string().trim().min(1).max(48),
   label: z.string().trim().min(1).max(80),
   description: z.string().trim().max(180).optional(),
 });
+
+const boardImageValueSchema = z.string().trim().max(2_048).nullable();
+const boardTitleValueSchema = z.string().trim().max(255).nullable();
+const boardColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
+
+export const assistantBoardSettingsChangesSchema = z
+  .object({
+    pageTitle: boardTitleValueSchema.optional(),
+    metaTitle: boardTitleValueSchema.optional(),
+    logoImageUrl: boardImageValueSchema.optional(),
+    faviconImageUrl: boardImageValueSchema.optional(),
+    backgroundImageUrl: boardImageValueSchema.optional(),
+    backgroundImageAttachment: z.enum(backgroundImageAttachments.values).optional(),
+    backgroundImageRepeat: z.enum(backgroundImageRepeats.values).optional(),
+    backgroundImageSize: z.enum(backgroundImageSizes.values).optional(),
+    primaryColor: boardColorSchema.optional(),
+    secondaryColor: boardColorSchema.optional(),
+    opacity: z.number().min(0).max(100).optional(),
+    customCss: z
+      .string()
+      .max(16_384)
+      .optional()
+      .describe(
+        "The complete resulting board stylesheet. Preserve existing rules from board_getBoardSettings unless the user explicitly asks to replace them.",
+      ),
+    iconColor: boardColorSchema.nullable().optional(),
+    itemRadius: z.enum(["xs", "sm", "md", "lg", "xl"]).optional(),
+    disableStatus: z.boolean().optional(),
+  })
+  .describe("Only the board fields the user asked to change.");
 
 export const browserToolContracts = {
   ask_user: {
@@ -35,6 +67,16 @@ export const browserToolContracts = {
       pingUrl: z.string().trim().max(2_048).nullable().optional(),
     }),
   },
+  configure_board_settings: {
+    description:
+      "Open Homarr's native board settings and custom CSS review form. Always call board_getBoardSettings first, then pass only the requested proposed changes here. The user can edit the complete stylesheet and all supported settings. Use the returned flat object directly with board_savePartialBoardSettings; do not ask for confirmation in prose.",
+    parameters: z.object({
+      boardId: z.string().trim().min(1).max(64),
+      boardName: z.string().trim().min(1).max(255),
+      summary: z.string().trim().min(1).max(400),
+      changes: assistantBoardSettingsChangesSchema,
+    }),
+  },
   navigate_to_route: {
     description:
       "Navigate the current Homarr tab to a safe internal route. Only same-origin paths beginning with a single slash are accepted.",
@@ -59,6 +101,13 @@ export type AskUserResult = {
   source: "option" | "other";
 };
 export type ConfigureAppArgs = z.infer<(typeof browserToolContracts)["configure_app"]["parameters"]>;
+export type ConfigureBoardSettingsArgs = z.infer<
+  (typeof browserToolContracts)["configure_board_settings"]["parameters"]
+>;
+export type AssistantBoardSettingsChanges = z.infer<typeof assistantBoardSettingsChangesSchema>;
+export type ConfigureBoardSettingsResult =
+  | (AssistantBoardSettingsChanges & { id: string })
+  | { id: string; cancelled: true };
 
 export const normalizeAssistantAppIconUrl = (value: string | undefined) => {
   if (!value) return "";

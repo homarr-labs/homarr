@@ -68,13 +68,13 @@ import {
   IconChevronUp,
   IconCopy,
   IconDownload,
-  IconCommand,
   IconFile,
   IconFileExport,
   IconLink,
   IconMessage,
   IconMinus,
   IconPaperclip,
+  IconPalette,
   IconPencil,
   IconHistory,
   IconPlayerStop,
@@ -1061,9 +1061,9 @@ const EmptyThread = () => {
                 {t("suggestions.media.label")}
               </Button>
             </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.command.prompt")} send asChild>
-              <Button variant="default" className={classes.suggestion} leftSection={<IconCommand size={18} />}>
-                {t("suggestions.command.label")}
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.style.prompt")} send asChild>
+              <Button variant="default" className={classes.suggestion} leftSection={<IconPalette size={18} />}>
+                {t("suggestions.style.label")}
               </Button>
             </ThreadPrimitive.Suggestion>
           </Box>
@@ -1188,6 +1188,12 @@ const ComposerTriggers = () => {
         label: "/media",
         description: t("commands.media"),
         execute: () => aui.composer().setText(t("suggestions.media.prompt")),
+      },
+      {
+        id: "style",
+        label: "/style",
+        description: t("commands.style"),
+        execute: () => aui.composer().setText(t("suggestions.style.prompt")),
       },
     ],
   });
@@ -1471,7 +1477,11 @@ const usePendingActionCopy = (action: AssistantPendingAction | undefined) => {
     return { title: t("pendingAction.answerTitle"), detail: action.detail ?? t("pendingAction.answerFallback") };
   }
   if (action.kind === "form") {
-    return { title: t("pendingAction.formTitle"), detail: action.detail ?? t("configureApp.title") };
+    const isBoardSettings = action.toolName === "configure_board_settings";
+    return {
+      title: isBoardSettings ? t("pendingAction.boardFormTitle") : t("pendingAction.formTitle"),
+      detail: action.detail ?? (isBoardSettings ? t("configureBoardSettings.title") : t("configureApp.title")),
+    };
   }
   const tool = action.toolName.replaceAll("_", " ");
   return { title: t("activity.approval"), detail: action.detail ? `${tool} · ${action.detail}` : tool };

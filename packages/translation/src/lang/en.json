@@ -2019,9 +2019,9 @@
           "label": "Find media to request",
           "prompt": "Help me find a movie or series to request."
         },
-        "command": {
-          "label": "Open the command menu",
-          "prompt": "Open the Homarr command menu for me."
+        "style": {
+          "label": "Improve a dashboard",
+          "prompt": "Help me improve a board's appearance or custom CSS. Show me my boards first, then preserve my current settings while we make the change."
         }
       },
       "composerPlaceholder": "Ask Homarr Assistant…",
@@ -2077,7 +2077,8 @@
         "hint": "Type / for shortcuts",
         "health": "Prepare a service-health check",
         "explore": "Prepare an overview of this Homarr instance",
-        "media": "Prepare a media search"
+        "media": "Prepare a media search",
+        "style": "Prepare a board appearance or custom CSS change"
       },
       "usage": {
         "tokens": "tokens",
@@ -2117,6 +2118,7 @@
         "answerTitle": "Answer needed",
         "answerFallback": "Choose an answer to continue",
         "formTitle": "Review app details",
+        "boardFormTitle": "Review board changes",
         "review": "Review",
         "sendBlocked": "Resolve the pending request before sending"
       },
@@ -2145,6 +2147,35 @@
         "description": "Choose a local icon and adjust anything before the assistant requests creation approval.",
         "continue": "Use these details",
         "ready": "App details ready"
+      },
+      "configureBoardSettings": {
+        "title": "Review board changes",
+        "loading": "Loading current board settings",
+        "loadErrorTitle": "Board settings could not be loaded",
+        "loadErrorDescription": "The board may no longer exist, or you may not have permission to modify it.",
+        "retry": "Try again",
+        "proposedCount": "Assistant proposed {count} fields",
+        "changeCount": "{count} changes ready",
+        "ready": "Board changes ready",
+        "cancelled": "Current board settings kept",
+        "noChanges": "No settings will change",
+        "keepCurrent": "Keep current settings",
+        "continue": "Continue to approval",
+        "resetAll": "Reset all changes",
+        "tabs": {
+          "css": "Custom CSS",
+          "appearance": "Appearance",
+          "background": "Background",
+          "general": "General"
+        },
+        "cssDescription": "Edit the complete stylesheet. Existing rules are kept unless they are removed here.",
+        "cssCharacters": "{count} of 16384 characters",
+        "copy": "Copy",
+        "copyCss": "Copy CSS",
+        "copied": "Copied",
+        "restoreCss": "Restore current CSS",
+        "remoteCssTitle": "This CSS loads a remote resource",
+        "remoteCssDescription": "Imported stylesheets and remote URLs contact another server when the board loads. Review them before continuing."
       },
       "approvalRequired": "Approval required",
       "complete": "Complete",
