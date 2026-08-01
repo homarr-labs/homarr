@@ -114,6 +114,38 @@
   animation: assistant-panel-in 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.widgetPanel {
+  container-name: assistant-widget;
+  container-type: size;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--mantine-color-text);
+}
+
+.widgetState {
+  container-type: inline-size;
+  overflow: auto;
+}
+
+.compactState {
+  width: 100%;
+  height: 100%;
+  padding: 0.75rem;
+}
+
+.compactCopy {
+  min-width: 0;
+}
+
+.widgetPanel[data-editing] .panelActions {
+  padding-inline-end: 2.75rem;
+}
+
 .panelHeader {
   min-height: 3.75rem;
   flex: 0 0 auto;
@@ -137,6 +169,120 @@
 .panelAction {
   width: 2.625rem;
   height: 2.625rem;
+}
+
+@container assistant-widget (max-width: 30rem) {
+  .panelHeader {
+    min-height: 3.25rem;
+    padding: 0.45rem 0.5rem 0.45rem 0.65rem;
+  }
+
+  .panelIdentityText > :last-child,
+  .composerHints {
+    display: none;
+  }
+
+  .historyButton {
+    width: 2.625rem;
+    max-width: 2.625rem;
+    height: 2.625rem;
+    padding-inline: 0.75rem;
+  }
+
+  .historyButtonSection {
+    margin-inline-end: 0;
+  }
+
+  .historyButtonLabel {
+    display: none;
+  }
+
+  .messages {
+    padding: 0.5rem 0.65rem 1rem;
+  }
+
+  .composerWrap {
+    padding: 0.45rem;
+  }
+
+  .composer {
+    gap: 0.25rem;
+    padding: 0.25rem 0.3rem;
+  }
+
+  .composerInput {
+    min-height: 2.625rem;
+    padding: 0.6rem 0.5rem;
+  }
+
+  .runtimeButtonGroup,
+  .runtimeControls {
+    width: 100%;
+  }
+
+  .modelButton {
+    min-width: 0;
+    max-width: none;
+  }
+
+  .reasoningButton {
+    min-width: 2.5rem;
+    max-width: 7.75rem;
+  }
+
+  .suggestions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@container assistant-widget (max-width: 22rem) {
+  .panelIdentityText {
+    display: none;
+  }
+
+  .panelActions {
+    margin-inline-start: auto;
+  }
+
+  .panelAction,
+  .historyButton {
+    width: 2.25rem;
+    max-width: 2.25rem;
+    height: 2.25rem;
+    padding-inline: 0.55rem;
+  }
+
+  .composerFooter {
+    overflow: hidden;
+  }
+
+  .runtimeButton {
+    padding-inline: 0.5rem;
+  }
+}
+
+@container assistant-widget (max-width: 18rem) {
+  .compactDescription {
+    display: none;
+  }
+}
+
+@container assistant-widget (max-width: 10rem) {
+  .compactTitle {
+    display: none;
+  }
+}
+
+@container assistant-widget (max-height: 24rem) {
+  .empty {
+    min-height: 16rem;
+    padding-block: 1rem;
+  }
+
+  .suggestion {
+    min-height: 2.5rem;
+    padding-block: 0.45rem;
+  }
 }
 
 .historyMenu {

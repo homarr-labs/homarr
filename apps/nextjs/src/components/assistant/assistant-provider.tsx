@@ -23,6 +23,7 @@ import { hotkeys } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResults } from "@homarr/spotlight";
+import { AssistantWidgetRendererProvider } from "@homarr/widgets";
 
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
 import { AssistantAskUserTool, AssistantConfigureAppTool } from "./assistant-human-tools";
@@ -35,9 +36,11 @@ import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
 import { AssistantConfigureBoardSettingsTool } from "./assistant-board-settings-tool";
 import type { AssistantUIMessage } from "./assistant-message-metadata";
+import { AssistantBoardWidget } from "./assistant-widget";
 
 interface AssistantContextValue {
   enabled: boolean;
+  unavailableDescription: string | null;
   opened: boolean;
   isRunning: boolean;
   unreadCount: number;
@@ -148,7 +151,7 @@ export const useHomarrAssistant = () => {
 
 export const useOptionalHomarrAssistant = () => useContext(AssistantContext);
 
-const useAssistantPreferences = () => {
+export const useAssistantPreferences = () => {
   const value = useContext(AssistantPreferencesContext);
   if (!value) throw new Error("useAssistantPreferences must be used within AssistantPreferencesProvider");
   return value;
@@ -636,13 +639,23 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const value = useMemo(
-    () => ({ enabled: true, opened, isRunning: assistantIsRunning, unreadCount, open, close, toggle, sendPrompt }),
+    () => ({
+      enabled: true,
+      unavailableDescription: null,
+      opened,
+      isRunning: assistantIsRunning,
+      unreadCount,
+      open,
+      close,
+      toggle,
+      sendPrompt,
+    }),
     [assistantIsRunning, close, open, opened, sendPrompt, toggle, unreadCount],
   );
 
   return (
     <AssistantContext.Provider value={value}>
-      {children}
+      <AssistantWidgetRendererProvider renderer={AssistantBoardWidget}>{children}</AssistantWidgetRendererProvider>
       <AssistantPanel
         opened={opened}
         onOpen={open}
@@ -692,6 +705,7 @@ const DisabledAssistantProvider = ({ children, description }: DisabledAssistantP
   const value = useMemo(
     () => ({
       enabled: false,
+      unavailableDescription: description,
       opened: false,
       isRunning: false,
       unreadCount: 0,
@@ -700,10 +714,14 @@ const DisabledAssistantProvider = ({ children, description }: DisabledAssistantP
       toggle: () => undefined,
       sendPrompt: () => undefined,
     }),
-    [],
+    [description],
   );
 
-  return <AssistantContext.Provider value={value}>{children}</AssistantContext.Provider>;
+  return (
+    <AssistantContext.Provider value={value}>
+      <AssistantWidgetRendererProvider renderer={AssistantBoardWidget}>{children}</AssistantWidgetRendererProvider>
+    </AssistantContext.Provider>
+  );
 };
 
 export const AssistantProvider = ({ children }: PropsWithChildren) => {

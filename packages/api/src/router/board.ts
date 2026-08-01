@@ -1555,7 +1555,11 @@ export const boardRouter = createTRPCRouter({
           }
         }
 
-        const defaultSize = widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
+        const configuredDefaultSize = widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
+        const defaultSize = {
+          ...configuredDefaultSize,
+          width: Math.min(configuredDefaultSize.width, layout.columnCount),
+        };
 
         const fitsAt = (x: number, y: number) => {
           if (x + defaultSize.width > layout.columnCount) return false;

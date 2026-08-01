@@ -108,4 +108,24 @@ describe("item actions create-item", () => {
       { height: 1, width: 1 },
     );
   });
+
+  test("should fit a wide widget to every board layout", () => {
+    const layoutId = "compact-layout";
+    const layout = new LayoutMockBuilder({ id: layoutId, columnCount: 4 }).build();
+    const board = new BoardMockBuilder().addLayout(layout).addEmptySection({ id: "section" }).build();
+    const layoutsSpy = vi.spyOn(boardContext, "getBoardLayouts");
+    layoutsSpy.mockReturnValue([layoutId]);
+    const emptyPositionSpy = vi.spyOn(emptyPositionModule, "getFirstEmptyPosition");
+    emptyPositionSpy.mockReturnValue({ xOffset: 0, yOffset: 0 });
+
+    const result = createItemCallback({ kind: "assistant" })(board);
+
+    expect(result.items.at(0)?.layouts.at(0)).toEqual(
+      expect.objectContaining({ width: layout.columnCount, height: 4 }),
+    );
+    expect(emptyPositionSpy).toHaveBeenCalledWith([], layout.columnCount, 9999, {
+      width: layout.columnCount,
+      height: 4,
+    });
+  });
 });
