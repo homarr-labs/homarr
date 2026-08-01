@@ -13,6 +13,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import classes from "./component.module.css";
 
 import type { WidgetComponentProps } from "../definition";
+import { setWidgetRuntimeQueries } from "../definition";
 import type { BeszelTimePeriod } from "../beszel/_shared/chart";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
@@ -28,6 +29,7 @@ export default function BeszelSystemStatsWidget({
   boardId,
   itemId,
   setOptions,
+  widgetStateRef,
 }: WidgetComponentProps<"beszelSystemStats">) {
   const t = useScopedI18n("widget.beszelSystemStats");
   const board = useOptionalBoard();
@@ -45,6 +47,25 @@ export default function BeszelSystemStatsWidget({
   const selectedValue = selectedSystem?.value ?? "";
   const selectedLabel = selectedSystem?.label;
   const systemExists = selectedSystem !== undefined;
+  const includeDocker =
+    (displayMode === "advanced" || height >= 380) &&
+    (options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork);
+  setWidgetRuntimeQueries(
+    widgetStateRef,
+    selectedSystem && options.timePeriod !== "1m"
+      ? [
+          {
+            path: ["widget", "beszel", "getSystemStats"],
+            input: {
+              integrationIds: [selectedSystem.integrationId],
+              systemId: selectedSystem.systemId,
+              timePeriod: options.timePeriod,
+              includeDocker,
+            },
+          },
+        ]
+      : [],
+  );
 
   const handleSelectSystem = useCallback(
     (value: string) => {
@@ -178,7 +199,7 @@ export default function BeszelSystemStatsWidget({
               dockerMemory: options.showDockerMemory && (displayMode === "advanced" || height >= 380),
               dockerNetwork: options.showDockerNetwork && (displayMode === "advanced" || height >= 380),
             }}
-            onSwitchToHistorical={() => setOptions({ newOptions: { timePeriod: "1h" } })}
+            onSwitchToHistorical={() => handleTimePeriod("1h")}
           />
         </Stack>
       </ScrollArea>

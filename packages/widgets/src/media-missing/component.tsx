@@ -26,6 +26,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { setWidgetRuntimeQueries } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
 import type { MediaMissingTab } from "./tabs";
@@ -37,14 +38,18 @@ export default function MediaMissingWidget({
   width,
   height,
   displayMode,
+  widgetStateRef,
 }: WidgetComponentProps<"mediaMissing">) {
   const t = useScopedI18n("widget.mediaMissing");
   const isAdvanced = displayMode === "advanced";
   const pageSize = isAdvanced ? Math.max(Number(options.pageSize), 50) : Number(options.pageSize);
-  const { data } = clientApi.widget.mediaOrganizer.getData.useQuery(
-    { integrationIds, pageSize },
-    { staleTime: 60 * 1000, refetchOnWindowFocus: false, refetchOnReconnect: false },
-  );
+  const input = { integrationIds, pageSize };
+  setWidgetRuntimeQueries(widgetStateRef, [{ path: ["widget", "mediaOrganizer", "getData"], input }]);
+  const { data } = clientApi.widget.mediaOrganizer.getData.useQuery(input, {
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
   const [selectedTab, setSelectedTab] = useState<MediaMissingTab>(options.showMissing ? "missing" : "queued");
   const activeTab = resolveMediaMissingTab(selectedTab, options.showMissing, options.showQueued);
 

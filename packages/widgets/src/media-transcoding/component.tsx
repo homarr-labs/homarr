@@ -23,6 +23,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { views } from ".";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { setWidgetRuntimeQueries } from "../definition";
 import { HealthCheckStatus } from "./health-check-status";
 import { QueuePanel } from "./panels/queue.panel";
 import { StatisticsPanel } from "./panels/statistics.panel";
@@ -44,6 +45,7 @@ export default function MediaTranscodingWidget({
   width,
   height,
   displayMode,
+  widgetStateRef,
 }: WidgetComponentProps<"mediaTranscoding">) {
   const isAdvanced = displayMode === "advanced";
   const queuePageSize = getQueuePageSize(height, isAdvanced);
@@ -58,6 +60,7 @@ export default function MediaTranscodingWidget({
     pageSize: queuePageSize,
     page: requestPagination.page,
   };
+  setWidgetRuntimeQueries(widgetStateRef, [{ path: ["widget", "mediaTranscoding", "getDataAsync"], input }]);
   const { data: transcodingData } = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input);
 
   const [view, setView] = useState<View>(options.defaultView);

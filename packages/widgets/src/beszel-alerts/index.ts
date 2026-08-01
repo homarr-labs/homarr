@@ -1,12 +1,18 @@
 import { IconBell, IconServerOff } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelAlerts", {
   icon: IconBell,
-  queryKey: [["widget", "beszel"]],
+  queryKey: [["widget", "beszel", "getAlerts"]],
+  queryMatcher: ({ input }, scope) =>
+    widgetQueryInputMatches(input, {
+      integrationIds: scope.integrationIds,
+      includeHistory: scope.options.showHistory,
+      maxHistoryItems: scope.options.maxHistoryItems,
+    }),
   supportedIntegrations: ["beszel", "mock"],
   integrationsRequired: true,
   createOptions() {

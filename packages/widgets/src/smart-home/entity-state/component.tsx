@@ -7,7 +7,7 @@ import { IconBinaryTree } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
-import { useI18n } from "@homarr/translation/client";
+import { useCurrentLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 
@@ -20,6 +20,7 @@ export default function SmartHomeEntityStateWidget({
   displayMode,
 }: WidgetComponentProps<"smartHome-entityState">) {
   const t = useI18n();
+  const locale = useCurrentLocale();
   // It will always have at least one integration as otherwise the NoIntegrationSelectedError would be thrown in item-content.tsx
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const integrationId = integrationIds[0]!;
@@ -123,7 +124,7 @@ export default function SmartHomeEntityStateWidget({
               </Text>
               <Text size="xs" c="dimmed">
                 {t("widget.smartHome-entityState.advanced.lastUpdated", {
-                  date: new Date(entity.last_updated).toLocaleString(),
+                  date: new Date(entity.last_updated).toLocaleString(locale),
                 })}
               </Text>
             </>

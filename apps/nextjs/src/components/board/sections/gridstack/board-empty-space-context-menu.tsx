@@ -17,6 +17,10 @@ import { ItemSelectModal } from "../../items/item-select-modal";
 import { useBoardPermissions } from "../../permissions/client";
 import type { BoardPlacementHint } from "../../items/actions/create-item";
 import type { UseGridstackRefs } from "./use-gridstack";
+import classes from "./board-empty-space-context-menu.module.css";
+import { hasExceededLongPressMoveTolerance } from "./long-press";
+
+const suppressTouchCalloutClass = classes.suppressTouchCallout as string;
 
 interface MenuState {
   x: number;
@@ -39,18 +43,25 @@ export const BoardEmptySpaceContextMenu = ({ section, refs, children, ...boxProp
   const [isEditMode] = useEditMode();
   const [menu, setMenu] = useState<MenuState | null>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressPointer = useRef<{ pointerId: number; x: number; y: number } | null>(null);
+  const touchGuardElement = useRef<HTMLDivElement | null>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
   const enabled = hasChangeAccess && settings.enableRightClickOnWidgets;
   const clearLongPress = () => {
-    if (longPressTimer.current === null) return;
-    clearTimeout(longPressTimer.current);
-    longPressTimer.current = null;
+    if (longPressTimer.current !== null) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+    touchGuardElement.current?.classList.remove(suppressTouchCalloutClass);
+    touchGuardElement.current = null;
+    longPressPointer.current = null;
   };
 
   useEffect(
     () => () => {
       if (longPressTimer.current !== null) clearTimeout(longPressTimer.current);
+      touchGuardElement.current?.classList.remove(suppressTouchCalloutClass);
     },
     [],
   );
@@ -89,10 +100,29 @@ export const BoardEmptySpaceContextMenu = ({ section, refs, children, ...boxProp
     const placement = resolvePlacement(event.target, event.pageX, event.pageY);
     if (!placement) return;
     clearLongPress();
+    longPressPointer.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+    touchGuardElement.current = event.currentTarget;
+    touchGuardElement.current.classList.add(suppressTouchCalloutClass);
     longPressTimer.current = setTimeout(() => {
       setMenu({ x: event.clientX, y: event.clientY, placement });
       navigator.vibrate?.(20);
     }, 500);
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const pointer = longPressPointer.current;
+    if (
+      !pointer ||
+      pointer.pointerId !== event.pointerId ||
+      !hasExceededLongPressMoveTolerance(pointer, { x: event.clientX, y: event.clientY })
+    ) {
+      return;
+    }
+    clearLongPress();
+  };
+
+  const handlePointerEnd = (event: PointerEvent<HTMLDivElement>) => {
+    if (longPressPointer.current?.pointerId === event.pointerId) clearLongPress();
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -134,10 +164,10 @@ export const BoardEmptySpaceContextMenu = ({ section, refs, children, ...boxProp
         onContextMenu={handleContextMenu}
         onKeyDown={handleKeyDown}
         onPointerDown={handlePointerDown}
-        onPointerMove={clearLongPress}
-        onPointerUp={clearLongPress}
-        onPointerCancel={clearLongPress}
-        onPointerLeave={clearLongPress}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
+        onPointerLeave={handlePointerEnd}
       >
         {children}
       </Box>

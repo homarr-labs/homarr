@@ -28,7 +28,7 @@ export default function IFrameWidget({ options, isEditMode, displayMode }: Widge
             {getFrameTitle(embedUrl)}
           </Text>
           <Anchor href={embedUrl} target="_blank" rel="noreferrer" size="xs">
-            {embedUrl}
+            {t("widget.app.option.openInNewTab.label")}
           </Anchor>
         </Group>
       )}
@@ -138,9 +138,9 @@ const permissionMapping: Partial<
   allowPayment: "payment",
 };
 
-const getFrameTitle = (url: string) => {
+export const getFrameTitle = (url: string) => {
   try {
-    return new URL(url).hostname;
+    return new URL(url).host;
   } catch {
     return "iframe";
   }

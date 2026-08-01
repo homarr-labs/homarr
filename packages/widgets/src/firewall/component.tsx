@@ -127,7 +127,9 @@ export default function FirewallWidget({
             const memory = firewallsMemoryData.find(({ integration }) => integration.id === firewallId);
             const version = firewallsVersionData.find(({ integration }) => integration.id === firewallId);
             const interfaces = firewallsInterfacesData.find(({ integration }) => integration.id === firewallId);
-            const hasError = Boolean(cpu?.error || memory?.error || version?.error || interfaces?.error);
+            const hasError = Boolean(
+              cpu?.error || memory?.error || version?.error || interfacesQuery.isError || interfaces?.error,
+            );
             const metadata = firewallMetadata.get(firewallId);
 
             return (
@@ -138,13 +140,18 @@ export default function FirewallWidget({
                 version={version?.error ? undefined : version?.summary.version}
                 cpu={cpu?.error ? undefined : cpu?.summary.total}
                 memory={memory?.error ? undefined : memory?.summary.percent}
-                interfaces={interfaces?.error ? undefined : interfaces?.summary}
+                interfaces={interfaces?.summary}
+                interfacesLoaded={interfaces !== undefined}
+                interfacesError={interfacesQuery.isError || Boolean(interfaces?.error)}
                 hasError={hasError}
                 isAdvanced={isAdvanced}
                 isTiny={isTiny}
                 accordionValue={accordionValue}
                 setAccordionValue={setAccordionValue}
-                noDataLabel={t("widget.firewall.error.internalServerError")}
+                errorLabel={t("widget.firewall.error.internalServerError")}
+                noDataLabel={t("widget.firewall.empty.noInterfaces")}
+                loadingLabel={t("common.action.loading")}
+                errorBadgeLabel={t("common.error")}
                 interfacesLabel={t("widget.firewall.widget.interfaces.title")}
                 t={t}
               />
@@ -163,12 +170,17 @@ interface FirewallPanelProps {
   cpu?: number;
   memory?: number;
   interfaces?: FirewallInterfacesSummary[];
+  interfacesLoaded: boolean;
+  interfacesError: boolean;
   hasError: boolean;
   isAdvanced: boolean;
   isTiny: boolean;
   accordionValue: string | null;
   setAccordionValue: (value: string | null) => void;
+  errorLabel: string;
   noDataLabel: string;
+  loadingLabel: string;
+  errorBadgeLabel: string;
   interfacesLabel: string;
   t: TranslationFunction;
 }
@@ -180,12 +192,17 @@ const FirewallPanel = ({
   cpu,
   memory,
   interfaces,
+  interfacesLoaded,
+  interfacesError,
   hasError,
   isAdvanced,
   isTiny,
   accordionValue,
   setAccordionValue,
+  errorLabel,
   noDataLabel,
+  loadingLabel,
+  errorBadgeLabel,
   interfacesLabel,
   t,
 }: FirewallPanelProps) => (
@@ -205,7 +222,7 @@ const FirewallPanel = ({
           </Stack>
           <Group gap={4} wrap="nowrap">
             {hasError && (
-              <Tooltip label={noDataLabel}>
+              <Tooltip label={errorLabel}>
                 <Badge color="red" variant="light" size="xs">
                   {t("common.error")}
                 </Badge>
@@ -235,11 +252,16 @@ const FirewallPanel = ({
 
       <InterfacesPanel
         summary={interfaces ?? []}
+        hasResult={interfacesLoaded}
+        hasError={interfacesError}
         isAdvanced={isAdvanced}
         isTiny={isTiny}
         accordionValue={accordionValue}
         setAccordionValue={setAccordionValue}
+        errorLabel={errorLabel}
+        errorBadgeLabel={errorBadgeLabel}
         noDataLabel={noDataLabel}
+        loadingLabel={loadingLabel}
         label={interfacesLabel}
       />
     </Stack>
@@ -294,21 +316,31 @@ const getMetricStatus = (value: number): "normal" | "warning" | "critical" => {
 
 interface InterfacesPanelProps {
   summary: FirewallInterfacesSummary[];
+  hasResult: boolean;
+  hasError: boolean;
   isAdvanced: boolean;
   isTiny: boolean;
   accordionValue: string | null;
   setAccordionValue: (value: string | null) => void;
+  errorLabel: string;
+  errorBadgeLabel: string;
   noDataLabel: string;
+  loadingLabel: string;
   label: string;
 }
 
 const InterfacesPanel = ({
   summary,
+  hasResult,
+  hasError,
   isAdvanced,
   isTiny,
   accordionValue,
   setAccordionValue,
+  errorLabel,
+  errorBadgeLabel,
   noDataLabel,
+  loadingLabel,
   label,
 }: InterfacesPanelProps) => {
   const bandwidth = calculateBandwidth(summary).data;
@@ -321,35 +353,45 @@ const InterfacesPanel = ({
     >
       <Accordion.Item value="interfaces">
         <Accordion.Control icon={isTiny ? null : <IconTopologyBus size={16} />}>
-          <Text size={isTiny ? "8px" : "xs"}>{label}</Text>
+          <Group justify="space-between" wrap="nowrap" gap="xs">
+            <Text size={isTiny ? "8px" : "xs"}>{label}</Text>
+            {hasError && (
+              <Badge color="red" variant="light" size="xs">
+                {errorBadgeLabel}
+              </Badge>
+            )}
+          </Group>
         </Accordion.Control>
         <Accordion.Panel>
           <Stack gap={4}>
-            {bandwidth.length > 0 ? (
-              bandwidth.map(({ name, receive, transmit }) => (
-                <Group key={name} gap="xs" wrap={isTiny ? "wrap" : "nowrap"} justify="space-between">
-                  <Text size={isTiny ? "8px" : "xs"} c="blue.3" truncate="end" style={{ flex: 1 }}>
-                    {name}
+            {bandwidth.map(({ name, receive, transmit }) => (
+              <Group key={name} gap="xs" wrap={isTiny ? "wrap" : "nowrap"} justify="space-between">
+                <Text size={isTiny ? "8px" : "xs"} c="blue.3" truncate="end" style={{ flex: 1 }}>
+                  {name}
+                </Text>
+                <Group gap={4} wrap="nowrap">
+                  <IconArrowBarUp size={isTiny ? 8 : 12} color="lightgreen" />
+                  <Text size={isTiny ? "8px" : "xs"} c="green.3">
+                    {formatBitsPerSec(transmit, 2)}
                   </Text>
-                  <Group gap={4} wrap="nowrap">
-                    <IconArrowBarUp size={isTiny ? 8 : 12} color="lightgreen" />
-                    <Text size={isTiny ? "8px" : "xs"} c="green.3">
-                      {formatBitsPerSec(transmit, 2)}
-                    </Text>
-                  </Group>
-                  <Group gap={4} wrap="nowrap">
-                    <IconArrowBarDown size={isTiny ? 8 : 12} color="yellow" />
-                    <Text size={isTiny ? "8px" : "xs"} c="yellow.3">
-                      {formatBitsPerSec(receive, 2)}
-                    </Text>
-                  </Group>
                 </Group>
-              ))
-            ) : (
-              <Text size="xs" c="dimmed">
-                {noDataLabel}
+                <Group gap={4} wrap="nowrap">
+                  <IconArrowBarDown size={isTiny ? 8 : 12} color="yellow" />
+                  <Text size={isTiny ? "8px" : "xs"} c="yellow.3">
+                    {formatBitsPerSec(receive, 2)}
+                  </Text>
+                </Group>
+              </Group>
+            ))}
+            {hasError ? (
+              <Text size="xs" c="red">
+                {errorLabel}
               </Text>
-            )}
+            ) : bandwidth.length === 0 ? (
+              <Text size="xs" c="dimmed">
+                {hasResult ? noDataLabel : loadingLabel}
+              </Text>
+            ) : null}
           </Stack>
         </Accordion.Panel>
       </Accordion.Item>

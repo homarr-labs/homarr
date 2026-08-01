@@ -13,6 +13,7 @@ import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
 
 import type { WidgetComponentProps } from "../definition";
+import { setWidgetRuntimeQueries } from "../definition";
 import { CalendarDay } from "./calender-day";
 import { getCalendarAgendaEvents, groupEventsByDate, splitEvents, toCalendarDateKey } from "./calendar-events";
 import { CalendarEventList } from "./calendar-event-list";
@@ -22,6 +23,7 @@ export default function CalendarWidget(props: WidgetComponentProps<"calendar">) 
   const [month, setMonth] = useState(() => new Date());
 
   if (props.integrationIds.length === 0) {
+    setWidgetRuntimeQueries(props.widgetStateRef, []);
     return <CalendarBase {...props} events={[]} month={month} setMonth={setMonth} />;
   }
 
@@ -33,7 +35,15 @@ interface FetchCalendarProps extends WidgetComponentProps<"calendar"> {
   setMonth: (date: Date) => void;
 }
 
-const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, displayMode }: FetchCalendarProps) => {
+const FetchCalendar = ({
+  month,
+  setMonth,
+  isEditMode,
+  integrationIds,
+  options,
+  displayMode,
+  widgetStateRef,
+}: FetchCalendarProps) => {
   const input = {
     integrationIds,
     month: month.getMonth(),
@@ -41,6 +51,7 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
     releaseType: options.releaseType,
     showUnmonitored: options.showUnmonitored,
   };
+  setWidgetRuntimeQueries(widgetStateRef, [{ path: ["widget", "calendar", "findAllEvents"], input }]);
   const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input);
 
   const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
@@ -75,6 +86,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options, displayMod
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
   const { ref, width, height } = useElementSize();
   const isSmall = width < 256;
+  const calendarHeight = displayMode === "advanced" ? height * 0.62 : height;
 
   const normalizedEvents = useMemo(() => splitEvents(events), [events]);
   const visibleEvents = useMemo(
@@ -159,7 +171,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options, displayMod
               events={eventsForDate}
               disabled={isEditMode || eventsForDate.length === 0}
               rootWidth={width}
-              rootHeight={height}
+              rootHeight={calendarHeight}
             />
           );
         }}

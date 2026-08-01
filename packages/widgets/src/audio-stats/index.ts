@@ -1,6 +1,6 @@
 import { IconHeadphones, IconServerOff } from "@tabler/icons-react";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
 
 const hideUnlessNavidrome = {
@@ -13,7 +13,8 @@ const hideUnlessAudiobookshelf = {
 
 export const { definition, componentLoader } = createWidgetDefinition("audioStats", {
   icon: IconHeadphones,
-  queryKeys: [[["widget", "audioStats"]], [["widget", "mediaServer"]]],
+  queryKeys: [[["widget", "audioStats", "getStats"]], [["widget", "mediaServer", "getCurrentStreams"]]],
+  queryMatcher: matchesWidgetRuntimeQuery,
   supportedIntegrations: ["navidrome", "audiobookshelf"],
   integrationsRequired: true,
   maxIntegrations: 1,

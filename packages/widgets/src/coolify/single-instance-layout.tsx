@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Accordion, Anchor, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
@@ -32,12 +32,27 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey, isA
     key: `coolify-sections-${widgetKey}`,
     defaultValue: ["applications"],
   });
-  const visibleSections = [
-    options.showServers ? "servers" : null,
-    options.showApplications ? "applications" : null,
-    options.showServices ? "services" : null,
-  ].filter((section): section is string => section !== null);
+  const visibleSections = useMemo(
+    () =>
+      [
+        options.showServers ? "servers" : null,
+        options.showApplications ? "applications" : null,
+        options.showServices ? "services" : null,
+      ].filter((section): section is string => section !== null),
+    [options.showApplications, options.showServers, options.showServices],
+  );
   const [advancedOpenSections, setAdvancedOpenSections] = useState(visibleSections);
+  const previousVisibleSectionsRef = useRef(visibleSections);
+
+  useEffect(() => {
+    const newlyVisibleSections = visibleSections.filter(
+      (section) => !previousVisibleSectionsRef.current.includes(section),
+    );
+    previousVisibleSectionsRef.current = visibleSections;
+    if (newlyVisibleSections.length === 0) return;
+
+    setAdvancedOpenSections((current) => [...new Set([...current, ...newlyVisibleSections])]);
+  }, [visibleSections]);
 
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,

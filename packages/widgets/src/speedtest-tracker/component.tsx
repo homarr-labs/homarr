@@ -37,12 +37,16 @@ export default function SpeedtestTrackerWidget({
     (options.showLatestResult && combined.latestResult !== null) || (options.showStats && combined.stats !== null);
   const hasChart = options.showRecentResults && recentFiltered.length > 0;
   const noSectionsEnabled = !options.showLatestResult && !options.showStats && !options.showRecentResults;
+  const advancedSectionWidth = width >= 720 ? width / 2 : width;
 
   const latest = options.showLatestResult && combined.latestResult && (
-    <LatestResultSection result={combined.latestResult} width={displayMode === "advanced" ? width / 2 : width} />
+    <LatestResultSection
+      result={combined.latestResult}
+      width={displayMode === "advanced" ? advancedSectionWidth : width}
+    />
   );
   const averages = options.showStats && combined.stats && (
-    <AveragesSection stats={combined.stats} width={displayMode === "advanced" ? width / 2 : width} />
+    <AveragesSection stats={combined.stats} width={displayMode === "advanced" ? advancedSectionWidth : width} />
   );
 
   if (displayMode === "advanced") {
@@ -69,6 +73,12 @@ export default function SpeedtestTrackerWidget({
             <RecentResultsSection results={recentFiltered} showPingGraph={options.showPingGraph} />
           </div>
         )}
+        {noSectionsEnabled && (
+          <Text c="dimmed" ta="center" size="sm">
+            {t("noSectionsEnabled")}
+          </Text>
+        )}
+        {!noSectionsEnabled && !hasStatSection && !hasChart && <WidgetEmptyState />}
       </Stack>
     );
   }

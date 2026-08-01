@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { settleIntegrationQueries } from "../settle-integrations";
 
@@ -19,6 +19,8 @@ const integrations = [
   { id: "second", name: "Second", kind: "jellyfin" },
 ];
 
+beforeEach(() => vi.clearAllMocks());
+
 describe("settleIntegrationQueries", () => {
   test("returns an empty result when no integrations are configured", async () => {
     await expect(settleIntegrationQueries([], vi.fn())).resolves.toEqual([]);
@@ -35,9 +37,14 @@ describe("settleIntegrationQueries", () => {
   });
 
   test("rejects when every integration fails", async () => {
-    const error = new Error("Integration unavailable");
+    const error = new Error("Integration unavailable with token=secret");
 
-    await expect(settleIntegrationQueries(integrations, () => Promise.reject(error))).rejects.toBe(error);
+    await expect(settleIntegrationQueries(integrations, () => Promise.reject(error))).rejects.toMatchObject({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "All integration queries failed",
+      cause: error,
+    });
+    expect(mocks.logger.warn).toHaveBeenCalledTimes(integrations.length);
   });
 
   test("uses configured fallbacks when every integration fails", async () => {
@@ -62,6 +69,10 @@ describe("settleIntegrationQueries", () => {
         options,
       ),
     ).resolves.toEqual(["First", "Second"]);
-    await expect(settleIntegrationQueries(integrations, () => Promise.reject(error), options)).rejects.toBe(error);
+    await expect(settleIntegrationQueries(integrations, () => Promise.reject(error), options)).rejects.toMatchObject({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "All integration queries failed",
+      cause: error,
+    });
   });
 });

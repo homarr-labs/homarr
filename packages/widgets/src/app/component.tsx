@@ -69,7 +69,7 @@ export default function AppWidget({ options, isEditMode, height, width, displayM
         ))}
         position="right-start"
         multiline
-        disabled={options.descriptionDisplayMode !== "tooltip" || !app.description || isEditMode}
+        disabled={options.descriptionDisplayMode !== "tooltip" || !app.description || isEditMode || isAdvanced}
         styles={{ tooltip: { maxWidth: 300 } }}
       >
         <Flex

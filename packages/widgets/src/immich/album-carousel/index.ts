@@ -4,23 +4,31 @@ import z from "zod";
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { createWidgetDefinition } from "../../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../../definition";
 import { optionsBuilder } from "../../options";
 import { ALL_PHOTOS_ALBUM_ID } from "./constants";
 
 export const { definition, componentLoader } = createWidgetDefinition("immich-albumCarousel", {
   icon: IconPhoto,
-  queryKey: [["widget", "immich"]],
+  queryKey: [["widget", "immich", "getAlbum"]],
+  queryMatcher: ({ input }, scope) =>
+    widgetQueryInputMatches(input, {
+      integrationId: scope.integrationIds[0] ?? "",
+      albumId:
+        typeof scope.options.albumId === "string" && scope.options.albumId !== ALL_PHOTOS_ALBUM_ID
+          ? scope.options.albumId
+          : undefined,
+    }),
   refetchInterval: null,
   supportedIntegrations: ["immich"],
   integrationsRequired: true,
   maxIntegrations: 1,
   contextActions({ widgetStateRef }) {
     const call = (key: string) => () => {
-      const action = widgetStateRef.current?.[key];
+      const action = widgetStateRef?.current?.[key];
       if (typeof action === "function") action();
     };
-    const disabled = (key: string) => typeof widgetStateRef.current?.[key] !== "function";
+    const disabled = (key: string) => typeof widgetStateRef?.current?.[key] !== "function";
     return [
       {
         key: "previousPhoto",
