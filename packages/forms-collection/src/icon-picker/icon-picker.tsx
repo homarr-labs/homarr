@@ -63,7 +63,7 @@ export const IconPicker = ({
   const tCommon = useScopedI18n("common");
   const [debouncedQuery] = useDebouncedValue(query, 100);
 
-  const searchText = (debouncedQuery !== (value ?? "") && debouncedQuery) || "";
+  const searchText = !isDirectIconUrl(debouncedQuery) && debouncedQuery !== (value ?? "") ? debouncedQuery : "";
 
   const { data, isLoading, isError, refetch } = clientApi.icon.findIcons.useQuery(
     { searchText },
@@ -167,15 +167,12 @@ export const IconPicker = ({
             onChange={(event) => {
               const nextValue = event.currentTarget.value;
               const trimmedValue = nextValue.trim();
-              if (/^https?:\/\/[^\s/]+(?:\/\S*)?$/i.test(trimmedValue)) {
-                startTransition(() => {
-                  setValue(trimmedValue);
-                  setQuery("");
-                  combobox.closeDropdown();
-                });
+              setQuery(nextValue);
+              if (isDirectIconUrl(trimmedValue)) {
+                setValue(trimmedValue);
+                combobox.closeDropdown();
               } else {
                 combobox.openDropdown();
-                setQuery(nextValue);
               }
             }}
             onClick={() => combobox.openDropdown()}
@@ -229,4 +226,13 @@ const localizationPathRegex = new RegExp(`^/?(${supportedLanguages.join("|")})(/
 const shouldShowPreview = (value: string | null | undefined): value is string => {
   if (!value) return false;
   return !localizationPathRegex.test(value);
+};
+
+const isDirectIconUrl = (value: string) => {
+  try {
+    const url = new URL(value.trim());
+    return (url.protocol === "http:" || url.protocol === "https:") && Boolean(url.hostname);
+  } catch {
+    return false;
+  }
 };
