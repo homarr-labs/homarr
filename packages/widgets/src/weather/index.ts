@@ -7,7 +7,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("weather", {
   icon: IconCloud,
-  queryKey: [["widget", "weather"]],
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

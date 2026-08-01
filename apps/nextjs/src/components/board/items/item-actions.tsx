@@ -3,7 +3,6 @@ import { useCallback } from "react";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 
-import type { Board } from "~/app/[locale]/boards/_types";
 import type { CreateItemInput } from "./actions/create-item";
 import { createItemCallback } from "./actions/create-item";
 import type { DuplicateItemInput } from "./actions/duplicate-item";
@@ -33,17 +32,7 @@ interface UpdateItemIntegrations {
 export const useItemActions = () => {
   const { updateBoard } = useUpdateBoard();
 
-  const createItem = useCallback(
-    (input: CreateItemInput) => {
-      let nextBoard: Board | undefined;
-      updateBoard((previous) => {
-        nextBoard = createItemCallback(input)(previous);
-        return nextBoard;
-      });
-      return nextBoard;
-    },
-    [updateBoard],
-  );
+  const createItem = useCallback((input: CreateItemInput) => updateBoard(createItemCallback(input)), [updateBoard]);
 
   const duplicateItem = useCallback(
     ({ itemId }: DuplicateItemInput) => {

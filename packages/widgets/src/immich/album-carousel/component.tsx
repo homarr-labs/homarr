@@ -27,13 +27,8 @@ export default function ImmichAlbumCarouselWidget({
   displayMode = "compact",
   widgetStateRef,
 }: WidgetComponentProps<"immich-albumCarousel">) {
-  const persistedState = widgetStateRef?.current?.immichAlbumCarousel as
-    | { currentPhotoIndex?: number; paused?: boolean }
-    | undefined;
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(() =>
-    typeof persistedState?.currentPhotoIndex === "number" ? persistedState.currentPhotoIndex : 0,
-  );
-  const [paused, setPaused] = useState(persistedState?.paused === true);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   const { data: album } = clientApi.widget.immich.getAlbum.useQuery(
     {
@@ -52,14 +47,6 @@ export default function ImmichAlbumCarouselWidget({
     if (photoAssets.length === 0) return;
     setCurrentPhotoIndex((current) => Math.min(current, photoAssets.length - 1));
   }, [photoAssets.length]);
-
-  useEffect(() => {
-    if (!widgetStateRef) return;
-    widgetStateRef.current = {
-      ...widgetStateRef.current,
-      immichAlbumCarousel: { currentPhotoIndex, paused },
-    };
-  }, [currentPhotoIndex, paused, widgetStateRef]);
 
   useEffect(() => {
     if (!widgetStateRef) return;

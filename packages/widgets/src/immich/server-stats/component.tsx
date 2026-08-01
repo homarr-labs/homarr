@@ -30,7 +30,10 @@ export default function ImmichServerStatsWidget({
   if (!stats) return <WidgetEmptyState />;
 
   const statsContent = (
-    <SimpleGrid cols={displayMode === "advanced" ? 4 : width >= 320 ? 2 : 1} spacing="sm">
+    <SimpleGrid
+      cols={displayMode === "advanced" ? (width >= 720 ? 4 : width >= 360 ? 2 : 1) : width >= 320 ? 2 : 1}
+      spacing="sm"
+    >
       {options.showUsers && (
         <StatItem icon={<IconUsers size={20} />} label={t("widget.immich-serverStats.users")} value={stats.userCount} />
       )}

@@ -14,11 +14,6 @@ export const updateBoardName = (name: string | null) => {
   boardName = name;
 };
 
-export const getBoardSaveScopeId = (boardId: string) => `board-save:${boardId}`;
-
-export const shouldRefetchAfterSaveError = <T>(currentBoard: T | undefined, failedBoard: T) =>
-  currentBoard === failedBoard;
-
 export const useUpdateBoard = () => {
   const utils = clientApi.useUtils();
 
@@ -51,19 +46,17 @@ export const usePersistBoard = ({ id, name }: Pick<Board, "id" | "name">) => {
   const utils = clientApi.useUtils();
   const { updateBoard } = useUpdateBoard();
   const { mutateAsync: saveBoardAsync } = clientApi.board.saveBoard.useMutation({
-    scope: { id: getBoardSaveScopeId(id) },
+    scope: { id: `board-save:${id}` },
   });
 
   const updateAndPersistBoard = useCallback(
     (updater: UpdateCallback, options?: PersistBoardOptions) => {
-      const updatedBoard = updateBoard(updater);
-      if (!updatedBoard) return undefined;
-      const persistedBoard = utils.board.getBoardByName.getData({ name });
+      const persistedBoard = updateBoard(updater);
       if (!persistedBoard) return undefined;
 
       void saveBoardAsync(persistedBoard).catch((error: unknown) => {
         const currentBoard = utils.board.getBoardByName.getData({ name });
-        if (shouldRefetchAfterSaveError(currentBoard, persistedBoard)) {
+        if (currentBoard === persistedBoard) {
           void utils.board.getBoardByName.invalidate({ name });
         }
         options?.onError?.(error);

@@ -7,7 +7,6 @@ import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaServer", {
   icon: IconVideo,
-  queryKey: [["widget", "mediaServer"]],
   refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from((factory) => ({

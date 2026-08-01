@@ -91,14 +91,6 @@ const controlIconProps = {
   stroke: 1.5,
 };
 
-interface NotebookPersistedState {
-  itemId: string | undefined;
-  content: string;
-  previousContent: string;
-  isEditing: boolean;
-  saveError: string | null;
-}
-
 export function Notebook({
   options,
   setOptions,
@@ -107,58 +99,44 @@ export function Notebook({
   itemId,
   displayMode,
   height,
-  widgetStateRef,
 }: WidgetComponentProps<"notebook">) {
-  const persistedState = widgetStateRef?.current?.notebook as NotebookPersistedState | undefined;
-  const canHydratePersistedState = persistedState?.itemId === itemId;
-  const initialContent = canHydratePersistedState ? (persistedState?.content ?? options.content) : options.content;
-  const [content, setContent] = useState(initialContent);
-  const previousContentRef = useRef(
-    canHydratePersistedState ? (persistedState?.previousContent ?? initialContent) : initialContent,
-  );
-  const [saveError, setSaveError] = useState<string | null>(
-    canHydratePersistedState ? (persistedState?.saveError ?? null) : null,
-  );
+  const [content, setContent] = useState(options.content);
+  const previousContentRef = useRef(options.content);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const board = useRequiredBoard();
   const { data: session } = useSession();
   const { hasChangeAccess } = constructBoardPermissions(board, session);
 
   const canChange = !isEditMode && hasChangeAccess;
-  const [isEditing, setIsEditing] = useState(canHydratePersistedState ? (persistedState?.isEditing ?? false) : false);
+  const [isEditing, setIsEditing] = useState(false);
   const canChangeRef = useRef(canChange);
   const allowReadOnlyCheckRef = useRef(options.allowReadOnlyCheck);
+  const savingRef = useRef(false);
   const readOnlyCheckEventName = `homarr:notebook-read-only-check:${useId()}`;
 
   useEffect(() => {
-    canChangeRef.current = canChange;
     allowReadOnlyCheckRef.current = options.allowReadOnlyCheck;
-  }, [canChange, options.allowReadOnlyCheck]);
-
-  useEffect(() => {
-    if (!widgetStateRef) return;
-    widgetStateRef.current = {
-      ...widgetStateRef.current,
-      notebook: {
-        itemId,
-        content,
-        previousContent: previousContentRef.current,
-        isEditing,
-        saveError,
-      },
-    };
-  }, [content, isEditing, itemId, saveError, widgetStateRef]);
+  }, [options.allowReadOnlyCheck]);
 
   const { primaryColor } = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
 
-  const { mutateAsync } = clientApi.widget.notebook.updateContent.useMutation();
+  const { mutateAsync, isPending: isSaving } = clientApi.widget.notebook.updateContent.useMutation({
+    scope: { id: `notebook-content:${boardId ?? "preview"}:${itemId ?? "preview"}` },
+  });
+
+  useEffect(() => {
+    canChangeRef.current = canChange && !isSaving;
+  }, [canChange, isSaving]);
 
   const tControls = useScopedI18n("widget.notebook.controls");
   const t = useI18n();
 
   const handleContentUpdate = useCallback(
     async (contentUpdate: string) => {
+      savingRef.current = true;
+      canChangeRef.current = false;
       setSaveError(null);
 
       try {
@@ -166,26 +144,17 @@ export function Notebook({
           await mutateAsync({ boardId, itemId, content: contentUpdate });
         }
         previousContentRef.current = contentUpdate;
-        if (widgetStateRef) {
-          widgetStateRef.current = {
-            ...widgetStateRef.current,
-            notebook: {
-              itemId,
-              content: contentUpdate,
-              previousContent: contentUpdate,
-              isEditing,
-              saveError: null,
-            },
-          };
-        }
         setOptions({ newOptions: { content: contentUpdate } });
         return true;
       } catch (error) {
         setSaveError(error instanceof Error ? error.message : t("widget.notebook.saveFailed"));
         return false;
+      } finally {
+        savingRef.current = false;
+        canChangeRef.current = canChange;
       }
     },
-    [boardId, isEditing, itemId, mutateAsync, setOptions, t, widgetStateRef],
+    [boardId, canChange, itemId, mutateAsync, setOptions, t],
   );
 
   const editor = useEditor(
@@ -311,6 +280,7 @@ export function Notebook({
   }, [editor, isEditing, options.content]);
 
   const handleEditCancelCallback = useCallback(() => {
+    if (savingRef.current) return true;
     if (!editor) return false;
     editor.setEditable(false);
 
@@ -322,6 +292,7 @@ export function Notebook({
 
   const { openConfirmModal } = useConfirmModal();
   const handleEditCancel = useCallback(() => {
+    if (savingRef.current) return;
     openConfirmModal({
       title: t("widget.notebook.dismiss.title"),
       children: t("widget.notebook.dismiss.message"),
@@ -336,7 +307,7 @@ export function Notebook({
   }, [setIsEditing, handleEditCancelCallback, openConfirmModal, t]);
 
   const handleEditToggle = useCallback(async () => {
-    if (!editor) return;
+    if (!editor || savingRef.current) return;
     if (!isEditing) {
       setSaveError(null);
       editor.setEditable(true);
@@ -344,15 +315,19 @@ export function Notebook({
       return;
     }
 
+    editor.setEditable(false);
     const wasSaved = await handleContentUpdate(content);
-    if (!wasSaved) return;
+    if (!wasSaved) {
+      editor.setEditable(true);
+      return;
+    }
     editor.setEditable(false);
     setIsEditing(false);
   }, [content, editor, handleContentUpdate, isEditing]);
 
   const handleDoubleClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement>) => {
-      if (!canChange || isEditing) return;
+      if (!canChange || isEditing || savingRef.current) return;
       // Ignore double-clicks bubbling up from interactive controls (e.g. the
       // edit/save ActionIcon), which would otherwise toggle edit mode twice.
       if (event.target instanceof Element && event.target.closest("button, a")) {
@@ -377,7 +352,9 @@ export function Notebook({
         p={0}
         mt={0}
         h="100%"
-        onKeyDown={isEditing ? getHotkeyHandler([[hotkeys.saveNotebook, () => void handleEditToggle()]]) : undefined}
+        onKeyDown={
+          isEditing && !isSaving ? getHotkeyHandler([[hotkeys.saveNotebook, () => void handleEditToggle()]]) : undefined
+        }
         editor={editor}
         styles={(theme) => ({
           root: {
@@ -404,7 +381,8 @@ export function Notebook({
       >
         <RichTextEditor.Toolbar
           style={{
-            display: isEditing && options.showToolbar === true && displayMode === "advanced" ? "flex" : "none",
+            display:
+              isEditing && !isSaving && options.showToolbar === true && displayMode === "advanced" ? "flex" : "none",
           }}
         >
           <RichTextEditor.ControlsGroup>
@@ -505,7 +483,7 @@ export function Notebook({
             <RichTextEditor.Redo />
           </RichTextEditor.ControlsGroup>
         </RichTextEditor.Toolbar>
-        {editor && (
+        {editor && isEditing && !isSaving && (
           <BubbleMenu editor={editor}>
             <RichTextEditor.ControlsGroup>
               <RichTextEditor.Bold title={tControls("bold")} />
@@ -557,6 +535,7 @@ export function Notebook({
         <>
           <ActionIcon
             title={isEditing ? t("common.action.save") : t("common.action.edit")}
+            aria-label={isEditing ? t("common.action.save") : t("common.action.edit")}
             style={{
               zIndex: 1,
             }}
@@ -566,6 +545,8 @@ export function Notebook({
             color={primaryColor}
             variant="light"
             size={30}
+            loading={isSaving}
+            disabled={isSaving}
             onClick={() => void handleEditToggle()}
           >
             {isEditing ? <IconDeviceFloppy {...iconProps} /> : <IconEdit {...iconProps} />}
@@ -573,6 +554,7 @@ export function Notebook({
           {isEditing && (
             <ActionIcon
               title={t("common.action.cancel")}
+              aria-label={t("common.action.cancel")}
               style={{
                 zIndex: 1,
               }}
@@ -582,6 +564,7 @@ export function Notebook({
               color={primaryColor}
               variant="light"
               size={30}
+              disabled={isSaving}
               onClick={handleEditCancel}
             >
               <IconX {...iconProps} />

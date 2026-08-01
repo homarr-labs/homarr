@@ -5,7 +5,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("bazarr", {
   icon: IconBadgeCc,
-  queryKey: [["widget", "bazarr"]],
   supportedIntegrations: ["bazarr"],
   integrationsRequired: true,
   maxIntegrations: 1,

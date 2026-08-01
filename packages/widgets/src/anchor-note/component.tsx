@@ -133,7 +133,6 @@ export default function AnchorNoteWidget({
   width,
   height,
   displayMode,
-  widgetStateRef,
 }: WidgetComponentProps<"anchorNote">) {
   const t = useScopedI18n("widget.anchorNote");
   const noteId = options.noteId.trim();
@@ -157,18 +156,8 @@ export default function AnchorNoteWidget({
       width={width}
       height={height}
       isAdvanced={displayMode === "advanced"}
-      widgetStateRef={widgetStateRef}
     />
   );
-}
-
-interface AnchorNotePersistedState {
-  integrationId: string;
-  noteId: string;
-  isEditing: boolean;
-  draftTitle: string;
-  draftContent: string;
-  saveError: string | null;
 }
 
 interface AnchorNoteWidgetContentProps {
@@ -178,7 +167,6 @@ interface AnchorNoteWidgetContentProps {
   width: number;
   height: number;
   isAdvanced: boolean;
-  widgetStateRef?: WidgetComponentProps<"anchorNote">["widgetStateRef"];
 }
 
 const AnchorNoteWidgetContent = ({
@@ -188,35 +176,18 @@ const AnchorNoteWidgetContent = ({
   width,
   height,
   isAdvanced,
-  widgetStateRef,
 }: AnchorNoteWidgetContentProps) => {
   const t = useScopedI18n("widget.anchorNote");
-  const persistedState = widgetStateRef?.current?.anchorNote as AnchorNotePersistedState | undefined;
-  const canHydratePersistedState = persistedState?.integrationId === integrationId && persistedState.noteId === noteId;
   const { data: note, refetch } = clientApi.widget.anchorNotes.getNote.useQuery({
     integrationId,
     noteId,
   });
   const { mutateAsync: updateNoteAsync, isPending: isUpdating } = clientApi.widget.anchorNotes.updateNote.useMutation();
 
-  const [isEditing, setIsEditing] = useState(canHydratePersistedState ? (persistedState?.isEditing ?? false) : false);
-  const [draftTitle, setDraftTitle] = useState(
-    canHydratePersistedState ? (persistedState?.draftTitle ?? "") : (note?.title ?? ""),
-  );
-  const [draftContent, setDraftContent] = useState(
-    canHydratePersistedState ? (persistedState?.draftContent ?? "") : (note?.content ?? ""),
-  );
-  const [saveError, setSaveError] = useState<string | null>(
-    canHydratePersistedState ? (persistedState?.saveError ?? null) : null,
-  );
-
-  useEffect(() => {
-    if (!widgetStateRef) return;
-    widgetStateRef.current = {
-      ...widgetStateRef.current,
-      anchorNote: { integrationId, noteId, isEditing, draftTitle, draftContent, saveError },
-    };
-  }, [draftContent, draftTitle, integrationId, isEditing, noteId, saveError, widgetStateRef]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftTitle, setDraftTitle] = useState(note?.title ?? "");
+  const [draftContent, setDraftContent] = useState(note?.content ?? "");
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isEditing || !note) return;

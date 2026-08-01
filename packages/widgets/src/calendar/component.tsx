@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { Box, Stack, Text, useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
@@ -19,19 +19,7 @@ import { CalendarEventList } from "./calendar-event-list";
 import classes from "./component.module.css";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
-  const persistedState = props.widgetStateRef?.current?.calendar as { monthTimestamp?: number } | undefined;
-  const [month, setMonth] = useState(() => {
-    const timestamp = persistedState?.monthTimestamp;
-    return typeof timestamp === "number" && Number.isFinite(timestamp) ? new Date(timestamp) : new Date();
-  });
-
-  useEffect(() => {
-    if (!props.widgetStateRef) return;
-    props.widgetStateRef.current = {
-      ...props.widgetStateRef.current,
-      calendar: { monthTimestamp: month.getTime() },
-    };
-  }, [month, props.widgetStateRef]);
+  const [month, setMonth] = useState(() => new Date());
 
   if (props.integrationIds.length === 0) {
     return <CalendarBase {...props} events={[]} month={month} setMonth={setMonth} />;

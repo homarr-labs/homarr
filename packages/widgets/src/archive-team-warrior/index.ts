@@ -5,7 +5,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("archiveTeamWarrior", {
   icon: IconArchive,
-  queryKey: [["widget", "archiveTeamWarrior"]],
   maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from((factory) => ({
