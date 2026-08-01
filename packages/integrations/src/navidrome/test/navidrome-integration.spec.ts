@@ -259,7 +259,7 @@ describe("NavidromeIntegration.getCurrentSessionsAsync", () => {
     expect(result).toEqual([]);
   });
 
-  test("throws on subsonic auth failure", async () => {
+  test("normalizes subsonic auth failures", async () => {
     mockFetch.mockImplementation((url) => {
       const urlStr = toUrlString(url);
 
