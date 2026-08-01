@@ -41,7 +41,7 @@ func buildPRImage(ctx context.Context, number int, tag string, stdout, stderr io
 	defer os.RemoveAll(temporaryRoot)
 
 	checkout := filepath.Join(temporaryRoot, "homarr")
-	clone := exec.CommandContext(ctx, "gh", "repo", "clone", gh.Repo, checkout, "--", "--filter=blob:none")
+	clone := exec.CommandContext(ctx, "gh", prCloneArgs(checkout)...)
 	clone.Stdout = stdout
 	clone.Stderr = stderr
 	if err := clone.Run(); err != nil {
@@ -65,6 +65,10 @@ func buildPRImage(ctx context.Context, number int, tag string, stdout, stderr io
 		Revision: revision,
 		PRNumber: number,
 	}, stdout, stderr)
+}
+
+func prCloneArgs(checkout string) []string {
+	return []string{"repo", "clone", gh.Repo, checkout, "--", "--depth=1", "--filter=blob:none"}
 }
 
 func RebuildImage(image docker.Image) error {

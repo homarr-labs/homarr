@@ -2,6 +2,7 @@ package run
 
 import (
 	"os"
+	"slices"
 	"strconv"
 	"testing"
 
@@ -15,6 +16,13 @@ func TestPRPlanUsesAMD64(t *testing.T) {
 	}
 	if plan.Platform != "linux/amd64" {
 		t.Fatalf("platform = %q, want linux/amd64", plan.Platform)
+	}
+}
+
+func TestPRCloneIsShallow(t *testing.T) {
+	args := prCloneArgs("/tmp/checkout")
+	if !slices.Contains(args, "--depth=1") || !slices.Contains(args, "--filter=blob:none") {
+		t.Fatalf("clone args = %v", args)
 	}
 }
 
