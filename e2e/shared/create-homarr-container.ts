@@ -1,5 +1,5 @@
 import { GenericContainer, Wait } from "testcontainers";
-import { Environment } from "testcontainers/build/types";
+import type { Environment } from "testcontainers/build/types";
 
 export const createHomarrContainer = (
   options: {
