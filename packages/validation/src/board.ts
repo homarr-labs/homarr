@@ -70,6 +70,11 @@ export const boardSavePartialSettingsSchema = z
   })
   .partial();
 
+export const boardSettingsSchema = boardSavePartialSettingsSchema.required().extend({
+  id: z.string(),
+  name: z.string(),
+});
+
 export const boardSaveLayoutsSchema = z.object({
   id: z.string(),
   layouts: z.array(

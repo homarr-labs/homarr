@@ -54,6 +54,7 @@ test("MCP tools should contain expected procedures", () => {
   expect(toolNames).toContain("app_byId");
   expect(toolNames).toContain("app_create");
   expect(toolNames).toContain("board_savePartialBoardSettings");
+  expect(toolNames).toContain("board_getBoardSettings");
   expect(toolNames).toContain("board_duplicateBoard");
   expect(toolNames).toContain("icon_findIcons");
   expect(toolNames).toContain("info_getInfo");

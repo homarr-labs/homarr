@@ -33,6 +33,7 @@ import { AssistantRuntimeProviderWithTools } from "./assistant-runtime-provider"
 import { sendAssistantPrompt as sendPromptThroughComposer } from "./assistant-send";
 import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
+import { AssistantConfigureBoardSettingsTool } from "./assistant-board-settings-tool";
 import type { AssistantUIMessage } from "./assistant-message-metadata";
 
 interface AssistantContextValue {
@@ -411,6 +412,12 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
           display: "standalone",
           ...browserToolContracts.configure_app,
           render: AssistantConfigureAppTool,
+        },
+        configure_board_settings: {
+          type: "human",
+          display: "standalone",
+          ...browserToolContracts.configure_board_settings,
+          render: AssistantConfigureBoardSettingsTool,
         },
         navigate_to_route: {
           type: "frontend",

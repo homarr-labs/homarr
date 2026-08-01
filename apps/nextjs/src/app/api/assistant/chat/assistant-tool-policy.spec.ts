@@ -57,6 +57,36 @@ describe("getForcedAssistantToolName", () => {
     ).toBeUndefined();
   });
 
+  test("continues directly from reviewed board settings to the settings mutation", () => {
+    expect(
+      getForcedAssistantToolName([
+        assistantMessage({
+          type: "dynamic-tool",
+          toolName: "configure_board_settings",
+          toolCallId: "settings-1",
+          input: { boardId: "board-1", boardName: "Home", changes: { customCss: ".item {}" } },
+          state: "output-available",
+          output: { id: "board-1", customCss: ".item {}" },
+        }),
+      ]),
+    ).toBe("board_savePartialBoardSettings");
+  });
+
+  test("does not request a mutation when board settings were left unchanged", () => {
+    expect(
+      getForcedAssistantToolName([
+        assistantMessage({
+          type: "dynamic-tool",
+          toolName: "configure_board_settings",
+          toolCallId: "settings-1",
+          input: { boardId: "board-1", boardName: "Home", changes: {} },
+          state: "output-available",
+          output: { id: "board-1", cancelled: true },
+        }),
+      ]),
+    ).toBeUndefined();
+  });
+
   test("does not repeat app creation after the mutation tool has been called", () => {
     expect(
       getForcedAssistantToolName([

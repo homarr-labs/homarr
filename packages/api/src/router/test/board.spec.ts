@@ -586,6 +586,28 @@ describe("getBoardByName should return board by name", () => {
   });
 });
 
+describe("getBoardSettings should return editable board settings", () => {
+  test("returns current custom CSS and requires modify permission", async () => {
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId } = await createFullBoardAsync(db, "default");
+    const customCss = ".dashboard-card { border-radius: 0.5rem; }";
+    await db.update(boards).set({ customCss, primaryColor: "#123456", pageTitle: null }).where(eq(boards.id, boardId));
+
+    const result = await caller.getBoardSettings({ id: boardId });
+
+    expect(result).toMatchObject({
+      id: boardId,
+      name: "default",
+      customCss,
+      primaryColor: "#123456",
+      pageTitle: null,
+    });
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
+  });
+});
+
 describe("savePartialBoardSettings should save general settings", () => {
   it("should save general settings", async () => {
     // Arrange

@@ -52,6 +52,7 @@ import {
   boardSavePartialSettingsSchema,
   boardSavePermissionsSchema,
   boardSaveSchema,
+  boardSettingsSchema,
   boardSummarySchema,
 } from "@homarr/validation/board";
 import { byIdSchema } from "@homarr/validation/common";
@@ -682,6 +683,57 @@ export const boardRouter = createTRPCRouter({
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
   }),
+  getBoardSettings: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Read the editable visual and behavior settings for one board, including its current custom CSS. Requires modify permission. REQUIRED: id (board ID). Call this before proposing board settings or custom CSS changes",
+      },
+    })
+    .input(z.object({ id: z.string() }))
+    .output(boardSettingsSchema)
+    .query(async ({ input, ctx }) => {
+      const boardWhere = eq(boards.id, input.id);
+      await throwIfActionForbiddenAsync(ctx, boardWhere, "modify");
+
+      const board = await ctx.db.query.boards.findFirst({
+        columns: {
+          id: true,
+          name: true,
+          pageTitle: true,
+          metaTitle: true,
+          logoImageUrl: true,
+          faviconImageUrl: true,
+          backgroundImageUrl: true,
+          backgroundImageAttachment: true,
+          backgroundImageRepeat: true,
+          backgroundImageSize: true,
+          primaryColor: true,
+          secondaryColor: true,
+          opacity: true,
+          customCss: true,
+          iconColor: true,
+          itemRadius: true,
+          disableStatus: true,
+        },
+        where: boardWhere,
+      });
+      if (!board) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
+      }
+
+      return {
+        ...board,
+        pageTitle: board.pageTitle ?? "",
+        metaTitle: board.metaTitle ?? "",
+        logoImageUrl: board.logoImageUrl ?? "",
+        faviconImageUrl: board.faviconImageUrl ?? "",
+        backgroundImageUrl: board.backgroundImageUrl ?? "",
+        customCss: board.customCss ?? "",
+        iconColor: board.iconColor ?? "",
+      };
+    }),
   saveLayouts: protectedProcedure.input(boardSaveLayoutsSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 

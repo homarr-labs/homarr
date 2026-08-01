@@ -133,6 +133,18 @@ App creation uses Homarr's native app form inside the conversation. The form reu
 including automatic matching and searches through the `icon.findIcons` procedure, before the final
 `app.create` approval is requested. The model is instructed not to invent external icon CDN URLs.
 
+Board appearance changes use a similar review flow. The assistant first reads the board's current settings,
+including its complete custom stylesheet, and then opens an editable form with Custom CSS, Appearance,
+Background, and General tabs. The form highlights how many fields were proposed, preserves settings the
+assistant did not change, and returns only values that differ from the current board. Custom CSS can be
+copied or restored before continuing, and Homarr warns when it contains an imported stylesheet or remote
+resource URL. Continuing from the form opens the normal mutation approval before anything is saved.
+
+Ask for changes such as “make the cards denser on my Home board,” “add a mobile CSS rule without removing
+my existing styles,” or “change the board colors and disable app status checks.” The current user must have
+modify permission on the selected board. The empty conversation includes an **Improve a dashboard** starter,
+and `/style` prepares the same guided workflow from the composer.
+
 Homarr also exposes a small set of browser-only actions to the assistant. These actions can navigate to
 safe internal routes and open Homarr interfaces such as the command menu and media request search.
 They never receive provider credentials and cannot navigate to arbitrary external URLs.
