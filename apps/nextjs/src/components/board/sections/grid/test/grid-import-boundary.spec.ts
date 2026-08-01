@@ -12,7 +12,7 @@ describe("board grid import boundary", () => {
   test("keeps every current dnd-kit runtime import inside the edit-only module", () => {
     const runtimeImports = getSourceFiles(nextjsSourceDirectory)
       .flatMap(getRuntimeImports)
-      .filter(({ specifier }) => CURRENT_DND_KIT_PACKAGES.has(specifier))
+      .filter(({ specifier }) => isCurrentDndKitImport(specifier))
       .map(({ filePath, kind, specifier }) => ({
         file: toSourceRelativePath(filePath),
         kind,
@@ -39,6 +39,11 @@ describe("board grid import boundary", () => {
         file: "components/board/sections/grid/grid-editor.tsx",
         kind: "static",
         specifier: "@dnd-kit/dom",
+      },
+      {
+        file: "components/board/sections/grid/grid-editor.tsx",
+        kind: "static",
+        specifier: "@dnd-kit/dom/utilities",
       },
       {
         file: "components/board/sections/grid/grid-editor.tsx",
@@ -104,7 +109,10 @@ describe("board grid import boundary", () => {
   });
 });
 
-const CURRENT_DND_KIT_PACKAGES = new Set(["@dnd-kit/abstract", "@dnd-kit/collision", "@dnd-kit/dom", "@dnd-kit/react"]);
+const CURRENT_DND_KIT_PACKAGES = ["@dnd-kit/abstract", "@dnd-kit/collision", "@dnd-kit/dom", "@dnd-kit/react"];
+
+const isCurrentDndKitImport = (specifier: string) =>
+  CURRENT_DND_KIT_PACKAGES.some((packageName) => specifier === packageName || specifier.startsWith(`${packageName}/`));
 
 interface RuntimeImport {
   filePath: string;

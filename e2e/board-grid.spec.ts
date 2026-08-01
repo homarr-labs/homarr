@@ -465,7 +465,6 @@ describe("Board grid", () => {
       await expect(containerSection.locator("xpath=ancestor::aside[1]")).toHaveAttribute("data-board-gutter", "left");
       await editToggle.click();
       await expect(page.locator(`[data-grid-runtime="${gridRuntimeMarker}"]`)).toHaveCount(3);
-      const mainGridBox = await expectBoundingBoxAsync(mainGrid);
       await dragHandleToGridPositionAsync(page, containerGrip, containerSection, mainGrid, 2, 0, canvasScale);
       await expect(containerSection.locator("xpath=ancestor::*[@data-grid-section-id][1]")).toHaveAttribute(
         "data-grid-section-id",
@@ -481,6 +480,7 @@ describe("Board grid", () => {
       await secondItem.locator("[data-grid-item-content]").evaluate((element) => {
         element.setAttribute("data-e2e-portal-instance", "second-item-content");
       });
+      const mainGridBox = await expectBoundingBoxAsync(mainGrid);
       await dragLocatorToAsync(
         page,
         secondItem,

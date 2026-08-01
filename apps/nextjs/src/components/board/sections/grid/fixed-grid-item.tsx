@@ -18,6 +18,7 @@ import {
 import type { GridPlacement } from "~/components/board/layout";
 import { useSectionContext } from "../section-context";
 import { beginGridTransaction, commitGridTransaction, previewGridMove, previewGridResize } from "./dnd";
+import type { GridTransaction } from "./dnd";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
 import { useGridLayoutActions } from "./use-grid-layout-actions";
@@ -109,19 +110,29 @@ export const FixedGridItem = ({
     const current = placements.find((candidate) => candidate.id === item.id);
     if (!current) return;
 
-    const transaction = beginGridTransaction(
-      {
-        grids: [
-          {
-            id: section.id,
-            columnCount,
-            maxRowCount,
-            placements,
-          },
-        ],
-      },
-      { activeId: current.id, sourceGridId: section.id },
-    );
+    let transaction: GridTransaction<SectionGridPlacement>;
+    try {
+      transaction = beginGridTransaction(
+        {
+          grids: [
+            {
+              id: section.id,
+              columnCount,
+              maxRowCount,
+              placements,
+            },
+          ],
+        },
+        { activeId: current.id, sourceGridId: section.id },
+      );
+    } catch {
+      keyboardGridRef.current = {
+        source: renderedPlacements,
+        current: renderedPlacements,
+      };
+      setKeyboardEditing(false);
+      return;
+    }
     const delta = getKeyboardDelta(event.key);
     const result = event.shiftKey
       ? previewGridResize(transaction, {

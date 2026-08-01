@@ -21,10 +21,15 @@ import type {
 } from "@dnd-kit/react";
 import { DragDropProvider, DragOverlay, useDragDropManager, useDraggable, useDroppable } from "@dnd-kit/react";
 
-import { useCurrentLayout } from "@homarr/boards/context";
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 
-import { getLayoutRowCount, getLogicalItemStyle, getLogicalTrackSize } from "~/components/board/layout";
+import {
+  getLayoutRowCount,
+  getLogicalItemStyle,
+  getLogicalTrackSize,
+  LOGICAL_GRID_PITCH,
+} from "~/components/board/layout";
 import type { GridPlacement } from "~/components/board/layout";
 import { useSectionContext } from "../section-context";
 import {
@@ -38,6 +43,7 @@ import {
   previewGridResize,
 } from "./dnd";
 import type { DragProjectionOrigin, GridResizeDirection, GridTransaction, TransactionalGridState } from "./dnd";
+import { getGridDepth } from "./grid-depth";
 import { GridResizePreviewProvider } from "./grid-editor-runtime";
 import { useBoardGridPortalHost } from "./grid-portal-host";
 import type { CommitSectionGridInput, SectionGridPlacement } from "./use-grid-layout-actions";
@@ -119,6 +125,7 @@ interface ResizePreviewInput {
 interface BoardGridEditorContextValue {
   interaction: GridInteraction | null;
   registerGrid: (grid: RegisteredGrid) => () => void;
+  getDepth: (gridId: string) => number;
   isDropTargetEligible: (source: AbstractDraggable, targetGridId: string) => boolean;
   canAcceptDrop: (source: AbstractDraggable, targetGridId: string) => boolean;
   beginResize: (input: ResizeStartInput) => boolean;
@@ -137,6 +144,7 @@ const useBoardGridEditor = () => {
 
 /** One provider coordinates every root and nested grid on the board. */
 export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
+  const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const t = useI18n();
   const { announce } = useBoardGridPortalHost();
@@ -147,6 +155,19 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
   const collisionFrameRef = useRef(0);
   const [interaction, setInteraction] = useState<GridInteraction | null>(null);
   const [overlayZoom, setOverlayZoom] = useState(1);
+  const parentGridById = useMemo(
+    () =>
+      new Map<string, string | null>(
+        board.sections.map((section): [string, string | null] => [
+          section.id,
+          section.kind === "container"
+            ? (section.layouts.find((layout) => layout.layoutId === currentLayoutId)?.parentSectionId ?? null)
+            : null,
+        ]),
+      ),
+    [board.sections, currentLayoutId],
+  );
+  const getDepth = useCallback((gridId: string) => getGridDepth(gridId, parentGridById), [parentGridById]);
 
   const clearInteraction = useCallback(() => {
     window.cancelAnimationFrame(collisionFrameRef.current);
@@ -512,11 +533,8 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
           arePointerCoordinatesEqual(active.lastProcessedPointer, pointer);
 
         if (canCommitRenderedPreview) {
-          const activeAfterHitTest = activeRef.current;
-          if (activeAfterHitTest?.valid && activeAfterHitTest.targetGridId) {
-            commitActiveTransaction(renderedInteraction.state);
-            return;
-          }
+          commitActiveTransaction(renderedInteraction.state);
+          return;
         }
 
         updateDragPreview(
@@ -596,6 +614,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
     () => ({
       interaction,
       registerGrid,
+      getDepth,
       isDropTargetEligible,
       canAcceptDrop,
       beginResize,
@@ -611,6 +630,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
       interaction,
       isDropTargetEligible,
       previewResize,
+      getDepth,
       registerGrid,
     ],
   );
@@ -671,12 +691,13 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
 
 const GridCollisionSynchronizer = ({ interaction }: { interaction: GridInteraction | null }) => {
   const manager = useDragDropManager();
+  const geometryKey = interaction ? getGridGeometryKey(interaction.state) : null;
 
   useLayoutEffect(() => {
-    if (!interaction || !manager) return;
+    if (!geometryKey || !manager) return;
     for (const target of manager.registry.droppables.value) target.refreshShape();
     manager.collisionObserver.forceUpdate(true);
-  }, [interaction, manager]);
+  }, [geometryKey, manager]);
 
   return null;
 };
@@ -692,11 +713,11 @@ export default function GridEditor({
 }: GridEditorProps) {
   const t = useI18n();
   const { section, items, innerSections } = useSectionContext();
-  const { interaction, registerGrid, isDropTargetEligible } = useBoardGridEditor();
+  const { interaction, registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditor();
   const gridRef = useRef<HTMLDivElement>(null);
   const parentGridId = "parentSectionId" in section ? section.parentSectionId : null;
   const ownerPlacementId = "parentSectionId" in section ? section.id : null;
-  const depth = getGridDepth(sectionId, parentGridId);
+  const depth = getDepth(sectionId);
   const previewGrid = interaction?.state.grids.find((grid) => grid.id === sectionId);
   const controlledById = useMemo(() => new Map(placements.map((placement) => [placement.id, placement])), [placements]);
   const renderPlacements = useMemo(() => {
@@ -792,7 +813,13 @@ export default function GridEditor({
       data-dnd-drop-target={isDropTarget ? "true" : "false"}
       data-dnd-drop-valid={isDropTarget ? String(targetPlacement !== null) : undefined}
       data-dnd-preview-revision={interaction?.targetGridId === sectionId ? interaction.previewRevision : undefined}
-      style={{ width: getLogicalTrackSize(columnCount), height: getLogicalTrackSize(renderedRowCount) }}
+      style={
+        {
+          width: getLogicalTrackSize(columnCount),
+          height: getLogicalTrackSize(renderedRowCount),
+          "--board-grid-pitch": `${LOGICAL_GRID_PITCH}px`,
+        } as CSSProperties
+      }
     >
       {renderPlacements.map((placement) => {
         const entry = entryById.get(placement.id);
@@ -1123,7 +1150,7 @@ const getPointerTargetGrid = (
   grids: Iterable<RegisteredGrid>,
   source: AbstractDraggable,
   pointer: { x: number; y: number },
-  canAcceptDrop: (source: AbstractDraggable, targetGridId: string) => boolean,
+  isTargetEligible: (source: AbstractDraggable, targetGridId: string) => boolean,
 ) =>
   Array.from(grids)
     .filter((grid) => {
@@ -1135,7 +1162,7 @@ const getPointerTargetGrid = (
         pointer.x <= rectangle.right &&
         pointer.y >= rectangle.top &&
         pointer.y <= rectangle.bottom &&
-        canAcceptDrop(source, grid.id)
+        isTargetEligible(source, grid.id)
       );
     })
     .toSorted((first, second) => {
@@ -1217,9 +1244,17 @@ const getGridTargetData = (target: { data: Record<string, unknown> }): GridTarge
   return data.kind === GRID_TARGET_TYPE && data.sectionId ? (data as GridTargetData) : null;
 };
 
-const getGridDepth = (sectionId: string, parentGridId: string | null) => {
-  if (!parentGridId || sectionId === parentGridId) return 0;
-  const parent = document.querySelector<HTMLElement>(`[data-grid-section-id="${CSS.escape(parentGridId)}"]`);
-  const parentDepth = Number(parent?.dataset.gridDepth ?? 0);
-  return Number.isFinite(parentDepth) ? parentDepth + 1 : 1;
-};
+const getGridGeometryKey = (state: TransactionalGridState<SectionGridPlacement>) =>
+  JSON.stringify(
+    state.grids
+      .map((grid) => ({
+        id: grid.id,
+        columnCount: grid.columnCount,
+        maxRowCount: grid.maxRowCount,
+        parentGridId: grid.parentGridId,
+        placements: grid.placements
+          .map(({ id, x, y, w, h }) => ({ id, x, y, w, h }))
+          .toSorted((first, second) => first.id.localeCompare(second.id)),
+      }))
+      .toSorted((first, second) => first.id.localeCompare(second.id)),
+  );
