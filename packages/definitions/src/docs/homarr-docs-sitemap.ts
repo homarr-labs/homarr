@@ -386,4 +386,5 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/beszel-system-stats"
   | "/docs/widgets/traefik"
   | "/docs/widgets/custom-api"
+  | "/docs/widgets/assistant"
   | "/docs/widgets/whats-up-docker";
