@@ -25,6 +25,15 @@ describe("Overseerr media request actions", () => {
   ])("rejects %s when Overseerr returns a non-success response", async (_action, run) => {
     mockFetch.mockResolvedValue(new Response(null, { status: 500 }));
 
-    await expect(run()).rejects.toThrow("Response from integration did not indicate success");
+    await expect(run()).rejects.toMatchObject({
+      name: "IntegrationResponseError",
+      message: "Response from integration did not indicate success",
+      cause: {
+        name: "ResponseError",
+        message: "Response did not indicate success",
+        statusCode: 500,
+      },
+    });
+    expect(mockFetch).toHaveBeenCalledOnce();
   });
 });

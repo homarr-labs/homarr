@@ -33,7 +33,9 @@ export default function IndexerManagerWidget({
   const hasSmallWidth = !isAdvanced && width < 256;
   const hasSmallHeight = !isAdvanced && height < 256;
   const allIndexers = useMemo(() => indexersData.flatMap((entry) => entry.indexers), [indexersData]);
-  const unavailableCount = allIndexers.filter((indexer) => !indexer.status || !indexer.enabled).length;
+  const unavailableCount = allIndexers.filter(
+    (indexer) => indexer.status === false || indexer.enabled === false,
+  ).length;
 
   useEffect(() => {
     if (!widgetStateRef) return;

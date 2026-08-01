@@ -1,6 +1,7 @@
 import type React from "react";
 import type { LoaderComponent } from "next/dynamic";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
+import { hashKey } from "@tanstack/react-query";
 import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -28,6 +29,21 @@ export interface WidgetContextMenuContext {
   itemId: string | undefined;
   canInteractWithSelectedIntegrations: boolean;
 }
+
+export interface NormalizedWidgetQuery {
+  path: readonly string[];
+  input: unknown;
+}
+
+export interface WidgetQueryMatcherScope {
+  itemId: string;
+  boardId: string | undefined;
+  integrationIds: readonly string[];
+  options: Record<string, unknown>;
+  runtimeQueries: readonly NormalizedWidgetQuery[];
+}
+
+export type WidgetQueryMatcher = (query: NormalizedWidgetQuery, scope: WidgetQueryMatcherScope) => boolean;
 
 export interface WidgetContextActionProps<
   TKind extends WidgetKind,
@@ -72,6 +88,7 @@ export interface WidgetDefinition {
   icon: TablerIcon;
   queryKey?: QueryKey;
   queryKeys?: readonly QueryKey[];
+  queryMatcher?: WidgetQueryMatcher;
   refetchInterval?: number | null;
   supportedIntegrations?: IntegrationKind[];
   integrationsRequired?: boolean;
@@ -100,6 +117,39 @@ export const getWidgetQueryKeys = (definition: {
   if (definition.queryKeys && definition.queryKeys.length > 0) return definition.queryKeys;
   return [definition.queryKey ?? [["widget", definition.kind]]];
 };
+
+const runtimeQueriesStateKey = "__homarrRuntimeQueries";
+
+export const setWidgetRuntimeQueries = (
+  widgetStateRef: React.MutableRefObject<Record<string, unknown> | null> | undefined,
+  queries: readonly NormalizedWidgetQuery[],
+) => {
+  if (!widgetStateRef) return;
+  const state = widgetStateRef.current ?? {};
+  state[runtimeQueriesStateKey] = queries;
+  widgetStateRef.current = state;
+};
+
+export const getWidgetRuntimeQueries = (
+  widgetStateRef: React.MutableRefObject<Record<string, unknown> | null>,
+): readonly NormalizedWidgetQuery[] => {
+  const queries = widgetStateRef.current?.[runtimeQueriesStateKey];
+  return Array.isArray(queries) ? (queries as NormalizedWidgetQuery[]) : [];
+};
+
+export const matchesWidgetRuntimeQuery: WidgetQueryMatcher = (query, scope) =>
+  scope.runtimeQueries.some(
+    (runtimeQuery) =>
+      widgetQueryValueEquals(runtimeQuery.path, query.path) && widgetQueryValueEquals(runtimeQuery.input, query.input),
+  );
+
+export const widgetQueryInputMatches = (input: unknown, expected: Record<string, unknown>) =>
+  isRecord(input) && Object.entries(expected).every(([key, value]) => widgetQueryValueEquals(input[key], value));
+
+export const widgetQueryValueEquals = (left: unknown, right: unknown) => hashKey([left]) === hashKey([right]);
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  value !== null && typeof value === "object" && !Array.isArray(value);
 
 export interface WidgetProps<TKind extends WidgetKind> {
   options: inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>;

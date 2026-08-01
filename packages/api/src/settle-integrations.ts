@@ -1,3 +1,5 @@
+import { TRPCError } from "@trpc/server";
+
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
@@ -50,7 +52,11 @@ export async function settleIntegrationQueries<TIntegration extends IntegrationL
     errors.length > 0 &&
     (results.length === 0 || (options?.throwOnAllFailures === true && errors.length === integrations.length))
   ) {
-    throw errors[0];
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "All integration queries failed",
+      cause: errors[0],
+    });
   }
 
   return results;

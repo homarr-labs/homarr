@@ -4,11 +4,13 @@ import { z } from "zod/v4";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("calendar", {
   icon: IconCalendar,
+  queryKey: [["widget", "calendar", "findAllEvents"]],
+  queryMatcher: matchesWidgetRuntimeQuery,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       releaseType: factory.multiSelect({

@@ -8,6 +8,7 @@ import type { AudiobookshelfDashboardData } from "@homarr/integrations/types";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { setWidgetRuntimeQueries } from "../definition";
 import { AudioStatsContent } from "./audio-stats-content";
 
 export default function AudioStatsWidget({
@@ -16,14 +17,19 @@ export default function AudioStatsWidget({
   width,
   height,
   displayMode = "compact",
+  widgetStateRef,
 }: WidgetComponentProps<"audioStats">) {
-  const { data: response } = clientApi.widget.audioStats.getStats.useQuery({
-    integrationId: integrationIds[0] ?? "",
+  const statsInput = { integrationId: integrationIds[0] ?? "" };
+  const { data: response } = clientApi.widget.audioStats.getStats.useQuery(statsInput);
+  const streamsInput = { integrationIds, showOnlyPlaying: false };
+  const streamsEnabled = displayMode === "advanced" && response?.kind === "navidrome";
+  const { data: streamResults = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery(streamsInput, {
+    enabled: streamsEnabled,
   });
-  const { data: streamResults = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery(
-    { integrationIds, showOnlyPlaying: false },
-    { enabled: displayMode === "advanced" && response?.kind === "navidrome" },
-  );
+  setWidgetRuntimeQueries(widgetStateRef, [
+    { path: ["widget", "audioStats", "getStats"], input: statsInput },
+    ...(streamsEnabled ? [{ path: ["widget", "mediaServer", "getCurrentStreams"], input: streamsInput }] : []),
+  ]);
 
   if (!response) return <WidgetEmptyState />;
 

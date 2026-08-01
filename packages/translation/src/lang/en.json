@@ -3712,6 +3712,9 @@
       "error": {
         "internalServerError": "Unable to get data from firewall"
       },
+      "empty": {
+        "noInterfaces": "No network interface data yet"
+      },
       "versionUnknown": "Unknown version",
       "metricAccessible": "{metric}: {value}%, {status}",
       "status": {

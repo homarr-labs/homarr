@@ -235,7 +235,7 @@ function Forecast({
               </Text>
               {showDetails && (
                 <Text fz="xs" c="dimmed">
-                  {getPreferredUnit(dayWeather.minTemp, options.isFormatFahrenheit, true)}
+                  {getPreferredUnit(dayWeather.minTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
                 </Text>
               )}
             </Stack>

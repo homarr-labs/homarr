@@ -10,30 +10,37 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
+import { setWidgetRuntimeQueries } from "../../definition";
 import classes from "./component.module.css";
+
+const MAX_ADVANCED_ALBUMS = 50;
 
 export default function ImmichServerStatsWidget({
   integrationIds,
   options,
   displayMode = "compact",
   width,
+  widgetStateRef,
 }: WidgetComponentProps<"immich-serverStats">) {
   const t = useI18n();
-  const { data: stats } = clientApi.widget.immich.getServerStats.useQuery({
-    integrationId: integrationIds[0] ?? "",
+  const input = { integrationId: integrationIds[0] ?? "" };
+  const albumsInput = { ...input, limit: MAX_ADVANCED_ALBUMS };
+  const isAdvanced = displayMode === "advanced";
+  const albumsEnabled = isAdvanced && integrationIds.length > 0;
+  const { data: stats } = clientApi.widget.immich.getServerStats.useQuery(input);
+  const { data: albums = [] } = clientApi.widget.immich.getAlbums.useQuery(albumsInput, {
+    enabled: albumsEnabled,
+    staleTime: 15 * 60 * 1000,
   });
-  const { data: albums = [] } = clientApi.widget.immich.getAlbums.useQuery(
-    { integrationId: integrationIds[0] ?? "" },
-    { enabled: displayMode === "advanced" && integrationIds.length > 0, staleTime: 15 * 60 * 1000 },
-  );
+  setWidgetRuntimeQueries(widgetStateRef, [
+    { path: ["widget", "immich", "getServerStats"], input },
+    ...(albumsEnabled ? [{ path: ["widget", "immich", "getAlbums"], input: albumsInput }] : []),
+  ]);
 
   if (!stats) return <WidgetEmptyState />;
 
   const statsContent = (
-    <SimpleGrid
-      cols={displayMode === "advanced" ? (width >= 720 ? 4 : width >= 360 ? 2 : 1) : width >= 320 ? 2 : 1}
-      spacing="sm"
-    >
+    <SimpleGrid cols={isAdvanced ? (width >= 720 ? 4 : width >= 360 ? 2 : 1) : width >= 320 ? 2 : 1} spacing="sm">
       {options.showUsers && (
         <StatItem icon={<IconUsers size={20} />} label={t("widget.immich-serverStats.users")} value={stats.userCount} />
       )}
@@ -61,7 +68,7 @@ export default function ImmichServerStatsWidget({
     </SimpleGrid>
   );
 
-  if (displayMode === "compact") {
+  if (!isAdvanced) {
     return (
       <Stack gap="md" h="100%" p="md" justify="center">
         {statsContent}
@@ -69,7 +76,7 @@ export default function ImmichServerStatsWidget({
     );
   }
 
-  const sortedAlbums = [...albums].toSorted((left, right) => right.assetCount - left.assetCount);
+  const sortedAlbums = albums;
   const maxAssets = sortedAlbums[0]?.assetCount ?? 1;
   return (
     <Stack gap="lg" h="100%" p="lg">

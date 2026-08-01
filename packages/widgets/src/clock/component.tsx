@@ -8,6 +8,8 @@ import timezones from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 
 import { clientApi } from "@homarr/api/client";
+import { metricToImperial } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { AnimatedWeatherIcon } from "../weather/animated-icon";
@@ -77,6 +79,7 @@ interface ClockWeatherCornerProps {
 }
 
 const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit, showDetails }: ClockWeatherCornerProps) => {
+  const tCommon = useScopedI18n("common");
   const { data: weather } = clientApi.widget.weather.atLocation.useQuery({ latitude, longitude });
 
   if (!weather) return null;
@@ -93,7 +96,8 @@ const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit, showDetails }: 
       </Text>
       {showDetails && (
         <Text size="xs" c="dimmed">
-          {Math.round(weather.current.windspeed)} km/h
+          {Math.round(isFahrenheit ? metricToImperial(weather.current.windspeed) : weather.current.windspeed)}{" "}
+          {isFahrenheit ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour")}
         </Text>
       )}
     </Stack>

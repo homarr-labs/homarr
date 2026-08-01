@@ -1,11 +1,13 @@
 import { IconApi, IconPlayerPause } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("customApi", {
   icon: IconApi,
+  queryKey: [["widget", "customApi", "getData"]],
+  queryMatcher: ({ input }, scope) => widgetQueryInputMatches(input, { definitionId: scope.options.definitionId }),
   contextActions({ options, widgetStateRef }) {
     return [
       {
@@ -13,9 +15,9 @@ export const { definition, componentLoader } = createWidgetDefinition("customApi
         label: (t) => t("widget.customApi.actions.togglePolling"),
         icon: IconPlayerPause,
         hidden: typeof options.definitionId !== "string" || options.definitionId.trim() === "",
-        disabled: typeof widgetStateRef.current?.togglePolling !== "function",
+        disabled: typeof widgetStateRef?.current?.togglePolling !== "function",
         onClick: () => {
-          const action = widgetStateRef.current?.togglePolling;
+          const action = widgetStateRef?.current?.togglePolling;
           if (typeof action === "function") action();
         },
       },

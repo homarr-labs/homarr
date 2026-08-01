@@ -430,7 +430,9 @@ export default function BeszelSystemGridWidget({
   const effectiveCellHeight = scrollEnabled ? minimumCellHeight : rawCellHeight;
   const cellWidth = width / cols;
   const size = getSizeConfig(cellWidth, effectiveCellHeight);
-  const maxMetrics = advanced ? metricRenderers.length : getMaxVisibleMetrics(effectiveCellHeight, size);
+  const maxMetrics = advanced
+    ? Math.min(metricRenderers.length, getMaxVisibleMetrics(effectiveCellHeight, size))
+    : getMaxVisibleMetrics(effectiveCellHeight, size);
 
   return (
     <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>

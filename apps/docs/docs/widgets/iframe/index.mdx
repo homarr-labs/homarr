@@ -39,13 +39,14 @@ import youtubeStream from "./img/nasa-iss-stream.png";
 Although you can integrate many websites, some may not work.
 This is because the administrators of those sites disallow iframes
 for security reasons, as users could easily be tricked
-by embeding the original site on a malicious page.
+by embedding the original site on a malicious page.
 
 Some proxies disallow iframes by default for this reason.
-You can use https://iframetest.com to check, if the site is allowing iframes.
+You can use https://iframetest.com to check whether the site allows iframes.
 
 If you manage all of your own applications, you can usually change that by configuring
-the appropriate headers (such as `X-Frame-Options` or `Content-Security-Policy`) to allow iframes.
+the `Content-Security-Policy` header and its `frame-ancestors` directive. The obsolete
+`X-Frame-Options: ALLOW-FROM` directive is not supported by modern browsers.
 
 For example, to allow your site to be embedded in iframes from specific domains:
 
@@ -53,14 +54,12 @@ For example, to allow your site to be embedded in iframes from specific domains:
 
 ```apache
 Header set Content-Security-Policy "frame-ancestors 'self' https://trusted-domain.com"
-Header set X-Frame-Options "ALLOW-FROM https://trusted-domain.com"
 ```
 
 **Nginx:**
 
 ```nginx
 add_header Content-Security-Policy "frame-ancestors 'self' https://trusted-domain.com";
-add_header X-Frame-Options "ALLOW-FROM https://trusted-domain.com";
 ```
 
 ### Example URLs
@@ -86,11 +85,11 @@ To create a transparent iframe like below you can use the following html code an
 
 ![transparent iframe](./img/transparent-iframe.png)
 
-### Third party content
+### Third-party content
 
 :::warning
 
-The content below is an overview of third party projects. All support requests/problems must be redirected to the appropriate repository.
+The content below is an overview of third-party projects. All support requests/problems must be redirected to the appropriate repository.
 We cannot guarantee the functionality nor security of these tools.
 
 :::

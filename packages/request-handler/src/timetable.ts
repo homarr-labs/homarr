@@ -1,7 +1,8 @@
+import type { LookupFunction } from "node:net";
 import { z } from "zod/v4";
 
 import { ResponseError } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { createRequestHandler } from "./lib/request-handler";
 import { normalizeTimetableBaseUrl, readBoundedTimetableJsonAsync } from "./timetable-url";
@@ -36,12 +37,17 @@ const MAX_STATION_RESULTS = 100;
 const MAX_TIMETABLE_ENTRIES = 100;
 const timetableFetchOptions = { redirect: "error", timeout: 10_000, bodyTimeout: 10_000 } as const;
 
+export interface TimetableResolvedAddress {
+  address: string;
+  family: 4 | 6;
+}
+
 export const timetableSearchStationsRequestHandler = createRequestHandler<
   Station[],
-  { baseUrl: string; query: string }
+  { baseUrl: string; query: string; pinnedAddresses?: TimetableResolvedAddress[] }
 >({
   async requestAsync(input) {
-    return await searchStationsAsync(input.baseUrl, input.query);
+    return await searchStationsAsync(input.baseUrl, input.query, input.pinnedAddresses);
   },
   cacheTtlMs: 24 * 60 * 60 * 1000,
 });
@@ -64,19 +70,73 @@ const buildUrl = (baseUrl: string, path: `/${string}`, queryParams: Record<strin
   return url.toString();
 };
 
-const searchStationsAsync = async (baseUrl: string, query: string): Promise<Station[]> => {
-  const response = await fetchWithTrustedCertificatesAsync(
-    buildUrl(baseUrl, "/timetable/api/completion.json", { term: query, show_ids: 1, nofavorites: 1 }),
-    timetableFetchOptions,
-  );
-  if (!response.ok) throw new ResponseError(response);
+const normalizeLookupHostname = (hostname: string) =>
+  hostname
+    .replace(/^\[(.*)\]$/, "$1")
+    .toLowerCase()
+    .replace(/\.$/, "");
 
-  const body = await readBoundedTimetableJsonAsync(response);
-  const data = await searchSchema.parseAsync(Array.isArray(body) ? body.slice(0, MAX_STATION_RESULTS) : body);
-  return data
-    .filter((item) => supportedStationTypes.some((type) => item.iconclass.endsWith(type)))
-    .map((item) => (item.id !== undefined ? { id: item.id, name: item.label } : null))
-    .filter((item) => item !== null);
+const createPinnedLookup = (baseUrl: string, addresses: TimetableResolvedAddress[]): LookupFunction => {
+  const expectedHostname = normalizeLookupHostname(new URL(baseUrl).hostname);
+
+  return (hostname, options, callback) => {
+    const requestedFamily = options.family === 4 || options.family === 6 ? options.family : undefined;
+    const candidates = requestedFamily ? addresses.filter(({ family }) => family === requestedFamily) : addresses;
+    if (normalizeLookupHostname(hostname) !== expectedHostname || candidates.length === 0) {
+      const error = new Error("Pinned timetable address is unavailable") as NodeJS.ErrnoException;
+      error.code = "ENOTFOUND";
+      callback(error, []);
+      return;
+    }
+
+    if (options.all) {
+      callback(null, candidates);
+      return;
+    }
+
+    const selected = candidates[0];
+    if (!selected) return callback(new Error("Pinned timetable address is unavailable"), []);
+    callback(null, selected.address, selected.family);
+  };
+};
+
+const createPinnedTimetableDispatcherAsync = async (baseUrl: string, addresses: TimetableResolvedAddress[]) => {
+  // Proxies resolve CONNECT targets independently, which would defeat DNS pinning. Force this security-sensitive
+  // configuration request to connect directly. The original URL remains unchanged for the Host header and TLS SNI.
+  return await createCertificateAgentAsync(
+    { lookup: createPinnedLookup(baseUrl, addresses) },
+    {
+      autoSelectFamily: addresses.length > 1,
+      bodyTimeout: timetableFetchOptions.bodyTimeout,
+      httpProxy: "",
+      httpsProxy: "",
+      noProxy: "*",
+    },
+  );
+};
+
+const searchStationsAsync = async (
+  baseUrl: string,
+  query: string,
+  pinnedAddresses?: TimetableResolvedAddress[],
+): Promise<Station[]> => {
+  const dispatcher = pinnedAddresses ? await createPinnedTimetableDispatcherAsync(baseUrl, pinnedAddresses) : undefined;
+  try {
+    const response = await fetchWithTrustedCertificatesAsync(
+      buildUrl(baseUrl, "/timetable/api/completion.json", { term: query, show_ids: 1, nofavorites: 1 }),
+      { ...timetableFetchOptions, dispatcher },
+    );
+    if (!response.ok) throw new ResponseError(response);
+
+    const body = await readBoundedTimetableJsonAsync(response);
+    const data = await searchSchema.parseAsync(Array.isArray(body) ? body.slice(0, MAX_STATION_RESULTS) : body);
+    return data
+      .filter((item) => supportedStationTypes.some((type) => item.iconclass.endsWith(type)))
+      .map((item) => (item.id !== undefined ? { id: item.id, name: item.label } : null))
+      .filter((item) => item !== null);
+  } finally {
+    await dispatcher?.close();
+  }
 };
 
 const getTimetableAsync = async (

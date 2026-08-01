@@ -24,6 +24,7 @@ import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { setWidgetRuntimeQueries } from "../definition";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
 import {
@@ -77,6 +78,7 @@ export default function BeszelSystemTableWidget({
   isEditMode,
   width,
   displayMode = "compact",
+  widgetStateRef,
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
   const { openModal } = useModalAction(BeszelSystemStatsModal);
@@ -319,6 +321,25 @@ export default function BeszelSystemTableWidget({
     openModal({ integrationId, systemId: record.id }, { title: record.name });
   };
 
+  const activeSystem = selectedSystem ?? sortedSystems[0];
+  const activeIntegrationId = activeSystem?._key.split(":")[0] ?? "";
+  setWidgetRuntimeQueries(
+    widgetStateRef,
+    displayMode === "advanced" && activeSystem
+      ? [
+          {
+            path: ["widget", "beszel", "getSystemStats"],
+            input: {
+              integrationIds: [activeIntegrationId],
+              systemId: activeSystem.id,
+              timePeriod: "1h",
+              includeDocker: false,
+            },
+          },
+        ]
+      : [],
+  );
+
   if (systemsError) throw systemsError;
 
   if (isPending) {
@@ -355,8 +376,6 @@ export default function BeszelSystemTableWidget({
 
   if (displayMode === "compact") return table;
 
-  const activeSystem = selectedSystem ?? sortedSystems[0];
-  const activeIntegrationId = activeSystem?._key.split(":")[0] ?? "";
   return (
     <div
       style={{
@@ -378,14 +397,14 @@ export default function BeszelSystemTableWidget({
               timePeriod="1h"
               columns={1}
               visibility={{
-                cpu: true,
-                memory: true,
-                disk: true,
-                diskIO: true,
-                network: true,
-                dockerCpu: true,
-                dockerMemory: true,
-                dockerNetwork: true,
+                cpu: options.showCpu,
+                memory: options.showMemory,
+                disk: options.showDisk,
+                diskIO: options.showDisk,
+                network: options.showNet,
+                dockerCpu: false,
+                dockerMemory: false,
+                dockerNetwork: false,
               }}
             />
           </Stack>

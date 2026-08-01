@@ -34,7 +34,7 @@ import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
 import { showWarningNotification } from "@homarr/notifications";
 import type { WidgetDefinition } from "@homarr/widgets";
-import { widgetImports } from "@homarr/widgets";
+import { getWidgetQueryKeys, widgetImports } from "@homarr/widgets";
 
 import { createWidgetQueryPersister } from "./query-cache-persister";
 
@@ -96,8 +96,11 @@ export function TRPCReactProvider(props: PropsWithChildren) {
       const def = definition as WidgetDefinition & { kind: string };
       if (def.refetchInterval === undefined) continue;
       const interval = def.refetchInterval === null ? false : def.refetchInterval * 1000;
-      const primaryQueryKey = def.queryKey ?? [["widget", def.kind]];
-      client.setQueryDefaults(primaryQueryKey, { refetchInterval: interval });
+      for (const queryKey of getWidgetQueryKeys(def)) {
+        const path = queryKey[0];
+        if (!Array.isArray(path) || path[0] !== "widget") continue;
+        client.setQueryDefaults(queryKey, { refetchInterval: interval });
+      }
     }
     return client;
   });

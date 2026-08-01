@@ -37,6 +37,7 @@ const queryFirewall = <
           summary: createFallback(),
           error: error instanceof Error ? error.message : "Integration request failed",
         }),
+        throwOnAllFailures: true,
       },
     ),
   );

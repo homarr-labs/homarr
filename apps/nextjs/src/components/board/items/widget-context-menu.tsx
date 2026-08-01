@@ -14,7 +14,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
-import { partialMatchKey, useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
@@ -28,8 +28,13 @@ import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TranslationFunction } from "@homarr/translation";
-import type { WidgetContextMenuAction } from "@homarr/widgets";
-import { getWidgetQueryKeys, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
+import type { WidgetContextMenuAction, WidgetDefinition } from "@homarr/widgets";
+import {
+  getWidgetQueryKeys,
+  getWidgetRuntimeQueries,
+  reduceWidgetOptionsWithDefaultValues,
+  widgetImports,
+} from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
@@ -38,6 +43,7 @@ import { useBoardPermissions } from "../permissions/client";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
 import { ItemMoveModal } from "./item-move-modal";
+import { matchesWidgetItemQuery } from "./widget-query-scope";
 
 interface WidgetContextMenuProps {
   item: SectionItem;
@@ -70,13 +76,45 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
   const integrationsWithInteractAccess = useIntegrationsWithInteractAccess();
   const [menuOpened, setMenuOpened] = useState(false);
 
+  const persistBoard = useCallback(
+    (updater: (previous: typeof board) => typeof board) => {
+      updateAndPersistBoard(updater, {
+        onError: () => {
+          showErrorNotification({
+            title: t("item.menu.notification.saveError.title"),
+            message: t("item.menu.notification.saveError.message"),
+          });
+        },
+      });
+    },
+    [t, updateAndPersistBoard],
+  );
+
+  const options = useMemo(
+    () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options) as Record<string, unknown>,
+    [item.kind, settings, item.options],
+  );
+
   const widgetQueryKeys = useMemo(
     () => getWidgetQueryKeys(currentDefinition as Parameters<typeof getWidgetQueryKeys>[0]),
     [currentDefinition],
   );
+  const widgetQueryMatcher = (currentDefinition as WidgetDefinition).queryMatcher;
   const matchesWidgetQuery = useCallback(
-    (queryKey: QueryKey) => widgetQueryKeys.some((candidate) => partialMatchKey(queryKey, candidate)),
-    [widgetQueryKeys],
+    (queryKey: QueryKey) =>
+      matchesWidgetItemQuery(
+        queryKey,
+        widgetQueryKeys,
+        {
+          itemId: item.id,
+          boardId: board.id,
+          integrationIds: item.integrationIds,
+          options,
+          runtimeQueries: getWidgetRuntimeQueries(widgetStateRef),
+        },
+        widgetQueryMatcher,
+      ),
+    [board.id, item.id, item.integrationIds, options, widgetQueryKeys, widgetQueryMatcher, widgetStateRef],
   );
   const isWidgetFetching =
     useIsFetching({
@@ -84,17 +122,29 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
       predicate: (query) => matchesWidgetQuery(query.queryKey),
     }) > 0;
   const handleRefetch = useCallback(() => {
-    void Promise.all(widgetQueryKeys.map((queryKey) => queryClient.refetchQueries({ queryKey, type: "active" })));
-  }, [queryClient, widgetQueryKeys]);
+    void queryClient.refetchQueries({ type: "active", predicate: (query) => matchesWidgetQuery(query.queryKey) });
+  }, [matchesWidgetQuery, queryClient]);
 
   const canInteractWithSelectedIntegrations = useMemo(() => {
     const allowedIds = new Set(integrationsWithInteractAccess.map(({ id }) => id));
     return item.integrationIds.length > 0 && item.integrationIds.every((id) => allowedIds.has(id));
   }, [integrationsWithInteractAccess, item.integrationIds]);
 
-  const options = useMemo(
-    () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options) as Record<string, unknown>,
-    [item.kind, settings, item.options],
+  const setItemOptions = useCallback(
+    (partial: Record<string, unknown>) => {
+      if (isEditMode) {
+        updateItemOptions({ itemId: item.id, newOptions: { ...options, ...partial } });
+        return;
+      }
+
+      persistBoard((previous) => ({
+        ...previous,
+        items: previous.items.map((boardItem) =>
+          boardItem.id === item.id ? { ...boardItem, options: { ...boardItem.options, ...partial } } : boardItem,
+        ),
+      }));
+    },
+    [isEditMode, item.id, options, persistBoard, updateItemOptions],
   );
 
   type OptionDef = { type: string; skipContextMenu?: boolean };
@@ -110,9 +160,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const actions = (def.contextActions as any)({
       options,
-      setOptions: (partial: Record<string, unknown>) => {
-        updateItemOptions({ itemId: item.id, newOptions: { ...options, ...partial } });
-      },
+      setOptions: setItemOptions,
       integrationIds: item.integrationIds,
       context: {
         isEditMode,
@@ -124,20 +172,6 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
     });
     return (Array.isArray(actions) ? actions : []) as WidgetContextMenuAction[];
   })();
-
-  const persistBoard = useCallback(
-    (updater: (previous: typeof board) => typeof board) => {
-      updateAndPersistBoard(updater, {
-        onError: () => {
-          showErrorNotification({
-            title: t("item.menu.notification.saveError.title"),
-            message: t("item.menu.notification.saveError.message"),
-          });
-        },
-      });
-    },
-    [t, updateAndPersistBoard],
-  );
 
   const openEditModal = useCallback(() => {
     openModal(
@@ -195,19 +229,8 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
   ]);
 
   const handleToggle = useCallback(
-    (key: string) => (checked: boolean) => {
-      if (isEditMode) {
-        updateItemOptions({ itemId: item.id, newOptions: { ...options, [key]: checked } });
-      } else {
-        persistBoard((previous) => ({
-          ...previous,
-          items: previous.items.map((boardItem) =>
-            boardItem.id !== item.id ? boardItem : { ...boardItem, options: { ...boardItem.options, [key]: checked } },
-          ),
-        }));
-      }
-    },
-    [options, item.id, updateItemOptions, isEditMode, persistBoard],
+    (key: string) => (checked: boolean) => setItemOptions({ [key]: checked }),
+    [setItemOptions],
   );
 
   if (!session) return <>{children}</>;
@@ -306,7 +329,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
               {tMenu("refresh")}
               <WidgetQueryStatus
                 queryClient={queryClient}
-                queryKeys={widgetQueryKeys}
+                matchesQuery={matchesWidgetQuery}
                 isFetching={isWidgetFetching}
                 t={t}
               />
@@ -350,15 +373,15 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
 
 interface WidgetQueryStatusProps {
   queryClient: QueryClient;
-  queryKeys: readonly QueryKey[];
+  matchesQuery: (queryKey: QueryKey) => boolean;
   isFetching: boolean;
   t: TranslationFunction;
 }
 
-const WidgetQueryStatus = ({ queryClient, queryKeys, isFetching, t }: WidgetQueryStatusProps) => {
+const WidgetQueryStatus = ({ queryClient, matchesQuery, isFetching, t }: WidgetQueryStatusProps) => {
   const queries = queryClient.getQueryCache().findAll({
     type: "active",
-    predicate: (query) => queryKeys.some((queryKey) => partialMatchKey(query.queryKey, queryKey)),
+    predicate: (query) => matchesQuery(query.queryKey),
   });
   const timestamps = queries.map((query) => query.state.dataUpdatedAt).filter(Boolean);
   const latest = timestamps.length > 0 ? Math.max(...timestamps) : 0;
