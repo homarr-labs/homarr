@@ -32,6 +32,7 @@ export const AssistantAskUserTool = ({
   const t = useScopedI18n("common.assistant.askUser");
   const [showOther, setShowOther] = useState(false);
   const [other, setOther] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const otherInputRef = useRef<HTMLInputElement>(null);
   const options = Array.isArray(args?.options) ? args.options : [];
 
@@ -69,10 +70,16 @@ export const AssistantAskUserTool = ({
     );
   }
 
+  const submitResult = (answer: AskUserResult) => {
+    if (submitting) return;
+    setSubmitting(true);
+    addResult(answer);
+  };
+
   const submitOther = () => {
     const answer = other.trim();
     if (!answer) return;
-    addResult({ answer, source: "other" });
+    submitResult({ answer, source: "other" });
   };
 
   return (
@@ -102,7 +109,8 @@ export const AssistantAskUserTool = ({
             size="md"
             fullWidth
             justify="space-between"
-            onClick={() => addResult({ answer: option.label, optionId: option.id, source: "option" })}
+            disabled={submitting}
+            onClick={() => submitResult({ answer: option.label, optionId: option.id, source: "option" })}
           >
             <Box ta="start">
               <Text component="span" size="sm" fw={650}>
@@ -134,7 +142,7 @@ export const AssistantAskUserTool = ({
                 label={t("otherLabel")}
                 placeholder={t("otherPlaceholder")}
               />
-              <Button size="md" onClick={submitOther} disabled={!other.trim()}>
+              <Button size="md" onClick={submitOther} disabled={!other.trim() || submitting} loading={submitting}>
                 {t("submit")}
               </Button>
               <Button
@@ -174,6 +182,7 @@ export const AssistantConfigureAppTool = ({
   addResult,
 }: ToolCallMessagePartProps<ConfigureAppArgs, AppValues>) => {
   const t = useScopedI18n("common.assistant.configureApp");
+  const [submitting, setSubmitting] = useState(false);
 
   if (result) {
     return (
@@ -205,8 +214,12 @@ export const AssistantConfigureAppTool = ({
         initialValues={toAppValues(args)}
         buttonLabels={{ submit: t("continue") }}
         showBackToOverview={false}
-        handleSubmit={(values) => addResult(values)}
-        isPending={false}
+        handleSubmit={(values) => {
+          if (submitting) return;
+          setSubmitting(true);
+          addResult(values);
+        }}
+        isPending={submitting}
       />
     </Box>
   );

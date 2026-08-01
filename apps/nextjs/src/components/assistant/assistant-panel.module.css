@@ -39,6 +39,17 @@
   color: var(--mantine-color-dimmed);
 }
 
+.activityReviewAction {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--mantine-radius-sm);
+  color: var(--mantine-color-yellow-light-color);
+  background: var(--mantine-color-yellow-light);
+}
+
 .activityDismiss {
   width: 2.5rem;
   height: 2.5rem;
@@ -344,6 +355,13 @@
 
 .approvalActions {
   margin-top: 0.85rem;
+}
+
+.pendingActionBanner {
+  flex: 0 0 auto;
+  padding: 0.6rem 0.75rem;
+  border-block: 1px solid var(--mantine-color-default-border);
+  background: var(--mantine-color-yellow-light);
 }
 
 .humanTool,
@@ -982,6 +1000,10 @@
 }
 
 @media (max-width: 30em) {
+  .activityReviewAction > span {
+    display: none;
+  }
+
   .historyButton {
     width: 2.625rem;
     max-width: 2.625rem;
