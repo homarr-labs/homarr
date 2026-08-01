@@ -165,8 +165,18 @@ export const IconPicker = ({
             leftSection={leftSection}
             value={inputValue}
             onChange={(event) => {
-              combobox.openDropdown();
-              setQuery(event.currentTarget.value);
+              const nextValue = event.currentTarget.value;
+              const trimmedValue = nextValue.trim();
+              if (/^https?:\/\/[^\s/]+(?:\/\S*)?$/i.test(trimmedValue)) {
+                startTransition(() => {
+                  setValue(trimmedValue);
+                  setQuery("");
+                  combobox.closeDropdown();
+                });
+              } else {
+                combobox.openDropdown();
+                setQuery(nextValue);
+              }
             }}
             onClick={() => combobox.openDropdown()}
             onFocus={(event) => {
