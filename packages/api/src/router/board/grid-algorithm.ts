@@ -28,7 +28,7 @@ export const generateResponsiveGridFor = ({
 }: GridAlgorithmInput): GridAlgorithmOutput => {
   const itemsOfCurrentSection = items
     .filter((item) => item.sectionId === sectionId)
-    .sort((itemA, itemB) =>
+    .toSorted((itemA, itemB) =>
       itemA.yOffset === itemB.yOffset ? itemA.xOffset - itemB.xOffset : itemA.yOffset - itemB.yOffset,
     );
   const normalizedItems = normalizeItems(itemsOfCurrentSection, width);
