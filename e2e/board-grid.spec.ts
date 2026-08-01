@@ -321,6 +321,8 @@ describe("Board grid", () => {
         await firstItem.evaluate((element) => element.scrollIntoView({ block: "center", behavior: "instant" }));
         await dragLocatorByAsync(page, getEditorEntry(firstItem), 0, logicalCellPitch * canvasScale + 2);
         await expect(firstItem).toHaveAttribute("data-grid-y", String(targetRow));
+        await waitForControlledGridReconciliationAsync(firstItem);
+        await expect(firstItem).toHaveAttribute("data-grid-y", String(targetRow));
       }
       await expect(firstItem).toHaveAttribute("data-grid-y", "8");
       expect(gridLayoutsOverlap(await readGridLayoutAsync(firstItem), await readGridLayoutAsync(belowItem))).toBe(
@@ -865,6 +867,15 @@ const resetLayoutShiftScoreAsync = async (page: Page) => {
 const dragLocatorByAsync = async (page: Page, locator: Locator, deltaX: number, deltaY: number) => {
   const box = await expectBoundingBoxAsync(locator);
   await dragLocatorToAsync(page, locator, box.x + box.width / 2 + deltaX, box.y + box.height / 2 + deltaY);
+};
+
+const waitForControlledGridReconciliationAsync = async (locator: Locator) => {
+  await locator.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      }),
+  );
 };
 
 const dragLocatorToAsync = async (page: Page, locator: Locator, targetX: number, targetY: number) => {
