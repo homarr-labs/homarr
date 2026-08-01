@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Box } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
@@ -9,6 +9,10 @@ import { MIN_ACCESSIBLE_CANVAS_SCALE } from "./constants";
 import classes from "./scaled-board-canvas.module.css";
 
 export { MIN_ACCESSIBLE_CANVAS_SCALE };
+
+const BoardCanvasScaleContext = createContext(1);
+
+export const useBoardCanvasScale = () => useContext(BoardCanvasScaleContext);
 
 export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: number) => {
   if (!Number.isFinite(availableWidth) || !Number.isFinite(logicalWidth)) return 1;
@@ -84,7 +88,7 @@ export const ScaledBoardCanvas = ({
             transform: `scale(${scale})`,
           }}
         >
-          {children}
+          <BoardCanvasScaleContext.Provider value={scale}>{children}</BoardCanvasScaleContext.Provider>
         </Box>
       </Box>
     </Box>

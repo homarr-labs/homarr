@@ -21,15 +21,18 @@ export const itemAdvancedOptionsSchema = z.object({
 
 export type BoardItemAdvancedOptions = z.infer<typeof itemAdvancedOptionsSchema>;
 
+const gridOffsetSchema = z.number().int().min(0).max(32767);
+const gridSizeSchema = z.number().int().min(1).max(32767);
+
 export const sharedItemSchema = z.object({
   id: z.string(),
   layouts: z.array(
     z.object({
       layoutId: z.string(),
-      yOffset: z.number(),
-      xOffset: z.number(),
-      width: z.number(),
-      height: z.number(),
+      yOffset: gridOffsetSchema,
+      xOffset: gridOffsetSchema,
+      width: gridSizeSchema,
+      height: gridSizeSchema,
       sectionId: z.string(),
     }),
   ),
@@ -44,46 +47,14 @@ export const commonItemSchema = z
   })
   .and(sharedItemSchema);
 
-export const sectionRailPlacements = ["main", "left", "right"] as const;
-
-export const categorySectionOptionsDefaults = {
-  showLabel: true,
-  collapsible: true,
-  showOpenAll: true,
-  railPlacement: "main",
-  columnCount: 2,
-} as const;
-
-export const categorySectionOptionsSchema = z
-  .object({
-    showLabel: z.boolean().default(categorySectionOptionsDefaults.showLabel),
-    collapsible: z.boolean().default(categorySectionOptionsDefaults.collapsible),
-    showOpenAll: z.boolean().default(categorySectionOptionsDefaults.showOpenAll),
-    railPlacement: z.enum(sectionRailPlacements).default(categorySectionOptionsDefaults.railPlacement),
-    columnCount: z.number().int().min(1).max(24).default(categorySectionOptionsDefaults.columnCount),
-  })
-  .default(categorySectionOptionsDefaults);
-
-export type CategorySectionOptions = z.infer<typeof categorySectionOptionsSchema>;
-
-const categorySectionSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  kind: z.literal("category"),
-  yOffset: z.number(),
-  xOffset: z.number(),
-  collapsed: z.boolean().default(true),
-  options: categorySectionOptionsSchema,
-});
-
 const emptySectionSchema = z.object({
   id: z.string(),
   kind: z.literal("empty"),
-  yOffset: z.number(),
-  xOffset: z.number(),
+  yOffset: z.number().int(),
+  xOffset: z.number().int(),
 });
 
-export const dynamicSectionOptionsDefaults = {
+export const containerSectionOptionsDefaults = {
   title: "",
   customCssClasses: [] as string[],
   borderColor: "",
@@ -92,34 +63,34 @@ export const dynamicSectionOptionsDefaults = {
   showOpenAll: false,
 } as const;
 
-export const dynamicSectionOptionsSchema = z
+export const containerSectionOptionsSchema = z
   .object({
-    title: z.string().max(64).default(dynamicSectionOptionsDefaults.title),
+    title: z.string().max(64).default(containerSectionOptionsDefaults.title),
     customCssClasses: z.array(z.string()).default([]),
-    borderColor: z.string().default(dynamicSectionOptionsDefaults.borderColor),
-    showLabel: z.boolean().default(dynamicSectionOptionsDefaults.showLabel),
-    collapsible: z.boolean().default(dynamicSectionOptionsDefaults.collapsible),
-    showOpenAll: z.boolean().default(dynamicSectionOptionsDefaults.showOpenAll),
+    borderColor: z.string().default(containerSectionOptionsDefaults.borderColor),
+    showLabel: z.boolean().default(containerSectionOptionsDefaults.showLabel),
+    collapsible: z.boolean().default(containerSectionOptionsDefaults.collapsible),
+    showOpenAll: z.boolean().default(containerSectionOptionsDefaults.showOpenAll),
   })
-  .default(dynamicSectionOptionsDefaults);
+  .default(containerSectionOptionsDefaults);
 
-export type DynamicSectionOptions = z.infer<typeof dynamicSectionOptionsSchema>;
+export type ContainerSectionOptions = z.infer<typeof containerSectionOptionsSchema>;
 
-const dynamicSectionSchema = z.object({
+const containerSectionSchema = z.object({
   id: z.string(),
-  kind: z.literal("dynamic"),
-  options: dynamicSectionOptionsSchema,
+  kind: z.literal("container"),
+  options: containerSectionOptionsSchema,
   collapsed: z.boolean().default(false),
   layouts: z.array(
     z.object({
       layoutId: z.string(),
-      yOffset: z.number(),
-      xOffset: z.number(),
-      width: z.number(),
-      height: z.number(),
+      yOffset: gridOffsetSchema,
+      xOffset: gridOffsetSchema,
+      width: gridSizeSchema,
+      height: gridSizeSchema,
       parentSectionId: z.string(),
     }),
   ),
 });
 
-export const sectionSchema = z.union([categorySectionSchema, emptySectionSchema, dynamicSectionSchema]);
+export const sectionSchema = z.union([emptySectionSchema, containerSectionSchema]);

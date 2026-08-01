@@ -917,18 +917,18 @@ export const boardRouter = createTRPCRouter({
               addedSections.map((section) => ({
                 id: section.id,
                 kind: section.kind,
-                yOffset: section.kind !== "dynamic" ? section.yOffset : null,
-                xOffset: section.kind === "dynamic" ? null : section.xOffset,
+                yOffset: section.kind === "empty" ? section.yOffset : null,
+                xOffset: section.kind === "empty" ? section.xOffset : null,
                 options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                name: "name" in section ? section.name : null,
+                name: null,
                 boardId: dbBoard.id,
               })),
             );
 
-            if (addedSections.some((section) => section.kind === "dynamic")) {
+            if (addedSections.some((section) => section.kind === "container")) {
               await transaction.insert(schema.sectionLayouts).values(
                 addedSections
-                  .filter((section) => section.kind === "dynamic")
+                  .filter((section) => section.kind === "container")
                   .flatMap((section) =>
                     section.layouts.map(
                       (sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
@@ -1039,18 +1039,17 @@ export const boardRouter = createTRPCRouter({
           const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
 
           for (const section of updatedSections) {
-            const prev = dbBoard.sections.find((dbSection) => dbSection.id === section.id);
             await transaction
               .update(schema.sections)
               .set({
-                yOffset: prev?.kind !== "dynamic" && "yOffset" in section ? section.yOffset : null,
-                xOffset: prev?.kind !== "dynamic" && "xOffset" in section ? section.xOffset : null,
+                yOffset: section.kind === "empty" ? section.yOffset : null,
+                xOffset: section.kind === "empty" ? section.xOffset : null,
                 options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                name: prev?.kind === "category" && "name" in section ? section.name : null,
+                name: null,
               })
               .where(eq(schema.sections.id, section.id));
 
-            if (section.kind !== "dynamic") continue;
+            if (section.kind !== "container") continue;
 
             for (const sectionLayout of section.layouts) {
               await transaction
@@ -1117,21 +1116,21 @@ export const boardRouter = createTRPCRouter({
                 addedSections.map((section) => ({
                   id: section.id,
                   kind: section.kind,
-                  yOffset: section.kind !== "dynamic" ? section.yOffset : null,
-                  xOffset: section.kind === "dynamic" ? null : section.xOffset,
+                  yOffset: section.kind === "empty" ? section.yOffset : null,
+                  xOffset: section.kind === "empty" ? section.xOffset : null,
                   options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                  name: "name" in section ? section.name : null,
+                  name: null,
                   boardId: dbBoard.id,
                 })),
               )
               .run();
 
-            if (addedSections.some((section) => section.kind === "dynamic")) {
+            if (addedSections.some((section) => section.kind === "container")) {
               transaction
                 .insert(sectionLayouts)
                 .values(
                   addedSections
-                    .filter((section) => section.kind === "dynamic")
+                    .filter((section) => section.kind === "container")
                     .flatMap((section) =>
                       section.layouts.map(
                         (sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
@@ -1249,19 +1248,18 @@ export const boardRouter = createTRPCRouter({
           const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
 
           for (const section of updatedSections) {
-            const prev = dbBoard.sections.find((dbSection) => dbSection.id === section.id);
             transaction
               .update(sections)
               .set({
-                yOffset: prev?.kind !== "dynamic" && "yOffset" in section ? section.yOffset : null,
-                xOffset: prev?.kind !== "dynamic" && "xOffset" in section ? section.xOffset : null,
+                yOffset: section.kind === "empty" ? section.yOffset : null,
+                xOffset: section.kind === "empty" ? section.xOffset : null,
                 options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
-                name: prev?.kind === "category" && "name" in section ? section.name : null,
+                name: null,
               })
               .where(eq(sections.id, section.id))
               .run();
 
-            if (section.kind !== "dynamic") continue;
+            if (section.kind !== "container") continue;
 
             for (const sectionLayout of section.layouts) {
               transaction
@@ -1772,7 +1770,7 @@ const getUpdatedBoardLayout = (
   });
 
   const sectionLayoutsCollection = board.sections.flatMap((section): InferInsertModel<typeof sectionLayouts>[] => {
-    if (section.kind !== "dynamic") return [];
+    if (section.kind !== "container") return [];
     const currentElement = updatedElementById.get(section.id);
     if (!currentElement || currentElement.type !== "section") return [];
 
@@ -1815,7 +1813,7 @@ const getRootSectionForLane = (
 
 const getElementsForLayout = (board: Awaited<ReturnType<typeof getFullBoardWithWhereAsync>>, layoutId: string) => {
   const sectionElements = board.sections
-    .filter((section) => section.kind === "dynamic")
+    .filter((section) => section.kind === "container")
     .map((section) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const clonedLayout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === layoutId)!;
@@ -1926,7 +1924,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
           parentSectionId: layout.parentSectionId,
           layoutId: layout.layoutId,
         })),
-        collapsed: collapseStates.at(0)?.collapsed ?? section.kind === "category",
+        collapsed: collapseStates.at(0)?.collapsed ?? false,
       }),
     ),
     items: items

@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import { getMoveTargets } from "../../item-move-modal";
 import { BoardMockBuilder } from "./mocks/board-mock";
-import { DynamicSectionMockBuilder } from "./mocks/dynamic-section-mock";
+import { ContainerSectionMockBuilder } from "./mocks/container-section-mock";
 import { EmptySectionMockBuilder } from "./mocks/empty-section-mock";
 import { ItemMockBuilder } from "./mocks/item-mock";
 
@@ -20,8 +20,8 @@ describe("item move targets", () => {
       new EmptySectionMockBuilder({ id: "canvas", xOffset: 0 }).build(),
       new EmptySectionMockBuilder({ id: "left-gutter", xOffset: -1 }).build(),
       new EmptySectionMockBuilder({ id: "right-gutter", xOffset: 1 }).build(),
-      new DynamicSectionMockBuilder({
-        id: "dynamic",
+      new ContainerSectionMockBuilder({
+        id: "container",
         options: {
           title: "",
           customCssClasses: [],
@@ -53,7 +53,7 @@ describe("item move targets", () => {
       },
       {
         canvas: "Dashboard canvas",
-        dynamicSection: "New section",
+        container: "New section",
         leftRail: "Left dashboard rail",
         rightRail: "Right dashboard rail",
         numbered: (name, index) => `${name}, destination ${index}`,
@@ -78,7 +78,7 @@ describe("item move targets", () => {
     layout.columnCount = 5;
     layout.leftGutterColumnCount = 2;
 
-    const section = new DynamicSectionMockBuilder({ id: "source" })
+    const section = new ContainerSectionMockBuilder({ id: "source" })
       .addLayout({
         layoutId: layout.id,
         parentSectionId: "canvas",
@@ -110,7 +110,7 @@ describe("item move targets", () => {
       { ...sourceLayout, id: section.id, type: "section" },
       {
         canvas: "Canvas",
-        dynamicSection: "Section",
+        container: "Section",
         leftRail: "Left",
         rightRail: "Right",
         numbered: (name, index) => `${name} ${index}`,

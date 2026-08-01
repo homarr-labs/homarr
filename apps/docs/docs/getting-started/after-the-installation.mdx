@@ -321,39 +321,34 @@ As with every change, don't forget to save your changes using the exit edit mode
 
 ![](./img/exit-edit-mode.png)
 
-## Organizing items with sections
+## Organizing items with Containers
 
-Sections are resizable containers for apps, widgets, and other sections.
-The same section works on the main canvas and inside a fixed sidebar.
-Each section can configure:
+Containers are resizable areas for apps, widgets, and nested Containers.
+The same Container works on the main canvas, inside a fixed rail, or inside another Container.
+Each Container can configure:
 
-- Show or hide its label.
+- Its label and whether that label is visible.
 - Allow or disable collapsing.
 - Show or hide **Open all in new tabs**.
 - Change its border color and custom CSS classes.
 
-![](./img/create-dynamic-section.png)
+Open the add-content menu and choose **New Container**.
+In edit mode, move and resize it like any other item, then drag items into or out of it.
+Nested content stays within the Container's bounds.
 
-After adding a section, drag and resize it like any other tile, then drag items into it:
+### Collapsing and opening apps
 
-![](./img/dynamic-section.gif)
+Users can collapse an eligible Container like an accordion in view mode without changing its saved expanded size.
+Expanding it restores its bounds and makes room for its contents.
+If **Open all in new tabs** is enabled, the Container menu can open every app link it contains.
 
-### Labeled and collapsible sections
+### Fixed rails
 
-Open the add-content menu and choose **New section**.
-Use its settings menu to add a label and enable the behavior you want.
-In edit mode, move items into or out of the section directly.
-In view mode, each user can collapse eligible sections without changing the saved board layout.
-If **Open all in new tabs** is enabled, the section menu can open every app link it contains.
-
-### Fixed sidebars
-
-Open the board's **Layout** settings to enable the left or right sidebar for each responsive layout.
+Open the board's **Layout** settings to enable the left or right rail for each responsive layout.
 Choose one, two, or three columns with the slider and use the preview to check the remaining canvas width.
-The sidebar reserves those columns from the dashboard, so Homarr moves canvas items into the next available positions.
-Sidebar content stays visible while the page scrolls and remains editable.
-
-Existing categories become sections automatically, and category rails become fixed sidebars.
+The rail reserves those columns from the dashboard, so Homarr moves canvas items into the next available positions.
+Rail content stays visible while the page scrolls and remains editable.
+Each responsive layout keeps its own rail widths, item positions, and item sizes.
 
 ## Guided tours
 

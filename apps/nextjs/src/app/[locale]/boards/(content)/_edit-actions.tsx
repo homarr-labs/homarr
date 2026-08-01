@@ -10,7 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
-import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
+import { useContainerActions } from "~/components/board/sections/container/container-actions";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { HeaderButton } from "~/components/layout/header/button";
 
@@ -23,7 +23,7 @@ const AddMenu = () => {
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
   const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
-  const { addDynamicSection } = useDynamicSectionActions();
+  const { addContainer } = useContainerActions();
   const { createItem } = useItemActions();
   const t = useI18n();
 
@@ -68,8 +68,8 @@ const AddMenu = () => {
           {t("integration.action.create")}
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item leftSection={<IconLayoutGridAdd size={20} />} onClick={addDynamicSection}>
-          {t("section.dynamic.action.create")}
+        <Menu.Item leftSection={<IconLayoutGridAdd size={20} />} onClick={addContainer}>
+          {t("section.container.action.create")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

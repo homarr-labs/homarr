@@ -2,16 +2,16 @@ import { useMemo } from "react";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 
-import type { DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
+import type { ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 
-export const useSectionItems = (sectionId: string): { innerSections: DynamicSectionItem[]; items: SectionItem[] } => {
+export const useSectionItems = (sectionId: string): { innerSections: ContainerSectionItem[]; items: SectionItem[] } => {
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
 
   const innerSections = useMemo(
     () =>
       board.sections
-        .filter((innerSection) => innerSection.kind === "dynamic")
+        .filter((innerSection) => innerSection.kind === "container")
         .map(({ layouts, ...innerSection }) => {
           const layout = layouts.find((layout) => layout.layoutId === currentLayoutId);
 

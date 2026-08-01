@@ -1344,7 +1344,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "Ny dynamisk sektion",
         "remove": ""
@@ -1363,46 +1363,6 @@
       "remove": {
         "title": "",
         "message": ""
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Namn"
-        }
-      },
-      "action": {
-        "create": "Ny kategori",
-        "edit": "",
-        "remove": "",
-        "moveUp": "Flytta uppåt",
-        "moveDown": "Flytta nedåt",
-        "createAbove": "",
-        "createBelow": "",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "",
-        "submit": "Lägg till kategori"
-      },
-      "remove": {
-        "title": "",
-        "message": "Är du säker du vill ta bort kategorin {name}?"
-      },
-      "edit": {
-        "title": "",
-        "submit": ""
-      },
-      "menu": {
-        "label": {
-          "create": "",
-          "changePosition": "Ändra position",
-          "settings": "Inställningar"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": ""
       }
     }
   },

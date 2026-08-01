@@ -1549,7 +1549,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "Új dinamikus szakasz",
         "remove": "A dinamikus szakasz eltávolítása"
@@ -1568,46 +1568,6 @@
       "remove": {
         "title": "Dinamikus szakasz eltávolítása",
         "message": "Biztosan el akarja távolítani ezt a dinamikus részt? Az elemek a szülő rész ugyanazon helyére kerülnek át."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Név"
-        }
-      },
-      "action": {
-        "create": "Új kategória",
-        "edit": "Kategória átnevezése",
-        "remove": "Kategória eltávolítása",
-        "moveUp": "Felfelé mozgatás",
-        "moveDown": "Mozgatás le",
-        "createAbove": "Új kategória fent",
-        "createBelow": "Új kategória alább",
-        "openAllInNewTabs": "Mindet lapokban megnyitni"
-      },
-      "create": {
-        "title": "Új kategória",
-        "submit": "Kategória hozzáadása"
-      },
-      "remove": {
-        "title": "Kategória eltávolítása",
-        "message": "Biztosan el akarja távolítani a {name} kategóriát?"
-      },
-      "edit": {
-        "title": "Kategória átnevezése",
-        "submit": "Kategória átnevezése"
-      },
-      "menu": {
-        "label": {
-          "create": "Új kategória",
-          "changePosition": "Pozíció módosítása",
-          "settings": "Beállítások"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "Mindet lapokban megnyitni",
-        "text": "Bizonyos böngészők biztonsági okokból megakadályozhatják a lapok tömeges megnyitását. A Homarr nem tudta megnyitni az összes ablakot, mert a böngészője letiltotta ezt a műveletet. Kérjük, engedélyezze a „Felugró ablakok megnyitása” opciót, majd próbálja meg újra."
       }
     }
   },

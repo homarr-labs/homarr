@@ -1344,7 +1344,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "Nueva sección dinámica",
         "remove": "Eliminar sección dinámica"
@@ -1363,46 +1363,6 @@
       "remove": {
         "title": "Eliminar sección dinámica",
         "message": "¿Estás seguro de que deseas eliminar esta sección dinámica? Los artículos se mantendrán en la misma ubicación."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Nombre"
-        }
-      },
-      "action": {
-        "create": "Nueva Categoría",
-        "edit": "Renombrar categoría",
-        "remove": "Eliminar categoría",
-        "moveUp": "Mover hacia arriba",
-        "moveDown": "Mover hacia abajo",
-        "createAbove": "Nueva categoría arriba",
-        "createBelow": "Nueva categoría abajo",
-        "openAllInNewTabs": "Abrir todo en nuevas pestañas"
-      },
-      "create": {
-        "title": "Nueva Categoría",
-        "submit": "Añadir categoría"
-      },
-      "remove": {
-        "title": "Eliminar categoría",
-        "message": "¿Estás seguro de que deseas eliminar la categoría {name}?"
-      },
-      "edit": {
-        "title": "Renombrar categoría",
-        "submit": "Renombrar categoría"
-      },
-      "menu": {
-        "label": {
-          "create": "Nueva Categoría",
-          "changePosition": "Cambiar posición",
-          "settings": ""
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "Abrir todo en nuevas pestañas",
-        "text": "Algunos navegadores pueden bloquear la apertura masiva de nuevas pestañas por razones de seguridad. Homarr no pudo abrir todas las ventanas, porque tu navegador bloqueó esta acción. Por favor, permite \"Abrir ventanas emergentes\" y vuelve a intentarlo."
       }
     }
   },

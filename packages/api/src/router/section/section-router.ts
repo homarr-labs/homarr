@@ -5,7 +5,7 @@ import { z } from "zod/v4";
 import { and, eq } from "@homarr/db";
 import { sectionCollapseStates, sections } from "@homarr/db/schema";
 import { emptySuperJSON } from "@homarr/definitions";
-import { categorySectionOptionsSchema, dynamicSectionOptionsSchema } from "@homarr/validation/shared";
+import { containerSectionOptionsSchema } from "@homarr/validation/shared";
 
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
@@ -34,7 +34,7 @@ export const sectionRouter = createTRPCRouter({
         });
       }
 
-      if (section.kind === "empty") {
+      if (section.kind !== "container") {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: `Section cannot be collapsed id=${input.sectionId}`,
@@ -42,10 +42,7 @@ export const sectionRouter = createTRPCRouter({
       }
 
       const rawOptions = superjson.parse(section.options ?? emptySuperJSON);
-      const parsedOptions =
-        section.kind === "category"
-          ? categorySectionOptionsSchema.safeParse(rawOptions)
-          : dynamicSectionOptionsSchema.safeParse(rawOptions);
+      const parsedOptions = containerSectionOptionsSchema.safeParse(rawOptions);
 
       if (!parsedOptions.success || !parsedOptions.data.collapsible) {
         throw new TRPCError({

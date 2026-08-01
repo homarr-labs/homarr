@@ -2,11 +2,11 @@ import { createContext, useContext } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 
-import type { DynamicSectionItem, Section, SectionItem } from "~/app/[locale]/boards/_types";
+import type { ContainerSectionItem, Section, SectionItem } from "~/app/[locale]/boards/_types";
 
 interface SectionContextProps {
-  section: Exclude<Section, { kind: "dynamic" }> | DynamicSectionItem;
-  innerSections: DynamicSectionItem[];
+  section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
+  innerSections: ContainerSectionItem[];
   items: SectionItem[];
   integrations: RouterOutputs["integration"]["all"] | undefined;
   columnCount: number;

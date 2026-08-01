@@ -1,31 +1,31 @@
 import dynamic from "next/dynamic";
 import { ActionIcon, Badge, Box, Card } from "@mantine/core";
-import { IconChevronDown, IconChevronUp, IconExternalLink } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronUp, IconExternalLink, IconGripVertical } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
+import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { SectionGrid } from "./grid/section-grid";
 import { useSectionCollapse } from "./section-collapse";
 import { useOpenSectionApps } from "./use-open-section-apps";
 import classes from "./item.module.css";
 
-const BoardDynamicSectionMenu = dynamic(
-  () => import("./dynamic/dynamic-menu").then((module) => module.BoardDynamicSectionMenu),
+const BoardContainerMenu = dynamic(
+  () => import("./container/container-menu").then((module) => module.BoardContainerMenu),
   { ssr: false },
 );
 
 interface Props {
-  section: DynamicSectionItem;
+  section: ContainerSectionItem;
 }
 
-export const BoardDynamicSection = ({ section }: Props) => {
+export const BoardContainerSection = ({ section }: Props) => {
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
-  const t = useScopedI18n("section.dynamic");
+  const t = useScopedI18n("section.container");
   const tAll = useI18n();
   const options = section.options;
   const { open: openAllInNewTabs, isLoading: areAppsLoading } = useOpenSectionApps(
@@ -37,22 +37,14 @@ export const BoardDynamicSection = ({ section }: Props) => {
     collapsible: options.collapsible,
   });
   const label = options.title || t("action.create");
-  const contentId = `board-section-${section.id}-content`;
-  const labelLeft = !isEditMode && options.collapsible ? 40 : 10;
+  const contentId = `board-container-${section.id}-content`;
+  const labelLeft = isEditMode || options.collapsible ? 40 : 10;
   const labelRight = isEditMode ? 48 : options.showOpenAll ? 40 : 8;
 
   return (
-    <Box
-      className="grid-stack-item-content"
-      data-grid-item-content
-      w="100%"
-      h="100%"
-      style={{
-        overflow: "visible",
-      }}
-    >
+    <Box className="board-grid-item-content" data-grid-item-content w="100%" h="100%" style={{ overflow: "visible" }}>
       <Card
-        className={combineClasses(classes.itemCard, section.options.customCssClasses.join(" "))}
+        className={combineClasses(classes.itemCard, options.customCssClasses.join(" "))}
         w="100%"
         h="100%"
         styles={{
@@ -65,6 +57,21 @@ export const BoardDynamicSection = ({ section }: Props) => {
         radius={board.itemRadius}
         p={0}
       >
+        {isEditMode && (
+          <ActionIcon
+            component="span"
+            pos="absolute"
+            top={4}
+            left={4}
+            style={{ zIndex: 10, cursor: "grab", touchAction: "none" }}
+            variant="default"
+            radius="xl"
+            data-grid-container-drag-handle
+            aria-hidden="true"
+          >
+            <IconGripVertical size={16} />
+          </ActionIcon>
+        )}
         {options.showLabel && options.title && (
           <Badge
             pos="absolute"
@@ -123,7 +130,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
           )}
         </Box>
       </Card>
-      {isEditMode && <BoardDynamicSectionMenu section={section} />}
+      {isEditMode && <BoardContainerMenu section={section} />}
     </Box>
   );
 };

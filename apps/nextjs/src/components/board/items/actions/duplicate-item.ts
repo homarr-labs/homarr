@@ -76,11 +76,8 @@ const getEmptySectionPosition = (
   if (!boardLayout) return;
 
   const sectionElements = getSectionElements(board, { sectionId: section.id, layoutId: layout.layoutId });
-  if (section.kind !== "dynamic") {
-    const columnCount =
-      section.kind === "empty"
-        ? getBoardLaneColumnCount(boardLayout, getRootSectionLane(section.xOffset))
-        : boardLayout.columnCount;
+  if (section.kind === "empty") {
+    const columnCount = getBoardLaneColumnCount(boardLayout, getRootSectionLane(section.xOffset));
 
     const size = {
       width: layout.width,

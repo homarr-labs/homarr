@@ -50,7 +50,7 @@ export const getInitialBoardLogicalHeight = (board: Board, layoutId: string) => 
           : [];
       }),
       ...board.sections.flatMap((section) => {
-        if (section.kind !== "dynamic") return [];
+        if (section.kind !== "container") return [];
         const sectionLayout = section.layouts.find(
           (candidate) => candidate.layoutId === layoutId && candidate.parentSectionId === root.id,
         );
@@ -75,7 +75,7 @@ export const getInitialBoardLogicalHeight = (board: Board, layoutId: string) => 
       board.sections
         .filter(
           (section) =>
-            section.kind === "dynamic" &&
+            section.kind === "container" &&
             section.collapsed &&
             section.options.collapsible &&
             placements.some((placement) => placement.id === section.id),

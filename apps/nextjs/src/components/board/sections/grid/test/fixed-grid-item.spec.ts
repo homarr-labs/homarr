@@ -59,6 +59,10 @@ vi.mock("../use-grid-layout-actions", () => ({
   }),
 }));
 
+vi.mock("../grid-editor-runtime", () => ({
+  useGridEditorRuntimeStatus: () => "ready",
+}));
+
 vi.mock("../../section-context", () => ({
   useSectionContext: () => ({
     section: { id: "root", kind: "empty", options: {} },
@@ -98,7 +102,7 @@ describe("fixed grid item behavior", () => {
     container.remove();
   });
 
-  test("moves with the keyboard and deterministically pushes a collision down", () => {
+  test("moves with the keyboard and swaps an equal-sized destination", () => {
     renderWeather(root);
 
     const entry = getEditorEntry(container);
@@ -110,7 +114,7 @@ describe("fixed grid item behavior", () => {
       sectionId: "root",
       placements: [
         { id: "weather", type: "item", x: 1, y: 0, w: 1, h: 1 },
-        { id: "clock", type: "item", x: 1, y: 1, w: 1, h: 1 },
+        { id: "clock", type: "item", x: 0, y: 0, w: 1, h: 1 },
       ],
     });
     expect(mocks.announce).toHaveBeenCalledTimes(2);
@@ -150,10 +154,50 @@ describe("fixed grid item behavior", () => {
         }),
       ),
     );
+    expect(mocks.commitSectionGrid).toHaveBeenCalledWith({
+      layoutId: "layout",
+      sectionId: "root",
+      placements: [
+        { id: "weather", type: "item", x: 0, y: 0, w: 1, h: 1 },
+        { id: "clock", type: "item", x: 1, y: 1, w: 1, h: 1 },
+      ],
+    });
+
+    mocks.commitSectionGrid.mockReset();
+    act(() =>
+      entry.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "ArrowLeft",
+          shiftKey: true,
+          bubbles: true,
+        }),
+      ),
+    );
     expect(mocks.commitSectionGrid).not.toHaveBeenCalled();
     expect(mocks.announce).toHaveBeenLastCalledWith(
       "widget.weather.name, column 1, row 1: item.moveResize.keyboard.boundary",
     );
+  });
+
+  test("applies repeated keyboard resizes before board props rerender", () => {
+    renderWeather(root);
+
+    const entry = getEditorEntry(container);
+    startKeyboardEditing(entry);
+    act(() => {
+      entry.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", shiftKey: true, bubbles: true }));
+      entry.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", shiftKey: true, bubbles: true }));
+    });
+
+    expect(mocks.commitSectionGrid).toHaveBeenCalledTimes(2);
+    expect(mocks.commitSectionGrid).toHaveBeenLastCalledWith({
+      layoutId: "layout",
+      sectionId: "root",
+      placements: [
+        { id: "weather", type: "item", x: 0, y: 0, w: 1, h: 3 },
+        { id: "clock", type: "item", x: 1, y: 0, w: 1, h: 1 },
+      ],
+    });
   });
 
   test("uses the whole tile as the focusable move surface with a visual drag affordance", () => {

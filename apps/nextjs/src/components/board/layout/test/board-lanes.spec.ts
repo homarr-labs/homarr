@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import type { Board } from "~/app/[locale]/boards/_types";
 import { BoardMockBuilder } from "~/components/board/items/actions/test/mocks/board-mock";
-import { DynamicSectionMockBuilder } from "~/components/board/items/actions/test/mocks/dynamic-section-mock";
+import { ContainerSectionMockBuilder } from "~/components/board/items/actions/test/mocks/container-section-mock";
 import { EmptySectionMockBuilder } from "~/components/board/items/actions/test/mocks/empty-section-mock";
 import { ItemMockBuilder } from "~/components/board/items/actions/test/mocks/item-mock";
 import { getBoardLaneColumnCount, getInitialBoardLogicalHeight, getRootSectionForLane } from "../index";
@@ -51,13 +51,13 @@ describe("board lanes", () => {
     const layoutId = "layout";
     const mainSectionId = "main";
     const leftSectionId = "left";
-    const dynamicSectionId = "dynamic";
+    const containerSectionId = "container";
     const board = new BoardMockBuilder()
       .addSection(new EmptySectionMockBuilder({ id: mainSectionId }).build())
       .addSection(new EmptySectionMockBuilder({ id: leftSectionId, xOffset: -1 }).build())
       .addSection(
-        new DynamicSectionMockBuilder({
-          id: dynamicSectionId,
+        new ContainerSectionMockBuilder({
+          id: containerSectionId,
           collapsed: true,
           options: { collapsible: true },
         })
