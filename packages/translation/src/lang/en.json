@@ -2156,7 +2156,8 @@
           "label": "Search.ch URL"
         },
         "station": {
-          "label": "Station"
+          "label": "Station",
+          "placeholder": "Search for a station"
         }
       }
     },
@@ -4112,7 +4113,8 @@
         },
         "conversation": {
           "label": "Pinned conversation",
-          "description": "This selector stays hidden while the widget follows the current conversation."
+          "description": "Choose the saved conversation this widget should keep available.",
+          "placeholder": "Select a saved conversation"
         }
       },
       "pinned": {
