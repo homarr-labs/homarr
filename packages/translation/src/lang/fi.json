@@ -1551,8 +1551,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Uusi dynaaminen osio",
-        "remove": ""
+        "create": "Uusi kontti",
+        "remove": "Poista kontti"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "",
-        "message": "Haluatko varmasti poistaa tämän dynaamisen osion? Kohteet siirretään samaan paikkaan yläosiossa."
+        "title": "Poista kontti",
+        "message": "Haluatko varmasti poistaa tämän kontin? Kohteet siirretään samaan paikkaan yläosiossa."
       }
     }
   },

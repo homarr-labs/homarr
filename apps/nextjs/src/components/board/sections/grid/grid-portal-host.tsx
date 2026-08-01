@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -33,6 +33,7 @@ const GridPortalHostContext = createContext<GridPortalHostContextValue | null>(n
  * content.
  */
 export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
+  const board = useRequiredBoard();
   const integrations = useIntegrations();
   const containersRef = useRef<Map<string, HTMLElement>>(new Map());
   const [containers, setContainers] = useState<Map<string, HTMLElement>>(() => new Map());
@@ -40,6 +41,10 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
   const announce = useCallback((message: string) => {
     setAnnouncement((previous) => ({ id: previous.id + 1, message }));
   }, []);
+  const liveEntryIds = useMemo(
+    () => new Set([...board.items.map((item) => item.id), ...board.sections.map((section) => section.id)]),
+    [board.items, board.sections],
+  );
 
   const acquireContainer = useCallback((id: string) => {
     const existing = containersRef.current.get(id);
@@ -53,9 +58,17 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
     return container;
   }, []);
 
-  // Keep acquired nodes for the host's lifetime. Cross-grid commits can
-  // transiently render neither shell, and detaching the node must not remount
-  // live widget state before the destination shell adopts it.
+  useEffect(() => {
+    // A cross-grid move can briefly have no shell, but the entry still exists
+    // on the board. Only remove containers whose board entity was deleted.
+    let didPrune = false;
+    for (const id of containersRef.current.keys()) {
+      if (liveEntryIds.has(id)) continue;
+      containersRef.current.delete(id);
+      didPrune = true;
+    }
+    if (didPrune) setContainers(new Map(containersRef.current));
+  }, [liveEntryIds]);
 
   const value = useMemo<GridPortalHostContextValue>(
     () => ({

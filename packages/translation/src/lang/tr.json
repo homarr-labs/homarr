@@ -1551,8 +1551,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Yeni Dinamik Bölüm",
-        "remove": "Dinamik bölümü kaldır"
+        "create": "Yeni konteyner",
+        "remove": "Konteyneri kaldır"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "Dinamik bölümü kaldır",
-        "message": "Bu dinamik bölümü kaldırmak istediğinizden emin misiniz? Öğeler üst bölümdeki aynı konuma taşınacaktır."
+        "title": "Konteyneri kaldır",
+        "message": "Bu konteyneri kaldırmak istediğinizden emin misiniz? Öğeler üst bölümdeki aynı konuma taşınacaktır."
       }
     }
   },

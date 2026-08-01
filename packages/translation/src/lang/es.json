@@ -1551,8 +1551,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Nueva sección dinámica",
-        "remove": "Eliminar sección dinámica"
+        "create": "Nuevo contenedor",
+        "remove": "Eliminar contenedor"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "Eliminar sección dinámica",
-        "message": "¿Estás seguro de que deseas eliminar esta sección dinámica? Los artículos se mantendrán en la misma ubicación."
+        "title": "Eliminar contenedor",
+        "message": "¿Estás seguro de que deseas eliminar este contenedor? Los elementos se mantendrán en la misma ubicación."
       }
     }
   },

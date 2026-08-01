@@ -1551,8 +1551,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Ny dynamisk seksjon",
-        "remove": "Fjern dynamisk seksjon"
+        "create": "Ny beholder",
+        "remove": "Fjern beholder"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "Fjern dynamisk seksjon",
-        "message": "Er du sikker på at du vil fjerne denne dynamiske delen? Elementer vil bli flyttet til samme sted i overordnet seksjon."
+        "title": "Fjern beholder",
+        "message": "Er du sikker på at du vil fjerne denne beholderen? Elementer vil bli flyttet til samme sted i overordnet seksjon."
       }
     }
   },

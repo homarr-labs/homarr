@@ -9,8 +9,9 @@ import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@ho
 import { useI18n } from "@homarr/translation/client";
 
 import type { Board, ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
-import { getBoardLaneColumnCount, getLayoutRowCount } from "../layout";
+import { getLayoutRowCount } from "../layout";
 import { resolvePinnedGridCollisions } from "../sections/grid/dnd";
+import { getSectionGridColumnCount, getSectionGridPlacements } from "../sections/grid/section-grid-placements";
 import type { CommitSectionGridInput, SectionGridPlacement } from "../sections/grid/use-grid-layout-actions";
 import { useGridLayoutActions } from "../sections/grid/use-grid-layout-actions";
 
@@ -117,7 +118,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
         w: width,
         h: height,
       };
-      const targetPlacements = getSectionPlacements(board, currentLayoutId, target.id).filter(
+      const targetPlacements = getSectionGridPlacements(board, currentLayoutId, target.id).filter(
         (placement) => placement.id !== entry.id,
       );
       const resolvedTarget = resolvePinnedGridCollisions(
@@ -137,7 +138,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
               {
                 layoutId: currentLayoutId,
                 sectionId: sourceSectionId,
-                placements: getSectionPlacements(board, currentLayoutId, sourceSectionId).filter(
+                placements: getSectionGridPlacements(board, currentLayoutId, sourceSectionId).filter(
                   (placement) => placement.id !== entry.id,
                 ),
               },
@@ -284,52 +285,15 @@ export const getMoveTargets = (
   }));
 };
 
-const getSectionPlacements = (board: Board, layoutId: string, sectionId: string): SectionGridPlacement[] => [
-  ...board.items.flatMap((item) => {
-    const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
-    return layout?.sectionId === sectionId
-      ? [
-          {
-            id: item.id,
-            type: "item" as const,
-            x: layout.xOffset,
-            y: layout.yOffset,
-            w: layout.width,
-            h: layout.height,
-          },
-        ]
-      : [];
-  }),
-  ...board.sections.flatMap((section) => {
-    if (section.kind !== "container") return [];
-    const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
-    return layout?.parentSectionId === sectionId
-      ? [
-          {
-            id: section.id,
-            type: "section" as const,
-            x: layout.xOffset,
-            y: layout.yOffset,
-            w: layout.width,
-            h: layout.height,
-          },
-        ]
-      : [];
-  }),
-];
-
 const getSectionColumnCount = (board: Board, layoutId: string, sectionId: string) => {
   const layout = board.layouts.find((candidate) => candidate.id === layoutId);
   if (!layout) throw new Error(`Layout "${layoutId}" was not found`);
   const section = board.sections.find((candidate) => candidate.id === sectionId);
   if (!section) throw new Error(`Section "${sectionId}" was not found`);
 
-  if (section.kind === "container") {
-    const sectionLayout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
-    if (!sectionLayout) throw new Error(`Section "${sectionId}" has no current layout`);
-    return sectionLayout.width;
-  }
-  return getBoardLaneColumnCount(layout, getRootSectionLane(section.xOffset));
+  const columnCount = getSectionGridColumnCount(board, layoutId, sectionId);
+  if (columnCount === null) throw new Error(`Section "${sectionId}" has no current layout`);
+  return columnCount;
 };
 
 const getSectionMaxRowCount = (board: Board, layoutId: string, sectionId: string) => {
@@ -343,7 +307,7 @@ const getSectionMaxRowCount = (board: Board, layoutId: string, sectionId: string
 
 const getEntryMinimumSize = (board: Board, layoutId: string, entry: MovableEntry) => {
   if (entry.type === "item") return { width: 1, height: 1 };
-  const children = getSectionPlacements(board, layoutId, entry.id);
+  const children = getSectionGridPlacements(board, layoutId, entry.id);
   return {
     width: Math.max(1, ...children.map((child) => child.x + child.w)),
     height: Math.max(1, ...children.map((child) => child.y + child.h)),

@@ -1551,8 +1551,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Nova dinamična vsebina",
-        "remove": "Odstrani dinamični odsek"
+        "create": "Nov vsebnik",
+        "remove": "Odstrani vsebnik"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "Odstrani dinamični odsek",
-        "message": "Ali ste prepričani, da želite odstraniti ta dinamični odsek? Elementi bodo premaknjeni na isto mesto v nadrejenem odseku."
+        "title": "Odstrani vsebnik",
+        "message": "Ali ste prepričani, da želite odstraniti ta vsebnik? Elementi bodo premaknjeni na isto mesto v nadrejenem odseku."
       }
     }
   },

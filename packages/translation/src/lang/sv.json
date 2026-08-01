@@ -1551,8 +1551,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Ny dynamisk sektion",
-        "remove": ""
+        "create": "Ny behållare",
+        "remove": "Ta bort behållare"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Ta bort behållare",
+        "message": "Är du säker på att du vill ta bort den här behållaren? Objekten flyttas till samma plats i den överordnade sektionen."
       }
     }
   },

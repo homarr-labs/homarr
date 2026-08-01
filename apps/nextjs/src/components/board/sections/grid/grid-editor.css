@@ -5,7 +5,7 @@
   background-image:
     linear-gradient(to right, color-mix(in srgb, var(--mantine-color-dimmed) 18%, transparent) 1px, transparent 1px),
     linear-gradient(to bottom, color-mix(in srgb, var(--mantine-color-dimmed) 18%, transparent) 1px, transparent 1px);
-  background-size: 224px 224px;
+  background-size: var(--board-grid-pitch) var(--board-grid-pitch);
   border-radius: var(--mantine-radius-md);
 }
 

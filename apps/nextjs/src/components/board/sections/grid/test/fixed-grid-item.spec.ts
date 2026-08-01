@@ -92,6 +92,8 @@ describe("fixed grid item behavior", () => {
     mocks.editMode = true;
     mocks.maxRowCount = null;
     getWeatherMock().advancedOptions.title = null;
+    getClockMock().xOffset = 1;
+    getClockMock().yOffset = 0;
     container = document.createElement("div");
     document.body.append(container);
     root = createRoot(container);
@@ -200,6 +202,21 @@ describe("fixed grid item behavior", () => {
     });
   });
 
+  test("stops keyboard editing when the rendered grid state is invalid", () => {
+    getClockMock().xOffset = 0;
+    renderWeather(root);
+
+    const entry = getEditorEntry(container);
+    startKeyboardEditing(entry);
+    act(() => entry.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true })));
+
+    expect(entry.dataset.keyboardEditing).toBe("false");
+    expect(mocks.commitSectionGrid).not.toHaveBeenCalled();
+    expect(mocks.announce).toHaveBeenLastCalledWith(
+      "widget.weather.name, column 1, row 1: item.moveResize.keyboard.stopped",
+    );
+  });
+
   test("uses the whole tile as the focusable move surface with a visual drag affordance", () => {
     getWeatherMock().advancedOptions.title = "  Balcony forecast  ";
     renderWeather(root);
@@ -283,6 +300,12 @@ const renderWeather = (root: Root) => {
 const getWeatherMock = () => {
   const item = mocks.items[0];
   if (!item) throw new Error("Expected the weather item mock to exist");
+  return item;
+};
+
+const getClockMock = () => {
+  const item = mocks.items[1];
+  if (!item) throw new Error("Expected the clock item mock to exist");
   return item;
 };
 

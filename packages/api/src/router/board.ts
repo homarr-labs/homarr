@@ -915,24 +915,24 @@ export const boardRouter = createTRPCRouter({
               })),
             );
 
-            if (addedSections.some((section) => section.kind === "container")) {
-              await transaction.insert(schema.sectionLayouts).values(
-                addedSections
-                  .filter((section) => section.kind === "container")
-                  .flatMap((section) =>
-                    section.layouts.map(
-                      (sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
-                        layoutId: sectionLayout.layoutId,
-                        sectionId: section.id,
-                        parentSectionId: sectionLayout.parentSectionId,
-                        height: sectionLayout.height,
-                        width: sectionLayout.width,
-                        xOffset: sectionLayout.xOffset,
-                        yOffset: sectionLayout.yOffset,
-                      }),
-                    ),
-                  ),
+            const sectionLayoutsToInsert = addedSections
+              .filter((section) => section.kind === "container")
+              .flatMap((section) =>
+                section.layouts.map(
+                  (sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
+                    layoutId: sectionLayout.layoutId,
+                    sectionId: section.id,
+                    parentSectionId: sectionLayout.parentSectionId,
+                    height: sectionLayout.height,
+                    width: sectionLayout.width,
+                    xOffset: sectionLayout.xOffset,
+                    yOffset: sectionLayout.yOffset,
+                  }),
+                ),
               );
+
+            if (sectionLayoutsToInsert.length > 0) {
+              await transaction.insert(schema.sectionLayouts).values(sectionLayoutsToInsert);
             }
           }
 
@@ -1115,27 +1115,24 @@ export const boardRouter = createTRPCRouter({
               )
               .run();
 
-            if (addedSections.some((section) => section.kind === "container")) {
-              transaction
-                .insert(sectionLayouts)
-                .values(
-                  addedSections
-                    .filter((section) => section.kind === "container")
-                    .flatMap((section) =>
-                      section.layouts.map(
-                        (sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
-                          layoutId: sectionLayout.layoutId,
-                          sectionId: section.id,
-                          parentSectionId: sectionLayout.parentSectionId,
-                          height: sectionLayout.height,
-                          width: sectionLayout.width,
-                          xOffset: sectionLayout.xOffset,
-                          yOffset: sectionLayout.yOffset,
-                        }),
-                      ),
-                    ),
-                )
-                .run();
+            const sectionLayoutsToInsert = addedSections
+              .filter((section) => section.kind === "container")
+              .flatMap((section) =>
+                section.layouts.map(
+                  (sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
+                    layoutId: sectionLayout.layoutId,
+                    sectionId: section.id,
+                    parentSectionId: sectionLayout.parentSectionId,
+                    height: sectionLayout.height,
+                    width: sectionLayout.width,
+                    xOffset: sectionLayout.xOffset,
+                    yOffset: sectionLayout.yOffset,
+                  }),
+                ),
+              );
+
+            if (sectionLayoutsToInsert.length > 0) {
+              transaction.insert(sectionLayouts).values(sectionLayoutsToInsert).run();
             }
           }
 

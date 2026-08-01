@@ -1551,8 +1551,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Nuova sezione dinamica",
-        "remove": "Rimuovi sezione dinamica"
+        "create": "Nuovo container",
+        "remove": "Rimuovi container"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "Rimuovi sezione dinamica",
-        "message": "Vuoi davvero rimuovere questa sezione dinamica? Gli elementi verranno spostati nella stessa posizione nella sezione padre."
+        "title": "Rimuovi container",
+        "message": "Vuoi davvero rimuovere questo container? Gli elementi verranno spostati nella stessa posizione nella sezione padre."
       }
     }
   },

@@ -1551,8 +1551,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Container nou",
+        "remove": "Elimină containerul"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Elimină containerul",
+        "message": "Sigur doriți să eliminați acest container? Elementele vor fi mutate în aceeași poziție din secțiunea părinte."
       }
     }
   },
