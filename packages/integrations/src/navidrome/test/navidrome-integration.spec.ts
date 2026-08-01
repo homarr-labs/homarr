@@ -1,5 +1,11 @@
+// @vitest-environment node
 import { Response } from "undici";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+
+vi.hoisted(() => {
+  process.env.SKIP_ENV_VALIDATION = "true";
+  process.env.SECRET_ENCRYPTION_KEY = "0".repeat(64);
+});
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
@@ -39,19 +45,19 @@ const subsonicFailed = (message: string, code = 70) =>
     "subsonic-response": { status: "failed", error: { code, message } },
   });
 
+const makeAlbums = (count: number, songCount: number) =>
+  Array.from({ length: count }, (_, index) => ({
+    id: `album-${index}`,
+    name: `Album ${index}`,
+    songCount,
+  }));
+
 beforeEach(() => {
   mockFetch.mockReset();
 });
 
 describe("NavidromeIntegration.getDashboardDataAsync", () => {
   test("paginates album list and counts songs", async () => {
-    const makeAlbums = (count: number, songCount: number) =>
-      Array.from({ length: count }, (_, i) => ({
-        id: `album-${i}`,
-        name: `Album ${i}`,
-        songCount,
-      }));
-
     mockFetch.mockImplementation((url) => {
       const urlStr = toUrlString(url);
 
@@ -84,7 +90,7 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
         >;
       }
 
-      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+      return Promise.reject(new Error(`Unexpected dashboard request: ${urlStr}`)) as unknown as ReturnType<
         typeof fetchWithTrustedCertificatesAsync
       >;
     });
@@ -113,7 +119,7 @@ describe("NavidromeIntegration.getDashboardDataAsync", () => {
         ) as unknown as ReturnType<typeof fetchWithTrustedCertificatesAsync>;
       }
 
-      return Promise.resolve(new Response(subsonicOk({}), { status: 200 })) as unknown as ReturnType<
+      return Promise.reject(new Error(`Unexpected dashboard request: ${urlStr}`)) as unknown as ReturnType<
         typeof fetchWithTrustedCertificatesAsync
       >;
     });
@@ -253,7 +259,7 @@ describe("NavidromeIntegration.getCurrentSessionsAsync", () => {
     expect(result).toEqual([]);
   });
 
-  test("throws on subsonic auth failure", async () => {
+  test("normalizes subsonic auth failures", async () => {
     mockFetch.mockImplementation((url) => {
       const urlStr = toUrlString(url);
 

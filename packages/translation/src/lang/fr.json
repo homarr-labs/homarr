@@ -199,8 +199,8 @@
         "label": "Utiliser les icônes pour les pings"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "Activer le clic droit sur les widgets",
+        "description": "Afficher le menu contextuel d'Homarr lorsque vous cliquez avec le bouton droit sur un widget. Désactiver pour utiliser le menu par défaut du navigateur (par exemple \"Ouvrir le lien dans un nouvel onglet\")."
       },
       "defaultSearchEngine": {
         "label": "Moteur de recherche par défaut"
@@ -710,10 +710,10 @@
       "delete": "Supprimer le widget personnalisé",
       "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{name}\" ? Cette action est irréversible.",
       "export": "Exporter",
-      "addMapping": "",
+      "addMapping": "Ajouter une correspondance",
       "addColumn": "Ajouter une colonne",
       "edit": "Modifier",
-      "removeMapping": "",
+      "removeMapping": "Supprimer la correspondance",
       "removeColumn": "Supprimer la colonne",
       "addItem": "Ajouter un élément",
       "removeItem": "Supprimer l'élément",
@@ -730,31 +730,31 @@
       "iconUrl": "URL de l'icône",
       "url": "URL",
       "authType": "Type d’authentification",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
+      "headerName": "Nom du paramètre de l'entête/requête",
+      "method": "Méthode",
+      "requestBody": "Corps de la requête",
+      "displayType": "Type d'affichage",
+      "jsonPath": "Chemin JSON",
+      "jsonPathHint": "Utiliser la syntaxe JSONPath pour extraire des valeurs, par exemple $.data.temperature ou $.items[0].name",
       "label": "Étiquette",
       "unit": "Unité",
-      "mappings": "",
+      "mappings": "Correspondances",
       "tablePath": "",
       "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
+      "columns": "Colonnes",
+      "header": "En-tête",
+      "items": "Objets",
+      "gridColumns": "Nombre de colonnes",
+      "cardStyle": "Style des cartes",
+      "bars": "Barres",
       "valuePath": "",
       "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
+      "showPercentage": "Afficher le pourcentage",
+      "barSize": "Taille de la barre",
+      "goodValues": "Bonnes valeurs (séparées par des virgules)",
+      "dotSize": "Taille des points",
+      "valueSize": "Taille",
+      "labelPosition": "Position du libellé",
       "kvLayout": "",
       "striped": "",
       "compact": "Mode Compact",
@@ -773,14 +773,14 @@
       }
     },
     "placeholder": {
-      "exampleLabel": "",
+      "exampleLabel": "Température du CPU",
       "exampleLabelShort": "Température du CPU",
       "exampleHeader": "Nom",
       "exampleUnit": "°C",
       "iconUrl": "https://...",
       "url": "https://api.example.com/api/v1/status",
       "headerName": "",
-      "jsonPath": "",
+      "jsonPath": "$.data.value",
       "tablePath": "",
       "columnJsonPath": "",
       "valuePath": "",
@@ -798,9 +798,9 @@
       "grid": ""
     },
     "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
+      "sm": "Petit",
+      "md": "Moyen",
+      "lg": "Grand",
       "xl": "Très grand"
     },
     "labelPositionOption": {
@@ -825,30 +825,30 @@
       "customJsx": ""
     },
     "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
     },
     "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
+      "none": "Aucun",
+      "bearer": "Jeton Bearer",
+      "basic": "Authentification basique",
+      "apiKeyHeader": "Clé API (En-tête)",
+      "apiKeyQuery": "Clé API (requête)"
     },
     "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Valeur unique",
+      "keyValue": "Clé-Valeur",
+      "table": "Tableau",
+      "statGrid": "Grille de statistiques",
+      "progressBars": "Barre de progression",
+      "statusIndicator": "Indicateur de statut",
+      "countGrid": "Grille de valeurs",
+      "raw": "Raw JSON",
+      "actionButton": "Bouton d'action",
+      "customJsx": "JSX personnalisé"
     },
     "secret": {
       "apiKey": "",
@@ -857,9 +857,9 @@
       "savedPlaceholder": ""
     },
     "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
+      "title": "Aperçu",
+      "test": "Tester",
+      "hint": "Cliquez sur Test pour prévisualiser la réponse API avec votre configuration actuelle.",
       "rawResponse": ""
     },
     "notification": {
@@ -987,30 +987,30 @@
         "placeholder": "URL personnalisée de l'application"
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Obtenir la clé API"
       }
     },
     "action": {
       "create": "Nouvelle intégration"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count, plural, one {# widget} other {# widgets}}",
+      "noWidgets": "Aucun widget",
+      "detected": "Détecté via Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
+      "dnsHole": "DNS",
+      "mediaService": "Média",
       "calendar": "Calendrier",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
+      "mediaSearch": "Rechercher",
+      "mediaRelease": "Versions",
+      "mediaRequest": "Demandes",
+      "downloadClient": "Téléchargements",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Divers",
+      "smartHomeServer": "Maison intelligente",
+      "indexerManager": "Indexeur",
       "healthMonitoring": "Santé",
       "search": "Rechercher",
       "mediaTranscoding": "Transcodage",
@@ -1018,7 +1018,7 @@
       "releasesProvider": "Versions",
       "notifications": "Notifications",
       "firewall": "Pare-feu",
-      "timetable": "",
+      "timetable": "Emploi du temps",
       "photoService": "Photos",
       "documents": "Documents",
       "notes": "Notes",
@@ -1398,7 +1398,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Aucun média téléchargé"
     }
   },
   "common": {
@@ -1498,7 +1498,7 @@
         "login": "Connexion",
         "homeBoard": "Votre tableau de bord",
         "loggedOut": "Déconnecté",
-        "updateAvailable": "Mises à jour {countUpdates} disponibles : {tag}"
+        "updateAvailable": "{countUpdates} Mises à jour disponibles : {tag}"
       }
     },
     "dangerZone": "Zone de danger",
@@ -1938,16 +1938,16 @@
       }
     },
     "timetable": {
-      "name": "",
+      "name": "Horaires",
       "description": "Affiche les heures de départ pour une station",
-      "title": "",
-      "noStation": "",
+      "title": "Départs {station}",
+      "noStation": "Aucune station sélectionnée",
       "option": {
         "baseUrl": {
           "label": ""
         },
         "station": {
-          "label": ""
+          "label": "Station"
         }
       }
     },
@@ -2024,26 +2024,26 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Note Anchor",
+      "description": "Affiche une note sélectionnée depuis Anchor",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Note"
         },
         "showTitle": {
-          "label": ""
+          "label": "Afficher le titre"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Afficher la dernière mise à jour"
         }
       },
-      "empty": "",
-      "emptyContent": "",
+      "empty": "Sélectionnez une note à afficher",
+      "emptyContent": "Cette note n'a pas de contenu",
       "notFound": "Note introuvable",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
+      "noNotes": "Aucune note trouvée",
+      "integrationRequired": "Sélectionnez d'abord une intégration Anchor",
+      "updatedAt": "Mis à jour {date}",
+      "untitled": "Sans titre",
       "edit": "Modifier",
       "save": "Sauvegarder",
       "cancel": "Annuler",
@@ -2083,7 +2083,7 @@
           "label": "Autoriser la géolocalisation"
         },
         "allowModals": {
-          "label": ""
+          "label": "Autoriser les modales"
         }
       },
       "error": {
@@ -2319,7 +2319,7 @@
           "label": "Afficher les infos de la mémoire"
         },
         "gpu": {
-          "label": ""
+          "label": "Afficher les infos du GPU"
         },
         "showUptime": {
           "label": "Afficher le temps de disponibilité"
@@ -2474,8 +2474,8 @@
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Surveiller l'état de vos périphériques UPS via un serveur NUT",
       "option": {
         "showBattery": {
           "label": "Afficher la batterie"
@@ -2501,7 +2501,7 @@
         "output": "Sortie"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Impossible de récupérer les données UPS"
       }
     },
     "tracearr": {
@@ -2536,16 +2536,16 @@
         "device": "Appareil",
         "progress": "Progression",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Lecture directe",
+          "transcode": "Transcodage",
+          "directStream": "Flux direct"
         }
       },
       "recentActivity": {
         "title": "Activité récente",
         "empty": "Aucune activité récente",
-        "watched": "",
-        "partial": ""
+        "watched": "Regardé",
+        "partial": "Partiel"
       },
       "violations": {
         "title": "Violations",
@@ -2553,21 +2553,21 @@
         "rule": "Règle",
         "user": "Utilisateur"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Aucune section activée",
       "error": {
         "noIntegration": "Aucune intégration Tracearr configurée",
         "internalServerError": "Impossible de récupérer les données de Tracearr"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Statistiques Umami",
+      "description": "Affiche les statistiques des visiteurs de votre instance Umami Analytics",
+      "visitors": "visiteurs",
+      "active": "actif",
+      "pageviews": "pages vues",
+      "visits": "visites",
+      "bounceRate": "rebond",
+      "avgDuration": "moy",
       "option": {
         "websiteId": {
           "label": "Site Web",
@@ -2596,53 +2596,53 @@
           "loading": "Chargement des événements...",
           "noEvents": "Aucun événement trouvé",
           "none": "Aucun événement",
-          "configureWebsiteFirst": ""
+          "configureWebsiteFirst": "Sélectionnez d'abord un site web pour charger les événements"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Type de graphique",
+          "description": "Style d'affichage du graphique",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Graphique à barres",
+            "sparkline": "Graphique sparkline"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Style de graphique",
+          "description": "Comment afficher la série d'événements dans le graphique",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Côte à côte",
+            "overlay": "Superposition (sous-ensemble)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Vue",
+          "description": "Quoi afficher dans le corps du widget",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Graphique",
+            "events": "Graphique des événements",
+            "topPages": "Pages principales",
+            "topReferrers": "Référents principaux"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Événements",
+          "description": "Sélectionnez un ou plusieurs événements à afficher dans le graphique",
+          "placeholder": "Sélectionner les événements...",
+          "loading": "Chargement des événements...",
+          "noEvents": "Aucun événement trouvé",
+          "configureWebsiteFirst": "Sélectionnez d'abord un site web pour charger les événements"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Éléments à afficher",
+          "description": "Nombre d'éléments principaux à afficher (max 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "événements",
+        "label": "événements"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Directe"
       },
       "topReferrers": {
         "direct": "Directe"
@@ -2651,10 +2651,10 @@
         "selectPrompt": "Sélectionnez les événements à afficher"
       },
       "error": {
-        "noIntegration": "",
+        "noIntegration": "Aucune intégration Umami configurée",
         "noWebsite": "Aucun site web configuré",
         "noData": "Aucune donnée disponible",
-        "internalServerError": ""
+        "internalServerError": "Impossible de récupérer les données Umami"
       }
     },
     "common": {
@@ -3079,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "Limiter les éléments par intégration",
           "description": "Cela limitera le nombre d'éléments affichés par intégration, pas globalement"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Sélectionner les colonnes dans les éléments",
-        "noCommunications": "Impossible de charger les données à partir de l'intégration"
+        "noCommunications": "Impossible de charger les données à partir de l'intégration",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3115,8 @@
           "detailsTitle": "Index actuel au sein du client"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Intégration"
@@ -3140,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "Heure de finition",
-          "detailsTitle": "Temps écoulé depuis/à l'achèvement"
+          "detailsTitle": "Temps écoulé depuis/à l'achèvement",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Type",
@@ -3184,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": "Ratio global"
+      "globalRatio": "Ratio global",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Sorties récentes",
@@ -3383,7 +3410,7 @@
           "label": "Masquer la description"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Afficher l'image de l'affiche"
         }
       }
     },
@@ -3614,7 +3641,7 @@
     },
     "speedtestTracker": {
       "name": "Suivi de test de vitesse",
-      "description": "",
+      "description": "Affiche les résultats des tests de vitesse depuis votre instance Speedtest Tracker.",
       "option": {
         "showLatestResult": {
           "label": "Afficher le dernier résultat"
@@ -3631,24 +3658,24 @@
       },
       "latestResult": "Dernier résultat",
       "averages": "Moyennes",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "tests": "{count, plural, one {test} other {tests}}",
+      "recentResults": "Résultats récents",
+      "recentResultsSpeed": "Vitesse",
+      "recentResultsPing": "Ping",
+      "download": "Téléchargement",
+      "upload": "Téléversement",
+      "ping": "Ping",
+      "status": "État",
+      "avgDownload": "Téléchargement moyen",
+      "avgUpload": "Téléversement moyen",
+      "avgPing": "Ping moyen",
+      "healthy": "Sain",
+      "unhealthy": "Dysfonctionnement",
+      "ok": "OK",
+      "fail": "Échec",
+      "noSectionsEnabled": "Activez au moins une section dans les options du widget.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Impossible de récupérer les données du test de vitesse"
       }
     },
     "uptimeKuma": {
@@ -3805,7 +3832,7 @@
           "option": {
             "cpu": "CPU",
             "memory": "Mémoire",
-            "gpu": "",
+            "gpu": "GPU",
             "network": "Réseau"
           }
         },
@@ -3822,7 +3849,7 @@
       "card": {
         "cpu": "CPU",
         "memory": "RAM",
-        "gpu": "",
+        "gpu": "GPU",
         "network": "NET",
         "up": "UP",
         "down": "HORS SERVICE"
@@ -3883,41 +3910,41 @@
       "executeFailed": ""
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Systèmes Beszel (Tableau)",
+      "description": "Vue en tableau de tous les systèmes surveillés par Beszel avec colonnes triables et indicateurs d'état",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Filtre d'état"
         },
         "sortBy": {
-          "label": ""
+          "label": "Trier par"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Direction du tri"
         },
         "showCpu": {
-          "label": ""
+          "label": "Afficher le CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Afficher la mémoire"
         },
         "showDisk": {
-          "label": ""
+          "label": "Afficher le disque"
         },
         "showGpu": {
-          "label": ""
+          "label": "Afficher le GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Afficher la charge moyenne"
         },
         "showNet": {
-          "label": ""
+          "label": "Afficher le réseau"
         },
         "showTemp": {
-          "label": ""
+          "label": "Afficher la température"
         },
         "showBattery": {
-          "label": ""
+          "label": "Afficher la batterie"
         },
         "showServices": {
           "label": ""
@@ -4508,7 +4535,7 @@
         "boards": "Tableaux de bord",
         "apps": "Applications",
         "integrations": "Intégrations",
-        "customWidgets": "",
+        "customWidgets": "Widgets personnalisés",
         "searchEngies": "Moteurs de recherche",
         "medias": "Médias",
         "users": {
@@ -4528,7 +4555,7 @@
             "api": "API",
             "certificates": "Certificats",
             "tasks": "Tâches",
-            "backup": ""
+            "backup": "Sauvegarde"
           }
         },
         "settings": "Paramètres",
@@ -4609,7 +4636,7 @@
           "private": "Ce tableau est privé"
         },
         "noResults": {
-          "title": ""
+          "title": "Aucun tableau de bord pour l'instant"
         },
         "modal": {
           "createBoard": {
@@ -4643,20 +4670,20 @@
               "firstDayOfWeek": "Premier jour de la semaine",
               "accessibility": "Accessibilité",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Visites guidées d'intégration",
+                "description": "Réinitialiser les visites guidées pour les revoir lors de votre prochaine visite dans la zone de gestion ou le tableau de bord.",
+                "reset": "Réinitialiser les visites guidées",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Visites réinitialisées",
+                  "message": "Les visites guidées s'afficheront à nouveau lors de votre prochaine visite"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Complété",
+                  "notStarted": "Non commencé"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Administration",
+                  "dashboard": "Tableau de bord"
                 }
               }
             }
@@ -4844,7 +4871,7 @@
             "defaultColorScheme": {
               "label": "Schéma de couleurs par défaut",
               "options": {
-                "auto": "",
+                "auto": "Automatique",
                 "light": "Clair",
                 "dark": "Sombre"
               }
@@ -5075,122 +5102,122 @@
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Sauvegarde complète de la base de données",
+          "metaTitle": "Sauvegarde et restauration",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Exporter la base de données",
+            "description": "Téléchargez une sauvegarde complète de votre base de données SQLite incluant tous les paramètres, utilisateurs, tableaux de bord et secrets d'intégration chiffrés. La sauvegarde est regroupée dans un fichier ZIP avec la clé de chiffrement et les métadonnées.",
+            "button": "Télécharger la sauvegarde",
+            "error": "Échec de l'exportation",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Exportation de données sensibles",
+              "warningTitle": "Cette exportation contient l'intégralité de votre base de données.",
+              "warningBody": "La sauvegarde comprend tous les utilisateurs, les secrets d'intégration (chiffrés), les clés API, les configurations de tableaux de bord et les données d'application. Stockez le fichier exporté en lieu sûr et ne le partagez pas.",
+              "typePrompt": "Tapez \"{phrase}\" pour continuer",
+              "submit": "Exporter la base de données",
+              "cancel": "Annuler"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Restaurer la base de données",
+            "description": "Téléversez une sauvegarde ZIP précédemment exportée pour restaurer votre base de données. Cela remplacera l'intégralité de votre base de données. Si la sauvegarde a été créée avec une clé de chiffrement différente, les secrets seront automatiquement rechiffrés.",
+            "warning": "Restaurer une sauvegarde remplacera complètement votre base de données actuelle et redémarrera l'application. Cette action est irréversible.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Déposez votre fichier ZIP de sauvegarde ici ou cliquez pour parcourir",
+              "description": "Seuls les fichiers .zip provenant d'une sauvegarde SQLite Homarr sont acceptés"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Changer le fichier",
+            "button": "Restaurer la base de données",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Restauration terminée",
+              "message": "La base de données a été restaurée avec succès. L'application redémarre..."
             },
-            "error": ""
+            "error": "Échec de l'importation"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Contenu de la sauvegarde",
+            "exported": "Exporté le {date}",
+            "loading": "Analyse du fichier de sauvegarde...",
+            "errorTitle": "Erreur d'aperçu",
+            "entity": "Entité",
+            "count": "Nombre",
+            "boards": "Tableaux de bord",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Tableaux de bord",
+              "user": "Utilisateurs",
+              "app": "Applications",
+              "integration": "Intégrations",
+              "item": "Widgets",
+              "media": "Médias",
+              "search_engine": "Moteurs de recherche"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Échec de l'analyse du fichier de sauvegarde",
+            "invalidMissingMetadata": "Sauvegarde invalide : metadata.json manquant",
+            "invalidMissingDb": "Sauvegarde invalide : db.sqlite manquant"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Déposez votre fichier ZIP de sauvegarde ici",
+              "description": "Accepte les fichiers .zip d'une sauvegarde SQLite Homarr (max 256 Mo)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Analyse de la sauvegarde...",
+            "changeFile": "Changer le fichier",
+            "continueToRestore": "Continuer vers la restauration",
+            "tryAgain": "Réessayer",
+            "analysisError": "Erreur d'analyse",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Contenu de la sauvegarde",
+              "exported": "Exporté le {date}",
+              "entity": "Entité",
+              "count": "Nombre",
+              "boards": "Tableaux de bord",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Tableaux de bord",
+                "user": "Utilisateurs",
+                "app": "Applications",
+                "integration": "Intégrations",
+                "item": "Widgets",
+                "media": "Médias",
+                "search_engine": "Moteurs de recherche"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "{count} migration appliquée",
+              "migrationsAppliedPlural": "{count} migrations appliquées",
+              "migrationsOlderVersion": "Cette sauvegarde provient d'une version plus ancienne de Homarr. {count} migration de schéma a été appliquée pour la mettre à jour.",
+              "migrationsOlderVersionPlural": "Cette sauvegarde provient d'une version plus ancienne de Homarr. {count} migrations de schéma ont été appliquées pour la mettre à jour.",
+              "migrationsUpToDate": "Le schéma de base de données est à jour ({count} migrations appliquées)",
+              "upToDate": "À jour",
+              "migrationsPending": "{count} en attente"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Application des migrations ({current}/{total})",
+              "migrationLabel": "Migration {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Action destructive",
+              "warningTitle": "Cela remplacera définitivement l'intégralité de votre base de données.",
+              "warningBody": "Tous les tableaux, utilisateurs, applications, intégrations, paramètres et sessions actuels seront perdus. Cette action est irréversible. L'application redémarrera après la restauration.",
+              "typePrompt": "Tapez \"{phrase}\" pour continuer",
+              "cancel": "Annuler",
+              "submit": "Restaurer la base de données"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Restauration de la base de données...",
+              "extracting": "Extraction de l'archive de sauvegarde",
+              "migrating": "Application des migrations de base de données",
+              "encrypting": "Rechiffrement des secrets d'intégration",
+              "swapping": "Remplacement du fichier de base de données",
+              "restarting": "Redémarrage du serveur"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Restauration terminée",
+              "message": "La base de données a été restaurée avec succès. Le serveur redémarre — veuillez rafraîchir la page dans quelques secondes."
             },
             "failed": {
-              "title": ""
+              "title": "Échec de la restauration"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Sauvegarde invalide : metadata.json manquant",
+            "invalidMissingDb": "Sauvegarde invalide : db.sqlite manquant",
+            "analyzeError": "Échec de l'analyse de la sauvegarde"
           }
         }
       },
@@ -5207,8 +5234,8 @@
             "subtitle": "{count} ont contribué à des traductions dans de nombreuses langues"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Commanditaires",
+            "subtitle": "{count} soutiens financiers pour le projet"
           },
           "libraries": {
             "title": "Bibliothèques",
@@ -5277,15 +5304,15 @@
         "label": "Ports"
       },
       "host": {
-        "label": ""
+        "label": "Hôte"
       }
     },
     "action": {
       "title": "Actions",
       "logs": {
-        "label": "",
+        "label": "Voir les journaux",
         "page": {
-          "title": ""
+          "title": "Journaux de {name}"
         }
       },
       "start": {
@@ -5681,9 +5708,9 @@
         }
       },
       "custom-widgets": {
-        "label": "",
+        "label": "Widgets personnalisés",
         "new": {
-          "label": ""
+          "label": "Nouveau"
         },
         "edit": {
           "label": "",
@@ -5715,7 +5742,7 @@
         "docker": {
           "label": "Docker",
           "logs": {
-            "label": ""
+            "label": "Journaux"
           }
         },
         "kubernetes": {
@@ -5826,7 +5853,7 @@
             "title": "Commandes globales",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Basculer le mode d'apparence",
                 "light": "Activer le mode clair",
                 "dark": "Activer le mode sombre"
               },
@@ -5867,104 +5894,104 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Préférences",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Sélectionnez une préférence à modifier",
+                "backHint": "Appuyez sur Retour arrière ou utilisez le bouton retour pour revenir en arrière",
+                "backAction": "Retour"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Impossible de mettre à jour la préférence"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Ouvrir les préférences"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Activé",
+                "disabled": "Désactivé"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Aucun",
+                "unavailable": "Actuellement sélectionné (indisponible)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "Aucun",
+                "unavailable": "Actuellement sélectionné (indisponible)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Thème de couleurs",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Sélectionnez votre thème de couleurs"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Langue",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Sélectionnez votre langue préférée"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Moteur de recherche par défaut",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Sélectionnez votre moteur de recherche par défaut"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Ouvrir les résultats de recherche dans un nouvel onglet",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Ouvrir les résultats de recherche dans un nouvel onglet"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "Activer les bangs DuckDuckGo",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Activer les bangs DuckDuckGo"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Premier jour de la semaine",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Sélectionnez le premier jour de la semaine"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Tableau de bord d'accueil",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Sélectionnez votre tableau de bord d'accueil"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Tableau de bord d'accueil mobile",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Sélectionnez votre tableau de bord d'accueil mobile"
                   }
                 }
               },
               "pingIconsEnabled": {
-                "label": "",
+                "label": "Utiliser les icônes pour les pings",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Utiliser les icônes pour les pings"
                   }
                 }
               },
@@ -5977,36 +6004,36 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Ouvrir la page complète des préférences"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Rechercher des films ou séries à demander",
         "requestMovie": "Demander un film",
         "requestSeries": "Demander une série",
         "openIn": "Ouvrir dans {kind}",
         "group": {
-          "title": ""
+          "title": "Films et séries"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Rechercher des films ou séries",
+            "description": "Commencez à taper pour rechercher vos intégrations de demande de médias",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Ajoutez une intégration Overseerr, Jellyseerr ou Seerr pour activer la recherche de médias.",
+              "scoped": "Ce widget n'a pas d'intégration de demande de médias accessible."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Disponible",
+          "partiallyAvailable": "Partiel",
+          "processing": "Traitement en cours",
+          "requested": "Demandé",
+          "pending": "Demandé"
         }
       },
       "external": {
@@ -6014,13 +6041,13 @@
         "group": {
           "searchEngine": {
             "title": "Moteurs de recherche",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Astuce : Vous pouvez également utiliser ici n'importe quel bang DuckDuckGo, par ex. !quelquechose",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Rechercher \"{query}\" avec {label}",
+              "pressEnterToOpen": "Appuyez sur Entrée pour ouvrir",
+              "engineSelected": "{label} sélectionné (!{bang})",
+              "typeQueryToContinue": "Tapez votre requête de recherche pour continuer",
+              "emptyBangHint": "Tapez un bang, par ex. !yt, puis appuyez sur Espace pour sélectionner"
             },
             "children": {
               "action": {
@@ -6284,10 +6311,10 @@
               "header": {
                 "season": "Saison",
                 "episodes": "Épisodes",
-                "status": ""
+                "status": "État"
               },
               "status": {
-                "requested": ""
+                "requested": "Demandé"
               }
             },
             "button": {
@@ -6400,69 +6427,69 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Lire la documentation",
+    "next": "Suivant",
+    "prev": "Retour",
+    "done": "Terminé",
+    "skip": "Passer la visite",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Bienvenue sur Homarr !",
+        "description": "Ceci est votre centre de contrôle. De là, vous gérez les tableaux de bord, les applications, les intégrations, les utilisateurs et les paramètres du serveur. Faisons une visite de chaque section."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Vos tableaux de bord",
+        "description": "Voici tous vos tableaux de bord. Chaque tableau a sa propre disposition, son arrière-plan et ses paramètres d'accès. Vous pouvez voir qui a créé chacun et s'il est public ou privé."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Créer un tableau de bord",
+        "description": "Cliquez ici pour créer un nouveau tableau de bord ou en importer un depuis une installation Homarr précédente. Chaque tableau obtient sa propre URL que vous pouvez partager."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Vos applications",
+        "description": "Ce sont toutes les applications que vous avez ajoutées — des liens vers vos services auto-hébergés. Chaque application a une icône, une vérification de santé optionnelle et un badge d'état sur le tableau de bord."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Ajouter une application",
+        "description": "Enregistrez un nouveau service ici. Donnez-lui un nom, une URL et une icône — il apparaîtra comme une tuile sur vos tableaux avec une surveillance de l'état en direct."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Vos intégrations",
+        "description": "Ce sont les services connectés à Homarr — Sonarr, Radarr, Plex, Jellyfin et plus de 50 autres. Toutes les informations d'identification sont chiffrées."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Ajouter une intégration",
+        "description": "Connectez un nouveau service ici. Choisissez le type, entrez l'URL et la clé API — Homarr valide la connexion avant d'enregistrer."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Vos utilisateurs",
+        "description": "Voyez tous ceux qui ont accès. Organisez les utilisateurs en groupes et contrôlez qui peut voir ou modifier chaque tableau."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Créer un utilisateur",
+        "description": "Ajoutez un nouveau compte utilisateur ici. Vous pouvez également utiliser des liens d'invitation pour une intégration facile. C'est la fin de la visite — vous êtes prêt !"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Ceci est votre tableau de bord",
+        "description": "Un tableau de bord par glisser-déposer où vous organisez les applications et les widgets. Appuyez sur Ctrl+K à tout moment pour rechercher des applications, des tableaux et des actions."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Mode édition",
+        "description": "Cliquez ici pour entrer en mode édition. Vous pouvez ensuite ajouter des widgets, des applications et des sections — faites glisser pour repositionner, redimensionnez avec la poignée d'angle. Cliquez à nouveau pour enregistrer vos modifications."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Paramètres du tableau de bord",
+        "description": "Modifiez le nom, les colonnes, l'arrière-plan, les couleurs de ce tableau et qui peut y accéder. Chaque tableau peut être public ou privé."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Changer de tableau de bord",
+        "description": "Passez d'un tableau à l'autre. Créez des tableaux de bord distincts pour différents usages — médias, réseau, par utilisateur, ou tout ce que vous voulez."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Votre profil",
+        "description": "Changez votre thème de couleurs, votre langue, votre tableau d'accueil et vos préférences. Vous pouvez également accéder à la zone de gestion depuis ici."
       }
     }
   }

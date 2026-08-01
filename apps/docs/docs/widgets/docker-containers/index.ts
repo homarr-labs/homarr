@@ -9,6 +9,12 @@ export const dockerContainersWidget: WidgetDefinition = {
   configuration: {
     items: [
       {
+        name: "Columns to show",
+        description: "Select which columns are visible in the table",
+        values: "Name, State, Host, CPU usage, Memory usage, and Actions",
+        defaultValue: "All columns",
+      },
+      {
         name: "Enable items sorting",
         description: "Allows to sort containers by clicking on the column headers",
         values: { type: "boolean" },
