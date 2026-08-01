@@ -4873,6 +4873,42 @@
         "unhealthy": "Unhealthy"
       }
     },
+    "assistant": {
+      "name": "Assistant",
+      "description": "Have a complete assistant conversation directly on your board.",
+      "option": {
+        "conversationMode": {
+          "label": "Conversation",
+          "description": "Follow the conversation used elsewhere in Homarr, or keep this widget attached to a specific conversation.",
+          "option": {
+            "current": "Current conversation",
+            "pinned": "Pinned conversation"
+          }
+        },
+        "conversation": {
+          "label": "Pinned conversation",
+          "description": "This selector stays hidden while the widget follows the current conversation."
+        }
+      },
+      "pinned": {
+        "title": "Pinned conversation",
+        "description": "This widget is attached to {conversation}. Open it to continue here without silently changing your active conversation.",
+        "selectTitle": "Choose a conversation",
+        "selectDescription": "Open the widget settings and select the conversation this widget should keep available.",
+        "open": "Open conversation",
+        "opening": "Opening conversation...",
+        "error": "This conversation could not be opened. It may have been deleted."
+      },
+      "unavailable": {
+        "title": "Assistant unavailable",
+        "description": "Sign in and ask an administrator to configure the Assistant from the management panel."
+      },
+      "compact": {
+        "title": "Assistant",
+        "description": "Resize this widget to chat here, or open the full conversation.",
+        "open": "Open assistant"
+      }
+    },
     "customApi": {
       "name": "Custom widget",
       "description": "Render a configured Custom JSX definition.",

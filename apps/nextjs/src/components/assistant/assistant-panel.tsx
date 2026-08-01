@@ -59,6 +59,7 @@ import {
   IconAlertTriangle,
   IconApps,
   IconArrowUp,
+  IconArrowsMaximize,
   IconAt,
   IconBrain,
   IconCheck,
@@ -105,7 +106,16 @@ import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assi
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
 
-interface AssistantPanelProps {
+export interface AssistantConversationControls {
+  modelId: string | null;
+  models: AssistantRuntimeModelOption[];
+  modelOptionsLoading: boolean;
+  reasoning: AssistantReasoningMode;
+  onModelChange: (modelId: string) => void;
+  onReasoningChange: (reasoning: AssistantReasoningMode) => void;
+}
+
+interface AssistantPanelProps extends AssistantConversationControls {
   opened: boolean;
   onOpen: () => void;
   onClose: () => void;
@@ -117,12 +127,6 @@ interface AssistantPanelProps {
   latestUserText: string;
   latestStatus: MessageStatus | undefined;
   pendingAction: AssistantPendingAction | undefined;
-  modelId: string | null;
-  models: AssistantRuntimeModelOption[];
-  modelOptionsLoading: boolean;
-  reasoning: AssistantReasoningMode;
-  onModelChange: (modelId: string) => void;
-  onReasoningChange: (reasoning: AssistantReasoningMode) => void;
 }
 
 const markdownRemarkPlugins = [remarkGfm, remarkBreaks];
@@ -1255,10 +1259,7 @@ const ComposerTriggers = () => {
   );
 };
 
-type ComposerProps = Pick<
-  AssistantPanelProps,
-  "modelId" | "models" | "modelOptionsLoading" | "reasoning" | "onModelChange" | "onReasoningChange"
-> & { pendingAction: AssistantPendingAction | undefined };
+type ComposerProps = AssistantConversationControls & { pendingAction: AssistantPendingAction | undefined };
 
 const RuntimeControls = ({
   modelId,
@@ -1622,6 +1623,124 @@ const AssistantActivityBar = ({
   );
 };
 
+interface AssistantConversationSurfaceProps extends AssistantConversationControls {
+  isRunning: boolean;
+  pendingAction: AssistantPendingAction | undefined;
+  onExpand?: () => void;
+  onMinimize?: () => void;
+}
+
+export const AssistantConversationSurface = ({
+  isRunning,
+  pendingAction,
+  modelId,
+  models,
+  modelOptionsLoading,
+  reasoning,
+  onModelChange,
+  onReasoningChange,
+  onExpand,
+  onMinimize,
+}: AssistantConversationSurfaceProps) => {
+  const t = useScopedI18n("common.assistant");
+
+  return (
+    <>
+      <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
+        <Group className={classes.panelIdentity} gap="xs" wrap="nowrap">
+          <ThemeIcon variant="light" color="red" radius="xl">
+            <IconRobot size={18} />
+          </ThemeIcon>
+          <div className={classes.panelIdentityText}>
+            <Text fw={700} lh={1.1} lineClamp={1}>
+              {t("title")}
+            </Text>
+            <Text size="xs" c="dimmed" lineClamp={1}>
+              {isRunning ? t("activity.thinking") : t("subtitle")}
+            </Text>
+          </div>
+        </Group>
+        <Group className={classes.panelActions} gap={2} wrap="nowrap">
+          <ConversationHistory />
+          <Tooltip label={t("newConversation")}>
+            <ThreadListPrimitive.New asChild>
+              <ActionIcon
+                className={classes.panelAction}
+                variant="subtle"
+                color="gray"
+                aria-label={t("newConversation")}
+              >
+                <IconPlus size={17} />
+              </ActionIcon>
+            </ThreadListPrimitive.New>
+          </Tooltip>
+          {onExpand && (
+            <Tooltip label={t("activity.expand")}>
+              <ActionIcon
+                className={classes.panelAction}
+                variant="subtle"
+                color="gray"
+                onClick={onExpand}
+                aria-label={t("activity.expand")}
+              >
+                <IconArrowsMaximize size={17} />
+              </ActionIcon>
+            </Tooltip>
+          )}
+          {onMinimize && (
+            <Tooltip label={t("minimize")}>
+              <ActionIcon
+                className={classes.panelAction}
+                variant="subtle"
+                color="gray"
+                onClick={onMinimize}
+                aria-label={t("minimize")}
+              >
+                <IconMinus size={18} />
+              </ActionIcon>
+            </Tooltip>
+          )}
+        </Group>
+      </Group>
+      <ThreadPrimitive.Root className={classes.thread}>
+        <ThreadPrimitive.Viewport className={classes.viewport}>
+          <Box className={classes.messages}>
+            <EmptyThread />
+            <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
+          </Box>
+          <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
+            <SelectionToolbarPrimitive.Quote asChild>
+              <Button variant="filled" color="dark" size="compact-sm" leftSection={<IconQuote size={14} />}>
+                {t("quoteSelection")}
+              </Button>
+            </SelectionToolbarPrimitive.Quote>
+          </SelectionToolbarPrimitive.Root>
+          <ThreadPrimitive.ScrollToBottom asChild>
+            <ActionIcon
+              className={classes.scrollToBottom}
+              variant="default"
+              radius="xl"
+              aria-label={t("scrollToLatest")}
+            >
+              <IconArrowUp size={16} style={{ transform: "rotate(180deg)" }} />
+            </ActionIcon>
+          </ThreadPrimitive.ScrollToBottom>
+        </ThreadPrimitive.Viewport>
+        <PendingActionBanner pendingAction={pendingAction} />
+        <Composer
+          modelId={modelId}
+          models={models}
+          modelOptionsLoading={modelOptionsLoading}
+          reasoning={reasoning}
+          onModelChange={onModelChange}
+          onReasoningChange={onReasoningChange}
+          pendingAction={pendingAction}
+        />
+      </ThreadPrimitive.Root>
+    </>
+  );
+};
+
 export const AssistantPanel = ({
   opened,
   onOpen,
@@ -1683,82 +1802,17 @@ export const AssistantPanel = ({
       {opened && (
         <FocusTrap active>
           <dialog className={classes.floatingPanel} aria-label={t("title")} open>
-            <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
-              <Group className={classes.panelIdentity} gap="xs" wrap="nowrap">
-                <ThemeIcon variant="light" color="red" radius="xl">
-                  <IconRobot size={18} />
-                </ThemeIcon>
-                <div className={classes.panelIdentityText}>
-                  <Text fw={700} lh={1.1} lineClamp={1}>
-                    {t("title")}
-                  </Text>
-                  <Text size="xs" c="dimmed" lineClamp={1}>
-                    {isRunning ? t("activity.thinking") : t("subtitle")}
-                  </Text>
-                </div>
-              </Group>
-              <Group className={classes.panelActions} gap={2} wrap="nowrap">
-                <ConversationHistory />
-                <Tooltip label={t("newConversation")}>
-                  <ThreadListPrimitive.New asChild>
-                    <ActionIcon
-                      className={classes.panelAction}
-                      variant="subtle"
-                      color="gray"
-                      aria-label={t("newConversation")}
-                    >
-                      <IconPlus size={17} />
-                    </ActionIcon>
-                  </ThreadListPrimitive.New>
-                </Tooltip>
-                <Tooltip label={t("minimize")}>
-                  <ActionIcon
-                    className={classes.panelAction}
-                    variant="subtle"
-                    color="gray"
-                    onClick={onClose}
-                    aria-label={t("minimize")}
-                  >
-                    <IconMinus size={18} />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-            </Group>
-            <ThreadPrimitive.Root className={classes.thread}>
-              <ThreadPrimitive.Viewport className={classes.viewport}>
-                <Box className={classes.messages}>
-                  <EmptyThread />
-                  <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
-                </Box>
-                <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
-                  <SelectionToolbarPrimitive.Quote asChild>
-                    <Button variant="filled" color="dark" size="compact-sm" leftSection={<IconQuote size={14} />}>
-                      {t("quoteSelection")}
-                    </Button>
-                  </SelectionToolbarPrimitive.Quote>
-                </SelectionToolbarPrimitive.Root>
-                <ThreadPrimitive.ScrollToBottom asChild>
-                  <ActionIcon
-                    className={classes.scrollToBottom}
-                    variant="default"
-                    radius="xl"
-                    aria-label={t("scrollToLatest")}
-                  >
-                    <IconArrowUp size={16} style={{ transform: "rotate(180deg)" }} />
-                  </ActionIcon>
-                </ThreadPrimitive.ScrollToBottom>
-              </ThreadPrimitive.Viewport>
-              <PendingActionBanner pendingAction={pendingAction} />
-              <Composer
-                modelId={modelId}
-                models={models}
-                modelOptionsLoading={modelOptionsLoading}
-                reasoning={reasoning}
-                onModelChange={onModelChange}
-                onReasoningChange={onReasoningChange}
-                pendingAction={pendingAction}
-              />
-            </ThreadPrimitive.Root>
+            <AssistantConversationSurface
+              isRunning={isRunning}
+              pendingAction={pendingAction}
+              modelId={modelId}
+              models={models}
+              modelOptionsLoading={modelOptionsLoading}
+              reasoning={reasoning}
+              onModelChange={onModelChange}
+              onReasoningChange={onReasoningChange}
+              onMinimize={onClose}
+            />
           </dialog>
         </FocusTrap>
       )}
