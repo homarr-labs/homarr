@@ -216,19 +216,23 @@ export function UmamiContent({
         {displayMode === "advanced" ? (
           <SimpleGrid cols={width >= 900 ? 2 : 1} spacing="md" h="100%">
             <Box mih={260}>{selectedView}</Box>
-            <SimpleGrid cols={2} spacing="md" mih={260}>
-              <UmamiTopPagesContent
-                integrationIds={integrationIds}
-                websiteId={websiteId}
-                timeFrame={timeFrame}
-                limit={topCount}
-              />
-              <UmamiTopReferrersContent
-                integrationIds={integrationIds}
-                websiteId={websiteId}
-                timeFrame={timeFrame}
-                limit={topCount}
-              />
+            <SimpleGrid cols={viewMode === "topPages" || viewMode === "topReferrers" ? 1 : 2} spacing="md" mih={260}>
+              {viewMode !== "topPages" && (
+                <UmamiTopPagesContent
+                  integrationIds={integrationIds}
+                  websiteId={websiteId}
+                  timeFrame={timeFrame}
+                  limit={topCount}
+                />
+              )}
+              {viewMode !== "topReferrers" && (
+                <UmamiTopReferrersContent
+                  integrationIds={integrationIds}
+                  websiteId={websiteId}
+                  timeFrame={timeFrame}
+                  limit={topCount}
+                />
+              )}
             </SimpleGrid>
           </SimpleGrid>
         ) : (

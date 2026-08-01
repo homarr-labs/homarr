@@ -53,7 +53,6 @@ import { Table } from "@tiptap/extension-table";
 import { TableCell } from "@tiptap/extension-table-cell";
 import { TableHeader } from "@tiptap/extension-table-header";
 import { TableRow } from "@tiptap/extension-table-row";
-import { TaskItem } from "@tiptap/extension-task-item";
 import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
@@ -61,7 +60,6 @@ import type { Editor } from "@tiptap/react";
 import { useEditor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { StarterKit } from "@tiptap/starter-kit";
-import type { Node } from "prosemirror-model";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
@@ -70,6 +68,7 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { createReadOnlyTaskItemTransaction, ReadOnlyTaskItem } from "./read-only-task-item";
 import { NotebookTextDirection, setTextDirection } from "./text-direction";
 
 import "@mantine/tiptap/styles.css";
@@ -208,17 +207,20 @@ export function Notebook({
         }),
         TableHeader,
         TableRow,
-        TaskItem.configure({
+        ReadOnlyTaskItem.configure({
           nested: true,
-          onReadOnlyChecked: (node, checked) => {
+          onReadOnlyChecked: () => {
             if (!allowReadOnlyCheckRef.current) return false;
             if (!canChangeRef.current) return false;
-
+            return true;
+          },
+          onReadOnlyCheckedAtPosition: (position, checked) => {
+            if (!allowReadOnlyCheckRef.current) return;
+            if (!canChangeRef.current) return;
             const event = new CustomEvent(readOnlyCheckEventName, {
-              detail: { node, checked },
+              detail: { position, checked },
             });
             dispatchEvent(event);
-            return true;
           },
         }),
         TaskList.configure({ itemTypeName: "taskItem" }),
@@ -243,25 +245,17 @@ export function Notebook({
     (event: Event) => {
       if (!allowReadOnlyCheckRef.current) return;
       if (!editor) return;
-      const { detail } = event as CustomEvent<{ node: Node; checked: boolean }>;
+      const { detail } = event as CustomEvent<{ position: number; checked: boolean }>;
+      const transaction = createReadOnlyTaskItemTransaction(editor.state, detail.position, detail.checked);
+      if (!transaction) return;
 
-      editor.state.doc.descendants((subnode, pos) => {
-        if (!detail) return;
-        if (!subnode.eq(detail.node)) return;
-
-        const { tr } = editor.state;
-        tr.setNodeMarkup(pos, undefined, {
-          ...detail.node.attrs,
-          checked: detail.checked,
-        });
-        editor.view.dispatch(tr);
-        const nextContent = editor.getHTML();
-        setContent(nextContent);
-        void handleContentUpdate(nextContent).then((wasSaved) => {
-          if (wasSaved) return;
-          setContent(previousContentRef.current);
-          editor.commands.setContent(previousContentRef.current);
-        });
+      editor.view.dispatch(transaction);
+      const nextContent = editor.getHTML();
+      setContent(nextContent);
+      void handleContentUpdate(nextContent).then((wasSaved) => {
+        if (wasSaved) return;
+        setContent(previousContentRef.current);
+        editor.commands.setContent(previousContentRef.current);
       });
     },
     [editor, handleContentUpdate],

@@ -15,9 +15,9 @@ export const { definition, componentLoader } = createWidgetDefinition("indexerMa
       disabled:
         context.isEditMode ||
         !context.canInteractWithSelectedIntegrations ||
-        typeof widgetStateRef.current?.testAllIndexers !== "function",
+        typeof widgetStateRef?.current?.testAllIndexers !== "function",
       onClick: () => {
-        const action = widgetStateRef.current?.testAllIndexers;
+        const action = widgetStateRef?.current?.testAllIndexers;
         if (typeof action === "function") action();
       },
     },

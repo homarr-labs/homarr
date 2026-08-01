@@ -1,7 +1,7 @@
 import { IconRss } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 /**
@@ -12,6 +12,12 @@ import { optionsBuilder } from "../options";
  */
 export const { definition, componentLoader } = createWidgetDefinition("rssFeed", {
   icon: IconRss,
+  queryKey: [["widget", "rssFeed", "getFeeds"]],
+  queryMatcher: ({ input }, scope) =>
+    widgetQueryInputMatches(input, {
+      urls: scope.options.feedUrls,
+      maximumAmountPosts: scope.options.maximumAmountPosts,
+    }),
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({

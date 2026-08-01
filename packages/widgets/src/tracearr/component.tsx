@@ -14,6 +14,10 @@ import { StatsBar } from "./stats-section";
 import { StreamsList } from "./streams-section";
 import { ViolationsList } from "./violations-section";
 
+const ADVANCED_GRID_BREAKPOINT = 800;
+const ADVANCED_GRID_GAP_PX = 16;
+const ADVANCED_GRID_PADDING_PX = 16;
+
 export default function TracearrWidget({
   options,
   integrationIds,
@@ -122,14 +126,20 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
   const recentActivity = combined.recentActivity?.data ?? [];
 
   if (displayMode === "advanced") {
+    const isTwoColumn = width >= ADVANCED_GRID_BREAKPOINT;
+    const columnWidth = getAdvancedColumnWidth(width, isTwoColumn);
     return (
       <ScrollArea h="100%">
-        <SimpleGrid cols={width >= 800 ? 2 : 1} spacing="md" p="md">
+        <SimpleGrid
+          cols={isTwoColumn ? 2 : 1}
+          spacing={`${ADVANCED_GRID_GAP_PX}px`}
+          p={`${ADVANCED_GRID_PADDING_PX}px`}
+        >
           <Stack gap="sm">
             {options.showStats && (
-              <StatsBar stats={combined.stats} summary={combined.streams.summary} width={width / 2} />
+              <StatsBar stats={combined.stats} summary={combined.streams.summary} width={columnWidth} />
             )}
-            {options.showStreams && <StreamsList streams={streams} width={width / 2} />}
+            {options.showStreams && <StreamsList streams={streams} width={columnWidth} />}
           </Stack>
           <Stack gap="sm">
             {options.showViolations && <ViolationsList violations={violations} />}
@@ -156,3 +166,8 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
     </ScrollArea>
   );
 }
+
+export const getAdvancedColumnWidth = (width: number, isTwoColumn: boolean) => {
+  const contentWidth = Math.max(0, width - ADVANCED_GRID_PADDING_PX * 2);
+  return isTwoColumn ? Math.max(0, (contentWidth - ADVANCED_GRID_GAP_PX) / 2) : contentWidth;
+};

@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
@@ -13,6 +14,14 @@ import type { WidgetComponentProps } from "../../../../widgets/src";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "rssFeed" });
+
+const safeFeedLogContext = (url: string, feedIndex: number) => {
+  try {
+    return { feedIndex, origin: new URL(url).origin };
+  } catch {
+    return { feedIndex };
+  }
+};
 
 const feedsInput = z.object({
   urls: z.array(z.string()).max(100),
@@ -38,14 +47,24 @@ export const rssFeedRouter = createTRPCRouter({
     );
 
     const failures = settled.filter((result) => result.status === "rejected");
+    settled.forEach((result, index) => {
+      if (result.status === "rejected") {
+        logger.warn("RSS feed fetch failed", {
+          ...safeFeedLogContext(urls[index] ?? "", index),
+          errorType: result.reason instanceof Error ? result.reason.name : typeof result.reason,
+        });
+      }
+    });
     if (settled.length > 0 && failures.length === settled.length) {
-      throw failures[0]?.reason;
+      throw new TRPCError({
+        code: "BAD_GATEWAY",
+        message: "All RSS feed requests failed",
+      });
     }
 
     return settled
-      .flatMap((result, index) => {
+      .flatMap((result) => {
         if (result.status === "fulfilled") return result.value.data.entries;
-        logger.warn("RSS feed fetch failed", { url: urls[index], error: result.reason });
         return [];
       })
       .toSorted((entryA, entryB) => {

@@ -1,16 +1,25 @@
 import { Response } from "undici";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { timetableGetTimetableRequestHandler, timetableSearchStationsRequestHandler } from "./timetable";
 import { normalizeTimetableBaseUrl, readBoundedTimetableJsonAsync } from "./timetable-url";
 
-vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
+vi.mock("@homarr/core/infrastructure/http", () => ({
+  createCertificateAgentAsync: vi.fn(),
+  fetchWithTrustedCertificatesAsync: vi.fn(),
+}));
 
 const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
+const mockCreateCertificateAgent = vi.mocked(createCertificateAgentAsync);
+const mockCloseDispatcher = vi.fn();
+const mockDispatcher = { close: mockCloseDispatcher };
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockCreateCertificateAgent.mockResolvedValue(mockDispatcher as never);
+});
 
 describe("normalizeTimetableBaseUrl", () => {
   it("normalizes an HTTP endpoint", () => {
@@ -53,6 +62,58 @@ describe("timetable response bounds", () => {
       expect.any(String),
       expect.objectContaining({ redirect: "error", bodyTimeout: 10_000 }),
     );
+  });
+
+  it("pins the vetted address into a direct connection without changing the request hostname", async () => {
+    mockFetch.mockResolvedValue(
+      new Response(JSON.stringify([{ id: "station", label: "Station", iconclass: "train" }])),
+    );
+    const pinnedAddresses = [
+      { address: "93.184.216.34", family: 4 as const },
+      { address: "2606:2800:220:1:248:1893:25c8:1946", family: 6 as const },
+    ];
+
+    await timetableSearchStationsRequestHandler
+      .handler({
+        baseUrl: "https://timetable.example.com",
+        query: "pinned-stations",
+        pinnedAddresses,
+      })
+      .getDataAsync();
+
+    expect(mockCreateCertificateAgent).toHaveBeenCalledWith(
+      { lookup: expect.any(Function) },
+      {
+        autoSelectFamily: true,
+        bodyTimeout: 10_000,
+        httpProxy: "",
+        httpsProxy: "",
+        noProxy: "*",
+      },
+    );
+    const requestUrl = mockFetch.mock.calls[0]?.[0];
+    expect(new URL(String(requestUrl)).hostname).toBe("timetable.example.com");
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({ dispatcher: mockDispatcher, redirect: "error" }),
+    );
+
+    const pinnedLookup = mockCreateCertificateAgent.mock.calls[0]?.[0]?.lookup;
+    expect(pinnedLookup).toBeTypeOf("function");
+    if (!pinnedLookup) throw new Error("Expected a pinned lookup function");
+
+    const lookupCallback = vi.fn();
+    pinnedLookup("timetable.example.com", { all: true }, lookupCallback);
+    expect(lookupCallback).toHaveBeenCalledWith(null, pinnedAddresses);
+
+    const repeatedLookupCallback = vi.fn();
+    pinnedLookup("timetable.example.com", { all: true }, repeatedLookupCallback);
+    expect(repeatedLookupCallback).toHaveBeenCalledWith(null, pinnedAddresses);
+
+    const unexpectedHostCallback = vi.fn();
+    pinnedLookup("different.example.com", { all: true }, unexpectedHostCallback);
+    expect(unexpectedHostCallback.mock.calls[0]?.[0]).toMatchObject({ code: "ENOTFOUND" });
+    expect(mockCloseDispatcher).toHaveBeenCalledOnce();
   });
 
   it("never caches more departures than requested", async () => {

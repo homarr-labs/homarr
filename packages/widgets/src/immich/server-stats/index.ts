@@ -1,11 +1,12 @@
 import { IconGraphFilled } from "@tabler/icons-react";
 
-import { createWidgetDefinition } from "../../definition";
+import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../../definition";
 import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("immich-serverStats", {
   icon: IconGraphFilled,
-  queryKey: [["widget", "immich"]],
+  queryKeys: [[["widget", "immich", "getServerStats"]], [["widget", "immich", "getAlbums"]]],
+  queryMatcher: matchesWidgetRuntimeQuery,
   refetchInterval: null,
   supportedIntegrations: ["immich"],
   integrationsRequired: true,

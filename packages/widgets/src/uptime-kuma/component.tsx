@@ -201,7 +201,8 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
                   {monitor.name}
                 </Text>
                 <Badge size="xs" color="red">
-                  {t("status.down")} · {formatNumber(monitor.uptimePercent24h ?? 0, 1)}%
+                  {t("status.down")} ·{" "}
+                  {monitor.uptimePercent24h === null ? "—" : `${formatNumber(monitor.uptimePercent24h, 1)}%`}
                 </Badge>
               </Group>
             ))}

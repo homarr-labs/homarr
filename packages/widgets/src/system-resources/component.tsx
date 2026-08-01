@@ -136,7 +136,7 @@ const SystemCharts = ({
   showTitle,
 }: SystemChartsProps) => {
   const showNetwork =
-    items.length > 0 && items.every((item) => item.network !== null) && options.visibleCharts.includes("network");
+    items.length > 0 && items[items.length - 1]?.network !== null && options.visibleCharts.includes("network");
   const chartCount = options.visibleCharts.filter((chart) => chart !== "network").length + Number(showNetwork);
   const chartColumns = isAdvanced && width >= 560 ? 2 : 1;
   const chartHeight = isAdvanced

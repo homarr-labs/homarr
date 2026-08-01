@@ -1,6 +1,6 @@
 import { IconBuildingBank } from "@tabler/icons-react";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const stockPriceTimeFrames = {
@@ -13,6 +13,13 @@ const timeIntervalOptions = stockPriceTimeFrames.interval;
 
 export const { definition, componentLoader } = createWidgetDefinition("stockPrice", {
   icon: IconBuildingBank,
+  queryKey: [["widget", "stockPrice", "getPriceHistory"]],
+  queryMatcher: ({ input }, scope) =>
+    widgetQueryInputMatches(input, {
+      stock: scope.options.stock,
+      timeRange: scope.options.timeRange,
+      timeInterval: scope.options.timeInterval,
+    }),
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({

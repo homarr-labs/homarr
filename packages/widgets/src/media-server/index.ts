@@ -2,11 +2,17 @@ import { IconVideo } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaServer", {
   icon: IconVideo,
+  queryKey: [["widget", "mediaServer", "getCurrentStreams"]],
+  queryMatcher: ({ input }, scope) =>
+    widgetQueryInputMatches(input, {
+      integrationIds: scope.integrationIds,
+      showOnlyPlaying: scope.options.showOnlyPlaying,
+    }),
   refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from((factory) => ({

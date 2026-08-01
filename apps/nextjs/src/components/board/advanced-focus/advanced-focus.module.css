@@ -135,7 +135,7 @@
 @media (prefers-reduced-motion: reduce) {
   .backdrop,
   .surface {
-    animation-duration: 1ms;
+    animation: none;
   }
 }
 

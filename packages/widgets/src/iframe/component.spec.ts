@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getAllowedPermissions, getSandboxFlags, isSupportedProtocol } from "./component";
+import { getAllowedPermissions, getFrameTitle, getSandboxFlags, isSupportedProtocol } from "./component";
 
 const permissions = {
   allowFullScreen: true,
@@ -22,5 +22,13 @@ describe("iframe policy", () => {
     expect(isSupportedProtocol("https://example.com")).toBe(true);
     expect(isSupportedProtocol("javascript:alert(1)")).toBe(false);
     expect(isSupportedProtocol("not a url")).toBe(false);
+  });
+
+  it("creates a display title without credentials, paths, or query parameters", () => {
+    expect(getFrameTitle("https://user:secret@example.com/private?token=sensitive")).toBe("example.com");
+  });
+
+  it("keeps a non-default port in the display title", () => {
+    expect(getFrameTitle("http://user:secret@example.com:8080/private?token=sensitive")).toBe("example.com:8080");
   });
 });

@@ -4,14 +4,23 @@ import { z } from "zod/v4";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { openMediaRequestSearch } from "@homarr/spotlight";
 
-import { createWidgetDefinition } from "../../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../../definition";
 import { optionsBuilder } from "../../options";
 
 const mediaRequestStatusValues = ["pending", "approved", "declined", "failed", "completed"] as const;
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestList", {
   icon: IconZoomQuestion,
-  queryKey: [["widget", "mediaRequests"]],
+  queryKey: [["widget", "mediaRequests", "getLatestRequests"]],
+  queryMatcher: ({ input }, scope) =>
+    widgetQueryInputMatches(input, {
+      integrationIds: scope.integrationIds,
+      statuses:
+        Array.isArray(scope.options.statusFilter) && scope.options.statusFilter.length > 0
+          ? scope.options.statusFilter
+          : mediaRequestStatusValues,
+      recentDays: scope.options.recentDays,
+    }),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       linksTargetNewTab: factory.switch({

@@ -67,12 +67,15 @@ import * as customApi from "./custom-api";
 import * as wud from "./wud";
 
 export type {
+  NormalizedWidgetQuery,
   WidgetDefinition,
   WidgetContextMenuAction,
   WidgetContextActionProps,
   WidgetOptionsSettings,
+  WidgetQueryMatcher,
+  WidgetQueryMatcherScope,
 } from "./definition";
-export { getWidgetQueryKeys } from "./definition";
+export { getWidgetQueryKeys, getWidgetRuntimeQueries } from "./definition";
 export type { WidgetComponentProps };
 export type { WidgetOptionDefinition, WidgetOptionType } from "./options";
 

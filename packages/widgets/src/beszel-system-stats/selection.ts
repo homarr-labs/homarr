@@ -24,9 +24,25 @@ export function createBeszelSystemChoices(results: BeszelSystemsResult[]): Besze
 }
 
 export function resolveBeszelSystemChoice(choices: BeszelSystemChoice[], storedValue: string) {
-  return (
-    choices.find((choice) => choice.value === storedValue) ??
-    choices.find((choice) => choice.systemId === storedValue) ??
-    choices[0]
-  );
+  const exactMatch = choices.find((choice) => choice.value === storedValue);
+  if (exactMatch) return exactMatch;
+  if (storedValue === "") return choices[0];
+
+  const legacyMatches = choices.filter((choice) => choice.systemId === storedValue);
+  return legacyMatches.length === 1 ? legacyMatches[0] : undefined;
+}
+
+export function resolveStoredBeszelQuerySelection(storedValue: string, integrationIds: readonly string[]) {
+  for (const integrationId of integrationIds) {
+    const prefix = `${integrationId}:`;
+    if (storedValue.startsWith(prefix)) {
+      return { integrationIds: [integrationId], systemId: storedValue.slice(prefix.length) };
+    }
+  }
+
+  if (storedValue !== "" && integrationIds.length === 1) {
+    return { integrationIds: [integrationIds[0] as string], systemId: storedValue };
+  }
+
+  return null;
 }

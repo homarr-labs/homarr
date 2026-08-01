@@ -76,6 +76,7 @@ describe("Board advanced interactions", () => {
       await page.keyboard.down("Shift");
       await widget.hover();
       await expect(advancedDialog).toBeVisible({ timeout: 2_000 });
+      await expect(advancedDialog).toHaveCSS("animation-name", "none");
       const advancedBounds = await advancedDialog.boundingBox();
       expect(advancedBounds?.width).toBeGreaterThanOrEqual(900);
       await expect(advancedDialog).toHaveAttribute("data-lifecycle-probe", "same-instance");
@@ -280,7 +281,7 @@ const touchAndHoldEmptyGridSpaceAsync = async (grid: Locator) => {
   const clientX = bounds.x + bounds.width - 16;
   const clientY = bounds.y + Math.min(24, bounds.height / 2);
   await grid.dispatchEvent("pointerdown", { pointerType: "touch", clientX, clientY });
-  await new Promise((resolve) => setTimeout(resolve, 550));
+  await new Promise((resolve) => setTimeout(resolve, 800));
   await grid.dispatchEvent("pointerup", { pointerType: "touch", clientX, clientY });
 };
 
@@ -310,7 +311,7 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
       id: iframeItemId,
       kind: "iframe",
       boardId,
-      options: stringify({ embedUrl: "https://example.com", allowScrolling: true }),
+      options: stringify({ embedUrl: "http://127.0.0.1:9", allowScrolling: true }),
       advancedOptions: stringify({ title: null, customCssClasses: [], borderColor: "" }),
     },
   ]);

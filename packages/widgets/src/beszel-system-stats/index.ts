@@ -2,9 +2,9 @@ import { IconChartAreaLine, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
-import { createBeszelSystemChoices } from "./selection";
+import { createBeszelSystemChoices, resolveStoredBeszelQuerySelection } from "./selection";
 
 const timePeriodOptions = [
   { value: "1m", label: "Live" },
@@ -17,7 +17,29 @@ const timePeriodOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemStats", {
   icon: IconChartAreaLine,
-  queryKey: [["widget", "beszel"]],
+  queryKeys: [[["widget", "beszel", "getSystems"]], [["widget", "beszel", "getSystemStats"]]],
+  queryMatcher(query, scope) {
+    if (query.path.at(-1) === "getSystems") {
+      return widgetQueryInputMatches(query.input, { integrationIds: scope.integrationIds });
+    }
+
+    const hasRuntimeStatsQuery = scope.runtimeQueries.some(({ path }) => path.at(-1) === "getSystemStats");
+    if (hasRuntimeStatsQuery) return matchesWidgetRuntimeQuery(query, scope);
+
+    const selection = resolveStoredBeszelQuerySelection(String(scope.options.systemId ?? ""), scope.integrationIds);
+    if (!selection) return false;
+    const dockerEnabled = ["showDockerCpu", "showDockerMemory", "showDockerNetwork"].some(
+      (key) => scope.options[key] === true,
+    );
+    const expected = {
+      ...selection,
+      timePeriod: scope.options.timePeriod,
+    };
+    return (
+      widgetQueryInputMatches(query.input, { ...expected, includeDocker: false }) ||
+      (dockerEnabled && widgetQueryInputMatches(query.input, { ...expected, includeDocker: true }))
+    );
+  },
   supportedIntegrations: ["beszel", "mock"],
   integrationsRequired: true,
   createOptions() {
