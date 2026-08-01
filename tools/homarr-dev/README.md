@@ -5,17 +5,17 @@ Build and launch local Homarr images and GHCR pull-request builds, then manage t
 ## Requirements
 
 - Docker or OrbStack
-- GitHub CLI authenticated with `gh auth login`
 - Go 1.25+ to build from source
+- GitHub CLI authenticated with `gh auth login` for pull-request features
 
 ## Setup
 
 ```sh
 pnpm install
-pnpm db:migration:sqlite:run
 ```
 
-The migration command also seeds a new database. Use `pnpm db:seed` explicitly when you need to reseed an existing database. Start Redis separately with `pnpm docker:dev:up` when it is needed.
+Create `.env` from `.env.example` and set `DB_URL` to an absolute path for the SQLite file before running the migration. In a POSIX shell, use `cp .env.example .env`; in PowerShell, use `Copy-Item .env.example .env`.
+Then run `pnpm db:migration:sqlite:run` to create or update the database. The migration command also seeds a new database. Use `pnpm db:seed` explicitly when you need to seed an existing database. Start Redis separately with `pnpm docker:dev:up` when it is needed.
 The examples below use `pnpm dev:cli -- ...`, which works from POSIX shells and PowerShell. If you prefer a global command, install it with `pnpm dev:cli:install` and add your Go bin directory to `PATH`.
 
 ## Build
@@ -57,7 +57,7 @@ homarr open <container>    Open in browser
 homarr stop <container>    Stop
 homarr restart <container> Restart
 homarr remove <container>  Force-remove
-homarr doctor              Check Docker, GitHub auth, and PATH
+homarr doctor              Check Docker and optional CLI integrations
 ```
 
 ## Development Browser

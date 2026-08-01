@@ -49,7 +49,7 @@ Examples:
   homarr build --pr 6390        # build PR #6390 locally as homarr:pr-6390
   homarr list                   # script-friendly instance list
   homarr logs homarr_pr_6390    # follow logs
-  homarr doctor                 # verify dependencies`,
+  homarr doctor                 # check Docker and optional integrations`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return cmd.Help()
@@ -207,28 +207,27 @@ var listCmd = &cobra.Command{
 
 var doctorCmd = &cobra.Command{
 	Use:   "doctor",
-	Short: "Check Docker, GitHub CLI, and local installation",
+	Short: "Check Docker and optional developer CLI integrations",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		checks := []struct {
-			name    string
-			command *exec.Cmd
-		}{
-			{name: "Docker daemon", command: exec.Command("docker", "info", "--format", "{{.ServerVersion}}")},
-			{name: "GitHub authentication", command: exec.Command("gh", "auth", "status")},
-		}
 		failed := false
-		for _, check := range checks {
-			output, err := check.command.CombinedOutput()
-			if err != nil {
-				failed = true
-				fmt.Printf("✗ %s: %s\n", check.name, strings.TrimSpace(string(output)))
-			} else {
-				fmt.Printf("✓ %s\n", check.name)
-			}
-		}
-		if _, err := exec.LookPath("homarr"); err != nil {
+		output, err := exec.Command("docker", "info", "--format", "{{.ServerVersion}}").CombinedOutput()
+		if err != nil {
 			failed = true
-			fmt.Println("✗ homarr is not on PATH")
+			fmt.Printf("✗ Docker daemon: %s\n", strings.TrimSpace(string(output)))
+		} else {
+			fmt.Printf("✓ Docker daemon: %s\n", strings.TrimSpace(string(output)))
+		}
+
+		if _, err := exec.LookPath("gh"); err != nil {
+			fmt.Println("- GitHub CLI not found (optional; required for pull-request features)")
+		} else if output, err := exec.Command("gh", "auth", "status").CombinedOutput(); err != nil {
+			fmt.Printf("- GitHub CLI is not authenticated (optional; run `gh auth login` for pull-request features): %s\n", strings.TrimSpace(string(output)))
+		} else {
+			fmt.Println("✓ GitHub CLI authentication")
+		}
+
+		if _, err := exec.LookPath("homarr"); err != nil {
+			fmt.Println("- homarr is not on PATH (optional; use `pnpm dev:cli -- ...` or run `pnpm dev:cli:install`)")
 		} else {
 			fmt.Println("✓ homarr is on PATH")
 		}
