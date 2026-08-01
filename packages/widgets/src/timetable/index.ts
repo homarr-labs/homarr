@@ -15,9 +15,11 @@ export const { componentLoader, definition } = createWidgetDefinition("timetable
         validate: z.string().url(),
       }),
       station: factory.dynamicSelect({
-        useOptions(query, _integrationIds, options) {
+        useOptions(query, _integrationIds, options, itemId, boardId) {
           const { data: stations, isPending } = clientApi.widget.timetable.searchStations.useQuery({
             baseUrl: typeof options.baseUrl === "string" ? options.baseUrl : "https://search.ch",
+            itemId,
+            boardId,
             query,
           });
 

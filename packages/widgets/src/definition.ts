@@ -26,6 +26,7 @@ export interface WidgetContextMenuContext {
   isEditMode: boolean;
   boardId: string | undefined;
   itemId: string | undefined;
+  canInteractWithSelectedIntegrations: boolean;
 }
 
 export interface WidgetContextActionProps<
@@ -70,6 +71,7 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
 export interface WidgetDefinition {
   icon: TablerIcon;
   queryKey?: QueryKey;
+  queryKeys?: readonly QueryKey[];
   refetchInterval?: number | null;
   supportedIntegrations?: IntegrationKind[];
   integrationsRequired?: boolean;
@@ -90,6 +92,15 @@ export interface WidgetDefinition {
   contextActions?: (props: Omit<WidgetContextActionProps<WidgetKind>, "kind">) => WidgetContextMenuAction[];
 }
 
+export const getWidgetQueryKeys = (definition: {
+  kind: string;
+  queryKey?: QueryKey;
+  queryKeys?: readonly QueryKey[];
+}): readonly QueryKey[] => {
+  if (definition.queryKeys && definition.queryKeys.length > 0) return definition.queryKeys;
+  return [definition.queryKey ?? [["widget", definition.kind]]];
+};
+
 export interface WidgetProps<TKind extends WidgetKind> {
   options: inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>;
   integrationIds: string[];
@@ -99,6 +110,7 @@ export interface WidgetProps<TKind extends WidgetKind> {
 export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> & {
   boardId: string | undefined; // undefined when in preview mode
   isEditMode: boolean;
+  displayMode?: "compact" | "advanced";
   setOptions: ({ newOptions }: { newOptions: Partial<inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>> }) => void;
   width: number;
   height: number;

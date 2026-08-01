@@ -1,4 +1,4 @@
-import { IconPhoto } from "@tabler/icons-react";
+import { IconChevronLeft, IconChevronRight, IconPhoto, IconPlayerPause } from "@tabler/icons-react";
 import z from "zod";
 
 import { clientApi } from "@homarr/api/client";
@@ -14,6 +14,37 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-al
   refetchInterval: null,
   supportedIntegrations: ["immich"],
   integrationsRequired: true,
+  maxIntegrations: 1,
+  contextActions({ widgetStateRef }) {
+    const call = (key: string) => () => {
+      const action = widgetStateRef.current?.[key];
+      if (typeof action === "function") action();
+    };
+    const disabled = (key: string) => typeof widgetStateRef.current?.[key] !== "function";
+    return [
+      {
+        key: "previousPhoto",
+        label: (t) => t("widget.immich-albumCarousel.actions.previousPhoto"),
+        icon: IconChevronLeft,
+        disabled: disabled("previousPhoto"),
+        onClick: call("previousPhoto"),
+      },
+      {
+        key: "nextPhoto",
+        label: (t) => t("widget.immich-albumCarousel.actions.nextPhoto"),
+        icon: IconChevronRight,
+        disabled: disabled("nextPhoto"),
+        onClick: call("nextPhoto"),
+      },
+      {
+        key: "toggleSlideshow",
+        label: (t) => t("widget.immich-albumCarousel.actions.toggleSlideshow"),
+        icon: IconPlayerPause,
+        disabled: disabled("toggleSlideshow"),
+        onClick: call("toggleSlideshow"),
+      },
+    ];
+  },
   createOptions() {
     return optionsBuilder.from((factory) => ({
       albumId: factory.integrationSelect({

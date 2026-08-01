@@ -16,7 +16,7 @@ dayjs.extend(advancedFormat);
 dayjs.extend(utc);
 dayjs.extend(timezones);
 
-export default function ClockWidget({ options, width }: WidgetComponentProps<"clock">) {
+export default function ClockWidget({ options, width, height, displayMode }: WidgetComponentProps<"clock">) {
   const secondsFormat = options.showSeconds ? ":ss" : "";
   const timeFormat = options.is24HourFormat ? `HH:mm${secondsFormat}` : `hh:mm${secondsFormat} A`;
   const dateFormat = options.dateFormat;
@@ -25,7 +25,8 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
   const timezone = options.useCustomTimezone ? options.timezone : Intl.DateTimeFormat().resolvedOptions().timeZone;
   const time = useCurrentTime(options);
 
-  const sizing = width < 128 ? "xs" : width < 196 ? "sm" : "md";
+  const minimumAxis = Math.min(width, height * 1.5);
+  const sizing = minimumAxis < 128 ? "xs" : minimumAxis < 196 ? "sm" : "md";
   const showWeatherCorner = options.showWeather && sizing !== "xs";
 
   return (
@@ -35,6 +36,7 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
           latitude={options.weatherLocation.latitude}
           longitude={options.weatherLocation.longitude}
           isFahrenheit={options.isWeatherFormatFahrenheit}
+          showDetails={displayMode === "advanced"}
         />
       )}
       <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap={sizing}>
@@ -44,15 +46,22 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
           </Text>
         )}
         <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
-          {options.customTimeFormat
-            ? dayjs(time).tz(timezone).format(customTimeFormat)
-            : dayjs(time).tz(timezone).format(timeFormat)}
+          <time dateTime={dayjs(time).tz(timezone).toISOString()}>
+            {options.customTimeFormat
+              ? dayjs(time).tz(timezone).format(customTimeFormat)
+              : dayjs(time).tz(timezone).format(timeFormat)}
+          </time>
         </Title>
         {options.showDate && (
           <Text className="clock-date-text" size={sizing} lineClamp={1}>
             {options.customDateFormat
               ? dayjs(time).tz(timezone).format(customDateFormat)
               : dayjs(time).tz(timezone).format(dateFormat)}
+          </Text>
+        )}
+        {displayMode === "advanced" && (
+          <Text size="xs" c="dimmed" lineClamp={1}>
+            {timezone} · UTC{dayjs(time).tz(timezone).format("Z")}
           </Text>
         )}
       </Stack>
@@ -64,9 +73,10 @@ interface ClockWeatherCornerProps {
   latitude: number;
   longitude: number;
   isFahrenheit: boolean;
+  showDetails: boolean;
 }
 
-const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit }: ClockWeatherCornerProps) => {
+const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit, showDetails }: ClockWeatherCornerProps) => {
   const { data: weather } = clientApi.widget.weather.atLocation.useQuery({ latitude, longitude });
 
   if (!weather) return null;
@@ -81,6 +91,11 @@ const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit }: ClockWeatherC
         {Math.round(temp)}
         {unit}
       </Text>
+      {showDetails && (
+        <Text size="xs" c="dimmed">
+          {Math.round(weather.current.windspeed)} km/h
+        </Text>
+      )}
     </Stack>
   );
 };

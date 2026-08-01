@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Accordion, Center, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
 import { IconBrain, IconCpu, IconCube, IconDatabase, IconDeviceLaptop, IconServer } from "@tabler/icons-react";
 
@@ -8,6 +9,7 @@ import { useI18n } from "@homarr/translation/client";
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { formatUptime } from "../system-health";
+import { getClusterAccordionDefault } from "./accordion-state";
 import { ResourceAccordionItem } from "./resource-accordion-item";
 import { ResourceTable } from "./resource-table";
 
@@ -33,11 +35,16 @@ export const ClusterHealthMonitoring = ({
   integrationId,
   options,
   width,
+  displayMode,
 }: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
   const t = useI18n();
   const { data: healthData } = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({
     integrationId,
   });
+  const accordionScope = `${displayMode}:${options.visibleClusterSections.join(",")}`;
+  const accordionDefault = getClusterAccordionDefault(displayMode, options.visibleClusterSections);
+  const [accordionValues, setAccordionValues] = useState<Record<string, string[]>>({});
+  const accordionValue = accordionValues[accordionScope] ?? accordionDefault;
 
   if (!healthData) return <WidgetEmptyState />;
 
@@ -53,15 +60,13 @@ export const ClusterHealthMonitoring = ({
     (sum, item) => (item.isRunning ? item.cpu.utilization * item.cpu.cores + sum : sum),
     0,
   );
-  const uptime = healthData.nodes.reduce((sum, { uptime }) => (sum > uptime ? sum : uptime), 0);
+  const uptime = healthData.nodes.reduce((sum, { uptime: nodeUptime }) => (sum > nodeUptime ? sum : nodeUptime), 0);
 
   const cpuPercent = maxCpu ? (usedCpu / maxCpu) * 100 : 0;
   const memPercent = maxMem ? (usedMem / maxMem) * 100 : 0;
-  const defaultValue = [options.visibleClusterSections.at(0) ?? "node"];
-
-  const isTiny = width < 256;
+  const isTiny = displayMode !== "advanced" && width < 256;
   return (
-    <Stack h="100%" p="xs" gap={isTiny ? "xs" : "md"}>
+    <Stack h={displayMode === "advanced" ? "auto" : "100%"} p="xs" gap={isTiny ? "xs" : "md"}>
       {options.showUptime && (
         <Group justify="center" wrap="nowrap">
           <Text fz={isTiny ? 8 : "xs"} tt="uppercase" fw={700} c="dimmed" ta="center">
@@ -81,7 +86,13 @@ export const ClusterHealthMonitoring = ({
         isTiny={isTiny}
       />
       {options.visibleClusterSections.length >= 1 && (
-        <Accordion variant="contained" chevronPosition="right" multiple defaultValue={defaultValue}>
+        <Accordion
+          variant="contained"
+          chevronPosition="right"
+          multiple
+          value={accordionValue}
+          onChange={(value) => setAccordionValues((current) => ({ ...current, [accordionScope]: value }))}
+        >
           {options.visibleClusterSections.includes("node") && (
             <ResourceAccordionItem
               value="node"

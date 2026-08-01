@@ -17,6 +17,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
+import { getDockerColumnVisibility } from "./layout";
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useScopedI18n("docker.field.state.option");
@@ -35,6 +36,7 @@ const actionIconIconStyle: IconProps["style"] = {
 
 const createColumns = (
   t: ReturnType<typeof useScopedI18n<"docker">>,
+  isEditMode: boolean,
 ): MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] => [
   {
     id: "name",
@@ -160,6 +162,7 @@ const createColumns = (
               variant="subtle"
               size="xs"
               radius="100%"
+              disabled={isEditMode}
               onClick={() => handleActionAsync(row.original.state === "running" ? "stop" : "start")}
             >
               {row.original.state === "running" ? (
@@ -170,7 +173,13 @@ const createColumns = (
             </ActionIcon>
           </Tooltip>
           <Tooltip label={t("action.restart.label")}>
-            <ActionIcon variant="subtle" size="xs" radius="100%" onClick={() => handleActionAsync("restart")}>
+            <ActionIcon
+              variant="subtle"
+              size="xs"
+              radius="100%"
+              disabled={isEditMode}
+              onClick={() => handleActionAsync("restart")}
+            >
               <IconRotateClockwise style={actionIconIconStyle} />
             </ActionIcon>
           </Tooltip>
@@ -180,12 +189,18 @@ const createColumns = (
   },
 ];
 
-export default function DockerWidget({ options, width, isEditMode }: WidgetComponentProps<"dockerContainers">) {
+export default function DockerWidget({
+  options,
+  width,
+  isEditMode,
+  displayMode,
+}: WidgetComponentProps<"dockerContainers">) {
   const t = useScopedI18n("docker");
-  const isTiny = width <= 256;
+  const isAdvanced = displayMode === "advanced";
+  const isTiny = !isAdvanced && width <= 256;
 
   const { data, refetch, isFetching } = clientApi.docker.getContainers.useQuery();
-  const containers = data?.containers ?? [];
+  const containers = useMemo(() => data?.containers ?? [], [data?.containers]);
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
 
@@ -202,33 +217,26 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
     );
   }, [containers]);
 
-  const columns = useMemo(() => createColumns(t), [t]);
+  const columns = useMemo(() => createColumns(t, isEditMode), [isEditMode, t]);
 
-  const columnVisibility: MRT_VisibilityState = {
-    name: options.columns.includes("name"),
-    state: options.columns.includes("state"),
-    host: options.columns.includes("host"),
-    cpuUsage: options.columns.includes("cpuUsage"),
-    memoryUsage: options.columns.includes("memoryUsage"),
-    actions: options.columns.includes("actions"),
-  };
+  const columnVisibility: MRT_VisibilityState = getDockerColumnVisibility(options.columns, width, isAdvanced);
 
   const table = useTranslatedMantineReactTable({
     columns,
     data: containers,
     enablePagination: false,
-    enableTopToolbar: false,
+    enableTopToolbar: isAdvanced,
     enableBottomToolbar: false,
-    enableColumnActions: false,
-    enableSorting: options.enableRowSorting && !isEditMode,
-    enableStickyHeader: false,
-    enableColumnOrdering: false,
+    enableColumnActions: isAdvanced,
+    enableSorting: (isAdvanced || options.enableRowSorting) && !isEditMode,
+    enableStickyHeader: isAdvanced,
+    enableColumnOrdering: isAdvanced && !isEditMode,
     enableRowSelection: false,
     enableFullScreenToggle: false,
-    enableGlobalFilter: false,
+    enableGlobalFilter: isAdvanced,
     enableDensityToggle: false,
     enableFilters: false,
-    enableHiding: false,
+    enableHiding: isAdvanced,
     initialState: {
       sorting: [{ id: options.defaultSort, desc: options.descendingDefaultSort }],
       density: "xs",
@@ -259,11 +267,12 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
     mantineTableContainerProps: {
       style: {
         height: "100%",
+        pointerEvents: isEditMode ? "none" : undefined,
       },
     },
   });
 
-  if (options.columns.length === 0)
+  if (!isAdvanced && options.columns.length === 0)
     return (
       <Center h="100%">
         <Text>{t("error.noColumns")}</Text>
@@ -274,7 +283,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
     <Stack gap={0} h="100%" display="flex">
       <MantineReactTable table={table} />
 
-      {!isTiny && (
+      {(isAdvanced || !isTiny) && (
         <Group
           justify="space-between"
           style={{

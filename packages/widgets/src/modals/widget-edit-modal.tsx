@@ -8,6 +8,7 @@ import { z } from "zod/v4";
 
 import { objectEntries } from "@homarr/common";
 import { useSession } from "@homarr/auth/client";
+import { useOptionalBoard } from "@homarr/boards/context";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
@@ -40,11 +41,13 @@ interface ModalProps<TSort extends WidgetKind> {
   integrationSupport: boolean;
   settings: SettingsContextProps;
   itemId?: string;
+  boardId?: string;
   appId?: string;
 }
 
 export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, innerProps }) => {
   const t = useI18n();
+  const board = useOptionalBoard();
   const { data: session } = useSession();
   const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
   const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
@@ -154,6 +157,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
             options={value as never}
             initialOptions={innerProps.value.options}
             itemId={innerProps.itemId}
+            boardId={innerProps.boardId ?? board?.id}
           />
         );
       })}

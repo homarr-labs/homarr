@@ -1,0 +1,213 @@
+"use client";
+
+import type { PropsWithChildren } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Box, Portal, RemoveScroll } from "@mantine/core";
+
+import { useEditMode } from "@homarr/boards/edit-mode";
+
+import classes from "./advanced-focus.module.css";
+import { isEscapeOwnedByNestedOverlay } from "./escape";
+import type { FocusRect } from "./geometry";
+
+interface ActiveFocus {
+  itemId: string;
+  source: HTMLElement;
+  sourceRect: FocusRect;
+  pinned: boolean;
+  autofocusClose: boolean;
+  phase: "visible" | "closing";
+}
+
+interface AdvancedFocusContextValue {
+  active: ActiveFocus | null;
+  open: (itemId: string, source: HTMLElement, pinned?: boolean) => void;
+  close: (restoreFocus?: boolean) => void;
+  dismiss: (itemId: string) => void;
+  pin: (autofocusClose?: boolean) => void;
+  hover: (itemId: string, source: HTMLElement) => void;
+  leave: (itemId: string) => void;
+}
+
+const AdvancedFocusContext = createContext<AdvancedFocusContextValue | null>(null);
+const HOVER_DELAY_MS = 150;
+const CLOSE_DURATION_MS = 180;
+
+const isEditableTarget = (target: EventTarget | null) =>
+  target instanceof HTMLElement &&
+  (target.matches("input, textarea, select, [contenteditable='true']") || target.isContentEditable);
+
+export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
+  const [isEditMode] = useEditMode();
+  const [active, setActive] = useState<ActiveFocus | null>(null);
+  const activeRef = useRef<ActiveFocus | null>(null);
+  const hoveredRef = useRef<{ itemId: string; source: HTMLElement } | null>(null);
+  const shiftHeldRef = useRef(false);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelHoverTimer = useCallback(() => {
+    if (hoverTimerRef.current === null) return;
+    clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = null;
+  }, []);
+
+  const updateActive = useCallback((next: ActiveFocus | null) => {
+    activeRef.current = next;
+    setActive(next);
+  }, []);
+
+  const cancelCloseTimer = useCallback(() => {
+    if (closeTimerRef.current === null) return;
+    clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = null;
+  }, []);
+
+  const open = useCallback(
+    (itemId: string, source: HTMLElement, pinned = false) => {
+      if (isEditMode) return;
+      cancelHoverTimer();
+      cancelCloseTimer();
+      const rect = source.getBoundingClientRect();
+      updateActive({
+        itemId,
+        source,
+        sourceRect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
+        pinned,
+        autofocusClose: pinned,
+        phase: "visible",
+      });
+    },
+    [cancelCloseTimer, cancelHoverTimer, isEditMode, updateActive],
+  );
+
+  const close = useCallback(
+    (restoreFocus = true) => {
+      cancelHoverTimer();
+      const current = activeRef.current;
+      if (!current || current.phase === "closing") return;
+      updateActive({ ...current, phase: "closing" });
+      const closeDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : CLOSE_DURATION_MS;
+      closeTimerRef.current = setTimeout(() => {
+        closeTimerRef.current = null;
+        updateActive(null);
+        if (restoreFocus && current.source.isConnected) requestAnimationFrame(() => current.source.focus());
+      }, closeDuration);
+    },
+    [cancelHoverTimer, updateActive],
+  );
+
+  const startHoverTimer = useCallback(() => {
+    cancelHoverTimer();
+    const hovered = hoveredRef.current;
+    if (!hovered || !shiftHeldRef.current || activeRef.current) return;
+    hoverTimerRef.current = setTimeout(() => open(hovered.itemId, hovered.source), HOVER_DELAY_MS);
+  }, [cancelHoverTimer, open]);
+
+  const hover = useCallback(
+    (itemId: string, source: HTMLElement) => {
+      hoveredRef.current = { itemId, source };
+      startHoverTimer();
+    },
+    [startHoverTimer],
+  );
+
+  const leave = useCallback(
+    (itemId: string) => {
+      if (hoveredRef.current?.itemId === itemId) hoveredRef.current = null;
+      cancelHoverTimer();
+    },
+    [cancelHoverTimer],
+  );
+
+  const dismiss = useCallback(
+    (itemId: string) => {
+      if (activeRef.current?.itemId !== itemId) return;
+      cancelHoverTimer();
+      cancelCloseTimer();
+      updateActive(null);
+    },
+    [cancelCloseTimer, cancelHoverTimer, updateActive],
+  );
+
+  const pin = useCallback(
+    (autofocusClose = false) => {
+      const current = activeRef.current;
+      if (!current || current.pinned || current.phase === "closing") return;
+      updateActive({ ...current, pinned: true, autofocusClose });
+    },
+    [updateActive],
+  );
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && activeRef.current) {
+        const advancedSurface = document.querySelector(`.${classes.surface}`);
+        if (event.defaultPrevented || event.isComposing || isEscapeOwnedByNestedOverlay(event.target, advancedSurface))
+          return;
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (isEditMode) return;
+      if (event.key !== "Shift" || event.repeat || isEditableTarget(event.target)) return;
+      if (activeRef.current?.pinned) return;
+      shiftHeldRef.current = true;
+      startHoverTimer();
+    };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key !== "Shift") return;
+      shiftHeldRef.current = false;
+      cancelHoverTimer();
+      if (activeRef.current && !activeRef.current.pinned) close(false);
+    };
+    const handleBlur = () => {
+      shiftHeldRef.current = false;
+      cancelHoverTimer();
+      if (activeRef.current && !activeRef.current.pinned) close(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("blur", handleBlur);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("blur", handleBlur);
+      cancelHoverTimer();
+      cancelCloseTimer();
+    };
+  }, [cancelCloseTimer, cancelHoverTimer, close, isEditMode, startHoverTimer]);
+
+  useEffect(() => {
+    if (isEditMode && activeRef.current) close(false);
+  }, [close, isEditMode]);
+
+  const value = useMemo(
+    () => ({ active, open, close, dismiss, pin, hover, leave }),
+    [active, close, dismiss, hover, leave, open, pin],
+  );
+
+  return (
+    <AdvancedFocusContext.Provider value={value}>
+      <RemoveScroll enabled={active !== null} className={classes.focusScope}>
+        {children}
+      </RemoveScroll>
+      {active && (
+        <Portal>
+          <Box
+            className={`${classes.backdrop} ${active.phase === "closing" ? classes.backdropClosing : ""}`}
+            onPointerDown={() => close()}
+            aria-hidden
+          />
+        </Portal>
+      )}
+    </AdvancedFocusContext.Provider>
+  );
+};
+
+export const useAdvancedFocus = () => {
+  const context = useContext(AdvancedFocusContext);
+  if (!context) throw new Error("useAdvancedFocus must be used within BoardAdvancedFocusProvider");
+  return context;
+};

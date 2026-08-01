@@ -11,6 +11,8 @@ export const views = ["workers", "queue", "statistics"] as const;
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaTranscoding", {
   icon: IconTransform,
+  queryKey: [["widget", "mediaTranscoding"]],
+  maxIntegrations: 1,
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({

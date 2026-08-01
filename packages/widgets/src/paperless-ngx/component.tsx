@@ -70,7 +70,13 @@ const heroPartVisibility = {
   ring: "showInboxRing",
 } as const;
 
-export default function PaperlessNgxWidget({ integrationIds, options, width }: WidgetComponentProps<"paperlessNgx">) {
+export default function PaperlessNgxWidget({
+  integrationIds,
+  options,
+  width,
+  height,
+  displayMode = "compact",
+}: WidgetComponentProps<"paperlessNgx">) {
   const t = useScopedI18n("widget.paperlessNgx");
   const { data: stats } = clientApi.widget.paperlessNgx.getStats.useQuery({
     integrationId: integrationIds[0] ?? "",
@@ -95,18 +101,20 @@ export default function PaperlessNgxWidget({ integrationIds, options, width }: W
     .map(([, statKey]) => statKey)
     .filter((statKey) => !(showHero && gridHiddenWhenHeroShown.has(statKey)));
 
-  const gridCols = getGridCols(width);
-  const ringSize = getRingSize(width);
+  const advanced = displayMode === "advanced";
+  const gridCols = advanced ? Math.max(1, Math.min(5, visibleStatKeys.length)) : getGridCols(width);
+  const ringSize = advanced ? 112 : getRingSize(width);
   const iconSize = getIconSize(width);
   const ringLabelSize = getRingLabelSize(ringSize);
   const hasContent = showHero || visibleStatKeys.length > 0;
 
   const heroLayoutClass =
     heroLayoutBySecondaryStats[String(visibleStatKeys.length > 0) as keyof typeof heroLayoutBySecondaryStats];
-  const heroRingClass = heroVariantByRing[String(options.showInboxRing) as keyof typeof heroVariantByRing];
+  const showInboxRing = options.showInboxRing && (advanced || height >= 120);
+  const heroRingClass = heroVariantByRing[String(showInboxRing) as keyof typeof heroVariantByRing];
 
   const visibleHeroParts = Object.entries(heroPartVisibility).filter(
-    ([, optionKey]) => options[optionKey as keyof typeof options],
+    ([partKey, optionKey]) => options[optionKey as keyof typeof options] && (partKey !== "ring" || showInboxRing),
   );
 
   const heroPartRenderers = {
@@ -140,7 +148,11 @@ export default function PaperlessNgxWidget({ integrationIds, options, width }: W
   } as const;
 
   return (
-    <div className={classes.root}>
+    <div
+      className={classes.root}
+      data-display-mode={displayMode}
+      style={advanced ? { padding: 16, gap: 16 } : undefined}
+    >
       {showHero && (
         <div className={`${classes.hero} ${heroLayoutClass} ${heroRingClass}`}>
           {visibleHeroParts.map(([partKey]) => (

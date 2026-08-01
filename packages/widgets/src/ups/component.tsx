@@ -1,6 +1,18 @@
 "use client";
 
-import { Badge, Box, Card, Group, Progress, RingProgress, ScrollArea, Stack, Text } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Card,
+  Group,
+  Progress,
+  RingProgress,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Text,
+  VisuallyHidden,
+} from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { formatDuration } from "@homarr/common";
@@ -22,29 +34,47 @@ const statusColors: Record<UpsStatus, string> = {
 
 type UpsLayout = "mini" | "compact" | "full";
 
-export default function UpsWidget({ options, integrationIds, width }: WidgetComponentProps<"ups">) {
+export default function UpsWidget({
+  options,
+  integrationIds,
+  width,
+  height,
+  displayMode = "compact",
+}: WidgetComponentProps<"ups">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationSelectedError();
   }
 
-  return <UpsContent integrationIds={integrationIds} options={options} width={width} />;
+  return (
+    <UpsContent
+      integrationIds={integrationIds}
+      options={options}
+      width={width}
+      height={height}
+      displayMode={displayMode}
+    />
+  );
 }
 
 interface UpsContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"ups">["options"];
   width: number;
+  height: number;
+  displayMode: "compact" | "advanced";
 }
 
-function UpsContent({ integrationIds, options, width }: UpsContentProps) {
+function UpsContent({ integrationIds, options, width, height, displayMode }: UpsContentProps) {
   const t = useScopedI18n("widget.ups");
   const { data } = clientApi.widget.ups.getSummaries.useQuery({ integrationIds });
 
   if (!data) return <WidgetEmptyState />;
 
-  const devices = data.flatMap((instance) =>
-    instance.summaries.map((summary) => ({ key: `${instance.integrationId}:${summary.id}`, summary })),
-  );
+  const devices = data
+    .flatMap((instance) =>
+      instance.summaries.map((summary) => ({ key: `${instance.integrationId}:${summary.id}`, summary })),
+    )
+    .toSorted((left, right) => statusPriority[left.summary.status] - statusPriority[right.summary.status]);
 
   if (devices.length === 0) {
     return <WidgetEmptyState />;
@@ -55,27 +85,52 @@ function UpsContent({ integrationIds, options, width }: UpsContentProps) {
   // - full: ring beside a column of stats (runtime, load, voltage)
   // - compact (~2 columns): ring beside the name and a status badge
   // - mini (~1 column): a text badge no longer fits, so status becomes a colour dot next to the name
-  const layout: UpsLayout = width < 150 ? "mini" : width < 256 ? "compact" : "full";
+  const layout: UpsLayout =
+    displayMode === "advanced" ? "full" : width < 150 || height < 110 ? "mini" : width < 256 ? "compact" : "full";
+
+  const cards = devices.map(({ key, summary }) => (
+    <UpsDeviceCard
+      key={key}
+      summary={summary}
+      options={options}
+      layout={layout}
+      advanced={displayMode === "advanced"}
+      t={t}
+    />
+  ));
 
   return (
     <ScrollArea h="100%">
-      <Stack gap="xs" p="xs">
-        {devices.map(({ key, summary }) => (
-          <UpsDeviceCard key={key} summary={summary} options={options} layout={layout} t={t} />
-        ))}
-      </Stack>
+      {displayMode === "advanced" ? (
+        <SimpleGrid cols={width >= 760 ? 2 : 1} spacing="md" p="md">
+          {cards}
+        </SimpleGrid>
+      ) : (
+        <Stack gap="xs" p="xs">
+          {cards}
+        </Stack>
+      )}
     </ScrollArea>
   );
 }
+
+const statusPriority: Record<UpsStatus, number> = {
+  lowBattery: 0,
+  onBattery: 1,
+  charging: 2,
+  unknown: 3,
+  online: 4,
+};
 
 interface UpsDeviceCardProps {
   summary: UpsSummary;
   options: WidgetComponentProps<"ups">["options"];
   layout: UpsLayout;
+  advanced: boolean;
   t: ScopedTranslationFunction<"widget.ups">;
 }
 
-function UpsDeviceCard({ summary, options, layout, t }: UpsDeviceCardProps) {
+function UpsDeviceCard({ summary, options, layout, advanced, t }: UpsDeviceCardProps) {
   const showRing = options.showBattery && summary.batteryCharge !== null;
   const statusBadge = (
     <Badge
@@ -95,12 +150,14 @@ function UpsDeviceCard({ summary, options, layout, t }: UpsDeviceCardProps) {
           <Box
             w={8}
             h={8}
+            aria-hidden="true"
             style={{
               borderRadius: "50%",
               backgroundColor: `var(--mantine-color-${statusColors[summary.status]}-6)`,
               flexShrink: 0,
             }}
           />
+          <VisuallyHidden>{t(`status.${summary.status}`)}</VisuallyHidden>
           <Text fw={600} size="xs" truncate>
             {summary.name}
           </Text>
@@ -205,6 +262,20 @@ function UpsDeviceCard({ summary, options, layout, t }: UpsDeviceCardProps) {
           )}
         </Stack>
       </Group>
+      {advanced && (
+        <SimpleGrid cols={2} spacing={4} mt="sm">
+          {summary.batteryVoltage !== null && (
+            <StatRow label={t("field.batteryVoltage")} value={`${summary.batteryVoltage} V`} />
+          )}
+          {summary.power !== null && <StatRow label={t("field.power")} value={`${summary.power} W`} />}
+          {summary.temperature !== null && (
+            <StatRow label={t("field.temperature")} value={`${summary.temperature} °C`} />
+          )}
+          {summary.manufacturer && <StatRow label={t("field.manufacturer")} value={summary.manufacturer} />}
+          {summary.model && <StatRow label={t("field.model")} value={summary.model} />}
+          {summary.serial && <StatRow label={t("field.serial")} value={summary.serial} />}
+        </SimpleGrid>
+      )}
     </Card>
   );
 }

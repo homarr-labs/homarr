@@ -9,6 +9,7 @@ export interface CommonWidgetInputProps<TKey extends WidgetOptionType> {
   options: Omit<WidgetOptionOfType<TKey>, "defaultValue" | "type">;
   initialOptions: Record<string, unknown>;
   itemId?: string;
+  boardId?: string;
 }
 
 type UseWidgetInputTranslationReturnType = (key: "label" | "description" | "placeholder") => string;

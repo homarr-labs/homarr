@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 
 import * as boardContext from "@homarr/boards/context";
 
@@ -10,6 +10,10 @@ import { ItemMockBuilder } from "./mocks/item-mock";
 import { LayoutMockBuilder } from "./mocks/layout-mock";
 
 describe("item actions create-item", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test("should add it to first section", () => {
     // Arrange
     const itemKind = "clock";
@@ -107,5 +111,59 @@ describe("item actions create-item", () => {
       9999,
       { height: 1, width: 1 },
     );
+  });
+
+  test("uses the clicked section and nearest cell for the active layout", () => {
+    const activeLayoutId = "desktop";
+    const secondaryLayoutId = "mobile";
+    const rootSectionId = "root";
+    const targetSectionId = "target";
+    const activeLayout = new LayoutMockBuilder({ id: activeLayoutId, columnCount: 12 }).build();
+    const secondaryLayout = new LayoutMockBuilder({ id: secondaryLayoutId, columnCount: 4 }).build();
+    const targetSection = new DynamicSectionMockBuilder({ id: targetSectionId })
+      .addLayout({
+        layoutId: activeLayoutId,
+        parentSectionId: rootSectionId,
+        width: 4,
+        height: 3,
+      })
+      .build();
+    const board = new BoardMockBuilder()
+      .addLayout(activeLayout)
+      .addLayout(secondaryLayout)
+      .addEmptySection({ id: rootSectionId, yOffset: 0 })
+      .addSection(targetSection)
+      .build();
+
+    vi.spyOn(boardContext, "getBoardLayouts").mockReturnValue([activeLayoutId, secondaryLayoutId]);
+
+    const result = createItemCallback({
+      kind: "clock",
+      placement: {
+        sectionId: targetSectionId,
+        layoutId: activeLayoutId,
+        xOffset: 2,
+        yOffset: 1,
+      },
+    })(board);
+
+    expect(result.items.at(0)?.layouts).toEqual([
+      {
+        layoutId: activeLayoutId,
+        sectionId: targetSectionId,
+        xOffset: 2,
+        yOffset: 1,
+        width: 1,
+        height: 1,
+      },
+      {
+        layoutId: secondaryLayoutId,
+        sectionId: rootSectionId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 1,
+        height: 1,
+      },
+    ]);
   });
 });

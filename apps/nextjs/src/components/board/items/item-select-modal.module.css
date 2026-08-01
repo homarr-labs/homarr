@@ -1,0 +1,25 @@
+.selectionCard {
+  overflow: hidden;
+}
+
+.selectionActions {
+  opacity: 1;
+  transition: opacity 150ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .selectionActions {
+    opacity: 0;
+  }
+
+  .selectionCard:hover .selectionActions,
+  .selectionCard:focus-within .selectionActions {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .selectionActions {
+    transition: none;
+  }
+}

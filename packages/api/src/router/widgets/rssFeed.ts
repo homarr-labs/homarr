@@ -34,6 +34,11 @@ export const rssFeedRouter = createTRPCRouter({
       }),
     );
 
+    const failures = settled.filter((result) => result.status === "rejected");
+    if (settled.length > 0 && failures.length === settled.length) {
+      throw failures[0]?.reason;
+    }
+
     return settled
       .flatMap((result, index) => {
         if (result.status === "fulfilled") return result.value.data.entries;

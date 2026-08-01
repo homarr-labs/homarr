@@ -1632,12 +1632,33 @@
         "error": "Error",
         "loading": "Loading",
         "idle": "Idle"
+      },
+      "notification": {
+        "saveError": {
+          "title": "Unable to save widget",
+          "message": "The widget changes were rolled back"
+        }
       }
     },
     "create": {
       "title": "Choose item to add",
       "search": "Filter items",
-      "addToBoard": "Add to board"
+      "addToBoard": "Add to board",
+      "addAtPosition": "Add item here",
+      "integrationAvailable": "Connected integration available",
+      "notification": {
+        "error": {
+          "title": "Unable to add item",
+          "message": "The item could not be added to this board"
+        }
+      }
+    },
+    "advancedFocus": {
+      "open": "Open advanced view",
+      "close": "Close advanced view",
+      "pin": "Keep advanced view open",
+      "pinned": "Advanced view is pinned",
+      "dialog": "{widget} advanced view"
     },
     "moveResize": {
       "title": "Move / resize item",
@@ -1791,6 +1812,26 @@
         "showBroadcastMessage": {
           "label": "Show broadcast messages"
         }
+      },
+      "noProjectSelected": "No project selected",
+      "runnerStatus": "Runner: {status}",
+      "updatedAt": "Updated {date}",
+      "metric": {
+        "running": "Running",
+        "completed": "Done",
+        "failed": "Failed",
+        "canceled": "Canceled",
+        "download": "Download",
+        "upload": "Upload"
+      },
+      "status": {
+        "running": "Running",
+        "completed": "Completed",
+        "failed": "Failed",
+        "canceled": "Canceled",
+        "stopped": "Stopped",
+        "idle": "Idle",
+        "unknown": "Unknown"
       }
     },
     "dnsHoleSummary": {
@@ -1825,6 +1866,11 @@
         "dnsQueriesToday": "Queries today",
         "domainsBeingBlocked": "Domains on blocklist"
       },
+      "status": {
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "unknown": "Unknown"
+      },
       "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
     },
     "dnsHoleControls": {
@@ -1850,7 +1896,8 @@
         }
       },
       "error": {
-        "internalServerError": "Failed to control DNS Hole"
+        "internalServerError": "Failed to control DNS Hole",
+        "bulkActionsFailed": "{count, plural, one {# action failed} other {# actions failed}}"
       },
       "controls": {
         "enableAll": "Enable All",
@@ -2014,6 +2061,8 @@
         "height": "Height"
       },
       "placeholder": "Start writing your notes",
+      "saveFailed": "Unable to save note",
+      "documentStats": "{words, plural, one {# word} other {# words}} · {characters, plural, one {# character} other {# characters}}",
       "dismiss": {
         "title": "Dismiss changes?",
         "message": "You have unsaved changes in your notebook. Are you sure you want to discard them?",
@@ -2043,13 +2092,23 @@
       "noNotes": "No notes found",
       "integrationRequired": "Select an Anchor integration first",
       "updatedAt": "Updated {date}",
+      "createdAt": "Created {date}",
       "untitled": "Untitled",
       "edit": "Edit",
       "save": "Save",
       "cancel": "Cancel",
       "readOnlyViewer": "You have viewer access to this note. Editing is disabled.",
       "saveForbidden": "You do not have permission to edit this note.",
-      "saveFailed": "Failed to save this note. Please try again."
+      "saveFailed": "Failed to save this note. Please try again.",
+      "permission": {
+        "owner": "Owner",
+        "editor": "Editor",
+        "viewer": "Viewer"
+      },
+      "status": {
+        "pinned": "Pinned",
+        "archived": "Archived"
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -2108,6 +2167,18 @@
         "clickable": {
           "label": "Clickable"
         }
+      },
+      "advanced": {
+        "entityId": "Entity ID: {id}",
+        "lastUpdated": "Updated {date}",
+        "attribute": {
+          "unit": "Unit",
+          "deviceClass": "Device class",
+          "icon": "Icon"
+        }
+      },
+      "error": {
+        "toggleFailed": "Unable to update entity"
       }
     },
     "smartHome-executeAutomation": {
@@ -2123,6 +2194,13 @@
       },
       "spotlightAction": {
         "run": "Run {name}"
+      },
+      "advanced": {
+        "lastExecuted": "Last run at {time}",
+        "automationId": "Automation ID: {id}"
+      },
+      "error": {
+        "executeFailed": "Unable to run automation"
       }
     },
     "stockPrice": {
@@ -2498,7 +2576,13 @@
         "runtime": "Runtime",
         "load": "Load",
         "input": "Input",
-        "output": "Output"
+        "output": "Output",
+        "batteryVoltage": "Battery voltage",
+        "power": "Power",
+        "temperature": "Temperature",
+        "manufacturer": "Manufacturer",
+        "model": "Model",
+        "serial": "Serial"
       },
       "error": {
         "internalServerError": "Failed to fetch UPS data"
@@ -2755,6 +2839,11 @@
             "target": "Target codec"
           }
         }
+      },
+      "summary": {
+        "sessions": "{count, plural, one {# session} other {# sessions}}",
+        "playing": "{count} playing",
+        "transcoding": "{count} transcoding"
       }
     },
     "paperlessNgx": {
@@ -3037,7 +3126,16 @@
         }
       },
       "description": "Slideshow of pictures from an Immich album or your full library",
-      "noPhotos": "No photos found"
+      "noPhotos": "No photos found",
+      "albumPhoto": "Album photo",
+      "actions": {
+        "previousPhoto": "Previous photo",
+        "nextPhoto": "Next photo",
+        "pauseSlideshow": "Pause slideshow",
+        "resumeSlideshow": "Resume slideshow",
+        "toggleSlideshow": "Pause or resume slideshow",
+        "photo": "Photo {number}"
+      }
     },
     "downloads": {
       "name": "Download Client",
@@ -3610,6 +3708,13 @@
       "error": {
         "internalServerError": "Unable to get data from firewall"
       },
+      "versionUnknown": "Unknown version",
+      "metricAccessible": "{metric}: {value}%, {status}",
+      "status": {
+        "normal": "Normal",
+        "warning": "Warning",
+        "critical": "Critical"
+      },
       "option": {
         "interfaces": "Network interfaces to display"
       },
@@ -3673,6 +3778,11 @@
       "unhealthy": "Unhealthy",
       "ok": "OK",
       "fail": "Fail",
+      "range": {
+        "twelveHours": "12h",
+        "oneDay": "24h",
+        "all": "All"
+      },
       "noSectionsEnabled": "Enable at least one section in widget options.",
       "error": {
         "internalServerError": "Failed to fetch speedtest data"
@@ -3714,6 +3824,11 @@
         "downCount": "Down",
         "pausedCount": "Paused"
       },
+      "status": {
+        "up": "Up",
+        "down": "Down",
+        "paused": "Paused"
+      },
       "error": {
         "internalServerError": "Failed to fetch uptime data"
       }
@@ -3743,6 +3858,19 @@
         "services": "Services",
         "middlewares": "Middlewares"
       },
+      "resourceType": {
+        "router": "Router",
+        "service": "Service",
+        "middleware": "Middleware"
+      },
+      "resourceStatus": {
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "warning": "Warning",
+        "error": "Error",
+        "unknown": "Unknown"
+      },
+      "failedEndpoint": "Failed: {endpoint}",
       "status": {
         "healthy": "Healthy",
         "errors": "{count} errors",
@@ -3889,11 +4017,30 @@
       },
       "noDefinition": "No definition selected",
       "definitionNotFound": "Widget definition not found. It may have been deleted.",
+      "fetchFailed": "Unable to load custom API data",
       "noDisplayOutput": "No display output",
       "executeConfirm": "Are you sure you want to execute this action?",
       "executing": "Executing...",
       "executeSuccess": "Action executed successfully",
-      "executeFailed": "Action failed. Check the widget configuration."
+      "executeFailed": "Action failed. Check the widget configuration.",
+      "actions": {
+        "pausePolling": "Pause polling",
+        "resumePolling": "Resume polling",
+        "togglePolling": "Pause or resume polling"
+      },
+      "displayType": {
+        "singleValue": "Single value",
+        "keyValue": "Key/value",
+        "table": "Table",
+        "statGrid": "Stat grid",
+        "progressBars": "Progress bars",
+        "statusIndicator": "Status indicator",
+        "countGrid": "Count grid",
+        "raw": "Raw data",
+        "actionButton": "Action button",
+        "customJsx": "Custom JSX",
+        "unknown": "Custom data"
+      }
     },
     "beszelSystemTable": {
       "name": "Beszel Systems (Table)",
@@ -4081,6 +4228,14 @@
         }
       },
       "selectSystem": "Select system",
+      "period": {
+        "live": "Live",
+        "oneHour": "1h",
+        "twelveHours": "12h",
+        "oneDay": "24h",
+        "oneWeek": "1w",
+        "thirtyDays": "30d"
+      },
       "empty": {
         "noSystems": "No systems found"
       },

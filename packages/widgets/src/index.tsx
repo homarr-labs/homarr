@@ -71,6 +71,7 @@ export type {
   WidgetContextActionProps,
   WidgetOptionsSettings,
 } from "./definition";
+export { getWidgetQueryKeys } from "./definition";
 export type { WidgetComponentProps };
 export type { WidgetOptionDefinition, WidgetOptionType } from "./options";
 

@@ -1,10 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ComponentType } from "react";
 import {
   ActionIcon,
+  Badge,
+  Box,
   Button,
   Card,
   Center,
@@ -22,7 +24,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { IconAlertTriangle, IconCheck, IconExternalLink, IconPlayerPlay } from "@tabler/icons-react";
+import { IconAlertTriangle, IconCheck, IconExternalLink, IconPlayerPause, IconPlayerPlay } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal } from "@homarr/modals";
@@ -96,18 +98,29 @@ function KeyValueDisplay({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-function TableDisplay({ data }: { data: Record<string, unknown> }) {
+interface CustomDisplayProps {
+  data: Record<string, unknown>;
+  displayMode: "compact" | "advanced";
+  width: number;
+  height: number;
+}
+
+function TableDisplay({ data, displayMode, width, height }: CustomDisplayProps) {
   const columns = (data.columns as string[]) ?? [];
   const rows = (data.rows as unknown[][]) ?? [];
   const striped = (data.striped as boolean) ?? true;
   const compact = (data.compact as boolean) ?? false;
 
+  const visibleColumnCount = displayMode === "advanced" ? columns.length : Math.max(1, Math.floor(width / 120));
+  const visibleRowCount = displayMode === "advanced" ? rows.length : Math.max(1, Math.floor(height / 32) - 1);
+  const visibleColumns = columns.slice(0, visibleColumnCount);
+
   return (
-    <ScrollArea>
+    <ScrollArea h="100%">
       <Table striped={striped} highlightOnHover withTableBorder>
         <Table.Thead>
           <Table.Tr>
-            {columns.map((col, i) => (
+            {visibleColumns.map((col, i) => (
               <Table.Th key={i} py={compact ? 4 : undefined}>
                 {col}
               </Table.Th>
@@ -115,9 +128,9 @@ function TableDisplay({ data }: { data: Record<string, unknown> }) {
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {rows.map((row, i) => (
+          {rows.slice(0, visibleRowCount).map((row, i) => (
             <Table.Tr key={i}>
-              {row.map((cell, j) => (
+              {row.slice(0, visibleColumnCount).map((cell, j) => (
                 <Table.Td key={j} py={compact ? 2 : undefined}>
                   {String(cell ?? "—")}
                 </Table.Td>
@@ -181,9 +194,11 @@ function StatGridCard({
   );
 }
 
-function StatGridDisplay({ data }: { data: Record<string, unknown> }) {
+function StatGridDisplay({ data, displayMode, width }: CustomDisplayProps) {
   const items = (data.items as Array<{ label: string; unit: string; color: string; value: unknown }>) ?? [];
-  const columns = (data.columns as number) ?? 2;
+  const configuredColumns = (data.columns as number) ?? 2;
+  const columns =
+    displayMode === "advanced" ? configuredColumns : Math.min(configuredColumns, Math.max(1, Math.floor(width / 120)));
   const cardStyle = (data.cardStyle as string) ?? "filled";
 
   return (
@@ -304,12 +319,12 @@ function CountGridDisplay({ data }: { data: Record<string, unknown> }) {
 function openJsonInBrowser(json: unknown) {
   const blob = new Blob([JSON.stringify(json, null, 2)], { type: "application/json" });
   const blobUrl = URL.createObjectURL(blob);
-  window.open(blobUrl);
+  window.open(blobUrl, "_blank", "noopener,noreferrer");
   setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
 }
 
-function RawDisplay({ data }: { data: Record<string, unknown> }) {
-  const maxHeight = (data.maxHeight as number) ?? 300;
+function RawDisplay({ data, displayMode, height }: CustomDisplayProps) {
+  const maxHeight = displayMode === "advanced" ? Math.max(160, height - 80) : ((data.maxHeight as number) ?? 300);
   const jsonString = JSON.stringify(data.data, null, 2);
 
   return (
@@ -387,7 +402,9 @@ function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-export const displayComponents: Record<string, ComponentType<{ data: Record<string, unknown> }>> = {
+const CustomJsxAdapter = ({ data }: CustomDisplayProps) => <CustomJsxDisplay data={data} />;
+
+export const displayComponents: Record<string, ComponentType<CustomDisplayProps>> = {
   singleValue: SingleValueDisplay,
   keyValue: KeyValueDisplay,
   table: TableDisplay,
@@ -397,10 +414,29 @@ export const displayComponents: Record<string, ComponentType<{ data: Record<stri
   countGrid: CountGridDisplay,
   raw: RawDisplay,
   actionButton: ActionButtonDisplay,
-  customJsx: CustomJsxDisplay,
+  customJsx: CustomJsxAdapter,
 };
 
-export default function CustomApiWidget({ options }: WidgetComponentProps<"customApi">) {
+const displayTypeTranslationKeys = {
+  singleValue: "displayType.singleValue",
+  keyValue: "displayType.keyValue",
+  table: "displayType.table",
+  statGrid: "displayType.statGrid",
+  progressBars: "displayType.progressBars",
+  statusIndicator: "displayType.statusIndicator",
+  countGrid: "displayType.countGrid",
+  raw: "displayType.raw",
+  actionButton: "displayType.actionButton",
+  customJsx: "displayType.customJsx",
+} as const;
+
+export default function CustomApiWidget({
+  options,
+  width,
+  height,
+  displayMode = "compact",
+  widgetStateRef,
+}: WidgetComponentProps<"customApi">) {
   const t = useScopedI18n("widget.customApi");
   const { definitionId, refreshInterval } = options;
 
@@ -417,20 +453,45 @@ export default function CustomApiWidget({ options }: WidgetComponentProps<"custo
     );
   }
 
-  return <CustomApiWidgetInner definitionId={definitionId} refreshInterval={refreshInterval as number} />;
+  return (
+    <CustomApiWidgetInner
+      definitionId={definitionId}
+      refreshInterval={refreshInterval as number}
+      width={width}
+      height={height}
+      displayMode={displayMode}
+      widgetStateRef={widgetStateRef}
+    />
+  );
 }
 
-function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId: string; refreshInterval: number }) {
+function CustomApiWidgetInner({
+  definitionId,
+  refreshInterval,
+  width,
+  height,
+  displayMode,
+  widgetStateRef,
+}: {
+  definitionId: string;
+  refreshInterval: number;
+  width: number;
+  height: number;
+  displayMode: "compact" | "advanced";
+  widgetStateRef?: WidgetComponentProps<"customApi">["widgetStateRef"];
+}) {
   const t = useScopedI18n("widget.customApi");
   const tCustomWidget = useScopedI18n("customWidget");
   const safeInterval = Number.isFinite(refreshInterval) ? refreshInterval : 30;
   const intervalMs = Math.max(1000, safeInterval * 1000);
-  const { data, isLoading, error } = clientApi.widget.customApi.getData.useQuery(
+  const persistedState = widgetStateRef?.current?.customApi as { pollingPaused?: boolean } | undefined;
+  const [pollingPaused, setPollingPaused] = useState(persistedState?.pollingPaused === true);
+  const { data, isLoading, error, refetch, isFetching } = clientApi.widget.customApi.getData.useQuery(
     { definitionId },
     {
       refetchInterval: (query) => {
         const result = query.state.data as Record<string, unknown> | undefined;
-        if (result?.type === "actionButton" || result?.type === "disabled") return false;
+        if (pollingPaused || result?.type === "actionButton" || result?.type === "disabled") return false;
         return intervalMs;
       },
       retry: (failureCount, err) => {
@@ -439,6 +500,33 @@ function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId:
       },
     },
   );
+
+  const widgetData = (data ?? {}) as Record<string, unknown>;
+  const dataType = widgetData.type as string | undefined;
+  const canTogglePolling = Boolean(data) && dataType !== "actionButton" && dataType !== "disabled";
+  const togglePolling = useCallback(() => setPollingPaused((value) => !value), []);
+
+  useEffect(() => {
+    if (!widgetStateRef) return;
+    widgetStateRef.current = {
+      ...widgetStateRef.current,
+      customApi: { pollingPaused },
+    };
+  }, [pollingPaused, widgetStateRef]);
+
+  useEffect(() => {
+    if (!widgetStateRef) return;
+    if (canTogglePolling) {
+      widgetStateRef.current = { ...widgetStateRef.current, togglePolling };
+    } else if (widgetStateRef.current) {
+      delete widgetStateRef.current.togglePolling;
+    }
+    return () => {
+      if (widgetStateRef.current?.togglePolling === togglePolling) {
+        delete widgetStateRef.current.togglePolling;
+      }
+    };
+  }, [canTogglePolling, togglePolling, widgetStateRef]);
 
   if (isLoading) {
     return (
@@ -454,18 +542,23 @@ function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId:
       <Center h="100%">
         <Stack align="center" gap="xs">
           <IconAlertTriangle size={32} color={`var(--mantine-color-${isNotFound ? "yellow" : "red"}-6)`} />
-          <Text c="dimmed" size="sm" ta="center">
-            {isNotFound ? t("definitionNotFound") : error.message}
-          </Text>
+          {isNotFound ? (
+            <Text c="dimmed" size="sm" ta="center">
+              {t("definitionNotFound")}
+            </Text>
+          ) : (
+            <Tooltip label={error.message} multiline>
+              <Text c="dimmed" size="sm" ta="center" tabIndex={0} aria-label={`${t("fetchFailed")}. ${error.message}`}>
+                {t("fetchFailed")}
+              </Text>
+            </Tooltip>
+          )}
         </Stack>
       </Center>
     );
   }
 
   if (!data) return null;
-
-  const widgetData = data as Record<string, unknown>;
-  const dataType = widgetData.type as string | undefined;
 
   if (dataType === "disabled") {
     return (
@@ -479,8 +572,34 @@ function CustomApiWidgetInner({ definitionId, refreshInterval }: { definitionId:
 
   const Component = dataType ? displayComponents[dataType] : undefined;
   if (Component) {
+    const displayTypeKey = displayTypeTranslationKeys[dataType as keyof typeof displayTypeTranslationKeys];
+    const pollingLabel = pollingPaused ? t("actions.resumePolling") : t("actions.pausePolling");
     const enrichedData = dataType === "actionButton" ? { ...widgetData, widgetDefinitionId: definitionId } : widgetData;
-    return <Component data={enrichedData} />;
+    const content = <Component data={enrichedData} displayMode={displayMode} width={width} height={height} />;
+    if (displayMode === "compact") return content;
+    return (
+      <Stack h="100%" gap="xs" p="xs">
+        <Group justify="space-between" wrap="nowrap">
+          <Badge variant="light">{displayTypeKey ? t(displayTypeKey) : t("displayType.unknown")}</Badge>
+          {dataType !== "actionButton" && (
+            <Tooltip label={pollingLabel}>
+              <ActionIcon
+                aria-label={pollingLabel}
+                variant="subtle"
+                loading={isFetching}
+                onClick={() => {
+                  if (pollingPaused) void refetch();
+                  setPollingPaused((value) => !value);
+                }}
+              >
+                {pollingPaused ? <IconPlayerPlay size={16} /> : <IconPlayerPause size={16} />}
+              </ActionIcon>
+            </Tooltip>
+          )}
+        </Group>
+        <Box style={{ flex: 1, minHeight: 0 }}>{content}</Box>
+      </Stack>
+    );
   }
 
   return (

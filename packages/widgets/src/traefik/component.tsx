@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Badge, Group, ScrollArea, Text } from "@mantine/core";
+import { Badge, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import {
   IconAlertTriangle,
   IconCircleCheck,
@@ -36,6 +36,8 @@ const emptyProtocol: TraefikProtocolSummary = {
 const emptyDashboard: TraefikDashboardData = {
   version: null,
   entryPoints: [],
+  resources: [],
+  failedEndpoints: [],
   http: emptyProtocol,
   tcp: emptyProtocol,
   udp: {
@@ -47,11 +49,21 @@ const emptyDashboard: TraefikDashboardData = {
 type ProtocolKey = "http" | "tcp" | "udp";
 type ResourceKey = "routers" | "services" | "middlewares";
 
-export default function TraefikWidget({ integrationIds, options, width }: WidgetComponentProps<"traefik">) {
-  if (integrationIds.length === 0) {
+export default function TraefikWidget(props: WidgetComponentProps<"traefik">) {
+  if (props.integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }
 
+  return <TraefikWidgetContent {...props} />;
+}
+
+function TraefikWidgetContent({
+  integrationIds,
+  options,
+  width,
+  height,
+  displayMode = "compact",
+}: WidgetComponentProps<"traefik">) {
   const t = useScopedI18n("widget.traefik");
   const { data } = clientApi.widget.traefik.getDashboard.useQuery({ integrationIds });
 
@@ -61,6 +73,8 @@ export default function TraefikWidget({ integrationIds, options, width }: Widget
     (acc, item) => ({
       version: acc.version ?? item.dashboard.version,
       entryPoints: [...acc.entryPoints, ...item.dashboard.entryPoints],
+      resources: [...acc.resources, ...item.dashboard.resources],
+      failedEndpoints: [...acc.failedEndpoints, ...item.dashboard.failedEndpoints],
       http: combineProtocol(acc.http, item.dashboard.http),
       tcp: combineProtocol(acc.tcp, item.dashboard.tcp),
       udp: {
@@ -72,58 +86,113 @@ export default function TraefikWidget({ integrationIds, options, width }: Widget
   );
 
   const totalRouters = combined.http.routers.total + combined.tcp.routers.total + combined.udp.routers.total;
-  const totalErrors = getProtocolErrors(combined.http) + getProtocolErrors(combined.tcp) + getUdpErrors(combined.udp);
+  const totalErrors =
+    getProtocolErrors(combined.http) +
+    getProtocolErrors(combined.tcp) +
+    getUdpErrors(combined.udp) +
+    combined.failedEndpoints.length;
   const totalWarnings =
     getProtocolWarnings(combined.http) + getProtocolWarnings(combined.tcp) + getUdpWarnings(combined.udp);
   const protocolKeys: ProtocolKey[] = ["http"];
-  if (options.showTcp) protocolKeys.push("tcp");
-  if (options.showUdp) protocolKeys.push("udp");
+  if (options.showTcp && (displayMode === "advanced" || height >= 220)) protocolKeys.push("tcp");
+  if (options.showUdp && (displayMode === "advanced" || height >= 300)) protocolKeys.push("udp");
 
-  return (
-    <ScrollArea h="100%">
-      <div className={classes.root}>
-        <Group justify="space-between" gap="xs" wrap="nowrap">
-          <div className={classes.titleBlock}>
-            <Text className={classes.title}>{data.length === 1 ? data[0]?.integrationName : t("instances")}</Text>
-            <Text className={classes.subtitle}>{combined.version ? `v${combined.version}` : t("versionUnknown")}</Text>
-          </div>
-          <HealthBadge errors={totalErrors} warnings={totalWarnings} />
-        </Group>
-
-        <div className={classes.hero}>
-          <SummaryMetric
-            icon={<IconRoute size={getHeroIconSize(width)} />}
-            label={t("summary.routers")}
-            value={totalRouters}
-          />
-          <SummaryMetric
-            icon={<IconDoorEnter size={getHeroIconSize(width)} />}
-            label={t("summary.entryPoints")}
-            value={dedupe(combined.entryPoints).length}
-          />
+  const summary = (
+    <div className={classes.root}>
+      <Group justify="space-between" gap="xs" wrap="nowrap">
+        <div className={classes.titleBlock}>
+          <Text className={classes.title}>{data.length === 1 ? data[0]?.integrationName : t("instances")}</Text>
+          <Text className={classes.subtitle}>{combined.version ? `v${combined.version}` : t("versionUnknown")}</Text>
         </div>
+        <HealthBadge errors={totalErrors} warnings={totalWarnings} />
+      </Group>
 
-        <div className={classes.protocolGrid}>
-          {protocolKeys.map((protocol) => (
-            <ProtocolCard key={protocol} protocol={protocol} data={combined[protocol]} />
-          ))}
-        </div>
-
-        {options.showEntryPoints && combined.entryPoints.length > 0 && (
-          <div className={classes.entryPoints}>
-            {dedupe(combined.entryPoints)
-              .slice(0, getEntryPointLimit(width))
-              .map((entryPoint) => (
-                <Badge key={entryPoint} variant="light" size="sm" radius="sm">
-                  {entryPoint}
-                </Badge>
-              ))}
-          </div>
-        )}
+      <div className={classes.hero}>
+        <SummaryMetric
+          icon={<IconRoute size={getHeroIconSize(width)} />}
+          label={t("summary.routers")}
+          value={totalRouters}
+        />
+        <SummaryMetric
+          icon={<IconDoorEnter size={getHeroIconSize(width)} />}
+          label={t("summary.entryPoints")}
+          value={dedupe(combined.entryPoints).length}
+        />
       </div>
-    </ScrollArea>
+
+      <div className={classes.protocolGrid}>
+        {protocolKeys.map((protocol) => (
+          <ProtocolCard key={protocol} protocol={protocol} data={combined[protocol]} />
+        ))}
+      </div>
+
+      {options.showEntryPoints && combined.entryPoints.length > 0 && (
+        <div className={classes.entryPoints}>
+          {dedupe(combined.entryPoints)
+            .slice(0, getEntryPointLimit(width))
+            .map((entryPoint) => (
+              <Badge key={entryPoint} variant="light" size="sm" radius="sm">
+                {entryPoint}
+              </Badge>
+            ))}
+        </div>
+      )}
+    </div>
+  );
+
+  if (displayMode === "compact") return <ScrollArea h="100%">{summary}</ScrollArea>;
+
+  const resources = [...combined.resources].toSorted(
+    (left, right) =>
+      resourceStatusOrder[left.status] - resourceStatusOrder[right.status] || left.name.localeCompare(right.name),
+  );
+  return (
+    <SimpleGrid cols={width >= 900 ? 2 : 1} spacing="md" h="100%" p="md">
+      <ScrollArea h="100%">{summary}</ScrollArea>
+      <ScrollArea h="100%">
+        <Stack gap="xs">
+          {combined.failedEndpoints.map((endpoint) => (
+            <Badge key={endpoint} color="red" variant="light">
+              {t("failedEndpoint", { endpoint })}
+            </Badge>
+          ))}
+          {resources.map((resource, index) => (
+            <Group
+              key={`${resource.protocol}:${resource.type}:${resource.name}:${index}`}
+              justify="space-between"
+              wrap="nowrap"
+              p="xs"
+            >
+              <Stack gap={0} style={{ minWidth: 0 }}>
+                <Text size="sm" fw={600} truncate>
+                  {resource.name}
+                </Text>
+                <Text size="xs" c="dimmed">
+                  {resource.protocol.toUpperCase()} · {t(`resourceType.${resource.type}`)} · {resource.provider ?? "—"}
+                </Text>
+              </Stack>
+              <Badge
+                color={
+                  resource.status === "error"
+                    ? "red"
+                    : resource.status === "warning"
+                      ? "yellow"
+                      : resource.status === "enabled"
+                        ? "green"
+                        : "gray"
+                }
+              >
+                {t(`resourceStatus.${resource.status}`)}
+              </Badge>
+            </Group>
+          ))}
+        </Stack>
+      </ScrollArea>
+    </SimpleGrid>
   );
 }
+
+const resourceStatusOrder = { error: 0, warning: 1, disabled: 2, unknown: 3, enabled: 4 } as const;
 
 function ProtocolCard({ protocol, data }: { protocol: ProtocolKey; data: TraefikDashboardData[ProtocolKey] }) {
   const t = useScopedI18n("widget.traefik");

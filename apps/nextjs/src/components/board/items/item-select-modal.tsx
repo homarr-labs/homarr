@@ -3,10 +3,12 @@ import { Avatar, Box, Button, Card, Center, Divider, Group, Image, Stack, Text, 
 import { IconApi } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { usePersistBoard } from "@homarr/boards/updater";
 import { createId, objectEntries } from "@homarr/common";
 import { getIconUrl, getIntegrationName } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { SelectGridLayout, selectGridCardHeight } from "@homarr/ui";
@@ -15,15 +17,47 @@ import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/wid
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import { useItemActions } from "./item-actions";
+import type { BoardPlacementHint, CreateItemInput } from "./actions/create-item";
+import { createItemCallback } from "./actions/create-item";
+import classes from "./item-select-modal.module.css";
 
-export const ItemSelectModal = createModal<void>(({ actions }) => {
+interface ItemSelectModalProps {
+  placement?: BoardPlacementHint;
+  board: { id: string; name: string };
+  persistImmediately: boolean;
+}
+
+export const ItemSelectModal = createModal<ItemSelectModalProps>(({ actions, innerProps }) => {
   const [search, setSearch] = useState("");
   const t = useI18n();
-  const { createItem, updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
+  const { createItem } = useItemActions();
   const { openModal: openEditModal } = useModalAction(WidgetEditModal);
   const { data: integrationData } = clientApi.integration.all.useQuery();
   const { data: customWidgetDefs } = clientApi.customWidget.all.useQuery();
   const settings = useSettings();
+  const { updateAndPersistBoard } = usePersistBoard(innerProps.board);
+
+  const createAndPersist = (input: CreateItemInput) => {
+    try {
+      if (!innerProps.persistImmediately) {
+        createItem(input);
+        return;
+      }
+      updateAndPersistBoard(createItemCallback(input), {
+        onError: () => {
+          showErrorNotification({
+            title: t("item.create.notification.error.title"),
+            message: t("item.create.notification.error.message"),
+          });
+        },
+      });
+    } catch {
+      showErrorNotification({
+        title: t("item.create.notification.error.title"),
+        message: t("item.create.notification.error.message"),
+      });
+    }
+  };
 
   const availableKinds = useMemo(() => new Set((integrationData ?? []).map((i) => i.kind)), [integrationData]);
 
@@ -69,8 +103,13 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   const handleAddCustomWidget = (definitionId: string) => {
     const itemId = createId();
     const defaultOptions = reduceWidgetOptionsWithDefaultValues("customApi", settings);
-    createItem({ id: itemId, kind: "customApi", integrationIds: [] });
-    updateItemOptions({ itemId, newOptions: { ...defaultOptions, definitionId } });
+    createAndPersist({
+      id: itemId,
+      kind: "customApi",
+      integrationIds: [],
+      options: { ...defaultOptions, definitionId },
+      placement: innerProps.placement,
+    });
     actions.closeModal();
   };
 
@@ -88,7 +127,6 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
     const itemId = createId();
     const defaultOptions = reduceWidgetOptionsWithDefaultValues(kind, settings);
 
-    createItem({ id: itemId, kind, integrationIds });
     actions.closeModal();
 
     openEditModal(
@@ -100,13 +138,19 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
           integrationIds,
         },
         onSuccessfulEdit: ({ options, integrationIds: newIntegrationIds, advancedOptions }) => {
-          updateItemOptions({ itemId, newOptions: options });
-          updateItemAdvancedOptions({ itemId, newAdvancedOptions: advancedOptions });
-          updateItemIntegrations({ itemId, newIntegrations: newIntegrationIds });
+          createAndPersist({
+            id: itemId,
+            kind,
+            options,
+            integrationIds: newIntegrationIds,
+            advancedOptions,
+            placement: innerProps.placement,
+          });
         },
         integrationData: matchingIntegrations,
         integrationSupport: hasIntegrationSupport,
         settings,
+        boardId: innerProps.board.id,
       },
       {
         title: (titleT) => `${titleT("item.edit.title")} - ${titleT(`widget.${kind}.name`)}`,
@@ -144,19 +188,18 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
             style={{ gridColumn: "1 / -1" }}
           />
           {filteredCustomWidgets.map((def) => (
-            <Card
-              key={def.id}
-              h={selectGridCardHeight}
-              withBorder
-              pos="relative"
-              style={{ overflow: "hidden", "--_hover-opacity": "0" }}
-              onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
-              onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
-            >
+            <Card key={def.id} h={selectGridCardHeight} withBorder pos="relative" className={classes.selectionCard}>
               <Stack h="100%" gap="xs">
                 <Group gap="sm" wrap="nowrap" align="flex-start">
                   {def.iconUrl ? (
-                    <Image src={def.iconUrl} w={22} h={22} fit="contain" style={{ flexShrink: 0, marginTop: 2 }} />
+                    <Image
+                      src={def.iconUrl}
+                      alt=""
+                      w={22}
+                      h={22}
+                      fit="contain"
+                      style={{ flexShrink: 0, marginTop: 2 }}
+                    />
                   ) : (
                     <IconApi size={22} style={{ flexShrink: 0, marginTop: 2 }} />
                   )}
@@ -174,9 +217,8 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
                 left={0}
                 right={0}
                 p="xs"
+                className={classes.selectionActions}
                 style={{
-                  opacity: "var(--_hover-opacity)",
-                  transition: "opacity 150ms ease",
                   background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
                 }}
               >
@@ -223,14 +265,11 @@ const WidgetItem = ({
       h={selectGridCardHeight}
       withBorder
       pos="relative"
+      className={classes.selectionCard}
       style={{
-        overflow: "hidden",
-        "--_hover-opacity": "0",
         borderColor: hasMatchingIntegration ? "var(--mantine-color-blue-6)" : undefined,
         borderWidth: hasMatchingIntegration ? 2 : undefined,
       }}
-      onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
-      onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
     >
       <Stack h="100%" gap="xs">
         <Group gap="sm" wrap="nowrap" align="flex-start">
@@ -244,6 +283,11 @@ const WidgetItem = ({
             {item.description}
           </Text>
         </Tooltip>
+        {hasMatchingIntegration && (
+          <Text size="10px" c="blue.6" fw={600}>
+            {t("item.create.integrationAvailable")}
+          </Text>
+        )}
         <SupportedIntegrations integrations={item.supportedIntegrations} />
       </Stack>
       <Box
@@ -252,9 +296,8 @@ const WidgetItem = ({
         left={0}
         right={0}
         p="xs"
+        className={classes.selectionActions}
         style={{
-          opacity: "var(--_hover-opacity)",
-          transition: "opacity 150ms ease",
           background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
         }}
       >

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { Box, Button, Center, Loader, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
+import { Box, Button, Center, Loader, Menu, ScrollArea, SegmentedControl, Select, Stack, Text } from "@mantine/core";
 import { IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -16,12 +16,15 @@ import type { WidgetComponentProps } from "../definition";
 import type { BeszelTimePeriod } from "../beszel/_shared/chart";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
+import { createBeszelSystemChoices, resolveBeszelSystemChoice } from "./selection";
 
 export default function BeszelSystemStatsWidget({
   options,
   integrationIds,
   isEditMode,
   width,
+  height,
+  displayMode = "compact",
   boardId,
   itemId,
   setOptions,
@@ -37,13 +40,11 @@ export default function BeszelSystemStatsWidget({
     error: systemsError,
   } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
 
-  const systems = useMemo(
-    () => systemsResult.flatMap((result) => result.systems.map((system) => ({ value: system.id, label: system.name }))),
-    [systemsResult],
-  );
-  const selectedSystem = options.systemId || systems[0]?.value || "";
-  const selectedLabel = systems.find((system) => system.value === selectedSystem)?.label;
-  const systemExists = systems.some((system) => system.value === selectedSystem);
+  const systems = useMemo(() => createBeszelSystemChoices(systemsResult), [systemsResult]);
+  const selectedSystem = resolveBeszelSystemChoice(systems, options.systemId);
+  const selectedValue = selectedSystem?.value ?? "";
+  const selectedLabel = selectedSystem?.label;
+  const systemExists = selectedSystem !== undefined;
 
   const handleSelectSystem = useCallback(
     (value: string) => {
@@ -53,6 +54,16 @@ export default function BeszelSystemStatsWidget({
       }
     },
     [setOptions, hasChangeAccess, boardId, itemId, saveItemOptions],
+  );
+
+  const handleTimePeriod = useCallback(
+    (value: string) => {
+      setOptions({ newOptions: { timePeriod: value as BeszelTimePeriod } });
+      if (hasChangeAccess && boardId && itemId) {
+        saveItemOptions({ boardId, itemId, newOptions: { timePeriod: value } });
+      }
+    },
+    [boardId, hasChangeAccess, itemId, saveItemOptions, setOptions],
   );
 
   if (systemsError) throw systemsError;
@@ -90,7 +101,7 @@ export default function BeszelSystemStatsWidget({
           <Select
             size="xs"
             data={systems}
-            value={selectedSystem}
+            value={selectedValue}
             placeholder={t("selectSystem")}
             onChange={(value) => value && handleSelectSystem(value)}
           />
@@ -127,8 +138,8 @@ export default function BeszelSystemStatsWidget({
                   <Menu.Item
                     key={system.value}
                     fz="xs"
-                    fw={system.value === selectedSystem ? 600 : 400}
-                    c={system.value !== selectedSystem ? "dimmed" : undefined}
+                    fw={system.value === selectedValue ? 600 : 400}
+                    c={system.value !== selectedValue ? "dimmed" : undefined}
                     onClick={() => handleSelectSystem(system.value)}
                   >
                     {system.label}
@@ -137,20 +148,35 @@ export default function BeszelSystemStatsWidget({
               </Menu.Dropdown>
             </Menu>
           )}
+          {!isEditMode && displayMode === "advanced" && (
+            <SegmentedControl
+              size="xs"
+              value={options.timePeriod}
+              onChange={handleTimePeriod}
+              data={[
+                { value: "1m", label: t("period.live") },
+                { value: "1h", label: t("period.oneHour") },
+                { value: "12h", label: t("period.twelveHours") },
+                { value: "24h", label: t("period.oneDay") },
+                { value: "1w", label: t("period.oneWeek") },
+                { value: "30d", label: t("period.thirtyDays") },
+              ]}
+            />
+          )}
           <BeszelStatsView
-            integrationIds={integrationIds}
-            systemId={selectedSystem}
+            integrationIds={selectedSystem ? [selectedSystem.integrationId] : []}
+            systemId={selectedSystem?.systemId ?? ""}
             timePeriod={options.timePeriod as BeszelTimePeriod}
-            columns={width > 600 ? 2 : 1}
+            columns={displayMode === "advanced" || width > 600 ? 2 : 1}
             visibility={{
               cpu: options.showCpu,
               memory: options.showMemory,
               disk: options.showDisk,
-              diskIO: options.showDiskIO,
-              network: options.showNetwork,
-              dockerCpu: options.showDockerCpu,
-              dockerMemory: options.showDockerMemory,
-              dockerNetwork: options.showDockerNetwork,
+              diskIO: options.showDiskIO && (displayMode === "advanced" || height >= 260),
+              network: options.showNetwork && (displayMode === "advanced" || height >= 260),
+              dockerCpu: options.showDockerCpu && (displayMode === "advanced" || height >= 380),
+              dockerMemory: options.showDockerMemory && (displayMode === "advanced" || height >= 380),
+              dockerNetwork: options.showDockerNetwork && (displayMode === "advanced" || height >= 380),
             }}
             onSwitchToHistorical={() => setOptions({ newOptions: { timePeriod: "1h" } })}
           />

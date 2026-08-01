@@ -1,38 +1,36 @@
 ---
-title: 'DNS Hole Summary'
+title: "DNS Hole Summary"
 description: "Displays the summary of your DNS Hole."
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { IconAd } from "@tabler/icons-react";
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import { dnsHoleSummaryWidget } from '.';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import { dnsHoleSummaryWidget } from ".";
 
+<WidgetHeader widget={dnsHoleSummaryWidget} categories={["DNS Hole"]} />
 
-<WidgetHeader
-  widget={dnsHoleSummaryWidget}
-  categories={['DNS Hole']}
-/>
-
-This widget allows you to display statistics about your DNS Hole like total queries, blocked queries, and more.
+This widget combines statistics from every selected DNS service, including total queries, blocked queries, and blocklist size. Its data is cached under the same DNS query family as DNS Hole Controls, so placing both widgets on a board does not create a second integration request. Advanced view keeps the aggregate metrics visible and adds a named status chip for each source.
 
 ### Screenshots
 
-import gridLayout from './img/grid.png';
-import verticalLayout from './img/vertical.png';
-import horizontalLayout from './img/horizontal.png';
-import { adguardHomeIntegration } from '@site/docs/integrations/adguard-home';
-import { piHoleIntegration } from '@site/docs/integrations/pi-hole';
-import { technitiumDnsIntegration } from '@site/docs/integrations/technitium-dns';
+import gridLayout from "./img/grid.png";
+import verticalLayout from "./img/vertical.png";
+import horizontalLayout from "./img/horizontal.png";
+import { adguardHomeIntegration } from "@site/docs/integrations/adguard-home";
+import { piHoleIntegration } from "@site/docs/integrations/pi-hole";
+import { technitiumDnsIntegration } from "@site/docs/integrations/technitium-dns";
 
-<div className='flex gap-2'>
+<div className="flex gap-2">
   <img src={gridLayout} alt="grid-layout pi-hole-colors" width={256 + 8} height={256 + 8} />
-  <div className='flex flex-col gap-2'>
+  <div className="flex flex-col gap-2">
     <img src={verticalLayout} alt="vertical-layout no-colors" width={128} height={128} />
     <img src={horizontalLayout} alt="horizontal-layout pi-hole-colors" width={128 * 3} height={128} />
   </div>
@@ -40,17 +38,26 @@ import { technitiumDnsIntegration } from '@site/docs/integrations/technitium-dns
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: adguardHomeIntegration,
-}, {
-  integration: piHoleIntegration,
-}, {
-  integration: technitiumDnsIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: adguardHomeIntegration,
+    },
+    {
+      integration: piHoleIntegration,
+    },
+    {
+      integration: technitiumDnsIntegration,
+    },
+  ]}
+/>
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={dnsHoleSummaryWidget.configuration} />

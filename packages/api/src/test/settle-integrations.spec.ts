@@ -47,4 +47,21 @@ describe("settleIntegrationQueries", () => {
       }),
     ).resolves.toEqual(["First", "Second"]);
   });
+
+  test("can retain partial fallbacks while rejecting total failure", async () => {
+    const error = new Error("Integration unavailable");
+    const options = {
+      fallback: (integration: (typeof integrations)[number]) => integration.name,
+      throwOnAllFailures: true,
+    };
+
+    await expect(
+      settleIntegrationQueries(
+        integrations,
+        (integration) => (integration.id === "first" ? Promise.reject(error) : Promise.resolve(integration.name)),
+        options,
+      ),
+    ).resolves.toEqual(["First", "Second"]);
+    await expect(settleIntegrationQueries(integrations, () => Promise.reject(error), options)).rejects.toBe(error);
+  });
 });

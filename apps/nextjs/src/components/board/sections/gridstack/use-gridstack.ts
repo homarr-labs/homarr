@@ -14,6 +14,7 @@ import { initializeGridstack } from "./init-gridstack";
 
 export interface UseGridstackRefs {
   wrapper: Ref<HTMLDivElement | null>;
+  wrapperElement: RefObject<HTMLDivElement | null>;
   items: RefObject<Record<string, RefObject<GridItemHTMLElement | null>>>;
   gridstack: RefObject<GridStack | null>;
 }
@@ -287,6 +288,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     refs: {
       items: itemRefs,
       wrapper: wrapperRef,
+      wrapperElement: wrapperElementRef,
       gridstack: gridRef,
     },
   };

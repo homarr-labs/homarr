@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Accordion, Anchor, Badge, Card, Group, Image, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
@@ -18,9 +19,10 @@ interface InstanceCardProps {
   options: CoolifyOptions;
   isTiny: boolean;
   widgetKey: string;
+  isAdvanced: boolean;
 }
 
-export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceCardProps) {
+export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced }: InstanceCardProps) {
   const t = useScopedI18n("widget.coolify");
   const cardKey = `${widgetKey}-${instance.integrationId}`;
   const [showIp, setShowIp] = useLocalStorage({
@@ -31,6 +33,12 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
     key: `coolify-sections-${cardKey}`,
     defaultValue: ["applications"],
   });
+  const visibleSections = [
+    options.showServers ? "servers" : null,
+    options.showApplications ? "applications" : null,
+    options.showServices ? "services" : null,
+  ].filter((section): section is string => section !== null);
+  const [advancedOpenSections, setAdvancedOpenSections] = useState(visibleSections);
 
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,
@@ -90,7 +98,13 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
         </Group>
       </Group>
 
-      <Accordion variant="filled" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
+      <Accordion
+        variant="filled"
+        chevronPosition="right"
+        multiple
+        value={isAdvanced ? advancedOpenSections : openSections}
+        onChange={isAdvanced ? setAdvancedOpenSections : setOpenSections}
+      >
         {options.showServers && (
           <ServersSection
             servers={instance.instanceInfo.servers}

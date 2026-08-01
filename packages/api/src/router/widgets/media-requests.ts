@@ -34,6 +34,7 @@ export const mediaRequestsRouter = createTRPCRouter({
           data.map((request) => ({
             ...request,
             integrationId: integration.id,
+            integration,
           })),
         )
         .toSorted((dataA, dataB) => {
@@ -99,5 +100,6 @@ export const mediaRequestsRouter = createTRPCRouter({
       } as const;
 
       await answerActions[input.answer](input.requestId);
+      return { success: true };
     }),
 });

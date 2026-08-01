@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Anchor, Box, Center, Group, Stack, Title } from "@mantine/core";
+import { Anchor, Badge, Box, Center, Group, Stack, Title } from "@mantine/core";
 import { IconBrandYoutube, IconDeviceCctvOff } from "@tabler/icons-react";
 import videojs from "video.js";
 
@@ -16,17 +16,26 @@ import type Player from "video.js/dist/types/player";
 
 import { createDocumentationLink } from "@homarr/definitions";
 
-export default function VideoWidget({ options }: WidgetComponentProps<"video">) {
+export default function VideoWidget({ options, isEditMode, displayMode }: WidgetComponentProps<"video">) {
   if (options.feedUrl.trim() === "") {
     return <NoUrl />;
   }
 
-  if (options.feedUrl.trim().startsWith("https://www.youtube.com/watch")) {
+  if (isYouTubeUrl(options.feedUrl)) {
     return <ForYoutubeUseIframe />;
   }
 
-  return <Feed options={options} />;
+  return <Feed options={options} isEditMode={isEditMode} isAdvanced={displayMode === "advanced"} />;
 }
+
+export const isYouTubeUrl = (value: string): boolean => {
+  try {
+    const url = new URL(value);
+    return url.hostname === "youtu.be" || url.hostname === "youtube.com" || url.hostname.endsWith(".youtube.com");
+  } catch {
+    return false;
+  }
+};
 
 const NoUrl = () => {
   const t = useI18n();
@@ -55,7 +64,11 @@ const ForYoutubeUseIframe = () => {
   );
 };
 
-const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
+const Feed = ({
+  options,
+  isEditMode,
+  isAdvanced,
+}: Pick<WidgetComponentProps<"video">, "options"> & { isEditMode: boolean; isAdvanced: boolean }) => {
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Player>(null);
 
@@ -98,8 +111,8 @@ const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
 
   useEffect(() => {
     if (!playerRef.current) return;
-    playerRef.current.controls(options.hasControls);
-  }, [options.hasControls]);
+    playerRef.current.controls(!isEditMode && (options.hasControls || isAdvanced));
+  }, [isAdvanced, isEditMode, options.hasControls]);
 
   useEffect(() => {
     const player = playerRef.current;
@@ -113,8 +126,21 @@ const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
   }, [playerRef]);
 
   return (
-    <Group justify="center" w="100%" h="100%" pos="relative">
+    <Group justify="center" w="100%" h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
       <Box w="100%" h="100%" ref={videoRef} />
+      {isAdvanced && (
+        <Badge pos="absolute" top={8} left={8} variant="filled" color="dark" maw="calc(100% - 16px)">
+          {getVideoHost(options.feedUrl)}
+        </Badge>
+      )}
     </Group>
   );
+};
+
+const getVideoHost = (value: string) => {
+  try {
+    return new URL(value).host;
+  } catch {
+    return value;
+  }
 };

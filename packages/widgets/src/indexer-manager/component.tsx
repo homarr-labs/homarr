@@ -1,6 +1,7 @@
 "use client";
 
-import { ActionIcon, Anchor, Button, Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
+import { useEffect, useMemo } from "react";
+import { ActionIcon, Anchor, Badge, Button, Card, Flex, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -16,6 +17,9 @@ export default function IndexerManagerWidget({
   integrationIds,
   width,
   height,
+  displayMode,
+  isEditMode,
+  widgetStateRef,
 }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
   const { data: indexersData = [] } = clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds });
@@ -25,8 +29,22 @@ export default function IndexerManagerWidget({
     onSettled: () => void utils.widget.indexerManager.getIndexersStatus.invalidate(),
   });
   const board = useRequiredBoard();
-  const hasSmallWidth = width < 256;
-  const hasSmallHeight = height < 256;
+  const isAdvanced = displayMode === "advanced";
+  const hasSmallWidth = !isAdvanced && width < 256;
+  const hasSmallHeight = !isAdvanced && height < 256;
+  const allIndexers = useMemo(() => indexersData.flatMap((entry) => entry.indexers), [indexersData]);
+  const unavailableCount = allIndexers.filter((indexer) => !indexer.status || !indexer.enabled).length;
+
+  useEffect(() => {
+    if (!widgetStateRef) return;
+    widgetStateRef.current = {
+      ...widgetStateRef.current,
+      testAllIndexers: () => testAll({ integrationIds }),
+    };
+    return () => {
+      if (widgetStateRef.current) delete widgetStateRef.current.testAllIndexers;
+    };
+  }, [integrationIds, testAll, widgetStateRef]);
 
   return (
     <Flex className="indexer-manager-container" h="100%" direction="column" gap="sm" p="sm" align="center">
@@ -39,6 +57,18 @@ export default function IndexerManagerWidget({
         <Text size={hasSmallWidth ? "xs" : "md"} fw="bold">
           {t("widget.indexerManager.title")}
         </Text>
+        {isAdvanced && (
+          <Group gap={4} wrap="nowrap">
+            <Badge size="xs" color="green" variant="light">
+              {allIndexers.length - unavailableCount}
+            </Badge>
+            {unavailableCount > 0 && (
+              <Badge size="xs" color="red" variant="light">
+                {unavailableCount}
+              </Badge>
+            )}
+          </Group>
+        )}
         {hasSmallHeight && (
           <ActionIcon
             className="indexer-manager-test-action-icon"
@@ -46,6 +76,7 @@ export default function IndexerManagerWidget({
             radius={board.itemRadius}
             variant="light"
             loading={isPending}
+            disabled={isEditMode}
             loaderProps={{ type: "dots" }}
             onClick={() => {
               testAll({ integrationIds });
@@ -63,8 +94,22 @@ export default function IndexerManagerWidget({
         flex={1}
       >
         <ScrollArea className="indexer-manager-list-scroll-area" h="100%" scrollbars="y">
-          {indexersData.map(({ integrationId, indexers }) => (
+          {indexersData.map(({ integrationId, integrationName, indexers, error }) => (
             <Stack gap={4} className={`indexer-manager-${integrationId}-list-container`} p={0} key={integrationId}>
+              {(isAdvanced || indexersData.length > 1) && (
+                <Group justify="space-between" wrap="nowrap" py={4}>
+                  <Text size="xs" fw={600} truncate="end">
+                    {integrationName}
+                  </Text>
+                  {error && (
+                    <Tooltip label={error} multiline maw={360}>
+                      <Badge size="xs" color="red" variant="light">
+                        {t("common.error")}
+                      </Badge>
+                    </Tooltip>
+                  )}
+                </Group>
+              )}
               {indexers.map((indexer) => (
                 <Group
                   className={`indexer-manager-line indexer-manager-${indexer.name}`}
@@ -82,6 +127,11 @@ export default function IndexerManagerWidget({
                       {indexer.name}
                     </Text>
                   </Anchor>
+                  {isAdvanced && (
+                    <Text size="xs" c="dimmed" truncate="end" style={{ flex: 1 }}>
+                      {indexer.url}
+                    </Text>
+                  )}
                   {indexer.status === false || indexer.enabled === false ? (
                     <IconCircleX
                       className="indexer-manager-line-status-icon indexer-manager-line-icon-disabled"
@@ -110,6 +160,7 @@ export default function IndexerManagerWidget({
           variant="light"
           leftSection={<IconTestPipe size={"1rem"} />}
           loading={isPending}
+          disabled={isEditMode}
           loaderProps={{ type: "dots" }}
           onClick={() => {
             testAll({ integrationIds });

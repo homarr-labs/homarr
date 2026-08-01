@@ -44,7 +44,9 @@ import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
 import { DataTable, useDataTableColumns } from "mantine-datatable";
 
 import { clientApi } from "@homarr/api/client";
-import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
+import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { useOptionalBoard } from "@homarr/boards/context";
 import { formatByteRate, formatBytes, useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
@@ -52,8 +54,11 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { columnWidthsToRecord, filterDownloadItemsByStatus, getAvailableDownloadStates } from "./helpers";
 
 dayjs.extend(relativeTime);
+
+const COLUMN_WIDTH_SAVE_DELAY_MS = 200;
 
 type DownloadsT = ReturnType<typeof useScopedI18n<"widget.downloads">>;
 type DownloadState = ExtendedDownloadClientItem["state"];
@@ -71,6 +76,14 @@ interface ContextMenuState {
   x: number;
   y: number;
   item: ExtendedDownloadClientItem;
+}
+
+interface DownloadsWidgetState {
+  integrationKey: string;
+  clientFilter: string[];
+  statusFilter: string[];
+  sortStatus: DataTableSortStatus<ExtendedDownloadClientItem>;
+  showStats: boolean;
 }
 
 interface ColumnContext {
@@ -149,7 +162,10 @@ const speedColumnConfig = {
   up: { Icon: IconUpload, color: "green" as const },
 } as const;
 
-function getSizeConfig(width: number): SizeConfig {
+export function getSizeConfig(width: number, height = Number.POSITIVE_INFINITY, isAdvanced = false): SizeConfig {
+  if (isAdvanced) return DEFAULT_SIZE_CONFIG;
+  if (height < 120) return SIZE_BREAKPOINTS[0]?.config ?? DEFAULT_SIZE_CONFIG;
+  if (height < 180) return SIZE_BREAKPOINTS[1]?.config ?? DEFAULT_SIZE_CONFIG;
   for (const { maxWidth, config } of SIZE_BREAKPOINTS) {
     if (width < maxWidth) return config;
   }
@@ -286,7 +302,13 @@ export default function DownloadClientsWidget({
   boardId,
   itemId,
   width,
+  height,
+  displayMode,
+  widgetStateRef,
 }: WidgetComponentProps<"downloads">) {
+  const board = useOptionalBoard();
+  const { data: session } = useSession();
+  const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const allInteractAccess = useIntegrationsWithInteractAccess();
   const integrationInteractSet = useMemo(
     () => new Set(allInteractAccess.filter(({ id }) => integrationIds.includes(id)).map(({ id }) => id)),
@@ -304,10 +326,19 @@ export default function DownloadClientsWidget({
 
   const t = useScopedI18n("widget.downloads");
 
-  const [clientFilter, setClientFilter] = useState<string[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+  const integrationKey = integrationIds.join("\u0000");
+  const storedWidgetState = widgetStateRef?.current?.downloads as Partial<DownloadsWidgetState> | undefined;
+  const persistedWidgetState = storedWidgetState?.integrationKey === integrationKey ? storedWidgetState : undefined;
+
+  const [clientFilter, setClientFilter] = useState<string[]>(() =>
+    Array.isArray(persistedWidgetState?.clientFilter) ? [...persistedWidgetState.clientFilter] : [],
+  );
+  const [statusFilter, setStatusFilter] = useState<string[]>(() =>
+    Array.isArray(persistedWidgetState?.statusFilter) ? [...persistedWidgetState.statusFilter] : [],
+  );
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
-  const [showStats, { toggle: toggleStats }] = useDisclosure(false);
+  const [showStats, { toggle: toggleStats }] = useDisclosure(persistedWidgetState?.showStats === true);
+  const isAdvanced = displayMode === "advanced";
 
   const utils = clientApi.useUtils();
   const mutationOptions = {
@@ -321,14 +352,21 @@ export default function DownloadClientsWidget({
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation(mutationOptions);
 
   const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
+    scope: { id: `downloads-options:${boardId ?? "preview"}:${itemId ?? "preview"}` },
     onError: () => showErrorNotification({ title: t("errors.actionFailed"), message: t("errors.actionFailedMessage") }),
   });
+  const saveOptionToServer = useCallback(
+    (newOptions: Partial<Record<string, string>>) => {
+      if (hasChangeAccess && boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
+    },
+    [boardId, hasChangeAccess, itemId, saveItemOptions],
+  );
   const persistOption = useCallback(
     (newOptions: Partial<Record<string, string>>) => {
       setOptions({ newOptions });
-      if (boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
+      saveOptionToServer(newOptions);
     },
-    [setOptions, boardId, itemId, saveItemOptions],
+    [saveOptionToServer, setOptions],
   );
 
   const savedOrder = useMemo(() => parseJsonOption(options.columnOrder, [] as string[]), [options.columnOrder]);
@@ -339,26 +377,28 @@ export default function DownloadClientsWidget({
 
   let defaultSortDirection: DataTableSortStatus<ExtendedDownloadClientItem>["direction"] = "asc";
   if (options.descendingDefaultSort) defaultSortDirection = "desc";
-  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<ExtendedDownloadClientItem>>({
-    columnAccessor: options.defaultSort,
-    direction: defaultSortDirection,
-  });
+  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<ExtendedDownloadClientItem>>(() =>
+    persistedWidgetState?.sortStatus
+      ? { ...persistedWidgetState.sortStatus }
+      : { columnAccessor: options.defaultSort, direction: defaultSortDirection },
+  );
+  const hasMountedSortDefaults = useRef(false);
   useEffect(() => {
+    if (!hasMountedSortDefaults.current) {
+      hasMountedSortDefaults.current = true;
+      return;
+    }
     setSortStatus({ columnAccessor: options.defaultSort, direction: defaultSortDirection });
   }, [options.defaultSort, defaultSortDirection]);
 
-  const data = useMemo<ExtendedDownloadClientItem[]>(() => {
+  const eligibleData = useMemo<ExtendedDownloadClientItem[]>(() => {
     return currentItems
       .filter(({ integration }) => integrationIds.includes(integration.id))
       .flatMap((pair) =>
         pair.data.items
           .filter(({ category }) => matchesCategoryFilter(category, options.categoryFilter, options.filterIsWhitelist))
           .filter((item) => showCompletedItem(item, options))
-          .filter(
-            ({ state }) =>
-              (clientFilter.length === 0 || clientFilter.includes(pair.integration.id)) &&
-              (statusFilter.length === 0 || statusFilter.includes(state)),
-          )
+          .filter(() => clientFilter.length === 0 || clientFilter.includes(pair.integration.id))
           .map((item): ExtendedDownloadClientItem => {
             const received = item.received ?? Math.floor(item.size * item.progress);
             const ids = [pair.integration.id];
@@ -389,8 +429,9 @@ export default function DownloadClientsWidget({
     mutateResumeItem,
     options,
     clientFilter,
-    statusFilter,
   ]);
+
+  const data = useMemo(() => filterDownloadItemsByStatus(eligibleData, statusFilter), [eligibleData, statusFilter]);
 
   const sortedData = useMemo(() => {
     const accessor = sortStatus.columnAccessor as keyof ExtendedDownloadClientItem;
@@ -452,7 +493,7 @@ export default function DownloadClientsWidget({
   const hasMultipleClients = clients.length > 1;
   const hasMultipleTypes = new Set(data.map(({ type }) => type)).size > 1;
 
-  const size = useMemo(() => getSizeConfig(width), [width]);
+  const size = useMemo(() => getSizeConfig(width, height, isAdvanced), [height, isAdvanced, width]);
   const optionsColumnSet = useMemo(() => new Set<string>(options.columns), [options.columns]);
   const columnContext = useMemo<ColumnContext>(
     () => ({ optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, size }),
@@ -660,7 +701,7 @@ export default function DownloadClientsWidget({
   }, [columnContext, t, size, progressColumnWidth]);
 
   const storeKey = `downloads-${itemId ?? "preview"}-${[...options.columns].toSorted().join(",")}`;
-  const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths } =
+  const { effectiveColumns, columnsOrder, columnsWidth, isResizing, setColumnsOrder, setMultipleColumnWidths } =
     useDataTableColumns<ExtendedDownloadClientItem>({
       key: storeKey,
       columns,
@@ -685,28 +726,46 @@ export default function DownloadClientsWidget({
   }, [storeKey, savedOrder, savedWidths, setColumnsOrder, setMultipleColumnWidths]);
 
   const prevOrder = useRef(columnsOrder);
-  const prevWidths = useRef(columnsWidth);
   useEffect(() => {
     if (!hydrated.current) return;
     const orderChanged = JSON.stringify(columnsOrder) !== JSON.stringify(prevOrder.current);
-    const widthsChanged = JSON.stringify(columnsWidth) !== JSON.stringify(prevWidths.current);
     prevOrder.current = columnsOrder;
-    prevWidths.current = columnsWidth;
-
-    if (!orderChanged && !widthsChanged) return;
     if (orderChanged) persistOption({ columnOrder: JSON.stringify(columnsOrder) });
-    if (widthsChanged) {
-      const widthMap: Record<string, number> = {};
-      for (const entry of columnsWidth) {
-        const key = Object.keys(entry)[0];
-        if (!key) continue;
-        const w = entry[key as keyof typeof entry];
-        if (typeof w === "number") widthMap[key] = w;
-        else if (typeof w === "string" && w.endsWith("px")) widthMap[key] = parseInt(w, 10);
-      }
-      persistOption({ columnWidths: JSON.stringify(widthMap) });
-    }
-  }, [columnsOrder, columnsWidth, persistOption]);
+  }, [columnsOrder, persistOption]);
+
+  const prevWidths = useRef(columnsWidth);
+  const pendingColumnWidths = useRef<string | null>(null);
+  const columnWidthSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveOptionToServerRef = useRef(saveOptionToServer);
+  useEffect(() => {
+    saveOptionToServerRef.current = saveOptionToServer;
+  }, [saveOptionToServer]);
+  useEffect(() => {
+    if (!hydrated.current || isResizing) return;
+    const widthsChanged = JSON.stringify(columnsWidth) !== JSON.stringify(prevWidths.current);
+    prevWidths.current = columnsWidth;
+    if (!widthsChanged) return;
+
+    const serializedWidths = JSON.stringify(columnWidthsToRecord(columnsWidth));
+    setOptions({ newOptions: { columnWidths: serializedWidths } });
+    pendingColumnWidths.current = serializedWidths;
+    if (columnWidthSaveTimer.current !== null) clearTimeout(columnWidthSaveTimer.current);
+    columnWidthSaveTimer.current = setTimeout(() => {
+      const value = pendingColumnWidths.current;
+      pendingColumnWidths.current = null;
+      columnWidthSaveTimer.current = null;
+      if (value !== null) saveOptionToServerRef.current({ columnWidths: value });
+    }, COLUMN_WIDTH_SAVE_DELAY_MS);
+  }, [columnsWidth, isResizing, setOptions]);
+  useEffect(
+    () => () => {
+      if (columnWidthSaveTimer.current !== null) clearTimeout(columnWidthSaveTimer.current);
+      const value = pendingColumnWidths.current;
+      pendingColumnWidths.current = null;
+      if (value !== null) saveOptionToServerRef.current({ columnWidths: value });
+    },
+    [],
+  );
 
   const handleContextMenu = useCallback(
     ({ record, event }: { record: ExtendedDownloadClientItem; event: React.MouseEvent }) => {
@@ -731,7 +790,7 @@ export default function DownloadClientsWidget({
     return traffic.up / traffic.down;
   }, [clients]);
 
-  const availableStatuses = useMemo(() => [...new Set(data.map(({ state }) => state))], [data]);
+  const availableStatuses = useMemo(() => getAvailableDownloadStates(eligibleData), [eligibleData]);
 
   const queueStats = useMemo(() => {
     const stateCounts: Record<string, number> = {};
@@ -744,6 +803,20 @@ export default function DownloadClientsWidget({
     }
     return { stateCounts, totalSize, completedSize, totalItems: data.length };
   }, [data]);
+
+  useEffect(() => {
+    if (!widgetStateRef) return;
+    widgetStateRef.current = {
+      ...widgetStateRef.current,
+      downloads: {
+        integrationKey,
+        clientFilter,
+        statusFilter,
+        sortStatus,
+        showStats,
+      } satisfies DownloadsWidgetState,
+    };
+  }, [clientFilter, integrationKey, showStats, sortStatus, statusFilter, widgetStateRef]);
 
   if (options.columns.length === 0) {
     return (
@@ -769,7 +842,7 @@ export default function DownloadClientsWidget({
 
   return (
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
-      {showStats && (
+      {(showStats || isAdvanced) && (
         <GlobalStatsBar
           queueStats={queueStats}
           totalSpeed={totalSpeed}
@@ -829,22 +902,24 @@ export default function DownloadClientsWidget({
         />
       </Box>
 
-      <WidgetFooter
-        clients={clients}
-        totalSpeed={totalSpeed}
-        totalUpSpeed={totalUpSpeed}
-        globalRatio={globalRatio}
-        hasTorrents={hasTorrents}
-        clientFilter={clientFilter}
-        setClientFilter={setClientFilter}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        availableStatuses={availableStatuses}
-        pauseQueue={mutatePauseQueue}
-        resumeQueue={mutateResumeQueue}
-        showStats={showStats}
-        toggleStats={toggleStats}
-      />
+      {(isAdvanced || height >= 96) && (
+        <WidgetFooter
+          clients={clients}
+          totalSpeed={totalSpeed}
+          totalUpSpeed={totalUpSpeed}
+          globalRatio={globalRatio}
+          hasTorrents={hasTorrents}
+          clientFilter={clientFilter}
+          setClientFilter={setClientFilter}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          availableStatuses={availableStatuses}
+          pauseQueue={mutatePauseQueue}
+          resumeQueue={mutateResumeQueue}
+          showStats={showStats}
+          toggleStats={toggleStats}
+        />
+      )}
 
       {contextMenu && <RowContextMenu state={contextMenu} onClose={closeContextMenu} t={t} />}
     </Stack>

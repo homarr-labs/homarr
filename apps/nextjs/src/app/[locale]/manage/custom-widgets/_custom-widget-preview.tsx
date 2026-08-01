@@ -123,7 +123,7 @@ export function CustomWidgetPreview({
                     type: "application/json",
                   });
                   const blobUrl = URL.createObjectURL(blob);
-                  window.open(blobUrl);
+                  window.open(blobUrl, "_blank", "noopener,noreferrer");
                   setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
                 }}
               >
@@ -167,7 +167,7 @@ function PreviewDisplay({ data }: { data: unknown }) {
 
   const Component = dataType ? displayComponents[dataType] : undefined;
   if (Component) {
-    return <Component data={typed} />;
+    return <Component data={typed} displayMode="advanced" width={320} height={240} />;
   }
 
   return (

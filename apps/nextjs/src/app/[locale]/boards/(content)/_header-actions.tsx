@@ -70,6 +70,7 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
 };
 
 const AddMenu = () => {
+  const board = useRequiredBoard();
   const { data: session } = useSession();
   const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
@@ -101,8 +102,8 @@ const AddMenu = () => {
   );
 
   const handleSelectItem = useCallback(() => {
-    openItemSelectModal();
-  }, [openItemSelectModal]);
+    openItemSelectModal({ board, persistImmediately: false });
+  }, [board, openItemSelectModal]);
 
   const handleSelectApp = useCallback(() => {
     openAppSelectModal({

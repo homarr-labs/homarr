@@ -36,7 +36,13 @@ const iconSizeByWidth = [
   { minWidth: 0, size: 16 },
 ] as const;
 
-export default function BazarrWidget({ integrationIds, options, width }: WidgetComponentProps<"bazarr">) {
+export default function BazarrWidget({
+  integrationIds,
+  options,
+  width,
+  height,
+  displayMode,
+}: WidgetComponentProps<"bazarr">) {
   const t = useScopedI18n("widget.bazarr");
   const { data: badges } = clientApi.widget.bazarr.getBadges.useQuery(
     { integrationId: integrationIds[0] ?? "" },
@@ -53,11 +59,11 @@ export default function BazarrWidget({ integrationIds, options, width }: WidgetC
   } as const;
 
   const visibleStatKeys = Object.entries(statVisibilityByOption)
-    .filter(([optionKey]) => options[optionKey as keyof typeof options])
+    .filter(([optionKey]) => displayMode === "advanced" || options[optionKey as keyof typeof options])
     .map(([, statKey]) => statKey);
 
-  const gridCols = getGridCols(width);
-  const iconSize = getIconSize(width);
+  const gridCols = getGridCols(width, height, visibleStatKeys.length, displayMode === "advanced");
+  const iconSize = getIconSize(Math.min(width, height));
 
   if (visibleStatKeys.length === 0) {
     return (
@@ -92,12 +98,17 @@ export default function BazarrWidget({ integrationIds, options, width }: WidgetC
   );
 }
 
-function getGridCols(width: number): number {
-  const match = gridColsByWidth.find(({ minWidth }) => width >= minWidth);
-  return match?.cols ?? 1;
+export function getGridCols(width: number, height: number, itemCount: number, isAdvanced = false): number {
+  if (itemCount <= 1) return 1;
+  if (isAdvanced && width >= 640) return Math.min(itemCount, 4);
+
+  const widthMatch = gridColsByWidth.find(({ minWidth }) => width >= minWidth)?.cols ?? 1;
+  const rowsAtWidth = Math.ceil(itemCount / widthMatch);
+  const rowHeight = height / rowsAtWidth;
+  return rowHeight >= 72 ? widthMatch : Math.min(itemCount, Math.max(widthMatch, 2));
 }
 
-function getIconSize(width: number): number {
+export function getIconSize(width: number): number {
   const match = iconSizeByWidth.find(({ minWidth }) => width >= minWidth);
   return match?.size ?? 16;
 }

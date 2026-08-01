@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Flex, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
+import { Card, Flex, Group, Image, ScrollArea, SimpleGrid, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -17,7 +17,7 @@ const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]
   return feedEntries;
 };
 
-export default function RssFeed({ options, width }: WidgetComponentProps<"rssFeed">) {
+export default function RssFeed({ options, width, displayMode }: WidgetComponentProps<"rssFeed">) {
   const feedEntries = useLiveFeedEntries({
     urls: options.feedUrls,
     maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
@@ -27,60 +27,109 @@ export default function RssFeed({ options, width }: WidgetComponentProps<"rssFee
 
   const languageDir = options.enableRtl ? "RTL" : "LTR";
 
-  const isNarrow = width < 128 * 3;
+  const isAdvanced = displayMode === "advanced";
+  const isNarrow = !isAdvanced && width < 128 * 3;
+  const columns = isAdvanced && width >= 720 ? 2 : 1;
 
   return (
-    <ScrollArea className="scroll-area-w100" w="100%" p="sm">
-      <Stack w={"100%"} gap="sm">
+    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isAdvanced ? "md" : "xs"}>
+      <SimpleGrid cols={columns} w="100%" spacing={isAdvanced ? "md" : "xs"} verticalSpacing={isAdvanced ? "md" : "xs"}>
         {feedEntries.map((feedEntry) => (
           <Card
             key={feedEntry.id}
             component={"a"}
-            href={feedEntry.link}
+            href={getSafeExternalUrl(feedEntry.link, feedEntry.feedUrl) ?? getSafeExternalUrl(feedEntry.feedUrl)}
             radius={board.itemRadius}
             target="_blank"
+            rel="noopener noreferrer"
             w="100%"
-            p="sm"
+            p={isAdvanced ? "md" : "xs"}
           >
             {feedEntry.enclosure !== undefined && (
               <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
             )}
 
-            <Group wrap="nowrap">
+            <Group wrap="nowrap" align="flex-start">
               {feedEntry.enclosure !== undefined && options.showPosterImage && !isNarrow && (
-                <Image src={feedEntry.enclosure} alt={feedEntry.title} w={140} h={140} radius="sm" />
+                <Image
+                  src={feedEntry.enclosure}
+                  alt={feedEntry.title}
+                  w={isAdvanced ? 180 : 112}
+                  h={isAdvanced ? 120 : 112}
+                  radius="sm"
+                  fit="cover"
+                />
               )}
 
-              <Flex gap="sm" direction="column" w="100%">
-                <Text dir={languageDir} fz="sm" lh="sm" lineClamp={2}>
+              <Flex gap={isAdvanced ? "sm" : 6} direction="column" w="100%" miw={0}>
+                <Text dir={languageDir} fz={isAdvanced ? "md" : "sm"} fw={600} lh={1.25} lineClamp={2}>
                   {feedEntry.title}
                 </Text>
                 {!options.hideDescription && feedEntry.description && (
                   <Text
-                    className={feedEntry.description}
                     dir={languageDir}
                     c="dimmed"
                     size="sm"
-                    lineClamp={options.textLinesClamp}
-                    dangerouslySetInnerHTML={{ __html: feedEntry.description }}
-                  />
+                    lineClamp={isAdvanced ? Math.max(options.textLinesClamp, 8) : options.textLinesClamp}
+                  >
+                    {feedDescriptionToText(feedEntry.description)}
+                  </Text>
                 )}
 
-                {feedEntry.published && <InfoDisplay date={dayjs(feedEntry.published).fromNow()} />}
+                <InfoDisplay
+                  source={isAdvanced ? getHostname(feedEntry.feedUrl) : undefined}
+                  date={feedEntry.published ? dayjs(feedEntry.published).fromNow() : undefined}
+                />
               </Flex>
             </Group>
           </Card>
         ))}
-      </Stack>
+      </SimpleGrid>
     </ScrollArea>
   );
 }
 
-const InfoDisplay = ({ date }: { date: string }) => (
-  <Group gap={5} align={"center"}>
-    <IconClock size={"1rem"} color={"var(--mantine-color-dimmed)"} />
-    <Text size="sm" c="dimmed">
-      {date}
-    </Text>
+export const feedDescriptionToText = (description: string): string => {
+  if (typeof DOMParser !== "undefined") {
+    return new DOMParser().parseFromString(description, "text/html").body.textContent?.trim() ?? "";
+  }
+  return description
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+export const getHostname = (url: string): string => {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return url;
+  }
+};
+
+export const getSafeExternalUrl = (value: unknown, baseUrl?: string): string | undefined => {
+  if (typeof value !== "string") return undefined;
+  try {
+    const url = new URL(value, baseUrl);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const InfoDisplay = ({ date, source }: { date?: string; source?: string }) => (
+  <Group gap={5} align="center" wrap="nowrap">
+    {date && <IconClock size="1rem" color="var(--mantine-color-dimmed)" />}
+    {date && (
+      <Text size="xs" c="dimmed">
+        {date}
+      </Text>
+    )}
+    {date && source && <Text c="dimmed">•</Text>}
+    {source && (
+      <Text size="xs" c="dimmed" truncate="end">
+        {source}
+      </Text>
+    )}
   </Group>
 );

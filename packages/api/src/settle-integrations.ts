@@ -11,6 +11,7 @@ interface IntegrationLike {
 
 interface Options<TIntegration extends IntegrationLike, TResult> {
   fallback?: (integration: TIntegration, error: unknown) => TResult;
+  throwOnAllFailures?: boolean;
 }
 
 export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
@@ -37,15 +38,18 @@ export async function settleIntegrationQueries<TIntegration extends IntegrationL
       ),
     );
 
+    errors.push(result.reason);
+
     if (options?.fallback && integration) {
       results.push(options.fallback(integration, result.reason));
       return;
     }
-
-    errors.push(result.reason);
   });
 
-  if (results.length === 0 && errors.length > 0) {
+  if (
+    errors.length > 0 &&
+    (results.length === 0 || (options?.throwOnAllFailures === true && errors.length === integrations.length))
+  ) {
     throw errors[0];
   }
 

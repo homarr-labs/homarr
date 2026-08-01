@@ -18,6 +18,7 @@ import { IconSearch, IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { toValidDate } from "@homarr/common";
 import type { MediaRequestStatus } from "@homarr/integrations/types";
@@ -35,7 +36,14 @@ export default function MediaServerWidget({
   isEditMode,
   options,
   width,
+  height,
+  displayMode,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
+  const interactIntegrationIds = new Set(
+    useIntegrationsWithInteractAccess()
+      .filter(({ id }) => integrationIds.includes(id))
+      .map(({ id }) => id),
+  );
   const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
     integrationIds,
     statuses:
@@ -61,7 +69,9 @@ export default function MediaServerWidget({
             <MediaRequestCard
               key={`${mediaRequest.integrationId}-${mediaRequest.id}`}
               request={mediaRequest}
-              isTiny={width <= 256}
+              isTiny={displayMode !== "advanced" && (width <= 256 || height < 96)}
+              isAdvanced={displayMode === "advanced"}
+              canInteract={interactIntegrationIds.has(mediaRequest.integrationId)}
               options={options}
             />
           ))}
@@ -92,10 +102,12 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
 interface MediaRequestCardProps {
   request: RouterOutputs["widget"]["mediaRequests"]["getLatestRequests"][number];
   isTiny: boolean;
+  isAdvanced: boolean;
+  canInteract: boolean;
   options: WidgetComponentProps<"mediaRequests-requestList">["options"];
 }
 
-const MediaRequestCard = ({ request, isTiny, options }: MediaRequestCardProps) => {
+const MediaRequestCard = ({ request, isTiny, isAdvanced, canInteract, options }: MediaRequestCardProps) => {
   const board = useRequiredBoard();
   const t = useScopedI18n("widget.mediaRequests-requestList");
 
@@ -152,6 +164,11 @@ const MediaRequestCard = ({ request, isTiny, options }: MediaRequestCardProps) =
                     {t(`availability.${request.availability}`)}
                   </Badge>
                 )}
+                {isAdvanced && (
+                  <Badge size="xs" variant="outline">
+                    {request.integration.name}
+                  </Badge>
+                )}
               </Group>
               <Group className="mediaRequests-list-item-request-user" gap={4} wrap="nowrap">
                 <Avatar
@@ -186,7 +203,11 @@ const MediaRequestCard = ({ request, isTiny, options }: MediaRequestCardProps) =
                 {request.name || "unknown"}
               </Anchor>
               {request.status === "pending" ? (
-                <DecisionButtons requestId={request.id} integrationId={request.integrationId} />
+                <DecisionButtons
+                  requestId={request.id}
+                  integrationId={request.integrationId}
+                  canInteract={canInteract}
+                />
               ) : (
                 <StatusBadge status={request.status} />
               )}
@@ -201,15 +222,21 @@ const MediaRequestCard = ({ request, isTiny, options }: MediaRequestCardProps) =
 interface DecisionButtonsProps {
   requestId: number;
   integrationId: string;
+  canInteract: boolean;
 }
 
-const DecisionButtons = ({ requestId, integrationId }: DecisionButtonsProps) => {
+const DecisionButtons = ({ requestId, integrationId, canInteract }: DecisionButtonsProps) => {
   const utils = clientApi.useUtils();
-  const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation({
+  const {
+    mutate: mutateRequestAnswer,
+    isPending,
+    error,
+  } = clientApi.widget.mediaRequests.answerRequest.useMutation({
     onSettled: () => void utils.widget.mediaRequests.invalidate(),
   });
   const t = useScopedI18n("widget.mediaRequests-requestList");
   const handleDecision = (answer: RouterInputs["widget"]["mediaRequests"]["answerRequest"]["answer"]) => {
+    if (!canInteract || isPending) return;
     mutateRequestAnswer({
       integrationId,
       requestId,
@@ -218,13 +245,15 @@ const DecisionButtons = ({ requestId, integrationId }: DecisionButtonsProps) => 
   };
 
   return (
-    <Group className="mediaRequests-list-item-pending-buttons" gap="sm">
+    <Group className="mediaRequests-list-item-pending-buttons" gap="sm" title={error?.message}>
       <Tooltip label={t("pending.approve")}>
         <ActionIcon
           className="mediaRequests-list-item-pending-button-approve"
           variant="light"
           color="green"
           size="xs"
+          disabled={!canInteract || isPending}
+          aria-label={t("pending.approve")}
           onClick={() => {
             handleDecision("approve");
           }}
@@ -238,6 +267,8 @@ const DecisionButtons = ({ requestId, integrationId }: DecisionButtonsProps) => 
           variant="light"
           color="red"
           size="xs"
+          disabled={!canInteract || isPending}
+          aria-label={t("pending.decline")}
           onClick={() => {
             handleDecision("decline");
           }}

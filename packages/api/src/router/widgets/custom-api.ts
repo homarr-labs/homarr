@@ -9,12 +9,11 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { applyAuth } from "../custom-widget/auth";
 import { extractActionButtonDisplay, extractDisplayDataWithFallback } from "../custom-widget/display-data";
+import { readBoundedJsonResponseAsync, validateCustomApiUrl } from "./custom-api-security";
 
 const logger = createLogger({ module: "widget:customApi" });
 
 const FETCH_TIMEOUT_MS = 10_000;
-
-const validateUrl = (urlString: string): URL => new URL(urlString);
 
 export const customApiRouter = createTRPCRouter({
   getData: protectedProcedure.input(z.object({ definitionId: z.string() })).query(async ({ ctx, input }) => {
@@ -47,7 +46,7 @@ export const customApiRouter = createTRPCRouter({
       value: decryptSecret(s.value),
     }));
 
-    const url = validateUrl(definition.url);
+    const url = validateCustomApiUrl(definition.url);
     const headers = new Headers({ Accept: "application/json" });
 
     if (definition.method !== "GET" && definition.requestBody) {
@@ -64,7 +63,7 @@ export const customApiRouter = createTRPCRouter({
         method: definition.method,
         headers,
         body: definition.method !== "GET" ? definition.requestBody : undefined,
-        redirect: "follow",
+        redirect: "error",
         signal: controller.signal,
       });
 
@@ -75,7 +74,7 @@ export const customApiRouter = createTRPCRouter({
         });
       }
 
-      const json: unknown = await response.json();
+      const json = await readBoundedJsonResponseAsync(response);
       return extractDisplayDataWithFallback(json, definition.displayType, displayConfig);
     } catch (error) {
       if (error instanceof TRPCError) throw error;

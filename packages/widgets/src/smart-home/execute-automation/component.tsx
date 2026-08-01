@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { Center, LoadingOverlay, Overlay, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
+import { Center, LoadingOverlay, Overlay, Stack, Text, ThemeIcon, Tooltip, UnstyledButton } from "@mantine/core";
 import { useDisclosure, useTimeout } from "@mantine/hooks";
 import { IconAutomation, IconCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 
@@ -16,27 +17,37 @@ export default function SmartHomeTriggerAutomationWidget({
   integrationIds,
   isEditMode,
   width,
+  height,
+  displayMode,
 }: WidgetComponentProps<"smartHome-executeAutomation">) {
+  const integrationId = integrationIds[0];
+  const canInteract = useIntegrationsWithInteractAccess().some(({ id }) => id === integrationId);
+  const [lastExecutedAt, setLastExecutedAt] = React.useState<Date | null>(null);
   const [isShowSuccess, { open: showSuccess, close: closeSuccess }] = useDisclosure();
   const { start } = useTimeout(() => {
     closeSuccess();
   }, 1000);
 
-  const { mutateAsync, isPending } = clientApi.widget.smartHome.executeAutomation.useMutation({
+  const { mutateAsync, isPending, error } = clientApi.widget.smartHome.executeAutomation.useMutation({
     onSuccess: () => {
+      setLastExecutedAt(new Date());
       showSuccess();
       start();
     },
   });
   const handleClick = React.useCallback(async () => {
-    if (isEditMode) {
+    if (isEditMode || isPending || !integrationId || !canInteract) {
       return;
     }
-    await mutateAsync({
-      automationId: options.automationId,
-      integrationId: integrationIds[0] ?? "",
-    });
-  }, [integrationIds, isEditMode, mutateAsync, options.automationId]);
+    try {
+      await mutateAsync({
+        automationId: options.automationId,
+        integrationId,
+      });
+    } catch {
+      // The mutation exposes the error below and remains retryable.
+    }
+  }, [canInteract, integrationId, isEditMode, isPending, mutateAsync, options.automationId]);
 
   const t = useI18n();
   useRegisterSpotlightContextActions(
@@ -55,17 +66,23 @@ export default function SmartHomeTriggerAutomationWidget({
             },
           };
         },
+        disabled: !integrationId || !canInteract || isPending,
       },
     ],
-    [handleClick, options.automationId, options.displayName],
+    [canInteract, handleClick, integrationId, isPending, options.automationId, options.displayName],
   );
 
-  const isTiny = width < 128;
+  const isTiny = width < 128 || height < 96;
 
   return (
     <UnstyledButton
       onClick={handleClick}
-      style={{ cursor: !isEditMode ? "pointer" : "initial", pointerEvents: isEditMode ? "none" : undefined }}
+      disabled={!integrationId || !canInteract || isPending}
+      style={{
+        cursor: !isEditMode && integrationId && canInteract ? "pointer" : "initial",
+        pointerEvents: isEditMode ? "none" : undefined,
+      }}
+      aria-description={error?.message}
       w="100%"
       h="100%"
     >
@@ -79,12 +96,44 @@ export default function SmartHomeTriggerAutomationWidget({
         </Overlay>
       )}
       <LoadingOverlay visible={isPending} />
+      {error && displayMode !== "advanced" && (
+        <Overlay>
+          <Center w="100%" h="100%" p="xs">
+            <Tooltip label={error.message} multiline>
+              <Text size="xs" c="red" ta="center" lineClamp={3}>
+                {t("widget.smartHome-executeAutomation.error.executeFailed")}
+              </Text>
+            </Tooltip>
+          </Center>
+        </Overlay>
+      )}
       <Center w="100%" h="100%">
         <Stack align="center" gap="md">
           <IconAutomation size={isTiny ? 16 : undefined} />
           <Text ta="center" fw="bold" fz={isTiny ? "xs" : undefined}>
             {options.displayName}
           </Text>
+          {displayMode === "advanced" && (
+            <>
+              {error ? (
+                <Tooltip label={error.message} multiline>
+                  <Text ta="center" size="xs" c="red">
+                    {t("widget.smartHome-executeAutomation.error.executeFailed")}
+                  </Text>
+                </Tooltip>
+              ) : (
+                <Text ta="center" size="xs" c="dimmed">
+                  {lastExecutedAt
+                    ? t("widget.smartHome-executeAutomation.advanced.lastExecuted", {
+                        time: lastExecutedAt.toLocaleTimeString(),
+                      })
+                    : t("widget.smartHome-executeAutomation.advanced.automationId", {
+                        id: options.automationId,
+                      })}
+                </Text>
+              )}
+            </>
+          )}
         </Stack>
       </Center>
     </UnstyledButton>

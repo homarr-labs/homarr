@@ -56,6 +56,8 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
     query: string,
     integrationIds: string[],
     options: Record<string, unknown>,
+    itemId?: string,
+    boardId?: string,
   ) => {
     isPending: boolean;
     options: DynamicSelectOption[];

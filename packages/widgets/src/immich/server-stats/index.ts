@@ -9,6 +9,7 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-se
   refetchInterval: null,
   supportedIntegrations: ["immich"],
   integrationsRequired: true,
+  maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showUsers: factory.switch({

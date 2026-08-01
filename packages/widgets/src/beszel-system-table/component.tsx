@@ -3,7 +3,7 @@
 import "./styles.css";
 
 import { useMemo, useState } from "react";
-import { Center, Group, Indicator, Loader, Progress, Text } from "@mantine/core";
+import { Center, Group, Indicator, Loader, Progress, ScrollArea, Stack, Text } from "@mantine/core";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
 import { DataTable } from "mantine-datatable";
 import {
@@ -38,6 +38,7 @@ import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
+import { BeszelStatsView } from "../beszel/_shared/stats-view";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
@@ -75,6 +76,7 @@ export default function BeszelSystemTableWidget({
   integrationIds,
   isEditMode,
   width,
+  displayMode = "compact",
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
   const { openModal } = useModalAction(BeszelSystemStatsModal);
@@ -84,6 +86,34 @@ export default function BeszelSystemTableWidget({
     isPending,
   } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
   const size = getSizeConfig(width);
+  const [selectedSystem, setSelectedSystem] = useState<SystemRowWithKey | null>(null);
+
+  const visibleMetricKeys = useMemo(() => {
+    const enabled = [
+      "showCpu",
+      "showMemory",
+      "showDisk",
+      "showGpu",
+      "showLoadAvg",
+      "showNet",
+      "showTemp",
+      "showBattery",
+      "showServices",
+      "showUptime",
+      "showAgent",
+    ].filter((key) => options[key as keyof typeof options]) as string[];
+    const budget =
+      displayMode === "advanced"
+        ? enabled.length
+        : width < 360
+          ? 1
+          : width < 560
+            ? 2
+            : width < 760
+              ? 4
+              : enabled.length;
+    return new Set(enabled.slice(0, budget));
+  }, [displayMode, options, width]);
 
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
 
@@ -138,7 +168,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
       },
-      options.showCpu && {
+      visibleMetricKeys.has("showCpu") && {
         accessor: "cpu",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -149,7 +179,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <PercentCell value={record.cpu} />,
       },
-      options.showMemory && {
+      visibleMetricKeys.has("showMemory") && {
         accessor: "memory",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -160,7 +190,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <PercentCell value={record.memory} />,
       },
-      options.showDisk && {
+      visibleMetricKeys.has("showDisk") && {
         accessor: "disk",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -179,7 +209,7 @@ export default function BeszelSystemTableWidget({
           />
         ),
       },
-      options.showGpu && {
+      visibleMetricKeys.has("showGpu") && {
         accessor: "gpu",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -190,7 +220,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <PercentCell value={record.gpu} />,
       },
-      options.showLoadAvg && {
+      visibleMetricKeys.has("showLoadAvg") && {
         accessor: "loadAvg",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -206,7 +236,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
       },
-      options.showNet && {
+      visibleMetricKeys.has("showNet") && {
         accessor: "netBytes",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -221,7 +251,7 @@ export default function BeszelSystemTableWidget({
           </Text>
         ),
       },
-      options.showTemp && {
+      visibleMetricKeys.has("showTemp") && {
         accessor: "temp",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -232,7 +262,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{formatTemp(record.temp, false)}</Text>,
       },
-      options.showBattery && {
+      visibleMetricKeys.has("showBattery") && {
         accessor: "battery",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -242,7 +272,7 @@ export default function BeszelSystemTableWidget({
         ),
         render: (record) => <Text size={size.fontSize}>{record.battery ? `${record.battery[0]}%` : "—"}</Text>,
       },
-      options.showServices && {
+      visibleMetricKeys.has("showServices") && {
         accessor: "services",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -253,7 +283,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{record.services}</Text>,
       },
-      options.showUptime && {
+      visibleMetricKeys.has("showUptime") && {
         accessor: "uptime",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -264,7 +294,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{formatUptime(record.uptime)}</Text>,
       },
-      options.showAgent && {
+      visibleMetricKeys.has("showAgent") && {
         accessor: "agentVersion",
         title: (
           <Group gap={4} wrap="nowrap">
@@ -278,9 +308,13 @@ export default function BeszelSystemTableWidget({
     ];
 
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
-  }, [options, t, size]);
+  }, [t, size, visibleMetricKeys]);
 
   const handleRowClick = ({ record }: { record: SystemRowWithKey }) => {
+    if (displayMode === "advanced") {
+      setSelectedSystem(record);
+      return;
+    }
     const integrationId = record._key.split(":")[0] ?? "";
     openModal({ integrationId, systemId: record.id }, { title: record.name });
   };
@@ -295,7 +329,7 @@ export default function BeszelSystemTableWidget({
     );
   }
 
-  return (
+  const table = (
     <div style={{ position: "relative", height: "100%" }}>
       <div style={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}>
         <BeszelIntegrationErrorIndicator results={results} />
@@ -316,6 +350,47 @@ export default function BeszelSystemTableWidget({
         className="beszel-table"
         onRowClick={isEditMode ? undefined : handleRowClick}
       />
+    </div>
+  );
+
+  if (displayMode === "compact") return table;
+
+  const activeSystem = selectedSystem ?? sortedSystems[0];
+  const activeIntegrationId = activeSystem?._key.split(":")[0] ?? "";
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: width >= 900 ? "minmax(0, 3fr) minmax(320px, 2fr)" : "1fr",
+        height: "100%",
+        gap: 12,
+        padding: 12,
+      }}
+    >
+      {table}
+      {activeSystem && (
+        <ScrollArea h="100%">
+          <Stack gap="sm">
+            <Text fw={700}>{activeSystem.name}</Text>
+            <BeszelStatsView
+              integrationIds={[activeIntegrationId]}
+              systemId={activeSystem.id}
+              timePeriod="1h"
+              columns={1}
+              visibility={{
+                cpu: true,
+                memory: true,
+                disk: true,
+                diskIO: true,
+                network: true,
+                dockerCpu: true,
+                dockerMemory: true,
+                dockerNetwork: true,
+              }}
+            />
+          </Stack>
+        </ScrollArea>
+      )}
     </div>
   );
 }
