@@ -61,6 +61,20 @@ describe("getPendingAssistantAction", () => {
     ).toEqual({ kind: "form", toolName: "configure_app", detail: "Wikipedia" });
   });
 
+  test("exposes the board settings form while changes still need review", () => {
+    expect(
+      getPendingAssistantAction(
+        assistantMessage({
+          type: "tool-call",
+          toolCallId: "settings-1",
+          toolName: "configure_board_settings",
+          args: { boardId: "board-1", boardName: "Home", changes: { customCss: ".item {}" } },
+          argsText: "{}",
+        }),
+      ),
+    ).toEqual({ kind: "form", toolName: "configure_board_settings", detail: "Home" });
+  });
+
   test("exposes an unresolved mutation approval", () => {
     expect(
       getPendingAssistantAction(

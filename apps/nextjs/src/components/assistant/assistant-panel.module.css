@@ -55,6 +55,43 @@
   height: 2.5rem;
 }
 
+.boardSettingsTool {
+  padding: 0.9rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+}
+
+.boardSettingsHeader {
+  min-width: 0;
+}
+
+.boardSettingsTabs :global(.mantine-Tabs-list) {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.boardSettingsTabs :global(.mantine-Tabs-tab) {
+  min-width: max-content;
+}
+
+.boardCssEditor {
+  line-height: 1.55;
+  tab-size: 2;
+  font-family: var(--mantine-font-family-monospace);
+  font-size: var(--mantine-font-size-xs);
+}
+
+.boardSettingsActions {
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.boardSettingsSubmitGroup {
+  margin-inline-start: auto;
+}
+
 .floatingPanel {
   position: fixed;
   z-index: 290;
@@ -1049,8 +1086,19 @@
   }
 
   .humanTool,
-  .appTool {
+  .appTool,
+  .boardSettingsTool {
     padding: 0.8rem;
+  }
+
+  .boardSettingsActions,
+  .boardSettingsSubmitGroup {
+    width: 100%;
+  }
+
+  .boardSettingsSubmitGroup {
+    justify-content: space-between;
+    margin-inline-start: 0;
   }
 }
 

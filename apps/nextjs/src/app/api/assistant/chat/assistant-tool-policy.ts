@@ -14,13 +14,23 @@ export const getForcedAssistantToolName = (messages: UIMessage[]) => {
   if (latestMessage?.role !== "assistant") return undefined;
 
   const latestToolPart = latestMessage.parts.toReversed().find((part) => isToolUIPart(part));
+  if (latestToolPart === undefined || latestToolPart.state !== "output-available") return undefined;
+
+  const nextToolByHumanTool = {
+    configure_app: "app_create",
+    configure_board_settings: "board_savePartialBoardSettings",
+  } as const;
+  const toolName = getToolName(latestToolPart);
   if (
-    latestToolPart === undefined ||
-    getToolName(latestToolPart) !== "configure_app" ||
-    latestToolPart.state !== "output-available"
+    toolName === "configure_board_settings" &&
+    typeof latestToolPart.output === "object" &&
+    latestToolPart.output !== null &&
+    "cancelled" in latestToolPart.output &&
+    latestToolPart.output.cancelled === true
   ) {
     return undefined;
   }
-
-  return "app_create" as const;
+  return toolName in nextToolByHumanTool
+    ? nextToolByHumanTool[toolName as keyof typeof nextToolByHumanTool]
+    : undefined;
 };

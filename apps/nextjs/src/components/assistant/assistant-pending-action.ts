@@ -9,6 +9,7 @@ export type AssistantPendingAction = {
 const humanToolKinds = {
   ask_user: "question",
   configure_app: "form",
+  configure_board_settings: "form",
 } as const;
 
 const getStringArg = (args: unknown, key: string) => {
@@ -37,7 +38,10 @@ export const getPendingAssistantAction = (message: ThreadMessage | undefined): A
     return {
       kind,
       toolName: part.toolName,
-      detail: getStringArg(part.args, kind === "question" ? "question" : "name"),
+      detail: getStringArg(
+        part.args,
+        kind === "question" ? "question" : part.toolName === "configure_board_settings" ? "boardName" : "name",
+      ),
     };
   }
 

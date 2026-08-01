@@ -8,7 +8,12 @@ tags:
 
 # Model Context Protocol (MCP)
 
-Homarr exposes a [Model Context Protocol](https://modelcontextprotocol.io) server at `/api/mcp/mcp`, enabling AI assistants like Claude, Cursor, VS Code Copilot, and Claude Code to interact with your Homarr instance using natural language.
+Homarr exposes a [Model Context Protocol](https://modelcontextprotocol.io) server at `/api/mcp`, enabling AI assistants like Claude, Cursor, VS Code Copilot, and Claude Code to interact with your Homarr instance using natural language.
+
+The endpoint implements the stateless MCP 2026-07-28 protocol and accepts 2025 Streamable HTTP clients through a
+stateless compatibility path. It does not create protocol sessions or require sticky sessions. Homarr creates the
+server and extracts its tools only after an authenticated request reaches the route. The previous `/api/mcp/mcp` URL
+remains available as a compatibility alias, but new clients should always use `/api/mcp`.
 
 With MCP, you can ask your AI assistant to manage apps, integrations, users, boards, Docker containers, media servers, DNS settings, and more - all through Homarr's existing tRPC API, now exposed as 50+ AI-callable tools.
 
@@ -46,7 +51,7 @@ Add the following to your client's MCP configuration file:
 {
   "mcpServers": {
     "homarr": {
-      "url": "https://your-homarr-instance.com/api/mcp/mcp",
+      "url": "https://your-homarr-instance.com/api/mcp",
       "headers": {
         "ApiKey": "<your-api-key>"
       }
@@ -77,7 +82,7 @@ Replace `<your-api-key>` with your actual API key. Never commit API keys to vers
   "mcpServers": {
     "homarr": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://your-homarr-instance.com/api/mcp/mcp", "--header", "ApiKey:<your-api-key>"]
+      "args": ["-y", "mcp-remote", "https://your-homarr-instance.com/api/mcp", "--header", "ApiKey:<your-api-key>"]
     }
   }
 }
@@ -100,6 +105,10 @@ Custom Widget and Workshop authoring are different: their tools, prompts, and re
 key owner is a Homarr administrator. Non-administrator keys cannot discover or invoke those capabilities. Creating an
 API key never elevates the owner.
 
+OAuth authorization and token requests bind issued credentials to the canonical `/api/mcp` resource. Dynamic client
+registration remains available for compatibility with current MCP clients while the ecosystem transitions toward
+pre-registered clients and Client ID Metadata Documents.
+
 ## Testing the Connection
 
 Verify your MCP endpoint is working:
@@ -107,13 +116,17 @@ Verify your MCP endpoint is working:
 ```bash
 curl -s -X POST \
   -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
+  -H "Accept: application/json" \
   -H "ApiKey: <your-api-key>" \
-  -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}},"id":1}' \
-  https://your-homarr-instance.com/api/mcp/mcp
+  -H "Mcp-Method: server/discover" \
+  -H "Mcp-Name: homarr" \
+  -d '{"jsonrpc":"2.0","method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientInfo":{"name":"test","version":"1.0"},"io.modelcontextprotocol/clientCapabilities":{}}},"id":1}' \
+  https://your-homarr-instance.com/api/mcp
 ```
 
-A successful response includes the server capabilities and available tools. Use `tools/list` to see all available tools:
+A successful response includes the supported protocol versions and server capabilities. Use `tools/list` to see all
+available tools. MCP v2 clients add the per-request metadata and `Mcp-Method` / `Mcp-Name` headers automatically; the
+abbreviated request below uses the stateless 2025 compatibility path for readability:
 
 ```bash
 curl -s -X POST \
@@ -121,33 +134,36 @@ curl -s -X POST \
   -H "Accept: application/json, text/event-stream" \
   -H "ApiKey: <your-api-key>" \
   -d '{"jsonrpc":"2.0","method":"tools/list","id":1}' \
-  https://your-homarr-instance.com/api/mcp/mcp
+  https://your-homarr-instance.com/api/mcp
 ```
+
+Tool catalogs are returned in deterministic order and may be cached privately by the client for five minutes. The
+removed HTTP+SSE `/sse` and `/message` transports return `410 Gone`; use the single Streamable HTTP endpoint instead.
 
 ## Available Tools
 
 Homarr exposes 50+ tools organized by namespace. Each tool is either a **query** (GET, read-only) or **mutation** (POST, write action).
 
-| Namespace          | Example Tools                                             | Type       |
-| ------------------ | --------------------------------------------------------- | ---------- |
-| `app`              | List all apps, get app by ID, create/update/delete app    | GET + POST |
-| `apiKeys`          | List API keys                                             | GET        |
-| `beszel`           | Systems status, alerts, historical system metrics         | GET        |
-| `board`            | List boards, get board by ID, create/update/delete board  | GET + POST |
-| `docker`           | List containers, inspect container, start/stop/restart    | GET + POST |
-| `icon`             | Search icons                                              | GET        |
-| `info`             | Server health, version info                               | GET        |
-| `integration`      | List integrations, test connection, delete integration    | GET + POST |
-| `invite`           | List invitations, delete invite                           | GET + POST |
-| `calendar`         | Calendar events from media servers                        | GET        |
-| `customWidget`     | Validate, preview, create, and iteratively update widgets | GET + POST |
-| `dnsHole`          | DNS hole summary, toggle blocking                         | GET + POST |
-| `downloads`        | Active downloads, pause/resume/delete                     | GET + POST |
-| `healthMonitoring` | Resource usage stats                                      | GET        |
-| `patchmon`         | Host patch and security update statistics                 | GET        |
-| `mediaRequests`    | Approve/decline media requests                            | GET + POST |
-| `mediaServer`      | Media server sessions and stats                           | GET        |
-| `smartHome`        | Execute automations, device states                        | GET + POST |
+| Namespace          | Example Tools                                              | Type       |
+| ------------------ | ---------------------------------------------------------- | ---------- |
+| `app`              | List all apps, get app by ID, create/update/delete app     | GET + POST |
+| `apiKeys`          | List API keys                                              | GET        |
+| `beszel`           | Systems status, alerts, historical system metrics          | GET        |
+| `board`            | List boards, read settings/CSS, create/update/delete board | GET + POST |
+| `docker`           | List containers, inspect container, start/stop/restart     | GET + POST |
+| `icon`             | Search icons                                               | GET        |
+| `info`             | Server health, version info                                | GET        |
+| `integration`      | List integrations, test connection, delete integration     | GET + POST |
+| `invite`           | List invitations, delete invite                            | GET + POST |
+| `calendar`         | Calendar events from media servers                         | GET        |
+| `customWidget`     | Validate, preview, create, and iteratively update widgets  | GET + POST |
+| `dnsHole`          | DNS hole summary, toggle blocking                          | GET + POST |
+| `downloads`        | Active downloads, pause/resume/delete                      | GET + POST |
+| `healthMonitoring` | Resource usage stats                                       | GET        |
+| `patchmon`         | Host patch and security update statistics                  | GET        |
+| `mediaRequests`    | Approve/decline media requests                             | GET + POST |
+| `mediaServer`      | Media server sessions and stats                            | GET        |
+| `smartHome`        | Execute automations, device states                         | GET + POST |
 
 The tools table on the MCP tab is dynamically generated - it always reflects the latest available procedures from your Homarr instance.
 
@@ -179,21 +195,36 @@ An agent creates one `homarr-custom-widget-v2` definition at a time. Start with 
 The API key owner must be a Homarr administrator. The same rule applies to management, import, migration, preview,
 secrets, publication, Workshop installation, and the HTTP authoring resources.
 
-Then, read the live schema and component resources. These resources describe the installed Mantine components.
+Load the installed skill before authoring. `customWidget_getSkill` returns the complete `SKILL.md` entrypoint and every
+bundled reference in one response, so an MCP client does not need filesystem access or a second documentation fetch.
+Then read the live schema and only the component resources required by the design. These resources describe the
+installed Mantine components.
 
-1. Call `customWidget_getAuthoringPrompt` and `customWidget_schema`.
-2. Build one Custom Widget definition.
-3. Call `customWidget_validate` without saving the definition.
-4. Call `customWidget_previewCreate`.
-5. Test named requests with `customWidget_previewQuery` and `customWidget_previewAction`.
-6. Open the returned preview URL.
-7. Examine `customWidget_previewJournal`.
-8. Revise the local candidate and create another preview session until it is ready.
-9. Call `customWidget_create`, supplying any credentials and deployment-specific source URLs the user already provided.
-10. If the user must enter the source URL or credentials, call `customWidget_configurationRequestUser` with the new definition ID and wait for completion.
-11. Create a final preview with that definition ID so Homarr loads its stored credentials, then test it again.
-12. Use `customWidget_update` or `customWidget_templatePatch` for any final saved-definition corrections.
-13. Repeat this procedure for the next Custom Widget.
+1. Call `customWidget_getSkill`, `customWidget_getAuthoringPrompt`, `customWidget_schema`, and
+   `customWidget_getComponentCatalog`.
+2. Fetch only the relevant installed component documentation with `customWidget_getComponent` and, when useful,
+   one interaction example with `customWidget_getExample`. Component results contain component-specific props; collect
+   any needed shared prop names from the compact catalog and fetch them together once with `customWidget_getSharedProps`.
+3. Build one Custom Widget definition. Use `templateLines` for generated multiline JSX to avoid a fragile JSON-escaped
+   template string.
+4. Call `customWidget_validate` without saving the definition and repair every returned issue path.
+5. Call `customWidget_previewCreate`.
+6. Call `customWidget_previewQuery` for every entry in the returned `queries` list. Supply the listed invocation
+   parameters for manual queries and inspect the real HTTP status and response shape before binding template fields.
+7. Test relevant actions with `customWidget_previewAction` in simulation mode.
+8. Open the returned `previewPath` or `previewUrl`.
+9. Examine `customWidget_previewJournal`.
+10. Revise the local candidate and create another preview session until validation, query data, actions, and rendering
+    are ready.
+11. Call `customWidget_create`, supplying any credentials and deployment-specific source URLs the user already provided.
+12. Open the returned `managementPath` to review the exact saved definition.
+13. If the user must enter the source URL or credentials, call `customWidget_configurationRequestUser` with the new definition ID and wait for completion.
+14. Create a final preview with that definition ID so Homarr loads its stored credentials, then test it again.
+15. Use `customWidget_update` or `customWidget_templatePatch` for any final saved-definition corrections.
+16. Repeat this procedure for the next Custom Widget.
+
+Validation and preview creation return compact lifecycle metadata. They do not echo the submitted widget or duplicate
+its template as both a string and line array; the agent should retain and reuse its local candidate.
 
 The agent receives the configuration-request status. The agent does not receive plaintext credentials. A preview-scoped setup URL configures only that temporary preview; use a definition-scoped URL when the values must persist.
 
@@ -229,6 +260,10 @@ The Custom Widget tools are:
 - `customWidget_workshopGet`
 - `customWidget_workshopInstall`
 - `customWidget_getAuthoringPrompt`
+- `customWidget_getComponentCatalog`
+- `customWidget_getComponent`
+- `customWidget_getSharedProps`
+- `customWidget_getExample`
 - `customWidget_getSkill`
 
 Custom Widget permissions are not assignable group capabilities. Administrator status is required for the complete
