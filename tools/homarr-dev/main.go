@@ -20,6 +20,7 @@ var (
 	flagEnv     []string
 	flagDetach  bool
 	flagBuildPR int
+	runMain     = tui.RunDev
 )
 
 func main() {
@@ -52,7 +53,7 @@ Examples:
   homarr doctor                 # check Docker and optional integrations`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return cmd.Help()
+		return runMain()
 	},
 }
 

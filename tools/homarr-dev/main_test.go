@@ -1,9 +1,21 @@
 package main
 
 import (
+	"errors"
 	"strings"
 	"testing"
 )
+
+func TestRootCommandLaunchesDevelopmentDashboard(t *testing.T) {
+	want := errors.New("dashboard started")
+	previous := runMain
+	t.Cleanup(func() { runMain = previous })
+	runMain = func() error { return want }
+
+	if err := rootCmd.RunE(rootCmd, nil); !errors.Is(err, want) {
+		t.Fatalf("root command error = %v", err)
+	}
+}
 
 func TestRunLaunchRejectsTagWithPR(t *testing.T) {
 	previousPR := flagPR
