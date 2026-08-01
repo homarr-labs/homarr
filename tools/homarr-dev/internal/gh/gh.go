@@ -6,9 +6,22 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+	"sync"
+	"time"
 )
 
 const Repo = "homarr-labs/homarr"
+const prCacheTTL = 5 * time.Minute
+
+var prListCache = struct {
+	sync.Mutex
+	entries map[int]cachedPRs
+}{entries: make(map[int]cachedPRs)}
+
+type cachedPRs struct {
+	prs       []PR
+	fetchedAt time.Time
+}
 
 func isBot(login string) bool {
 	return strings.HasSuffix(login, "[bot]") || strings.HasPrefix(login, "app/")
@@ -78,13 +91,30 @@ func rollupState(checks []rawCheck) string {
 }
 
 func ListPRs(ctx context.Context, limit int, includeBots bool) ([]PR, error) {
+	return listPRs(ctx, limit, includeBots, false)
+}
+
+func RefreshPRs(ctx context.Context, limit int, includeBots bool) ([]PR, error) {
+	return listPRs(ctx, limit, includeBots, true)
+}
+
+func listPRs(ctx context.Context, limit int, includeBots, refresh bool) ([]PR, error) {
+	cached, fetchedAt := cachedPRList(limit)
+	if !refresh && !fetchedAt.IsZero() && time.Since(fetchedAt) < prCacheTTL {
+		return filterPRs(cached, includeBots), nil
+	}
+
 	out, err := exec.CommandContext(ctx, "gh", "pr", "list",
 		"--repo", Repo,
 		"--state", "open",
 		"--limit", fmt.Sprint(limit),
 		"--json", "number,title,author,headRefName,updatedAt,isDraft,statusCheckRollup",
-	).Output()
+	).CombinedOutput()
 	if err != nil {
+		err = commandError(err, out)
+		if len(cached) > 0 {
+			return filterPRs(cached, includeBots), fmt.Errorf("%w; showing cached PRs from %s", err, fetchedAt.Format(time.Kitchen))
+		}
 		return nil, err
 	}
 
@@ -95,9 +125,6 @@ func ListPRs(ctx context.Context, limit int, includeBots bool) ([]PR, error) {
 
 	prs := make([]PR, 0, len(raws))
 	for _, r := range raws {
-		if !includeBots && isBot(r.Author.Login) {
-			continue
-		}
 		prs = append(prs, PR{
 			Number:    r.Number,
 			Title:     r.Title,
@@ -108,16 +135,48 @@ func ListPRs(ctx context.Context, limit int, includeBots bool) ([]PR, error) {
 			UpdatedAt: r.UpdatedAt,
 		})
 	}
-	return prs, nil
+	storePRList(limit, prs)
+	return filterPRs(prs, includeBots), nil
+}
+
+func cachedPRList(limit int) ([]PR, time.Time) {
+	prListCache.Lock()
+	defer prListCache.Unlock()
+	entry := prListCache.entries[limit]
+	return append([]PR(nil), entry.prs...), entry.fetchedAt
+}
+
+func storePRList(limit int, prs []PR) {
+	prListCache.Lock()
+	defer prListCache.Unlock()
+	prListCache.entries[limit] = cachedPRs{prs: append([]PR(nil), prs...), fetchedAt: time.Now()}
+}
+
+func filterPRs(prs []PR, includeBots bool) []PR {
+	filtered := make([]PR, 0, len(prs))
+	for _, pr := range prs {
+		if includeBots || !isBot(pr.Author) {
+			filtered = append(filtered, pr)
+		}
+	}
+	return filtered
+}
+
+func commandError(err error, output []byte) error {
+	detail := strings.TrimSpace(string(output))
+	if detail == "" {
+		return err
+	}
+	return fmt.Errorf("%s: %w", detail, err)
 }
 
 func GetPR(ctx context.Context, number int) (*PR, error) {
 	out, err := exec.CommandContext(ctx, "gh", "pr", "view", fmt.Sprint(number),
 		"--repo", Repo,
 		"--json", "number,title,author,headRefName,updatedAt,isDraft,statusCheckRollup",
-	).Output()
+	).CombinedOutput()
 	if err != nil {
-		return nil, err
+		return nil, commandError(err, out)
 	}
 
 	var r rawPR

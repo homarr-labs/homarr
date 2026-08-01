@@ -1,8 +1,11 @@
 package gh
 
 import (
+	"errors"
 	"os"
+	"strings"
 	"testing"
+	"time"
 )
 
 func TestIsBot(t *testing.T) {
@@ -39,6 +42,29 @@ func TestRollupStateHandlesChecksAndStatuses(t *testing.T) {
 				t.Fatalf("rollupState() = %q, want %q", got, test.want)
 			}
 		})
+	}
+}
+
+func TestCachedPRListFiltersBotsWithoutMutatingCache(t *testing.T) {
+	limit := 9876
+	storePRList(limit, []PR{{Number: 1, Author: "developer"}, {Number: 2, Author: "bot[bot]"}})
+
+	prs, fetchedAt := cachedPRList(limit)
+	if time.Since(fetchedAt) >= prCacheTTL {
+		t.Fatal("new cache entry is already expired")
+	}
+	if filtered := filterPRs(prs, false); len(filtered) != 1 || filtered[0].Number != 1 {
+		t.Fatalf("filtered PRs = %#v", filtered)
+	}
+	if unfiltered := filterPRs(prs, true); len(unfiltered) != 2 {
+		t.Fatalf("unfiltered PR count = %d, want 2", len(unfiltered))
+	}
+}
+
+func TestCommandErrorIncludesGitHubOutput(t *testing.T) {
+	err := commandError(errors.New("exit status 1"), []byte("GraphQL: API rate limit exceeded\n"))
+	if !strings.Contains(err.Error(), "API rate limit exceeded") {
+		t.Fatalf("error = %q", err)
 	}
 }
 
