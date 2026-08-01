@@ -13,4 +13,11 @@
 
 .editModeInertContent {
   display: contents;
+  pointer-events: none;
+  user-select: none;
+}
+
+.editModeInertContent * {
+  pointer-events: none !important;
+  user-select: none !important;
 }

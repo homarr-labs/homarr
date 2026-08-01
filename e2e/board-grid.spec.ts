@@ -207,9 +207,16 @@ describe("Board grid", () => {
       await expect(mainSection).toHaveAttribute("data-grid-editable", "true");
       await expect(firstItem.locator(`[data-grid-id="${fixture.firstItemId}"]`)).toHaveAttribute("role", "group");
       await expectTargetSizeAsync(getEditorEntry(firstItem));
-      await expectTargetSizeAsync(firstItem.locator(':scope > [data-testid="board-grid-resize-handle"]'));
-      await expectLogicalTargetSizeAsync(firstItem.locator(':scope > [data-testid="board-grid-resize-handle"]'), 44);
-      await expect(firstItem.locator("[data-board-grid-inert-content]")).toHaveAttribute("inert", "");
+      const dragAffordance = firstItem.getByTestId("board-grid-drag-affordance");
+      const diagonalResizeHandle = firstItem.locator(':scope > [data-testid="board-grid-resize-handle"]');
+      const inertContent = firstItem.locator("[data-board-grid-inert-content]");
+      await expect(dragAffordance).toBeVisible();
+      await expect(dragAffordance).toHaveCSS("pointer-events", "none");
+      await expectTargetSizeAsync(diagonalResizeHandle);
+      await expectLogicalTargetSizeAsync(diagonalResizeHandle, 44);
+      await expect(diagonalResizeHandle).toHaveCSS("transform", "none");
+      await expect(inertContent).toHaveAttribute("inert", "");
+      await expect(inertContent).toHaveCSS("pointer-events", "none");
 
       await page.getByRole("button", { name: "Add board content" }).click();
       await expect(page.getByRole("menuitem", { name: "New section", exact: true })).toBeVisible();
