@@ -78,14 +78,6 @@ interface ContextMenuState {
   item: ExtendedDownloadClientItem;
 }
 
-interface DownloadsWidgetState {
-  integrationKey: string;
-  clientFilter: string[];
-  statusFilter: string[];
-  sortStatus: DataTableSortStatus<ExtendedDownloadClientItem>;
-  showStats: boolean;
-}
-
 interface ColumnContext {
   optionsColumnSet: Set<string>;
   hasTorrents: boolean;
@@ -304,7 +296,6 @@ export default function DownloadClientsWidget({
   width,
   height,
   displayMode,
-  widgetStateRef,
 }: WidgetComponentProps<"downloads">) {
   const board = useOptionalBoard();
   const { data: session } = useSession();
@@ -326,18 +317,10 @@ export default function DownloadClientsWidget({
 
   const t = useScopedI18n("widget.downloads");
 
-  const integrationKey = integrationIds.join("\u0000");
-  const storedWidgetState = widgetStateRef?.current?.downloads as Partial<DownloadsWidgetState> | undefined;
-  const persistedWidgetState = storedWidgetState?.integrationKey === integrationKey ? storedWidgetState : undefined;
-
-  const [clientFilter, setClientFilter] = useState<string[]>(() =>
-    Array.isArray(persistedWidgetState?.clientFilter) ? [...persistedWidgetState.clientFilter] : [],
-  );
-  const [statusFilter, setStatusFilter] = useState<string[]>(() =>
-    Array.isArray(persistedWidgetState?.statusFilter) ? [...persistedWidgetState.statusFilter] : [],
-  );
+  const [clientFilter, setClientFilter] = useState<string[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
-  const [showStats, { toggle: toggleStats }] = useDisclosure(persistedWidgetState?.showStats === true);
+  const [showStats, { toggle: toggleStats }] = useDisclosure(false);
   const isAdvanced = displayMode === "advanced";
 
   const utils = clientApi.useUtils();
@@ -377,11 +360,10 @@ export default function DownloadClientsWidget({
 
   let defaultSortDirection: DataTableSortStatus<ExtendedDownloadClientItem>["direction"] = "asc";
   if (options.descendingDefaultSort) defaultSortDirection = "desc";
-  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<ExtendedDownloadClientItem>>(() =>
-    persistedWidgetState?.sortStatus
-      ? { ...persistedWidgetState.sortStatus }
-      : { columnAccessor: options.defaultSort, direction: defaultSortDirection },
-  );
+  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<ExtendedDownloadClientItem>>(() => ({
+    columnAccessor: options.defaultSort,
+    direction: defaultSortDirection,
+  }));
   const hasMountedSortDefaults = useRef(false);
   useEffect(() => {
     if (!hasMountedSortDefaults.current) {
@@ -803,20 +785,6 @@ export default function DownloadClientsWidget({
     }
     return { stateCounts, totalSize, completedSize, totalItems: data.length };
   }, [data]);
-
-  useEffect(() => {
-    if (!widgetStateRef) return;
-    widgetStateRef.current = {
-      ...widgetStateRef.current,
-      downloads: {
-        integrationKey,
-        clientFilter,
-        statusFilter,
-        sortStatus,
-        showStats,
-      } satisfies DownloadsWidgetState,
-    };
-  }, [clientFilter, integrationKey, showStats, sortStatus, statusFilter, widgetStateRef]);
 
   if (options.columns.length === 0) {
     return (

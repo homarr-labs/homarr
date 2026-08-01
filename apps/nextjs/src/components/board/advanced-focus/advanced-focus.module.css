@@ -22,6 +22,7 @@
   overscroll-behavior: contain;
   animation: focus-surface-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
   transform-origin: top left;
+  padding-top: 60px;
 }
 
 .backdropClosing {
@@ -57,6 +58,21 @@
   pointer-events: none;
 }
 
+.surfaceControlsAdvanced {
+  right: 0;
+  bottom: auto;
+  height: 60px;
+  background: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.surfaceTitle {
+  position: absolute;
+  top: 20px;
+  right: 120px;
+  left: 16px;
+}
+
 .closeButton {
   position: absolute;
   top: 8px;
@@ -68,7 +84,7 @@
 .pinButton {
   position: absolute;
   top: 8px;
-  right: 52px;
+  right: 60px;
   z-index: 2;
   pointer-events: auto;
 }
@@ -82,7 +98,7 @@
   pointer-events: auto;
 }
 
-@media (pointer: coarse) {
+@media (any-pointer: coarse) {
   .touchButton {
     display: inline-flex;
   }

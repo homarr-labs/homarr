@@ -2199,6 +2199,10 @@
         "lastExecuted": "Last run at {time}",
         "automationId": "Automation ID: {id}"
       },
+      "status": {
+        "running": "Running automation",
+        "success": "Automation completed"
+      },
       "error": {
         "executeFailed": "Unable to run automation"
       }

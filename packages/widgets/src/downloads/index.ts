@@ -42,7 +42,6 @@ const sortColumns = [
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
-  queryKey: [["widget", "downloads"]],
   refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from(

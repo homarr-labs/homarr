@@ -7,7 +7,6 @@ import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("notifications", {
   icon: IconMessage,
-  queryKey: [["widget", "notifications"]],
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({

@@ -9,7 +9,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("calendar", {
   icon: IconCalendar,
-  queryKey: [["widget", "calendar"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       releaseType: factory.multiSelect({

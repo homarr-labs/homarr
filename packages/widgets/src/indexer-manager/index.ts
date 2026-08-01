@@ -7,7 +7,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("indexerManager", {
   icon: IconReportSearch,
-  queryKey: [["widget", "indexerManager"]],
   contextActions: ({ widgetStateRef, context }) => [
     {
       key: "test-all-indexers",

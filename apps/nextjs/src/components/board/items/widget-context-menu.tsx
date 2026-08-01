@@ -2,7 +2,7 @@
 
 import type { MutableRefObject, ReactNode, RefObject } from "react";
 import { useCallback, useMemo, useState } from "react";
-import { Group, Loader, Menu, Switch, Text, Tooltip } from "@mantine/core";
+import { Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
 import {
   IconAlertTriangle,
   IconCircleCheck,
@@ -242,13 +242,10 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
           <>
             <Menu.Label>{tMenu("options")}</Menu.Label>
             {toggleOptions.map(([key]) => (
-              <Menu.Item key={key} onClick={() => handleToggle(key)(!options[key])}>
+              <Menu.CheckboxItem key={key} checked={Boolean(options[key])} onChange={handleToggle(key)}>
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                <Group wrap="nowrap">
-                  {String(translateIfNecessary(t, ((fn: any) => fn(`widget.${item.kind}.option.${key}.label`)) as any))}
-                  <Switch size="xs" checked={Boolean(options[key])} readOnly tabIndex={-1} ml="auto" />
-                </Group>
-              </Menu.Item>
+                {String(translateIfNecessary(t, ((fn: any) => fn(`widget.${item.kind}.option.${key}.label`)) as any))}
+              </Menu.CheckboxItem>
             ))}
           </>
         )}

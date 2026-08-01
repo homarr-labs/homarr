@@ -1,6 +1,6 @@
 import type { CSSProperties, KeyboardEvent, MutableRefObject, PointerEvent } from "react";
 import { useEffect, useRef } from "react";
-import { ActionIcon, Badge, Box, Card, FocusTrap } from "@mantine/core";
+import { ActionIcon, Badge, Box, Card, FocusTrap, Text } from "@mantine/core";
 import { useElementSize, useMergedRef, useViewportSize } from "@mantine/hooks";
 import { IconMaximize, IconPin, IconX } from "@tabler/icons-react";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
@@ -43,6 +43,8 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const { width: viewportWidth, height: viewportHeight } = useViewportSize();
   const board = useRequiredBoard();
   const t = useI18n();
+  const widgetName = t(`widget.${item.kind}.name`);
+  const advancedDialogLabel = t("item.advancedFocus.dialog", { widget: widgetName });
   const [isEditMode] = useEditMode();
   const widgetStateRef = useRef<Record<string, unknown> | null>(null);
   const { active, open, close, dismiss, pin, hover, leave } = useAdvancedFocus();
@@ -86,6 +88,8 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
         <Box
           ref={mergedRef}
           tabIndex={isEditMode ? undefined : 0}
+          role={isEditMode ? undefined : "group"}
+          aria-label={isEditMode ? undefined : `${widgetName}: ${t("item.advancedFocus.open")}`}
           aria-haspopup="dialog"
           aria-expanded={isAdvanced}
           aria-keyshortcuts="Shift+Enter"
@@ -104,11 +108,9 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
               <Card
                 role={isAdvanced ? "dialog" : undefined}
                 aria-modal={activeFocus?.pinned || undefined}
-                aria-label={
-                  isAdvanced ? t("item.advancedFocus.dialog", { widget: t(`widget.${item.kind}.name`) }) : undefined
-                }
+                aria-label={isAdvanced ? advancedDialogLabel : undefined}
                 radius={board.itemRadius}
-                p={0}
+                p={isAdvanced ? undefined : 0}
                 h={isAdvanced ? undefined : "100%"}
                 w={isAdvanced ? undefined : "100%"}
                 className={combineClasses(
@@ -143,13 +145,23 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
                     : undefined
                 }
               >
-                <div className={advancedFocusClasses.surfaceControls}>
+                <div
+                  className={combineClasses(
+                    advancedFocusClasses.surfaceControls,
+                    isAdvanced && advancedFocusClasses.surfaceControlsAdvanced,
+                  )}
+                >
+                  {isAdvanced && (
+                    <Text className={advancedFocusClasses.surfaceTitle} size="sm" fw={600} truncate>
+                      {advancedDialogLabel}
+                    </Text>
+                  )}
                   {isAdvanced && (
                     <ActionIcon
                       data-autofocus={activeFocus.pinned && activeFocus.autofocusClose ? true : undefined}
                       className={advancedFocusClasses.closeButton}
                       variant="default"
-                      size="lg"
+                      size={44}
                       aria-label={t("item.advancedFocus.close")}
                       onClick={() => close()}
                     >
@@ -160,6 +172,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
                     <ActionIcon
                       className={advancedFocusClasses.pinButton}
                       variant={activeFocus.pinned ? "filled" : "default"}
+                      size={44}
                       aria-label={activeFocus.pinned ? t("item.advancedFocus.pinned") : t("item.advancedFocus.pin")}
                       aria-pressed={activeFocus.pinned}
                       onClick={(event) => pin(event.detail === 0)}
@@ -171,7 +184,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
                     <ActionIcon
                       className={advancedFocusClasses.touchButton}
                       variant="default"
-                      size="lg"
+                      size={44}
                       aria-label={t("item.advancedFocus.open")}
                       onClick={openPinned}
                     >

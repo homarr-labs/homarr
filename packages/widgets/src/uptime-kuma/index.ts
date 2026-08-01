@@ -5,7 +5,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("uptimeKuma", {
   icon: IconHeartbeat,
-  queryKey: [["widget", "uptimeKuma"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showAverageUptime: factory.switch({

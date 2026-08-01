@@ -484,8 +484,7 @@ function CustomApiWidgetInner({
   const tCustomWidget = useScopedI18n("customWidget");
   const safeInterval = Number.isFinite(refreshInterval) ? refreshInterval : 30;
   const intervalMs = Math.max(1000, safeInterval * 1000);
-  const persistedState = widgetStateRef?.current?.customApi as { pollingPaused?: boolean } | undefined;
-  const [pollingPaused, setPollingPaused] = useState(persistedState?.pollingPaused === true);
+  const [pollingPaused, setPollingPaused] = useState(false);
   const { data, isLoading, error, refetch, isFetching } = clientApi.widget.customApi.getData.useQuery(
     { definitionId },
     {
@@ -505,14 +504,6 @@ function CustomApiWidgetInner({
   const dataType = widgetData.type as string | undefined;
   const canTogglePolling = Boolean(data) && dataType !== "actionButton" && dataType !== "disabled";
   const togglePolling = useCallback(() => setPollingPaused((value) => !value), []);
-
-  useEffect(() => {
-    if (!widgetStateRef) return;
-    widgetStateRef.current = {
-      ...widgetStateRef.current,
-      customApi: { pollingPaused },
-    };
-  }, [pollingPaused, widgetStateRef]);
 
   useEffect(() => {
     if (!widgetStateRef) return;

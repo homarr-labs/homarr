@@ -21,6 +21,7 @@ export interface FirewallIntegration {
 
 export const FirewallVersion = ({ firewallsVersionData, selectedFirewall, isTiny }: FirewallVersionProps) => {
   const t = useI18n();
+  const version = firewallsVersionData.find(({ integration }) => integration.id === selectedFirewall)?.summary.version;
 
   return (
     <Box>
@@ -31,11 +32,7 @@ export const FirewallVersion = ({ firewallsVersionData, selectedFirewall, isTiny
         size={isTiny ? "8px" : "xs"}
         style={{ minHeight: "24px" }}
       >
-        {firewallsVersionData
-          .filter(({ integration }) => integration.id === selectedFirewall)
-          .map(({ summary, integration }) => (
-            <span key={integration.id}>{formatVersion(summary.version, t("widget.firewall.versionUnknown"))}</span>
-          ))}
+        {formatVersion(version ?? "", t("widget.firewall.versionUnknown"))}
       </Badge>
     </Box>
   );
