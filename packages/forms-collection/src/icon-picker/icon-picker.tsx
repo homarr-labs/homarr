@@ -167,9 +167,10 @@ export const IconPicker = ({
             value={inputValue}
             onChange={(event) => {
               const nextValue = event.currentTarget.value;
-              if (isDirectIconUrl(nextValue)) {
+              const trimmedValue = nextValue.trim();
+              if (isDirectIconUrl(trimmedValue)) {
                 startTransition(() => {
-                  setValue(nextValue);
+                  setValue(trimmedValue);
                   setQuery("");
                   combobox.closeDropdown();
                 });

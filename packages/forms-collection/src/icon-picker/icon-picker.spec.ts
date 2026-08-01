@@ -99,7 +99,7 @@ describe("IconPicker", () => {
     const input = getInput();
 
     await act(async () => {
-      setInputValue(input, directIconUrl);
+      setInputValue(input, `  ${directIconUrl}  `);
       await new Promise((resolve) => setTimeout(resolve, 150));
     });
 
