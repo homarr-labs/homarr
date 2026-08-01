@@ -1,7 +1,9 @@
-import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
-
 import type { Board, ContainerSection } from "~/app/[locale]/boards/_types";
 import { resolvePinnedGridCollisions } from "~/components/board/sections/grid/dnd";
+import {
+  getSectionGridColumnCount,
+  getSectionGridPlacements,
+} from "~/components/board/sections/grid/section-grid-placements";
 import type { SectionGridPlacement } from "~/components/board/sections/grid/use-grid-layout-actions";
 
 export interface RemoveContainerInput {
@@ -15,6 +17,27 @@ export const removeContainerCallback =
       (section): section is ContainerSection => section.id === id && section.kind === "container",
     );
     if (!sectionToRemove) return board;
+
+    const removedLayoutsById = new Map(sectionToRemove.layouts.map((layout) => [layout.layoutId, layout]));
+    const childLayoutIds = [
+      ...board.sections.flatMap((section) =>
+        section.kind === "container"
+          ? section.layouts.flatMap((layout) =>
+              layout.parentSectionId === sectionToRemove.id ? [layout.layoutId] : [],
+            )
+          : [],
+      ),
+      ...board.items.flatMap((item) =>
+        item.layouts.flatMap((layout) => (layout.sectionId === sectionToRemove.id ? [layout.layoutId] : [])),
+      ),
+    ];
+    const hasUnresolvableChildLayout = childLayoutIds.some((layoutId) => {
+      const removedLayout = removedLayoutsById.get(layoutId);
+      return (
+        !removedLayout || !isValidFlattenDestination(board, sectionToRemove.id, layoutId, removedLayout.parentSectionId)
+      );
+    });
+    if (hasUnresolvableChildLayout) return board;
 
     const flattened = {
       ...board,
@@ -31,7 +54,7 @@ export const removeContainerCallback =
               const removedSectionLayout = sectionToRemove.layouts.find(
                 (layoutToRemove) => layoutToRemove.layoutId === layout.layoutId,
               );
-              if (!removedSectionLayout) throw new Error("Layout not found");
+              if (!removedSectionLayout) return layout;
 
               return {
                 ...layout,
@@ -50,7 +73,7 @@ export const removeContainerCallback =
           const removedSectionLayout = sectionToRemove.layouts.find(
             (layoutToRemove) => layoutToRemove.layoutId === layout.layoutId,
           );
-          if (!removedSectionLayout) throw new Error("Layout not found");
+          if (!removedSectionLayout) return layout;
 
           return {
             ...layout,
@@ -64,6 +87,29 @@ export const removeContainerCallback =
 
     return resolveFlattenedLayouts(flattened, sectionToRemove, board);
   };
+
+const isValidFlattenDestination = (
+  board: Board,
+  removedSectionId: string,
+  layoutId: string,
+  destinationSectionId: string,
+) => {
+  const visited = new Set<string>();
+  let sectionId = destinationSectionId;
+
+  while (true) {
+    if (sectionId === removedSectionId || visited.has(sectionId)) return false;
+    visited.add(sectionId);
+
+    const section = board.sections.find((candidate) => candidate.id === sectionId);
+    if (!section) return false;
+    if (section.kind !== "container") return true;
+
+    const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
+    if (!layout) return false;
+    sectionId = layout.parentSectionId;
+  }
+};
 
 const resolveFlattenedLayouts = (board: Board, removed: ContainerSection, original: Board): Board => {
   const resolvedByLayoutAndId = new Map<string, SectionGridPlacement>();
@@ -80,13 +126,13 @@ const resolveFlattenedLayouts = (board: Board, removed: ContainerSection, origin
         return layout?.parentSectionId === removed.id ? [section.id] : [];
       }),
     ];
-    const pinnedId = movedIds.toSorted()[0];
-    if (!pinnedId) continue;
-
-    const columnCount = getParentColumnCount(board, removedLayout.layoutId, removedLayout.parentSectionId);
+    const columnCount = getSectionGridColumnCount(board, removedLayout.layoutId, removedLayout.parentSectionId);
     if (!columnCount) continue;
-    const placements = getSectionPlacements(board, removedLayout.layoutId, removedLayout.parentSectionId);
-    const pinned = placements.find((placement) => placement.id === pinnedId);
+    const placements = getSectionGridPlacements(board, removedLayout.layoutId, removedLayout.parentSectionId);
+    const movedIdSet = new Set(movedIds);
+    const pinned = placements
+      .filter((placement) => movedIdSet.has(placement.id))
+      .toSorted((first, second) => first.y - second.y || first.x - second.x || first.id.localeCompare(second.id))[0];
     if (!pinned) continue;
 
     for (const placement of resolvePinnedGridCollisions(placements, pinned, columnCount)) {
@@ -132,48 +178,4 @@ const resolveFlattenedLayouts = (board: Board, removed: ContainerSection, origin
           },
     ),
   };
-};
-
-const getSectionPlacements = (board: Board, layoutId: string, sectionId: string): SectionGridPlacement[] => [
-  ...board.items.flatMap((item) => {
-    const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
-    return layout?.sectionId === sectionId
-      ? [
-          {
-            id: item.id,
-            type: "item" as const,
-            x: layout.xOffset,
-            y: layout.yOffset,
-            w: layout.width,
-            h: layout.height,
-          },
-        ]
-      : [];
-  }),
-  ...board.sections.flatMap((section) => {
-    if (section.kind !== "container") return [];
-    const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
-    return layout?.parentSectionId === sectionId
-      ? [
-          {
-            id: section.id,
-            type: "section" as const,
-            x: layout.xOffset,
-            y: layout.yOffset,
-            w: layout.width,
-            h: layout.height,
-          },
-        ]
-      : [];
-  }),
-];
-
-const getParentColumnCount = (board: Board, layoutId: string, sectionId: string) => {
-  const section = board.sections.find((candidate) => candidate.id === sectionId);
-  if (!section) return null;
-  if (section.kind === "container") {
-    return section.layouts.find((layout) => layout.layoutId === layoutId)?.width ?? null;
-  }
-  const layout = board.layouts.find((candidate) => candidate.id === layoutId);
-  return layout ? getBoardLaneColumnCount(layout, getRootSectionLane(section.xOffset)) : null;
 };

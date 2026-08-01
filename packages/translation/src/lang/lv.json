@@ -1356,8 +1356,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Jauna dinamiskā sadaļa",
-        "remove": "Noņemt dinamisko sadaļu"
+        "create": "Jauns konteiners",
+        "remove": "Noņemt konteineru"
       },
       "option": {
         "title": {
@@ -1371,8 +1371,8 @@
         }
       },
       "remove": {
-        "title": "Noņemt dinamisko sadaļu",
-        "message": "Vai esat pārliecināts, ka vēlaties noņemt šo dinamisko sadaļu? Vienumi tiks pārvietoti uz to pašu atrašanās vietu vecāku sadaļā."
+        "title": "Noņemt konteineru",
+        "message": "Vai esat pārliecināts, ka vēlaties noņemt šo konteineru? Vienumi tiks pārvietoti uz to pašu atrašanās vietu vecāku sadaļā."
       }
     }
   },

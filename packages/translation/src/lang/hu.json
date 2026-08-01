@@ -1346,8 +1346,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Új dinamikus szakasz",
-        "remove": "A dinamikus szakasz eltávolítása"
+        "create": "Új konténer",
+        "remove": "A konténer eltávolítása"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,8 @@
         }
       },
       "remove": {
-        "title": "Dinamikus szakasz eltávolítása",
-        "message": "Biztosan el akarja távolítani ezt a dinamikus részt? Az elemek a szülő rész ugyanazon helyére kerülnek át."
+        "title": "Konténer eltávolítása",
+        "message": "Biztosan el akarja távolítani ezt a konténert? Az elemek a szülő rész ugyanazon helyére kerülnek át."
       }
     }
   },

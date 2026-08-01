@@ -1346,8 +1346,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Nová dynamická sekce",
-        "remove": "Odstranit dynamickou sekci"
+        "create": "Nový kontejner",
+        "remove": "Odstranit kontejner"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,8 @@
         }
       },
       "remove": {
-        "title": "Odstranit dynamickou sekci",
-        "message": "Jste si jisti, že chcete odstranit tuto dynamickou sekci? Položky budou přesunuty na stejné místo v nadřazené sekci."
+        "title": "Odstranit kontejner",
+        "message": "Jste si jisti, že chcete odstranit tento kontejner? Položky budou přesunuty na stejné místo v nadřazené sekci."
       }
     }
   },

@@ -1346,8 +1346,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Uus dünaamiline sektsioon",
-        "remove": "Eemalda dünaamiline sektsioon"
+        "create": "Uus konteiner",
+        "remove": "Eemalda konteiner"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,8 @@
         }
       },
       "remove": {
-        "title": "Eemalda dünaamiline sektsioon",
-        "message": "Kas oled kindel, et soovid selle dünaamilise sektsiooni eemaldada? Üksused teisaldatakse ülemsektsiooni samasse asukohta."
+        "title": "Eemalda konteiner",
+        "message": "Kas oled kindel, et soovid selle konteineri eemaldada? Üksused teisaldatakse ülemsektsiooni samasse asukohta."
       }
     }
   },

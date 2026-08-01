@@ -1346,8 +1346,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Nova dinamička sekcija",
-        "remove": "Ukloni dinamičku sekciju"
+        "create": "Novi kontejner",
+        "remove": "Ukloni kontejner"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,8 @@
         }
       },
       "remove": {
-        "title": "Ukloni dinamičku sekciju",
-        "message": "Jeste li sigurni da želite ukloniti ovu dinamičku sekciju? Stavke će biti premještene na isto mjesto u nadređenoj sekciji."
+        "title": "Ukloni kontejner",
+        "message": "Jeste li sigurni da želite ukloniti ovaj kontejner? Stavke će biti premještene na isto mjesto u nadređenoj sekciji."
       }
     }
   },

@@ -10,8 +10,9 @@ export const createHomarrContainer = (
     };
   } = {},
 ) => {
-  const image = process.env.HOMARR_E2E_IMAGE?.trim() || "homarr-e2e";
-  if (!process.env.CI) {
+  const configuredImage = process.env.HOMARR_E2E_IMAGE?.trim();
+  const image = configuredImage || "homarr-e2e";
+  if (!process.env.CI && !configuredImage) {
     throw new Error(`This test should only be run in CI or with a local Homarr image (configured: '${image}')`);
   }
 

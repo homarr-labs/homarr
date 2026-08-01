@@ -1011,6 +1011,43 @@ describe("saveBoard should save full board", () => {
       height: 5,
     });
   });
+  it("should add a container without layouts", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId: rootSectionId } = await createFullBoardAsync(db, "default");
+    const containerId = createId();
+
+    await caller.saveBoard({
+      id: boardId,
+      sections: [
+        {
+          id: rootSectionId,
+          kind: "empty",
+          xOffset: 0,
+          yOffset: 0,
+        },
+        {
+          id: containerId,
+          kind: "container",
+          collapsed: false,
+          options: {},
+          layouts: [],
+        },
+      ],
+      items: [],
+    });
+
+    expect(
+      await db.query.sections.findFirst({
+        where: eq(sections.id, containerId),
+      }),
+    ).toMatchObject({ id: containerId, kind: "container" });
+    expect(
+      await db.query.sectionLayouts.findMany({
+        where: eq(sectionLayouts.sectionId, containerId),
+      }),
+    ).toEqual([]);
+  });
   it("should add item when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();

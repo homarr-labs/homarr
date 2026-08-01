@@ -1346,8 +1346,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Nauja dinaminė sekcija",
-        "remove": "Pašalinti dinaminę sekciją"
+        "create": "Naujas konteineris",
+        "remove": "Pašalinti konteinerį"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,8 @@
         }
       },
       "remove": {
-        "title": "Pašalinti dinaminę sekciją",
-        "message": "Ar tikrai norite pašalinti šią dinaminę sekciją? Elementai bus perkelti į tą pačią vietą pirminėje sekcijoje."
+        "title": "Pašalinti konteinerį",
+        "message": "Ar tikrai norite pašalinti šį konteinerį? Elementai bus perkelti į tą pačią vietą pirminėje sekcijoje."
       }
     }
   },

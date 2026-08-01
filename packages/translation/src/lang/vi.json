@@ -1346,8 +1346,8 @@
   "section": {
     "container": {
       "action": {
-        "create": "Phần động mới",
-        "remove": "Xóa phần động"
+        "create": "Vùng chứa mới",
+        "remove": "Xóa vùng chứa"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,8 @@
         }
       },
       "remove": {
-        "title": "Xóa phần động",
-        "message": "Bạn có chắc chắn muốn xóa phần động này không? Các mục sẽ được chuyển đến cùng vị trí trong phần cha."
+        "title": "Xóa vùng chứa",
+        "message": "Bạn có chắc chắn muốn xóa vùng chứa này không? Các mục sẽ được chuyển đến cùng vị trí trong phần cha."
       }
     }
   },

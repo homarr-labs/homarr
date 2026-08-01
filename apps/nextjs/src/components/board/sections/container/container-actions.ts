@@ -1,8 +1,7 @@
 import { useCallback } from "react";
-import type { z } from "zod/v4";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
-import type { containerSectionOptionsSchema } from "@homarr/validation/shared";
+import type { ContainerSectionOptions } from "@homarr/validation/shared";
 
 import { addContainerCallback } from "./actions/add-container";
 import type { RemoveContainerInput } from "./actions/remove-container";
@@ -10,7 +9,7 @@ import { removeContainerCallback } from "./actions/remove-container";
 
 interface UpdateContainerOptions {
   containerId: string;
-  newOptions: z.infer<typeof containerSectionOptionsSchema>;
+  newOptions: ContainerSectionOptions;
 }
 
 export const useContainerActions = () => {

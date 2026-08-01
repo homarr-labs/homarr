@@ -1,9 +1,5 @@
 # Product
 
-## Register
-
-product
-
 ## Users
 
 Homarr is used by self-hosters and administrators who assemble dashboards for services running across home labs and private infrastructure. They need dense, reliable controls and status at a glance, with enough guidance to configure advanced features without hiding how they work.

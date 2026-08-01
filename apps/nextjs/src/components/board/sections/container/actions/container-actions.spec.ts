@@ -58,7 +58,15 @@ describe("container actions", () => {
     const nestedItem = new ItemMockBuilder({ id: "nested-item" })
       .addLayout({ layoutId: "layout", sectionId: removed.id, xOffset: 2, yOffset: 1, width: 1, height: 1 })
       .build();
-    const board = new BoardMockBuilder().addSection(removed).addSection(child).addItem(nestedItem).build();
+    const board = new BoardMockBuilder()
+      .addEmptySection({ id: "root" })
+      .addSection(removed)
+      .addSection(child)
+      .addItem(nestedItem)
+      .build();
+    const layout = board.layouts[0];
+    if (!layout) throw new Error("Expected a board layout");
+    layout.id = "layout";
 
     const result = removeContainerCallback({ id: removed.id })(board);
     const flattenedChild = result.sections.find(
@@ -78,7 +86,7 @@ describe("container actions", () => {
     });
   });
 
-  test("normalizes and resolves collisions while flattening malformed child geometry", () => {
+  test("normalizes, pins the top-left child, and resolves collisions while flattening malformed geometry", () => {
     const removed = new ContainerSectionMockBuilder({ id: "removed" })
       .addLayout({ layoutId: "layout", parentSectionId: "root", xOffset: 2, yOffset: 0, width: 2, height: 2 })
       .build();
@@ -111,7 +119,67 @@ describe("container actions", () => {
     );
 
     expect(layouts.existing).toMatchObject({ xOffset: 0, yOffset: 0, width: 2, height: 1 });
-    expect(layouts.a).toMatchObject({ sectionId: "root", xOffset: 2, yOffset: 0, width: 2, height: 1 });
-    expect(layouts.b).toMatchObject({ sectionId: "root", xOffset: 2, yOffset: 1, width: 2, height: 1 });
+    expect(layouts.a).toMatchObject({ sectionId: "root", xOffset: 2, yOffset: 1, width: 2, height: 1 });
+    expect(layouts.b).toMatchObject({ sectionId: "root", xOffset: 2, yOffset: 0, width: 2, height: 1 });
+  });
+
+  test("keeps the container when a child container has layout geometry that cannot be flattened", () => {
+    const removed = new ContainerSectionMockBuilder({ id: "removed" })
+      .addLayout({ layoutId: "other-layout", parentSectionId: "root", xOffset: 3, yOffset: 4 })
+      .build();
+    const child = new ContainerSectionMockBuilder({ id: "child" })
+      .addLayout({ layoutId: "layout", parentSectionId: removed.id, xOffset: 1, yOffset: 2 })
+      .build();
+    const board = new BoardMockBuilder().addSection(removed).addSection(child).build();
+
+    const result = removeContainerCallback({ id: removed.id })(board);
+
+    expect(result).toBe(board);
+    expect(result.sections).toContainEqual(removed);
+  });
+
+  test("keeps the container when a child item has layout geometry that cannot be flattened", () => {
+    const removed = new ContainerSectionMockBuilder({ id: "removed" })
+      .addLayout({ layoutId: "other-layout", parentSectionId: "root", xOffset: 3, yOffset: 4 })
+      .build();
+    const item = new ItemMockBuilder({ id: "item" })
+      .addLayout({ layoutId: "layout", sectionId: removed.id, xOffset: 2, yOffset: 1 })
+      .build();
+    const board = new BoardMockBuilder().addSection(removed).addItem(item).build();
+
+    const result = removeContainerCallback({ id: removed.id })(board);
+
+    expect(result).toBe(board);
+    expect(result.sections).toContainEqual(removed);
+  });
+
+  test("keeps the container when flattening would move a child back into the removed container", () => {
+    const removed = new ContainerSectionMockBuilder({ id: "removed" })
+      .addLayout({ layoutId: "layout", parentSectionId: "removed", xOffset: 3, yOffset: 4 })
+      .build();
+    const item = new ItemMockBuilder({ id: "item" })
+      .addLayout({ layoutId: "layout", sectionId: removed.id, xOffset: 2, yOffset: 1 })
+      .build();
+    const board = new BoardMockBuilder().addSection(removed).addItem(item).build();
+
+    const result = removeContainerCallback({ id: removed.id })(board);
+
+    expect(result).toBe(board);
+    expect(result.sections).toContainEqual(removed);
+  });
+
+  test("keeps the container when its destination is a child container", () => {
+    const removed = new ContainerSectionMockBuilder({ id: "removed" })
+      .addLayout({ layoutId: "layout", parentSectionId: "child", xOffset: 3, yOffset: 4 })
+      .build();
+    const child = new ContainerSectionMockBuilder({ id: "child" })
+      .addLayout({ layoutId: "layout", parentSectionId: removed.id, xOffset: 1, yOffset: 2 })
+      .build();
+    const board = new BoardMockBuilder().addSection(removed).addSection(child).build();
+
+    const result = removeContainerCallback({ id: removed.id })(board);
+
+    expect(result).toBe(board);
+    expect(result.sections).toContainEqual(removed);
   });
 });
