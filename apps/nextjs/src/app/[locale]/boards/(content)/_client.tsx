@@ -15,7 +15,7 @@ export const ClientBoard = () => {
 
   const fullWidthSortedSections = board.sections
     .filter((section) => section.kind === "empty" || section.kind === "category")
-    .sort((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset);
+    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset);
 
   return (
     <BoardAdvancedFocusProvider>
