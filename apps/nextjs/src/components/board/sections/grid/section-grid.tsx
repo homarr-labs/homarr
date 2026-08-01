@@ -9,7 +9,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useI18n } from "@homarr/translation/client";
 
-import type { DynamicSectionItem, Section } from "~/app/[locale]/boards/_types";
+import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
 import {
   getCollapsedDisplayLayout,
   getEditableCanvasAttributes,
@@ -20,6 +20,7 @@ import {
   normalizeGridPlacement,
 } from "~/components/board/layout";
 import { loadGridEditorAsync } from "./grid-editor-loader";
+import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
 import { SectionContent } from "../content";
 import { useCollapsedSectionIds } from "../section-collapse";
@@ -63,7 +64,7 @@ function GridEditorLoading() {
 }
 
 interface SectionGridProps {
-  section: Exclude<Section, { kind: "dynamic" }> | DynamicSectionItem;
+  section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
   columnCount: number;
   requestedRowCount?: number;
   label: string;
@@ -80,6 +81,7 @@ export const SectionGrid = ({
   className,
 }: SectionGridProps) => {
   const [isEditMode] = useEditMode();
+  const editorRuntimeStatus = useGridEditorRuntimeStatus();
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const { items, innerSections } = useSectionItems(section.id);
@@ -90,7 +92,7 @@ export const SectionGrid = ({
       new Map(
         innerSections.map((innerSection) => [
           innerSection.id,
-          getDynamicSectionMinimumSize(board, currentLayoutId, innerSection.id),
+          getContainerMinimumSize(board, currentLayoutId, innerSection.id),
         ]),
       ),
     [board, currentLayoutId, innerSections],
@@ -144,7 +146,7 @@ export const SectionGrid = ({
   const displayedInnerSections = innerSections.map((item) => withPlacement(item, placementById.get(item.id)));
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount);
-  const fixedRowCount = section.kind === "dynamic";
+  const fixedRowCount = section.kind === "container";
   const logicalWidth = getLogicalTrackSize(columnCount);
   const logicalHeight = getLogicalTrackSize(rowCount);
   const canvasAttributes = isEditMode
@@ -172,21 +174,24 @@ export const SectionGrid = ({
         data-section-kind={section.kind}
         data-rail-placement={railPlacement}
       >
-        {isEditMode ? (
+        {isEditMode && editorRuntimeStatus === "ready" ? (
           <GridEditor
             sectionId={section.id}
             columnCount={columnCount}
             rowCount={rowCount}
             fixedRowCount={fixedRowCount}
             placements={displayPlacements}
-            className={combineClasses("grid-stack", classes.editorGrid)}
+            className={combineClasses("board-grid-editor", classes.editorGrid)}
           />
+        ) : isEditMode && editorRuntimeStatus === "loading" ? (
+          <GridEditorLoading />
         ) : (
           <Box
             className={classes.staticGrid}
             style={{ width: logicalWidth, height: logicalHeight }}
             data-grid-section-id={section.id}
             data-kind={section.kind}
+            data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
           >
             <SectionContent />
           </Box>
@@ -196,19 +201,30 @@ export const SectionGrid = ({
   );
 };
 
-const getDynamicSectionMinimumSize = (
+const getContainerMinimumSize = (
   board: ReturnType<typeof useRequiredBoard>,
   layoutId: string,
   sectionId: string,
-) => {
-  const directItems = board.items.flatMap((item) => {
+  visited = new Set<string>(),
+): { width: number; height: number } => {
+  if (visited.has(sectionId)) return { width: 1, height: 1 };
+  const nextVisited = new Set(visited).add(sectionId);
+  const directItems: PlacementBounds[] = board.items.flatMap((item) => {
     const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
     return layout?.sectionId === sectionId ? [layout] : [];
   });
-  const directSections = board.sections.flatMap((candidate) => {
-    if (candidate.kind !== "dynamic") return [];
+  const directSections: PlacementBounds[] = board.sections.flatMap((candidate) => {
+    if (candidate.kind !== "container") return [];
     const layout = candidate.layouts.find((candidateLayout) => candidateLayout.layoutId === layoutId);
-    return layout?.parentSectionId === sectionId ? [layout] : [];
+    if (!layout || layout.parentSectionId !== sectionId) return [];
+    const minimum = getContainerMinimumSize(board, layoutId, candidate.id, nextVisited);
+    return [
+      {
+        ...layout,
+        width: Math.max(layout.width, minimum.width),
+        height: Math.max(layout.height, minimum.height),
+      },
+    ];
   });
   const children = [...directItems, ...directSections];
 
@@ -217,6 +233,13 @@ const getDynamicSectionMinimumSize = (
     height: Math.max(1, ...children.map((child) => child.yOffset + child.height)),
   };
 };
+
+interface PlacementBounds {
+  xOffset: number;
+  yOffset: number;
+  width: number;
+  height: number;
+}
 
 const withPlacement = <
   TItem extends {

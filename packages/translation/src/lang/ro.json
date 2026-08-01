@@ -1549,7 +1549,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "",
         "remove": ""
@@ -1568,46 +1568,6 @@
       "remove": {
         "title": "",
         "message": ""
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Nume"
-        }
-      },
-      "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
-        "moveUp": "Mută în sus",
-        "moveDown": "Mută în jos",
-        "createAbove": "",
-        "createBelow": "",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "",
-        "submit": ""
-      },
-      "remove": {
-        "title": "",
-        "message": ""
-      },
-      "edit": {
-        "title": "",
-        "submit": ""
-      },
-      "menu": {
-        "label": {
-          "create": "",
-          "changePosition": "Schimbă locația",
-          "settings": "Setări"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": ""
       }
     }
   },

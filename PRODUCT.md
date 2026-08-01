@@ -1,5 +1,9 @@
 # Product
 
+## Register
+
+product
+
 ## Users
 
 Homarr serves people and teams who run self-hosted applications and want one dependable dashboard for launching apps, monitoring services, and viewing live operational data. They use it across wall displays, desktops, tablets, and smaller devices, often returning to the same board many times per day.

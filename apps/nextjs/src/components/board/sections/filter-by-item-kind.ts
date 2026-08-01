@@ -9,8 +9,8 @@ export const filterByItemKind = <TKind extends WidgetKind>(
   items: Item[],
   settings: SettingsContextProps,
   kind: TKind,
-) => {
-  return items
+) =>
+  items
     .filter((item) => item.kind === kind)
     .map((item) => ({
       ...item,
@@ -20,4 +20,3 @@ export const filterByItemKind = <TKind extends WidgetKind>(
         item.options,
       ) as WidgetComponentProps<TKind>["options"],
     }));
-};

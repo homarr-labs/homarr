@@ -42,33 +42,27 @@ const createCallerAsync = async () => {
 };
 
 describe("changeCollapsed", () => {
-  it("preserves collapse support for legacy categories", async () => {
+  it("rejects a root section", async () => {
     const { boardId, caller, db } = await createCallerAsync();
     const sectionId = createId();
     await db.insert(sections).values({
       id: sectionId,
       boardId,
-      kind: "category",
-      name: "Media",
+      kind: "empty",
       xOffset: 0,
       yOffset: 0,
     });
 
-    await caller.changeCollapsed({ sectionId, collapsed: true });
-
-    const state = await db.query.sectionCollapseStates.findFirst({
-      where: eq(sectionCollapseStates.sectionId, sectionId),
-    });
-    expect(state?.collapsed).toBe(true);
+    await expect(caller.changeCollapsed({ sectionId, collapsed: true })).rejects.toThrow("Section cannot be collapsed");
   });
 
-  it("creates and updates collapse state for an enabled dynamic section", async () => {
+  it("creates and updates collapse state for an enabled container", async () => {
     const { boardId, caller, db } = await createCallerAsync();
     const sectionId = createId();
     await db.insert(sections).values({
       id: sectionId,
       boardId,
-      kind: "dynamic",
+      kind: "container",
       options: stringify({ collapsible: true }),
     });
 
@@ -82,13 +76,13 @@ describe("changeCollapsed", () => {
     expect(states[0]?.collapsed).toBe(false);
   });
 
-  it("rejects a dynamic section when collapsing is disabled", async () => {
+  it("rejects a container when collapsing is disabled", async () => {
     const { boardId, caller, db } = await createCallerAsync();
     const sectionId = createId();
     await db.insert(sections).values({
       id: sectionId,
       boardId,
-      kind: "dynamic",
+      kind: "container",
     });
 
     await expect(caller.changeCollapsed({ sectionId, collapsed: true })).rejects.toThrow("Section cannot be collapsed");

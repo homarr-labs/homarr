@@ -1552,15 +1552,15 @@
     "option": {
       "showLabel": {
         "label": "Show label",
-        "description": "Display the section label above its contents."
+        "description": "Display the container label above its contents."
       },
       "collapsible": {
         "label": "Allow collapse",
-        "description": "Let viewers expand and collapse this section."
+        "description": "Let viewers expand and collapse this container."
       },
       "showOpenAll": {
         "label": "Show open-all action",
-        "description": "Show an action that opens every app in this section in new tabs."
+        "description": "Show an action that opens every app in this container in new tabs."
       }
     },
     "action": {
@@ -1571,11 +1571,11 @@
       "title": "Open all in tabs",
       "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
     },
-    "dynamic": {
-      "untitled": "Untitled section",
+    "container": {
+      "untitled": "Untitled container",
       "action": {
-        "create": "New section",
-        "remove": "Remove section",
+        "create": "New container",
+        "remove": "Remove container",
         "expand": "Expand",
         "collapse": "Collapse"
       },
@@ -1591,8 +1591,8 @@
         }
       },
       "remove": {
-        "title": "Remove section",
-        "message": "Remove this section? Its contents will move into the surrounding area."
+        "title": "Remove container",
+        "message": "Remove this container? Its contents will move into the surrounding area."
       }
     }
   },

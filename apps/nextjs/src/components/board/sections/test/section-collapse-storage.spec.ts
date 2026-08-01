@@ -24,8 +24,8 @@ describe("section collapse storage", () => {
   test("uses the corrected fallback when no browser preference exists", () => {
     const storage = createStorage();
 
-    expect(readSectionCollapsedFromStorage(storage, "category", true)).toBe(true);
-    expect(readSectionCollapsedFromStorage(storage, "dynamic", false)).toBe(false);
+    expect(readSectionCollapsedFromStorage(storage, "first", true)).toBe(true);
+    expect(readSectionCollapsedFromStorage(storage, "second", false)).toBe(false);
   });
 
   test("writes only the versioned corrected state", () => {

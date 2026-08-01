@@ -37,7 +37,7 @@ const loadBoardEditorAsync = async () =>
     loadGridEditorAsync(),
     loadEditActionsAsync(),
     import("~/components/board/items/item-menu"),
-    import("~/components/board/sections/dynamic/dynamic-menu"),
+    import("~/components/board/sections/container/container-menu"),
   ]);
 const BoardEditActions = dynamic(loadEditActionsAsync, { ssr: false });
 

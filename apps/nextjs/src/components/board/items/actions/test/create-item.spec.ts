@@ -5,7 +5,7 @@ import * as boardContext from "@homarr/boards/context";
 import { createItemCallback } from "../create-item";
 import * as emptyPositionModule from "../empty-position";
 import { BoardMockBuilder } from "./mocks/board-mock";
-import { DynamicSectionMockBuilder } from "./mocks/dynamic-section-mock";
+import { ContainerSectionMockBuilder } from "./mocks/container-section-mock";
 import { ItemMockBuilder } from "./mocks/item-mock";
 import { LayoutMockBuilder } from "./mocks/layout-mock";
 
@@ -58,7 +58,7 @@ describe("item actions create-item", () => {
     );
     expect(emptyPositionSpy).toHaveBeenCalledWith([], layout.columnCount, undefined, { height: 1, width: 1 });
   });
-  test("should correctly pass dynamic section and items to getFirstEmptyPosition", () => {
+  test("should correctly pass containers and items to getFirstEmptyPosition", () => {
     // Arrange
     const itemKind = "clock";
     const emptyPosition = { xOffset: 5, yOffset: 5 };
@@ -67,21 +67,21 @@ describe("item actions create-item", () => {
     const itemAndSectionPosition = { height: 2, width: 3, yOffset: 2, xOffset: 1 };
 
     const layout = new LayoutMockBuilder({ id: layoutId, columnCount: 4 }).build();
-    const dynamicSectionInFirstSection = new DynamicSectionMockBuilder({ id: "4" })
+    const containerInFirstSection = new ContainerSectionMockBuilder({ id: "4" })
       .addLayout({ ...itemAndSectionPosition, layoutId, parentSectionId: firstSectionId })
       .build();
     const itemInFirstSection = new ItemMockBuilder({ id: "12" })
       .addLayout({ ...itemAndSectionPosition, layoutId, sectionId: firstSectionId })
       .build();
-    const otherDynamicSection = new DynamicSectionMockBuilder({ id: "5" }).addLayout({ layoutId }).build();
+    const otherContainer = new ContainerSectionMockBuilder({ id: "5" }).addLayout({ layoutId }).build();
     const otherItem = new ItemMockBuilder({ id: "13" }).addLayout({ layoutId }).build();
     const board = new BoardMockBuilder()
       .addLayout(layout)
       .addEmptySection({ id: "1", yOffset: 2 })
       .addEmptySection({ id: firstSectionId, yOffset: 0 })
       .addEmptySection({ id: "3", yOffset: 1 })
-      .addSection(dynamicSectionInFirstSection)
-      .addSection(otherDynamicSection)
+      .addSection(containerInFirstSection)
+      .addSection(otherContainer)
       .addItem(itemInFirstSection)
       .addItem(otherItem)
       .build();

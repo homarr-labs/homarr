@@ -1549,7 +1549,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "Nauja dinaminė sekcija",
         "remove": "Pašalinti dinaminę sekciją"
@@ -1568,46 +1568,6 @@
       "remove": {
         "title": "Pašalinti dinaminę sekciją",
         "message": "Ar tikrai norite pašalinti šią dinaminę sekciją? Elementai bus perkelti į tą pačią vietą pirminėje sekcijoje."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Pavadinimas"
-        }
-      },
-      "action": {
-        "create": "Nauja kategorija",
-        "edit": "Pervardyti kategoriją",
-        "remove": "Pašalinti kategoriją",
-        "moveUp": "Pakelti aukštyn",
-        "moveDown": "Perkelti žemyn",
-        "createAbove": "Nauja kategorija aukščiau",
-        "createBelow": "Nauja kategorija žemiau",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "Nauja kategorija",
-        "submit": "Pridėti kategoriją"
-      },
-      "remove": {
-        "title": "Pašalinti kategoriją",
-        "message": "Ar tikrai norite pašalinti kategoriją {name}?"
-      },
-      "edit": {
-        "title": "Pervardyti kategoriją",
-        "submit": "Pervardyti kategoriją"
-      },
-      "menu": {
-        "label": {
-          "create": "Nauja kategorija",
-          "changePosition": "Keisti poziciją",
-          "settings": "Nustatymai"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": ""
       }
     }
   },

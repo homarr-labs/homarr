@@ -8,13 +8,14 @@ import { useZodForm } from "@homarr/form";
 import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
-import type { Board, DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
-import { getBoardLaneColumnCount, getLayoutRowCount, reflowVerticalLayout } from "../layout";
+import type { Board, ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
+import { getBoardLaneColumnCount, getLayoutRowCount } from "../layout";
+import { resolvePinnedGridCollisions } from "../sections/grid/dnd";
 import type { CommitSectionGridInput, SectionGridPlacement } from "../sections/grid/use-grid-layout-actions";
 import { useGridLayoutActions } from "../sections/grid/use-grid-layout-actions";
 
 export type MovableEntry = Pick<
-  SectionItem | DynamicSectionItem,
+  SectionItem | ContainerSectionItem,
   "id" | "type" | "width" | "height" | "xOffset" | "yOffset"
 >;
 
@@ -38,7 +39,7 @@ interface MoveTarget {
 
 interface MoveTargetLabels {
   canvas: string;
-  dynamicSection: string;
+  container: string;
   leftRail: string;
   rightRail: string;
   numbered: (name: string, index: number) => string;
@@ -61,7 +62,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
     () =>
       getMoveTargets(board, currentLayoutId, entry, {
         canvas: t("board.landmark.canvas"),
-        dynamicSection: t("section.dynamic.action.create"),
+        container: t("section.container.action.create"),
         leftRail: t("board.landmark.leftRail"),
         rightRail: t("board.landmark.rightRail"),
         numbered: (name, index) => t("item.moveResize.target.numbered", { name, index: String(index) }),
@@ -119,10 +120,11 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
       const targetPlacements = getSectionPlacements(board, currentLayoutId, target.id).filter(
         (placement) => placement.id !== entry.id,
       );
-      const resolvedTarget = reflowVerticalLayout([...targetPlacements, nextPlacement], {
-        columnCount: target.columnCount,
-        pinnedItemId: entry.id,
-      });
+      const resolvedTarget = resolvePinnedGridCollisions(
+        [...targetPlacements, nextPlacement],
+        nextPlacement,
+        target.columnCount,
+      );
       if (target.maxRowCount !== null && getLayoutRowCount(resolvedTarget) > target.maxRowCount) {
         form.setFieldError("height", t("item.moveResize.keyboard.boundary"));
         return;
@@ -135,13 +137,8 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
               {
                 layoutId: currentLayoutId,
                 sectionId: sourceSectionId,
-                placements: reflowVerticalLayout(
-                  getSectionPlacements(board, currentLayoutId, sourceSectionId).filter(
-                    (placement) => placement.id !== entry.id,
-                  ),
-                  {
-                    columnCount: getSectionColumnCount(board, currentLayoutId, sourceSectionId),
-                  },
+                placements: getSectionPlacements(board, currentLayoutId, sourceSectionId).filter(
+                  (placement) => placement.id !== entry.id,
                 ),
               },
               { layoutId: currentLayoutId, sectionId: target.id, placements: resolvedTarget },
@@ -261,8 +258,6 @@ export const getMoveTargets = (
         : [];
     }
 
-    if (section.kind === "category") return [];
-
     const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
     if (!layout) return [];
     if (
@@ -276,7 +271,7 @@ export const getMoveTargets = (
     return [
       {
         id: section.id,
-        name: section.options.title || labels.dynamicSection,
+        name: section.options.title || labels.container,
         columnCount: layout.width,
         maxRowCount: layout.height,
       },
@@ -306,7 +301,7 @@ const getSectionPlacements = (board: Board, layoutId: string, sectionId: string)
       : [];
   }),
   ...board.sections.flatMap((section) => {
-    if (section.kind !== "dynamic") return [];
+    if (section.kind !== "container") return [];
     const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
     return layout?.parentSectionId === sectionId
       ? [
@@ -329,19 +324,18 @@ const getSectionColumnCount = (board: Board, layoutId: string, sectionId: string
   const section = board.sections.find((candidate) => candidate.id === sectionId);
   if (!section) throw new Error(`Section "${sectionId}" was not found`);
 
-  if (section.kind === "dynamic") {
+  if (section.kind === "container") {
     const sectionLayout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
     if (!sectionLayout) throw new Error(`Section "${sectionId}" has no current layout`);
     return sectionLayout.width;
   }
-  if (section.kind === "category") return layout.columnCount;
   return getBoardLaneColumnCount(layout, getRootSectionLane(section.xOffset));
 };
 
 const getSectionMaxRowCount = (board: Board, layoutId: string, sectionId: string) => {
   const section = board.sections.find((candidate) => candidate.id === sectionId);
   if (!section) return null;
-  if (section.kind === "dynamic") {
+  if (section.kind === "container") {
     return section.layouts.find((candidate) => candidate.layoutId === layoutId)?.height ?? null;
   }
   return null;
@@ -362,8 +356,8 @@ const isSameOrDescendant = (board: Board, layoutId: string, candidateId: string,
   while (current && !visited.has(current)) {
     if (current === ancestorId) return true;
     visited.add(current);
-    const section = board.sections.find((candidate) => candidate.id === current && candidate.kind === "dynamic");
-    if (!section || section.kind !== "dynamic") return false;
+    const section = board.sections.find((candidate) => candidate.id === current && candidate.kind === "container");
+    if (!section || section.kind !== "container") return false;
     current = section.layouts.find((layout) => layout.layoutId === layoutId)?.parentSectionId;
   }
   return false;

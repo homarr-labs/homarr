@@ -51,7 +51,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
           className={combineClasses(
             classes.itemCard,
             `${item.kind}-wrapper`,
-            "grid-stack-item-content",
+            "board-grid-item-content",
             item.advancedOptions.customCssClasses.join(" "),
           )}
           radius={board.itemRadius}

@@ -19,9 +19,9 @@ export interface CommitSectionGridInput {
 }
 
 /**
- * Commits a complete section snapshot in one cache update. GridStack can move
- * several neighbours for one gesture, so persisting only the active item would
- * lose its collision result.
+ * Commits complete section snapshots in one cache update. One drag or resize
+ * can move several neighbours and can cross section boundaries, so the whole
+ * transaction must remain atomic.
  */
 export const useGridLayoutActions = () => {
   const { updateBoard } = useUpdateBoard();
@@ -34,48 +34,68 @@ export const useGridLayoutActions = () => {
         ),
       );
       updateBoard((previous) => {
-        return {
-          ...previous,
-          items: previous.items.map((item) => {
-            const layouts = item.layouts.map((layout) => {
-              const resolved = byId.get(`${layout.layoutId}:${item.id}`);
-              if (!resolved || resolved.placement.type !== "item") return layout;
-              const { placement, sectionId } = resolved;
+        let hasChanges = false;
+        const items = previous.items.map((item) => {
+          const layouts = item.layouts.map((layout) => {
+            const resolved = byId.get(`${layout.layoutId}:${item.id}`);
+            if (!resolved || resolved.placement.type !== "item") return layout;
+            const { placement, sectionId } = resolved;
+            if (
+              layout.sectionId === sectionId &&
+              layout.xOffset === placement.x &&
+              layout.yOffset === placement.y &&
+              layout.width === placement.w &&
+              layout.height === placement.h
+            ) {
+              return layout;
+            }
 
-              return {
-                ...layout,
-                sectionId,
-                xOffset: placement.x,
-                yOffset: placement.y,
-                width: placement.w,
-                height: placement.h,
-              };
-            });
+            return {
+              ...layout,
+              sectionId,
+              xOffset: placement.x,
+              yOffset: placement.y,
+              width: placement.w,
+              height: placement.h,
+            };
+          });
 
-            return layouts.some((layout, index) => layout !== item.layouts[index]) ? { ...item, layouts } : item;
-          }),
-          sections: previous.sections.map((innerSection) => {
-            if (innerSection.kind !== "dynamic") return innerSection;
-            const layouts = innerSection.layouts.map((layout) => {
-              const resolved = byId.get(`${layout.layoutId}:${innerSection.id}`);
-              if (!resolved || resolved.placement.type !== "section") return layout;
-              const { placement, sectionId } = resolved;
+          if (!layouts.some((layout, index) => layout !== item.layouts[index])) return item;
+          hasChanges = true;
+          return { ...item, layouts };
+        });
+        const sections = previous.sections.map((innerSection) => {
+          if (innerSection.kind !== "container") return innerSection;
+          const layouts = innerSection.layouts.map((layout) => {
+            const resolved = byId.get(`${layout.layoutId}:${innerSection.id}`);
+            if (!resolved || resolved.placement.type !== "section") return layout;
+            const { placement, sectionId } = resolved;
+            if (
+              layout.parentSectionId === sectionId &&
+              layout.xOffset === placement.x &&
+              layout.yOffset === placement.y &&
+              layout.width === placement.w &&
+              layout.height === placement.h
+            ) {
+              return layout;
+            }
 
-              return {
-                ...layout,
-                parentSectionId: sectionId,
-                xOffset: placement.x,
-                yOffset: placement.y,
-                width: placement.w,
-                height: placement.h,
-              };
-            });
+            return {
+              ...layout,
+              parentSectionId: sectionId,
+              xOffset: placement.x,
+              yOffset: placement.y,
+              width: placement.w,
+              height: placement.h,
+            };
+          });
 
-            return layouts.some((layout, index) => layout !== innerSection.layouts[index])
-              ? { ...innerSection, layouts }
-              : innerSection;
-          }),
-        };
+          if (!layouts.some((layout, index) => layout !== innerSection.layouts[index])) return innerSection;
+          hasChanges = true;
+          return { ...innerSection, layouts };
+        });
+
+        return hasChanges ? { ...previous, items, sections } : previous;
       });
     },
     [updateBoard],

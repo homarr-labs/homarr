@@ -14,8 +14,12 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@dnd-kit/abstract": "catalog:",
+    "@dnd-kit/collision": "catalog:",
     "@dnd-kit/core": "catalog:",
+    "@dnd-kit/dom": "catalog:",
     "@dnd-kit/modifiers": "catalog:",
+    "@dnd-kit/react": "catalog:",
     "@dnd-kit/sortable": "catalog:",
     "@dnd-kit/utilities": "catalog:",
     "@gfazioli/mantine-onboarding-tour": "catalog:",
@@ -80,7 +84,6 @@
     "drizzle-orm": "catalog:",
     "flag-icons": "catalog:",
     "glob": "catalog:",
-    "gridstack": "catalog:",
     "isomorphic-dompurify": "catalog:",
     "jotai": "catalog:",
     "jszip": "catalog:",

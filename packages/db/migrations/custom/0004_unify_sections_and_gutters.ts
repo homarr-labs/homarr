@@ -1,9 +1,10 @@
 import { parse, stringify } from "superjson";
+import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
 import type { BoardLane } from "@homarr/definitions";
 import { emptySuperJSON, getRootSectionLane, rootSectionOffsets } from "@homarr/definitions";
-import { categorySectionOptionsSchema, dynamicSectionOptionsSchema } from "@homarr/validation/shared";
+import { containerSectionOptionsSchema } from "@homarr/validation/shared";
 
 import { and, eq, handleTransactionsAsync, inArray } from "../..";
 import type { Database } from "../..";
@@ -50,13 +51,30 @@ interface MigrationOperation {
   applySync(db: HomarrDatabase): void;
 }
 
+const legacyCategoryOptionsDefaults = {
+  showLabel: true,
+  collapsible: true,
+  showOpenAll: true,
+  railPlacement: "main",
+  columnCount: 2,
+} as const;
+
+const legacyCategoryOptionsSchema = z
+  .object({
+    showLabel: z.boolean().default(legacyCategoryOptionsDefaults.showLabel),
+    collapsible: z.boolean().default(legacyCategoryOptionsDefaults.collapsible),
+    showOpenAll: z.boolean().default(legacyCategoryOptionsDefaults.showOpenAll),
+    railPlacement: z.enum(["main", "left", "right"]).default(legacyCategoryOptionsDefaults.railPlacement),
+    columnCount: z.number().int().min(1).max(24).default(legacyCategoryOptionsDefaults.columnCount),
+  })
+  .default(legacyCategoryOptionsDefaults);
+
 /**
- * Categories and dynamic sections used to be separate concepts. Categories
- * were full-width roots and also doubled as side rails. Convert every category
- * into the same resizable section used by the canvas, and create internal
- * gutter roots for the board-level left/right sidebar settings.
+ * Convert legacy categories and dynamic sections into durable containers.
+ * Categories were full-width roots and also doubled as side rails, so they
+ * additionally need placement and gutter migration.
  */
-export async function migrateCategoriesToUnifiedSectionsAsync(db: Database) {
+export async function migrateLegacySectionsToContainersAsync(db: Database) {
   const existingBoards = await db.query.boards.findMany({
     with: {
       layouts: true,
@@ -74,15 +92,37 @@ export async function migrateCategoriesToUnifiedSectionsAsync(db: Database) {
     },
   });
 
-  let migratedCategoryCount = 0;
+  let migratedSectionCount = 0;
 
   for (const board of existingBoards) {
-    const categories = board.sections.filter((section) => section.kind === "category");
-    if (categories.length === 0) continue;
+    const categories = board.sections.filter((section) => (section.kind as string) === "category");
+    const legacyContainers = board.sections.filter((section) => (section.kind as string) === "dynamic");
+    if (categories.length === 0 && legacyContainers.length === 0) continue;
     const operations: MigrationOperation[] = [];
 
+    const appendLegacyContainerOperations = () => {
+      for (const section of legacyContainers) {
+        operations.push(
+          updateSectionOperation(section.id, {
+            kind: "container",
+            xOffset: null,
+            yOffset: null,
+            name: null,
+            options: stringify(containerSectionOptionsSchema.parse(parse(section.options ?? emptySuperJSON))),
+          }),
+        );
+        migratedSectionCount += 1;
+      }
+    };
+
+    if (categories.length === 0) {
+      appendLegacyContainerOperations();
+      await executeBoardMigrationOperationsAsync(db, operations);
+      continue;
+    }
+
     const categoryDetails = categories.map((category) => {
-      const options = categorySectionOptionsSchema.parse(parse(category.options ?? emptySuperJSON));
+      const options = legacyCategoryOptionsSchema.parse(parse(category.options ?? emptySuperJSON));
       return {
         category,
         lane: options.railPlacement as BoardLane,
@@ -247,12 +287,12 @@ export async function migrateCategoriesToUnifiedSectionsAsync(db: Database) {
 
       operations.push(
         updateSectionOperation(category.id, {
-          kind: "dynamic",
+          kind: "container",
           xOffset: null,
           yOffset: null,
           name: null,
           options: stringify(
-            dynamicSectionOptionsSchema.parse({
+            containerSectionOptionsSchema.parse({
               title: (category.name ?? "").slice(0, 64),
               customCssClasses: [],
               borderColor: "",
@@ -263,8 +303,10 @@ export async function migrateCategoriesToUnifiedSectionsAsync(db: Database) {
           ),
         }),
       );
-      migratedCategoryCount += 1;
+      migratedSectionCount += 1;
     }
+
+    appendLegacyContainerOperations();
 
     const retainedRootIds = new Set(Array.from(rootByLane.values(), (root) => root.id));
     const obsoleteRootIds = emptyRoots.filter((root) => !retainedRootIds.has(root.id)).map((root) => root.id);
@@ -275,8 +317,8 @@ export async function migrateCategoriesToUnifiedSectionsAsync(db: Database) {
     await executeBoardMigrationOperationsAsync(db, operations);
   }
 
-  if (migratedCategoryCount > 0) {
-    console.log(`Migrated categories to unified sections count="${migratedCategoryCount}"`);
+  if (migratedSectionCount > 0) {
+    console.log(`Migrated legacy sections to containers count="${migratedSectionCount}"`);
   }
 }
 
@@ -299,7 +341,7 @@ const getDirectPlacements = (board: MigrationBoard, layoutId: string, sectionId:
       : [];
   }),
   ...board.sections.flatMap((section) => {
-    if (section.kind !== "dynamic") return [];
+    if (section.kind !== "dynamic" && section.kind !== "container") return [];
     const layout = section.layouts.find(
       (candidate) => candidate.layoutId === layoutId && candidate.parentSectionId === sectionId,
     );

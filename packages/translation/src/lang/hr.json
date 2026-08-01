@@ -1549,7 +1549,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "Nova dinamička sekcija",
         "remove": "Ukloni dinamičku sekciju"
@@ -1568,46 +1568,6 @@
       "remove": {
         "title": "Ukloni dinamičku sekciju",
         "message": "Jeste li sigurni da želite ukloniti ovu dinamičku sekciju? Stavke će biti premještene na isto mjesto u nadređenoj sekciji."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Naziv"
-        }
-      },
-      "action": {
-        "create": "Nova kategorija",
-        "edit": "Preimenuj kategoriju",
-        "remove": "Ukloni kategoriju",
-        "moveUp": "Pomakni se gore",
-        "moveDown": "Pomicati prema dolje",
-        "createAbove": "Nova kategorija iznad",
-        "createBelow": "Nova kategorija ispod",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "Nova kategorija",
-        "submit": "Dodaj kategoriju"
-      },
-      "remove": {
-        "title": "Ukloni kategoriju",
-        "message": "Jeste li sigurni da želite ukloniti kategoriju {name}?"
-      },
-      "edit": {
-        "title": "Preimenuj kategoriju",
-        "submit": "Preimenuj kategoriju"
-      },
-      "menu": {
-        "label": {
-          "create": "Nova kategorija",
-          "changePosition": "Promijenjen položaj",
-          "settings": "Postavke"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": ""
       }
     }
   },

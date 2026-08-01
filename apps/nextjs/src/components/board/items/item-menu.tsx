@@ -43,7 +43,7 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
   const { section } = useSectionContext();
   const settings = useSettings();
   const label = item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`);
-  const menuRightOffset = section.kind === "dynamic" ? offset + 40 : offset;
+  const menuRightOffset = section.kind === "container" ? offset + 40 : offset;
 
   // Reset error boundary on next render if item has been edited
   useEffect(() => {

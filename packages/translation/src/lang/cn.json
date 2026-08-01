@@ -1549,7 +1549,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "新建动态部分",
         "remove": "删除动态部分"
@@ -1568,46 +1568,6 @@
       "remove": {
         "title": "删除动态部分",
         "message": "你确定你要删除这个动态部分？项目将被移动到父节的相同位置。"
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "名称"
-        }
-      },
-      "action": {
-        "create": "新建分类",
-        "edit": "重命名分类",
-        "remove": "删除分类",
-        "moveUp": "上移",
-        "moveDown": "下移",
-        "createAbove": "上方新建分类",
-        "createBelow": "下方新建分类",
-        "openAllInNewTabs": "在标签中打开全部"
-      },
-      "create": {
-        "title": "新建分类",
-        "submit": "添加分类"
-      },
-      "remove": {
-        "title": "删除分类",
-        "message": "您确定要删除分类 {name} 吗？"
-      },
-      "edit": {
-        "title": "重命名分类",
-        "submit": "重命名分类"
-      },
-      "menu": {
-        "label": {
-          "create": "新建分类",
-          "changePosition": "换位",
-          "settings": "设置"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "在标签中打开全部",
-        "text": "某些浏览器可能出于安全原因阻止大批打开标签页。 Homarr 无法打开所有窗口，因为您的浏览器屏蔽了此操作。请允许“打开弹出窗口”并重试。"
       }
     }
   },

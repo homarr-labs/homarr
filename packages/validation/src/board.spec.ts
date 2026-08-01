@@ -1,31 +1,32 @@
 import { describe, expect, it } from "vitest";
 
-import { categorySectionOptionsDefaults, dynamicSectionOptionsDefaults, sectionSchema } from "./shared";
+import { containerSectionOptionsDefaults, sectionSchema } from "./shared";
 
 describe("section behavior validation", () => {
-  it("normalizes a legacy category to the current behavior defaults", () => {
+  it("normalizes a container to the current behavior defaults", () => {
     const result = sectionSchema.parse({
-      id: "category",
-      name: "Media",
-      kind: "category",
-      yOffset: 0,
-      xOffset: 0,
+      id: "container",
+      kind: "container",
+      layouts: [],
     });
 
     expect(result).toMatchObject({
-      collapsed: true,
-      options: categorySectionOptionsDefaults,
+      collapsed: false,
+      options: containerSectionOptionsDefaults,
     });
   });
 
-  it("normalizes a legacy dynamic section to the current behavior defaults", () => {
+  it("preserves configured container behavior", () => {
     const result = sectionSchema.parse({
-      id: "dynamic",
-      kind: "dynamic",
+      id: "container",
+      kind: "container",
       options: {
-        title: "Media",
-        customCssClasses: [],
-        borderColor: "",
+        title: "Operations",
+        customCssClasses: ["dense"],
+        borderColor: "#123456",
+        showLabel: false,
+        collapsible: true,
+        showOpenAll: true,
       },
       layouts: [],
     });
@@ -33,37 +34,32 @@ describe("section behavior validation", () => {
     expect(result).toMatchObject({
       collapsed: false,
       options: {
-        ...dynamicSectionOptionsDefaults,
-        title: "Media",
+        title: "Operations",
+        customCssClasses: ["dense"],
+        borderColor: "#123456",
+        showLabel: false,
+        collapsible: true,
+        showOpenAll: true,
       },
     });
   });
 
-  it("accepts a configured category rail", () => {
-    const result = sectionSchema.parse({
-      id: "category",
-      name: "Navigation",
-      kind: "category",
-      yOffset: 0,
-      xOffset: 0,
-      collapsed: false,
-      options: {
-        showLabel: false,
-        collapsible: false,
-        showOpenAll: false,
-        railPlacement: "left",
-        columnCount: 3,
-      },
-    });
+  it.each(["category", "dynamic"])("rejects the legacy %s kind", (kind) => {
+    expect(() => sectionSchema.parse({ id: "legacy", kind, layouts: [] })).toThrow();
+  });
 
-    expect(result).toMatchObject({
-      options: {
-        showLabel: false,
-        collapsible: false,
-        showOpenAll: false,
-        railPlacement: "left",
-        columnCount: 3,
-      },
-    });
+  it.each([
+    { xOffset: 0.5, yOffset: 0, width: 1, height: 1 },
+    { xOffset: -1, yOffset: 0, width: 1, height: 1 },
+    { xOffset: 0, yOffset: 0, width: 0, height: 1 },
+    { xOffset: 0, yOffset: 0, width: 1, height: 0 },
+  ])("rejects invalid container grid geometry: %o", (layout) => {
+    expect(() =>
+      sectionSchema.parse({
+        id: "container",
+        kind: "container",
+        layouts: [{ layoutId: "layout", parentSectionId: "root", ...layout }],
+      }),
+    ).toThrow();
   });
 });

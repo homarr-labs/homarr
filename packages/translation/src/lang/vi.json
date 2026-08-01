@@ -1549,7 +1549,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "Phần động mới",
         "remove": "Xóa phần động"
@@ -1568,46 +1568,6 @@
       "remove": {
         "title": "Xóa phần động",
         "message": "Bạn có chắc chắn muốn xóa phần động này không? Các mục sẽ được chuyển đến cùng vị trí trong phần cha."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Tên"
-        }
-      },
-      "action": {
-        "create": "Danh mục mới",
-        "edit": "Đổi tên danh mục",
-        "remove": "Xóa danh mục",
-        "moveUp": "Đi lên",
-        "moveDown": "Đi xuống",
-        "createAbove": "Danh mục mới phía trên",
-        "createBelow": "Danh mục mới phía dưới",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "Danh mục mới",
-        "submit": "Thêm danh mục"
-      },
-      "remove": {
-        "title": "Xóa danh mục",
-        "message": "Bạn có chắc chắn muốn xóa danh mục {name} không?"
-      },
-      "edit": {
-        "title": "Đổi tên danh mục",
-        "submit": "Đổi tên danh mục"
-      },
-      "menu": {
-        "label": {
-          "create": "Danh mục mới",
-          "changePosition": "Đổi vị trí",
-          "settings": "Cài đặt"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": ""
       }
     }
   },

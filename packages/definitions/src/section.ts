@@ -1,4 +1,4 @@
-export const sectionKinds = ["category", "empty", "dynamic"] as const;
+export const sectionKinds = ["empty", "container"] as const;
 export type SectionKind = (typeof sectionKinds)[number];
 
 export const boardLanes = ["left", "main", "right"] as const;
