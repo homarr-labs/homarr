@@ -100,6 +100,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import classes from "./assistant-panel.module.css";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
+import type { AssistantPendingAction } from "./assistant-pending-action";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
@@ -115,6 +116,7 @@ interface AssistantPanelProps {
   latestAssistantText: string;
   latestUserText: string;
   latestStatus: MessageStatus | undefined;
+  pendingAction: AssistantPendingAction | undefined;
   modelId: string | null;
   models: AssistantRuntimeModelOption[];
   modelOptionsLoading: boolean;
@@ -346,6 +348,7 @@ const ToolPart = ({
 }: ToolCallMessagePartProps) => {
   const t = useScopedI18n("common.assistant");
   const [opened, setOpened] = useState(false);
+  const [approvalResponse, setApprovalResponse] = useState<"approve" | "deny" | null>(null);
   const completed = status?.type === "complete";
   const awaitingApproval = approval !== undefined && approval.approved === undefined && !approval.resolution;
   const denied = approval?.approved === false;
@@ -413,7 +416,12 @@ const ToolPart = ({
               size="md"
               fullWidth
               leftSection={<IconCheck size={18} />}
-              onClick={() => respondToApproval({ approved: true })}
+              loading={approvalResponse === "approve"}
+              disabled={approvalResponse !== null}
+              onClick={() => {
+                setApprovalResponse("approve");
+                respondToApproval({ approved: true });
+              }}
             >
               {t("approveAndRun")}
             </Button>
@@ -422,7 +430,12 @@ const ToolPart = ({
               fullWidth
               variant="default"
               leftSection={<IconX size={18} />}
-              onClick={() => respondToApproval({ approved: false })}
+              loading={approvalResponse === "deny"}
+              disabled={approvalResponse !== null}
+              onClick={() => {
+                setApprovalResponse("deny");
+                respondToApproval({ approved: false });
+              }}
             >
               {t("deny")}
             </Button>
@@ -1239,7 +1252,7 @@ const ComposerTriggers = () => {
 type ComposerProps = Pick<
   AssistantPanelProps,
   "modelId" | "models" | "modelOptionsLoading" | "reasoning" | "onModelChange" | "onReasoningChange"
->;
+> & { pendingAction: AssistantPendingAction | undefined };
 
 const RuntimeControls = ({
   modelId,
@@ -1374,11 +1387,18 @@ const RuntimeControls = ({
 const Composer = (props: ComposerProps) => {
   const t = useScopedI18n("common.assistant");
   const running = useAuiState((state) => state.thread.isRunning);
+  const hasPendingAction = props.pendingAction !== undefined;
   return (
     <Box className={classes.composerWrap}>
       <ComposerPrimitive.Unstable_TriggerPopoverRoot>
         <ComposerPrimitive.AttachmentDropzone className={classes.composerDropzone}>
-          <ComposerPrimitive.Root className={classes.composer}>
+          <ComposerPrimitive.Root
+            className={classes.composer}
+            data-pending-action={hasPendingAction || undefined}
+            onSubmit={(event) => {
+              if (hasPendingAction) event.preventDefault();
+            }}
+          >
             <ComposerTriggers />
             <ComposerPrimitive.Quote className={classes.composerQuote}>
               <IconQuote size={15} />
@@ -1414,7 +1434,13 @@ const Composer = (props: ComposerProps) => {
                 </ComposerPrimitive.Cancel>
               ) : (
                 <ComposerPrimitive.Send asChild>
-                  <ActionIcon color="red" variant="filled" size="lg" aria-label={t("send")}>
+                  <ActionIcon
+                    color="red"
+                    variant="filled"
+                    size="lg"
+                    aria-label={hasPendingAction ? t("pendingAction.sendBlocked") : t("send")}
+                    disabled={hasPendingAction}
+                  >
                     <IconArrowUp size={18} />
                   </ActionIcon>
                 </ComposerPrimitive.Send>
@@ -1438,12 +1464,55 @@ const Composer = (props: ComposerProps) => {
   );
 };
 
+const usePendingActionCopy = (action: AssistantPendingAction | undefined) => {
+  const t = useScopedI18n("common.assistant");
+  if (!action) return undefined;
+  if (action.kind === "question") {
+    return { title: t("pendingAction.answerTitle"), detail: action.detail ?? t("pendingAction.answerFallback") };
+  }
+  if (action.kind === "form") {
+    return { title: t("pendingAction.formTitle"), detail: action.detail ?? t("configureApp.title") };
+  }
+  const tool = action.toolName.replaceAll("_", " ");
+  return { title: t("activity.approval"), detail: action.detail ? `${tool} · ${action.detail}` : tool };
+};
+
+const PendingActionBanner = ({ pendingAction }: { pendingAction: AssistantPendingAction | undefined }) => {
+  const t = useScopedI18n("common.assistant");
+  const copy = usePendingActionCopy(pendingAction);
+  if (!copy) return null;
+
+  return (
+    <Box component="output" className={classes.pendingActionBanner}>
+      <Group gap="sm" wrap="nowrap">
+        <ThemeIcon variant="light" color="yellow" radius="xl">
+          <IconMessage size={17} />
+        </ThemeIcon>
+        <Stack gap={0} flex={1} miw={0}>
+          <Text size="sm" fw={700}>
+            {copy.title}
+          </Text>
+          <Text size="xs" c="dimmed" lineClamp={1}>
+            {copy.detail}
+          </Text>
+        </Stack>
+        <ThreadPrimitive.ScrollToBottom asChild>
+          <Button variant="light" color="yellow" size="compact-sm">
+            {t("pendingAction.review")}
+          </Button>
+        </ThreadPrimitive.ScrollToBottom>
+      </Group>
+    </Box>
+  );
+};
+
 const AssistantActivityBar = ({
   isRunning,
   unreadCount,
   latestAssistantText,
   latestUserText,
   latestStatus,
+  pendingAction,
   onOpen,
   onDismissActivity,
   activityDismissed,
@@ -1454,12 +1523,14 @@ const AssistantActivityBar = ({
   | "latestAssistantText"
   | "latestUserText"
   | "latestStatus"
+  | "pendingAction"
   | "onOpen"
   | "onDismissActivity"
   | "activityDismissed"
 >) => {
   const t = useScopedI18n("common.assistant");
-  const needsApproval = latestStatus?.type === "requires-action";
+  const pendingCopy = usePendingActionCopy(pendingAction);
+  const needsApproval = pendingAction !== undefined || latestStatus?.type === "requires-action";
   const failed = latestStatus?.type === "incomplete" && latestStatus.reason !== "cancelled";
   const visible =
     !activityDismissed &&
@@ -1469,14 +1540,16 @@ const AssistantActivityBar = ({
 
   const title = isRunning
     ? t("activity.thinking")
-    : needsApproval
-      ? t("activity.approval")
-      : failed
-        ? t("activity.failed")
-        : t("activity.ready");
+    : pendingCopy
+      ? pendingCopy.title
+      : needsApproval
+        ? t("activity.approval")
+        : failed
+          ? t("activity.failed")
+          : t("activity.ready");
   const detail = isRunning
     ? latestUserText || t("activity.working")
-    : latestAssistantText || (failed ? t("responseError.description") : t("activity.completed"));
+    : pendingCopy?.detail || latestAssistantText || (failed ? t("responseError.description") : t("activity.completed"));
 
   return (
     <Box component="output" className={classes.activityBar} aria-live="polite">
@@ -1512,7 +1585,16 @@ const AssistantActivityBar = ({
               {detail}
             </Text>
           </Stack>
-          <IconChevronUp size={17} className={classes.activityExpandIcon} />
+          {needsApproval ? (
+            <Box className={classes.activityReviewAction}>
+              <Text component="span" size="xs" fw={700}>
+                {t("pendingAction.review")}
+              </Text>
+              <IconChevronUp size={15} />
+            </Box>
+          ) : (
+            <IconChevronUp size={17} className={classes.activityExpandIcon} />
+          )}
         </Group>
       </UnstyledButton>
       {!isRunning && !needsApproval && (
@@ -1541,6 +1623,7 @@ export const AssistantPanel = ({
   latestAssistantText,
   latestUserText,
   latestStatus,
+  pendingAction,
   modelId,
   models,
   modelOptionsLoading,
@@ -1584,6 +1667,7 @@ export const AssistantPanel = ({
           latestAssistantText={latestAssistantText}
           latestUserText={latestUserText}
           latestStatus={latestStatus}
+          pendingAction={pendingAction}
         />
       )}
       {opened && (
@@ -1654,6 +1738,7 @@ export const AssistantPanel = ({
                   </ActionIcon>
                 </ThreadPrimitive.ScrollToBottom>
               </ThreadPrimitive.Viewport>
+              <PendingActionBanner pendingAction={pendingAction} />
               <Composer
                 modelId={modelId}
                 models={models}
@@ -1661,6 +1746,7 @@ export const AssistantPanel = ({
                 reasoning={reasoning}
                 onModelChange={onModelChange}
                 onReasoningChange={onReasoningChange}
+                pendingAction={pendingAction}
               />
             </ThreadPrimitive.Root>
           </dialog>
