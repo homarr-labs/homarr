@@ -167,14 +167,7 @@ export const IconPicker = ({
             onChange={(event) => {
               const nextValue = event.currentTarget.value;
               const trimmedValue = nextValue.trim();
-              let isDirectIconUrl = false;
-              try {
-                const url = new URL(trimmedValue);
-                isDirectIconUrl = (url.protocol === "http:" || url.protocol === "https:") && Boolean(url.hostname);
-              } catch {
-                // Keep repository search active for incomplete or invalid URLs.
-              }
-              if (isDirectIconUrl) {
+              if (/^https?:\/\/[^\s/]+/i.test(trimmedValue)) {
                 startTransition(() => {
                   setValue(trimmedValue);
                   setQuery("");
