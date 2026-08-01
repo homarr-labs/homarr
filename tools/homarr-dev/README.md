@@ -66,7 +66,7 @@ homarr doctor              Check Docker and optional CLI integrations
 /              Filter by PR number, title, author, branch, CI, image, state, or port
 ↑/↓ or j/k     Select
 Enter or Space Pull latest image and start, or stop when already running
-R              Rebuild a local image from its checkout or PR
+R              Build a remote PR locally or rebuild a local image
 p              Pull a remote PR image and redeploy, preserving port and volume
 m              Toggle demo mode for the next launch
 o              Open PR on GitHub

@@ -10,7 +10,7 @@ To install an optional `homarr` binary, run `pnpm dev:cli:install` and make your
 pnpm dev:cli -- dev
 ```
 
-The interactive browser combines local `homarr:*` images with open pull requests and their GHCR preview status. Select an image to start or stop it, use `R` to rebuild a local image, or use `p` to pull a remote preview.
+The interactive browser combines local `homarr:*` images with open pull requests and their GHCR preview status. Select an image to start or stop it, use `R` to build a remote pull request locally or rebuild a local image, or use `p` to pull a remote preview.
 
 ## Build images
 
@@ -19,7 +19,7 @@ pnpm dev:cli -- build <name>
 pnpm dev:cli -- build --pr <number> [name]
 ```
 
-The first command builds the current checkout as `homarr:<name>`. The pull-request form clones the requested branch into a temporary directory and defaults to `homarr:pr-<number>` when `name` is omitted.
+The first command builds the current checkout as `homarr:<name>`. The pull-request form uses a depth-one clone in a temporary directory and defaults to `homarr:pr-<number>` when `name` is omitted.
 
 ## Rebuild images
 
