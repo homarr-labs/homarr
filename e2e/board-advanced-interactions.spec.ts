@@ -76,6 +76,8 @@ describe("Board advanced interactions", () => {
       await page.keyboard.down("Shift");
       await widget.hover();
       await expect(advancedDialog).toBeVisible({ timeout: 2_000 });
+      const advancedBounds = await advancedDialog.boundingBox();
+      expect(advancedBounds?.width).toBeGreaterThanOrEqual(900);
       await expect(advancedDialog).toHaveAttribute("data-lifecycle-probe", "same-instance");
       await expect(widget).toBeFocused();
       await page.keyboard.up("Shift");
@@ -156,8 +158,15 @@ describe("Board advanced interactions", () => {
       if (!bounds) return;
       expect(bounds.x).toBeGreaterThanOrEqual(0);
       expect(bounds.y).toBeGreaterThanOrEqual(60);
+      expect(bounds.width).toBeGreaterThanOrEqual(44);
+      expect(bounds.height).toBeGreaterThanOrEqual(44);
       expect(bounds.x + bounds.width).toBeLessThanOrEqual(1366);
       expect(bounds.y + bounds.height).toBeLessThanOrEqual(768);
+      const dialogBounds = await page.getByRole("dialog", { name: "Date and time advanced view" }).boundingBox();
+      const contentBounds = await page.locator(".clock-widget-container").boundingBox();
+      expect(dialogBounds).not.toBeNull();
+      expect(contentBounds).not.toBeNull();
+      if (dialogBounds && contentBounds) expect(contentBounds.y).toBeGreaterThanOrEqual(dialogBounds.y + 60);
       await closeButton.click();
       await expect(page.getByRole("dialog", { name: "Date and time advanced view" })).toBeHidden();
     } finally {

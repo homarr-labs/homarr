@@ -33,6 +33,20 @@ export interface Firewall {
   value: string;
 }
 
+interface FirewallQueryState {
+  isPending: boolean;
+  isFetching: boolean;
+  isError: boolean;
+  data?: readonly { error?: string }[];
+}
+
+export const hasTotalFirewallFailure = (queries: readonly FirewallQueryState[]) =>
+  queries.every((query) => !query.isPending && !query.isFetching) &&
+  queries.every(
+    (query) =>
+      query.isError || (query.data !== undefined && query.data.length > 0 && query.data.every(({ error }) => error)),
+  );
+
 export default function FirewallWidget({
   integrationIds,
   width,
@@ -48,34 +62,44 @@ export default function FirewallWidget({
     setSelectedFirewall(value ?? "");
   }, []);
 
-  const { data: firewallsCpuData = [] } = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({ integrationIds });
-  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({
+  const cpuQuery = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({ integrationIds });
+  const memoryQuery = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({
     integrationIds,
   });
-  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({
+  const versionQuery = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({
     integrationIds,
   });
-  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({
+  const interfacesQuery = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({
     integrationIds,
   });
+  const firewallsCpuData = cpuQuery.data ?? [];
+  const firewallsMemoryData = memoryQuery.data ?? [];
+  const firewallsVersionData = versionQuery.data ?? [];
+  const firewallsInterfacesData = interfacesQuery.data ?? [];
+  const queries = [cpuQuery, memoryQuery, versionQuery, interfacesQuery];
+  const hasTotalFailure = hasTotalFirewallFailure(queries);
 
   const [accordionValue, setAccordionValue] = useLocalStorage<string | null>({
     key: `homarr-${itemId}-firewall`,
     defaultValue: "interfaces",
   });
 
-  const initialSelectedFirewall = firewallsVersionData[0]?.integration.id ?? "";
-  const activeFirewall = firewallsVersionData.some(({ integration }) => integration.id === selectedFirewall)
-    ? selectedFirewall
-    : initialSelectedFirewall;
-  const displayedFirewallIds = isAdvanced
-    ? firewallsVersionData.map(({ integration }) => integration.id)
-    : activeFirewall
-      ? [activeFirewall]
-      : [];
-  const dropdownItems = firewallsVersionData.map((firewall) => ({
-    label: firewall.integration.name,
-    value: firewall.integration.id,
+  if (hasTotalFailure) {
+    throw new Error(t("widget.firewall.error.internalServerError"));
+  }
+
+  const firewallMetadata = new Map(
+    [...firewallsVersionData, ...firewallsCpuData, ...firewallsMemoryData, ...firewallsInterfacesData].map(
+      ({ integration }) => [integration.id, integration] as const,
+    ),
+  );
+  const firewallIds = [...firewallMetadata.keys()];
+  const initialSelectedFirewall = firewallIds[0] ?? "";
+  const activeFirewall = firewallMetadata.has(selectedFirewall) ? selectedFirewall : initialSelectedFirewall;
+  const displayedFirewallIds = isAdvanced ? firewallIds : activeFirewall ? [activeFirewall] : [];
+  const dropdownItems = firewallIds.map((firewallId) => ({
+    label: firewallMetadata.get(firewallId)?.name ?? firewallId,
+    value: firewallId,
   }));
 
   return (
@@ -90,7 +114,7 @@ export default function FirewallWidget({
               isTiny={isTiny}
             />
             <FirewallVersion
-              firewallsVersionData={firewallsVersionData}
+              firewallsVersionData={firewallsVersionData.filter(({ error }) => !error)}
               selectedFirewall={activeFirewall}
               isTiny={isTiny}
             />
@@ -104,16 +128,17 @@ export default function FirewallWidget({
             const version = firewallsVersionData.find(({ integration }) => integration.id === firewallId);
             const interfaces = firewallsInterfacesData.find(({ integration }) => integration.id === firewallId);
             const hasError = Boolean(cpu?.error || memory?.error || version?.error || interfaces?.error);
+            const metadata = firewallMetadata.get(firewallId);
 
             return (
               <FirewallPanel
                 key={firewallId}
-                name={version?.integration.name ?? cpu?.integration.name ?? firewallId}
-                kind={version?.integration.kind}
-                version={version?.summary.version}
-                cpu={cpu?.summary.total}
-                memory={memory?.summary.percent}
-                interfaces={interfaces?.summary}
+                name={metadata?.name ?? firewallId}
+                kind={metadata?.kind}
+                version={version?.error ? undefined : version?.summary.version}
+                cpu={cpu?.error ? undefined : cpu?.summary.total}
+                memory={memory?.error ? undefined : memory?.summary.percent}
+                interfaces={interfaces?.error ? undefined : interfaces?.summary}
                 hasError={hasError}
                 isAdvanced={isAdvanced}
                 isTiny={isTiny}

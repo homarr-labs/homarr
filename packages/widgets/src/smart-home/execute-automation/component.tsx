@@ -1,7 +1,18 @@
 "use client";
 
 import React from "react";
-import { Center, LoadingOverlay, Overlay, Stack, Text, ThemeIcon, Tooltip, UnstyledButton } from "@mantine/core";
+import {
+  Box,
+  Center,
+  LoadingOverlay,
+  Overlay,
+  Stack,
+  Text,
+  ThemeIcon,
+  Tooltip,
+  UnstyledButton,
+  VisuallyHidden,
+} from "@mantine/core";
 import { useDisclosure, useTimeout } from "@mantine/hooks";
 import { IconAutomation, IconCheck } from "@tabler/icons-react";
 
@@ -75,67 +86,79 @@ export default function SmartHomeTriggerAutomationWidget({
   const isTiny = width < 128 || height < 96;
 
   return (
-    <UnstyledButton
-      onClick={handleClick}
-      disabled={!integrationId || !canInteract || isPending}
-      style={{
-        cursor: !isEditMode && integrationId && canInteract ? "pointer" : "initial",
-        pointerEvents: isEditMode ? "none" : undefined,
-      }}
-      aria-description={error?.message}
-      w="100%"
-      h="100%"
-    >
-      {isShowSuccess && (
-        <Overlay>
-          <Center w="100%" h="100%">
-            <ThemeIcon variant="filled" color="green" size="xl" radius="xl">
-              <IconCheck style={{ width: "70%", height: "70%" }} stroke={1.5} />
-            </ThemeIcon>
-          </Center>
-        </Overlay>
+    <Box pos="relative" w="100%" h="100%">
+      <VisuallyHidden role="status">
+        {isPending
+          ? t("widget.smartHome-executeAutomation.status.running")
+          : isShowSuccess
+            ? t("widget.smartHome-executeAutomation.status.success")
+            : ""}
+      </VisuallyHidden>
+      {error && (
+        <VisuallyHidden role="alert">{t("widget.smartHome-executeAutomation.error.executeFailed")}</VisuallyHidden>
       )}
-      <LoadingOverlay visible={isPending} />
-      {error && displayMode !== "advanced" && (
-        <Overlay>
-          <Center w="100%" h="100%" p="xs">
-            <Tooltip label={error.message} multiline>
-              <Text size="xs" c="red" ta="center" lineClamp={3}>
-                {t("widget.smartHome-executeAutomation.error.executeFailed")}
-              </Text>
-            </Tooltip>
-          </Center>
-        </Overlay>
-      )}
-      <Center w="100%" h="100%">
-        <Stack align="center" gap="md">
-          <IconAutomation size={isTiny ? 16 : undefined} />
-          <Text ta="center" fw="bold" fz={isTiny ? "xs" : undefined}>
-            {options.displayName}
-          </Text>
-          {displayMode === "advanced" && (
-            <>
-              {error ? (
-                <Tooltip label={error.message} multiline>
-                  <Text ta="center" size="xs" c="red">
-                    {t("widget.smartHome-executeAutomation.error.executeFailed")}
-                  </Text>
-                </Tooltip>
-              ) : (
-                <Text ta="center" size="xs" c="dimmed">
-                  {lastExecutedAt
-                    ? t("widget.smartHome-executeAutomation.advanced.lastExecuted", {
-                        time: lastExecutedAt.toLocaleTimeString(),
-                      })
-                    : t("widget.smartHome-executeAutomation.advanced.automationId", {
-                        id: options.automationId,
-                      })}
+      <UnstyledButton
+        onClick={handleClick}
+        disabled={!integrationId || !canInteract || isPending}
+        style={{
+          cursor: !isEditMode && integrationId && canInteract ? "pointer" : "initial",
+          pointerEvents: isEditMode ? "none" : undefined,
+        }}
+        aria-description={error?.message}
+        w="100%"
+        h="100%"
+      >
+        {isShowSuccess && (
+          <Overlay>
+            <Center w="100%" h="100%">
+              <ThemeIcon variant="filled" color="green" size="xl" radius="xl">
+                <IconCheck style={{ width: "70%", height: "70%" }} stroke={1.5} />
+              </ThemeIcon>
+            </Center>
+          </Overlay>
+        )}
+        <LoadingOverlay visible={isPending} />
+        {error && displayMode !== "advanced" && (
+          <Overlay>
+            <Center w="100%" h="100%" p="xs">
+              <Tooltip label={error.message} multiline>
+                <Text size="xs" c="red" ta="center" lineClamp={3}>
+                  {t("widget.smartHome-executeAutomation.error.executeFailed")}
                 </Text>
-              )}
-            </>
-          )}
-        </Stack>
-      </Center>
-    </UnstyledButton>
+              </Tooltip>
+            </Center>
+          </Overlay>
+        )}
+        <Center w="100%" h="100%">
+          <Stack align="center" gap="md">
+            <IconAutomation size={isTiny ? 16 : undefined} />
+            <Text ta="center" fw="bold" fz={isTiny ? "xs" : undefined}>
+              {options.displayName}
+            </Text>
+            {displayMode === "advanced" && (
+              <>
+                {error ? (
+                  <Tooltip label={error.message} multiline>
+                    <Text ta="center" size="xs" c="red">
+                      {t("widget.smartHome-executeAutomation.error.executeFailed")}
+                    </Text>
+                  </Tooltip>
+                ) : (
+                  <Text ta="center" size="xs" c="dimmed">
+                    {lastExecutedAt
+                      ? t("widget.smartHome-executeAutomation.advanced.lastExecuted", {
+                          time: lastExecutedAt.toLocaleTimeString(),
+                        })
+                      : t("widget.smartHome-executeAutomation.advanced.automationId", {
+                          id: options.automationId,
+                        })}
+                  </Text>
+                )}
+              </>
+            )}
+          </Stack>
+        </Center>
+      </UnstyledButton>
+    </Box>
   );
 }

@@ -2782,6 +2782,10 @@
         "running": "Running automation",
         "success": "Automation completed"
       },
+      "status": {
+        "running": "Running automation",
+        "success": "Automation completed"
+      },
       "error": {
         "executeFailed": "Unable to run automation"
       }

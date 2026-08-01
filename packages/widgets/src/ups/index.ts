@@ -7,7 +7,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("ups", {
   icon: IconBatteryCharging,
-  queryKey: [["widget", "ups"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showBattery: factory.switch({

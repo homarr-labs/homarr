@@ -6,7 +6,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("customApi", {
   icon: IconApi,
-  queryKey: [["widget", "customApi"]],
   contextActions({ options, widgetStateRef }) {
     return [
       {

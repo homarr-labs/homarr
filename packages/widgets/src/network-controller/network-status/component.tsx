@@ -21,6 +21,7 @@ export default function NetworkControllerNetworkStatusWidget({
   options,
   integrationIds,
   displayMode,
+  width,
 }: WidgetComponentProps<"networkControllerStatus">) {
   const { data: summaries = [] } = clientApi.widget.networkController.summary.useQuery({
     integrationIds,
@@ -35,7 +36,7 @@ export default function NetworkControllerNetworkStatusWidget({
 
   return (
     <Box p={isAdvanced ? "md" : "sm"} h="100%">
-      <SimpleGrid cols={isAdvanced ? 2 : 1} h="100%" spacing="sm">
+      <SimpleGrid cols={isAdvanced && width >= 560 ? 2 : 1} h="100%" spacing="sm">
         {(isAdvanced || options.content === "wifi") && (
           <Card p={isAdvanced ? "md" : 0} withBorder={isAdvanced}>
             <WifiVariant countGuests={countWifiGuests} countUsers={countWifiUsers} compact={!isAdvanced} />

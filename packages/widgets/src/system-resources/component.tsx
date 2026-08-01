@@ -40,34 +40,18 @@ export const toChartItem = (healthInfo: {
 export const appendBoundedHistory = (history: ChartItem[], item: ChartItem, limit: number): ChartItem[] =>
   [...history, item].slice(-limit);
 
-export const boundHistoryByIntegration = (
-  historyByIntegration: Record<string, ChartItem[]>,
-  limit: number,
-): Record<string, ChartItem[]> =>
-  Object.fromEntries(
-    Object.entries(historyByIntegration).map(([integrationId, history]) => [integrationId, history.slice(-limit)]),
-  );
-
 export default function SystemResources({
   integrationIds,
   options,
   width,
   displayMode,
-  widgetStateRef,
 }: WidgetComponentProps<"systemResources">) {
   const { data = [], dataUpdatedAt } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
     integrationIds,
   });
   const isAdvanced = displayMode === "advanced";
   const integrationKey = useMemo(() => integrationIds.join("\u0000"), [integrationIds]);
-  const persistedState = widgetStateRef?.current?.systemResources as
-    | { integrationKey?: string; historyByIntegration?: Record<string, ChartItem[]> }
-    | undefined;
-  const [historyByIntegration, setHistoryByIntegration] = useState<Record<string, ChartItem[]>>(() =>
-    persistedState?.integrationKey === integrationKey && persistedState.historyByIntegration
-      ? boundHistoryByIntegration(persistedState.historyByIntegration, ADVANCED_HISTORY_SIZE)
-      : {},
-  );
+  const [historyByIntegration, setHistoryByIntegration] = useState<Record<string, ChartItem[]>>({});
   const previousIntegrationKey = useRef(integrationKey);
 
   useEffect(() => {
@@ -93,17 +77,6 @@ export default function SystemResources({
       ),
     );
   }, [dataUpdatedAt, data]);
-
-  useEffect(() => {
-    if (!widgetStateRef) return;
-    widgetStateRef.current = {
-      ...widgetStateRef.current,
-      systemResources: {
-        integrationKey,
-        historyByIntegration: boundHistoryByIntegration(historyByIntegration, ADVANCED_HISTORY_SIZE),
-      },
-    };
-  }, [historyByIntegration, integrationKey, widgetStateRef]);
 
   const panelColumns = isAdvanced && width >= 960 && data.length > 1 ? 2 : 1;
   const panelWidth = width / panelColumns;

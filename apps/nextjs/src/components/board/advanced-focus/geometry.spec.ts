@@ -4,12 +4,12 @@ import { getAdvancedFocusRect } from "./geometry";
 
 describe("getAdvancedFocusRect", () => {
   it("expands a widget and keeps it inside the viewport", () => {
-    expect(getAdvancedFocusRect({ left: 10, top: 10, width: 300, height: 200 }, { width: 1200, height: 800 })).toEqual({
-      left: 240,
-      top: 190,
-      width: 720,
-      height: 480,
-    });
+    const rect = getAdvancedFocusRect({ left: 10, top: 10, width: 300, height: 200 }, { width: 1200, height: 800 });
+
+    expect(rect.left).toBe(120);
+    expect(rect.top).toBeCloseTo(118.6);
+    expect(rect.width).toBe(960);
+    expect(rect.height).toBeCloseTo(622.8);
   });
 
   it("uses the available viewport on small screens", () => {
