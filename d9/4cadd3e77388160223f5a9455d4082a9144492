@@ -9,6 +9,7 @@ apps/nextjs/src/components/board/sections/grid/dnd/coordinates.spec.ts
   s_7b8a552cf9f1f8::t_1c77a0bac28392 4,33-48
   s_7b8a552cf9f1f8::t_644e167ff143ec 3,5-32,49-50,52-55,58,60-63,74-82,84
   s_7b8a552cf9f1f8::t_40c54586e3381c 51,56-57,59,64-73,83
+  s_7b8a552cf9f1f8::t_c5fa518dbfdf42 1-2,85-86
 apps/nextjs/src/components/board/sections/grid/grid-portal-host.tsx
   s_7b8a552cf9f1f8::t_62d43e30bcc7b9 23,64,73-91,107
   s_7b8a552cf9f1f8::t_75fc9a5607ec5c 134-135
@@ -130,6 +131,7 @@ packages/translation/src/lang/lt.json
   s_7b8a552cf9f1f8::t_5c2d28f7a0f2b0 1552
 apps/docs/docs/management/boards/index.mdx
   s_7b8a552cf9f1f8::t_9f889c010bda32 103-106,110,121,123-124,128-131,133-134,159,167,169-172,174,176-179,181-182,228
+  s_7b8a552cf9f1f8::t_96d8503c0adb51 153-158
 packages/db/migrations/custom/index.ts
   s_7b8a552cf9f1f8::t_4b777febfe91b7 6,13
 packages/translation/src/lang/el.json
@@ -163,6 +165,7 @@ apps/nextjs/src/components/board/sections/grid/grid-editor.css
   s_7b8a552cf9f1f8::t_915093db504bbc 139
   s_7b8a552cf9f1f8::t_241cb7cdb9950e 190
   s_7b8a552cf9f1f8::t_f64294aa71ed98 243
+  s_7b8a552cf9f1f8::t_f0674edd173ec9 96-97,109-110,117,151-152,161-162,206-207
 packages/translation/src/lang/fr.json
   s_7b8a552cf9f1f8::t_5c2d28f7a0f2b0 1552
 packages/translation/src/lang/en.json
@@ -181,8 +184,12 @@ apps/nextjs/src/components/board/sections/grid/dnd/engine.ts
   s_7b8a552cf9f1f8::t_20c1b4e92b9acb 210-213,215-225,227-246
   s_7b8a552cf9f1f8::t_5bb2c630041530 1,226
   s_7b8a552cf9f1f8::t_6b438ab1d7375c 2-30,32-44,48-63,65-122,124-150,152-153,155-159,166-168,184-194,202-209,247-387,390-402,404-463,465-497
+  s_7b8a552cf9f1f8::t_94e850b13c2e9d 151,178
+  s_7b8a552cf9f1f8::t_96d8503c0adb51 45-47,154,160-165,169-177,179-182
+  s_7b8a552cf9f1f8::t_c5fa518dbfdf42 183
 apps/nextjs/src/components/board/items/actions/test/mocks/container-section-mock.ts
   s_7b8a552cf9f1f8::t_eb3c9aea774928 2,4,6-7,10-11,13,15-16,18-20,23,25-31,35-36
+  s_7b8a552cf9f1f8::t_c5fa518dbfdf42 1,3,5,8-9,12,14,17,21-22,24,32-34,37-38
 pnpm-workspace.yaml
   s_7b8a552cf9f1f8::t_489f89916e107e 11-12,14,16
 apps/nextjs/src/components/board/sections/section-actions.tsx
@@ -201,6 +208,7 @@ apps/docs/docs/getting-started/after-the-installation.mdx
   s_7b8a552cf9f1f8::t_9f889c010bda32 324,326-328,330,335-337,339,341-343,345,347,349-351
 apps/nextjs/src/components/board/sections/grid/board-grid-editor-boundary.tsx
   s_7b8a552cf9f1f8::t_63ffb87c72c01f 1-11,14-15,17-49,52-55
+  s_7b8a552cf9f1f8::t_c5fa518dbfdf42 12-13,16,50-51,56-57
 packages/translation/src/lang/pt.json
   s_7b8a552cf9f1f8::t_5c2d28f7a0f2b0 1552
 apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
@@ -224,12 +232,14 @@ packages/translation/src/lang/nl.json
   s_7b8a552cf9f1f8::t_5c2d28f7a0f2b0 1552
 packages/old-import/src/prepare/prepare-sections.spec.ts
   s_7b8a552cf9f1f8::t_4cb026fb0a6167 1,4,6-14,16-26,29-36,38-67,69-85
+  s_7b8a552cf9f1f8::t_c5fa518dbfdf42 2-3,5,15,27-28,37,68,86-87
 apps/nextjs/src/components/board/sections/grid/dnd/engine.spec.ts
   s_7b8a552cf9f1f8::t_0901c9a365df21 1-68,70-119,121-209,243,245-256,258-274,291-345,347-359,361-390,392-440,458-463,471-579,581-592,594-639,656-681,693-743
   s_7b8a552cf9f1f8::t_ca2b3b009f7b1a 69,120,244,391,441-457,464-470,580,640-655,682-692
   s_7b8a552cf9f1f8::t_26fff989595f39 275-276,278-286,289-290
   s_7b8a552cf9f1f8::t_df4651a7111822 277,287-288
   s_7b8a552cf9f1f8::t_5d31c52c2c95f1 242,257,346,360,593
+  s_7b8a552cf9f1f8::t_96d8503c0adb51 210-241
 packages/translation/src/lang/pl.json
   s_7b8a552cf9f1f8::t_5c2d28f7a0f2b0 1552
 packages/translation/src/lang/uk.json
@@ -244,6 +254,7 @@ apps/nextjs/src/components/board/sections/container/container-actions.ts
   s_7b8a552cf9f1f8::t_b41963dfa99eb7 12-13,16,19-20,23-24,28
   s_7b8a552cf9f1f8::t_25d10430d8d69b 11
   s_18642ab4fa377f::t_417dba09103ef6 5,7-9,35-37,42
+  s_7b8a552cf9f1f8::t_c5fa518dbfdf42 1-4,6,10,14-15,17-18,21-22,25-27,29-34,38-41,43
 packages/translation/src/lang/fi.json
   s_7b8a552cf9f1f8::t_5c2d28f7a0f2b0 1552
 packages/translation/src/lang/ca.json
@@ -294,6 +305,7 @@ apps/nextjs/src/components/board/sections/container/actions/remove-container.ts
   s_7b8a552cf9f1f8::t_4dd2a658e56331 86,141-150
   s_7b8a552cf9f1f8::t_4143267748aefb 1,3-7,11-12,15,19,24,64,67,69-72,74,76,78-79,81,83-85,87-140,151-179
   s_7b8a552cf9f1f8::t_454b5b1dec1461 65,68,73,75,77,80,82
+  s_7b8a552cf9f1f8::t_c5fa518dbfdf42 2,8-10,13-14,16-18,20-23,25-63,66
 packages/translation/src/lang/de-CH.json
   s_7b8a552cf9f1f8::t_5c2d28f7a0f2b0 1552
 packages/translation/src/lang/vi.json
@@ -411,6 +423,8 @@ e2e/board-grid.spec.ts
   s_7b8a552cf9f1f8::t_4c8ede6e7689e3 622
   s_7b8a552cf9f1f8::t_7e9416df161959 1386
   s_7b8a552cf9f1f8::t_8725f0be042cbb 1749
+  s_7b8a552cf9f1f8::t_c5fa518dbfdf42 596,610,1745
+  s_7b8a552cf9f1f8::t_96d8503c0adb51 228-230,247
 packages/validation/src/shared.ts
   s_7b8a552cf9f1f8::t_0c7e4409272c5a 24-26,32-35,53-54,87-90
   s_7b8a552cf9f1f8::t_14afb6f60f9053 57,66,68,70-73,75,77,79,81-82,96
@@ -432,6 +446,7 @@ apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
   s_7b8a552cf9f1f8::t_5d87d844d5a7ca 82
   s_7b8a552cf9f1f8::t_7cb1e8fce0ba7d 54-57
   s_7b8a552cf9f1f8::t_3abc5f2bbb85fb 71-72
+  s_7b8a552cf9f1f8::t_96d8503c0adb51 187-189
 apps/nextjs/src/components/board/sections/container/actions/add-container.ts
   s_7b8a552cf9f1f8::t_0d04ef0fddef30 4,6,11,21,24,26,28,32,36,52
 pnpm-lock.yaml
