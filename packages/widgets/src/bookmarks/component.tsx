@@ -1,6 +1,6 @@
 "use client";
 
-import { Anchor, Card, Flex, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
+import { Anchor, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 import combineClasses from "clsx";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -12,11 +12,11 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
 
-export default function BookmarksWidget({ options, itemId }: WidgetComponentProps<"bookmarks">) {
+export default function BookmarksWidget({ options, itemId, width, displayMode }: WidgetComponentProps<"bookmarks">) {
   const board = useRequiredBoard();
   const { data = [] } = clientApi.app.byIds.useQuery(options.items, {
-    select(data) {
-      return data.toSorted((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
+    select(apps) {
+      return apps.toSorted((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
     },
   });
 
@@ -48,7 +48,16 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
           {options.title}
         </Title>
       )}
-      {(options.layout === "grid" || options.layout === "gridHorizontal") && (
+      {displayMode === "advanced" && (
+        <AdvancedBookmarksLayout
+          data={data}
+          width={width}
+          openNewTab={options.openNewTab}
+          withBorder={options.withBorder}
+          hasIconColor={board.iconColor !== null}
+        />
+      )}
+      {displayMode !== "advanced" && (options.layout === "grid" || options.layout === "gridHorizontal") && (
         <GridLayout
           data={data}
           itemDirection={options.layout === "gridHorizontal" ? "horizontal" : "vertical"}
@@ -60,7 +69,7 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
           hasIconColor={board.iconColor !== null}
         />
       )}
-      {options.layout !== "grid" && options.layout !== "gridHorizontal" && (
+      {displayMode !== "advanced" && options.layout !== "grid" && options.layout !== "gridHorizontal" && (
         <FlexLayout
           data={data}
           direction={options.layout}
@@ -141,6 +150,77 @@ const FlexLayout = ({
         </div>
       ))}
     </Flex>
+  );
+};
+
+interface AdvancedBookmarksLayoutProps {
+  data: RouterOutputs["app"]["byIds"];
+  width: number;
+  openNewTab: boolean;
+  withBorder: boolean;
+  hasIconColor: boolean;
+}
+
+export const getAdvancedBookmarkColumns = (width: number, itemCount: number): number =>
+  Math.max(1, Math.min(itemCount || 1, Math.floor(width / 280)));
+
+export const getBookmarkHostname = (href: string | null): string | undefined => {
+  if (!href) return undefined;
+  try {
+    return new URL(href).hostname;
+  } catch {
+    return href;
+  }
+};
+
+const AdvancedBookmarksLayout = ({
+  data,
+  width,
+  openNewTab,
+  withBorder,
+  hasIconColor,
+}: AdvancedBookmarksLayoutProps) => {
+  const board = useRequiredBoard();
+
+  return (
+    <ScrollArea h="100%" style={{ flex: 1 }}>
+      <SimpleGrid cols={getAdvancedBookmarkColumns(width, data.length)} spacing="sm">
+        {data.map((app) => (
+          <UnstyledButton
+            key={app.id}
+            component="a"
+            href={app.href ?? undefined}
+            target={openNewTab ? "_blank" : "_self"}
+            rel="noopener noreferrer"
+          >
+            <Card radius={board.itemRadius} className={classes.card} withBorder={withBorder} p="md" h="100%">
+              <Group align="flex-start" wrap="nowrap">
+                <MaskedOrNormalImage
+                  imageUrl={app.iconUrl}
+                  hasColor={hasIconColor}
+                  alt={app.name}
+                  className={classes.bookmarkIcon}
+                  style={{ width: 40, height: 40, flex: "0 0 auto" }}
+                />
+                <Stack gap={3} miw={0}>
+                  <Text fw={700} size="sm" truncate="end">
+                    {app.name}
+                  </Text>
+                  <Anchor component="span" size="xs" truncate="end">
+                    {getBookmarkHostname(app.href)}
+                  </Anchor>
+                  {app.description && (
+                    <Text size="xs" c="dimmed" lineClamp={3}>
+                      {app.description}
+                    </Text>
+                  )}
+                </Stack>
+              </Group>
+            </Card>
+          </UnstyledButton>
+        ))}
+      </SimpleGrid>
+    </ScrollArea>
   );
 };
 
@@ -247,7 +327,7 @@ const VerticalItem = ({
       )}
       {!hideHostname && (
         <Anchor ta="center" component="span" size="xs">
-          {app.href ? new URL(app.href).hostname : undefined}
+          {getBookmarkHostname(app.href)}
         </Anchor>
       )}
     </Stack>
@@ -294,7 +374,7 @@ const HorizontalItem = ({
 
             {!hideHostname && (
               <Anchor component="span" size="xs">
-                {app.href ? new URL(app.href).hostname : undefined}
+                {getBookmarkHostname(app.href)}
               </Anchor>
             )}
           </Stack>

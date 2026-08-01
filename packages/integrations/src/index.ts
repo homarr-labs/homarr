@@ -62,6 +62,7 @@ export type { SystemHealthMonitoring } from "./interfaces/health-monitoring/heal
 export { UpstreamMediaRequestStatus } from "./interfaces/media-requests/media-request-types";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request-types";
 export type { StreamSession } from "./interfaces/media-server/media-server-types";
+export type { EntityState } from "./interfaces/smart-home/smart-home-types";
 export type {
   TdarrQueue,
   TdarrPieSegment,

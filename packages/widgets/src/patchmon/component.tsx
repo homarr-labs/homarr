@@ -75,7 +75,13 @@ const getLayoutMode = (width: number, height: number): LayoutMode => {
   return "comfortable";
 };
 
-export default function PatchMonWidget({ integrationIds, options, width, height }: WidgetComponentProps<"patchmon">) {
+export default function PatchMonWidget({
+  integrationIds,
+  options,
+  width,
+  height,
+  displayMode = "compact",
+}: WidgetComponentProps<"patchmon">) {
   const t = useScopedI18n("widget.patchmon");
   const integrationId = integrationIds[0] ?? "";
   const { data: stats } = clientApi.widget.patchmon.getStats.useQuery({ integrationId }, { staleTime: 60 * 1000 });
@@ -98,18 +104,20 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
     .map(([, statKey]) => statKey);
 
   const colorContext = { totalHosts: stats.totalHosts };
-  const layout = getLayoutMode(width, height);
-  const isLandscape = width / height > 2.5;
+  const advanced = displayMode === "advanced";
+  const layout = advanced ? "spacious" : getLayoutMode(width, height);
+  const isLandscape = !advanced && width / height > 2.5;
   const isTinySquare = width < 160 && height < 160;
   const isShortLandscape = width >= 160 && height < 160;
-  const isCompactSurface = isTinySquare || isShortLandscape;
+  const isCompactSurface = !advanced && (isTinySquare || isShortLandscape);
   const isNarrow = width < 180;
   const osDisplayMode = options.osDisplayMode as "bars" | "donut";
   const showOsData = options.showOsDistribution && stats.osDistribution.length > 0;
 
   const showIcons = layout !== "mini";
   const showLabels = layout !== "mini";
-  const showHero = options.showComplianceHero && (!isLandscape || isCompactSurface) && width >= 90 && height >= 90;
+  const showHero =
+    options.showComplianceHero && (advanced || !isLandscape || isCompactSurface) && width >= 90 && height >= 90;
   const showHeroText = showHero && shouldShowComplianceHeroText(width);
   const showHeroRingOnly = showHero && !showHeroText;
   const compactPrimaryContent = isCompactSurface
@@ -120,10 +128,10 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
       })
     : null;
   const showStats = visibleStatKeys.length > 0 && !isCompactSurface;
-  const showOsSection = showOsData && !isCompactSurface && height > 200;
+  const showOsSection = showOsData && !isCompactSurface && (advanced || height > 200);
   const showCompactFooter = isCompactSurface && height >= 110;
-  const showFooter = isCompactSurface ? showCompactFooter : !isLandscape && height > 220;
-  const showOsLegend = osDisplayMode === "donut" && width >= 380 && height >= 300;
+  const showFooter = advanced || (isCompactSurface ? showCompactFooter : !isLandscape && height > 220);
+  const showOsLegend = osDisplayMode === "donut" && (advanced || (width >= 380 && height >= 300));
 
   const hasContent = compactPrimaryContent !== null || showStats || showOsSection || showHero;
 
@@ -272,10 +280,10 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
     </div>
   );
 
-  const needsScroll = layout === "mini" || layout === "compact";
+  const needsScroll = !advanced && (layout === "mini" || layout === "compact");
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} data-display-mode={displayMode}>
       {showHero && (
         <ComplianceHero
           compliancePercent={compliancePercent}

@@ -17,7 +17,13 @@ export interface DynamicSelectOption {
   label: string;
 }
 
-export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidgetInputProps<"dynamicSelect">) => {
+export const WidgetDynamicSelectInput = ({
+  property,
+  kind,
+  options,
+  itemId,
+  boardId,
+}: CommonWidgetInputProps<"dynamicSelect">) => {
   const t = useI18n();
   const tWidget = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
@@ -28,6 +34,8 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
     debouncedSearch,
     form.values.integrationIds,
     form.values.options,
+    itemId,
+    boardId,
   );
   const currentOption = inputProps.value as DynamicSelectOption | null;
   const onChange = inputProps.onChange as (value: DynamicSelectOption | null) => void;

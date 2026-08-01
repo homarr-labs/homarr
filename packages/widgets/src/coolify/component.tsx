@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollArea, Stack, Text } from "@mantine/core";
+import { ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -10,7 +10,12 @@ import { createWidgetKey } from "./coolify-utils";
 import { InstanceCard } from "./instance-card";
 import { SingleInstanceLayout } from "./single-instance-layout";
 
-export default function CoolifyWidget({ options, integrationIds, width }: WidgetComponentProps<"coolify">) {
+export default function CoolifyWidget({
+  options,
+  integrationIds,
+  width,
+  displayMode,
+}: WidgetComponentProps<"coolify">) {
   const t = useScopedI18n("widget.coolify");
 
   if (integrationIds.length === 0) {
@@ -21,29 +26,45 @@ export default function CoolifyWidget({ options, integrationIds, width }: Widget
     );
   }
 
-  return <CoolifyContent integrationIds={integrationIds} options={options} width={width} />;
+  return (
+    <CoolifyContent
+      integrationIds={integrationIds}
+      options={options}
+      width={width}
+      isAdvanced={displayMode === "advanced"}
+    />
+  );
 }
 
 interface CoolifyContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"coolify">["options"];
   width: number;
+  isAdvanced: boolean;
 }
 
-function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps) {
+function CoolifyContent({ integrationIds, options, width, isAdvanced }: CoolifyContentProps) {
   const { data: instancesData = [] } = clientApi.widget.coolify.getInstancesInfo.useQuery({ integrationIds });
 
-  const isTiny = width < 256;
+  const isTiny = !isAdvanced && width < 256;
   const [firstInstance] = instancesData;
   const widgetKey = createWidgetKey(integrationIds);
 
   if (instancesData.length === 1 && firstInstance) {
-    return <SingleInstanceLayout instance={firstInstance} options={options} isTiny={isTiny} widgetKey={widgetKey} />;
+    return (
+      <SingleInstanceLayout
+        instance={firstInstance}
+        options={options}
+        isTiny={isTiny}
+        widgetKey={widgetKey}
+        isAdvanced={isAdvanced}
+      />
+    );
   }
 
   return (
     <ScrollArea h="100%">
-      <Stack gap="xs" p="xs">
+      <SimpleGrid cols={isAdvanced && width >= 760 ? 2 : 1} spacing="sm" p="xs">
         {instancesData.map((instance) => (
           <InstanceCard
             key={instance.integrationId}
@@ -51,9 +72,10 @@ function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps)
             options={options}
             isTiny={isTiny}
             widgetKey={widgetKey}
+            isAdvanced={isAdvanced}
           />
         ))}
-      </Stack>
+      </SimpleGrid>
     </ScrollArea>
   );
 }

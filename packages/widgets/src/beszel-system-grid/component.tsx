@@ -330,7 +330,9 @@ const metricRenderers = [
 ] as const;
 
 const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius, onClick }: SystemCardProps) => {
-  const visibleMetrics = metricRenderers.filter((m) => m.visible(system, options)).slice(0, maxMetrics);
+  const enabledMetrics = metricRenderers.filter((metric) => metric.visible(system, options));
+  const visibleMetrics = enabledMetrics.slice(0, maxMetrics);
+  const hiddenMetricCount = enabledMetrics.length - visibleMetrics.length;
 
   return (
     <Card
@@ -362,6 +364,11 @@ const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius, onClick 
       <Stack gap={0} style={{ flex: 1 }} justify="space-evenly">
         {visibleMetrics.map((m) => m.render(system, t, size))}
       </Stack>
+      {hiddenMetricCount > 0 && (
+        <Text size="10px" c="dimmed" ta="right">
+          +{hiddenMetricCount}
+        </Text>
+      )}
     </Card>
   );
 };
@@ -372,6 +379,7 @@ export default function BeszelSystemGridWidget({
   isEditMode,
   width,
   height,
+  displayMode = "compact",
 }: WidgetComponentProps<"beszelSystemGrid">) {
   const t = useScopedI18n("widget.beszelSystemGrid");
   const board = useRequiredBoard();
@@ -411,14 +419,18 @@ export default function BeszelSystemGridWidget({
     );
   }
 
-  const cols = getColCount(width, height, filteredSystems.length);
+  const advanced = displayMode === "advanced";
+  const cols = advanced
+    ? Math.min(filteredSystems.length, width >= 900 ? 2 : 1)
+    : getColCount(width, height, filteredSystems.length);
   const rows = Math.ceil(filteredSystems.length / cols) || 1;
   const rawCellHeight = height / rows;
-  const scrollEnabled = rawCellHeight < MIN_CELL_HEIGHT;
-  const effectiveCellHeight = scrollEnabled ? MIN_CELL_HEIGHT : rawCellHeight;
+  const minimumCellHeight = advanced ? 320 : MIN_CELL_HEIGHT;
+  const scrollEnabled = rawCellHeight < minimumCellHeight;
+  const effectiveCellHeight = scrollEnabled ? minimumCellHeight : rawCellHeight;
   const cellWidth = width / cols;
   const size = getSizeConfig(cellWidth, effectiveCellHeight);
-  const maxMetrics = getMaxVisibleMetrics(effectiveCellHeight, size);
+  const maxMetrics = advanced ? metricRenderers.length : getMaxVisibleMetrics(effectiveCellHeight, size);
 
   return (
     <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
@@ -428,7 +440,7 @@ export default function BeszelSystemGridWidget({
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gridTemplateRows: scrollEnabled ? `repeat(${rows}, ${MIN_CELL_HEIGHT}px)` : `repeat(${rows}, 1fr)`,
+          gridTemplateRows: scrollEnabled ? `repeat(${rows}, ${minimumCellHeight}px)` : `repeat(${rows}, 1fr)`,
           gap: size.gap,
           overflow: scrollEnabled ? "auto" : "hidden",
         }}

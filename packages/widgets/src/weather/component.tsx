@@ -15,7 +15,13 @@ import type { WidgetComponentProps } from "../definition";
 import { AnimatedWeatherIcon } from "./animated-icon";
 import { WeatherDescription } from "./icon";
 
-export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
+export default function WeatherWidget({
+  isEditMode,
+  options,
+  width,
+  height,
+  displayMode,
+}: WidgetComponentProps<"weather">) {
   const input = {
     latitude: options.location.latitude,
     longitude: options.location.longitude,
@@ -34,9 +40,14 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
       {options.hasForecast ? (
-        <WeeklyForecast weather={weather} options={options} />
+        <WeeklyForecast
+          weather={weather}
+          options={options}
+          maxDays={getVisibleForecastDays(options.forecastDayCount, width, height, displayMode === "advanced")}
+          showDetails={displayMode === "advanced"}
+        />
       ) : (
-        <DailyWeather weather={weather} options={options} />
+        <DailyWeather weather={weather} options={options} showDetails={displayMode === "advanced"} />
       )}
     </Stack>
   );
@@ -46,7 +57,7 @@ interface WeatherProps extends Pick<WidgetComponentProps<"weather">, "options"> 
   weather: NonNullable<RouterOutputs["widget"]["weather"]["atLocation"]>;
 }
 
-const DailyWeather = ({ options, weather }: WeatherProps) => {
+const DailyWeather = ({ options, weather, showDetails = false }: WeatherProps & { showDetails?: boolean }) => {
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
 
@@ -127,11 +138,39 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
           </Group>
         </>
       )}
+      {showDetails && weather.daily[0] && (
+        <WeatherDescription
+          useImperialSpeed={options.useImperialSpeed}
+          dateFormat={options.dateFormat}
+          time={weather.daily[0].time}
+          weatherCode={weather.daily[0].weatherCode}
+          maxTemp={getPreferredUnit(
+            weather.daily[0].maxTemp,
+            options.isFormatFahrenheit,
+            options.disableTemperatureDecimals,
+          )}
+          minTemp={getPreferredUnit(
+            weather.daily[0].minTemp,
+            options.isFormatFahrenheit,
+            options.disableTemperatureDecimals,
+          )}
+          sunrise={dayjs(weather.daily[0].sunrise).format("HH:mm")}
+          sunset={dayjs(weather.daily[0].sunset).format("HH:mm")}
+          maxWindSpeed={weather.daily[0].maxWindSpeed}
+          maxWindGusts={weather.daily[0].maxWindGusts}
+          humidity={weather.daily[0].humidity}
+        />
+      )}
     </>
   );
 };
 
-const WeeklyForecast = ({ options, weather }: WeatherProps) => {
+const WeeklyForecast = ({
+  options,
+  weather,
+  maxDays,
+  showDetails,
+}: WeatherProps & { maxDays: number; showDetails: boolean }) => {
   return (
     <>
       <Group className="weather-forecast-city-temp-group" wrap="nowrap" gap="md">
@@ -163,16 +202,21 @@ const WeeklyForecast = ({ options, weather }: WeatherProps) => {
           </Text>
         </Group>
       </Group>
-      <Forecast weather={weather} options={options} />
+      <Forecast weather={weather} options={options} maxDays={maxDays} showDetails={showDetails} />
     </>
   );
 };
 
-function Forecast({ weather, options }: WeatherProps) {
+function Forecast({
+  weather,
+  options,
+  maxDays,
+  showDetails,
+}: WeatherProps & { maxDays: number; showDetails: boolean }) {
   const dateFormat = options.dateFormat;
   return (
     <Group className="weather-forecast-days-group" w="100%" justify="space-evenly" wrap="nowrap" pb="sm">
-      {weather.daily.slice(0, options.forecastDayCount).map((dayWeather, index) => (
+      {weather.daily.slice(0, maxDays).map((dayWeather, index) => (
         <HoverCard key={dayWeather.time} withArrow shadow="md">
           <HoverCard.Target>
             <Stack
@@ -189,6 +233,11 @@ function Forecast({ weather, options }: WeatherProps) {
               <Text fz={16}>
                 {getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
               </Text>
+              {showDetails && (
+                <Text fz="xs" c="dimmed">
+                  {getPreferredUnit(dayWeather.minTemp, options.isFormatFahrenheit, true)}
+                </Text>
+              )}
             </Stack>
           </HoverCard.Target>
           <HoverCard.Dropdown>
@@ -220,9 +269,21 @@ function Forecast({ weather, options }: WeatherProps) {
   );
 }
 
-const getPreferredUnit = (value?: number, isFahrenheit = false, disableTemperatureDecimals = false): string =>
-  value
+export const getPreferredUnit = (value?: number, isFahrenheit = false, disableTemperatureDecimals = false): string =>
+  value !== undefined
     ? isFahrenheit
       ? `${(value * (9 / 5) + 32).toFixed(disableTemperatureDecimals ? 0 : 1)}°F`
       : `${value.toFixed(disableTemperatureDecimals ? 0 : 1)}°C`
     : "?";
+
+export const getVisibleForecastDays = (
+  configuredDays: number,
+  width: number,
+  height: number,
+  isAdvanced: boolean,
+): number => {
+  if (isAdvanced) return configuredDays;
+  const widthBudget = Math.max(1, Math.floor(width / 58));
+  const heightBudget = height < 120 ? 3 : configuredDays;
+  return Math.min(configuredDays, widthBudget, heightBudget);
+};

@@ -1,13 +1,15 @@
 ---
-title: 'Media server streams'
-description: 'Show the current streams on your media servers'
+title: "Media server streams"
+description: "Show the current streams on your media servers"
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { IconAd } from "@tabler/icons-react";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
@@ -17,20 +19,18 @@ import { jellyfinIntegration } from "@site/docs/integrations/jellyfin";
 import { navidromeIntegration } from "@site/docs/integrations/navidrome";
 import { plexIntegration } from "@site/docs/integrations/plex";
 
+<WidgetHeader widget={mediaServerWidget} categories={["Media server"]} />
 
-<WidgetHeader
-  widget={mediaServerWidget}
-  categories={['Media server']}
-/>
+The media server widget shows active sessions across your media servers.
+It shows playback progress, pause state, time remaining, and whether each session is direct play, direct stream, or transcoding audio or video. Location and bitrate can be toggled independently.
 
-The media server widget enables you to watch and view current active sessions over all your media servers. 
-It also displays useful information, that you can use when providing support to users or debugging a problem.
-
-
+Select a session to inspect its media metadata in an anchored popover. Advanced mode adds search, sorting, location, bitrate, and a summary of playing and transcoding sessions while keeping separate integration instances identifiable. Compact visibility switches do not hide location or bitrate from the complete advanced session view.
+If one selected server is unavailable, a warning indicator identifies the degraded result while sessions from healthy servers remain usable.
+Sessions without user metadata remain visible and are labeled as an unknown user.
 
 ### Screenshots
 
-import mediaTable from './img/table.png';
+import mediaTable from "./img/table.png";
 
 <img src={mediaTable} alt="media-server-streams" width={128 * 3 * 1.5} height={128 * 1.5} />
 
@@ -54,6 +54,7 @@ import mediaTable from './img/table.png';
     },
   ]}
 />
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

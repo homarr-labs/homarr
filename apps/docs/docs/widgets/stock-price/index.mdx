@@ -1,28 +1,26 @@
 ---
-title: 'Stock Price'
-description: 'Displays the current stock price of a company.'
+title: "Stock Price"
+description: "Displays the current stock price of a company."
 hide_title: true
 ---
 
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { stockPriceWidget } from '.';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { stockPriceWidget } from ".";
 
-<WidgetHeader
-  widget={stockPriceWidget}
-  categories={['Finance', "Market"]}
-/>
+<WidgetHeader widget={stockPriceWidget} categories={["Finance", "Market"]} />
 
 Using the Stocks widget, you can show the current stock prices of your favorite companies on your dashboard.
 
 ### Screenshots
 
-import apple from './img/apple.png';
-import google from './img/google.png';
-import ethereum from './img/ethereum.png';
-import nvidia from './img/nvidia.png';
+import apple from "./img/apple.png";
+import google from "./img/google.png";
+import ethereum from "./img/ethereum.png";
+import nvidia from "./img/nvidia.png";
 
 <div className="flex gap-1">
   <div className="flex flex-col gap-1">
@@ -34,17 +32,21 @@ import nvidia from './img/nvidia.png';
   </div>
   <img src={nvidia} alt="stock-price nvidia" width={128 * 2 + 2} height={128 * 2 + 4} />
 </div>
-  
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={stockPriceWidget.configuration} />
 
 ### Examples
+
 Here's a small collection of examples, that you can use for testing or actual use (in no particular order):
+
 - AAPL
 - GOOGL
 - AMZN

@@ -1,7 +1,20 @@
 "use client";
 
 import { Fragment } from "react";
-import { Avatar, Badge, Box, Divider, Group, Image, Stack, Text, TooltipFloating, UnstyledButton } from "@mantine/core";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Divider,
+  Group,
+  Image,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Text,
+  TooltipFloating,
+  UnstyledButton,
+} from "@mantine/core";
 import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -17,26 +30,36 @@ import { OverflowBadge } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 
-export default function MediaReleasesWidget({ options, integrationIds }: WidgetComponentProps<"mediaReleases">) {
+export default function MediaReleasesWidget({
+  options,
+  integrationIds,
+  width,
+  displayMode,
+}: WidgetComponentProps<"mediaReleases">) {
   const { data: releases = [] } = clientApi.widget.mediaRelease.getMediaReleases.useQuery({
     integrationIds,
   });
 
+  const isAdvanced = displayMode === "advanced";
+
   return (
-    <Stack p="xs" gap="sm">
-      {releases.map((item, index) => (
-        <Fragment key={item.id}>
-          {index !== 0 && options.layout === "poster" && <Divider />}
-          <Item item={item} options={options} />
-        </Fragment>
-      ))}
-    </Stack>
+    <ScrollArea h="100%">
+      <SimpleGrid cols={isAdvanced ? Math.max(1, Math.floor(width / 360)) : 1} p="xs" spacing="sm">
+        {releases.map((item, index) => (
+          <Fragment key={`${item.integration.id}:${item.id}`}>
+            {!isAdvanced && index !== 0 && options.layout === "poster" && <Divider />}
+            <Item item={item} options={options} isAdvanced={isAdvanced} />
+          </Fragment>
+        ))}
+      </SimpleGrid>
+    </ScrollArea>
   );
 }
 
 interface ItemProps {
   item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"][number];
   options: WidgetComponentProps<"mediaReleases">["options"];
+  isAdvanced: boolean;
 }
 
 const formatReleaseDate = (value: unknown, locale: string) => {
@@ -52,7 +75,7 @@ const formatReleaseDate = (value: unknown, locale: string) => {
   }).format(date);
 };
 
-const Item = ({ item, options }: ItemProps) => {
+const Item = ({ item, options, isAdvanced }: ItemProps) => {
   const locale = useCurrentLocale();
   const t = useI18n();
   const length = formatLength(item.length, item.type, t);
@@ -62,7 +85,12 @@ const Item = ({ item, options }: ItemProps) => {
       label={item.description}
       w={300}
       multiline
-      disabled={item.description === undefined || item.description.trim() === "" || !options.showDescriptionTooltip}
+      disabled={
+        isAdvanced ||
+        item.description === undefined ||
+        item.description.trim() === "" ||
+        !options.showDescriptionTooltip
+      }
     >
       <UnstyledButton
         component="a"
@@ -70,9 +98,18 @@ const Item = ({ item, options }: ItemProps) => {
         target="_blank"
         rel="noopener noreferrer"
         pos="relative"
-        p={options.layout === "poster" ? 0 : 4}
+        p={isAdvanced ? "sm" : options.layout === "poster" ? 0 : 4}
+        h="100%"
+        style={
+          isAdvanced
+            ? {
+                border: "1px solid var(--mantine-color-default-border)",
+                borderRadius: "var(--mantine-radius-sm)",
+              }
+            : undefined
+        }
       >
-        {options.layout === "backdrop" && (
+        {!isAdvanced && options.layout === "backdrop" && (
           <Box
             w="100%"
             h="100%"
@@ -91,7 +128,9 @@ const Item = ({ item, options }: ItemProps) => {
         )}
         <Group justify="space-between" h="100%" wrap="nowrap">
           <Group align="start" wrap="nowrap" style={{ zIndex: 0 }}>
-            {options.layout === "poster" && <Image w={60} src={item.imageUrls.poster} alt={item.title} />}
+            {(isAdvanced || options.layout === "poster") && (
+              <Image w={isAdvanced ? 80 : 60} src={item.imageUrls.poster} alt={item.title} radius="xs" />
+            )}
             <Stack gap={4}>
               <Stack gap={0}>
                 <Text size="sm" fw="bold" lineClamp={2}>
@@ -136,15 +175,20 @@ const Item = ({ item, options }: ItemProps) => {
                   groupGap={4}
                   data={item.tags}
                   overflowCount={3}
-                  disablePopover
+                  disablePopover={!isAdvanced}
                   style={{ cursor: "pointer" }}
                 />
               )}
+              {isAdvanced && item.description && (
+                <Text size="xs" c="dimmed" lineClamp={3}>
+                  {item.description}
+                </Text>
+              )}
             </Stack>
           </Group>
-          {(options.showType || options.showSource) && (
+          {(isAdvanced || options.showType || options.showSource) && (
             <Stack justify="space-between" align="end" h="100%" style={{ zIndex: 0 }}>
-              {options.showType && (
+              {(isAdvanced || options.showType) && (
                 <Badge
                   w="max-content"
                   size="xs"
@@ -155,7 +199,7 @@ const Item = ({ item, options }: ItemProps) => {
                 </Badge>
               )}
 
-              {options.showSource && (
+              {(isAdvanced || options.showSource) && (
                 <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt={item.integration.name} />
               )}
             </Stack>

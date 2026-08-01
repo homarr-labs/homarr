@@ -2,7 +2,19 @@
 
 import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
-import { Avatar, AvatarGroup, Card, Flex, SimpleGrid, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
+import {
+  Avatar,
+  AvatarGroup,
+  Badge,
+  Card,
+  Flex,
+  Group,
+  SimpleGrid,
+  Stack,
+  Text,
+  Tooltip,
+  TooltipFloating,
+} from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
 
@@ -19,7 +31,11 @@ import type { TablerIcon } from "@homarr/ui";
 import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 
-export default function DnsHoleSummaryWidget({ options, integrationIds }: WidgetComponentProps<typeof widgetKind>) {
+export default function DnsHoleSummaryWidget({
+  options,
+  integrationIds,
+  displayMode,
+}: WidgetComponentProps<typeof widgetKind>) {
   const { data: summaries = [] } = clientApi.widget.dnsHole.summary.useQuery({
     integrationIds,
   });
@@ -27,28 +43,44 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
   const t = useI18n();
 
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
+  const layoutProps = boxPropsByLayout(options.layout);
 
   return (
-    <SimpleGrid cols={2} spacing="xs" h="100%" p={"xs"} {...boxPropsByLayout(options.layout)}>
-      {data.length > 0 ? (
-        stats.map((item) => (
-          <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
-        ))
-      ) : (
-        <Stack h="100%" w="100%" justify="center" align="center" gap="sm" p="sm">
-          <AvatarGroup spacing="md">
-            {summaries.map(({ integration }) => (
-              <Tooltip key={integration.id} label={integration.name}>
-                <Avatar h={30} w={30} src={integrationDefs[integration.kind].iconUrl} />
-              </Tooltip>
-            ))}
-          </AvatarGroup>
-          <Text fz="md" ta="center">
-            {t("widget.dnsHoleSummary.error.integrationsDisconnected")}
-          </Text>
-        </Stack>
+    <Stack h="100%" gap={0}>
+      <SimpleGrid cols={2} spacing="xs" p="xs" {...layoutProps} style={{ ...layoutProps.style, flex: 1, minHeight: 0 }}>
+        {data.length > 0 ? (
+          stats.map((item) => (
+            <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
+          ))
+        ) : (
+          <Stack h="100%" w="100%" justify="center" align="center" gap="sm" p="sm">
+            <AvatarGroup spacing="md">
+              {summaries.map(({ integration }) => (
+                <Tooltip key={integration.id} label={integration.name}>
+                  <Avatar h={30} w={30} src={integrationDefs[integration.kind].iconUrl} />
+                </Tooltip>
+              ))}
+            </AvatarGroup>
+            <Text fz="md" ta="center">
+              {t("widget.dnsHoleSummary.error.integrationsDisconnected")}
+            </Text>
+          </Stack>
+        )}
+      </SimpleGrid>
+      {displayMode === "advanced" && summaries.length > 0 && (
+        <Group px="xs" pb="xs" gap="xs">
+          {summaries.map(({ integration, summary }) => (
+            <Badge
+              key={integration.id}
+              variant="light"
+              color={summary.status === "enabled" ? "green" : summary.status === "disabled" ? "red" : "gray"}
+            >
+              {integration.name}: {t(`widget.dnsHoleSummary.status.${summary.status ?? "unknown"}`)}
+            </Badge>
+          ))}
+        </Group>
       )}
-    </SimpleGrid>
+    </Stack>
   );
 }
 

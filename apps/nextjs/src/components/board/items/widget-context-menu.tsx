@@ -1,149 +1,154 @@
 "use client";
 
-import type { MutableRefObject, ReactNode } from "react";
+import type { MutableRefObject, ReactNode, RefObject } from "react";
 import { useCallback, useMemo, useState } from "react";
-import { Group, Loader, Menu, Switch, Text, Tooltip } from "@mantine/core";
-import { IconAlertTriangle, IconCircleCheck, IconRefresh, IconSettings } from "@tabler/icons-react";
+import { Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
+import { IconAlertTriangle, IconCircleCheck, IconMaximize, IconRefresh, IconSettings } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
-import { partialMatchKey, useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
+import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { usePersistBoard } from "@homarr/boards/updater";
 import { useTimeAgo } from "@homarr/common";
 import { useModalAction } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TranslationFunction } from "@homarr/translation";
-import type { WidgetContextMenuAction, WidgetDefinition } from "@homarr/widgets/definition";
-import { getWidgetQueryKeys } from "@homarr/widgets/definition";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import type { WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
+import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
+import { useAdvancedFocus } from "../advanced-focus/context";
+import { useBoardPermissions } from "../permissions/client";
 import { useItemActions } from "./item-actions";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
+import { matchesWidgetItemQuery } from "./widget-query-scope";
 
 interface WidgetContextMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
+  widgetRuntimeRef: WidgetRuntimeRef;
+  sourceRef: RefObject<HTMLElement | null>;
   children: ReactNode;
 }
 
-export const WidgetContextMenu = ({ item, definition, widgetStateRef, children }: WidgetContextMenuProps) => {
-  const { data: session } = useSession();
-  const [isEditMode] = useEditMode();
-  const settings = useSettings();
-
-  if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") return <>{children}</>;
-
-  return (
-    <WidgetContextMenuInner item={item} definition={definition} widgetStateRef={widgetStateRef} settings={settings}>
-      {children}
-    </WidgetContextMenuInner>
-  );
-};
-
-const WidgetContextMenuInner = ({
+export const WidgetContextMenu = ({
   item,
   definition,
-  widgetStateRef,
+  widgetRuntimeRef,
+  sourceRef,
   children,
-  settings,
-}: WidgetContextMenuProps & { settings: ReturnType<typeof useSettings> }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  return (
-    <Menu
-      shadow="md"
-      width={300}
-      closeOnItemClick={false}
-      position="right-start"
-      offset={4}
-      opened={isMenuOpen}
-      onChange={setIsMenuOpen}
-    >
-      <Menu.ContextMenu>{children}</Menu.ContextMenu>
-      <Menu.Dropdown>
-        {isMenuOpen && (
-          <WidgetContextMenuDropdown
-            item={item}
-            definition={definition}
-            widgetStateRef={widgetStateRef}
-            settings={settings}
-          />
-        )}
-      </Menu.Dropdown>
-    </Menu>
-  );
-};
-
-type WidgetContextMenuDropdownProps = Omit<WidgetContextMenuProps, "children"> & {
-  settings: ReturnType<typeof useSettings>;
-};
-
-const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings }: WidgetContextMenuDropdownProps) => {
+}: WidgetContextMenuProps) => {
+  const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
+  const { hasChangeAccess } = useBoardPermissions(board);
+  const { updateAndPersistBoard } = usePersistBoard(board);
   const tMenu = useScopedI18n("item.menu.label");
   const t = useI18n();
-  const { data: session } = useSession();
-  const canConfigureWidget = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
-  const hasSupportedIntegrations =
-    "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) > 0;
+  const settings = useSettings();
   const { openModal } = useModalAction(LazyWidgetEditModal);
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
+  const hasSupportedIntegrations = (definition.supportedIntegrations?.length ?? 0) > 0;
   const { data: integrationData = [], isPending } = clientApi.integration.all.useQuery(undefined, {
     enabled: hasSupportedIntegrations,
   });
-  const { mutate: saveBoard } = clientApi.board.saveBoard.useMutation();
+  const canConfigureWidget =
+    hasChangeAccess && (item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false));
+  const canOpenAdvancedFocus = supportsAdvancedFocus(definition);
   const queryClient = useQueryClient();
+  const { open: openAdvancedFocus } = useAdvancedFocus();
+  const integrationsWithInteractAccess = useIntegrationsWithInteractAccess();
+  const [menuOpened, setMenuOpened] = useState(false);
 
-  const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(definition, item.kind), [definition, item.kind]);
-  const isWidgetFetching =
-    useIsFetching({
-      predicate: (query) => widgetQueryKeys.some((queryKey) => partialMatchKey(query.queryKey, queryKey)),
-    }) > 0;
-  const handleRefetch = useCallback(() => {
-    void Promise.all(widgetQueryKeys.map((queryKey) => queryClient.refetchQueries({ queryKey, type: "all" })));
-  }, [queryClient, widgetQueryKeys]);
+  const persistBoard = useCallback(
+    (updater: (previous: typeof board) => typeof board) => {
+      updateAndPersistBoard(updater, {
+        onError: () => {
+          showErrorNotification({
+            title: t("item.menu.notification.saveError.title"),
+            message: t("item.menu.notification.saveError.message"),
+          });
+        },
+      });
+    },
+    [t, updateAndPersistBoard],
+  );
 
   const options = useMemo(
     () => reduceWidgetOptionsWithDefinition(definition, settings, item.options),
     [definition, settings, item.options],
+  );
+  const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(definition, item.kind), [definition, item.kind]);
+  const matchesWidgetQuery = useCallback(
+    (queryKey: QueryKey) =>
+      matchesWidgetItemQuery(
+        queryKey,
+        widgetQueryKeys,
+        {
+          itemId: item.id,
+          boardId: board.id,
+          integrationIds: item.integrationIds,
+          options,
+          runtimeQueries: getWidgetRuntimeQueries(widgetRuntimeRef),
+        },
+        definition.queryMatcher,
+      ),
+    [board.id, definition.queryMatcher, item.id, item.integrationIds, options, widgetQueryKeys, widgetRuntimeRef],
+  );
+  const isWidgetFetching =
+    useIsFetching({
+      type: "active",
+      predicate: (query) => matchesWidgetQuery(query.queryKey),
+    }) > 0;
+  const handleRefetch = useCallback(() => {
+    void queryClient.refetchQueries({ type: "active", predicate: (query) => matchesWidgetQuery(query.queryKey) });
+  }, [matchesWidgetQuery, queryClient]);
+
+  const canInteractWithSelectedIntegrations = useMemo(() => {
+    const allowedIds = new Set(integrationsWithInteractAccess.map(({ id }) => id));
+    return item.integrationIds.length > 0 && item.integrationIds.every((id) => allowedIds.has(id));
+  }, [integrationsWithInteractAccess, item.integrationIds]);
+
+  const setItemOptions = useCallback(
+    (partial: Record<string, unknown>) => {
+      persistBoard((previous) => ({
+        ...previous,
+        items: previous.items.map((boardItem) =>
+          boardItem.id === item.id ? { ...boardItem, options: { ...boardItem.options, ...partial } } : boardItem,
+        ),
+      }));
+    },
+    [item.id, persistBoard],
   );
 
   type OptionDef = { type: string; skipContextMenu?: boolean };
   const toggleOptions = useMemo(() => {
     if (!canConfigureWidget) return [];
     const rawOptions = definition.createOptions(settings) as unknown as Record<string, OptionDef>;
-    return Object.entries(rawOptions).filter(([, def]) => def.type === "switch" && !def.skipContextMenu);
+    return Object.entries(rawOptions).filter(([, option]) => option.type === "switch" && !option.skipContextMenu);
   }, [canConfigureWidget, definition, settings]);
 
-  const widgetContextActions = useMemo(() => {
-    const def = definition as unknown as Record<string, unknown>;
-    if (typeof def.contextActions !== "function") return [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const actions = (def.contextActions as any)({
+  const widgetContextActions =
+    definition.contextActions?.({
       options,
-      setOptions: (partial: Record<string, unknown>) => {
-        updateItemOptions({ itemId: item.id, newOptions: { ...options, ...partial } });
-      },
+      setOptions: setItemOptions,
       integrationIds: item.integrationIds,
-      context: { isEditMode, boardId: board.id, itemId: item.id },
-      widgetStateRef,
-    });
-    return (Array.isArray(actions) ? actions : []) as WidgetContextMenuAction[];
-  }, [definition, options, item, updateItemOptions, isEditMode, board.id, widgetStateRef]);
-
-  const persistBoard = useCallback(
-    (updatedItems: typeof board.items) => {
-      saveBoard({ ...board, items: updatedItems });
-    },
-    [board, saveBoard],
-  );
+      context: {
+        isEditMode,
+        boardId: board.id,
+        itemId: item.id,
+        canInteractWithSelectedIntegrations,
+      },
+      widgetRuntimeRef,
+    }) ?? [];
 
   const openEditModal = useCallback(() => {
     openModal(
@@ -159,27 +164,24 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
           updateItemOptions({ itemId: item.id, newOptions: editResult.options });
           updateItemAdvancedOptions({ itemId: item.id, newAdvancedOptions: editResult.advancedOptions });
           updateItemIntegrations({ itemId: item.id, newIntegrations: editResult.integrationIds });
-          if (!isEditMode) {
-            persistBoard(
-              board.items.map((boardItem) =>
-                boardItem.id !== item.id
-                  ? boardItem
-                  : {
-                      ...boardItem,
-                      options: editResult.options,
-                      advancedOptions: editResult.advancedOptions,
-                      integrationIds: editResult.integrationIds,
-                    },
-              ),
-            );
-          }
+          persistBoard((previous) => ({
+            ...previous,
+            items: previous.items.map((boardItem) =>
+              boardItem.id !== item.id
+                ? boardItem
+                : {
+                    ...boardItem,
+                    options: editResult.options,
+                    advancedOptions: editResult.advancedOptions,
+                    integrationIds: editResult.integrationIds,
+                  },
+            ),
+          }));
         },
-        integrationData: integrationData.filter(
-          (integration) =>
-            "supportedIntegrations" in definition &&
-            (definition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
+        integrationData: integrationData.filter((integration) =>
+          definition.supportedIntegrations?.some((kind) => kind === integration.kind),
         ),
-        integrationSupport: "supportedIntegrations" in definition,
+        integrationSupport: definition.supportedIntegrations !== undefined,
         settings,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
@@ -187,72 +189,87 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
       { title: (fn: any) => `${fn("item.edit.title")} - ${fn(`widget.${item.kind}.name`)}` },
     );
   }, [
-    openModal,
+    definition,
+    integrationData,
     item,
-    updateItemOptions,
+    openModal,
+    persistBoard,
+    settings,
     updateItemAdvancedOptions,
     updateItemIntegrations,
-    integrationData,
-    definition,
-    settings,
-    isEditMode,
-    persistBoard,
-    board,
+    updateItemOptions,
   ]);
 
   const handleToggle = useCallback(
-    (key: string) => (checked: boolean) => {
-      const newOptions = { ...options, [key]: checked };
-      updateItemOptions({ itemId: item.id, newOptions });
-      persistBoard(
-        board.items.map((boardItem) => (boardItem.id !== item.id ? boardItem : { ...boardItem, options: newOptions })),
-      );
-    },
-    [options, item.id, updateItemOptions, persistBoard, board],
+    (key: string) => (checked: boolean) => setItemOptions({ [key]: checked }),
+    [setItemOptions],
   );
 
-  const visibleWidgetActions = widgetContextActions.filter((a) => !a.hidden);
+  if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") return <>{children}</>;
+
+  const visibleWidgetActions = widgetContextActions.filter((action) => !action.hidden);
 
   return (
-    <>
-      {toggleOptions.length > 0 && (
-        <>
-          <Menu.Label>{tMenu("options")}</Menu.Label>
-          {toggleOptions.map(([key]) => (
-            <Menu.Item key={key} onClick={() => handleToggle(key)(!options[key])}>
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              <Group wrap="nowrap">
-                {String(translateIfNecessary(t, ((fn: any) => fn(`widget.${item.kind}.option.${key}.label`)) as any))}
-                <Switch size="xs" checked={Boolean(options[key])} readOnly tabIndex={-1} ml="auto" />
-              </Group>
+    <Menu
+      shadow="md"
+      width={300}
+      closeOnItemClick={false}
+      position="right-start"
+      offset={4}
+      opened={menuOpened}
+      onChange={setMenuOpened}
+    >
+      <Menu.ContextMenu>{children}</Menu.ContextMenu>
+      <Menu.Dropdown>
+        {canOpenAdvancedFocus && (
+          <>
+            <Menu.Item
+              closeMenuOnClick
+              leftSection={<IconMaximize size={16} />}
+              onClick={() => {
+                if (sourceRef.current) openAdvancedFocus(item.id, sourceRef.current);
+              }}
+            >
+              {t("item.advancedFocus.open")}
             </Menu.Item>
-          ))}
-        </>
-      )}
+            <Menu.Divider />
+          </>
+        )}
 
-      {visibleWidgetActions.length > 0 && (
-        <>
-          {toggleOptions.length > 0 && <Menu.Divider />}
-          <Menu.Label>{tMenu("actions")}</Menu.Label>
-          {visibleWidgetActions.map((action) => {
-            const Icon = action.icon;
-            return (
-              <Menu.Item
-                key={action.key}
-                closeMenuOnClick
-                leftSection={Icon ? <Icon size={16} /> : undefined}
-                onClick={action.onClick}
-                disabled={action.disabled}
-                color={action.color}
-              >
-                {String(translateIfNecessary(t, action.label))}
-              </Menu.Item>
-            );
-          })}
-        </>
-      )}
+        {toggleOptions.length > 0 && (
+          <>
+            <Menu.Label>{tMenu("options")}</Menu.Label>
+            {toggleOptions.map(([key]) => (
+              <Menu.CheckboxItem key={key} checked={Boolean(options[key])} onChange={handleToggle(key)}>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {String(translateIfNecessary(t, ((fn: any) => fn(`widget.${item.kind}.option.${key}.label`)) as any))}
+              </Menu.CheckboxItem>
+            ))}
+          </>
+        )}
 
-      <>
+        {visibleWidgetActions.length > 0 && (
+          <>
+            {toggleOptions.length > 0 && <Menu.Divider />}
+            <Menu.Label>{tMenu("actions")}</Menu.Label>
+            {visibleWidgetActions.map((action) => {
+              const Icon = action.icon;
+              return (
+                <Menu.Item
+                  key={action.key}
+                  closeMenuOnClick
+                  leftSection={Icon ? <Icon size={16} /> : undefined}
+                  onClick={action.onClick}
+                  disabled={action.disabled}
+                  color={action.color}
+                >
+                  {translateIfNecessary(t, action.label)}
+                </Menu.Item>
+              );
+            })}
+          </>
+        )}
+
         {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
         <Menu.Item
           leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
@@ -263,7 +280,7 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
             {tMenu("refresh")}
             <WidgetQueryStatus
               queryClient={queryClient}
-              queryKeys={widgetQueryKeys}
+              matchesQuery={matchesWidgetQuery}
               isFetching={isWidgetFetching}
               t={t}
             />
@@ -279,23 +296,27 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
         >
           {tMenu("settings")}
         </Menu.Item>
-      </>
-    </>
+      </Menu.Dropdown>
+    </Menu>
   );
 };
 
 interface WidgetQueryStatusProps {
   queryClient: QueryClient;
-  queryKeys: QueryKey[];
+  matchesQuery: (queryKey: QueryKey) => boolean;
   isFetching: boolean;
   t: TranslationFunction;
 }
 
-const WidgetQueryStatus = ({ queryClient, queryKeys, isFetching, t }: WidgetQueryStatusProps) => {
-  const queries = [...new Set(queryKeys.flatMap((queryKey) => queryClient.getQueryCache().findAll({ queryKey })))];
+const WidgetQueryStatus = ({ queryClient, matchesQuery, isFetching, t }: WidgetQueryStatusProps) => {
+  const queries = queryClient.getQueryCache().findAll({
+    type: "active",
+    predicate: (query) => matchesQuery(query.queryKey),
+  });
   const timestamps = queries.map((query) => query.state.dataUpdatedAt).filter(Boolean);
   const latest = timestamps.length > 0 ? Math.max(...timestamps) : 0;
-  const ageLabel = useTimeAgo(new Date(latest));
+  const ageLabel = useTimeAgo(new Date(latest || Date.now()));
+  const ageSuffix = latest > 0 ? ` · ${ageLabel}` : "";
 
   if (isFetching) {
     return (
@@ -316,22 +337,15 @@ const WidgetQueryStatus = ({ queryClient, queryKeys, isFetching, t }: WidgetQuer
     );
   }
 
-  const hasError = queries.some((q) => q.state.status === "error");
-
+  const hasError = queries.some((query) => query.state.status === "error");
   if (hasError) {
-    const errorQuery = queries.find((q) => q.state.status === "error");
-    const errorMessage =
-      errorQuery?.state.error instanceof Error
-        ? errorQuery.state.error.message
-        : String(errorQuery?.state.error ?? "Unknown error");
-
     return (
-      <Tooltip label={errorMessage} multiline position="left" w={250}>
+      <Tooltip label={t("item.menu.status.error")} position="left">
         <Group gap={4} wrap="nowrap">
           <IconAlertTriangle size={12} color="var(--mantine-color-red-6)" />
           <Text size="xs" c="red.6">
             {t("item.menu.status.error")}
-            {latest > 0 && ` · ${ageLabel}`}
+            {ageSuffix}
           </Text>
         </Group>
       </Tooltip>
@@ -343,7 +357,7 @@ const WidgetQueryStatus = ({ queryClient, queryKeys, isFetching, t }: WidgetQuer
       <IconCircleCheck size={12} color="var(--mantine-color-green-6)" />
       <Text size="xs" c="dimmed">
         {t("item.menu.status.success")}
-        {latest > 0 && ` · ${ageLabel}`}
+        {ageSuffix}
       </Text>
     </Group>
   );

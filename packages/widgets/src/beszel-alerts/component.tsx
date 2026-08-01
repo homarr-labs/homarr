@@ -35,6 +35,8 @@ export default function BeszelAlertsWidget({
   options,
   integrationIds,
   isEditMode,
+  height,
+  displayMode = "compact",
 }: WidgetComponentProps<"beszelAlerts">) {
   const t = useScopedI18n("widget.beszelAlerts");
   const alertsInput = useMemo(
@@ -67,6 +69,8 @@ export default function BeszelAlertsWidget({
 
   const triggeredAlerts = alerts.filter((a) => a.triggered);
   const okAlerts = alerts.filter((a) => !a.triggered);
+  const showOkAlerts = displayMode === "advanced" || triggeredAlerts.length === 0 || height >= 260;
+  const showHistory = options.showHistory && (displayMode === "advanced" || height >= 360);
 
   if (alertsError) throw alertsError;
 
@@ -117,9 +121,9 @@ export default function BeszelAlertsWidget({
             </Stack>
           )}
 
-          {triggeredAlerts.length > 0 && okAlerts.length > 0 && <Divider />}
+          {triggeredAlerts.length > 0 && showOkAlerts && okAlerts.length > 0 && <Divider />}
 
-          {okAlerts.length > 0 && (
+          {showOkAlerts && okAlerts.length > 0 && (
             <Stack gap={6}>
               <Group gap={6}>
                 <IconCircleCheck size={14} color="var(--mantine-color-green-6)" />
@@ -140,7 +144,7 @@ export default function BeszelAlertsWidget({
             </Stack>
           )}
 
-          {options.showHistory && history.length > 0 && (
+          {showHistory && history.length > 0 && (
             <>
               <Divider />
               <Stack gap={6}>

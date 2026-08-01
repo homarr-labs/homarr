@@ -1,7 +1,7 @@
 "use client";
 
 import { BarChart, LineChart } from "@mantine/charts";
-import { Box, Group, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { Box, Group, SimpleGrid, Stack, Text, useMantineColorScheme } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { formatDuration } from "@homarr/common";
@@ -23,6 +23,8 @@ interface UmamiContentProps {
   chartType: string;
   viewMode: string;
   topCount: number;
+  width: number;
+  displayMode: "compact" | "advanced";
 }
 
 export function UmamiContent({
@@ -35,6 +37,8 @@ export function UmamiContent({
   chartType,
   viewMode,
   topCount,
+  width,
+  displayMode,
 }: UmamiContentProps) {
   const t = useScopedI18n("widget.umami");
   const { colorScheme } = useMantineColorScheme();
@@ -88,6 +92,63 @@ export function UmamiContent({
   const isOverlay = chartStyle === "overlay" && hasEventSeries;
   const overlayBarSize = 16;
 
+  const selectedView =
+    viewMode === "events" ? (
+      <UmamiEventsContent
+        integrationIds={integrationIds}
+        websiteId={websiteId}
+        timeFrame={timeFrame}
+        eventNames={eventNames}
+        chartType={chartType}
+      />
+    ) : viewMode === "topPages" ? (
+      <UmamiTopPagesContent
+        integrationIds={integrationIds}
+        websiteId={websiteId}
+        timeFrame={timeFrame}
+        limit={topCount}
+      />
+    ) : viewMode === "topReferrers" ? (
+      <UmamiTopReferrersContent
+        integrationIds={integrationIds}
+        websiteId={websiteId}
+        timeFrame={timeFrame}
+        limit={topCount}
+      />
+    ) : chartType === "sparkline" ? (
+      <LineChart
+        h="100%"
+        data={chartData}
+        dataKey="label"
+        series={series}
+        withDots={false}
+        curveType="monotone"
+        tickLine="none"
+        gridAxis="none"
+        withLegend={false}
+        withTooltip
+        withXAxis
+        withYAxis={false}
+        xAxisProps={{ tick: { fontSize: 9, fill: tickColor }, interval: "preserveStartEnd" }}
+      />
+    ) : (
+      <BarChart
+        h="100%"
+        data={chartData}
+        dataKey="label"
+        series={series}
+        tickLine="none"
+        gridAxis="none"
+        withLegend={false}
+        withTooltip
+        withXAxis
+        withYAxis={false}
+        barProps={isOverlay ? { barSize: overlayBarSize, radius: 2 } : { radius: 2 }}
+        barChartProps={isOverlay ? { barGap: -overlayBarSize } : undefined}
+        xAxisProps={{ tick: { fontSize: 9, fill: tickColor }, interval: "preserveStartEnd" }}
+      />
+    );
+
   return (
     <Stack gap={4} p="xs" h="100%">
       <Group justify="space-between" align="baseline" wrap="nowrap">
@@ -140,74 +201,38 @@ export function UmamiContent({
         <Text size="xs" c="dimmed">
           {visitorStats.totalVisits.toLocaleString()} {t("visits")}
         </Text>
-        <Text size="xs" c="dimmed">
-          {visitorStats.bounceRate}% {t("bounceRate")}
-        </Text>
-        <Text size="xs" c="dimmed">
-          {formatDuration(visitorStats.avgDuration * 1000)} {t("avgDuration")}
-        </Text>
+        {(displayMode === "advanced" || width >= 260) && (
+          <>
+            <Text size="xs" c="dimmed">
+              {visitorStats.bounceRate}% {t("bounceRate")}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {formatDuration(visitorStats.avgDuration * 1000)} {t("avgDuration")}
+            </Text>
+          </>
+        )}
       </Group>
       <Box mt={4} style={{ flex: 1, minHeight: 0 }}>
-        {viewMode === "events" ? (
-          <UmamiEventsContent
-            integrationIds={integrationIds}
-            websiteId={websiteId}
-            timeFrame={timeFrame}
-            eventNames={eventNames}
-            chartType={chartType}
-          />
-        ) : viewMode === "topPages" ? (
-          <UmamiTopPagesContent
-            integrationIds={integrationIds}
-            websiteId={websiteId}
-            timeFrame={timeFrame}
-            limit={topCount}
-          />
-        ) : viewMode === "topReferrers" ? (
-          <UmamiTopReferrersContent
-            integrationIds={integrationIds}
-            websiteId={websiteId}
-            timeFrame={timeFrame}
-            limit={topCount}
-          />
-        ) : chartType === "sparkline" ? (
-          <LineChart
-            h="100%"
-            data={chartData}
-            dataKey="label"
-            series={series}
-            withDots={false}
-            curveType="monotone"
-            tickLine="none"
-            gridAxis="none"
-            withLegend={false}
-            withTooltip
-            withXAxis
-            withYAxis={false}
-            xAxisProps={{
-              tick: { fontSize: 9, fill: tickColor },
-              interval: "preserveStartEnd",
-            }}
-          />
+        {displayMode === "advanced" ? (
+          <SimpleGrid cols={width >= 900 ? 2 : 1} spacing="md" h="100%">
+            <Box mih={260}>{selectedView}</Box>
+            <SimpleGrid cols={2} spacing="md" mih={260}>
+              <UmamiTopPagesContent
+                integrationIds={integrationIds}
+                websiteId={websiteId}
+                timeFrame={timeFrame}
+                limit={topCount}
+              />
+              <UmamiTopReferrersContent
+                integrationIds={integrationIds}
+                websiteId={websiteId}
+                timeFrame={timeFrame}
+                limit={topCount}
+              />
+            </SimpleGrid>
+          </SimpleGrid>
         ) : (
-          <BarChart
-            h="100%"
-            data={chartData}
-            dataKey="label"
-            series={series}
-            tickLine="none"
-            gridAxis="none"
-            withLegend={false}
-            withTooltip
-            withXAxis
-            withYAxis={false}
-            barProps={isOverlay ? { barSize: overlayBarSize, radius: 2 } : { radius: 2 }}
-            barChartProps={isOverlay ? { barGap: -overlayBarSize } : undefined}
-            xAxisProps={{
-              tick: { fontSize: 9, fill: tickColor },
-              interval: "preserveStartEnd",
-            }}
-          />
+          selectedView
         )}
       </Box>
     </Stack>

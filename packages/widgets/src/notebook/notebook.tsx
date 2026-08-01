@@ -1,7 +1,7 @@
 "use client";
 
 import type { MouseEvent as ReactMouseEvent } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import {
   ActionIcon,
   Box,
@@ -13,7 +13,9 @@ import {
   Popover,
   ScrollArea,
   Stack,
+  Text,
   TextInput,
+  Tooltip,
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
@@ -89,16 +91,63 @@ const controlIconProps = {
   stroke: 1.5,
 };
 
-export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: WidgetComponentProps<"notebook">) {
-  const [content, setContent] = useState(options.content);
-  const previousContentRef = useRef(content);
+interface NotebookPersistedState {
+  itemId: string | undefined;
+  content: string;
+  previousContent: string;
+  isEditing: boolean;
+  saveError: string | null;
+}
+
+export function Notebook({
+  options,
+  setOptions,
+  isEditMode,
+  boardId,
+  itemId,
+  displayMode,
+  height,
+  widgetStateRef,
+}: WidgetComponentProps<"notebook">) {
+  const persistedState = widgetStateRef?.current?.notebook as NotebookPersistedState | undefined;
+  const canHydratePersistedState = persistedState?.itemId === itemId;
+  const initialContent = canHydratePersistedState ? (persistedState?.content ?? options.content) : options.content;
+  const [content, setContent] = useState(initialContent);
+  const previousContentRef = useRef(
+    canHydratePersistedState ? (persistedState?.previousContent ?? initialContent) : initialContent,
+  );
+  const [saveError, setSaveError] = useState<string | null>(
+    canHydratePersistedState ? (persistedState?.saveError ?? null) : null,
+  );
 
   const board = useRequiredBoard();
   const { data: session } = useSession();
   const { hasChangeAccess } = constructBoardPermissions(board, session);
 
   const canChange = !isEditMode && hasChangeAccess;
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(canHydratePersistedState ? (persistedState?.isEditing ?? false) : false);
+  const canChangeRef = useRef(canChange);
+  const allowReadOnlyCheckRef = useRef(options.allowReadOnlyCheck);
+  const readOnlyCheckEventName = `homarr:notebook-read-only-check:${useId()}`;
+
+  useEffect(() => {
+    canChangeRef.current = canChange;
+    allowReadOnlyCheckRef.current = options.allowReadOnlyCheck;
+  }, [canChange, options.allowReadOnlyCheck]);
+
+  useEffect(() => {
+    if (!widgetStateRef) return;
+    widgetStateRef.current = {
+      ...widgetStateRef.current,
+      notebook: {
+        itemId,
+        content,
+        previousContent: previousContentRef.current,
+        isEditing,
+        saveError,
+      },
+    };
+  }, [content, isEditing, itemId, saveError, widgetStateRef]);
 
   const { primaryColor } = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
@@ -107,6 +156,37 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
 
   const tControls = useScopedI18n("widget.notebook.controls");
   const t = useI18n();
+
+  const handleContentUpdate = useCallback(
+    async (contentUpdate: string) => {
+      setSaveError(null);
+
+      try {
+        if (boardId && itemId) {
+          await mutateAsync({ boardId, itemId, content: contentUpdate });
+        }
+        previousContentRef.current = contentUpdate;
+        if (widgetStateRef) {
+          widgetStateRef.current = {
+            ...widgetStateRef.current,
+            notebook: {
+              itemId,
+              content: contentUpdate,
+              previousContent: contentUpdate,
+              isEditing,
+              saveError: null,
+            },
+          };
+        }
+        setOptions({ newOptions: { content: contentUpdate } });
+        return true;
+      } catch (error) {
+        setSaveError(error instanceof Error ? error.message : t("widget.notebook.saveFailed"));
+        return false;
+      }
+    },
+    [boardId, isEditing, itemId, mutateAsync, setOptions, t, widgetStateRef],
+  );
 
   const editor = useEditor(
     {
@@ -162,10 +242,10 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
         TaskItem.configure({
           nested: true,
           onReadOnlyChecked: (node, checked) => {
-            if (!options.allowReadOnlyCheck) return false;
-            if (!canChange) return false;
+            if (!allowReadOnlyCheckRef.current) return false;
+            if (!canChangeRef.current) return false;
 
-            const event = new CustomEvent("onReadOnlyCheck", {
+            const event = new CustomEvent(readOnlyCheckEventName, {
               detail: { node, checked },
             });
             dispatchEvent(event);
@@ -184,60 +264,51 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
         setContent(editor.getHTML());
       },
       onCreate: ({ editor }) => {
-        editor.setEditable(false);
+        editor.setEditable(isEditing);
       },
     },
     [],
   );
 
-  const handleOnReadOnlyCheck = (event: CustomEventInit<{ node: Node; checked: boolean }>) => {
-    if (!options.allowReadOnlyCheck) return;
-    if (!editor) return;
+  const handleOnReadOnlyCheck = useCallback(
+    (event: Event) => {
+      if (!allowReadOnlyCheckRef.current) return;
+      if (!editor) return;
+      const { detail } = event as CustomEvent<{ node: Node; checked: boolean }>;
 
-    editor.state.doc.descendants((subnode, pos) => {
-      if (!event.detail) return;
-      if (!subnode.eq(event.detail.node)) return;
+      editor.state.doc.descendants((subnode, pos) => {
+        if (!detail) return;
+        if (!subnode.eq(detail.node)) return;
 
-      const { tr } = editor.state;
-      tr.setNodeMarkup(pos, undefined, {
-        ...event.detail.node.attrs,
-        checked: event.detail.checked,
+        const { tr } = editor.state;
+        tr.setNodeMarkup(pos, undefined, {
+          ...detail.node.attrs,
+          checked: detail.checked,
+        });
+        editor.view.dispatch(tr);
+        const nextContent = editor.getHTML();
+        setContent(nextContent);
+        void handleContentUpdate(nextContent).then((wasSaved) => {
+          if (wasSaved) return;
+          setContent(previousContentRef.current);
+          editor.commands.setContent(previousContentRef.current);
+        });
       });
-      editor.view.dispatch(tr);
-      setContent(editor.getHTML());
-      handleContentUpdate(editor.getHTML());
-    });
-  };
-
-  addEventListener("onReadOnlyCheck", handleOnReadOnlyCheck);
-
-  const handleContentUpdate = useCallback(
-    (contentUpdate: string) => {
-      previousContentRef.current = contentUpdate;
-      setOptions({ newOptions: { content: contentUpdate } });
-
-      // This is not available in preview mode
-      if (boardId && itemId) {
-        void mutateAsync({ boardId, itemId, content: contentUpdate });
-      }
     },
-    [boardId, itemId, mutateAsync, setOptions],
+    [editor, handleContentUpdate],
   );
 
-  const handleEditToggleCallback = useCallback(
-    (previous: boolean) => {
-      const current = !previous;
-      if (!editor) return current;
-      editor.setEditable(current);
+  useEffect(() => {
+    addEventListener(readOnlyCheckEventName, handleOnReadOnlyCheck);
+    return () => removeEventListener(readOnlyCheckEventName, handleOnReadOnlyCheck);
+  }, [handleOnReadOnlyCheck, readOnlyCheckEventName]);
 
-      if (previous) {
-        handleContentUpdate(content);
-      }
-
-      return current;
-    },
-    [content, editor, handleContentUpdate],
-  );
+  useEffect(() => {
+    if (isEditing || !editor || options.content === previousContentRef.current) return;
+    previousContentRef.current = options.content;
+    setContent(options.content);
+    editor.commands.setContent(options.content);
+  }, [editor, isEditing, options.content]);
 
   const handleEditCancelCallback = useCallback(() => {
     if (!editor) return false;
@@ -264,9 +335,20 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
     });
   }, [setIsEditing, handleEditCancelCallback, openConfirmModal, t]);
 
-  const handleEditToggle = useCallback(() => {
-    setIsEditing(handleEditToggleCallback);
-  }, [setIsEditing, handleEditToggleCallback]);
+  const handleEditToggle = useCallback(async () => {
+    if (!editor) return;
+    if (!isEditing) {
+      setSaveError(null);
+      editor.setEditable(true);
+      setIsEditing(true);
+      return;
+    }
+
+    const wasSaved = await handleContentUpdate(content);
+    if (!wasSaved) return;
+    editor.setEditable(false);
+    setIsEditing(false);
+  }, [content, editor, handleContentUpdate, isEditing]);
 
   const handleDoubleClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement>) => {
@@ -276,10 +358,18 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
       if (event.target instanceof Element && event.target.closest("button, a")) {
         return;
       }
-      setIsEditing(handleEditToggleCallback);
+      setSaveError(null);
+      editor?.setEditable(true);
+      setIsEditing(true);
     },
-    [canChange, isEditing, setIsEditing, handleEditToggleCallback],
+    [canChange, editor, isEditing],
   );
+
+  const documentText = editor?.getText().trim() ?? "";
+  const documentStats = {
+    characters: documentText.length,
+    words: documentText.length === 0 ? 0 : documentText.split(/\s+/).length,
+  };
 
   return (
     <Box h="100%" onDoubleClick={handleDoubleClick}>
@@ -287,7 +377,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
         p={0}
         mt={0}
         h="100%"
-        onKeyDown={isEditing ? getHotkeyHandler([[hotkeys.saveNotebook, handleEditToggle]]) : undefined}
+        onKeyDown={isEditing ? getHotkeyHandler([[hotkeys.saveNotebook, () => void handleEditToggle()]]) : undefined}
         editor={editor}
         styles={(theme) => ({
           root: {
@@ -304,7 +394,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
           },
           content: {
             backgroundColor: "transparent",
-            padding: "0.5rem",
+            padding: height < 120 && displayMode !== "advanced" ? "0.25rem" : "0.5rem",
             height: "100%",
           },
           typographyStylesProvider: {
@@ -314,7 +404,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
       >
         <RichTextEditor.Toolbar
           style={{
-            display: isEditing && options.showToolbar === true ? "flex" : "none",
+            display: isEditing && options.showToolbar === true && displayMode === "advanced" ? "flex" : "none",
           }}
         >
           <RichTextEditor.ControlsGroup>
@@ -442,6 +532,27 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
           <RichTextEditor.Content />
         </ScrollArea>
       </RichTextEditor>
+      {displayMode === "advanced" && (
+        <Group pos="absolute" bottom={4} right={8} gap="xs">
+          {saveError && (
+            <Tooltip label={saveError} multiline>
+              <Text
+                size="xs"
+                c="red"
+                lineClamp={1}
+                maw={320}
+                tabIndex={0}
+                aria-label={`${t("widget.notebook.saveFailed")}. ${saveError}`}
+              >
+                {t("widget.notebook.saveFailed")}
+              </Text>
+            </Tooltip>
+          )}
+          <Text size="xs" c="dimmed">
+            {t("widget.notebook.documentStats", documentStats)}
+          </Text>
+        </Group>
+      )}
       {canChange && (
         <>
           <ActionIcon
@@ -455,7 +566,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
             color={primaryColor}
             variant="light"
             size={30}
-            onClick={handleEditToggle}
+            onClick={() => void handleEditToggle()}
           >
             {isEditing ? <IconDeviceFloppy {...iconProps} /> : <IconEdit {...iconProps} />}
           </ActionIcon>

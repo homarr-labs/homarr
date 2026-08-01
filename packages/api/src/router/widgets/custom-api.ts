@@ -33,7 +33,6 @@ const namedRequestInputSchema = itemInputSchema.extend({
   requestId: z.string().min(1).max(64),
   params: runtimeParamsSchema.default({}),
 });
-
 interface CustomWidgetItemOptions {
   definitionId: string;
   configuration: Record<string, unknown>;

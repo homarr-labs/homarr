@@ -1,8 +1,19 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Fragment, useMemo } from "react";
-import { Avatar, Badge, Divider, Flex, Group, Progress, Stack, Text, Title } from "@mantine/core";
+import { useMemo, useState } from "react";
+import {
+  Avatar,
+  Badge,
+  Divider,
+  Group,
+  Popover,
+  Progress,
+  SimpleGrid,
+  Stack,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
 import {
   IconDeviceTv,
   IconHeadphones,
@@ -17,14 +28,17 @@ import { MantineReactTable } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
 import { objectEntries } from "@homarr/common";
-import { getIconUrl, integrationDefs } from "@homarr/definitions";
+import { getIconUrl } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
-import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
+import classes from "./component.module.css";
 
 type TranscodingDecision = NonNullable<NonNullable<StreamSession["currentlyPlaying"]>["metadata"]>["transcoding"];
 
@@ -53,135 +67,117 @@ function formatBitrate(bitrateKbps: number | null | undefined): string | null {
   return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
 }
 
-export default function MediaServerWidget({ options, integrationIds }: WidgetComponentProps<"mediaServer">) {
-  const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
+export default function MediaServerWidget({
+  options,
+  integrationIds,
+  width,
+  height,
+  isEditMode,
+  displayMode,
+}: WidgetComponentProps<"mediaServer">) {
+  const currentStreamsQuery = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
     integrationIds,
     showOnlyPlaying: options.showOnlyPlaying,
   });
+  const currentStreamsData = getUsableWidgetQueryData(currentStreamsQuery);
+  const currentStreams = useMemo(() => currentStreamsData ?? [], [currentStreamsData]);
 
   const t = useScopedI18n("widget.mediaServer");
-  const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(
-    () => [
-      {
-        accessorKey: "user.username",
-        header: t("items.user"),
-        size: 160,
+  const isAdvanced = displayMode === "advanced";
+  const showLocation = isAdvanced || options.showLocation;
+  const showBitrate = isAdvanced || options.showBitrate;
+  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
+  const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(() => {
+    const result: MRT_ColumnDef<StreamSession>[] = [
+      ...(width >= 300 || isAdvanced
+        ? [
+            {
+              accessorKey: "user.username",
+              header: t("items.user"),
+              size: 160,
 
-        Cell: ({ row }) => (
-          <Group gap="xs" wrap="nowrap">
-            <Avatar size={28} src={row.original.user.profilePictureUrl} />
-            <Stack gap={0} style={{ minWidth: 0 }}>
-              <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {row.original.user.username}
-              </Text>
-              <Text
-                size="10px"
-                c="dimmed"
-                style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-              >
-                {row.original.sessionName}
-              </Text>
-            </Stack>
-          </Group>
-        ),
-      },
+              Cell: ({ row }) => (
+                <Group gap="xs" wrap="nowrap">
+                  <Avatar size={28} src={row.original.user?.profilePictureUrl} />
+                  <Stack gap={0} style={{ minWidth: 0 }}>
+                    <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {row.original.user?.username ?? t("items.unknownUser")}
+                    </Text>
+                    <Text
+                      size="10px"
+                      c="dimmed"
+                      style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                    >
+                      {row.original.sessionName}
+                    </Text>
+                  </Stack>
+                </Group>
+              ),
+            } satisfies MRT_ColumnDef<StreamSession>,
+          ]
+        : []),
       {
         accessorKey: "currentlyPlaying", // currentlyPlaying.name can be undefined which results in a warning. This is why we use currentlyPlaying instead of currentlyPlaying.name
         header: t("items.currentlyPlaying"),
 
         Cell: ({ row }) => {
-          const currentlyPlaying = row.original.currentlyPlaying;
-          if (!currentlyPlaying) return null;
-
-          const playback = currentlyPlaying.playback;
-          const isPaused = playback?.state === "paused";
-          const Icon = isPaused ? IconPlayerPause : mediaTypeIconMap[currentlyPlaying.type];
-
-          const positionMs = playback?.positionMs ?? null;
-          const durationMs = playback?.durationMs ?? null;
-          const progressPercent =
-            positionMs !== null && durationMs !== null && durationMs > 0
-              ? Math.min(100, Math.round((positionMs / durationMs) * 100))
-              : null;
-          const remainingMinutes =
-            positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
-
           return (
-            <Stack gap={4} style={{ minWidth: 0 }}>
-              <Group gap="xs" align="center" wrap="nowrap" style={{ minWidth: 0 }}>
-                <Icon
-                  size={16}
-                  color={isPaused ? "var(--mantine-color-yellow-6)" : undefined}
-                  style={{ flexShrink: 0 }}
-                />
-                <Text size="xs" lineClamp={1} style={{ minWidth: 0 }}>
-                  {currentlyPlaying.name}
-                </Text>
-                {isPaused && (
-                  <Text size="xs" c="yellow" style={{ flexShrink: 0 }}>
-                    {t("items.paused")}
-                  </Text>
-                )}
-                {!isPaused && remainingMinutes !== null && (
-                  <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
-                    {t("items.remaining", { minutes: remainingMinutes.toString() })}
-                  </Text>
-                )}
-              </Group>
-              {progressPercent !== null && (
-                <Progress
-                  value={progressPercent}
-                  size={4}
-                  color={isPaused ? "yellow" : "green"}
-                  style={{ backgroundColor: "rgba(255, 255, 255, 0.15)" }}
-                />
-              )}
-            </Stack>
+            <SessionDetailsPopover
+              item={row.original}
+              opened={selectedRowId === row.id}
+              onChange={(opened) => setSelectedRowId(opened ? row.id : null)}
+            >
+              <CurrentlyPlaying item={row.original} />
+            </SessionDetailsPopover>
           );
         },
-      },
-      {
-        id: "status",
-        header: t("items.status"),
-        size: 110,
+      } satisfies MRT_ColumnDef<StreamSession>,
+      ...(width >= 420 || isAdvanced
+        ? [
+            {
+              id: "status",
+              header: t("items.status"),
+              size: 110,
 
-        Cell: ({ row }) => {
-          const currentlyPlaying = row.original.currentlyPlaying;
-          if (!currentlyPlaying) return null;
+              Cell: ({ row }) => {
+                const currentlyPlaying = row.original.currentlyPlaying;
+                if (!currentlyPlaying) return null;
 
-          const status = getPlaybackStatus(currentlyPlaying.metadata?.transcoding);
-          const bitrateLabel = formatBitrate(currentlyPlaying.metadata?.bitrateKbps);
+                const status = getPlaybackStatus(currentlyPlaying.metadata?.transcoding);
+                const location = showLocation ? currentlyPlaying.location : null;
+                const bitrateLabel = showBitrate ? formatBitrate(currentlyPlaying.metadata?.bitrateKbps) : null;
 
-          return (
-            <Stack gap={4} align="flex-start">
-              <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
-                {t(`items.${status}` as never)}
-              </Badge>
-              {(currentlyPlaying.location ?? bitrateLabel) && (
-                <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
-                  <Group gap={4} align="center">
-                    {currentlyPlaying.location &&
-                      (currentlyPlaying.location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />)}
-                    {currentlyPlaying.location && (
-                      <Text size="10px" c="dimmed" tt="uppercase">
-                        {currentlyPlaying.location}
-                      </Text>
+                return (
+                  <Stack gap={4} align="flex-start">
+                    <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
+                      {t(`items.${status}` as never)}
+                    </Badge>
+                    {(location ?? bitrateLabel) && (
+                      <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                        <Group gap={4} align="center">
+                          {location && (location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />)}
+                          {location && (
+                            <Text size="10px" c="dimmed" tt="uppercase">
+                              {location}
+                            </Text>
+                          )}
+                        </Group>
+                        {bitrateLabel && (
+                          <Text size="10px" c="dimmed">
+                            {bitrateLabel}
+                          </Text>
+                        )}
+                      </Group>
                     )}
-                  </Group>
-                  {bitrateLabel && (
-                    <Text size="10px" c="dimmed">
-                      {bitrateLabel}
-                    </Text>
-                  )}
-                </Group>
-              )}
-            </Stack>
-          );
-        },
-      },
-    ],
-    [t],
-  );
+                  </Stack>
+                );
+              },
+            } satisfies MRT_ColumnDef<StreamSession>,
+          ]
+        : []),
+    ];
+    return result;
+  }, [isAdvanced, selectedRowId, showBitrate, showLocation, t, width]);
 
   // Only render the flat list of sessions when the currentStreams change
   // Otherwise it will always create a new array reference and cause the table to re-render
@@ -190,37 +186,34 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
       currentStreams.flatMap((pair) =>
         pair.sessions.map((session) => ({
           ...session,
+          integrationId: pair.integrationId,
           integrationKind: pair.integrationKind,
-          integrationName: integrationDefs[pair.integrationKind].name,
+          integrationName: pair.integrationName,
           integrationIcon: getIconUrl(pair.integrationKind),
         })),
       ),
     [currentStreams],
   );
 
-  const { openModal } = useModalAction(ItemInfoModal);
   const table = useTranslatedMantineReactTable({
     columns,
     data: flatSessions,
     enablePagination: false,
-    enableTopToolbar: false,
+    enableTopToolbar: isAdvanced,
     enableBottomToolbar: false,
-    enableSorting: false,
+    enableSorting: isAdvanced,
     enableColumnActions: false,
     enableStickyHeader: false,
     enableColumnOrdering: false,
     enableRowSelection: false,
     enableFullScreenToggle: false,
-    enableGlobalFilter: false,
+    enableGlobalFilter: isAdvanced,
     enableDensityToggle: false,
     enableFilters: false,
     enableHiding: false,
-    enableColumnPinning: true,
+    enableColumnPinning: false,
     initialState: {
       density: "xs",
-      columnPinning: {
-        right: ["currentlyPlaying", "status"],
-      },
     },
     mantineTableHeadProps: {
       fz: "xs",
@@ -232,6 +225,7 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
       flex: 1,
       withBorder: false,
       shadow: undefined,
+      className: classes.tablePaper,
     },
     mantineTableProps: {
       className: "media-server-widget-table",
@@ -240,21 +234,32 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
       },
     },
     mantineTableContainerProps: {
+      className: classes.tableContainer,
       style: {
-        height: "100%",
+        pointerEvents: isEditMode ? "none" : undefined,
       },
     },
-    mantineTableBodyCellProps: ({ row }) => ({
-      onClick: () => {
-        openModal(
-          {
-            item: row.original,
-          },
-          {
-            title: row.original.sessionName,
-          },
-        );
-      },
+    mantineTableBodyRowProps: ({ row }) => {
+      const toggleDetails = () => setSelectedRowId((current) => (current === row.id ? null : row.id));
+
+      return {
+        className: isEditMode ? undefined : classes.sessionRow,
+        tabIndex: isEditMode ? -1 : 0,
+        "aria-label": row.original.sessionName,
+        "aria-haspopup": isEditMode ? undefined : "dialog",
+        "aria-expanded": isEditMode ? undefined : selectedRowId === row.id,
+        onClick: isEditMode ? undefined : toggleDetails,
+        onKeyDown: isEditMode
+          ? undefined
+          : (event) => {
+              if (event.currentTarget !== event.target) return;
+              if (event.key !== "Enter" && event.key !== " ") return;
+              event.preventDefault();
+              toggleDetails();
+            },
+      };
+    },
+    mantineTableBodyCellProps: () => ({
       py: 4,
       style: {
         overflowX: "hidden",
@@ -263,145 +268,279 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
     }),
   });
 
-  const uniqueIntegrations = Array.from(new Set(flatSessions.map((session) => session.integrationKind))).map((kind) => {
-    const session = flatSessions.find((session) => session.integrationKind === kind);
-    return {
-      integrationKind: kind,
-      integrationIcon: session?.integrationIcon,
-      integrationName: session?.integrationName,
-    };
-  });
+  const uniqueIntegrations = currentStreams.map((stream) => ({
+    integrationId: stream.integrationId,
+    integrationKind: stream.integrationKind,
+    integrationIcon: getIconUrl(stream.integrationKind),
+    integrationName: stream.integrationName,
+  }));
+
+  const playingCount = flatSessions.filter(
+    (session) => session.currentlyPlaying && session.currentlyPlaying.playback?.state !== "paused",
+  ).length;
+  const transcodingCount = flatSessions.filter((session) => {
+    const status = getPlaybackStatus(session.currentlyPlaying?.metadata?.transcoding);
+    return status !== "directPlay" && status !== "directStream";
+  }).length;
 
   const totalBitrateKbps = flatSessions.reduce(
     (sum, session) => sum + (session.currentlyPlaying?.metadata?.bitrateKbps ?? 0),
     0,
   );
-  const totalBitrateLabel = options.showBitrate ? formatBitrate(totalBitrateKbps) : null;
+  const totalBitrateLabel = showBitrate ? formatBitrate(totalBitrateKbps) : null;
+  const hasFailedIntegrations = currentStreams.some(({ error }) => Boolean(error));
 
   return (
-    <Stack gap={0} h="100%" display="flex">
+    <Stack className={classes.root} gap={0} h="100%" display="flex">
+      {isAdvanced && (
+        <Group px="xs" py={4} gap="xs">
+          <Badge variant="light">{t("summary.sessions", { count: flatSessions.length })}</Badge>
+          <Badge variant="light" color="green">
+            {t("summary.playing", { count: playingCount })}
+          </Badge>
+          <Badge variant="light" color="orange">
+            {t("summary.transcoding", { count: transcodingCount })}
+          </Badge>
+          <Group ml="auto">
+            <WidgetQueryErrorIndicator error={currentStreamsQuery.error} label={t("name")} />
+            <IntegrationErrorIndicator results={currentStreams} />
+          </Group>
+        </Group>
+      )}
+      {!isAdvanced && (hasFailedIntegrations || currentStreamsQuery.error) && (
+        <Group px="xs" justify="flex-end">
+          <WidgetQueryErrorIndicator error={currentStreamsQuery.error} label={t("name")} />
+          <IntegrationErrorIndicator results={currentStreams} />
+        </Group>
+      )}
       <MantineReactTable table={table} />
-      <Group
-        gap="xs"
-        h={30}
-        px="xs"
-        pr="md"
-        justify="space-between"
-        style={{
-          borderTop: "1px solid var(--border-color)",
-        }}
-      >
-        <Group gap={4} wrap="nowrap">
-          <IconVideo size={16} style={{ flexShrink: 0 }} />
-          <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-            {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
-              count: flatSessions.length,
-            })}
-          </Text>
-          {totalBitrateLabel && (
-            <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
-              {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
+      {(isAdvanced || height >= 144) && (
+        <Group
+          gap="xs"
+          h={30}
+          px="xs"
+          pr="md"
+          justify="space-between"
+          style={{
+            borderTop: "1px solid var(--border-color)",
+          }}
+        >
+          <Group gap={4} wrap="nowrap">
+            <IconVideo size={16} style={{ flexShrink: 0 }} />
+            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+              {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
+                count: flatSessions.length,
+              })}
             </Text>
-          )}
-        </Group>
-        <Group gap="xs">
-          {uniqueIntegrations.map((integration) => (
-            <Group key={integration.integrationKind} gap="xs" align="center">
-              <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
-              <Text className="media-server-name" size="sm">
-                {integration.integrationName}
+            {totalBitrateLabel && (isAdvanced || width >= 300) && (
+              <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
               </Text>
-            </Group>
-          ))}
+            )}
+          </Group>
+          <Group gap="xs">
+            {uniqueIntegrations.map((integration) => (
+              <Group key={integration.integrationId} gap="xs" align="center">
+                <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
+                {(isAdvanced || width >= 480) && (
+                  <Text className="media-server-name" size="sm" truncate="end">
+                    {integration.integrationName}
+                  </Text>
+                )}
+              </Group>
+            ))}
+          </Group>
         </Group>
-      </Group>
+      )}
     </Stack>
   );
 }
 
-const ItemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
-  const t = useScopedI18n("widget.mediaServer.items");
-  const Icon = innerProps.item.currentlyPlaying ? mediaTypeIconMap[innerProps.item.currentlyPlaying.type] : null;
+function CurrentlyPlaying({ item }: { item: StreamSession }) {
+  const t = useScopedI18n("widget.mediaServer");
+  const currentlyPlaying = item.currentlyPlaying;
+  if (!currentlyPlaying) {
+    return (
+      <Text size="xs" c="dimmed">
+        {item.sessionName}
+      </Text>
+    );
+  }
 
-  const metadata = useMemo(() => {
-    return innerProps.item.currentlyPlaying?.metadata
-      ? constructMetadata(innerProps.item.currentlyPlaying.metadata)
+  const playback = currentlyPlaying.playback;
+  const isPaused = playback?.state === "paused";
+  const Icon = isPaused ? IconPlayerPause : mediaTypeIconMap[currentlyPlaying.type];
+  const positionMs = playback?.positionMs ?? null;
+  const durationMs = playback?.durationMs ?? null;
+  const progressPercent =
+    positionMs !== null && durationMs !== null && durationMs > 0
+      ? Math.min(100, Math.round((positionMs / durationMs) * 100))
       : null;
-  }, [innerProps.item.currentlyPlaying?.metadata]);
+  const remainingMinutes =
+    positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
 
   return (
-    <Stack align="center">
-      <Flex direction="column" gap="xs" align="center">
-        {Icon && innerProps.item.currentlyPlaying !== null && (
-          <Group gap="sm" align="center">
-            <Icon size={24} />
-            <Title order={2}>{innerProps.item.currentlyPlaying.name}</Title>
-          </Group>
+    <Stack gap={4} style={{ minWidth: 0 }}>
+      <Group gap="xs" align="center" wrap="nowrap" style={{ minWidth: 0 }}>
+        <Icon size={16} color={isPaused ? "var(--mantine-color-yellow-6)" : undefined} style={{ flexShrink: 0 }} />
+        <Text size="xs" lineClamp={1} style={{ minWidth: 0 }}>
+          {currentlyPlaying.name}
+        </Text>
+        {isPaused ? (
+          <Text size="xs" c="yellow" style={{ flexShrink: 0 }}>
+            {t("items.paused")}
+          </Text>
+        ) : (
+          remainingMinutes !== null && (
+            <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
+              {t("items.remaining", { minutes: remainingMinutes.toString() })}
+            </Text>
+          )
         )}
-        {innerProps.item.currentlyPlaying?.episodeName && (
-          <Group>
-            <Title order={4}>{innerProps.item.currentlyPlaying.episodeName}</Title>
-            {innerProps.item.currentlyPlaying.seasonName && (
-              <>
-                {" - "}
-                <Title order={4}>{innerProps.item.currentlyPlaying.seasonName}</Title>
-              </>
+      </Group>
+      {progressPercent !== null && (
+        <Progress
+          value={progressPercent}
+          size={4}
+          color={isPaused ? "yellow" : "green"}
+          style={{ backgroundColor: "var(--mantine-color-default-border)" }}
+        />
+      )}
+    </Stack>
+  );
+}
+
+export function SessionDetailsPopover({
+  item,
+  opened,
+  onChange,
+  children,
+}: {
+  item: StreamSession;
+  opened: boolean;
+  onChange: (opened: boolean) => void;
+  children: ReactNode;
+}) {
+  return (
+    <Popover
+      opened={opened}
+      onChange={onChange}
+      position="bottom-start"
+      width="min(26.25rem, calc(100vw - 1.5rem))"
+      shadow="md"
+      withArrow
+      withinPortal
+      returnFocus
+    >
+      <Popover.Target>
+        <UnstyledButton
+          className={classes.detailsTarget}
+          aria-label={item.sessionName}
+          onClick={(event) => {
+            event.stopPropagation();
+            onChange(!opened);
+          }}
+        >
+          {children}
+        </UnstyledButton>
+      </Popover.Target>
+      <Popover.Dropdown>
+        <SessionDetails item={item} />
+      </Popover.Dropdown>
+    </Popover>
+  );
+}
+
+function SessionDetails({ item }: { item: StreamSession }) {
+  const t = useScopedI18n("widget.mediaServer.items");
+  const Icon = item.currentlyPlaying ? mediaTypeIconMap[item.currentlyPlaying.type] : null;
+
+  const metadata = item.currentlyPlaying?.metadata ? constructMetadata(item.currentlyPlaying.metadata) : null;
+
+  return (
+    <Stack gap="sm" style={{ minWidth: 0 }}>
+      {Icon && item.currentlyPlaying && (
+        <Group gap="sm" align="flex-start" wrap="nowrap">
+          <Icon size={22} style={{ flexShrink: 0 }} />
+          <Stack gap={2} style={{ minWidth: 0 }}>
+            <Text fw={600} lineClamp={2}>
+              {item.currentlyPlaying.name}
+            </Text>
+            {item.currentlyPlaying.episodeName && (
+              <Text size="xs" c="dimmed" lineClamp={2}>
+                {[item.currentlyPlaying.episodeName, item.currentlyPlaying.seasonName].filter(Boolean).join(" · ")}
+              </Text>
             )}
-          </Group>
-        )}
-      </Flex>
+          </Stack>
+        </Group>
+      )}
       <NormalizedLine
         itemKey={t("user")}
         value={
-          <Group gap="sm" align="center">
-            <Avatar size="sm" src={innerProps.item.user.profilePictureUrl} />{" "}
-            <Text>{innerProps.item.user.username}</Text>
+          <Group gap="xs" align="center" wrap="nowrap">
+            <Avatar size="xs" src={item.user?.profilePictureUrl} />
+            <Text size="sm" truncate>
+              {item.user?.username ?? t("unknownUser")}
+            </Text>
           </Group>
         }
       />
-      <NormalizedLine itemKey={t("name")} value={<Text>{innerProps.item.sessionName}</Text>} />
-      <NormalizedLine itemKey={t("id")} value={<Text>{innerProps.item.sessionId}</Text>} />
+      <NormalizedLine
+        itemKey={t("name")}
+        value={
+          <Text size="sm" truncate>
+            {item.sessionName}
+          </Text>
+        }
+      />
+      <NormalizedLine
+        itemKey={t("id")}
+        value={
+          <Text size="xs" ff="monospace" truncate>
+            {item.sessionId}
+          </Text>
+        }
+      />
 
       {metadata ? (
-        <Stack w="100%" gap={0}>
-          <Divider label={t("metadata.title")} labelPosition="center" mt="lg" mb="sm" />
-
-          <Group align="flex-start">
-            {objectEntries(metadata).map(([key, value], index) => (
-              <Fragment key={key}>
-                {index !== 0 && <Divider key={index} orientation="vertical" />}
-                <Stack gap={4}>
-                  <Text fw="bold">{t(`metadata.${key}.title`)}</Text>
-
-                  {Object.entries(value)
-                    .filter(([_, value]) => Boolean(value))
-                    .map(([innerKey, value]) => (
-                      <Group justify="space-between" w="100%" key={innerKey} wrap="nowrap">
-                        <Text>{t(`metadata.${key}.${innerKey}` as never)}</Text>
-                        <Text>{value}</Text>
-                      </Group>
-                    ))}
-                </Stack>
-              </Fragment>
+        <Stack gap="xs">
+          <Divider label={t("metadata.title")} labelPosition="left" />
+          <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="sm" verticalSpacing="xs">
+            {objectEntries(metadata).map(([key, entries]) => (
+              <Stack key={key} gap={4} style={{ minWidth: 0 }}>
+                <Text fw={600} size="xs">
+                  {t(`metadata.${key}.title`)}
+                </Text>
+                {Object.entries(entries)
+                  .filter(([_, entryValue]) => Boolean(entryValue))
+                  .map(([innerKey, entryValue]) => (
+                    <Group justify="space-between" gap="xs" key={innerKey} wrap="nowrap">
+                      <Text size="xs" c="dimmed">
+                        {t(`metadata.${key}.${innerKey}` as never)}
+                      </Text>
+                      <Text size="xs" ta="right" truncate>
+                        {entryValue}
+                      </Text>
+                    </Group>
+                  ))}
+              </Stack>
             ))}
-          </Group>
+          </SimpleGrid>
         </Stack>
       ) : null}
     </Stack>
   );
-}).withOptions({
-  defaultTitle() {
-    return "";
-  },
-  size: "lg",
-  centered: true,
-});
+}
 
 const NormalizedLine = ({ itemKey, value }: { itemKey: string; value: ReactNode }) => {
   return (
-    <Group w="100%" align="top" justify="space-between">
-      <Text>{itemKey}:</Text>
-      {value}
+    <Group w="100%" gap="md" align="flex-start" justify="space-between" wrap="nowrap">
+      <Text size="sm" c="dimmed" style={{ flexShrink: 0 }}>
+        {itemKey}:
+      </Text>
+      <Stack gap={0} align="flex-end" style={{ minWidth: 0 }}>
+        {value}
+      </Stack>
     </Group>
   );
 };

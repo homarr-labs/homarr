@@ -4,6 +4,7 @@ import { clientApi } from "@homarr/api/client";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { createBeszelSystemChoices } from "./selection";
 
 const timePeriodOptions = [
   { value: "1m", label: "Live" },
@@ -30,7 +31,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
             isPending,
             isError,
           } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds }, { enabled: integrationIds.length > 0 });
-          const selectData = data.flatMap((r) => r.systems.map((s) => ({ value: s.id, label: s.name })));
+          const selectData = createBeszelSystemChoices(data).map(({ value, label }) => ({ value, label }));
           return { data: selectData, isPending, isError };
         },
       }),

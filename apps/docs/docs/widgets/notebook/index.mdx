@@ -4,6 +4,8 @@ description: "A simple notebook widget that supports markdown."
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
@@ -23,6 +25,8 @@ import editOn from "./img/edit.png";
   <img src={editOff} alt="notebook edit-off" width={128 * 3} />
   <img src={editOn} alt="notebook edit-on" width={128 * 3} />
 </div>
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

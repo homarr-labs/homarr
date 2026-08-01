@@ -1,35 +1,31 @@
 ---
-title: 'Media transcoding'
-description: 'Statistics, current queue and worker status of your media transcoding'
+title: "Media transcoding"
+description: "Statistics, current queue and worker status of your media transcoding"
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { IconAd } from "@tabler/icons-react";
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import { mediaTranscodingWidget } from '.';
-import { tdarrIntegration } from '@site/docs/integrations/tdarr';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import { mediaTranscodingWidget } from ".";
+import { tdarrIntegration } from "@site/docs/integrations/tdarr";
 
+<WidgetHeader widget={mediaTranscodingWidget} categories={["Media transcoding"]} />
 
-<WidgetHeader
-  widget={mediaTranscodingWidget}
-  categories={['Media transcoding']}
-/>
-
-The media transcoding widget provides you with an overview of your media transcoding status. 
+The media transcoding widget provides you with an overview of your media transcoding status.
 It shows you the current queue, worker status, and statistics about your transcoding jobs.
-
-
 
 ### Screenshots
 
-import queueCard from './img/queue.png';
-import workersCard from './img/workers.png';
-import statisticsCard from './img/statistics.png';
+import queueCard from "./img/queue.png";
+import workersCard from "./img/workers.png";
+import statisticsCard from "./img/statistics.png";
 
 <div className="flex gap-1 flex-wrap">
   <img src={workersCard} alt="media-transcoding workers-tab" width={128 * 3} />
@@ -39,13 +35,20 @@ import statisticsCard from './img/statistics.png';
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: tdarrIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: tdarrIntegration,
+    },
+  ]}
+/>
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={mediaTranscodingWidget.configuration} />

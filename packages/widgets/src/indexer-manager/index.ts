@@ -1,4 +1,4 @@
-import { IconReportSearch, IconServerOff } from "@tabler/icons-react";
+import { IconReportSearch, IconServerOff, IconTestPipe } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
@@ -7,6 +7,22 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("indexerManager", {
   icon: IconReportSearch,
+  queryKey: [["widget", "indexerManager"]],
+  contextActions: ({ widgetStateRef, context }) => [
+    {
+      key: "test-all-indexers",
+      label: (t) => t("widget.indexerManager.testAll"),
+      icon: IconTestPipe,
+      disabled:
+        context.isEditMode ||
+        !context.canInteractWithSelectedIntegrations ||
+        typeof widgetStateRef.current?.testAllIndexers !== "function",
+      onClick: () => {
+        const action = widgetStateRef.current?.testAllIndexers;
+        if (typeof action === "function") action();
+      },
+    },
+  ],
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({

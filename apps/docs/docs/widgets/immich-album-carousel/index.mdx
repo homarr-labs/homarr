@@ -4,36 +4,38 @@ description: "Shows a slideshow of pictures from an Immich album or your full li
 hide_title: true
 ---
 
-import { immichIntegration } from '../../integrations/immich';import {
-  AddingWidget
-} from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { immichAlbumCarouselWidget } from '.';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
+import { immichIntegration } from "../../integrations/immich";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { immichAlbumCarouselWidget } from ".";
 
-<WidgetHeader
-  widget={immichAlbumCarouselWidget}
-  categories={['Photos Service']}
-/>
+<WidgetHeader widget={immichAlbumCarouselWidget} categories={["Photos Service"]} />
 
 ### Screenshots
 
-import screen from './img/screen.png';
+import screen from "./img/screen.png";
 
 <img src={screen} height={256} alt="immich album size-big" />
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: immichIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: immichIntegration,
+    },
+  ]}
+/>
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
 <AddingWidget />
-
 
 ### Configuration
 
