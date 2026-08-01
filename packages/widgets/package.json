@@ -73,6 +73,7 @@
     "@tiptap/extension-underline": "catalog:",
     "@tiptap/react": "catalog:",
     "@tiptap/starter-kit": "catalog:",
+    "@trpc/react-query": "catalog:",
     "clsx": "catalog:",
     "dayjs": "catalog:",
     "jsonpath-plus": "catalog:",

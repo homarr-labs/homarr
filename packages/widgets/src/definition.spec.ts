@@ -1,4 +1,7 @@
 import { describe, expect, test } from "vitest";
+import { getQueryKey } from "@trpc/react-query";
+
+import { clientApi } from "@homarr/api/client";
 
 import { getWidgetQueryKeys, getWidgetRuntimeQueries, setWidgetRuntimeQueries } from "./definition";
 
@@ -24,11 +27,12 @@ describe("getWidgetQueryKeys", () => {
 
   test("registers runtime queries without replacing imperative widget actions", () => {
     const widgetStateRef = { current: { togglePolling } };
-    const runtimeQueries = [{ path: ["widget", "calendar", "findAllEvents"], input: { month: 7 } }];
+    const input = { integrationIds: [], month: 7, year: 2026, releaseType: [], showUnmonitored: false };
+    const queryKey = getQueryKey(clientApi.widget.calendar.findAllEvents, input, "query");
 
-    setWidgetRuntimeQueries(widgetStateRef, runtimeQueries);
+    setWidgetRuntimeQueries(widgetStateRef, [queryKey]);
 
     expect(widgetStateRef.current.togglePolling).toBe(togglePolling);
-    expect(getWidgetRuntimeQueries(widgetStateRef)).toEqual(runtimeQueries);
+    expect(getWidgetRuntimeQueries(widgetStateRef)).toEqual([{ path: ["widget", "calendar", "findAllEvents"], input }]);
   });
 });

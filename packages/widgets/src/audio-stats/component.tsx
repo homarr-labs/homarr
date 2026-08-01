@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { formatBytes, formatDuration } from "@homarr/common";
@@ -27,8 +28,8 @@ export default function AudioStatsWidget({
     enabled: streamsEnabled,
   });
   setWidgetRuntimeQueries(widgetStateRef, [
-    { path: ["widget", "audioStats", "getStats"], input: statsInput },
-    ...(streamsEnabled ? [{ path: ["widget", "mediaServer", "getCurrentStreams"], input: streamsInput }] : []),
+    getQueryKey(clientApi.widget.audioStats.getStats, statsInput, "query"),
+    ...(streamsEnabled ? [getQueryKey(clientApi.widget.mediaServer.getCurrentStreams, streamsInput, "query")] : []),
   ]);
 
   if (!response) return <WidgetEmptyState />;

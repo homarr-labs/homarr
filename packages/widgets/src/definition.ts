@@ -122,11 +122,18 @@ const runtimeQueriesStateKey = "__homarrRuntimeQueries";
 
 export const setWidgetRuntimeQueries = (
   widgetStateRef: React.MutableRefObject<Record<string, unknown> | null> | undefined,
-  queries: readonly NormalizedWidgetQuery[],
+  queryKeys: readonly QueryKey[],
 ) => {
   if (!widgetStateRef) return;
   const state = widgetStateRef.current ?? {};
-  state[runtimeQueriesStateKey] = queries;
+  state[runtimeQueriesStateKey] = queryKeys.flatMap((queryKey) => {
+    const path = queryKey[0];
+    if (!Array.isArray(path) || !path.every((part): part is string => typeof part === "string")) return [];
+
+    const queryKeyOptions = queryKey[1];
+    const input = isRecord(queryKeyOptions) && "input" in queryKeyOptions ? queryKeyOptions.input : undefined;
+    return [{ path, input }];
+  });
   widgetStateRef.current = state;
 };
 

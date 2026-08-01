@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Box, Stack, Text, useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
+import { getQueryKey } from "@trpc/react-query";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
@@ -51,7 +52,7 @@ const FetchCalendar = ({
     releaseType: options.releaseType,
     showUnmonitored: options.showUnmonitored,
   };
-  setWidgetRuntimeQueries(widgetStateRef, [{ path: ["widget", "calendar", "findAllEvents"], input }]);
+  setWidgetRuntimeQueries(widgetStateRef, [getQueryKey(clientApi.widget.calendar.findAllEvents, input, "query")]);
   const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input);
 
   const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);

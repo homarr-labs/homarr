@@ -1,11 +1,9 @@
 "use client";
 
-import "./styles.css";
-
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Center, Group, Indicator, Loader, Progress, ScrollArea, Stack, Text } from "@mantine/core";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
-import { DataTable } from "mantine-datatable";
+import { getQueryKey } from "@trpc/react-query";
 import {
   Activity,
   Battery,
@@ -20,11 +18,17 @@ import {
 } from "lucide-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { useOptionalBoard } from "@homarr/boards/context";
 import { useModalAction } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { setWidgetRuntimeQueries } from "../definition";
+import { HomarrDataTable } from "../common/homarr-data-table";
+import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
 import {
@@ -44,6 +48,21 @@ import { BeszelStatsView } from "../beszel/_shared/stats-view";
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
 type SystemRowWithKey = BeszelSystemRow & { _key: string };
+
+const columnAccessors = [
+  "name",
+  "cpu",
+  "memory",
+  "disk",
+  "gpu",
+  "loadAvg",
+  "netBytes",
+  "temp",
+  "battery",
+  "services",
+  "uptime",
+  "agentVersion",
+] as const satisfies readonly (keyof BeszelSystemRow)[];
 
 interface SizeConfig {
   iconSize: number;
@@ -79,15 +98,21 @@ export default function BeszelSystemTableWidget({
   width,
   displayMode = "compact",
   widgetStateRef,
+  boardId,
+  itemId,
+  setOptions,
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
   const { openModal } = useModalAction(BeszelSystemStatsModal);
+  const board = useOptionalBoard();
+  const { data: session } = useSession();
+  const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const {
     data: results = [],
     error: systemsError,
     isPending,
   } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
-  const size = getSizeConfig(width);
+  const size = useMemo(() => getSizeConfig(width), [width]);
   const [selectedSystem, setSelectedSystem] = useState<SystemRowWithKey | null>(null);
 
   const visibleMetricKeys = useMemo(() => {
@@ -117,12 +142,33 @@ export default function BeszelSystemTableWidget({
     return new Set(enabled.slice(0, budget));
   }, [displayMode, options, width]);
 
+  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
+    onError: () =>
+      showErrorNotification({
+        title: t("error.layoutSaveTitle"),
+        message: t("error.layoutSaveMessage"),
+      }),
+  });
+  const persistLayout = useTableLayoutPersistence({
+    boardId,
+    hasChangeAccess,
+    itemId,
+    saveItemOptions,
+    setOptions,
+  });
+
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
 
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus<SystemRowWithKey>>({
     columnAccessor: options.sortBy,
     direction: options.sortDirection as "asc" | "desc",
   });
+  useEffect(() => {
+    setSortStatus({
+      columnAccessor: options.sortBy,
+      direction: options.sortDirection as "asc" | "desc",
+    });
+  }, [options.sortBy, options.sortDirection]);
 
   const sortedSystems = useMemo(() => {
     const accessor = sortStatus.columnAccessor as keyof BeszelSystemRow;
@@ -154,6 +200,8 @@ export default function BeszelSystemTableWidget({
     const cols: (DataTableColumn<SystemRowWithKey> | false)[] = [
       {
         accessor: "name",
+        width: 160,
+        ellipsis: true,
         title: (
           <Group gap={4} wrap="nowrap">
             <Server size={size.iconSize} />
@@ -162,7 +210,7 @@ export default function BeszelSystemTableWidget({
         ),
         sortable: true,
         render: (record) => (
-          <Group gap={8} wrap="nowrap">
+          <Group gap={8} wrap="nowrap" style={{ overflow: "hidden", paddingInlineStart: 4 }}>
             <Indicator color={statusColorMap[record.status]} size={7} />
             <Text size={size.fontSize} fw={500} truncate>
               {record.name}
@@ -172,6 +220,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showCpu") && {
         accessor: "cpu",
+        width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
             <Cpu size={size.iconSize} />
@@ -183,6 +232,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showMemory") && {
         accessor: "memory",
+        width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
             <MemoryStick size={size.iconSize} />
@@ -194,6 +244,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showDisk") && {
         accessor: "disk",
+        width: 160,
         title: (
           <Group gap={4} wrap="nowrap">
             <HardDrive size={size.iconSize} />
@@ -213,6 +264,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showGpu") && {
         accessor: "gpu",
+        width: 140,
         title: (
           <Group gap={4} wrap="nowrap">
             <Monitor size={size.iconSize} />
@@ -224,6 +276,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showLoadAvg") && {
         accessor: "loadAvg",
+        width: 100,
         title: (
           <Group gap={4} wrap="nowrap">
             <Activity size={size.iconSize} />
@@ -240,6 +293,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showNet") && {
         accessor: "netBytes",
+        width: 100,
         title: (
           <Group gap={4} wrap="nowrap">
             <Network size={size.iconSize} />
@@ -255,6 +309,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showTemp") && {
         accessor: "temp",
+        width: 80,
         title: (
           <Group gap={4} wrap="nowrap">
             <Thermometer size={size.iconSize} />
@@ -266,6 +321,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showBattery") && {
         accessor: "battery",
+        width: 70,
         title: (
           <Group gap={4} wrap="nowrap">
             <Battery size={size.iconSize} />
@@ -276,6 +332,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showServices") && {
         accessor: "services",
+        width: 80,
         title: (
           <Group gap={4} wrap="nowrap">
             <Server size={size.iconSize} />
@@ -287,6 +344,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showUptime") && {
         accessor: "uptime",
+        width: 90,
         title: (
           <Group gap={4} wrap="nowrap">
             <Activity size={size.iconSize} />
@@ -298,6 +356,7 @@ export default function BeszelSystemTableWidget({
       },
       visibleMetricKeys.has("showAgent") && {
         accessor: "agentVersion",
+        width: 90,
         title: (
           <Group gap={4} wrap="nowrap">
             <Wifi size={size.iconSize} />
@@ -312,14 +371,27 @@ export default function BeszelSystemTableWidget({
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
   }, [t, size, visibleMetricKeys]);
 
-  const handleRowClick = ({ record }: { record: SystemRowWithKey }) => {
-    if (displayMode === "advanced") {
-      setSelectedSystem(record);
-      return;
-    }
-    const integrationId = record._key.split(":")[0] ?? "";
-    openModal({ integrationId, systemId: record.id }, { title: record.name });
-  };
+  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+    columns,
+    columnAccessors,
+    columnOrder: options.columnOrder,
+    columnWidths: options.columnWidths,
+    itemId,
+    storeKeyPrefix: "beszel-system-table",
+    onLayoutChange: persistLayout,
+  });
+
+  const handleRowClick = useCallback(
+    ({ record }: { record: SystemRowWithKey }) => {
+      if (displayMode === "advanced") {
+        setSelectedSystem(record);
+        return;
+      }
+      const integrationId = record._key.split(":")[0] ?? "";
+      openModal({ integrationId, systemId: record.id }, { title: record.name });
+    },
+    [displayMode, openModal],
+  );
 
   const activeSystem = selectedSystem ?? sortedSystems[0];
   const activeIntegrationId = activeSystem?._key.split(":")[0] ?? "";
@@ -327,15 +399,16 @@ export default function BeszelSystemTableWidget({
     widgetStateRef,
     displayMode === "advanced" && activeSystem
       ? [
-          {
-            path: ["widget", "beszel", "getSystemStats"],
-            input: {
+          getQueryKey(
+            clientApi.widget.beszel.getSystemStats,
+            {
               integrationIds: [activeIntegrationId],
               systemId: activeSystem.id,
               timePeriod: "1h",
-              includeDocker: false,
+              includeDocker: true,
             },
-          },
+            "query",
+          ),
         ]
       : [],
   );
@@ -355,20 +428,17 @@ export default function BeszelSystemTableWidget({
       <div style={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}>
         <BeszelIntegrationErrorIndicator results={results} />
       </div>
-      <DataTable
-        style={{ pointerEvents: isEditMode ? "none" : undefined }}
-        withTableBorder={false}
-        borderRadius={0}
-        highlightOnHover
+      <HomarrDataTable
+        isEditMode={isEditMode}
+        cellPadding={`${size.cellPadding}px 8px`}
         fz={size.fontSize}
         records={sortedSystems}
-        columns={columns}
+        columns={effectiveColumns}
         sortStatus={sortStatus}
         onSortStatusChange={setSortStatus}
         noRecordsText={t("noRecords")}
         idAccessor="_key"
-        height="100%"
-        className="beszel-table"
+        storeColumnsKey={storeKey}
         onRowClick={isEditMode ? undefined : handleRowClick}
       />
     </div>
@@ -402,9 +472,9 @@ export default function BeszelSystemTableWidget({
                 disk: options.showDisk,
                 diskIO: options.showDisk,
                 network: options.showNet,
-                dockerCpu: false,
-                dockerMemory: false,
-                dockerNetwork: false,
+                dockerCpu: true,
+                dockerMemory: true,
+                dockerNetwork: true,
               }}
             />
           </Stack>

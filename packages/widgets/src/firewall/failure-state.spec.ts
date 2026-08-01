@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { hasTotalFirewallFailure } from "./component";
+import { hasFirewallPartialFailure, hasTotalFirewallFailure } from "./component";
 
 const failedQuery = {
   isPending: false,
@@ -26,5 +26,22 @@ describe("firewall failure state", () => {
     expect(hasTotalFirewallFailure([failedQuery, failedQuery, { ...failedQuery, isFetching: true }, failedQuery])).toBe(
       false,
     );
+  });
+
+  it("surfaces query-wide and integration-specific partial failures", () => {
+    const successfulQuery = {
+      isPending: false,
+      isFetching: false,
+      isError: false,
+      data: [{ integration: { id: "firewall-1" }, error: undefined }],
+    };
+
+    expect(hasFirewallPartialFailure("firewall-1", [successfulQuery])).toBe(false);
+    expect(hasFirewallPartialFailure("firewall-1", [{ ...successfulQuery, isError: true }])).toBe(true);
+    expect(
+      hasFirewallPartialFailure("firewall-1", [
+        { ...successfulQuery, data: [{ integration: { id: "firewall-1" }, error: "offline" }] },
+      ]),
+    ).toBe(true);
   });
 });

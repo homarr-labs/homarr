@@ -43,6 +43,12 @@ function parseResolution(
   return parsedWidth !== null && parsedHeight !== null ? { width: parsedWidth, height: parsedHeight } : null;
 }
 
+function isStreamDirect(decision: string | undefined): boolean {
+  // Plex reports "transcode" when a stream is re-encoded. "copy" (remuxed
+  // without re-encoding) and an absent decision both count as direct.
+  return decision !== "transcode";
+}
+
 export class PlexIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
   public async getCurrentSessionsAsync(_options: CurrentSessionsInput): Promise<StreamSession[]> {
     const token = super.getSecretValue("apiKey");
@@ -87,6 +93,16 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
         const videoStream = streams.find((stream) => stream.$.streamType === "1");
         const audioStream = streams.find((stream) => stream.$.streamType === "2");
 
+        const isVideoDirect = isStreamDirect(transcodeElement?.$.videoDecision);
+        const isAudioDirect = isStreamDirect(transcodeElement?.$.audioDecision);
+        const containerChanged = Boolean(
+          transcodeElement?.$.container &&
+          mediaInfoElement?.$.container &&
+          transcodeElement.$.container !== mediaInfoElement.$.container,
+        );
+        const bitrateKbps =
+          parseOptionalNumber(sessionElement?.$.bandwidth) ?? parseOptionalNumber(mediaInfoElement?.$.bitrate);
+
         return {
           sessionId: sessionElement?.$.id ?? "unknown",
           sessionName: `${playerElement.$.product} (${playerElement.$.title})`,
@@ -124,7 +140,11 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
                   audioCodec: transcodeElement?.$.audioCodec ?? null,
                   videoCodec: transcodeElement?.$.videoCodec ?? null,
                 },
+                isVideoDirect,
+                isAudioDirect,
+                containerChanged,
               },
+              bitrateKbps,
             },
           },
         };

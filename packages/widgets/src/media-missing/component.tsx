@@ -19,6 +19,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconDownload, IconMovie, IconQuestionMark, IconVideo } from "@tabler/icons-react";
+import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import type { MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/types";
@@ -44,7 +45,7 @@ export default function MediaMissingWidget({
   const isAdvanced = displayMode === "advanced";
   const pageSize = isAdvanced ? Math.max(Number(options.pageSize), 50) : Number(options.pageSize);
   const input = { integrationIds, pageSize };
-  setWidgetRuntimeQueries(widgetStateRef, [{ path: ["widget", "mediaOrganizer", "getData"], input }]);
+  setWidgetRuntimeQueries(widgetStateRef, [getQueryKey(clientApi.widget.mediaOrganizer.getData, input, "query")]);
   const { data } = clientApi.widget.mediaOrganizer.getData.useQuery(input, {
     staleTime: 60 * 1000,
     refetchOnWindowFocus: false,

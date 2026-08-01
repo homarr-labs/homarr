@@ -40,6 +40,9 @@ export const toChartItem = (healthInfo: {
 export const appendBoundedHistory = (history: ChartItem[], item: ChartItem, limit: number): ChartItem[] =>
   [...history, item].slice(-limit);
 
+export const getNetworkHistory = (items: readonly ChartItem[]) =>
+  items.flatMap((item) => (item.network === null ? [] : [item.network]));
+
 export default function SystemResources({
   integrationIds,
   options,
@@ -135,8 +138,8 @@ const SystemCharts = ({
   isAdvanced,
   showTitle,
 }: SystemChartsProps) => {
-  const showNetwork =
-    items.length > 0 && items[items.length - 1]?.network !== null && options.visibleCharts.includes("network");
+  const networkItems = getNetworkHistory(items);
+  const showNetwork = networkItems.length > 0 && options.visibleCharts.includes("network");
   const chartCount = options.visibleCharts.filter((chart) => chart !== "network").length + Number(showNetwork);
   const chartColumns = isAdvanced && width >= 560 ? 2 : 1;
   const chartHeight = isAdvanced
@@ -183,13 +186,13 @@ const SystemCharts = ({
           (width >= 300 ? (
             <Group h={chartHeight} gap="xs" grow wrap="nowrap">
               <NetworkTrafficChart
-                usageOverTime={items.map((item) => item.network?.down ?? 0)}
+                usageOverTime={networkItems.map((network) => network.down)}
                 isUp={false}
                 hasShadow={options.hasShadow}
                 labelDisplayMode={options.labelDisplayMode}
               />
               <NetworkTrafficChart
-                usageOverTime={items.map((item) => item.network?.up ?? 0)}
+                usageOverTime={networkItems.map((network) => network.up)}
                 isUp
                 hasShadow={options.hasShadow}
                 labelDisplayMode={options.labelDisplayMode}
@@ -198,7 +201,7 @@ const SystemCharts = ({
           ) : (
             <Box h={chartHeight}>
               <CombinedNetworkTrafficChart
-                usageOverTime={items.map((item) => item.network ?? { up: 0, down: 0 })}
+                usageOverTime={networkItems}
                 hasShadow={options.hasShadow}
                 labelDisplayMode={options.labelDisplayMode}
               />

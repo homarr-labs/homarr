@@ -3,6 +3,7 @@
 import { useCallback, useMemo } from "react";
 import { Box, Button, Center, Loader, Menu, ScrollArea, SegmentedControl, Select, Stack, Text } from "@mantine/core";
 import { IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
+import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -54,15 +55,16 @@ export default function BeszelSystemStatsWidget({
     widgetStateRef,
     selectedSystem && options.timePeriod !== "1m"
       ? [
-          {
-            path: ["widget", "beszel", "getSystemStats"],
-            input: {
+          getQueryKey(
+            clientApi.widget.beszel.getSystemStats,
+            {
               integrationIds: [selectedSystem.integrationId],
               systemId: selectedSystem.systemId,
-              timePeriod: options.timePeriod,
+              timePeriod: options.timePeriod as BeszelTimePeriod,
               includeDocker,
             },
-          },
+            "query",
+          ),
         ]
       : [],
   );

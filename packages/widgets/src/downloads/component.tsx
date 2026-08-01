@@ -41,7 +41,6 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
-import { DataTable, useDataTableColumns } from "mantine-datatable";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
@@ -54,11 +53,11 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { columnWidthsToRecord, filterDownloadItemsByStatus, getAvailableDownloadStates } from "./helpers";
+import { HomarrDataTable } from "../common/homarr-data-table";
+import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
+import { filterDownloadItemsByStatus, getAvailableDownloadStates } from "./helpers";
 
 dayjs.extend(relativeTime);
-
-const COLUMN_WIDTH_SAVE_DELAY_MS = 200;
 
 type DownloadsT = ReturnType<typeof useScopedI18n<"widget.downloads">>;
 type DownloadState = ExtendedDownloadClientItem["state"];
@@ -170,14 +169,23 @@ function progressColor(state: DownloadState, progress: number): string {
   return "blue";
 }
 
-function parseJsonOption<T>(value: string | undefined, fallback: T): T {
-  if (!value) return fallback;
-  try {
-    return JSON.parse(value) as T;
-  } catch {
-    return fallback;
-  }
-}
+const columnAccessors = [
+  "name",
+  "progress",
+  "size",
+  "downSpeed",
+  "upSpeed",
+  "time",
+  "state",
+  "added",
+  "ratio",
+  "received",
+  "sent",
+  "category",
+  "integration",
+  "index",
+  "type",
+] as const;
 
 function toCategoryArray(category: string | string[]): string[] {
   if (Array.isArray(category)) return category;
@@ -338,25 +346,13 @@ export default function DownloadClientsWidget({
     scope: { id: `downloads-options:${boardId ?? "preview"}:${itemId ?? "preview"}` },
     onError: () => showErrorNotification({ title: t("errors.actionFailed"), message: t("errors.actionFailedMessage") }),
   });
-  const saveOptionToServer = useCallback(
-    (newOptions: Partial<Record<string, string>>) => {
-      if (hasChangeAccess && boardId && itemId) saveItemOptions({ boardId, itemId, newOptions });
-    },
-    [boardId, hasChangeAccess, itemId, saveItemOptions],
-  );
-  const persistOption = useCallback(
-    (newOptions: Partial<Record<string, string>>) => {
-      setOptions({ newOptions });
-      saveOptionToServer(newOptions);
-    },
-    [saveOptionToServer, setOptions],
-  );
-
-  const savedOrder = useMemo(() => parseJsonOption(options.columnOrder, [] as string[]), [options.columnOrder]);
-  const savedWidths = useMemo(
-    () => parseJsonOption(options.columnWidths, {} as Record<string, number>),
-    [options.columnWidths],
-  );
+  const persistOption = useTableLayoutPersistence({
+    boardId,
+    hasChangeAccess,
+    itemId,
+    saveItemOptions,
+    setOptions,
+  });
 
   let defaultSortDirection: DataTableSortStatus<ExtendedDownloadClientItem>["direction"] = "asc";
   if (options.descendingDefaultSort) defaultSortDirection = "desc";
@@ -682,72 +678,15 @@ export default function DownloadClientsWidget({
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
   }, [columnContext, t, size, progressColumnWidth]);
 
-  const storeKey = `downloads-${itemId ?? "preview"}-${[...options.columns].toSorted().join(",")}`;
-  const { effectiveColumns, columnsOrder, columnsWidth, isResizing, setColumnsOrder, setMultipleColumnWidths } =
-    useDataTableColumns<ExtendedDownloadClientItem>({
-      key: storeKey,
-      columns,
-    });
-
-  const lastStoreKey = useRef(storeKey);
-  const hydrated = useRef(false);
-  useEffect(() => {
-    if (lastStoreKey.current !== storeKey) {
-      lastStoreKey.current = storeKey;
-      hydrated.current = false;
-    }
-    if (hydrated.current) return;
-    if (savedOrder.length > 0) setColumnsOrder(savedOrder);
-    if (Object.keys(savedWidths).length > 0) {
-      setMultipleColumnWidths(Object.entries(savedWidths).map(([accessor, w]) => ({ accessor, width: w })));
-    }
-    // ponytail: defer hydrated flag so the persist effect skips the restore echo
-    requestAnimationFrame(() => {
-      hydrated.current = true;
-    });
-  }, [storeKey, savedOrder, savedWidths, setColumnsOrder, setMultipleColumnWidths]);
-
-  const prevOrder = useRef(columnsOrder);
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const orderChanged = JSON.stringify(columnsOrder) !== JSON.stringify(prevOrder.current);
-    prevOrder.current = columnsOrder;
-    if (orderChanged) persistOption({ columnOrder: JSON.stringify(columnsOrder) });
-  }, [columnsOrder, persistOption]);
-
-  const prevWidths = useRef(columnsWidth);
-  const pendingColumnWidths = useRef<string | null>(null);
-  const columnWidthSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const saveOptionToServerRef = useRef(saveOptionToServer);
-  useEffect(() => {
-    saveOptionToServerRef.current = saveOptionToServer;
-  }, [saveOptionToServer]);
-  useEffect(() => {
-    if (!hydrated.current || isResizing) return;
-    const widthsChanged = JSON.stringify(columnsWidth) !== JSON.stringify(prevWidths.current);
-    prevWidths.current = columnsWidth;
-    if (!widthsChanged) return;
-
-    const serializedWidths = JSON.stringify(columnWidthsToRecord(columnsWidth));
-    setOptions({ newOptions: { columnWidths: serializedWidths } });
-    pendingColumnWidths.current = serializedWidths;
-    if (columnWidthSaveTimer.current !== null) clearTimeout(columnWidthSaveTimer.current);
-    columnWidthSaveTimer.current = setTimeout(() => {
-      const value = pendingColumnWidths.current;
-      pendingColumnWidths.current = null;
-      columnWidthSaveTimer.current = null;
-      if (value !== null) saveOptionToServerRef.current({ columnWidths: value });
-    }, COLUMN_WIDTH_SAVE_DELAY_MS);
-  }, [columnsWidth, isResizing, setOptions]);
-  useEffect(
-    () => () => {
-      if (columnWidthSaveTimer.current !== null) clearTimeout(columnWidthSaveTimer.current);
-      const value = pendingColumnWidths.current;
-      pendingColumnWidths.current = null;
-      if (value !== null) saveOptionToServerRef.current({ columnWidths: value });
-    },
-    [],
-  );
+  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+    columns,
+    columnAccessors,
+    columnOrder: options.columnOrder,
+    columnWidths: options.columnWidths,
+    itemId,
+    storeKeyPrefix: "downloads",
+    onLayoutChange: persistOption,
+  });
 
   const handleContextMenu = useCallback(
     ({ record, event }: { record: ExtendedDownloadClientItem; event: React.MouseEvent }) => {
@@ -802,9 +741,6 @@ export default function DownloadClientsWidget({
     );
   }
 
-  let tablePointerEvents: React.CSSProperties["pointerEvents"];
-  if (isEditMode) tablePointerEvents = "none";
-
   let rowContextMenuHandler: typeof handleContextMenu | undefined = handleContextMenu;
   if (isEditMode) rowContextMenuHandler = undefined;
 
@@ -822,35 +758,19 @@ export default function DownloadClientsWidget({
       )}
 
       <Box style={{ flex: 1, minHeight: 0, position: "relative" }}>
-        <DataTable
-          style={{ pointerEvents: tablePointerEvents }}
-          withTableBorder={false}
-          borderRadius={0}
-          highlightOnHover
-          striped="odd"
-          stripedColor={{ dark: "dark.7", light: "gray.0" }}
-          highlightOnHoverColor={{ dark: "dark.5", light: "gray.1" }}
-          verticalAlign="center"
+        <HomarrDataTable
+          isEditMode={isEditMode}
+          cellPadding={`${size.cellPadding}px 8px`}
           fetching={isFetching && currentItems.length === 0}
-          loaderBackgroundBlur={2}
           fz={size.fontSize}
           records={sortedData}
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
-          textSelectionDisabled
           sortStatus={sortStatus}
           onSortStatusChange={setSortStatus}
           noRecordsText={t("errors.noItems")}
           idAccessor={(record) => `${record.integration.id}:${record.id}`}
-          height="100%"
           className="downloads-table"
-          defaultColumnProps={{
-            noWrap: true,
-            draggable: true,
-            resizable: true,
-            cellsStyle: () => ({ padding: `${size.cellPadding}px 8px` }),
-          }}
-          scrollAreaProps={{ type: "auto", scrollbarSize: 6 }}
           customRowAttributes={(_, index) => ({ "data-row-index": index })}
           onRowContextMenu={rowContextMenuHandler}
           rowBackgroundColor={(record) => rowBgAlpha[record.state]}

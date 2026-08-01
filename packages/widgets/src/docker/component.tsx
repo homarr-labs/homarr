@@ -1,23 +1,58 @@
 "use client";
 
-import { useMemo } from "react";
-import { ActionIcon, Avatar, Badge, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
-import type { IconProps } from "@tabler/icons-react";
-import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRefresh, IconRotateClockwise } from "@tabler/icons-react";
-import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";
-import { MantineReactTable } from "mantine-react-table";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ActionIcon, Avatar, Badge, Box, Center, Group, Menu, Portal, Stack, Text, Tooltip } from "@mantine/core";
+import {
+  IconBrandDocker,
+  IconCategoryPlus,
+  IconDots,
+  IconFileText,
+  IconPlayerPlay,
+  IconPlayerStop,
+  IconRefresh,
+  IconRotateClockwise,
+  IconTrash,
+} from "@tabler/icons-react";
+import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { useOptionalBoard } from "@homarr/boards/context";
 import { formatBytes, useTimeAgo } from "@homarr/common";
 import type { ContainerState } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
+import { useModalAction } from "@homarr/modals";
+import { AddDockerAppToHomarr } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
+import { HomarrDataTable } from "../common/homarr-data-table";
+import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 import { getDockerColumnVisibility } from "./layout";
+
+type DockerContainer = RouterOutputs["docker"]["getContainers"]["containers"][number];
+type ContainerAction = "start" | "stop" | "restart" | "remove";
+
+interface ContextMenuState {
+  x: number;
+  y: number;
+  container: DockerContainer;
+}
+
+interface ContainerActionHandlers {
+  onAction: (action: ContainerAction, container: DockerContainer) => void;
+  onAddToHomarr: (container: DockerContainer) => void;
+  onOpenLogs: (container: DockerContainer) => void;
+}
+
+const columnAccessors = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"] as const;
+const containerMenuWidth = 240;
+
+const createContainerLogsPath = (container: Pick<DockerContainer, "id" | "name">) =>
+  `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}`;
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useScopedI18n("docker.field.state.option");
@@ -29,173 +64,142 @@ const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   );
 };
 
-const actionIconIconStyle: IconProps["style"] = {
-  height: "var(--ai-icon-size)",
-  width: "var(--ai-icon-size)",
-};
-
 const createColumns = (
   t: ReturnType<typeof useScopedI18n<"docker">>,
-  isEditMode: boolean,
-): MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] => [
+  handlers: ContainerActionHandlers,
+  sortingEnabled: boolean,
+): DataTableColumn<DockerContainer>[] => [
   {
-    id: "name",
-    accessorKey: "name",
-    header: t("field.name.label"),
-    Cell({ renderedCellValue, row }) {
-      return (
-        <Group gap="xs" wrap="nowrap">
-          <Avatar variant="outline" size={20} src={row.original.iconUrl} />
-          <Text p="0.5" size="sm" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-            {renderedCellValue}
-          </Text>
-        </Group>
-      );
-    },
-  },
-  {
-    id: "state",
-    accessorKey: "state",
-    size: 100,
-    header: t("field.state.label"),
-    Cell({ row }) {
-      return <ContainerStateBadge state={row.original.state} />;
-    },
-  },
-  {
-    id: "host",
-    accessorKey: "host",
-    size: 100,
-    header: t("field.host.label"),
-    Cell({ row }) {
-      return (
-        <Text size="xs" truncate="end">
-          {row.original.host}
+    accessor: "name",
+    title: t("field.name.label"),
+    width: 180,
+    ellipsis: true,
+    sortable: sortingEnabled,
+    render: (container) => (
+      <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
+        <Avatar
+          variant="outline"
+          radius="sm"
+          size={20}
+          styles={{ image: { objectFit: "contain" } }}
+          src={container.iconUrl}
+          style={{ flexShrink: 0 }}
+        >
+          {container.name.at(0)?.toUpperCase()}
+        </Avatar>
+        <Text size="sm" truncate>
+          {container.name}
         </Text>
-      );
-    },
+      </Group>
+    ),
   },
   {
-    id: "cpuUsage",
-    sortingFn: (rowA, rowB) => {
-      const cpuUsageA = safeValue(rowA.original.cpuUsage);
-      const cpuUsageB = safeValue(rowB.original.cpuUsage);
-
-      return cpuUsageA - cpuUsageB;
-    },
-    accessorKey: "cpuUsage",
-    size: 80,
-    header: t("field.stats.cpu.label"),
-    Cell({ row }) {
-      const cpuUsage = safeValue(row.original.cpuUsage);
-
+    accessor: "state",
+    title: t("field.state.label"),
+    width: 100,
+    sortable: sortingEnabled,
+    render: (container) => <ContainerStateBadge state={container.state} />,
+  },
+  {
+    accessor: "host",
+    title: t("field.host.label"),
+    width: 120,
+    sortable: sortingEnabled,
+    ellipsis: true,
+    render: (container) => (
+      <Text size="xs" truncate title={container.host}>
+        {container.host}
+      </Text>
+    ),
+  },
+  {
+    accessor: "cpuUsage",
+    title: t("field.stats.cpu.label"),
+    width: 80,
+    sortable: sortingEnabled,
+    render: (container) => {
+      const cpuUsage = safeValue(container.cpuUsage);
       return (
-        <Text size="xs" c={cpuUsageColor(cpuUsage, row.original.state)}>
+        <Text size="xs" c={cpuUsageColor(cpuUsage, container.state)}>
           {cpuUsage.toFixed(2)}%
         </Text>
       );
     },
   },
   {
-    id: "memoryUsage",
-    sortingFn: (rowA, rowB) => {
-      const memoryUsageA = safeValue(rowA.original.memoryUsage);
-      const memoryUsageB = safeValue(rowB.original.memoryUsage);
-
-      return memoryUsageA - memoryUsageB;
-    },
-    accessorKey: "memoryUsage",
-    size: 80,
-    header: t("field.stats.memory.label"),
-    Cell({ row }) {
-      const bytesUsage = safeValue(row.original.memoryUsage);
-
+    accessor: "memoryUsage",
+    title: t("field.stats.memory.label"),
+    width: 100,
+    sortable: sortingEnabled,
+    render: (container) => {
+      const memoryUsage = safeValue(container.memoryUsage);
       return (
-        <Text size="xs" c={memoryUsageColor(bytesUsage, row.original.state)}>
-          {formatBytes(bytesUsage)}
+        <Text size="xs" c={memoryUsageColor(memoryUsage, container.state)}>
+          {formatBytes(memoryUsage)}
         </Text>
       );
     },
   },
   {
-    id: "actions",
-    accessorKey: "actions",
-    size: 80,
-    header: t("action.title"),
-    enableSorting: false,
-    Cell({ row }) {
-      const utils = clientApi.useUtils();
-      // eslint-disable-next-line no-restricted-syntax
-      const onSettled = async () => {
-        await utils.docker.getContainers.invalidate();
-      };
-      const { mutateAsync: startContainer } = clientApi.docker.startAll.useMutation({ onSettled });
-      const { mutateAsync: stopContainer } = clientApi.docker.stopAll.useMutation({ onSettled });
-      const { mutateAsync: restartContainer } = clientApi.docker.restartAll.useMutation({ onSettled });
-
-      const handleActionAsync = async (action: "start" | "stop" | "restart") => {
-        const mutation = action === "start" ? startContainer : action === "stop" ? stopContainer : restartContainer;
-
-        await mutation(
-          { ids: [row.original.id] },
-          {
-            onSuccess() {
-              showSuccessNotification({
-                title: t(`action.${action}.notification.success.title`),
-                message: t(`action.${action}.notification.success.message`),
-              });
-            },
-            onError() {
-              showErrorNotification({
-                title: t(`action.${action}.notification.error.title`),
-                message: t(`action.${action}.notification.error.message`),
-              });
-            },
-          },
-        );
-      };
-
-      return (
-        <Group wrap="nowrap" gap="xs">
-          <Tooltip label={row.original.state === "running" ? t("action.stop.label") : t("action.start.label")}>
-            <ActionIcon
-              variant="subtle"
-              size="xs"
-              radius="100%"
-              disabled={isEditMode}
-              onClick={() => handleActionAsync(row.original.state === "running" ? "stop" : "start")}
-            >
-              {row.original.state === "running" ? (
-                <IconPlayerStop style={actionIconIconStyle} />
-              ) : (
-                <IconPlayerPlay style={actionIconIconStyle} />
-              )}
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip label={t("action.restart.label")}>
-            <ActionIcon
-              variant="subtle"
-              size="xs"
-              radius="100%"
-              disabled={isEditMode}
-              onClick={() => handleActionAsync("restart")}
-            >
-              <IconRotateClockwise style={actionIconIconStyle} />
-            </ActionIcon>
-          </Tooltip>
-        </Group>
-      );
-    },
+    accessor: "actions",
+    title: "",
+    width: 44,
+    textAlign: "right",
+    render: (container) => <ContainerMenuButton container={container} handlers={handlers} />,
   },
 ];
+
+const compareContainers = (
+  first: DockerContainer,
+  second: DockerContainer,
+  accessor: DataTableSortStatus<DockerContainer>["columnAccessor"],
+) => {
+  if (accessor === "cpuUsage") return safeValue(first.cpuUsage) - safeValue(second.cpuUsage);
+  if (accessor === "memoryUsage") return safeValue(first.memoryUsage) - safeValue(second.memoryUsage);
+
+  const firstValue = first[accessor as "name" | "state" | "host"];
+  const secondValue = second[accessor as "name" | "state" | "host"];
+  return String(firstValue ?? "").localeCompare(String(secondValue ?? ""));
+};
+
+const useContainerAction = (action: ContainerAction) => {
+  const t = useScopedI18n("docker.action");
+  const utils = clientApi.useUtils();
+
+  return clientApi.docker[`${action}All`].useMutation({
+    async onSettled() {
+      await utils.docker.getContainers.invalidate();
+    },
+    onSuccess() {
+      showSuccessNotification({
+        title: t(`${action}.notification.success.title`),
+        message: t(`${action}.notification.success.message`),
+      });
+    },
+    onError() {
+      showErrorNotification({
+        title: t(`${action}.notification.error.title`),
+        message: t(`${action}.notification.error.message`),
+      });
+    },
+  });
+};
 
 export default function DockerWidget({
   options,
   width,
   isEditMode,
   displayMode,
+  boardId,
+  itemId,
+  setOptions,
 }: WidgetComponentProps<"dockerContainers">) {
   const t = useScopedI18n("docker");
+  const tWidget = useScopedI18n("widget.dockerContainers");
+  const { openModal } = useModalAction(AddDockerAppToHomarr);
+  const board = useOptionalBoard();
+  const { data: session } = useSession();
+  const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const isAdvanced = displayMode === "advanced";
   const isTiny = !isAdvanced && width <= 256;
 
@@ -204,84 +208,137 @@ export default function DockerWidget({
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
 
-  const totalContainers = containers.length;
+  const { mutate: startContainer } = useContainerAction("start");
+  const { mutate: stopContainer } = useContainerAction("stop");
+  const { mutate: restartContainer } = useContainerAction("restart");
+  const { mutate: removeContainer } = useContainerAction("remove");
+  const handleContainerAction = useCallback(
+    (action: ContainerAction, container: DockerContainer) => {
+      if (action === "start") startContainer({ ids: [container.id] });
+      else if (action === "stop") stopContainer({ ids: [container.id] });
+      else if (action === "restart") restartContainer({ ids: [container.id] });
+      else removeContainer({ ids: [container.id] });
+    },
+    [removeContainer, restartContainer, startContainer, stopContainer],
+  );
+  const handleOpenLogs = useCallback(
+    (container: DockerContainer) => window.location.assign(createContainerLogsPath(container)),
+    [],
+  );
+  const handleAddToHomarr = useCallback(
+    (container: DockerContainer) => openModal({ selectedContainers: [container] }),
+    [openModal],
+  );
+  const actionHandlers = useMemo<ContainerActionHandlers>(
+    () => ({
+      onAction: handleContainerAction,
+      onAddToHomarr: handleAddToHomarr,
+      onOpenLogs: handleOpenLogs,
+    }),
+    [handleAddToHomarr, handleContainerAction, handleOpenLogs],
+  );
 
-  const totals = useMemo(() => {
-    return containers.reduce(
-      (acc, container) => {
-        acc.cpu += safeValue(container.cpuUsage);
-        acc.memory += safeValue(container.memoryUsage);
-        return acc;
-      },
-      { cpu: 0, memory: 0 },
-    );
-  }, [containers]);
-
-  const columns = useMemo(() => createColumns(t, isEditMode), [isEditMode, t]);
-
-  const columnVisibility: MRT_VisibilityState = getDockerColumnVisibility(options.columns, width, isAdvanced);
-
-  const table = useTranslatedMantineReactTable({
-    columns,
-    data: containers,
-    enablePagination: false,
-    enableTopToolbar: isAdvanced,
-    enableBottomToolbar: false,
-    enableColumnActions: isAdvanced,
-    enableSorting: (isAdvanced || options.enableRowSorting) && !isEditMode,
-    enableStickyHeader: isAdvanced,
-    enableColumnOrdering: isAdvanced && !isEditMode,
-    enableRowSelection: false,
-    enableFullScreenToggle: false,
-    enableGlobalFilter: isAdvanced,
-    enableDensityToggle: false,
-    enableFilters: false,
-    enableHiding: isAdvanced,
-    initialState: {
-      sorting: [{ id: options.defaultSort, desc: options.descendingDefaultSort }],
-      density: "xs",
-    },
-    state: {
-      columnVisibility,
-    },
-    mantinePaperProps: {
-      flex: 1,
-      withBorder: false,
-      shadow: undefined,
-    },
-    mantineTableProps: {
-      className: "docker-widget-table",
-      style: {
-        tableLayout: "fixed",
-      },
-    },
-    mantineTableHeadProps: {
-      fz: "xs",
-    },
-    mantineTableHeadCellProps: {
-      p: 4,
-    },
-    mantineTableBodyCellProps: {
-      p: 4,
-    },
-    mantineTableContainerProps: {
-      style: {
-        height: "100%",
-        pointerEvents: isEditMode ? "none" : undefined,
-      },
-    },
+  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
+    onError: () =>
+      showErrorNotification({
+        title: tWidget("error.layoutSaveTitle"),
+        message: tWidget("error.layoutSaveMessage"),
+      }),
+  });
+  const persistLayout = useTableLayoutPersistence({
+    boardId,
+    hasChangeAccess,
+    itemId,
+    saveItemOptions,
+    setOptions,
   });
 
-  if (!isAdvanced && options.columns.length === 0)
+  const defaultDirection = options.descendingDefaultSort ? "desc" : "asc";
+  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<DockerContainer>>({
+    columnAccessor: options.defaultSort,
+    direction: defaultDirection,
+  });
+  useEffect(() => {
+    setSortStatus({ columnAccessor: options.defaultSort, direction: defaultDirection });
+  }, [defaultDirection, options.defaultSort]);
+
+  const sortedContainers = useMemo(() => {
+    const multiplier = sortStatus.direction === "desc" ? -1 : 1;
+    return [...containers].toSorted(
+      (first, second) => compareContainers(first, second, sortStatus.columnAccessor) * multiplier,
+    );
+  }, [containers, sortStatus]);
+
+  const totals = useMemo(
+    () =>
+      containers.reduce(
+        (acc, container) => {
+          acc.cpu += safeValue(container.cpuUsage);
+          acc.memory += safeValue(container.memoryUsage);
+          return acc;
+        },
+        { cpu: 0, memory: 0 },
+      ),
+    [containers],
+  );
+
+  const columnVisibility = useMemo(
+    () => getDockerColumnVisibility(options.columns, width, isAdvanced),
+    [isAdvanced, options.columns, width],
+  );
+  const columns = useMemo(() => {
+    const sortingEnabled = (isAdvanced || options.enableRowSorting) && !isEditMode;
+    return createColumns(t, actionHandlers, sortingEnabled).filter(
+      ({ accessor }) => columnVisibility[String(accessor) as keyof typeof columnVisibility],
+    );
+  }, [actionHandlers, columnVisibility, isAdvanced, isEditMode, options.enableRowSorting, t]);
+  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+    columns,
+    columnAccessors,
+    columnOrder: options.columnOrder,
+    columnWidths: options.columnWidths,
+    itemId,
+    storeKeyPrefix: "docker-containers",
+    onLayoutChange: persistLayout,
+  });
+
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
+  const closeContextMenu = useCallback(() => setContextMenu(null), []);
+  const handleContextMenu = useCallback(({ record, event }: { record: DockerContainer; event: React.MouseEvent }) => {
+    event.preventDefault();
+    setContextMenu({ x: event.clientX, y: event.clientY, container: record });
+  }, []);
+
+  if (!isAdvanced && options.columns.length === 0) {
     return (
       <Center h="100%">
         <Text>{t("error.noColumns")}</Text>
       </Center>
     );
+  }
 
   return (
-    <Stack gap={0} h="100%" display="flex">
-      <MantineReactTable table={table} />
+    <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
+      <Box style={{ flex: 1, minHeight: 0 }}>
+        <HomarrDataTable
+          isEditMode={isEditMode}
+          cellPadding={width < 400 ? "2px 8px" : "4px 8px"}
+          rowCursor="default"
+          fetching={isFetching && containers.length === 0}
+          fz={width < 400 ? "xs" : "sm"}
+          records={sortedContainers}
+          noRecordsText={tWidget("empty.noContainers")}
+          columns={effectiveColumns}
+          storeColumnsKey={storeKey}
+          sortStatus={sortStatus}
+          onSortStatusChange={(isAdvanced || options.enableRowSorting) && !isEditMode ? setSortStatus : undefined}
+          idAccessor="id"
+          onRowContextMenu={isEditMode ? undefined : handleContextMenu}
+          onScroll={() => {
+            if (contextMenu) closeContextMenu();
+          }}
+        />
+      </Box>
 
       {(isAdvanced || !isTiny) && (
         <Group
@@ -290,23 +347,22 @@ export default function DockerWidget({
             borderTop: "0.0625rem solid var(--border-color)",
           }}
           p={4}
+          wrap="nowrap"
         >
           <Group gap={4} wrap="nowrap">
             <IconBrandDocker size={20} style={{ flexShrink: 0 }} />
-            <Text size="sm" truncate="end">
-              {t("table.footer", { count: totalContainers.toString() })}
+            <Text size="sm" truncate>
+              {t("table.footer", { count: containers.length.toString() })}
             </Text>
           </Group>
 
-          <Group gap="sm" wrap="wrap" justify="flex-end" style={{ flex: 1, minWidth: 0 }}>
+          <Group gap="sm" wrap="nowrap" justify="flex-end" style={{ minWidth: 0 }}>
             <Text size="sm" style={{ whiteSpace: "nowrap" }}>
               {t("table.totalCpu", { cpu: totals.cpu.toFixed(2) })}
             </Text>
-
             <Text size="sm" style={{ whiteSpace: "nowrap" }}>
               {t("table.totalMemory", { memory: formatBytes(totals.memory) })}
             </Text>
-
             <Tooltip label={t("table.refresh.lastUpdated", { when: relativeTime })}>
               <ActionIcon
                 size="sm"
@@ -316,12 +372,161 @@ export default function DockerWidget({
                 onClick={() => void refetch()}
                 aria-label={t("table.refresh.lastUpdated", { when: relativeTime })}
               >
-                <IconRefresh style={actionIconIconStyle} />
+                <IconRefresh size={16} />
               </ActionIcon>
             </Tooltip>
           </Group>
         </Group>
       )}
+
+      {contextMenu && <ContainerContextMenu state={contextMenu} handlers={actionHandlers} onClose={closeContextMenu} />}
     </Stack>
+  );
+}
+
+function ContainerMenuButton({
+  container,
+  handlers,
+}: {
+  container: DockerContainer;
+  handlers: ContainerActionHandlers;
+}) {
+  const t = useScopedI18n("docker.action");
+  const [opened, setOpened] = useState(false);
+  const close = () => setOpened(false);
+
+  return (
+    <Menu opened={opened} onChange={setOpened} closeOnItemClick={false} withinPortal position="bottom-end" shadow="sm">
+      <Menu.Target>
+        <ActionIcon
+          variant="subtle"
+          color="gray"
+          size="sm"
+          aria-label={t("title")}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <IconDots size={16} />
+        </ActionIcon>
+      </Menu.Target>
+      <Menu.Dropdown w={containerMenuWidth} miw={containerMenuWidth} maw={containerMenuWidth}>
+        <ContainerActionItems container={container} handlers={handlers} onClose={close} />
+      </Menu.Dropdown>
+    </Menu>
+  );
+}
+
+function ContainerActionItems({
+  container,
+  handlers,
+  onClose,
+}: {
+  container: DockerContainer;
+  handlers: ContainerActionHandlers;
+  onClose: () => void;
+}) {
+  const t = useScopedI18n("docker.action");
+  const [confirmRemove, setConfirmRemove] = useState(false);
+  const stateAction = container.state === "running" ? "stop" : "start";
+  const StateIcon = stateAction === "stop" ? IconPlayerStop : IconPlayerPlay;
+
+  const invokeAction = (action: ContainerAction) => {
+    handlers.onAction(action, container);
+    onClose();
+  };
+
+  return (
+    <>
+      <Menu.Label title={container.name} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        {container.name}
+      </Menu.Label>
+      <Menu.Item
+        leftSection={<IconFileText size={14} />}
+        onClick={() => {
+          handlers.onOpenLogs(container);
+          onClose();
+        }}
+      >
+        {t("logs.label")}
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item
+        color={stateAction === "start" ? "green" : "red"}
+        leftSection={<StateIcon size={14} />}
+        onClick={() => invokeAction(stateAction)}
+      >
+        {t(`${stateAction}.label`)}
+      </Menu.Item>
+      <Menu.Item color="orange" leftSection={<IconRotateClockwise size={14} />} onClick={() => invokeAction("restart")}>
+        {t("restart.label")}
+      </Menu.Item>
+      {!confirmRemove ? (
+        <Menu.Item color="red" leftSection={<IconTrash size={14} />} onClick={() => setConfirmRemove(true)}>
+          {t("remove.label")}
+        </Menu.Item>
+      ) : (
+        <Menu.Item color="red" leftSection={<IconTrash size={14} />} onClick={() => invokeAction("remove")}>
+          {t("remove.confirm")}
+        </Menu.Item>
+      )}
+      <Menu.Divider />
+      <Menu.Item
+        leftSection={<IconCategoryPlus size={14} />}
+        onClick={() => {
+          handlers.onAddToHomarr(container);
+          onClose();
+        }}
+      >
+        {t("addToHomarr.label")}
+      </Menu.Item>
+    </>
+  );
+}
+
+function ContainerContextMenu({
+  state,
+  handlers,
+  onClose,
+}: {
+  state: ContextMenuState;
+  handlers: ContainerActionHandlers;
+  onClose: () => void;
+}) {
+  return (
+    <Portal>
+      <Box
+        pos="fixed"
+        top={0}
+        left={0}
+        w="100vw"
+        h="100vh"
+        style={{ zIndex: 1000 }}
+        onClick={onClose}
+        onContextMenu={(event) => {
+          event.preventDefault();
+          onClose();
+        }}
+      >
+        <Menu
+          opened
+          shadow="md"
+          position="bottom-start"
+          withinPortal={false}
+          closeOnItemClick={false}
+          onClose={onClose}
+        >
+          <Menu.Target>
+            <Box pos="fixed" style={{ left: state.x, top: state.y, width: 1, height: 1 }} />
+          </Menu.Target>
+          <Menu.Dropdown
+            w={containerMenuWidth}
+            miw={containerMenuWidth}
+            maw={containerMenuWidth}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <ContainerActionItems container={state.container} handlers={handlers} onClose={onClose} />
+          </Menu.Dropdown>
+        </Menu>
+      </Box>
+    </Portal>
   );
 }

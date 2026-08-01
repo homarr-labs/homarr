@@ -41,7 +41,11 @@ export interface StreamSession {
           audioCodec: string | null;
           videoCodec: string | null;
         };
+        isVideoDirect: boolean;
+        isAudioDirect: boolean;
+        containerChanged: boolean;
       };
+      bitrateKbps: number | null;
     } | null;
   } | null;
 }

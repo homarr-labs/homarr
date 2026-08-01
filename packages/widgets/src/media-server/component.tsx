@@ -26,6 +26,33 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 
+type TranscodingDecision = NonNullable<NonNullable<StreamSession["currentlyPlaying"]>["metadata"]>["transcoding"];
+
+type PlaybackStatus = "directPlay" | "directStream" | "transcodeVideo" | "transcodeAudio" | "transcoding";
+
+function getPlaybackStatus(transcoding: TranscodingDecision | undefined): PlaybackStatus {
+  if (!transcoding) return "directPlay";
+  const { isVideoDirect, isAudioDirect, containerChanged } = transcoding;
+
+  if (isVideoDirect && isAudioDirect) return containerChanged ? "directStream" : "directPlay";
+  if (!isVideoDirect && isAudioDirect) return "transcodeVideo";
+  if (isVideoDirect && !isAudioDirect) return "transcodeAudio";
+  return "transcoding";
+}
+
+const playbackStatusColorMap = {
+  directPlay: "green",
+  directStream: "teal",
+  transcodeVideo: "orange",
+  transcodeAudio: "yellow",
+  transcoding: "red",
+} satisfies Record<PlaybackStatus, string>;
+
+function formatBitrate(bitrateKbps: number | null | undefined): string | null {
+  if (!bitrateKbps || bitrateKbps <= 0) return null;
+  return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
+}
+
 export default function MediaServerWidget({
   options,
   integrationIds,
@@ -138,23 +165,30 @@ export default function MediaServerWidget({
                 const currentlyPlaying = row.original.currentlyPlaying;
                 if (!currentlyPlaying) return null;
 
-                const isTranscoding = Boolean(
-                  currentlyPlaying.metadata?.transcoding.target.videoCodec ??
-                  currentlyPlaying.metadata?.transcoding.target.audioCodec ??
-                  currentlyPlaying.metadata?.transcoding.container,
-                );
+                const status = getPlaybackStatus(currentlyPlaying.metadata?.transcoding);
+                const location = options.showLocation ? currentlyPlaying.location : null;
+                const bitrateLabel = options.showBitrate ? formatBitrate(currentlyPlaying.metadata?.bitrateKbps) : null;
 
                 return (
                   <Stack gap={4} align="flex-start">
-                    <Badge size="xs" variant="light" color={isTranscoding ? "orange" : "green"}>
-                      {isTranscoding ? t("items.transcoding") : t("items.directPlay")}
+                    <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
+                      {t(`items.${status}` as never)}
                     </Badge>
-                    {currentlyPlaying.location && (
-                      <Group gap={4} align="center">
-                        {currentlyPlaying.location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />}
-                        <Text size="10px" c="dimmed" tt="uppercase">
-                          {currentlyPlaying.location}
-                        </Text>
+                    {(location ?? bitrateLabel) && (
+                      <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                        <Group gap={4} align="center">
+                          {location && (location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />)}
+                          {location && (
+                            <Text size="10px" c="dimmed" tt="uppercase">
+                              {location}
+                            </Text>
+                          )}
+                        </Group>
+                        {bitrateLabel && (
+                          <Text size="10px" c="dimmed">
+                            {bitrateLabel}
+                          </Text>
+                        )}
                       </Group>
                     )}
                   </Stack>
@@ -165,7 +199,7 @@ export default function MediaServerWidget({
         : []),
     ];
     return result;
-  }, [isAdvanced, t, width]);
+  }, [isAdvanced, options.showBitrate, options.showLocation, t, width]);
 
   // Only render the flat list of sessions when the currentStreams change
   // Otherwise it will always create a new array reference and cause the table to re-render
@@ -231,16 +265,18 @@ export default function MediaServerWidget({
       },
     },
     mantineTableBodyCellProps: ({ row }) => ({
-      onClick: () => {
-        openModal(
-          {
-            item: row.original,
+      onClick: isEditMode
+        ? undefined
+        : () => {
+            openModal(
+              {
+                item: row.original,
+              },
+              {
+                title: row.original.sessionName,
+              },
+            );
           },
-          {
-            title: row.original.sessionName,
-          },
-        );
-      },
       py: 4,
       style: {
         overflowX: "hidden",
@@ -259,13 +295,16 @@ export default function MediaServerWidget({
   const playingCount = flatSessions.filter(
     (session) => session.currentlyPlaying && session.currentlyPlaying.playback?.state !== "paused",
   ).length;
-  const transcodingCount = flatSessions.filter((session) =>
-    Boolean(
-      session.currentlyPlaying?.metadata?.transcoding.target.videoCodec ??
-      session.currentlyPlaying?.metadata?.transcoding.target.audioCodec ??
-      session.currentlyPlaying?.metadata?.transcoding.container,
-    ),
-  ).length;
+  const transcodingCount = flatSessions.filter((session) => {
+    const status = getPlaybackStatus(session.currentlyPlaying?.metadata?.transcoding);
+    return status !== "directPlay" && status !== "directStream";
+  }).length;
+
+  const totalBitrateKbps = flatSessions.reduce(
+    (sum, session) => sum + (session.currentlyPlaying?.metadata?.bitrateKbps ?? 0),
+    0,
+  );
+  const totalBitrateLabel = options.showBitrate ? formatBitrate(totalBitrateKbps) : null;
 
   return (
     <Stack gap={0} h="100%" display="flex">
@@ -287,19 +326,34 @@ export default function MediaServerWidget({
           h={30}
           px="xs"
           pr="md"
-          justify="flex-end"
+          justify="space-between"
           style={{
             borderTop: "1px solid var(--border-color)",
           }}
         >
-          {uniqueIntegrations.map((integration) => (
-            <Group key={integration.integrationId} gap="xs" align="center">
-              <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
-              <Text className="media-server-name" size="sm">
-                {integration.integrationName}
+          <Group gap={4} wrap="nowrap">
+            <IconVideo size={16} style={{ flexShrink: 0 }} />
+            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+              {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
+                count: flatSessions.length,
+              })}
+            </Text>
+            {totalBitrateLabel && (
+              <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
               </Text>
-            </Group>
-          ))}
+            )}
+          </Group>
+          <Group gap="xs">
+            {uniqueIntegrations.map((integration) => (
+              <Group key={integration.integrationId} gap="xs" align="center">
+                <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
+                <Text className="media-server-name" size="sm">
+                  {integration.integrationName}
+                </Text>
+              </Group>
+            ))}
+          </Group>
         </Group>
       )}
     </Stack>

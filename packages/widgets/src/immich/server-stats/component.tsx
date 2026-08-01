@@ -3,6 +3,7 @@
 import React from "react";
 import { Group, Progress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconDatabase, IconPhoto, IconUsers, IconVideo } from "@tabler/icons-react";
+import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { formatBytes } from "@homarr/common";
@@ -33,8 +34,8 @@ export default function ImmichServerStatsWidget({
     staleTime: 15 * 60 * 1000,
   });
   setWidgetRuntimeQueries(widgetStateRef, [
-    { path: ["widget", "immich", "getServerStats"], input },
-    ...(albumsEnabled ? [{ path: ["widget", "immich", "getAlbums"], input: albumsInput }] : []),
+    getQueryKey(clientApi.widget.immich.getServerStats, input, "query"),
+    ...(albumsEnabled ? [getQueryKey(clientApi.widget.immich.getAlbums, albumsInput, "query")] : []),
   ]);
 
   if (!stats) return <WidgetEmptyState />;
@@ -81,6 +82,9 @@ export default function ImmichServerStatsWidget({
   return (
     <Stack gap="lg" h="100%" p="lg">
       {statsContent}
+      <Text size="xs" c="dimmed">
+        {t("widget.immich-serverStats.albumLimit", { count: MAX_ADVANCED_ALBUMS })}
+      </Text>
       <ScrollArea style={{ flex: 1, minHeight: 0 }}>
         <SimpleGrid cols={width >= 900 ? 2 : 1} spacing="xs">
           {sortedAlbums.map((album) => (

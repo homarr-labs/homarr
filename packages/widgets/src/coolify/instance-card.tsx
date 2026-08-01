@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import { Accordion, Anchor, Badge, Card, Group, Image, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
@@ -13,6 +12,7 @@ import { ServersSection } from "./servers-section";
 import { ServicesSection } from "./services-section";
 import type { CoolifyOptions, InstanceData } from "./types";
 import { COOLIFY_ICON_URL } from "./types";
+import { useAdvancedOpenSections } from "./use-advanced-open-sections";
 
 interface InstanceCardProps {
   instance: InstanceData;
@@ -33,27 +33,7 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced 
     key: `coolify-sections-${cardKey}`,
     defaultValue: ["applications"],
   });
-  const visibleSections = useMemo(
-    () =>
-      [
-        options.showServers ? "servers" : null,
-        options.showApplications ? "applications" : null,
-        options.showServices ? "services" : null,
-      ].filter((section): section is string => section !== null),
-    [options.showApplications, options.showServers, options.showServices],
-  );
-  const [advancedOpenSections, setAdvancedOpenSections] = useState(visibleSections);
-  const previousVisibleSectionsRef = useRef(visibleSections);
-
-  useEffect(() => {
-    const newlyVisibleSections = visibleSections.filter(
-      (section) => !previousVisibleSectionsRef.current.includes(section),
-    );
-    previousVisibleSectionsRef.current = visibleSections;
-    if (newlyVisibleSections.length === 0) return;
-
-    setAdvancedOpenSections((current) => [...new Set([...current, ...newlyVisibleSections])]);
-  }, [visibleSections]);
+  const [advancedOpenSections, setAdvancedOpenSections] = useAdvancedOpenSections(options);
 
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,

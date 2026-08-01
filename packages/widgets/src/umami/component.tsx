@@ -1,7 +1,9 @@
 "use client";
 
 import { Stack, Text } from "@mantine/core";
+import { getQueryKey } from "@trpc/react-query";
 
+import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -28,37 +30,36 @@ export default function UmamiWidget({
     limit: options.topCount,
   };
   setWidgetRuntimeQueries(widgetStateRef, [
-    {
-      path: ["widget", "umami", "getVisitorStats"],
-      input: {
+    getQueryKey(
+      clientApi.widget.umami.getVisitorStats,
+      {
         integrationIds,
         websiteId: options.websiteId,
         timeFrame: options.timeFrame,
         eventName: options.eventName || undefined,
       },
-    },
-    {
-      path: ["widget", "umami", "getActiveVisitors"],
-      input: { integrationId, websiteId: options.websiteId },
-    },
+      "query",
+    ),
+    getQueryKey(clientApi.widget.umami.getActiveVisitors, { integrationId, websiteId: options.websiteId }, "query"),
     ...(options.viewMode === "events"
       ? [
-          {
-            path: ["widget", "umami", "getMultiEventTimeSeries"],
-            input: {
+          getQueryKey(
+            clientApi.widget.umami.getMultiEventTimeSeries,
+            {
               integrationId,
               websiteId: options.websiteId,
               timeFrame: options.timeFrame,
               eventNames: [...options.eventNames].toSorted(),
             },
-          },
+            "query",
+          ),
         ]
       : []),
     ...(displayMode === "advanced" || options.viewMode === "topPages"
-      ? [{ path: ["widget", "umami", "getTopPages"], input: commonTopInput }]
+      ? [getQueryKey(clientApi.widget.umami.getTopPages, commonTopInput, "query")]
       : []),
     ...(displayMode === "advanced" || options.viewMode === "topReferrers"
-      ? [{ path: ["widget", "umami", "getTopReferrers"], input: commonTopInput }]
+      ? [getQueryKey(clientApi.widget.umami.getTopReferrers, commonTopInput, "query")]
       : []),
   ]);
 

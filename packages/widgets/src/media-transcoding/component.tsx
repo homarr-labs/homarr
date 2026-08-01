@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { getQueryKey } from "@trpc/react-query";
 import {
   Center,
   Divider,
@@ -60,7 +61,9 @@ export default function MediaTranscodingWidget({
     pageSize: queuePageSize,
     page: requestPagination.page,
   };
-  setWidgetRuntimeQueries(widgetStateRef, [{ path: ["widget", "mediaTranscoding", "getDataAsync"], input }]);
+  setWidgetRuntimeQueries(widgetStateRef, [
+    getQueryKey(clientApi.widget.mediaTranscoding.getDataAsync, input, "query"),
+  ]);
   const { data: transcodingData } = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input);
 
   const [view, setView] = useState<View>(options.defaultView);
