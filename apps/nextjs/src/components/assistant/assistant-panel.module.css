@@ -93,6 +93,8 @@
 }
 
 .floatingPanel {
+  container-name: assistant-widget;
+  container-type: size;
   position: fixed;
   z-index: 290;
   inset-inline-start: 50%;
@@ -258,6 +260,21 @@
 
   .runtimeButton {
     padding-inline: 0.5rem;
+  }
+
+  .reasoningButton {
+    width: 2.5rem;
+    min-width: 2.5rem;
+    max-width: 2.5rem;
+  }
+
+  .reasoningButton :global(.mantine-Button-label),
+  .reasoningButton :global(.mantine-Button-section[data-position="right"]) {
+    display: none;
+  }
+
+  .reasoningButton :global(.mantine-Button-section[data-position="left"]) {
+    margin-inline: 0;
   }
 }
 

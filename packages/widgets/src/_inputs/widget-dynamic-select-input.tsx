@@ -76,6 +76,8 @@ export const WidgetDynamicSelectInput = ({
         )}
       searchValue={search}
       onSearchChange={setSearch}
+      placeholder={tWidget("placeholder")}
+      nothingFoundMessage={t("common.noResults")}
       leftSection={isPending && <Loader size="xs" />}
       renderOption={({ option, checked }) => {
         return (

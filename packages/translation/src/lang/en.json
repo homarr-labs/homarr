@@ -2758,7 +2758,8 @@
           "description": "Custom URLs must resolve to a public IP address. Private and local hosts are rejected."
         },
         "station": {
-          "label": "Station"
+          "label": "Station",
+          "placeholder": "Search for a station"
         }
       },
       "error": {
@@ -4887,7 +4888,8 @@
         },
         "conversation": {
           "label": "Pinned conversation",
-          "description": "This selector stays hidden while the widget follows the current conversation."
+          "description": "Choose the saved conversation this widget should keep available.",
+          "placeholder": "Select a saved conversation"
         }
       },
       "pinned": {
