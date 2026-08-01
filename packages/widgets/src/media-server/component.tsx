@@ -26,6 +26,35 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 
+type TranscodingDecision = NonNullable<
+  NonNullable<StreamSession["currentlyPlaying"]>["metadata"]
+>["transcoding"];
+
+type PlaybackStatus = "directPlay" | "directStream" | "transcodeVideo" | "transcodeAudio" | "transcoding";
+
+function getPlaybackStatus(transcoding: TranscodingDecision | undefined): PlaybackStatus {
+  if (!transcoding) return "directPlay";
+  const { isVideoDirect, isAudioDirect, containerChanged } = transcoding;
+
+  if (isVideoDirect && isAudioDirect) return containerChanged ? "directStream" : "directPlay";
+  if (!isVideoDirect && isAudioDirect) return "transcodeVideo";
+  if (isVideoDirect && !isAudioDirect) return "transcodeAudio";
+  return "transcoding";
+}
+
+const playbackStatusColorMap = {
+  directPlay: "green",
+  directStream: "teal",
+  transcodeVideo: "orange",
+  transcodeAudio: "yellow",
+  transcoding: "red",
+} satisfies Record<PlaybackStatus, string>;
+
+function formatBitrate(bitrateKbps: number | null | undefined): string | null {
+  if (!bitrateKbps || bitrateKbps <= 0) return null;
+  return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
+}
+
 export default function MediaServerWidget({ options, integrationIds }: WidgetComponentProps<"mediaServer">) {
   const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
     integrationIds,
@@ -122,23 +151,30 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
           const currentlyPlaying = row.original.currentlyPlaying;
           if (!currentlyPlaying) return null;
 
-          const isTranscoding = Boolean(
-            currentlyPlaying.metadata?.transcoding.target.videoCodec ??
-              currentlyPlaying.metadata?.transcoding.target.audioCodec ??
-              currentlyPlaying.metadata?.transcoding.container,
-          );
+          const status = getPlaybackStatus(currentlyPlaying.metadata?.transcoding);
+          const bitrateLabel = formatBitrate(currentlyPlaying.metadata?.bitrateKbps);
 
           return (
             <Stack gap={4} align="flex-start">
-              <Badge size="xs" variant="light" color={isTranscoding ? "orange" : "green"}>
-                {isTranscoding ? t("items.transcoding") : t("items.directPlay")}
+              <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
+                {t(`items.${status}` as never)}
               </Badge>
-              {currentlyPlaying.location && (
-                <Group gap={4} align="center">
-                  {currentlyPlaying.location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />}
-                  <Text size="10px" c="dimmed" tt="uppercase">
-                    {currentlyPlaying.location}
-                  </Text>
+              {(currentlyPlaying.location ?? bitrateLabel) && (
+                <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                  <Group gap={4} align="center">
+                    {currentlyPlaying.location &&
+                      (currentlyPlaying.location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />)}
+                    {currentlyPlaying.location && (
+                      <Text size="10px" c="dimmed" tt="uppercase">
+                        {currentlyPlaying.location}
+                      </Text>
+                    )}
+                  </Group>
+                  {bitrateLabel && (
+                    <Text size="10px" c="dimmed">
+                      {bitrateLabel}
+                    </Text>
+                  )}
                 </Group>
               )}
             </Stack>
@@ -238,6 +274,12 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
     };
   });
 
+  const totalBitrateKbps = flatSessions.reduce(
+    (sum, session) => sum + (session.currentlyPlaying?.metadata?.bitrateKbps ?? 0),
+    0,
+  );
+  const totalBitrateLabel = options.showBitrate ? formatBitrate(totalBitrateKbps) : null;
+
   return (
     <Stack gap={0} h="100%" display="flex">
       <MantineReactTable table={table} />
@@ -246,19 +288,34 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
         h={30}
         px="xs"
         pr="md"
-        justify="flex-end"
+        justify="space-between"
         style={{
           borderTop: "1px solid var(--border-color)",
         }}
       >
-        {uniqueIntegrations.map((integration) => (
-          <Group key={integration.integrationKind} gap="xs" align="center">
-            <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
-            <Text className="media-server-name" size="sm">
-              {integration.integrationName}
+        <Group gap={4} wrap="nowrap">
+          <IconVideo size={16} style={{ flexShrink: 0 }} />
+          <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+            {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
+              count: flatSessions.length,
+            })}
+          </Text>
+          {totalBitrateLabel && (
+            <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+              {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
             </Text>
-          </Group>
-        ))}
+          )}
+        </Group>
+        <Group gap="xs">
+          {uniqueIntegrations.map((integration) => (
+            <Group key={integration.integrationKind} gap="xs" align="center">
+              <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
+              <Text className="media-server-name" size="sm">
+                {integration.integrationName}
+              </Text>
+            </Group>
+          ))}
+        </Group>
       </Group>
     </Stack>
   );

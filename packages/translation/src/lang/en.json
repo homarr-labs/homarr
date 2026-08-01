@@ -2736,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "Show only currently playing",
           "description": "Disabling this will not work for plex"
+        },
+        "showBitrate": {
+          "label": "Show bitrate",
+          "description": "Show the current playback bitrate next to the location"
+        },
+        "showLocation": {
+          "label": "Show location",
+          "description": "Show whether the stream is on your LAN or WAN"
         }
+      },
+      "footer": {
+        "streams": "{count, plural, one {# active stream} other {# active streams}}",
+        "totalBitrate": "Total: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Currently playing",
@@ -2745,6 +2757,9 @@
         "id": "Id",
         "status": "Status",
         "directPlay": "Direct play",
+        "directStream": "Direct stream",
+        "transcodeVideo": "Transcoding video",
+        "transcodeAudio": "Transcoding audio",
         "transcoding": "Transcoding",
         "paused": "Paused",
         "remaining": "{minutes} min left",

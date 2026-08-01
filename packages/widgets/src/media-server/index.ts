@@ -11,6 +11,8 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaServ
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showOnlyPlaying: factory.switch({ defaultValue: true, withDescription: true }),
+      showBitrate: factory.switch({ defaultValue: true, withDescription: true }),
+      showLocation: factory.switch({ defaultValue: true, withDescription: true }),
     }));
   },
   supportedIntegrations: getIntegrationKindsByCategory("mediaService"),
