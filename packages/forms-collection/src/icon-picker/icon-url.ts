@@ -1,1 +1,8 @@
-export const isDirectIconUrl = (value: string) => /^https?:\/\//i.test(value.trim());
+export const isDirectIconUrl = (value: string) => {
+  try {
+    const url = new URL(value.trim());
+    return (url.protocol === "http:" || url.protocol === "https:") && Boolean(url.hostname);
+  } catch {
+    return false;
+  }
+};
