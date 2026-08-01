@@ -220,6 +220,10 @@ export default function GridEditor({
             dragSnapshot.placements,
             getGridPlacements(changedGrid),
             dragSnapshot.itemId,
+            {
+              columnCount: dimensionsRef.current.columnCount,
+              rowCount: dimensionsRef.current.fixedRowCount ? dimensionsRef.current.rowCount : undefined,
+            },
           );
           if (swapped) {
             applyingControlledLayoutRef.current = true;

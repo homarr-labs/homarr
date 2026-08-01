@@ -137,6 +137,7 @@ export const FixedGridItem = ({
       onBlur={isEditMode ? handleBlur : undefined}
       onKeyDown={isEditMode ? handleKeyboard : undefined}
     >
+      {isEditMode && <span className={classes.dragAffordance} data-testid="board-grid-drag-affordance" aria-hidden />}
       {children}
       {isEditMode && (
         <span id={instructionsId} className={classes.liveRegion}>
