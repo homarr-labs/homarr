@@ -11,7 +11,7 @@ export const assistantWidget: WidgetDefinition = {
       {
         name: "Conversation",
         description: "Follow the active conversation or attach the widget to one persisted conversation.",
-        values: ["Current conversation", "Pinned conversation"],
+        values: { type: "select", options: ["Current conversation", "Pinned conversation"] },
         defaultValue: "Current conversation",
       },
       {
