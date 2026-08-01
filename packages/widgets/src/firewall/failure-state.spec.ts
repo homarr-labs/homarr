@@ -13,7 +13,12 @@ describe("firewall failure state", () => {
   it("rejects only after every dimension fails", () => {
     expect(hasTotalFirewallFailure([failedQuery, failedQuery, failedQuery, failedQuery])).toBe(true);
     expect(
-      hasTotalFirewallFailure([failedQuery, failedQuery, failedQuery, { ...failedQuery, data: [{ error: undefined }] }]),
+      hasTotalFirewallFailure([
+        failedQuery,
+        failedQuery,
+        failedQuery,
+        { ...failedQuery, data: [{ error: undefined }] },
+      ]),
     ).toBe(false);
   });
 
