@@ -402,7 +402,7 @@ func (m dashModel) View() tea.View {
 		}
 		b.WriteString("\n" + statusStyle.Render(m.status))
 	}
-	b.WriteString("\n\n" + helpStyle.Render("/ filter · ↑/↓ select · l logs · f follow · pgup/pgdn scroll · s stop · R restart · x remove · o open · c copy URL · r refresh · q quit"))
+	b.WriteString("\n\n" + helpStyle.Render("/ filter · ↑/↓ select · l logs · f follow · pgup/pgdn scroll · s stop · R restart · x remove · o open · c copy URL · r refresh · d development · q quit"))
 	b.WriteString("\n" + helpStyle.Render(runningLegend+" · "+stoppedLegend))
 	v := tea.NewView(b.String())
 	v.AltScreen = true
@@ -411,7 +411,5 @@ func (m dashModel) View() tea.View {
 }
 
 func RunDashboard() error {
-	p := tea.NewProgram(newDashModel())
-	_, err := p.Run()
-	return err
+	return runApp(true)
 }

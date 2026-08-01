@@ -1049,7 +1049,7 @@ func (m prsModel) View() tea.View {
 		b.WriteString("\n\n" + helpStyle.Render("q/esc cancel rebuild"))
 	} else if !m.pulling {
 		b.WriteString("\n\n" + helpStyle.Render("/ filter · ↑/↓ select · enter start/stop · R build locally · p pull remote · m demo · o PR · a app"))
-		b.WriteString("\n" + helpStyle.Render("b "+botState+" · r refresh · q quit"))
+		b.WriteString("\n" + helpStyle.Render("b "+botState+" · r refresh · d instances · q quit"))
 		b.WriteString("\n" + helpStyle.Render("l toggle logs · f follow · pgup/pgdn scroll"))
 	}
 	b.WriteString("\n" + helpStyle.Render("SOURCE: local Docker / remote GHCR · CI: "+legendCIYes+" pass "+legendCINo+" fail "+legendCIPend+" pending "+legendNone+" none · IMAGE: "+legendImageYes+" available "+legendImageNo+" not built"))
@@ -1060,7 +1060,5 @@ func (m prsModel) View() tea.View {
 }
 
 func RunDev() error {
-	p := tea.NewProgram(newPRsModel())
-	_, err := p.Run()
-	return err
+	return runApp(false)
 }
