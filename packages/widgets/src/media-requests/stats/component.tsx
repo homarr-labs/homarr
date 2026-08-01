@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon, Avatar, Box, Card, Grid, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Box, Card, Grid, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import type { Icon } from "@tabler/icons-react";
 import {
   IconDeviceTv,
@@ -34,6 +34,8 @@ export default function MediaServerWidget({
   integrationIds,
   isEditMode,
   width,
+  height,
+  displayMode,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const { data: requestStats } = clientApi.widget.mediaRequests.getStats.useQuery({
@@ -88,7 +90,12 @@ export default function MediaServerWidget({
     },
   ] satisfies { name: keyof RequestStats; icon: Icon; number: number }[];
 
-  const isTiny = width < 256;
+  const isTiny = displayMode !== "advanced" && (width < 256 || height < 180);
+  const visibleStats = displayMode === "advanced" ? data : data.slice(0, height < 120 ? 4 : 8);
+  const visibleUsers = requestStats.users.slice(
+    0,
+    displayMode === "advanced" ? 50 : Math.max(1, Math.floor(height / 44) - 3),
+  );
 
   return (
     <Box className={searchClasses.searchRoot}>
@@ -107,7 +114,7 @@ export default function MediaServerWidget({
             {t("titles.stats.main")}
           </Text>
           <Grid className="mediaRequests-stats-stats-grid" gap={4} w="100%">
-            {data.map((stat) => (
+            {visibleStats.map((stat) => (
               <Grid.Col
                 className={combineClasses("mediaRequests-stats-stat-wrapper", `mediaRequests-stats-stat-${stat.name}`)}
                 key={stat.name}
@@ -131,44 +138,61 @@ export default function MediaServerWidget({
           <Text className="mediaRequests-stats-users-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
             {t("titles.users.main")} ({t("titles.users.requests")})
           </Text>
-          <Stack className="mediaRequests-stats-users-wrapper" flex={1} w="100%" gap={4} style={{ overflow: "hidden" }}>
-            {requestStats.users.slice(0, 10).map((user) => (
-              <Card
-                component="a"
-                href={user.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={combineClasses(
-                  "mediaRequests-stats-users-user-wrapper",
-                  `mediaRequests-stats-users-user-${user.id}`,
-                  classes.card,
-                )}
-                key={user.id}
-                p="xs"
-                radius={board.itemRadius}
-              >
-                <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="sm" justify="space-between">
-                  <Group gap={4}>
-                    <Tooltip label={user.integration.name}>
-                      <Avatar
-                        className="mediaRequests-stats-users-user-avatar"
-                        size={20}
-                        src={user.avatar}
-                        bd={`2px solid ${user.integration.kind === "overseerr" ? OVERSEERR_COLOR : JELLYSEERR_COLOR}`}
-                      />
-                    </Tooltip>
-                    <Text className="mediaRequests-stats-users-user-userName" size="sm">
-                      {user.displayName}
+          <ScrollArea className="mediaRequests-stats-users-wrapper" flex={1} w="100%">
+            <Stack gap={4}>
+              {visibleUsers.map((user) => (
+                <Card
+                  component="a"
+                  href={user.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={combineClasses(
+                    "mediaRequests-stats-users-user-wrapper",
+                    `mediaRequests-stats-users-user-${user.id}`,
+                    classes.card,
+                  )}
+                  key={`${user.integration.id}:${user.id}`}
+                  p="xs"
+                  radius={board.itemRadius}
+                >
+                  <Group
+                    className="mediaRequests-stats-users-user-group"
+                    h="100%"
+                    p={0}
+                    gap="sm"
+                    justify="space-between"
+                  >
+                    <Group gap={4}>
+                      <Tooltip label={user.integration.name}>
+                        <Avatar
+                          className="mediaRequests-stats-users-user-avatar"
+                          size={20}
+                          src={user.avatar}
+                          bd={`2px solid ${user.integration.kind === "overseerr" ? OVERSEERR_COLOR : JELLYSEERR_COLOR}`}
+                        />
+                      </Tooltip>
+                      <Text className="mediaRequests-stats-users-user-userName" size="sm">
+                        {user.displayName}
+                      </Text>
+                    </Group>
+
+                    <Text className="mediaRequests-stats-users-user-request-count" size="md" fw={500}>
+                      {user.requestCount}
                     </Text>
                   </Group>
-
-                  <Text className="mediaRequests-stats-users-user-request-count" size="md" fw={500}>
-                    {user.requestCount}
-                  </Text>
-                </Group>
-              </Card>
-            ))}
-          </Stack>
+                </Card>
+              ))}
+            </Stack>
+          </ScrollArea>
+          {displayMode === "advanced" && (
+            <Group justify="center" gap={4}>
+              {requestStats.integrations.map((integration) => (
+                <Badge key={integration.id} size="xs" variant="light">
+                  {integration.name}
+                </Badge>
+              ))}
+            </Group>
+          )}
         </Stack>
       </Stack>
     </Box>

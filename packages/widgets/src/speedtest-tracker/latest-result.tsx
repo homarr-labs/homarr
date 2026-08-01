@@ -10,7 +10,7 @@ import { formatResultSpeed } from "./helpers";
 import { SectionLabel } from "./section-label";
 import { SpeedStatCard } from "./speed-stat-card";
 
-export function LatestResultSection({ result }: { result: SpeedtestTrackerResult }) {
+export function LatestResultSection({ result, width = 500 }: { result: SpeedtestTrackerResult; width?: number }) {
   const t = useScopedI18n("widget.speedtestTracker");
   const locale = useCurrentLocale();
   const timestamp = Intl.DateTimeFormat(locale, {
@@ -19,7 +19,8 @@ export function LatestResultSection({ result }: { result: SpeedtestTrackerResult
     hour: "2-digit",
     minute: "2-digit",
   }).format(result.created_at);
-  const cols = result.healthy !== null ? 4 : 3;
+  const metricCount = result.healthy !== null ? 4 : 3;
+  const cols = width < 230 ? 2 : metricCount;
 
   return (
     <Stack gap={6} h="100%">

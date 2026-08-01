@@ -5,6 +5,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("coolify", {
   icon: IconCloud,
+  queryKey: [["widget", "coolify"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showServers: factory.switch({

@@ -7,7 +7,12 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import { UmamiContent } from "./umami-content";
 
-export default function UmamiWidget({ options, integrationIds }: WidgetComponentProps<"umami">) {
+export default function UmamiWidget({
+  options,
+  integrationIds,
+  width,
+  displayMode = "compact",
+}: WidgetComponentProps<"umami">) {
   if (!options.websiteId || options.websiteId.trim() === "") {
     return <NoWebsiteConfigured />;
   }
@@ -23,6 +28,8 @@ export default function UmamiWidget({ options, integrationIds }: WidgetComponent
       chartType={options.chartType}
       viewMode={options.viewMode}
       topCount={options.topCount}
+      width={width}
+      displayMode={displayMode}
     />
   );
 }

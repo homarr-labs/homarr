@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Accordion, Anchor, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
@@ -18,9 +19,10 @@ interface SingleInstanceLayoutProps {
   options: CoolifyOptions;
   isTiny: boolean;
   widgetKey: string;
+  isAdvanced: boolean;
 }
 
-export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: SingleInstanceLayoutProps) {
+export function SingleInstanceLayout({ instance, options, isTiny, widgetKey, isAdvanced }: SingleInstanceLayoutProps) {
   const t = useScopedI18n("widget.coolify");
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${widgetKey}`,
@@ -30,6 +32,12 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
     key: `coolify-sections-${widgetKey}`,
     defaultValue: ["applications"],
   });
+  const visibleSections = [
+    options.showServers ? "servers" : null,
+    options.showApplications ? "applications" : null,
+    options.showServices ? "services" : null,
+  ].filter((section): section is string => section !== null);
+  const [advancedOpenSections, setAdvancedOpenSections] = useState(visibleSections);
 
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,
@@ -56,7 +64,13 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
           </Anchor>
         </Group>
 
-        <Accordion variant="contained" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
+        <Accordion
+          variant="contained"
+          chevronPosition="right"
+          multiple
+          value={isAdvanced ? advancedOpenSections : openSections}
+          onChange={isAdvanced ? setAdvancedOpenSections : setOpenSections}
+        >
           {options.showServers && (
             <ServersSection
               servers={instance.instanceInfo.servers}

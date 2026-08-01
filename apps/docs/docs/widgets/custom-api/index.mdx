@@ -1,8 +1,10 @@
 ---
 title: "Custom API"
-description: "The Custom API widget shows a Custom JSX v2 definition with server-side API requests, widget options, and actions."
+description: "Displays data from a custom API endpoint using configurable display types and optional JSX templates."
 hide_title: true
 ---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
@@ -10,15 +12,15 @@ import { customApiWidget } from ".";
 
 <WidgetHeader widget={customApiWidget} categories={["Custom", "API"]} />
 
-The Custom API widget shows a Custom JSX v2 definition. Create the definition in [Management → Custom Widgets](/docs/management/custom-widgets).
-
 A definition contains API sources, named requests, a widget options schema, and one safe JSX template.
 
 Temporary inputs exist only while the tile is mounted. Homarr encrypts source credentials separately.
 
 Homarr does not send these credentials to the browser. Homarr does not include them in an export.
 
-### Add the widget
+<WidgetInteractionGuide advancedView={false} />
+
+### Adding the widget
 
 <AddingWidget />
 
@@ -29,9 +31,8 @@ Select a refresh interval. The board item stores the definition ID and the valid
 Credentials remain on the server.
 
 :::note
-
-Enable the definition before you use it. The definition must also be available to the board.
-
+Custom API widgets must first be created in **Management → Custom Widgets** before they appear in the widget picker.
+Action buttons can only be executed by administrators.
 :::
 
 ### Permissions and actions

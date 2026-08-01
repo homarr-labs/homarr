@@ -13,19 +13,36 @@ export const notificationsRouter = createTRPCRouter({
   getNotifications: publicProcedure
     .unstable_concat(createNotificationsIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const innerHandler = notificationsRequestHandler.handler(integration, {});
-        const { data, timestamp } = await innerHandler.getDataAsync();
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const innerHandler = notificationsRequestHandler.handler(integration, {});
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
-        return {
-          integration: {
-            id: integration.id,
-            name: integration.name,
-            kind: integration.kind,
-            updatedAt: timestamp,
-          },
-          data,
-        };
-      });
+          return {
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+              updatedAt: timestamp,
+            },
+            data,
+            error: undefined as string | undefined,
+          };
+        },
+        {
+          fallback: (integration, error) => ({
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+              updatedAt: new Date(0),
+            },
+            data: [],
+            error: error instanceof Error ? error.message : String(error),
+          }),
+          throwOnAllFailures: true,
+        },
+      );
     }),
 });

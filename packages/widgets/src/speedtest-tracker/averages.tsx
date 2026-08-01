@@ -10,7 +10,7 @@ import { formatStatsSpeed } from "./helpers";
 import { SectionLabel } from "./section-label";
 import { SpeedStatCard } from "./speed-stat-card";
 
-export function AveragesSection({ stats }: { stats: SpeedtestTrackerStats }) {
+export function AveragesSection({ stats, width = 500 }: { stats: SpeedtestTrackerStats; width?: number }) {
   const t = useScopedI18n("widget.speedtestTracker");
 
   return (
@@ -18,7 +18,7 @@ export function AveragesSection({ stats }: { stats: SpeedtestTrackerStats }) {
       <SectionLabel>
         {t("averages")} · {t("tests", { count: stats.total_results.toString() })}
       </SectionLabel>
-      <SimpleGrid cols={3} spacing="xs" style={{ flex: 1, gridTemplateRows: "1fr" }}>
+      <SimpleGrid cols={width < 220 ? 1 : 3} spacing="xs" style={{ flex: 1, gridTemplateRows: "1fr" }}>
         <SpeedStatCard
           icon={IconArrowDown}
           color="blue"

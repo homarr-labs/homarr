@@ -4,6 +4,8 @@ description: "Displays host patch statistics from PatchMon including update and 
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -70,6 +72,10 @@ The widget adapts its layout based on the available space:
 
 When the widget has enough space, a "last updated" timestamp appears at the bottom showing how recently PatchMon refreshed its data. Narrow layouts use a shortened timestamp such as `5m ago`; wider short layouts can show the full translated text.
 
+### Advanced view
+
+Advanced view is a complete PatchMon posture view. It always shows the compliance hero, all eight host and package statistics, the full OS distribution with versions, and the last-updated time. Compact visibility switches and OS limits still shape the board tile, but do not hide already-fetched security information in advanced view. Threshold and chart-style choices remain in effect.
+
 ### Supported Integrations
 
 <WidgetIntegrations
@@ -80,6 +86,8 @@ When the widget has enough space, a "last updated" timestamp appears at the bott
     },
   ]}
 />
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

@@ -27,7 +27,12 @@ export const mediaServerRouter = createTRPCRouter({
         const { data } = await mediaServerRequestHandler
           .handler(integration, { showOnlyPlaying: input.showOnlyPlaying })
           .getDataAsync();
-        return { integrationId: integration.id, integrationKind: integration.kind, sessions: data };
+        return {
+          integrationId: integration.id,
+          integrationName: integration.name,
+          integrationKind: integration.kind,
+          sessions: data,
+        };
       });
     }),
 });

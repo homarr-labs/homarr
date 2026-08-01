@@ -4,6 +4,8 @@ description: "Allows you to view and manage your Downloads from both Torrent and
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { aria2Integration } from "@site/docs/integrations/aria2";
 import { delugeIntegration } from "@site/docs/integrations/deluge";
 import { nzbgetIntegration } from "@site/docs/integrations/nzbget";
@@ -43,7 +45,7 @@ import contextMenuImg from "./img/context-menu.png";
 - **Column customization** — choose which columns to display, then hover a header to reveal its grab handle for reordering or drag its edge to resize it; layouts save automatically per widget
 - **Right-click context menu** — pause, resume, delete downloads, or copy download names directly from the context menu
 - **Row expansion** — click any row to see full details inline without opening a separate modal
-- **Hover tooltips** — hover a download name to see size, speeds, ETA, ratio, and category
+- **Hover tooltips** — hover a download name to see size, speeds, ETA, ratio, and category; open tooltips close when switching between compact and advanced mode
 - **Global stats bar** — toggle a summary bar showing queue progress, total size, speeds, ratio, and per-state counts
 - **Client filtering** — filter downloads by integration or status using the footer filter panel
 - **Global controls** — pause/resume all downloads across all clients from the footer bar
@@ -94,6 +96,8 @@ import contextMenuImg from "./img/context-menu.png";
 - **Pause / Resume** all downloads using the footer controls
 - **Filter** by integration or status using the filter button in the footer
 - **Sort** by clicking column headers (with persistent sort direction)
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

@@ -4,6 +4,8 @@ description: "Displays departure times for a station."
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
@@ -22,6 +24,8 @@ import streetDepartures from "./img/street-departures.png";
   <img src={trainDepartures} alt="timetable-widget-train-departures" width={128 * 2} />
   <img src={streetDepartures} alt="timetable-widget-bus-and-tram-departures" width={128 * 2} />
 </div>
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

@@ -4,6 +4,8 @@ description: "Display the state of an entity and toggle it optionally"
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -19,6 +21,8 @@ import { homeAssistantIntegration } from "@site/docs/integrations/home-assistant
 The entity state enables you to display the current state of an entity.
 This works with most entities and enables you display almost any data.
 It is recommended that you transform data on the integration as much as possible since Homarr's capabilities in transformation are very limited.
+
+Advanced view shows the safe Home Assistant metadata owned by Homarr: the friendly name, entity ID, unit, device class, icon, last-changed time, and last-updated time. Arbitrary attributes remain intentionally excluded.
 
 ### Screenshots
 
@@ -43,6 +47,9 @@ import temperature from "./img/temperature.png";
 ### Interactions
 
 - Toggle entity state by clicking on the entity (only when clickable enabled).
+- If Homarr cannot refresh an entity, the last known state stays visible but toggling is disabled until the connection recovers.
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

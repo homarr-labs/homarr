@@ -8,8 +8,11 @@ export const timeFrameValues = ["today", "24h", "7d", "30d", "month", "lastMonth
 
 export const { definition, componentLoader } = createWidgetDefinition("umami", {
   icon: IconChartBar,
+  queryKey: [["widget", "umami"]],
   refetchInterval: null,
   supportedIntegrations: ["umami"],
+  integrationsRequired: true,
+  maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

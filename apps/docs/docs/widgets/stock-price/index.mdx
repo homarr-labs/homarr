@@ -4,6 +4,8 @@ description: "Displays the current stock price of a company."
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
@@ -12,6 +14,9 @@ import { stockPriceWidget } from ".";
 <WidgetHeader widget={stockPriceWidget} categories={["Finance", "Market"]} />
 
 Using the Stocks widget, you can show the current stock prices of your favorite companies on your dashboard.
+The widget prioritizes the symbol, current price, and trend. Company name, change, time range, and a taller chart appear progressively when both widget dimensions can support them.
+
+In advanced view, the widget always shows the returned symbol and company name, configured range and interval, current and previous close, absolute and percentage change, range minimum and maximum, and the full price-history chart. These values use the same configured Yahoo Finance query as the compact widget; advanced view does not change the symbol, range, or interval.
 
 ### Screenshots
 
@@ -30,6 +35,8 @@ import nvidia from "./img/nvidia.png";
   </div>
   <img src={nvidia} alt="stock-price nvidia" width={128 * 2 + 2} height={128 * 2 + 4} />
 </div>
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

@@ -4,6 +4,7 @@ import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { createRequestHandler } from "./lib/request-handler";
+import { normalizeTimetableBaseUrl, readBoundedTimetableJsonAsync } from "./timetable-url";
 
 export interface Station {
   id: string;
@@ -31,6 +32,9 @@ export interface Timetable {
 }
 
 const supportedStationTypes = ["bus", "tram", "train", "ship", "cablecar", "funicular", "chairlift"];
+const MAX_STATION_RESULTS = 100;
+const MAX_TIMETABLE_ENTRIES = 100;
+const timetableFetchOptions = { redirect: "error", timeout: 10_000, bodyTimeout: 10_000 } as const;
 
 export const timetableSearchStationsRequestHandler = createRequestHandler<
   Station[],
@@ -53,7 +57,7 @@ export const timetableGetTimetableRequestHandler = createRequestHandler<
 });
 
 const buildUrl = (baseUrl: string, path: `/${string}`, queryParams: Record<string, string | number>) => {
-  const url = new URL(`${baseUrl.replace(/\/$/, "")}${path}`);
+  const url = new URL(`${normalizeTimetableBaseUrl(baseUrl)}${path}`);
   for (const [key, value] of Object.entries(queryParams)) {
     url.searchParams.set(key, value.toString());
   }
@@ -63,10 +67,12 @@ const buildUrl = (baseUrl: string, path: `/${string}`, queryParams: Record<strin
 const searchStationsAsync = async (baseUrl: string, query: string): Promise<Station[]> => {
   const response = await fetchWithTrustedCertificatesAsync(
     buildUrl(baseUrl, "/timetable/api/completion.json", { term: query, show_ids: 1, nofavorites: 1 }),
+    timetableFetchOptions,
   );
   if (!response.ok) throw new ResponseError(response);
 
-  const data = await searchSchema.parseAsync(await response.json());
+  const body = await readBoundedTimetableJsonAsync(response);
+  const data = await searchSchema.parseAsync(Array.isArray(body) ? body.slice(0, MAX_STATION_RESULTS) : body);
   return data
     .filter((item) => supportedStationTypes.some((type) => item.iconclass.endsWith(type)))
     .map((item) => (item.id !== undefined ? { id: item.id, name: item.label } : null))
@@ -99,10 +105,15 @@ const getTimetableAsync = async (
       date,
       time,
     }),
+    timetableFetchOptions,
   );
   if (!response.ok) throw new ResponseError(response);
 
-  const data = await timetableSchema.parseAsync(await response.json());
+  const body = await readBoundedTimetableJsonAsync(response);
+  const envelope = timetableEnvelopeSchema.parse(body);
+  const data = await timetableSchema.parseAsync({
+    connections: envelope.connections.slice(0, Math.min(options.limit, MAX_TIMETABLE_ENTRIES)),
+  });
   return {
     stationId: options.stationId,
     timestamp: now,
@@ -144,6 +155,8 @@ const timetableSchema = z.object({
     }),
   ),
 });
+
+const timetableEnvelopeSchema = z.object({ connections: z.array(z.unknown()) });
 
 const searchSchema = z.array(
   z.object({

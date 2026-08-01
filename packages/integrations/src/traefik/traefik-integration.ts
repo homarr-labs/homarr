@@ -4,10 +4,12 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import { readBoundedTraefikJsonAsync } from "./traefik-bounds";
 import type {
   TraefikDashboardData,
   TraefikProtocolSummary,
   TraefikResource,
+  TraefikResourceDetail,
   TraefikResourceStatus,
   TraefikResourceSummary,
 } from "./traefik-types";
@@ -24,6 +26,8 @@ type ResourcePath =
   | "/api/udp/services"
   | "/api/entrypoints";
 
+const MAX_RESOURCE_DETAILS = 200;
+
 export class TraefikIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/version"), { headers: this.getAuthHeaders() });
@@ -32,7 +36,7 @@ export class TraefikIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    traefikVersionSchema.parse(await response.json());
+    traefikVersionSchema.parse(await readBoundedTraefikJsonAsync(response));
     return { success: true };
   }
 
@@ -60,6 +64,38 @@ export class TraefikIntegration extends Integration {
       this.getResourcesAsync("/api/udp/routers"),
       this.getResourcesAsync("/api/udp/services"),
     ]);
+
+    const allResults = [
+      versionResult,
+      entryPointsResult,
+      httpRoutersResult,
+      httpServicesResult,
+      httpMiddlewaresResult,
+      tcpRoutersResult,
+      tcpServicesResult,
+      tcpMiddlewaresResult,
+      udpRoutersResult,
+      udpServicesResult,
+    ];
+    if (allResults.every((result) => result.status === "rejected")) {
+      throw versionResult.status === "rejected" ? versionResult.reason : new Error("Every Traefik endpoint failed");
+    }
+
+    const endpointResults = [
+      ["version", versionResult],
+      ["entrypoints", entryPointsResult],
+      ["http/routers", httpRoutersResult],
+      ["http/services", httpServicesResult],
+      ["http/middlewares", httpMiddlewaresResult],
+      ["tcp/routers", tcpRoutersResult],
+      ["tcp/services", tcpServicesResult],
+      ["tcp/middlewares", tcpMiddlewaresResult],
+      ["udp/routers", udpRoutersResult],
+      ["udp/services", udpServicesResult],
+    ] as const;
+    const failedEndpoints = endpointResults
+      .filter(([, result]) => result.status === "rejected")
+      .map(([endpoint]) => endpoint);
     const version = versionResult.status === "fulfilled" ? versionResult.value : null;
     const entryPoints = entryPointsResult.status === "fulfilled" ? entryPointsResult.value : [];
     const httpRouters = httpRoutersResult.status === "fulfilled" ? httpRoutersResult.value : [];
@@ -71,9 +107,30 @@ export class TraefikIntegration extends Integration {
     const udpRouters = udpRoutersResult.status === "fulfilled" ? udpRoutersResult.value : [];
     const udpServices = udpServicesResult.status === "fulfilled" ? udpServicesResult.value : [];
 
+    const resources: TraefikResourceDetail[] = [];
+    const resourceGroups = [
+      ["http", "router", httpRouters],
+      ["http", "service", httpServices],
+      ["http", "middleware", httpMiddlewares],
+      ["tcp", "router", tcpRouters],
+      ["tcp", "service", tcpServices],
+      ["tcp", "middleware", tcpMiddlewares],
+      ["udp", "router", udpRouters],
+      ["udp", "service", udpServices],
+    ] as const;
+    for (const [protocol, type, entries] of resourceGroups) {
+      const remaining = MAX_RESOURCE_DETAILS - resources.length;
+      if (remaining === 0) break;
+      resources.push(...this.createResourceDetails(protocol, type, entries.slice(0, remaining)));
+    }
+
     return {
       version,
-      entryPoints: entryPoints.map((entryPoint, index) => entryPoint.name ?? `entrypoint-${index + 1}`),
+      entryPoints: entryPoints
+        .slice(0, MAX_RESOURCE_DETAILS)
+        .map((entryPoint, index) => entryPoint.name ?? `entrypoint-${index + 1}`),
+      resources,
+      failedEndpoints,
       http: this.createProtocolSummary(httpRouters, httpServices, httpMiddlewares),
       tcp: this.createProtocolSummary(tcpRouters, tcpServices, tcpMiddlewares),
       udp: {
@@ -83,15 +140,29 @@ export class TraefikIntegration extends Integration {
     };
   }
 
+  private createResourceDetails(
+    protocol: TraefikResourceDetail["protocol"],
+    type: TraefikResourceDetail["type"],
+    resources: TraefikResource[],
+  ): TraefikResourceDetail[] {
+    return resources.map((resource, index) => ({
+      protocol,
+      type,
+      name: resource.name ?? `${type}-${index + 1}`,
+      provider: resource.provider ?? null,
+      status: this.normalizeStatus(resource.status),
+    }));
+  }
+
   private async getVersionAsync() {
     const response = await this.fetchOkAsync("/api/version");
-    const version = traefikVersionSchema.parse(await response.json());
+    const version = traefikVersionSchema.parse(await readBoundedTraefikJsonAsync(response));
     return version.Version ?? null;
   }
 
   private async getResourcesAsync(path: ResourcePath) {
     const response = await this.fetchOkAsync(path);
-    return traefikResourcesSchema.parse(await response.json());
+    return traefikResourcesSchema.parse(await readBoundedTraefikJsonAsync(response));
   }
 
   private createProtocolSummary(
@@ -137,6 +208,7 @@ export class TraefikIntegration extends Integration {
     const response = await fetchWithTrustedCertificatesAsync(this.url(path), {
       headers: this.getAuthHeaders(),
       timeout: 10_000,
+      bodyTimeout: 10_000,
     });
 
     if (!response.ok) {

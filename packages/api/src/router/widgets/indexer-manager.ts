@@ -16,15 +16,29 @@ export const indexerManagerRouter = createTRPCRouter({
   getIndexersStatus: publicProcedure
     .concat(createIndexerManagerIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const innerHandler = indexerManagerRequestHandler.handler(integration, {});
-        const { data: indexers } = await innerHandler.getDataAsync();
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const innerHandler = indexerManagerRequestHandler.handler(integration, {});
+          const { data: indexers } = await innerHandler.getDataAsync();
 
-        return {
-          integrationId: integration.id,
-          indexers,
-        };
-      });
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            indexers,
+            error: undefined as string | undefined,
+          };
+        },
+        {
+          fallback: (integration, error) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            indexers: [],
+            error: error instanceof Error ? error.message : String(error),
+          }),
+          throwOnAllFailures: true,
+        },
+      );
     }),
   testAllIndexers: protectedProcedure
     .concat(createIndexerManagerIntegrationMiddleware("interact"))
