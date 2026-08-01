@@ -29,6 +29,7 @@ import { supportedLanguages } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { UploadMedia } from "../upload-media/upload-media";
+import { isDirectIconUrl } from "./icon-url";
 import classes from "./icon-picker.module.css";
 
 interface IconPickerProps {
@@ -165,8 +166,17 @@ export const IconPicker = ({
             leftSection={leftSection}
             value={inputValue}
             onChange={(event) => {
-              combobox.openDropdown();
-              setQuery(event.currentTarget.value);
+              const nextValue = event.currentTarget.value;
+              if (isDirectIconUrl(nextValue)) {
+                startTransition(() => {
+                  setValue(nextValue);
+                  setQuery("");
+                  combobox.closeDropdown();
+                });
+              } else {
+                combobox.openDropdown();
+                setQuery(nextValue);
+              }
             }}
             onClick={() => combobox.openDropdown()}
             onFocus={(event) => {
