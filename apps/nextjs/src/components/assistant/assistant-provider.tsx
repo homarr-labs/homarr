@@ -11,15 +11,7 @@ import type {
   ThreadMessage,
   Toolkit,
 } from "@assistant-ui/react";
-import {
-  AssistantRuntimeProvider,
-  defineToolkit,
-  Tools,
-  useAui,
-  useAuiEvent,
-  useAuiState,
-  useRemoteThreadListRuntime,
-} from "@assistant-ui/react";
+import { defineToolkit, useAui, useAuiEvent, useAuiState, useRemoteThreadListRuntime } from "@assistant-ui/react";
 import { AssistantChatTransport, useChatRuntime } from "@assistant-ui/react-ai-sdk";
 import { useHotkeys } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
@@ -35,7 +27,9 @@ import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResul
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
 import { AssistantAskUserTool, AssistantConfigureAppTool } from "./assistant-human-tools";
 import { AssistantPanel } from "./assistant-panel";
+import { getPendingAssistantAction } from "./assistant-pending-action";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
+import { AssistantRuntimeProviderWithTools } from "./assistant-runtime-provider";
 import { sendAssistantPrompt as sendPromptThroughComposer } from "./assistant-send";
 import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
@@ -461,14 +455,12 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
       }) as Toolkit,
     [router],
   );
-
   return (
-    <AssistantRuntimeProvider runtime={runtime}>
-      <AssistantTools toolkit={toolkit} />
+    <AssistantRuntimeProviderWithTools runtime={runtime} toolkit={toolkit}>
       <AssistantRuntimeEvents />
       <AssistantPreferenceSync />
       {children}
-    </AssistantRuntimeProvider>
+    </AssistantRuntimeProviderWithTools>
   );
 };
 
@@ -492,11 +484,6 @@ const AssistantPreferenceSync = () => {
     if (nextModelId) preferences.setModelId(nextModelId);
   }, [modelCatalogKey, preferences, threadId, threadModelId]);
 
-  return null;
-};
-
-const AssistantTools = ({ toolkit }: { toolkit: Toolkit }) => {
-  useAui({ tools: Tools({ toolkit }) });
   return null;
 };
 
@@ -543,6 +530,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const latestAssistantText = getMessageText(latestAssistantMessage);
   const latestUserText = getMessageText(latestUserMessage);
   const latestStatus = latestAssistantMessage?.role === "assistant" ? latestAssistantMessage.status : undefined;
+  const pendingAction = getPendingAssistantAction(latestAssistantMessage);
   const assistantIsRunning = isRunning || queuedPrompt !== null;
   const notificationKey = getNotificationKey(latestAssistantMessage);
   const initializedRef = useRef(false);
@@ -662,6 +650,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
         latestAssistantText={latestAssistantText}
         latestUserText={queuedPrompt ?? latestUserText}
         latestStatus={latestStatus}
+        pendingAction={pendingAction}
         modelId={preferences.modelId}
         models={preferences.models}
         modelOptionsLoading={preferences.isLoading}

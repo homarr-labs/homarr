@@ -2095,6 +2095,13 @@
         "title": "The assistant is already working",
         "description": "Wait for the current response or open it to stop the run."
       },
+      "pendingAction": {
+        "answerTitle": "Answer needed",
+        "answerFallback": "Choose an answer to continue",
+        "formTitle": "Review app details",
+        "review": "Review",
+        "sendBlocked": "Resolve the pending request before sending"
+      },
       "activity": {
         "thinking": "Assistant is thinking",
         "working": "Working on your prompt",
