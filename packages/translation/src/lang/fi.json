@@ -1344,7 +1344,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "Uusi dynaaminen osio",
         "remove": ""
@@ -1363,46 +1363,6 @@
       "remove": {
         "title": "",
         "message": "Haluatko varmasti poistaa tämän dynaamisen osion? Kohteet siirretään samaan paikkaan yläosiossa."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": ""
-        }
-      },
-      "action": {
-        "create": "Uusi kategoria",
-        "edit": "",
-        "remove": "",
-        "moveUp": "",
-        "moveDown": "",
-        "createAbove": "",
-        "createBelow": "",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "",
-        "submit": ""
-      },
-      "remove": {
-        "title": "",
-        "message": "Haluatko varmasti poistaa kategorian {name}?"
-      },
-      "edit": {
-        "title": "",
-        "submit": ""
-      },
-      "menu": {
-        "label": {
-          "create": "",
-          "changePosition": "",
-          "settings": "Asetukset"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": "Jotkin selaimet voivat turvallisuussyistä estää välilehtien massa-avaamisen. Homarr ei voinut avata kaikkia ikkunoita, koska selaimesi esti toimenpiteen. Salli ponnahdusikkunoiden avaaminen ja yritä uudelleen."
       }
     }
   },

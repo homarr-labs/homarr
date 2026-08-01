@@ -42,18 +42,18 @@ export const generateResponsiveGridFor = ({
 
   const newItems: GridAlgorithmItem[] = [];
 
-  // Fix height of dynamic sections
-  const dynamicSectionHeightMap = new Map<string, number>();
-  const dynamicSectionsOfCurrentSection = normalizedItems.filter((item) => item.type === "section");
-  for (const dynamicSection of dynamicSectionsOfCurrentSection) {
+  // A container must remain tall enough for its recursively reflowed contents.
+  const containerHeightMap = new Map<string, number>();
+  const containersOfCurrentSection = normalizedItems.filter((item) => item.type === "section");
+  for (const container of containersOfCurrentSection) {
     const result = generateResponsiveGridFor({
       items,
-      previousWidth: dynamicSection.previousWidth,
-      width: dynamicSection.width,
-      sectionId: dynamicSection.id,
+      previousWidth: container.previousWidth,
+      width: container.width,
+      sectionId: container.id,
     });
     newItems.push(...result.items);
-    dynamicSectionHeightMap.set(dynamicSection.id, result.height);
+    containerHeightMap.set(container.id, result.height);
   }
 
   // Return same positions for items in the current section
@@ -69,7 +69,7 @@ export const generateResponsiveGridFor = ({
   for (const item of normalizedItems) {
     const itemWithHeight = {
       ...item,
-      height: item.type === "section" ? Math.max(dynamicSectionHeightMap.get(item.id) ?? 1, item.height) : item.height,
+      height: item.type === "section" ? Math.max(containerHeightMap.get(item.id) ?? 1, item.height) : item.height,
     };
     const position = nextFreeSpot(occupied2d, itemWithHeight, width);
     if (!position) throw new Error("No free spot available");

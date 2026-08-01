@@ -7,7 +7,7 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { Item } from "~/app/[locale]/boards/_types";
-import { filterByItemKind } from "./category/filter";
+import { filterByItemKind } from "./filter-by-item-kind";
 
 interface SectionItemLayout {
   layoutId: string;
@@ -35,8 +35,8 @@ interface SectionTree<TItem extends SectionTreeItem> {
 }
 
 /**
- * Finds every item contained by a section in one responsive layout. Dynamic
- * sections can be nested, so their descendants are traversed recursively.
+ * Finds every item contained by a section in one responsive layout. Containers
+ * can be nested, so their descendants are traversed recursively.
  */
 export const getSectionItemsForLayout = <TItem extends SectionTreeItem>(
   board: SectionTree<TItem>,
@@ -46,7 +46,7 @@ export const getSectionItemsForLayout = <TItem extends SectionTreeItem>(
   const childrenByParent = new Map<string, string[]>();
 
   for (const section of board.sections) {
-    if (section.kind !== "dynamic") continue;
+    if (section.kind !== "container") continue;
 
     const layout = section.layouts?.find((candidate) => candidate.layoutId === layoutId);
     if (!layout) continue;

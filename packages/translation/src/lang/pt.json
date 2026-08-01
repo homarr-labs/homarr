@@ -1344,7 +1344,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "Nova seção dinâmica",
         "remove": "Remover seção dinâmica"
@@ -1363,46 +1363,6 @@
       "remove": {
         "title": "Remover seção dinâmica",
         "message": "Tem certeza de que deseja remover esta seção dinâmica? Os itens serão movidos para o mesmo local na seção pai."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Nome"
-        }
-      },
-      "action": {
-        "create": "Nova categoria",
-        "edit": "Renomear categoria",
-        "remove": "Remover categoria",
-        "moveUp": "Subir",
-        "moveDown": "Mover para baixo",
-        "createAbove": "Nova categoria acima",
-        "createBelow": "Nova categoria abaixo",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "Nova categoria",
-        "submit": "Adicionar categoria"
-      },
-      "remove": {
-        "title": "Remover categoria",
-        "message": "Tem certeza que deseja deletar a categoria {name}?"
-      },
-      "edit": {
-        "title": "Renomear categoria",
-        "submit": "Renomear categoria"
-      },
-      "menu": {
-        "label": {
-          "create": "Nova categoria",
-          "changePosition": "Mudar de posição",
-          "settings": "Configurações"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": ""
       }
     }
   },

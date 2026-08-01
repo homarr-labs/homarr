@@ -5,46 +5,39 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
+import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { useOpenItemMoveModal } from "../../items/item-move-modal";
 import { useSectionContext } from "../section-context";
-import { useDynamicSectionActions } from "./dynamic-actions";
-import { DynamicSectionEditModal } from "./dynamic-edit-modal";
+import { useContainerActions } from "./container-actions";
+import { ContainerEditModal } from "./container-edit-modal";
 
-export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionItem }) => {
+export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem }) => {
   const t = useI18n();
-  const tDynamic = useScopedI18n("section.dynamic");
+  const tContainer = useScopedI18n("section.container");
   const tItem = useScopedI18n("item");
-  const { openModal } = useModalAction(DynamicSectionEditModal);
+  const { openModal } = useModalAction(ContainerEditModal);
   const openMoveModal = useOpenItemMoveModal();
-  const { updateDynamicSection, removeDynamicSection } = useDynamicSectionActions();
+  const { updateContainer, removeContainer } = useContainerActions();
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
   const { section: parentSection } = useSectionContext();
-  const label = section.options.title || tDynamic("action.create");
-  const menuRightOffset = parentSection.kind === "dynamic" ? 44 : 4;
+  const label = section.options.title || tContainer("action.create");
+  const menuRightOffset = parentSection.kind === "container" ? 44 : 4;
 
   if (!isEditMode) return null;
 
   const openEditModal = () => {
     openModal({
       value: section.options,
-      onSuccessfulEdit: (options) => {
-        updateDynamicSection({
-          itemId: section.id,
-          newOptions: options,
-        });
-      },
+      onSuccessfulEdit: (options) => updateContainer({ containerId: section.id, newOptions: options }),
     });
   };
 
   const openRemoveModal = () => {
     openConfirmModal({
-      title: tDynamic("remove.title"),
-      children: tDynamic("remove.message"),
-      onConfirm: () => {
-        removeDynamicSection({ id: section.id });
-      },
+      title: tContainer("remove.title"),
+      children: tContainer("remove.message"),
+      onConfirm: () => removeContainer({ id: section.id }),
     });
   };
 
@@ -53,14 +46,14 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
       <Menu.Target>
         <ActionIcon
           variant="default"
-          radius={"xl"}
+          radius="xl"
           pos="absolute"
           top={4}
           right={menuRightOffset}
           style={{ zIndex: 10 }}
           aria-label={tItem("menu.label.settingsFor", { name: label })}
         >
-          <IconLayoutKanban size={"1rem"} />
+          <IconLayoutKanban size="1rem" />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
@@ -70,19 +63,14 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
         </Menu.Item>
         <Menu.Item
           leftSection={<IconArrowsMove size={16} />}
-          onClick={() =>
-            openMoveModal({
-              entry: section,
-              sourceSectionId: section.parentSectionId,
-            })
-          }
+          onClick={() => openMoveModal({ entry: section, sourceSectionId: section.parentSectionId })}
         >
           {tItem("action.moveResize")}
         </Menu.Item>
         <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
         <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>
-          {tDynamic("action.remove")}
+          {tContainer("action.remove")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

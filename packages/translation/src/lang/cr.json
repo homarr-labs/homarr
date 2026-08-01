@@ -1398,7 +1398,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "crwdns650:0crwdne650:0",
         "remove": "crwdns652:0crwdne652:0"
@@ -1417,46 +1417,6 @@
       "remove": {
         "title": "crwdns654:0crwdne654:0",
         "message": "crwdns656:0crwdne656:0"
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "crwdns658:0crwdne658:0"
-        }
-      },
-      "action": {
-        "create": "crwdns660:0crwdne660:0",
-        "edit": "crwdns662:0crwdne662:0",
-        "remove": "crwdns664:0crwdne664:0",
-        "moveUp": "crwdns666:0crwdne666:0",
-        "moveDown": "crwdns668:0crwdne668:0",
-        "createAbove": "crwdns670:0crwdne670:0",
-        "createBelow": "crwdns672:0crwdne672:0",
-        "openAllInNewTabs": "crwdns2730:0crwdne2730:0"
-      },
-      "create": {
-        "title": "crwdns674:0crwdne674:0",
-        "submit": "crwdns676:0crwdne676:0"
-      },
-      "remove": {
-        "title": "crwdns678:0crwdne678:0",
-        "message": "crwdns680:0{name}crwdne680:0"
-      },
-      "edit": {
-        "title": "crwdns682:0crwdne682:0",
-        "submit": "crwdns684:0crwdne684:0"
-      },
-      "menu": {
-        "label": {
-          "create": "crwdns686:0crwdne686:0",
-          "changePosition": "crwdns688:0crwdne688:0",
-          "settings": "crwdns4259:0crwdne4259:0"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "crwdns2732:0crwdne2732:0",
-        "text": "crwdns2734:0crwdne2734:0"
       }
     }
   },

@@ -1,40 +1,38 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { GridItemHTMLElement } from "gridstack";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useIntegrations } from "@homarr/auth/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { getRootSectionLane } from "@homarr/definitions";
 
-import type { DynamicSectionItem, Section } from "~/app/[locale]/boards/_types";
+import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
 import { getBoardLaneColumnCount } from "~/components/board/layout";
 import { SectionContentItem } from "../content";
 import { SectionProvider } from "../section-context";
 import { useSectionItems } from "../use-section-items";
-import { decorateGridResizeHandles } from "./grid-resize-handles";
+import { useGridResizePreview } from "./grid-editor-runtime";
 import classes from "./section-grid.module.css";
 
 interface GridPortalHostContextValue {
   announce: (message: string) => void;
   integrations: RouterOutputs["integration"]["all"] | undefined;
+  containers: ReadonlyMap<string, HTMLElement>;
   acquireContainer: (id: string) => HTMLElement;
-  releaseContainer: (id: string, container: HTMLElement) => void;
 }
 
 const GridPortalHostContext = createContext<GridPortalHostContextValue | null>(null);
 
 /**
  * One portal registry owns every edit-mode item on the board. Its content
- * containers are stable even when GridStack replaces or transfers the outer
- * positioning shell, so moving between grids does not remount widget content.
+ * containers are stable even when drag-and-drop replaces or transfers the
+ * outer positioning shell, so moving between grids does not remount widget
+ * content.
  */
 export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
-  const board = useRequiredBoard();
-  const currentLayoutId = useCurrentLayout();
   const integrations = useIntegrations();
   const containersRef = useRef<Map<string, HTMLElement>>(new Map());
   const [containers, setContainers] = useState<Map<string, HTMLElement>>(() => new Map());
@@ -48,36 +46,49 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
     if (existing) return existing;
 
     const container = document.createElement("div");
-    container.className = "grid-stack-item-content";
-    container.style.overflow = "visible";
+    container.className = "board-grid-item-content";
+    container.dataset.boardGridPortal = id;
     containersRef.current.set(id, container);
     setContainers(new Map(containersRef.current));
     return container;
   }, []);
 
-  const releaseContainer = useCallback((id: string, container: HTMLElement) => {
-    // Controlled cross-grid moves remove the source shell before the target
-    // adopts this container. Wait until all grid effects in the commit ran.
-    queueMicrotask(() => {
-      if (container.isConnected || containersRef.current.get(id) !== container) return;
-      containersRef.current.delete(id);
-      setContainers(new Map(containersRef.current));
-    });
-  }, []);
+  // Keep acquired nodes for the host's lifetime. Cross-grid commits can
+  // transiently render neither shell, and detaching the node must not remount
+  // live widget state before the destination shell adopts it.
 
   const value = useMemo<GridPortalHostContextValue>(
     () => ({
       announce,
       integrations,
+      containers,
       acquireContainer,
-      releaseContainer,
     }),
-    [acquireContainer, announce, integrations, releaseContainer],
+    [acquireContainer, announce, containers, integrations],
   );
 
   return (
     <GridPortalHostContext.Provider value={value}>
       {children}
+      <div className={classes.liveRegion} aria-live="polite" aria-atomic="true">
+        <span key={announcement.id}>{announcement.message}</span>
+      </div>
+    </GridPortalHostContext.Provider>
+  );
+};
+
+/**
+ * Renders stable portal content at this component's logical React position.
+ * Keep it inside the editor runtime and dnd-kit providers so portaled entries
+ * inherit the same keyboard, transaction, and nested-grid contexts as shells.
+ */
+export const BoardGridPortalRenderer = () => {
+  const board = useRequiredBoard();
+  const currentLayoutId = useCurrentLayout();
+  const { announce, containers, integrations } = useBoardGridPortalHost();
+
+  return (
+    <>
       {Array.from(containers, ([id, container]) => {
         const ownerSectionId = getOwnerSectionId(board, currentLayoutId, id);
         return ownerSectionId
@@ -85,7 +96,6 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
               <GridPortalContent
                 itemId={id}
                 ownerSectionId={ownerSectionId}
-                container={container}
                 integrations={integrations}
                 announce={announce}
               />,
@@ -94,10 +104,7 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
             )
           : null;
       })}
-      <div className={classes.liveRegion} aria-live="polite" aria-atomic="true">
-        <span key={announcement.id}>{announcement.message}</span>
-      </div>
-    </GridPortalHostContext.Provider>
+    </>
   );
 };
 
@@ -110,40 +117,33 @@ export const useBoardGridPortalHost = () => {
 interface GridPortalContentProps {
   itemId: string;
   ownerSectionId: string;
-  container: HTMLElement;
   integrations: RouterOutputs["integration"]["all"] | undefined;
   announce: (message: string) => void;
 }
 
-const GridPortalContent = ({ itemId, ownerSectionId, container, integrations, announce }: GridPortalContentProps) => {
+const GridPortalContent = ({ itemId, ownerSectionId, integrations, announce }: GridPortalContentProps) => {
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const { items, innerSections } = useSectionItems(ownerSectionId);
-  const entry = [...items, ...innerSections].find((candidate) => candidate.id === itemId);
+  const entryPreview = useGridResizePreview(itemId);
+  const ownerPreview = useGridResizePreview(ownerSectionId);
+  const persistedEntry = [...items, ...innerSections].find((candidate) => candidate.id === itemId);
+  const entry = withResizePreview(persistedEntry, entryPreview);
   const rawSection = board.sections.find((section) => section.id === ownerSectionId);
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
-  const section = toGridSection(rawSection, currentLayoutId);
-
-  useLayoutEffect(() => {
-    const itemElement = container.parentElement as GridItemHTMLElement | null;
-    if (!itemElement) return;
-
-    itemElement.gridstackNode?.grid?.refreshDragHandles(itemElement);
-    decorateGridResizeHandles(itemElement, {
-      minW: itemElement.gridstackNode?.minW,
-      minH: itemElement.gridstackNode?.minH,
-    });
-  }, [container, ownerSectionId]);
+  const persistedSection = toGridSection(rawSection, currentLayoutId);
+  const section =
+    persistedSection?.kind === "container" ? withResizePreview(persistedSection, ownerPreview) : persistedSection;
 
   if (!entry || !section || !currentLayout) return null;
 
   const columnCount =
-    section.kind === "dynamic"
+    section.kind === "container"
       ? section.width
       : section.kind === "empty"
         ? getBoardLaneColumnCount(currentLayout, getRootSectionLane(section.xOffset))
         : currentLayout.columnCount;
-  const configuredMaxRowCount = section.kind === "dynamic" ? section.height : null;
+  const configuredMaxRowCount = section.kind === "container" ? section.height : null;
   const contentRowCount = Math.max(
     1,
     ...items.map((item) => item.yOffset + item.height),
@@ -168,12 +168,28 @@ const GridPortalContent = ({ itemId, ownerSectionId, container, integrations, an
   );
 };
 
+const withResizePreview = <
+  TValue extends { xOffset: number; yOffset: number; width: number; height: number } | null | undefined,
+>(
+  value: TValue,
+  preview: { x: number; y: number; w: number; h: number } | null,
+): TValue =>
+  value && preview
+    ? ({
+        ...value,
+        xOffset: preview.x,
+        yOffset: preview.y,
+        width: preview.w,
+        height: preview.h,
+      } as TValue)
+    : value;
+
 const toGridSection = (
   section: Section | undefined,
   layoutId: string,
-): Exclude<Section, { kind: "dynamic" }> | DynamicSectionItem | null => {
+): Exclude<Section, { kind: "container" }> | ContainerSectionItem | null => {
   if (!section) return null;
-  if (section.kind !== "dynamic") return section;
+  if (section.kind !== "container") return section;
 
   const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
   if (!layout) return null;
@@ -191,7 +207,7 @@ const getOwnerSectionId = (board: ReturnType<typeof useRequiredBoard>, layoutId:
     return item.layouts.find((layout) => layout.layoutId === layoutId)?.sectionId ?? null;
   }
 
-  const section = board.sections.find((candidate) => candidate.kind === "dynamic" && candidate.id === entryId);
-  if (!section || section.kind !== "dynamic") return null;
+  const section = board.sections.find((candidate) => candidate.kind === "container" && candidate.id === entryId);
+  if (!section || section.kind !== "container") return null;
   return section.layouts.find((layout) => layout.layoutId === layoutId)?.parentSectionId ?? null;
 };

@@ -7,18 +7,17 @@ import { useZodForm } from "@homarr/form";
 import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { TextMultiSelect } from "@homarr/ui";
-import { dynamicSectionOptionsSchema } from "@homarr/validation/shared";
+import { containerSectionOptionsSchema } from "@homarr/validation/shared";
 
 interface ModalProps {
-  value: z.infer<typeof dynamicSectionOptionsSchema>;
-  onSuccessfulEdit: (value: z.infer<typeof dynamicSectionOptionsSchema>) => void;
+  value: z.infer<typeof containerSectionOptionsSchema>;
+  onSuccessfulEdit: (value: z.infer<typeof containerSectionOptionsSchema>) => void;
 }
 
-export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, innerProps }) => {
+export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps }) => {
   const t = useI18n();
   const theme = useMantineTheme();
-
-  const form = useZodForm(dynamicSectionOptionsSchema.unwrap(), {
+  const form = useZodForm(containerSectionOptionsSchema.unwrap(), {
     mode: "controlled",
     initialValues: { ...innerProps.value },
   });
@@ -31,7 +30,7 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
       })}
     >
       <Stack>
-        <TextInput label={t("section.dynamic.option.title.label")} data-autofocus {...form.getInputProps("title")} />
+        <TextInput label={t("section.container.option.title.label")} data-autofocus {...form.getInputProps("title")} />
         <Switch
           label={t("section.option.showLabel.label")}
           description={t("section.option.showLabel.description")}
@@ -48,11 +47,11 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
           {...form.getInputProps("showOpenAll", { type: "checkbox" })}
         />
         <TextMultiSelect
-          label={t("section.dynamic.option.customCssClasses.label")}
+          label={t("section.container.option.customCssClasses.label")}
           {...form.getInputProps("customCssClasses")}
         />
         <ColorInput
-          label={t("section.dynamic.option.borderColor.label")}
+          label={t("section.container.option.borderColor.label")}
           format="hex"
           swatches={Object.values(theme.colors).map((color) => color[6])}
           rightSection={

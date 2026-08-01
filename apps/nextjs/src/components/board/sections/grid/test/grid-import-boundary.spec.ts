@@ -9,10 +9,10 @@ const sectionGridPath = resolve(gridDirectory, "section-grid.tsx");
 const editorLoaderPath = resolve(gridDirectory, "grid-editor-loader.ts");
 
 describe("board grid import boundary", () => {
-  test("keeps every GridStack runtime import inside the edit-only module", () => {
+  test("keeps every current dnd-kit runtime import inside the edit-only module", () => {
     const runtimeImports = getSourceFiles(nextjsSourceDirectory)
       .flatMap(getRuntimeImports)
-      .filter(({ specifier }) => specifier === "gridstack" || specifier.startsWith("gridstack/"))
+      .filter(({ specifier }) => CURRENT_DND_KIT_PACKAGES.has(specifier))
       .map(({ filePath, kind, specifier }) => ({
         file: toSourceRelativePath(filePath),
         kind,
@@ -28,12 +28,22 @@ describe("board grid import boundary", () => {
       {
         file: "components/board/sections/grid/grid-editor.tsx",
         kind: "static",
-        specifier: "gridstack",
+        specifier: "@dnd-kit/abstract",
       },
       {
         file: "components/board/sections/grid/grid-editor.tsx",
         kind: "static",
-        specifier: "gridstack/dist/gridstack.min.css",
+        specifier: "@dnd-kit/collision",
+      },
+      {
+        file: "components/board/sections/grid/grid-editor.tsx",
+        kind: "static",
+        specifier: "@dnd-kit/dom",
+      },
+      {
+        file: "components/board/sections/grid/grid-editor.tsx",
+        kind: "static",
+        specifier: "@dnd-kit/react",
       },
     ]);
   });
@@ -88,14 +98,13 @@ describe("board grid import boundary", () => {
     }
 
     const editConditional = findAncestor(gridEditorUsage, ts.isConditionalExpression);
-    expect(
-      editConditional !== undefined &&
-        ts.isIdentifier(editConditional.condition) &&
-        editConditional.condition.text === "isEditMode" &&
-        isDescendantOf(gridEditorUsage, editConditional.whenTrue),
-    ).toBe(true);
+    expect(editConditional && isDescendantOf(gridEditorUsage, editConditional.whenTrue)).toBe(true);
+    expect(editConditional?.condition.getText(sourceFile)).toContain("isEditMode");
+    expect(editConditional?.condition.getText(sourceFile)).toContain('editorRuntimeStatus === "ready"');
   });
 });
+
+const CURRENT_DND_KIT_PACKAGES = new Set(["@dnd-kit/abstract", "@dnd-kit/collision", "@dnd-kit/dom", "@dnd-kit/react"]);
 
 interface RuntimeImport {
   filePath: string;

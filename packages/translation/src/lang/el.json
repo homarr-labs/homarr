@@ -1344,7 +1344,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "",
         "remove": ""
@@ -1363,46 +1363,6 @@
       "remove": {
         "title": "",
         "message": ""
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Όνομα"
-        }
-      },
-      "action": {
-        "create": "Νέα κατηγορία",
-        "edit": "Μετονομασία κατηγορίας",
-        "remove": "Αφαίρεση κατηγορίας",
-        "moveUp": "Μετακίνηση επάνω",
-        "moveDown": "Μετακίνηση κάτω",
-        "createAbove": "Νέα κατηγορία επάνω",
-        "createBelow": "Νέα κατηγορία κάτω",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "Νέα κατηγορία",
-        "submit": "Προσθήκη κατηγορίας"
-      },
-      "remove": {
-        "title": "Αφαίρεση κατηγορίας",
-        "message": ""
-      },
-      "edit": {
-        "title": "Μετονομασία κατηγορίας",
-        "submit": "Μετονομασία κατηγορίας"
-      },
-      "menu": {
-        "label": {
-          "create": "Νέα κατηγορία",
-          "changePosition": "Αλλαγή θέσης",
-          "settings": "Ρυθμίσεις"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": ""
       }
     }
   },

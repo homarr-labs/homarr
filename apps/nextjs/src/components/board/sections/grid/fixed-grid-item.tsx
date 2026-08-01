@@ -1,7 +1,7 @@
 "use client";
 
 import type { FocusEvent, KeyboardEvent, PropsWithChildren } from "react";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Box } from "@mantine/core";
 import combineClasses from "clsx";
 
@@ -9,26 +9,31 @@ import { useCurrentLayout } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useI18n } from "@homarr/translation/client";
 
-import type { DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
+import type { ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import {
   getEditableGridCellAttributes,
-  getLayoutRowCount,
   getLogicalItemStyle,
   getReadonlyGridItemAttributes,
-  placeGridItem,
 } from "~/components/board/layout";
 import type { GridPlacement } from "~/components/board/layout";
 import { useSectionContext } from "../section-context";
-import classes from "./section-grid.module.css";
+import { beginGridTransaction, commitGridTransaction, previewGridMove, previewGridResize } from "./dnd";
+import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
 import { useGridLayoutActions } from "./use-grid-layout-actions";
+import classes from "./section-grid.module.css";
 
 interface FixedGridItemProps {
-  item: DynamicSectionItem | SectionItem;
+  item: ContainerSectionItem | SectionItem;
   minWidth?: number;
   minHeight?: number;
 }
 
+/**
+ * Static SSR geometry in view mode and the stable content/keyboard handle in
+ * edit mode. The focused tile owns grid-based keyboard movement while dnd-kit
+ * handles pointer and touch input on the outer editor shell.
+ */
 export const FixedGridItem = ({
   item,
   minWidth = 1,
@@ -36,22 +41,35 @@ export const FixedGridItem = ({
   children,
 }: PropsWithChildren<FixedGridItemProps>) => {
   const [isEditMode] = useEditMode();
+  const runtimeStatus = useGridEditorRuntimeStatus();
   const currentLayoutId = useCurrentLayout();
   const t = useI18n();
   const { section, items, innerSections, columnCount, maxRowCount, announce } = useSectionContext();
   const { commitSectionGrid } = useGridLayoutActions();
   const [isKeyboardEditing, setIsKeyboardEditing] = useState(false);
   const instructionsId = useId();
+  const isEditorActive = isEditMode && runtimeStatus === "ready";
   const placement = toPlacement(item);
+  const renderedPlacements = [...items, ...innerSections].map(toPlacement);
+  const keyboardGridRef = useRef<{
+    source: readonly SectionGridPlacement[];
+    current: readonly SectionGridPlacement[];
+  }>({
+    source: renderedPlacements,
+    current: renderedPlacements,
+  });
   const displayName =
     item.type === "item"
       ? item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`)
-      : item.options.title.trim() || t("section.dynamic.untitled");
+      : item.options.title.trim() || t("section.container.untitled");
   const accessibleLabel = t("item.moveResize.entryLabel", {
     name: displayName,
     column: String(placement.x + 1),
     row: String(placement.y + 1),
   });
+  const semantics = isEditorActive
+    ? getEditableGridCellAttributes({ label: accessibleLabel, placement })
+    : getReadonlyGridItemAttributes(placement);
 
   const setKeyboardEditing = (next: boolean) => {
     setIsKeyboardEditing(next);
@@ -61,7 +79,7 @@ export const FixedGridItem = ({
   };
 
   const handleKeyboard = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.target !== event.currentTarget || !isEditMode || event.altKey || event.ctrlKey || event.metaKey) {
+    if (event.target !== event.currentTarget || !isEditorActive || event.altKey || event.ctrlKey || event.metaKey) {
       return;
     }
     if (event.key === "Enter" || event.key === " ") {
@@ -77,27 +95,60 @@ export const FixedGridItem = ({
     if (!isKeyboardEditing || !isArrowKey(event.key)) return;
 
     event.preventDefault();
-    const allPlacements = [...items, ...innerSections].map(toPlacement);
-    const current = allPlacements.find((candidate) => candidate.id === item.id);
+    if (document.body.hasAttribute("data-board-grid-interacting")) {
+      setKeyboardEditing(false);
+      return;
+    }
+    if (!arePlacementListsEqual(keyboardGridRef.current.source, renderedPlacements)) {
+      keyboardGridRef.current = {
+        source: renderedPlacements,
+        current: renderedPlacements,
+      };
+    }
+    const placements = keyboardGridRef.current.current;
+    const current = placements.find((candidate) => candidate.id === item.id);
     if (!current) return;
 
-    const next = getKeyboardPlacement(current, event.key, event.shiftKey, {
-      columnCount,
-      minWidth,
-      minHeight,
-      maxRowCount,
-    });
-    if (next.x === current.x && next.y === current.y && next.w === current.w && next.h === current.h) {
+    const transaction = beginGridTransaction(
+      {
+        grids: [
+          {
+            id: section.id,
+            columnCount,
+            maxRowCount,
+            placements,
+          },
+        ],
+      },
+      { activeId: current.id, sourceGridId: section.id },
+    );
+    const delta = getKeyboardDelta(event.key);
+    const result = event.shiftKey
+      ? previewGridResize(transaction, {
+          direction: "se",
+          deltaColumns: delta.x,
+          deltaRows: delta.y,
+          minWidth,
+          minHeight,
+        })
+      : previewGridMove(transaction, {
+          targetGridId: section.id,
+          x: current.x + delta.x,
+          y: current.y + delta.y,
+        });
+    const next = result.transaction.preview.grids[0]?.placements.find((candidate) => candidate.id === item.id);
+    if (!result.accepted || !next || arePlacementsEqual(current, next)) {
       announce(`${accessibleLabel}: ${t("item.moveResize.keyboard.boundary")}`);
       return;
     }
 
-    const resolved = placeGridItem(allPlacements, next, columnCount) as SectionGridPlacement[];
-    if (maxRowCount !== null && getLayoutRowCount(resolved) > maxRowCount) {
-      announce(`${accessibleLabel}: ${t("item.moveResize.keyboard.boundary")}`);
-      return;
-    }
-    commitSectionGrid({ layoutId: currentLayoutId, sectionId: section.id, placements: resolved });
+    const committed = commitGridTransaction(result.transaction).grids[0];
+    if (!committed) return;
+    keyboardGridRef.current = {
+      ...keyboardGridRef.current,
+      current: committed.placements,
+    };
+    commitSectionGrid({ layoutId: currentLayoutId, sectionId: section.id, placements: committed.placements });
     announce(
       `${displayName}: ${t("item.moveResize.field.xOffset.label")} ${next.x + 1}, ${t(
         "item.moveResize.field.yOffset.label",
@@ -108,38 +159,36 @@ export const FixedGridItem = ({
   };
 
   const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
-    if (isKeyboardEditing && !event.currentTarget.contains(event.relatedTarget)) {
-      setIsKeyboardEditing(false);
+    if (isKeyboardEditing && event.target === event.currentTarget) {
+      setKeyboardEditing(false);
     }
   };
-
-  const semantics = isEditMode
-    ? getEditableGridCellAttributes({ label: accessibleLabel, placement })
-    : getReadonlyGridItemAttributes(placement);
 
   return (
     <Box
       {...semantics}
-      className={combineClasses(isEditMode ? classes.editorEntry : classes.staticItem)}
-      style={isEditMode ? { position: "relative", width: "100%", height: "100%" } : getLogicalItemStyle(placement)}
-      data-grid-item-id={isEditMode ? undefined : item.id}
-      data-grid-item-type={isEditMode ? undefined : item.type}
-      data-editor-grid-entry={isEditMode ? "true" : undefined}
+      className={combineClasses(isEditorActive ? classes.editorEntry : classes.staticItem)}
+      style={isEditorActive ? { position: "relative", width: "100%", height: "100%" } : getLogicalItemStyle(placement)}
+      data-grid-item-id={isEditorActive ? undefined : item.id}
+      data-grid-item-type={isEditorActive ? undefined : item.type}
+      data-editor-grid-entry={isEditorActive ? "true" : undefined}
       data-type={item.type}
       data-kind={item.kind}
-      data-keyboard-editing={isEditMode ? String(isKeyboardEditing) : undefined}
-      aria-describedby={isEditMode ? instructionsId : undefined}
+      data-keyboard-editing={isEditorActive ? String(isKeyboardEditing) : undefined}
+      aria-describedby={isEditorActive ? instructionsId : undefined}
       aria-keyshortcuts={
-        isEditMode
+        isEditorActive
           ? "Enter Space Escape ArrowLeft ArrowRight ArrowUp ArrowDown Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown"
           : undefined
       }
-      onBlur={isEditMode ? handleBlur : undefined}
-      onKeyDown={isEditMode ? handleKeyboard : undefined}
+      onBlur={isEditorActive ? handleBlur : undefined}
+      onKeyDown={isEditorActive ? handleKeyboard : undefined}
     >
-      {isEditMode && <span className={classes.dragAffordance} data-testid="board-grid-drag-affordance" aria-hidden />}
+      {isEditorActive && (
+        <span className={classes.dragAffordance} data-testid="board-grid-drag-affordance" aria-hidden />
+      )}
       {children}
-      {isEditMode && (
+      {isEditorActive && (
         <span id={instructionsId} className={classes.liveRegion}>
           {t("item.moveResize.keyboard.instructions")}
         </span>
@@ -148,7 +197,7 @@ export const FixedGridItem = ({
   );
 };
 
-const toPlacement = (item: DynamicSectionItem | SectionItem): SectionGridPlacement => ({
+const toPlacement = (item: ContainerSectionItem | SectionItem): SectionGridPlacement => ({
   id: item.id,
   type: item.type,
   x: item.xOffset,
@@ -160,43 +209,17 @@ const toPlacement = (item: DynamicSectionItem | SectionItem): SectionGridPlaceme
 const isArrowKey = (key: string): key is "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown" =>
   key === "ArrowLeft" || key === "ArrowRight" || key === "ArrowUp" || key === "ArrowDown";
 
-const getKeyboardPlacement = (
-  current: SectionGridPlacement,
-  key: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown",
-  resize: boolean,
-  {
-    columnCount,
-    minWidth,
-    minHeight,
-    maxRowCount,
-  }: {
-    columnCount: number;
-    minWidth: number;
-    minHeight: number;
-    maxRowCount: number | null;
-  },
-): GridPlacement & Pick<SectionGridPlacement, "type"> => {
-  if (resize) {
-    const widthDelta = key === "ArrowLeft" ? -1 : key === "ArrowRight" ? 1 : 0;
-    const heightDelta = key === "ArrowUp" ? -1 : key === "ArrowDown" ? 1 : 0;
-    return {
-      ...current,
-      w: Math.max(minWidth, Math.min(columnCount - current.x, current.w + widthDelta)),
-      h: Math.max(
-        minHeight,
-        Math.min(maxRowCount === null ? Number.MAX_SAFE_INTEGER : maxRowCount - current.y, current.h + heightDelta),
-      ),
-    };
-  }
+const getKeyboardDelta = (key: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown") => ({
+  x: key === "ArrowLeft" ? -1 : key === "ArrowRight" ? 1 : 0,
+  y: key === "ArrowUp" ? -1 : key === "ArrowDown" ? 1 : 0,
+});
 
-  const xDelta = key === "ArrowLeft" ? -1 : key === "ArrowRight" ? 1 : 0;
-  const yDelta = key === "ArrowUp" ? -1 : key === "ArrowDown" ? 1 : 0;
-  return {
-    ...current,
-    x: Math.max(0, Math.min(columnCount - current.w, current.x + xDelta)),
-    y: Math.max(
-      0,
-      Math.min(maxRowCount === null ? Number.MAX_SAFE_INTEGER : maxRowCount - current.h, current.y + yDelta),
-    ),
-  };
-};
+const arePlacementsEqual = (first: GridPlacement, second: GridPlacement) =>
+  first.x === second.x && first.y === second.y && first.w === second.w && first.h === second.h;
+
+const arePlacementListsEqual = (first: readonly GridPlacement[], second: readonly GridPlacement[]) =>
+  first.length === second.length &&
+  first.every((placement, index) => {
+    const candidate = second[index];
+    return candidate?.id === placement.id && arePlacementsEqual(placement, candidate);
+  });
