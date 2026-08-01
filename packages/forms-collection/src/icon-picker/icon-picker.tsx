@@ -167,7 +167,7 @@ export const IconPicker = ({
             onChange={(event) => {
               const nextValue = event.currentTarget.value;
               const trimmedValue = nextValue.trim();
-              if (/^https?:\/\/[^\s/]+/i.test(trimmedValue)) {
+              if (/^https?:\/\/[^\s/]+(?:\/\S*)?$/i.test(trimmedValue)) {
                 startTransition(() => {
                   setValue(trimmedValue);
                   setQuery("");
