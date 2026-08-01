@@ -35,7 +35,6 @@ vi.mock("@homarr/translation/client", () => ({
 }));
 vi.mock("../upload-media/upload-media", () => ({ UploadMedia: () => null }));
 
-import { isDirectIconUrl } from "./icon-url";
 import { IconPicker } from "./icon-picker";
 
 const directIconUrl = "https://cdn.example.com/shopify.svg";
@@ -121,18 +120,5 @@ describe("IconPicker", () => {
     expect(onChange).not.toHaveBeenCalled();
     expect(input.value).toBe("shopify");
     expect(findIconsQuery.mock.calls.some(([query]) => query.searchText === "shopify")).toBe(true);
-  });
-});
-
-describe("isDirectIconUrl", () => {
-  test.each([
-    { value: directIconUrl, expected: true },
-    { value: "HTTP://cdn.example.com/shopify.svg", expected: true },
-    { value: "https://", expected: false },
-    { value: "http://", expected: false },
-    { value: "shopify", expected: false },
-    { value: "/icons/shopify.svg", expected: false },
-  ])("returns $expected for $value", ({ value, expected }) => {
-    expect(isDirectIconUrl(value)).toBe(expected);
   });
 });

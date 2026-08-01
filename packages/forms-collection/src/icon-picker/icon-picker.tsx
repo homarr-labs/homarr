@@ -29,7 +29,6 @@ import { supportedLanguages } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { UploadMedia } from "../upload-media/upload-media";
-import { isDirectIconUrl } from "./icon-url";
 import classes from "./icon-picker.module.css";
 
 interface IconPickerProps {
@@ -168,7 +167,14 @@ export const IconPicker = ({
             onChange={(event) => {
               const nextValue = event.currentTarget.value;
               const trimmedValue = nextValue.trim();
-              if (isDirectIconUrl(trimmedValue)) {
+              let isDirectIconUrl = false;
+              try {
+                const url = new URL(trimmedValue);
+                isDirectIconUrl = (url.protocol === "http:" || url.protocol === "https:") && Boolean(url.hostname);
+              } catch {
+                // Keep repository search active for incomplete or invalid URLs.
+              }
+              if (isDirectIconUrl) {
                 startTransition(() => {
                   setValue(trimmedValue);
                   setQuery("");
