@@ -12,7 +12,8 @@ import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
 const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
-  const { data: feedEntries = [] } = clientApi.widget.rssFeed.getFeeds.useQuery(input);
+  const { data: feedEntries = [], error } = clientApi.widget.rssFeed.getFeeds.useQuery(input);
+  if (error) throw error;
 
   return feedEntries;
 };

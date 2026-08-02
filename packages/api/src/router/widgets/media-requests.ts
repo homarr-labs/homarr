@@ -44,10 +44,10 @@ export const mediaRequestsRouter = createTRPCRouter({
           };
         },
         {
-          fallback: (integration, error) => ({
+          fallback: (integration) => ({
             integration: { id: integration.id, name: integration.name, kind: integration.kind },
             data: [],
-            error: error instanceof Error ? error.message : String(error),
+            error: "Integration request failed",
           }),
           throwOnAllFailures: true,
         },
@@ -101,10 +101,10 @@ export const mediaRequestsRouter = createTRPCRouter({
           };
         },
         {
-          fallback: (integration, error) => ({
+          fallback: (integration) => ({
             integration: { id: integration.id, name: integration.name, kind: integration.kind },
             data: { stats: null, users: [] },
-            error: error instanceof Error ? error.message : String(error),
+            error: "Integration request failed",
           }),
           throwOnAllFailures: true,
         },

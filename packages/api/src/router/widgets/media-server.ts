@@ -38,12 +38,12 @@ export const mediaServerRouter = createTRPCRouter({
           };
         },
         {
-          fallback: (integration, error) => ({
+          fallback: (integration) => ({
             integrationId: integration.id,
             integrationName: integration.name,
             integrationKind: integration.kind,
             sessions: [],
-            error: error instanceof Error ? error.message : String(error),
+            error: "Integration request failed",
           }),
           throwOnAllFailures: true,
         },

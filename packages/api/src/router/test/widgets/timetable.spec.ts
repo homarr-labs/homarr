@@ -1,4 +1,6 @@
-import { stringify } from "superjson";
+// @vitest-environment node
+
+import { parse, stringify } from "superjson";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
@@ -8,6 +10,8 @@ import { eq } from "@homarr/db";
 import { boards, items, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { boardRouter } from "../../board";
+import { optionsRouter } from "../../widgets/options";
 import { timetableRouter } from "../../widgets/timetable";
 
 const mocks = vi.hoisted(() => ({ getTimetable: vi.fn(), searchStations: vi.fn(), lookup: vi.fn() }));
@@ -123,7 +127,7 @@ describe("timetableRouter source authorization", () => {
     "http://timetable.internal:8080",
     "http://[::1]:8080",
     "http://[::ffff:127.0.0.1]:8080",
-    "http://[fd00::1]:8080",
+    "https://[fd00::1]:8443",
     "http://[64:ff9b::7f00:1]:8080",
     "http://[2002:7f00:1::]:8080",
   ])("blocks an unsaved private endpoint %s even for board modifiers", async (baseUrl) => {
@@ -180,6 +184,66 @@ describe("timetableRouter source authorization", () => {
     expect(mocks.searchStations).toHaveBeenLastCalledWith(
       expect.objectContaining({ baseUrl, pinnedAddresses: undefined }),
     );
+  });
+
+  it("blocks changing a saved timetable to a private endpoint through item options", async () => {
+    const db = createDb();
+    const { boardId, itemId, ownerId } = await createTimetableItemAsync(db, {
+      baseUrl: "https://search.ch",
+      isPublic: false,
+    });
+    const caller = optionsRouter.createCaller({ db, deviceType: undefined, session: createSession(ownerId) });
+
+    await expect(
+      caller.saveItemOptions({ boardId, itemId, newOptions: { baseUrl: "http://127.0.0.1:8080" } }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+
+    const item = await db.query.items.findFirst({ where: eq(items.id, itemId) });
+    expect(parse<Record<string, unknown>>(item?.options ?? "{}")).toMatchObject({ baseUrl: "https://search.ch" });
+  });
+
+  it("blocks changing a saved timetable to a private endpoint through a board save", async () => {
+    const db = createDb();
+    const { boardId, itemId, ownerId } = await createTimetableItemAsync(db, {
+      baseUrl: "https://search.ch",
+      isPublic: false,
+    });
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: createSession(ownerId) });
+
+    await expect(
+      caller.saveBoard({
+        id: boardId,
+        sections: [],
+        items: [
+          {
+            id: itemId,
+            kind: "timetable",
+            options: { baseUrl: "http://127.0.0.1:8080" },
+            integrationIds: [],
+            layouts: [],
+            advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
+  it("blocks adding a timetable with a private endpoint", async () => {
+    const db = createDb();
+    const { boardId, ownerId } = await createTimetableItemAsync(db, {
+      baseUrl: "https://search.ch",
+      isPublic: false,
+    });
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: createSession(ownerId) });
+
+    await expect(
+      caller.addItem({
+        boardId,
+        kind: "timetable",
+        options: { baseUrl: "http://127.0.0.1:8080" },
+        integrationIds: [],
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
 
   it("rejects an item ID that does not belong to the requested board", async () => {
