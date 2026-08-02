@@ -14,9 +14,20 @@ describe("RSS feed display helpers", () => {
     expect(getHostname("https://example.com/feed.xml")).toBe("example.com");
   });
 
-  test("only exposes HTTP links from untrusted feed entries", () => {
+  test("only exposes credential-free HTTP links from untrusted feed entries", () => {
     expect(getSafeExternalUrl("https://example.com/story")).toBe("https://example.com/story");
     expect(getSafeExternalUrl("/story", "https://example.com/feed.xml")).toBe("https://example.com/story");
+    expect(getSafeExternalUrl("/story", "https://user:password@example.com/feed.xml")).toBe(
+      "https://example.com/story",
+    );
+    expect(getSafeExternalUrl("https://user:password@example.com/story")).toBe("https://example.com/story");
+    expect(getSafeExternalUrl(undefined, "https://example.com/feed?token=secret")).toBeUndefined();
+    expect(getSafeExternalUrl("#story", "https://example.com/feed?token=secret#old")).toBe(
+      "https://example.com/feed#story",
+    );
+    expect(getSafeExternalUrl("?story=1", "https://example.com/feed?token=secret")).toBe(
+      "https://example.com/feed?story=1",
+    );
     expect(getSafeExternalUrl("javascript:alert(1)")).toBeUndefined();
     expect(getSafeExternalUrl("not a URL")).toBeUndefined();
   });
