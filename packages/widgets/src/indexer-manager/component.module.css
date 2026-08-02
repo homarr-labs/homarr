@@ -35,7 +35,7 @@
   }
 }
 
-@media (hover: none) {
+@media (any-pointer: coarse) {
   .testAction {
     opacity: 1;
   }

@@ -68,6 +68,7 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import actionTargetClasses from "../common/action-target.module.css";
 import { createReadOnlyTaskItemTransaction, ReadOnlyTaskItem } from "./read-only-task-item";
 import { NotebookTextDirection, setTextDirection } from "./text-direction";
 
@@ -526,18 +527,12 @@ export function Notebook({
         </Group>
       )}
       {canChange && (
-        <>
+        <Stack pos="absolute" top={7} right={7} gap={7} style={{ zIndex: 1 }}>
           <ActionIcon
-            className="homarr-notebook-action"
+            className={`homarr-notebook-action ${actionTargetClasses.root}`}
             data-visible={isEditing || displayMode === "advanced" || undefined}
             title={isEditing ? t("common.action.save") : t("common.action.edit")}
             aria-label={isEditing ? t("common.action.save") : t("common.action.edit")}
-            style={{
-              zIndex: 1,
-            }}
-            top={7}
-            right={7}
-            pos="absolute"
             color={primaryColor}
             variant="light"
             size={30}
@@ -549,16 +544,10 @@ export function Notebook({
           </ActionIcon>
           {isEditing && (
             <ActionIcon
-              className="homarr-notebook-action"
+              className={`homarr-notebook-action ${actionTargetClasses.root}`}
               data-visible
               title={t("common.action.cancel")}
               aria-label={t("common.action.cancel")}
-              style={{
-                zIndex: 1,
-              }}
-              top={44}
-              right={7}
-              pos="absolute"
               color={primaryColor}
               variant="light"
               size={30}
@@ -568,7 +557,7 @@ export function Notebook({
               <IconX {...iconProps} />
             </ActionIcon>
           )}
-        </>
+        </Stack>
       )}
     </Box>
   );
@@ -746,13 +735,31 @@ const ColorControl = ({ defaultColor, getCurrent, update, icon: Icon, ariaLabel 
         <Stack gap={8}>
           <ColorPicker value={color} onChange={setColor} format="hexa" swatches={palette} swatchesPerRow={6} />
           <Group justify="right" gap={8}>
-            <ActionIcon title={t("common.action.cancel")} variant="default" onClick={close}>
+            <ActionIcon
+              className={actionTargetClasses.root}
+              title={t("common.action.cancel")}
+              aria-label={t("common.action.cancel")}
+              variant="default"
+              onClick={close}
+            >
               <IconX stroke={1.5} size="1rem" />
             </ActionIcon>
-            <ActionIcon title={t("common.action.apply")} variant="default" onClick={handleApplyColor}>
+            <ActionIcon
+              className={actionTargetClasses.root}
+              title={t("common.action.apply")}
+              aria-label={t("common.action.apply")}
+              variant="default"
+              onClick={handleApplyColor}
+            >
               <IconCheck stroke={1.5} size="1rem" />
             </ActionIcon>
-            <ActionIcon title={t("widget.notebook.popover.clearColor")} variant="default" onClick={handleClearColor}>
+            <ActionIcon
+              className={actionTargetClasses.root}
+              title={t("widget.notebook.popover.clearColor")}
+              aria-label={t("widget.notebook.popover.clearColor")}
+              variant="default"
+              onClick={handleClearColor}
+            >
               <IconCircleOff stroke={1.5} size="1rem" />
             </ActionIcon>
           </Group>

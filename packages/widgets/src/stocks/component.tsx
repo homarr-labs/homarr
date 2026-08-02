@@ -2,7 +2,7 @@
 
 import { Sparkline } from "@mantine/charts";
 import { Flex, Stack, Text, Title, useMantineTheme } from "@mantine/core";
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import { IconMinus, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -105,8 +105,10 @@ export default function StockPriceWidget({ options, width, height, displayMode }
         <Text size="xl" fw={700} lh="0.715">
           {stockValuesChange > 0 ? (
             <IconTrendingUp size="1.5rem" color={theme.colors.green[7]} />
-          ) : (
+          ) : stockValuesChange < 0 ? (
             <IconTrendingDown size="1.5rem" color={theme.colors.red[7]} />
+          ) : (
+            <IconMinus size="1.5rem" color={theme.colors.gray[6]} />
           )}
           {data.symbol}
         </Text>

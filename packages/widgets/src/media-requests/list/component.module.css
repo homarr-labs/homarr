@@ -24,16 +24,9 @@
   opacity: 1;
 }
 
-@media (hover: none) {
+@media (any-pointer: coarse) {
   .pendingActions {
     opacity: 1;
-  }
-}
-
-@media (pointer: coarse) {
-  .pendingActions button {
-    min-width: 36px;
-    min-height: 36px;
   }
 }
 

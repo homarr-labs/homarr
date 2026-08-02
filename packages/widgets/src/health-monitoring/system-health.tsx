@@ -42,6 +42,7 @@ import { useI18n } from "@homarr/translation/client";
 import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import actionTargetClasses from "../common/action-target.module.css";
 import { CpuRing } from "./rings/cpu-ring";
 import { CpuTempRing } from "./rings/cpu-temp-ring";
 import { GpuRing } from "./rings/gpu-ring";
@@ -118,7 +119,7 @@ export const SystemHealthMonitoring = ({
                   disabled={!healthInfo.rebootRequired && healthInfo.availablePkgUpdates === 0}
                 >
                   <ActionIcon
-                    className="health-monitoring-information-icon-avatar"
+                    className={combineClasses("health-monitoring-information-icon-avatar", actionTargetClasses.root)}
                     variant={"light"}
                     color="var(--mantine-color-text)"
                     size="sm"

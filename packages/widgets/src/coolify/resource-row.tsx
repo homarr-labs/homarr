@@ -3,6 +3,7 @@
 import { ActionIcon, Anchor, Group, Indicator, Stack, Text } from "@mantine/core";
 import { IconFileText, IconLink } from "@tabler/icons-react";
 
+import actionTargetClasses from "../common/action-target.module.css";
 import { cleanFqdn, getResourceTimestamp, getStatusColor, parseStatus } from "./coolify-utils";
 
 interface ResourceRowProps {
@@ -58,6 +59,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
       <Group wrap="nowrap" gap={4} ml={16}>
         {cleanFqdn(item.fqdn) && (
           <ActionIcon
+            className={actionTargetClasses.root}
             component="a"
             href={cleanFqdn(item.fqdn)}
             target="_blank"
@@ -72,6 +74,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
         )}
         {!isTiny && logsUrl && (
           <ActionIcon
+            className={actionTargetClasses.root}
             component="a"
             href={logsUrl}
             target="_blank"

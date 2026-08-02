@@ -33,6 +33,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
+import actionTargetClasses from "../../common/action-target.module.css";
 import classes from "./component.module.css";
 import TimerModal from "./TimerModal";
 
@@ -353,6 +354,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                 <Group gap="xs" grow wrap="nowrap" w="100%">
                   {!isEnabled ? (
                     <ActionIcon
+                      className={actionTargetClasses.root}
                       aria-label={`${t("widget.dnsHoleControls.controls.enableAll")}: ${data.integration.name}`}
                       onClick={() => void toggleDns(data.integration.id).catch(() => undefined)}
                       disabled={!controlEnabled}
@@ -364,6 +366,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                     </ActionIcon>
                   ) : (
                     <ActionIcon
+                      className={actionTargetClasses.root}
                       aria-label={`${t("widget.dnsHoleControls.controls.disableAll")}: ${data.integration.name}`}
                       onClick={() => void toggleDns(data.integration.id).catch(() => undefined)}
                       disabled={!controlEnabled}
@@ -375,6 +378,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                     </ActionIcon>
                   )}
                   <ActionIcon
+                    className={actionTargetClasses.root}
                     aria-label={`${t("widget.dnsHoleControls.controls.setTimer")}: ${data.integration.name}`}
                     onClick={() => {
                       setSelectedIntegrationIds([data.integration.id]);
@@ -440,7 +444,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
           {layout === "md" && (
             <ActionIcon
               aria-label={`${t("widget.dnsHoleControls.controls.setTimer")}: ${data.integration.name}`}
-              className="dns-hole-controls-item-timer-button"
+              className={combineClasses("dns-hole-controls-item-timer-button", actionTargetClasses.root)}
               display={isInteractPermitted ? undefined : "none"}
               disabled={!controlEnabled || !isEnabled}
               color="yellow"

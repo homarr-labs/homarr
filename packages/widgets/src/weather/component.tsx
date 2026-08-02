@@ -1,7 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import { Box, Group, HoverCard, Stack, Table, Text } from "@mantine/core";
+import { Group, Popover, Stack, Table, Text, UnstyledButton } from "@mantine/core";
 import {
   IconArrowDownRight,
   IconArrowUpRight,
@@ -23,6 +23,7 @@ import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { AnimatedWeatherIcon } from "./animated-icon";
 import { WeatherDescription } from "./icon";
+import classes from "./component.module.css";
 
 export default function WeatherWidget({
   isEditMode,
@@ -56,10 +57,11 @@ export default function WeatherWidget({
         <WeeklyForecast
           weather={weather}
           options={options}
+          isEditMode={isEditMode}
           maxDays={getVisibleForecastDays(options.forecastDayCount, width, height)}
         />
       ) : (
-        <DailyWeather weather={weather} options={options} />
+        <DailyWeather weather={weather} options={options} isEditMode={isEditMode} />
       )}
     </Stack>
   );
@@ -67,6 +69,10 @@ export default function WeatherWidget({
 
 interface WeatherProps extends Pick<WidgetComponentProps<"weather">, "options"> {
   weather: NonNullable<RouterOutputs["widget"]["weather"]["atLocation"]>;
+}
+
+interface CompactWeatherProps extends WeatherProps {
+  isEditMode: boolean;
 }
 
 const AdvancedWeather = ({ options, weather }: WeatherProps) => {
@@ -234,23 +240,23 @@ const AdvancedWeather = ({ options, weather }: WeatherProps) => {
   );
 };
 
-const DailyWeather = ({ options, weather }: WeatherProps) => {
+const DailyWeather = ({ options, weather, isEditMode }: CompactWeatherProps) => {
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
 
   return (
     <>
       <Group className="weather-day-group" gap="sm">
-        <HoverCard>
-          <HoverCard.Target>
-            <Box>
+        <Popover position="bottom" withArrow shadow="md">
+          <Popover.Target>
+            <UnstyledButton className={classes.detailsButton} aria-label={t("details")} disabled={isEditMode}>
               <AnimatedWeatherIcon size={30} code={weather.current.weathercode} />
-            </Box>
-          </HoverCard.Target>
-          <HoverCard.Dropdown>
+            </UnstyledButton>
+          </Popover.Target>
+          <Popover.Dropdown>
             <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
-          </HoverCard.Dropdown>
-        </HoverCard>
+          </Popover.Dropdown>
+        </Popover>
         <Text fz={30}>
           {getPreferredUnit(
             weather.current.temperature,
@@ -319,7 +325,9 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
   );
 };
 
-const WeeklyForecast = ({ options, weather, maxDays }: WeatherProps & { maxDays: number }) => {
+const WeeklyForecast = ({ options, weather, isEditMode, maxDays }: CompactWeatherProps & { maxDays: number }) => {
+  const t = useScopedI18n("widget.weather");
+
   return (
     <>
       <Group className="weather-forecast-city-temp-group" wrap="nowrap" gap="md">
@@ -332,16 +340,16 @@ const WeeklyForecast = ({ options, weather, maxDays }: WeatherProps & { maxDays:
           </Group>
         )}
         <Group gap="xs" wrap="nowrap">
-          <HoverCard>
-            <HoverCard.Target>
-              <Box>
+          <Popover position="bottom" withArrow shadow="md">
+            <Popover.Target>
+              <UnstyledButton className={classes.detailsButton} aria-label={t("details")} disabled={isEditMode}>
                 <AnimatedWeatherIcon size={16} code={weather.current.weathercode} />
-              </Box>
-            </HoverCard.Target>
-            <HoverCard.Dropdown>
+              </UnstyledButton>
+            </Popover.Target>
+            <Popover.Dropdown>
               <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
-            </HoverCard.Dropdown>
-          </HoverCard>
+            </Popover.Dropdown>
+          </Popover>
           <Text fz={16}>
             {getPreferredUnit(
               weather.current.temperature,
@@ -351,35 +359,45 @@ const WeeklyForecast = ({ options, weather, maxDays }: WeatherProps & { maxDays:
           </Text>
         </Group>
       </Group>
-      <Forecast weather={weather} options={options} maxDays={maxDays} />
+      <Forecast weather={weather} options={options} isEditMode={isEditMode} maxDays={maxDays} />
     </>
   );
 };
 
-function Forecast({ weather, options, maxDays }: WeatherProps & { maxDays: number }) {
+function Forecast({ weather, options, isEditMode, maxDays }: CompactWeatherProps & { maxDays: number }) {
   const dateFormat = options.dateFormat;
+  const t = useScopedI18n("widget.weather");
   return (
     <Group className="weather-forecast-days-group" w="100%" justify="space-evenly" wrap="nowrap" pb="sm">
       {weather.daily.slice(0, maxDays).map((dayWeather, index) => (
-        <HoverCard key={dayWeather.time} withArrow shadow="md">
-          <HoverCard.Target>
-            <Stack
-              className={combineClasses(
-                "weather-forecast-day-stack",
-                `weather-forecast-day${index}`,
-                `weather-forecast-weekday${dayjs(dayWeather.time).day()}`,
-              )}
-              gap="0"
-              align="center"
+        <Popover key={dayWeather.time} position="bottom" withArrow shadow="md">
+          <Popover.Target>
+            <UnstyledButton
+              className={classes.forecastButton}
+              aria-label={t("detailsFor", { date: dayjs(dayWeather.time).format(dateFormat) })}
+              disabled={isEditMode}
             >
-              <Text fz="xl">{dayjs(dayWeather.time).format("dd")}</Text>
-              <AnimatedWeatherIcon size={16} code={dayWeather.weatherCode} />
-              <Text fz={16}>
-                {getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
-              </Text>
-            </Stack>
-          </HoverCard.Target>
-          <HoverCard.Dropdown>
+              <Stack
+                component="span"
+                className={combineClasses(
+                  "weather-forecast-day-stack",
+                  `weather-forecast-day${index}`,
+                  `weather-forecast-weekday${dayjs(dayWeather.time).day()}`,
+                )}
+                gap="0"
+                align="center"
+              >
+                <Text component="span" fz="xl">
+                  {dayjs(dayWeather.time).format("dd")}
+                </Text>
+                <AnimatedWeatherIcon size={16} code={dayWeather.weatherCode} />
+                <Text component="span" fz={16}>
+                  {getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
+                </Text>
+              </Stack>
+            </UnstyledButton>
+          </Popover.Target>
+          <Popover.Dropdown>
             <WeatherDescription
               useImperialSpeed={options.useImperialSpeed}
               dateFormat={dateFormat}
@@ -401,8 +419,8 @@ function Forecast({ weather, options, maxDays }: WeatherProps & { maxDays: numbe
               maxWindGusts={dayWeather.maxWindGusts}
               humidity={dayWeather.humidity}
             />
-          </HoverCard.Dropdown>
-        </HoverCard>
+          </Popover.Dropdown>
+        </Popover>
       ))}
     </Group>
   );
