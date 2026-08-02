@@ -54,10 +54,14 @@ export const timetableSearchStationsRequestHandler = createRequestHandler<
 
 export const timetableGetTimetableRequestHandler = createRequestHandler<
   Timetable,
-  { baseUrl: string; stationId: string; limit: number }
+  { baseUrl: string; stationId: string; limit: number; pinnedAddresses?: TimetableResolvedAddress[] }
 >({
   async requestAsync(input) {
-    return await getTimetableAsync(input.baseUrl, { stationId: input.stationId, limit: input.limit });
+    return await getTimetableAsync(
+      input.baseUrl,
+      { stationId: input.stationId, limit: input.limit },
+      input.pinnedAddresses,
+    );
   },
   cacheTtlMs: 60_000,
 });
@@ -142,6 +146,7 @@ const searchStationsAsync = async (
 const getTimetableAsync = async (
   baseUrl: string,
   options: { stationId: string; limit: number },
+  pinnedAddresses?: TimetableResolvedAddress[],
 ): Promise<Timetable> => {
   const now = new Date();
   const date = new Intl.DateTimeFormat("en-US", {
@@ -156,48 +161,53 @@ const getTimetableAsync = async (
     minute: "2-digit",
     hour12: false,
   }).format(now);
-  const response = await fetchWithTrustedCertificatesAsync(
-    buildUrl(baseUrl, "/timetable/api/stationboard.json", {
-      stop: options.stationId,
-      limit: options.limit,
-      show_delays: 1,
-      show_tracks: 1,
-      date,
-      time,
-    }),
-    timetableFetchOptions,
-  );
-  if (!response.ok) throw new ResponseError(response);
+  const dispatcher = pinnedAddresses ? await createPinnedTimetableDispatcherAsync(baseUrl, pinnedAddresses) : undefined;
+  try {
+    const response = await fetchWithTrustedCertificatesAsync(
+      buildUrl(baseUrl, "/timetable/api/stationboard.json", {
+        stop: options.stationId,
+        limit: options.limit,
+        show_delays: 1,
+        show_tracks: 1,
+        date,
+        time,
+      }),
+      { ...timetableFetchOptions, dispatcher },
+    );
+    if (!response.ok) throw new ResponseError(response);
 
-  const body = await readBoundedTimetableJsonAsync(response);
-  const envelope = timetableEnvelopeSchema.parse(body);
-  const data = await timetableSchema.parseAsync({
-    connections: envelope.connections.slice(0, Math.min(options.limit, MAX_TIMETABLE_ENTRIES)),
-  });
-  return {
-    stationId: options.stationId,
-    timestamp: now,
-    entries: data.connections.map((connection) => {
-      const color = connection.color.split("~")[0];
-      return {
-        timestamp: connection.time,
-        line: connection.line
-          ? {
-              name: connection.line,
-              color: color && color.length >= 1 ? `#${color}` : null,
-            }
-          : null,
-        location: connection.terminal.name,
-        delay: connection.dep_delay,
-        platform: connection.track
-          ? {
-              name: connection.track.replace("!", ""),
-              hasChanged: connection.track.includes("!"),
-            }
-          : null,
-      };
-    }),
-  };
+    const body = await readBoundedTimetableJsonAsync(response);
+    const envelope = timetableEnvelopeSchema.parse(body);
+    const data = await timetableSchema.parseAsync({
+      connections: envelope.connections.slice(0, Math.min(options.limit, MAX_TIMETABLE_ENTRIES)),
+    });
+    return {
+      stationId: options.stationId,
+      timestamp: now,
+      entries: data.connections.map((connection) => {
+        const color = connection.color.split("~")[0];
+        return {
+          timestamp: connection.time,
+          line: connection.line
+            ? {
+                name: connection.line,
+                color: color && color.length >= 1 ? `#${color}` : null,
+              }
+            : null,
+          location: connection.terminal.name,
+          delay: connection.dep_delay,
+          platform: connection.track
+            ? {
+                name: connection.track.replace("!", ""),
+                hasChanged: connection.track.includes("!"),
+              }
+            : null,
+        };
+      }),
+    };
+  } finally {
+    await dispatcher?.close();
+  }
 };
 
 const timetableSchema = z.object({

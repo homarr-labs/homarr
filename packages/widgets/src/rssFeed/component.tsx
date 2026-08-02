@@ -12,10 +12,10 @@ import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
 const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
-  const { data: feedEntries = [], error } = clientApi.widget.rssFeed.getFeeds.useQuery(input);
-  if (error) throw error;
+  const { data: feedEntries, error } = clientApi.widget.rssFeed.getFeeds.useQuery(input);
+  if (error && feedEntries === undefined) throw error;
 
-  return feedEntries;
+  return feedEntries ?? [];
 };
 
 export default function RssFeed({ options, width, displayMode }: WidgetComponentProps<"rssFeed">) {

@@ -69,8 +69,10 @@ export const SystemHealthMonitoring = ({
 
   if (healthData.length === 0) return <WidgetEmptyState />;
 
+  const Container = withScrollArea ? ScrollArea : Box;
+
   return (
-    <ScrollArea h={withScrollArea ? "100%" : undefined}>
+    <Container h={withScrollArea ? "100%" : undefined}>
       <Stack mih="100%" gap="sm" className="health-monitoring">
         {healthData.map(({ integrationId, integrationName, healthInfo }) => {
           const filteredFileSystem = filterStorageVolumes(
@@ -221,7 +223,7 @@ export const SystemHealthMonitoring = ({
           );
         })}
       </Stack>
-    </ScrollArea>
+    </Container>
   );
 };
 

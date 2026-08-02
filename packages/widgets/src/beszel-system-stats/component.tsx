@@ -8,6 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
@@ -35,7 +36,13 @@ export default function BeszelSystemStatsWidget({
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
-  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation();
+  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
+    onError: () =>
+      showErrorNotification({
+        title: t("error.selectionSaveTitle"),
+        message: t("error.selectionSaveMessage"),
+      }),
+  });
   const {
     data: systemsResult = [],
     isPending: systemsPending,
