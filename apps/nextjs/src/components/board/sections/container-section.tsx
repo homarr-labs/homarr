@@ -66,13 +66,13 @@ export const BoardContainerSection = ({ section }: Props) => {
           <Button
             className={classes.containerToggle}
             pos="absolute"
-            top={isVisuallyCollapsed ? 0 : -28}
+            top={isVisuallyCollapsed ? 0 : -24}
             left={0}
             w="100%"
-            h={isVisuallyCollapsed ? "100%" : 28}
+            h={isVisuallyCollapsed ? "100%" : 24}
             px={12}
             pe={options.showOpenAll ? 40 : 12}
-            radius={isVisuallyCollapsed ? board.itemRadius : "sm"}
+            radius={board.itemRadius}
             variant="default"
             justify={options.showLabel ? "flex-start" : "center"}
             leftSection={
@@ -145,8 +145,8 @@ export const BoardContainerSection = ({ section }: Props) => {
         {options.showOpenAll && !isEditMode && (
           <ActionIcon
             pos="absolute"
-            top={isVisuallyCollapsed ? "50%" : -26}
-            right={2}
+            top={isVisuallyCollapsed ? "50%" : -24}
+            right={0}
             style={{ zIndex: 10, transform: isVisuallyCollapsed ? "translateY(-50%)" : undefined }}
             variant={options.collapsible ? "subtle" : "default"}
             size={24}
@@ -158,15 +158,20 @@ export const BoardContainerSection = ({ section }: Props) => {
             <IconExternalLink size={16} />
           </ActionIcon>
         )}
-        <Box id={contentId} h="100%" hidden={isVisuallyCollapsed}>
-          {!isVisuallyCollapsed && (
-            <SectionGrid
-              section={section}
-              columnCount={section.width}
-              requestedRowCount={section.height}
-              label={label}
-            />
-          )}
+        <Box
+          id={contentId}
+          className={classes.containerBody}
+          h="100%"
+          data-collapsed={isVisuallyCollapsed ? "true" : "false"}
+          aria-hidden={isVisuallyCollapsed}
+          inert={isVisuallyCollapsed}
+        >
+          <SectionGrid
+            section={section}
+            columnCount={section.width}
+            requestedRowCount={section.height}
+            label={label}
+          />
         </Box>
       </Card>
       {isEditMode && <BoardContainerMenu section={section} />}

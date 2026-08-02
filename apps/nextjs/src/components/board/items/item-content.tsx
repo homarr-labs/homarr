@@ -30,8 +30,9 @@ interface BoardItemContentProps {
 }
 
 const getOverflowFromKind = (kind: SectionItem["kind"]) => {
+  if (kind === "iframe") return "hidden";
   if (kind === "systemResources") return "visible";
-  return "hidden";
+  return undefined;
 };
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
