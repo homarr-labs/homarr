@@ -5,27 +5,8 @@ import {
   hiddenFromOnboarding,
   integrationDefs,
   integrationKinds,
+  getWidgetKindsForIntegration,
 } from "@homarr/definitions";
-import { loadAllWidgetDefinitions } from "@homarr/widgets/manifest";
-
-const buildWidgetsByIntegration = async () => {
-  const map = Object.fromEntries(integrationKinds.map((kind) => [kind, [] as WidgetKind[]])) as Record<
-    IntegrationKind,
-    WidgetKind[]
-  >;
-  const definitions = await loadAllWidgetDefinitions();
-
-  for (const [widgetKind, definition] of definitions) {
-    const supported =
-      "supportedIntegrations" in definition ? (definition.supportedIntegrations as IntegrationKind[]) : [];
-    for (const kind of supported) {
-      if (kind in map) {
-        map[kind].push(widgetKind);
-      }
-    }
-  }
-  return map;
-};
 
 export const categoryTranslationKeys: Record<string, string> = {
   dnsHole: "integration.category.dnsHole",
@@ -64,14 +45,13 @@ export interface IntegrationGridItem {
   widgets: WidgetKind[];
 }
 
-export const buildSortedIntegrations = async (
+export const buildSortedIntegrations = (
   options: { enableMockIntegration?: boolean; onboarding?: boolean } = {},
-): Promise<IntegrationGridItem[]> => {
-  const widgetsByIntegration = await buildWidgetsByIntegration();
+): IntegrationGridItem[] => {
   return integrationKinds
     .filter((kind) => {
       if (options.onboarding && hiddenFromOnboarding.has(kind)) return false;
-      if (options.onboarding && widgetsByIntegration[kind].length === 0) return false;
+      if (options.onboarding && getWidgetKindsForIntegration(kind).length === 0) return false;
       if (!options.enableMockIntegration && kind === "mock") return false;
       return true;
     })
@@ -79,7 +59,7 @@ export const buildSortedIntegrations = async (
       kind,
       name: getIntegrationName(kind),
       categories: [...new Set(integrationDefs[kind].category.flat())] as string[],
-      widgets: widgetsByIntegration[kind],
+      widgets: getWidgetKindsForIntegration(kind),
     }))
     .toSorted((left, right) => {
       const leftIdx = featuredIntegrations.indexOf(left.kind);

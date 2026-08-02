@@ -12,6 +12,15 @@ type WidgetModule = {
   componentLoader: () => Promise<{ default: ComponentType<WidgetComponentProps<WidgetKind>> }>;
 };
 
+type WidgetComponentModule = {
+  default: ComponentType<WidgetComponentProps<WidgetKind>>;
+};
+
+export type WidgetResources = {
+  definition: WidgetDefinition;
+  Component: ComponentType<WidgetComponentProps<WidgetKind>>;
+};
+
 const moduleLoaders: Record<WidgetKind, () => Promise<WidgetModule>> = {
   clock: () => import("./clock") as Promise<WidgetModule>,
   weather: () => import("./weather") as Promise<WidgetModule>,
@@ -69,6 +78,67 @@ const moduleLoaders: Record<WidgetKind, () => Promise<WidgetModule>> = {
   customApi: () => import("./custom-api") as Promise<WidgetModule>,
 };
 
+// Keep these imports explicit so Turbopack can create one discoverable chunk per
+// widget implementation. Loading this registry does not load the implementations.
+const componentLoaders: Record<WidgetKind, () => Promise<WidgetComponentModule>> = {
+  clock: () => import("./clock/component") as Promise<WidgetComponentModule>,
+  weather: () => import("./weather/component") as Promise<WidgetComponentModule>,
+  app: () => import("./app/component") as Promise<WidgetComponentModule>,
+  archiveTeamWarrior: () => import("./archive-team-warrior/component") as Promise<WidgetComponentModule>,
+  anchorNote: () => import("./anchor-note/component") as Promise<WidgetComponentModule>,
+  notebook: () => import("./notebook/component") as Promise<WidgetComponentModule>,
+  iframe: () => import("./iframe/component") as Promise<WidgetComponentModule>,
+  video: () => import("./video/component") as Promise<WidgetComponentModule>,
+  dnsHoleSummary: () => import("./dns-hole/summary/component") as Promise<WidgetComponentModule>,
+  dnsHoleControls: () => import("./dns-hole/controls/component") as Promise<WidgetComponentModule>,
+  "smartHome-entityState": () => import("./smart-home/entity-state/component") as Promise<WidgetComponentModule>,
+  "smartHome-executeAutomation": () =>
+    import("./smart-home/execute-automation/component") as Promise<WidgetComponentModule>,
+  stockPrice: () => import("./stocks/component") as Promise<WidgetComponentModule>,
+  mediaServer: () => import("./media-server/component") as Promise<WidgetComponentModule>,
+  calendar: () => import("./calendar/component") as Promise<WidgetComponentModule>,
+  downloads: () => import("./downloads/component") as Promise<WidgetComponentModule>,
+  "mediaRequests-requestList": () => import("./media-requests/list/component") as Promise<WidgetComponentModule>,
+  "mediaRequests-requestStats": () => import("./media-requests/stats/component") as Promise<WidgetComponentModule>,
+  mediaMissing: () => import("./media-missing/component") as Promise<WidgetComponentModule>,
+  networkControllerSummary: () => import("./network-controller/summary/component") as Promise<WidgetComponentModule>,
+  networkControllerStatus: () =>
+    import("./network-controller/network-status/component") as Promise<WidgetComponentModule>,
+  rssFeed: () => import("./rssFeed/component") as Promise<WidgetComponentModule>,
+  bookmarks: () => import("./bookmarks/component") as Promise<WidgetComponentModule>,
+  bazarr: () => import("./bazarr/component") as Promise<WidgetComponentModule>,
+  indexerManager: () => import("./indexer-manager/component") as Promise<WidgetComponentModule>,
+  healthMonitoring: () => import("./health-monitoring/component") as Promise<WidgetComponentModule>,
+  mediaTranscoding: () => import("./media-transcoding/component") as Promise<WidgetComponentModule>,
+  minecraftServerStatus: () => import("./minecraft/server-status/component") as Promise<WidgetComponentModule>,
+  dockerContainers: () => import("./docker/component") as Promise<WidgetComponentModule>,
+  releases: () => import("./releases/component") as Promise<WidgetComponentModule>,
+  firewall: () => import("./firewall/component") as Promise<WidgetComponentModule>,
+  notifications: () => import("./notifications/component") as Promise<WidgetComponentModule>,
+  mediaReleases: () => import("./media-releases/component") as Promise<WidgetComponentModule>,
+  systemResources: () => import("./system-resources/component") as Promise<WidgetComponentModule>,
+  coolify: () => import("./coolify/component") as Promise<WidgetComponentModule>,
+  systemDisks: () => import("./system-disks/component") as Promise<WidgetComponentModule>,
+  timetable: () => import("./timetable/component") as Promise<WidgetComponentModule>,
+  "immich-serverStats": () => import("./immich/server-stats/component") as Promise<WidgetComponentModule>,
+  "immich-albumCarousel": () => import("./immich/album-carousel/component") as Promise<WidgetComponentModule>,
+  paperlessNgx: () => import("./paperless-ngx/component") as Promise<WidgetComponentModule>,
+  patchmon: () => import("./patchmon/component") as Promise<WidgetComponentModule>,
+  tracearr: () => import("./tracearr/component") as Promise<WidgetComponentModule>,
+  speedtestTracker: () => import("./speedtest-tracker/component") as Promise<WidgetComponentModule>,
+  uptimeKuma: () => import("./uptime-kuma/component") as Promise<WidgetComponentModule>,
+  audioStats: () => import("./audio-stats/component") as Promise<WidgetComponentModule>,
+  umami: () => import("./umami/component") as Promise<WidgetComponentModule>,
+  vpn: () => import("./vpn/component") as Promise<WidgetComponentModule>,
+  ups: () => import("./ups/component") as Promise<WidgetComponentModule>,
+  beszelSystemTable: () => import("./beszel-system-table/component") as Promise<WidgetComponentModule>,
+  beszelSystemGrid: () => import("./beszel-system-grid/component") as Promise<WidgetComponentModule>,
+  beszelAlerts: () => import("./beszel-alerts/component") as Promise<WidgetComponentModule>,
+  beszelSystemStats: () => import("./beszel-system-stats/component") as Promise<WidgetComponentModule>,
+  traefik: () => import("./traefik/component") as Promise<WidgetComponentModule>,
+  customApi: () => import("./custom-api/component") as Promise<WidgetComponentModule>,
+};
+
 const definitionPromises = new Map<WidgetKind, Promise<WidgetDefinition>>();
 
 export const widgetKinds = Object.keys(moduleLoaders) as WidgetKind[];
@@ -94,6 +164,25 @@ export const createRetryableLoader = <TKey, TValue>(loaders: ReadonlyMap<TKey, (
 
 export const loadWidgetModule = createRetryableLoader(
   new Map(Object.entries(moduleLoaders) as [WidgetKind, () => Promise<WidgetModule>][]),
+);
+
+export const loadWidgetComponent = createRetryableLoader(
+  new Map(Object.entries(componentLoaders) as [WidgetKind, () => Promise<WidgetComponentModule>][]),
+);
+
+export const loadWidgetResources = createRetryableLoader(
+  new Map(
+    (Object.keys(moduleLoaders) as WidgetKind[]).map((kind) => [
+      kind,
+      async () => {
+        const [{ definition }, { default: Component }] = await Promise.all([
+          loadWidgetModule(kind),
+          loadWidgetComponent(kind),
+        ]);
+        return { definition, Component } satisfies WidgetResources;
+      },
+    ]),
+  ),
 );
 
 export const loadWidgetDefinition = (kind: WidgetKind) => {

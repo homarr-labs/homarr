@@ -1,5 +1,6 @@
-import type { MutableRefObject } from "react";
+import type { ComponentType, MutableRefObject } from "react";
 import { Suspense, use, useRef } from "react";
+import type { CardProps } from "@mantine/core";
 import { Badge, Card, Center, Loader } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
@@ -11,10 +12,10 @@ import { ErrorBoundary } from "react-error-boundary";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useSettings } from "@homarr/settings";
-import { getWidgetComponent } from "@homarr/widgets/client";
 import { WidgetError } from "@homarr/widgets/errors";
-import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
-import type { WidgetDefinition } from "@homarr/widgets/definition";
+import { getWidgetQueryKeys } from "@homarr/widgets/definition";
+import type { WidgetComponentProps, WidgetDefinition } from "@homarr/widgets/definition";
+import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import classes from "../sections/item.module.css";
@@ -22,7 +23,7 @@ import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { BoardItemMenu } from "./item-menu";
 import { WidgetContextMenu } from "./widget-context-menu";
-import { removePersistedWidgetQueries } from "./widget-query-recovery";
+import { removeWidgetDataQueries } from "./widget-query-recovery";
 
 interface BoardItemContentProps {
   item: SectionItem;
@@ -34,10 +35,51 @@ const getOverflowFromKind = (kind: SectionItem["kind"]) => {
   return undefined;
 };
 
-const WidgetDefinitionLoadError = ({ error, resetErrorBoundary }: FallbackProps) => (
-  <Center className={classes.itemCard} h="100%">
-    <WidgetError error={error} resetErrorBoundary={resetErrorBoundary} />
-  </Center>
+type BoardItemCardProps = CardProps & {
+  item: SectionItem;
+  innerRef: (element: HTMLDivElement | null) => void;
+};
+
+const BoardItemCard = ({ item, innerRef, children, ...cardProps }: BoardItemCardProps) => {
+  const board = useRequiredBoard();
+
+  return (
+    <Card
+      {...cardProps}
+      ref={innerRef}
+      className={combineClasses(
+        classes.itemCard,
+        `${item.kind}-wrapper`,
+        "grid-stack-item-content",
+        item.advancedOptions.customCssClasses.join(" "),
+      )}
+      radius={board.itemRadius}
+      styles={{
+        root: {
+          "--opacity": board.opacity / 100,
+          containerType: "size",
+          overflow: getOverflowFromKind(item.kind),
+          "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+        },
+      }}
+      p={0}
+    >
+      {children}
+    </Card>
+  );
+};
+
+const WidgetDefinitionLoadError = ({
+  error,
+  resetErrorBoundary,
+  item,
+  innerRef,
+}: FallbackProps & Pick<BoardItemCardProps, "item" | "innerRef">) => (
+  <BoardItemCard item={item} innerRef={innerRef}>
+    <Center h="100%">
+      <WidgetError error={error} resetErrorBoundary={resetErrorBoundary} />
+    </Center>
+  </BoardItemCard>
 );
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
@@ -47,12 +89,17 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
 
   return (
     <>
-      <ErrorBoundary resetKeys={[item.kind]} fallbackRender={WidgetDefinitionLoadError}>
+      <ErrorBoundary
+        resetKeys={[item.kind]}
+        fallbackRender={(fallbackProps) => <WidgetDefinitionLoadError {...fallbackProps} item={item} innerRef={ref} />}
+      >
         <Suspense
           fallback={
-            <Center ref={ref} className={classes.itemCard} h="100%">
-              <Loader size="sm" />
-            </Center>
+            <BoardItemCard item={item} innerRef={ref}>
+              <Center h="100%">
+                <Loader size="sm" />
+              </Center>
+            </BoardItemCard>
           }
         >
           <LoadedBoardItemContent
@@ -89,35 +136,16 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   );
 };
 
-interface LoadedBoardItemContentProps extends Omit<InnerContentProps, "definition"> {
+interface LoadedBoardItemContentProps extends Omit<InnerContentProps, "definition" | "Component"> {
   innerRef: (element: HTMLDivElement | null) => void;
 }
 
 const LoadedBoardItemContent = ({ item, innerRef, ...innerContentProps }: LoadedBoardItemContentProps) => {
-  const board = useRequiredBoard();
-  const definition = use(loadWidgetDefinition(item.kind));
+  const { definition, Component } = use(loadWidgetResources(item.kind));
 
   return (
     <WidgetContextMenu item={item} definition={definition} widgetStateRef={innerContentProps.widgetStateRef}>
-      <Card
-        ref={innerRef}
-        className={combineClasses(
-          classes.itemCard,
-          `${item.kind}-wrapper`,
-          "grid-stack-item-content",
-          item.advancedOptions.customCssClasses.join(" "),
-        )}
-        radius={board.itemRadius}
-        styles={{
-          root: {
-            "--opacity": board.opacity / 100,
-            containerType: "size",
-            overflow: getOverflowFromKind(item.kind),
-            "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-          },
-        }}
-        p={0}
-      >
+      <BoardItemCard item={item} innerRef={innerRef}>
         <ErrorBoundary
           resetKeys={[item.kind]}
           fallbackRender={({ resetErrorBoundary, error }) => (
@@ -127,9 +155,9 @@ const LoadedBoardItemContent = ({ item, innerRef, ...innerContentProps }: Loaded
             </>
           )}
         >
-          <InnerContent item={item} definition={definition} {...innerContentProps} />
+          <InnerContent item={item} definition={definition} Component={Component} {...innerContentProps} />
         </ErrorBoundary>
-      </Card>
+      </BoardItemCard>
     </WidgetContextMenu>
   );
 };
@@ -140,13 +168,13 @@ interface InnerContentProps {
   height: number;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   definition: WidgetDefinition;
+  Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
 }
 
-const InnerContent = ({ item, definition, ...dimensions }: InnerContentProps) => {
+const InnerContent = ({ item, definition, Component, ...dimensions }: InnerContentProps) => {
   const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
-  const Comp = getWidgetComponent(item.kind);
   const options = reduceWidgetOptionsWithDefinition(definition, settings, item.options);
   const newItem = { ...item, options };
   const { updateItemOptions } = useItemActions();
@@ -155,13 +183,14 @@ const InnerContent = ({ item, definition, ...dimensions }: InnerContentProps) =>
   const widgetSupportsIntegrations =
     "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) >= 1;
   const queryClient = useQueryClient();
+  const widgetQueryKeys = getWidgetQueryKeys(definition, item.kind);
 
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
         <ErrorBoundary
           onReset={() => {
-            removePersistedWidgetQueries(queryClient);
+            removeWidgetDataQueries(queryClient, widgetQueryKeys);
             reset();
           }}
           fallbackRender={({ resetErrorBoundary, error }) => (
@@ -185,22 +214,24 @@ const InnerContent = ({ item, definition, ...dimensions }: InnerContentProps) =>
             }
           />
           <BoardItemMenu offset={4} item={newItem} definition={definition} />
-          <Comp
-            options={options as never}
-            integrationIds={item.integrationIds}
-            isEditMode={isEditMode}
-            boardId={board.id}
-            itemId={item.id}
-            setOptions={(partialNewOptions) =>
-              updateOptions({
-                newOptions: {
-                  ...options,
-                  ...partialNewOptions.newOptions,
-                },
-              })
-            }
-            {...dimensions}
-          />
+          <div data-homarr-widget-ready={item.kind} style={{ display: "contents" }}>
+            <Component
+              options={options as never}
+              integrationIds={item.integrationIds}
+              isEditMode={isEditMode}
+              boardId={board.id}
+              itemId={item.id}
+              setOptions={(partialNewOptions) =>
+                updateOptions({
+                  newOptions: {
+                    ...options,
+                    ...partialNewOptions.newOptions,
+                  },
+                })
+              }
+              {...dimensions}
+            />
+          </div>
         </ErrorBoundary>
       )}
     </QueryErrorResetBoundary>

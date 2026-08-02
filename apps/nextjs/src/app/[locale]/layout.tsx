@@ -13,13 +13,11 @@ import { notFound } from "next/navigation";
 import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
+import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
+import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { db } from "@homarr/db";
-import { eq } from "@homarr/db";
-import { getServerSettingsAsync } from "@homarr/db/queries";
-import { users } from "@homarr/db/schema";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { SettingsProvider } from "@homarr/settings";
@@ -82,42 +80,27 @@ export default async function Layout(props: {
   children: React.ReactNode;
   params: Promise<{ locale: SupportedLanguage }>;
 }) {
-  if (!isLocaleSupported((await props.params).locale)) {
+  const { locale } = await props.params;
+  if (!isLocaleSupported(locale)) {
     notFound();
   }
 
-  const session = await auth();
-  const user = session
-    ? await db.query.users
-        .findFirst({
-          columns: {
-            id: true,
-            name: true,
-            email: true,
-            emailVerified: true,
-            image: true,
-            provider: true,
-            homeBoardId: true,
-            mobileHomeBoardId: true,
-            firstDayOfWeek: true,
-            pingIconsEnabled: true,
-            enableRightClickOnWidgets: true,
-            defaultSearchEngineId: true,
-            openSearchInNewTab: true,
-            ddgBangs: true,
-            completedManageTour: true,
-            completedBoardTour: true,
-          },
-          where: eq(users.id, session.user.id),
-        })
-        .catch((error: unknown) => {
+  const sessionPromise = auth();
+  const userPromise = sessionPromise.then((session) =>
+    session
+      ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
           logger.error(new Error("Failed to load the authenticated user in the root layout", { cause: error }));
           return null;
         })
-    : null;
-  const serverSettings = await getServerSettingsAsync(db);
-  const colorScheme = await getCurrentColorSchemeAsync();
-  const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
+      : null,
+  );
+  const [session, user, serverSettings, colorScheme] = await Promise.all([
+    sessionPromise,
+    userPromise,
+    getRscServerSettingsAsync(),
+    getCurrentColorSchemeAsync(),
+  ]);
+  const direction = isLocaleRTL(locale) ? "rtl" : "ltr";
 
   const StackedProvider = composeWrappers([
     (innerProps) => {
@@ -155,8 +138,6 @@ export default async function Layout(props: {
     (innerProps) => <ModalProvider {...innerProps} />,
     (innerProps) => <SpotlightProvider {...innerProps} />,
   ]);
-
-  const { locale } = await props.params;
 
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering

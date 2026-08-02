@@ -22,9 +22,14 @@ type UpdateCheckCacheEntry = {
   checkedAt: number | null;
 };
 
-const freshUpdateCheckChannel = createGetSetChannel<UpdateCheckCacheEntry>("update-checker:fresh:v1");
-const staleUpdateCheckChannel = createGetSetChannel<UpdateCheckCacheEntry>("update-checker:stale:v1");
-const updateCheckLock = createLockChannel("update-checker:lock:v1");
+const updateCheckCacheVersion = `v2:${packageJson.version}`;
+const freshUpdateCheckChannel = createGetSetChannel<UpdateCheckCacheEntry>(
+  `update-checker:fresh:${updateCheckCacheVersion}`,
+);
+const staleUpdateCheckChannel = createGetSetChannel<UpdateCheckCacheEntry>(
+  `update-checker:stale:${updateCheckCacheVersion}`,
+);
+const updateCheckLock = createLockChannel(`update-checker:lock:${updateCheckCacheVersion}`);
 
 const waitAsync = async (durationMs: number) =>
   await new Promise<void>((resolve) => {
@@ -53,8 +58,10 @@ const getCachedAvailableUpdatesAsync = async (): Promise<UpdateCheckCacheEntry> 
   const cached = await freshUpdateCheckChannel.getAsync();
   if (cached) return cached;
 
+  const staleBeforeRefresh = await staleUpdateCheckChannel.getAsync();
   const lockToken = await updateCheckLock.acquireAsync(updateCheckLockTtlSeconds);
   if (!lockToken) {
+    if (staleBeforeRefresh) return staleBeforeRefresh;
     const concurrentResult = await waitForConcurrentUpdateCheckAsync();
     if (concurrentResult) return concurrentResult;
     throw new Error("Timed out waiting for the update check");

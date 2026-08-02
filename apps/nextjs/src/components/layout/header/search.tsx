@@ -3,11 +3,12 @@
 import { TextInput, UnstyledButton } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
-import { openSpotlight } from "@homarr/spotlight";
+import { openSpotlight } from "@homarr/spotlight/open";
 import { useI18n } from "@homarr/translation/client";
 
 import { HeaderButton } from "./button";
 import classes from "./search.module.css";
+import { preloadSpotlight } from "./lazy-spotlight";
 
 export const DesktopSearchInput = () => {
   const t = useI18n();
@@ -21,6 +22,9 @@ export const DesktopSearchInput = () => {
       size="sm"
       leftSection={<IconSearch size={20} stroke={1.5} />}
       onClick={openSpotlight}
+      onFocus={preloadSpotlight}
+      onPointerDown={preloadSpotlight}
+      onPointerEnter={preloadSpotlight}
       radius="xl"
     >
       {`${t("search.placeholder")}...`}
@@ -33,6 +37,9 @@ export const MobileSearchButton = () => {
     <HeaderButton
       data-homarr-dev-benchmark-interaction="search"
       onClick={openSpotlight}
+      onFocus={preloadSpotlight}
+      onPointerDown={preloadSpotlight}
+      onPointerEnter={preloadSpotlight}
       className={classes.mobileSearch}
     >
       <IconSearch size={20} stroke={1.5} />

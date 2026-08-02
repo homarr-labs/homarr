@@ -4,6 +4,11 @@
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
+    "benchmark:build:docker": "node --experimental-strip-types scripts/benchmarks/docker-build.mts",
+    "benchmark:compare": "node --experimental-strip-types scripts/benchmarks/benchmark-compare.mts",
+    "benchmark:board-graph": "node --experimental-strip-types scripts/benchmarks/board-static-graph.mts",
+    "benchmark:docker": "node --experimental-strip-types scripts/benchmarks/docker-runtime.mts",
+    "benchmark:request-memory": "node --expose-gc --import tsx scripts/benchmarks/request-handler-memory.mts",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "ci:act:all": "bash scripts/ci/act.sh all",
@@ -42,6 +47,7 @@
     "jsonpath-plus": "catalog:"
   },
   "devDependencies": {
+    "@babel/parser": "catalog:",
     "@playwright/test": "catalog:",
     "@semantic-release/changelog": "catalog:",
     "@semantic-release/commit-analyzer": "catalog:",
@@ -62,6 +68,7 @@
     "oxlint": "catalog:",
     "semantic-release": "catalog:",
     "testcontainers": "catalog:",
+    "tsx": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",

@@ -6,37 +6,33 @@ import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@ta
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 
-import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
+import { clientApi } from "@homarr/api/client";
+import type { WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
-import { showSuccessNotification } from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
-import { getWidgetComponent } from "@homarr/widgets/client";
 import { WidgetError } from "@homarr/widgets/errors";
-import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
-import { WidgetEditModal } from "@homarr/widgets/modals";
+import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
+import { LazyWidgetEditModal, preloadWidgetEditModal } from "~/components/board/items/lazy-widget-edit-modal";
 import type { Dimensions } from "./_dimension-modal";
 import { PreviewDimensionsModal } from "./_dimension-modal";
 
 interface WidgetPreviewPageContentProps {
   kind: WidgetKind;
-  integrationData: {
-    id: string;
-    name: string;
-    url: string;
-    kind: IntegrationKind;
-  }[];
 }
 
-export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPreviewPageContentProps) => {
+export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps) => {
   const settings = useSettings();
   const t = useI18n();
-  const { openModal: openWidgetEditModal } = useModalAction(WidgetEditModal);
+  const utils = clientApi.useUtils();
+  const { openModal: openWidgetEditModal } = useModalAction(LazyWidgetEditModal);
   const { openModal: openPreviewDimensionsModal } = useModalAction(PreviewDimensionsModal);
-  const currentDefinition = use(loadWidgetDefinition(kind));
+  const { definition: currentDefinition, Component } = use(loadWidgetResources(kind));
   const [editMode, setEditMode] = useState(false);
+  const [isEditorLoading, setIsEditorLoading] = useState(false);
   const [dimensions, setDimensions] = useState<Dimensions>({
     width: 128,
     height: 128,
@@ -55,31 +51,41 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
     },
   });
 
-  const handleOpenEditWidgetModal = useCallback(() => {
-    openWidgetEditModal(
-      {
-        kind,
-        value: state,
-        onSuccessfulEdit: (value) => {
-          setState(value);
+  const handleOpenEditWidgetModal = useCallback(async () => {
+    const hasIntegrationSupport = "supportedIntegrations" in currentDefinition;
+    setIsEditorLoading(true);
+    preloadWidgetEditModal();
+    try {
+      const integrationData = hasIntegrationSupport ? await utils.integration.all.ensureData() : [];
+      openWidgetEditModal(
+        {
+          kind,
+          definition: currentDefinition,
+          value: state,
+          onSuccessfulEdit: (value) => {
+            setState(value);
+          },
+          integrationData: integrationData.filter((integration) =>
+            (currentDefinition.supportedIntegrations ?? []).includes(integration.kind),
+          ),
+          integrationSupport: hasIntegrationSupport,
+          settings,
         },
-        integrationData: integrationData.filter(
-          (integration) =>
-            "supportedIntegrations" in currentDefinition &&
-            (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
-        ),
-        integrationSupport: "supportedIntegrations" in currentDefinition,
-        settings,
-      },
-      {
-        title(t) {
-          return `${t("item.edit.title")} - ${t(`widget.${kind}.name`)}`;
+        {
+          title(translate) {
+            return `${translate("item.edit.title")} - ${translate(`widget.${kind}.name`)}`;
+          },
         },
-      },
-    );
-  }, [currentDefinition, integrationData, kind, openWidgetEditModal, settings, state]);
-
-  const Comp = getWidgetComponent(kind);
+      );
+    } catch (error) {
+      showErrorNotification({
+        title: t("common.error"),
+        message: error instanceof Error ? error.message : String(error),
+      });
+    } finally {
+      setIsEditorLoading(false);
+    }
+  }, [currentDefinition, kind, openWidgetEditModal, settings, state, t, utils]);
 
   const toggleEditMode = useCallback(() => {
     setEditMode((editMode) => !editMode);
@@ -95,8 +101,11 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
     });
   }, [dimensions, openPreviewDimensionsModal]);
 
-  const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
-    setState({ ...state, options: { ...state.options, newOptions } });
+  const updateOptions = useCallback(
+    ({ newOptions }: { newOptions: Record<string, unknown> }) =>
+      setState((current) => ({ ...current, options: { ...current.options, ...newOptions } })),
+    [],
+  );
 
   return (
     <>
@@ -109,7 +118,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
                 <WidgetError definition={currentDefinition} error={error} resetErrorBoundary={resetErrorBoundary} />
               )}
             >
-              <Comp
+              <Component
                 options={state.options as never}
                 integrationIds={state.integrationIds}
                 width={dimensions.width}
@@ -128,7 +137,10 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
           size={48}
           variant="default"
           radius="xl"
-          onClick={handleOpenEditWidgetModal}
+          onClick={() => void handleOpenEditWidgetModal()}
+          onFocus={preloadWidgetEditModal}
+          onPointerEnter={preloadWidgetEditModal}
+          loading={isEditorLoading}
           aria-label={t("common.action.edit")}
         >
           <IconPencil size={24} />

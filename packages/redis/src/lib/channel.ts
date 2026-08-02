@@ -1,12 +1,9 @@
 import superjson from "superjson";
 
 import { createId } from "@homarr/common";
-import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
 import { createRedisConnection } from "./connection";
-
-const logger = createLogger({ module: "redisChannel" });
 
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
@@ -157,34 +154,6 @@ export const createLockChannel = (name: string) => {
       );
     },
   };
-};
-
-const queryCacheKey = (userId: string, boardId: string) => `qc:${userId}:${boardId}`;
-
-export const setQueryCacheAsync = async (
-  userId: string,
-  boardId: string,
-  value: string,
-  ttlMs: number,
-  maxValueBytes: number,
-) => {
-  if (Buffer.byteLength(value, "utf8") > maxValueBytes) {
-    logger.warn("Query cache value exceeded maximum size", {
-      key: queryCacheKey(userId, boardId),
-      valueBytes: Buffer.byteLength(value, "utf8"),
-      maxValueBytes,
-    });
-    return false;
-  }
-  await getSetClient.set(queryCacheKey(userId, boardId), value, "PX", ttlMs);
-  return true;
-};
-
-export const getQueryCacheAsync = async (userId: string, boardId: string) =>
-  await getSetClient.get(queryCacheKey(userId, boardId));
-
-export const removeQueryCacheAsync = async (userId: string, boardId: string) => {
-  await getSetClient.del(queryCacheKey(userId, boardId));
 };
 
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {

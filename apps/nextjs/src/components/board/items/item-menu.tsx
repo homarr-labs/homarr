@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
@@ -9,12 +9,12 @@ import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { WidgetDefinition } from "@homarr/widgets/definition";
-import { WidgetEditModal } from "@homarr/widgets/modals";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
-import { ItemMoveModal } from "./item-move-modal";
+import { LazyItemMoveModal, preloadItemMoveModal } from "./lazy-item-move-modal";
+import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 
 interface BoardItemMenuProps {
   offset: number;
@@ -25,7 +25,8 @@ interface BoardItemMenuProps {
 
 export const BoardItemMenu = (props: BoardItemMenuProps) => {
   const { data: session } = useSession();
-  if (!session) return null;
+  const [isEditMode] = useEditMode();
+  if (!session || !isEditMode) return null;
 
   return <BoardItemMenuInner {...props} />;
 };
@@ -34,13 +35,17 @@ const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: Bo
   const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useScopedI18n("item");
   const t = useI18n();
-  const { openModal } = useModalAction(WidgetEditModal);
-  const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
+  const { openModal } = useModalAction(LazyWidgetEditModal);
+  const { openModal: openMoveModal } = useModalAction(LazyItemMoveModal);
   const { openConfirmModal } = useConfirmModal();
-  const [isEditMode] = useEditMode();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const hasSupportedIntegrations =
+    "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) > 0;
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
-  const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
+  const { data: integrationData, isPending } = clientApi.integration.all.useQuery(undefined, {
+    enabled: isMenuOpen && hasSupportedIntegrations,
+  });
   const { gridstack } = useSectionContext().refs;
   const settings = useSettings();
 
@@ -52,12 +57,11 @@ const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: Bo
     }
   }, [item, resetErrorBoundary]);
 
-  if (!isEditMode || isPending) return null;
-
   const openEditModal = () => {
     openModal(
       {
         kind: item.kind,
+        definition,
         value: {
           advancedOptions: item.advancedOptions,
           options: item.options,
@@ -107,7 +111,7 @@ const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: Bo
   };
 
   return (
-    <Menu withinPortal position="right-start" arrowPosition="center">
+    <Menu withinPortal position="right-start" arrowPosition="center" opened={isMenuOpen} onChange={setIsMenuOpen}>
       <Menu.Target>
         <ActionIcon
           variant="default"
@@ -123,11 +127,19 @@ const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: Bo
       </Menu.Target>
       <Menu.Dropdown miw={128}>
         <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
-        <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
+        <Menu.Item
+          leftSection={<IconPencil size={16} />}
+          onClick={openEditModal}
+          onFocus={preloadWidgetEditModal}
+          onPointerEnter={preloadWidgetEditModal}
+          disabled={hasSupportedIntegrations && isPending}
+        >
           {tItem("action.edit")}
         </Menu.Item>
         <Menu.Item
           leftSection={<IconLayoutKanban size={16} />}
+          onFocus={preloadItemMoveModal}
+          onPointerEnter={preloadItemMoveModal}
           onClick={() => {
             if (!gridstack.current) return;
             openMoveModal({ item, columnCount: gridstack.current.getColumn(), gridStack: gridstack.current });

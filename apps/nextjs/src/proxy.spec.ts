@@ -81,4 +81,42 @@ describe("locale and onboarding proxy", () => {
     expect(mocks.getDefaultLocale).not.toHaveBeenCalled();
     expect(mocks.createI18nMiddleware).toHaveBeenCalledWith("en");
   });
+
+  it("deduplicates concurrent cold-start database reads", async () => {
+    let finishOnboarding!: (step: string) => void;
+    let finishLocale!: (locale: string) => void;
+    mocks.getOnboardingStep.mockImplementation(
+      () =>
+        new Promise<string>((resolve) => {
+          finishOnboarding = resolve;
+        }),
+    );
+    mocks.getDefaultLocale.mockImplementation(
+      () =>
+        new Promise<string>((resolve) => {
+          finishLocale = resolve;
+        }),
+    );
+    const { proxy } = await loadProxy();
+    const responses = Array.from({ length: 50 }, () => proxy(createRequest("/en/dashboard", "not-a-locale")));
+
+    await vi.waitFor(() => expect(mocks.getOnboardingStep).toHaveBeenCalledOnce());
+    finishOnboarding("finish");
+    await vi.waitFor(() => expect(mocks.getDefaultLocale).toHaveBeenCalledOnce());
+    finishLocale("de");
+
+    await expect(Promise.all(responses)).resolves.toHaveLength(50);
+    expect(mocks.getOnboardingStep).toHaveBeenCalledOnce();
+    expect(mocks.getDefaultLocale).toHaveBeenCalledOnce();
+  });
+
+  it("clears failed in-flight reads so the next request can recover", async () => {
+    mocks.getOnboardingStep.mockRejectedValueOnce(new Error("temporary database failure")).mockResolvedValue("finish");
+    const { proxy } = await loadProxy();
+
+    await expect(proxy(createRequest("/en/dashboard", "en"))).rejects.toThrow("temporary database failure");
+    await expect(proxy(createRequest("/en/dashboard", "en"))).resolves.toMatchObject({ status: 200 });
+
+    expect(mocks.getOnboardingStep).toHaveBeenCalledTimes(2);
+  });
 });

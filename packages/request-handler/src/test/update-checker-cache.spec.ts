@@ -20,12 +20,27 @@ const mocks = vi.hoisted(() => {
     values,
     locks,
     removeFreshResult() {
-      values.delete("update-checker:fresh:v1");
+      for (const key of values.keys()) {
+        if (key.startsWith("update-checker:fresh:")) values.delete(key);
+      }
     },
   };
 });
 
 vi.mock("@homarr/common/env", () => ({ env: mocks.env }));
+
+vi.mock("@homarr/core/infrastructure/http", () => ({
+  fetchWithTrustedCertificatesAsync: vi.fn(),
+}));
+
+vi.mock("@homarr/core/infrastructure/logs", () => ({
+  createLogger: () => ({
+    debug: vi.fn(),
+    error: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+  }),
+}));
 
 vi.mock("@homarr/redis", () => ({
   createGetSetChannel: (name: string) => ({
@@ -179,6 +194,20 @@ describe("persisted update checker cache", () => {
     await restartedHandler.getDataAsync();
 
     expect(mocks.listReleases).toHaveBeenCalledTimes(1);
+  });
+
+  test("ignores update results created for an older application version", async () => {
+    mocks.values.set("update-checker:fresh:v1", {
+      value: { availableUpdates: [], attemptedAt: 1, checkedAt: 1 },
+      expiresAt: null,
+    });
+    mocks.listReleases.mockResolvedValue(successfulResponse);
+
+    const handler = await loadHandlerAsync();
+    const result = await handler.getDataAsync();
+
+    expect(result.data.availableUpdates).toHaveLength(1);
+    expect(mocks.listReleases).toHaveBeenCalledOnce();
   });
 
   test("serves stale data and retries only after 24 hours following a provider failure", async () => {

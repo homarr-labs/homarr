@@ -1,17 +1,20 @@
 import type { QueryKey } from "@tanstack/react-query";
 import { describe, expect, it } from "vitest";
 
-import { widgetKinds as definedWidgetKinds } from "@homarr/definitions";
+import { widgetIntegrationSupport, widgetKinds as definedWidgetKinds } from "@homarr/definitions";
 
 import {
   createRetryableLoader,
   loadAllWidgetDefinitions,
+  loadWidgetComponent,
   loadWidgetDefinition,
   loadWidgetModule,
+  loadWidgetResources,
   reduceWidgetOptionsWithDefinition,
   widgetKinds,
 } from "./manifest";
 import { widgetQueryRefetchIntervals } from "./refetch-intervals";
+import { widgetCatalogIcons } from "./catalog";
 
 describe("widget manifest promise stability", () => {
   it("returns the same module promise for every render", () => {
@@ -20,6 +23,11 @@ describe("widget manifest promise stability", () => {
 
   it("returns the same derived definition promise for every render", () => {
     expect(loadWidgetDefinition("clock")).toBe(loadWidgetDefinition("clock"));
+  });
+
+  it("returns stable component and combined resource promises", () => {
+    expect(loadWidgetComponent("clock")).toBe(loadWidgetComponent("clock"));
+    expect(loadWidgetResources("clock")).toBe(loadWidgetResources("clock"));
   });
 
   it("returns the same all-definitions promise for every modal render", () => {
@@ -56,9 +64,14 @@ describe("widget manifest promise stability", () => {
     await Promise.all(
       widgetKinds.map(async (kind) => {
         const module = await loadWidgetModule(kind);
-        const component = await module.componentLoader();
+        const canonicalComponent = await module.componentLoader();
+        const component = await loadWidgetComponent(kind);
+        const resources = await loadWidgetResources(kind);
         expect(definitions.get(kind)).toBe(module.definition);
+        expect(component.default).toBe(canonicalComponent.default);
         expect(component.default).toBeDefined();
+        expect(resources.definition).toBe(module.definition);
+        expect(resources.Component).toBe(component.default);
       }),
     );
   }, 30_000);
@@ -72,6 +85,42 @@ describe("widget manifest promise stability", () => {
       const reduced = reduceWidgetOptionsWithDefinition(definition, settings);
       expect(Object.keys(reduced)).toEqual(Object.keys(options));
       expect(Object.values(reduced).every((value) => value !== undefined)).toBe(true);
+    }
+  });
+
+  it("keeps the lightweight integration support map aligned with widget definitions", async () => {
+    const definitions = await loadAllWidgetDefinitions();
+
+    for (const kind of widgetKinds) {
+      const definition = definitions.get(kind);
+      const supportedIntegrations =
+        definition && "supportedIntegrations" in definition ? (definition.supportedIntegrations ?? []) : [];
+      expect([...(widgetIntegrationSupport[kind] ?? [])].toSorted()).toEqual([...supportedIntegrations].toSorted());
+    }
+  });
+
+  it("keeps the lightweight catalog icons aligned with widget definitions", async () => {
+    const definitions = await loadAllWidgetDefinitions();
+
+    for (const kind of widgetKinds) {
+      expect(widgetCatalogIcons[kind]).toBe(definitions.get(kind)?.icon);
+    }
+  });
+
+  it("declares the real query prefix for widget kinds that share a router", async () => {
+    const definitions = await loadAllWidgetDefinitions();
+    const expectedQueryKeys = new Map([
+      ["anchorNote", [["widget", "anchorNotes"]]],
+      ["beszelAlerts", [["widget", "beszel"]]],
+      ["clock", [["widget", "weather"]]],
+      ["mediaMissing", [["widget", "mediaOrganizer"]]],
+      ["mediaRequests-requestList", [["widget", "mediaRequests"]]],
+      ["mediaRequests-requestStats", [["widget", "mediaRequests"]]],
+      ["smartHome-entityState", [["widget", "smartHome"]]],
+    ] as const);
+
+    for (const [kind, queryKey] of expectedQueryKeys) {
+      expect(definitions.get(kind)?.queryKey).toEqual(queryKey);
     }
   });
 

@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Center, Loader } from "@mantine/core";
 
-import { db } from "@homarr/db";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetKinds } from "@homarr/widgets/manifest";
 
@@ -18,19 +17,10 @@ export default async function WidgetPreview(props: Props) {
     notFound();
   }
 
-  const integrationData = await db.query.integrations.findMany({
-    columns: {
-      id: true,
-      name: true,
-      url: true,
-      kind: true,
-    },
-  });
-
   return (
     <Center h="100vh">
       <Suspense fallback={<Loader size="sm" />}>
-        <WidgetPreviewPageContent kind={kind as WidgetKind} integrationData={integrationData} />
+        <WidgetPreviewPageContent key={kind} kind={kind as WidgetKind} />
       </Suspense>
     </Center>
   );

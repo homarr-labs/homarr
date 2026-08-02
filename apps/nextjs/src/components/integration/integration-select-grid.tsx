@@ -1,9 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Badge, Card, Center, Group, Loader, Stack, Text, Tooltip } from "@mantine/core";
+import { Badge, Card, Center, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { IconPuzzle } from "@tabler/icons-react";
-import { useQuery } from "@tanstack/react-query";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
@@ -20,14 +19,7 @@ export const IntegrationSelectGrid = ({ onSelect, enableMockIntegration = false 
   const [search, setSearch] = useState("");
   const t = useI18n();
 
-  const {
-    data: integrations = [],
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["widget-integrations", { enableMockIntegration }],
-    queryFn: () => buildSortedIntegrations({ enableMockIntegration }),
-  });
+  const integrations = useMemo(() => buildSortedIntegrations({ enableMockIntegration }), [enableMockIntegration]);
   const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
 
   return (
@@ -36,11 +28,6 @@ export const IntegrationSelectGrid = ({ onSelect, enableMockIntegration = false 
       onSearchChange={setSearch}
       placeholder={`${t("integration.page.list.search")}...`}
     >
-      {isPending && (
-        <Center p="xl">
-          <Loader size="sm" />
-        </Center>
-      )}
       {filtered.map((integration) => (
         <Card
           key={integration.kind}
@@ -93,14 +80,7 @@ export const IntegrationSelectGrid = ({ onSelect, enableMockIntegration = false 
         </Card>
       ))}
 
-      {isError && (
-        <Center p="xl">
-          <Text c="red" role="alert">
-            {t("common.error")}
-          </Text>
-        </Center>
-      )}
-      {!isPending && !isError && filtered.length === 0 && (
+      {filtered.length === 0 && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>

@@ -1,15 +1,17 @@
 export type NumericSummary = {
   count: number;
-  medianMs: number | null;
-  p95Ms: number | null;
-  standardDeviationMs: number | null;
-  outliersMs: number[];
+  min: number | null;
+  median: number | null;
+  p95: number | null;
+  max: number | null;
+  standardDeviation: number | null;
+  outliers: number[];
 };
 
 export const normalizeTrpcPath = (requestUrl: string) => {
   try {
     const url = new URL(requestUrl, "http://benchmark.invalid");
-    url.searchParams.delete("input");
+    url.searchParams.sort();
     return url.pathname + url.search;
   } catch {
     return requestUrl;
@@ -27,13 +29,13 @@ const values = (numbers: Array<number | null | undefined>) =>
 export const summarize = (numbers: Array<number | null | undefined>): NumericSummary => {
   const sorted = values(numbers);
   if (sorted.length === 0) {
-    return { count: 0, medianMs: null, p95Ms: null, standardDeviationMs: null, outliersMs: [] };
+    return { count: 0, min: null, median: null, p95: null, max: null, standardDeviation: null, outliers: [] };
   }
 
   const middleIndex = Math.floor(sorted.length / 2);
-  let medianMs = sorted[middleIndex] ?? 0;
+  let median = sorted[middleIndex] ?? 0;
   if (sorted.length % 2 === 0) {
-    medianMs = ((sorted[middleIndex - 1] ?? 0) + medianMs) / 2;
+    median = ((sorted[middleIndex - 1] ?? 0) + median) / 2;
   }
   const p95Index = Math.min(sorted.length - 1, Math.ceil(sorted.length * 0.95) - 1);
   const mean = sorted.reduce((total, value) => total + value, 0) / sorted.length;
@@ -45,10 +47,12 @@ export const summarize = (numbers: Array<number | null | undefined>): NumericSum
 
   return {
     count: sorted.length,
-    medianMs,
-    p95Ms: sorted[p95Index] ?? 0,
-    standardDeviationMs: Math.round(Math.sqrt(variance)),
-    outliersMs: sorted.filter((value) => value > outlierLimit),
+    min: sorted[0] ?? null,
+    median,
+    p95: sorted.length >= 20 ? (sorted[p95Index] ?? null) : null,
+    max: sorted.at(-1) ?? null,
+    standardDeviation: Math.round(Math.sqrt(variance)),
+    outliers: sorted.filter((value) => value > outlierLimit),
   };
 };
 
@@ -56,7 +60,10 @@ export const validateBrowserMeasurement = (measurement: {
   responseStatus: number | null;
   domContentLoadedMs: number;
   boardHydratedMs: number | null;
-  firstInteractionMs: number | null;
+  widgetsReadyMs?: number | null;
+  widgetCount?: number;
+  coldImmediateInteractionMs?: number | null;
+  postIdleWarmInteractionMs?: number | null;
   error?: string;
 }) => {
   const errors: string[] = [];
@@ -66,6 +73,9 @@ export const validateBrowserMeasurement = (measurement: {
     errors.push(`browser navigation returned HTTP ${measurement.responseStatus}`);
   if (measurement.domContentLoadedMs < 0) errors.push("DOMContentLoaded timing is missing");
   if (measurement.boardHydratedMs === null) errors.push("board hydration marker is missing");
-  if (measurement.firstInteractionMs === null) errors.push("first interaction timing is missing");
+  if (measurement.widgetsReadyMs === null) errors.push("widget readiness marker is missing");
+  if (measurement.widgetCount === 0) errors.push("representative board contains no widgets");
+  if (measurement.coldImmediateInteractionMs === null) errors.push("cold immediate interaction timing is missing");
+  if (measurement.postIdleWarmInteractionMs === null) errors.push("post-idle warm interaction timing is missing");
   return errors;
 };

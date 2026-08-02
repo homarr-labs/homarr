@@ -14,15 +14,21 @@ const registerAsync = async (nodeEnv: string, nextRuntime: string) => {
   });
   vi.doMock("@homarr/tasks", () => {
     tasksStarted();
-    return {};
+    return { startupPromise: Promise.resolve() };
   });
   vi.doMock("@homarr/websocket", () => {
     websocketStarted();
-    return {};
+    return { startupPromise: Promise.resolve() };
   });
 
   const { register } = await import("./instrumentation");
   await register();
+  if (nodeEnv === "production" && nextRuntime === "nodejs") {
+    await vi.waitFor(() => {
+      expect(tasksStarted).toHaveBeenCalledOnce();
+      expect(websocketStarted).toHaveBeenCalledOnce();
+    });
+  }
   return { loggerLoaded, tasksStarted, websocketStarted };
 };
 
@@ -32,6 +38,7 @@ describe("Next instrumentation", () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.doUnmock("@homarr/core/infrastructure/logs");
     vi.doUnmock("@homarr/tasks");
     vi.doUnmock("@homarr/websocket");
@@ -62,21 +69,57 @@ describe("Next instrumentation", () => {
     expect(websocketStarted).not.toHaveBeenCalled();
   });
 
-  test("isolates embedded service startup failures", async () => {
-    const websocketStarted = vi.fn();
+  test("does not block Next readiness on slow cron run-on-start hooks", async () => {
+    const neverFinishes = new Promise<void>(() => undefined);
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("NEXT_RUNTIME", "nodejs");
-    vi.doMock("@homarr/tasks", () => {
-      throw new Error("task startup failed");
-    });
+    vi.doMock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ error: vi.fn() }) }));
+    vi.doMock("@homarr/tasks", () => ({ startupPromise: neverFinishes }));
+    vi.doMock("@homarr/websocket", () => ({ startupPromise: Promise.resolve() }));
+
+    const { register } = await import("./instrumentation");
+
+    await expect(register()).resolves.toBeUndefined();
+  });
+
+  test("terminates a ready Node process when cron startup later fails", async () => {
+    const websocketStarted = vi.fn();
+    const errorLogged = vi.fn();
+    let rejectTasks!: (error: Error) => void;
+    const exit = vi.spyOn(process, "exit").mockImplementation(() => undefined as never);
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("NEXT_RUNTIME", "nodejs");
+    vi.doMock("@homarr/core/infrastructure/logs", () => ({
+      createLogger: () => ({ error: errorLogged }),
+    }));
+    vi.doMock("@homarr/tasks", () => ({
+      startupPromise: new Promise<void>((_resolve, reject) => {
+        rejectTasks = reject;
+      }),
+    }));
     vi.doMock("@homarr/websocket", () => {
       websocketStarted();
-      return {};
+      return { startupPromise: Promise.resolve() };
     });
 
     const { register } = await import("./instrumentation");
 
     await expect(register()).resolves.toBeUndefined();
+    rejectTasks(new Error("task startup failed"));
+    await vi.waitFor(() => expect(exit).toHaveBeenCalledWith(1));
     expect(websocketStarted).toHaveBeenCalledOnce();
+    expect(errorLogged).toHaveBeenCalledOnce();
+  });
+
+  test("fails readiness when the embedded WebSocket listener cannot start", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("NEXT_RUNTIME", "nodejs");
+    vi.doMock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ error: vi.fn() }) }));
+    vi.doMock("@homarr/tasks", () => ({ startupPromise: Promise.resolve() }));
+    vi.doMock("@homarr/websocket", () => ({ startupPromise: Promise.reject(new Error("port unavailable")) }));
+
+    const { register } = await import("./instrumentation");
+
+    await expect(register()).rejects.toThrow("Failed to start embedded websocket service");
   });
 });

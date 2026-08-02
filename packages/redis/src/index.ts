@@ -7,9 +7,6 @@ export {
   createSubPubChannel,
   createGetSetChannel,
   createLockChannel,
-  setQueryCacheAsync,
-  getQueryCacheAsync,
-  removeQueryCacheAsync,
   invalidateIntegrationCacheAsync,
 } from "./lib/channel";
 
