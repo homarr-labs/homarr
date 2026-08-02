@@ -1,0 +1,24 @@
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_909ca8cf5b6e15::t_477a20b668face 3,11,15-19,28-29,57-58,66-73,84,131,137-138,142,155,160,163
+  s_909ca8cf5b6e15::t_83c37d6df97807 31-36
+packages/widgets/src/umami/umami-content.tsx
+  s_909ca8cf5b6e15::t_83c37d6df97807 60-72
+  s_909ca8cf5b6e15::t_bb4e276fa514c3 215-229
+  s_909ca8cf5b6e15::t_477a20b668face 3,32-40,144,172,186,232,273,284
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "3e2059de71e4cd3800738b2cdce2f7a66f21c874",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
