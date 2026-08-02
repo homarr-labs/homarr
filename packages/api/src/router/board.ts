@@ -62,6 +62,7 @@ import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { generateResponsiveGridFor } from "./board/grid-algorithm";
+import { validateTimetableOptionsChangeAsync } from "./widgets/timetable";
 
 export const boardRouter = createTRPCRouter({
   exists: permissionRequiredProcedure
@@ -856,6 +857,15 @@ export const boardRouter = createTRPCRouter({
 
     const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
 
+    for (const item of input.items) {
+      if (item.kind !== "timetable") continue;
+      const previousItem = dbBoard.items.find((dbItem) => dbItem.id === item.id);
+      await validateTimetableOptionsChangeAsync(
+        item.options,
+        previousItem?.kind === "timetable" ? previousItem.options : undefined,
+      );
+    }
+
     await handleTransactionsAsync(ctx.db, {
       async handleAsync(db, schema) {
         await db.transaction(async (transaction) => {
@@ -1440,6 +1450,10 @@ export const boardRouter = createTRPCRouter({
     .output(z.object({ itemId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+
+      if (input.kind === "timetable") {
+        await validateTimetableOptionsChangeAsync(input.options);
+      }
 
       if (input.integrationIds.length > 0) {
         const existing = await ctx.db.query.integrations.findMany({

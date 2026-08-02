@@ -45,14 +45,14 @@ export const calendarRouter = createTRPCRouter({
           };
         },
         {
-          fallback: (integration, error) => ({
+          fallback: (integration) => ({
             events: [],
             integration: {
               id: integration.id,
               name: integration.name,
               kind: integration.kind,
             },
-            error: error instanceof Error ? error.message : String(error),
+            error: "Integration request failed",
           }),
           throwOnAllFailures: true,
         },

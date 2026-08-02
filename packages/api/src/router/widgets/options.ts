@@ -9,6 +9,7 @@ import { boards, items } from "@homarr/db/schema";
 import type { WidgetOptionsSettings } from "../../../../widgets/src";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
+import { validateTimetableOptionsChangeAsync } from "./timetable";
 
 export const optionsRouter = createTRPCRouter({
   getWidgetOptionSettings: publicProcedure.query(async ({ ctx }): Promise<WidgetOptionsSettings> => {
@@ -45,8 +46,11 @@ export const optionsRouter = createTRPCRouter({
         });
       }
 
-      const options = SuperJSON.parse<Record<string, unknown>>(item.options);
-      Object.assign(options, input.newOptions);
+      const previousOptions = SuperJSON.parse<Record<string, unknown>>(item.options);
+      const options = { ...previousOptions, ...input.newOptions };
+      if (item.kind === "timetable") {
+        await validateTimetableOptionsChangeAsync(options, previousOptions);
+      }
       await ctx.db
         .update(items)
         .set({ options: SuperJSON.stringify(options) })

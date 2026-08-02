@@ -185,7 +185,7 @@ export function UmamiContent({
         <Box h="100%" mih={260}>
           {selectedView}
         </Box>
-        {advancedLists}
+        <ScrollArea h="100%">{advancedLists}</ScrollArea>
       </SimpleGrid>
     );
 
