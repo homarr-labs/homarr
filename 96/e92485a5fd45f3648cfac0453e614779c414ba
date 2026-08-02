@@ -1,0 +1,19 @@
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_909ca8cf5b6e15::t_477a20b668face 11,23-24,46-47,55-62,73,121,145,150,153
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "96e92485a5fd45f3648cfac0453e614779c414ba",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}
