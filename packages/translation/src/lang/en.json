@@ -1653,6 +1653,10 @@
         "description": "Try again. If the problem continues, ask an administrator to verify the configured model endpoint.",
         "retry": "Try again"
       },
+      "toolPreparationError": {
+        "title": "This request could not be prepared",
+        "description": "The model stopped before it supplied complete details. Retry the response or describe the request again. No change was made."
+      },
       "busy": {
         "title": "The assistant is already working",
         "description": "Wait for the current response or open it to stop the run."

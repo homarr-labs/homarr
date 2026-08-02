@@ -32,18 +32,23 @@ const AssistantAutoApprovalContext = createContext<AssistantAutoApprovalContextV
 export const AssistantAutoApprovalProvider = ({
   children,
   conversationId,
-}: PropsWithChildren<{ conversationId: string | undefined }>) => {
-  const [enabled, setEnabled] = useState(false);
+}: PropsWithChildren<{ conversationId: string }>) => {
+  const [enabled, setEnabledState] = useState(false);
   const trackerRef = useRef(createAssistantAutoApprovalTracker());
   const previousConversationIdRef = useRef(conversationId);
+
+  const setEnabled = useCallback((nextEnabled: boolean) => {
+    if (!nextEnabled) trackerRef.current.clear();
+    setEnabledState(nextEnabled);
+  }, []);
 
   useEffect(() => {
     const previousConversationId = previousConversationIdRef.current;
     previousConversationIdRef.current = conversationId;
 
-    if (previousConversationId === undefined || previousConversationId === conversationId) return;
+    if (previousConversationId === conversationId) return;
     trackerRef.current.clear();
-    setEnabled(false);
+    setEnabledState(false);
   }, [conversationId]);
 
   const requestApproval = useCallback(
@@ -61,7 +66,7 @@ export const AssistantAutoApprovalProvider = ({
     [enabled],
   );
 
-  const value = useMemo(() => ({ enabled, setEnabled, requestApproval }), [enabled, requestApproval]);
+  const value = useMemo(() => ({ enabled, setEnabled, requestApproval }), [enabled, requestApproval, setEnabled]);
 
   return <AssistantAutoApprovalContext.Provider value={value}>{children}</AssistantAutoApprovalContext.Provider>;
 };
