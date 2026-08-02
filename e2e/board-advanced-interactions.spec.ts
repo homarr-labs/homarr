@@ -183,20 +183,24 @@ describe("Board advanced interactions", () => {
       const addHereMenuItem = page.getByRole("menuitem", { name: "Add item here" });
       await expect(grid).toHaveAttribute("aria-label", "Add item here");
 
-      await grid.focus();
-      await page.keyboard.press("Shift+F10");
+      await grid.press("Shift+F10");
       await expect(addHereMenuItem).toBeVisible();
+      await page.keyboard.press("ArrowDown");
+      await expect(addHereMenuItem).toBeFocused();
+      await page.keyboard.press("Enter");
+      await expect(page.getByRole("dialog").filter({ hasText: "Choose item to add" })).toBeVisible();
       await page.keyboard.press("Escape");
-      await expect(addHereMenuItem).toBeHidden();
       await expect(grid).toBeFocused();
 
       await touchAndHoldEmptyGridSpaceAsync(grid);
       await expect(addHereMenuItem).toBeVisible({ timeout: 1_000 });
       await page.keyboard.press("Escape");
+      await expect(addHereMenuItem).toBeHidden();
 
       await rightClickEmptyGridSpaceAsync(grid);
-      await addHereMenuItem.click();
-      await expect(page.getByRole("dialog").filter({ hasText: "Choose item to add" })).toBeVisible();
+      await expect(addHereMenuItem).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(addHereMenuItem).toBeHidden();
     } finally {
       await context.close();
     }

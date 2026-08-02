@@ -36,7 +36,7 @@ import {
   getProgressTrackSize,
 } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
-import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
 
@@ -406,7 +406,7 @@ export default function BeszelSystemGridWidget({
   if (filteredSystems.length === 0) {
     return (
       <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
-        <BeszelIntegrationErrorIndicator results={results} />
+        <IntegrationErrorIndicator results={results} />
         <Center h="100%">
           <Stack align="center" gap="xs">
             <IconServerOff size={28} opacity={0.5} />
@@ -436,7 +436,7 @@ export default function BeszelSystemGridWidget({
 
   return (
     <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
-      <BeszelIntegrationErrorIndicator results={results} />
+      <IntegrationErrorIndicator results={results} />
       <Box
         h="100%"
         style={{

@@ -12,6 +12,7 @@ export default function UmamiWidget({
   options,
   integrationIds,
   width,
+  height,
   displayMode = "compact",
   widgetStateRef,
 }: WidgetComponentProps<"umami">) {
@@ -74,6 +75,7 @@ export default function UmamiWidget({
       viewMode={options.viewMode}
       topCount={options.topCount}
       width={width}
+      height={height}
       displayMode={displayMode}
     />
   );

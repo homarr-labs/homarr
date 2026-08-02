@@ -1,7 +1,7 @@
 "use client";
 
 import { BarChart, LineChart } from "@mantine/charts";
-import { Box, Group, SimpleGrid, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { Box, Group, ScrollArea, SimpleGrid, Stack, Text, useMantineColorScheme } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { formatDuration } from "@homarr/common";
@@ -24,6 +24,7 @@ interface UmamiContentProps {
   viewMode: string;
   topCount: number;
   width: number;
+  height: number;
   displayMode: "compact" | "advanced";
 }
 
@@ -38,6 +39,7 @@ export function UmamiContent({
   viewMode,
   topCount,
   width,
+  height,
   displayMode,
 }: UmamiContentProps) {
   const t = useScopedI18n("widget.umami");
@@ -149,6 +151,44 @@ export function UmamiContent({
       />
     );
 
+  const advancedLists = (
+    <SimpleGrid cols={viewMode === "topPages" || viewMode === "topReferrers" ? 1 : 2} spacing="md" mih={260}>
+      {viewMode !== "topPages" && (
+        <UmamiTopPagesContent
+          integrationIds={integrationIds}
+          websiteId={websiteId}
+          timeFrame={timeFrame}
+          limit={topCount}
+        />
+      )}
+      {viewMode !== "topReferrers" && (
+        <UmamiTopReferrersContent
+          integrationIds={integrationIds}
+          websiteId={websiteId}
+          timeFrame={timeFrame}
+          limit={topCount}
+        />
+      )}
+    </SimpleGrid>
+  );
+
+  const advancedContent =
+    width < 900 ? (
+      <ScrollArea h="100%">
+        <Stack gap="md">
+          <Box h={Math.max(280, Math.min(420, height - 160))}>{selectedView}</Box>
+          {advancedLists}
+        </Stack>
+      </ScrollArea>
+    ) : (
+      <SimpleGrid cols={2} spacing="md" h="100%" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
+        <Box h="100%" mih={260}>
+          {selectedView}
+        </Box>
+        {advancedLists}
+      </SimpleGrid>
+    );
+
   return (
     <Stack gap={4} p="xs" h="100%">
       <Group justify="space-between" align="baseline" wrap="nowrap">
@@ -213,31 +253,7 @@ export function UmamiContent({
         )}
       </Group>
       <Box mt={4} style={{ flex: 1, minHeight: 0 }}>
-        {displayMode === "advanced" ? (
-          <SimpleGrid cols={width >= 900 ? 2 : 1} spacing="md" h="100%">
-            <Box mih={260}>{selectedView}</Box>
-            <SimpleGrid cols={viewMode === "topPages" || viewMode === "topReferrers" ? 1 : 2} spacing="md" mih={260}>
-              {viewMode !== "topPages" && (
-                <UmamiTopPagesContent
-                  integrationIds={integrationIds}
-                  websiteId={websiteId}
-                  timeFrame={timeFrame}
-                  limit={topCount}
-                />
-              )}
-              {viewMode !== "topReferrers" && (
-                <UmamiTopReferrersContent
-                  integrationIds={integrationIds}
-                  websiteId={websiteId}
-                  timeFrame={timeFrame}
-                  limit={topCount}
-                />
-              )}
-            </SimpleGrid>
-          </SimpleGrid>
-        ) : (
-          selectedView
-        )}
+        {displayMode === "advanced" ? advancedContent : selectedView}
       </Box>
     </Stack>
   );

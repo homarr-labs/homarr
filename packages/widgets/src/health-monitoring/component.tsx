@@ -41,8 +41,19 @@ export default function HealthMonitoringWidget(props: WidgetComponentProps<"heal
   }
 
   if (props.displayMode === "advanced") {
+    if (props.width < 900) {
+      return (
+        <ScrollArea h="100%">
+          <Stack gap="sm" p="xs">
+            <SystemHealthMonitoring {...props} integrationIds={systemIntegrationIds} withScrollArea={false} />
+            {clusters}
+          </Stack>
+        </ScrollArea>
+      );
+    }
+
     return (
-      <SimpleGrid cols={props.width >= 900 ? 2 : 1} spacing="sm" p="xs" h="100%">
+      <SimpleGrid cols={2} spacing="sm" p="xs" h="100%" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
         <Box style={{ minHeight: 0, overflow: "hidden" }}>
           <SystemHealthMonitoring {...props} integrationIds={systemIntegrationIds} />
         </Box>

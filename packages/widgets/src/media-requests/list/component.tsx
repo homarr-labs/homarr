@@ -1,19 +1,6 @@
 "use client";
 
-import {
-  ActionIcon,
-  Anchor,
-  Avatar,
-  Badge,
-  Box,
-  Card,
-  Group,
-  Image,
-  ScrollArea,
-  Stack,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconSearch, IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
@@ -27,6 +14,7 @@ import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
+import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "../search-button.module.css";
@@ -44,7 +32,7 @@ export default function MediaServerWidget({
       .filter(({ id }) => integrationIds.includes(id))
       .map(({ id }) => id),
   );
-  const { data: mediaRequests } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
+  const { data: mediaRequestData } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
     integrationIds,
     statuses:
       options.statusFilter.length > 0
@@ -53,16 +41,22 @@ export default function MediaServerWidget({
     recentDays: options.recentDays,
   });
 
-  if (!mediaRequests) return <WidgetEmptyState />;
-  if (mediaRequests.length === 0) throw new NoIntegrationDataError();
+  if (!mediaRequestData) return <WidgetEmptyState />;
+  const { requests: mediaRequests, failedIntegrations } = mediaRequestData;
+  if (mediaRequests.length === 0 && failedIntegrations.length === 0) throw new NoIntegrationDataError();
 
   return (
-    <Box className={classes.searchRoot}>
+    <Stack className={classes.searchRoot} gap={0}>
       {!isEditMode && <MediaRequestSearchButton integrationIds={integrationIds} />}
+      {failedIntegrations.length > 0 && (
+        <Group px="sm" pt="xs">
+          <IntegrationErrorIndicator results={failedIntegrations} />
+        </Group>
+      )}
       <ScrollArea
         className="mediaRequests-list-scrollArea"
         scrollbarSize="md"
-        style={{ pointerEvents: isEditMode ? "none" : undefined }}
+        style={{ flex: 1, minHeight: 0, pointerEvents: isEditMode ? "none" : undefined }}
       >
         <Stack className="mediaRequests-list-list" gap="xs" p="sm">
           {mediaRequests.map((mediaRequest) => (
@@ -77,7 +71,7 @@ export default function MediaServerWidget({
           ))}
         </Stack>
       </ScrollArea>
-    </Box>
+    </Stack>
   );
 }
 
@@ -100,7 +94,7 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
 };
 
 interface MediaRequestCardProps {
-  request: RouterOutputs["widget"]["mediaRequests"]["getLatestRequests"][number];
+  request: RouterOutputs["widget"]["mediaRequests"]["getLatestRequests"]["requests"][number];
   isTiny: boolean;
   isAdvanced: boolean;
   canInteract: boolean;

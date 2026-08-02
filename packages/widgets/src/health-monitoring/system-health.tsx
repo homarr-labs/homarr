@@ -55,7 +55,8 @@ export const SystemHealthMonitoring = ({
   integrationIds,
   width,
   displayMode,
-}: WidgetComponentProps<"healthMonitoring">) => {
+  withScrollArea = true,
+}: WidgetComponentProps<"healthMonitoring"> & { withScrollArea?: boolean }) => {
   const t = useI18n();
   const { data: healthData = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
     integrationIds,
@@ -69,7 +70,7 @@ export const SystemHealthMonitoring = ({
   if (healthData.length === 0) return <WidgetEmptyState />;
 
   return (
-    <ScrollArea h="100%">
+    <ScrollArea h={withScrollArea ? "100%" : undefined}>
       <Stack mih="100%" gap="sm" className="health-monitoring">
         {healthData.map(({ integrationId, integrationName, healthInfo }) => {
           const filteredFileSystem = filterStorageVolumes(
