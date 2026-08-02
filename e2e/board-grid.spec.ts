@@ -1195,8 +1195,10 @@ const signInAsync = async (page: Page, baseUrl: string, callbackPath: string) =>
   await page.goto(loginUrl.href);
   await page.getByLabel("Username").fill(adminCredentials.username);
   await page.getByRole("textbox", { name: "Password", exact: true }).fill(adminCredentials.password);
-  await page.locator("button[type='submit']").click();
-  await page.waitForURL(`${baseUrl}${callbackPath}`, { timeout: 15_000 });
+  await Promise.all([
+    page.waitForURL(`${baseUrl}${callbackPath}`, { timeout: 30_000, waitUntil: "commit" }),
+    page.locator("button[type='submit']").click(),
+  ]);
 };
 
 const prepareScreenshotDirectoryAsync = async () => {
