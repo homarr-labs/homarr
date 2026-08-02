@@ -8,7 +8,11 @@ import { parse, stringify } from "superjson";
 import { z } from "zod/v4";
 
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
-import { getAssistantContextEntitiesAsync, getSelectedModelDetailsAsync } from "@homarr/api/assistant";
+import {
+  createAssistantGenerationAccessToken,
+  getAssistantContextEntitiesAsync,
+  getSelectedModelDetailsAsync,
+} from "@homarr/api/assistant";
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { decryptSecret } from "@homarr/common/server";
@@ -538,6 +542,15 @@ export async function POST(request: Request) {
             ? { upstreamCost: asFiniteNumber(telemetry?.upstreamCost) }
             : {}),
           ...(generationId ? { generationId } : {}),
+          ...(generationId
+            ? {
+                generationAccessToken: createAssistantGenerationAccessToken({
+                  userId: session.user.id,
+                  threadId: thread.id,
+                  generationId,
+                }),
+              }
+            : {}),
           ...(typeof telemetry?.routedProvider === "string" ? { routedProvider: telemetry.routedProvider } : {}),
           ...(asFiniteNumber(telemetry?.fallbackCount) !== undefined
             ? { fallbackCount: asFiniteNumber(telemetry?.fallbackCount) }

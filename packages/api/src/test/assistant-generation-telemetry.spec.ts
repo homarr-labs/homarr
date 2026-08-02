@@ -1,8 +1,13 @@
 import { describe, expect, test, vi } from "vitest";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+
 vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
 
-import { parseOpenRouterGenerationTelemetry } from "../assistant-generation-telemetry";
+import {
+  fetchOpenRouterGenerationTelemetryAsync,
+  parseOpenRouterGenerationTelemetry,
+} from "../assistant-generation-telemetry";
 
 describe("parseOpenRouterGenerationTelemetry", () => {
   test("uses provider-native tokens for context and throughput", () => {
@@ -62,5 +67,39 @@ describe("parseOpenRouterGenerationTelemetry", () => {
     expect(parseOpenRouterGenerationTelemetry(null)).toBeNull();
     expect(parseOpenRouterGenerationTelemetry({ data: [] })).toBeNull();
     expect(parseOpenRouterGenerationTelemetry({ data: { latency: -1, total_cost: "invalid" } })).toBeNull();
+  });
+
+  test("does not count additional successful provider responses as fallbacks", () => {
+    expect(
+      parseOpenRouterGenerationTelemetry({
+        id: "gen-success",
+        provider_responses: [
+          { status: 200, latency: 100 },
+          { status: 200, latency: 120 },
+        ],
+      }),
+    ).toMatchObject({ fallbackCount: 0 });
+  });
+
+  test("caches completed generation records", async () => {
+    const mockedFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
+    mockedFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ data: { id: "gen-cached", native_tokens_completion: 4 } }),
+    } as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>);
+    const input = {
+      baseUrl: "https://openrouter.ai/api/v1",
+      generationId: "gen-cached",
+      headers: { Authorization: "Bearer test" },
+    };
+
+    await expect(fetchOpenRouterGenerationTelemetryAsync(input)).resolves.toMatchObject({
+      generationId: "gen-cached",
+      outputTokens: 4,
+    });
+    await expect(fetchOpenRouterGenerationTelemetryAsync(input)).resolves.toMatchObject({
+      generationId: "gen-cached",
+    });
+    expect(mockedFetch).toHaveBeenCalledTimes(1);
   });
 });

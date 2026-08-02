@@ -119,7 +119,9 @@ processing it. The details separate Homarr's end-to-end timing from OpenRouter's
 generation time, and provider throughput, and can include normalized and native token counts, moderation
 latency, cache discount, fallback count, service tier, data region, BYOK status, routed provider, generation
 identifier, exact cost, and upstream inference cost. Provider credentials remain server-side; the browser
-can request only generation identifiers already stored on a conversation owned by the signed-in user.
+can request only generation identifiers already stored on a conversation owned by the signed-in user and
+signed by the Homarr server for that user and conversation. Successful generation lookups are cached
+briefly so polling and multi-step requests do not repeatedly query OpenRouter for the same record.
 When a provider omits cost but model discovery includes prompt and completion pricing, Homarr labels the
 calculated value as estimated. Missing provider data is shown as not reported rather than inferred.
 

@@ -2102,6 +2102,7 @@
         "observedThroughput": "Observed throughput",
         "providerTiming": "Provider reported",
         "loadingProviderDetails": "Loading generation details…",
+        "providerDetailsPending": "OpenRouter is still processing some generation details. Reopen to retry.",
         "providerLatency": "Provider latency",
         "generationTime": "Generation time",
         "moderationLatency": "Moderation",

@@ -27,6 +27,7 @@ import {
 
 import type { createTRPCContext } from "../trpc";
 import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation-telemetry";
+import { verifyAssistantGenerationAccessToken } from "../assistant-generation-access";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import { boardRouter } from "./board";
 
@@ -174,7 +175,13 @@ const getGenerationIdsFromMessageContent = (content: unknown) => {
     .flatMap((step) => {
       if (!step || typeof step !== "object" || Array.isArray(step)) return [];
       const generationId = (step as { generationId?: unknown }).generationId;
-      return typeof generationId === "string" && /^gen-[A-Za-z0-9_-]{1,128}$/.test(generationId) ? [generationId] : [];
+      const accessToken = (step as { generationAccessToken?: unknown }).generationAccessToken;
+      return typeof generationId === "string" &&
+        /^gen-[A-Za-z0-9_-]{1,128}$/.test(generationId) &&
+        typeof accessToken === "string" &&
+        /^[A-Za-z0-9_-]{43}$/.test(accessToken)
+        ? [{ generationId, accessToken }]
+        : [];
     })
     .slice(0, 8);
 };
@@ -714,10 +721,19 @@ export const assistantRouter = createTRPCRouter({
         return { complete: true, generations: [] };
       }
 
-      const generationIds = getGenerationIdsFromMessageContent(parse(message.content));
-      if (generationIds.length === 0) return { complete: true, generations: [] };
+      const generationReferences = getGenerationIdsFromMessageContent(parse(message.content)).filter((reference) =>
+        verifyAssistantGenerationAccessToken(
+          {
+            userId: ctx.session.user.id,
+            threadId: thread.id,
+            generationId: reference.generationId,
+          },
+          reference.accessToken,
+        ),
+      );
+      if (generationReferences.length === 0) return { complete: true, generations: [] };
       const generations = await Promise.all(
-        generationIds.map((generationId) =>
+        generationReferences.map(({ generationId }) =>
           fetchOpenRouterGenerationTelemetryAsync({
             baseUrl: configuration.baseUrl,
             generationId,
