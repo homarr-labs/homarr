@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"context"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -129,6 +128,27 @@ type pullEvent struct {
 	err  error
 }
 
+type outputTail struct {
+	data []byte
+}
+
+func (tail *outputTail) Write(data []byte) (int, error) {
+	const limit = 32 * 1024
+	tail.data = append(tail.data, data...)
+	if len(tail.data) > limit {
+		tail.data = tail.data[len(tail.data)-limit:]
+	}
+	return len(data), nil
+}
+
+func (tail *outputTail) lastLine() string {
+	lines := strings.FieldsFunc(string(tail.data), func(char rune) bool { return char == '\n' || char == '\r' })
+	if len(lines) == 0 {
+		return ""
+	}
+	return strings.TrimSpace(lines[len(lines)-1])
+}
+
 func splitDockerProgress(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	for i, b := range data {
 		if b == '\n' || b == '\r' {
@@ -174,7 +194,7 @@ func startPull(ctx context.Context, cmd *exec.Cmd, events chan<- pullEvent) tea.
 			if err == nil {
 				err = scanner.Err()
 			} else {
-				err = pullCommandError(err, lastLine)
+				err = commandErrorWithDetail(err, lastLine)
 			}
 			events <- pullEvent{done: true, err: err}
 		}()
@@ -182,7 +202,7 @@ func startPull(ctx context.Context, cmd *exec.Cmd, events chan<- pullEvent) tea.
 	}
 }
 
-func pullCommandError(err error, lastLine string) error {
+func commandErrorWithDetail(err error, lastLine string) error {
 	if lastLine == "" {
 		return err
 	}
@@ -928,7 +948,11 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.rebuildCancel = cancel
 			m.status = status
 			rebuild := func() tea.Msg {
-				err := run.RebuildImageContext(ctx, image, io.Discard, io.Discard)
+				output := &outputTail{}
+				err := run.RebuildImageContext(ctx, image, output, output)
+				if err != nil {
+					err = commandErrorWithDetail(err, output.lastLine())
+				}
 				return rebuildDoneMsg{image: image, err: err, canceled: ctx.Err() != nil, action: action}
 			}
 			return m, tea.Batch(rebuild, m.spinner.Tick)

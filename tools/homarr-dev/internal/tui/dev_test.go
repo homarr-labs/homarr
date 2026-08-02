@@ -137,9 +137,17 @@ func TestPRImageCheckInProgressDoesNotLaunch(t *testing.T) {
 }
 
 func TestPullErrorIncludesLastDockerMessage(t *testing.T) {
-	err := pullCommandError(errors.New("exit status 1"), "manifest unknown")
+	err := commandErrorWithDetail(errors.New("exit status 1"), "manifest unknown")
 	if !strings.Contains(err.Error(), "manifest unknown") {
 		t.Fatalf("pull error = %v", err)
+	}
+}
+
+func TestOutputTailRetainsBuildFailure(t *testing.T) {
+	tail := &outputTail{}
+	_, _ = tail.Write([]byte("building\r\nERROR: Dockerfile not found\n"))
+	if got := tail.lastLine(); got != "ERROR: Dockerfile not found" {
+		t.Fatalf("last line = %q", got)
 	}
 }
 
