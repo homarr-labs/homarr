@@ -1,6 +1,6 @@
 "use client";
 
-import { Tooltip, VisuallyHidden } from "@mantine/core";
+import { ActionIcon, Tooltip } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
@@ -24,15 +24,9 @@ export function IntegrationErrorIndicator({ results }: IntegrationErrorIndicator
   const label = `${t("common.error")}: ${names}`;
   return (
     <Tooltip label={label} position="left" withArrow>
-      <span style={{ display: "inline-flex" }}>
-        <IconAlertTriangle
-          aria-hidden
-          size={14}
-          color="var(--mantine-color-orange-6)"
-          style={{ cursor: "help", flexShrink: 0 }}
-        />
-        <VisuallyHidden>{label}</VisuallyHidden>
-      </span>
+      <ActionIcon variant="transparent" color="orange" size={18} aria-label={label} style={{ cursor: "help" }}>
+        <IconAlertTriangle aria-hidden size={14} />
+      </ActionIcon>
     </Tooltip>
   );
 }
