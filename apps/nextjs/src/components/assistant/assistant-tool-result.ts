@@ -31,6 +31,17 @@ const maximumFields = 6;
 
 type ToolResultPrimitive = string | number | boolean;
 
+const redactUrlCredentials = (value: string) => {
+  if (!URL.canParse(value)) return value;
+  const url = new URL(value);
+  if (url.protocol !== "http:" && url.protocol !== "https:") return value;
+  if (!url.username && !url.password && !url.search) return value;
+  url.username = "";
+  url.password = "";
+  url.search = "";
+  return url.toString();
+};
+
 export interface ToolResultField {
   label: string;
   value: ToolResultPrimitive;
@@ -65,7 +76,7 @@ const toDisplayValue = (value: unknown): ToolResultPrimitive | undefined => {
   if (typeof value === "string") {
     const trimmed = value.trim();
     if (trimmed.length === 0 || trimmed.length > 160) return undefined;
-    return trimmed;
+    return redactUrlCredentials(trimmed);
   }
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (typeof value === "boolean") return value;

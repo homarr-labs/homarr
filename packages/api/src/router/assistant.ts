@@ -237,8 +237,9 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
     .flatMap((model) => {
       const id = typeof model.id === "string" ? model.id : typeof model.model === "string" ? model.model : null;
       if (!id || id.length > 256) return [];
-      const name =
+      const rawName =
         typeof model.name === "string" ? model.name : typeof model.display_name === "string" ? model.display_name : id;
+      const name = rawName.trim() || id;
       const contextLength =
         typeof model.context_length === "number" &&
         Number.isSafeInteger(model.context_length) &&

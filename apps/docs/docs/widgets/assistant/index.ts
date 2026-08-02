@@ -18,7 +18,7 @@ export const assistantWidget: WidgetDefinition = {
         name: "Pinned conversation",
         description: "Search for a conversation. This field is hidden when Current conversation is selected.",
         values: { type: "string" },
-        defaultValue: "Hidden",
+        defaultValue: "",
       },
     ],
   },

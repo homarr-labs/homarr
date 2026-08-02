@@ -31,6 +31,7 @@ import type {
 
 import { extractMcpTools } from "../../mcp/_extract-tools";
 import { getRequestedMentionIds, sanitizeAttachmentFilename } from "./assistant-chat-input";
+import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getForcedAssistantToolName, withAssistantToolPolicy } from "./assistant-tool-policy";
 
@@ -361,11 +362,35 @@ export async function POST(request: Request) {
   const requestStartedAt = Date.now();
   const requestId = crypto.randomUUID();
   const requestedModelId = parsed.data.modelId ?? configuration.modelId;
-  const [selectedModel, mentionContext] = await Promise.all([
-    getSelectedModelDetailsAsync(configuration, requestedModelId).catch(() => null),
+  const [modelLookup, mentionContext] = await Promise.all([
+    getSelectedModelDetailsAsync(configuration, requestedModelId).then(
+      (model) => ({ model, error: null }),
+      (error: unknown) => ({ model: null, error }),
+    ),
     getMentionContextAsync(context, parsed.data.messages),
   ]);
-  if (requestedModelId !== configuration.modelId && !selectedModel) {
+  if (modelLookup.error !== null) {
+    logger.warn("Assistant model discovery failed before the response started", {
+      requestId,
+      provider: configuration.provider,
+      modelId: requestedModelId,
+      error: modelLookup.error,
+    });
+  }
+  const selectedModel = modelLookup.model;
+  const modelLookupStatus = getAssistantModelLookupStatus({
+    configuredModelId: configuration.modelId,
+    requestedModelId,
+    hasModel: selectedModel !== null,
+    failed: modelLookup.error !== null,
+  });
+  if (modelLookupStatus === "unreachable") {
+    return Response.json(
+      { error: "The configured model endpoint could not be reached. Try again in a moment." },
+      { status: 503 },
+    );
+  }
+  if (modelLookupStatus === "unavailable") {
     return Response.json(
       { error: "The selected model is not available from the configured provider." },
       { status: 400 },

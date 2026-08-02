@@ -21,10 +21,11 @@ export const { definition, componentLoader } = createWidgetDefinition("assistant
         conversation: factory.dynamicSelect({
           withDescription: true,
           useOptions(query) {
-            const { data: threads = [], isPending } = clientApi.assistant.listThreads.useQuery();
+            const { data: threads = [], isPending, isError } = clientApi.assistant.listThreads.useQuery();
             const normalizedQuery = query.trim().toLocaleLowerCase();
             return {
               isPending,
+              isError,
               options: threads
                 .filter((thread) => {
                   if (normalizedQuery.length === 0) return true;

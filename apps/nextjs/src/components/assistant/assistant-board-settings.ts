@@ -31,3 +31,27 @@ export const getCustomCssWarnings = (css: string) => ({
   importsStylesheet: /@import\b/iu.test(css),
   loadsRemoteResource: /url\(\s*["']?https?:\/\//iu.test(css),
 });
+
+const appearanceKeys = new Set<keyof AssistantBoardSettingsChanges>([
+  "primaryColor",
+  "secondaryColor",
+  "opacity",
+  "iconColor",
+  "itemRadius",
+]);
+const backgroundKeys = new Set<keyof AssistantBoardSettingsChanges>([
+  "backgroundImageUrl",
+  "backgroundImageAttachment",
+  "backgroundImageRepeat",
+  "backgroundImageSize",
+]);
+
+export const getAssistantBoardSettingsDefaultTab = (
+  changes: AssistantBoardSettingsChanges,
+): "general" | "appearance" | "background" | "css" => {
+  if (changes.customCss !== undefined) return "css";
+  const keys = Object.keys(changes) as (keyof AssistantBoardSettingsChanges)[];
+  if (keys.some((key) => appearanceKeys.has(key))) return "appearance";
+  if (keys.some((key) => backgroundKeys.has(key))) return "background";
+  return "general";
+};
