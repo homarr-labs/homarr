@@ -1,0 +1,21 @@
+tools/homarr-dev/internal/gh/gh_test.go
+  s_1c2c60ab8959b8::t_bb4ced54f4cebc 87-89
+tools/homarr-dev/internal/gh/gh.go
+  s_1c2c60ab8959b8::t_bb4ced54f4cebc 35,49,113,135,179,194
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "d096aecd591de0e35da72d2322111f4b31e26c0c",
+  "prompts": {},
+  "sessions": {
+    "s_1c2c60ab8959b8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_04800f60fffebifl2JH2wvlokh",
+        "model": "gpt-5.6-sol-fast"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
