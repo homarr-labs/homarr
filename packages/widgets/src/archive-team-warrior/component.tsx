@@ -5,7 +5,7 @@ import { Avatar, Badge, Card, Group, ScrollArea, SimpleGrid, Stack, Text } from 
 import { clientApi } from "@homarr/api/client";
 import { formatByteRate } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
-import { useCurrentLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -47,7 +47,7 @@ const ArchiveTeamWarriorWidgetContent = ({
   isAdvanced: boolean;
 }) => {
   const t = useScopedI18n("widget.archiveTeamWarrior");
-  const locale = useCurrentLocale();
+  const locale = useCurrentIntlLocale();
   const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
 
   const status = data.status;
