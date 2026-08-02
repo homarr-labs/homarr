@@ -113,8 +113,13 @@ Each completed response includes a circular context-window meter. Select it to o
 the provider reports them: input, output, cached-input and reasoning tokens, used and remaining context,
 time to first output, total duration, output speed, agent-step timing, and cost. OpenRouter-reported cost
 is labeled as reported.
-OpenRouter responses also show the routed provider, generation identifier, and upstream inference cost when
-the endpoint supplies those fields.
+OpenRouter responses request inline usage and routing metadata. When request details are opened, Homarr also
+loads the server-side generation record for each model step and briefly polls while OpenRouter finishes
+processing it. The details separate Homarr's end-to-end timing from OpenRouter's provider latency,
+generation time, and provider throughput, and can include normalized and native token counts, moderation
+latency, cache discount, fallback count, service tier, data region, BYOK status, routed provider, generation
+identifier, exact cost, and upstream inference cost. Provider credentials remain server-side; the browser
+can request only generation identifiers already stored on a conversation owned by the signed-in user.
 When a provider omits cost but model discovery includes prompt and completion pricing, Homarr labels the
 calculated value as estimated. Missing provider data is shown as not reported rather than inferred.
 
