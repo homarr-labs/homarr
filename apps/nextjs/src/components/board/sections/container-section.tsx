@@ -75,7 +75,15 @@ export const BoardContainerSection = ({ section }: Props) => {
             radius={isVisuallyCollapsed ? board.itemRadius : "sm"}
             variant="default"
             justify={options.showLabel ? "flex-start" : "center"}
-            leftSection={options.showLabel ? isVisuallyCollapsed ? <IconChevronDown size={16} /> : <IconChevronUp size={16} /> : undefined}
+            leftSection={
+              options.showLabel ? (
+                isVisuallyCollapsed ? (
+                  <IconChevronDown size={16} />
+                ) : (
+                  <IconChevronUp size={16} />
+                )
+              ) : undefined
+            }
             onClick={toggle}
             aria-expanded={!isVisuallyCollapsed}
             aria-controls={contentId}
@@ -84,7 +92,13 @@ export const BoardContainerSection = ({ section }: Props) => {
             data-board-container-label
             title={options.showLabel ? label : undefined}
           >
-            {options.showLabel ? label : isVisuallyCollapsed ? <IconChevronDown size={16} /> : <IconChevronUp size={16} />}
+            {options.showLabel ? (
+              label
+            ) : isVisuallyCollapsed ? (
+              <IconChevronDown size={16} />
+            ) : (
+              <IconChevronUp size={16} />
+            )}
           </Button>
         )}
         {isEditMode && (
