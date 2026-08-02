@@ -3,7 +3,8 @@
 import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
 import type { ComponentProps } from "react";
 import dynamic from "next/dynamic";
-import { Badge, Button, Center, Group, Stack, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Badge, Button, Center, Group, Stack, Text, TextInput, Tooltip } from "@mantine/core";
+import { IconEdit } from "@tabler/icons-react";
 import { Quill } from "react-quill-new";
 import type { DeltaStatic } from "react-quill-new";
 import type ReactQuillComponent from "react-quill-new";
@@ -295,7 +296,7 @@ const AnchorNoteWidgetContent = ({
   if (!note) return <WidgetEmptyState />;
 
   return (
-    <Stack h="100%" gap="xs" p={height < 120 ? "xs" : "sm"}>
+    <Stack className="homarr-anchor-note" h="100%" gap="xs" p={height < 120 ? "xs" : "sm"}>
       <Group justify="space-between" align="flex-start">
         <Stack gap={2} style={{ flex: 1 }}>
           {isEditing ? (
@@ -335,22 +336,30 @@ const AnchorNoteWidgetContent = ({
             </Text>
           )}
         </Stack>
-        <Group gap="xs">
-          {isEditing ? (
-            <>
-              <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
-                {t("save")}
+        {(isEditing || canEdit) && (
+          <Group className="homarr-anchor-actions" data-visible={isEditing || isAdvanced || undefined} gap="xs">
+            {isEditing ? (
+              <>
+                <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
+                  {t("save")}
+                </Button>
+                <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
+                  {t("cancel")}
+                </Button>
+              </>
+            ) : isAdvanced ? (
+              <Button size="xs" variant="light" onClick={handleEdit} disabled={isUpdating}>
+                {t("edit")}
               </Button>
-              <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
-                {t("cancel")}
-              </Button>
-            </>
-          ) : (
-            <Button size="xs" variant="light" onClick={handleEdit} disabled={!canEdit || isUpdating}>
-              {t("edit")}
-            </Button>
-          )}
-        </Group>
+            ) : (
+              <Tooltip label={t("edit")}>
+                <ActionIcon aria-label={t("edit")} size="md" variant="light" onClick={handleEdit} disabled={isUpdating}>
+                  <IconEdit size={16} />
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </Group>
+        )}
       </Group>
       {isEditing || isAdvanced ? (
         <div

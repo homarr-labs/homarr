@@ -14,6 +14,7 @@ export default function CoolifyWidget({
   options,
   integrationIds,
   width,
+  height,
   displayMode,
 }: WidgetComponentProps<"coolify">) {
   const t = useScopedI18n("widget.coolify");
@@ -31,6 +32,7 @@ export default function CoolifyWidget({
       integrationIds={integrationIds}
       options={options}
       width={width}
+      height={height}
       isAdvanced={displayMode === "advanced"}
     />
   );
@@ -40,15 +42,30 @@ interface CoolifyContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"coolify">["options"];
   width: number;
+  height: number;
   isAdvanced: boolean;
 }
 
-function CoolifyContent({ integrationIds, options, width, isAdvanced }: CoolifyContentProps) {
-  const { data: instancesData = [] } = clientApi.widget.coolify.getInstancesInfo.useQuery({ integrationIds });
+function CoolifyContent({ integrationIds, options, width, height, isAdvanced }: CoolifyContentProps) {
+  const t = useScopedI18n("common");
+  const { data: instancesData = [], isPending } = clientApi.widget.coolify.getInstancesInfo.useQuery({
+    integrationIds,
+  });
 
-  const isTiny = !isAdvanced && width < 256;
+  const isTiny = !isAdvanced && (width < 256 || height < 144);
+  const hideFooter = !isAdvanced && height < 112;
   const [firstInstance] = instancesData;
   const widgetKey = createWidgetKey(integrationIds);
+
+  if (isPending) {
+    return (
+      <Stack align="center" justify="center" h="100%">
+        <Text c="dimmed" size="sm">
+          {t("action.loading")}
+        </Text>
+      </Stack>
+    );
+  }
 
   if (instancesData.length === 1 && firstInstance) {
     return (
@@ -58,6 +75,7 @@ function CoolifyContent({ integrationIds, options, width, isAdvanced }: CoolifyC
         isTiny={isTiny}
         widgetKey={widgetKey}
         isAdvanced={isAdvanced}
+        hideFooter={hideFooter}
       />
     );
   }
@@ -73,6 +91,7 @@ function CoolifyContent({ integrationIds, options, width, isAdvanced }: CoolifyC
             isTiny={isTiny}
             widgetKey={widgetKey}
             isAdvanced={isAdvanced}
+            hideFooter={hideFooter}
           />
         ))}
       </SimpleGrid>

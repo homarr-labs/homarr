@@ -40,6 +40,7 @@ export default function AudioStatsWidget({
       stats={response.data}
       options={{ ...options, compactMode: displayMode === "compact" && (options.compactMode || height < 160) }}
       width={width}
+      height={height}
     />
   );
   if (displayMode === "compact") return summary;

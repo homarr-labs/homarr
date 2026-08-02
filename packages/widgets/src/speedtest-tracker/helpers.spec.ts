@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { SpeedtestTrackerDashboardData, SpeedtestTrackerStats } from "@homarr/integrations/types";
 
-import { combineSpeedtestDashboards, mergeStats } from "./helpers";
+import { combineSpeedtestDashboards, getCompactSections, mergeStats } from "./helpers";
 
 const stats = (average: number, totalResults: number): SpeedtestTrackerStats => ({
   ping: { avg: average, min: average, max: average },
@@ -24,5 +24,18 @@ describe("speedtest dashboard aggregation", () => {
       { latestResult: older, stats: null, recentResults: [] },
     ];
     expect(combineSpeedtestDashboards(dashboards).latestResult?.id).toBe(2);
+  });
+});
+
+describe("getCompactSections", () => {
+  const available = { latest: true, chart: true, averages: true };
+
+  it("prioritizes the latest result in a short widget", () => {
+    expect(getCompactSections(180, available)).toEqual({ latest: true, chart: false, averages: false });
+  });
+
+  it("reveals history before averages as height grows", () => {
+    expect(getCompactSections(300, available)).toEqual({ latest: true, chart: true, averages: false });
+    expect(getCompactSections(400, available)).toEqual({ latest: true, chart: true, averages: true });
   });
 });

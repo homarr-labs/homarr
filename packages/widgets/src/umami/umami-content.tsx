@@ -43,10 +43,11 @@ export function UmamiContent({
   displayMode,
 }: UmamiContentProps) {
   const t = useScopedI18n("widget.umami");
+  const tCommon = useScopedI18n("common");
   const { colorScheme } = useMantineColorScheme();
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
 
-  const { data: results = [] } = clientApi.widget.umami.getVisitorStats.useQuery(
+  const { data: results = [], isPending: isStatsPending } = clientApi.widget.umami.getVisitorStats.useQuery(
     { integrationIds, websiteId, timeFrame, eventName },
     umamiQueryOptions,
   );
@@ -67,6 +68,15 @@ export function UmamiContent({
     : undefined;
 
   const firstResult = results[0];
+  if (isStatsPending) {
+    return (
+      <Stack align="center" justify="center" h="100%">
+        <Text c="dimmed" size="sm">
+          {tCommon("action.loading")}
+        </Text>
+      </Stack>
+    );
+  }
   if (!firstResult) {
     return (
       <Stack align="center" justify="center" h="100%">
@@ -93,6 +103,11 @@ export function UmamiContent({
 
   const isOverlay = chartStyle === "overlay" && hasEventSeries;
   const overlayBarSize = 16;
+  const isAdvanced = displayMode === "advanced";
+  const isDense = !isAdvanced && height < 120;
+  const showXAxis = isAdvanced || height >= 140;
+  const showSecondaryStats = isAdvanced || height >= 96;
+  const showDetailedStats = isAdvanced || (width >= 260 && height >= 150);
 
   const selectedView =
     viewMode === "events" ? (
@@ -102,6 +117,7 @@ export function UmamiContent({
         timeFrame={timeFrame}
         eventNames={eventNames}
         chartType={chartType}
+        showXAxis={showXAxis}
       />
     ) : viewMode === "topPages" ? (
       <UmamiTopPagesContent
@@ -129,7 +145,7 @@ export function UmamiContent({
         gridAxis="none"
         withLegend={false}
         withTooltip
-        withXAxis
+        withXAxis={showXAxis}
         withYAxis={false}
         xAxisProps={{ tick: { fontSize: 9, fill: tickColor }, interval: "preserveStartEnd" }}
       />
@@ -143,7 +159,7 @@ export function UmamiContent({
         gridAxis="none"
         withLegend={false}
         withTooltip
-        withXAxis
+        withXAxis={showXAxis}
         withYAxis={false}
         barProps={isOverlay ? { barSize: overlayBarSize, radius: 2 } : { radius: 2 }}
         barChartProps={isOverlay ? { barGap: -overlayBarSize } : undefined}
@@ -190,7 +206,7 @@ export function UmamiContent({
     );
 
   return (
-    <Stack gap={4} p="xs" h="100%">
+    <Stack gap={isDense ? 2 : 4} p={isDense ? 4 : "xs"} h="100%">
       <Group justify="space-between" align="baseline" wrap="nowrap">
         <Text size="xs" c="dimmed" truncate="end" style={{ maxWidth: "55%" }}>
           {visitorStats.domain} ({formatTimeFrameLabel(timeFrame, t)})
@@ -231,27 +247,29 @@ export function UmamiContent({
           </Group>
         )}
       </Group>
-      <Group wrap="wrap" style={{ columnGap: 12, rowGap: 4 }}>
-        <Text size="xs" c="green">
-          ● {activeVisitors.toLocaleString()} {t("active")}
-        </Text>
-        <Text size="xs" c="dimmed">
-          {visitorStats.totalPageviews.toLocaleString()} {t("pageviews")}
-        </Text>
-        <Text size="xs" c="dimmed">
-          {visitorStats.totalVisits.toLocaleString()} {t("visits")}
-        </Text>
-        {(displayMode === "advanced" || width >= 260) && (
-          <>
-            <Text size="xs" c="dimmed">
-              {visitorStats.bounceRate}% {t("bounceRate")}
-            </Text>
-            <Text size="xs" c="dimmed">
-              {formatDuration(visitorStats.avgDuration * 1000)} {t("avgDuration")}
-            </Text>
-          </>
-        )}
-      </Group>
+      {showSecondaryStats && (
+        <Group wrap="wrap" style={{ columnGap: 12, rowGap: 4 }}>
+          <Text size="xs" c="green">
+            ● {activeVisitors.toLocaleString()} {t("active")}
+          </Text>
+          <Text size="xs" c="dimmed">
+            {visitorStats.totalPageviews.toLocaleString()} {t("pageviews")}
+          </Text>
+          <Text size="xs" c="dimmed">
+            {visitorStats.totalVisits.toLocaleString()} {t("visits")}
+          </Text>
+          {showDetailedStats && (
+            <>
+              <Text size="xs" c="dimmed">
+                {visitorStats.bounceRate}% {t("bounceRate")}
+              </Text>
+              <Text size="xs" c="dimmed">
+                {formatDuration(visitorStats.avgDuration * 1000)} {t("avgDuration")}
+              </Text>
+            </>
+          )}
+        </Group>
+      )}
       <Box mt={4} style={{ flex: 1, minHeight: 0 }}>
         {displayMode === "advanced" ? advancedContent : selectedView}
       </Box>

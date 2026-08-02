@@ -10,10 +10,16 @@ export const getDockerColumnVisibility = (
 
   return {
     name: isVisible("name"),
-    state: isVisible("state"),
-    host: isVisible("host") && (isAdvanced || width >= 440),
-    cpuUsage: isVisible("cpuUsage") && (isAdvanced || width >= 280),
-    memoryUsage: isVisible("memoryUsage") && (isAdvanced || width >= 360),
+    state: isVisible("state") && (isAdvanced || width >= 340 || !configured.has("name")),
+    host: isVisible("host") && (isAdvanced || width >= 640),
+    cpuUsage: isVisible("cpuUsage") && (isAdvanced || width >= 420),
+    memoryUsage: isVisible("memoryUsage") && (isAdvanced || width >= 520),
     actions: isVisible("actions"),
   };
 };
+
+export const getDockerFooterVisibility = (width: number, isAdvanced: boolean) => ({
+  footer: isAdvanced || width > 256,
+  cpu: isAdvanced || width >= 360,
+  memory: isAdvanced || width >= 480,
+});

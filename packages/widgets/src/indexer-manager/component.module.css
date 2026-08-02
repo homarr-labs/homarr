@@ -5,3 +5,44 @@
 [data-mantine-color-scheme="dark"] .card {
   background-color: var(--mantine-color-dark-7);
 }
+
+.root {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.testAction {
+  margin-inline-start: auto;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.root:hover .testAction,
+.root:focus-within .testAction {
+  opacity: 1;
+}
+
+.indexerRow {
+  min-height: 24px;
+  padding: 2px 4px;
+  border-radius: var(--mantine-radius-xs);
+
+  &:hover,
+  &:focus-within {
+    background-color: var(--mantine-color-default-hover);
+  }
+}
+
+@media (hover: none) {
+  .testAction {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .testAction {
+    transition: none;
+  }
+}

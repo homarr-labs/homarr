@@ -24,11 +24,17 @@ import classes from "./calendar-event-list.module.css";
 
 interface CalendarEventListProps {
   events: CalendarEvent[];
+  fillHeight?: boolean;
   groupByDate?: boolean;
   locale?: string;
 }
 
-export const CalendarEventList = ({ events, groupByDate = false, locale }: CalendarEventListProps) => {
+export const CalendarEventList = ({
+  events,
+  fillHeight = false,
+  groupByDate = false,
+  locale,
+}: CalendarEventListProps) => {
   const headingIdPrefix = useId();
   const dateFormatter = new Intl.DateTimeFormat(locale, {
     weekday: "long",
@@ -43,9 +49,10 @@ export const CalendarEventList = ({ events, groupByDate = false, locale }: Calen
       offsetScrollbars
       pt={5}
       w="100%"
+      h={fillHeight ? "100%" : undefined}
       styles={{
         viewport: {
-          maxHeight: 450,
+          maxHeight: fillHeight ? undefined : 450,
         },
       }}
     >
@@ -100,9 +107,9 @@ const CalendarEventRows = ({ events }: Pick<CalendarEventListProps, "events">) =
               )}
             </Box>
           )}
-          <Stack style={{ flexGrow: 1 }} gap={0}>
-            <Group justify="space-between" align="start" mb="xs" wrap="nowrap">
-              <Stack gap={0}>
+          <Stack style={{ flexGrow: 1, minWidth: 0 }} gap={0}>
+            <Group justify="space-between" align="start" mb="xs" wrap="wrap">
+              <Stack gap={0} style={{ flex: "1 1 12rem", minWidth: 0 }}>
                 {event.subTitle !== null && (
                   <Text lineClamp={1} size="sm">
                     {event.subTitle}
@@ -120,7 +127,7 @@ const CalendarEventRows = ({ events }: Pick<CalendarEventListProps, "events">) =
                 </Group>
               )}
 
-              <Group gap={3} wrap="nowrap" align={"center"}>
+              <Group gap={3} wrap="nowrap" align={"center"} ml="auto">
                 <IconClock opacity={0.7} size={"1rem"} />
                 {isAllDay(event) ? (
                   <Text c={"dimmed"} size={"sm"}>

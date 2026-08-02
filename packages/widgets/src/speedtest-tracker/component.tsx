@@ -9,7 +9,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import { WidgetEmptyState } from "../common/empty-state";
 import { AveragesSection } from "./averages";
-import { combineSpeedtestDashboards } from "./helpers";
+import { combineSpeedtestDashboards, getCompactSections } from "./helpers";
 import { LatestResultSection } from "./latest-result";
 import { RecentResultsSection } from "./recent-results";
 
@@ -48,6 +48,11 @@ export default function SpeedtestTrackerWidget({
   const averages = options.showStats && combined.stats && (
     <AveragesSection stats={combined.stats} width={displayMode === "advanced" ? advancedSectionWidth : width} />
   );
+  const compactSections = getCompactSections(height, {
+    latest: Boolean(latest),
+    chart: hasChart,
+    averages: Boolean(averages),
+  });
 
   if (displayMode === "advanced") {
     return (
@@ -85,13 +90,13 @@ export default function SpeedtestTrackerWidget({
 
   return (
     <Stack h="100%" gap="sm" p="xs" style={{ overflow: "hidden" }}>
-      {hasStatSection && (
+      {(compactSections.latest || compactSections.averages) && (
         <Stack gap="sm" style={{ flex: 1, minHeight: 0 }}>
-          {latest && <div style={{ flex: 1, minHeight: 0 }}>{latest}</div>}
-          {averages && height >= 170 && <div style={{ flex: 1, minHeight: 0 }}>{averages}</div>}
+          {compactSections.latest && <div style={{ flex: 1, minHeight: 0 }}>{latest}</div>}
+          {compactSections.averages && <div style={{ flex: 1, minHeight: 0 }}>{averages}</div>}
         </Stack>
       )}
-      {hasChart && (
+      {compactSections.chart && (
         <div style={{ flex: 2, minHeight: 0 }}>
           <RecentResultsSection results={recentFiltered} showPingGraph={options.showPingGraph} />
         </div>

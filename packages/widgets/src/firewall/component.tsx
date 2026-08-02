@@ -50,12 +50,15 @@ export const hasTotalFirewallFailure = (queries: readonly FirewallQueryState[]) 
 export default function FirewallWidget({
   integrationIds,
   width,
+  height,
   itemId,
   displayMode,
 }: WidgetComponentProps<"firewall">) {
   const [selectedFirewall, setSelectedFirewall] = useState("");
   const isAdvanced = displayMode === "advanced";
-  const isTiny = !isAdvanced && width < 256;
+  const isTiny = !isAdvanced && (width < 256 || height < 180);
+  const ringSize = isAdvanced ? 100 : height < 120 ? 44 : isTiny ? 64 : 100;
+  const showInterfaces = isAdvanced || height >= 120;
   const t = useI18n();
 
   const handleSelect = useCallback((value: string | null) => {
@@ -102,6 +105,17 @@ export default function FirewallWidget({
     value: firewallId,
   }));
 
+  if (firewallIds.length === 0) {
+    const isLoading = queries.some((query) => query.isPending || query.isFetching);
+    return (
+      <Center h="100%" p="sm">
+        <Text size="sm" c="dimmed" ta="center">
+          {isLoading ? t("common.action.loading") : t("widget.firewall.empty.noInterfaces")}
+        </Text>
+      </Center>
+    );
+  }
+
   return (
     <ScrollArea h="100%">
       <Stack gap="xs" p={isAdvanced ? "xs" : 0}>
@@ -146,6 +160,8 @@ export default function FirewallWidget({
                 hasError={hasError}
                 isAdvanced={isAdvanced}
                 isTiny={isTiny}
+                ringSize={ringSize}
+                showInterfaces={showInterfaces}
                 accordionValue={accordionValue}
                 setAccordionValue={setAccordionValue}
                 errorLabel={t("widget.firewall.error.internalServerError")}
@@ -175,6 +191,8 @@ interface FirewallPanelProps {
   hasError: boolean;
   isAdvanced: boolean;
   isTiny: boolean;
+  ringSize: number;
+  showInterfaces: boolean;
   accordionValue: string | null;
   setAccordionValue: (value: string | null) => void;
   errorLabel: string;
@@ -197,6 +215,8 @@ const FirewallPanel = ({
   hasError,
   isAdvanced,
   isTiny,
+  ringSize,
+  showInterfaces,
   accordionValue,
   setAccordionValue,
   errorLabel,
@@ -237,33 +257,35 @@ const FirewallPanel = ({
 
       <Flex justify="center" align="center" wrap="wrap">
         {cpu !== undefined && (
-          <MetricRing value={cpu} icon={IconCpu} isTiny={isTiny} label={t("widget.firewall.widget.cpu")} t={t} />
+          <MetricRing value={cpu} icon={IconCpu} size={ringSize} label={t("widget.firewall.widget.cpu")} t={t} />
         )}
         {memory !== undefined && (
           <MetricRing
             value={memory}
             icon={IconBrain}
-            isTiny={isTiny}
+            size={ringSize}
             label={t("widget.firewall.widget.memory")}
             t={t}
           />
         )}
       </Flex>
 
-      <InterfacesPanel
-        summary={interfaces ?? []}
-        hasResult={interfacesLoaded}
-        hasError={interfacesError}
-        isAdvanced={isAdvanced}
-        isTiny={isTiny}
-        accordionValue={accordionValue}
-        setAccordionValue={setAccordionValue}
-        errorLabel={errorLabel}
-        errorBadgeLabel={errorBadgeLabel}
-        noDataLabel={noDataLabel}
-        loadingLabel={loadingLabel}
-        label={interfacesLabel}
-      />
+      {showInterfaces && (
+        <InterfacesPanel
+          summary={interfaces ?? []}
+          hasResult={interfacesLoaded}
+          hasError={interfacesError}
+          isAdvanced={isAdvanced}
+          isTiny={isTiny}
+          accordionValue={accordionValue}
+          setAccordionValue={setAccordionValue}
+          errorLabel={errorLabel}
+          errorBadgeLabel={errorBadgeLabel}
+          noDataLabel={noDataLabel}
+          loadingLabel={loadingLabel}
+          label={interfacesLabel}
+        />
+      )}
     </Stack>
   </Paper>
 );
@@ -271,12 +293,12 @@ const FirewallPanel = ({
 interface MetricRingProps {
   value: number;
   icon: typeof IconCpu;
-  isTiny: boolean;
+  size: number;
   label: string;
   t: TranslationFunction;
 }
 
-const MetricRing = ({ value, icon: Icon, isTiny, label, t }: MetricRingProps) => {
+const MetricRing = ({ value, icon: Icon, size, label, t }: MetricRingProps) => {
   const safeValue = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
   const status = getMetricStatus(safeValue);
   const statusLabel = t(`widget.firewall.status.${status}`);
@@ -289,13 +311,13 @@ const MetricRing = ({ value, icon: Icon, isTiny, label, t }: MetricRingProps) =>
         status: statusLabel,
       })}
       roundCaps
-      size={isTiny ? 50 : 100}
-      thickness={isTiny ? 4 : 8}
+      size={size}
+      thickness={size < 72 ? 4 : 8}
       label={
         <Center style={{ flexDirection: "column" }}>
-          <Text size={isTiny ? "8px" : "xs"}>{safeValue.toFixed(1)}%</Text>
-          <Icon size={isTiny ? 8 : 16} />
-          {!isTiny && <Text size="8px">{statusLabel}</Text>}
+          <Text size={size < 72 ? "8px" : "xs"}>{safeValue.toFixed(1)}%</Text>
+          <Icon size={size < 72 ? 8 : 16} />
+          {size >= 72 && <Text size="8px">{statusLabel}</Text>}
         </Center>
       }
       sections={[

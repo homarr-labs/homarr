@@ -87,7 +87,7 @@ export default function SmartHomeTriggerAutomationWidget({
 
   return (
     <Box pos="relative" w="100%" h="100%">
-      <VisuallyHidden role="status">
+      <VisuallyHidden component="output">
         {isPending
           ? t("widget.smartHome-executeAutomation.status.running")
           : isShowSuccess
@@ -100,6 +100,7 @@ export default function SmartHomeTriggerAutomationWidget({
       <UnstyledButton
         onClick={handleClick}
         disabled={!integrationId || !canInteract || isPending}
+        aria-label={t("widget.smartHome-executeAutomation.spotlightAction.run", { name: options.displayName })}
         style={{
           cursor: !isEditMode && integrationId && canInteract ? "pointer" : "initial",
           pointerEvents: isEditMode ? "none" : undefined,
@@ -130,9 +131,11 @@ export default function SmartHomeTriggerAutomationWidget({
           </Overlay>
         )}
         <Center w="100%" h="100%">
-          <Stack align="center" gap="md">
-            <IconAutomation size={isTiny ? 16 : undefined} />
-            <Text ta="center" fw="bold" fz={isTiny ? "xs" : undefined}>
+          <Stack align="center" gap={isTiny ? 6 : "md"} p="xs" maw="100%">
+            <ThemeIcon variant="light" size={isTiny ? "md" : "xl"} radius="xl">
+              <IconAutomation size={isTiny ? 14 : 24} />
+            </ThemeIcon>
+            <Text ta="center" fw={600} fz={isTiny ? "xs" : "sm"} lineClamp={2} maw="100%">
               {options.displayName}
             </Text>
             {displayMode === "advanced" && (

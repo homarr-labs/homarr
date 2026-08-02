@@ -1,13 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
-import { Box, Card, SimpleGrid } from "@mantine/core";
+import { Box, Card, Center, SimpleGrid, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import objectSupport from "dayjs/plugin/objectSupport";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { clientApi } from "@homarr/api/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 import { WifiVariant } from "./variants/wifi-variant";
@@ -22,10 +23,12 @@ export default function NetworkControllerNetworkStatusWidget({
   integrationIds,
   displayMode,
   width,
+  height,
 }: WidgetComponentProps<"networkControllerStatus">) {
-  const { data: summaries = [] } = clientApi.widget.networkController.summary.useQuery({
+  const { data: summaries = [], isPending } = clientApi.widget.networkController.summary.useQuery({
     integrationIds,
   });
+  const t = useI18n();
 
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
   const isAdvanced = displayMode === "advanced";
@@ -33,18 +36,39 @@ export default function NetworkControllerNetworkStatusWidget({
   const countWifiUsers = data.reduce((sum, summary) => sum + summary.wifi.users, 0);
   const countLanGuests = data.reduce((sum, summary) => sum + summary.lan.guests, 0);
   const countLanUsers = data.reduce((sum, summary) => sum + summary.lan.users, 0);
+  const useHorizontalStats = !isAdvanced && height < 150 && width >= 200;
+
+  if (isPending || data.length === 0) {
+    return (
+      <Center h="100%" p="sm">
+        <Text c="dimmed" size="sm" ta="center">
+          {isPending ? t("common.action.loading") : t("widget.networkControllerStatus.error.integrationsDisconnected")}
+        </Text>
+      </Center>
+    );
+  }
 
   return (
-    <Box p={isAdvanced ? "md" : "sm"} h="100%">
+    <Box p={isAdvanced ? "md" : height < 120 ? "xs" : "sm"} h="100%">
       <SimpleGrid cols={isAdvanced && width >= 560 ? 2 : 1} h="100%" spacing="sm">
         {(isAdvanced || options.content === "wifi") && (
           <Card p={isAdvanced ? "md" : 0} withBorder={isAdvanced}>
-            <WifiVariant countGuests={countWifiGuests} countUsers={countWifiUsers} compact={!isAdvanced} />
+            <WifiVariant
+              countGuests={countWifiGuests}
+              countUsers={countWifiUsers}
+              compact={!isAdvanced}
+              horizontal={useHorizontalStats}
+            />
           </Card>
         )}
         {(isAdvanced || options.content === "wired") && (
           <Card p={isAdvanced ? "md" : 0} withBorder={isAdvanced}>
-            <WiredVariant countGuests={countLanGuests} countUsers={countLanUsers} compact={!isAdvanced} />
+            <WiredVariant
+              countGuests={countLanGuests}
+              countUsers={countLanUsers}
+              compact={!isAdvanced}
+              horizontal={useHorizontalStats}
+            />
           </Card>
         )}
       </SimpleGrid>

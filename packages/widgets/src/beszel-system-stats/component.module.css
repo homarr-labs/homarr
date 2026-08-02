@@ -8,7 +8,21 @@
   pointer-events: none;
 }
 
-.beszelStatsContainer:hover .beszelStatsSystemToggle {
+.beszelStatsContainer:hover .beszelStatsSystemToggle,
+.beszelStatsContainer:focus-within .beszelStatsSystemToggle {
   opacity: 1;
   pointer-events: auto;
+}
+
+@media (hover: none) {
+  .beszelStatsSystemToggle {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beszelStatsSystemToggle {
+    transition: none;
+  }
 }

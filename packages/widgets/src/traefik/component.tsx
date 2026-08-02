@@ -126,7 +126,7 @@ function TraefikWidgetContent({
         ))}
       </div>
 
-      {options.showEntryPoints && combined.entryPoints.length > 0 && (
+      {options.showEntryPoints && combined.entryPoints.length > 0 && (displayMode === "advanced" || height >= 340) && (
         <div className={classes.entryPoints}>
           {dedupe(combined.entryPoints)
             .slice(0, getEntryPointLimit(width))

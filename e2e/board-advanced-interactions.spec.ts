@@ -7,6 +7,7 @@ import { afterAll, beforeAll, describe, test } from "vitest";
 
 import { hashPasswordAsync } from "../packages/auth/security";
 import {
+  apps,
   boardUserPermissions,
   boards,
   itemLayouts,
@@ -24,6 +25,7 @@ const ownerCredentials = { username: "owner", password: "Comp(exP4sswOrd" };
 const disabledModifierCredentials = { username: "modifier", password: "Comp(exP4sswOrd" };
 const viewerCredentials = { username: "viewer", password: "Comp(exP4sswOrd" };
 const boardName = "advanced-interactions-e2e";
+const emptyCellCenterXRatio = 7.5 / 12;
 
 describe("Board advanced interactions", () => {
   let browser: Browser;
@@ -67,7 +69,10 @@ describe("Board advanced interactions", () => {
     try {
       const widget = page.locator(".grid-stack-item[data-kind='clock'] > .grid-stack-item-content").first();
       const compactSurface = widget.locator(".clock-wrapper");
-      const advancedDialog = page.getByRole("dialog", { name: "Date and time advanced view" });
+      const advancedSurface = page.getByRole("region", { name: "Date and time advanced view" });
+      const iframeAdvancedSurface = page.getByRole("region", { name: "iFrame advanced view" });
+      const dimmingOverlay = page.locator("[data-advanced-focus-overlay]");
+      const otherWidget = page.locator(".grid-stack-item[data-kind='iframe'] > .grid-stack-item-content").first();
 
       await compactSurface.evaluate((element) => {
         element.setAttribute("data-lifecycle-probe", "same-instance");
@@ -75,43 +80,60 @@ describe("Board advanced interactions", () => {
       await widget.focus();
       await page.keyboard.down("Shift");
       await widget.hover();
-      await expect(advancedDialog).toBeVisible({ timeout: 2_000 });
-      await expect(advancedDialog).toHaveCSS("animation-name", "none");
-      const advancedBounds = await advancedDialog.boundingBox();
-      expect(advancedBounds?.width).toBeGreaterThanOrEqual(900);
-      await expect(advancedDialog).toHaveAttribute("data-lifecycle-probe", "same-instance");
+      await expect(advancedSurface).toBeVisible({ timeout: 2_000 });
+      await expect(advancedSurface).toHaveCSS("animation-name", "none");
+      const compactBounds = await widget.boundingBox();
+      const advancedBounds = await advancedSurface.boundingBox();
+      expect(advancedBounds?.width).toBeGreaterThan(compactBounds?.width ?? 0);
+      await expect(advancedSurface).toHaveAttribute("data-lifecycle-probe", "same-instance");
+      await expect(dimmingOverlay).toBeVisible();
+      await expect(dimmingOverlay).toHaveCSS("pointer-events", "none");
+      await expect(otherWidget).toBeVisible();
       await expect(widget).toBeFocused();
+
+      await advancedSurface.click({ button: "right", position: { x: 80, y: 80 } });
+      const portalledMenuItem = page.getByRole("menuitem", { name: "Open advanced view" });
+      await expect(portalledMenuItem).toBeVisible();
+      await portalledMenuItem.hover();
+      await expect(advancedSurface).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(portalledMenuItem).toBeHidden();
+      await expect(advancedSurface).toBeVisible();
+
+      await otherWidget.hover();
+      await expect(advancedSurface).toBeHidden();
+      await expect(iframeAdvancedSurface).toBeVisible({ timeout: 2_000 });
       await page.keyboard.up("Shift");
-      await expect(advancedDialog).toBeHidden();
+      await expect(iframeAdvancedSurface).toBeHidden();
+      await expect(dimmingOverlay).toBeHidden();
       await expect(compactSurface).toHaveAttribute("data-lifecycle-probe", "same-instance");
       await expect(widget).toBeFocused();
 
-      await page.keyboard.down("Shift");
-      await widget.hover();
-      await expect(advancedDialog).toBeVisible({ timeout: 2_000 });
-      await page.getByRole("button", { name: "Keep advanced view open" }).click();
-      const pinnedButton = page.getByRole("button", { name: "Advanced view is pinned" });
-      await expect(pinnedButton).toBeFocused();
-      await page.keyboard.up("Shift");
-      await expect(advancedDialog).toBeVisible();
-      await page.keyboard.press("Shift+Tab");
-      await expect(advancedDialog).toBeVisible();
-      await expect(page.getByRole("button", { name: "Close advanced view" })).toBeFocused();
-      await page.keyboard.press("Escape");
-      await expect(advancedDialog).toBeHidden();
-      await expect(widget).toBeFocused();
-
       await page.keyboard.press("Shift+Enter");
-      await expect(advancedDialog).toBeVisible();
+      await expect(advancedSurface).toBeVisible();
+      await expect(page.getByRole("button", { name: "Close advanced view" })).toBeFocused();
+      await expect(page.getByRole("button", { name: /advanced view is pinned|keep advanced view open/i })).toHaveCount(
+        0,
+      );
       await page.keyboard.press("Escape");
-      await expect(advancedDialog).toBeHidden();
+      await expect(advancedSurface).toBeHidden();
       await expect(widget).toBeFocused();
 
       await widget.click({ button: "right" });
       await page.getByRole("menuitem", { name: "Open advanced view" }).click();
-      await expect(advancedDialog).toBeVisible();
+      await expect(advancedSurface).toBeVisible();
       await page.keyboard.press("Escape");
-      await expect(advancedDialog).toBeHidden();
+      await expect(advancedSurface).toBeHidden();
+
+      const appWidget = page.locator(".grid-stack-item[data-kind='app'] > .grid-stack-item-content").first();
+      await expect(appWidget).not.toHaveAttribute("aria-keyshortcuts", "Shift+Enter");
+      await appWidget.click({ button: "right" });
+      await expect(page.getByRole("menuitem", { name: "Open advanced view" })).toHaveCount(0);
+      await page.keyboard.press("Escape");
+      await page.keyboard.down("Shift");
+      await appWidget.hover();
+      await expect(advancedSurface).toBeHidden();
+      await page.keyboard.up("Shift");
     } finally {
       await context.close();
     }
@@ -131,7 +153,7 @@ describe("Board advanced interactions", () => {
 
       await iframeSlot.focus();
       await page.keyboard.press("Shift+Enter");
-      await expect(page.getByRole("dialog", { name: "iFrame advanced view" })).toBeVisible();
+      await expect(page.getByRole("region", { name: "iFrame advanced view" })).toBeVisible();
       await expect(frame.locator("#state")).toHaveValue("changed");
       await page.keyboard.press("Escape");
       await expect(frame.locator("#state")).toHaveValue("changed");
@@ -139,7 +161,7 @@ describe("Board advanced interactions", () => {
       await iframeSlot.focus();
       await page.keyboard.press("Shift+Enter");
       await page.setViewportSize({ width: 800, height: 900 });
-      await expect(page.getByRole("dialog", { name: "iFrame advanced view" })).toBeHidden();
+      await expect(page.getByRole("region", { name: "iFrame advanced view" })).toBeHidden();
       await expect(page.locator(".grid-stack-item[data-kind='iframe'] iframe")).toBeVisible();
     } finally {
       await context.close();
@@ -163,13 +185,18 @@ describe("Board advanced interactions", () => {
       expect(bounds.height).toBeGreaterThanOrEqual(44);
       expect(bounds.x + bounds.width).toBeLessThanOrEqual(1366);
       expect(bounds.y + bounds.height).toBeLessThanOrEqual(768);
-      const dialogBounds = await page.getByRole("dialog", { name: "Date and time advanced view" }).boundingBox();
+      const surfaceBounds = await page.getByRole("region", { name: "Date and time advanced view" }).boundingBox();
       const contentBounds = await page.locator(".clock-widget-container").boundingBox();
-      expect(dialogBounds).not.toBeNull();
+      expect(surfaceBounds).not.toBeNull();
       expect(contentBounds).not.toBeNull();
-      if (dialogBounds && contentBounds) expect(contentBounds.y).toBeGreaterThanOrEqual(dialogBounds.y + 60);
+      if (surfaceBounds && contentBounds) {
+        expect(contentBounds.y - surfaceBounds.y).toBeLessThan(32);
+        expect(bounds.x >= surfaceBounds.x + surfaceBounds.width || bounds.x + bounds.width <= surfaceBounds.x).toBe(
+          true,
+        );
+      }
       await closeButton.click();
-      await expect(page.getByRole("dialog", { name: "Date and time advanced view" })).toBeHidden();
+      await expect(page.getByRole("region", { name: "Date and time advanced view" })).toBeHidden();
     } finally {
       await context.close();
     }
@@ -232,7 +259,7 @@ describe("Board advanced interactions", () => {
 
       await widget.click({ button: "right" });
       await page.getByRole("menuitem", { name: "Open advanced view" }).click();
-      await expect(page.getByRole("dialog", { name: "Date and time advanced view" })).toBeVisible();
+      await expect(page.getByRole("region", { name: "Date and time advanced view" })).toBeVisible();
       await page.keyboard.press("Escape");
 
       await expect(grid).not.toHaveAttribute("aria-label", "Add item here");
@@ -273,7 +300,7 @@ const rightClickEmptyGridSpaceAsync = async (grid: Locator) => {
 
   await grid.click({
     button: "right",
-    position: { x: bounds.width - 16, y: Math.min(24, bounds.height / 2) },
+    position: { x: bounds.width * emptyCellCenterXRatio, y: Math.min(24, bounds.height / 2) },
   });
 };
 
@@ -282,7 +309,7 @@ const touchAndHoldEmptyGridSpaceAsync = async (grid: Locator) => {
   expect(bounds).not.toBeNull();
   if (!bounds) return;
 
-  const clientX = bounds.x + bounds.width - 16;
+  const clientX = bounds.x + bounds.width * emptyCellCenterXRatio;
   const clientY = bounds.y + Math.min(24, bounds.height / 2);
   await grid.dispatchEvent("pointerdown", { pointerType: "touch", clientX, clientY });
   await new Promise((resolve) => setTimeout(resolve, 800));
@@ -296,8 +323,16 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
   const sectionId = createId();
   const clockItemId = createId();
   const iframeItemId = createId();
+  const appItemId = createId();
+  const appId = createId();
 
   await db.insert(boards).values({ id: boardId, name: boardName, creatorId: ownerId, isPublic: false });
+  await db.insert(apps).values({
+    id: appId,
+    name: "Example app",
+    iconUrl: "/favicon.ico",
+    href: "https://example.com",
+  });
   await db.insert(layouts).values([
     { id: baseLayoutId, name: "Base", columnCount: 12, breakpoint: 0, boardId },
     { id: desktopLayoutId, name: "Desktop", columnCount: 12, breakpoint: 1000, boardId },
@@ -318,6 +353,13 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
       options: stringify({ embedUrl: "http://127.0.0.1:9", allowScrolling: true }),
       advancedOptions: stringify({ title: null, customCssClasses: [], borderColor: "" }),
     },
+    {
+      id: appItemId,
+      kind: "app",
+      boardId,
+      options: stringify({ appId, openInNewTab: true, showTitle: true, pingEnabled: false }),
+      advancedOptions: stringify({ title: null, customCssClasses: [], borderColor: "" }),
+    },
   ]);
   await db.insert(itemLayouts).values(
     [baseLayoutId, desktopLayoutId].flatMap((layoutId) => [
@@ -334,9 +376,18 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
         itemId: iframeItemId,
         sectionId,
         layoutId,
-        xOffset: 4,
+        xOffset: 8,
         yOffset: 0,
         width: 4,
+        height: 3,
+      },
+      {
+        itemId: appItemId,
+        sectionId,
+        layoutId,
+        xOffset: 4,
+        yOffset: 0,
+        width: 3,
         height: 3,
       },
     ]),

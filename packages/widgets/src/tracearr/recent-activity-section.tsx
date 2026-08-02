@@ -8,7 +8,7 @@ export function RecentActivityList({ sessions }: { sessions: TracearrHistorySess
 
   return (
     <Stack gap={4}>
-      <Text size="xs" fw={600} c="dimmed" tt="uppercase">
+      <Text size="xs" fw={600} c="dimmed">
         {t("recentActivity.title")}
       </Text>
       {sessions.length === 0 ? (

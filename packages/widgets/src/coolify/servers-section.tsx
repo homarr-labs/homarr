@@ -1,7 +1,7 @@
 "use client";
 
 import { Accordion, ActionIcon, Anchor, Badge, Group, Indicator, Stack, Text } from "@mantine/core";
-import { IconExternalLink, IconEye, IconEyeOff, IconServer } from "@tabler/icons-react";
+import { IconEye, IconEyeOff, IconServer } from "@tabler/icons-react";
 
 import type { CoolifyServer } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -40,6 +40,7 @@ export function ServersSection({
             </Badge>
           </Group>
           <ActionIcon
+            aria-label={`${showIp ? tCommon("action.hide") : tCommon("action.show")} IP`}
             size="xs"
             variant="subtle"
             c="dimmed"
@@ -96,7 +97,14 @@ function ServerRow({ server, counts, baseUrl, isTiny, showIp }: ServerRowProps) 
     <Stack gap={0}>
       <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
         <Indicator size={isTiny ? 4 : 8} color={isOnline ? "green" : "red"} />
-        <Anchor href={serverUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
+        <Anchor
+          href={serverUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          fz={isTiny ? "8px" : "xs"}
+          c="inherit"
+          lineClamp={1}
+        >
           {server.name}
         </Anchor>
         {isBuildServer ? (
@@ -110,9 +118,6 @@ function ServerRow({ server, counts, baseUrl, isTiny, showIp }: ServerRowProps) 
         )}
       </Group>
       <Group wrap="nowrap" gap={4} ml={16}>
-        <ActionIcon component="a" href={serverUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
-          <IconExternalLink size={12} />
-        </ActionIcon>
         <Text fz="10px" c="dimmed">
           {showIp ? server.ip : "***.***.***.***"}
         </Text>

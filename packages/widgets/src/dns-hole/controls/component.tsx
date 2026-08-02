@@ -53,7 +53,7 @@ export default function DnsHoleControlsWidget({
     .map(({ id }) => id)
     .filter((id) => integrationIds.includes(id));
 
-  const { data: summaries = [] } = clientApi.widget.dnsHole.summary.useQuery({
+  const { data: summaries = [], isPending: isSummaryPending } = clientApi.widget.dnsHole.summary.useQuery({
     integrationIds,
   });
   const utils = clientApi.useUtils();
@@ -129,6 +129,16 @@ export default function DnsHoleControlsWidget({
     setBulkPending(false);
   };
 
+  if (isSummaryPending) {
+    return (
+      <Stack h="100%" justify="center" align="center">
+        <Text c="dimmed" size="sm">
+          {t("common.action.loading")}
+        </Text>
+      </Stack>
+    );
+  }
+
   return (
     <Stack
       className="dns-hole-controls-stack"
@@ -142,6 +152,7 @@ export default function DnsHoleControlsWidget({
         <Flex className="dns-hole-controls-buttons" gap="sm">
           <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
             <Button
+              aria-label={t("widget.dnsHoleControls.controls.enableAll")}
               size="xs"
               p={0}
               className="dns-hole-controls-enable-all-button"
@@ -159,6 +170,7 @@ export default function DnsHoleControlsWidget({
 
           <Tooltip label={t("widget.dnsHoleControls.controls.setTimer")}>
             <Button
+              aria-label={t("widget.dnsHoleControls.controls.setTimer")}
               size="xs"
               p={0}
               className="dns-hole-controls-timer-all-button"
@@ -179,6 +191,7 @@ export default function DnsHoleControlsWidget({
 
           <Tooltip label={t("widget.dnsHoleControls.controls.disableAll")}>
             <Button
+              aria-label={t("widget.dnsHoleControls.controls.disableAll")}
               size="xs"
               p={0}
               className="dns-hole-controls-disable-all-button"
@@ -340,6 +353,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                 <Group gap="xs" grow wrap="nowrap" w="100%">
                   {!isEnabled ? (
                     <ActionIcon
+                      aria-label={`${t("widget.dnsHoleControls.controls.enableAll")}: ${data.integration.name}`}
                       onClick={() => void toggleDns(data.integration.id).catch(() => undefined)}
                       disabled={!controlEnabled}
                       size="sm"
@@ -350,6 +364,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                     </ActionIcon>
                   ) : (
                     <ActionIcon
+                      aria-label={`${t("widget.dnsHoleControls.controls.disableAll")}: ${data.integration.name}`}
                       onClick={() => void toggleDns(data.integration.id).catch(() => undefined)}
                       disabled={!controlEnabled}
                       size="sm"
@@ -360,6 +375,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                     </ActionIcon>
                   )}
                   <ActionIcon
+                    aria-label={`${t("widget.dnsHoleControls.controls.setTimer")}: ${data.integration.name}`}
                     onClick={() => {
                       setSelectedIntegrationIds([data.integration.id]);
                       open();
@@ -376,6 +392,11 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
               )}
               {layout === "md" && (
                 <UnstyledButton
+                  aria-label={`${
+                    isEnabled
+                      ? t("widget.dnsHoleControls.controls.disableAll")
+                      : t("widget.dnsHoleControls.controls.enableAll")
+                  }: ${data.integration.name}`}
                   className="dns-hole-controls-item-toggle-button"
                   disabled={!controlEnabled}
                   display="contents"
@@ -418,6 +439,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
           </Flex>
           {layout === "md" && (
             <ActionIcon
+              aria-label={`${t("widget.dnsHoleControls.controls.setTimer")}: ${data.integration.name}`}
               className="dns-hole-controls-item-timer-button"
               display={isInteractPermitted ? undefined : "none"}
               disabled={!controlEnabled || !isEnabled}

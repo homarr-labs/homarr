@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Accordion, Anchor, Badge, Card, Group, Image, Text } from "@mantine/core";
+import { useState } from "react";
+import { Accordion, Anchor, Badge, Card, Group, Image, Stack, Text, Tooltip } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
 import { useTimeAgo } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";
-import { buildServerResourceCounts, getBadgeColor, parseStatus } from "./coolify-utils";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { buildServerResourceCounts, getBadgeColor, isCoolifyServerOnline, parseStatus } from "./coolify-utils";
 import { ServersSection } from "./servers-section";
 import { ServicesSection } from "./services-section";
 import type { CoolifyOptions, InstanceData } from "./types";
@@ -18,12 +19,14 @@ interface InstanceCardProps {
   instance: InstanceData;
   options: CoolifyOptions;
   isTiny: boolean;
-  widgetKey: string;
   isAdvanced: boolean;
+  widgetKey: string;
+  hideFooter: boolean;
 }
 
-export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced }: InstanceCardProps) {
+export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey, hideFooter }: InstanceCardProps) {
   const t = useScopedI18n("widget.coolify");
+  const tCommon = useScopedI18n("common");
   const cardKey = `${widgetKey}-${instance.integrationId}`;
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${cardKey}`,
@@ -33,44 +36,41 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced 
     key: `coolify-sections-${cardKey}`,
     defaultValue: ["applications"],
   });
-  const visibleSections = useMemo(
-    () =>
-      [
-        options.showServers ? "servers" : null,
-        options.showApplications ? "applications" : null,
-        options.showServices ? "services" : null,
-      ].filter((section): section is string => section !== null),
-    [options.showApplications, options.showServers, options.showServices],
-  );
-  const [advancedOpenSections, setAdvancedOpenSections] = useState(visibleSections);
-  const previousVisibleSectionsRef = useRef(visibleSections);
-
-  useEffect(() => {
-    const newlyVisibleSections = visibleSections.filter(
-      (section) => !previousVisibleSectionsRef.current.includes(section),
-    );
-    previousVisibleSectionsRef.current = visibleSections;
-    if (newlyVisibleSections.length === 0) return;
-
-    setAdvancedOpenSections((current) => [...new Set([...current, ...newlyVisibleSections])]);
-  }, [visibleSections]);
-
+  const [advancedOpenSections, setAdvancedOpenSections] = useState(["servers", "applications", "services"]);
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,
     instance.instanceInfo.applications,
     instance.instanceInfo.services,
   );
 
-  const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
+  const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
+  const displayUrl = baseUrl ? baseUrl.replace(/^https?:\/\//, "") : "—";
   const relativeTime = useTimeAgo(instance.updatedAt);
 
-  const onlineServers = instance.instanceInfo.servers.filter((s) => s.is_reachable !== false).length;
+  const onlineServers = instance.instanceInfo.servers.filter(isCoolifyServerOnline).length;
   const runningApps = instance.instanceInfo.applications.filter(
     (a) => parseStatus(a.status ?? "") === "running",
   ).length;
   const runningServices = instance.instanceInfo.services.filter(
     (s) => parseStatus(s.status ?? "") === "running",
   ).length;
+  const healthyResources =
+    (options.showServers ? onlineServers : 0) +
+    (options.showApplications ? runningApps : 0) +
+    (options.showServices ? runningServices : 0);
+  const totalResources =
+    (options.showServers ? instance.instanceInfo.servers.length : 0) +
+    (options.showApplications ? instance.instanceInfo.applications.length : 0) +
+    (options.showServices ? instance.instanceInfo.services.length : 0);
+  const resourceSummary = [
+    options.showServers ? `${tCommon("servers")}: ${onlineServers}/${instance.instanceInfo.servers.length}` : null,
+    options.showApplications
+      ? `${tCommon("applications")}: ${runningApps}/${instance.instanceInfo.applications.length}`
+      : null,
+    options.showServices ? `${tCommon("services")}: ${runningServices}/${instance.instanceInfo.services.length}` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <Card p={0} radius="sm">
@@ -80,19 +80,42 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced 
         wrap="nowrap"
         style={{ borderBottom: "1px solid var(--mantine-color-dark-4)" }}
       >
-        <Group gap={4} wrap="nowrap">
+        <Group gap={4} wrap="nowrap" miw={0}>
           <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
-          <Anchor href={baseUrl} target="_blank" fz={isTiny ? "10px" : "xs"} fw={600} c="inherit" lineClamp={1}>
-            {instance.integrationName}
-          </Anchor>
+          <Stack gap={0} miw={0}>
+            <Anchor
+              component={baseUrl ? "a" : "span"}
+              href={baseUrl}
+              target={baseUrl ? "_blank" : undefined}
+              rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
+              fz={isTiny ? "10px" : "xs"}
+              fw={600}
+              c="inherit"
+              lineClamp={1}
+            >
+              {instance.integrationName}
+            </Anchor>
+            {isAdvanced && (
+              <Text fz="10px" c="dimmed" truncate="end">
+                {t("source.url", { url: displayUrl })}
+              </Text>
+            )}
+          </Stack>
         </Group>
         <Group gap={4} wrap="nowrap">
-          {options.showServers && (
+          {isTiny && totalResources > 0 ? (
+            <Tooltip label={resourceSummary}>
+              <Badge variant="dot" color={getBadgeColor(healthyResources, totalResources)} size="xs">
+                {healthyResources}/{totalResources}
+              </Badge>
+            </Tooltip>
+          ) : null}
+          {!isTiny && options.showServers && (
             <Badge variant="dot" color={getBadgeColor(onlineServers, instance.instanceInfo.servers.length)} size="xs">
               {onlineServers}/{instance.instanceInfo.servers.length}
             </Badge>
           )}
-          {options.showApplications && (
+          {!isTiny && options.showApplications && (
             <Badge
               variant="dot"
               color={getBadgeColor(runningApps, instance.instanceInfo.applications.length)}
@@ -101,7 +124,7 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced 
               {runningApps}/{instance.instanceInfo.applications.length}
             </Badge>
           )}
-          {options.showServices && (
+          {!isTiny && options.showServices && (
             <Badge
               variant="dot"
               color={getBadgeColor(runningServices, instance.instanceInfo.services.length)}
@@ -126,6 +149,7 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced 
             serverResourceCounts={serverResourceCounts}
             baseUrl={baseUrl}
             isTiny={isTiny}
+            isAdvanced={isAdvanced}
             showIp={showIp}
             onToggleIp={() => setShowIp((prev) => !prev)}
           />
@@ -134,18 +158,29 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced 
           <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
         )}
         {options.showServices && (
-          <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
+          <ServicesSection
+            services={instance.instanceInfo.services}
+            baseUrl={baseUrl}
+            isTiny={isTiny}
+            isAdvanced={isAdvanced}
+          />
         )}
       </Accordion>
 
-      <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
-        <Text size="10px" c="dimmed">
-          v{instance.instanceInfo.version}
-        </Text>
-        <Text size="10px" c="dimmed">
-          {t("footer.updated", { when: relativeTime })}
-        </Text>
-      </Group>
+      {!hideFooter && (
+        <Group
+          justify="space-between"
+          p={4}
+          style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
+        >
+          <Text size="10px" c="dimmed">
+            v{instance.instanceInfo.version}
+          </Text>
+          <Text size="10px" c="dimmed">
+            {t("footer.updated", { when: relativeTime })}
+          </Text>
+        </Group>
+      )}
     </Card>
   );
 }

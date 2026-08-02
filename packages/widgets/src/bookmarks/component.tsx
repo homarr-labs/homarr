@@ -1,6 +1,18 @@
 "use client";
 
-import { Anchor, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text, Title, UnstyledButton } from "@mantine/core";
+import {
+  Anchor,
+  Box,
+  Card,
+  Flex,
+  Group,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
+  UnstyledButton,
+} from "@mantine/core";
 import combineClasses from "clsx";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -12,7 +24,45 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
 
-export default function BookmarksWidget({ options, itemId, width, displayMode }: WidgetComponentProps<"bookmarks">) {
+type BookmarkLayout = WidgetComponentProps<"bookmarks">["options"]["layout"];
+
+export interface CompactBookmarkLayout {
+  columns: number;
+  hideHostname: boolean;
+  hideTitle: boolean;
+  minimumItemSize: number;
+}
+
+export function getCompactBookmarkLayout(
+  width: number,
+  height: number,
+  itemCount: number,
+  layout: BookmarkLayout,
+): CompactBookmarkLayout {
+  const count = Math.max(1, itemCount);
+  const isGrid = layout === "grid" || layout === "gridHorizontal";
+  const targetWidth = layout === "gridHorizontal" ? 180 : 104;
+  const columns = isGrid ? Math.max(1, Math.min(count, Math.floor(width / targetWidth))) : layout === "row" ? count : 1;
+  const rows = Math.max(1, Math.ceil(count / columns));
+  const cellWidth = width / columns;
+  const cellHeight = height / rows;
+  const usesHorizontalItems = layout === "column" || layout === "gridHorizontal";
+
+  return {
+    columns,
+    hideHostname: cellWidth < 120 || cellHeight < (usesHorizontalItems ? 52 : 96),
+    hideTitle: cellWidth < 64 || cellHeight < 40,
+    minimumItemSize: usesHorizontalItems ? 48 : 96,
+  };
+}
+
+export default function BookmarksWidget({
+  options,
+  itemId,
+  width,
+  height,
+  displayMode,
+}: WidgetComponentProps<"bookmarks">) {
   const board = useRequiredBoard();
   const { data = [] } = clientApi.app.byIds.useQuery(options.items, {
     select(apps) {
@@ -41,10 +91,15 @@ export default function BookmarksWidget({ options, itemId, width, displayMode }:
     [data],
   );
 
+  const compactLayout = getCompactBookmarkLayout(width, height, data.length, options.layout);
+  const compactHideTitle = options.hideTitle || (compactLayout.hideTitle && !options.hideIcon);
+  const compactHideHostname =
+    options.hideHostname || (compactLayout.hideHostname && !(options.hideTitle && options.hideIcon));
+
   return (
-    <Stack h="100%" gap="sm" p="sm">
+    <Stack h="100%" mih={0} gap="sm" p={height < 120 ? "xs" : "sm"}>
       {options.title.length > 0 && (
-        <Title order={4} px="0.25rem">
+        <Title order={4} px="0.25rem" lineClamp={1}>
           {options.title}
         </Title>
       )}
@@ -57,29 +112,37 @@ export default function BookmarksWidget({ options, itemId, width, displayMode }:
           hasIconColor={board.iconColor !== null}
         />
       )}
-      {displayMode !== "advanced" && (options.layout === "grid" || options.layout === "gridHorizontal") && (
-        <GridLayout
-          data={data}
-          itemDirection={options.layout === "gridHorizontal" ? "horizontal" : "vertical"}
-          hideTitle={options.hideTitle}
-          hideIcon={options.hideIcon}
-          hideHostname={options.hideHostname}
-          openNewTab={options.openNewTab}
-          withBorder={options.withBorder}
-          hasIconColor={board.iconColor !== null}
-        />
-      )}
-      {displayMode !== "advanced" && options.layout !== "grid" && options.layout !== "gridHorizontal" && (
-        <FlexLayout
-          data={data}
-          direction={options.layout}
-          hideTitle={options.hideTitle}
-          hideIcon={options.hideIcon}
-          hideHostname={options.hideHostname}
-          openNewTab={options.openNewTab}
-          withBorder={options.withBorder}
-          hasIconColor={board.iconColor !== null}
-        />
+      {displayMode !== "advanced" && (
+        <ScrollArea type="auto" scrollbarSize={6} offsetScrollbars style={{ flex: 1, minHeight: 0 }}>
+          <Box mih="100%">
+            {options.layout === "grid" || options.layout === "gridHorizontal" ? (
+              <GridLayout
+                data={data}
+                columns={compactLayout.columns}
+                minimumItemHeight={compactLayout.minimumItemSize}
+                itemDirection={options.layout === "gridHorizontal" ? "horizontal" : "vertical"}
+                hideTitle={compactHideTitle}
+                hideIcon={options.hideIcon}
+                hideHostname={compactHideHostname}
+                openNewTab={options.openNewTab}
+                withBorder={options.withBorder}
+                hasIconColor={board.iconColor !== null}
+              />
+            ) : (
+              <FlexLayout
+                data={data}
+                direction={options.layout}
+                minimumItemSize={compactLayout.minimumItemSize}
+                hideTitle={compactHideTitle}
+                hideIcon={options.hideIcon}
+                hideHostname={compactHideHostname}
+                openNewTab={options.openNewTab}
+                withBorder={options.withBorder}
+                hasIconColor={board.iconColor !== null}
+              />
+            )}
+          </Box>
+        </ScrollArea>
       )}
     </Stack>
   );
@@ -94,6 +157,7 @@ interface FlexLayoutProps {
   openNewTab: boolean;
   withBorder: boolean;
   hasIconColor: boolean;
+  minimumItemSize: number;
 }
 
 const FlexLayout = ({
@@ -105,13 +169,15 @@ const FlexLayout = ({
   openNewTab,
   withBorder,
   hasIconColor,
+  minimumItemSize,
 }: FlexLayoutProps) => {
   const board = useRequiredBoard();
   return (
-    <Flex direction={direction} gap="0" w="100%">
+    <Flex direction={direction} gap={4} w="100%" mih="100%" wrap="nowrap">
       {data.map((app) => (
-        <div key={app.id} style={{ display: "flex", flex: "1", flexDirection: direction }}>
+        <div key={app.id} style={{ display: "flex", flex: `1 0 ${minimumItemSize}px`, flexDirection: direction }}>
           <UnstyledButton
+            className={classes.bookmarkButton}
             component="a"
             href={app.href ?? undefined}
             target={openNewTab ? "_blank" : "_self"}
@@ -188,6 +254,7 @@ const AdvancedBookmarksLayout = ({
         {data.map((app) => (
           <UnstyledButton
             key={app.id}
+            className={classes.bookmarkButton}
             component="a"
             href={app.href ?? undefined}
             target={openNewTab ? "_blank" : "_self"}
@@ -233,6 +300,8 @@ interface GridLayoutProps {
   withBorder: boolean;
   itemDirection: "horizontal" | "vertical";
   hasIconColor: boolean;
+  columns: number;
+  minimumItemHeight: number;
 }
 
 const GridLayout = ({
@@ -244,19 +313,29 @@ const GridLayout = ({
   withBorder,
   itemDirection,
   hasIconColor,
+  columns,
+  minimumItemHeight,
 }: GridLayoutProps) => {
   const board = useRequiredBoard();
 
   return (
-    <Flex miw="100%" gap={4} wrap="wrap" style={{ flex: 1 }}>
+    <SimpleGrid
+      cols={columns}
+      spacing={4}
+      verticalSpacing={4}
+      miw="100%"
+      mih="100%"
+      style={{ gridAutoRows: `minmax(${minimumItemHeight}px, 1fr)` }}
+    >
       {data.map((app) => (
         <UnstyledButton
+          className={classes.bookmarkButton}
           component="a"
           href={app.href ?? undefined}
           target={openNewTab ? "_blank" : "_self"}
           rel="noopener noreferrer"
           key={app.id}
-          flex="1"
+          h="100%"
         >
           <Card
             h="100%"
@@ -285,7 +364,7 @@ const GridLayout = ({
           </Card>
         </UnstyledButton>
       ))}
-    </Flex>
+    </SimpleGrid>
   );
 };
 
@@ -305,7 +384,7 @@ const VerticalItem = ({
   return (
     <Stack h="100%" miw={16} gap="sm" justify={"center"}>
       {!hideTitle && (
-        <Text fw={700} ta="center" size="xs">
+        <Text fw={700} ta="center" size="xs" lineClamp={2}>
           {app.name}
         </Text>
       )}
@@ -326,7 +405,7 @@ const VerticalItem = ({
         />
       )}
       {!hideHostname && (
-        <Anchor ta="center" component="span" size="xs">
+        <Anchor ta="center" component="span" size="xs" truncate="end" w="100%">
           {getBookmarkHostname(app.href)}
         </Anchor>
       )}
@@ -365,7 +444,7 @@ const HorizontalItem = ({
       )}
       {!(hideTitle && hideHostname) && (
         <>
-          <Stack justify="space-between" gap={0}>
+          <Stack justify="space-between" gap={0} miw={0} style={{ flex: 1 }}>
             {!hideTitle && (
               <Text fw={700} size="xs" lineClamp={hideHostname ? 2 : 1}>
                 {app.name}
@@ -373,7 +452,7 @@ const HorizontalItem = ({
             )}
 
             {!hideHostname && (
-              <Anchor component="span" size="xs">
+              <Anchor component="span" size="xs" truncate="end">
                 {getBookmarkHostname(app.href)}
               </Anchor>
             )}

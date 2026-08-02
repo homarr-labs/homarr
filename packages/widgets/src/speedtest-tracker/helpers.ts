@@ -75,3 +75,21 @@ export const formatStatsSpeed = (band: SpeedtestTrackerStats["download"]): strin
   if (band.avg_bits != null) return formatBitsPerSec(band.avg_bits);
   return formatBitsPerSec(band.avg * 8);
 };
+
+type CompactSection = "latest" | "chart" | "averages";
+
+export const getCompactSections = (
+  height: number,
+  available: Record<CompactSection, boolean>,
+): Record<CompactSection, boolean> => {
+  const budget = height < 240 ? 1 : height < 360 ? 2 : 3;
+  const visible = new Set(
+    (["latest", "chart", "averages"] as const).filter((section) => available[section]).slice(0, budget),
+  );
+
+  return {
+    latest: visible.has("latest"),
+    chart: visible.has("chart"),
+    averages: visible.has("averages"),
+  };
+};

@@ -97,6 +97,7 @@ export default function MediaServerWidget({
   ] satisfies { name: keyof RequestStats; icon: Icon; number: number }[];
 
   const isTiny = displayMode !== "advanced" && (width < 256 || height < 180);
+  const showSectionTitles = displayMode === "advanced" || height >= 180;
   const visibleStats = displayMode === "advanced" ? data : data.slice(0, height < 120 ? 4 : 8);
   const visibleUsers = requestStats.users.slice(
     0,
@@ -119,9 +120,11 @@ export default function MediaServerWidget({
         style={{ pointerEvents: isEditMode ? "none" : undefined }}
       >
         <Stack gap={4} w="100%">
-          <Text className="mediaRequests-stats-stats-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
-            {t("titles.stats.main")}
-          </Text>
+          {showSectionTitles && (
+            <Text className="mediaRequests-stats-stats-title" fw={600} ta="center" size={isTiny ? "xs" : "sm"}>
+              {t("titles.stats.main")}
+            </Text>
+          )}
           <Grid className="mediaRequests-stats-stats-grid" gap={4} w="100%">
             {visibleStats.map((stat) => (
               <Grid.Col
@@ -144,9 +147,11 @@ export default function MediaServerWidget({
           </Grid>
         </Stack>
         <Stack gap={4} w="100%">
-          <Text className="mediaRequests-stats-users-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
-            {t("titles.users.main")} ({t("titles.users.requests")})
-          </Text>
+          {showSectionTitles && (
+            <Text className="mediaRequests-stats-users-title" fw={600} ta="center" size={isTiny ? "xs" : "sm"}>
+              {t("titles.users.main")} ({t("titles.users.requests")})
+            </Text>
+          )}
           <ScrollArea className="mediaRequests-stats-users-wrapper" flex={1} w="100%">
             <Stack gap={4}>
               {visibleUsers.map((user) => (
@@ -159,6 +164,7 @@ export default function MediaServerWidget({
                     "mediaRequests-stats-users-user-wrapper",
                     `mediaRequests-stats-users-user-${user.id}`,
                     classes.card,
+                    classes.userCard,
                   )}
                   key={`${user.integration.id}:${user.id}`}
                   p="xs"
@@ -171,7 +177,7 @@ export default function MediaServerWidget({
                     gap="sm"
                     justify="space-between"
                   >
-                    <Group gap={4}>
+                    <Group gap={4} wrap="nowrap" miw={0}>
                       <Tooltip label={user.integration.name}>
                         <Avatar
                           className="mediaRequests-stats-users-user-avatar"
@@ -180,7 +186,7 @@ export default function MediaServerWidget({
                           bd={`2px solid ${user.integration.kind === "overseerr" ? OVERSEERR_COLOR : JELLYSEERR_COLOR}`}
                         />
                       </Tooltip>
-                      <Text className="mediaRequests-stats-users-user-userName" size="sm">
+                      <Text className="mediaRequests-stats-users-user-userName" size="sm" truncate="end">
                         {user.displayName}
                       </Text>
                     </Group>
