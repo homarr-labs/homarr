@@ -1,0 +1,25 @@
+apps/docs/docs/widgets/health-monitoring/index.mdx
+  s_40b6da747f24d4::t_7fc3be4179b84c 65-68
+packages/definitions/src/widget-integration-map.ts
+  s_40b6da747f24d4::t_5c65bc0de41bc4 6-16,38
+packages/definitions/src/test/widget-integration-map.spec.ts
+  s_40b6da747f24d4::t_5c65bc0de41bc4 1-17
+packages/widgets/src/health-monitoring/index.ts
+  s_40b6da747f24d4::t_5c65bc0de41bc4 3,115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "e42f31569e2d5de57a201f8468387406610a0e8a",
+  "prompts": {},
+  "sessions": {
+    "s_40b6da747f24d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fc134-acf1-7eb1-ad7d-178ea328894c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
