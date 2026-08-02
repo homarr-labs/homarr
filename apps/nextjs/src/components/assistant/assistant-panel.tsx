@@ -739,6 +739,7 @@ const RequestTelemetry = () => {
     : `${t("usage.contextWindow")}: ${t("usage.notReported")}`;
   const displayedThroughput = telemetry.providerOutputTokensPerSecond ?? telemetry.outputTokensPerSecond;
   const hasProviderMetrics =
+    telemetry.provider === "openrouter" ||
     generationQuery.isFetching ||
     telemetry.providerOutputTokensPerSecond !== undefined ||
     telemetry.generationTimeMs !== undefined ||
@@ -990,6 +991,11 @@ const RequestTelemetry = () => {
                         {t("usage.loadingProviderDetails")}
                       </Text>
                     </Group>
+                  )}
+                  {!generationQuery.isFetching && generationQuery.data?.complete === false && (
+                    <Text size="xs" c="dimmed">
+                      {t("usage.providerDetailsPending")}
+                    </Text>
                   )}
                   <Box className={classes.usageGrid}>
                     <div>

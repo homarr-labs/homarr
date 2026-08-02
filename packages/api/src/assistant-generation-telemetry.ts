@@ -1,5 +1,9 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
+const generationTelemetryCache = new Map<string, { expiresAt: number; value: OpenRouterGenerationTelemetry }>();
+const generationTelemetryCacheTtlMs = 5 * 60_000;
+const generationTelemetryCacheMaxEntries = 512;
+
 export type OpenRouterGenerationTelemetry = {
   generationId?: string;
   routedProvider?: string;
@@ -50,13 +54,17 @@ export const parseOpenRouterGenerationTelemetry = (value: unknown): OpenRouterGe
   const generationTimeMs = asFiniteNonNegativeNumber(data.generation_time);
   const providerResponses = Array.isArray(data.provider_responses) ? data.provider_responses : undefined;
   const parsedProviderResponses = providerResponses?.map(asRecord).filter((response) => response !== null);
+  const providerResponseStatuses = parsedProviderResponses?.map((response) =>
+    asFiniteNonNegativeNumber(response.status),
+  );
   const failedProviderResponses = parsedProviderResponses?.filter((response) => {
     const status = asFiniteNonNegativeNumber(response.status);
     return status !== undefined && (status < 200 || status >= 300);
   });
   const fallbackCount = providerResponses
-    ? failedProviderResponses && failedProviderResponses.length > 0
-      ? failedProviderResponses.length
+    ? providerResponseStatuses?.length === providerResponses.length &&
+      providerResponseStatuses.every((status) => status !== undefined)
+      ? (failedProviderResponses?.length ?? 0)
       : Math.max(providerResponses.length - 1, 0)
     : undefined;
   const fallbackLatencies = failedProviderResponses?.map((response) => asFiniteNonNegativeNumber(response.latency));
@@ -128,12 +136,31 @@ export const fetchOpenRouterGenerationTelemetryAsync = async ({
   generationId: string;
   headers: Record<string, string>;
 }): Promise<OpenRouterGenerationTelemetry | null> => {
+  const cacheKey = `${baseUrl}\0${generationId}`;
+  const cached = generationTelemetryCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    generationTelemetryCache.delete(cacheKey);
+    generationTelemetryCache.set(cacheKey, cached);
+    return cached.value;
+  }
+  if (cached) generationTelemetryCache.delete(cacheKey);
+
   try {
     const endpoint = new URL(`${baseUrl.replace(/\/$/, "")}/generation`);
     endpoint.searchParams.set("id", generationId);
     const response = await fetchWithTrustedCertificatesAsync(endpoint, { headers, timeout: 3000 });
     if (!response.ok) return null;
-    return parseOpenRouterGenerationTelemetry(await response.json());
+    const telemetry = parseOpenRouterGenerationTelemetry(await response.json());
+    if (!telemetry) return null;
+    if (generationTelemetryCache.size >= generationTelemetryCacheMaxEntries) {
+      const oldestKey = generationTelemetryCache.keys().next().value;
+      if (oldestKey !== undefined) generationTelemetryCache.delete(oldestKey);
+    }
+    generationTelemetryCache.set(cacheKey, {
+      expiresAt: Date.now() + generationTelemetryCacheTtlMs,
+      value: telemetry,
+    });
+    return telemetry;
   } catch {
     return null;
   }
