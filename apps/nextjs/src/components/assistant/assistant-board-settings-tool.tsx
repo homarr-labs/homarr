@@ -43,7 +43,11 @@ import { useZodForm } from "@homarr/form";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
-import { getChangedBoardSettings, getCustomCssWarnings } from "./assistant-board-settings";
+import {
+  getAssistantBoardSettingsDefaultTab,
+  getChangedBoardSettings,
+  getCustomCssWarnings,
+} from "./assistant-board-settings";
 import { hasCompleteAssistantToolArguments, hasFailedAssistantToolArguments } from "./assistant-human-tool-status";
 import { AssistantHumanToolError } from "./assistant-human-tools";
 import classes from "./assistant-panel.module.css";
@@ -183,8 +187,7 @@ const BoardSettingsForm = ({
   const changedCount = Object.keys(changes).length;
   const cssWarnings = getCustomCssWarnings(form.values.customCss);
   const proposedKeys = Object.keys(args.changes);
-  const defaultTab =
-    args.changes.customCss !== undefined ? "css" : proposedKeys.some(isAppearanceKey) ? "appearance" : "general";
+  const defaultTab = getAssistantBoardSettingsDefaultTab(args.changes);
   const optionData = <TValue extends string>(
     values: readonly TValue[],
     key: "backgroundImageAttachment" | "backgroundImageRepeat" | "backgroundImageSize",
@@ -404,6 +407,3 @@ const BoardSettingsForm = ({
     </Box>
   );
 };
-
-const isAppearanceKey = (key: string) =>
-  ["primaryColor", "secondaryColor", "opacity", "iconColor", "itemRadius"].includes(key);

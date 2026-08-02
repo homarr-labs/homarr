@@ -170,6 +170,12 @@ describe("assistant conversation features", () => {
               supported_parameters: [],
               architecture: { output_modalities: ["text"] },
             },
+            {
+              id: "example/unnamed",
+              name: "",
+              supported_parameters: ["tools"],
+              architecture: { output_modalities: ["text"] },
+            },
           ],
         }),
       ),
@@ -186,6 +192,10 @@ describe("assistant conversation features", () => {
             id: "example/model",
             name: "Example Model",
             inputModalities: ["text", "image"],
+          }),
+          expect.objectContaining({
+            id: "example/unnamed",
+            name: "example/unnamed",
           }),
         ],
       });

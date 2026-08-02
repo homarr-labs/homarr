@@ -58,9 +58,9 @@ export const AssistantAutoApprovalProvider = ({
       try {
         approve();
         return true;
-      } catch (error) {
+      } catch {
         trackerRef.current.release(toolCallId);
-        throw error;
+        return false;
       }
     },
     [enabled],

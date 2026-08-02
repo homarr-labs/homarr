@@ -113,5 +113,10 @@ describe("assistant human tool contracts", () => {
     expect(normalizeAssistantAppIconUrl("youtube")).toBe("");
     expect(normalizeAssistantAppIconUrl("/api/media/youtube.svg")).toBe("/api/media/youtube.svg");
     expect(normalizeAssistantAppIconUrl("https://icons.example/youtube.svg")).toBe("https://icons.example/youtube.svg");
+    expect(normalizeAssistantAppIconUrl("http://icons.example/youtube.svg")).toBe("http://icons.example/youtube.svg");
+    expect(normalizeAssistantAppIconUrl("//icons.example/youtube.svg")).toBe("");
+    expect(normalizeAssistantAppIconUrl("javascript:alert(1)")).toBe("");
+    expect(normalizeAssistantAppIconUrl("data:image/svg+xml,<svg />")).toBe("");
+    expect(normalizeAssistantAppIconUrl("file:///etc/passwd")).toBe("");
   });
 });

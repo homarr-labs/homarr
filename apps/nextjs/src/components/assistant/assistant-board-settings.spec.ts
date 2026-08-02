@@ -1,6 +1,10 @@
 import { describe, expect, test } from "vitest";
 
-import { getChangedBoardSettings, getCustomCssWarnings } from "./assistant-board-settings";
+import {
+  getAssistantBoardSettingsDefaultTab,
+  getChangedBoardSettings,
+  getCustomCssWarnings,
+} from "./assistant-board-settings";
 
 describe("getChangedBoardSettings", () => {
   test("returns only changed settings and treats empty nullable values equally", () => {
@@ -25,5 +29,14 @@ describe("getCustomCssWarnings", () => {
       importsStylesheet: true,
       loadsRemoteResource: true,
     });
+  });
+});
+
+describe("getAssistantBoardSettingsDefaultTab", () => {
+  test("opens the tab containing the proposed settings", () => {
+    expect(getAssistantBoardSettingsDefaultTab({ pageTitle: "Home" })).toBe("general");
+    expect(getAssistantBoardSettingsDefaultTab({ primaryColor: "#112233" })).toBe("appearance");
+    expect(getAssistantBoardSettingsDefaultTab({ backgroundImageSize: "cover" })).toBe("background");
+    expect(getAssistantBoardSettingsDefaultTab({ customCss: ".item { opacity: 0.9; }" })).toBe("css");
   });
 });

@@ -1970,6 +1970,7 @@
         "management": "Management",
         "assistant": "Homarr Assistant",
         "assistantThinking": "Thinking",
+        "modifier": "Mod",
         "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Logout",
@@ -2493,6 +2494,10 @@
     }
   },
   "widget": {
+    "dynamicSelect": {
+      "noResults": "No results found",
+      "loadError": "Failed to load options"
+    },
     "integrationSelect": {
       "configureIntegrationFirst": "Connect an integration first",
       "loading": "Loading...",
@@ -6084,6 +6089,7 @@
             }
           },
           "assistant": {
+            "loading": "Loading assistant configuration",
             "title": "Assistant",
             "description": "Connect an OpenAI-compatible model endpoint for the instance-wide assistant.",
             "security": {
@@ -6245,9 +6251,9 @@
               "manualFallback": "Discovery is unavailable. You can still enter a model ID manually.",
               "saveConnectionFirst": "Save the provider connection before choosing a model.",
               "discovering": "Refreshing the models available from this provider…",
-              "discovered": "Discovered {count} models. Tool support depends on the selected endpoint and model.",
+              "discovered": "{count, plural, one {Discovered # model. Tool support depends on the selected endpoint and model.} other {Discovered # models. Tool support depends on the selected endpoint and model.}}",
               "discoveryFailed": "Model discovery did not complete",
-              "context": "{count} token context",
+              "context": "{count, number} token context",
               "toolsConfirmed": "Tools advertised",
               "toolsUnknown": "Verify tool support"
             },
