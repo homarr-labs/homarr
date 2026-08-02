@@ -30,6 +30,7 @@ export type AssistantRequestStep = {
   upstreamCost?: number;
   cacheDiscount?: number;
   generationId?: string;
+  generationAccessToken?: string;
   routedProvider?: string;
   finishReason?: string;
   nativeFinishReason?: string;
@@ -189,6 +190,9 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
               ? { cacheDiscount: getFiniteNonNegativeNumber(candidate.cacheDiscount) }
               : {}),
             ...(typeof candidate.generationId === "string" ? { generationId: candidate.generationId } : {}),
+            ...(typeof candidate.generationAccessToken === "string"
+              ? { generationAccessToken: candidate.generationAccessToken }
+              : {}),
             ...(typeof candidate.routedProvider === "string" ? { routedProvider: candidate.routedProvider } : {}),
             ...(typeof candidate.finishReason === "string" ? { finishReason: candidate.finishReason } : {}),
             ...(typeof candidate.nativeFinishReason === "string"
