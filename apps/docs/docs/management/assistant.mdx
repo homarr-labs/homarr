@@ -145,7 +145,8 @@ question. Users can select one of the proposed answers or choose **Other** and e
 Submitting the answer resumes the same agent run automatically. The minimized activity bar shows the
 question or approval that needs attention and opens directly back to the request. While an answer, app
 form, or mutation approval is pending, the composer preserves its draft but does not replace the pending
-tool call with a new message.
+tool call with a new message. If the provider stops before an interactive tool supplies complete arguments,
+Homarr replaces the loading state with an explicit error and confirms that no change was made.
 
 App creation uses Homarr's native app form inside the conversation. The form reuses the local icon picker,
 including automatic matching and searches through the `icon.findIcons` procedure, before the final

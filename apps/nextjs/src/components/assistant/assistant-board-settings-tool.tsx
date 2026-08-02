@@ -44,7 +44,8 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import { getChangedBoardSettings, getCustomCssWarnings } from "./assistant-board-settings";
-import { hasCompleteAssistantToolArguments } from "./assistant-human-tool-status";
+import { hasCompleteAssistantToolArguments, hasFailedAssistantToolArguments } from "./assistant-human-tool-status";
+import { AssistantHumanToolError } from "./assistant-human-tools";
 import classes from "./assistant-panel.module.css";
 import type {
   AssistantBoardSettingsChanges,
@@ -116,9 +117,13 @@ export const AssistantConfigureBoardSettingsTool = ({
     );
   }
 
-  if (!hasCompleteArguments || !args?.boardId || !args.boardName) {
+  if (hasFailedAssistantToolArguments(status)) return <AssistantHumanToolError />;
+
+  if (!hasCompleteArguments) {
     return <BoardSettingsSkeleton label={t("loading")} />;
   }
+
+  if (!args?.boardId || !args.boardName) return <AssistantHumanToolError />;
 
   if (settings.isError) {
     return (

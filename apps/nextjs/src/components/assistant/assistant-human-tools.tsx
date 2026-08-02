@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ToolCallMessagePartProps, ToolCallMessagePartStatus } from "@assistant-ui/react";
-import { Box, Button, Group, Skeleton, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
-import { IconCheck, IconMessageQuestion, IconPencil, IconX } from "@tabler/icons-react";
+import { Alert, Box, Button, Group, Skeleton, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
+import { IconAlertTriangle, IconCheck, IconMessageQuestion, IconPencil, IconX } from "@tabler/icons-react";
 import type { z } from "zod/v4";
 
 import { AppForm } from "@homarr/forms-collection";
@@ -11,7 +11,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
 
 import classes from "./assistant-panel.module.css";
-import { hasCompleteAssistantToolArguments } from "./assistant-human-tool-status";
+import { hasCompleteAssistantToolArguments, hasFailedAssistantToolArguments } from "./assistant-human-tool-status";
 import { normalizeAssistantAppIconUrl } from "./assistant-tool-contracts";
 import type { AskUserArgs, AskUserResult, ConfigureAppArgs } from "./assistant-tool-contracts";
 
@@ -29,6 +29,15 @@ export const getAssistantAppFormValues = (
   args: ConfigureAppArgs | undefined,
   status: ToolCallMessagePartStatus | undefined,
 ) => (hasCompleteAssistantToolArguments(status) ? toAssistantAppValues(args) : null);
+
+export const AssistantHumanToolError = () => {
+  const t = useScopedI18n("common.assistant.toolPreparationError");
+  return (
+    <Alert color="red" variant="light" title={t("title")} icon={<IconAlertTriangle size={18} />}>
+      {t("description")}
+    </Alert>
+  );
+};
 
 export const AssistantAskUserTool = ({
   args,
@@ -65,7 +74,9 @@ export const AssistantAskUserTool = ({
     );
   }
 
-  if (!hasCompleteAssistantToolArguments(status) || !args?.question || options.length < 2) {
+  if (hasFailedAssistantToolArguments(status)) return <AssistantHumanToolError />;
+
+  if (!hasCompleteAssistantToolArguments(status)) {
     return (
       <Box className={classes.humanTool} aria-label={t("preparing")}>
         <Stack gap="xs">
@@ -76,6 +87,8 @@ export const AssistantAskUserTool = ({
       </Box>
     );
   }
+
+  if (!args?.question || options.length < 2) return <AssistantHumanToolError />;
 
   const submitResult = (answer: AskUserResult) => {
     if (submitting) return;
@@ -211,6 +224,8 @@ export const AssistantConfigureAppTool = ({
       </Box>
     );
   }
+
+  if (hasFailedAssistantToolArguments(status)) return <AssistantHumanToolError />;
 
   if (initialValues === null) {
     return (

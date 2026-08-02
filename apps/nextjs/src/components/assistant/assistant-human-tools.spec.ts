@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import { appManageSchema } from "@homarr/validation/app";
 
-import { hasCompleteAssistantToolArguments } from "./assistant-human-tool-status";
+import { hasCompleteAssistantToolArguments, hasFailedAssistantToolArguments } from "./assistant-human-tool-status";
 import { getAssistantAppFormValues } from "./assistant-human-tools";
 
 describe("assistant human tool forms", () => {
@@ -10,6 +10,14 @@ describe("assistant human tool forms", () => {
     expect(hasCompleteAssistantToolArguments({ type: "running" })).toBe(false);
     expect(hasCompleteAssistantToolArguments({ type: "complete" })).toBe(true);
     expect(hasCompleteAssistantToolArguments({ type: "requires-action", reason: "interrupt" })).toBe(true);
+    expect(hasCompleteAssistantToolArguments({ type: "incomplete", reason: "error" })).toBe(false);
+    expect(hasFailedAssistantToolArguments({ type: "incomplete", reason: "error" })).toBe(true);
+  });
+
+  test("treats cancelled and truncated tool arguments as failed instead of loading forever", () => {
+    expect(hasFailedAssistantToolArguments({ type: "incomplete", reason: "cancelled" })).toBe(true);
+    expect(hasFailedAssistantToolArguments({ type: "incomplete", reason: "length" })).toBe(true);
+    expect(hasFailedAssistantToolArguments({ type: "running" })).toBe(false);
   });
 
   test("waits for streamed app arguments before initializing the form", () => {
