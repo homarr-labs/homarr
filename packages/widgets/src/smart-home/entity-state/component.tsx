@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { Badge, Center, Group, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Badge, Center, Group, Stack, Text, UnstyledButton } from "@mantine/core";
 import { IconBinaryTree } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -38,7 +38,7 @@ export default function SmartHomeEntityStateWidget({
   const canInteract = useIntegrationsWithInteractAccess().some(({ id }) => id === integrationId);
 
   const utils = clientApi.useUtils();
-  const { mutate, isPending, error } = clientApi.widget.smartHome.switchEntity.useMutation({
+  const { mutate, isPending } = clientApi.widget.smartHome.switchEntity.useMutation({
     onSettled: () => void utils.widget.smartHome.entityDetails.invalidate(input),
     onError: () =>
       showErrorNotification({
@@ -110,7 +110,7 @@ export default function SmartHomeEntityStateWidget({
       onClick={handleClick}
       disabled={!isActionable}
       aria-label={`${displayName}: ${state}${attribute}`}
-      aria-description={queryErrorLabel ?? (error ? t("widget.smartHome-entityState.error.toggleFailed") : undefined)}
+      aria-description={queryErrorLabel}
       w="100%"
       h="100%"
       styles={{
@@ -152,13 +152,6 @@ export default function SmartHomeEntityStateWidget({
                 })}
               </Text>
             </>
-          )}
-          {error && (
-            <Tooltip label={error.message} multiline>
-              <Text size="xs" c="red" lineClamp={2} tabIndex={0}>
-                {t("widget.smartHome-entityState.error.toggleFailed")}
-              </Text>
-            </Tooltip>
           )}
         </Stack>
       </Center>
