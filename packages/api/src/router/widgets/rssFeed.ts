@@ -62,17 +62,20 @@ export const rssFeedRouter = createTRPCRouter({
       });
     }
 
-    return settled
-      .flatMap((result) => {
-        if (result.status === "fulfilled") return result.value.data.entries;
-        return [];
-      })
-      .toSorted((entryA, entryB) => {
-        return entryA.published && entryB.published
-          ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
-          : 0;
-      })
-      .slice(0, input.maximumAmountPosts);
+    return {
+      entries: settled
+        .flatMap((result) => {
+          if (result.status === "fulfilled") return result.value.data.entries;
+          return [];
+        })
+        .toSorted((entryA, entryB) => {
+          return entryA.published && entryB.published
+            ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
+            : 0;
+        })
+        .slice(0, input.maximumAmountPosts),
+      failedFeedCount: failures.length,
+    };
   }),
 });
 

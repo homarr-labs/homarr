@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { Box, Button, Center, Loader, Menu, ScrollArea, SegmentedControl, Select, Stack, Text } from "@mantine/core";
 import { IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
@@ -37,13 +37,15 @@ export default function BeszelSystemStatsWidget({
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
-  const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
-    onError: () =>
-      showErrorNotification({
-        title: t("error.selectionSaveTitle"),
-        message: t("error.selectionSaveMessage"),
-      }),
-  });
+  const selectionSavePendingRef = useRef(false);
+  const { mutate: saveItemOptions, isPending: isSelectionSavePending } =
+    clientApi.widget.options.saveItemOptions.useMutation({
+      onError: () =>
+        showErrorNotification({
+          title: t("error.selectionSaveTitle"),
+          message: t("error.selectionSaveMessage"),
+        }),
+    });
   const {
     data: systemsResult = [],
     isPending: systemsPending,
@@ -78,22 +80,51 @@ export default function BeszelSystemStatsWidget({
 
   const handleSelectSystem = useCallback(
     (value: string) => {
+      if (selectionSavePendingRef.current) return;
+
+      const previousValue = options.systemId;
       setOptions({ newOptions: { systemId: value } });
       if (hasChangeAccess && boardId && itemId) {
-        saveItemOptions({ boardId, itemId, newOptions: { systemId: value } });
+        selectionSavePendingRef.current = true;
+        saveItemOptions(
+          { boardId, itemId, newOptions: { systemId: value } },
+          {
+            onError: () => {
+              setOptions({ newOptions: { systemId: previousValue } });
+            },
+            onSettled: () => {
+              selectionSavePendingRef.current = false;
+            },
+          },
+        );
       }
     },
-    [setOptions, hasChangeAccess, boardId, itemId, saveItemOptions],
+    [boardId, hasChangeAccess, itemId, options.systemId, saveItemOptions, setOptions],
   );
 
   const handleTimePeriod = useCallback(
     (value: string) => {
-      setOptions({ newOptions: { timePeriod: value as BeszelTimePeriod } });
+      if (selectionSavePendingRef.current) return;
+
+      const timePeriod = value as BeszelTimePeriod;
+      const previousValue = options.timePeriod;
+      setOptions({ newOptions: { timePeriod } });
       if (hasChangeAccess && boardId && itemId) {
-        saveItemOptions({ boardId, itemId, newOptions: { timePeriod: value } });
+        selectionSavePendingRef.current = true;
+        saveItemOptions(
+          { boardId, itemId, newOptions: { timePeriod } },
+          {
+            onError: () => {
+              setOptions({ newOptions: { timePeriod: previousValue } });
+            },
+            onSettled: () => {
+              selectionSavePendingRef.current = false;
+            },
+          },
+        );
       }
     },
-    [boardId, hasChangeAccess, itemId, saveItemOptions, setOptions],
+    [boardId, hasChangeAccess, itemId, options.timePeriod, saveItemOptions, setOptions],
   );
 
   if (systemsError) throw systemsError;
@@ -133,6 +164,7 @@ export default function BeszelSystemStatsWidget({
             data={systems}
             value={selectedValue}
             placeholder={t("selectSystem")}
+            disabled={isSelectionSavePending}
             onChange={(value) => value && handleSelectSystem(value)}
           />
         </Stack>
@@ -159,6 +191,7 @@ export default function BeszelSystemStatsWidget({
                   size="compact-xs"
                   leftSection={<IconServer size={14} />}
                   className={classes.beszelStatsSystemToggle}
+                  disabled={isSelectionSavePending}
                 >
                   {selectedLabel}
                 </Button>
@@ -170,6 +203,7 @@ export default function BeszelSystemStatsWidget({
                     fz="xs"
                     fw={system.value === selectedValue ? 600 : 400}
                     c={system.value !== selectedValue ? "dimmed" : undefined}
+                    disabled={isSelectionSavePending}
                     onClick={() => handleSelectSystem(system.value)}
                   >
                     {system.label}
@@ -183,6 +217,7 @@ export default function BeszelSystemStatsWidget({
               size="xs"
               value={options.timePeriod}
               onChange={handleTimePeriod}
+              disabled={isSelectionSavePending}
               data={[
                 { value: "1m", label: t("period.live") },
                 { value: "1h", label: t("period.oneHour") },

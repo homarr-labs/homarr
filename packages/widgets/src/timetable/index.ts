@@ -1,4 +1,4 @@
-import { IconBusStop } from "@tabler/icons-react";
+import { IconBusStop, IconWorldOff } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
@@ -9,6 +9,13 @@ import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("timetable", {
   icon: IconBusStop,
+  errors: {
+    BAD_REQUEST: {
+      icon: IconWorldOff,
+      message: (t) => t("widget.timetable.error.customSourceUnavailable"),
+      hideLogsLink: true,
+    },
+  },
   createOptions() {
     return optionsBuilder.from((factory) => ({
       baseUrl: factory.text({

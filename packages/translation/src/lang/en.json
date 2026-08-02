@@ -1999,7 +1999,11 @@
         }
       },
       "error": {
+        "customSourceUnavailable": "The timetable source is unavailable. Check that its URL resolves to a public IP address.",
         "stationSearch": "Unable to search stations. Check the custom URL and your board access."
+      },
+      "warning": {
+        "stale": "The timetable could not be refreshed. Showing departures last updated at {time}."
       }
     },
     "notebook": {
@@ -3548,6 +3552,10 @@
       },
       "error": {
         "allFeedsFailed": "Unable to load RSS feeds. Check the feed URLs and try again."
+      },
+      "warning": {
+        "partial": "{count, plural, one {# RSS feed could not be loaded} other {# RSS feeds could not be loaded}}",
+        "stale": "RSS feeds could not be refreshed. Showing previously loaded entries."
       }
     },
     "releases": {

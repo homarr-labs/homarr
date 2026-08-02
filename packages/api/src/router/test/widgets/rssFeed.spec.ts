@@ -65,6 +65,26 @@ describe("rssFeedRouter", () => {
       expect(logged).not.toContain("token");
       expect(logged).not.toContain("secret");
     });
+
+    test("returns successful entries and only a failure count when some feeds fail", async () => {
+      const failedUrl = "https://user:password@example.com/feed?token=secret";
+      mocks.getFeed.mockImplementation(async (input: { url: string }) => {
+        if (input.url === failedUrl) throw new Error(`Failed to fetch ${failedUrl}`);
+        return { data: { entries: [{ id: "entry" }] } };
+      });
+      const caller = rssFeedRouter.createCaller({
+        db: createDb(),
+        deviceType: undefined,
+        session: createSession(["board-create"]),
+      });
+
+      const result = await caller.getFeeds({ urls: ["https://example.com/feed", failedUrl], maximumAmountPosts: 5 });
+
+      expect(result).toEqual({ entries: [{ id: "entry" }], failedFeedCount: 1 });
+      expect(JSON.stringify(result)).not.toContain("password");
+      expect(JSON.stringify(result)).not.toContain("token");
+      expect(JSON.stringify(result)).not.toContain("secret");
+    });
   });
 
   describe("canAccessAllFeedsAsync", () => {

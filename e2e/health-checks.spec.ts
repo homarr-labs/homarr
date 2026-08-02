@@ -4,9 +4,12 @@ import { createHomarrContainer } from "./shared/create-homarr-container";
 import { createRedisContainer } from "./shared/redis-container";
 
 describe("Health checks", () => {
-  test("ready and live should return 200 OK with normal image and no extra configuration", async () => {
+  test("ready and live should return 200 OK with normal image and no extra configuration", async ({
+    onTestFinished,
+  }) => {
     // Arrange
     const homarrContainer = await createHomarrContainer().start();
+    onTestFinished(() => homarrContainer.stop());
 
     // Act
     const readyResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/api/health/ready`);
@@ -17,9 +20,10 @@ describe("Health checks", () => {
     expect(liveResponse.status).toBe(200);
   }, 60_000);
 
-  test("ready and live should return 200 OK with external redis", async () => {
+  test("ready and live should return 200 OK with external redis", async ({ onTestFinished }) => {
     // Arrange
     const redisContainer = await createRedisContainer().start();
+    onTestFinished(() => redisContainer.stop());
     const homarrContainer = await createHomarrContainer({
       environment: {
         REDIS_IS_EXTERNAL: "true",
@@ -28,6 +32,7 @@ describe("Health checks", () => {
         REDIS_PASSWORD: redisContainer.getPassword(),
       },
     }).start();
+    onTestFinished(() => homarrContainer.stop());
 
     // Act
     const readyResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/api/health/ready`);
