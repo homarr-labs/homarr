@@ -614,8 +614,8 @@ const formatDuration = (milliseconds: number) =>
 
 const formatCost = (cost: number) => {
   if (cost === 0) return "$0";
-  if (cost < 0.0001) return `<$0.0001`;
-  return `$${cost.toFixed(cost < 0.01 ? 4 : 3)}`;
+  if (cost < 0.00001) return `<$0.00001`;
+  return `$${cost.toFixed(cost < 0.001 ? 5 : cost < 0.01 ? 4 : 3)}`;
 };
 
 const getContextColor = (percentage: number) => {
@@ -628,9 +628,101 @@ const RequestTelemetry = () => {
   const t = useScopedI18n("common.assistant");
   const [opened, setOpened] = useState(false);
   const metadata = useAuiState((state) => state.message.metadata);
-  const telemetry = getAssistantTelemetry(metadata);
-  const usage = getAssistantUsage(metadata);
-  if (!telemetry) return null;
+  const messageId = useAuiState((state) => state.message.id);
+  const threadId = useAuiState((state) => state.threadListItem.remoteId);
+  const persistedTelemetry = getAssistantTelemetry(metadata);
+  const persistedUsage = getAssistantUsage(metadata);
+  const generationQuery = clientApi.assistant.getGenerationTelemetry.useQuery(
+    { threadId: threadId ?? "", messageId },
+    {
+      enabled: opened && persistedTelemetry?.provider === "openrouter" && Boolean(threadId),
+      refetchInterval: (query) =>
+        query.state.data?.complete === false && query.state.dataUpdateCount < 6 ? 1500 : false,
+      retry: 2,
+      staleTime: (query) => (query.state.data?.complete ? 5 * 60_000 : 0),
+    },
+  );
+  if (!persistedTelemetry) return null;
+
+  const generationById = new Map(
+    generationQuery.data?.generations.flatMap((generation) =>
+      generation.generationId ? [[generation.generationId, generation] as const] : [],
+    ) ?? [],
+  );
+  const steps = persistedTelemetry.steps.map((step) => ({
+    ...step,
+    ...(step.generationId ? generationById.get(step.generationId) : undefined),
+  }));
+  const sumCompleteMetric = (getValue: (step: (typeof steps)[number]) => number | undefined) => {
+    if (steps.length === 0) return undefined;
+    const values = steps.map(getValue);
+    return values.some((value) => value === undefined)
+      ? undefined
+      : (values as number[]).reduce((sum, value) => sum + value, 0);
+  };
+  const providerInputTokens = sumCompleteMetric((step) => step.inputTokens);
+  const providerOutputTokens = sumCompleteMetric((step) => step.outputTokens);
+  const providerGenerationTimeMs = sumCompleteMetric((step) => step.generationTimeMs);
+  const providerOutputTokensPerSecond =
+    providerOutputTokens !== undefined && providerGenerationTimeMs !== undefined && providerGenerationTimeMs > 0
+      ? providerOutputTokens / (providerGenerationTimeMs / 1000)
+      : undefined;
+  const latestStep = steps.at(-1);
+  const providerContextUsed =
+    latestStep?.inputTokens !== undefined && latestStep.outputTokens !== undefined
+      ? latestStep.inputTokens + latestStep.outputTokens
+      : undefined;
+  const usage = {
+    ...persistedUsage,
+    ...(generationQuery.data?.complete && providerInputTokens !== undefined
+      ? { inputTokens: providerInputTokens }
+      : {}),
+    ...(generationQuery.data?.complete && providerOutputTokens !== undefined
+      ? { outputTokens: providerOutputTokens }
+      : {}),
+    ...(generationQuery.data?.complete && providerInputTokens !== undefined && providerOutputTokens !== undefined
+      ? { totalTokens: providerInputTokens + providerOutputTokens }
+      : {}),
+    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.cachedInputTokens) !== undefined
+      ? { cachedInputTokens: sumCompleteMetric((step) => step.cachedInputTokens) }
+      : {}),
+    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.reasoningTokens) !== undefined
+      ? { reasoningTokens: sumCompleteMetric((step) => step.reasoningTokens) }
+      : {}),
+  };
+  const telemetry = {
+    ...persistedTelemetry,
+    steps,
+    ...(generationQuery.data?.complete && providerGenerationTimeMs !== undefined
+      ? { generationTimeMs: providerGenerationTimeMs }
+      : {}),
+    ...(generationQuery.data?.complete && providerOutputTokensPerSecond !== undefined
+      ? { providerOutputTokensPerSecond }
+      : {}),
+    ...(generationQuery.data?.complete && providerContextUsed !== undefined
+      ? {
+          contextUsed: providerContextUsed,
+          ...(persistedTelemetry.contextLength
+            ? { contextUtilization: Math.min(providerContextUsed / persistedTelemetry.contextLength, 1) }
+            : {}),
+        }
+      : {}),
+    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.cost) !== undefined
+      ? { cost: sumCompleteMetric((step) => step.cost), costType: "reported" as const }
+      : {}),
+    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.upstreamCost) !== undefined
+      ? { upstreamCost: sumCompleteMetric((step) => step.upstreamCost) }
+      : {}),
+    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.cacheDiscount) !== undefined
+      ? { cacheDiscount: sumCompleteMetric((step) => step.cacheDiscount) }
+      : {}),
+    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.fallbackCount) !== undefined
+      ? { fallbackCount: sumCompleteMetric((step) => step.fallbackCount) }
+      : {}),
+    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.fallbackLatencyMs) !== undefined
+      ? { fallbackLatencyMs: sumCompleteMetric((step) => step.fallbackLatencyMs) }
+      : {}),
+  };
 
   const contextLength = telemetry.contextLength ?? 0;
   const contextUsed = telemetry.contextUsed ?? 0;
@@ -645,6 +737,21 @@ const RequestTelemetry = () => {
   const contextLabel = hasContextWindow
     ? `${t("usage.contextWindow")}: ${contextUsed.toLocaleString()} / ${contextLength.toLocaleString()} (${contextPercentage}%)`
     : `${t("usage.contextWindow")}: ${t("usage.notReported")}`;
+  const displayedThroughput = telemetry.providerOutputTokensPerSecond ?? telemetry.outputTokensPerSecond;
+  const hasProviderMetrics =
+    generationQuery.isFetching ||
+    telemetry.providerOutputTokensPerSecond !== undefined ||
+    telemetry.generationTimeMs !== undefined ||
+    telemetry.cacheDiscount !== undefined ||
+    telemetry.fallbackCount !== undefined ||
+    telemetry.fallbackLatencyMs !== undefined ||
+    telemetry.steps.some(
+      (step) =>
+        step.providerLatencyMs !== undefined ||
+        step.moderationLatencyMs !== undefined ||
+        step.serviceTier !== undefined ||
+        step.dataRegion !== undefined,
+    );
 
   return (
     <Box className={classes.telemetry}>
@@ -661,9 +768,9 @@ const RequestTelemetry = () => {
               {formatDuration(telemetry.durationMs)}
             </Text>
           )}
-          {telemetry.outputTokensPerSecond !== undefined && (
+          {displayedThroughput !== undefined && (
             <Text size="xs" c="dimmed">
-              {telemetry.outputTokensPerSecond.toFixed(1)} tok/s
+              {displayedThroughput.toFixed(1)} tok/s
             </Text>
           )}
           {telemetry.cost !== undefined && (
@@ -676,7 +783,7 @@ const RequestTelemetry = () => {
         <Popover
           opened={opened}
           onChange={setOpened}
-          width="min(20rem, calc(100vw - 1.5rem))"
+          width="min(23rem, calc(100vw - 1.5rem))"
           position="bottom-end"
           shadow="md"
           withArrow
@@ -803,7 +910,18 @@ const RequestTelemetry = () => {
               </Box>
 
               <Divider />
-              <Group gap="lg" align="flex-start">
+              <Text size="xs" fw={700} tt="uppercase" c="dimmed">
+                {t("usage.homarrTiming")}
+              </Text>
+              <Box className={classes.usageGrid}>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.endToEnd")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {telemetry.durationMs !== undefined ? formatDuration(telemetry.durationMs) : t("usage.notReported")}
+                  </Text>
+                </div>
                 <div>
                   <Text size="xs" c="dimmed">
                     {t("usage.firstOutput")}
@@ -811,6 +929,16 @@ const RequestTelemetry = () => {
                   <Text size="sm" fw={600}>
                     {telemetry.timeToFirstOutputMs !== undefined
                       ? formatDuration(telemetry.timeToFirstOutputMs)
+                      : t("usage.notReported")}
+                  </Text>
+                </div>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    {t("usage.observedThroughput")}
+                  </Text>
+                  <Text size="sm" fw={600}>
+                    {telemetry.outputTokensPerSecond !== undefined
+                      ? `${telemetry.outputTokensPerSecond.toFixed(1)} tok/s`
                       : t("usage.notReported")}
                   </Text>
                 </div>
@@ -847,7 +975,74 @@ const RequestTelemetry = () => {
                     </Text>
                   </div>
                 )}
-              </Group>
+              </Box>
+
+              {hasProviderMetrics && (
+                <>
+                  <Divider />
+                  <Text size="xs" fw={700} tt="uppercase" c="dimmed">
+                    {t("usage.providerTiming")}
+                  </Text>
+                  {generationQuery.isFetching && generationQuery.data?.complete !== true && (
+                    <Group gap="xs">
+                      <Loader size="xs" type="bars" />
+                      <Text size="xs" c="dimmed">
+                        {t("usage.loadingProviderDetails")}
+                      </Text>
+                    </Group>
+                  )}
+                  <Box className={classes.usageGrid}>
+                    <div>
+                      <Text size="xs" c="dimmed">
+                        {t("usage.generationTime")}
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {telemetry.generationTimeMs !== undefined
+                          ? formatDuration(telemetry.generationTimeMs)
+                          : t("usage.notReported")}
+                      </Text>
+                    </div>
+                    <div>
+                      <Text size="xs" c="dimmed">
+                        {t("usage.providerThroughput")}
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {telemetry.providerOutputTokensPerSecond !== undefined
+                          ? `${telemetry.providerOutputTokensPerSecond.toFixed(1)} tok/s`
+                          : t("usage.notReported")}
+                      </Text>
+                    </div>
+                    <div>
+                      <Text size="xs" c="dimmed">
+                        {t("usage.fallbacks")}
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {telemetry.fallbackCount?.toLocaleString() ?? t("usage.notReported")}
+                      </Text>
+                    </div>
+                    {telemetry.fallbackLatencyMs !== undefined && (
+                      <div>
+                        <Text size="xs" c="dimmed">
+                          {t("usage.fallbackLatency")}
+                        </Text>
+                        <Text size="sm" fw={600}>
+                          {formatDuration(telemetry.fallbackLatencyMs)}
+                        </Text>
+                      </div>
+                    )}
+                    {telemetry.cacheDiscount !== undefined && (
+                      <div>
+                        <Text size="xs" c="dimmed">
+                          {t("usage.cacheDiscount")}
+                        </Text>
+                        <Text size="sm" fw={600}>
+                          {formatCost(telemetry.cacheDiscount)}
+                        </Text>
+                      </div>
+                    )}
+                  </Box>
+                </>
+              )}
 
               {telemetry.steps.length > 0 && (
                 <Stack gap={4}>
@@ -863,12 +1058,86 @@ const RequestTelemetry = () => {
                         </Text>
                         <Text size="xs" c="dimmed">
                           {formatDuration(step.durationMs)}
-                          {step.outputTokensPerSecond !== undefined
-                            ? ` · ${step.outputTokensPerSecond.toFixed(1)} tok/s`
-                            : ""}
+                          {step.providerOutputTokensPerSecond !== undefined
+                            ? ` · ${step.providerOutputTokensPerSecond.toFixed(1)} tok/s`
+                            : step.outputTokensPerSecond !== undefined
+                              ? ` · ${step.outputTokensPerSecond.toFixed(1)} tok/s`
+                              : ""}
                           {step.cost !== undefined ? ` · ${formatCost(step.cost)}` : ""}
                         </Text>
                       </Group>
+                      {(step.providerLatencyMs !== undefined ||
+                        step.generationTimeMs !== undefined ||
+                        step.moderationLatencyMs !== undefined ||
+                        step.fallbackCount !== undefined ||
+                        step.fallbackLatencyMs !== undefined) && (
+                        <Text size="xs" c="dimmed">
+                          {[
+                            step.providerLatencyMs !== undefined
+                              ? `${t("usage.providerLatency")} ${formatDuration(step.providerLatencyMs)}`
+                              : undefined,
+                            step.generationTimeMs !== undefined
+                              ? `${t("usage.generationTime")} ${formatDuration(step.generationTimeMs)}`
+                              : undefined,
+                            step.moderationLatencyMs !== undefined
+                              ? `${t("usage.moderationLatency")} ${formatDuration(step.moderationLatencyMs)}`
+                              : undefined,
+                            step.fallbackCount !== undefined
+                              ? `${t("usage.fallbacks")} ${step.fallbackCount.toLocaleString()}`
+                              : undefined,
+                            step.fallbackLatencyMs !== undefined
+                              ? `${t("usage.fallbackLatency")} ${formatDuration(step.fallbackLatencyMs)}`
+                              : undefined,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </Text>
+                      )}
+                      {(step.inputTokens !== undefined || step.outputTokens !== undefined) && (
+                        <Text size="xs" c="dimmed">
+                          {[
+                            step.inputTokens !== undefined
+                              ? `${step.inputTokens.toLocaleString()} ${t("usage.inputShort")}`
+                              : undefined,
+                            step.outputTokens !== undefined
+                              ? `${step.outputTokens.toLocaleString()} ${t("usage.outputShort")}`
+                              : undefined,
+                            step.cachedInputTokens !== undefined
+                              ? `${step.cachedInputTokens.toLocaleString()} ${t("usage.cachedShort")}`
+                              : undefined,
+                            step.reasoningTokens !== undefined
+                              ? `${step.reasoningTokens.toLocaleString()} ${t("usage.reasoningShort")}`
+                              : undefined,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </Text>
+                      )}
+                      {(step.serviceTier ||
+                        step.dataRegion ||
+                        step.routerStrategy ||
+                        step.routerRegion ||
+                        step.isByok) && (
+                        <Text size="xs" c="dimmed">
+                          {[
+                            step.routerStrategy,
+                            step.routerRegion,
+                            step.serviceTier,
+                            step.dataRegion,
+                            step.isByok ? t("usage.byok") : undefined,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </Text>
+                      )}
+                      {(step.normalizedInputTokens !== undefined || step.normalizedOutputTokens !== undefined) &&
+                        (step.normalizedInputTokens !== step.inputTokens ||
+                          step.normalizedOutputTokens !== step.outputTokens) && (
+                          <Text size="xs" c="dimmed">
+                            {t("usage.normalizedTokens")}: {step.normalizedInputTokens?.toLocaleString() ?? "–"} /{" "}
+                            {step.normalizedOutputTokens?.toLocaleString() ?? "–"}
+                          </Text>
+                        )}
                       {step.generationId && (
                         <Text size="xs" c="dimmed" className={classes.generationId} title={step.generationId}>
                           {t("usage.generation")}: {step.generationId}
