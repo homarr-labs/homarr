@@ -22,6 +22,7 @@ import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
+import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "./component.module.css";
@@ -45,7 +46,12 @@ export default function MediaServerWidget({
   const board = useRequiredBoard();
 
   if (!requestStats) return <WidgetEmptyState />;
-  if (requestStats.users.length === 0 && requestStats.stats.length === 0) throw new NoIntegrationDataError();
+  if (
+    requestStats.users.length === 0 &&
+    requestStats.stats.length === 0 &&
+    requestStats.failedIntegrations.length === 0
+  )
+    throw new NoIntegrationDataError();
 
   const data = [
     {
@@ -99,6 +105,9 @@ export default function MediaServerWidget({
 
   return (
     <Box className={searchClasses.searchRoot}>
+      <Box pos="absolute" top="xs" left="xs" style={{ zIndex: 2 }}>
+        <IntegrationErrorIndicator results={requestStats.failedIntegrations} />
+      </Box>
       {!isEditMode && <MediaRequestSearchButton integrationIds={integrationIds} />}
       <Stack
         className="mediaRequests-stats-layout"

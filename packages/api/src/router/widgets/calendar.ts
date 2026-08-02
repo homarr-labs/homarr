@@ -27,19 +27,35 @@ export const calendarRouter = createTRPCRouter({
     )
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("calendar")))
     .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const { integrationIds: _integrationIds, ...handlerInput } = input;
-        const innerHandler = calendarMonthRequestHandler.handler(integration, handlerInput);
-        const { data } = await innerHandler.getDataAsync();
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const { integrationIds: _integrationIds, ...handlerInput } = input;
+          const innerHandler = calendarMonthRequestHandler.handler(integration, handlerInput);
+          const { data } = await innerHandler.getDataAsync();
 
-        return {
-          events: data,
-          integration: {
-            id: integration.id,
-            name: integration.name,
-            kind: integration.kind,
-          },
-        };
-      });
+          return {
+            events: data,
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+            },
+            error: undefined as string | undefined,
+          };
+        },
+        {
+          fallback: (integration, error) => ({
+            events: [],
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+            },
+            error: error instanceof Error ? error.message : String(error),
+          }),
+          throwOnAllFailures: true,
+        },
+      );
     }),
 });

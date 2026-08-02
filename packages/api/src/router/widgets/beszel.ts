@@ -13,27 +13,12 @@ import {
 import { settleIntegrationQueries } from "../../settle-integrations";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
-import { everyBeszelIntegrationFailed } from "./beszel-failures";
 import { BoundedAsyncQueue } from "./bounded-async-queue";
 
 const logger = createLogger({ module: "beszelRouter" });
 const MAX_PENDING_LIVE_EVENTS = 4;
 
 const errorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
-
-function throwIfEveryBeszelIntegrationFailed(results: readonly unknown[], operation: string) {
-  if (everyBeszelIntegrationFailed(results)) {
-    const firstError = results[0];
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: `Every Beszel integration failed while loading ${operation}: ${
-        typeof firstError === "object" && firstError !== null && "error" in firstError
-          ? String(firstError.error)
-          : "unknown error"
-      }`,
-    });
-  }
-}
 
 export const beszelRouter = createTRPCRouter({
   getSystems: publicProcedure
@@ -70,6 +55,7 @@ export const beszelRouter = createTRPCRouter({
             updatedAt: new Date(0),
             error: errorMessage(error),
           }),
+          throwOnAllFailures: true,
         },
       );
       logger.debug("getSystems completed", {
@@ -78,7 +64,6 @@ export const beszelRouter = createTRPCRouter({
         resultCount: results.length,
         errorCount: results.filter((r) => "error" in r).length,
       });
-      throwIfEveryBeszelIntegrationFailed(results, "systems");
       return results;
     }),
 
@@ -144,6 +129,7 @@ export const beszelRouter = createTRPCRouter({
             updatedAt: new Date(0),
             error: errorMessage(error),
           }),
+          throwOnAllFailures: true,
         },
       );
       logger.debug("getAlerts completed", {
@@ -152,7 +138,6 @@ export const beszelRouter = createTRPCRouter({
         resultCount: results.length,
         errorCount: results.filter((r) => "error" in r).length,
       });
-      throwIfEveryBeszelIntegrationFailed(results, "alerts");
       return results;
     }),
 

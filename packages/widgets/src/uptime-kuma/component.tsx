@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Badge, Group, RingProgress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Badge, Box, Group, RingProgress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconClockPause, IconServer } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -213,33 +213,46 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
 
   if (displayMode === "compact") return summaryContent;
 
-  return (
-    <SimpleGrid cols={width >= 760 ? 2 : 1} spacing="lg" h="100%" p="md">
-      {summaryContent}
+  const monitorList = (
+    <Stack gap="xs">
+      {monitors
+        .toSorted((left, right) => statusOrder[left.status] - statusOrder[right.status])
+        .map((monitor) => (
+          <Group key={monitor.key} justify="space-between" wrap="nowrap" p="xs">
+            <Stack gap={0} style={{ minWidth: 0 }}>
+              <Text size="sm" fw={600} truncate>
+                {monitor.name}
+              </Text>
+              {dashboardData.length > 1 && (
+                <Text size="xs" c="dimmed">
+                  {monitor.integrationName}
+                </Text>
+              )}
+            </Stack>
+            <Badge color={monitor.status === "up" ? "green" : monitor.status === "down" ? "red" : "yellow"}>
+              {t(`status.${monitor.status}`)} ·{" "}
+              {monitor.uptimePercent24h === null ? "—" : `${formatNumber(monitor.uptimePercent24h, 1)}%`}
+            </Badge>
+          </Group>
+        ))}
+    </Stack>
+  );
+
+  if (width < 760) {
+    return (
       <ScrollArea h="100%">
-        <Stack gap="xs">
-          {monitors
-            .toSorted((left, right) => statusOrder[left.status] - statusOrder[right.status])
-            .map((monitor) => (
-              <Group key={monitor.key} justify="space-between" wrap="nowrap" p="xs">
-                <Stack gap={0} style={{ minWidth: 0 }}>
-                  <Text size="sm" fw={600} truncate>
-                    {monitor.name}
-                  </Text>
-                  {dashboardData.length > 1 && (
-                    <Text size="xs" c="dimmed">
-                      {monitor.integrationName}
-                    </Text>
-                  )}
-                </Stack>
-                <Badge color={monitor.status === "up" ? "green" : monitor.status === "down" ? "red" : "yellow"}>
-                  {t(`status.${monitor.status}`)} ·{" "}
-                  {monitor.uptimePercent24h === null ? "—" : `${formatNumber(monitor.uptimePercent24h, 1)}%`}
-                </Badge>
-              </Group>
-            ))}
+        <Stack gap="lg" p="md">
+          <Box h={Math.max(280, Math.min(420, height - 120))}>{summaryContent}</Box>
+          {monitorList}
         </Stack>
       </ScrollArea>
+    );
+  }
+
+  return (
+    <SimpleGrid cols={2} spacing="lg" h="100%" p="md" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
+      {summaryContent}
+      <ScrollArea h="100%">{monitorList}</ScrollArea>
     </SimpleGrid>
   );
 }

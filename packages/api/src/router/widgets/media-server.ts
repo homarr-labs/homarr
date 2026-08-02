@@ -23,16 +23,30 @@ export const mediaServerRouter = createTRPCRouter({
     .concat(createMediaServerIntegrationMiddleware("query"))
     .input(z.object({ showOnlyPlaying: z.boolean() }))
     .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const { data } = await mediaServerRequestHandler
-          .handler(integration, { showOnlyPlaying: input.showOnlyPlaying })
-          .getDataAsync();
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          integrationKind: integration.kind,
-          sessions: data,
-        };
-      });
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const { data } = await mediaServerRequestHandler
+            .handler(integration, { showOnlyPlaying: input.showOnlyPlaying })
+            .getDataAsync();
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationKind: integration.kind,
+            sessions: data,
+            error: undefined as string | undefined,
+          };
+        },
+        {
+          fallback: (integration, error) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationKind: integration.kind,
+            sessions: [],
+            error: error instanceof Error ? error.message : String(error),
+          }),
+          throwOnAllFailures: true,
+        },
+      );
     }),
 });

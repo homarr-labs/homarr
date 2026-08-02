@@ -1,7 +1,7 @@
 import type { QueryKey } from "@tanstack/react-query";
-import { hashKey } from "@tanstack/react-query";
 
-import type { NormalizedWidgetQuery, WidgetQueryMatcher, WidgetQueryMatcherScope } from "@homarr/widgets";
+import type { WidgetQueryMatcher, WidgetQueryMatcherScope } from "@homarr/widgets";
+import { normalizeWidgetQuery, widgetQueryValueEquals } from "@homarr/widgets";
 
 export const matchesWidgetItemQuery = (
   queryKey: QueryKey,
@@ -16,15 +16,6 @@ export const matchesWidgetItemQuery = (
   return matchesQueryInput(query.input, scope);
 };
 
-const normalizeWidgetQuery = (queryKey: QueryKey): NormalizedWidgetQuery | null => {
-  const path = queryKey[0];
-  if (!Array.isArray(path) || !path.every((part): part is string => typeof part === "string")) return null;
-
-  const queryKeyOptions = queryKey[1];
-  const input = isRecord(queryKeyOptions) && "input" in queryKeyOptions ? queryKeyOptions.input : undefined;
-  return { path, input };
-};
-
 const matchesDefinitionPath = (path: readonly string[], candidate: QueryKey) => {
   const candidatePath = candidate[0];
   return (
@@ -36,7 +27,7 @@ const matchesDefinitionPath = (path: readonly string[], candidate: QueryKey) => 
 const matchesQueryInput = (input: unknown, scope: WidgetQueryMatcherScope) => {
   if (input == null) return true;
   if (Array.isArray(input)) {
-    return isEqual(input, scope.integrationIds) || containsValue(scope.options, input);
+    return widgetQueryValueEquals(input, scope.integrationIds) || containsValue(scope.options, input);
   }
 
   if (!isRecord(input)) {
@@ -62,7 +53,7 @@ const matchesQueryInput = (input: unknown, scope: WidgetQueryMatcherScope) => {
       continue;
     }
     if (key === "integrationIds") {
-      if (!isEqual(value, scope.integrationIds)) return false;
+      if (!widgetQueryValueEquals(value, scope.integrationIds)) return false;
       continue;
     }
 
@@ -81,14 +72,12 @@ const matchesAnyScopedValue = (value: unknown, scope: WidgetQueryMatcherScope) =
 const isIdentityKey = (key: string) => key === "id" || key.endsWith("Id") || key.endsWith("Ids");
 
 const containsValue = (container: unknown, expected: unknown, seen = new WeakSet<object>()): boolean => {
-  if (isEqual(container, expected)) return true;
+  if (widgetQueryValueEquals(container, expected)) return true;
   if (container === null || typeof container !== "object" || seen.has(container)) return false;
   seen.add(container);
 
   return Object.values(container).some((value) => containsValue(value, expected, seen));
 };
-
-const isEqual = (left: unknown, right: unknown) => hashKey([left]) === hashKey([right]);
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === "object" && !Array.isArray(value);

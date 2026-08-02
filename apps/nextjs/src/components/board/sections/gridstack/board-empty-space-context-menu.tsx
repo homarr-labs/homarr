@@ -48,6 +48,15 @@ export const BoardEmptySpaceContextMenu = ({ section, refs, children, ...boxProp
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
   const enabled = hasChangeAccess && settings.enableRightClickOnWidgets;
+  const closeMenu = (afterFocusRestore?: (returnFocus: HTMLElement | null) => void) => {
+    const returnFocus = returnFocusRef.current;
+    returnFocusRef.current = null;
+    setMenu(null);
+    requestAnimationFrame(() => {
+      returnFocus?.focus();
+      afterFocusRestore?.(returnFocus);
+    });
+  };
   const clearLongPress = () => {
     if (longPressTimer.current !== null) {
       clearTimeout(longPressTimer.current);
@@ -174,15 +183,11 @@ export const BoardEmptySpaceContextMenu = ({ section, refs, children, ...boxProp
       <Menu
         opened={menu !== null}
         onChange={(opened) => {
-          if (!opened) {
-            setMenu(null);
-            const returnFocus = returnFocusRef.current;
-            returnFocusRef.current = null;
-            requestAnimationFrame(() => returnFocus?.focus());
-          }
+          if (!opened) closeMenu();
         }}
         withinPortal
         position="bottom-start"
+        returnFocus={false}
       >
         <Menu.Target>
           <Box pos="fixed" left={menu?.x ?? 0} top={menu?.y ?? 0} w={1} h={1} style={{ pointerEvents: "none" }} />
@@ -191,11 +196,20 @@ export const BoardEmptySpaceContextMenu = ({ section, refs, children, ...boxProp
           <Menu.Item
             leftSection={<IconPlus size={18} />}
             onClick={() => {
-              returnFocusRef.current = null;
-              if (menu) {
-                openModal({ placement: menu.placement, board, persistImmediately: !isEditMode });
-              }
-              setMenu(null);
+              const placement = menu?.placement;
+              closeMenu((returnFocus) => {
+                if (!placement) return;
+                openModal(
+                  { placement, board, persistImmediately: !isEditMode },
+                  {
+                    onClose: () => {
+                      requestAnimationFrame(() => {
+                        if (returnFocus?.isConnected) returnFocus.focus();
+                      });
+                    },
+                  },
+                );
+              });
             }}
           >
             {t("item.create.addAtPosition")}
