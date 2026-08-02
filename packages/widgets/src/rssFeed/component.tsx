@@ -69,7 +69,7 @@ export default function RssFeed({ options, width, displayMode }: WidgetComponent
           <Card
             key={feedEntry.id}
             component={"a"}
-            href={getSafeExternalUrl(feedEntry.link, feedEntry.feedUrl) ?? getSafeExternalUrl(feedEntry.feedUrl)}
+            href={getSafeExternalUrl(feedEntry.link, feedEntry.feedUrl)}
             radius={board.itemRadius}
             target="_blank"
             rel="noopener noreferrer"
@@ -141,8 +141,21 @@ export const getHostname = (url: string): string => {
 export const getSafeExternalUrl = (value: unknown, baseUrl?: string): string | undefined => {
   if (typeof value !== "string") return undefined;
   try {
-    const url = new URL(value, baseUrl);
-    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : undefined;
+    let sanitizedBaseUrl: string | undefined;
+    if (baseUrl) {
+      const parsedBaseUrl = new URL(baseUrl);
+      parsedBaseUrl.username = "";
+      parsedBaseUrl.password = "";
+      parsedBaseUrl.search = "";
+      parsedBaseUrl.hash = "";
+      sanitizedBaseUrl = parsedBaseUrl.toString();
+    }
+
+    const url = new URL(value, sanitizedBaseUrl);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return undefined;
+    url.username = "";
+    url.password = "";
+    return url.toString();
   } catch {
     return undefined;
   }
