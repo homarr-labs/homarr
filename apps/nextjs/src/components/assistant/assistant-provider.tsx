@@ -30,6 +30,7 @@ import { AssistantAskUserTool, AssistantConfigureAppTool } from "./assistant-hum
 import { AssistantPanel } from "./assistant-panel";
 import { getPendingAssistantAction } from "./assistant-pending-action";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
+import { resolveAssistantPreferenceModelId } from "./assistant-preferences";
 import { AssistantRuntimeProviderWithTools } from "./assistant-runtime-provider";
 import { sendAssistantPrompt as sendPromptThroughComposer } from "./assistant-send";
 import { createAssistantPromptInteraction } from "./assistant-spotlight";
@@ -163,6 +164,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
   });
   const [modelId, setModelIdState] = useState<string | null>(null);
   const [reasoning, setReasoningState] = useState<AssistantReasoningMode>("auto");
+  const previousDefaultModelIdRef = useRef<string | null | undefined>(undefined);
   const preferencesRef = useRef<{ modelId: string | null; reasoning: AssistantReasoningMode }>({
     modelId: null,
     reasoning: "auto",
@@ -190,10 +192,17 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (!data) return;
-    const currentModelId = preferencesRef.current.modelId;
-    if (currentModelId && data.models.some((model) => model.id === currentModelId)) return;
-    setModelId(data.defaultModelId);
-  }, [data, setModelId]);
+    const nextModelId = resolveAssistantPreferenceModelId({
+      currentModelId: preferencesRef.current.modelId,
+      previousDefaultModelId: previousDefaultModelIdRef.current,
+      defaultModelId: data.defaultModelId,
+      models: data.models,
+    });
+    previousDefaultModelIdRef.current = data.defaultModelId;
+    if (nextModelId === preferencesRef.current.modelId) return;
+    preferencesRef.current.modelId = nextModelId;
+    setModelIdState(nextModelId);
+  }, [data]);
 
   const value = useMemo(
     () => ({

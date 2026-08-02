@@ -256,6 +256,7 @@ export const AssistantConfiguration = () => {
       await Promise.all([
         utils.assistant.getAdminConfiguration.invalidate(),
         utils.assistant.getAvailability.invalidate(),
+        utils.assistant.getRuntimeOptions.invalidate(),
       ]);
       showSuccessNotification({
         title: t("notification.saved.title"),
