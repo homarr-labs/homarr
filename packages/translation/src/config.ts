@@ -438,5 +438,13 @@ export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 export const fallbackLocale = "en" satisfies SupportedLanguage;
 
+const intlLocaleOverrides: Partial<Record<SupportedLanguage, string>> = {
+  cn: "zh-CN",
+  cr: "en",
+  zh: "zh-TW",
+};
+
+export const getIntlLocale = (locale: SupportedLanguage): string => intlLocaleOverrides[locale] ?? locale;
+
 export const isLocaleRTL = (locale: SupportedLanguage) =>
   "isRTL" in localeConfigurations[locale] && localeConfigurations[locale].isRTL;

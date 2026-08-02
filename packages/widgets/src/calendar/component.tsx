@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useParams } from "next/navigation";
 import { ActionIcon, Box, Center, Group, Loader, Stack, Text, Tooltip, useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
@@ -13,7 +12,7 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import actionTargetClasses from "../common/action-target.module.css";
 import type { WidgetComponentProps } from "../definition";
@@ -115,8 +114,7 @@ const CalendarBase = ({
   options,
   displayMode,
 }: CalendarBaseProps) => {
-  const params = useParams();
-  const locale = params.locale as string;
+  const locale = useCurrentIntlLocale();
   const { firstDayOfWeek } = useSettings();
   const board = useRequiredBoard();
   const mantineTheme = useMantineTheme();

@@ -3,7 +3,7 @@
 import { Center, Flex, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useCurrentLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { VpnIntegrationCard } from "./vpn-card";
@@ -21,7 +21,7 @@ export default function VpnWidget({
   });
   const t = useScopedI18n("widget.vpn");
   const tCommon = useScopedI18n("common");
-  const locale = useCurrentLocale();
+  const locale = useCurrentIntlLocale();
   const dense = displayMode === "compact" && (width < 240 || height < 120);
 
   if (isPending || integrations.length === 0) {

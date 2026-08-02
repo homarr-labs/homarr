@@ -24,7 +24,7 @@ import { getIconUrl } from "@homarr/definitions";
 import type { MediaRelease } from "@homarr/integrations/types";
 import { mediaTypeConfigurations } from "@homarr/integrations/types";
 import type { TranslationFunction } from "@homarr/translation";
-import { useCurrentLocale, useI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
 
@@ -78,7 +78,7 @@ const formatReleaseDate = (value: unknown, locale: string, compact: boolean) => 
 };
 
 const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
-  const locale = useCurrentLocale();
+  const locale = useCurrentIntlLocale();
   const t = useI18n();
   const length = formatLength(item.length, item.type, t);
   const isCompact = !isAdvanced && (width < 340 || height < 180);

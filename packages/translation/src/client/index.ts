@@ -6,7 +6,7 @@ import type { SupportedLanguage } from "../config";
 import type englishTranslation from "../lang/en.json";
 
 export { useChangeLocale } from "./use-change-locale";
-export { useCurrentLocale } from "./use-current-locale";
+export { useCurrentIntlLocale, useCurrentLocale } from "./use-current-locale";
 
 declare module "next-intl" {
   interface AppConfig {
