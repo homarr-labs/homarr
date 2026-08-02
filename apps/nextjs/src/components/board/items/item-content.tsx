@@ -157,8 +157,9 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
                       height: advancedRect.height,
                       "--focus-translate-x": `${activeFocus.sourceRect.left - advancedRect.left}px`,
                       "--focus-translate-y": `${activeFocus.sourceRect.top - advancedRect.top}px`,
-                      "--focus-scale-x": activeFocus.sourceRect.width / advancedRect.width,
-                      "--focus-scale-y": activeFocus.sourceRect.height / advancedRect.height,
+                      "--focus-scale-x": advancedRect.width > 0 ? activeFocus.sourceRect.width / advancedRect.width : 1,
+                      "--focus-scale-y":
+                        advancedRect.height > 0 ? activeFocus.sourceRect.height / advancedRect.height : 1,
                     } as CSSProperties)
                   : undefined
               }

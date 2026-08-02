@@ -2567,6 +2567,12 @@
           "label": "Show services"
         }
       },
+      "action": {
+        "openResource": "Open {name}",
+        "openLogs": "Open {name} logs",
+        "showIp": "Show IP address",
+        "hideIp": "Hide IP address"
+      },
       "empty": {
         "servers": "No servers found",
         "applications": "No applications found",
@@ -2590,6 +2596,12 @@
       "name": "VPN",
       "description": "Overview of your VPN connections",
       "serviceUnavailable": "VPN unavailable",
+      "status": {
+        "running": "Running",
+        "notRunning": "Not running",
+        "unavailable": "Unavailable",
+        "vpn": "VPN: {status}"
+      },
       "option": {}
     },
     "ups": {

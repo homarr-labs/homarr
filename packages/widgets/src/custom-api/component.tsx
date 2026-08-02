@@ -531,7 +531,10 @@ function CustomApiWidgetInner({
   const widgetData = (data ?? {}) as Record<string, unknown>;
   const dataType = widgetData.type as string | undefined;
   const canTogglePolling = Boolean(data) && dataType !== "actionButton" && dataType !== "disabled";
-  const togglePolling = useCallback(() => setPollingPaused((value) => !value), []);
+  const togglePolling = useCallback(() => {
+    if (pollingPaused) void refetch();
+    setPollingPaused((value) => !value);
+  }, [pollingPaused, refetch]);
 
   useEffect(() => {
     if (!widgetStateRef) return;
@@ -607,10 +610,7 @@ function CustomApiWidgetInner({
                 aria-label={pollingLabel}
                 variant="subtle"
                 loading={isFetching}
-                onClick={() => {
-                  if (pollingPaused) void refetch();
-                  setPollingPaused((value) => !value);
-                }}
+                onClick={togglePolling}
               >
                 {pollingPaused ? <IconPlayerPlay size={16} /> : <IconPlayerPause size={16} />}
               </ActionIcon>

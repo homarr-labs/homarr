@@ -40,16 +40,17 @@ describe("Custom JSX custom widgets", () => {
     const browser = await chromium.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
+    const destination = "/manage/custom-widgets/new";
 
     try {
-      await page.goto(`${baseUrl}/auth/login`);
+      await page.goto(`${baseUrl}/auth/login?callbackUrl=${encodeURIComponent(destination)}`);
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
-      await page.locator("css=button[type='submit']").click();
-      await page.waitForURL(baseUrl, { timeout: 15_000 });
-
-      await page.goto(`${baseUrl}/manage/custom-widgets/new`);
-      await page.waitForURL("**/manage/custom-widgets/new", { timeout: 15_000 });
+      await Promise.all([
+        page.waitForURL(`**${destination}`, { timeout: 30_000 }),
+        page.locator("css=button[type='submit']").click(),
+      ]);
+      await expect(page.getByRole("textbox", { name: "Name" })).toBeVisible({ timeout: 30_000 });
       await page.getByRole("textbox", { name: "Name" }).fill("E2E Custom JSX");
       await page.getByRole("textbox", { name: "URL", exact: true }).fill(`${mockApi.url}/status`);
       await page.getByRole("combobox", { name: "Display Type" }).click();

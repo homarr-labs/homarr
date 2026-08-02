@@ -102,8 +102,12 @@ function VpnStatusColumn({
   compact: boolean;
   dense: boolean;
 }) {
+  const t = useScopedI18n("widget.vpn");
   // Connected shows a shield with a check; anything else (stopped or unavailable) shows a shield with a cross.
   const ShieldIcon = vpnStatus === RUNNING_STATUS ? IconShieldCheck : IconShieldX;
+  const statusLabel = t(
+    vpnStatus === RUNNING_STATUS ? "status.running" : vpnStatus ? "status.notRunning" : "status.unavailable",
+  );
 
   return (
     <Flex
@@ -114,7 +118,7 @@ function VpnStatusColumn({
       align="center"
     >
       <ShieldIcon
-        aria-label={vpnStatus || "unavailable"}
+        aria-label={t("status.vpn", { status: statusLabel })}
         stroke={2}
         color={getStatusColor(vpnStatus)}
         size={dense ? 32 : compact ? 44 : 52}
@@ -181,7 +185,11 @@ function VpnProviderDetails({ provider, protocol }: { provider: string; protocol
 }
 
 function DnsStatusBadge({ status }: { status: string }) {
+  const t = useScopedI18n("widget.vpn");
   const StatusIcon = status === RUNNING_STATUS ? IconCircleCheckFilled : IconCircleXFilled;
+  const statusLabel = t(
+    status === RUNNING_STATUS ? "status.running" : status ? "status.notRunning" : "status.unavailable",
+  );
   return (
     <Badge
       variant="outline"
@@ -191,7 +199,7 @@ function DnsStatusBadge({ status }: { status: string }) {
       leftSection={<StatusIcon aria-hidden size={9} />}
     >
       DNS
-      <VisuallyHidden> {status || "unavailable"}</VisuallyHidden>
+      <VisuallyHidden> {statusLabel}</VisuallyHidden>
     </Badge>
   );
 }

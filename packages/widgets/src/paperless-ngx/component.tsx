@@ -79,7 +79,11 @@ export default function PaperlessNgxWidget({
 }: WidgetComponentProps<"paperlessNgx">) {
   const t = useScopedI18n("widget.paperlessNgx");
   const tCommon = useScopedI18n("common");
-  const { data: stats, isPending } = clientApi.widget.paperlessNgx.getStats.useQuery({
+  const {
+    data: stats,
+    error,
+    isPending,
+  } = clientApi.widget.paperlessNgx.getStats.useQuery({
     integrationId: integrationIds[0] ?? "",
   });
 
@@ -92,6 +96,7 @@ export default function PaperlessNgxWidget({
       </Center>
     );
   }
+  if (error && stats === undefined) throw error;
   if (!stats) return <WidgetEmptyState />;
 
   const canShowInboxHero = options.showDocumentsInbox && options.showDocumentsTotal;

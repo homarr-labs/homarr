@@ -8,7 +8,7 @@ import objectSupport from "dayjs/plugin/objectSupport";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { clientApi } from "@homarr/api/client";
-import { useI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 import { WifiVariant } from "./variants/wifi-variant";
@@ -25,12 +25,17 @@ export default function NetworkControllerNetworkStatusWidget({
   width,
   height,
 }: WidgetComponentProps<"networkControllerStatus">) {
-  const { data: summaries = [], isPending } = clientApi.widget.networkController.summary.useQuery({
+  const {
+    data: summaries,
+    error,
+    isPending,
+  } = clientApi.widget.networkController.summary.useQuery({
     integrationIds,
   });
-  const t = useI18n();
+  const t = useScopedI18n("widget.networkControllerStatus");
+  const tCommon = useScopedI18n("common");
 
-  const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
+  const data = useMemo(() => (summaries ?? []).flatMap(({ summary }) => summary), [summaries]);
   const isAdvanced = displayMode === "advanced";
   const countWifiGuests = data.reduce((sum, summary) => sum + summary.wifi.guests, 0);
   const countWifiUsers = data.reduce((sum, summary) => sum + summary.wifi.users, 0);
@@ -38,11 +43,13 @@ export default function NetworkControllerNetworkStatusWidget({
   const countLanUsers = data.reduce((sum, summary) => sum + summary.lan.users, 0);
   const useHorizontalStats = !isAdvanced && height < 150 && width >= 200;
 
+  if (error && summaries === undefined) throw error;
+
   if (isPending || data.length === 0) {
     return (
       <Center h="100%" p="sm">
         <Text c="dimmed" size="sm" ta="center">
-          {isPending ? t("common.action.loading") : t("widget.networkControllerStatus.error.integrationsDisconnected")}
+          {isPending ? tCommon("action.loading") : t("error.integrationsDisconnected")}
         </Text>
       </Center>
     );
