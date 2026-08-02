@@ -1,0 +1,19 @@
+packages/definitions/src/integration.ts
+  s_40b6da747f24d4::t_4d209f59aa13ae 445,568
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "192bb7880a433464f877c3e5f4767ab32fa1ca21",
+  "prompts": {},
+  "sessions": {
+    "s_40b6da747f24d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fc134-acf1-7eb1-ad7d-178ea328894c",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
