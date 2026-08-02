@@ -42,7 +42,7 @@ export default function UmamiWidget({
       "query",
     ),
     getQueryKey(clientApi.widget.umami.getActiveVisitors, { integrationId, websiteId: options.websiteId }, "query"),
-    ...(options.viewMode === "events"
+    ...(options.viewMode === "events" && options.eventNames.length > 0
       ? [
           getQueryKey(
             clientApi.widget.umami.getMultiEventTimeSeries,

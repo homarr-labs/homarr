@@ -58,6 +58,7 @@ describe("rssFeedRouter", () => {
         feedIndex: 0,
         origin: "https://example.com",
         errorType: "Error",
+        errorMessage: "Failed to fetch [redacted URL]",
       });
       const logged = JSON.stringify(mocks.logger.warn.mock.calls);
       expect(logged).not.toContain("password");

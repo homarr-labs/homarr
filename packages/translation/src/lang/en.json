@@ -1991,11 +1991,15 @@
       "noStation": "No station selected",
       "option": {
         "baseUrl": {
-          "label": "Search.ch URL"
+          "label": "Search.ch URL",
+          "description": "Custom URLs must resolve to a public IP address. Private and local hosts are rejected."
         },
         "station": {
           "label": "Station"
         }
+      },
+      "error": {
+        "stationSearch": "Unable to search stations. Check the custom URL and your board access."
       }
     },
     "notebook": {
@@ -3541,6 +3545,9 @@
         "showPosterImage": {
           "label": "Show poster image"
         }
+      },
+      "error": {
+        "allFeedsFailed": "Unable to load RSS feeds. Check the feed URLs and try again."
       }
     },
     "releases": {
@@ -4284,6 +4291,8 @@
       "error": {
         "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
         "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",
+        "selectionSaveTitle": "Unable to save selection",
+        "selectionSaveMessage": "Your system or time period selection could not be saved. Please try again.",
         "switchToHistorical": "Switch to historical view",
         "systemNotFound": "Selected system was not found. Choose a different system."
       },

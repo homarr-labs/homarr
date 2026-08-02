@@ -134,6 +134,7 @@ export const setWidgetRuntimeQueries = (
   queryKeys: readonly QueryKey[],
 ) => {
   if (!widgetStateRef) return;
+  // This render-time ref write is idempotent and does not trigger a render.
   const state = widgetStateRef.current ?? {};
   state[runtimeQueriesStateKey] = queryKeys.flatMap((queryKey) => {
     const query = normalizeWidgetQuery(queryKey);

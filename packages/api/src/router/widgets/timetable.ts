@@ -37,6 +37,7 @@ const blockedTimetableSubnets = [
   ["172.16.0.0", 12, "ipv4"],
   ["192.0.0.0", 24, "ipv4"],
   ["192.0.2.0", 24, "ipv4"],
+  ["192.88.99.0", 24, "ipv4"],
   ["192.168.0.0", 16, "ipv4"],
   ["198.18.0.0", 15, "ipv4"],
   ["198.51.100.0", 24, "ipv4"],
@@ -153,7 +154,7 @@ const resolvePublicTimetableAddressesAsync = async (baseUrl: string): Promise<Ti
     });
   }
 
-  return addresses;
+  return addresses.toSorted((left, right) => left.family - right.family || left.address.localeCompare(right.address));
 };
 
 const normalizeTimetableOptionsBaseUrlOrThrowBadRequest = (options: Record<string, unknown>) => {
@@ -203,19 +204,19 @@ const resolveTimetableBaseUrlAsync = async (
   if (allowBoardConfiguration) {
     if (input.boardId) {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
-      let savedOptions: string | undefined;
       if (input.itemId) {
         const item = await ctx.db.query.items.findFirst({
+          columns: { id: true },
           where: and(eq(items.id, input.itemId), eq(items.kind, "timetable"), eq(items.boardId, input.boardId)),
         });
         if (!item) throw new TRPCError({ code: "NOT_FOUND", message: "Timetable widget not found" });
-        savedOptions = item.options;
       }
-      const savedBaseUrl = savedOptions === undefined ? undefined : getSavedTimetableBaseUrl(savedOptions);
-      if (requestedBaseUrl === savedBaseUrl || requestedBaseUrl === DEFAULT_TIMETABLE_BASE_URL) {
+      if (requestedBaseUrl === DEFAULT_TIMETABLE_BASE_URL) {
         return { baseUrl: requestedBaseUrl };
       }
 
+      // Resolve immediately before every custom request. A URL that was public when saved can later resolve to a
+      // private address, so matching the persisted value is not sufficient protection against DNS rebinding.
       const pinnedAddresses = await resolvePublicTimetableAddressesAsync(requestedBaseUrl);
       return { baseUrl: requestedBaseUrl, pinnedAddresses };
     }
@@ -241,7 +242,10 @@ const resolveTimetableBaseUrlAsync = async (
   if (requestedBaseUrl !== savedBaseUrl) {
     throw new TRPCError({ code: "FORBIDDEN", message: "Timetable URL does not match the saved widget" });
   }
-  return { baseUrl: savedBaseUrl };
+  if (savedBaseUrl === DEFAULT_TIMETABLE_BASE_URL) return { baseUrl: savedBaseUrl };
+
+  const pinnedAddresses = await resolvePublicTimetableAddressesAsync(savedBaseUrl);
+  return { baseUrl: savedBaseUrl, pinnedAddresses };
 };
 
 export const timetableRouter = createTRPCRouter({
@@ -253,9 +257,11 @@ export const timetableRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const { baseUrl } = await resolveTimetableBaseUrlAsync(ctx, input);
+      const { baseUrl, pinnedAddresses } = await resolveTimetableBaseUrlAsync(ctx, input);
       const { itemId: _itemId, boardId: _boardId, ...handlerInput } = input;
-      const { data } = await timetableGetTimetableRequestHandler.handler({ ...handlerInput, baseUrl }).getDataAsync();
+      const { data } = await timetableGetTimetableRequestHandler
+        .handler({ ...handlerInput, baseUrl, pinnedAddresses })
+        .getDataAsync();
       return data;
     }),
   searchStations: publicProcedure

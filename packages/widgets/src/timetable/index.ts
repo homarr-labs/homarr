@@ -2,6 +2,7 @@ import { IconBusStop } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -13,10 +14,16 @@ export const { componentLoader, definition } = createWidgetDefinition("timetable
       baseUrl: factory.text({
         defaultValue: "https://search.ch",
         validate: z.string().url(),
+        withDescription: true,
       }),
       station: factory.dynamicSelect({
         useOptions(query, _integrationIds, options, itemId, boardId) {
-          const { data: stations, isPending } = clientApi.widget.timetable.searchStations.useQuery({
+          const t = useScopedI18n("widget.timetable");
+          const {
+            data: stations,
+            error,
+            isPending,
+          } = clientApi.widget.timetable.searchStations.useQuery({
             baseUrl: typeof options.baseUrl === "string" ? options.baseUrl : "https://search.ch",
             itemId,
             boardId,
@@ -24,6 +31,7 @@ export const { componentLoader, definition } = createWidgetDefinition("timetable
           });
 
           return {
+            error: error ? t("error.stationSearch") : undefined,
             isPending,
             options:
               stations?.map((station) => ({

@@ -102,23 +102,26 @@ const ArchiveTeamWarriorWidgetContent = ({
           </Group>
           <ScrollArea style={{ flex: 1 }}>
             <Stack gap={4}>
-              {status.items.map((item) => (
-                <Card key={item.id} withBorder p="xs">
-                  <Group justify="space-between" wrap="nowrap">
-                    <Stack gap={0} miw={0}>
-                      <Text size="sm" fw={600} lineClamp={1}>
-                        {item.name}
-                      </Text>
-                      <Text size="xs" c="dimmed" lineClamp={1}>
-                        {item.project ?? projectName}
-                      </Text>
-                    </Stack>
-                    <Badge size="xs" color={getStatusColor(item.status)}>
-                      {t(`status.${item.status}`)}
-                    </Badge>
-                  </Group>
-                </Card>
-              ))}
+              {status.items.map((item) => {
+                const itemStatusKey = getStatusKey(item.status);
+                return (
+                  <Card key={item.id} withBorder p="xs">
+                    <Group justify="space-between" wrap="nowrap">
+                      <Stack gap={0} miw={0}>
+                        <Text size="sm" fw={600} lineClamp={1}>
+                          {item.name}
+                        </Text>
+                        <Text size="xs" c="dimmed" lineClamp={1}>
+                          {item.project ?? projectName}
+                        </Text>
+                      </Stack>
+                      <Badge size="xs" color={getStatusColor(itemStatusKey)}>
+                        {t(`status.${itemStatusKey}`)}
+                      </Badge>
+                    </Group>
+                  </Card>
+                );
+              })}
             </Stack>
           </ScrollArea>
         </>

@@ -1,4 +1,4 @@
-import { IconRss } from "@tabler/icons-react";
+import { IconRss, IconServerOff } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
@@ -19,6 +19,12 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
       maximumAmountPosts: scope.options.maximumAmountPosts,
     }),
   refetchInterval: null,
+  errors: {
+    BAD_GATEWAY: {
+      icon: IconServerOff,
+      message: (t) => t("widget.rssFeed.error.allFeedsFailed"),
+    },
+  },
   createOptions() {
     return optionsBuilder.from((factory) => ({
       feedUrls: factory.multiText({

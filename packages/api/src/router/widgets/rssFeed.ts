@@ -22,6 +22,8 @@ const safeFeedLogContext = (url: string, feedIndex: number) => {
   }
 };
 
+const redactFeedFailureMessage = (message: string) => message.replace(/https?:\/\/\S+/gi, "[redacted URL]");
+
 const feedsInput = z.object({
   urls: z.array(z.string()).max(100),
   maximumAmountPosts: z.number(),
@@ -49,6 +51,7 @@ export const rssFeedRouter = createTRPCRouter({
         logger.warn("RSS feed fetch failed", {
           ...safeFeedLogContext(urls[index] ?? "", index),
           errorType: result.reason instanceof Error ? result.reason.name : typeof result.reason,
+          errorMessage: result.reason instanceof Error ? redactFeedFailureMessage(result.reason.message) : undefined,
         });
       }
     });

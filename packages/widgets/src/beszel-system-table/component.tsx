@@ -405,7 +405,7 @@ export default function BeszelSystemTableWidget({
               integrationIds: [activeIntegrationId],
               systemId: activeSystem.id,
               timePeriod: "1h",
-              includeDocker: true,
+              includeDocker: false,
             },
             "query",
           ),
@@ -472,9 +472,9 @@ export default function BeszelSystemTableWidget({
                 disk: options.showDisk,
                 diskIO: options.showDisk,
                 network: options.showNet,
-                dockerCpu: true,
-                dockerMemory: true,
-                dockerNetwork: true,
+                dockerCpu: false,
+                dockerMemory: false,
+                dockerNetwork: false,
               }}
             />
           </Stack>

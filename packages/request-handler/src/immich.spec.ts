@@ -28,7 +28,7 @@ describe("immichAlbumsRequestHandler", () => {
   });
 
   test("sorts deterministically before caching a limited response", async () => {
-    const getAlbumsAsync = vi.fn().mockResolvedValue(albums);
+    const getAlbumsAsync = vi.fn().mockResolvedValue([...albums]);
     mocks.createIntegrationAsync.mockResolvedValue({ getAlbumsAsync });
 
     const first = await immichAlbumsRequestHandler.handler(integration, { limit: 2 }).getDataAsync();
@@ -40,7 +40,7 @@ describe("immichAlbumsRequestHandler", () => {
   });
 
   test("preserves upstream order when no limit is requested", async () => {
-    const getAlbumsAsync = vi.fn().mockResolvedValue(albums);
+    const getAlbumsAsync = vi.fn().mockResolvedValue([...albums]);
     mocks.createIntegrationAsync.mockResolvedValue({ getAlbumsAsync });
 
     const result = await immichAlbumsRequestHandler.handler(integration, {}).getDataAsync();
