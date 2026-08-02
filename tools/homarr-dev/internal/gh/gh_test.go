@@ -84,5 +84,8 @@ func TestListPRsExcludesBotsIntegration(t *testing.T) {
 		if isBot(pr.Author) {
 			t.Fatalf("bot PR was not filtered: #%d by %s", pr.Number, pr.Author)
 		}
+		if pr.HeadSHA == "" {
+			t.Fatalf("PR #%d has no head SHA", pr.Number)
+		}
 	}
 }

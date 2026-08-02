@@ -32,6 +32,7 @@ type PR struct {
 	Title     string `json:"title"`
 	Author    string `json:"author"`
 	HeadRef   string `json:"headRefName"`
+	HeadSHA   string `json:"headRefOid"`
 	CIState   string `json:"ciState"`
 	IsDraft   bool   `json:"isDraft"`
 	UpdatedAt string `json:"updatedAt"`
@@ -45,6 +46,7 @@ type rawPR struct {
 		Login string `json:"login"`
 	} `json:"author"`
 	HeadRefName       string     `json:"headRefName"`
+	HeadRefOID        string     `json:"headRefOid"`
 	UpdatedAt         string     `json:"updatedAt"`
 	StatusCheckRollup []rawCheck `json:"statusCheckRollup"`
 }
@@ -108,7 +110,7 @@ func listPRs(ctx context.Context, limit int, includeBots, refresh bool) ([]PR, e
 		"--repo", Repo,
 		"--state", "open",
 		"--limit", fmt.Sprint(limit),
-		"--json", "number,title,author,headRefName,updatedAt,isDraft,statusCheckRollup",
+		"--json", "number,title,author,headRefName,headRefOid,updatedAt,isDraft,statusCheckRollup",
 	).CombinedOutput()
 	if err != nil {
 		err = commandError(err, out)
@@ -130,6 +132,7 @@ func listPRs(ctx context.Context, limit int, includeBots, refresh bool) ([]PR, e
 			Title:     r.Title,
 			Author:    r.Author.Login,
 			HeadRef:   r.HeadRefName,
+			HeadSHA:   r.HeadRefOID,
 			CIState:   rollupState(r.StatusCheckRollup),
 			IsDraft:   r.IsDraft,
 			UpdatedAt: r.UpdatedAt,
@@ -173,7 +176,7 @@ func commandError(err error, output []byte) error {
 func GetPR(ctx context.Context, number int) (*PR, error) {
 	out, err := exec.CommandContext(ctx, "gh", "pr", "view", fmt.Sprint(number),
 		"--repo", Repo,
-		"--json", "number,title,author,headRefName,updatedAt,isDraft,statusCheckRollup",
+		"--json", "number,title,author,headRefName,headRefOid,updatedAt,isDraft,statusCheckRollup",
 	).CombinedOutput()
 	if err != nil {
 		return nil, commandError(err, out)
@@ -188,6 +191,7 @@ func GetPR(ctx context.Context, number int) (*PR, error) {
 		Title:     r.Title,
 		Author:    r.Author.Login,
 		HeadRef:   r.HeadRefName,
+		HeadSHA:   r.HeadRefOID,
 		CIState:   rollupState(r.StatusCheckRollup),
 		IsDraft:   r.IsDraft,
 		UpdatedAt: r.UpdatedAt,
