@@ -1,15 +1,18 @@
 "use client";
 
-import { Badge, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Badge, Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { formatBytes, formatDuration } from "@homarr/common";
 import type { AudiobookshelfDashboardData } from "@homarr/integrations/types";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
-import { setWidgetRuntimeQueries } from "../definition";
-import { NoIntegrationDataError } from "../errors/no-data-integration";
+import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { AudioStatsContent } from "./audio-stats-content";
 
 export default function AudioStatsWidget({
@@ -18,8 +21,9 @@ export default function AudioStatsWidget({
   width,
   height,
   displayMode = "compact",
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"audioStats">) {
+  const t = useI18n();
   const statsInput = { integrationId: integrationIds[0] ?? "" };
   const { data: response, error: statsError } = clientApi.widget.audioStats.getStats.useQuery(statsInput);
   const streamsInput = { integrationIds: [statsInput.integrationId], showOnlyPlaying: true };
@@ -28,15 +32,14 @@ export default function AudioStatsWidget({
     streamsInput,
     { enabled: streamsEnabled },
   );
-  setWidgetRuntimeQueries(widgetStateRef, [
-    { path: ["widget", "audioStats", "getStats"], input: statsInput },
-    ...(streamsEnabled ? [{ path: ["widget", "mediaServer", "getCurrentStreams"], input: streamsInput }] : []),
+  useWidgetRuntimeQueries(widgetRuntimeRef, [
+    getQueryKey(clientApi.widget.audioStats.getStats, statsInput, "query"),
+    ...(streamsEnabled ? [getQueryKey(clientApi.widget.mediaServer.getCurrentStreams, streamsInput, "query")] : []),
   ]);
 
   if (statsError && response === undefined) throw statsError;
   if (streamsEnabled && streamsError && streamResults === undefined) throw streamsError;
   const currentStreams = streamResults ?? [];
-  if (streamsEnabled && currentStreams.some(({ error }) => Boolean(error))) throw new NoIntegrationDataError();
   if (!response) return <WidgetEmptyState />;
 
   const summary = (
@@ -44,20 +47,38 @@ export default function AudioStatsWidget({
       backend={response.kind}
       stats={response.data}
       options={{ ...options, compactMode: displayMode === "compact" && (options.compactMode || height < 160) }}
+      showAllStats={displayMode === "advanced"}
       width={width}
       height={height}
     />
   );
-  if (displayMode === "compact") return summary;
+  if (displayMode === "compact") {
+    return (
+      <Box h="100%" pos="relative">
+        <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
+          <WidgetQueryErrorIndicator error={statsError} label={t("widget.audioStats.name")} />
+        </Box>
+        {summary}
+      </Box>
+    );
+  }
 
   const sessions = currentStreams.flatMap((result) =>
     result.sessions.map((session) => ({ integrationId: result.integrationId, session })),
   );
   const audiobookStats = response.kind === "audiobookshelf" ? (response.data as AudiobookshelfDashboardData) : null;
   const advancedGridColumns = width >= 760 ? 2 : 1;
+  const hasStreamErrors = currentStreams.some(({ error }) => Boolean(error));
   return (
     <Stack h="100%" gap="lg" p="md">
       <div style={{ minHeight: 150 }}>{summary}</div>
+      {(statsError || streamsError || hasStreamErrors) && (
+        <Group justify="flex-end">
+          <WidgetQueryErrorIndicator error={statsError} label={t("widget.audioStats.name")} />
+          <WidgetQueryErrorIndicator error={streamsError} label={t("widget.mediaServer.name")} />
+          <IntegrationErrorIndicator results={currentStreams} />
+        </Group>
+      )}
       <ScrollArea style={{ flex: 1, minHeight: 0 }}>
         {response.kind === "navidrome" ? (
           <SimpleGrid cols={advancedGridColumns} spacing="xs">
@@ -66,15 +87,22 @@ export default function AudioStatsWidget({
               if (!currentlyPlaying) return null;
               return (
                 <Group key={`${integrationId}:${session.sessionId}`} justify="space-between" wrap="nowrap" p="sm">
-                  <Stack gap={0} style={{ minWidth: 0 }}>
+                  <Stack gap={0} style={{ minWidth: 0, flex: 1 }}>
                     <Text size="sm" fw={600} truncate>
                       {currentlyPlaying.name}
                     </Text>
                     <Text size="xs" c="dimmed" truncate>
-                      {currentlyPlaying.seasonName ?? currentlyPlaying.albumName ?? session.user.username}
+                      {currentlyPlaying.seasonName ?? currentlyPlaying.albumName ?? session.user?.username ?? "—"}
                     </Text>
                   </Stack>
-                  <Badge variant="light" style={{ flexShrink: 0 }}>
+                  <Badge
+                    variant="light"
+                    maw="40%"
+                    h="auto"
+                    py={4}
+                    style={{ flexShrink: 0 }}
+                    styles={{ label: { whiteSpace: "normal", overflowWrap: "anywhere", lineHeight: 1.2 } }}
+                  >
                     {session.sessionName}
                   </Badge>
                 </Group>
