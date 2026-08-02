@@ -51,15 +51,24 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width }: 
   if (error && timetable === undefined) throw error;
 
   const entries = timetable?.entries ?? [];
-  const staleWarning =
-    error && timetable ? t("warning.stale", { time: dayjs(timetable.timestamp).format("HH:mm:ss") }) : undefined;
+  const staleTime = timetable ? dayjs(timetable.timestamp).format("HH:mm:ss") : undefined;
+  const staleWarning = error && staleTime ? t("warning.stale", { time: staleTime }) : undefined;
+  const compactStaleWarning = error && staleTime ? t("warning.staleCompact") : undefined;
 
   return (
     <Stack w="100%" h="100%" gap="xs" p="sm">
       <Text fw="bold">{t("title", { station: station.label })}</Text>
-      {staleWarning && (
-        <Alert role="status" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs">
-          {staleWarning}
+      {compactStaleWarning && displayMode === "compact" && (
+        <Group gap={2} wrap="nowrap">
+          <IconAlertTriangle aria-hidden size={12} color="var(--mantine-color-orange-6)" />
+          <Text component="output" size="xs" c="orange" style={{ whiteSpace: "nowrap" }}>
+            {compactStaleWarning}
+          </Text>
+        </Group>
+      )}
+      {staleWarning && displayMode === "advanced" && (
+        <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs">
+          <output>{staleWarning}</output>
         </Alert>
       )}
       <ScrollArea style={{ flex: 1, minHeight: 0 }}>
