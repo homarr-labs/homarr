@@ -120,6 +120,15 @@ export const getWidgetQueryKeys = (definition: {
 
 const runtimeQueriesStateKey = "__homarrRuntimeQueries";
 
+export const normalizeWidgetQuery = (queryKey: QueryKey): NormalizedWidgetQuery | null => {
+  const path = queryKey[0];
+  if (!Array.isArray(path) || !path.every((part): part is string => typeof part === "string")) return null;
+
+  const queryKeyOptions = queryKey[1];
+  const input = isRecord(queryKeyOptions) && "input" in queryKeyOptions ? queryKeyOptions.input : undefined;
+  return { path, input };
+};
+
 export const setWidgetRuntimeQueries = (
   widgetStateRef: React.MutableRefObject<Record<string, unknown> | null> | undefined,
   queryKeys: readonly QueryKey[],
@@ -127,12 +136,8 @@ export const setWidgetRuntimeQueries = (
   if (!widgetStateRef) return;
   const state = widgetStateRef.current ?? {};
   state[runtimeQueriesStateKey] = queryKeys.flatMap((queryKey) => {
-    const path = queryKey[0];
-    if (!Array.isArray(path) || !path.every((part): part is string => typeof part === "string")) return [];
-
-    const queryKeyOptions = queryKey[1];
-    const input = isRecord(queryKeyOptions) && "input" in queryKeyOptions ? queryKeyOptions.input : undefined;
-    return [{ path, input }];
+    const query = normalizeWidgetQuery(queryKey);
+    return query ? [query] : [];
   });
   widgetStateRef.current = state;
 };

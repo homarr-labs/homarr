@@ -83,3 +83,10 @@ The OpenAPI and MCP APIs include board management endpoints for common automatio
 - Configure global board defaults such as public home boards and status behavior
 
 Use the interactive API reference to inspect the exact request body for each endpoint under the `boards` and `settings` tags.
+
+## Partial integration failures
+
+Multi-integration widget queries keep data from integrations that remain available. Calendar and media-server results include
+an optional `error` on a failed integration; media-request responses expose a `failedIntegrations` array, and the latest
+requests endpoint returns its items in `requests`. When every selected integration fails, the query returns an error instead
+of a partial response.

@@ -40,7 +40,7 @@ import {
   getProgressTrackSize,
 } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
-import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
@@ -426,7 +426,7 @@ export default function BeszelSystemTableWidget({
   const table = (
     <div style={{ position: "relative", height: "100%" }}>
       <div style={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}>
-        <BeszelIntegrationErrorIndicator results={results} />
+        <IntegrationErrorIndicator results={results} />
       </div>
       <HomarrDataTable
         isEditMode={isEditMode}

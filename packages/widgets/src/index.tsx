@@ -74,7 +74,12 @@ export type {
   WidgetQueryMatcher,
   WidgetQueryMatcherScope,
 } from "./definition";
-export { getWidgetQueryKeys, getWidgetRuntimeQueries } from "./definition";
+export {
+  getWidgetQueryKeys,
+  getWidgetRuntimeQueries,
+  normalizeWidgetQuery,
+  widgetQueryValueEquals,
+} from "./definition";
 export type { WidgetComponentProps };
 export type { WidgetOptionDefinition, WidgetOptionType } from "./options";
 

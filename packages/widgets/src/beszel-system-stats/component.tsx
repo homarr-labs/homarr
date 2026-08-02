@@ -16,7 +16,7 @@ import classes from "./component.module.css";
 import type { WidgetComponentProps } from "../definition";
 import { setWidgetRuntimeQueries } from "../definition";
 import type { BeszelTimePeriod } from "../beszel/_shared/chart";
-import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
 import { createBeszelSystemChoices, resolveBeszelSystemChoice } from "./selection";
 
@@ -100,7 +100,7 @@ export default function BeszelSystemStatsWidget({
   if (systems.length === 0) {
     return (
       <Box h="100%" pos="relative">
-        <BeszelIntegrationErrorIndicator results={systemsResult} />
+        <IntegrationErrorIndicator results={systemsResult} />
         <Center h="100%">
           <Stack align="center" gap="xs">
             <IconServerOff size={28} opacity={0.5} />
@@ -136,7 +136,7 @@ export default function BeszelSystemStatsWidget({
   return (
     <Box h="100%" pos="relative">
       <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
-        <BeszelIntegrationErrorIndicator results={systemsResult} />
+        <IntegrationErrorIndicator results={systemsResult} />
       </Box>
       <ScrollArea
         h="100%"

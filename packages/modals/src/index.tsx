@@ -125,6 +125,7 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
 
 interface OpenModalOptions {
   keepMounted?: boolean;
+  onClose?: () => void;
   title?: stringOrTranslation;
 }
 

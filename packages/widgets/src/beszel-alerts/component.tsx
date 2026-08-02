@@ -12,7 +12,7 @@ import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 
 const alertIconMap: Record<string, LucideIcon> = {
   CPU: Cpu,
@@ -85,7 +85,7 @@ export default function BeszelAlertsWidget({
   return (
     <Box h="100%" pos="relative">
       <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
-        <BeszelIntegrationErrorIndicator results={results} />
+        <IntegrationErrorIndicator results={results} />
       </Box>
       <ScrollArea h="100%" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
         <Stack gap="sm" p="sm">

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { Box, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Box, Group, Stack, Text, useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import { getQueryKey } from "@trpc/react-query";
@@ -15,6 +15,7 @@ import { useSettings } from "@homarr/settings";
 
 import type { WidgetComponentProps } from "../definition";
 import { setWidgetRuntimeQueries } from "../definition";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { CalendarDay } from "./calender-day";
 import { getCalendarAgendaEvents, groupEventsByDate, splitEvents, toCalendarDateKey } from "./calendar-events";
 import { CalendarEventList } from "./calendar-event-list";
@@ -25,7 +26,7 @@ export default function CalendarWidget(props: WidgetComponentProps<"calendar">) 
 
   if (props.integrationIds.length === 0) {
     setWidgetRuntimeQueries(props.widgetStateRef, []);
-    return <CalendarBase {...props} events={[]} month={month} setMonth={setMonth} />;
+    return <CalendarBase {...props} events={[]} failedIntegrations={[]} month={month} setMonth={setMonth} />;
   }
 
   return <FetchCalendar month={month} setMonth={setMonth} {...props} />;
@@ -56,11 +57,16 @@ const FetchCalendar = ({
   const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input);
 
   const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
+  const failedIntegrations =
+    data?.flatMap(({ integration, error }) =>
+      error ? [{ integrationId: integration.id, integrationName: integration.name, error }] : [],
+    ) ?? [];
 
   return (
     <CalendarBase
       isEditMode={isEditMode}
       events={events}
+      failedIntegrations={failedIntegrations}
       month={month}
       setMonth={setMonth}
       options={options}
@@ -72,13 +78,22 @@ const FetchCalendar = ({
 interface CalendarBaseProps {
   isEditMode: boolean;
   events: CalendarEvent[];
+  failedIntegrations: { integrationId: string; integrationName: string; error: string }[];
   month: Date;
   setMonth: (date: Date) => void;
   options: WidgetComponentProps<"calendar">["options"];
   displayMode?: WidgetComponentProps<"calendar">["displayMode"];
 }
 
-const CalendarBase = ({ isEditMode, events, month, setMonth, options, displayMode }: CalendarBaseProps) => {
+const CalendarBase = ({
+  isEditMode,
+  events,
+  failedIntegrations,
+  month,
+  setMonth,
+  options,
+  displayMode,
+}: CalendarBaseProps) => {
   const params = useParams();
   const locale = params.locale as string;
   const { firstDayOfWeek } = useSettings();
@@ -105,6 +120,11 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options, displayMod
 
   return (
     <Stack ref={ref} h="100%" w="100%" gap="xs" style={{ overflow: "hidden" }}>
+      {failedIntegrations.length > 0 && (
+        <Group px="xs" justify="flex-end">
+          <IntegrationErrorIndicator results={failedIntegrations} />
+        </Group>
+      )}
       <Calendar
         defaultDate={new Date()}
         onPreviousMonth={(previousMonth) => setMonth(new Date(previousMonth))}

@@ -146,48 +146,61 @@ function TraefikWidgetContent({
     (left, right) =>
       resourceStatusOrder[left.status] - resourceStatusOrder[right.status] || left.name.localeCompare(right.name),
   );
-  return (
-    <SimpleGrid cols={width >= 900 ? 2 : 1} spacing="md" h="100%" p="md">
-      <ScrollArea h="100%">{summary}</ScrollArea>
+  const resourceList = (
+    <Stack gap="xs">
+      {combined.failedEndpoints.map((endpoint) => (
+        <Badge key={endpoint} color="red" variant="light">
+          {t("failedEndpoint", { endpoint })}
+        </Badge>
+      ))}
+      {resources.map((resource, index) => (
+        <Group
+          key={`${resource.protocol}:${resource.type}:${resource.name}:${index}`}
+          justify="space-between"
+          wrap="nowrap"
+          p="xs"
+        >
+          <Stack gap={0} style={{ minWidth: 0 }}>
+            <Text size="sm" fw={600} truncate>
+              {resource.name}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {resource.protocol.toUpperCase()} · {t(`resourceType.${resource.type}`)} · {resource.provider ?? "—"}
+            </Text>
+          </Stack>
+          <Badge
+            color={
+              resource.status === "error"
+                ? "red"
+                : resource.status === "warning"
+                  ? "yellow"
+                  : resource.status === "enabled"
+                    ? "green"
+                    : "gray"
+            }
+          >
+            {t(`resourceStatus.${resource.status}`)}
+          </Badge>
+        </Group>
+      ))}
+    </Stack>
+  );
+
+  if (width < 900) {
+    return (
       <ScrollArea h="100%">
-        <Stack gap="xs">
-          {combined.failedEndpoints.map((endpoint) => (
-            <Badge key={endpoint} color="red" variant="light">
-              {t("failedEndpoint", { endpoint })}
-            </Badge>
-          ))}
-          {resources.map((resource, index) => (
-            <Group
-              key={`${resource.protocol}:${resource.type}:${resource.name}:${index}`}
-              justify="space-between"
-              wrap="nowrap"
-              p="xs"
-            >
-              <Stack gap={0} style={{ minWidth: 0 }}>
-                <Text size="sm" fw={600} truncate>
-                  {resource.name}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {resource.protocol.toUpperCase()} · {t(`resourceType.${resource.type}`)} · {resource.provider ?? "—"}
-                </Text>
-              </Stack>
-              <Badge
-                color={
-                  resource.status === "error"
-                    ? "red"
-                    : resource.status === "warning"
-                      ? "yellow"
-                      : resource.status === "enabled"
-                        ? "green"
-                        : "gray"
-                }
-              >
-                {t(`resourceStatus.${resource.status}`)}
-              </Badge>
-            </Group>
-          ))}
+        <Stack gap="md" p="md">
+          {summary}
+          {resourceList}
         </Stack>
       </ScrollArea>
+    );
+  }
+
+  return (
+    <SimpleGrid cols={2} spacing="md" h="100%" p="md" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
+      <ScrollArea h="100%">{summary}</ScrollArea>
+      <ScrollArea h="100%">{resourceList}</ScrollArea>
     </SimpleGrid>
   );
 }

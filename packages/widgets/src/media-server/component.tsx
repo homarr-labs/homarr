@@ -25,6 +25,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 
 type TranscodingDecision = NonNullable<NonNullable<StreamSession["currentlyPlaying"]>["metadata"]>["transcoding"];
 
@@ -305,6 +306,7 @@ export default function MediaServerWidget({
     0,
   );
   const totalBitrateLabel = options.showBitrate ? formatBitrate(totalBitrateKbps) : null;
+  const hasFailedIntegrations = currentStreams.some(({ error }) => Boolean(error));
 
   return (
     <Stack gap={0} h="100%" display="flex">
@@ -317,6 +319,14 @@ export default function MediaServerWidget({
           <Badge variant="light" color="orange">
             {t("summary.transcoding", { count: transcodingCount })}
           </Badge>
+          <Group ml="auto">
+            <IntegrationErrorIndicator results={currentStreams} />
+          </Group>
+        </Group>
+      )}
+      {!isAdvanced && hasFailedIntegrations && (
+        <Group h={18} px="xs" justify="flex-end">
+          <IntegrationErrorIndicator results={currentStreams} />
         </Group>
       )}
       <MantineReactTable table={table} />

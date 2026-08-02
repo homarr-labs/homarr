@@ -8,6 +8,7 @@ import { formatBytes, formatDuration } from "@homarr/common";
 import type { AudiobookshelfDashboardData } from "@homarr/integrations/types";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { setWidgetRuntimeQueries } from "../definition";
 import { AudioStatsContent } from "./audio-stats-content";
@@ -47,9 +48,15 @@ export default function AudioStatsWidget({
   const sessions = streamResults.flatMap((result) =>
     result.sessions.map((session) => ({ integrationId: result.integrationId, session })),
   );
+  const hasStreamFailures = streamResults.some(({ error }) => Boolean(error));
   const audiobookStats = response.kind === "audiobookshelf" ? (response.data as AudiobookshelfDashboardData) : null;
   return (
     <Stack h="100%" gap="lg" p="md">
+      {hasStreamFailures && (
+        <Group justify="flex-end">
+          <IntegrationErrorIndicator results={streamResults} />
+        </Group>
+      )}
       <div style={{ minHeight: 150 }}>{summary}</div>
       <ScrollArea style={{ flex: 1, minHeight: 0 }}>
         {response.kind === "navidrome" ? (
