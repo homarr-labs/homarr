@@ -1,4 +1,5 @@
-import { Badge, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Alert, Badge, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconAlertTriangle } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
@@ -39,7 +40,7 @@ interface TimetableWidgetInnerProps {
 }
 
 const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width }: TimetableWidgetInnerProps) => {
-  const { data: timetable } = clientApi.widget.timetable.getTimetable.useQuery({
+  const { data: timetable, error } = clientApi.widget.timetable.getTimetable.useQuery({
     baseUrl,
     itemId,
     stationId: station.value,
@@ -47,11 +48,20 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width }: 
   });
   const t = useScopedI18n("widget.timetable");
 
+  if (error && timetable === undefined) throw error;
+
   const entries = timetable?.entries ?? [];
+  const staleWarning =
+    error && timetable ? t("warning.stale", { time: dayjs(timetable.timestamp).format("HH:mm:ss") }) : undefined;
 
   return (
     <Stack w="100%" h="100%" gap="xs" p="sm">
       <Text fw="bold">{t("title", { station: station.label })}</Text>
+      {staleWarning && (
+        <Alert role="status" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs">
+          {staleWarning}
+        </Alert>
+      )}
       <ScrollArea style={{ flex: 1, minHeight: 0 }}>
         <SimpleGrid cols={displayMode === "advanced" && width >= 760 ? 2 : 1} spacing="xs">
           {entries.map((entry) => (
