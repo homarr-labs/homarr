@@ -12,7 +12,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  TooltipFloating,
+  Tooltip,
   UnstyledButton,
 } from "@mantine/core";
 import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons-react";
@@ -88,10 +88,11 @@ const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
   const showSide = isAdvanced || (!isTiny && (options.showType || options.showSource));
 
   return (
-    <TooltipFloating
+    <Tooltip
       label={item.description}
       w={300}
       multiline
+      events={{ hover: true, focus: true, touch: true }}
       disabled={
         isAdvanced ||
         item.description === undefined ||
@@ -221,7 +222,7 @@ const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
           )}
         </Group>
       </UnstyledButton>
-    </TooltipFloating>
+    </Tooltip>
   );
 };
 

@@ -6,7 +6,7 @@ import { IconDatabase, IconPhoto, IconUsers, IconVideo } from "@tabler/icons-rea
 
 import { clientApi } from "@homarr/api/client";
 import { formatBytes } from "@homarr/common";
-import { useI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
@@ -24,6 +24,7 @@ export default function ImmichServerStatsWidget({
   widgetStateRef,
 }: WidgetComponentProps<"immich-serverStats">) {
   const t = useI18n();
+  const locale = useCurrentIntlLocale();
   const input = { integrationId: integrationIds[0] ?? "" };
   const albumsInput = { ...input, limit: MAX_ADVANCED_ALBUMS };
   const isAdvanced = displayMode === "advanced";
@@ -50,7 +51,7 @@ export default function ImmichServerStatsWidget({
         <StatItem
           icon={<IconUsers size={20} />}
           label={t("widget.immich-serverStats.users")}
-          value={stats.userCount}
+          value={stats.userCount.toLocaleString(locale)}
           dense={statsLayout.dense}
         />
       )}
@@ -58,7 +59,7 @@ export default function ImmichServerStatsWidget({
         <StatItem
           icon={<IconPhoto size={20} />}
           label={t("widget.immich-serverStats.photos")}
-          value={stats.photoCount}
+          value={stats.photoCount.toLocaleString(locale)}
           dense={statsLayout.dense}
         />
       )}
@@ -66,7 +67,7 @@ export default function ImmichServerStatsWidget({
         <StatItem
           icon={<IconVideo size={20} />}
           label={t("widget.immich-serverStats.videos")}
-          value={stats.videoCount}
+          value={stats.videoCount.toLocaleString(locale)}
           dense={statsLayout.dense}
         />
       )}
@@ -103,7 +104,7 @@ export default function ImmichServerStatsWidget({
                   {album.albumName}
                 </Text>
                 <Text size="xs" c="dimmed">
-                  {album.assetCount.toLocaleString()}
+                  {album.assetCount.toLocaleString(locale)}
                 </Text>
               </Group>
               <Progress value={(album.assetCount / Math.max(maxAssets, 1)) * 100} size="sm" />
