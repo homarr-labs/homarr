@@ -1,30 +1,55 @@
 "use client";
 
-import { Card, Flex, Group, Image, ScrollArea, SimpleGrid, Text } from "@mantine/core";
-import { IconClock } from "@tabler/icons-react";
+import { Alert, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Text } from "@mantine/core";
+import { IconAlertTriangle, IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
-import type { RouterInputs } from "@homarr/api";
+import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 
-const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
-  const { data: feedEntries, error } = clientApi.widget.rssFeed.getFeeds.useQuery(input);
-  if (error && feedEntries === undefined) throw error;
+const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
+  const { data, error } = clientApi.widget.rssFeed.getFeeds.useQuery(input);
+  if (error && data === undefined) throw error;
 
-  return feedEntries ?? [];
+  // Persisted query caches can still contain the array response used before failed-feed metadata was added.
+  const normalizedData = data as typeof data | RouterOutputs["widget"]["rssFeed"]["getFeeds"]["entries"];
+  if (Array.isArray(normalizedData)) {
+    return {
+      entries: normalizedData,
+      failedFeedCount: 0,
+      isStale: Boolean(error),
+    };
+  }
+
+  return {
+    entries: normalizedData?.entries ?? [],
+    failedFeedCount: normalizedData?.failedFeedCount ?? 0,
+    isStale: Boolean(error),
+  };
 };
 
 export default function RssFeed({ options, width, displayMode }: WidgetComponentProps<"rssFeed">) {
-  const feedEntries = useLiveFeedEntries({
+  const {
+    entries: feedEntries,
+    failedFeedCount,
+    isStale,
+  } = useLiveFeed({
     urls: options.feedUrls,
     maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
   });
 
   const board = useRequiredBoard();
+  const t = useScopedI18n("widget.rssFeed");
+  const warning = isStale
+    ? t("warning.stale")
+    : failedFeedCount > 0
+      ? t("warning.partial", { count: failedFeedCount })
+      : undefined;
 
   const languageDir = options.enableRtl ? "RTL" : "LTR";
 
@@ -34,6 +59,11 @@ export default function RssFeed({ options, width, displayMode }: WidgetComponent
 
   return (
     <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isAdvanced ? "md" : "xs"}>
+      {warning && (
+        <Alert role="status" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs" mb="xs">
+          {warning}
+        </Alert>
+      )}
       <SimpleGrid cols={columns} w="100%" spacing={isAdvanced ? "md" : "xs"} verticalSpacing={isAdvanced ? "md" : "xs"}>
         {feedEntries.map((feedEntry) => (
           <Card

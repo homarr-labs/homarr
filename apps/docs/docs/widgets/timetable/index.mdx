@@ -36,3 +36,5 @@ import streetDepartures from "./img/street-departures.png";
 <WidgetConfig configuration={timetableWidget.configuration} />
 
 For security, all custom base URLs must resolve to a public IP address whenever Homarr uses them. Private and local hosts are rejected.
+
+If a timetable refresh fails after departures have loaded, the widget keeps the previous departures visible and marks them with their last update time.
