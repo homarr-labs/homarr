@@ -27,6 +27,7 @@ vi.mock("@homarr/api/client", () => ({
 }));
 
 vi.mock("@homarr/translation/client", () => ({
+  useCurrentIntlLocale: () => "en",
   useI18n: () => (key: string) => key,
   useScopedI18n: () => (key: string) => key,
 }));

@@ -5,7 +5,7 @@ import { Flex, Stack, Text, Title, useMantineTheme } from "@mantine/core";
 import { IconMinus, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
@@ -73,6 +73,8 @@ export function getStockSummary(priceHistory: number[], previousClose: number): 
 
 export default function StockPriceWidget({ options, width, height, displayMode }: WidgetComponentProps<"stockPrice">) {
   const t = useScopedI18n("widget.stockPrice");
+  const locale = useCurrentIntlLocale();
+  const numberFormatter = new Intl.NumberFormat(locale);
   const theme = useMantineTheme();
   const { data: result } = clientApi.widget.stockPrice.getPriceHistory.useQuery(options);
 
@@ -120,15 +122,15 @@ export default function StockPriceWidget({ options, width, height, displayMode }
       </Stack>
 
       <Title pos="absolute" bottom={10} right={10} order={layout.priceOrder} fw={700}>
-        {new Intl.NumberFormat().format(round(summary.currentPrice))}
+        {numberFormatter.format(round(summary.currentPrice))}
       </Title>
 
       {layout.showChange && (
         <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
-          {new Intl.NumberFormat().format(stockValuesChange)}
+          {numberFormatter.format(stockValuesChange)}
           {stockValuesChangePercentage === null
             ? null
-            : ` (${stockValuesChange > 0 ? "+" : ""}${new Intl.NumberFormat().format(stockValuesChangePercentage)}%)`}
+            : ` (${stockValuesChange > 0 ? "+" : ""}${numberFormatter.format(stockValuesChangePercentage)}%)`}
         </Text>
       )}
 

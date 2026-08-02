@@ -14,7 +14,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useTimeAgo } from "@homarr/common";
 import type { AnchorNotePermission } from "@homarr/integrations";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
@@ -180,6 +180,7 @@ const AnchorNoteWidgetContent = ({
   isAdvanced,
 }: AnchorNoteWidgetContentProps) => {
   const t = useScopedI18n("widget.anchorNote");
+  const locale = useCurrentIntlLocale();
   const { data: note, refetch } = clientApi.widget.anchorNotes.getNote.useQuery({
     integrationId,
     noteId,
@@ -327,7 +328,7 @@ const AnchorNoteWidgetContent = ({
                 </Badge>
               )}
               <Text size="xs" c="dimmed">
-                {t("createdAt", { date: new Date(note.createdAt).toLocaleDateString() })}
+                {t("createdAt", { date: new Date(note.createdAt).toLocaleDateString(locale) })}
               </Text>
             </Group>
           )}

@@ -6,7 +6,7 @@ import { Box, Group, ScrollArea, SimpleGrid, Stack, Text, useMantineColorScheme 
 import { clientApi } from "@homarr/api/client";
 import { formatDuration } from "@homarr/common";
 import type { UmamiVisitorStats } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { UmamiEventsContent } from "./umami-events-content";
 import { UmamiTopPagesContent, UmamiTopReferrersContent } from "./umami-top-list";
@@ -44,6 +44,7 @@ export function UmamiContent({
 }: UmamiContentProps) {
   const t = useScopedI18n("widget.umami");
   const tCommon = useScopedI18n("common");
+  const locale = useCurrentIntlLocale();
   const { colorScheme } = useMantineColorScheme();
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
 
@@ -217,8 +218,8 @@ export function UmamiContent({
             <Group gap={4} align="baseline">
               <Text size="lg" fw={700} lh={1}>
                 {viewMode === "events"
-                  ? (multiEventTotal ?? 0).toLocaleString()
-                  : (visitorStats.eventCount ?? 0).toLocaleString()}
+                  ? (multiEventTotal ?? 0).toLocaleString(locale)
+                  : (visitorStats.eventCount ?? 0).toLocaleString(locale)}
               </Text>
               <Text size="xs" c="dimmed">
                 {t("event.label")}
@@ -229,7 +230,7 @@ export function UmamiContent({
             </Text>
             <Group gap={4} align="baseline">
               <Text size="lg" fw={700} lh={1}>
-                {visitorStats.totalVisitors.toLocaleString()}
+                {visitorStats.totalVisitors.toLocaleString(locale)}
               </Text>
               <Text size="xs" c="dimmed">
                 {t("visitors")}
@@ -239,7 +240,7 @@ export function UmamiContent({
         ) : (
           <Group gap={4} align="baseline">
             <Text size="xl" fw={700} lh={1}>
-              {visitorStats.totalVisitors.toLocaleString()}
+              {visitorStats.totalVisitors.toLocaleString(locale)}
             </Text>
             <Text size="xs" c="dimmed">
               {t("visitors")}
@@ -250,18 +251,18 @@ export function UmamiContent({
       {showSecondaryStats && (
         <Group wrap="wrap" style={{ columnGap: 12, rowGap: 4 }}>
           <Text size="xs" c="green">
-            ● {activeVisitors.toLocaleString()} {t("active")}
+            ● {activeVisitors.toLocaleString(locale)} {t("active")}
           </Text>
           <Text size="xs" c="dimmed">
-            {visitorStats.totalPageviews.toLocaleString()} {t("pageviews")}
+            {visitorStats.totalPageviews.toLocaleString(locale)} {t("pageviews")}
           </Text>
           <Text size="xs" c="dimmed">
-            {visitorStats.totalVisits.toLocaleString()} {t("visits")}
+            {visitorStats.totalVisits.toLocaleString(locale)} {t("visits")}
           </Text>
           {showDetailedStats && (
             <>
               <Text size="xs" c="dimmed">
-                {visitorStats.bounceRate}% {t("bounceRate")}
+                {visitorStats.bounceRate.toLocaleString(locale)}% {t("bounceRate")}
               </Text>
               <Text size="xs" c="dimmed">
                 {formatDuration(visitorStats.avgDuration * 1000)} {t("avgDuration")}

@@ -2,19 +2,7 @@
 
 import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
-import {
-  Avatar,
-  AvatarGroup,
-  Badge,
-  Card,
-  Flex,
-  Group,
-  SimpleGrid,
-  Stack,
-  Text,
-  Tooltip,
-  TooltipFloating,
-} from "@mantine/core";
+import { Avatar, AvatarGroup, Badge, Card, Flex, Group, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
 
@@ -177,10 +165,11 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
   const value = item.value(data, width <= 64 ? "sm" : "md");
 
   return (
-    <TooltipFloating label={tooltip} disabled={!tooltip} w={250} multiline>
+    <Tooltip label={tooltip} disabled={!tooltip} w={250} multiline events={{ hover: true, focus: true, touch: true }}>
       <Card
         ref={ref}
         component="section"
+        tabIndex={tooltip ? 0 : undefined}
         aria-label={`${label}: ${value}`}
         className="summary-card"
         p="sm"
@@ -223,7 +212,7 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
           </Flex>
         </Flex>
       </Card>
-    </TooltipFloating>
+    </Tooltip>
   );
 };
 

@@ -19,7 +19,7 @@ import { IconAutomation, IconCheck } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
-import { useI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 
@@ -61,6 +61,7 @@ export default function SmartHomeTriggerAutomationWidget({
   }, [canInteract, integrationId, isEditMode, isPending, mutateAsync, options.automationId]);
 
   const t = useI18n();
+  const locale = useCurrentIntlLocale();
   useRegisterSpotlightContextActions(
     `smartHome-automation-${options.automationId}`,
     [
@@ -150,7 +151,7 @@ export default function SmartHomeTriggerAutomationWidget({
                   <Text ta="center" size="xs" c="dimmed">
                     {lastExecutedAt
                       ? t("widget.smartHome-executeAutomation.advanced.lastExecuted", {
-                          time: lastExecutedAt.toLocaleTimeString(),
+                          time: lastExecutedAt.toLocaleTimeString(locale),
                         })
                       : t("widget.smartHome-executeAutomation.advanced.automationId", {
                           id: options.automationId,
