@@ -75,7 +75,14 @@ export default function AudioStatsWidget({
                       {currentlyPlaying.seasonName ?? currentlyPlaying.albumName ?? session.user.username}
                     </Text>
                   </Stack>
-                  <Badge variant="light" maw="40%" style={{ flexShrink: 0 }} title={session.sessionName}>
+                  <Badge
+                    variant="light"
+                    maw="40%"
+                    h="auto"
+                    py={4}
+                    style={{ flexShrink: 0 }}
+                    styles={{ label: { whiteSpace: "normal", overflowWrap: "anywhere", lineHeight: 1.2 } }}
+                  >
                     {session.sessionName}
                   </Badge>
                 </Group>
