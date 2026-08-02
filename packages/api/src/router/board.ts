@@ -691,25 +691,12 @@ export const boardRouter = createTRPCRouter({
   saveLayouts: protectedProcedure.input(boardSaveLayoutsSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
-    let board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
-    const missingGutterRoots = (["left", "right"] as const).filter(
-      (lane) =>
-        input.layouts.some((layout) => getBoardLaneColumnCount(layout, lane) > 0) &&
-        !getRootSectionForLane(board, lane),
+    const requiredGutterRoots = (["left", "right"] as const).filter((lane) =>
+      input.layouts.some((layout) => getBoardLaneColumnCount(layout, lane) > 0),
     );
-    if (missingGutterRoots.length > 0) {
-      await ctx.db.insert(sections).values(
-        missingGutterRoots.map((lane) => ({
-          id: createId(),
-          boardId: board.id,
-          kind: "empty" as const,
-          xOffset: rootSectionOffsets[lane],
-          yOffset: 0,
-          options: emptySuperJSON,
-        })),
-      );
-      board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
-    }
+    await ensureGutterRootSectionsAsync(ctx.db, input.id, requiredGutterRoots);
+
+    const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
 
     const addedLayouts = filterAddedItems(input.layouts, board.layouts);
 
@@ -1784,12 +1771,77 @@ interface BoardLayoutGeometry {
   rightGutterColumnCount: number;
 }
 
-const getRootSectionForLane = (board: Awaited<ReturnType<typeof getFullBoardWithWhereAsync>>, lane: BoardLane) => {
-  const roots = board.sections.filter(
-    (section) => section.kind === "empty" && getRootSectionLane(section.xOffset) === lane,
-  );
-  if (roots.length > 1) throw new Error(`Board "${board.id}" has multiple ${lane} canvas roots`);
-  return roots[0];
+type GutterLane = Exclude<BoardLane, "main">;
+
+const ensureGutterRootSectionsAsync = async (db: Database, boardId: string, lanes: readonly GutterLane[]) => {
+  if (lanes.length === 0) return;
+
+  const getMissingLanes = (existingOffsets: readonly (number | null)[]) =>
+    lanes.filter((lane) => {
+      const rootCount = existingOffsets.filter((offset) => offset === rootSectionOffsets[lane]).length;
+      if (rootCount > 1) throw new Error(`Board "${boardId}" has multiple ${lane} canvas roots`);
+      return rootCount === 0;
+    });
+  const getRows = (missingLanes: readonly GutterLane[]) =>
+    missingLanes.map((lane) => ({
+      id: createId(),
+      boardId,
+      kind: "empty" as const,
+      xOffset: rootSectionOffsets[lane],
+      yOffset: 0,
+      options: emptySuperJSON,
+    }));
+
+  await handleTransactionsAsync(db, {
+    async handleAsync(database, schema) {
+      await database.transaction(async (transaction) => {
+        await transaction
+          .select({ id: schema.boards.id })
+          .from(schema.boards)
+          .where(eq(schema.boards.id, boardId))
+          .for("update");
+
+        const existingRoots = await transaction
+          .select({ xOffset: schema.sections.xOffset })
+          .from(schema.sections)
+          .where(
+            and(
+              eq(schema.sections.boardId, boardId),
+              eq(schema.sections.kind, "empty"),
+              inArray(
+                schema.sections.xOffset,
+                lanes.map((lane) => rootSectionOffsets[lane]),
+              ),
+            ),
+          );
+        const rows = getRows(getMissingLanes(existingRoots.map(({ xOffset }) => xOffset)));
+        if (rows.length > 0) await transaction.insert(schema.sections).values(rows);
+      });
+    },
+    handleSync(database) {
+      database.transaction(
+        (transaction) => {
+          const existingRoots = transaction
+            .select({ xOffset: sections.xOffset })
+            .from(sections)
+            .where(
+              and(
+                eq(sections.boardId, boardId),
+                eq(sections.kind, "empty"),
+                inArray(
+                  sections.xOffset,
+                  lanes.map((lane) => rootSectionOffsets[lane]),
+                ),
+              ),
+            )
+            .all();
+          const rows = getRows(getMissingLanes(existingRoots.map(({ xOffset }) => xOffset)));
+          if (rows.length > 0) transaction.insert(sections).values(rows).run();
+        },
+        { behavior: "immediate" },
+      );
+    },
+  });
 };
 
 const getElementsForLayout = (board: Awaited<ReturnType<typeof getFullBoardWithWhereAsync>>, layoutId: string) => {

@@ -6,7 +6,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { getRootSectionLane } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
-import { useI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { Board, ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import { getLayoutRowCount } from "../layout";
@@ -53,7 +53,9 @@ type MoveTargetCandidate = Omit<MoveTarget, "label"> & {
 };
 
 export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) => {
-  const t = useI18n();
+  const tLandmark = useScopedI18n("board.landmark");
+  const tContainer = useScopedI18n("section.container");
+  const tMoveResize = useScopedI18n("item.moveResize");
   const { board, commitSectionGrids, currentLayoutId, entry, sourceSectionId } = innerProps;
   const minimumSize = useMemo(
     () => getEntryMinimumSize(board, currentLayoutId, entry),
@@ -62,19 +64,19 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
   const targets = useMemo(
     () =>
       getMoveTargets(board, currentLayoutId, entry, {
-        canvas: t("board.landmark.canvas"),
-        container: t("section.container.action.create"),
-        leftRail: t("board.landmark.leftRail"),
-        rightRail: t("board.landmark.rightRail"),
-        numbered: (name, index) => t("item.moveResize.target.numbered", { name, index: String(index) }),
+        canvas: tLandmark("canvas"),
+        container: tContainer("action.create"),
+        leftRail: tLandmark("leftRail"),
+        rightRail: tLandmark("rightRail"),
+        numbered: (name, index) => tMoveResize("target.numbered", { name, index: String(index) }),
         located: (name, location, index) =>
-          t("item.moveResize.target.located", {
+          tMoveResize("target.located", {
             name,
             location,
             index: String(index),
           }),
       }),
-    [board, currentLayoutId, entry, t],
+    [board, currentLayoutId, entry, tContainer, tLandmark, tMoveResize],
   );
   const targetById = useMemo(() => new Map(targets.map((target) => [target.id, target])), [targets]);
   const initialTarget = targetById.get(sourceSectionId) ?? targets[0];
@@ -127,7 +129,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
         target.columnCount,
       );
       if (target.maxRowCount !== null && getLayoutRowCount(resolvedTarget) > target.maxRowCount) {
-        form.setFieldError("height", t("item.moveResize.keyboard.boundary"));
+        form.setFieldError("height", tMoveResize("keyboard.boundary"));
         return;
       }
 
@@ -149,7 +151,18 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
       actions.closeModal();
       focusMovedEntry(entry.id, target.id);
     },
-    [actions, board, commitSectionGrids, currentLayoutId, entry, form, minimumSize, sourceSectionId, t, targetById],
+    [
+      actions,
+      board,
+      commitSectionGrids,
+      currentLayoutId,
+      entry,
+      form,
+      minimumSize,
+      sourceSectionId,
+      targetById,
+      tMoveResize,
+    ],
   );
 
   return (
@@ -157,7 +170,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
       <Stack>
         <Select
           data={targets.map((target) => ({ value: target.id, label: target.label }))}
-          label={t("item.moveResize.field.section.label")}
+          label={tMoveResize("field.section.label")}
           data-autofocus
           allowDeselect={false}
           searchable
@@ -166,7 +179,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
         <Grid>
           <Grid.Col span={{ base: 12, md: 6 }}>
             <NumberInput
-              label={t("item.moveResize.field.xOffset.label")}
+              label={tMoveResize("field.xOffset.label")}
               min={0}
               max={selectedTarget.columnCount - 1}
               {...form.getInputProps("xOffset")}
@@ -175,7 +188,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
 
           <Grid.Col span={{ base: 12, md: 6 }}>
             <NumberInput
-              label={t("item.moveResize.field.yOffset.label")}
+              label={tMoveResize("field.yOffset.label")}
               min={0}
               max={selectedTarget.maxRowCount === null ? undefined : selectedTarget.maxRowCount - 1}
               {...form.getInputProps("yOffset")}
@@ -184,7 +197,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
 
           <Grid.Col span={{ base: 12, md: 6 }}>
             <NumberInput
-              label={t("item.moveResize.field.width.label")}
+              label={tMoveResize("field.width.label")}
               min={minimumSize.width}
               max={selectedTarget.columnCount - Math.min(form.values.xOffset, selectedTarget.columnCount - 1)}
               {...form.getInputProps("width")}
@@ -193,7 +206,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
 
           <Grid.Col span={{ base: 12, md: 6 }}>
             <NumberInput
-              label={t("item.moveResize.field.height.label")}
+              label={tMoveResize("field.height.label")}
               min={minimumSize.height}
               max={
                 selectedTarget.maxRowCount === null

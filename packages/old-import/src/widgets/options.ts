@@ -148,6 +148,8 @@ const optionMapping: OptionMapping = {
   },
   mediaServer: {
     showOnlyPlaying: () => undefined,
+    showBitrate: () => undefined,
+    showLocation: () => undefined,
   },
   indexerManager: {
     openIndexerSiteInNewTab: (oldOptions) => oldOptions.openIndexerSiteInNewTab,

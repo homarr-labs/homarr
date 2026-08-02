@@ -1694,6 +1694,27 @@ describe("saveLayouts should save layout changes", () => {
     );
     expect(returnedItem.sectionId).toBe(sectionId);
   });
+  test("should create one gutter root when layouts are saved concurrently", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId } = await createFullBoardAsync(db, "concurrent-gutters");
+    const input = {
+      id: boardId,
+      layouts: [
+        {
+          ...createExistingLayout(layoutId),
+          leftGutterColumnCount: 2,
+        },
+      ],
+    };
+
+    await Promise.all([caller.saveLayouts(input), caller.saveLayouts(input)]);
+
+    const leftRoots = await db.query.sections.findMany({
+      where: and(eq(sections.boardId, boardId), eq(sections.kind, "empty"), eq(sections.xOffset, -1)),
+    });
+    expect(leftRoots).toHaveLength(1);
+  });
   test("should remove layout when not present in input", async () => {
     // Arrange
     const db = createDb();
