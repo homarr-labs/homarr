@@ -357,6 +357,8 @@ const ToolPart = ({
   const autoApproval = useAssistantAutoApproval();
   const [opened, setOpened] = useState(false);
   const [approvalResponse, setApprovalResponse] = useState<"approve" | "deny" | null>(null);
+  const [autoApprovalInProgress, setAutoApprovalInProgress] = useState(false);
+  const autoApprovalAttemptRef = useRef<string | null>(null);
   const completed = status?.type === "complete";
   const awaitingApproval = approval !== undefined && approval.approved === undefined && !approval.resolution;
   const denied = approval?.approved === false;
@@ -369,12 +371,23 @@ const ToolPart = ({
   const duration = timing?.completedAt !== undefined ? Math.max(0, timing.completedAt - timing.startedAt) : undefined;
 
   useEffect(() => {
-    if (!awaitingApproval || !autoApproval.enabled) return;
+    if (!awaitingApproval) {
+      autoApprovalAttemptRef.current = null;
+      setAutoApprovalInProgress(false);
+      return;
+    }
+    if (!autoApproval.enabled) {
+      setAutoApprovalInProgress(false);
+      return;
+    }
+    if (autoApprovalAttemptRef.current === toolCallId) return;
+    autoApprovalAttemptRef.current = toolCallId;
 
-    autoApproval.requestApproval(toolCallId, () => {
-      setApprovalResponse("approve");
+    const requested = autoApproval.requestApproval(toolCallId, () => {
       respondToApproval({ approved: true, reason: "Approved automatically by the user." });
+      setApprovalResponse("approve");
     });
+    setAutoApprovalInProgress(requested);
   }, [autoApproval, awaitingApproval, respondToApproval, toolCallId]);
 
   return (
@@ -429,7 +442,7 @@ const ToolPart = ({
             {t("approvalDescription")}
           </Text>
           <ToolResultPreview result={args} />
-          {autoApproval.enabled ? (
+          {autoApprovalInProgress ? (
             <Group className={classes.autoApprovalProgress} gap="sm" wrap="nowrap">
               <Loader type="bars" size="sm" color="green" />
               <Text size="sm" fw={600}>

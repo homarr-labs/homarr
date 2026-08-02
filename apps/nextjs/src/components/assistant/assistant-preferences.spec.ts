@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { resolveAssistantPreferenceModelId } from "./assistant-preferences";
+import { resolveAssistantPreferenceModelId, resolveAssistantThreadPreferenceModelId } from "./assistant-preferences";
 
 const models = [
   { id: "provider/default", name: "Default", inputModalities: ["text"] },
@@ -50,5 +50,43 @@ describe("resolveAssistantPreferenceModelId", () => {
         models,
       }),
     ).toBe("provider/default");
+  });
+});
+
+describe("resolveAssistantThreadPreferenceModelId", () => {
+  test("waits for an existing remote conversation's metadata", () => {
+    expect(
+      resolveAssistantThreadPreferenceModelId({
+        isRemote: true,
+        metadataLoaded: false,
+        threadModelId: undefined,
+        defaultModelId: "provider/default",
+        models,
+      }),
+    ).toBeUndefined();
+  });
+
+  test("uses the default immediately for a new local conversation", () => {
+    expect(
+      resolveAssistantThreadPreferenceModelId({
+        isRemote: false,
+        metadataLoaded: false,
+        threadModelId: undefined,
+        defaultModelId: "provider/default",
+        models,
+      }),
+    ).toBe("provider/default");
+  });
+
+  test("restores a valid persisted conversation model", () => {
+    expect(
+      resolveAssistantThreadPreferenceModelId({
+        isRemote: true,
+        metadataLoaded: true,
+        threadModelId: "provider/alternate",
+        defaultModelId: "provider/default",
+        models,
+      }),
+    ).toBe("provider/alternate");
   });
 });

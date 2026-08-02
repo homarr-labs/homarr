@@ -3,14 +3,14 @@
 import { Center, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconRobot } from "@tabler/icons-react";
 
-import { useI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { useAssistantWidgetRenderer } from "./context";
 
 export default function AssistantWidget(props: WidgetComponentProps<"assistant">) {
   const Renderer = useAssistantWidgetRenderer();
-  const t = useI18n();
+  const t = useScopedI18n("widget.assistant.unavailable");
 
   if (Renderer) return <Renderer {...props} />;
 
@@ -21,10 +21,10 @@ export default function AssistantWidget(props: WidgetComponentProps<"assistant">
           <IconRobot size={20} />
         </ThemeIcon>
         <Text size="sm" fw={600}>
-          {t("widget.assistant.unavailable.title")}
+          {t("title")}
         </Text>
         <Text size="xs" c="dimmed">
-          {t("widget.assistant.unavailable.description")}
+          {t("description")}
         </Text>
       </Stack>
     </Center>

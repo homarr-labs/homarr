@@ -32,7 +32,7 @@ import { AssistantAskUserTool, AssistantConfigureAppTool } from "./assistant-hum
 import { AssistantPanel } from "./assistant-panel";
 import { getPendingAssistantAction } from "./assistant-pending-action";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
-import { resolveAssistantPreferenceModelId } from "./assistant-preferences";
+import { resolveAssistantPreferenceModelId, resolveAssistantThreadPreferenceModelId } from "./assistant-preferences";
 import { AssistantRuntimeProviderWithTools } from "./assistant-runtime-provider";
 import { sendAssistantPrompt as sendPromptThroughComposer } from "./assistant-send";
 import { createAssistantPromptInteraction } from "./assistant-spotlight";
@@ -481,7 +481,9 @@ const AssistantPreferenceSync = () => {
   const preferences = useAssistantPreferences();
   // The local id distinguishes every thread immediately, including threads that do not have a remote id yet.
   const conversationId = useAuiState((state) => state.threadListItem.id);
-  const threadModelId = useAuiState((state) => state.threadListItem.custom?.modelId);
+  const remoteId = useAuiState((state) => state.threadListItem.remoteId);
+  const threadCustom = useAuiState((state) => state.threadListItem.custom);
+  const threadModelId = threadCustom?.modelId;
   const previousSyncKeyRef = useRef<string | null>(null);
   const modelCatalogKey = preferences.models.map((model) => model.id).join("\0");
 
@@ -489,14 +491,17 @@ const AssistantPreferenceSync = () => {
     if (preferences.models.length === 0) return;
     const syncKey = `${conversationId}:${modelCatalogKey}`;
     if (previousSyncKeyRef.current === syncKey) return;
+    const nextModelId = resolveAssistantThreadPreferenceModelId({
+      isRemote: remoteId !== undefined,
+      metadataLoaded: threadCustom !== undefined,
+      threadModelId,
+      defaultModelId: preferences.defaultModelId,
+      models: preferences.models,
+    });
+    if (nextModelId === undefined) return;
     previousSyncKeyRef.current = syncKey;
-    const storedModelId = typeof threadModelId === "string" ? threadModelId : null;
-    const nextModelId =
-      storedModelId && preferences.models.some((model) => model.id === storedModelId)
-        ? storedModelId
-        : preferences.defaultModelId;
     if (nextModelId) preferences.setModelId(nextModelId);
-  }, [conversationId, modelCatalogKey, preferences, threadModelId]);
+  }, [conversationId, modelCatalogKey, preferences, remoteId, threadCustom, threadModelId]);
 
   return null;
 };

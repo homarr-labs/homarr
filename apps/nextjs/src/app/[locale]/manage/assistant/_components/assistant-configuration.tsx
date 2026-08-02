@@ -101,8 +101,8 @@ const ConfigurationSection = ({ number, title, description, status, actions, chi
   </section>
 );
 
-const ConfigurationSkeleton = () => (
-  <Stack className={classes.configuration} gap="md" aria-label="Loading assistant configuration">
+const ConfigurationSkeleton = ({ label }: { label: string }) => (
+  <Stack className={classes.configuration} gap="md" aria-label={label}>
     <Paper withBorder p="md">
       <Group justify="space-between">
         <Group>
@@ -357,7 +357,7 @@ export const AssistantConfiguration = () => {
   };
 
   if (isLoading) {
-    return <ConfigurationSkeleton />;
+    return <ConfigurationSkeleton label={t("loading")} />;
   }
 
   return (
@@ -376,12 +376,12 @@ export const AssistantConfiguration = () => {
                   <Badge
                     size="sm"
                     variant="light"
-                    color={connectionReady ? "green" : connectionChanged ? "yellow" : "gray"}
+                    color={connectionChanged ? "yellow" : connectionReady ? "green" : "gray"}
                   >
-                    {connectionReady
-                      ? t("overview.connectionReady")
-                      : connectionChanged
-                        ? t("overview.unsavedChanges")
+                    {connectionChanged
+                      ? t("overview.unsavedChanges")
+                      : connectionReady
+                        ? t("overview.connectionReady")
                         : t("overview.setupRequired")}
                   </Badge>
                 </Group>
@@ -815,9 +815,7 @@ export const AssistantConfiguration = () => {
               </Box>
               <Group className={classes.selectedModelBadges} gap="xs" justify="flex-end">
                 {selectedModel.contextLength && (
-                  <Badge variant="light">
-                    {t("model.context", { count: selectedModel.contextLength.toLocaleString() })}
-                  </Badge>
+                  <Badge variant="light">{t("model.context", { count: selectedModel.contextLength })}</Badge>
                 )}
                 <Badge
                   variant="light"

@@ -6,7 +6,7 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { IconCheck } from "@tabler/icons-react";
 
 import { translateIfNecessary } from "@homarr/translation";
-import { useI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -19,16 +19,17 @@ export interface DynamicSelectOption {
 
 export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidgetInputProps<"dynamicSelect">) => {
   const t = useI18n();
+  const tSelect = useScopedI18n("widget.dynamicSelect");
   const tWidget = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
   const inputProps = form.getInputProps(`options.${property}`);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 300);
-  const { isPending, options: selectOptions } = options.useOptions(
-    debouncedSearch,
-    form.values.integrationIds,
-    form.values.options,
-  );
+  const {
+    isPending,
+    isError = false,
+    options: selectOptions,
+  } = options.useOptions(debouncedSearch, form.values.integrationIds, form.values.options);
   const currentOption = inputProps.value as DynamicSelectOption | null;
   const onChange = inputProps.onChange as (value: DynamicSelectOption | null) => void;
 
@@ -71,7 +72,7 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
       searchValue={search}
       onSearchChange={setSearch}
       placeholder={tWidget("placeholder")}
-      nothingFoundMessage={t("common.noResults")}
+      nothingFoundMessage={tSelect("noResults")}
       leftSection={isPending && <Loader size="xs" />}
       renderOption={({ option, checked }) => {
         return (
@@ -92,6 +93,8 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
       description={options.withDescription ? tWidget("description") : undefined}
       searchable
       {...inputProps}
+      disabled={isError}
+      error={isError ? tSelect("loadError") : inputProps.error}
       value={currentOption === null ? null : currentOption.value}
       onChange={(selectedValue: string | null) => {
         if (selectedValue === null) {

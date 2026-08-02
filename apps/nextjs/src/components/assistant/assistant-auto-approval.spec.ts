@@ -96,4 +96,31 @@ describe("assistant automatic approval tracker", () => {
 
     await act(async () => root.unmount());
   });
+
+  test("returns a failed approval to the caller and releases its claim", async () => {
+    const container = document.createElement("div");
+    containers.push(container);
+    document.body.append(container);
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        createElement(
+          AssistantAutoApprovalProvider,
+          { conversationId: "local-thread-1" },
+          createElement(AutoApprovalProbe),
+        ),
+      );
+    });
+    act(() => currentAutoApproval?.setEnabled(true));
+
+    expect(
+      currentAutoApproval?.requestApproval("app-create-1", () => {
+        throw new Error("Approval transport failed");
+      }),
+    ).toBe(false);
+    expect(currentAutoApproval?.requestApproval("app-create-1", () => undefined)).toBe(true);
+
+    await act(async () => root.unmount());
+  });
 });

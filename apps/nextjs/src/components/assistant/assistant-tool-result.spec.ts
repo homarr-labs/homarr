@@ -73,6 +73,30 @@ describe("getToolResultPresentation", () => {
     });
   });
 
+  test("removes URL credentials and query parameters from inline descriptions", () => {
+    expect(
+      getToolResultPresentation({
+        apps: [
+          {
+            name: "Sonarr",
+            url: "https://user:password@sonarr.example/api/v3/series?apikey=secret#calendar",
+          },
+        ],
+      }),
+    ).toEqual({
+      type: "collection",
+      totalCount: 1,
+      items: [
+        {
+          title: "Sonarr",
+          description: "https://sonarr.example/api/v3/series#calendar",
+          badges: [],
+          fields: [],
+        },
+      ],
+    });
+  });
+
   test("limits large collections while preserving their total", () => {
     const result = getToolResultPresentation({
       items: Array.from({ length: 8 }, (_, index) => ({ name: `Item ${index + 1}` })),

@@ -111,5 +111,8 @@ export type ConfigureBoardSettingsResult =
 
 export const normalizeAssistantAppIconUrl = (value: string | undefined) => {
   if (!value) return "";
-  return value.startsWith("/") || URL.canParse(value) ? value : "";
+  if (value.startsWith("/") && !value.startsWith("//")) return value;
+  if (!URL.canParse(value)) return "";
+  const protocol = new URL(value).protocol;
+  return protocol === "http:" || protocol === "https:" ? value : "";
 };

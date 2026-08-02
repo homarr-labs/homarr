@@ -36,10 +36,10 @@ interface UserAvatarMenuProps {
   isDockerEnabled?: boolean;
 }
 
-const formatHotkeyLabel = (hotkey: string) =>
+const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
   hotkey
     .split("+")
-    .map((key) => (key === "mod" ? "Mod" : `${key.charAt(0).toUpperCase()}${key.slice(1)}`))
+    .map((key) => (key === "mod" ? modifierLabel : `${key.charAt(0).toUpperCase()}${key.slice(1)}`))
     .join(" + ");
 
 export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnabled }: UserAvatarMenuProps) => {
@@ -104,7 +104,7 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
                       {t("assistantThinking")}
                     </Text>
                   ) : (
-                    <Kbd size="xs">{formatHotkeyLabel(hotkeys.openAssistant)}</Kbd>
+                    <Kbd size="xs">{formatHotkeyLabel(hotkeys.openAssistant, t("modifier"))}</Kbd>
                   )
                 }
                 onClick={assistant.open}
