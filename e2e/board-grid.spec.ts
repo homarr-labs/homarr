@@ -102,9 +102,13 @@ describe("Board grid", () => {
       await expect(railItem).toHaveAttribute("data-grid-x", "0");
       await expect(containerSection).toHaveAttribute("data-grid-w", "2");
       await expect(containerSection).toHaveAttribute("data-grid-h", "2");
-      await expect(containerSection.getByText("Nested box", { exact: true })).toBeVisible();
+      const containerLabel = containerSection.locator("[data-board-container-label]");
+      await expect(containerLabel).toHaveText("Nested box");
       await expect(nestedItem).toHaveAttribute("data-grid-x", "0");
       await expect(belowItem).toHaveAttribute("data-grid-y", "2");
+      const containerLabelBox = await expectBoundingBoxAsync(containerLabel);
+      const nestedItemBox = await expectBoundingBoxAsync(nestedItem.locator("[data-grid-item-content]"));
+      expect(containerLabelBox.y + containerLabelBox.height).toBeLessThanOrEqual(nestedItemBox.y + 0.5);
 
       const firstItem = page.locator(`[data-grid-item-id="${fixture.firstItemId}"]`);
       const secondItem = page.locator(`[data-grid-item-id="${fixture.secondItemId}"]`);
@@ -118,7 +122,14 @@ describe("Board grid", () => {
       const logicalTile = firstItem.locator("[data-grid-item-content]");
       await expect(logicalTile).toHaveCount(1);
       await expectFixedLogicalTileAsync(logicalTile);
+      await expect(logicalTile).toHaveCSS("overflow", "hidden");
       await expect(canvas).toHaveAttribute("data-canvas-overflow", "false");
+      await expectDocumentNotHorizontallyScrollableAsync(page);
+      const nestedAppLink = nestedItem.locator('a[href="#board-app-opened"]');
+      await expect(nestedAppLink).toBeVisible();
+      await nestedAppLink.click();
+      await expect(page).toHaveURL(/#board-app-opened$/);
+      await page.evaluate(() => history.replaceState(null, "", `${location.pathname}${location.search}`));
       const normalZoomTileBox = await expectBoundingBoxAsync(logicalTile);
       const normalCanvasScale = await readCanvasScaleAsync(canvas);
       const secondItemBox = await expectBoundingBoxAsync(secondItem);
@@ -172,9 +183,16 @@ describe("Board grid", () => {
         exact: true,
       });
       await collapseContainer.click();
-      await expect(containerSection).toHaveAttribute("data-grid-h", "1");
-      await expect(belowItem).toHaveAttribute("data-grid-y", "1");
+      await expect(containerSection).toHaveAttribute("data-grid-h", "0.5");
+      await expect(belowItem).toHaveAttribute("data-grid-y", "0.5");
       await expect(nestedItem).toHaveCount(0);
+      const collapsedControl = containerSection.getByRole("button", { name: "Expand: Nested box", exact: true });
+      await expect(collapsedControl).toBeVisible();
+      await expect(collapsedControl).toHaveAttribute("data-board-container-collapsed-control", "true");
+      const expectedCollapsedHeight = (logicalCellPitch * 0.5 - LOGICAL_GRID_GAP) * normalCanvasScale;
+      await expect
+        .poll(async () => (await expectBoundingBoxAsync(containerSection)).height)
+        .toBeCloseTo(expectedCollapsedHeight, 1);
 
       await page
         .getByRole("button", {
@@ -209,9 +227,7 @@ describe("Board grid", () => {
       await expect(firstKeyboardEntry).not.toHaveAttribute("aria-pressed");
       await expect(firstKeyboardEntry).not.toHaveAttribute("aria-grabbed");
       await expectTargetSizeAsync(firstItem);
-      const dragAffordance = firstItem.getByTestId("board-grid-drag-affordance");
-      await expect(dragAffordance).toBeVisible();
-      await expect(dragAffordance).toHaveCSS("pointer-events", "none");
+      await expect(firstItem.getByTestId("board-grid-drag-affordance")).toHaveCount(0);
       const firstResizeHandles = firstItem.locator(":scope > [data-grid-resize-handle]");
       await expect(firstResizeHandles).toHaveCount(8);
       expect(
@@ -259,6 +275,7 @@ describe("Board grid", () => {
 
       const mainGrid = page.locator(`[data-grid-section-id="${fixture.sectionId}"]`);
       const interactionSnapshot = await readEditorGridSnapshotAsync(mainGrid);
+      await expectGridBoundaryRejectsOverflowAsync(page, mainGrid, firstItem);
       await firstItem.locator("[data-grid-item-content]").evaluate((element) => {
         const iframe = document.createElement("iframe");
         iframe.dataset.e2eDragIframe = "true";
@@ -295,10 +312,21 @@ describe("Board grid", () => {
       await page.setViewportSize({ width: 1920, height: 1200 });
       await expect(page.locator(`[data-grid-runtime="${gridRuntimeMarker}"]`)).toHaveCount(3);
       await expect(canvas).toHaveAttribute("data-canvas-overflow", "false");
+      await expectDocumentNotHorizontallyScrollableAsync(page);
       await expect.poll(async () => await readEditorGridSnapshotAsync(mainGrid)).toEqual(interactionSnapshot);
 
       const settingsButton = firstItem.getByRole("button", { name: /^Settings for / });
+      await firstItem.hover();
+      const widgetHeader = firstItem.locator("[data-board-widget-header]");
+      await expect(widgetHeader).toBeVisible();
       const settingsBox = await expectBoundingBoxAsync(settingsButton);
+      const widgetHeaderBox = await expectBoundingBoxAsync(widgetHeader);
+      const firstItemBox = await expectBoundingBoxAsync(firstItem);
+      expect(settingsBox.y).toBeGreaterThanOrEqual(firstItemBox.y);
+      expect(settingsBox.y + settingsBox.height).toBeLessThanOrEqual(firstItemBox.y + firstItemBox.height);
+      expect(settingsBox.y).toBeLessThan(widgetHeaderBox.y + widgetHeaderBox.height);
+      expect(settingsBox.y + settingsBox.height).toBeGreaterThan(widgetHeaderBox.y);
+      await expect(settingsButton).toHaveCSS("border-radius", "4px");
       await page.mouse.move(settingsBox.x + settingsBox.width / 2, settingsBox.y + settingsBox.height / 2);
       await page.mouse.down();
       await page.mouse.move(settingsBox.x + settingsBox.width / 2 + 8, settingsBox.y + settingsBox.height / 2 + 8);
@@ -419,6 +447,37 @@ describe("Board grid", () => {
       await packedSecondKeyboardEntry.press("Escape");
       await expect(secondItem).toHaveAttribute("data-grid-h", "2");
 
+      const packedSecondBox = await expectBoundingBoxAsync(secondItem);
+      const initialMainGridBox = await expectBoundingBoxAsync(mainGrid);
+      await page.mouse.move(
+        packedSecondBox.x + packedSecondBox.width / 2,
+        packedSecondBox.y + packedSecondBox.height / 2,
+      );
+      await page.mouse.down();
+      await page.mouse.move(nestedGridBox.x + 1, packedSecondBox.y + packedSecondBox.height / 2, { steps: 8 });
+      await expect(mainGrid).toHaveAttribute("data-dnd-drop-target", "true");
+      await expect(nestedEditor).toHaveAttribute("data-dnd-drop-target", "false");
+      await page.mouse.move(
+        initialMainGridBox.x + logicalCellSize * canvasScale * 0.5,
+        initialMainGridBox.y + logicalCellSize * canvasScale * 0.5,
+        { steps: 8 },
+      );
+      await page.mouse.up();
+      await expect(secondItem.locator("xpath=ancestor::*[@data-grid-section-id][1]")).toHaveAttribute(
+        "data-grid-section-id",
+        fixture.sectionId,
+      );
+      await dragLocatorToImmediateReleaseAsync(
+        page,
+        secondItem,
+        nestedGridBox.x + logicalCellPitch * canvasScale * 1.5,
+        nestedGridBox.y + logicalCellSize * canvasScale * 0.5,
+      );
+      await expect(secondItem.locator("xpath=ancestor::*[@data-grid-section-id][1]")).toHaveAttribute(
+        "data-grid-section-id",
+        fixture.containerSectionId,
+      );
+
       const nestedSouthResizeHandle = nestedItem.locator(':scope > [data-grid-resize-handle="s"]');
       await expect(containerSection).toHaveAttribute("data-grid-section-chrome-active", "false");
       await expect(nestedSouthResizeHandle).not.toHaveAttribute("data-grid-resize-disabled");
@@ -458,10 +517,10 @@ describe("Board grid", () => {
       await expect(page.locator(`[data-grid-runtime="${gridRuntimeMarker}"]`)).toHaveCount(0);
       await page.reload();
       await expect(canvas).toHaveAttribute("data-board-hydrated", "true");
-      await expect(secondItem.locator("xpath=ancestor::*[@data-grid-section-id][1]")).toHaveAttribute(
-        "data-grid-section-id",
-        fixture.containerSectionId,
-      );
+      await expect(secondItem).toHaveCount(1);
+      const reloadedSecondItemGrid = secondItem.locator("xpath=ancestor::*[@data-grid-section-id][1]");
+      await expect(reloadedSecondItemGrid).toHaveCount(1);
+      await expect(reloadedSecondItemGrid).toHaveAttribute("data-grid-section-id", fixture.containerSectionId);
       await expect(containerSection.locator("xpath=ancestor::aside[1]")).toHaveAttribute("data-board-gutter", "left");
       await editToggle.click();
       await expect(page.locator(`[data-grid-runtime="${gridRuntimeMarker}"]`)).toHaveCount(3);
@@ -619,6 +678,12 @@ describe("Board grid", () => {
       expect(
         gridLayoutsOverlap(await readGridLayoutAsync(containerSection), await readGridLayoutAsync(belowItem)),
       ).toBe(false);
+
+      // Auto-scroll needs real document overflow. Grow the canvas through an
+      // explicit resize instead of relying on edit mode to add empty rows.
+      await dragLocatorByAsync(page, southResizeHandle, 0, logicalCellPitch * canvasScale * 6);
+      await expect(containerSection).toHaveAttribute("data-grid-h", "9");
+      await expect(belowItem).toHaveAttribute("data-grid-y", "9");
 
       await firstItem.evaluate((element) => element.scrollIntoView({ block: "center", behavior: "instant" }));
       const autoScrollStartBox = await expectBoundingBoxAsync(firstItem);
@@ -846,6 +911,7 @@ const seedBoardGridAsync = async (db: SqliteDatabase, creatorId: string) => {
   const belowItemId = createId();
   const nestedItemId = createId();
   const railItemId = createId();
+  const nestedAppId = createId();
 
   await db.insert(sqliteSchema.boards).values({
     id: boardId,
@@ -926,6 +992,12 @@ const seedBoardGridAsync = async (db: SqliteDatabase, creatorId: string) => {
       height: 2,
     },
   ]);
+  await db.insert(sqliteSchema.apps).values({
+    id: nestedAppId,
+    name: "Interactive nested app",
+    iconUrl: "/favicon.ico",
+    href: "#board-app-opened",
+  });
   await db.insert(sqliteSchema.items).values([
     {
       id: firstItemId,
@@ -948,8 +1020,15 @@ const seedBoardGridAsync = async (db: SqliteDatabase, creatorId: string) => {
     {
       id: nestedItemId,
       boardId,
-      kind: "clock",
-      options: stringifySuperJSON({ is24HourFormat: true }),
+      kind: "app",
+      options: stringifySuperJSON({
+        appId: nestedAppId,
+        descriptionDisplayMode: "hidden",
+        layout: "column",
+        openInNewTab: false,
+        pingEnabled: false,
+        showTitle: true,
+      }),
     },
     {
       id: railItemId,
@@ -1536,6 +1615,26 @@ const expectImmediateOutsideReleaseRestoresSnapshotAsync = async (page: Page, gr
   await expect.poll(async () => await readEditorGridSnapshotAsync(grid)).toEqual(snapshot);
 };
 
+const expectGridBoundaryRejectsOverflowAsync = async (page: Page, grid: Locator, locator: Locator) => {
+  const snapshot = await readEditorGridSnapshotAsync(grid);
+  const gridBox = await expectBoundingBoxAsync(grid);
+  const itemBox = await expectBoundingBoxAsync(locator);
+  const start = { x: itemBox.x + itemBox.width * 0.63, y: itemBox.y + itemBox.height * 0.42 };
+
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(start.x + 8, start.y);
+  await expect(locator).toHaveAttribute("data-dnd-drag-source", "true");
+  await page.mouse.move(gridBox.x + gridBox.width / 2, gridBox.y + gridBox.height + logicalCellPitch, { steps: 12 });
+  await expect(page.locator("[data-grid-placeholder-for]")).toHaveCount(0);
+  const activeGridBox = await expectBoundingBoxAsync(grid);
+  expect(activeGridBox.height).toBeCloseTo(gridBox.height, 1);
+
+  await page.mouse.up();
+  await expect(page.locator("body")).not.toHaveAttribute("data-board-grid-interacting");
+  await expect.poll(async () => await readEditorGridSnapshotAsync(grid)).toEqual(snapshot);
+};
+
 const expectInvalidNestedDropRestoresSnapshotAsync = async (
   page: Page,
   sourceGrid: Locator,
@@ -1847,6 +1946,15 @@ const expectHorizontalOverflowAsync = async (locator: Locator) => {
   });
 
   expect(dimensions.scrollWidth).toBeGreaterThan(dimensions.clientWidth);
+};
+
+const expectDocumentNotHorizontallyScrollableAsync = async (page: Page) => {
+  await expect
+    .poll(
+      async () =>
+        await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth),
+    )
+    .toBeLessThanOrEqual(1);
 };
 
 const expectTargetSizeAsync = async (locator: Locator) => {

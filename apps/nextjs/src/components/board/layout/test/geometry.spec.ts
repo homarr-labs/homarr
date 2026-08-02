@@ -5,6 +5,7 @@ import { getLayoutRowCount, getLogicalItemStyle, getLogicalTrackSize, normalizeG
 describe("fixed dashboard geometry", () => {
   test("keeps a 1x1 item exactly 200px with a fixed 24px gap", () => {
     expect(getLogicalTrackSize(1)).toBe(200);
+    expect(getLogicalTrackSize(0.5)).toBe(88);
     expect(getLogicalTrackSize(2)).toBe(424);
     expect(getLogicalTrackSize(3)).toBe(648);
 

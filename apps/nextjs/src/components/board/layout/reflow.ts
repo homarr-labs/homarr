@@ -63,21 +63,21 @@ export const getCollapsedDisplayLayout = <TPlacement extends GridPlacement>(
   placements: readonly TPlacement[],
   { columnCount, collapsedItemIds, collapsedRowCount = COLLAPSED_SECTION_ROW_COUNT }: CollapsedLayoutOptions,
 ): TPlacement[] => {
-  if (collapsedRowCount < 1 || !Number.isInteger(collapsedRowCount)) {
-    throw new RangeError("collapsedRowCount must be a positive integer");
+  if (!Number.isFinite(collapsedRowCount) || collapsedRowCount <= 0) {
+    throw new RangeError("collapsedRowCount must be positive and finite");
   }
 
-  return reflowVerticalLayout(
-    placements.map((placement) =>
-      collapsedItemIds.has(placement.id)
-        ? {
-            ...placement,
-            h: collapsedRowCount,
-          }
-        : placement,
-    ),
-    { columnCount },
+  const normalized = placements.map((placement) => normalizeGridPlacement(placement, columnCount));
+  const displayPlacements = normalized.map((placement) =>
+    collapsedItemIds.has(placement.id)
+      ? {
+          ...placement,
+          h: collapsedRowCount,
+        }
+      : placement,
   );
+
+  return reflowDisplayLayout(displayPlacements);
 };
 
 /**
@@ -116,6 +116,21 @@ const findFirstAvailableRow = (candidate: GridPlacement, placed: readonly GridPl
 
     y = Math.max(...collisions.map((placement) => placement.y + placement.h));
   }
+};
+
+const reflowDisplayLayout = <TPlacement extends GridPlacement>(placements: readonly TPlacement[]): TPlacement[] => {
+  assertUniqueIds(placements);
+  const placed: TPlacement[] = [];
+
+  for (const candidate of placements.toSorted(comparePlacements)) {
+    placed.push({
+      ...candidate,
+      y: findFirstAvailableRow(candidate, placed),
+    });
+  }
+
+  const byId = new Map(placed.map((placement) => [placement.id, placement]));
+  return placements.map((placement) => getRequiredPlacement(byId, placement.id));
 };
 
 const comparePlacements = (first: GridPlacement, second: GridPlacement) =>

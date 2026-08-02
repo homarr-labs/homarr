@@ -43,46 +43,6 @@
   border-radius: var(--mantine-radius-md);
 }
 
-.dragAffordance {
-  position: absolute;
-  top: 6px;
-  left: 50%;
-  z-index: 7;
-  display: grid;
-  width: 28px;
-  height: 18px;
-  color: var(--mantine-color-dimmed);
-  pointer-events: none;
-  place-items: center;
-  background-color: color-mix(in srgb, var(--mantine-color-body) 88%, transparent);
-  border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-xl);
-  opacity: 0.8;
-  transform: translateX(-50%);
-  transition:
-    color 160ms ease,
-    background-color 160ms ease,
-    border-color 160ms ease,
-    opacity 160ms ease;
-}
-
-.dragAffordance::before {
-  width: 12px;
-  height: 8px;
-  content: "";
-  background-image: radial-gradient(circle, currentColor 1.25px, transparent 1.5px);
-  background-size: 6px 4px;
-}
-
-.editorEntry:hover .dragAffordance,
-.editorEntry:focus-visible .dragAffordance,
-.editorEntry[data-keyboard-editing="true"] .dragAffordance {
-  color: var(--mantine-primary-color-filled);
-  background-color: var(--mantine-color-body);
-  border-color: var(--mantine-primary-color-filled);
-  opacity: 1;
-}
-
 .editorLoading {
   position: absolute;
   inset: 0;
@@ -109,8 +69,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .staticItem,
-  .dragAffordance {
+  .staticItem {
     transition: none;
   }
 }

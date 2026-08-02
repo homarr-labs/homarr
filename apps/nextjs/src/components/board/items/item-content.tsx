@@ -30,9 +30,8 @@ interface BoardItemContentProps {
 }
 
 const getOverflowFromKind = (kind: SectionItem["kind"]) => {
-  if (kind === "iframe") return "hidden";
   if (kind === "systemResources") return "visible";
-  return undefined;
+  return "hidden";
 };
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
@@ -125,7 +124,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
           }}
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
-              {isEditMode && <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />}
+              {isEditMode && <BoardItemMenu item={newItem} resetErrorBoundary={resetErrorBoundary} />}
               <div
                 className={itemContentClasses.editModeInertContent}
                 data-board-grid-inert-content={isEditMode ? "true" : undefined}
@@ -144,7 +143,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
               (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />
-          {isEditMode && <BoardItemMenu offset={4} item={newItem} />}
+          {isEditMode && <BoardItemMenu item={newItem} />}
           <div
             className={itemContentClasses.editModeInertContent}
             data-board-grid-inert-content={isEditMode ? "true" : undefined}

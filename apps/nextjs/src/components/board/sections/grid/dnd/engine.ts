@@ -41,10 +41,10 @@ export const beginGridTransaction = <TPlacement extends GridPlacement>(
 };
 
 /**
- * Computes a move preview from the transaction snapshot. Same-grid exact-slot
- * drops swap items when both resulting placements remain valid; every other
- * move pins the active item and pushes only actual collisions. Intentional
- * empty rows remain untouched.
+ * Computes a move preview from the transaction snapshot. Same-grid moves that
+ * collide with one item swap into that item's slot when both resulting
+ * placements remain valid; every other move pins the active item and pushes
+ * only actual collisions. Intentional empty rows remain untouched.
  */
 export const previewGridMove = <TPlacement extends GridPlacement>(
   transaction: GridTransaction<TPlacement>,
@@ -147,13 +147,14 @@ const previewSameGridMove = <TPlacement extends GridPlacement>(
   const previewGrid = getGrid(preview, grid.id);
   if (areCoordinatesEqual(active, nextActive)) return preview;
 
-  const displaced = grid.placements.find(
-    (placement) => placement.id !== active.id && placement.x === nextActive.x && placement.y === nextActive.y,
+  const collisions = grid.placements.filter(
+    (placement) => placement.id !== active.id && doGridPlacementsOverlap(placement, nextActive),
   );
+  const displaced = collisions.length === 1 ? collisions[0] : undefined;
 
   const swapped = displaced
     ? grid.placements.map((placement) => {
-        if (placement.id === active.id) return { ...placement, x: nextActive.x, y: nextActive.y };
+        if (placement.id === active.id) return { ...placement, x: displaced.x, y: displaced.y };
         if (placement.id === displaced.id) return { ...placement, x: active.x, y: active.y };
         return { ...placement };
       })

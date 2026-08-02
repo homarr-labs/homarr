@@ -46,9 +46,10 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem 
       <Menu.Target>
         <ActionIcon
           variant="default"
-          radius="xl"
+          size={24}
+          radius="sm"
           pos="absolute"
-          top={4}
+          top={-24}
           right={menuRightOffset}
           style={{ zIndex: 10 }}
           aria-label={tItem("menu.label.settingsFor", { name: label })}

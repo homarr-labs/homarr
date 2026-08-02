@@ -16,7 +16,6 @@ import { useItemActions } from "./item-actions";
 import { useOpenItemMoveModal } from "./item-move-modal";
 
 interface BoardItemMenuProps {
-  offset: number;
   item: SectionItem;
   resetErrorBoundary?: () => void;
 }
@@ -28,7 +27,7 @@ export const BoardItemMenu = (props: BoardItemMenuProps) => {
   return <BoardItemMenuInner {...props} />;
 };
 
-const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuProps) => {
+const BoardItemMenuInner = ({ item, resetErrorBoundary }: BoardItemMenuProps) => {
   const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useScopedI18n("item");
   const t = useI18n();
@@ -43,7 +42,6 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
   const { section } = useSectionContext();
   const settings = useSettings();
   const label = item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`);
-  const menuRightOffset = section.kind === "container" ? offset + 40 : offset;
 
   // Reset error boundary on next render if item has been edited
   useEffect(() => {
@@ -112,14 +110,16 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
       <Menu.Target>
         <ActionIcon
           variant="default"
-          radius={"xl"}
+          size={24}
+          radius="sm"
           pos="absolute"
-          top={offset}
-          right={menuRightOffset}
+          top={12}
+          right={8}
           style={{ zIndex: 10 }}
+          data-board-widget-settings
           aria-label={tItem("menu.label.settingsFor", { name: label })}
         >
-          <IconDotsVertical size={"1rem"} />
+          <IconDotsVertical size="1rem" />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>

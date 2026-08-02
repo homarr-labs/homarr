@@ -36,6 +36,7 @@ import {
   beginGridTransaction,
   cancelGridTransaction,
   commitGridTransaction,
+  getPreferredNestedExitTargetId,
   getPointerProjectedShape,
   getSnappedGridCoordinates,
   getSnappedGridDelta,
@@ -51,13 +52,11 @@ import { useGridLayoutActions } from "./use-grid-layout-actions";
 
 const GRID_ENTRY_TYPE = "homarr-board-grid-entry";
 const GRID_TARGET_TYPE = "homarr-board-grid-target";
-const EDIT_ROW_BUFFER = 8;
 
 interface GridEditorProps {
   sectionId: string;
   columnCount: number;
   rowCount: number;
-  fixedRowCount: boolean;
   placements: readonly SectionGridPlacement[];
   className: string;
 }
@@ -286,18 +285,11 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
   const updateDragPreview = useCallback(
     (
       operation: DragMoveEvent["operation"],
-      projectedShape?: { left: number; top: number },
+      projectedShape?: { left: number; top: number; width: number; height: number },
       targetOverride?: RegisteredGrid | null,
     ) => {
       const active = activeRef.current;
       const source = operation.source;
-      const targetData = operation.target ? getGridTargetData(operation.target) : null;
-      const targetGrid =
-        targetOverride === undefined
-          ? targetData
-            ? gridsRef.current.get(targetData.sectionId)
-            : undefined
-          : (targetOverride ?? undefined);
       if (!active || active.mode !== "drag") return;
 
       const publishPreview = (preview: Omit<GridInteraction, "previewRevision">) => {
@@ -321,7 +313,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         });
       };
 
-      if (!source || !targetGrid) {
+      if (!source) {
         showInvalidPreview(null, "invalid:no-target");
         return;
       }
@@ -329,7 +321,24 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
       const sourceData = getGridEntryData(source);
       const shape = projectedShape ?? operation.shape?.current.boundingRectangle;
       if (!sourceData || !shape) {
-        showInvalidPreview(targetGrid.id, `invalid:${targetGrid.id}:shape`);
+        showInvalidPreview(null, "invalid:shape");
+        return;
+      }
+
+      const targetData = operation.target ? getGridTargetData(operation.target) : null;
+      const pointerTargetGrid = targetData ? gridsRef.current.get(targetData.sectionId) : undefined;
+      const targetGrid =
+        targetOverride === undefined
+          ? getPreferredRegisteredGridTarget(
+              gridsRef.current.values(),
+              sourceData.sectionId,
+              pointerTargetGrid,
+              shape,
+              (targetGridId) => isDropTargetEligible(source, targetGridId),
+            )
+          : (targetOverride ?? undefined);
+      if (!targetGrid) {
+        showInvalidPreview(null, "invalid:no-target");
         return;
       }
 
@@ -394,7 +403,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         valid: true,
       });
     },
-    [canAcceptDrop],
+    [canAcceptDrop, isDropTargetEligible],
   );
 
   const commitActiveTransaction = useCallback(
@@ -507,11 +516,12 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
       if (!canceled) {
         const source = operation.source;
         const pointer = getPointerCoordinates(source?.element, nativeEvent);
+        const active = activeRef.current;
+        const finalShape = getProjectedDragShape(operation, active?.dragProjection ?? null, pointer);
         const finalTarget =
           source && pointer
-            ? getPointerTargetGrid(gridsRef.current.values(), source, pointer, isDropTargetEligible)
+            ? getPointerTargetGrid(gridsRef.current.values(), source, pointer, finalShape, isDropTargetEligible)
             : undefined;
-        const active = activeRef.current;
 
         // The rendered placeholder is the drop contract. During auto-scroll,
         // dnd-kit's final geometry can advance between the last collision pass
@@ -703,14 +713,7 @@ const GridCollisionSynchronizer = ({ interaction }: { interaction: GridInteracti
 };
 
 /** A section-local dnd-kit canvas registered with the board transaction. */
-export default function GridEditor({
-  sectionId,
-  columnCount,
-  rowCount,
-  fixedRowCount,
-  placements,
-  className,
-}: GridEditorProps) {
+export default function GridEditor({ sectionId, columnCount, rowCount, placements, className }: GridEditorProps) {
   const t = useI18n();
   const { section, items, innerSections } = useSectionContext();
   const { interaction, registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditor();
@@ -740,14 +743,9 @@ export default function GridEditor({
     interaction?.mode === "drag" && interaction.valid && interaction.targetGridId === sectionId
       ? interaction.targetPlacement
       : null;
-  const renderedRowCount = fixedRowCount
-    ? rowCount
-    : interaction
-      ? Math.max(
-          rowCount + EDIT_ROW_BUFFER,
-          getLayoutRowCount(previewGrid?.placements ?? placements) + EDIT_ROW_BUFFER,
-          targetPlacement ? targetPlacement.y + targetPlacement.h + EDIT_ROW_BUFFER : 0,
-        )
+  const renderedRowCount =
+    section.kind !== "container" && interaction?.mode === "resize"
+      ? Math.max(rowCount, getLayoutRowCount(renderPlacements))
       : rowCount;
 
   const { ref: droppableRef, isDropTarget } = useDroppable<GridTargetData>({
@@ -761,6 +759,7 @@ export default function GridEditor({
     // through to an accepting parent grid underneath the pointer.
     accept: (source) => isDropTargetEligible(source, sectionId),
   });
+  const isIntentTarget = interaction?.mode === "drag" ? interaction.targetGridId === sectionId : isDropTarget;
 
   const setGridRef = useCallback(
     (element: HTMLDivElement | null) => {
@@ -776,24 +775,14 @@ export default function GridEditor({
     return registerGrid({
       id: sectionId,
       columnCount,
-      maxRowCount: fixedRowCount ? rowCount : null,
+      maxRowCount: section.kind === "container" ? rowCount : null,
       parentGridId,
       ownerPlacementId,
       placements,
       depth,
       element,
     });
-  }, [
-    columnCount,
-    depth,
-    fixedRowCount,
-    ownerPlacementId,
-    parentGridId,
-    placements,
-    registerGrid,
-    rowCount,
-    sectionId,
-  ]);
+  }, [columnCount, depth, ownerPlacementId, parentGridId, placements, registerGrid, rowCount, section.kind, sectionId]);
 
   useLayoutEffect(() => {
     const viewport = gridRef.current?.parentElement;
@@ -810,8 +799,8 @@ export default function GridEditor({
       className={className}
       data-grid-section-id={sectionId}
       data-grid-depth={depth}
-      data-dnd-drop-target={isDropTarget ? "true" : "false"}
-      data-dnd-drop-valid={isDropTarget ? String(targetPlacement !== null) : undefined}
+      data-dnd-drop-target={isIntentTarget ? "true" : "false"}
+      data-dnd-drop-valid={isIntentTarget ? String(targetPlacement !== null) : undefined}
       data-dnd-preview-revision={interaction?.targetGridId === sectionId ? interaction.previewRevision : undefined}
       style={
         {
@@ -1097,7 +1086,7 @@ const getProjectedDragShape = (
 ) => {
   if (origin && pointer) return getPointerProjectedShape(origin, pointer);
   const shape = operation.shape?.current.boundingRectangle;
-  return shape ? { left: shape.left, top: shape.top } : undefined;
+  return shape ? { left: shape.left, top: shape.top, width: shape.width, height: shape.height } : undefined;
 };
 
 const getInitialDragProjection = (
@@ -1112,6 +1101,8 @@ const getInitialDragProjection = (
     initialShape: {
       left: rectangle.left * frame.scaleX + frame.x,
       top: rectangle.top * frame.scaleY + frame.y,
+      width: rectangle.width * frame.scaleX,
+      height: rectangle.height * frame.scaleY,
     },
   };
 };
@@ -1150,9 +1141,11 @@ const getPointerTargetGrid = (
   grids: Iterable<RegisteredGrid>,
   source: AbstractDraggable,
   pointer: { x: number; y: number },
+  projectedShape: { left: number; top: number; width: number; height: number } | undefined,
   isTargetEligible: (source: AbstractDraggable, targetGridId: string) => boolean,
-) =>
-  Array.from(grids)
+) => {
+  const registeredGrids = Array.from(grids);
+  const pointerTarget = registeredGrids
     .filter((grid) => {
       const rectangle = grid.element.getBoundingClientRect();
       return (
@@ -1170,7 +1163,41 @@ const getPointerTargetGrid = (
       const firstRectangle = first.element.getBoundingClientRect();
       const secondRectangle = second.element.getBoundingClientRect();
       return firstRectangle.width * firstRectangle.height - secondRectangle.width * secondRectangle.height;
-    })[0] ?? null;
+    })[0];
+  const sourceData = getGridEntryData(source);
+  if (!pointerTarget || !projectedShape || !sourceData) return pointerTarget ?? null;
+
+  return getPreferredRegisteredGridTarget(
+    registeredGrids,
+    sourceData.sectionId,
+    pointerTarget,
+    projectedShape,
+    (targetGridId) => isTargetEligible(source, targetGridId),
+  );
+};
+
+const getPreferredRegisteredGridTarget = (
+  grids: Iterable<RegisteredGrid>,
+  sourceGridId: string,
+  pointerTarget: RegisteredGrid | undefined,
+  dragShape: { left: number; top: number; width: number; height: number },
+  isEligible: (gridId: string) => boolean,
+) => {
+  if (!pointerTarget) return undefined;
+  const registeredGrids = Array.from(grids);
+  const preferredId = getPreferredNestedExitTargetId({
+    grids: registeredGrids.map((grid) => ({
+      id: grid.id,
+      parentGridId: grid.parentGridId,
+      rectangle: grid.element.getBoundingClientRect(),
+    })),
+    pointerTargetId: pointerTarget.id,
+    sourceGridId,
+    dragShape,
+    isEligible,
+  });
+  return registeredGrids.find((grid) => grid.id === preferredId) ?? pointerTarget;
+};
 
 const doesPreviewDisplaceNestedGridOwner = (
   snapshot: TransactionalGridState<SectionGridPlacement>,

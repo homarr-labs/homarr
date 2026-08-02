@@ -106,7 +106,8 @@ When adding a new layout, its initial positions and sizes are generated from the
 New items use their widget's default grid size, while a new Container starts at a useful `4 × 3` size when the layout has enough columns.
 Both are placed in the first available position.
 
-Moving content downward in edit mode extends the canvas automatically, while view mode trims it back to the content.
+The current board edge is a hard drag boundary, so moving a tile outside the canvas cancels that placement instead of creating empty rows.
+Adding content can still create the rows required for the new tile.
 Nested Containers keep their own resizable bounds.
 
 #### Name
@@ -143,14 +144,14 @@ Once the minimum of the next layout is reached, the layout will change.
 View mode renders a static board without executing the drag-and-drop editor.
 After the board is interactive, Homarr prepares the editor in the background for users who can modify it.
 Entering edit mode keeps the static board visible until that preparation finishes, then enables collision-aware movement and resizing without changing the board geometry.
-Widget content is inert in edit mode, so dragging anywhere on the content moves the tile instead of activating the widget; the visible grip and tile outline indicate the active move surface, while the tile's settings button remains available.
+Widget content is inert in edit mode, so dragging anywhere on the content moves the tile instead of activating the widget; its settings button remains visible in the compact header above the tile.
 Dropping a tile into another tile's exact slot swaps their positions when both resulting placements fit without overlapping other content.
 For other collisions, or when a tile grows into occupied space, nearby tiles are compacted out of the way.
 The visible corner controls provide a 44-pixel resize target, and edge controls appear on hover for horizontal or vertical resizing.
 Resize handles stop at the tile's minimum allowed size while the pointer is still moving.
 Exit edit mode to save the resulting positions.
 
-Pointer users can drag anywhere on a tile; the grip is a visual cue for that move surface rather than a separate control.
+Pointer users can drag anywhere on a widget tile. Containers use the grab button at their top-left corner.
 Resize tiles from any edge or corner handle.
 On a touch screen, press and hold the tile before moving it; resize handles support direct touch input.
 Keyboard users can focus a tile, press Enter or Space to start editing, use the arrow keys to move it, and use Shift plus the arrow keys to resize it.
@@ -179,7 +180,7 @@ Each Container can configure:
 - Whether its menu shows **Open all in new tabs** for the app links it contains.
 - Its border color and custom CSS classes.
 
-Collapsing a Container compacts the surrounding layout without losing its expanded size.
+Collapsing a Container reduces it to a half-row expansion pill and compacts the surrounding layout without losing its expanded size.
 Expanding it restores those bounds and moves following items out of the way.
 
 ### Background

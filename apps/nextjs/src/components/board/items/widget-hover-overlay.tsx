@@ -33,7 +33,7 @@ export const WidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayPro
   }
 
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.wrapper} data-board-widget-header>
       <div className={classes.panel}>
         <div className={classes.nameSection}>
           <WidgetIcon size={14} stroke={1.75} className={classes.widgetIcon} />

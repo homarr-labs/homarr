@@ -17,7 +17,7 @@ describe("dnd grid coordinates", () => {
   test("uses the dragged shape origin so a non-center grab retains its pointer offset", () => {
     const scale = 0.75;
     const target = { left: -280, top: 390, width: getLogicalTrackSize(5) * scale };
-    const initialShape = { left: target.left, top: target.top };
+    const initialShape = { left: target.left, top: target.top, width: 424 * scale, height: 200 * scale };
     const pointerDelta = { x: LOGICAL_GRID_PITCH * scale * 2, y: LOGICAL_GRID_PITCH * scale * 3 };
 
     expect(
@@ -37,6 +37,8 @@ describe("dnd grid coordinates", () => {
     const initialShape = {
       left: target.left + 4 * LOGICAL_GRID_PITCH * scale,
       top: target.top + 8 * LOGICAL_GRID_PITCH * scale,
+      width: getLogicalTrackSize(2) * scale,
+      height: getLogicalTrackSize(2) * scale,
     };
     const initialPointer = { x: initialShape.left + 134 * scale, y: initialShape.top + 89 * scale };
     const dragShape = getPointerProjectedShape(
@@ -45,6 +47,7 @@ describe("dnd grid coordinates", () => {
     );
 
     expect(dragShape.left).toBe(initialShape.left);
+    expect(dragShape).toMatchObject({ width: initialShape.width, height: initialShape.height });
     expect(getSnappedGridCoordinates({ dragShape, target, columnCount: 8 })).toEqual({ x: 4, y: 7 });
   });
 

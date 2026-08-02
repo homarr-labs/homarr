@@ -2,10 +2,6 @@
   position: absolute;
   inset: 0 auto auto 0;
   overflow: visible;
-  background-image:
-    linear-gradient(to right, color-mix(in srgb, var(--mantine-color-dimmed) 18%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, var(--mantine-color-dimmed) 18%, transparent) 1px, transparent 1px);
-  background-size: var(--board-grid-pitch) var(--board-grid-pitch);
   border-radius: var(--mantine-radius-md);
 }
 
@@ -169,11 +165,11 @@ body[data-board-grid-interacting] .board-grid-placeholder {
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="n"] {
-  top: -12px;
+  top: 0;
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="s"] {
-  bottom: -12px;
+  bottom: 0;
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="e"],
@@ -185,11 +181,11 @@ body[data-board-grid-interacting] .board-grid-placeholder {
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="e"] {
-  right: -12px;
+  right: 0;
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="w"] {
-  left: -12px;
+  left: 0;
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="e"]::after,
@@ -208,26 +204,26 @@ body[data-board-grid-interacting] .board-grid-placeholder {
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="ne"] {
-  top: -12px;
-  right: -12px;
+  top: 0;
+  right: 0;
   cursor: nesw-resize;
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="se"] {
-  right: -12px;
-  bottom: -12px;
+  right: 0;
+  bottom: 0;
   cursor: nwse-resize;
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="sw"] {
-  bottom: -12px;
-  left: -12px;
+  bottom: 0;
+  left: 0;
   cursor: nesw-resize;
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="nw"] {
-  top: -12px;
-  left: -12px;
+  top: 0;
+  left: 0;
   cursor: nwse-resize;
 }
 

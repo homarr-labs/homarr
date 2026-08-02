@@ -4,7 +4,7 @@ import { LOGICAL_GRID_CELL_SIZE, LOGICAL_GRID_GAP, LOGICAL_GRID_PITCH } from "./
 import type { GridCoordinates, GridPlacement } from "./types";
 
 export const getLogicalTrackSize = (trackCount: number) => {
-  const normalizedTrackCount = toNonNegativeInteger(trackCount);
+  const normalizedTrackCount = Math.max(0, toFiniteNumber(trackCount, "trackCount"));
   if (normalizedTrackCount === 0) return 0;
 
   return normalizedTrackCount * LOGICAL_GRID_CELL_SIZE + (normalizedTrackCount - 1) * LOGICAL_GRID_GAP;
