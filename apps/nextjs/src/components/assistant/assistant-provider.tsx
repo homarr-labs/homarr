@@ -535,7 +535,8 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const aui = useAui();
   const preferences = useAssistantPreferences();
   const messages = useAuiState((state) => state.thread.messages);
-  const conversationId = useAuiState((state) => state.threadListItem.remoteId);
+  // The local id is stable while a new thread is initialized and changes for every real thread switch.
+  const conversationId = useAuiState((state) => state.threadListItem.id);
   const isRunning = useAuiState((state) => state.thread.isRunning);
   const isLoading = useAuiState((state) => state.thread.isLoading);
   const latestAssistantMessage = getLatestMessage(messages, "assistant");
