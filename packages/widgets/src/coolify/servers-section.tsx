@@ -42,7 +42,7 @@ export function ServersSection({
           </Group>
           <ActionIcon
             className={actionTargetClasses.root}
-            aria-label={`${showIp ? tCommon("action.hide") : tCommon("action.show")} IP`}
+            aria-label={t(showIp ? "action.hideIp" : "action.showIp")}
             size="xs"
             variant="subtle"
             c="dimmed"

@@ -3,6 +3,8 @@
 import { ActionIcon, Anchor, Group, Indicator, Stack, Text } from "@mantine/core";
 import { IconFileText, IconLink } from "@tabler/icons-react";
 
+import { useScopedI18n } from "@homarr/translation/client";
+
 import actionTargetClasses from "../common/action-target.module.css";
 import { cleanFqdn, getResourceTimestamp, getStatusColor, parseStatus } from "./coolify-utils";
 
@@ -25,6 +27,7 @@ interface ResourceRowProps {
 }
 
 export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRowProps) {
+  const t = useScopedI18n("widget.coolify");
   const status = parseStatus(item.status ?? "");
   const statusColor = getStatusColor(status);
 
@@ -64,7 +67,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             href={cleanFqdn(item.fqdn)}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Open ${item.name}`}
+            aria-label={t("action.openResource", { name: item.name })}
             size="xs"
             variant="subtle"
             c="dimmed"
@@ -79,7 +82,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             href={logsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Open ${item.name} logs`}
+            aria-label={t("action.openLogs", { name: item.name })}
             size="xs"
             variant="subtle"
             c="dimmed"
