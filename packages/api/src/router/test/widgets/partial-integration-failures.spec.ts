@@ -21,7 +21,7 @@ vi.hoisted(() => {
 
 const createHandler = <T>(integration: { name: string }, data: T) => ({
   getDataAsync: async () => {
-    if (integration.name === "Offline") throw new Error("offline");
+    if (integration.name === "Offline") throw new Error("offline https://internal.example?token=secret");
     return { data, timestamp: new Date() };
   },
 });
@@ -119,9 +119,13 @@ describe("partial integration failures", () => {
       });
     expect(calendarResults).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ integration: expect.objectContaining({ id: calendar.offlineId }), error: "offline" }),
+        expect.objectContaining({
+          integration: expect.objectContaining({ id: calendar.offlineId }),
+          error: "Integration request failed",
+        }),
       ]),
     );
+    expect(JSON.stringify(calendarResults)).not.toContain("secret");
 
     const mediaServer = await setupAsync("plex");
     const streamResults = await mediaServerRouter
@@ -129,9 +133,14 @@ describe("partial integration failures", () => {
       .getCurrentStreams({ integrationIds: mediaServer.integrationIds, showOnlyPlaying: false });
     expect(streamResults).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ integrationId: mediaServer.offlineId, sessions: [], error: "offline" }),
+        expect.objectContaining({
+          integrationId: mediaServer.offlineId,
+          sessions: [],
+          error: "Integration request failed",
+        }),
       ]),
     );
+    expect(JSON.stringify(streamResults)).not.toContain("secret");
   });
 
   test("media request responses expose failed integrations without dropping successful data", async () => {
@@ -156,13 +165,15 @@ describe("partial integration failures", () => {
       }),
     ]);
     expect(latest.failedIntegrations).toEqual([
-      expect.objectContaining({ integrationId: mediaRequests.offlineId, error: "offline" }),
+      expect.objectContaining({ integrationId: mediaRequests.offlineId, error: "Integration request failed" }),
     ]);
+    expect(JSON.stringify(latest)).not.toContain("secret");
 
     const stats = await caller.getStats({ integrationIds: mediaRequests.integrationIds });
     expect(stats.failedIntegrations).toEqual([
-      expect.objectContaining({ integrationId: mediaRequests.offlineId, error: "offline" }),
+      expect.objectContaining({ integrationId: mediaRequests.offlineId, error: "Integration request failed" }),
     ]);
+    expect(JSON.stringify(stats)).not.toContain("secret");
     expect(stats.stats).toHaveLength(1);
     expect(stats.users).toEqual([
       expect.objectContaining({

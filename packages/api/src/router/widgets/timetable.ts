@@ -156,6 +156,34 @@ const resolvePublicTimetableAddressesAsync = async (baseUrl: string): Promise<Ti
   return addresses;
 };
 
+const normalizeTimetableOptionsBaseUrlOrThrowBadRequest = (options: Record<string, unknown>) => {
+  const parsedOptions = timetableOptionsSchema.safeParse(options);
+  if (!parsedOptions.success) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid timetable widget options" });
+  }
+  return normalizeBaseUrlOrThrowBadRequest(parsedOptions.data.baseUrl ?? DEFAULT_TIMETABLE_BASE_URL);
+};
+
+export const validateTimetableOptionsChangeAsync = async (
+  nextOptions: Record<string, unknown>,
+  previousOptions?: Record<string, unknown>,
+) => {
+  const nextBaseUrl = normalizeTimetableOptionsBaseUrlOrThrowBadRequest(nextOptions);
+  if (nextBaseUrl === DEFAULT_TIMETABLE_BASE_URL) return;
+
+  let previousBaseUrl: string | undefined;
+  if (previousOptions) {
+    try {
+      previousBaseUrl = normalizeTimetableOptionsBaseUrlOrThrowBadRequest(previousOptions);
+    } catch {
+      // Invalid legacy options must not prevent replacing them with a valid configuration.
+    }
+  }
+  if (nextBaseUrl === previousBaseUrl) return;
+
+  await resolvePublicTimetableAddressesAsync(nextBaseUrl);
+};
+
 const getSavedTimetableBaseUrl = (serializedOptions: string) => {
   const options = parseSavedTimetableOptions(serializedOptions);
   return normalizeSavedTimetableBaseUrl(options.baseUrl ?? DEFAULT_TIMETABLE_BASE_URL);
@@ -174,6 +202,7 @@ const resolveTimetableBaseUrlAsync = async (
   const requestedBaseUrl = normalizeBaseUrlOrThrowBadRequest(input.baseUrl);
   if (allowBoardConfiguration) {
     if (input.boardId) {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
       let savedOptions: string | undefined;
       if (input.itemId) {
         const item = await ctx.db.query.items.findFirst({
@@ -182,8 +211,6 @@ const resolveTimetableBaseUrlAsync = async (
         if (!item) throw new TRPCError({ code: "NOT_FOUND", message: "Timetable widget not found" });
         savedOptions = item.options;
       }
-
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
       const savedBaseUrl = savedOptions === undefined ? undefined : getSavedTimetableBaseUrl(savedOptions);
       if (requestedBaseUrl === savedBaseUrl || requestedBaseUrl === DEFAULT_TIMETABLE_BASE_URL) {
         return { baseUrl: requestedBaseUrl };
