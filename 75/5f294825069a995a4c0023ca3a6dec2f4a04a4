@@ -1,0 +1,25 @@
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_40b6da747f24d4::t_71ab41d6650d21 48
+packages/definitions/src/integration.ts
+  s_40b6da747f24d4::t_9826f6c7a8437d 238,246,253,269,331,339,347,481,569
+packages/definitions/src/widget-integration-map.ts
+  s_40b6da747f24d4::t_31dbd251884d6b 27
+packages/widgets/src/health-monitoring/index.ts
+  s_40b6da747f24d4::t_bd5aa11b211cff 115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "755f294825069a995a4c0023ca3a6dec2f4a04a4",
+  "prompts": {},
+  "sessions": {
+    "s_40b6da747f24d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fc134-acf1-7eb1-ad7d-178ea328894c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
