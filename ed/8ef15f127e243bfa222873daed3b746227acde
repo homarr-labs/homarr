@@ -1,0 +1,30 @@
+packages/widgets/src/umami/umami-events-content.tsx
+  s_909ca8cf5b6e15::t_a3524992ec7610 8,30,63
+packages/widgets/src/umami/umami-utils.ts
+  s_909ca8cf5b6e15::t_a3524992ec7610 9,19
+  s_909ca8cf5b6e15::t_21fafbc5eb58eb 14
+packages/widgets/src/umami/umami-top-list.tsx
+  s_909ca8cf5b6e15::t_a3524992ec7610 7,51-52,69
+packages/widgets/src/speedtest-tracker/recent-results.tsx
+  s_909ca8cf5b6e15::t_c7f86e3cf31d32 43,170-171,284-285
+  s_909ca8cf5b6e15::t_a3524992ec7610 11,48,51,53,70,82-92,103,106,166,194-195,241,280,310,353
+  s_909ca8cf5b6e15::t_594ac59d5ee000 71-81
+packages/widgets/src/umami/umami-content.tsx
+  s_909ca8cf5b6e15::t_a3524992ec7610 94
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "ed8ef15f127e243bfa222873daed3b746227acde",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
