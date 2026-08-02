@@ -73,8 +73,8 @@
   zoom: var(--board-grid-overlay-content-zoom, 1);
 }
 
-body[data-board-grid-interacting] .board-grid-entry,
-body[data-board-grid-interacting] .board-grid-placeholder {
+body[data-board-grid-interacting="drag"] .board-grid-entry,
+body[data-board-grid-interacting="drag"] .board-grid-placeholder {
   transition: none;
 }
 
@@ -99,6 +99,24 @@ body[data-board-grid-interacting] .board-grid-placeholder {
     height 100ms ease;
 }
 
+.board-grid-placeholder[data-grid-placeholder-mode="resize"] {
+  z-index: 1001;
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 10%, transparent);
+}
+
+.board-grid-resize-outline {
+  z-index: 1002;
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 6%, transparent);
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  pointer-events: none;
+}
+
+.board-grid-resize-outline[data-grid-resize-valid="false"] {
+  background: color-mix(in srgb, var(--mantine-color-red-filled) 8%, transparent);
+  border-color: var(--mantine-color-red-filled);
+}
+
 .board-grid-editor[data-dnd-drop-target="true"] {
   outline: 2px solid color-mix(in srgb, var(--mantine-primary-color-filled) 60%, transparent);
   outline-offset: 4px;
@@ -110,7 +128,7 @@ body[data-board-grid-interacting] .board-grid-placeholder {
 
 .board-grid-resize-handle {
   position: absolute;
-  z-index: 8;
+  z-index: 20;
   display: block;
   padding: 0;
   appearance: none;
@@ -246,6 +264,7 @@ body[data-board-grid-interacting] .board-grid-placeholder {
 @media (prefers-reduced-motion: reduce) {
   .board-grid-entry,
   .board-grid-placeholder,
+  .board-grid-resize-outline,
   .board-grid-resize-handle::after {
     transition: none;
   }

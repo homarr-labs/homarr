@@ -21,3 +21,23 @@
   border-color: transparent !important;
   box-shadow: none !important;
 }
+
+.containerToggle {
+  z-index: 9;
+  overflow: hidden;
+  color: var(--mantine-color-text);
+  background-color: var(--background-color);
+  border-color: var(--border-color);
+}
+
+.containerToggle :global(.mantine-Button-inner) {
+  width: 100%;
+  min-width: 0;
+}
+
+.containerToggle :global(.mantine-Button-label) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

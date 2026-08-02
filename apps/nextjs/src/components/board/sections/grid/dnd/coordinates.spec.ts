@@ -1,7 +1,13 @@
 import { describe, expect, test } from "vitest";
 
 import { getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
-import { getPointerProjectedShape, getSnappedGridCoordinates, getSnappedGridDelta } from "./coordinates";
+import {
+  getContinuousGridDelta,
+  getContinuousResizePlacement,
+  getPointerProjectedShape,
+  getSnappedGridCoordinates,
+  getSnappedGridDelta,
+} from "./coordinates";
 
 describe("dnd grid coordinates", () => {
   test.each([0.75, 1, 1.25, 2])("maps transformed drag geometry at %sx scale", (scale) => {
@@ -62,6 +68,56 @@ describe("dnd grid coordinates", () => {
         visualScale,
       }),
     ).toEqual({ x: -2, y: 4 });
+  });
+
+  test("keeps the visual resize continuous between snapped grid breakpoints", () => {
+    const visualScale = 0.75;
+    const delta = getContinuousGridDelta({
+      initial: { x: 10, y: 20 },
+      current: {
+        x: 10 + LOGICAL_GRID_PITCH * visualScale * 0.42,
+        y: 20 + LOGICAL_GRID_PITCH * visualScale * 0.68,
+      },
+      visualScale,
+    });
+
+    expect(delta?.x).toBeCloseTo(0.42);
+    expect(delta?.y).toBeCloseTo(0.68);
+    expect(
+      getSnappedGridDelta({
+        initial: { x: 10, y: 20 },
+        current: {
+          x: 10 + LOGICAL_GRID_PITCH * visualScale * 0.42,
+          y: 20 + LOGICAL_GRID_PITCH * visualScale * 0.68,
+        },
+        visualScale,
+      }),
+    ).toEqual({ x: 0, y: 1 });
+  });
+
+  test("projects a continuous resize while anchoring the opposite edges and respecting bounds", () => {
+    const placement = { id: "widget", x: 2, y: 3, w: 3, h: 2 };
+
+    expect(
+      getContinuousResizePlacement({
+        placement,
+        direction: "nw",
+        deltaColumns: 0.35,
+        deltaRows: -0.6,
+        columnCount: 8,
+        maxRowCount: 10,
+      }),
+    ).toEqual({ id: "widget", x: 2.35, y: 2.4, w: 2.65, h: 2.6 });
+    expect(
+      getContinuousResizePlacement({
+        placement,
+        direction: "se",
+        deltaColumns: 99,
+        deltaRows: 99,
+        columnCount: 8,
+        maxRowCount: 7,
+      }),
+    ).toEqual({ id: "widget", x: 2, y: 3, w: 6, h: 4 });
   });
 
   test("uses independently measured visual axes for transformed resize geometry", () => {

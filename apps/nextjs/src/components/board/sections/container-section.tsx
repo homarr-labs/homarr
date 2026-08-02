@@ -38,7 +38,7 @@ export const BoardContainerSection = ({ section }: Props) => {
   });
   const label = options.title.trim() || t("untitled");
   const contentId = `board-container-${section.id}-content`;
-  const labelLeft = options.collapsible && !isEditMode ? 40 : 8;
+  const labelLeft = isEditMode ? 40 : 8;
   const labelRight = isEditMode ? 48 : options.showOpenAll ? 40 : 8;
 
   return (
@@ -62,29 +62,29 @@ export const BoardContainerSection = ({ section }: Props) => {
         radius={board.itemRadius}
         p={0}
       >
-        {isVisuallyCollapsed && (
+        {options.collapsible && !isEditMode && (
           <Button
+            className={classes.containerToggle}
             pos="absolute"
-            top={0}
+            top={isVisuallyCollapsed ? 0 : -28}
             left={0}
-            maw={`calc(100% - ${options.showOpenAll ? 40 : 0}px)`}
-            size="compact-sm"
-            radius="xl"
+            w="100%"
+            h={isVisuallyCollapsed ? "100%" : 28}
+            px={12}
+            pe={options.showOpenAll ? 40 : 12}
+            radius={isVisuallyCollapsed ? board.itemRadius : "sm"}
             variant="default"
-            leftSection={<IconChevronDown size={14} />}
+            justify={options.showLabel ? "flex-start" : "center"}
+            leftSection={options.showLabel ? isVisuallyCollapsed ? <IconChevronDown size={16} /> : <IconChevronUp size={16} /> : undefined}
             onClick={toggle}
-            aria-expanded={false}
+            aria-expanded={!isVisuallyCollapsed}
             aria-controls={contentId}
-            aria-label={`${t("action.expand")}: ${label}`}
-            data-board-container-collapsed-control
-            styles={{
-              label: {
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              },
-            }}
+            aria-label={`${t(isVisuallyCollapsed ? "action.expand" : "action.collapse")}: ${label}`}
+            data-board-container-collapsed-control={isVisuallyCollapsed ? "true" : undefined}
+            data-board-container-label
+            title={options.showLabel ? label : undefined}
           >
-            {label}
+            {options.showLabel ? label : isVisuallyCollapsed ? <IconChevronDown size={16} /> : <IconChevronUp size={16} />}
           </Button>
         )}
         {isEditMode && (
@@ -103,7 +103,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             <IconGripVertical size={16} />
           </ActionIcon>
         )}
-        {!isVisuallyCollapsed && options.showLabel && options.title && (
+        {!isVisuallyCollapsed && (!options.collapsible || isEditMode) && options.showLabel && options.title && (
           <Badge
             pos="absolute"
             top={-24}
@@ -128,30 +128,13 @@ export const BoardContainerSection = ({ section }: Props) => {
             {options.title}
           </Badge>
         )}
-        {options.collapsible && !isEditMode && !isVisuallyCollapsed && (
-          <ActionIcon
-            pos="absolute"
-            top={-24}
-            left={4}
-            style={{ zIndex: 10 }}
-            variant="default"
-            size={24}
-            radius="sm"
-            onClick={toggle}
-            aria-expanded={!isVisuallyCollapsed}
-            aria-controls={contentId}
-            aria-label={`${isVisuallyCollapsed ? t("action.expand") : t("action.collapse")}: ${label}`}
-          >
-            <IconChevronUp size={16} />
-          </ActionIcon>
-        )}
         {options.showOpenAll && !isEditMode && (
           <ActionIcon
             pos="absolute"
-            top={isVisuallyCollapsed ? 0 : -24}
-            right={4}
-            style={{ zIndex: 10 }}
-            variant="default"
+            top={isVisuallyCollapsed ? "50%" : -26}
+            right={2}
+            style={{ zIndex: 10, transform: isVisuallyCollapsed ? "translateY(-50%)" : undefined }}
+            variant={options.collapsible ? "subtle" : "default"}
             size={24}
             radius="sm"
             loading={areAppsLoading}
