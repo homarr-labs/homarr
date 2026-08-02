@@ -171,6 +171,7 @@ The **Move / resize item** action in the edit menu remains available for precise
 Containers can hold apps, widgets, and nested Containers.
 The same Container model works on the main canvas, inside a fixed rail, or inside another Container.
 Move and resize Containers directly in edit mode; nested content stays within the Container's local bounds.
+Resize outlines follow the pointer continuously while a dashed preview marks the grid size that will be applied on release.
 Each responsive layout stores its own Container position and size.
 
 Each Container can configure:
@@ -180,7 +181,7 @@ Each Container can configure:
 - Whether its menu shows **Open all in new tabs** for the app links it contains.
 - Its border color and custom CSS classes.
 
-Collapsing a Container reduces it to a half-row expansion pill and compacts the surrounding layout without losing its expanded size.
+Collapsing a Container reduces its full-width header to a half-row expansion bar and compacts the surrounding layout without losing its expanded size.
 Expanding it restores those bounds and moves following items out of the way.
 
 ### Background

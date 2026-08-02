@@ -6,7 +6,13 @@ export {
   previewGridResize,
   resolvePinnedGridCollisions,
 } from "./engine";
-export { getPointerProjectedShape, getSnappedGridCoordinates, getSnappedGridDelta } from "./coordinates";
+export {
+  getContinuousGridDelta,
+  getContinuousResizePlacement,
+  getPointerProjectedShape,
+  getSnappedGridCoordinates,
+  getSnappedGridDelta,
+} from "./coordinates";
 export type { DragProjectionOrigin } from "./coordinates";
 export { getPreferredNestedExitTargetId } from "./targeting";
 export type { GridTargetGeometry } from "./targeting";

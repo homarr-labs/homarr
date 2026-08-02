@@ -36,6 +36,8 @@ import {
   beginGridTransaction,
   cancelGridTransaction,
   commitGridTransaction,
+  getContinuousGridDelta,
+  getContinuousResizePlacement,
   getPreferredNestedExitTargetId,
   getPointerProjectedShape,
   getSnappedGridCoordinates,
@@ -45,7 +47,6 @@ import {
 } from "./dnd";
 import type { DragProjectionOrigin, GridResizeDirection, GridTransaction, TransactionalGridState } from "./dnd";
 import { getGridDepth } from "./grid-depth";
-import { GridResizePreviewProvider } from "./grid-editor-runtime";
 import { useBoardGridPortalHost } from "./grid-portal-host";
 import type { CommitSectionGridInput, SectionGridPlacement } from "./use-grid-layout-actions";
 import { useGridLayoutActions } from "./use-grid-layout-actions";
@@ -602,7 +603,10 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
       activeId: active.transaction.activeId,
       sourceGridId: active.transaction.sourceGridId,
       targetGridId: active.transaction.sourceGridId,
-      targetPlacement: null,
+      targetPlacement:
+        result.transaction.preview.grids
+          .find((grid) => grid.id === active.transaction.sourceGridId)
+          ?.placements.find((placement) => placement.id === active.transaction.activeId) ?? null,
       state: result.transaction.preview,
       mode: "resize",
       valid: true,
@@ -644,15 +648,6 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
       registerGrid,
     ],
   );
-  const resizePreview = useMemo(() => {
-    if (interaction?.mode !== "resize") return null;
-    return (
-      interaction.state.grids
-        .flatMap((grid) => grid.placements)
-        .find((placement) => placement.id === interaction.activeId) ?? null
-    );
-  }, [interaction]);
-
   useEffect(() => {
     if (interaction?.mode !== "resize") return;
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -666,35 +661,33 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <BoardGridEditorContext.Provider value={value}>
-      <GridResizePreviewProvider value={resizePreview}>
-        <DragDropProvider
-          plugins={configureEditorPlugins}
-          onCollision={handleCollision}
-          onBeforeDragStart={handleBeforeDragStart}
-          onDragStart={handleDragStart}
-          onDragMove={handleDragMove}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
+      <DragDropProvider
+        plugins={configureEditorPlugins}
+        onCollision={handleCollision}
+        onBeforeDragStart={handleBeforeDragStart}
+        onDragStart={handleDragStart}
+        onDragMove={handleDragMove}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        {children}
+        <DragOverlay
+          className="board-grid-drag-overlay"
+          dropAnimation={null}
+          style={
+            {
+              zoom: overlayZoom,
+              "--board-grid-overlay-content-zoom": 1 / overlayZoom,
+            } as CSSProperties
+          }
         >
-          {children}
-          <DragOverlay
-            className="board-grid-drag-overlay"
-            dropAnimation={null}
-            style={
-              {
-                zoom: overlayZoom,
-                "--board-grid-overlay-content-zoom": 1 / overlayZoom,
-              } as CSSProperties
-            }
-          >
-            {(source) => {
-              const data = getGridEntryData(source);
-              return data ? <div className="board-grid-drag-overlay-card">{data.label}</div> : null;
-            }}
-          </DragOverlay>
-          <GridCollisionSynchronizer interaction={interaction} />
-        </DragDropProvider>
-      </GridResizePreviewProvider>
+          {(source) => {
+            const data = getGridEntryData(source);
+            return data ? <div className="board-grid-drag-overlay-card">{data.label}</div> : null;
+          }}
+        </DragOverlay>
+        <GridCollisionSynchronizer interaction={interaction} />
+      </DragDropProvider>
     </BoardGridEditorContext.Provider>
   );
 };
@@ -726,23 +719,21 @@ export default function GridEditor({ sectionId, columnCount, rowCount, placement
   const renderPlacements = useMemo(() => {
     if (!previewGrid || !interaction) return placements;
 
-    const preview = previewGrid.placements.filter(
-      (placement) => interaction.mode === "resize" || placement.id !== interaction.activeId,
-    );
-    if (interaction.mode === "drag" && interaction.sourceGridId === sectionId) {
+    if (interaction.sourceGridId === sectionId) {
       const original = controlledById.get(interaction.activeId);
-      return original ? [...preview, original] : preview;
+      if (!original) return previewGrid.placements;
+      return previewGrid.placements.some((placement) => placement.id === interaction.activeId)
+        ? previewGrid.placements.map((placement) => (placement.id === interaction.activeId ? original : placement))
+        : [...previewGrid.placements, original];
     }
-    return preview;
+    return previewGrid.placements.filter((placement) => placement.id !== interaction.activeId);
   }, [controlledById, interaction, placements, previewGrid, sectionId]);
   const entryById = useMemo(
     () => new Map([...items, ...innerSections].map((entry) => [entry.id, entry])),
     [innerSections, items],
   );
   const targetPlacement =
-    interaction?.mode === "drag" && interaction.valid && interaction.targetGridId === sectionId
-      ? interaction.targetPlacement
-      : null;
+    interaction?.valid && interaction.targetGridId === sectionId ? interaction.targetPlacement : null;
   const renderedRowCount =
     section.kind !== "container" && interaction?.mode === "resize"
       ? Math.max(rowCount, getLayoutRowCount(renderPlacements))
@@ -817,13 +808,23 @@ export default function GridEditor({ sectionId, columnCount, rowCount, placement
             ? entry.advancedOptions.title?.trim() || t(`widget.${entry.kind}.name`)
             : entry.options.title.trim() || t("section.container.untitled")
           : placement.id;
-        return <DndGridEntry key={placement.id} sectionId={sectionId} placement={placement} label={label} />;
+        return (
+          <DndGridEntry
+            key={placement.id}
+            sectionId={sectionId}
+            placement={placement}
+            label={label}
+            columnCount={columnCount}
+            maxRowCount={section.kind === "container" ? rowCount : null}
+          />
+        );
       })}
       {targetPlacement && (
         <div
           className="board-grid-placeholder"
           style={getLogicalItemStyle(targetPlacement)}
           data-grid-placeholder-for={interaction?.activeId}
+          data-grid-placeholder-mode={interaction?.mode}
           data-grid-x={targetPlacement.x}
           data-grid-y={targetPlacement.y}
           data-grid-w={targetPlacement.w}
@@ -845,12 +846,18 @@ interface DndGridEntryProps {
   sectionId: string;
   placement: SectionGridPlacement;
   label: string;
+  columnCount: number;
+  maxRowCount: number | null;
 }
 
-const DndGridEntry = ({ sectionId, placement, label }: DndGridEntryProps) => {
+const DndGridEntry = ({ sectionId, placement, label, columnCount, maxRowCount }: DndGridEntryProps) => {
   const { acquireContainer } = useBoardGridPortalHost();
   const { interaction, beginResize, previewResize, completeResize, cancelResize } = useBoardGridEditor();
   const [isSectionChromeActive, setIsSectionChromeActive] = useState(false);
+  const [continuousResize, setContinuousResize] = useState<{
+    placement: SectionGridPlacement;
+    valid: boolean;
+  } | null>(null);
   const mountRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const sourceData = useMemo<GridEntryData>(
@@ -932,6 +939,14 @@ const DndGridEntry = ({ sectionId, placement, label }: DndGridEntryProps) => {
 
   const isActive = interaction?.activeId === placement.id;
   const style = getLogicalItemStyle(placement) as CSSProperties;
+  const continuousResizeStyle =
+    continuousResize && isActive
+      ? getLogicalItemStyle({
+          ...continuousResize.placement,
+          x: continuousResize.placement.x - placement.x,
+          y: continuousResize.placement.y - placement.y,
+        })
+      : undefined;
 
   return (
     <div
@@ -950,15 +965,27 @@ const DndGridEntry = ({ sectionId, placement, label }: DndGridEntryProps) => {
       data-dnd-dropping={isDropping ? "true" : undefined}
     >
       <div ref={mountRef} className="board-grid-content-mount" />
+      {continuousResizeStyle && (
+        <div
+          className="board-grid-resize-outline"
+          style={continuousResizeStyle}
+          data-grid-resize-outline
+          data-grid-resize-valid={String(continuousResize?.valid)}
+          aria-hidden="true"
+        />
+      )}
       <GridResizeHandles
         sectionId={sectionId}
         placement={placement}
         label={label}
         disabled={interaction !== null || (placement.type === "section" && !isSectionChromeActive)}
+        columnCount={columnCount}
+        maxRowCount={maxRowCount}
         beginResize={beginResize}
         previewResize={previewResize}
         completeResize={completeResize}
         cancelResize={cancelResize}
+        setContinuousResize={setContinuousResize}
       />
     </div>
   );
@@ -969,10 +996,13 @@ interface GridResizeHandlesProps {
   placement: SectionGridPlacement;
   label: string;
   disabled: boolean;
+  columnCount: number;
+  maxRowCount: number | null;
   beginResize: BoardGridEditorContextValue["beginResize"];
   previewResize: BoardGridEditorContextValue["previewResize"];
   completeResize: BoardGridEditorContextValue["completeResize"];
   cancelResize: BoardGridEditorContextValue["cancelResize"];
+  setContinuousResize: (preview: { placement: SectionGridPlacement; valid: boolean } | null) => void;
 }
 
 const RESIZE_DIRECTIONS: readonly GridResizeDirection[] = ["n", "ne", "e", "se", "s", "sw", "w", "nw"];
@@ -982,10 +1012,13 @@ const GridResizeHandles = ({
   placement,
   label,
   disabled,
+  columnCount,
+  maxRowCount,
   beginResize,
   previewResize,
   completeResize,
   cancelResize,
+  setContinuousResize,
 }: GridResizeHandlesProps) => {
   const pointerStartRef = useRef<{
     id: number;
@@ -1033,18 +1066,35 @@ const GridResizeHandles = ({
     const started = pointerStartRef.current;
     if (!started || started.id !== event.pointerId) return;
     event.preventDefault();
-    const delta = getSnappedGridDelta({
+    const input = {
       initial: { x: started.x, y: started.y },
       current: { x: event.clientX, y: event.clientY },
       visualScale: started.visualScale,
+    };
+    const snappedDelta = getSnappedGridDelta(input);
+    const continuousDelta = getContinuousGridDelta(input);
+    if (!snappedDelta || !continuousDelta) return;
+    const valid = update(started.direction, snappedDelta.x, snappedDelta.y);
+    setContinuousResize({
+      placement: getContinuousResizePlacement({
+        placement,
+        direction: started.direction,
+        deltaColumns: continuousDelta.x,
+        deltaRows: continuousDelta.y,
+        columnCount,
+        maxRowCount,
+        minWidth: placement.minW ?? 1,
+        minHeight: placement.minH ?? 1,
+      }),
+      valid,
     });
-    if (delta) update(started.direction, delta.x, delta.y);
   };
 
   const handlePointerEnd = (event: ReactPointerEvent<HTMLSpanElement>, canceled: boolean) => {
     const started = pointerStartRef.current;
     if (!started || started.id !== event.pointerId) return;
     pointerStartRef.current = null;
+    setContinuousResize(null);
     if (event.currentTarget.hasPointerCapture(event.pointerId))
       event.currentTarget.releasePointerCapture(event.pointerId);
     if (canceled) cancelResize();
@@ -1073,6 +1123,7 @@ const GridResizeHandles = ({
       onLostPointerCapture={(event) => {
         if (pointerStartRef.current?.id !== event.pointerId) return;
         pointerStartRef.current = null;
+        setContinuousResize(null);
         cancelResize();
       }}
     />
