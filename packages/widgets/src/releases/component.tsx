@@ -221,6 +221,10 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
                 })}
                 onClick={() => toggleExpandedDisplay(repository)}
                 aria-expanded={isActive}
+                aria-label={t(isActive ? "collapseDetails" : "expandDetails", {
+                  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                  name: repository.name || repository.identifier,
+                })}
               >
                 <Group p="xs">
                   <MaskedOrNormalImage
@@ -321,7 +325,11 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
                 </Group>
               </UnstyledButton>
               {(options.showDetails || isAdvanced) && (
-                <DetailsDisplay repository={repository} toggleExpandedDisplay={toggleExpandedDisplay} />
+                <DetailsDisplay
+                  repository={repository}
+                  isExpanded={isActive}
+                  toggleExpandedDisplay={toggleExpandedDisplay}
+                />
               )}
               {isActive && (
                 <ExpandedDisplay
@@ -342,10 +350,11 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
 
 interface DetailsDisplayProps {
   repository: ReleasesRepositoryResponse;
+  isExpanded: boolean;
   toggleExpandedDisplay: (repository: ReleasesRepositoryResponse) => void;
 }
 
-const DetailsDisplay = ({ repository, toggleExpandedDisplay }: DetailsDisplayProps) => {
+const DetailsDisplay = ({ repository, isExpanded, toggleExpandedDisplay }: DetailsDisplayProps) => {
   const t = useScopedI18n("widget.releases");
   const formatter = useFormatter();
 
@@ -355,6 +364,11 @@ const DetailsDisplay = ({ repository, toggleExpandedDisplay }: DetailsDisplayPro
       <UnstyledButton
         className={combineClasses("releases-repository-details", classes.releasesRepositoryDetails)}
         onClick={() => toggleExpandedDisplay(repository)}
+        aria-expanded={isExpanded}
+        aria-label={t(isExpanded ? "collapseDetails" : "expandDetails", {
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+          name: repository.name || repository.identifier,
+        })}
       >
         <Group justify="space-between" p={5}>
           <Group className="releases-repository-details-icon-wrapper">

@@ -32,6 +32,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import actionTargetClasses from "../common/action-target.module.css";
 
 const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
 
@@ -343,14 +344,21 @@ function openJsonInBrowser(json: unknown) {
 }
 
 function RawDisplay({ data, displayMode, height }: CustomDisplayProps) {
+  const t = useScopedI18n("widget.customApi");
   const maxHeight = displayMode === "advanced" ? Math.max(160, height - 80) : ((data.maxHeight as number) ?? 300);
   const jsonString = JSON.stringify(data.data, null, 2);
 
   return (
     <Stack gap={4} p="xs" h="100%">
       <Group justify="flex-end">
-        <Tooltip label="Open in browser JSON viewer">
-          <ActionIcon variant="subtle" size="sm" onClick={() => openJsonInBrowser(data.data)}>
+        <Tooltip label={t("actions.openJsonViewer")}>
+          <ActionIcon
+            className={actionTargetClasses.root}
+            variant="subtle"
+            size="sm"
+            aria-label={t("actions.openJsonViewer")}
+            onClick={() => openJsonInBrowser(data.data)}
+          >
             <IconExternalLink size={14} />
           </ActionIcon>
         </Tooltip>
@@ -595,6 +603,7 @@ function CustomApiWidgetInner({
           {dataType !== "actionButton" && (
             <Tooltip label={pollingLabel}>
               <ActionIcon
+                className={actionTargetClasses.root}
                 aria-label={pollingLabel}
                 variant="subtle"
                 loading={isFetching}

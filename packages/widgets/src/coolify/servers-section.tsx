@@ -6,6 +6,7 @@ import { IconEye, IconEyeOff, IconServer } from "@tabler/icons-react";
 import type { CoolifyServer } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import actionTargetClasses from "../common/action-target.module.css";
 import { getBadgeColor } from "./coolify-utils";
 
 interface ServersSectionProps {
@@ -40,6 +41,7 @@ export function ServersSection({
             </Badge>
           </Group>
           <ActionIcon
+            className={actionTargetClasses.root}
             aria-label={`${showIp ? tCommon("action.hide") : tCommon("action.show")} IP`}
             size="xs"
             variant="subtle"

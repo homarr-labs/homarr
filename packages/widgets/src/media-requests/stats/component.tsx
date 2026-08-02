@@ -22,6 +22,7 @@ import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
+import actionTargetClasses from "../../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
@@ -220,7 +221,7 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
   return (
     <Tooltip label={t("action.search.label")}>
       <ActionIcon
-        className={searchClasses.searchButton}
+        className={`${searchClasses.searchButton} ${actionTargetClasses.root}`}
         variant="light"
         size="sm"
         aria-label={t("action.search.label")}

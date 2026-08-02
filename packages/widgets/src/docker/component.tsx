@@ -43,6 +43,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import actionTargetClasses from "../common/action-target.module.css";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 import { getDockerColumnVisibility, getDockerFooterVisibility } from "./layout";
@@ -409,6 +410,7 @@ export default function DockerWidget({
             )}
             <Tooltip label={t("table.refresh.lastUpdated", { when: relativeTime })}>
               <ActionIcon
+                className={actionTargetClasses.root}
                 size="sm"
                 variant="transparent"
                 c="var(--mantine-color-text)"
@@ -443,6 +445,7 @@ function ContainerMenuButton({
     <Menu opened={opened} onChange={setOpened} closeOnItemClick={false} withinPortal position="bottom-end" shadow="sm">
       <Menu.Target>
         <ActionIcon
+          className={actionTargetClasses.root}
           variant="subtle"
           color="gray"
           size="sm"

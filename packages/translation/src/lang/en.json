@@ -1012,6 +1012,7 @@
       "smartHomeServer": "Smart Home",
       "indexerManager": "Indexer",
       "healthMonitoring": "Health",
+      "beszel": "Beszel",
       "search": "Search",
       "mediaTranscoding": "Transcoding",
       "networkController": "Network",
@@ -2299,6 +2300,7 @@
         "previousMonth": "Show previous month",
         "nextMonth": "Show next month",
         "eventCount": "{count, plural, one {# event} other {# events}}",
+        "loading": "Loading calendar events...",
         "noEvents": "No events in this month"
       },
       "option": {
@@ -2357,6 +2359,8 @@
         }
       },
       "currentWindSpeed": "{currentWindSpeed} {unit}",
+      "details": "Show weather details",
+      "detailsFor": "Show weather details for {date}",
       "advanced": {
         "forecast": "7-day forecast",
         "day": "Day",
@@ -3684,6 +3688,8 @@
       "starsCount": "Stars",
       "forksCount": "Forks",
       "issuesCount": "Open Issues",
+      "expandDetails": "Show details for {name}",
+      "collapseDetails": "Hide details for {name}",
       "markViewed": "Mark as viewed",
       "openProjectPage": "Open Project Page",
       "openReleasePage": "Open Release Page",
@@ -4087,6 +4093,7 @@
       "executeSuccess": "Action executed successfully",
       "executeFailed": "Action failed. Check the widget configuration.",
       "actions": {
+        "openJsonViewer": "Open in browser JSON viewer",
         "pausePolling": "Pause polling",
         "resumePolling": "Resume polling",
         "togglePolling": "Pause or resume polling"

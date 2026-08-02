@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { ActionIcon, Box, Group, Stack, Text, Tooltip, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Box, Center, Group, Loader, Stack, Text, Tooltip, useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
@@ -15,6 +15,7 @@ import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import actionTargetClasses from "../common/action-target.module.css";
 import type { WidgetComponentProps } from "../definition";
 import { setWidgetRuntimeQueries } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -34,7 +35,16 @@ export default function CalendarWidget(props: WidgetComponentProps<"calendar">) 
 
   if (props.integrationIds.length === 0) {
     setWidgetRuntimeQueries(props.widgetStateRef, []);
-    return <CalendarBase {...props} events={[]} failedIntegrations={[]} month={month} setMonth={setMonth} />;
+    return (
+      <CalendarBase
+        {...props}
+        events={[]}
+        failedIntegrations={[]}
+        isPending={false}
+        month={month}
+        setMonth={setMonth}
+      />
+    );
   }
 
   return <FetchCalendar month={month} setMonth={setMonth} {...props} />;
@@ -62,7 +72,7 @@ const FetchCalendar = ({
     showUnmonitored: options.showUnmonitored,
   };
   setWidgetRuntimeQueries(widgetStateRef, [getQueryKey(clientApi.widget.calendar.findAllEvents, input, "query")]);
-  const { data } = clientApi.widget.calendar.findAllEvents.useQuery(input);
+  const { data, isPending } = clientApi.widget.calendar.findAllEvents.useQuery(input);
 
   const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
   const failedIntegrations =
@@ -75,6 +85,7 @@ const FetchCalendar = ({
       isEditMode={isEditMode}
       events={events}
       failedIntegrations={failedIntegrations}
+      isPending={isPending}
       month={month}
       setMonth={setMonth}
       options={options}
@@ -87,6 +98,7 @@ interface CalendarBaseProps {
   isEditMode: boolean;
   events: CalendarEvent[];
   failedIntegrations: { integrationId: string; integrationName: string; error: string }[];
+  isPending: boolean;
   month: Date;
   setMonth: (date: Date) => void;
   options: WidgetComponentProps<"calendar">["options"];
@@ -97,6 +109,7 @@ const CalendarBase = ({
   isEditMode,
   events,
   failedIntegrations,
+  isPending,
   month,
   setMonth,
   options,
@@ -133,6 +146,7 @@ const CalendarBase = ({
       <CalendarAgenda
         events={agendaEvents}
         failedIntegrations={failedIntegrations}
+        isPending={isPending}
         isEditMode={isEditMode}
         locale={locale}
         month={month}
@@ -227,13 +241,22 @@ const CalendarBase = ({
 interface CalendarAgendaProps {
   events: CalendarEvent[];
   failedIntegrations: CalendarBaseProps["failedIntegrations"];
+  isPending: boolean;
   isEditMode: boolean;
   locale: string;
   month: Date;
   setMonth: (date: Date) => void;
 }
 
-const CalendarAgenda = ({ events, failedIntegrations, isEditMode, locale, month, setMonth }: CalendarAgendaProps) => {
+const CalendarAgenda = ({
+  events,
+  failedIntegrations,
+  isPending,
+  isEditMode,
+  locale,
+  month,
+  setMonth,
+}: CalendarAgendaProps) => {
   const t = useScopedI18n("widget.calendar.advanced");
   const monthLabel = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(month);
 
@@ -243,6 +266,7 @@ const CalendarAgenda = ({ events, failedIntegrations, isEditMode, locale, month,
         <Group gap="xs" wrap="nowrap">
           <Tooltip label={t("previousMonth")} events={{ hover: true, focus: true, touch: false }}>
             <ActionIcon
+              className={actionTargetClasses.root}
               variant="subtle"
               size="lg"
               aria-label={t("previousMonth")}
@@ -257,11 +281,12 @@ const CalendarAgenda = ({ events, failedIntegrations, isEditMode, locale, month,
               {monthLabel}
             </Text>
             <Text size="xs" c="dimmed">
-              {t("eventCount", { count: events.length })}
+              {isPending ? t("loading") : t("eventCount", { count: events.length })}
             </Text>
           </Stack>
           <Tooltip label={t("nextMonth")} events={{ hover: true, focus: true, touch: false }}>
             <ActionIcon
+              className={actionTargetClasses.root}
               variant="subtle"
               size="lg"
               aria-label={t("nextMonth")}
@@ -276,7 +301,11 @@ const CalendarAgenda = ({ events, failedIntegrations, isEditMode, locale, month,
       </Group>
 
       <Box style={{ flex: 1, minHeight: 0 }}>
-        {events.length > 0 ? (
+        {isPending ? (
+          <Center component="output" h="100%" aria-label={t("loading")}>
+            <Loader size="sm" />
+          </Center>
+        ) : events.length > 0 ? (
           <CalendarEventList events={events} groupByDate locale={locale} fillHeight />
         ) : (
           <Stack h="100%" align="center" justify="center" p="md">
