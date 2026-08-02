@@ -1,7 +1,7 @@
 import type { CSSProperties, KeyboardEvent, MutableRefObject, PointerEvent } from "react";
 import { useEffect, useRef } from "react";
 import { ActionIcon, Badge, Box, Card, FocusTrap, Text } from "@mantine/core";
-import { useElementSize, useMergedRef, useViewportSize } from "@mantine/hooks";
+import { useElementSize, useViewportSize } from "@mantine/hooks";
 import { IconMaximize, IconPin, IconX } from "@tabler/icons-react";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
@@ -37,9 +37,8 @@ const getOverflowFromKind = (kind: SectionItem["kind"]) => {
 };
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
-  const { ref, width, height } = useElementSize<HTMLDivElement>();
+  const { ref: contentRef, width, height } = useElementSize<HTMLDivElement>();
   const sourceRef = useRef<HTMLDivElement>(null);
-  const mergedRef = useMergedRef(ref, sourceRef);
   const { width: viewportWidth, height: viewportHeight } = useViewportSize();
   const board = useRequiredBoard();
   const t = useI18n();
@@ -86,7 +85,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
     <>
       <WidgetContextMenu item={item} widgetStateRef={widgetStateRef} sourceRef={sourceRef}>
         <Box
-          ref={mergedRef}
+          ref={sourceRef}
           tabIndex={isEditMode ? undefined : 0}
           role={isEditMode ? undefined : "group"}
           aria-label={isEditMode ? undefined : `${widgetName}: ${t("item.advancedFocus.open")}`}
@@ -192,13 +191,15 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
                     </ActionIcon>
                   )}
                 </div>
-                <InnerContent
-                  item={item}
-                  width={advancedRect?.width ?? width}
-                  height={advancedRect?.height ?? height}
-                  widgetStateRef={widgetStateRef}
-                  displayMode={isAdvanced ? "advanced" : "compact"}
-                />
+                <Box ref={contentRef} w="100%" h="100%" mih={0}>
+                  <InnerContent
+                    item={item}
+                    width={width}
+                    height={height}
+                    widgetStateRef={widgetStateRef}
+                    displayMode={isAdvanced ? "advanced" : "compact"}
+                  />
+                </Box>
               </Card>
             </FocusTrap>
           </div>

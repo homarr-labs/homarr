@@ -325,7 +325,7 @@ export default function MediaServerWidget({
         </Group>
       )}
       {!isAdvanced && hasFailedIntegrations && (
-        <Group h={18} px="xs" justify="flex-end">
+        <Group px="xs" justify="flex-end">
           <IntegrationErrorIndicator results={currentStreams} />
         </Group>
       )}

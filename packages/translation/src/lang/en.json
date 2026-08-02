@@ -2003,7 +2003,8 @@
         "stationSearch": "Unable to search stations. Check the custom URL and your board access."
       },
       "warning": {
-        "stale": "The timetable could not be refreshed. Showing departures last updated at {time}."
+        "stale": "The timetable could not be refreshed. Showing departures last updated at {time}.",
+        "staleCompact": "Stale data"
       }
     },
     "notebook": {

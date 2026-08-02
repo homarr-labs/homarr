@@ -24,7 +24,7 @@ export function IntegrationErrorIndicator({ results }: IntegrationErrorIndicator
   const label = `${t("error")}: ${names}`;
   return (
     <Tooltip label={label} position="left" withArrow>
-      <ActionIcon variant="transparent" color="orange" size={18} aria-label={label} style={{ cursor: "help" }}>
+      <ActionIcon variant="transparent" color="orange" size={28} aria-label={label} style={{ cursor: "help" }}>
         <IconAlertTriangle aria-hidden size={14} />
       </ActionIcon>
     </Tooltip>
