@@ -91,7 +91,7 @@ export function UmamiContent({
   const { visitorStats } = firstResult;
 
   const chartData = visitorStats.dataPoints.map((point: UmamiVisitorStats["dataPoints"][number]) => ({
-    label: formatXLabel(point.timestamp, timeFrame),
+    label: formatXLabel(point.timestamp, timeFrame, locale),
     visitors: point.visitors,
     ...(point.events !== undefined ? { events: point.events } : {}),
   }));
