@@ -5,7 +5,7 @@ import { Box, Group, Stack, Text, useMantineColorScheme } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { UmamiEventSeries } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { EVENT_COLORS, formatXLabel, umamiQueryOptions } from "./umami-utils";
 
@@ -27,6 +27,7 @@ export function UmamiEventsContent({
   showXAxis,
 }: UmamiEventsContentProps) {
   const t = useScopedI18n("widget.umami");
+  const locale = useCurrentIntlLocale();
   const { colorScheme } = useMantineColorScheme();
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
 
@@ -59,7 +60,7 @@ export function UmamiEventsContent({
   );
 
   const chartData = allTimestamps.map((timestamp) => {
-    const row: Record<string, string | number> = { label: formatXLabel(timestamp, timeFrame) };
+    const row: Record<string, string | number> = { label: formatXLabel(timestamp, timeFrame, locale) };
     for (const serie of series) {
       row[serie.eventName] = byEvent.get(serie.eventName)?.get(timestamp) ?? 0;
     }
