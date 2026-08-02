@@ -14,7 +14,7 @@
   pointer-events: auto;
 }
 
-@media (hover: none) {
+@media (any-pointer: coarse) {
   .beszelStatsSystemToggle {
     opacity: 1;
     pointer-events: auto;

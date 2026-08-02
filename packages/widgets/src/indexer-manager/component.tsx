@@ -10,6 +10,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import actionTargetClasses from "../common/action-target.module.css";
 import classes from "./component.module.css";
 
 export default function IndexerManagerWidget({
@@ -83,7 +84,7 @@ export default function IndexerManagerWidget({
         )}
         <Tooltip label={t("widget.indexerManager.testAll")}>
           <ActionIcon
-            className={combineClasses("indexer-manager-test-action-icon", classes.testAction)}
+            className={combineClasses("indexer-manager-test-action-icon", classes.testAction, actionTargetClasses.root)}
             size="sm"
             radius={board.itemRadius}
             variant="light"

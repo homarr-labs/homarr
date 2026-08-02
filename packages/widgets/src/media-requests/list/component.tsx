@@ -14,6 +14,7 @@ import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
+import actionTargetClasses from "../../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
@@ -83,7 +84,7 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
   return (
     <Tooltip label={t("action.search.label")}>
       <ActionIcon
-        className={searchClasses.searchButton}
+        className={`${searchClasses.searchButton} ${actionTargetClasses.root}`}
         variant="light"
         size="sm"
         aria-label={t("action.search.label")}
@@ -255,7 +256,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible 
     >
       <Tooltip label={t("pending.approve")}>
         <ActionIcon
-          className="mediaRequests-list-item-pending-button-approve"
+          className={`mediaRequests-list-item-pending-button-approve ${actionTargetClasses.root}`}
           variant="light"
           color="green"
           size="sm"
@@ -270,7 +271,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible 
       </Tooltip>
       <Tooltip label={t("pending.decline")}>
         <ActionIcon
-          className="mediaRequests-list-item-pending-button-decline"
+          className={`mediaRequests-list-item-pending-button-decline ${actionTargetClasses.root}`}
           variant="light"
           color="red"
           size="sm"

@@ -17,7 +17,11 @@
   opacity: 1;
 }
 
-@media (hover: none) {
+@media (any-pointer: coarse) {
+  .searchRoot {
+    padding-top: 52px;
+  }
+
   .searchButton {
     opacity: 1;
   }

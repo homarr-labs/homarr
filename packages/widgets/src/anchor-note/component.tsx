@@ -18,6 +18,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import actionTargetClasses from "../common/action-target.module.css";
 
 import "react-quill-new/dist/quill.snow.css";
 import "./anchor-note.css";
@@ -353,7 +354,14 @@ const AnchorNoteWidgetContent = ({
               </Button>
             ) : (
               <Tooltip label={t("edit")}>
-                <ActionIcon aria-label={t("edit")} size="md" variant="light" onClick={handleEdit} disabled={isUpdating}>
+                <ActionIcon
+                  className={actionTargetClasses.root}
+                  aria-label={t("edit")}
+                  size="md"
+                  variant="light"
+                  onClick={handleEdit}
+                  disabled={isUpdating}
+                >
                   <IconEdit size={16} />
                 </ActionIcon>
               </Tooltip>

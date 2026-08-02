@@ -6,6 +6,8 @@ import { IconHeartbeat } from "@tabler/icons-react";
 import type { TdarrStatistics } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
 
+import actionTargetClasses from "../common/action-target.module.css";
+
 interface HealthCheckStatusProps {
   statistics: TdarrStatistics;
 }
@@ -23,7 +25,7 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
   return (
     <Popover position="bottom" width={250} shadow="sm" withArrow>
       <Popover.Target>
-        <ActionIcon variant="subtle" size="sm" aria-label={t("title")}>
+        <ActionIcon className={actionTargetClasses.root} variant="subtle" size="sm" aria-label={t("title")}>
           <Indicator color={textColor(indicatorColor, colorScheme)} size={6} display="flex">
             <IconHeartbeat size={16} />
           </Indicator>
