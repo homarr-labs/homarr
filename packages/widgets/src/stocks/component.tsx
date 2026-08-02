@@ -30,6 +30,34 @@ export interface StockSummary {
   graphValues: number[];
 }
 
+export interface StockLayout {
+  showName: boolean;
+  showChange: boolean;
+  showRange: boolean;
+  graphHeight: "48%" | "68%" | "75%";
+  priceOrder: 1 | 2;
+}
+
+export function getStockLayout(width: number, height: number, isAdvanced: boolean): StockLayout {
+  if (isAdvanced) {
+    return {
+      showName: true,
+      showChange: true,
+      showRange: true,
+      graphHeight: "75%",
+      priceOrder: 1,
+    };
+  }
+
+  return {
+    showName: width >= 300 && height >= 190,
+    showChange: width >= 260 && height >= 130,
+    showRange: width >= 220 && height >= 130,
+    graphHeight: height >= 220 ? "68%" : "48%",
+    priceOrder: width >= 280 && height >= 120 ? 1 : 2,
+  };
+}
+
 export function getStockSummary(priceHistory: number[], previousClose: number): StockSummary | null {
   const currentPrice = priceHistory.at(-1);
   if (currentPrice === undefined) return null;
@@ -57,6 +85,7 @@ export default function StockPriceWidget({ options, width, height, displayMode }
   const stockValuesChangePercentage = summary.changePercentage === null ? null : round(summary.changePercentage);
   const stockGraphValues = summary.graphValues;
   const trendColor = stockValuesChange > 0 ? "green.7" : stockValuesChange < 0 ? "red.7" : "gray.6";
+  const layout = getStockLayout(width, height, displayMode === "advanced");
 
   return (
     <Flex h="100%" w="100%">
@@ -64,7 +93,7 @@ export default function StockPriceWidget({ options, width, height, displayMode }
         pos="absolute"
         bottom={10}
         w="100%"
-        h={displayMode === "advanced" || height > 280 ? "75%" : "50%"}
+        h={layout.graphHeight}
         data={stockGraphValues}
         curveType="linear"
         color={trendColor}
@@ -81,18 +110,18 @@ export default function StockPriceWidget({ options, width, height, displayMode }
           )}
           {data.symbol}
         </Text>
-        {(displayMode === "advanced" || (width > 280 && height > 280)) && (
+        {layout.showName && (
           <Text size="md" lh="1">
             {data.shortName}
           </Text>
         )}
       </Stack>
 
-      <Title pos="absolute" bottom={10} right={10} order={width > 280 ? 1 : 2} fw={700}>
+      <Title pos="absolute" bottom={10} right={10} order={layout.priceOrder} fw={700}>
         {new Intl.NumberFormat().format(round(summary.currentPrice))}
       </Title>
 
-      {(displayMode === "advanced" || width > 280) && (
+      {layout.showChange && (
         <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
           {new Intl.NumberFormat().format(stockValuesChange)}
           {stockValuesChangePercentage === null
@@ -101,7 +130,7 @@ export default function StockPriceWidget({ options, width, height, displayMode }
         </Text>
       )}
 
-      {(displayMode === "advanced" || width > 280) && (
+      {layout.showRange && (
         <Text pos="absolute" bottom={10} left={10} fw={700}>
           {t(`option.timeRange.option.${options.timeRange}.label`)}
         </Text>

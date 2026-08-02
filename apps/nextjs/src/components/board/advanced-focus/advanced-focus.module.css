@@ -1,28 +1,18 @@
-.focusScope {
-  height: 100%;
-}
-
 .backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 198;
-  background: rgba(0, 0, 0, 0.64);
-  backdrop-filter: blur(6px) saturate(0.75);
-  touch-action: none;
+  pointer-events: none;
   animation: focus-backdrop-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .surface {
   position: fixed;
-  z-index: 199;
+  z-index: 1;
   pointer-events: auto;
   overflow: hidden;
   background: var(--mantine-color-body);
-  box-shadow: var(--mantine-shadow-lg);
+  box-shadow: var(--mantine-shadow-md);
   overscroll-behavior: contain;
-  animation: focus-surface-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: focus-surface-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
   transform-origin: top left;
-  padding-top: 60px;
 }
 
 .backdropClosing {
@@ -45,7 +35,7 @@
 .surfaceHostAdvanced {
   position: fixed;
   inset: 0;
-  z-index: 199;
+  z-index: calc(var(--mantine-z-index-modal) - 1);
   width: auto;
   height: auto;
   pointer-events: none;
@@ -58,33 +48,8 @@
   pointer-events: none;
 }
 
-.surfaceControlsAdvanced {
-  right: 0;
-  bottom: auto;
-  height: 60px;
-  background: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
-  border-bottom: 1px solid var(--mantine-color-default-border);
-}
-
-.surfaceTitle {
-  position: absolute;
-  top: 20px;
-  right: 120px;
-  left: 16px;
-}
-
 .closeButton {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 2;
-  pointer-events: auto;
-}
-
-.pinButton {
-  position: absolute;
-  top: 8px;
-  right: 60px;
+  position: fixed;
   z-index: 2;
   pointer-events: auto;
 }
@@ -141,8 +106,7 @@
 
 @media (forced-colors: active) {
   .backdrop {
-    backdrop-filter: none;
     background: Canvas;
-    opacity: 0.8;
+    opacity: 0.4;
   }
 }

@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Box, Portal, RemoveScroll } from "@mantine/core";
+import { Overlay, Portal } from "@mantine/core";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 
@@ -14,17 +14,21 @@ interface ActiveFocus {
   itemId: string;
   source: HTMLElement;
   sourceRect: FocusRect;
-  pinned: boolean;
+  activation: "preview" | "manual";
   autofocusClose: boolean;
   phase: "visible" | "closing";
 }
 
+interface OpenAdvancedFocusOptions {
+  activation?: ActiveFocus["activation"];
+  autofocusClose?: boolean;
+}
+
 interface AdvancedFocusContextValue {
   active: ActiveFocus | null;
-  open: (itemId: string, source: HTMLElement, pinned?: boolean) => void;
+  open: (itemId: string, source: HTMLElement, options?: OpenAdvancedFocusOptions) => void;
   close: (restoreFocus?: boolean) => void;
   dismiss: (itemId: string) => void;
-  pin: (autofocusClose?: boolean) => void;
   hover: (itemId: string, source: HTMLElement) => void;
   leave: (itemId: string) => void;
 }
@@ -64,7 +68,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   const open = useCallback(
-    (itemId: string, source: HTMLElement, pinned = false) => {
+    (itemId: string, source: HTMLElement, options: OpenAdvancedFocusOptions = {}) => {
       if (isEditMode) return;
       cancelHoverTimer();
       cancelCloseTimer();
@@ -73,8 +77,8 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
         itemId,
         source,
         sourceRect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
-        pinned,
-        autofocusClose: pinned,
+        activation: options.activation ?? "manual",
+        autofocusClose: options.autofocusClose ?? false,
         phase: "visible",
       });
     },
@@ -101,15 +105,23 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
     cancelHoverTimer();
     const hovered = hoveredRef.current;
     if (!hovered || !shiftHeldRef.current || activeRef.current) return;
-    hoverTimerRef.current = setTimeout(() => open(hovered.itemId, hovered.source), HOVER_DELAY_MS);
+    hoverTimerRef.current = setTimeout(
+      () => open(hovered.itemId, hovered.source, { activation: "preview" }),
+      HOVER_DELAY_MS,
+    );
   }, [cancelHoverTimer, open]);
 
   const hover = useCallback(
     (itemId: string, source: HTMLElement) => {
       hoveredRef.current = { itemId, source };
+      const current = activeRef.current;
+      if (current?.activation === "preview" && current.itemId !== itemId) {
+        cancelCloseTimer();
+        updateActive(null);
+      }
       startHoverTimer();
     },
-    [startHoverTimer],
+    [cancelCloseTimer, startHoverTimer, updateActive],
   );
 
   const leave = useCallback(
@@ -130,15 +142,6 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
     [cancelCloseTimer, cancelHoverTimer, updateActive],
   );
 
-  const pin = useCallback(
-    (autofocusClose = false) => {
-      const current = activeRef.current;
-      if (!current || current.pinned || current.phase === "closing") return;
-      updateActive({ ...current, pinned: true, autofocusClose });
-    },
-    [updateActive],
-  );
-
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape" && activeRef.current) {
@@ -151,7 +154,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
       }
       if (isEditMode) return;
       if (event.key !== "Shift" || event.repeat || isEditableTarget(event.target)) return;
-      if (activeRef.current?.pinned) return;
+      if (activeRef.current?.activation === "manual") return;
       shiftHeldRef.current = true;
       startHoverTimer();
     };
@@ -159,12 +162,12 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
       if (event.key !== "Shift") return;
       shiftHeldRef.current = false;
       cancelHoverTimer();
-      if (activeRef.current && !activeRef.current.pinned) close(false);
+      if (activeRef.current?.activation === "preview") close(false);
     };
     const handleBlur = () => {
       shiftHeldRef.current = false;
       cancelHoverTimer();
-      if (activeRef.current && !activeRef.current.pinned) close(false);
+      if (activeRef.current?.activation === "preview") close(false);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -184,20 +187,22 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   }, [close, isEditMode]);
 
   const value = useMemo(
-    () => ({ active, open, close, dismiss, pin, hover, leave }),
-    [active, close, dismiss, hover, leave, open, pin],
+    () => ({ active, open, close, dismiss, hover, leave }),
+    [active, close, dismiss, hover, leave, open],
   );
 
   return (
     <AdvancedFocusContext.Provider value={value}>
-      <RemoveScroll enabled={active !== null} className={classes.focusScope}>
-        {children}
-      </RemoveScroll>
+      {children}
       {active && (
         <Portal>
-          <Box
+          <Overlay
+            fixed
+            data-advanced-focus-overlay
+            backgroundOpacity={0.38}
+            blur={0}
+            zIndex="calc(var(--mantine-z-index-modal) - 2)"
             className={`${classes.backdrop} ${active.phase === "closing" ? classes.backdropClosing : ""}`}
-            onPointerDown={() => close()}
             aria-hidden
           />
         </Portal>

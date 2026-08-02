@@ -2,7 +2,7 @@
 
 import { Fragment } from "react";
 import type { CSSProperties } from "react";
-import { RingProgress, Text } from "@mantine/core";
+import { Center, RingProgress, Text } from "@mantine/core";
 import { IconFileDescription, IconFileText, IconInbox, IconTag, IconUsers } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -78,10 +78,20 @@ export default function PaperlessNgxWidget({
   displayMode = "compact",
 }: WidgetComponentProps<"paperlessNgx">) {
   const t = useScopedI18n("widget.paperlessNgx");
-  const { data: stats } = clientApi.widget.paperlessNgx.getStats.useQuery({
+  const tCommon = useScopedI18n("common");
+  const { data: stats, isPending } = clientApi.widget.paperlessNgx.getStats.useQuery({
     integrationId: integrationIds[0] ?? "",
   });
 
+  if (isPending) {
+    return (
+      <Center h="100%">
+        <Text c="dimmed" size="sm">
+          {tCommon("action.loading")}
+        </Text>
+      </Center>
+    );
+  }
   if (!stats) return <WidgetEmptyState />;
 
   const canShowInboxHero = options.showDocumentsInbox && options.showDocumentsTotal;

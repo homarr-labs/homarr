@@ -124,9 +124,10 @@ const searchStationsAsync = async (
   query: string,
   pinnedAddresses?: TimetableResolvedAddress[],
 ): Promise<Station[]> => {
-  const dispatcher = pinnedAddresses ? await createPinnedTimetableDispatcherAsync(baseUrl, pinnedAddresses) : undefined;
+  let dispatcher = pinnedAddresses ? await createPinnedTimetableDispatcherAsync(baseUrl, pinnedAddresses) : undefined;
+  let response: Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>> | undefined;
   try {
-    const response = await fetchWithTrustedCertificatesAsync(
+    response = await fetchWithTrustedCertificatesAsync(
       buildUrl(baseUrl, "/timetable/api/completion.json", { term: query, show_ids: 1, nofavorites: 1 }),
       { ...timetableFetchOptions, dispatcher },
     );
@@ -138,6 +139,11 @@ const searchStationsAsync = async (
       .filter((item) => supportedStationTypes.some((type) => item.iconclass.endsWith(type)))
       .map((item) => (item.id !== undefined ? { id: item.id, name: item.label } : null))
       .filter((item) => item !== null);
+  } catch (error) {
+    if (response?.body) await response.body.cancel().catch(() => {});
+    await dispatcher?.destroy().catch(() => {});
+    dispatcher = undefined;
+    throw error;
   } finally {
     await dispatcher?.close();
   }
@@ -161,9 +167,10 @@ const getTimetableAsync = async (
     minute: "2-digit",
     hour12: false,
   }).format(now);
-  const dispatcher = pinnedAddresses ? await createPinnedTimetableDispatcherAsync(baseUrl, pinnedAddresses) : undefined;
+  let dispatcher = pinnedAddresses ? await createPinnedTimetableDispatcherAsync(baseUrl, pinnedAddresses) : undefined;
+  let response: Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>> | undefined;
   try {
-    const response = await fetchWithTrustedCertificatesAsync(
+    response = await fetchWithTrustedCertificatesAsync(
       buildUrl(baseUrl, "/timetable/api/stationboard.json", {
         stop: options.stationId,
         limit: options.limit,
@@ -205,6 +212,11 @@ const getTimetableAsync = async (
         };
       }),
     };
+  } catch (error) {
+    if (response?.body) await response.body.cancel().catch(() => {});
+    await dispatcher?.destroy().catch(() => {});
+    dispatcher = undefined;
+    throw error;
   } finally {
     await dispatcher?.close();
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Box, Flex, Group, Progress, Stack, Text, Tooltip } from "@mantine/core";
+import { Badge, Box, Flex, Group, Progress, Stack, Text, Tooltip, VisuallyHidden } from "@mantine/core";
 import { IconCube, IconUsersGroup } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -16,14 +16,25 @@ export default function MinecraftServerStatusWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"minecraftServerStatus">) {
-  const { data: result } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
+  const { data: result, isPending } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
   const t = useI18n();
 
+  if (isPending) {
+    return (
+      <Flex align="center" justify="center" h="100%">
+        <Text c="dimmed" size="sm">
+          {t("common.action.loading")}
+        </Text>
+      </Flex>
+    );
+  }
   if (!result) return <WidgetEmptyState />;
   const { data } = result;
 
   const title = options.title.trim().length > 0 ? options.title : options.domain;
   const isAdvanced = displayMode === "advanced";
+  const isDense = !isAdvanced && (width < 220 || height < 120);
+  const showServerIcon = isAdvanced || (!isDense && height >= 144);
   const iconSize = Math.max(40, Math.min(isAdvanced ? 128 : 80, width * 0.45, height * 0.45));
   const playerPercent = data.online && data.players.max > 0 ? (data.players.online / data.players.max) * 100 : 0;
 
@@ -33,11 +44,11 @@ export default function MinecraftServerStatusWidget({
       h="100%"
       w="100%"
       direction="column"
-      p={isAdvanced ? "lg" : "sm"}
+      p={isAdvanced ? "lg" : isDense ? "xs" : "sm"}
       justify="center"
       align="center"
     >
-      <Group gap="xs" wrap="nowrap" align="center">
+      <Group gap="xs" wrap="nowrap" align="center" maw="100%">
         <Tooltip
           label={
             data.online
@@ -45,8 +56,13 @@ export default function MinecraftServerStatusWidget({
               : t("widget.minecraftServerStatus.status.offline")
           }
         >
-          <Box miw="md" h="md" bg={data.online ? "teal" : "red"} style={{ borderRadius: "100%" }}></Box>
+          <Box aria-hidden miw="md" h="md" bg={data.online ? "teal" : "red"} style={{ borderRadius: "100%" }} />
         </Tooltip>
+        <VisuallyHidden>
+          {data.online
+            ? t("widget.minecraftServerStatus.status.online")
+            : t("widget.minecraftServerStatus.status.offline")}
+        </VisuallyHidden>
         <Text size={isAdvanced ? "xl" : "md"} fw="bold" truncate="end">
           {title}
         </Text>
@@ -62,6 +78,7 @@ export default function MinecraftServerStatusWidget({
       {data.online && (
         <>
           {!options.isBedrockServer &&
+            showServerIcon &&
             (data.icon ? (
               <img
                 style={{ flex: 1, width: iconSize, maxHeight: iconSize, objectFit: "contain" }}
@@ -83,7 +100,7 @@ export default function MinecraftServerStatusWidget({
           <Stack gap={4} w={isAdvanced ? "min(100%, 420px)" : "auto"} align="stretch">
             <Group gap={5} c="dimmed" align="center" justify="center">
               <IconUsersGroup size={isAdvanced ? "1.25rem" : "1rem"} />
-              <Text size={isAdvanced ? "lg" : "md"}>
+              <Text size={isAdvanced ? "lg" : isDense ? "sm" : "md"}>
                 {formatNumber(data.players.online, 1)} / {formatNumber(data.players.max, 1)}
               </Text>
             </Group>

@@ -29,8 +29,9 @@ export const FirewallVersion = ({ firewallsVersionData, selectedFirewall, isTiny
         autoContrast
         variant="outline"
         color="lightgray"
-        size={isTiny ? "8px" : "xs"}
-        style={{ minHeight: "24px" }}
+        size="xs"
+        style={{ minHeight: "24px", maxWidth: isTiny ? 72 : undefined }}
+        styles={{ label: { overflow: "hidden", textOverflow: "ellipsis" } }}
       >
         {formatVersion(version ?? "", t("widget.firewall.versionUnknown"))}
       </Badge>

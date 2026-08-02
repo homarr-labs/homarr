@@ -341,7 +341,7 @@ export function Notebook({
   };
 
   return (
-    <Box h="100%" onDoubleClick={handleDoubleClick}>
+    <Box className="homarr-notebook" h="100%" onDoubleClick={handleDoubleClick}>
       <RichTextEditor
         p={0}
         mt={0}
@@ -528,6 +528,8 @@ export function Notebook({
       {canChange && (
         <>
           <ActionIcon
+            className="homarr-notebook-action"
+            data-visible={isEditing || displayMode === "advanced" || undefined}
             title={isEditing ? t("common.action.save") : t("common.action.edit")}
             aria-label={isEditing ? t("common.action.save") : t("common.action.edit")}
             style={{
@@ -547,6 +549,8 @@ export function Notebook({
           </ActionIcon>
           {isEditing && (
             <ActionIcon
+              className="homarr-notebook-action"
+              data-visible
               title={t("common.action.cancel")}
               aria-label={t("common.action.cancel")}
               style={{

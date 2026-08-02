@@ -336,6 +336,9 @@ const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius, onClick 
 
   return (
     <Card
+      component="button"
+      type="button"
+      disabled={!onClick}
       padding={size.cardPadding}
       radius={itemRadius}
       bg="transparent"
@@ -347,7 +350,10 @@ const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius, onClick 
         display: "flex",
         flexDirection: "column" as const,
         border: "0.0625rem solid var(--border-color)",
-        cursor: onClick ? "pointer" : undefined,
+        color: "inherit",
+        font: "inherit",
+        textAlign: "left",
+        width: "100%",
       }}
     >
       <Group gap="xs" mb={2}>

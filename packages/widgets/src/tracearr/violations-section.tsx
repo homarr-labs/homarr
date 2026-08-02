@@ -9,7 +9,7 @@ export function ViolationsList({ violations }: { violations: TracearrViolation[]
 
   return (
     <Stack gap={4}>
-      <Text size="xs" fw={600} c="dimmed" tt="uppercase">
+      <Text size="xs" fw={600} c="dimmed">
         {t("violations.title")}
       </Text>
       {violations.length === 0 ? (

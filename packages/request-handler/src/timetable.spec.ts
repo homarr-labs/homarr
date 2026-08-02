@@ -14,7 +14,8 @@ vi.mock("@homarr/core/infrastructure/http", () => ({
 const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
 const mockCreateCertificateAgent = vi.mocked(createCertificateAgentAsync);
 const mockCloseDispatcher = vi.fn();
-const mockDispatcher = { close: mockCloseDispatcher };
+const mockDestroyDispatcher = vi.fn().mockResolvedValue(undefined);
+const mockDispatcher = { close: mockCloseDispatcher, destroy: mockDestroyDispatcher };
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -154,6 +155,41 @@ describe("timetable response bounds", () => {
       expect.objectContaining({ dispatcher: mockDispatcher, redirect: "error" }),
     );
     expect(mockCloseDispatcher).toHaveBeenCalledOnce();
+  });
+
+  it("destroys the pinned station dispatcher when response handling fails", async () => {
+    mockFetch.mockResolvedValue(new Response("not json"));
+
+    await expect(
+      timetableSearchStationsRequestHandler
+        .handler({
+          baseUrl: "https://timetable.example.com",
+          query: "invalid-stations",
+          pinnedAddresses: [{ address: "93.184.216.34", family: 4 }],
+        })
+        .getDataAsync(),
+    ).rejects.toThrow();
+
+    expect(mockDestroyDispatcher).toHaveBeenCalledOnce();
+    expect(mockCloseDispatcher).not.toHaveBeenCalled();
+  });
+
+  it("destroys the pinned timetable dispatcher when response handling fails", async () => {
+    mockFetch.mockResolvedValue(new Response("not json"));
+
+    await expect(
+      timetableGetTimetableRequestHandler
+        .handler({
+          baseUrl: "https://timetable.example.com",
+          stationId: "invalid-departures",
+          limit: 1,
+          pinnedAddresses: [{ address: "93.184.216.34", family: 4 }],
+        })
+        .getDataAsync(),
+    ).rejects.toThrow();
+
+    expect(mockDestroyDispatcher).toHaveBeenCalledOnce();
+    expect(mockCloseDispatcher).not.toHaveBeenCalled();
   });
 
   it("never caches more departures than requested", async () => {

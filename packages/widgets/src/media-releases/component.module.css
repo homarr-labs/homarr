@@ -1,7 +1,9 @@
-.entry {
+.item {
+  display: block;
+  width: 100%;
   min-width: 0;
   color: inherit;
-  text-decoration: none;
+  text-align: start;
   transition: background-color 120ms ease;
 
   &:hover,
@@ -15,12 +17,8 @@
   }
 }
 
-.poster {
-  flex-shrink: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .entry {
+  .item {
     transition: none;
   }
 }

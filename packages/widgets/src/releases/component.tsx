@@ -1,7 +1,18 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Button, Divider, Group, ScrollArea, SimpleGrid, Stack, Text, Title, Tooltip } from "@mantine/core";
+import {
+  Button,
+  Divider,
+  Group,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
+  Tooltip,
+  UnstyledButton,
+} from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import {
   IconArchive,
@@ -204,105 +215,111 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
                   : undefined
               }
             >
-              <Group
+              <UnstyledButton
                 className={combineClasses("releases-repository-header", classes.releasesRepositoryHeader, {
                   [classes.active ?? ""]: isActive,
                 })}
-                p="xs"
                 onClick={() => toggleExpandedDisplay(repository)}
+                aria-expanded={isActive}
               >
-                <MaskedOrNormalImage
-                  className="releases-repository-header-icon"
-                  imageUrl={repository.iconUrl ?? repository.providerMetadata?.iconUrl}
-                  hasColor={hasIconColor}
-                  style={{
-                    width: "1em",
-                    aspectRatio: "1/1",
-                  }}
-                />
+                <Group p="xs">
+                  <MaskedOrNormalImage
+                    className="releases-repository-header-icon"
+                    imageUrl={repository.iconUrl ?? repository.providerMetadata?.iconUrl}
+                    hasColor={hasIconColor}
+                    style={{
+                      width: "1em",
+                      aspectRatio: "1/1",
+                    }}
+                  />
 
-                <Group
-                  className="releases-repository-header-nameVersion-wrapper"
-                  gap={5}
-                  justify="space-between"
-                  miw={0}
-                  style={{ flex: 1 }}
-                >
-                  {!options.showOnlyIcon && (
-                    <Text className="releases-repository-header-name" size="xs">
-                      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-                      {repository.name || repository.identifier}
-                    </Text>
-                  )}
+                  <Group
+                    className="releases-repository-header-nameVersion-wrapper"
+                    gap={5}
+                    justify="space-between"
+                    miw={0}
+                    style={{ flex: 1 }}
+                  >
+                    {!options.showOnlyIcon && (
+                      <Text className="releases-repository-header-name" size="xs">
+                        {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+                        {repository.name || repository.identifier}
+                      </Text>
+                    )}
 
-                  <Tooltip
-                    className="releases-repository-header-version-tooltip"
-                    withArrow
-                    arrowSize={5}
-                    label={repository.latestRelease}
-                    events={{ hover: repository.latestRelease !== undefined, focus: false, touch: false }}
+                    <Tooltip
+                      className="releases-repository-header-version-tooltip"
+                      withArrow
+                      arrowSize={5}
+                      label={repository.latestRelease}
+                      events={{ hover: repository.latestRelease !== undefined, focus: true, touch: false }}
+                    >
+                      <Text
+                        className="releases-repository-header-version"
+                        size="xs"
+                        fw={700}
+                        truncate="end"
+                        c={hasError ? "red" : "text"}
+                        style={{ flexShrink: 1 }}
+                      >
+                        {hasError ? t("error.label") : (repository.latestRelease ?? t("not-found"))}
+                      </Text>
+                    </Tooltip>
+                  </Group>
+
+                  <Group
+                    className="releases-repository-header-releaseDate-wrapper"
+                    gap={5}
+                    style={{ flex: "0 0 auto" }}
                   >
                     <Text
-                      className="releases-repository-header-version"
+                      className="releases-repository-header-releaseDate"
                       size="xs"
-                      fw={700}
-                      truncate="end"
-                      c={hasError ? "red" : "text"}
-                      style={{ flexShrink: 1 }}
+                      c={
+                        repository.viewed
+                          ? "green"
+                          : repository.isNewRelease
+                            ? "primaryColor"
+                            : repository.isStaleRelease
+                              ? "secondaryColor"
+                              : "dimmed"
+                      }
                     >
-                      {hasError ? t("error.label") : (repository.latestRelease ?? t("not-found"))}
+                      {repository.latestReleaseAt &&
+                        !hasError &&
+                        formatter.relativeTime(repository.latestReleaseAt, {
+                          now,
+                          style: "long",
+                        })}
                     </Text>
-                  </Tooltip>
-                </Group>
-
-                <Group className="releases-repository-header-releaseDate-wrapper" gap={5} style={{ flex: "0 0 auto" }}>
-                  <Text
-                    className="releases-repository-header-releaseDate"
-                    size="xs"
-                    c={
-                      repository.viewed
-                        ? "green"
-                        : repository.isNewRelease
-                          ? "primaryColor"
-                          : repository.isStaleRelease
-                            ? "secondaryColor"
-                            : "dimmed"
-                    }
-                  >
-                    {repository.latestReleaseAt &&
-                      !hasError &&
-                      formatter.relativeTime(repository.latestReleaseAt, {
-                        now,
-                        style: "long",
-                      })}
-                  </Text>
-                  {hasError ? (
-                    <IconTriangleFilled
-                      className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-error"
-                      size={10}
-                      color="var(--mantine-color-red-filled)"
-                    />
-                  ) : repository.viewed ? (
-                    <IconCheck
-                      className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-confirmed"
-                      size={10}
-                      color="green"
-                    />
-                  ) : (
-                    (repository.isNewRelease || repository.isStaleRelease) && (
-                      <IconCircleFilled
-                        className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-marker"
+                    {hasError ? (
+                      <IconTriangleFilled
+                        className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-error"
                         size={10}
-                        color={
-                          repository.isNewRelease
-                            ? "var(--mantine-color-primaryColor-filled)"
-                            : "var(--mantine-color-secondaryColor-filled)"
-                        }
+                        color="var(--mantine-color-red-filled)"
                       />
-                    )
-                  )}
+                    ) : repository.viewed ? (
+                      <IconCheck
+                        className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-confirmed"
+                        size={10}
+                        color="green"
+                      />
+                    ) : (
+                      (repository.isNewRelease || repository.isStaleRelease) && (
+                        <IconCircleFilled
+                          className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-marker"
+                          size={10}
+                          color={
+                            repository.isNewRelease
+                              ? "var(--mantine-color-primaryColor-filled)"
+                              : "var(--mantine-color-secondaryColor-filled)"
+                          }
+                        />
+                      )
+                    )}
+                  </Group>
                 </Group>
-              </Group>
+              </UnstyledButton>
               {(options.showDetails || isAdvanced) && (
                 <DetailsDisplay repository={repository} toggleExpandedDisplay={toggleExpandedDisplay} />
               )}
@@ -334,198 +351,203 @@ const DetailsDisplay = ({ repository, toggleExpandedDisplay }: DetailsDisplayPro
 
   return (
     <>
-      <Divider className="releases-repository-details-divider" onClick={() => toggleExpandedDisplay(repository)} />
-      <Group
+      <Divider className="releases-repository-details-divider" />
+      <UnstyledButton
         className={combineClasses("releases-repository-details", classes.releasesRepositoryDetails)}
-        justify="space-between"
-        p={5}
         onClick={() => toggleExpandedDisplay(repository)}
       >
-        <Group className="releases-repository-details-icon-wrapper">
-          <Tooltip
-            className={combineClasses(
-              "releases-repository-details-icon-tooltip",
-              "releases-repository-details-icon-preRelease-tooltip",
-            )}
-            label={t("pre-release")}
-            withArrow
-            arrowSize={5}
-          >
-            <IconProgressCheck
+        <Group justify="space-between" p={5}>
+          <Group className="releases-repository-details-icon-wrapper">
+            <Tooltip
               className={combineClasses(
-                "releases-repository-details-icon",
-                "releases-repository-details-icon-preRelease",
+                "releases-repository-details-icon-tooltip",
+                "releases-repository-details-icon-preRelease-tooltip",
               )}
-              size={13}
-              color={
-                repository.isPreRelease ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
-              }
-            />
-          </Tooltip>
-
-          <Tooltip
-            className={combineClasses(
-              "releases-repository-details-icon-tooltip",
-              "releases-repository-details-icon-archived-tooltip",
-            )}
-            label={t("archived")}
-            withArrow
-            arrowSize={5}
-          >
-            <IconArchive
-              className={combineClasses(
-                "releases-repository-details-icon",
-                "releases-repository-details-icon-archived",
-              )}
-              size={13}
-              color={repository.isArchived ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
-            />
-          </Tooltip>
-
-          <Tooltip
-            className={combineClasses(
-              "releases-repository-details-icon-tooltip",
-              "releases-repository-details-icon-forked-tooltip",
-            )}
-            label={t("forked")}
-            withArrow
-            arrowSize={5}
-          >
-            <IconGitFork
-              className={combineClasses("releases-repository-details-icon", "releases-repository-details-icon-forked")}
-              size={13}
-              color={repository.isFork ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
-            />
-          </Tooltip>
-        </Group>
-        <Group className="releases-repository-details-stats">
-          <Tooltip
-            className={combineClasses(
-              "releases-repository-details-stats-tooltip",
-              "releases-repository-details-stats-stars-tooltip",
-            )}
-            label={t("starsCount")}
-            withArrow
-            arrowSize={5}
-          >
-            <Group
-              className={combineClasses(
-                "releases-repository-details-stats-wrapper",
-                "releases-repository-details-stats-stars-wrapper",
-              )}
-              gap={5}
+              label={t("pre-release")}
+              withArrow
+              arrowSize={5}
             >
-              <IconStar
+              <IconProgressCheck
                 className={combineClasses(
-                  "releases-repository-details-stats-icon",
-                  "releases-repository-details-stats-stars-icon",
+                  "releases-repository-details-icon",
+                  "releases-repository-details-icon-preRelease",
                 )}
-                size={12}
-                color={!repository.starsCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                size={13}
+                color={
+                  repository.isPreRelease ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
+                }
               />
-              <Text
-                className={combineClasses(
-                  "releases-repository-details-stats-text",
-                  "releases-repository-details-stats-stars-text",
-                )}
-                size="xs"
-                c={!repository.starsCount ? "dimmed" : ""}
-              >
-                {!repository.starsCount
-                  ? "-"
-                  : formatter.number(repository.starsCount, {
-                      notation: "compact",
-                      maximumFractionDigits: 1,
-                    })}
-              </Text>
-            </Group>
-          </Tooltip>
+            </Tooltip>
 
-          <Tooltip
-            className={combineClasses(
-              "releases-repository-details-stats-tooltip",
-              "releases-repository-details-stats-forks-tooltip",
-            )}
-            label={t("forksCount")}
-            withArrow
-            arrowSize={5}
-          >
-            <Group
+            <Tooltip
               className={combineClasses(
-                "releases-repository-details-stats-wrapper",
-                "releases-repository-details-stats-forks-wrapper",
+                "releases-repository-details-icon-tooltip",
+                "releases-repository-details-icon-archived-tooltip",
               )}
-              gap={5}
+              label={t("archived")}
+              withArrow
+              arrowSize={5}
+            >
+              <IconArchive
+                className={combineClasses(
+                  "releases-repository-details-icon",
+                  "releases-repository-details-icon-archived",
+                )}
+                size={13}
+                color={
+                  repository.isArchived ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
+                }
+              />
+            </Tooltip>
+
+            <Tooltip
+              className={combineClasses(
+                "releases-repository-details-icon-tooltip",
+                "releases-repository-details-icon-forked-tooltip",
+              )}
+              label={t("forked")}
+              withArrow
+              arrowSize={5}
             >
               <IconGitFork
                 className={combineClasses(
-                  "releases-repository-details-stats-icon",
-                  "releases-repository-details-stats-forks-icon",
+                  "releases-repository-details-icon",
+                  "releases-repository-details-icon-forked",
                 )}
-                size={12}
-                color={!repository.forksCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                size={13}
+                color={repository.isFork ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
               />
-              <Text
-                className={combineClasses(
-                  "releases-repository-details-stats-text",
-                  "releases-repository-details-stats-forks-text",
-                )}
-                size="xs"
-                c={!repository.forksCount ? "dimmed" : ""}
-              >
-                {!repository.forksCount
-                  ? "-"
-                  : formatter.number(repository.forksCount, {
-                      notation: "compact",
-                      maximumFractionDigits: 1,
-                    })}
-              </Text>
-            </Group>
-          </Tooltip>
-
-          <Tooltip
-            className={combineClasses(
-              "releases-repository-details-stats-tooltip",
-              "releases-repository-details-stats-issues-tooltip",
-            )}
-            label={t("issuesCount")}
-            withArrow
-            arrowSize={5}
-          >
-            <Group
+            </Tooltip>
+          </Group>
+          <Group className="releases-repository-details-stats">
+            <Tooltip
               className={combineClasses(
-                "releases-repository-details-stats-wrapper",
-                "releases-repository-details-stats-issues-wrapper",
+                "releases-repository-details-stats-tooltip",
+                "releases-repository-details-stats-stars-tooltip",
               )}
-              gap={5}
+              label={t("starsCount")}
+              withArrow
+              arrowSize={5}
             >
-              <IconCircleDot
+              <Group
                 className={combineClasses(
-                  "releases-repository-details-stats-icon",
-                  "releases-repository-details-stats-issues-icon",
+                  "releases-repository-details-stats-wrapper",
+                  "releases-repository-details-stats-stars-wrapper",
                 )}
-                size={12}
-                color={!repository.openIssues ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
-              />
-              <Text
-                className={combineClasses(
-                  "releases-repository-details-stats-text",
-                  "releases-repository-details-stats-issues-text",
-                )}
-                size="xs"
-                c={!repository.openIssues ? "dimmed" : ""}
+                gap={5}
               >
-                {!repository.openIssues
-                  ? "-"
-                  : formatter.number(repository.openIssues, {
-                      notation: "compact",
-                      maximumFractionDigits: 1,
-                    })}
-              </Text>
-            </Group>
-          </Tooltip>
+                <IconStar
+                  className={combineClasses(
+                    "releases-repository-details-stats-icon",
+                    "releases-repository-details-stats-stars-icon",
+                  )}
+                  size={12}
+                  color={!repository.starsCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                />
+                <Text
+                  className={combineClasses(
+                    "releases-repository-details-stats-text",
+                    "releases-repository-details-stats-stars-text",
+                  )}
+                  size="xs"
+                  c={!repository.starsCount ? "dimmed" : ""}
+                >
+                  {!repository.starsCount
+                    ? "-"
+                    : formatter.number(repository.starsCount, {
+                        notation: "compact",
+                        maximumFractionDigits: 1,
+                      })}
+                </Text>
+              </Group>
+            </Tooltip>
+
+            <Tooltip
+              className={combineClasses(
+                "releases-repository-details-stats-tooltip",
+                "releases-repository-details-stats-forks-tooltip",
+              )}
+              label={t("forksCount")}
+              withArrow
+              arrowSize={5}
+            >
+              <Group
+                className={combineClasses(
+                  "releases-repository-details-stats-wrapper",
+                  "releases-repository-details-stats-forks-wrapper",
+                )}
+                gap={5}
+              >
+                <IconGitFork
+                  className={combineClasses(
+                    "releases-repository-details-stats-icon",
+                    "releases-repository-details-stats-forks-icon",
+                  )}
+                  size={12}
+                  color={!repository.forksCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                />
+                <Text
+                  className={combineClasses(
+                    "releases-repository-details-stats-text",
+                    "releases-repository-details-stats-forks-text",
+                  )}
+                  size="xs"
+                  c={!repository.forksCount ? "dimmed" : ""}
+                >
+                  {!repository.forksCount
+                    ? "-"
+                    : formatter.number(repository.forksCount, {
+                        notation: "compact",
+                        maximumFractionDigits: 1,
+                      })}
+                </Text>
+              </Group>
+            </Tooltip>
+
+            <Tooltip
+              className={combineClasses(
+                "releases-repository-details-stats-tooltip",
+                "releases-repository-details-stats-issues-tooltip",
+              )}
+              label={t("issuesCount")}
+              withArrow
+              arrowSize={5}
+            >
+              <Group
+                className={combineClasses(
+                  "releases-repository-details-stats-wrapper",
+                  "releases-repository-details-stats-issues-wrapper",
+                )}
+                gap={5}
+              >
+                <IconCircleDot
+                  className={combineClasses(
+                    "releases-repository-details-stats-icon",
+                    "releases-repository-details-stats-issues-icon",
+                  )}
+                  size={12}
+                  color={!repository.openIssues ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                />
+                <Text
+                  className={combineClasses(
+                    "releases-repository-details-stats-text",
+                    "releases-repository-details-stats-issues-text",
+                  )}
+                  size="xs"
+                  c={!repository.openIssues ? "dimmed" : ""}
+                >
+                  {!repository.openIssues
+                    ? "-"
+                    : formatter.number(repository.openIssues, {
+                        notation: "compact",
+                        maximumFractionDigits: 1,
+                      })}
+                </Text>
+              </Group>
+            </Tooltip>
+          </Group>
         </Group>
-      </Group>
+      </UnstyledButton>
     </>
   );
 };

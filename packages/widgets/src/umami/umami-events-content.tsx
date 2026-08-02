@@ -15,6 +15,7 @@ interface UmamiEventsContentProps {
   timeFrame: string;
   eventNames: string[];
   chartType: string;
+  showXAxis: boolean;
 }
 
 export function UmamiEventsContent({
@@ -23,6 +24,7 @@ export function UmamiEventsContent({
   timeFrame,
   eventNames,
   chartType,
+  showXAxis,
 }: UmamiEventsContentProps) {
   const t = useScopedI18n("widget.umami");
   const { colorScheme } = useMantineColorScheme();
@@ -104,7 +106,7 @@ export function UmamiEventsContent({
             gridAxis="none"
             withLegend={false}
             withTooltip
-            withXAxis
+            withXAxis={showXAxis}
             withYAxis={false}
             xAxisProps={{
               tick: { fontSize: 9, fill: tickColor },
@@ -121,7 +123,7 @@ export function UmamiEventsContent({
             gridAxis="none"
             withLegend={false}
             withTooltip
-            withXAxis
+            withXAxis={showXAxis}
             withYAxis={false}
             barProps={{ radius: 2 }}
             xAxisProps={{

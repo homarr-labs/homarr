@@ -20,9 +20,17 @@ interface SingleInstanceLayoutProps {
   isTiny: boolean;
   widgetKey: string;
   isAdvanced: boolean;
+  hideFooter: boolean;
 }
 
-export function SingleInstanceLayout({ instance, options, isTiny, widgetKey, isAdvanced }: SingleInstanceLayoutProps) {
+export function SingleInstanceLayout({
+  instance,
+  options,
+  isTiny,
+  widgetKey,
+  isAdvanced,
+  hideFooter,
+}: SingleInstanceLayoutProps) {
   const t = useScopedI18n("widget.coolify");
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${widgetKey}`,
@@ -74,7 +82,15 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey, isA
               oolify
             </Text>
           </Group>
-          <Anchor href={baseUrl} target="_blank" fz={isTiny ? "xs" : "sm"} fw={500} c="dimmed" lineClamp={1}>
+          <Anchor
+            href={baseUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            fz={isTiny ? "xs" : "sm"}
+            fw={500}
+            c="dimmed"
+            lineClamp={1}
+          >
             {displayUrl}
           </Anchor>
         </Group>
@@ -104,21 +120,23 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey, isA
           )}
         </Accordion>
 
-        <Group
-          justify="space-between"
-          p={4}
-          style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
-        >
-          <Group gap={2}>
-            <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
+        {!hideFooter && (
+          <Group
+            justify="space-between"
+            p={4}
+            style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
+          >
+            <Group gap={2}>
+              <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
+              <Text size="xs" c="dimmed">
+                v{instance.instanceInfo.version}
+              </Text>
+            </Group>
             <Text size="xs" c="dimmed">
-              v{instance.instanceInfo.version}
+              {t("footer.updated", { when: relativeTime })}
             </Text>
           </Group>
-          <Text size="xs" c="dimmed">
-            {t("footer.updated", { when: relativeTime })}
-          </Text>
-        </Group>
+        )}
       </Stack>
     </ScrollArea>
   );

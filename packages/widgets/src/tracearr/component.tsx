@@ -18,6 +18,23 @@ const ADVANCED_GRID_BREAKPOINT = 800;
 const ADVANCED_GRID_GAP_PX = 16;
 const ADVANCED_GRID_PADDING_PX = 16;
 
+export const getCompactSectionVisibility = ({
+  height,
+  showStreams,
+  showViolations,
+  hasViolations,
+  showRecentActivity,
+}: {
+  height: number;
+  showStreams: boolean;
+  showViolations: boolean;
+  hasViolations: boolean;
+  showRecentActivity: boolean;
+}) => ({
+  violations: showViolations && (hasViolations || height >= 240 || !showStreams),
+  recentActivity: showRecentActivity && (height >= 360 || (!showStreams && (!showViolations || !hasViolations))),
+});
+
 export default function TracearrWidget({
   options,
   integrationIds,
@@ -124,6 +141,13 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
   const streams = displayMode === "advanced" ? combined.streams.data : combined.streams.data.slice(0, compactLimit);
   const violations = combined.violations?.data ?? [];
   const recentActivity = combined.recentActivity?.data ?? [];
+  const compactSections = getCompactSectionVisibility({
+    height,
+    showStreams: options.showStreams,
+    showViolations: options.showViolations,
+    hasViolations: violations.length > 0,
+    showRecentActivity: options.showRecentActivity,
+  });
 
   if (displayMode === "advanced") {
     const isTwoColumn = width >= ADVANCED_GRID_BREAKPOINT;
@@ -154,9 +178,9 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
     <ScrollArea h="100%">
       <Stack gap="xs" p="xs">
         {options.showStats && <StatsBar stats={combined.stats} summary={combined.streams.summary} width={width} />}
+        {compactSections.violations && <ViolationsList violations={violations.slice(0, compactLimit)} />}
         {options.showStreams && <StreamsList streams={streams} width={width} />}
-        {options.showViolations && <ViolationsList violations={violations.slice(0, compactLimit)} />}
-        {options.showRecentActivity && <RecentActivityList sessions={recentActivity.slice(0, compactLimit)} />}
+        {compactSections.recentActivity && <RecentActivityList sessions={recentActivity.slice(0, compactLimit)} />}
         {noSectionsEnabled && (
           <Text c="dimmed" ta="center">
             {t("noSectionsEnabled")}

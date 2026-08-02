@@ -1,10 +1,9 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import dayjs from "dayjs";
-import localizedFormat from "dayjs/plugin/localizedFormat";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
-dayjs.extend(localizedFormat);
+import { formatLocalizedDate } from "../../common/locale";
 
 const styles: Record<string, CSSProperties> = {
   wrapper: {
@@ -54,6 +53,8 @@ interface BeszelTooltipProps {
 }
 
 const BeszelTooltipContent = ({ active, label, payload, formatter, showTotal }: BeszelTooltipProps) => {
+  const locale = useCurrentIntlLocale();
+  const t = useScopedI18n("common");
   const isActive = active && (payload?.length ?? 0) > 0;
   if (!isActive) return null;
 
@@ -66,7 +67,9 @@ const BeszelTooltipContent = ({ active, label, payload, formatter, showTotal }: 
   if (!sorted.length) return null;
 
   const rawTime = sorted[0]?.payload?.rawTime as string | undefined;
-  const tooltipLabel = rawTime ? dayjs(rawTime).format("MMM D, LT") : label;
+  const tooltipLabel = rawTime
+    ? formatLocalizedDate(rawTime, locale, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })
+    : label;
   const total = sorted.reduce((sum, p) => sum + p.value, 0);
 
   return (
@@ -81,7 +84,7 @@ const BeszelTooltipContent = ({ active, label, payload, formatter, showTotal }: 
       ))}
       {showTotal && sorted.length > 1 && (
         <div style={{ ...styles.row, ...styles.separator }}>
-          <span style={styles.name}>Total</span>
+          <span style={styles.name}>{t("total")}</span>
           <span style={styles.value}>{formatter(total)}</span>
         </div>
       )}
@@ -100,6 +103,6 @@ export const makeTooltipProps = (formatter: (v: number) => string, showTotal = f
       showTotal={showTotal}
     />
   ),
-  wrapperStyle: { zIndex: 10000, pointerEvents: "none" as const },
+  wrapperStyle: { pointerEvents: "none" as const },
   isAnimationActive: false,
 });

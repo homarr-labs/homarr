@@ -294,9 +294,6 @@ const CardShell = ({
     p="xs"
     h={CARD_HEIGHT[density]}
   >
-    {item.imageUrl && (
-      <span className={classes.backdrop} style={{ backgroundImage: `url("${item.imageUrl}")` }} aria-hidden />
-    )}
     <div className={classes.content}>{children}</div>
   </Paper>
 );

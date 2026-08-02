@@ -13,6 +13,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  VisuallyHidden,
 } from "@mantine/core";
 import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-react";
 
@@ -87,7 +88,7 @@ export default function MediaTranscodingWidget({
   if (!transcodingData) return <WidgetEmptyState />;
 
   const queuePageCount = totalQueuePages ?? 1;
-  const isTiny = !isAdvanced && width < 256;
+  const isTiny = !isAdvanced && (width < 280 || height < 140);
 
   if (isAdvanced) {
     return (
@@ -131,7 +132,9 @@ export default function MediaTranscodingWidget({
               label: (
                 <Center style={{ gap: 4 }}>
                   <Icon size={12} />
-                  {!isTiny && (
+                  {isTiny ? (
+                    <VisuallyHidden>{t(`tab.${value}`)}</VisuallyHidden>
+                  ) : (
                     <Text span size="xs">
                       {t(`tab.${value}`)}
                     </Text>

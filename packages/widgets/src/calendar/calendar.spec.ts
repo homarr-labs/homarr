@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import type { CalendarEvent } from "@homarr/integrations/types";
 
-import { getCalendarAgendaEvents, groupEventsByDate, splitEvents } from "./calendar-events";
+import { getCalendarAgendaEvents, groupEventsByDate, moveCalendarMonth, splitEvents } from "./calendar-events";
 
 describe("splitEvents should split multi-day events into multiple single-day events", () => {
   test("2 day all-day event should be split up into two all-day events", () => {
@@ -89,6 +89,13 @@ describe("getCalendarAgendaEvents", () => {
     digital.metadata = { type: "radarr", releaseType: "digitalRelease" };
 
     expect(getCalendarAgendaEvents([cinema, digital], new Date(2025, 0, 1), ["inCinemas"])).toEqual([cinema]);
+  });
+});
+
+describe("moveCalendarMonth", () => {
+  test("uses the first day so short months do not skip", () => {
+    expect(moveCalendarMonth(new Date(2025, 0, 31), 1)).toEqual(new Date(2025, 1, 1));
+    expect(moveCalendarMonth(new Date(2025, 2, 31), -1)).toEqual(new Date(2025, 1, 1));
   });
 });
 

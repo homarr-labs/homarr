@@ -89,7 +89,9 @@ export default function BazarrWidget({
             <div key={statKey} className={`${classes.statTile} ${isWarning ? classes.statTileWarning : ""}`}>
               <Icon className={classes.statIcon} size={iconSize} stroke={1.5} />
               <span className={`${classes.statValue} ${isWarning ? classes.statValueWarning : ""}`}>{value}</span>
-              <span className={classes.statLabel}>{t(statKey)}</span>
+              <span className={classes.statLabel} title={t(statKey)}>
+                {t(statKey)}
+              </span>
             </div>
           );
         })}

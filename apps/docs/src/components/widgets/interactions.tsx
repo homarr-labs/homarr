@@ -1,11 +1,11 @@
-import { IconArrowsMaximize, IconMouse2, IconPlus } from "@tabler/icons-react";
+import { IconArrowsMaximize, IconLayoutGrid, IconMouse2, IconPlus } from "@tabler/icons-react";
 
 const interactions = [
   {
     icon: IconArrowsMaximize,
     title: "Advanced view",
     description:
-      "Hold Shift while hovering (then pin it), press Shift + Enter, or choose Open advanced view from the widget menu.",
+      "Hold Shift while hovering for an in-place preview, press Shift + Enter, or choose Open advanced view from the widget menu.",
   },
   {
     icon: IconMouse2,
@@ -19,6 +19,12 @@ const interactions = [
     description:
       "With board changes allowed, right-click or touch and hold empty grid space to add there. Keyboard users can press Shift + F10.",
   },
+  {
+    icon: IconLayoutGrid,
+    title: "Adaptive detail",
+    description:
+      "Resize a widget to tune its density. Compact views keep primary status visible, then reveal details and controls as space or intent allows.",
+  },
 ] as const;
 
 export const WidgetInteractionGuide = () => (
@@ -30,7 +36,7 @@ export const WidgetInteractionGuide = () => (
         Hide shortcuts
       </span>
     </summary>
-    <div className="grid gap-3 border-0 border-t border-solid border-[#e5e7eb] p-4 md:grid-cols-3 dark:border-[#333]">
+    <div className="grid gap-3 border-0 border-t border-solid border-[#e5e7eb] p-4 md:grid-cols-2 xl:grid-cols-4 dark:border-[#333]">
       {interactions.map(({ icon: Icon, title, description }) => (
         <div key={title} className="rounded-lg bg-white p-3 shadow-sm dark:bg-gray-950">
           <Icon aria-hidden size={20} stroke={1.5} className="mb-2 stroke-red-500" />
@@ -40,8 +46,8 @@ export const WidgetInteractionGuide = () => (
       ))}
     </div>
     <p className="m-0 px-4 pb-4 text-xs text-[#696969] dark:text-[#999]">
-      Advanced view reuses the widget&apos;s live data and cache. Touch devices expose a maximize control; board actions
-      respect your permissions and right-click preference.
+      Advanced view reuses the widget&apos;s live data and cache. The rest of the board stays visible but dimmed. Touch
+      devices expose a maximize control; app tiles stay compact.
     </p>
   </details>
 );

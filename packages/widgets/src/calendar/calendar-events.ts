@@ -4,6 +4,9 @@ import type { CalendarEvent } from "@homarr/integrations/types";
 
 export const toCalendarDateKey = (date: Date) => dayjs(date).format("YYYY-MM-DD");
 
+export const moveCalendarMonth = (month: Date, amount: number): Date =>
+  dayjs(month).startOf("month").add(amount, "month").toDate();
+
 const matchesReleaseType = (event: CalendarEvent, releaseTypes: readonly string[]) =>
   event.metadata?.type !== "radarr" || releaseTypes.includes(event.metadata.releaseType);
 

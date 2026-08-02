@@ -1,4 +1,4 @@
-import { Group, Stack, Text } from "@mantine/core";
+import { Group, SimpleGrid, Text } from "@mantine/core";
 import { IconWifi } from "@tabler/icons-react";
 
 import { useScopedI18n } from "@homarr/translation/client";
@@ -9,10 +9,12 @@ export const WifiVariant = ({
   countGuests,
   countUsers,
   compact = false,
+  horizontal = false,
 }: {
   countUsers: number;
   countGuests: number;
   compact?: boolean;
+  horizontal?: boolean;
 }) => {
   const t = useScopedI18n("widget.networkControllerStatus.card");
   return (
@@ -23,10 +25,10 @@ export const WifiVariant = ({
           {t("variants.wifi.name")}
         </Text>
       </Group>
-      <Stack gap={compact ? "sm" : "lg"}>
+      <SimpleGrid cols={horizontal ? 2 : 1} spacing={compact ? "sm" : "lg"}>
         <StatRow label={t("users.label")} value={countUsers} compact={compact} />
         <StatRow label={t("guests.label")} value={countGuests} compact={compact} />
-      </Stack>
+      </SimpleGrid>
     </>
   );
 };

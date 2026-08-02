@@ -4,8 +4,6 @@ description: "Embeds an app into the board."
 hide_title: true
 ---
 
-import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
-
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
@@ -27,7 +25,10 @@ import piHoleApp from "./img/pi-hole-ping-icon.png";
   <img src={piHoleApp} alt="app pi-hole with-status-check status-check-icon" width={128 * 1.5} height={128 * 1.5} />
   <img src={jellyseerrApp} alt="app jellyseerr with-description-tooltip" height={128 * 1.5} />
 </div>
-<WidgetInteractionGuide />
+
+### Interactions
+
+App tiles stay compact and open their configured destination directly. Right-click a tile to inspect its status or change its settings when the board and your preferences allow it.
 
 ### Adding the widget
 
