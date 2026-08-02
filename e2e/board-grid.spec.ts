@@ -1893,6 +1893,8 @@ const dragLocatorToImmediateReleaseAsync = async (
 };
 
 const resizeLocatorByImmediateReleaseAsync = async (page: Page, handle: Locator, deltaX: number, deltaY: number) => {
+  const entry = await getGridEntryLocatorAsync(handle);
+  await expectGridEntryGeometrySettledAsync(entry);
   const box = await expectBoundingBoxAsync(handle);
   const start = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
   await page.mouse.move(start.x, start.y);
