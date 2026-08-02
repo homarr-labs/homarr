@@ -166,12 +166,7 @@ export const BoardContainerSection = ({ section }: Props) => {
           aria-hidden={isVisuallyCollapsed}
           inert={isVisuallyCollapsed}
         >
-          <SectionGrid
-            section={section}
-            columnCount={section.width}
-            requestedRowCount={section.height}
-            label={label}
-          />
+          <SectionGrid section={section} columnCount={section.width} requestedRowCount={section.height} label={label} />
         </Box>
       </Card>
       {isEditMode && <BoardContainerMenu section={section} />}
