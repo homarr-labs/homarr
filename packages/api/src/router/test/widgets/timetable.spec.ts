@@ -86,14 +86,16 @@ describe("timetableRouter source authorization", () => {
     ).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
 
-  it("loads a persisted private endpoint only through a viewable timetable item", async () => {
+  it("rejects a persisted private endpoint at runtime even through a viewable timetable item", async () => {
     const db = createDb();
     const baseUrl = "http://timetable.internal:8080";
     const { itemId } = await createTimetableItemAsync(db, { baseUrl });
     const caller = createCaller(db, null);
 
-    await caller.getTimetable({ baseUrl, itemId, stationId: "station", limit: 10 });
-    expect(mocks.getTimetable).toHaveBeenLastCalledWith(expect.objectContaining({ baseUrl }));
+    await expect(caller.getTimetable({ baseUrl, itemId, stationId: "station", limit: 10 })).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+    });
+    expect(mocks.getTimetable).not.toHaveBeenCalled();
     await expect(
       caller.getTimetable({ baseUrl: "http://127.0.0.1:8080", itemId, stationId: "station", limit: 10 }),
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
@@ -128,6 +130,7 @@ describe("timetableRouter source authorization", () => {
     "http://[::1]:8080",
     "http://[::ffff:127.0.0.1]:8080",
     "https://[fd00::1]:8443",
+    "https://192.88.99.1",
     "http://[64:ff9b::7f00:1]:8080",
     "http://[2002:7f00:1::]:8080",
   ])("blocks an unsaved private endpoint %s even for board modifiers", async (baseUrl) => {
@@ -173,17 +176,54 @@ describe("timetableRouter source authorization", () => {
     expect(mocks.searchStations).not.toHaveBeenCalled();
   });
 
-  it("allows the exact saved private endpoint when item and board IDs match", async () => {
+  it("rejects the exact saved private endpoint at runtime", async () => {
     const db = createDb();
     const baseUrl = "http://timetable.internal:8080";
     const { boardId, itemId, ownerId } = await createTimetableItemAsync(db, { baseUrl, isPublic: false });
 
-    await createCaller(db, createSession(ownerId)).searchStations({ baseUrl, boardId, itemId, query: "Bern" });
+    await expect(
+      createCaller(db, createSession(ownerId)).searchStations({ baseUrl, boardId, itemId, query: "Bern" }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
 
     expect(mocks.lookup).not.toHaveBeenCalled();
-    expect(mocks.searchStations).toHaveBeenLastCalledWith(
-      expect.objectContaining({ baseUrl, pinnedAddresses: undefined }),
-    );
+    expect(mocks.searchStations).not.toHaveBeenCalled();
+  });
+
+  it("re-resolves and pins a saved public endpoint for searches and timetable requests", async () => {
+    const db = createDb();
+    const baseUrl = "https://timetable.example.com";
+    const pinnedAddresses = [
+      { address: "93.184.216.34", family: 4 },
+      { address: "93.184.216.35", family: 4 },
+      { address: "2606:2800:220:1:248:1893:25c8:1946", family: 6 },
+    ];
+    mocks.lookup.mockResolvedValue([pinnedAddresses[2], pinnedAddresses[1], pinnedAddresses[0]]);
+    const { boardId, itemId, ownerId } = await createTimetableItemAsync(db, { baseUrl, isPublic: false });
+    const caller = createCaller(db, createSession(ownerId));
+
+    await caller.searchStations({ baseUrl, boardId, itemId, query: "Bern" });
+    await caller.getTimetable({ baseUrl, itemId, stationId: "station", limit: 10 });
+
+    expect(mocks.lookup).toHaveBeenCalledTimes(2);
+    expect(mocks.searchStations).toHaveBeenLastCalledWith(expect.objectContaining({ baseUrl, pinnedAddresses }));
+    expect(mocks.getTimetable).toHaveBeenLastCalledWith(expect.objectContaining({ baseUrl, pinnedAddresses }));
+  });
+
+  it("rejects a saved public hostname when it resolves to a private address at request time", async () => {
+    const db = createDb();
+    const baseUrl = "https://timetable.example.com";
+    mocks.lookup.mockResolvedValue([{ address: "10.0.0.8", family: 4 }]);
+    const { boardId, itemId, ownerId } = await createTimetableItemAsync(db, { baseUrl, isPublic: false });
+    const caller = createCaller(db, createSession(ownerId));
+
+    await expect(caller.searchStations({ baseUrl, boardId, itemId, query: "Bern" })).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+    });
+    await expect(caller.getTimetable({ baseUrl, itemId, stationId: "station", limit: 10 })).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+    });
+    expect(mocks.searchStations).not.toHaveBeenCalled();
+    expect(mocks.getTimetable).not.toHaveBeenCalled();
   });
 
   it("blocks changing a saved timetable to a private endpoint through item options", async () => {
