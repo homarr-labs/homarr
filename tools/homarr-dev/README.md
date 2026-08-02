@@ -66,8 +66,8 @@ homarr doctor              Check Docker and optional CLI integrations
 ```text
 /              Filter by PR number, title, author, branch, CI, image, state, or port
 ↑/↓ or j/k     Select
-Enter or Space Pull latest image and start, or stop when already running
-R              Build a remote PR locally or rebuild a local image
+Enter or Space Start the matching local build, otherwise pull remote; stop when running
+R              Build a remote PR locally in the background or rebuild a local image
 p              Pull a remote PR image and redeploy, preserving port and volume
 m              Toggle demo mode for the next launch
 o              Open PR on GitHub
@@ -82,6 +82,7 @@ q              Quit; during a pull, cancel it
 ```
 
 Pull progress, layer completion, local build provenance, selected PR details, CI state, image availability, inline logs, and the final port remain inside the TUI.
+Local PR images are folded into their remote PR row only when the recorded revision exactly matches the current GitHub head SHA. They are marked `◆ local` and preferred by Enter; outdated builds remain separate local rows. Navigation and the `d` dashboard toggle remain available while a local build runs.
 
 ## Instance Dashboard
 
