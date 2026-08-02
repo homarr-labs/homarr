@@ -1,0 +1,20 @@
+e2e/board-grid.spec.ts
+  s_7b8a552cf9f1f8::t_592c0b7e109e08 1199
+  s_7b8a552cf9f1f8::t_36102b9ea0a142 1198,1200-1201
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "8f0c9435ffb9453324dc8dcdd9f808e24446bc6e",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
