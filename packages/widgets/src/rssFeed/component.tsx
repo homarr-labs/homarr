@@ -60,8 +60,8 @@ export default function RssFeed({ options, width, displayMode }: WidgetComponent
   return (
     <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isAdvanced ? "md" : "xs"}>
       {warning && (
-        <Alert role="status" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs" mb="xs">
-          {warning}
+        <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs" mb="xs">
+          <output>{warning}</output>
         </Alert>
       )}
       <SimpleGrid cols={columns} w="100%" spacing={isAdvanced ? "md" : "xs"} verticalSpacing={isAdvanced ? "md" : "xs"}>
