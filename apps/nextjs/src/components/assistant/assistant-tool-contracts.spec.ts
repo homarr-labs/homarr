@@ -3,7 +3,43 @@ import { z } from "zod/v4";
 
 import { browserToolContracts, normalizeAssistantAppIconUrl } from "./assistant-tool-contracts";
 
+const supportedToolArguments = {
+  ask_user: {
+    question: "How should the app be added?",
+    options: [
+      { id: "yes", label: "Yes" },
+      { id: "no", label: "No" },
+    ],
+  },
+  configure_app: {
+    name: "Wikipedia",
+    description: "The Free Encyclopedia",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/wikipedia.svg",
+    href: "https://wikipedia.org",
+    pingUrl: "https://wikipedia.org",
+  },
+  configure_board_settings: {
+    boardId: "board-1",
+    boardName: "Home",
+    summary: "Improve dashboard contrast.",
+    changes: { primaryColor: "#7C3AED" },
+  },
+  navigate_to_route: { path: "/manage/apps" },
+  open_command_menu: {},
+  open_media_request_search: {},
+} satisfies Record<keyof typeof browserToolContracts, unknown>;
+
 describe("assistant human tool contracts", () => {
+  test("keeps a valid fixture and JSON schema for every supported browser tool", () => {
+    expect(Object.keys(supportedToolArguments).toSorted()).toEqual(Object.keys(browserToolContracts).toSorted());
+
+    for (const [toolName, contract] of Object.entries(browserToolContracts)) {
+      const args = supportedToolArguments[toolName as keyof typeof supportedToolArguments];
+      expect(contract.parameters.safeParse(args).success, toolName).toBe(true);
+      expect(() => z.toJSONSchema(contract.parameters), toolName).not.toThrow();
+    }
+  });
+
   test("accepts a structured question with reusable choices", () => {
     expect(
       browserToolContracts.ask_user.parameters.safeParse({
@@ -33,6 +69,15 @@ describe("assistant human tool contracts", () => {
         href: "https://youtube.com",
       }).success,
     ).toBe(true);
+  });
+
+  test("requires an app name before opening the native form", () => {
+    expect(
+      browserToolContracts.configure_app.parameters.safeParse({
+        iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/wikipedia.svg",
+        href: "https://wikipedia.org",
+      }).success,
+    ).toBe(false);
   });
 
   test("accepts a scoped board settings proposal", () => {

@@ -557,6 +557,14 @@
   margin-top: 0.85rem;
 }
 
+.autoApprovalProgress {
+  margin-top: 0.85rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--mantine-radius-sm);
+  color: var(--mantine-color-green-light-color);
+  background: var(--mantine-color-green-light);
+}
+
 .pendingActionBanner {
   flex: 0 0 auto;
   padding: 0.6rem 0.75rem;

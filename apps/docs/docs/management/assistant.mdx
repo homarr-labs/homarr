@@ -134,6 +134,12 @@ validated input, result, and error state without flooding the conversation with 
 Common collection and widget results are summarized inline as compact responsive cards, while the full
 structured result remains available in the tool card details.
 
+The shield control in the conversation header can enable automatic approvals for the current conversation.
+While enabled, Homarr approves protected mutation calls as they arrive. Human questions and editable review
+forms still wait for input. Automatic approvals turn off when you switch conversations, and the shared
+approval tracker prevents the same call from being approved twice when both a board widget and the floating
+assistant are visible.
+
 When the assistant genuinely needs missing information or a choice, it can pause with a structured
 question. Users can select one of the proposed answers or choose **Other** and enter their own response.
 Submitting the answer resumes the same agent run automatically. The minimized activity bar shows the
@@ -143,7 +149,9 @@ tool call with a new message.
 
 App creation uses Homarr's native app form inside the conversation. The form reuses the local icon picker,
 including automatic matching and searches through the `icon.findIcons` procedure, before the final
-`app.create` approval is requested. The model is instructed not to invent external icon CDN URLs.
+`app.create` approval is requested. App fields are filled only after the complete tool input has arrived, so
+streaming partial arguments cannot replace the proposed values with empty fields. The model is instructed not
+to invent external icon CDN URLs.
 
 Board appearance changes use a similar review flow. The assistant first reads the board's current settings,
 including its complete custom stylesheet, and then opens an editable form with Custom CSS, Appearance,
