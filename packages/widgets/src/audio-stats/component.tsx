@@ -8,9 +8,9 @@ import { formatBytes, formatDuration } from "@homarr/common";
 import type { AudiobookshelfDashboardData } from "@homarr/integrations/types";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { setWidgetRuntimeQueries } from "../definition";
+import { NoIntegrationDataError } from "../errors/no-data-integration";
 import { AudioStatsContent } from "./audio-stats-content";
 
 export default function AudioStatsWidget({
@@ -22,17 +22,22 @@ export default function AudioStatsWidget({
   widgetStateRef,
 }: WidgetComponentProps<"audioStats">) {
   const statsInput = { integrationId: integrationIds[0] ?? "" };
-  const { data: response } = clientApi.widget.audioStats.getStats.useQuery(statsInput);
-  const streamsInput = { integrationIds, showOnlyPlaying: false };
+  const { data: response, error: statsError } = clientApi.widget.audioStats.getStats.useQuery(statsInput);
+  const streamsInput = { integrationIds: [statsInput.integrationId], showOnlyPlaying: true };
   const streamsEnabled = displayMode === "advanced" && response?.kind === "navidrome";
-  const { data: streamResults = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery(streamsInput, {
-    enabled: streamsEnabled,
-  });
+  const { data: streamResults, error: streamsError } = clientApi.widget.mediaServer.getCurrentStreams.useQuery(
+    streamsInput,
+    { enabled: streamsEnabled },
+  );
   setWidgetRuntimeQueries(widgetStateRef, [
     getQueryKey(clientApi.widget.audioStats.getStats, statsInput, "query"),
     ...(streamsEnabled ? [getQueryKey(clientApi.widget.mediaServer.getCurrentStreams, streamsInput, "query")] : []),
   ]);
 
+  if (statsError && response === undefined) throw statsError;
+  if (streamsEnabled && streamsError && streamResults === undefined) throw streamsError;
+  const currentStreams = streamResults ?? [];
+  if (streamsEnabled && currentStreams.some(({ error }) => Boolean(error))) throw new NoIntegrationDataError();
   if (!response) return <WidgetEmptyState />;
 
   const summary = (
@@ -46,22 +51,17 @@ export default function AudioStatsWidget({
   );
   if (displayMode === "compact") return summary;
 
-  const sessions = streamResults.flatMap((result) =>
+  const sessions = currentStreams.flatMap((result) =>
     result.sessions.map((session) => ({ integrationId: result.integrationId, session })),
   );
-  const hasStreamFailures = streamResults.some(({ error }) => Boolean(error));
   const audiobookStats = response.kind === "audiobookshelf" ? (response.data as AudiobookshelfDashboardData) : null;
+  const advancedGridColumns = width >= 760 ? 2 : 1;
   return (
     <Stack h="100%" gap="lg" p="md">
-      {hasStreamFailures && (
-        <Group justify="flex-end">
-          <IntegrationErrorIndicator results={streamResults} />
-        </Group>
-      )}
       <div style={{ minHeight: 150 }}>{summary}</div>
       <ScrollArea style={{ flex: 1, minHeight: 0 }}>
         {response.kind === "navidrome" ? (
-          <SimpleGrid cols={width >= 760 ? 2 : 1} spacing="xs">
+          <SimpleGrid cols={advancedGridColumns} spacing="xs">
             {sessions.map(({ integrationId, session }) => {
               const currentlyPlaying = session.currentlyPlaying;
               if (!currentlyPlaying) return null;
@@ -75,13 +75,15 @@ export default function AudioStatsWidget({
                       {currentlyPlaying.seasonName ?? currentlyPlaying.albumName ?? session.user.username}
                     </Text>
                   </Stack>
-                  <Badge variant="light">{session.sessionName}</Badge>
+                  <Badge variant="light" style={{ flexShrink: 0 }}>
+                    {session.sessionName}
+                  </Badge>
                 </Group>
               );
             })}
           </SimpleGrid>
         ) : (
-          <SimpleGrid cols={width >= 760 ? 2 : 1} spacing="xs">
+          <SimpleGrid cols={advancedGridColumns} spacing="xs">
             {(audiobookStats?.libraries ?? []).map((library) => (
               <Stack key={library.id} gap={2} p="sm">
                 <Group justify="space-between" wrap="nowrap">

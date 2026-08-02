@@ -6,6 +6,7 @@ import { IconBinaryTree } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
+import { showErrorNotification } from "@homarr/notifications";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
@@ -29,18 +30,27 @@ export default function SmartHomeEntityStateWidget({
     entityId: options.entityId,
     integrationId,
   };
-  const { data: entity } = clientApi.widget.smartHome.entityDetails.useQuery(input);
+  const {
+    data: entity,
+    isPending: isEntityPending,
+    error: entityError,
+  } = clientApi.widget.smartHome.entityDetails.useQuery(input);
   const canInteract = useIntegrationsWithInteractAccess().some(({ id }) => id === integrationId);
 
   const utils = clientApi.useUtils();
   const { mutate, isPending, error } = clientApi.widget.smartHome.switchEntity.useMutation({
     onSettled: () => void utils.widget.smartHome.entityDetails.invalidate(input),
+    onError: () =>
+      showErrorNotification({
+        title: t("common.error"),
+        message: t("widget.smartHome-entityState.error.toggleFailed"),
+      }),
   });
 
   const apiUnit = entity?.attributes.unit_of_measurement;
   const unit = options.entityUnit || (typeof apiUnit === "string" ? apiUnit : "");
   const attribute = unit.length > 0 ? ` ${unit}` : "";
-  const isActionable = options.clickable && canInteract && !isPending;
+  const isActionable = options.clickable && canInteract && entity !== undefined && !isEntityPending && !isPending;
 
   const handleClick = useCallback(() => {
     if (isEditMode) {
@@ -77,6 +87,9 @@ export default function SmartHomeEntityStateWidget({
     ],
     [handleClick, isActionable, options.displayName, options.entityId],
   );
+
+  if (entityError && entity === undefined) throw entityError;
+
   const isTiny = width < 128 || height < 96;
   const advancedAttributes = [
     { key: "unit" as const, value: entity?.attributes.unit_of_measurement },
