@@ -127,6 +127,8 @@ describe("Board grid", () => {
       await expect(logicalTile).toHaveCount(1);
       await expectFixedLogicalTileAsync(logicalTile);
       await expect(logicalTile).toHaveCSS("overflow", "hidden");
+      await page.addStyleTag({ content: ".e2e-widget-overflow { overflow: visible; }" });
+      await expect(secondItem.locator("[data-grid-item-content]")).toHaveCSS("overflow", "visible");
       await expect(canvas).toHaveAttribute("data-canvas-overflow", "false");
       await expectDocumentNotHorizontallyScrollableAsync(page);
       const nestedAppLink = nestedItem.locator('a[href="#board-app-opened"]');
@@ -186,10 +188,15 @@ describe("Board grid", () => {
         name: "Collapse: Nested box",
         exact: true,
       });
+      await nestedItem.evaluate((element) => {
+        element.setAttribute("data-e2e-preserved-through-collapse", "true");
+      });
       await collapseContainer.click();
       await expect(containerSection).toHaveAttribute("data-grid-h", "0.5");
       await expect(belowItem).toHaveAttribute("data-grid-y", "0.5");
-      await expect(nestedItem).toHaveCount(0);
+      await expect(nestedItem).toBeHidden();
+      await expect(nestedItem).toHaveAttribute("data-e2e-preserved-through-collapse", "true");
+      await expect(containerSection.locator("[data-collapsed='true']")).toHaveAttribute("inert", "");
       const collapsedControl = containerSection.getByRole("button", { name: "Expand: Nested box", exact: true });
       await expect(collapsedControl).toBeVisible();
       await expect(collapsedControl).toHaveAttribute("data-board-container-collapsed-control", "true");
@@ -212,7 +219,8 @@ describe("Board grid", () => {
         .click();
       await expect(containerSection).toHaveAttribute("data-grid-h", "2");
       await expect(belowItem).toHaveAttribute("data-grid-y", "2");
-      await expect(nestedItem).toHaveCount(1);
+      await expect(nestedItem).toBeVisible();
+      await expect(nestedItem).toHaveAttribute("data-e2e-preserved-through-collapse", "true");
       await captureBoardScreenshotAsync(canvas, screenshotDirectory, "board-grid-read-only.png");
 
       const viewMainSectionBox = await expectBoundingBoxAsync(mainSection);
@@ -1041,6 +1049,11 @@ const seedBoardGridAsync = async (db: SqliteDatabase, creatorId: string) => {
       boardId,
       kind: "clock",
       options: stringifySuperJSON({ is24HourFormat: true }),
+      advancedOptions: stringifySuperJSON({
+        title: null,
+        customCssClasses: ["e2e-widget-overflow"],
+        borderColor: "",
+      }),
     },
     {
       id: belowItemId,

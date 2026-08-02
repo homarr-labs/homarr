@@ -41,3 +41,27 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.containerBody {
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity 140ms ease 80ms,
+    visibility 0s;
+}
+
+.containerBody[data-collapsed="true"] {
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 120ms ease,
+    visibility 0s linear 120ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .containerBody,
+  .containerBody[data-collapsed="true"] {
+    transition: none;
+  }
+}
