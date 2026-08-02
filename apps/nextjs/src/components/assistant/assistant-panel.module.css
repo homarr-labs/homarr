@@ -988,6 +988,10 @@
   flex: 1 1 auto;
 }
 
+.modelButton :global(.mantine-Button-label) {
+  font-size: var(--mantine-font-size-xs);
+}
+
 .reasoningButton {
   min-width: 7.5rem;
   max-width: 10.5rem;

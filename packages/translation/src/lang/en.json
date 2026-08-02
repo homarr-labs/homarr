@@ -2012,12 +2012,12 @@
         "noModels": "No models available",
         "thinking": "Thinking mode",
         "reasoning": {
-          "auto": "Thinking: Auto",
-          "none": "Thinking: Off",
-          "minimal": "Thinking: Minimal",
-          "low": "Thinking: Low",
-          "medium": "Thinking: Medium",
-          "high": "Thinking: High"
+          "auto": "Auto",
+          "none": "Off",
+          "minimal": "Minimal",
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
         }
       },
       "stop": "Stop response",
