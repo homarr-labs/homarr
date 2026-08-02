@@ -14,7 +14,6 @@ import { getBoardLaneColumnCount } from "~/components/board/layout";
 import { SectionContentItem } from "../content";
 import { SectionProvider } from "../section-context";
 import { useSectionItems } from "../use-section-items";
-import { useGridResizePreview } from "./grid-editor-runtime";
 import classes from "./section-grid.module.css";
 
 interface GridPortalHostContextValue {
@@ -138,15 +137,12 @@ const GridPortalContent = ({ itemId, ownerSectionId, integrations, announce }: G
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const { items, innerSections } = useSectionItems(ownerSectionId);
-  const entryPreview = useGridResizePreview(itemId);
-  const ownerPreview = useGridResizePreview(ownerSectionId);
   const persistedEntry = [...items, ...innerSections].find((candidate) => candidate.id === itemId);
-  const entry = withResizePreview(persistedEntry, entryPreview);
+  const entry = persistedEntry;
   const rawSection = board.sections.find((section) => section.id === ownerSectionId);
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
   const persistedSection = toGridSection(rawSection, currentLayoutId);
-  const section =
-    persistedSection?.kind === "container" ? withResizePreview(persistedSection, ownerPreview) : persistedSection;
+  const section = persistedSection;
 
   if (!entry || !section || !currentLayout) return null;
 
@@ -180,22 +176,6 @@ const GridPortalContent = ({ itemId, ownerSectionId, integrations, announce }: G
     </SectionProvider>
   );
 };
-
-const withResizePreview = <
-  TValue extends { xOffset: number; yOffset: number; width: number; height: number } | null | undefined,
->(
-  value: TValue,
-  preview: { x: number; y: number; w: number; h: number } | null,
-): TValue =>
-  value && preview
-    ? ({
-        ...value,
-        xOffset: preview.x,
-        yOffset: preview.y,
-        width: preview.w,
-        height: preview.h,
-      } as TValue)
-    : value;
 
 const toGridSection = (
   section: Section | undefined,

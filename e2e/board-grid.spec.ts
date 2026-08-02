@@ -104,6 +104,10 @@ describe("Board grid", () => {
       await expect(containerSection).toHaveAttribute("data-grid-h", "2");
       const containerLabel = containerSection.locator("[data-board-container-label]");
       await expect(containerLabel).toHaveText("Nested box");
+      const expandedContainerBox = await expectBoundingBoxAsync(containerSection);
+      const expandedContainerLabelBox = await expectBoundingBoxAsync(containerLabel);
+      expect(Math.abs(expandedContainerLabelBox.x - expandedContainerBox.x)).toBeLessThanOrEqual(3);
+      expect(Math.abs(expandedContainerLabelBox.width - expandedContainerBox.width)).toBeLessThanOrEqual(3);
       await expect(nestedItem).toHaveAttribute("data-grid-x", "0");
       await expect(belowItem).toHaveAttribute("data-grid-y", "2");
       const containerLabelBox = await expectBoundingBoxAsync(containerLabel);
@@ -193,6 +197,12 @@ describe("Board grid", () => {
       await expect
         .poll(async () => (await expectBoundingBoxAsync(containerSection)).height)
         .toBeCloseTo(expectedCollapsedHeight, 1);
+      const collapsedContainerBox = await expectBoundingBoxAsync(containerSection);
+      const collapsedControlBox = await expectBoundingBoxAsync(collapsedControl);
+      expect(Math.abs(collapsedControlBox.x - collapsedContainerBox.x)).toBeLessThanOrEqual(3);
+      expect(Math.abs(collapsedControlBox.y - collapsedContainerBox.y)).toBeLessThanOrEqual(3);
+      expect(Math.abs(collapsedControlBox.width - collapsedContainerBox.width)).toBeLessThanOrEqual(3);
+      expect(Math.abs(collapsedControlBox.height - collapsedContainerBox.height)).toBeLessThanOrEqual(3);
 
       await page
         .getByRole("button", {
@@ -637,13 +647,34 @@ describe("Board grid", () => {
       };
       await page.mouse.move(eastResizeStart.x, eastResizeStart.y);
       await page.mouse.down();
-      await page.mouse.move(eastResizeStart.x - logicalCellPitch * canvasScale, eastResizeStart.y, { steps: 12 });
-      await expect(containerSection).toHaveAttribute("data-grid-w", "1");
+      await page.mouse.move(eastResizeStart.x - logicalCellPitch * canvasScale * 0.35, eastResizeStart.y, {
+        steps: 6,
+      });
+      const resizeOutline = containerSection.locator(":scope > [data-grid-resize-outline]");
+      const resizePlaceholder = mainGrid.locator(`[data-grid-placeholder-for="${fixture.containerSectionId}"]`);
+      await expect(resizeOutline).toBeVisible();
+      await expect(resizeOutline).toHaveAttribute("data-grid-resize-valid", "true");
+      await expect(resizePlaceholder).toHaveAttribute("data-grid-placeholder-mode", "resize");
+      await expect(resizePlaceholder).toHaveAttribute("data-grid-w", "2");
+      await expect(containerSection).toHaveAttribute("data-grid-w", "2");
+      const originalResizeWidth = (await expectBoundingBoxAsync(containerSection)).width;
+      const continuousResizeWidth = (await expectBoundingBoxAsync(resizeOutline)).width;
+      expect(continuousResizeWidth).toBeLessThan(originalResizeWidth);
+      expect(continuousResizeWidth).toBeGreaterThan(logicalCellSize * canvasScale);
+
+      await page.mouse.move(eastResizeStart.x - logicalCellPitch * canvasScale, eastResizeStart.y, { steps: 6 });
+      await expect(containerSection).toHaveAttribute("data-grid-w", "2");
+      await expect(resizePlaceholder).toHaveAttribute("data-grid-w", "1");
+      expect((await expectBoundingBoxAsync(resizeOutline)).width).toBeCloseTo(logicalCellSize * canvasScale, 1);
       const liveNestedGridBox = await expectBoundingBoxAsync(nestedEditor);
       const liveContainerBox = await expectBoundingBoxAsync(containerSection);
-      expect(liveNestedGridBox.width).toBeCloseTo(logicalCellSize * canvasScale, 1);
+      expect(liveNestedGridBox.width).toBeCloseTo(originalResizeWidth, 1);
       expect(liveNestedGridBox.width).toBeLessThanOrEqual(liveContainerBox.width + 1);
       await page.mouse.up();
+      await expect(containerSection).toHaveAttribute("data-grid-w", "1");
+      await expect(resizeOutline).toHaveCount(0);
+      await expect(containerSection).toHaveAttribute("data-grid-section-chrome-active", "true");
+      await expect(eastResizeHandle).not.toHaveAttribute("data-grid-resize-disabled");
       await resizeLocatorByImmediateReleaseAsync(page, eastResizeHandle, logicalCellPitch * canvasScale, 0);
       await expect(containerSection).toHaveAttribute("data-grid-w", "2");
 
