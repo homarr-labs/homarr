@@ -1,7 +1,14 @@
 "use client";
 
-import { ActionIcon, Anchor, Group, Indicator, Stack, Text } from "@mantine/core";
-import { IconFileText, IconLink } from "@tabler/icons-react";
+import { ActionIcon, Anchor, Group, Stack, Text } from "@mantine/core";
+import {
+  IconCircleCheckFilled,
+  IconCircleXFilled,
+  IconFileText,
+  IconHelpCircleFilled,
+  IconLink,
+  IconLoader2,
+} from "@tabler/icons-react";
 
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -30,6 +37,27 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
   const t = useScopedI18n("widget.coolify");
   const status = parseStatus(item.status ?? "");
   const statusColor = getStatusColor(status);
+  const isTransitioning = status === "starting" || status === "restarting";
+  const StatusIcon =
+    status === "running"
+      ? IconCircleCheckFilled
+      : isTransitioning
+        ? IconLoader2
+        : status === "unknown"
+          ? IconHelpCircleFilled
+          : IconCircleXFilled;
+  const statusLabel =
+    status === "running"
+      ? t("status.running")
+      : status === "stopped"
+        ? t("status.stopped")
+        : status === "exited"
+          ? t("status.exited")
+          : status === "starting"
+            ? t("status.starting")
+            : status === "restarting"
+              ? t("status.restarting")
+              : t("status.unknown");
 
   const resourceUrl =
     item.projectUuid && item.environmentUuid
@@ -37,34 +65,38 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
       : undefined;
 
   const logsUrl = resourceUrl ? `${resourceUrl}/logs` : undefined;
+  const publicUrl = cleanFqdn(item.fqdn);
+  const resourceTimestamp = getResourceTimestamp(item, resourceType);
 
   return (
     <Stack gap={0}>
       <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
-        <Indicator size={isTiny ? 4 : 8} color={statusColor} />
+        <StatusIcon aria-label={statusLabel} size={isTiny ? 12 : 16} color={`var(--mantine-color-${statusColor}-6)`} />
         {resourceUrl ? (
           <Anchor
+            className={actionTargetClasses.root}
             href={resourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            fz={isTiny ? "8px" : "xs"}
+            fz="xs"
             c="inherit"
-            lineClamp={1}
+            truncate="end"
+            style={{ display: "inline-flex", alignItems: "center", overflow: "hidden" }}
           >
             {item.name}
           </Anchor>
         ) : (
-          <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+          <Text lineClamp={1} fz="xs">
             {item.name}
           </Text>
         )}
       </Group>
       <Group wrap="nowrap" gap={4} ml={16}>
-        {cleanFqdn(item.fqdn) && (
+        {publicUrl && (
           <ActionIcon
             className={actionTargetClasses.root}
             component="a"
-            href={cleanFqdn(item.fqdn)}
+            href={publicUrl}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t("action.openResource", { name: item.name })}
@@ -95,9 +127,9 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             {item.projectName ?? "-"} / {item.environmentName ?? "-"}
           </Text>
         )}
-        {!isTiny && getResourceTimestamp(item, resourceType) && (
+        {!isTiny && resourceTimestamp && (
           <Text fz="10px" c="dimmed" ml="auto">
-            {getResourceTimestamp(item, resourceType)}
+            {resourceTimestamp}
           </Text>
         )}
       </Group>
