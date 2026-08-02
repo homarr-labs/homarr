@@ -1,21 +1,23 @@
 import { createId } from "@homarr/common";
+import { dynamicSectionOptionsSchema } from "@homarr/validation/shared";
 
 import type { DynamicSection } from "~/app/[locale]/boards/_types";
+
+type DynamicSectionMock = Omit<Partial<DynamicSection>, "options"> & {
+  options?: Partial<DynamicSection["options"]>;
+};
 
 export class DynamicSectionMockBuilder {
   private readonly section: DynamicSection;
 
-  constructor(section?: Partial<DynamicSection>) {
+  constructor(section?: DynamicSectionMock) {
     this.section = {
       id: createId(),
       kind: "dynamic",
-      options: {
-        title: "",
-        borderColor: "",
-        customCssClasses: [],
-      },
       layouts: [],
       ...section,
+      collapsed: section?.collapsed ?? false,
+      options: dynamicSectionOptionsSchema.parse(section?.options),
     } satisfies DynamicSection;
   }
 

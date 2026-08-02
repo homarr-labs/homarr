@@ -343,6 +343,8 @@ export const layouts = pgTable("layout", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   columnCount: smallint().notNull(),
+  leftGutterColumnCount: smallint().notNull().default(0),
+  rightGutterColumnCount: smallint().notNull().default(0),
   breakpoint: smallint().notNull().default(0),
 });
 

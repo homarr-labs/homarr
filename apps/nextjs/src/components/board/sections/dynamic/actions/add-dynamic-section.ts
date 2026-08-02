@@ -1,27 +1,30 @@
 import { getBoardLayouts } from "@homarr/boards/context";
 import { createId } from "@homarr/common";
+import { getRootSectionLane } from "@homarr/definitions";
+import { dynamicSectionOptionsSchema } from "@homarr/validation/shared";
 
 import type { Board, DynamicSection, DynamicSectionLayout, EmptySection } from "~/app/[locale]/boards/_types";
+import { getBoardLaneColumnCount } from "~/components/board/layout";
 import { getFirstEmptyPosition } from "~/components/board/items/actions/empty-position";
 import { getSectionElements } from "~/components/board/items/actions/section-elements";
 
 export const addDynamicSectionCallback = () => (board: Board) => {
   const firstSection = board.sections
-    .filter((section) => section.kind === "empty")
-    .sort((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
+    .filter(
+      (section): section is EmptySection => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
+    )
+    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
     .at(0);
 
   if (!firstSection) return board;
 
+  const sectionLayouts = createDynamicSectionLayouts(board, firstSection);
   const newSection = {
     id: createId(),
     kind: "dynamic",
-    options: {
-      title: "",
-      borderColor: "",
-      customCssClasses: [],
-    },
-    layouts: createDynamicSectionLayouts(board, firstSection),
+    collapsed: false,
+    options: dynamicSectionOptionsSchema.parse(undefined),
+    layouts: sectionLayouts,
   } satisfies DynamicSection;
 
   return {
@@ -36,9 +39,14 @@ const createDynamicSectionLayouts = (board: Board, currentSection: EmptySection)
   return layouts.map((layoutId) => {
     const boardLayout = board.layouts.find((layout) => layout.id === layoutId);
     const elements = getSectionElements(board, { sectionId: currentSection.id, layoutId });
+    const columnCount = boardLayout ? getBoardLaneColumnCount(boardLayout, "main") : 1;
+    const size = {
+      width: Math.min(4, columnCount),
+      height: 3,
+    };
 
     const emptyPosition = boardLayout
-      ? getFirstEmptyPosition(elements, boardLayout.columnCount)
+      ? getFirstEmptyPosition(elements, columnCount, undefined, size)
       : { xOffset: 0, yOffset: 0 };
 
     if (!emptyPosition) {
@@ -46,8 +54,7 @@ const createDynamicSectionLayouts = (board: Board, currentSection: EmptySection)
     }
 
     return {
-      width: 1,
-      height: 1,
+      ...size,
       ...emptyPosition,
       parentSectionId: currentSection.id,
       layoutId,

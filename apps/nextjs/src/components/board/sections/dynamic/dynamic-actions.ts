@@ -24,7 +24,9 @@ export const useDynamicSectionActions = () => {
     ({ itemId, newOptions }: UpdateDynamicOptions) => {
       updateBoard((previous) => ({
         ...previous,
-        sections: previous.sections.map((item) => (item.id !== itemId ? item : { ...item, options: newOptions })),
+        sections: previous.sections.map((item) =>
+          item.id !== itemId || item.kind !== "dynamic" ? item : { ...item, options: newOptions },
+        ),
       }));
     },
     [updateBoard],

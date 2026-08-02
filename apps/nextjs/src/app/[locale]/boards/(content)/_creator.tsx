@@ -2,15 +2,11 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { TRPCError } from "@trpc/server";
 
-// Placed here because gridstack styles are used for board content
-import "~/styles/gridstack.scss";
-
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { PersistedClient } from "@tanstack/react-query-persist-client";
 import superjson from "superjson";
 import { queryCacheBuster } from "@homarr/api/query-cache";
 import { getQueryClient } from "@homarr/api/server";
-import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { isNullOrWhitespace } from "@homarr/common";
@@ -25,8 +21,9 @@ import { createMetaTitle } from "~/metadata";
 import { env } from "~/env";
 import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
-import { DynamicClientBoard } from "./_dynamic-client";
+import { ClientBoard } from "./_client";
 import { BoardContentHeaderActions } from "./_header-actions";
+import { BoardIntegrationProvider } from "./_integration-provider";
 
 const logger = createLogger({ module: "createBoardContentPage" });
 
@@ -85,9 +82,9 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
             <QueryCacheHydration userId={userId} boardId={board.id} />
           </Suspense>
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <IntegrationProvider integrations={integrations}>
-              <DynamicClientBoard />
-            </IntegrationProvider>
+            <BoardIntegrationProvider initialIntegrations={integrations}>
+              <ClientBoard />
+            </BoardIntegrationProvider>
           </HydrationBoundary>
         </>
       );

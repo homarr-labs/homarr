@@ -1,6 +1,20 @@
 "use client";
 
-import { Button, Fieldset, Grid, Group, Input, NumberInput, Slider, Stack, Text, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Fieldset,
+  Grid,
+  Group,
+  Input,
+  NumberInput,
+  Paper,
+  Slider,
+  Stack,
+  Switch,
+  Text,
+  TextInput,
+} from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
@@ -9,6 +23,9 @@ import { useI18n } from "@homarr/translation/client";
 import { boardSaveLayoutsSchema } from "@homarr/validation/board";
 
 import type { Board } from "../../_types";
+import classes from "./_layout.module.css";
+
+const layoutSettingsSchema = boardSaveLayoutsSchema.omit({ id: true });
 
 interface Props {
   board: Board;
@@ -22,7 +39,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
       void utils.board.getHomeBoard.invalidate();
     },
   });
-  const form = useZodForm(boardSaveLayoutsSchema.omit({ id: true }).required(), {
+  const form = useZodForm(layoutSettingsSchema, {
     initialValues: {
       layouts: board.layouts,
     },
@@ -33,7 +50,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
       onSubmit={form.onSubmit((values) => {
         saveLayouts({
           id: board.id,
-          ...values,
+          layouts: values.layouts,
         });
       })}
     >
@@ -51,6 +68,8 @@ export const LayoutSettingsContent = ({ board }: Props) => {
                       id: createId(),
                       name: "",
                       columnCount: 10,
+                      leftGutterColumnCount: 0,
+                      rightGutterColumnCount: 0,
                       breakpoint: 0,
                     },
                   ],
@@ -70,7 +89,21 @@ export const LayoutSettingsContent = ({ board }: Props) => {
 
                 <Grid.Col span={{ sm: 12, md: 6 }}>
                   <Input.Wrapper label={t("layout.field.columnCount.label")}>
-                    <Slider mt="xs" min={1} max={24} step={1} {...form.getInputProps(`layouts.${index}.columnCount`)} />
+                    <Slider
+                      mt="xs"
+                      min={1}
+                      max={24}
+                      step={1}
+                      value={layout.columnCount}
+                      thumbLabel={t("layout.field.columnCount.label")}
+                      onChange={(columnCount) => {
+                        const left = Math.min(layout.leftGutterColumnCount, Math.max(0, columnCount - 1));
+                        const right = Math.min(layout.rightGutterColumnCount, Math.max(0, columnCount - left - 1));
+                        form.setFieldValue(`layouts.${index}.columnCount`, columnCount);
+                        form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, left);
+                        form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, right);
+                      }}
+                    />
                   </Input.Wrapper>
                 </Grid.Col>
 
@@ -79,6 +112,15 @@ export const LayoutSettingsContent = ({ board }: Props) => {
                     {...form.getInputProps(`layouts.${index}.breakpoint`)}
                     label={t("layout.field.breakpoint.label")}
                     description={t("layout.field.breakpoint.description")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={12}>
+                  <GutterSettings
+                    left={layout.leftGutterColumnCount}
+                    right={layout.rightGutterColumnCount}
+                    columnCount={layout.columnCount}
+                    onLeftChange={(value) => form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, value)}
+                    onRightChange={(value) => form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, value)}
                   />
                 </Grid.Col>
               </Grid>
@@ -111,5 +153,125 @@ export const LayoutSettingsContent = ({ board }: Props) => {
         </Group>
       </Stack>
     </form>
+  );
+};
+
+interface GutterSettingsProps {
+  left: number;
+  right: number;
+  columnCount: number;
+  onLeftChange: (value: number) => void;
+  onRightChange: (value: number) => void;
+}
+
+const gutterMarks = [
+  { value: 1, label: "1" },
+  { value: 2, label: "2" },
+  { value: 3, label: "3" },
+];
+
+const GutterSettings = ({ left, right, columnCount, onLeftChange, onRightChange }: GutterSettingsProps) => {
+  const t = useI18n();
+  const maxGutterWidth = Math.min(3, Math.max(1, columnCount - 1));
+
+  return (
+    <Paper className={classes.gutterSettings} p="md">
+      <Stack gap="md">
+        <Box>
+          <Text fw={600}>{t("layout.field.gutters.label")}</Text>
+          <Text size="sm" c="dimmed">
+            {t("layout.field.gutters.description")}
+          </Text>
+        </Box>
+
+        <GutterPreview left={left} right={right} columnCount={columnCount} />
+
+        <Grid>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <GutterControl
+              side="left"
+              value={left}
+              max={Math.min(maxGutterWidth, columnCount - right - 1)}
+              onChange={onLeftChange}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <GutterControl
+              side="right"
+              value={right}
+              max={Math.min(maxGutterWidth, columnCount - left - 1)}
+              onChange={onRightChange}
+            />
+          </Grid.Col>
+        </Grid>
+      </Stack>
+    </Paper>
+  );
+};
+
+const GutterControl = ({
+  side,
+  value,
+  max,
+  onChange,
+}: {
+  side: "left" | "right";
+  value: number;
+  max: number;
+  onChange: (value: number) => void;
+}) => {
+  const t = useI18n();
+  const enabled = value > 0;
+
+  return (
+    <Stack gap="sm">
+      <Switch
+        checked={enabled}
+        disabled={max < 1}
+        onChange={(event) => onChange(event.currentTarget.checked ? Math.min(2, max) : 0)}
+        label={t(`layout.field.gutters.${side}.label`)}
+        description={t(`layout.field.gutters.${side}.description`)}
+      />
+      {enabled && (
+        <Input.Wrapper label={t("layout.field.gutters.width.label")}>
+          <Slider
+            mt="xs"
+            min={1}
+            max={max}
+            value={Math.min(value, max)}
+            marks={gutterMarks.filter((mark) => mark.value <= max)}
+            restrictToMarks
+            thumbLabel={t(`layout.field.gutters.${side}.thumbLabel`)}
+            onChange={(nextValue) => onChange(Math.min(nextValue, max))}
+          />
+        </Input.Wrapper>
+      )}
+    </Stack>
+  );
+};
+
+const GutterPreview = ({ left, right, columnCount }: { left: number; right: number; columnCount: number }) => {
+  const t = useI18n();
+  const safeColumnCount = Math.max(1, columnCount);
+  const main = Math.max(1, safeColumnCount - left - right);
+  const tracks = [left > 0 ? `${left}fr` : null, `${main}fr`, right > 0 ? `${right}fr` : null]
+    .filter((track) => track !== null)
+    .join(" ");
+
+  return (
+    <Box
+      className={classes.gutterPreview}
+      aria-label={t("layout.field.gutters.preview.label")}
+      style={{ gridTemplateColumns: tracks }}
+    >
+      {left > 0 && <Box className={classes.previewGutter} data-side="left" />}
+      <Box className={classes.previewCanvas}>
+        <Box />
+        <Box />
+        <Box />
+        <Box />
+      </Box>
+      {right > 0 && <Box className={classes.previewGutter} data-side="right" />}
+    </Box>
   );
 };

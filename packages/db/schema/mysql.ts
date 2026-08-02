@@ -344,6 +344,8 @@ export const layouts = mysqlTable("layout", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   columnCount: tinyint().notNull(),
+  leftGutterColumnCount: tinyint().notNull().default(0),
+  rightGutterColumnCount: tinyint().notNull().default(0),
   breakpoint: smallint().notNull().default(0),
 });
 

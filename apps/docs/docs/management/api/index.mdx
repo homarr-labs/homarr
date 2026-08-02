@@ -83,3 +83,10 @@ The OpenAPI and MCP APIs include board management endpoints for common automatio
 - Configure global board defaults such as public home boards and status behavior
 
 Use the interactive API reference to inspect the exact request body for each endpoint under the `boards` and `settings` tags.
+
+### Saving dashboard layouts
+
+The dashboard editor saves item positions and sections as one board update.
+Canvas height follows its content automatically and does not require a separate API setting.
+Responsive layouts store optional left and right gutter widths from zero to three columns.
+Gutter columns are reserved from the layout's total column count, and changing them reflows affected items.

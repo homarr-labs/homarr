@@ -10,3 +10,14 @@
   background-color: var(--background-color) !important;
   border-color: var(--border-color) !important;
 }
+
+.editModeInertContent {
+  display: contents;
+  pointer-events: none;
+  user-select: none;
+}
+
+.editModeInertContent * {
+  pointer-events: none !important;
+  user-select: none !important;
+}
