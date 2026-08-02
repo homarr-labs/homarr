@@ -217,7 +217,7 @@ describe("fixed grid item behavior", () => {
     );
   });
 
-  test("uses the whole tile as the focusable move surface with a visual drag affordance", () => {
+  test("uses the whole tile as the focusable move surface without extra drag chrome", () => {
     getWeatherMock().advancedOptions.title = "  Balcony forecast  ";
     renderWeather(root);
 
@@ -226,7 +226,7 @@ describe("fixed grid item behavior", () => {
     expect(entry.getAttribute("aria-label")).toBe("Balcony forecast, column 1, row 1");
     expect(entry.tabIndex).toBe(0);
     expect(entry.getAttribute("aria-describedby")).not.toBeNull();
-    expect(container.querySelector('[data-testid="board-grid-drag-affordance"]')).not.toBeNull();
+    expect(container.querySelector('[data-testid="board-grid-drag-affordance"]')).toBeNull();
   });
 
   test("renders a view-only 1x1 card at the fixed 200px logical size", () => {
@@ -275,8 +275,8 @@ describe("fixed grid item behavior", () => {
     });
 
     expect(displayed).toEqual([
-      { ...persisted[0], h: 1 },
-      { ...persisted[1], y: 1 },
+      { ...persisted[0], h: 0.5 },
+      { ...persisted[1], y: 0.5 },
     ]);
     expect(persisted[0]?.h).toBe(4);
     expect(persisted[1]?.y).toBe(4);

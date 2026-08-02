@@ -15,3 +15,9 @@
   background-color: transparent !important;
   border-color: transparent !important;
 }
+
+.collapsedContainerCard {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}

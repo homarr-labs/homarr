@@ -42,8 +42,8 @@ describe("dashboard layout reflow", () => {
     );
 
     expect(result).toEqual([
-      { id: "section", x: 0, y: 0, w: 2, h: 1 },
-      { id: "below", x: 0, y: 1, w: 2, h: 1 },
+      { id: "section", x: 0, y: 0, w: 2, h: 0.5 },
+      { id: "below", x: 0, y: 0.5, w: 2, h: 1 },
       { id: "other-lane", x: 2, y: 0, w: 1, h: 1 },
     ]);
   });
