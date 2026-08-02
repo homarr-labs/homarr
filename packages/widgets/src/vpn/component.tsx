@@ -1,8 +1,9 @@
 "use client";
 
-import { Flex, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Center, Flex, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { VpnIntegrationCard } from "./vpn-card";
@@ -11,12 +12,26 @@ export default function VpnWidget({
   options,
   integrationIds,
   width,
+  height,
   displayMode = "compact",
 }: WidgetComponentProps<"vpn">) {
-  const { data: integrations = [] } = clientApi.widget.vpn.getSummaries.useQuery({
+  const { data: integrations = [], isPending } = clientApi.widget.vpn.getSummaries.useQuery({
     ...options,
     integrationIds,
   });
+  const t = useScopedI18n("widget.vpn");
+  const tCommon = useScopedI18n("common");
+  const dense = displayMode === "compact" && (width < 240 || height < 120);
+
+  if (isPending || integrations.length === 0) {
+    return (
+      <Center h="100%" p="sm">
+        <Text c="dimmed" size="sm" ta="center">
+          {isPending ? tCommon("action.loading") : t("serviceUnavailable")}
+        </Text>
+      </Center>
+    );
+  }
 
   const [vpn] = integrations;
   if (displayMode === "compact" && integrations.length === 1 && vpn) {
@@ -26,6 +41,7 @@ export default function VpnWidget({
           vpn={vpn.summary}
           integrationName={vpn.integration.name}
           variant={width < 240 ? "list" : "single"}
+          dense={dense}
         />
       </Flex>
     );
@@ -59,6 +75,7 @@ export default function VpnWidget({
             vpn={result.summary}
             integrationName={result.integration.name}
             variant="list"
+            dense={dense}
           />
         ))}
       </Stack>

@@ -1,7 +1,20 @@
 "use client";
 
 import { useMemo } from "react";
-import { Badge, Box, Center, Divider, Group, Loader, ScrollArea, Stack, Text, ThemeIcon } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Center,
+  Divider,
+  Group,
+  Loader,
+  ScrollArea,
+  Stack,
+  Text,
+  ThemeIcon,
+  Tooltip,
+  VisuallyHidden,
+} from "@mantine/core";
 import { IconBellOff, IconCircleCheck, IconFlame, IconHistory } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -71,6 +84,7 @@ export default function BeszelAlertsWidget({
   const okAlerts = alerts.filter((a) => !a.triggered);
   const showOkAlerts = displayMode === "advanced" || triggeredAlerts.length === 0 || height >= 260;
   const showHistory = options.showHistory && (displayMode === "advanced" || height >= 360);
+  const showAlertDescriptions = displayMode === "advanced" || height >= 190;
 
   if (alertsError) throw alertsError;
 
@@ -104,7 +118,7 @@ export default function BeszelAlertsWidget({
             <Stack gap={6}>
               <Group gap={6}>
                 <IconFlame size={14} color="var(--mantine-color-red-6)" />
-                <Text size="xs" fw={600} tt="uppercase" c="red">
+                <Text size="xs" fw={600} c="red">
                   {t("status.triggered")} ({triggeredAlerts.length})
                 </Text>
               </Group>
@@ -116,6 +130,7 @@ export default function BeszelAlertsWidget({
                   min={alert.min}
                   systemName={systemNameMap[alert.system] ?? alert.system}
                   triggered
+                  showDescription={showAlertDescriptions}
                 />
               ))}
             </Stack>
@@ -127,7 +142,7 @@ export default function BeszelAlertsWidget({
             <Stack gap={6}>
               <Group gap={6}>
                 <IconCircleCheck size={14} color="var(--mantine-color-green-6)" />
-                <Text size="xs" fw={600} tt="uppercase" c="dimmed">
+                <Text size="xs" fw={600} c="dimmed">
                   {t("status.ok")} ({okAlerts.length})
                 </Text>
               </Group>
@@ -139,6 +154,7 @@ export default function BeszelAlertsWidget({
                   min={alert.min}
                   systemName={systemNameMap[alert.system] ?? alert.system}
                   triggered={false}
+                  showDescription={showAlertDescriptions}
                 />
               ))}
             </Stack>
@@ -150,7 +166,7 @@ export default function BeszelAlertsWidget({
               <Stack gap={6}>
                 <Group gap={6}>
                   <IconHistory size={14} opacity={0.5} />
-                  <Text size="xs" fw={600} tt="uppercase" c="dimmed">
+                  <Text size="xs" fw={600} c="dimmed">
                     {t("history")}
                   </Text>
                 </Group>
@@ -203,6 +219,7 @@ interface AlertRowProps {
   min: number;
   systemName: string;
   triggered: boolean;
+  showDescription: boolean;
 }
 
 const unitSuffixMap: Record<string, string> = {
@@ -226,38 +243,43 @@ function formatAlertDescription(name: string, value: number, min: number): strin
   return `exceeds ${value}${suffix} over ${min} min`;
 }
 
-function AlertRow({ name, value, min, systemName, triggered }: AlertRowProps) {
+function AlertRow({ name, value, min, systemName, triggered, showDescription }: AlertRowProps) {
   const Icon = alertIconMap[name] ?? Server;
+  const description = formatAlertDescription(name, value, min);
   return (
-    <Group
-      wrap="nowrap"
-      gap="xs"
-      py={4}
-      pr={8}
-      pl={12}
-      style={{
-        borderRadius: "var(--mantine-radius-sm)",
-        borderLeft: `3px solid var(--mantine-color-${triggered ? "red" : "green"}-6)`,
-        backgroundColor: triggered ? "var(--mantine-color-red-light)" : "var(--mantine-color-default-hover)",
-      }}
-    >
-      <Icon size={14} opacity={0.7} style={{ flexShrink: 0 }} />
-      <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
-        <Group gap={6} wrap="nowrap">
-          <Text size="xs" fw={600} truncate>
-            {systemName}
-          </Text>
-          <Text size="xs" c="dimmed">
-            ·
-          </Text>
-          <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
-            {name}
-          </Text>
-        </Group>
-        <Text size="xs" c="dimmed" truncate>
-          {formatAlertDescription(name, value, min)}
-        </Text>
-      </Stack>
-    </Group>
+    <Tooltip label={description} disabled={showDescription} withArrow>
+      <Group
+        wrap="nowrap"
+        gap="xs"
+        py={showDescription ? 4 : 2}
+        px={8}
+        style={{
+          borderRadius: "var(--mantine-radius-sm)",
+          border: `1px solid var(--mantine-color-${triggered ? "red" : "gray"}-4)`,
+          backgroundColor: triggered ? "var(--mantine-color-red-light)" : "var(--mantine-color-default-hover)",
+        }}
+      >
+        <Icon size={14} opacity={0.7} style={{ flexShrink: 0 }} />
+        <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
+          <Group gap={6} wrap="nowrap">
+            <Text size="xs" fw={600} truncate>
+              {systemName}
+            </Text>
+            <Text size="xs" c="dimmed">
+              ·
+            </Text>
+            <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+              {name}
+            </Text>
+          </Group>
+          {showDescription && (
+            <Text size="xs" c="dimmed" truncate>
+              {description}
+            </Text>
+          )}
+          {!showDescription && <VisuallyHidden>{description}</VisuallyHidden>}
+        </Stack>
+      </Group>
+    </Tooltip>
   );
 }

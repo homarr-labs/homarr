@@ -1645,7 +1645,6 @@
       "search": "Filter items",
       "addToBoard": "Add to board",
       "addAtPosition": "Add item here",
-      "integrationAvailable": "Connected integration available",
       "notification": {
         "error": {
           "title": "Unable to add item",
@@ -1656,9 +1655,7 @@
     "advancedFocus": {
       "open": "Open advanced view",
       "close": "Close advanced view",
-      "pin": "Keep advanced view open",
-      "pinned": "Advanced view is pinned",
-      "dialog": "{widget} advanced view"
+      "label": "{widget} advanced view"
     },
     "moveResize": {
       "title": "Move / resize item",
@@ -2298,6 +2295,12 @@
       "duration": {
         "allDay": "All day"
       },
+      "advanced": {
+        "previousMonth": "Show previous month",
+        "nextMonth": "Show next month",
+        "eventCount": "{count, plural, one {# event} other {# events}}",
+        "noEvents": "No events in this month"
+      },
       "option": {
         "releaseType": {
           "label": "Radarr release type",
@@ -2354,6 +2357,16 @@
         }
       },
       "currentWindSpeed": "{currentWindSpeed} {unit}",
+      "advanced": {
+        "forecast": "7-day forecast",
+        "day": "Day",
+        "conditions": "Conditions",
+        "temperature": "High / low",
+        "humidity": "Humidity",
+        "wind": "Wind / gusts ({unit})",
+        "sun": "Sunrise / sunset",
+        "noForecast": "No forecast data available"
+      },
       "dailyForecast": {
         "sunrise": "Sunrise",
         "sunset": "Sunset",

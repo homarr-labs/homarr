@@ -36,7 +36,7 @@ export default function DnsHoleSummaryWidget({
   integrationIds,
   displayMode,
 }: WidgetComponentProps<typeof widgetKind>) {
-  const { data: summaries = [] } = clientApi.widget.dnsHole.summary.useQuery({
+  const { data: summaries = [], isPending } = clientApi.widget.dnsHole.summary.useQuery({
     integrationIds,
   });
 
@@ -44,6 +44,16 @@ export default function DnsHoleSummaryWidget({
 
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
   const layoutProps = boxPropsByLayout(options.layout);
+
+  if (isPending) {
+    return (
+      <Stack h="100%" justify="center" align="center">
+        <Text c="dimmed" size="sm">
+          {t("common.action.loading")}
+        </Text>
+      </Stack>
+    );
+  }
 
   return (
     <Stack h="100%" gap={0}>
@@ -53,7 +63,16 @@ export default function DnsHoleSummaryWidget({
             <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
           ))
         ) : (
-          <Stack h="100%" w="100%" justify="center" align="center" gap="sm" p="sm">
+          <Stack
+            aria-live="polite"
+            h="100%"
+            w="100%"
+            justify="center"
+            align="center"
+            gap="sm"
+            p="sm"
+            style={{ gridColumn: "1 / -1" }}
+          >
             <AvatarGroup spacing="md">
               {summaries.map(({ integration }) => (
                 <Tooltip key={integration.id} label={integration.name}>
@@ -154,11 +173,15 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
   const hideLabel = (height <= 32 && width <= 256) || (height <= 64 && width <= 92);
   const tooltip = item.tooltip?.(data, t);
   const board = useRequiredBoard();
+  const label = translateIfNecessary(t, item.label);
+  const value = item.value(data, width <= 64 ? "sm" : "md");
 
   return (
     <TooltipFloating label={tooltip} disabled={!tooltip} w={250} multiline>
       <Card
         ref={ref}
+        component="section"
+        aria-label={`${label}: ${value}`}
         className="summary-card"
         p="sm"
         radius={board.itemRadius}
@@ -190,11 +213,11 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
             wrap="wrap"
           >
             <Text className="summary-card-value text-flash" ta="center" size="lg" fw="bold" maw="100%">
-              {item.value(data, width <= 64 ? "sm" : "md")}
+              {value}
             </Text>
             {!hideLabel && (
               <Text className="summary-card-label" ta="center" size="xs" maw="100%">
-                {translateIfNecessary(t, item.label)}
+                {label}
               </Text>
             )}
           </Flex>

@@ -33,7 +33,7 @@ const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
   };
 };
 
-export default function RssFeed({ options, width, displayMode }: WidgetComponentProps<"rssFeed">) {
+export default function RssFeed({ options, width, height, displayMode }: WidgetComponentProps<"rssFeed">) {
   const {
     entries: feedEntries,
     failedFeedCount,
@@ -54,11 +54,13 @@ export default function RssFeed({ options, width, displayMode }: WidgetComponent
   const languageDir = options.enableRtl ? "RTL" : "LTR";
 
   const isAdvanced = displayMode === "advanced";
-  const isNarrow = !isAdvanced && width < 128 * 3;
+  const isDense = !isAdvanced && (width < 420 || height < 180);
+  const isTiny = !isAdvanced && (width < 260 || height < 110);
   const columns = isAdvanced && width >= 720 ? 2 : 1;
+  const descriptionLines = isAdvanced ? Math.max(options.textLinesClamp, 8) : isDense ? 1 : options.textLinesClamp;
 
   return (
-    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isAdvanced ? "md" : "xs"}>
+    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isAdvanced ? "md" : isTiny ? 4 : "xs"}>
       {warning && (
         <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs" mb="xs">
           <output>{warning}</output>
@@ -68,25 +70,24 @@ export default function RssFeed({ options, width, displayMode }: WidgetComponent
         {feedEntries.map((feedEntry) => (
           <Card
             key={feedEntry.id}
+            className={classes.entry}
             component={"a"}
             href={getSafeExternalUrl(feedEntry.link, feedEntry.feedUrl)}
             radius={board.itemRadius}
             target="_blank"
             rel="noopener noreferrer"
             w="100%"
-            p={isAdvanced ? "md" : "xs"}
+            p={isAdvanced ? "md" : isDense ? 6 : "xs"}
+            title={feedEntry.title}
           >
-            {feedEntry.enclosure !== undefined && (
-              <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
-            )}
-
-            <Group wrap="nowrap" align="flex-start">
-              {feedEntry.enclosure !== undefined && options.showPosterImage && !isNarrow && (
+            <Group wrap="nowrap" align="flex-start" gap={isDense ? "xs" : "md"}>
+              {feedEntry.enclosure !== undefined && options.showPosterImage && !isTiny && (
                 <Image
+                  className={classes.poster}
                   src={feedEntry.enclosure}
-                  alt={feedEntry.title}
-                  w={isAdvanced ? 180 : 112}
-                  h={isAdvanced ? 120 : 112}
+                  alt=""
+                  w={isAdvanced ? 180 : isDense ? 64 : 96}
+                  h={isAdvanced ? 120 : isDense ? 64 : 96}
                   radius="sm"
                   fit="cover"
                 />
@@ -96,19 +97,14 @@ export default function RssFeed({ options, width, displayMode }: WidgetComponent
                 <Text dir={languageDir} fz={isAdvanced ? "md" : "sm"} fw={600} lh={1.25} lineClamp={2}>
                   {feedEntry.title}
                 </Text>
-                {!options.hideDescription && feedEntry.description && (
-                  <Text
-                    dir={languageDir}
-                    c="dimmed"
-                    size="sm"
-                    lineClamp={isAdvanced ? Math.max(options.textLinesClamp, 8) : options.textLinesClamp}
-                  >
+                {!options.hideDescription && feedEntry.description && !isTiny && (
+                  <Text dir={languageDir} c="dimmed" size="sm" lineClamp={descriptionLines}>
                     {feedDescriptionToText(feedEntry.description)}
                   </Text>
                 )}
 
                 <InfoDisplay
-                  source={isAdvanced ? getHostname(feedEntry.feedUrl) : undefined}
+                  source={isAdvanced || !isDense ? getHostname(feedEntry.feedUrl) : undefined}
                   date={feedEntry.published ? dayjs(feedEntry.published).fromNow() : undefined}
                 />
               </Flex>

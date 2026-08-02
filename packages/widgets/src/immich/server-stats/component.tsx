@@ -21,6 +21,7 @@ export default function ImmichServerStatsWidget({
   options,
   displayMode = "compact",
   width,
+  height,
   widgetStateRef,
 }: WidgetComponentProps<"immich-serverStats">) {
   const t = useI18n();
@@ -40,16 +41,26 @@ export default function ImmichServerStatsWidget({
 
   if (!stats) return <WidgetEmptyState />;
 
+  const statCount =
+    Number(options.showUsers) + Number(options.showPhotos) + Number(options.showVideos) + Number(options.showStorage);
+  const statsLayout = getImmichStatsLayout(width, height, statCount, isAdvanced);
+
   const statsContent = (
-    <SimpleGrid cols={isAdvanced ? (width >= 720 ? 4 : width >= 360 ? 2 : 1) : width >= 320 ? 2 : 1} spacing="sm">
+    <SimpleGrid cols={statsLayout.columns} spacing={statsLayout.dense ? 4 : "sm"}>
       {options.showUsers && (
-        <StatItem icon={<IconUsers size={20} />} label={t("widget.immich-serverStats.users")} value={stats.userCount} />
+        <StatItem
+          icon={<IconUsers size={20} />}
+          label={t("widget.immich-serverStats.users")}
+          value={stats.userCount}
+          dense={statsLayout.dense}
+        />
       )}
       {options.showPhotos && (
         <StatItem
           icon={<IconPhoto size={20} />}
           label={t("widget.immich-serverStats.photos")}
           value={stats.photoCount}
+          dense={statsLayout.dense}
         />
       )}
       {options.showVideos && (
@@ -57,6 +68,7 @@ export default function ImmichServerStatsWidget({
           icon={<IconVideo size={20} />}
           label={t("widget.immich-serverStats.videos")}
           value={stats.videoCount}
+          dense={statsLayout.dense}
         />
       )}
       {options.showStorage && (
@@ -64,6 +76,7 @@ export default function ImmichServerStatsWidget({
           icon={<IconDatabase size={20} />}
           label={t("widget.immich-serverStats.storage")}
           value={formatBytes(stats.totalLibraryUsageInBytes)}
+          dense={statsLayout.dense}
         />
       )}
     </SimpleGrid>
@@ -71,7 +84,7 @@ export default function ImmichServerStatsWidget({
 
   if (!isAdvanced) {
     return (
-      <Stack gap="md" h="100%" p="md" justify="center">
+      <Stack gap="md" h="100%" p={statsLayout.dense ? "xs" : "md"} justify="center">
         {statsContent}
       </Stack>
     );
@@ -110,20 +123,46 @@ interface StatItemProps {
   icon: React.ReactNode;
   label: string;
   value: string | number;
+  dense: boolean;
 }
 
-function StatItem({ icon, label, value }: StatItemProps) {
+function StatItem({ icon, label, value, dense }: StatItemProps) {
+  if (dense) {
+    return (
+      <Stack gap={1} align="center" justify="center" className={classes.statItemDense} title={`${label}: ${value}`}>
+        <Text size="sm" fw={700} truncate="end" w="100%" ta="center">
+          {value}
+        </Text>
+        <Text size="xs" c="dimmed" truncate="end" w="100%" ta="center">
+          {label}
+        </Text>
+      </Stack>
+    );
+  }
+
   return (
     <Group justify="space-between" align="center" className={classes.statItem}>
-      <Group gap="sm" align="center">
+      <Group gap="sm" align="center" wrap="nowrap" miw={0}>
         {icon}
-        <Text size="sm" fw={500}>
+        <Text size="sm" fw={500} truncate="end">
           {label}
         </Text>
       </Group>
-      <Text size="sm" fw={700} c="var(--mantine-primary-color)">
+      <Text size="sm" fw={700} c="var(--mantine-primary-color)" truncate="end" title={String(value)}>
         {value}
       </Text>
     </Group>
   );
 }
+
+export const getImmichStatsLayout = (width: number, height: number, itemCount: number, isAdvanced = false) => {
+  const count = Math.max(1, itemCount);
+  if (isAdvanced) {
+    return { columns: width >= 720 ? Math.min(count, 4) : width >= 360 ? Math.min(count, 2) : 1, dense: false };
+  }
+
+  const dense = width < 320 || height < 160;
+  if (height < 140) return { columns: Math.min(count, width >= 360 ? 4 : 2), dense: true };
+  if (height < 220) return { columns: Math.min(count, 2), dense: true };
+  return { columns: Math.min(count, width >= 280 ? 2 : 1), dense };
+};

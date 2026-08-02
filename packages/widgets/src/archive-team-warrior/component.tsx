@@ -53,9 +53,16 @@ const ArchiveTeamWarriorWidgetContent = ({
   const status = data.status;
   const projectName = status.project?.title ?? status.selectedProject ?? t("noProjectSelected");
   const statusKey = getStatusKey(status.status);
+  const layout = getArchiveCompactLayout(width, height, isAdvanced);
+  const countMetrics = [
+    { label: t("metric.running"), value: status.counts.running },
+    ...(layout.showSecondaryCounts ? [{ label: t("metric.completed"), value: status.counts.completed }] : []),
+    { label: t("metric.failed"), value: status.counts.failed },
+    ...(layout.showSecondaryCounts ? [{ label: t("metric.canceled"), value: status.counts.canceled }] : []),
+  ];
 
   return (
-    <Stack p="xs" gap="xs" h="100%" style={{ overflow: "hidden" }}>
+    <Stack p="xs" gap={layout.gap} h="100%" style={{ overflow: "hidden" }}>
       <Group justify="space-between" align="center" wrap="nowrap">
         <Group gap="xs" wrap="nowrap" miw={0}>
           <Avatar size="sm" radius="md" src={getIconUrl("archiveTeamWarrior")} />
@@ -69,7 +76,7 @@ const ArchiveTeamWarriorWidgetContent = ({
         </Badge>
       </Group>
 
-      {options.showBroadcastMessage && status.broadcastMessage && (isAdvanced || height >= 160) && (
+      {options.showBroadcastMessage && status.broadcastMessage && layout.showBroadcast && (
         <Card withBorder p="xs">
           <Text size="xs" lineClamp={3}>
             {status.broadcastMessage}
@@ -77,17 +84,16 @@ const ArchiveTeamWarriorWidgetContent = ({
         </Card>
       )}
 
-      <SimpleGrid cols={width < 180 || height < 120 ? 4 : 2} spacing="xs">
-        <Metric label={t("metric.running")} value={status.counts.running} />
-        <Metric label={t("metric.completed")} value={status.counts.completed} />
-        <Metric label={t("metric.failed")} value={status.counts.failed} />
-        <Metric label={t("metric.canceled")} value={status.counts.canceled} />
+      <SimpleGrid cols={layout.metricColumns} spacing={layout.gap}>
+        {countMetrics.map((metric) => (
+          <Metric key={metric.label} {...metric} dense={layout.dense} />
+        ))}
       </SimpleGrid>
 
-      {status.bandwidth && (
-        <SimpleGrid cols={2} spacing="xs">
-          <Metric label={t("metric.download")} value={formatBandwidth(status.bandwidth.receiving)} />
-          <Metric label={t("metric.upload")} value={formatBandwidth(status.bandwidth.sending)} />
+      {status.bandwidth && layout.showBandwidth && (
+        <SimpleGrid cols={2} spacing={layout.gap}>
+          <Metric label={t("metric.download")} value={formatBandwidth(status.bandwidth.receiving)} dense />
+          <Metric label={t("metric.upload")} value={formatBandwidth(status.bandwidth.sending)} dense />
         </SimpleGrid>
       )}
       {isAdvanced && (
@@ -130,16 +136,31 @@ const ArchiveTeamWarriorWidgetContent = ({
   );
 };
 
-const Metric = ({ label, value }: { label: string; value: number | string }) => (
+const Metric = ({ label, value, dense = false }: { label: string; value: number | string; dense?: boolean }) => (
   <Stack gap={0} miw={0}>
-    <Text size="md" fw={700} lineClamp={1}>
+    <Text size={dense ? "sm" : "md"} fw={700} lineClamp={1} title={String(value)}>
       {value}
     </Text>
-    <Text size="xs" c="dimmed" lineClamp={1}>
+    <Text size="xs" c="dimmed" lineClamp={1} title={label}>
       {label}
     </Text>
   </Stack>
 );
+
+export const getArchiveCompactLayout = (width: number, height: number, isAdvanced = false) => {
+  const dense = !isAdvanced && (width < 240 || height < 160);
+  const showSecondaryCounts = isAdvanced || (width >= 200 && height >= 120);
+  const metricCount = showSecondaryCounts ? 4 : 2;
+
+  return {
+    dense,
+    gap: dense ? 4 : "xs",
+    metricColumns: height < 160 ? metricCount : Math.min(metricCount, width >= 260 ? 4 : 2),
+    showBandwidth: isAdvanced || height >= 190,
+    showBroadcast: isAdvanced || height >= 240,
+    showSecondaryCounts,
+  } as const;
+};
 
 const formatBandwidth = (value?: number) => formatByteRate(Math.round(value ?? 0));
 

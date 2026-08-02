@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Box, Center, Group, Loader, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
@@ -43,15 +44,24 @@ export const appendBoundedHistory = (history: ChartItem[], item: ChartItem, limi
 export const getNetworkHistory = (items: readonly ChartItem[]) =>
   items.flatMap((item) => (item.network === null ? [] : [item.network]));
 
+export const getCompactChartBudget = (height: number): number => {
+  if (height < 140) return 1;
+  if (height < 260) return 2;
+  return 4;
+};
+
 export default function SystemResources({
   integrationIds,
   options,
   width,
+  height,
   displayMode,
 }: WidgetComponentProps<"systemResources">) {
-  const { data = [], dataUpdatedAt } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
-    integrationIds,
-  });
+  const {
+    data = [],
+    dataUpdatedAt,
+    isPending,
+  } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
   const isAdvanced = displayMode === "advanced";
   const integrationKey = useMemo(() => integrationIds.join("\u0000"), [integrationIds]);
   const [historyByIntegration, setHistoryByIntegration] = useState<Record<string, ChartItem[]>>({});
@@ -83,7 +93,7 @@ export default function SystemResources({
 
   const panelColumns = isAdvanced && width >= 960 && data.length > 1 ? 2 : 1;
   const panelWidth = width / panelColumns;
-  const renderCharts = (entry: (typeof data)[number], availableWidth: number) => {
+  const renderCharts = (entry: (typeof data)[number], availableWidth: number, availableHeight: number) => {
     const currentItem = toChartItem(entry.healthInfo);
     const fullHistory = historyByIntegration[entry.integrationId] ?? [currentItem];
     const history = isAdvanced ? fullHistory : fullHistory.slice(-COMPACT_HISTORY_SIZE);
@@ -96,24 +106,37 @@ export default function SystemResources({
         memoryCapacityInBytes={entry.healthInfo.memAvailableInBytes + entry.healthInfo.memUsedInBytes}
         options={options}
         width={availableWidth}
+        height={availableHeight}
         isAdvanced={isAdvanced}
         showTitle={isAdvanced || data.length > 1}
       />
     );
   };
 
+  if (isPending) {
+    return (
+      <Center h="100%">
+        <Loader size="sm" />
+      </Center>
+    );
+  }
+
+  if (data.length === 0) return <WidgetEmptyState />;
+
   if (!isAdvanced && data.length === 1 && data[0]) {
     return (
       <Box h="100%" p="xs">
-        {renderCharts(data[0], width)}
+        {renderCharts(data[0], width, Math.max(0, height - 20))}
       </Box>
     );
   }
 
+  const compactPanelHeight = Math.max(160, Math.floor(height / Math.min(data.length, 2)));
+
   return (
     <ScrollArea h="100%">
       <SimpleGrid cols={panelColumns} spacing="xs" p="xs">
-        {data.map((entry) => renderCharts(entry, panelWidth))}
+        {data.map((entry) => renderCharts(entry, panelWidth, isAdvanced ? height : compactPanelHeight))}
       </SimpleGrid>
     </ScrollArea>
   );
@@ -125,6 +148,7 @@ interface SystemChartsProps {
   memoryCapacityInBytes: number;
   options: WidgetComponentProps<"systemResources">["options"];
   width: number;
+  height: number;
   isAdvanced: boolean;
   showTitle: boolean;
 }
@@ -135,26 +159,36 @@ const SystemCharts = ({
   memoryCapacityInBytes,
   options,
   width,
+  height,
   isAdvanced,
   showTitle,
 }: SystemChartsProps) => {
   const networkItems = getNetworkHistory(items);
-  const showNetwork = networkItems.length > 0 && options.visibleCharts.includes("network");
-  const chartCount = options.visibleCharts.filter((chart) => chart !== "network").length + Number(showNetwork);
+  const availableCharts = options.visibleCharts.filter((chart) => chart !== "network" || networkItems.length > 0);
+  const visibleCharts = isAdvanced ? availableCharts : availableCharts.slice(0, getCompactChartBudget(height));
+  const showNetwork = visibleCharts.includes("network");
+  const chartCount = visibleCharts.length;
   const chartColumns = isAdvanced && width >= 560 ? 2 : 1;
   const chartHeight = isAdvanced
     ? 180
-    : `calc((100% - ${Math.max(0, chartCount - 1) * 8}px) / ${Math.max(1, chartCount)})`;
+    : `calc((100% - ${Math.max(0, chartCount - 1) * 10}px) / ${Math.max(1, chartCount)})`;
 
   return (
-    <Stack gap="xs" h={isAdvanced ? "auto" : "100%"} miw={0}>
+    <Stack gap="xs" h={isAdvanced ? "auto" : height} miw={0}>
       {showTitle && (
         <Text size="sm" fw={600} truncate="end">
           {integrationName}
         </Text>
       )}
-      <SimpleGrid cols={chartColumns} spacing="xs" style={{ flex: 1 }}>
-        {options.visibleCharts.includes("cpu") && (
+      <SimpleGrid cols={chartColumns} spacing="xs" style={{ flex: 1, minHeight: 0 }}>
+        {chartCount === 0 && (
+          <Center h="100%">
+            <Text size="sm" c="dimmed">
+              —
+            </Text>
+          </Center>
+        )}
+        {visibleCharts.includes("cpu") && (
           <Box h={chartHeight}>
             <SystemResourceCPUChart
               cpuUsageOverTime={items.map((item) => item.cpu)}
@@ -163,7 +197,7 @@ const SystemCharts = ({
             />
           </Box>
         )}
-        {options.visibleCharts.includes("memory") && (
+        {visibleCharts.includes("memory") && (
           <Box h={chartHeight}>
             <SystemResourceMemoryChart
               memoryUsageOverTime={items.map((item) => item.memory)}
@@ -173,7 +207,7 @@ const SystemCharts = ({
             />
           </Box>
         )}
-        {options.visibleCharts.includes("gpu") && (
+        {visibleCharts.includes("gpu") && (
           <Box h={chartHeight}>
             <SystemResourceGPUChart
               gpuUsageOverTime={items.map((item) => item.gpu)}

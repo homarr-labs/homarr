@@ -1,7 +1,7 @@
 "use client";
 
 import { ActionIcon, Anchor, Group, Indicator, Stack, Text } from "@mantine/core";
-import { IconExternalLink, IconFileText, IconLink } from "@tabler/icons-react";
+import { IconFileText, IconLink } from "@tabler/icons-react";
 
 import { cleanFqdn, getResourceTimestamp, getStatusColor, parseStatus } from "./coolify-utils";
 
@@ -39,7 +39,14 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
       <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
         <Indicator size={isTiny ? 4 : 8} color={statusColor} />
         {resourceUrl ? (
-          <Anchor href={resourceUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
+          <Anchor
+            href={resourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            fz={isTiny ? "8px" : "xs"}
+            c="inherit"
+            lineClamp={1}
+          >
             {item.name}
           </Anchor>
         ) : (
@@ -50,24 +57,39 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
       </Group>
       <Group wrap="nowrap" gap={4} ml={16}>
         {cleanFqdn(item.fqdn) && (
-          <ActionIcon component="a" href={cleanFqdn(item.fqdn)} target="_blank" size="xs" variant="subtle" c="dimmed">
+          <ActionIcon
+            component="a"
+            href={cleanFqdn(item.fqdn)}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${item.name}`}
+            size="xs"
+            variant="subtle"
+            c="dimmed"
+          >
             <IconLink size={12} />
           </ActionIcon>
         )}
-        {resourceUrl && (
-          <ActionIcon component="a" href={resourceUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
-            <IconExternalLink size={12} />
-          </ActionIcon>
-        )}
-        {logsUrl && (
-          <ActionIcon component="a" href={logsUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
+        {!isTiny && logsUrl && (
+          <ActionIcon
+            component="a"
+            href={logsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${item.name} logs`}
+            size="xs"
+            variant="subtle"
+            c="dimmed"
+          >
             <IconFileText size={12} />
           </ActionIcon>
         )}
-        <Text fz="10px" c="dimmed" lineClamp={1}>
-          {item.projectName ?? "-"} / {item.environmentName ?? "-"}
-        </Text>
-        {getResourceTimestamp(item, resourceType) && (
+        {!isTiny && (
+          <Text fz="10px" c="dimmed" lineClamp={1}>
+            {item.projectName ?? "-"} / {item.environmentName ?? "-"}
+          </Text>
+        )}
+        {!isTiny && getResourceTimestamp(item, resourceType) && (
           <Text fz="10px" c="dimmed" ml="auto">
             {getResourceTimestamp(item, resourceType)}
           </Text>

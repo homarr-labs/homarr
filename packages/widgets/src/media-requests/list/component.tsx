@@ -17,7 +17,8 @@ import { WidgetEmptyState } from "../../common/empty-state";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
-import classes from "../search-button.module.css";
+import classes from "./component.module.css";
+import searchClasses from "../search-button.module.css";
 
 export default function MediaServerWidget({
   integrationIds,
@@ -46,7 +47,7 @@ export default function MediaServerWidget({
   if (mediaRequests.length === 0 && failedIntegrations.length === 0) throw new NoIntegrationDataError();
 
   return (
-    <Stack className={classes.searchRoot} gap={0}>
+    <Stack className={searchClasses.searchRoot} gap={0}>
       {!isEditMode && <MediaRequestSearchButton integrationIds={integrationIds} />}
       {failedIntegrations.length > 0 && (
         <Group px="sm" pt="xs">
@@ -64,6 +65,7 @@ export default function MediaServerWidget({
               key={`${mediaRequest.integrationId}-${mediaRequest.id}`}
               request={mediaRequest}
               isTiny={displayMode !== "advanced" && (width <= 256 || height < 96)}
+              isDense={displayMode !== "advanced" && (width < 340 || height < 150)}
               isAdvanced={displayMode === "advanced"}
               canInteract={interactIntegrationIds.has(mediaRequest.integrationId)}
               options={options}
@@ -81,7 +83,7 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
   return (
     <Tooltip label={t("action.search.label")}>
       <ActionIcon
-        className={classes.searchButton}
+        className={searchClasses.searchButton}
         variant="light"
         size="sm"
         aria-label={t("action.search.label")}
@@ -96,33 +98,23 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
 interface MediaRequestCardProps {
   request: RouterOutputs["widget"]["mediaRequests"]["getLatestRequests"]["requests"][number];
   isTiny: boolean;
+  isDense: boolean;
   isAdvanced: boolean;
   canInteract: boolean;
   options: WidgetComponentProps<"mediaRequests-requestList">["options"];
 }
 
-const MediaRequestCard = ({ request, isTiny, isAdvanced, canInteract, options }: MediaRequestCardProps) => {
+const MediaRequestCard = ({ request, isTiny, isDense, isAdvanced, canInteract, options }: MediaRequestCardProps) => {
   const board = useRequiredBoard();
   const t = useScopedI18n("widget.mediaRequests-requestList");
 
   return (
     <Card
-      className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${request.type} mediaRequests-list-item-${request.status}`}
+      className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${request.type} mediaRequests-list-item-${request.status} ${classes.card}`}
       radius={board.itemRadius}
-      p="xs"
+      p={isDense ? 6 : "xs"}
+      withBorder
     >
-      <Image
-        className="mediaRequests-list-item-background"
-        src={request.backdropImageUrl}
-        pos="absolute"
-        w="100%"
-        h="100%"
-        opacity={0.2}
-        top={0}
-        left={0}
-        alt=""
-      />
-
       <Group
         className="mediaRequests-list-item-contents"
         h="100%"
@@ -131,20 +123,55 @@ const MediaRequestCard = ({ request, isTiny, isAdvanced, canInteract, options }:
         wrap="nowrap"
         gap={0}
       >
-        <Group className="mediaRequests-list-item-left-side" h="100%" gap="md" wrap="nowrap" flex={1}>
+        <Group
+          className="mediaRequests-list-item-left-side"
+          h="100%"
+          gap={isDense ? "xs" : "md"}
+          wrap="nowrap"
+          flex={1}
+          miw={0}
+        >
           {!isTiny && (
             <Image
               className="mediaRequests-list-item-poster"
               src={request.posterImagePath}
-              h={40}
+              h={isDense ? 36 : 44}
               w="auto"
-              radius={"md"}
+              radius="sm"
+              alt=""
+              style={{ flexShrink: 0 }}
             />
           )}
 
-          <Stack gap={0} w="100%">
-            <Group justify="space-between" gap="xs" className="mediaRequests-list-item-top-group">
-              <Group gap="xs">
+          <Stack gap={2} w="100%" miw={0}>
+            <Group gap="xs" justify="space-between" wrap="nowrap" className="mediaRequests-list-item-top-group">
+              <Anchor
+                className="mediaRequests-list-item-info-second-line mediaRequests-list-item-media-title"
+                href={request.href}
+                c="var(--mantine-color-text)"
+                target={options.linksTargetNewTab ? "_blank" : "_self"}
+                rel={options.linksTargetNewTab ? "noopener noreferrer" : undefined}
+                fz={isTiny ? "xs" : "sm"}
+                fw={600}
+                title={request.name}
+                truncate="end"
+                style={{ minWidth: 0, flex: 1 }}
+              >
+                {request.name || "unknown"}
+              </Anchor>
+              {request.status === "pending" ? (
+                <DecisionButtons
+                  requestId={request.id}
+                  integrationId={request.integrationId}
+                  canInteract={canInteract}
+                  alwaysVisible={isTiny}
+                />
+              ) : (
+                <StatusBadge status={request.status} />
+              )}
+            </Group>
+            <Group justify="space-between" gap="xs" wrap="nowrap" className="mediaRequests-list-item-bottom-group">
+              <Group gap={4} wrap="nowrap" miw={0}>
                 <Text className="mediaRequests-list-item-media-year" size="xs">
                   {toValidDate(request.airDate)?.getFullYear() ?? t("toBeDetermined")}
                 </Text>
@@ -164,46 +191,26 @@ const MediaRequestCard = ({ request, isTiny, isAdvanced, canInteract, options }:
                   </Badge>
                 )}
               </Group>
-              <Group className="mediaRequests-list-item-request-user" gap={4} wrap="nowrap">
-                <Avatar
-                  className="mediaRequests-list-item-request-user-avatar"
-                  src={request.requestedBy?.avatar}
-                  size="xs"
-                />
-                <Anchor
-                  className="mediaRequests-list-item-request-user-name"
-                  href={request.requestedBy?.link}
-                  c="var(--mantine-color-text)"
-                  target={options.linksTargetNewTab ? "_blank" : "_self"}
-                  fz="xs"
-                  lineClamp={1}
-                  style={{ wordBreak: "break-all" }}
-                >
-                  {(request.requestedBy?.displayName ?? "") || "unknown"}
-                </Anchor>
-              </Group>
-            </Group>
-            <Group gap="xs" justify="space-between" className="mediaRequests-list-item-bottom-group">
-              <Anchor
-                className="mediaRequests-list-item-info-second-line mediaRequests-list-item-media-title"
-                href={request.href}
-                c="var(--mantine-color-text)"
-                target={options.linksTargetNewTab ? "_blank" : "_self"}
-                fz={isTiny ? "xs" : "sm"}
-                fw={"bold"}
-                title={request.name}
-                lineClamp={1}
-              >
-                {request.name || "unknown"}
-              </Anchor>
-              {request.status === "pending" ? (
-                <DecisionButtons
-                  requestId={request.id}
-                  integrationId={request.integrationId}
-                  canInteract={canInteract}
-                />
-              ) : (
-                <StatusBadge status={request.status} />
+              {!isTiny && (
+                <Group className="mediaRequests-list-item-request-user" gap={4} wrap="nowrap" miw={0}>
+                  <Avatar
+                    className="mediaRequests-list-item-request-user-avatar"
+                    src={request.requestedBy?.avatar}
+                    size={18}
+                  />
+                  <Anchor
+                    className="mediaRequests-list-item-request-user-name"
+                    href={request.requestedBy?.link}
+                    c="dimmed"
+                    target={options.linksTargetNewTab ? "_blank" : "_self"}
+                    rel={options.linksTargetNewTab ? "noopener noreferrer" : undefined}
+                    fz="xs"
+                    truncate="end"
+                    style={{ minWidth: 0, maxWidth: isAdvanced ? 180 : 100 }}
+                  >
+                    {(request.requestedBy?.displayName ?? "") || "unknown"}
+                  </Anchor>
+                </Group>
               )}
             </Group>
           </Stack>
@@ -217,9 +224,10 @@ interface DecisionButtonsProps {
   requestId: number;
   integrationId: string;
   canInteract: boolean;
+  alwaysVisible: boolean;
 }
 
-const DecisionButtons = ({ requestId, integrationId, canInteract }: DecisionButtonsProps) => {
+const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible }: DecisionButtonsProps) => {
   const utils = clientApi.useUtils();
   const {
     mutate: mutateRequestAnswer,
@@ -239,13 +247,18 @@ const DecisionButtons = ({ requestId, integrationId, canInteract }: DecisionButt
   };
 
   return (
-    <Group className="mediaRequests-list-item-pending-buttons" gap="sm" title={error?.message}>
+    <Group
+      className={`mediaRequests-list-item-pending-buttons ${classes.pendingActions} ${alwaysVisible ? classes.pendingActionsVisible : ""}`}
+      gap={4}
+      wrap="nowrap"
+      title={error?.message}
+    >
       <Tooltip label={t("pending.approve")}>
         <ActionIcon
           className="mediaRequests-list-item-pending-button-approve"
           variant="light"
           color="green"
-          size="xs"
+          size="sm"
           disabled={!canInteract || isPending}
           aria-label={t("pending.approve")}
           onClick={() => {
@@ -260,7 +273,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract }: DecisionButt
           className="mediaRequests-list-item-pending-button-decline"
           variant="light"
           color="red"
-          size="xs"
+          size="sm"
           disabled={!canInteract || isPending}
           aria-label={t("pending.decline")}
           onClick={() => {

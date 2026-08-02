@@ -5,3 +5,35 @@
 [data-mantine-color-scheme="dark"] .card {
   background-color: var(--mantine-color-dark-7);
 }
+
+.systemPanel {
+  min-width: 0;
+}
+
+.infoAction {
+  transition: opacity 150ms ease;
+}
+
+.infoActionCompact {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.systemPanel:hover .infoActionCompact,
+.systemPanel:focus-within .infoActionCompact {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none) {
+  .infoActionCompact {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .infoAction {
+    transition: none;
+  }
+}

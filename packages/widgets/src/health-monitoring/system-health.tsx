@@ -83,16 +83,29 @@ export const SystemHealthMonitoring = ({
           const filteredSmart = filterStorageVolumes(healthInfo.smart, options.visibleStorageVolumes, integrationId);
           const disksData = matchFileSystemAndSmart(filteredFileSystem, filteredSmart);
           const memoryUsage = formatMemoryUsage(healthInfo.memAvailableInBytes, healthInfo.memUsedInBytes);
+          const hasAttentionState = healthInfo.rebootRequired || healthInfo.availablePkgUpdates > 0;
           return (
             <Stack
               gap="sm"
               key={integrationId}
               h={!isAdvanced && healthData.length === 1 ? "100%" : "auto"}
-              className={`health-monitoring-information health-monitoring-${integrationName}`}
+              className={combineClasses(
+                `health-monitoring-information health-monitoring-${integrationName}`,
+                classes.systemPanel,
+              )}
               p="sm"
               pos="relative"
             >
-              <Box className="health-monitoring-information-card-section" pos="absolute" top={8} right={8}>
+              <Box
+                className={combineClasses(
+                  "health-monitoring-information-card-section",
+                  classes.infoAction,
+                  !isAdvanced && !hasAttentionState && classes.infoActionCompact,
+                )}
+                pos="absolute"
+                top={8}
+                right={8}
+              >
                 <Indicator
                   className="health-monitoring-updates-reboot-indicator"
                   inline

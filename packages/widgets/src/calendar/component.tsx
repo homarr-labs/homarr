@@ -2,9 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { Box, Group, Stack, Text, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Box, Group, Stack, Text, Tooltip, useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
 import dayjs from "dayjs";
 
@@ -12,12 +13,19 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { setWidgetRuntimeQueries } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { CalendarDay } from "./calender-day";
-import { getCalendarAgendaEvents, groupEventsByDate, splitEvents, toCalendarDateKey } from "./calendar-events";
+import {
+  getCalendarAgendaEvents,
+  groupEventsByDate,
+  moveCalendarMonth,
+  splitEvents,
+  toCalendarDateKey,
+} from "./calendar-events";
 import { CalendarEventList } from "./calendar-event-list";
 import classes from "./component.module.css";
 
@@ -102,9 +110,11 @@ const CalendarBase = ({
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
   const { ref, width, height } = useElementSize();
   const isSmall = width < 256;
-  const calendarHeight = displayMode === "advanced" ? height * 0.62 : height;
 
-  const normalizedEvents = useMemo(() => splitEvents(events), [events]);
+  const normalizedEvents = useMemo(
+    () => (displayMode === "advanced" ? [] : splitEvents(events)),
+    [displayMode, events],
+  );
   const visibleEvents = useMemo(
     () =>
       normalizedEvents.filter(
@@ -114,9 +124,22 @@ const CalendarBase = ({
   );
   const eventsByDate = useMemo(() => groupEventsByDate(visibleEvents), [visibleEvents]);
   const agendaEvents = useMemo(
-    () => getCalendarAgendaEvents(events, month, options.releaseType),
-    [events, month, options.releaseType],
+    () => (displayMode === "advanced" ? getCalendarAgendaEvents(events, month, options.releaseType) : []),
+    [displayMode, events, month, options.releaseType],
   );
+
+  if (displayMode === "advanced") {
+    return (
+      <CalendarAgenda
+        events={agendaEvents}
+        failedIntegrations={failedIntegrations}
+        isEditMode={isEditMode}
+        locale={locale}
+        month={month}
+        setMonth={setMonth}
+      />
+    );
+  }
 
   return (
     <Stack ref={ref} h="100%" w="100%" gap="xs" style={{ overflow: "hidden" }}>
@@ -138,7 +161,7 @@ const CalendarBase = ({
         static={isEditMode}
         className={classes.calendar}
         w="100%"
-        h={displayMode === "advanced" ? "62%" : "100%"}
+        h="100%"
         styles={{
           calendarHeaderControl: {
             pointerEvents: isEditMode ? "none" : undefined,
@@ -192,19 +215,77 @@ const CalendarBase = ({
               events={eventsForDate}
               disabled={isEditMode || eventsForDate.length === 0}
               rootWidth={width}
-              rootHeight={calendarHeight}
+              rootHeight={height}
             />
           );
         }}
       />
-      {displayMode === "advanced" && (
-        <Box px="md" pb="sm" style={{ flex: 1, minHeight: 0 }}>
-          <Text size="sm" fw={600} mb={4}>
-            {new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(month)} · {agendaEvents.length}
-          </Text>
-          <CalendarEventList events={agendaEvents} groupByDate locale={locale} />
-        </Box>
-      )}
+    </Stack>
+  );
+};
+
+interface CalendarAgendaProps {
+  events: CalendarEvent[];
+  failedIntegrations: CalendarBaseProps["failedIntegrations"];
+  isEditMode: boolean;
+  locale: string;
+  month: Date;
+  setMonth: (date: Date) => void;
+}
+
+const CalendarAgenda = ({ events, failedIntegrations, isEditMode, locale, month, setMonth }: CalendarAgendaProps) => {
+  const t = useScopedI18n("widget.calendar.advanced");
+  const monthLabel = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(month);
+
+  return (
+    <Stack h="100%" w="100%" gap="sm" p="md" style={{ overflow: "hidden" }}>
+      <Group justify="space-between" align="center" wrap="nowrap">
+        <Group gap="xs" wrap="nowrap">
+          <Tooltip label={t("previousMonth")} events={{ hover: true, focus: true, touch: false }}>
+            <ActionIcon
+              variant="subtle"
+              size="lg"
+              aria-label={t("previousMonth")}
+              disabled={isEditMode}
+              onClick={() => setMonth(moveCalendarMonth(month, -1))}
+            >
+              <IconChevronLeft size={18} aria-hidden />
+            </ActionIcon>
+          </Tooltip>
+          <Stack gap={0} miw={0}>
+            <Text component="h3" size="sm" fw={600} tt="capitalize" lineClamp={1}>
+              {monthLabel}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {t("eventCount", { count: events.length })}
+            </Text>
+          </Stack>
+          <Tooltip label={t("nextMonth")} events={{ hover: true, focus: true, touch: false }}>
+            <ActionIcon
+              variant="subtle"
+              size="lg"
+              aria-label={t("nextMonth")}
+              disabled={isEditMode}
+              onClick={() => setMonth(moveCalendarMonth(month, 1))}
+            >
+              <IconChevronRight size={18} aria-hidden />
+            </ActionIcon>
+          </Tooltip>
+        </Group>
+        {failedIntegrations.length > 0 && <IntegrationErrorIndicator results={failedIntegrations} />}
+      </Group>
+
+      <Box style={{ flex: 1, minHeight: 0 }}>
+        {events.length > 0 ? (
+          <CalendarEventList events={events} groupByDate locale={locale} fillHeight />
+        ) : (
+          <Stack h="100%" align="center" justify="center" p="md">
+            <Text c="dimmed" size="sm" ta="center">
+              {t("noEvents")}
+            </Text>
+          </Stack>
+        )}
+      </Box>
     </Stack>
   );
 };

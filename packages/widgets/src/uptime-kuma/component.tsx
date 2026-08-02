@@ -76,6 +76,25 @@ const heroVariantByRing = {
   false: classes.heroTextOnly,
 } as const;
 
+export function getCompactStatLimit(height: number, showHero: boolean, statCount: number): number {
+  if (showHero) {
+    if (height < 180) return 0;
+    if (height < 260) return Math.min(2, statCount);
+    if (height < 340) return Math.min(4, statCount);
+  } else {
+    if (height < 130) return Math.min(2, statCount);
+    if (height < 220) return Math.min(4, statCount);
+  }
+  return statCount;
+}
+
+export function getCompactStatPriority(statKey: keyof typeof statIcons, value: number): number {
+  if (statKey === "downCount") return value > 0 ? 0 : 4;
+  if (statKey === "pausedCount") return value > 0 ? 1 : 5;
+  if (statKey === "totalMonitors") return 2;
+  return 3;
+}
+
 export default function UptimeKumaWidget({
   integrationIds,
   options,
@@ -126,16 +145,30 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
   const iconSize = getIconSize(width);
   const gridCols = getGridCols(width);
 
-  const visibleStatKeys = Object.entries(statVisibilityByOption)
+  const enabledStatKeys = Object.entries(statVisibilityByOption)
     .filter(([optionKey]) => options[optionKey as keyof typeof options])
     .map(([, statKey]) => statKey);
 
   const showHero = options.showAverageUptime;
+  const showRing = options.showUptimeRing && (displayMode === "advanced" || (width >= 170 && height >= 110));
+  const prioritizedStatKeys =
+    displayMode === "advanced"
+      ? enabledStatKeys
+      : enabledStatKeys.toSorted(
+          (left, right) =>
+            getCompactStatPriority(left, combined[left]) - getCompactStatPriority(right, combined[right]),
+        );
+  const visibleStatKeys = prioritizedStatKeys.slice(
+    0,
+    displayMode === "advanced"
+      ? prioritizedStatKeys.length
+      : getCompactStatLimit(height, showHero, prioritizedStatKeys.length),
+  );
   const hasContent = showHero || visibleStatKeys.length > 0;
 
   const heroLayoutClass =
     heroLayoutBySecondaryStats[String(visibleStatKeys.length > 0) as keyof typeof heroLayoutBySecondaryStats];
-  const heroRingClass = heroVariantByRing[String(options.showUptimeRing) as keyof typeof heroVariantByRing];
+  const heroRingClass = heroVariantByRing[String(showRing) as keyof typeof heroVariantByRing];
 
   const summaryContent = (
     <div className={classes.root}>
@@ -145,7 +178,7 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
             <span className={classes.heroLabel}>{t("averageUptime")}</span>
             <span className={classes.heroValue}>{formatNumber(uptimeValue, 1)}%</span>
           </div>
-          {options.showUptimeRing && (
+          {showRing && (
             <RingProgress
               className={classes.ring}
               size={ringSize}
@@ -190,7 +223,7 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
           })}
         </div>
       )}
-      {displayMode === "compact" && height >= 240 && combined.downCount > 0 && (
+      {displayMode === "compact" && height >= 300 && combined.downCount > 0 && (
         <Stack gap={2} px="sm">
           {monitors
             .filter((monitor) => monitor.status === "down")

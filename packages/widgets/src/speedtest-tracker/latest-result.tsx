@@ -26,7 +26,7 @@ export function LatestResultSection({ result, width = 500 }: { result: Speedtest
     <Stack gap={6} h="100%">
       <Group justify="space-between" align="center" wrap="nowrap">
         <SectionLabel>{t("latestResult")}</SectionLabel>
-        <Text size="xs" c="dimmed">
+        <Text size="xs" c="dimmed" truncate title={timestamp} style={{ minWidth: 0 }}>
           {timestamp}
         </Text>
       </Group>

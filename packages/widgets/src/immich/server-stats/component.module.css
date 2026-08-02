@@ -8,3 +8,11 @@
     background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
   }
 }
+
+.statItemDense {
+  min-width: 0;
+  min-height: 44px;
+  padding: 4px 6px;
+  border-radius: var(--mantine-radius-sm);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}

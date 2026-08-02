@@ -23,6 +23,7 @@ export const NetworkTrafficChart = ({
 
   const max = Math.max(...usageOverTime);
   const upperBound = max + max * 0.2;
+  const latest = usageOverTime.at(-1) ?? 0;
 
   return (
     <CommonChart
@@ -32,7 +33,7 @@ export const NetworkTrafficChart = ({
       title={isUp ? t("up") : t("down")}
       icon={isUp ? IconArrowUp : IconArrowDown}
       yAxisProps={{ domain: [0, upperBound] }}
-      lastValue={formatByteRate(Math.round(max))}
+      lastValue={formatByteRate(Math.round(latest))}
       chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
       tooltipProps={{

@@ -283,11 +283,6 @@ const WidgetItem = ({
             {item.description}
           </Text>
         </Tooltip>
-        {hasMatchingIntegration && (
-          <Text size="10px" c="blue.6" fw={600}>
-            {t("item.create.integrationAvailable")}
-          </Text>
-        )}
         <SupportedIntegrations integrations={item.supportedIntegrations} />
       </Stack>
       <Box

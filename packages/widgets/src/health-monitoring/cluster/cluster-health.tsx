@@ -69,7 +69,7 @@ export const ClusterHealthMonitoring = ({
     <Stack h={displayMode === "advanced" ? "auto" : "100%"} p="xs" gap={isTiny ? "xs" : "md"}>
       {options.showUptime && (
         <Group justify="center" wrap="nowrap">
-          <Text fz={isTiny ? 8 : "xs"} tt="uppercase" fw={700} c="dimmed" ta="center">
+          <Text fz={isTiny ? 8 : "xs"} fw={700} c="dimmed" ta="center">
             {formatUptime(uptime, t)}
           </Text>
         </Group>

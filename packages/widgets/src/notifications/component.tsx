@@ -15,9 +15,10 @@ export default function NotificationsWidget({
   options,
   integrationIds,
   width,
+  height,
   displayMode,
 }: WidgetComponentProps<"notifications">) {
-  const { data: notificationIntegrations = [] } = clientApi.widget.notifications.getNotifications.useQuery({
+  const { data: notificationIntegrations = [], isPending } = clientApi.widget.notifications.getNotifications.useQuery({
     ...options,
     integrationIds,
   });
@@ -43,6 +44,8 @@ export default function NotificationsWidget({
     (integration): integration is typeof integration & { error: string } => Boolean(integration.error),
   );
   const isAdvanced = displayMode === "advanced";
+  const isDense = !isAdvanced && (width < 280 || height < 180);
+  const bodyLineClamp = isAdvanced ? 12 : height < 112 ? 1 : isDense ? 2 : 4;
   const columns = isAdvanced && width >= 720 ? 2 : 1;
 
   return (
@@ -59,7 +62,13 @@ export default function NotificationsWidget({
             ))}
           </Group>
         )}
-        {sortedNotifications.length > 0 ? (
+        {isPending ? (
+          <Flex justify="center" align="center" mih={96} p="sm">
+            <Text size="sm" c="dimmed" ta="center">
+              {t("common.action.loading")}
+            </Text>
+          </Flex>
+        ) : sortedNotifications.length > 0 ? (
           <SimpleGrid cols={columns} spacing={isAdvanced ? "md" : "xs"} verticalSpacing={isAdvanced ? "md" : "xs"}>
             {sortedNotifications.map((notification) => (
               <Card
@@ -70,32 +79,45 @@ export default function NotificationsWidget({
                 rel={notification.href ? "noopener noreferrer" : undefined}
                 radius={board.itemRadius}
                 w="100%"
-                p={isAdvanced ? "md" : "xs"}
-                style={{ color: "inherit", textDecoration: "none" }}
+                p={isAdvanced ? "md" : isDense ? 6 : "xs"}
+                bg={isAdvanced ? undefined : "transparent"}
+                style={{
+                  color: "inherit",
+                  textDecoration: "none",
+                  borderBottom: isAdvanced
+                    ? undefined
+                    : "1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4))",
+                }}
               >
-                <Flex gap="sm" align="flex-start" w="100%">
+                <Flex gap={isDense ? "xs" : "sm"} align="flex-start" w="100%">
                   {!options.hideLogos && notification.source?.iconUrl && (
                     <Avatar
                       src={notification.source.iconUrl}
                       alt={notification.source.name}
-                      size="sm"
+                      size={isDense ? "xs" : "sm"}
                       radius={board.itemRadius}
                     />
                   )}
 
-                  <Flex gap={isAdvanced ? "sm" : 6} direction="column" w="100%" miw={0}>
+                  <Flex gap={isAdvanced ? "sm" : isDense ? 4 : 6} direction="column" w="100%" miw={0}>
                     {notification.title && (
-                      <Text fz={isAdvanced ? "md" : "sm"} fw={600} lh={1.25} lineClamp={2}>
+                      <Text fz={isAdvanced ? "md" : "sm"} fw={600} lh={1.25} lineClamp={isDense ? 1 : 2}>
                         {notification.title}
                       </Text>
                     )}
-                    <Text c="dimmed" size="sm" lineClamp={isAdvanced ? 12 : 4} style={{ whiteSpace: "pre-line" }}>
+                    <Text
+                      c="dimmed"
+                      size={isDense ? "xs" : "sm"}
+                      lineClamp={bodyLineClamp}
+                      style={{ whiteSpace: "pre-line" }}
+                    >
                       {notification.body}
                     </Text>
 
                     <InfoDisplay
                       date={notification.time}
                       source={isAdvanced ? (notification.source?.name ?? notification.integrationName) : undefined}
+                      dense={isDense}
                     />
                   </Flex>
                 </Flex>
@@ -103,22 +125,24 @@ export default function NotificationsWidget({
             ))}
           </SimpleGrid>
         ) : (
-          <Text size="sm" c="dimmed">
-            {t("widget.notifications.noItems")}
-          </Text>
+          <Flex justify="center" align="center" mih={96} p="sm">
+            <Text size="sm" c="dimmed" ta="center">
+              {t("widget.notifications.noItems")}
+            </Text>
+          </Flex>
         )}
       </Stack>
     </ScrollArea>
   );
 }
 
-const InfoDisplay = ({ date, source }: { date: Date; source?: string }) => {
+const InfoDisplay = ({ date, source, dense }: { date: Date; source?: string; dense: boolean }) => {
   const timeAgo = useTimeAgo(date, 30000); // update every 30sec
 
   return (
     <Group gap={5} align="center" wrap="nowrap">
-      <IconClock size={"1rem"} color={"var(--mantine-color-dimmed)"} />
-      <Text size="sm" c="dimmed">
+      <IconClock aria-hidden size={dense ? 12 : "1rem"} color="var(--mantine-color-dimmed)" />
+      <Text size={dense ? "xs" : "sm"} c="dimmed">
         {timeAgo}
       </Text>
       {source && <Text c="dimmed">•</Text>}

@@ -26,6 +26,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import classes from "./component.module.css";
 
 type TranscodingDecision = NonNullable<NonNullable<StreamSession["currentlyPlaying"]>["metadata"]>["transcoding"];
 
@@ -265,19 +266,26 @@ export default function MediaServerWidget({
         pointerEvents: isEditMode ? "none" : undefined,
       },
     },
-    mantineTableBodyCellProps: ({ row }) => ({
-      onClick: isEditMode
-        ? undefined
-        : () => {
-            openModal(
-              {
-                item: row.original,
-              },
-              {
-                title: row.original.sessionName,
-              },
-            );
-          },
+    mantineTableBodyRowProps: ({ row }) => {
+      const openDetails = () => {
+        openModal({ item: row.original }, { title: row.original.sessionName });
+      };
+
+      return {
+        className: isEditMode ? undefined : classes.sessionRow,
+        tabIndex: isEditMode ? -1 : 0,
+        "aria-label": row.original.sessionName,
+        onClick: isEditMode ? undefined : openDetails,
+        onKeyDown: isEditMode
+          ? undefined
+          : (event) => {
+              if (event.key !== "Enter" && event.key !== " ") return;
+              event.preventDefault();
+              openDetails();
+            },
+      };
+    },
+    mantineTableBodyCellProps: () => ({
       py: 4,
       style: {
         overflowX: "hidden",
@@ -330,7 +338,7 @@ export default function MediaServerWidget({
         </Group>
       )}
       <MantineReactTable table={table} />
-      {(isAdvanced || height >= 96) && (
+      {(isAdvanced || height >= 144) && (
         <Group
           gap="xs"
           h={30}
@@ -348,7 +356,7 @@ export default function MediaServerWidget({
                 count: flatSessions.length,
               })}
             </Text>
-            {totalBitrateLabel && (
+            {totalBitrateLabel && (isAdvanced || width >= 300) && (
               <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
                 {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
               </Text>
@@ -358,9 +366,11 @@ export default function MediaServerWidget({
             {uniqueIntegrations.map((integration) => (
               <Group key={integration.integrationId} gap="xs" align="center">
                 <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
-                <Text className="media-server-name" size="sm">
-                  {integration.integrationName}
-                </Text>
+                {(isAdvanced || width >= 480) && (
+                  <Text className="media-server-name" size="sm" truncate="end">
+                    {integration.integrationName}
+                  </Text>
+                )}
               </Group>
             ))}
           </Group>

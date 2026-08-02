@@ -3,6 +3,7 @@
 import type { CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { getDefaultZIndex } from "@mantine/core";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 
@@ -56,6 +57,7 @@ interface PortalTooltipProps {
 }
 
 const MARGIN = 14;
+const TOOLTIP_Z_INDEX = getDefaultZIndex("modal");
 
 const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: PortalTooltipProps) => {
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -120,7 +122,7 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
     position: "fixed",
     left: pos.x,
     top: pos.y,
-    zIndex: 10000,
+    zIndex: TOOLTIP_Z_INDEX,
     pointerEvents: "none",
   };
 

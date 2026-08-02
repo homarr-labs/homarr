@@ -161,41 +161,48 @@ function Carousel({
       <Box w="100%" style={{ flex: 1, minHeight: 0 }} className={classes.carouselContainer}>
         <Image src={currentAsset.publicLink} alt={t("albumPhoto")} className={classes.carouselImage} />
 
-        {advanced && (
-          <>
-            <ActionIcon
-              aria-label={t("actions.previousPhoto")}
-              variant="filled"
-              radius="xl"
-              pos="absolute"
-              left="md"
-              top="50%"
-              onClick={() => move(-1)}
-            >
-              <IconChevronLeft size={18} />
-            </ActionIcon>
-            <Group pos="absolute" right="md" top="md" gap="xs">
+        {assets.length > 1 && (
+          <Group
+            className={classes.carouselControls}
+            data-visible={advanced || paused || undefined}
+            gap={4}
+            wrap="nowrap"
+          >
+            {advanced && (
               <ActionIcon
-                aria-label={paused ? t("actions.resumeSlideshow") : t("actions.pauseSlideshow")}
+                aria-label={t("actions.previousPhoto")}
                 variant="filled"
+                color="dark"
                 radius="xl"
-                onClick={() => setPaused((value) => !value)}
+                size={40}
+                onClick={() => move(-1)}
               >
-                {paused ? <IconPlayerPlay size={16} /> : <IconPlayerPause size={16} />}
+                <IconChevronLeft size={18} />
               </ActionIcon>
-            </Group>
+            )}
             <ActionIcon
-              aria-label={t("actions.nextPhoto")}
+              aria-label={paused ? t("actions.resumeSlideshow") : t("actions.pauseSlideshow")}
               variant="filled"
+              color="dark"
               radius="xl"
-              pos="absolute"
-              right="md"
-              top="50%"
-              onClick={() => move(1)}
+              size={advanced ? 40 : 32}
+              onClick={() => setPaused((value) => !value)}
             >
-              <IconChevronRight size={18} />
+              {paused ? <IconPlayerPlay size={18} /> : <IconPlayerPause size={18} />}
             </ActionIcon>
-          </>
+            {advanced && (
+              <ActionIcon
+                aria-label={t("actions.nextPhoto")}
+                variant="filled"
+                color="dark"
+                radius="xl"
+                size={40}
+                onClick={() => move(1)}
+              >
+                <IconChevronRight size={18} />
+              </ActionIcon>
+            )}
+          </Group>
         )}
 
         {(showPhotoInfo || advanced) && (

@@ -250,17 +250,21 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
     >
       <Menu.ContextMenu>{children}</Menu.ContextMenu>
       <Menu.Dropdown>
-        <Menu.Item
-          closeMenuOnClick
-          leftSection={<IconMaximize size={16} />}
-          onClick={() => {
-            if (sourceRef.current) openAdvancedFocus(item.id, sourceRef.current, true);
-          }}
-          disabled={isEditMode}
-        >
-          {t("item.advancedFocus.open")}
-        </Menu.Item>
-        <Menu.Divider />
+        {item.kind !== "app" && (
+          <>
+            <Menu.Item
+              closeMenuOnClick
+              leftSection={<IconMaximize size={16} />}
+              onClick={() => {
+                if (sourceRef.current) openAdvancedFocus(item.id, sourceRef.current);
+              }}
+              disabled={isEditMode}
+            >
+              {t("item.advancedFocus.open")}
+            </Menu.Item>
+            <Menu.Divider />
+          </>
+        )}
         {toggleOptions.length > 0 && (
           <>
             <Menu.Label>{tMenu("options")}</Menu.Label>

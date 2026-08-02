@@ -29,11 +29,13 @@ import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import classes from "./component.module.css";
 
 export default function MediaReleasesWidget({
   options,
   integrationIds,
   width,
+  height,
   displayMode,
 }: WidgetComponentProps<"mediaReleases">) {
   const { data: releases = [] } = clientApi.widget.mediaRelease.getMediaReleases.useQuery({
@@ -48,7 +50,7 @@ export default function MediaReleasesWidget({
         {releases.map((item, index) => (
           <Fragment key={`${item.integration.id}:${item.id}`}>
             {!isAdvanced && index !== 0 && options.layout === "poster" && <Divider />}
-            <Item item={item} options={options} isAdvanced={isAdvanced} />
+            <Item item={item} options={options} isAdvanced={isAdvanced} width={width} height={height} />
           </Fragment>
         ))}
       </SimpleGrid>
@@ -60,25 +62,30 @@ interface ItemProps {
   item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"][number];
   options: WidgetComponentProps<"mediaReleases">["options"];
   isAdvanced: boolean;
+  width: number;
+  height: number;
 }
 
-const formatReleaseDate = (value: unknown, locale: string) => {
+const formatReleaseDate = (value: unknown, locale: string, compact: boolean) => {
   const date = toValidDate(value);
   if (!date) return "—";
   return Intl.DateTimeFormat(locale, {
-    month: "2-digit",
+    month: compact ? "short" : "2-digit",
     year: "numeric",
     day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
+    ...(compact ? {} : { hour: "2-digit", minute: "2-digit", hour12: false }),
   }).format(date);
 };
 
-const Item = ({ item, options, isAdvanced }: ItemProps) => {
+const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
   const locale = useCurrentLocale();
   const t = useI18n();
   const length = formatLength(item.length, item.type, t);
+  const isCompact = !isAdvanced && (width < 340 || height < 180);
+  const isTiny = !isAdvanced && (width < 220 || height < 105);
+  const showPoster = (isAdvanced || options.layout === "poster") && !isTiny;
+  const showExtendedMetadata = isAdvanced || (!isCompact && width >= 360);
+  const showSide = isAdvanced || (!isTiny && (options.showType || options.showSource));
 
   return (
     <TooltipFloating
@@ -93,13 +100,15 @@ const Item = ({ item, options, isAdvanced }: ItemProps) => {
       }
     >
       <UnstyledButton
+        className={classes.item}
         component="a"
         href={item.href}
         target="_blank"
         rel="noopener noreferrer"
         pos="relative"
-        p={isAdvanced ? "sm" : options.layout === "poster" ? 0 : 4}
+        p={isAdvanced ? "sm" : options.layout === "poster" ? 4 : isTiny ? 4 : 6}
         h="100%"
+        title={item.title}
         style={
           isAdvanced
             ? {
@@ -126,57 +135,63 @@ const Item = ({ item, options, isAdvanced }: ItemProps) => {
             }}
           />
         )}
-        <Group justify="space-between" h="100%" wrap="nowrap">
-          <Group align="start" wrap="nowrap" style={{ zIndex: 0 }}>
-            {(isAdvanced || options.layout === "poster") && (
-              <Image w={isAdvanced ? 80 : 60} src={item.imageUrls.poster} alt={item.title} radius="xs" />
+        <Group justify="space-between" h="100%" wrap="nowrap" gap={isCompact ? "xs" : "sm"}>
+          <Group align="start" wrap="nowrap" style={{ zIndex: 0, minWidth: 0, flex: 1 }} gap="xs">
+            {showPoster && (
+              <Image
+                w={isAdvanced ? 80 : isCompact ? 44 : 60}
+                src={item.imageUrls.poster}
+                alt=""
+                radius="xs"
+                style={{ flexShrink: 0 }}
+              />
             )}
-            <Stack gap={4}>
+            <Stack gap={isCompact ? 2 : 4} style={{ minWidth: 0, flex: 1 }}>
               <Stack gap={0}>
-                <Text size="sm" fw="bold" lineClamp={2}>
+                <Text size={isTiny ? "xs" : "sm"} fw="bold" lineClamp={isCompact ? 1 : 2}>
                   {item.title}
                 </Text>
-                {item.subtitle !== undefined && (
-                  <Text size="sm" lineClamp={1}>
+                {item.subtitle !== undefined && !isTiny && (
+                  <Text size={isCompact ? "xs" : "sm"} c={isCompact ? "dimmed" : undefined} lineClamp={1}>
                     {item.subtitle}
                   </Text>
                 )}
               </Stack>
-              <Group gap={6} style={{ rowGap: 0 }}>
-                <Info icon={IconCalendar} label={formatReleaseDate(item.releaseDate, locale)} />
-                {length !== undefined && (
+              <Group gap={6} wrap="nowrap" style={{ minWidth: 0 }}>
+                <Info icon={IconCalendar} label={formatReleaseDate(item.releaseDate, locale, isCompact)} />
+                {length !== undefined && !isTiny && (
                   <>
                     <InfoDivider />
                     <Info icon={length.type === "duration" ? IconClock : IconBook} label={length.label} />
                   </>
                 )}
-                {item.producer !== undefined && (
+                {item.producer !== undefined && showExtendedMetadata && (
                   <>
                     <InfoDivider />
                     <Info label={item.producer} />
                   </>
                 )}
-                {item.rating !== undefined && (
+                {item.rating !== undefined && showExtendedMetadata && (
                   <>
                     <InfoDivider />
                     <Info icon={IconStarFilled} label={item.rating} />
                   </>
                 )}
-                {item.price !== undefined && (
+                {item.price !== undefined && showExtendedMetadata && (
                   <>
                     <InfoDivider />
                     <Info label={`$${item.price.toFixed(2)}`} />
                   </>
                 )}
               </Group>
-              {item.tags.length > 0 && (
+              {item.tags.length > 0 && (isAdvanced || !isCompact) && (
                 <OverflowBadge
                   size="xs"
                   groupGap={4}
                   data={item.tags}
                   overflowCount={3}
                   disablePopover={!isAdvanced}
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: isAdvanced ? "pointer" : undefined }}
                 />
               )}
               {isAdvanced && item.description && (
@@ -186,7 +201,7 @@ const Item = ({ item, options, isAdvanced }: ItemProps) => {
               )}
             </Stack>
           </Group>
-          {(isAdvanced || options.showType || options.showSource) && (
+          {showSide && (
             <Stack justify="space-between" align="end" h="100%" style={{ zIndex: 0 }}>
               {(isAdvanced || options.showType) && (
                 <Badge
@@ -223,9 +238,9 @@ const InfoDivider = () => (
 
 const Info = ({ icon: Icon, label }: IconAndLabelProps) => {
   return (
-    <Group gap={4}>
-      {Icon && <Icon size={12} color={getMantineColor("gray", 5)} />}
-      <Text size="xs" c="gray.5">
+    <Group gap={4} wrap="nowrap" miw={0}>
+      {Icon && <Icon size={12} color={getMantineColor("gray", 5)} style={{ flexShrink: 0 }} />}
+      <Text size="xs" c="dimmed" truncate="end">
         {label}
       </Text>
     </Group>

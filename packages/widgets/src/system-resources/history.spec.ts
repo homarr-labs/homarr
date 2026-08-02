@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { appendBoundedHistory, getNetworkHistory, toChartItem } from "./component";
+import { appendBoundedHistory, getCompactChartBudget, getNetworkHistory, toChartItem } from "./component";
 
 describe("system resource history", () => {
   test("averages all GPU values", () => {
@@ -29,5 +29,11 @@ describe("system resource history", () => {
     });
 
     expect(getNetworkHistory([missing, available, missing])).toEqual([{ up: 12, down: 34 }]);
+  });
+
+  test("limits compact charts to the available height", () => {
+    expect(getCompactChartBudget(100)).toBe(1);
+    expect(getCompactChartBudget(200)).toBe(2);
+    expect(getCompactChartBudget(300)).toBe(4);
   });
 });

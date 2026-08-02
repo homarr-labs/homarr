@@ -19,7 +19,7 @@ import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
-export default function AppWidget({ options, isEditMode, height, width, displayMode }: WidgetComponentProps<"app">) {
+export default function AppWidget({ options, isEditMode, height, width }: WidgetComponentProps<"app">) {
   const t = useI18n();
   const settings = useSettings();
   const board = useRequiredBoard();
@@ -51,7 +51,6 @@ export default function AppWidget({ options, isEditMode, height, width, displayM
   if (!app) return <WidgetEmptyState />;
 
   const isTiny = height < 100 || width < 100;
-  const isAdvanced = displayMode === "advanced";
   const isColumnLayout = options.layout.startsWith("column");
 
   return (
@@ -69,7 +68,7 @@ export default function AppWidget({ options, isEditMode, height, width, displayM
         ))}
         position="right-start"
         multiline
-        disabled={options.descriptionDisplayMode !== "tooltip" || !app.description || isEditMode || isAdvanced}
+        disabled={options.descriptionDisplayMode !== "tooltip" || !app.description || isEditMode}
         styles={{ tooltip: { maxWidth: 300 } }}
       >
         <Flex
@@ -84,7 +83,7 @@ export default function AppWidget({ options, isEditMode, height, width, displayM
           onContextMenu={isEditMode ? (e) => e.preventDefault() : undefined}
         >
           <Stack gap={0}>
-            {(options.showTitle || isAdvanced) && (
+            {options.showTitle && (
               <Text
                 className="app-title"
                 fw={700}
@@ -94,13 +93,13 @@ export default function AppWidget({ options, isEditMode, height, width, displayM
                 {app.name}
               </Text>
             )}
-            {(options.descriptionDisplayMode === "normal" || isAdvanced) && (
+            {options.descriptionDisplayMode === "normal" && (
               <Text
                 className="app-description"
                 size={isTiny ? rem(8) : "sm"}
                 ta={isColumnLayout ? "center" : undefined}
                 c="dimmed"
-                lineClamp={isAdvanced ? 10 : Math.max(1, Math.floor((height - 48) / 18))}
+                lineClamp={Math.max(1, Math.floor((height - 48) / 18))}
               >
                 {app.description?.split("\n").map((line, index) => (
                   <Fragment key={index}>
@@ -108,11 +107,6 @@ export default function AppWidget({ options, isEditMode, height, width, displayM
                     <br />
                   </Fragment>
                 ))}
-              </Text>
-            )}
-            {isAdvanced && app.href && (
-              <Text size="xs" c="dimmed" lineClamp={1}>
-                {getDisplayHost(app.href)}
               </Text>
             )}
           </Stack>
@@ -160,11 +154,3 @@ const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<Ap
   ) : (
     children
   );
-
-const getDisplayHost = (href: string) => {
-  try {
-    return new URL(href).host;
-  } catch {
-    return href;
-  }
-};

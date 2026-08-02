@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { ActionIcon, Anchor, Badge, Button, Card, Flex, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Anchor, Badge, Card, Flex, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -31,7 +31,7 @@ export default function IndexerManagerWidget({
   const board = useRequiredBoard();
   const isAdvanced = displayMode === "advanced";
   const hasSmallWidth = !isAdvanced && width < 256;
-  const hasSmallHeight = !isAdvanced && height < 256;
+  const isDense = !isAdvanced && (width < 280 || height < 180);
   const allIndexers = useMemo(() => indexersData.flatMap((entry) => entry.indexers), [indexersData]);
   const unavailableCount = allIndexers.filter(
     (indexer) => indexer.status === false || indexer.enabled === false,
@@ -49,16 +49,26 @@ export default function IndexerManagerWidget({
   }, [integrationIds, testAll, widgetStateRef]);
 
   return (
-    <Flex className="indexer-manager-container" h="100%" direction="column" gap="sm" p="sm" align="center">
-      <Group className="indexer-manager-title" align="center" gap="xs" wrap="nowrap">
-        <IconReportSearch
-          className="indexer-manager-title-icon"
-          size={hasSmallWidth ? 16 : 20}
-          style={{ minWidth: hasSmallWidth ? 16 : 20 }}
-        />
-        <Text size={hasSmallWidth ? "xs" : "md"} fw="bold">
-          {t("widget.indexerManager.title")}
-        </Text>
+    <Flex
+      className={`indexer-manager-container ${classes.root}`}
+      h="100%"
+      direction="column"
+      gap={isDense ? 4 : "xs"}
+      p={isDense ? "xs" : "sm"}
+    >
+      <Group className="indexer-manager-title" align="center" gap="xs" wrap="nowrap" w="100%">
+        <Tooltip label={t("widget.indexerManager.title")} disabled={!hasSmallWidth}>
+          <IconReportSearch
+            className="indexer-manager-title-icon"
+            size={hasSmallWidth ? 16 : 20}
+            style={{ minWidth: hasSmallWidth ? 16 : 20 }}
+          />
+        </Tooltip>
+        {!hasSmallWidth && (
+          <Text size={isDense ? "xs" : "sm"} fw={600} truncate="end">
+            {t("widget.indexerManager.title")}
+          </Text>
+        )}
         {isAdvanced && (
           <Group gap={4} wrap="nowrap">
             <Badge size="xs" color="green" variant="light">
@@ -71,9 +81,9 @@ export default function IndexerManagerWidget({
             )}
           </Group>
         )}
-        {hasSmallHeight && (
+        <Tooltip label={t("widget.indexerManager.testAll")}>
           <ActionIcon
-            className="indexer-manager-test-action-icon"
+            className={combineClasses("indexer-manager-test-action-icon", classes.testAction)}
             size="sm"
             radius={board.itemRadius}
             variant="light"
@@ -83,15 +93,16 @@ export default function IndexerManagerWidget({
             onClick={() => {
               testAll({ integrationIds });
             }}
+            aria-label={t("widget.indexerManager.testAll")}
           >
-            <IconTestPipe size={12} />
+            <IconTestPipe size={14} />
           </ActionIcon>
-        )}
+        </Tooltip>
       </Group>
       <Card
         className={combineClasses("indexer-manager-list-container", classes.card)}
         w="100%"
-        p="xs"
+        p={isDense ? 4 : "xs"}
         radius={board.itemRadius}
         flex={1}
       >
@@ -114,7 +125,7 @@ export default function IndexerManagerWidget({
               )}
               {indexers.map((indexer) => (
                 <Group
-                  className={`indexer-manager-line indexer-manager-${indexer.name}`}
+                  className={`indexer-manager-line indexer-manager-${indexer.name} ${classes.indexerRow}`}
                   key={indexer.id}
                   justify="space-between"
                   gap="xs"
@@ -124,8 +135,15 @@ export default function IndexerManagerWidget({
                     className="indexer-manager-line-anchor"
                     href={indexer.url}
                     target={options.openIndexerSiteInNewTab ? "_blank" : "_self"}
+                    rel={options.openIndexerSiteInNewTab ? "noopener noreferrer" : undefined}
+                    style={{ minWidth: 0, flex: 1 }}
                   >
-                    <Text className="indexer-manager-line-anchor-text" c="dimmed" size={hasSmallWidth ? "xs" : "sm"}>
+                    <Text
+                      className="indexer-manager-line-anchor-text"
+                      c="dimmed"
+                      size={hasSmallWidth ? "xs" : "sm"}
+                      truncate="end"
+                    >
                       {indexer.name}
                     </Text>
                   </Anchor>
@@ -153,24 +171,6 @@ export default function IndexerManagerWidget({
           ))}
         </ScrollArea>
       </Card>
-      {!hasSmallHeight && (
-        <Button
-          className="indexer-manager-test-button"
-          w="100%"
-          size="xs"
-          radius={board.itemRadius}
-          variant="light"
-          leftSection={<IconTestPipe size={"1rem"} />}
-          loading={isPending}
-          disabled={isEditMode}
-          loaderProps={{ type: "dots" }}
-          onClick={() => {
-            testAll({ integrationIds });
-          }}
-        >
-          {t("widget.indexerManager.testAll")}
-        </Button>
-      )}
     </Flex>
   );
 }

@@ -58,6 +58,7 @@ interface SystemDiskCardProps {
   integrationName?: string;
   secondaryText?: string;
   isAdvanced: boolean;
+  showTemperature: boolean;
 }
 
 const SystemDiskCard = ({
@@ -70,6 +71,7 @@ const SystemDiskCard = ({
   integrationName,
   secondaryText,
   isAdvanced,
+  showTemperature,
 }: SystemDiskCardProps) => {
   const board = useRequiredBoard();
   const scheme = useMantineColorScheme();
@@ -95,11 +97,18 @@ const SystemDiskCard = ({
   }, [displayText, healthy]);
 
   const unhealthyLabel = t("widget.systemDisks.status.unhealthy");
+  const hasHiddenTemperature = temperature !== null && temperature !== undefined && !showTemperature;
+  const tooltipLabel = [
+    healthy ? displayText : `${displayText} (${unhealthyLabel})`,
+    hasHiddenTemperature ? `${temperature}°C` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <Tooltip
-      label={healthy ? displayText : `${displayText} (${unhealthyLabel})`}
-      disabled={valueFits || isAdvanced}
+      label={tooltipLabel}
+      disabled={(valueFits && !hasHiddenTemperature) || isAdvanced}
       position="top"
       withinPortal
     >
@@ -109,9 +118,9 @@ const SystemDiskCard = ({
         bg={scheme.colorScheme === "dark" ? "dark.7" : "gray.1"}
         style={{ overflow: "hidden", position: "relative" }}
       >
-        <Group justify="space-between" style={{ zIndex: 1 }}>
-          <div>
-            <Text fw={700} size={isAdvanced ? "sm" : undefined} truncate="end">
+        <Group justify="space-between" wrap="nowrap" style={{ zIndex: 1, minWidth: 0 }}>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <Text fw={700} size="sm" truncate="end">
               {deviceName}
             </Text>
             {integrationName && (
@@ -119,22 +128,23 @@ const SystemDiskCard = ({
                 {integrationName}
               </Text>
             )}
-            <p ref={valueRef} style={{ margin: 0, visibility: valueFits ? "visible" : "hidden" }}>
+            <Text ref={valueRef} size="sm" style={{ visibility: valueFits ? "visible" : "hidden" }}>
               <span>{displayText}</span>
               {!healthy && <span style={{ marginLeft: 5 }}>{unhealthyLabel}</span>}
-            </p>
+            </Text>
             {isAdvanced && secondaryText && (
               <Text size="xs" c="dimmed">
                 {secondaryText}
               </Text>
             )}
           </div>
-          <div>
-            {temperature !== null && temperature !== undefined ? <p style={{ margin: 0 }}>{temperature}°C</p> : null}
+          <div style={{ flexShrink: 0 }}>
+            {showTemperature && temperature !== null && temperature !== undefined ? (
+              <Text size="sm">{temperature}°C</Text>
+            ) : null}
           </div>
         </Group>
         <Box
-          bg={healthy ? "green" : "red"}
           style={{
             position: "absolute",
             top: 0,
@@ -143,6 +153,7 @@ const SystemDiskCard = ({
             height: "100%",
             zIndex: 0,
             display: showBackgroundBar ? "block" : "none",
+            backgroundColor: healthy ? "var(--mantine-color-green-light)" : "var(--mantine-color-red-light)",
           }}
         ></Box>
       </Card>
@@ -154,6 +165,7 @@ export default function SystemResources({
   integrationIds,
   options,
   width,
+  height,
   displayMode: surfaceMode,
 }: WidgetComponentProps<"systemDisks">) {
   const queryInput = { integrationIds };
@@ -182,7 +194,9 @@ export default function SystemResources({
   if (disks.length === 0) return <WidgetEmptyState />;
 
   const isAdvanced = surfaceMode === "advanced";
-  const columns = isAdvanced ? Math.max(1, Math.min(disks.length, Math.floor(width / 320))) : 1;
+  const minimumCardWidth = isAdvanced ? 320 : 260;
+  const columns = Math.max(1, Math.min(disks.length, Math.floor(width / minimumCardWidth)));
+  const cellWidth = width / columns;
 
   return (
     <ScrollArea h="100%">
@@ -199,6 +213,7 @@ export default function SystemResources({
             integrationName={isAdvanced || data.length > 1 ? integrationName : undefined}
             secondaryText={getAbsoluteText(item)}
             isAdvanced={isAdvanced}
+            showTemperature={isAdvanced || (height >= 100 && cellWidth >= 220)}
           />
         ))}
       </SimpleGrid>

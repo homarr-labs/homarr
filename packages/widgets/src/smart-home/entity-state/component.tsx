@@ -83,12 +83,18 @@ export default function SmartHomeEntityStateWidget({
     { key: "deviceClass" as const, value: entity?.attributes.device_class },
     { key: "icon" as const, value: entity?.attributes.icon },
   ].filter(({ value }) => typeof value === "string" && value.length > 0);
+  const displayName =
+    displayMode === "advanced" && typeof entity?.attributes.friendly_name === "string"
+      ? entity.attributes.friendly_name
+      : options.displayName;
+  const state = entity?.state ?? "—";
 
   return (
     <UnstyledButton
       mod={{ "entity-state": entity?.state, "entity-id": options.entityId }}
       onClick={handleClick}
       disabled={!isActionable}
+      aria-label={`${displayName}: ${state}${attribute}`}
       aria-description={error?.message}
       w="100%"
       h="100%"
@@ -101,14 +107,12 @@ export default function SmartHomeEntityStateWidget({
     >
       <Center h="100%" w="100%">
         <Stack align="center" gap={isTiny ? 4 : "md"} p="xs" maw="100%">
-          <Text ta="center" fw="bold" size={isTiny ? "sm" : "lg"}>
-            {displayMode === "advanced" && typeof entity?.attributes.friendly_name === "string"
-              ? entity.attributes.friendly_name
-              : options.displayName}
-          </Text>
-          <Text ta="center" size={isTiny ? "xs" : "lg"}>
-            {entity?.state ?? "—"}
+          <Text ta="center" fw={700} size={isTiny ? "lg" : "2xl"} lh={1.1} lineClamp={1} maw="100%">
+            {state}
             {attribute}
+          </Text>
+          <Text ta="center" c="dimmed" fw={500} size={isTiny ? "xs" : "sm"} lineClamp={2} maw="100%">
+            {displayName}
           </Text>
           {displayMode === "advanced" && entity && (
             <>
@@ -131,7 +135,7 @@ export default function SmartHomeEntityStateWidget({
           )}
           {error && (
             <Tooltip label={error.message} multiline>
-              <Text size="xs" c="red" lineClamp={2}>
+              <Text size="xs" c="red" lineClamp={2} tabIndex={0}>
                 {t("widget.smartHome-entityState.error.toggleFailed")}
               </Text>
             </Tooltip>

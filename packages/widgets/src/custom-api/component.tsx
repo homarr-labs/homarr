@@ -35,13 +35,21 @@ import type { WidgetComponentProps } from "../definition";
 
 const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
 
-const valueSizeMap: Record<string, string> = { sm: "sm", md: "md", lg: "lg", xl: "xl" };
+const valueSizeMap: Record<string, "sm" | "md" | "lg" | "xl"> = { sm: "sm", md: "md", lg: "lg", xl: "xl" };
 
-function SingleValueDisplay({ data }: { data: Record<string, unknown> }) {
-  const size = valueSizeMap[(data.valueSize as string) ?? "lg"] ?? "lg";
+interface CustomDisplayProps {
+  data: Record<string, unknown>;
+  displayMode: "compact" | "advanced";
+  width: number;
+  height: number;
+}
+
+function SingleValueDisplay({ data, displayMode, width, height }: CustomDisplayProps) {
+  const configuredSize = valueSizeMap[(data.valueSize as string) ?? "lg"] ?? "lg";
+  const size = displayMode === "compact" && (width < 180 || height < 96) ? "md" : configuredSize;
   const labelAbove = (data.labelPosition as string) === "above";
   const label = data.label ? (
-    <Text c="dimmed" size="sm">
+    <Text c="dimmed" size={height < 96 ? "xs" : "sm"} ta="center" lineClamp={2}>
       {String(data.label)}
     </Text>
   ) : null;
@@ -49,7 +57,7 @@ function SingleValueDisplay({ data }: { data: Record<string, unknown> }) {
   return (
     <Stack h="100%" align="center" justify="center" gap="xs">
       {labelAbove && label}
-      <Title order={size === "xl" ? 1 : size === "lg" ? 2 : size === "md" ? 3 : 4}>
+      <Title order={size === "xl" ? 1 : size === "lg" ? 2 : size === "md" ? 3 : 4} ta="center" lineClamp={2} maw="100%">
         {String(data.value ?? "—")}
         {data.unit ? ` ${data.unit}` : ""}
       </Title>
@@ -58,51 +66,51 @@ function SingleValueDisplay({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-function KeyValueDisplay({ data }: { data: Record<string, unknown> }) {
+function KeyValueDisplay({ data, displayMode, width, height }: CustomDisplayProps) {
   const entries = (data.entries as Array<{ label: string; unit: string; value: unknown }>) ?? [];
   const layout = (data.layout as string) ?? "list";
-  const columns = (data.columns as number) ?? 2;
+  const configuredColumns = Math.max(1, (data.columns as number) ?? 2);
+  const columns =
+    displayMode === "advanced" ? configuredColumns : Math.min(configuredColumns, Math.max(1, Math.floor(width / 140)));
+  const padding = height < 112 ? "xs" : "sm";
 
   if (layout === "grid") {
     return (
-      <SimpleGrid cols={columns} spacing="xs" p="sm" h="100%">
-        {entries.map((entry, i) => (
-          <Stack key={i} align="center" gap={2}>
-            <Text size="sm" fw={600}>
-              {String(entry.value ?? "—")}
-              {entry.unit ? ` ${entry.unit}` : ""}
-            </Text>
-            <Text size="xs" c="dimmed">
-              {entry.label}
-            </Text>
-          </Stack>
-        ))}
-      </SimpleGrid>
+      <ScrollArea h="100%">
+        <SimpleGrid cols={columns} spacing="xs" p={padding}>
+          {entries.map((entry, i) => (
+            <Stack key={i} align="center" gap={2} miw={0}>
+              <Text size="sm" fw={600} truncate="end" maw="100%">
+                {String(entry.value ?? "—")}
+                {entry.unit ? ` ${entry.unit}` : ""}
+              </Text>
+              <Text size="xs" c="dimmed" truncate="end" maw="100%">
+                {entry.label}
+              </Text>
+            </Stack>
+          ))}
+        </SimpleGrid>
+      </ScrollArea>
     );
   }
 
   return (
-    <Stack h="100%" justify="center" gap="xs" p="sm">
-      {entries.map((entry, i) => (
-        <Group key={i} justify="space-between" wrap="nowrap">
-          <Text size="sm" c="dimmed">
-            {entry.label}
-          </Text>
-          <Text size="sm" fw={600}>
-            {String(entry.value ?? "—")}
-            {entry.unit ? ` ${entry.unit}` : ""}
-          </Text>
-        </Group>
-      ))}
-    </Stack>
+    <ScrollArea h="100%">
+      <Stack justify="center" gap={height < 112 ? 4 : "xs"} p={padding}>
+        {entries.map((entry, i) => (
+          <Group key={i} justify="space-between" wrap="nowrap" gap="xs">
+            <Text size="sm" c="dimmed" truncate="end">
+              {entry.label}
+            </Text>
+            <Text size="sm" fw={600} truncate="end" maw="55%">
+              {String(entry.value ?? "—")}
+              {entry.unit ? ` ${entry.unit}` : ""}
+            </Text>
+          </Group>
+        ))}
+      </Stack>
+    </ScrollArea>
   );
-}
-
-interface CustomDisplayProps {
-  data: Record<string, unknown>;
-  displayMode: "compact" | "advanced";
-  width: number;
-  height: number;
 }
 
 function TableDisplay({ data, displayMode, width, height }: CustomDisplayProps) {
@@ -184,7 +192,7 @@ function StatGridCard({
             {item.unit ? ` ${item.unit}` : ""}
           </Text>
           {!hideLabel && (
-            <Text size="xs" c="dimmed" ta="center" tt="uppercase" lh={1.3} style={{ letterSpacing: "0.03em" }}>
+            <Text size="xs" c="dimmed" ta="center" lh={1.3} lineClamp={2}>
               {item.label}
             </Text>
           )}
@@ -194,9 +202,9 @@ function StatGridCard({
   );
 }
 
-function StatGridDisplay({ data, displayMode, width }: CustomDisplayProps) {
+function StatGridDisplay({ data, displayMode, width, height }: CustomDisplayProps) {
   const items = (data.items as Array<{ label: string; unit: string; color: string; value: unknown }>) ?? [];
-  const configuredColumns = (data.columns as number) ?? 2;
+  const configuredColumns = Math.max(1, (data.columns as number) ?? 2);
   const columns =
     displayMode === "advanced" ? configuredColumns : Math.min(configuredColumns, Math.max(1, Math.floor(width / 120)));
   const cardStyle = (data.cardStyle as string) ?? "filled";
@@ -205,7 +213,7 @@ function StatGridDisplay({ data, displayMode, width }: CustomDisplayProps) {
     <SimpleGrid
       cols={columns}
       spacing="xs"
-      p="xs"
+      p={height < 96 ? 4 : "xs"}
       h="100%"
       style={{ gridTemplateRows: `repeat(${Math.ceil(items.length / columns)}, 1fr)` }}
     >
@@ -216,7 +224,7 @@ function StatGridDisplay({ data, displayMode, width }: CustomDisplayProps) {
   );
 }
 
-function ProgressBarsDisplay({ data }: { data: Record<string, unknown> }) {
+function ProgressBarsDisplay({ data, height }: CustomDisplayProps) {
   const bars = (data.bars as Array<{ label: string; unit: string; color: string; value: number; max?: number }>) ?? [];
   const showPercentage = (data.showPercentage as boolean) ?? true;
   const barSize = (data.barSize as string) ?? "md";
@@ -224,32 +232,34 @@ function ProgressBarsDisplay({ data }: { data: Record<string, unknown> }) {
   const sizeMap: Record<string, number> = { sm: 8, md: 14, lg: 22 };
 
   return (
-    <Stack h="100%" justify="center" gap="sm" p="sm">
-      {bars.map((bar, i) => {
-        const max = bar.max ?? 100;
-        const pct = max > 0 ? Math.min((bar.value / max) * 100, 100) : 0;
-        return (
-          <Stack key={i} gap={4}>
-            <Group justify="space-between" wrap="nowrap">
-              <Text size="xs" fw={500}>
-                {bar.label}
-              </Text>
-              <Text size="xs" c="dimmed">
-                {showPercentage ? `${pct.toFixed(0)}%` : `${bar.value}${bar.unit ? ` ${bar.unit}` : ""}`}
-                {bar.max !== undefined && showPercentage
-                  ? ` (${bar.value}/${max}${bar.unit ? ` ${bar.unit}` : ""})`
-                  : ""}
-              </Text>
-            </Group>
-            <Progress value={pct} size={sizeMap[barSize] ?? 14} color={bar.color} radius="sm" />
-          </Stack>
-        );
-      })}
-    </Stack>
+    <ScrollArea h="100%">
+      <Stack justify="center" gap={height < 120 ? "xs" : "sm"} p={height < 120 ? "xs" : "sm"}>
+        {bars.map((bar, i) => {
+          const max = bar.max ?? 100;
+          const pct = max > 0 ? Math.min((bar.value / max) * 100, 100) : 0;
+          return (
+            <Stack key={i} gap={4}>
+              <Group justify="space-between" wrap="nowrap" gap="xs">
+                <Text size="xs" fw={500} truncate="end" style={{ flex: 1, minWidth: 0 }}>
+                  {bar.label}
+                </Text>
+                <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+                  {showPercentage ? `${pct.toFixed(0)}%` : `${bar.value}${bar.unit ? ` ${bar.unit}` : ""}`}
+                  {bar.max !== undefined && showPercentage
+                    ? ` (${bar.value}/${max}${bar.unit ? ` ${bar.unit}` : ""})`
+                    : ""}
+                </Text>
+              </Group>
+              <Progress value={pct} size={sizeMap[barSize] ?? 14} color={bar.color} radius="sm" />
+            </Stack>
+          );
+        })}
+      </Stack>
+    </ScrollArea>
   );
 }
 
-function StatusIndicatorDisplay({ data }: { data: Record<string, unknown> }) {
+function StatusIndicatorDisplay({ data, displayMode, width, height }: CustomDisplayProps) {
   const items = (data.items as Array<{ label: string; value: string; isGood: boolean }>) ?? [];
   const layout = (data.layout as string) ?? "list";
   const dotSize = (data.dotSize as string) ?? "md";
@@ -268,51 +278,60 @@ function StatusIndicatorDisplay({ data }: { data: Record<string, unknown> }) {
           flexShrink: 0,
         }}
       />
-      <Text size="sm" fw={500}>
+      <Text size="sm" fw={500} truncate="end" style={{ flex: 1, minWidth: 0 }}>
         {item.label}
       </Text>
-      <Text size="xs" c="dimmed" ml="auto">
+      <Text size="xs" c="dimmed" ml="auto" truncate="end" maw="45%">
         {item.value}
       </Text>
     </Group>
   );
 
   if (layout === "grid") {
+    const columns = displayMode === "advanced" || width >= 280 ? 2 : 1;
     return (
-      <SimpleGrid cols={2} spacing="xs" p="sm" h="100%">
-        {items.map(renderItem)}
-      </SimpleGrid>
+      <ScrollArea h="100%">
+        <SimpleGrid cols={columns} spacing="xs" p={height < 112 ? "xs" : "sm"}>
+          {items.map(renderItem)}
+        </SimpleGrid>
+      </ScrollArea>
     );
   }
 
   return (
-    <Stack h="100%" justify="center" gap="xs" p="sm">
-      {items.map(renderItem)}
-    </Stack>
+    <ScrollArea h="100%">
+      <Stack justify="center" gap="xs" p={height < 112 ? "xs" : "sm"}>
+        {items.map(renderItem)}
+      </Stack>
+    </ScrollArea>
   );
 }
 
-function CountGridDisplay({ data }: { data: Record<string, unknown> }) {
+function CountGridDisplay({ data, displayMode, width, height }: CustomDisplayProps) {
   const items = (data.items as Array<{ label: string; unit: string; value: unknown }>) ?? [];
-  const columns = (data.columns as number) ?? 2;
+  const configuredColumns = Math.max(1, (data.columns as number) ?? 2);
+  const columns =
+    displayMode === "advanced" ? configuredColumns : Math.min(configuredColumns, Math.max(1, Math.floor(width / 120)));
   const valueSize = (data.valueSize as string) ?? "md";
 
   const sizeMap: Record<string, string> = { sm: "sm", md: "md", lg: "lg" };
 
   return (
-    <SimpleGrid cols={columns} spacing="xs" p="sm" h="100%">
-      {items.map((item, i) => (
-        <Stack key={i} align="center" justify="center" gap={0}>
-          <Text size={sizeMap[valueSize] ?? "md"} fw={700} lh={1.2}>
-            {String(item.value ?? "—")}
-            {item.unit ? ` ${item.unit}` : ""}
-          </Text>
-          <Text size="xs" c="dimmed" tt="uppercase" ta="center" lh={1.3} style={{ letterSpacing: "0.03em" }}>
-            {item.label}
-          </Text>
-        </Stack>
-      ))}
-    </SimpleGrid>
+    <ScrollArea h="100%">
+      <SimpleGrid cols={columns} spacing="xs" p={height < 112 ? "xs" : "sm"}>
+        {items.map((item, i) => (
+          <Stack key={i} align="center" justify="center" gap={0} miw={0}>
+            <Text size={sizeMap[valueSize] ?? "md"} fw={700} lh={1.2} truncate="end" maw="100%">
+              {String(item.value ?? "—")}
+              {item.unit ? ` ${item.unit}` : ""}
+            </Text>
+            <Text size="xs" c="dimmed" ta="center" lh={1.3} truncate="end" maw="100%">
+              {item.label}
+            </Text>
+          </Stack>
+        ))}
+      </SimpleGrid>
+    </ScrollArea>
   );
 }
 
@@ -328,7 +347,7 @@ function RawDisplay({ data, displayMode, height }: CustomDisplayProps) {
   const jsonString = JSON.stringify(data.data, null, 2);
 
   return (
-    <Stack gap={4} p="xs">
+    <Stack gap={4} p="xs" h="100%">
       <Group justify="flex-end">
         <Tooltip label="Open in browser JSON viewer">
           <ActionIcon variant="subtle" size="sm" onClick={() => openJsonInBrowser(data.data)}>
@@ -336,7 +355,7 @@ function RawDisplay({ data, displayMode, height }: CustomDisplayProps) {
           </ActionIcon>
         </Tooltip>
       </Group>
-      <ScrollArea mah={maxHeight}>
+      <ScrollArea mah={maxHeight} style={{ flex: 1, minHeight: 0 }}>
         <Code block style={{ fontSize: 12 }}>
           {jsonString}
         </Code>
@@ -345,7 +364,7 @@ function RawDisplay({ data, displayMode, height }: CustomDisplayProps) {
   );
 }
 
-function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
+function ActionButtonDisplay({ data, width, height }: CustomDisplayProps) {
   const t = useScopedI18n("widget.customApi");
   const { openConfirmModal } = useConfirmModal();
   const executeMutation = clientApi.customWidget.execute.useMutation();
@@ -389,14 +408,15 @@ function ActionButtonDisplay({ data }: { data: Record<string, unknown> }) {
   return (
     <Center h="100%">
       <Button
-        size="lg"
+        size={width < 180 || height < 96 ? "sm" : "lg"}
         color={buttonColor}
         onClick={handleClick}
         loading={executeMutation.isPending}
-        leftSection={lastSuccess ? <IconCheck size={20} /> : <IconPlayerPlay size={20} />}
+        leftSection={lastSuccess ? <IconCheck size={18} /> : <IconPlayerPlay size={18} />}
         variant={lastSuccess ? "light" : "filled"}
+        maw="calc(100% - var(--mantine-spacing-sm) * 2)"
       >
-        {executeMutation.isPending ? t("executing") : buttonLabel}
+        <Text truncate="end">{executeMutation.isPending ? t("executing") : buttonLabel}</Text>
       </Button>
     </Center>
   );
