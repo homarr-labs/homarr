@@ -62,7 +62,6 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
     },
   };
 };
-
 export const createDbInsertCollectionWithoutTransaction = <TTableKey extends TableKey>(
   tablesInInsertOrder: TTableKey[],
 ) => {
