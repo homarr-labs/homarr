@@ -12,6 +12,8 @@
   position: sticky;
   top: 0;
   align-self: start;
+  padding-top: 24px;
+  margin-top: -24px;
   max-height: calc(100dvh - var(--app-shell-header-offset, 0px) - var(--mantine-spacing-md));
   overflow-y: auto;
   overscroll-behavior: contain;

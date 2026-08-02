@@ -13,11 +13,14 @@
 
 .editModeInertContent {
   display: contents;
+}
+
+.editModeInertContent[data-board-grid-inert-content="true"] {
   pointer-events: none;
   user-select: none;
 }
 
-.editModeInertContent * {
+.editModeInertContent[data-board-grid-inert-content="true"] * {
   pointer-events: none !important;
   user-select: none !important;
 }

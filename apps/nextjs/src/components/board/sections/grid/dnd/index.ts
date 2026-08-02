@@ -8,6 +8,8 @@ export {
 } from "./engine";
 export { getPointerProjectedShape, getSnappedGridCoordinates, getSnappedGridDelta } from "./coordinates";
 export type { DragProjectionOrigin } from "./coordinates";
+export { getPreferredNestedExitTargetId } from "./targeting";
+export type { GridTargetGeometry } from "./targeting";
 export type {
   BeginGridTransactionInput,
   GridMoveGuard,

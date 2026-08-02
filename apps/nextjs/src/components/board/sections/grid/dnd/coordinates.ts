@@ -6,9 +6,13 @@ interface RectangleLike {
   width: number;
 }
 
+interface ProjectedRectangle extends RectangleLike {
+  height: number;
+}
+
 export interface DragProjectionOrigin {
   initialPointer: { x: number; y: number };
-  initialShape: { left: number; top: number };
+  initialShape: ProjectedRectangle;
 }
 
 /**
@@ -19,6 +23,8 @@ export interface DragProjectionOrigin {
 export const getPointerProjectedShape = (origin: DragProjectionOrigin, currentPointer: { x: number; y: number }) => ({
   left: origin.initialShape.left + currentPointer.x - origin.initialPointer.x,
   top: origin.initialShape.top + currentPointer.y - origin.initialPointer.y,
+  width: origin.initialShape.width,
+  height: origin.initialShape.height,
 });
 
 export const getSnappedGridCoordinates = ({

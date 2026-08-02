@@ -258,7 +258,7 @@ describe("same-grid movement", () => {
     });
   });
 
-  test("uses pinned reflow for a partial overlap even when sizes match", () => {
+  test("swaps laterally as soon as a move pushes into one compatible item", () => {
     const original = state(grid("root", 5, [placement("active", 0, 0, 2), placement("target", 2, 0, 2)]));
     const moved = accept(
       previewGridMove(beginGridTransaction(original, { activeId: "active" }), {
@@ -268,8 +268,22 @@ describe("same-grid movement", () => {
       }),
     );
 
-    expect(getPlacement(moved.preview, "active")).toMatchObject({ x: 1, y: 0, w: 2, h: 1 });
-    expect(getPlacement(moved.preview, "target")).toMatchObject({ x: 2, y: 1, w: 2, h: 1 });
+    expect(getPlacement(moved.preview, "active")).toMatchObject({ x: 2, y: 0, w: 2, h: 1 });
+    expect(getPlacement(moved.preview, "target")).toMatchObject({ x: 0, y: 0, w: 2, h: 1 });
+  });
+
+  test("swaps the pushed item into the vacated slot when moving from right to left", () => {
+    const original = state(grid("root", 5, [placement("target", 0, 0, 2), placement("active", 2, 0, 2)]));
+    const moved = accept(
+      previewGridMove(beginGridTransaction(original, { activeId: "active" }), {
+        targetGridId: "root",
+        x: 1,
+        y: 0,
+      }),
+    );
+
+    expect(getPlacement(moved.preview, "active")).toMatchObject({ x: 0, y: 0, w: 2, h: 1 });
+    expect(getPlacement(moved.preview, "target")).toMatchObject({ x: 2, y: 0, w: 2, h: 1 });
   });
 
   test("preserves intentional empty rows outside the collision chain", () => {

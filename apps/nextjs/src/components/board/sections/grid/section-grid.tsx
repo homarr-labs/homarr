@@ -146,7 +146,6 @@ export const SectionGrid = ({
   const displayedInnerSections = innerSections.map((item) => withPlacement(item, placementById.get(item.id)));
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount);
-  const fixedRowCount = section.kind === "container";
   const logicalWidth = getLogicalTrackSize(columnCount);
   const logicalHeight = getLogicalTrackSize(rowCount);
   const canvasAttributes = isEditMode
@@ -161,7 +160,7 @@ export const SectionGrid = ({
         innerSections: displayedInnerSections,
         integrations,
         columnCount,
-        maxRowCount: fixedRowCount ? rowCount : null,
+        maxRowCount: section.kind === "container" ? rowCount : null,
         announce,
       }}
     >
@@ -179,7 +178,6 @@ export const SectionGrid = ({
             sectionId={section.id}
             columnCount={columnCount}
             rowCount={rowCount}
-            fixedRowCount={fixedRowCount}
             placements={displayPlacements}
             className={combineClasses("board-grid-editor", classes.editorGrid)}
           />
