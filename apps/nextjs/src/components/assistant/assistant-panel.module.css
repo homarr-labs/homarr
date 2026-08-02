@@ -1108,6 +1108,10 @@
   box-shadow: var(--mantine-shadow-sm);
 }
 
+.scrollToBottom:disabled {
+  display: none;
+}
+
 @keyframes assistant-activity-in {
   from {
     opacity: 0;
