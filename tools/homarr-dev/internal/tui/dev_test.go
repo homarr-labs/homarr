@@ -77,6 +77,43 @@ func TestPRLoadedReusesImageChecksUnlessRefreshIsForced(t *testing.T) {
 	}
 }
 
+func TestDevelopmentRowsFoldCurrentLocalPRImage(t *testing.T) {
+	prs := []gh.PR{{Number: 6502, HeadSHA: "current"}}
+	images := []docker.Image{
+		{Tag: "pr-6502", PRNumber: 6502, Revision: "current"},
+		{Tag: "pr-6502-stale", PRNumber: 6502, Revision: "stale"},
+	}
+
+	rows, queue := developmentRows(prs, images, nil)
+	if len(rows) != 2 || !rows[0].hasCurrentLocalImage() || rows[0].local.Tag != "pr-6502" {
+		t.Fatalf("current image was not folded into PR row: %#v", rows)
+	}
+	if rows[1].kind != "local" || rows[1].local.Tag != "pr-6502-stale" {
+		t.Fatalf("stale image should remain separate: %#v", rows[1])
+	}
+	if got := buildTableRows(rows)[0][6]; got != imgLocal {
+		t.Fatalf("image marker = %q, want %q", got, imgLocal)
+	}
+	if len(queue) != 0 {
+		t.Fatalf("current local image queued unnecessary registry checks: %v", queue)
+	}
+}
+
+func TestLocalPRPlanUsesPRContainerIdentity(t *testing.T) {
+	row := prRow{
+		kind:  "remote",
+		pr:    gh.PR{Number: 6502, HeadSHA: "abcdef1234567890"},
+		local: docker.Image{Tag: "pr-6502", PRNumber: 6502, Revision: "abcdef1234567890"},
+	}
+	plan, err := localPRPlan(row, false, func(int) int { return 7575 })
+	if err != nil {
+		t.Fatal(err)
+	}
+	if plan.Image != "homarr:pr-6502" || plan.Name != "homarr_pr_6502" || plan.Volume != "homarr_pr_6502_data" || plan.Pull || plan.PRNumber != 6502 {
+		t.Fatalf("unexpected local PR plan: %#v", plan)
+	}
+}
+
 func TestRemotePRBuildUsesTemporaryPRWorkflow(t *testing.T) {
 	image, action, status := localBuildForRow(prRow{kind: "remote", pr: gh.PR{Number: 6441}})
 	if image.Tag != "pr-6441" || image.PRNumber != 6441 || action != "built" || !strings.Contains(status, "building PR #6441 locally") {
@@ -145,6 +182,22 @@ func TestRebuildCanBeCanceled(t *testing.T) {
 	got := updated.(prsModel)
 	if !canceled || cmd != nil || got.status != "canceling rebuild…" {
 		t.Fatalf("cancel state: canceled=%v status=%q", canceled, got.status)
+	}
+}
+
+func TestNavigationRemainsAvailableDuringBuild(t *testing.T) {
+	m := newPRsModel()
+	m.rebuilding = true
+	m.rows = []prRow{
+		{kind: "remote", pr: gh.PR{Number: 1}},
+		{kind: "remote", pr: gh.PR{Number: 2}},
+	}
+	m.table.SetRows(buildTableRows(m.rows))
+
+	updated, _ := m.Update(tea.KeyPressMsg(tea.Key{Code: tea.KeyDown}))
+	selected := updated.(prsModel).table.SelectedRow()
+	if len(selected) < 3 || selected[2] != "2" {
+		t.Fatalf("build blocked navigation: %v", selected)
 	}
 }
 

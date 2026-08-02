@@ -35,6 +35,7 @@ const (
 	imgNo    = "…"
 	imgCheck = "?"
 	imgError = "!"
+	imgLocal = "◆"
 	runMark  = "▶"
 	idleMark = " "
 )
@@ -46,6 +47,7 @@ var (
 	legendNone     = lipgloss.NewStyle().Foreground(lipgloss.Color("240")).Render(ciNone)
 	legendImageYes = lipgloss.NewStyle().Foreground(lipgloss.Color("42")).Render(imgYes)
 	legendImageNo  = lipgloss.NewStyle().Foreground(lipgloss.Color("240")).Render(imgNo)
+	legendLocal    = lipgloss.NewStyle().Foreground(lipgloss.Color("81")).Render(imgLocal)
 )
 
 type prRow struct {
@@ -55,6 +57,10 @@ type prRow struct {
 	imageState string
 	running    bool
 	port       string
+}
+
+func (row prRow) hasCurrentLocalImage() bool {
+	return row.kind == "remote" && row.local.Tag != "" && row.pr.HeadSHA != "" && row.local.Revision == row.pr.HeadSHA
 }
 
 type prsModel struct {
@@ -264,6 +270,9 @@ func buildTableRows(rows []prRow) []table.Row {
 		case "error":
 			img = imgError
 		}
+		if r.hasCurrentLocalImage() {
+			img = imgLocal
+		}
 		source := "remote"
 		ref := fmt.Sprint(r.pr.Number)
 		title := r.pr.Title
@@ -296,6 +305,38 @@ func buildTableRows(rows []prRow) []table.Row {
 		})
 	}
 	return out
+}
+
+func developmentRows(prs []gh.PR, images []docker.Image, imageStates map[int]string) ([]prRow, []int) {
+	rows := make([]prRow, 0, len(prs)+len(images))
+	prIndexes := make(map[int]int, len(prs))
+	queue := make([]int, 0, len(prs))
+	for _, pr := range prs {
+		imageState := imageStates[pr.Number]
+		prIndexes[pr.Number] = len(rows)
+		rows = append(rows, prRow{kind: "remote", pr: pr, imageState: imageState})
+	}
+	for _, image := range images {
+		if index, exists := prIndexes[image.PRNumber]; exists && image.Revision != "" && image.Revision == rows[index].pr.HeadSHA {
+			if rows[index].local.Tag == "" {
+				rows[index].local = image
+			}
+			continue
+		}
+		rows = append(rows, prRow{kind: "local", local: image, imageState: "yes"})
+	}
+	for index := range rows {
+		if rows[index].kind != "remote" || rows[index].imageState != "" {
+			continue
+		}
+		if rows[index].hasCurrentLocalImage() {
+			rows[index].imageState = "unchecked"
+			continue
+		}
+		rows[index].imageState = "checking"
+		queue = append(queue, rows[index].pr.Number)
+	}
+	return rows, queue
 }
 
 func prColumns(width int) []table.Column {
@@ -438,6 +479,18 @@ func localBuildForRow(row prRow) (docker.Image, string, string) {
 	return row.local, "rebuilt", "rebuilding " + row.local.Reference() + "…"
 }
 
+func localPRPlan(row prRow, demo bool, findPort func(int) int) (*run.Plan, error) {
+	plan, err := run.BuildPlan(run.Options{Context: context.Background(), Tag: row.local.Tag, Demo: demo, FindPort: findPort})
+	if err != nil {
+		return nil, err
+	}
+	plan.Name = fmt.Sprintf("homarr_pr_%d", row.pr.Number)
+	plan.Volume = fmt.Sprintf("homarr_pr_%d_data", row.pr.Number)
+	plan.Label = fmt.Sprintf("PR #%d · local %s", row.pr.Number, truncateText(row.pr.HeadSHA, 12))
+	plan.PRNumber = row.pr.Number
+	return plan, nil
+}
+
 func (m *prsModel) refreshSelectedLogs() tea.Cmd {
 	row := m.selectedRow()
 	if row == nil || !row.running {
@@ -577,21 +630,9 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		}
-		m.rows = make([]prRow, 0, len(msg.prs)+len(msg.images))
+		m.rows, m.imageQueue = developmentRows(msg.prs, msg.images, imageStates)
 		m.imageGen++
-		m.imageQueue = m.imageQueue[:0]
 		m.imageActive = 0
-		for _, pr := range msg.prs {
-			imageState := imageStates[pr.Number]
-			if imageState == "" {
-				imageState = "checking"
-				m.imageQueue = append(m.imageQueue, pr.Number)
-			}
-			m.rows = append(m.rows, prRow{kind: "remote", pr: pr, imageState: imageState})
-		}
-		for _, image := range msg.images {
-			m.rows = append(m.rows, prRow{kind: "local", local: image, imageState: "yes"})
-		}
 		m.applyFilter()
 		return m, tea.Batch(m.startImageChecks(), refreshRunning(m.rows, m.imageGen))
 	case imageCheckedMsg:
@@ -641,7 +682,7 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		} else {
 			m.status = action + " " + msg.image.Reference()
 		}
-		return m, tea.Batch(loadDev(m.includeBots, false), m.spinner.Tick)
+		return m, tea.Batch(loadDev(m.includeBots, true), m.spinner.Tick)
 	case logsMsg:
 		if !m.showLogs || msg.name == "" || msg.name != m.logsName {
 			return m, nil
@@ -715,8 +756,8 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.rebuildCancel()
 				}
 				m.status = "canceling rebuild…"
+				return m, nil
 			}
-			return m, nil
 		}
 		if m.pulling {
 			switch msg.String() {
@@ -792,6 +833,20 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 			if row.kind == "remote" {
+				if row.hasCurrentLocalImage() {
+					plan, err := localPRPlan(*row, m.demo, nil)
+					if err != nil {
+						m.status = err.Error()
+						return m, nil
+					}
+					m.status = fmt.Sprintf("starting PR #%d from local build…", row.pr.Number)
+					return m, func() tea.Msg {
+						if err := run.StartDetached(plan); err != nil {
+							return prActionMsg{"start failed: " + err.Error()}
+						}
+						return prActionMsg{fmt.Sprintf("started PR #%d from local build → http://localhost:%d", row.pr.Number, plan.HostPort)}
+					}
+				}
 				if row.imageState == "checking" {
 					m.status = fmt.Sprintf("PR #%d image check is still in progress", row.pr.Number)
 					return m, nil
@@ -858,6 +913,10 @@ func (m prsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.status = "pull is only available for remote PR images"
 			}
 		case "R":
+			if m.rebuilding {
+				m.status = "a local build is already running"
+				return m, nil
+			}
 			row := m.selectedRow()
 			if row == nil {
 				m.status = "select an image to build"
@@ -955,7 +1014,14 @@ func (m prsModel) selectedDetailView() string {
 	if branch == "" {
 		branch = "unknown branch"
 	}
-	meta := "@" + row.pr.Author + " · " + branch + " · CI " + coloredCI(row.pr.CIState) + " · Image " + coloredImage(row.imageState)
+	runSource := "run remote"
+	if row.hasCurrentLocalImage() {
+		runSource = "run local " + truncateText(row.local.Revision, 12)
+	}
+	meta := "@" + row.pr.Author + " · " + branch + " · CI " + coloredCI(row.pr.CIState) + " · " + runSource
+	if !row.hasCurrentLocalImage() {
+		meta += " · GHCR " + coloredImage(row.imageState)
+	}
 	if row.running {
 		meta += " · " + lipgloss.NewStyle().Foreground(lipgloss.Color("42")).Render("running on :"+row.port)
 	}
@@ -974,7 +1040,7 @@ func truncateText(value string, length int) string {
 func (m prsModel) View() tea.View {
 	var b strings.Builder
 	header := titleStyle.Render("🦞 homarr development")
-	if m.loading {
+	if m.loading || m.rebuilding {
 		header += " " + m.spinner.View()
 	}
 	running := 0
@@ -985,6 +1051,9 @@ func (m prsModel) View() tea.View {
 			local++
 		} else {
 			remote++
+			if row.hasCurrentLocalImage() {
+				local++
+			}
 		}
 		if row.running {
 			running++
@@ -1045,14 +1114,15 @@ func (m prsModel) View() tea.View {
 	if m.includeBots {
 		botState = "bots shown"
 	}
-	if m.rebuilding {
-		b.WriteString("\n\n" + helpStyle.Render("q/esc cancel rebuild"))
-	} else if !m.pulling {
+	if !m.pulling {
 		b.WriteString("\n\n" + helpStyle.Render("/ filter · ↑/↓ select · enter start/stop · R build locally · p pull remote · m demo · o PR · a app"))
 		b.WriteString("\n" + helpStyle.Render("b "+botState+" · r refresh · d instances · q quit"))
 		b.WriteString("\n" + helpStyle.Render("l toggle logs · f follow · pgup/pgdn scroll"))
+		if m.rebuilding {
+			b.WriteString("\n" + helpStyle.Render("local build running in background · q/esc cancel build"))
+		}
 	}
-	b.WriteString("\n" + helpStyle.Render("SOURCE: local Docker / remote GHCR · CI: "+legendCIYes+" pass "+legendCINo+" fail "+legendCIPend+" pending "+legendNone+" none · IMAGE: "+legendImageYes+" available "+legendImageNo+" not built"))
+	b.WriteString("\n" + helpStyle.Render("SOURCE: local Docker / remote GHCR · CI: "+legendCIYes+" pass "+legendCINo+" fail "+legendCIPend+" pending "+legendNone+" none · IMAGE: "+legendLocal+" local "+legendImageYes+" remote "+legendImageNo+" not built"))
 	v := tea.NewView(b.String())
 	v.AltScreen = true
 	v.WindowTitle = "🦞 Homarr Development"

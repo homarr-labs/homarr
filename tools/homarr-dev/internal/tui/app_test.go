@@ -35,3 +35,13 @@ func TestAppToggleDoesNotInterceptFilterInput(t *testing.T) {
 		t.Fatalf("filter input was intercepted: dashboard=%v filter=%q", got.showDashboard, got.dev.filter.Value())
 	}
 }
+
+func TestAppCanOpenInstancesDuringBuild(t *testing.T) {
+	m := newAppModel(false)
+	m.dev.rebuilding = true
+
+	updated, _ := m.Update(tea.KeyPressMsg(tea.Key{Code: 'd', Text: "d"}))
+	if !updated.(appModel).showDashboard {
+		t.Fatal("background build blocked dashboard navigation")
+	}
+}

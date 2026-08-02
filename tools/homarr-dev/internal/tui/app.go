@@ -28,7 +28,7 @@ func (m appModel) canSwitch() bool {
 	if m.showDashboard {
 		return !m.dashboard.filtering
 	}
-	return !m.dev.filtering && !m.dev.pulling && !m.dev.rebuilding
+	return !m.dev.filtering && !m.dev.pulling
 }
 
 func (m appModel) switchScreen() (tea.Model, tea.Cmd) {
