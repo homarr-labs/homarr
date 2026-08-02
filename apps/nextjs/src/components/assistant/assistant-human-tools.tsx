@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { ToolCallMessagePartProps } from "@assistant-ui/react";
+import type { ToolCallMessagePartProps, ToolCallMessagePartStatus } from "@assistant-ui/react";
 import { Box, Button, Group, Skeleton, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
 import { IconCheck, IconMessageQuestion, IconPencil, IconX } from "@tabler/icons-react";
 import type { z } from "zod/v4";
@@ -11,12 +11,13 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
 
 import classes from "./assistant-panel.module.css";
+import { hasCompleteAssistantToolArguments } from "./assistant-human-tool-status";
 import { normalizeAssistantAppIconUrl } from "./assistant-tool-contracts";
 import type { AskUserArgs, AskUserResult, ConfigureAppArgs } from "./assistant-tool-contracts";
 
 type AppValues = z.infer<typeof appManageSchema>;
 
-const toAppValues = (args: ConfigureAppArgs | undefined): AppValues => ({
+export const toAssistantAppValues = (args: ConfigureAppArgs | undefined): AppValues => ({
   name: args?.name ?? "",
   description: args?.description ?? "",
   iconUrl: normalizeAssistantAppIconUrl(args?.iconUrl),
@@ -24,10 +25,16 @@ const toAppValues = (args: ConfigureAppArgs | undefined): AppValues => ({
   pingUrl: args?.pingUrl ?? "",
 });
 
+export const getAssistantAppFormValues = (
+  args: ConfigureAppArgs | undefined,
+  status: ToolCallMessagePartStatus | undefined,
+) => (hasCompleteAssistantToolArguments(status) ? toAssistantAppValues(args) : null);
+
 export const AssistantAskUserTool = ({
   args,
   result,
   addResult,
+  status,
 }: ToolCallMessagePartProps<AskUserArgs, AskUserResult>) => {
   const t = useScopedI18n("common.assistant.askUser");
   const [showOther, setShowOther] = useState(false);
@@ -58,7 +65,7 @@ export const AssistantAskUserTool = ({
     );
   }
 
-  if (!args?.question || options.length < 2) {
+  if (!hasCompleteAssistantToolArguments(status) || !args?.question || options.length < 2) {
     return (
       <Box className={classes.humanTool} aria-label={t("preparing")}>
         <Stack gap="xs">
@@ -180,9 +187,12 @@ export const AssistantConfigureAppTool = ({
   args,
   result,
   addResult,
+  status,
+  toolCallId,
 }: ToolCallMessagePartProps<ConfigureAppArgs, AppValues>) => {
   const t = useScopedI18n("common.assistant.configureApp");
   const [submitting, setSubmitting] = useState(false);
+  const initialValues = getAssistantAppFormValues(args, status);
 
   if (result) {
     return (
@@ -202,6 +212,20 @@ export const AssistantConfigureAppTool = ({
     );
   }
 
+  if (initialValues === null) {
+    return (
+      <Box className={classes.appTool} aria-label={t("preparing")}>
+        <Stack gap="sm">
+          <Skeleton height={18} width="42%" />
+          <Skeleton height={36} />
+          <Skeleton height={36} />
+          <Skeleton height={72} />
+          <Skeleton height={36} />
+        </Stack>
+      </Box>
+    );
+  }
+
   return (
     <Box className={classes.appTool}>
       <Stack gap={2} mb="md">
@@ -211,7 +235,8 @@ export const AssistantConfigureAppTool = ({
         </Text>
       </Stack>
       <AppForm
-        initialValues={toAppValues(args)}
+        key={toolCallId}
+        initialValues={initialValues}
         buttonLabels={{ submit: t("continue") }}
         showBackToOverview={false}
         handleSubmit={(values) => {

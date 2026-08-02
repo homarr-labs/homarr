@@ -26,6 +26,8 @@ import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResul
 import { AssistantWidgetRendererProvider } from "@homarr/widgets";
 
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
+import { AssistantAutoApprovalProvider } from "./assistant-auto-approval";
+import { createAssistantBrowserToolExecutors } from "./assistant-browser-tool-executors";
 import { AssistantAskUserTool, AssistantConfigureAppTool } from "./assistant-human-tools";
 import { AssistantPanel } from "./assistant-panel";
 import { getPendingAssistantAction } from "./assistant-pending-action";
@@ -409,6 +411,16 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
     adapter: threadAdapter,
     runtimeHook: AssistantThreadRuntime,
   });
+  const browserToolExecutors = useMemo(
+    () =>
+      createAssistantBrowserToolExecutors({
+        getOrigin: () => window.location.origin,
+        navigate: (path) => router.push(path),
+        openCommandMenu: openSpotlight,
+        openMediaRequestSearch,
+      }),
+    [router],
+  );
 
   const toolkit = useMemo(
     () =>
@@ -434,20 +446,7 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
         navigate_to_route: {
           type: "frontend",
           ...browserToolContracts.navigate_to_route,
-          execute: async ({ path }) => {
-            const target = URL.canParse(path, window.location.origin) ? new URL(path, window.location.origin) : null;
-            if (
-              !path.startsWith("/") ||
-              path.startsWith("/\\") ||
-              target === null ||
-              target.origin !== window.location.origin
-            ) {
-              return { success: false, error: "Only internal Homarr paths are allowed." };
-            }
-            const internalPath = `${target.pathname}${target.search}${target.hash}`;
-            router.push(internalPath);
-            return { success: true, path: internalPath };
-          },
+          execute: browserToolExecutors.navigate_to_route,
           renderText: {
             running: ({ args }) => `Opening ${args.path}…`,
             complete: ({ args }) => `Opened ${args.path}`,
@@ -456,23 +455,17 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
         open_command_menu: {
           type: "frontend",
           ...browserToolContracts.open_command_menu,
-          execute: async () => {
-            openSpotlight();
-            return { success: true };
-          },
+          execute: browserToolExecutors.open_command_menu,
           renderText: { running: "Opening command menu…", complete: "Command menu opened" },
         },
         open_media_request_search: {
           type: "frontend",
           ...browserToolContracts.open_media_request_search,
-          execute: async () => {
-            openMediaRequestSearch();
-            return { success: true };
-          },
+          execute: browserToolExecutors.open_media_request_search,
           renderText: { running: "Opening media search…", complete: "Media search opened" },
         },
       }) as Toolkit,
-    [router],
+    [browserToolExecutors],
   );
   return (
     <AssistantRuntimeProviderWithTools runtime={runtime} toolkit={toolkit}>
@@ -542,6 +535,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const aui = useAui();
   const preferences = useAssistantPreferences();
   const messages = useAuiState((state) => state.thread.messages);
+  const conversationId = useAuiState((state) => state.threadListItem.remoteId);
   const isRunning = useAuiState((state) => state.thread.isRunning);
   const isLoading = useAuiState((state) => state.thread.isLoading);
   const latestAssistantMessage = getLatestMessage(messages, "assistant");
@@ -663,31 +657,33 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   );
 
   return (
-    <AssistantContext.Provider value={value}>
-      <AssistantWidgetRendererProvider renderer={AssistantBoardWidget}>{children}</AssistantWidgetRendererProvider>
-      <AssistantPanel
-        opened={opened}
-        onOpen={open}
-        onClose={close}
-        onDismissActivity={() => {
-          markRead();
-          setActivityDismissed(true);
-        }}
-        activityDismissed={activityDismissed}
-        isRunning={assistantIsRunning}
-        unreadCount={unreadCount}
-        latestAssistantText={latestAssistantText}
-        latestUserText={queuedPrompt ?? latestUserText}
-        latestStatus={latestStatus}
-        pendingAction={pendingAction}
-        modelId={preferences.modelId}
-        models={preferences.models}
-        modelOptionsLoading={preferences.isLoading}
-        reasoning={preferences.reasoning}
-        onModelChange={selectModel}
-        onReasoningChange={preferences.setReasoning}
-      />
-    </AssistantContext.Provider>
+    <AssistantAutoApprovalProvider conversationId={conversationId}>
+      <AssistantContext.Provider value={value}>
+        <AssistantWidgetRendererProvider renderer={AssistantBoardWidget}>{children}</AssistantWidgetRendererProvider>
+        <AssistantPanel
+          opened={opened}
+          onOpen={open}
+          onClose={close}
+          onDismissActivity={() => {
+            markRead();
+            setActivityDismissed(true);
+          }}
+          activityDismissed={activityDismissed}
+          isRunning={assistantIsRunning}
+          unreadCount={unreadCount}
+          latestAssistantText={latestAssistantText}
+          latestUserText={queuedPrompt ?? latestUserText}
+          latestStatus={latestStatus}
+          pendingAction={pendingAction}
+          modelId={preferences.modelId}
+          models={preferences.models}
+          modelOptionsLoading={preferences.isLoading}
+          reasoning={preferences.reasoning}
+          onModelChange={selectModel}
+          onReasoningChange={preferences.setReasoning}
+        />
+      </AssistantContext.Provider>
+    </AssistantAutoApprovalProvider>
   );
 };
 
