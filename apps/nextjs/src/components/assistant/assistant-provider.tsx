@@ -39,6 +39,7 @@ import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
 import { AssistantConfigureBoardSettingsTool } from "./assistant-board-settings-tool";
 import type { AssistantUIMessage } from "./assistant-message-metadata";
+import { initialAssistantNotificationState, updateAssistantNotificationState } from "./assistant-notifications";
 import { AssistantBoardWidget } from "./assistant-widget";
 
 interface AssistantContextValue {
@@ -478,14 +479,15 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
 
 const AssistantPreferenceSync = () => {
   const preferences = useAssistantPreferences();
-  const threadId = useAuiState((state) => state.threadListItem.remoteId);
+  // The local id distinguishes every thread immediately, including threads that do not have a remote id yet.
+  const conversationId = useAuiState((state) => state.threadListItem.id);
   const threadModelId = useAuiState((state) => state.threadListItem.custom?.modelId);
   const previousSyncKeyRef = useRef<string | null>(null);
   const modelCatalogKey = preferences.models.map((model) => model.id).join("\0");
 
   useEffect(() => {
     if (preferences.models.length === 0) return;
-    const syncKey = `${threadId ?? "new"}:${modelCatalogKey}`;
+    const syncKey = `${conversationId}:${modelCatalogKey}`;
     if (previousSyncKeyRef.current === syncKey) return;
     previousSyncKeyRef.current = syncKey;
     const storedModelId = typeof threadModelId === "string" ? threadModelId : null;
@@ -494,7 +496,7 @@ const AssistantPreferenceSync = () => {
         ? storedModelId
         : preferences.defaultModelId;
     if (nextModelId) preferences.setModelId(nextModelId);
-  }, [modelCatalogKey, preferences, threadId, threadModelId]);
+  }, [conversationId, modelCatalogKey, preferences, threadModelId]);
 
   return null;
 };
@@ -547,13 +549,16 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const pendingAction = getPendingAssistantAction(latestAssistantMessage);
   const assistantIsRunning = isRunning || queuedPrompt !== null;
   const notificationKey = getNotificationKey(latestAssistantMessage);
-  const initializedRef = useRef(false);
-  const lastNotifiedKeyRef = useRef<string | null>(null);
+  const notificationStateRef = useRef(initialAssistantNotificationState);
 
   const markRead = useCallback(() => {
-    lastNotifiedKeyRef.current = notificationKey;
+    notificationStateRef.current = {
+      initialized: true,
+      conversationId,
+      notificationKey,
+    };
     setUnreadCount(0);
-  }, [notificationKey]);
+  }, [conversationId, notificationKey]);
   const open = useCallback(() => {
     markRead();
     setActivityDismissed(false);
@@ -607,25 +612,21 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (isLoading) return;
-
-    if (!initializedRef.current) {
-      initializedRef.current = true;
-      lastNotifiedKeyRef.current = notificationKey;
-      return;
-    }
-
-    if (notificationKey === null || notificationKey === lastNotifiedKeyRef.current) return;
+    const update = updateAssistantNotificationState(notificationStateRef.current, {
+      conversationId,
+      notificationKey,
+    });
+    notificationStateRef.current = update.state;
+    if (!update.shouldNotify) return;
     setActivityDismissed(false);
 
     if (opened) {
-      lastNotifiedKeyRef.current = notificationKey;
       setUnreadCount(0);
       return;
     }
 
-    lastNotifiedKeyRef.current = notificationKey;
     setUnreadCount((current) => current + 1);
-  }, [isLoading, notificationKey, opened]);
+  }, [conversationId, isLoading, notificationKey, opened]);
 
   useHotkeys([[hotkeys.openAssistant, open, { preventDefault: true }]]);
 
