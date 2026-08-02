@@ -1,0 +1,26 @@
+apps/nextjs/src/components/board/items/item-move-modal.tsx
+  s_7b8a552cf9f1f8::t_daa386ef1f7b40 9,56-58,67-71,73,79,132,154-165,173,182,191,200,209
+packages/api/src/router/test/board.spec.ts
+  s_7b8a552cf9f1f8::t_daa386ef1f7b40 1697-1717
+packages/old-import/src/widgets/options.ts
+  s_7b8a552cf9f1f8::t_23ba3e7981822c 151-152
+packages/api/src/router/board.ts
+  s_7b8a552cf9f1f8::t_daa386ef1f7b40 694-695,697-699,1774-1779,1785-1844
+  s_7b8a552cf9f1f8::t_3406ee2c293e20 1780-1784
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "b9b938c6584007a12b578d8a8373584cc2200ffc",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
