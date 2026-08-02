@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "catalog:",
-    "@ai-sdk/react": "catalog:",
     "@assistant-ui/react": "catalog:",
     "@assistant-ui/react-ai-sdk": "catalog:",
     "@assistant-ui/react-markdown": "catalog:",
