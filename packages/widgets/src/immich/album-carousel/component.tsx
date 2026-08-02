@@ -14,7 +14,7 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
@@ -139,6 +139,7 @@ function Carousel({
   setPaused,
 }: CarouselProps) {
   const t = useScopedI18n("widget.immich-albumCarousel");
+  const locale = useCurrentIntlLocale();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -214,7 +215,7 @@ function Carousel({
             )}
             <Group gap="xs">
               <IconCalendar size={16} />
-              <Text size="xs">{new Date(currentAsset.fileModifiedAt).toLocaleDateString()}</Text>
+              <Text size="xs">{new Date(currentAsset.fileModifiedAt).toLocaleDateString(locale)}</Text>
             </Group>
             <Text size="xs" c="dimmed">
               {safeCurrentIndex + 1} / {assets.length}
