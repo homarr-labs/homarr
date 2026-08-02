@@ -1,7 +1,7 @@
 "use client";
 
-import { Accordion, ActionIcon, Anchor, Badge, Group, Indicator, Stack, Text } from "@mantine/core";
-import { IconEye, IconEyeOff, IconServer } from "@tabler/icons-react";
+import { Accordion, ActionIcon, Anchor, Badge, Group, Stack, Text } from "@mantine/core";
+import { IconCircleCheckFilled, IconCircleXFilled, IconEye, IconEyeOff, IconServer } from "@tabler/icons-react";
 
 import type { CoolifyServer } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -32,29 +32,28 @@ export function ServersSection({
 
   return (
     <Accordion.Item value="servers">
-      <Accordion.Control icon={isTiny ? null : <IconServer size={16} />}>
-        <Group gap="xs" justify="space-between" wrap="nowrap" style={{ flex: 1 }}>
+      <Group gap={0} wrap="nowrap">
+        <Accordion.Control icon={isTiny ? null : <IconServer size={16} />} style={{ flex: 1, minWidth: 0 }}>
           <Group gap="xs">
             <Text size="xs">{tCommon("servers")}</Text>
             <Badge variant="dot" color={getBadgeColor(onlineServers, servers.length)} size="xs">
               {onlineServers} / {servers.length}
             </Badge>
           </Group>
-          <ActionIcon
-            className={actionTargetClasses.root}
-            aria-label={t(showIp ? "action.hideIp" : "action.showIp")}
-            size="xs"
-            variant="subtle"
-            c="dimmed"
-            onClick={(event) => {
-              event.stopPropagation();
-              onToggleIp();
-            }}
-          >
-            {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
-          </ActionIcon>
-        </Group>
-      </Accordion.Control>
+        </Accordion.Control>
+        <ActionIcon
+          className={actionTargetClasses.root}
+          aria-label={t(showIp ? "action.hideIp" : "action.showIp")}
+          aria-pressed={showIp}
+          size="xs"
+          variant="subtle"
+          c="dimmed"
+          mr="xs"
+          onClick={onToggleIp}
+        >
+          {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
+        </ActionIcon>
+      </Group>
       <Accordion.Panel p={4}>
         {servers.length > 0 ? (
           <Stack gap={4}>
@@ -94,18 +93,25 @@ function ServerRow({ server, counts, baseUrl, isTiny, showIp }: ServerRowProps) 
   const isBuildServer = server.settings?.is_build_server === true;
   const isOnline = server.is_reachable !== false;
   const serverUrl = `${baseUrl}/server/${server.uuid}`;
+  const StatusIcon = isOnline ? IconCircleCheckFilled : IconCircleXFilled;
 
   return (
     <Stack gap={0}>
       <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
-        <Indicator size={isTiny ? 4 : 8} color={isOnline ? "green" : "red"} />
+        <StatusIcon
+          aria-label={t(isOnline ? "status.online" : "status.offline")}
+          size={isTiny ? 12 : 16}
+          color={`var(--mantine-color-${isOnline ? "green" : "red"}-6)`}
+        />
         <Anchor
+          className={actionTargetClasses.root}
           href={serverUrl}
           target="_blank"
           rel="noopener noreferrer"
-          fz={isTiny ? "8px" : "xs"}
+          fz="xs"
           c="inherit"
-          lineClamp={1}
+          truncate="end"
+          style={{ display: "inline-flex", alignItems: "center", overflow: "hidden" }}
         >
           {server.name}
         </Anchor>
@@ -115,7 +121,7 @@ function ServerRow({ server, counts, baseUrl, isTiny, showIp }: ServerRowProps) 
           </Badge>
         ) : (
           <Text fz="10px" c="dimmed">
-            ({counts.apps} apps / {counts.services} svcs)
+            ({t("server.resourceCounts", { applications: counts.apps, services: counts.services })})
           </Text>
         )}
       </Group>
