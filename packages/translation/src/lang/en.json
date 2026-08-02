@@ -2146,6 +2146,7 @@
       "configureApp": {
         "title": "Review app details",
         "description": "Choose a local icon and adjust anything before the assistant requests creation approval.",
+        "preparing": "Preparing app details",
         "continue": "Use these details",
         "ready": "App details ready"
       },
@@ -2185,7 +2186,16 @@
       "working": "Working",
       "approvalDescription": "Review this change before it runs.",
       "approveAndRun": "Approve and run",
-      "deny": "Deny"
+      "deny": "Deny",
+      "autoApproval": {
+        "label": "Automatic approvals",
+        "title": "Automatic approvals",
+        "description": "Approve every protected change in this conversation without another click. Your Homarr permissions still apply. This turns off when you switch conversations.",
+        "enable": "Enable for this conversation",
+        "disable": "Turn off automatic approvals",
+        "enabled": "Automatic approvals are on",
+        "approving": "Approving automatically"
+      }
     },
     "dangerZone": "Danger zone",
     "noResults": "No results found",

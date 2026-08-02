@@ -51,9 +51,9 @@ export const browserToolContracts = {
   },
   configure_app: {
     description:
-      "Open Homarr's native app form so the user can review or complete app details. Its icon picker searches the local Homarr icon repository. Use this before app.create instead of inventing an external icon URL.",
+      "Open Homarr's native app form with the best available app details already filled in. Its icon picker searches the local Homarr icon repository. Include the inferred description, href, and pingUrl when they are known. Use this before app.create instead of inventing an external icon URL.",
     parameters: z.object({
-      name: z.string().trim().max(64).optional(),
+      name: z.string().trim().min(1).max(64),
       description: z.string().trim().max(512).nullable().optional(),
       iconUrl: z
         .string()

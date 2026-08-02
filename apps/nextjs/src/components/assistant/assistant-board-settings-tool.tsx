@@ -44,6 +44,7 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import { getChangedBoardSettings, getCustomCssWarnings } from "./assistant-board-settings";
+import { hasCompleteAssistantToolArguments } from "./assistant-human-tool-status";
 import classes from "./assistant-panel.module.css";
 import type {
   AssistantBoardSettingsChanges,
@@ -85,12 +86,14 @@ export const AssistantConfigureBoardSettingsTool = ({
   args,
   result,
   addResult,
+  status,
 }: ToolCallMessagePartProps<ConfigureBoardSettingsArgs, ConfigureBoardSettingsResult>) => {
   const t = useScopedI18n("common.assistant.configureBoardSettings");
+  const hasCompleteArguments = hasCompleteAssistantToolArguments(status);
   const boardId = args?.boardId ?? "";
   const settings = clientApi.board.getBoardSettings.useQuery(
     { id: boardId },
-    { enabled: result === undefined && boardId.length > 0, retry: false },
+    { enabled: result === undefined && hasCompleteArguments && boardId.length > 0, retry: false },
   );
 
   if (result) {
@@ -113,7 +116,7 @@ export const AssistantConfigureBoardSettingsTool = ({
     );
   }
 
-  if (!args?.boardId || !args.boardName) {
+  if (!hasCompleteArguments || !args?.boardId || !args.boardName) {
     return <BoardSettingsSkeleton label={t("loading")} />;
   }
 

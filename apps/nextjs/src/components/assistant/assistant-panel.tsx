@@ -84,6 +84,7 @@ import {
   IconRefresh,
   IconRobot,
   IconSearch,
+  IconShieldCheck,
   IconSparkles,
   IconThumbDown,
   IconThumbUp,
@@ -99,6 +100,7 @@ import { assistantReasoningModes } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
+import { useAssistantAutoApproval } from "./assistant-auto-approval";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
 import type { AssistantPendingAction } from "./assistant-pending-action";
@@ -341,6 +343,7 @@ const ToolResultPreview = ({ result }: { result: unknown }) => {
 };
 
 const ToolPart = ({
+  toolCallId,
   toolName,
   args,
   result,
@@ -351,6 +354,7 @@ const ToolPart = ({
   timing,
 }: ToolCallMessagePartProps) => {
   const t = useScopedI18n("common.assistant");
+  const autoApproval = useAssistantAutoApproval();
   const [opened, setOpened] = useState(false);
   const [approvalResponse, setApprovalResponse] = useState<"approve" | "deny" | null>(null);
   const completed = status?.type === "complete";
@@ -363,6 +367,16 @@ const ToolPart = ({
       (typeof result === "object" && result !== null && "error" in result));
   const successful = completed && !denied && !failed;
   const duration = timing?.completedAt !== undefined ? Math.max(0, timing.completedAt - timing.startedAt) : undefined;
+
+  useEffect(() => {
+    if (!awaitingApproval || !autoApproval.enabled) return;
+
+    autoApproval.requestApproval(toolCallId, () => {
+      setApprovalResponse("approve");
+      respondToApproval({ approved: true, reason: "Approved automatically by the user." });
+    });
+  }, [autoApproval, awaitingApproval, respondToApproval, toolCallId]);
+
   return (
     <Box className={classes.tool}>
       <UnstyledButton
@@ -415,35 +429,44 @@ const ToolPart = ({
             {t("approvalDescription")}
           </Text>
           <ToolResultPreview result={args} />
-          <Group className={classes.approvalActions} gap="sm" grow wrap="nowrap">
-            <Button
-              size="md"
-              fullWidth
-              leftSection={<IconCheck size={18} />}
-              loading={approvalResponse === "approve"}
-              disabled={approvalResponse !== null}
-              onClick={() => {
-                setApprovalResponse("approve");
-                respondToApproval({ approved: true });
-              }}
-            >
-              {t("approveAndRun")}
-            </Button>
-            <Button
-              size="md"
-              fullWidth
-              variant="default"
-              leftSection={<IconX size={18} />}
-              loading={approvalResponse === "deny"}
-              disabled={approvalResponse !== null}
-              onClick={() => {
-                setApprovalResponse("deny");
-                respondToApproval({ approved: false });
-              }}
-            >
-              {t("deny")}
-            </Button>
-          </Group>
+          {autoApproval.enabled ? (
+            <Group className={classes.autoApprovalProgress} gap="sm" wrap="nowrap">
+              <Loader type="bars" size="sm" color="green" />
+              <Text size="sm" fw={600}>
+                {t("autoApproval.approving")}
+              </Text>
+            </Group>
+          ) : (
+            <Group className={classes.approvalActions} gap="sm" grow wrap="nowrap">
+              <Button
+                size="md"
+                fullWidth
+                leftSection={<IconCheck size={18} />}
+                loading={approvalResponse === "approve"}
+                disabled={approvalResponse !== null}
+                onClick={() => {
+                  setApprovalResponse("approve");
+                  respondToApproval({ approved: true });
+                }}
+              >
+                {t("approveAndRun")}
+              </Button>
+              <Button
+                size="md"
+                fullWidth
+                variant="default"
+                leftSection={<IconX size={18} />}
+                loading={approvalResponse === "deny"}
+                disabled={approvalResponse !== null}
+                onClick={() => {
+                  setApprovalResponse("deny");
+                  respondToApproval({ approved: false });
+                }}
+              >
+                {t("deny")}
+              </Button>
+            </Group>
+          )}
         </Box>
       )}
       {successful && result !== undefined && <ToolResultPreview result={result} />}
@@ -1310,6 +1333,62 @@ const ConversationHistory = () => {
   );
 };
 
+const AutoApprovalControl = () => {
+  const t = useScopedI18n("common.assistant.autoApproval");
+  const [opened, setOpened] = useState(false);
+  const { enabled, setEnabled } = useAssistantAutoApproval();
+
+  return (
+    <Popover
+      opened={opened}
+      onChange={setOpened}
+      onDismiss={() => setOpened(false)}
+      position="bottom-end"
+      width="min(19rem, calc(100vw - 1rem))"
+      shadow="md"
+      withinPortal
+    >
+      <Popover.Target>
+        <ActionIcon
+          className={classes.panelAction}
+          variant={enabled ? "light" : "subtle"}
+          color={enabled ? "green" : "gray"}
+          onClick={() => setOpened((current) => !current)}
+          aria-label={t("label")}
+          aria-pressed={enabled}
+          title={enabled ? t("enabled") : t("label")}
+        >
+          <IconShieldCheck size={17} />
+        </ActionIcon>
+      </Popover.Target>
+      <Popover.Dropdown>
+        <Stack gap="sm">
+          <Box>
+            <Text size="sm" fw={700}>
+              {t("title")}
+            </Text>
+            <Text size="xs" c="dimmed" mt={3}>
+              {t("description")}
+            </Text>
+          </Box>
+          <Button
+            fullWidth
+            variant={enabled ? "default" : "light"}
+            color={enabled ? "gray" : "green"}
+            leftSection={<IconShieldCheck size={16} />}
+            onClick={() => {
+              setEnabled(!enabled);
+              setOpened(false);
+            }}
+          >
+            {enabled ? t("disable") : t("enable")}
+          </Button>
+        </Stack>
+      </Popover.Dropdown>
+    </Popover>
+  );
+};
+
 const EmptyThread = () => {
   const t = useScopedI18n("common.assistant");
   return (
@@ -1944,6 +2023,7 @@ export const AssistantConversationSurface = ({
         </Group>
         <Group className={classes.panelActions} gap={2} wrap="nowrap">
           <ConversationHistory />
+          <AutoApprovalControl />
           <Tooltip label={t("newConversation")}>
             <ThreadListPrimitive.New asChild>
               <ActionIcon
