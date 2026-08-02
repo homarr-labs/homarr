@@ -50,7 +50,9 @@ export default function SmartHomeEntityStateWidget({
   const apiUnit = entity?.attributes.unit_of_measurement;
   const unit = options.entityUnit || (typeof apiUnit === "string" ? apiUnit : "");
   const attribute = unit.length > 0 ? ` ${unit}` : "";
-  const isActionable = options.clickable && canInteract && entity !== undefined && !isEntityPending && !isPending;
+  const isActionable =
+    options.clickable && canInteract && entity !== undefined && !entityError && !isEntityPending && !isPending;
+  const queryErrorLabel = entityError ? t("widget.smartHome-entityState.error.loadFailed") : undefined;
 
   const handleClick = useCallback(() => {
     if (isEditMode) {
@@ -108,7 +110,7 @@ export default function SmartHomeEntityStateWidget({
       onClick={handleClick}
       disabled={!isActionable}
       aria-label={`${displayName}: ${state}${attribute}`}
-      aria-description={error?.message}
+      aria-description={queryErrorLabel ?? (error ? t("widget.smartHome-entityState.error.toggleFailed") : undefined)}
       w="100%"
       h="100%"
       styles={{
@@ -127,6 +129,11 @@ export default function SmartHomeEntityStateWidget({
           <Text ta="center" c="dimmed" fw={500} size={isTiny ? "xs" : "sm"} lineClamp={2} maw="100%">
             {displayName}
           </Text>
+          {queryErrorLabel && (
+            <Text size="xs" c="orange" ta="center" lineClamp={1} maw="100%" aria-live="polite">
+              {queryErrorLabel}
+            </Text>
+          )}
           {displayMode === "advanced" && entity && (
             <>
               <Group justify="center" gap={4}>

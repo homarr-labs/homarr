@@ -2185,6 +2185,7 @@
         }
       },
       "error": {
+        "loadFailed": "Unable to load entity",
         "toggleFailed": "Unable to update entity"
       }
     },

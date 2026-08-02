@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Badge, Group, ScrollArea, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
@@ -67,7 +67,7 @@ export default function AudioStatsWidget({
               if (!currentlyPlaying) return null;
               return (
                 <Group key={`${integrationId}:${session.sessionId}`} justify="space-between" wrap="nowrap" p="sm">
-                  <Stack gap={0} style={{ minWidth: 0 }}>
+                  <Stack gap={0} style={{ minWidth: 0, flex: 1 }}>
                     <Text size="sm" fw={600} truncate>
                       {currentlyPlaying.name}
                     </Text>
@@ -75,9 +75,15 @@ export default function AudioStatsWidget({
                       {currentlyPlaying.seasonName ?? currentlyPlaying.albumName ?? session.user.username}
                     </Text>
                   </Stack>
-                  <Badge variant="light" style={{ flexShrink: 0 }}>
-                    {session.sessionName}
-                  </Badge>
+                  <Tooltip
+                    label={session.sessionName}
+                    events={{ hover: true, focus: true, touch: true }}
+                    position="left"
+                  >
+                    <Badge variant="light" maw="40%" style={{ flexShrink: 0 }} tabIndex={0}>
+                      {session.sessionName}
+                    </Badge>
+                  </Tooltip>
                 </Group>
               );
             })}
