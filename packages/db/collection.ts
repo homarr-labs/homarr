@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace -- Schema tables are selected by validated typed keys. */
 import type { InferInsertModel } from "drizzle-orm";
 
 import { objectEntries } from "@homarr/common";
