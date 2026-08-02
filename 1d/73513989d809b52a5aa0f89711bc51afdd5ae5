@@ -1,0 +1,37 @@
+apps/docs/docs/widgets/timetable/index.mdx
+  s_909ca8cf5b6e15::t_795ab6078f80b9 40
+packages/widgets/src/timetable/component.tsx
+  s_909ca8cf5b6e15::t_795ab6078f80b9 56,62-63
+  s_909ca8cf5b6e15::t_4978cf230c285b 54,61,65
+  s_909ca8cf5b6e15::t_08b386d2ebab4c 64,70-71
+  s_909ca8cf5b6e15::t_87839cf5298f59 55
+  s_909ca8cf5b6e15::t_d277b99a2e515a 66-69
+packages/widgets/src/rssFeed/component.tsx
+  s_909ca8cf5b6e15::t_08b386d2ebab4c 63-64
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_909ca8cf5b6e15::t_557a9dc4122f0b 4,40,88,197-198
+  s_909ca8cf5b6e15::t_d277b99a2e515a 194-196,199-202
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_4978cf230c285b 2006
+  s_909ca8cf5b6e15::t_795ab6078f80b9 2007
+packages/widgets/src/common/integration-error-indicator.tsx
+  s_909ca8cf5b6e15::t_d277b99a2e515a 27
+packages/widgets/src/media-server/component.tsx
+  s_909ca8cf5b6e15::t_4978cf230c285b 328
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "1d73513989d809b52a5aa0f89711bc51afdd5ae5",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
