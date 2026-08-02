@@ -25,8 +25,9 @@ import {
   resolveAssistantModelId,
 } from "@homarr/definitions";
 
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import type { createTRPCContext } from "../trpc";
+import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation-telemetry";
+import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import { boardRouter } from "./board";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
@@ -157,6 +158,25 @@ const getProviderHeaders = (configuration: AssistantConfiguration) => {
     headers["X-Title"] ??= "Homarr Assistant";
   }
   return { ...headers, ...decryptCustomHeaders(configuration.encryptedHeaders) };
+};
+
+const getGenerationIdsFromMessageContent = (content: unknown) => {
+  if (!content || typeof content !== "object" || Array.isArray(content)) return [];
+  const metadata = (content as { metadata?: unknown }).metadata;
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return [];
+  const custom = (metadata as { custom?: unknown }).custom;
+  if (!custom || typeof custom !== "object" || Array.isArray(custom)) return [];
+  const telemetry = (custom as { telemetry?: unknown }).telemetry;
+  if (!telemetry || typeof telemetry !== "object" || Array.isArray(telemetry)) return [];
+  const steps = (telemetry as { steps?: unknown }).steps;
+  if (!Array.isArray(steps)) return [];
+  return steps
+    .flatMap((step) => {
+      if (!step || typeof step !== "object" || Array.isArray(step)) return [];
+      const generationId = (step as { generationId?: unknown }).generationId;
+      return typeof generationId === "string" && /^gen-[A-Za-z0-9_-]{1,128}$/.test(generationId) ? [generationId] : [];
+    })
+    .slice(0, 8);
 };
 
 const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
@@ -673,6 +693,43 @@ export const assistantRouter = createTRPCRouter({
       })),
     };
   }),
+
+  getGenerationTelemetry: protectedProcedure
+    .input(
+      z.object({
+        threadId: z.string().max(64),
+        messageId: z.string().min(1).max(128),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const thread = await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
+      const [message, configuration] = await Promise.all([
+        ctx.db.query.assistantMessages.findFirst({
+          where: and(eq(assistantMessages.id, input.messageId), eq(assistantMessages.threadId, thread.id)),
+        }),
+        getConfigurationAsync(ctx.db),
+      ]);
+      if (!message) throw new TRPCError({ code: "NOT_FOUND", message: "Message not found." });
+      if (configuration?.provider !== "openrouter" || !configuration.encryptedApiKey) {
+        return { complete: true, generations: [] };
+      }
+
+      const generationIds = getGenerationIdsFromMessageContent(parse(message.content));
+      if (generationIds.length === 0) return { complete: true, generations: [] };
+      const generations = await Promise.all(
+        generationIds.map((generationId) =>
+          fetchOpenRouterGenerationTelemetryAsync({
+            baseUrl: configuration.baseUrl,
+            generationId,
+            headers: getProviderHeaders(configuration),
+          }),
+        ),
+      );
+      return {
+        complete: generations.every((generation) => generation !== null),
+        generations: generations.filter((generation) => generation !== null),
+      };
+    }),
 
   renameThread: protectedProcedure
     .input(z.object({ threadId: z.string().max(64), title: z.string().trim().min(1).max(120) }))

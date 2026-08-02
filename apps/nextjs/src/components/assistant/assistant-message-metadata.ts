@@ -16,12 +16,32 @@ export type AssistantRequestStep = {
   toolDurationMs: number;
   timeToFirstOutputMs?: number;
   outputTokensPerSecond?: number;
+  providerLatencyMs?: number;
+  generationTimeMs?: number;
+  moderationLatencyMs?: number;
+  providerOutputTokensPerSecond?: number;
   inputTokens?: number;
   outputTokens?: number;
+  normalizedInputTokens?: number;
+  normalizedOutputTokens?: number;
+  cachedInputTokens?: number;
+  reasoningTokens?: number;
   cost?: number;
   upstreamCost?: number;
+  cacheDiscount?: number;
   generationId?: string;
   routedProvider?: string;
+  finishReason?: string;
+  nativeFinishReason?: string;
+  serviceTier?: string;
+  dataRegion?: string;
+  routerStrategy?: string;
+  routerRegion?: string;
+  fallbackCount?: number;
+  fallbackLatencyMs?: number;
+  isByok?: boolean;
+  streamed?: boolean;
+  cancelled?: boolean;
 };
 
 export type AssistantRequestTelemetry = {
@@ -33,11 +53,16 @@ export type AssistantRequestTelemetry = {
   durationMs?: number;
   timeToFirstOutputMs?: number;
   outputTokensPerSecond?: number;
+  providerOutputTokensPerSecond?: number;
+  generationTimeMs?: number;
   contextLength?: number;
   contextUsed?: number;
   contextUtilization?: number;
   cost?: number;
   upstreamCost?: number;
+  cacheDiscount?: number;
+  fallbackCount?: number;
+  fallbackLatencyMs?: number;
   costType?: "reported" | "estimated";
   finishReason?: string;
   steps: AssistantRequestStep[];
@@ -124,11 +149,35 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
             ...(getFiniteNonNegativeNumber(candidate.outputTokensPerSecond) !== undefined
               ? { outputTokensPerSecond: getFiniteNonNegativeNumber(candidate.outputTokensPerSecond) }
               : {}),
+            ...(getFiniteNonNegativeNumber(candidate.providerLatencyMs) !== undefined
+              ? { providerLatencyMs: getFiniteNonNegativeNumber(candidate.providerLatencyMs) }
+              : {}),
+            ...(getFiniteNonNegativeNumber(candidate.generationTimeMs) !== undefined
+              ? { generationTimeMs: getFiniteNonNegativeNumber(candidate.generationTimeMs) }
+              : {}),
+            ...(getFiniteNonNegativeNumber(candidate.moderationLatencyMs) !== undefined
+              ? { moderationLatencyMs: getFiniteNonNegativeNumber(candidate.moderationLatencyMs) }
+              : {}),
+            ...(getFiniteNonNegativeNumber(candidate.providerOutputTokensPerSecond) !== undefined
+              ? { providerOutputTokensPerSecond: getFiniteNonNegativeNumber(candidate.providerOutputTokensPerSecond) }
+              : {}),
             ...(getFiniteNonNegativeNumber(candidate.inputTokens) !== undefined
               ? { inputTokens: getFiniteNonNegativeNumber(candidate.inputTokens) }
               : {}),
             ...(getFiniteNonNegativeNumber(candidate.outputTokens) !== undefined
               ? { outputTokens: getFiniteNonNegativeNumber(candidate.outputTokens) }
+              : {}),
+            ...(getFiniteNonNegativeNumber(candidate.normalizedInputTokens) !== undefined
+              ? { normalizedInputTokens: getFiniteNonNegativeNumber(candidate.normalizedInputTokens) }
+              : {}),
+            ...(getFiniteNonNegativeNumber(candidate.normalizedOutputTokens) !== undefined
+              ? { normalizedOutputTokens: getFiniteNonNegativeNumber(candidate.normalizedOutputTokens) }
+              : {}),
+            ...(getFiniteNonNegativeNumber(candidate.cachedInputTokens) !== undefined
+              ? { cachedInputTokens: getFiniteNonNegativeNumber(candidate.cachedInputTokens) }
+              : {}),
+            ...(getFiniteNonNegativeNumber(candidate.reasoningTokens) !== undefined
+              ? { reasoningTokens: getFiniteNonNegativeNumber(candidate.reasoningTokens) }
               : {}),
             ...(getFiniteNonNegativeNumber(candidate.cost) !== undefined
               ? { cost: getFiniteNonNegativeNumber(candidate.cost) }
@@ -136,8 +185,28 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
             ...(getFiniteNonNegativeNumber(candidate.upstreamCost) !== undefined
               ? { upstreamCost: getFiniteNonNegativeNumber(candidate.upstreamCost) }
               : {}),
+            ...(getFiniteNonNegativeNumber(candidate.cacheDiscount) !== undefined
+              ? { cacheDiscount: getFiniteNonNegativeNumber(candidate.cacheDiscount) }
+              : {}),
             ...(typeof candidate.generationId === "string" ? { generationId: candidate.generationId } : {}),
             ...(typeof candidate.routedProvider === "string" ? { routedProvider: candidate.routedProvider } : {}),
+            ...(typeof candidate.finishReason === "string" ? { finishReason: candidate.finishReason } : {}),
+            ...(typeof candidate.nativeFinishReason === "string"
+              ? { nativeFinishReason: candidate.nativeFinishReason }
+              : {}),
+            ...(typeof candidate.serviceTier === "string" ? { serviceTier: candidate.serviceTier } : {}),
+            ...(typeof candidate.dataRegion === "string" ? { dataRegion: candidate.dataRegion } : {}),
+            ...(typeof candidate.routerStrategy === "string" ? { routerStrategy: candidate.routerStrategy } : {}),
+            ...(typeof candidate.routerRegion === "string" ? { routerRegion: candidate.routerRegion } : {}),
+            ...(getFiniteNonNegativeNumber(candidate.fallbackCount) !== undefined
+              ? { fallbackCount: getFiniteNonNegativeNumber(candidate.fallbackCount) }
+              : {}),
+            ...(getFiniteNonNegativeNumber(candidate.fallbackLatencyMs) !== undefined
+              ? { fallbackLatencyMs: getFiniteNonNegativeNumber(candidate.fallbackLatencyMs) }
+              : {}),
+            ...(typeof candidate.isByok === "boolean" ? { isByok: candidate.isByok } : {}),
+            ...(typeof candidate.streamed === "boolean" ? { streamed: candidate.streamed } : {}),
+            ...(typeof candidate.cancelled === "boolean" ? { cancelled: candidate.cancelled } : {}),
           },
         ];
       })
@@ -158,6 +227,12 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
     ...(getFiniteNonNegativeNumber(value.outputTokensPerSecond) !== undefined
       ? { outputTokensPerSecond: getFiniteNonNegativeNumber(value.outputTokensPerSecond) }
       : {}),
+    ...(getFiniteNonNegativeNumber(value.providerOutputTokensPerSecond) !== undefined
+      ? { providerOutputTokensPerSecond: getFiniteNonNegativeNumber(value.providerOutputTokensPerSecond) }
+      : {}),
+    ...(getFiniteNonNegativeNumber(value.generationTimeMs) !== undefined
+      ? { generationTimeMs: getFiniteNonNegativeNumber(value.generationTimeMs) }
+      : {}),
     ...(getFiniteNonNegativeNumber(value.contextLength) !== undefined
       ? { contextLength: getFiniteNonNegativeNumber(value.contextLength) }
       : {}),
@@ -170,6 +245,15 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
     ...(getFiniteNonNegativeNumber(value.cost) !== undefined ? { cost: getFiniteNonNegativeNumber(value.cost) } : {}),
     ...(getFiniteNonNegativeNumber(value.upstreamCost) !== undefined
       ? { upstreamCost: getFiniteNonNegativeNumber(value.upstreamCost) }
+      : {}),
+    ...(getFiniteNonNegativeNumber(value.cacheDiscount) !== undefined
+      ? { cacheDiscount: getFiniteNonNegativeNumber(value.cacheDiscount) }
+      : {}),
+    ...(getFiniteNonNegativeNumber(value.fallbackCount) !== undefined
+      ? { fallbackCount: getFiniteNonNegativeNumber(value.fallbackCount) }
+      : {}),
+    ...(getFiniteNonNegativeNumber(value.fallbackLatencyMs) !== undefined
+      ? { fallbackLatencyMs: getFiniteNonNegativeNumber(value.fallbackLatencyMs) }
       : {}),
     ...(value.costType === "reported" || value.costType === "estimated" ? { costType: value.costType } : {}),
     ...(typeof value.finishReason === "string" ? { finishReason: value.finishReason } : {}),

@@ -119,21 +119,33 @@ const createProviderTelemetryExtractor = (): MetadataExtractor => {
       if (!body) return;
       const usage = asRecord(body.usage);
       const costDetails = asRecord(usage?.cost_details);
+      const routerMetadata = asRecord(body.openrouter_metadata);
+      const endpoints = asRecord(routerMetadata?.endpoints);
+      const selectedEndpoint = Array.isArray(endpoints?.available)
+        ? endpoints.available.map(asRecord).find((endpoint) => endpoint?.selected === true)
+        : undefined;
       const generationId = typeof body.id === "string" ? body.id : undefined;
       const routedProvider =
         typeof body.provider === "string"
           ? body.provider
           : typeof usage?.provider === "string"
             ? usage.provider
-            : undefined;
+            : typeof selectedEndpoint?.provider === "string"
+              ? selectedEndpoint.provider
+              : undefined;
       const cost = asFiniteNumber(usage?.cost);
       const upstreamCost = asFiniteNumber(costDetails?.upstream_inference_cost);
+      const routerAttempt = asFiniteNumber(routerMetadata?.attempt);
       metadata = {
         ...metadata,
         ...(generationId ? { generationId } : {}),
         ...(routedProvider ? { routedProvider } : {}),
         ...(cost !== undefined ? { cost } : {}),
         ...(upstreamCost !== undefined ? { upstreamCost } : {}),
+        ...(routerAttempt !== undefined ? { fallbackCount: Math.max(routerAttempt - 1, 0) } : {}),
+        ...(typeof routerMetadata?.strategy === "string" ? { routerStrategy: routerMetadata.strategy } : {}),
+        ...(typeof routerMetadata?.region === "string" ? { routerRegion: routerMetadata.region } : {}),
+        ...(typeof routerMetadata?.is_byok === "boolean" ? { isByok: routerMetadata.is_byok ? 1 : 0 } : {}),
       };
     };
     const build = () => (Object.keys(metadata).length > 0 ? { homarrTelemetry: metadata } : undefined);
@@ -251,6 +263,16 @@ const toUsageMetadata = (usage: {
     ? { reasoningTokens: usage.outputTokenDetails.reasoningTokens }
     : {}),
 });
+
+const sumCompleteStepMetric = (
+  steps: AssistantRequestStep[],
+  getValue: (step: AssistantRequestStep) => number | undefined,
+) => {
+  if (steps.length === 0) return undefined;
+  const values = steps.map(getValue);
+  if (values.some((value) => value === undefined)) return undefined;
+  return (values as number[]).reduce((sum, value) => sum + value, 0);
+};
 
 const safeToolError = (error: unknown) => {
   if (error instanceof Error && "code" in error) {
@@ -428,14 +450,20 @@ export async function POST(request: Request) {
       : {};
     const providerHeaders = {
       ...(configuration.provider === "openrouter"
-        ? { "HTTP-Referer": "https://homarr.dev", "X-Title": "Homarr Assistant" }
+        ? {
+            "HTTP-Referer": "https://homarr.dev",
+            "X-Title": "Homarr Assistant",
+            "X-OpenRouter-Metadata": "enabled",
+          }
         : {}),
       ...customHeaders,
     };
+    const providerApiKey = configuration.encryptedApiKey ? decryptSecret(configuration.encryptedApiKey) : undefined;
+    const providerName = `homarr-${configuration.provider}`;
     const provider = createOpenAICompatible({
-      name: `homarr-${configuration.provider}`,
+      name: providerName,
       baseURL: configuration.baseUrl,
-      apiKey: configuration.encryptedApiKey ? decryptSecret(configuration.encryptedApiKey) : undefined,
+      apiKey: providerApiKey,
       headers: providerHeaders,
       includeUsage: true,
       metadataExtractor: createProviderTelemetryExtractor(),
@@ -464,6 +492,8 @@ export async function POST(request: Request) {
       timeout: { totalMs: 55_000, stepMs: 30_000, toolMs: 30_000 },
       maxRetries: 2,
       reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
+      providerOptions:
+        configuration.provider === "openrouter" ? { [providerName]: { usage: { include: true } } } : undefined,
       toolApproval,
       experimental_toolApprovalSecret: getToolApprovalSecret(),
       onChunk: ({ chunk }) => {
@@ -484,17 +514,13 @@ export async function POST(request: Request) {
       },
       onStepFinish: ({ performance, providerMetadata, response, usage }) => {
         const telemetry = asRecord(providerMetadata?.homarrTelemetry);
-        const cost = asFiniteNumber(telemetry?.cost);
-        const stepUpstreamCost = asFiniteNumber(telemetry?.upstreamCost);
-        if (cost !== undefined) {
-          reportedCost += cost;
-          hasReportedCost = true;
-        }
-        if (stepUpstreamCost !== undefined) {
-          upstreamCost += stepUpstreamCost;
-          hasUpstreamCost = true;
-        }
-        requestSteps.push({
+        const generationId =
+          typeof telemetry?.generationId === "string"
+            ? telemetry.generationId
+            : typeof response.id === "string"
+              ? response.id
+              : undefined;
+        const step: AssistantRequestStep = {
           index: requestSteps.length + 1,
           durationMs: performance.stepTimeMs,
           modelDurationMs: performance.responseTimeMs,
@@ -507,11 +533,28 @@ export async function POST(request: Request) {
             : {}),
           ...(usage.inputTokens !== undefined ? { inputTokens: usage.inputTokens } : {}),
           ...(usage.outputTokens !== undefined ? { outputTokens: usage.outputTokens } : {}),
-          ...(cost !== undefined ? { cost } : {}),
-          ...(stepUpstreamCost !== undefined ? { upstreamCost: stepUpstreamCost } : {}),
-          ...(typeof response.id === "string" ? { generationId: response.id } : {}),
+          ...(asFiniteNumber(telemetry?.cost) !== undefined ? { cost: asFiniteNumber(telemetry?.cost) } : {}),
+          ...(asFiniteNumber(telemetry?.upstreamCost) !== undefined
+            ? { upstreamCost: asFiniteNumber(telemetry?.upstreamCost) }
+            : {}),
+          ...(generationId ? { generationId } : {}),
           ...(typeof telemetry?.routedProvider === "string" ? { routedProvider: telemetry.routedProvider } : {}),
-        });
+          ...(asFiniteNumber(telemetry?.fallbackCount) !== undefined
+            ? { fallbackCount: asFiniteNumber(telemetry?.fallbackCount) }
+            : {}),
+          ...(typeof telemetry?.routerStrategy === "string" ? { routerStrategy: telemetry.routerStrategy } : {}),
+          ...(typeof telemetry?.routerRegion === "string" ? { routerRegion: telemetry.routerRegion } : {}),
+          ...(telemetry?.isByok === 0 || telemetry?.isByok === 1 ? { isByok: telemetry.isByok === 1 } : {}),
+        };
+        requestSteps.push(step);
+        if (step.cost !== undefined) {
+          reportedCost += step.cost;
+          hasReportedCost = true;
+        }
+        if (step.upstreamCost !== undefined) {
+          upstreamCost += step.upstreamCost;
+          hasUpstreamCost = true;
+        }
       },
       onError: ({ error }) => {
         logger.error("Assistant response stream failed", {
@@ -552,8 +595,29 @@ export async function POST(request: Request) {
         }
 
         const completedAt = Date.now();
-        const usage = toUsageMetadata(part.totalUsage);
-        const contextUsed = (usage.inputTokens ?? 0) + (usage.outputTokens ?? 0);
+        const aiUsage = toUsageMetadata(part.totalUsage);
+        const providerInputTokens = sumCompleteStepMetric(requestSteps, (step) => step.inputTokens);
+        const providerOutputTokens = sumCompleteStepMetric(requestSteps, (step) => step.outputTokens);
+        const providerCachedInputTokens = sumCompleteStepMetric(requestSteps, (step) => step.cachedInputTokens);
+        const providerReasoningTokens = sumCompleteStepMetric(requestSteps, (step) => step.reasoningTokens);
+        const inputTokens = providerInputTokens ?? aiUsage.inputTokens;
+        const outputTokens = providerOutputTokens ?? aiUsage.outputTokens;
+        const usage: AssistantUsage = {
+          ...aiUsage,
+          ...(inputTokens !== undefined ? { inputTokens } : {}),
+          ...(outputTokens !== undefined ? { outputTokens } : {}),
+          ...(inputTokens !== undefined && outputTokens !== undefined
+            ? { totalTokens: inputTokens + outputTokens }
+            : {}),
+          ...(providerCachedInputTokens !== undefined ? { cachedInputTokens: providerCachedInputTokens } : {}),
+          ...(providerReasoningTokens !== undefined ? { reasoningTokens: providerReasoningTokens } : {}),
+        };
+        const latestStep = requestSteps.at(-1);
+        const latestContextUsed =
+          latestStep?.inputTokens !== undefined && latestStep.outputTokens !== undefined
+            ? latestStep.inputTokens + latestStep.outputTokens
+            : undefined;
+        const contextUsed = latestContextUsed ?? (usage.inputTokens ?? 0) + (usage.outputTokens ?? 0);
         const promptPrice = asFiniteNumber(selectedModel?.promptPrice);
         const completionPrice = asFiniteNumber(selectedModel?.completionPrice);
         const estimatedCost =
@@ -564,6 +628,16 @@ export async function POST(request: Request) {
         const generatedSeconds = requestSteps.reduce((sum, step) => sum + step.modelDurationMs, 0) / 1000;
         const outputTokensPerSecond =
           usage.outputTokens !== undefined && generatedSeconds > 0 ? usage.outputTokens / generatedSeconds : undefined;
+        const providerGenerationTimeMs = sumCompleteStepMetric(requestSteps, (step) => step.generationTimeMs);
+        const providerGeneratedTokens = sumCompleteStepMetric(requestSteps, (step) => step.outputTokens);
+        const providerOutputTokensPerSecond =
+          providerGenerationTimeMs !== undefined &&
+          providerGenerationTimeMs > 0 &&
+          providerGeneratedTokens !== undefined
+            ? providerGeneratedTokens / (providerGenerationTimeMs / 1000)
+            : undefined;
+        const cacheDiscount = sumCompleteStepMetric(requestSteps, (step) => step.cacheDiscount);
+        const fallbackCount = sumCompleteStepMetric(requestSteps, (step) => step.fallbackCount);
 
         return {
           usage,
@@ -574,13 +648,17 @@ export async function POST(request: Request) {
               durationMs: completedAt - requestStartedAt,
               ...(firstOutputAt !== undefined ? { timeToFirstOutputMs: firstOutputAt - requestStartedAt } : {}),
               ...(outputTokensPerSecond !== undefined ? { outputTokensPerSecond } : {}),
+              ...(providerOutputTokensPerSecond !== undefined ? { providerOutputTokensPerSecond } : {}),
+              ...(providerGenerationTimeMs !== undefined ? { generationTimeMs: providerGenerationTimeMs } : {}),
               ...(contextUsed > 0 ? { contextUsed } : {}),
               ...(selectedModel?.contextLength && contextUsed > 0
                 ? { contextUtilization: Math.min(contextUsed / selectedModel.contextLength, 1) }
                 : {}),
               ...(cost !== undefined ? { cost, costType: hasReportedCost ? "reported" : "estimated" } : {}),
               ...(hasUpstreamCost ? { upstreamCost } : {}),
-              finishReason: part.finishReason,
+              ...(cacheDiscount !== undefined ? { cacheDiscount } : {}),
+              ...(fallbackCount !== undefined ? { fallbackCount } : {}),
+              finishReason: latestStep?.finishReason ?? part.finishReason,
             },
           },
         };
