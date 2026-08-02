@@ -48,7 +48,11 @@ export function UmamiContent({
   const { colorScheme } = useMantineColorScheme();
   const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
 
-  const { data: results = [], isPending: isStatsPending } = clientApi.widget.umami.getVisitorStats.useQuery(
+  const {
+    data: results,
+    isPending: isStatsPending,
+    error: statsError,
+  } = clientApi.widget.umami.getVisitorStats.useQuery(
     { integrationIds, websiteId, timeFrame, eventName },
     umamiQueryOptions,
   );
@@ -68,7 +72,7 @@ export function UmamiContent({
     ? multiEventSeries.flatMap(({ dataPoints }) => dataPoints).reduce((sum, { y }) => sum + y, 0)
     : undefined;
 
-  const firstResult = results[0];
+  const firstResult = results?.[0];
   if (isStatsPending) {
     return (
       <Stack align="center" justify="center" h="100%">
@@ -78,6 +82,7 @@ export function UmamiContent({
       </Stack>
     );
   }
+  if (statsError && results === undefined) throw statsError;
   if (!firstResult) {
     return (
       <Stack align="center" justify="center" h="100%">
