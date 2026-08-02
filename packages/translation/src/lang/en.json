@@ -2573,6 +2573,16 @@
         "showIp": "Show IP address",
         "hideIp": "Hide IP address"
       },
+      "status": {
+        "running": "Running",
+        "stopped": "Stopped",
+        "exited": "Exited",
+        "starting": "Starting",
+        "restarting": "Restarting",
+        "unknown": "Unknown",
+        "online": "Online",
+        "offline": "Offline"
+      },
       "empty": {
         "servers": "No servers found",
         "applications": "No applications found",
@@ -2586,7 +2596,8 @@
         "internalServerError": "Failed to fetch Coolify data"
       },
       "server": {
-        "buildServer": "Build"
+        "buildServer": "Build",
+        "resourceCounts": "{applications, plural, one {# app} other {# apps}} / {services, plural, one {# service} other {# services}}"
       },
       "instances": {
         "title": "Instances"

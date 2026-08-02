@@ -43,7 +43,9 @@ describe("Custom JSX custom widgets", () => {
     const destination = "/manage/custom-widgets/new";
 
     try {
-      await page.goto(`${baseUrl}/auth/login?callbackUrl=${encodeURIComponent(destination)}`);
+      await page.goto(`${baseUrl}/auth/login?callbackUrl=${encodeURIComponent(destination)}`, {
+        waitUntil: "networkidle",
+      });
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
       await Promise.all([
