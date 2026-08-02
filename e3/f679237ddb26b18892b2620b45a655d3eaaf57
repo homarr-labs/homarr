@@ -1,0 +1,86 @@
+apps/nextjs/src/components/board/sections/grid/test/fixed-grid-item.spec.ts
+  s_7b8a552cf9f1f8::t_585481e1cd2948 220,229,278-279
+apps/nextjs/src/components/board/layout/test/reflow.spec.ts
+  s_7b8a552cf9f1f8::t_08d5638267520b 45-46
+apps/nextjs/src/components/board/sections/container-section.tsx
+  s_7b8a552cf9f1f8::t_5dbb2ed70d0bf0 2,39,41,54,65-89,98-99,106,109,113-114,116-126,131,134,138-139,145,151,155-156
+  s_7b8a552cf9f1f8::t_ee1556dc8d4515 47-51
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_7b8a552cf9f1f8::t_e623204223e792 39,288,316,324-341,406,519-520,523,762,802-803,1089,1104-1105,1144,1146-1148,1166-1200
+  s_7b8a552cf9f1f8::t_941ebc2eea7e22 716,746-748,778,785
+apps/nextjs/src/components/board/layout/geometry.ts
+  s_7b8a552cf9f1f8::t_08d5638267520b 7
+apps/nextjs/src/components/board/items/widget-hover-overlay.tsx
+  s_7b8a552cf9f1f8::t_bbe54187698be8 36
+apps/docs/docs/management/boards/index.mdx
+  s_7b8a552cf9f1f8::t_6cf48a92c85130 109-110,147,154,183
+apps/nextjs/src/components/board/layout/constants.ts
+  s_7b8a552cf9f1f8::t_08d5638267520b 10
+apps/nextjs/src/components/board/sections/item.module.css
+  s_7b8a552cf9f1f8::t_5dbb2ed70d0bf0 18-23
+apps/nextjs/src/components/board/layout/reflow.ts
+  s_7b8a552cf9f1f8::t_08d5638267520b 66-67,70-77,79-80,121-133
+  s_7b8a552cf9f1f8::t_54613feb06337f 134-135
+apps/nextjs/src/components/board/layout/test/geometry.spec.ts
+  s_7b8a552cf9f1f8::t_08d5638267520b 8
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_7b8a552cf9f1f8::t_941ebc2eea7e22 163
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_7b8a552cf9f1f8::t_4f923c66460b8b 116
+  s_7b8a552cf9f1f8::t_e623204223e792 30,113-114,117,119,122
+e2e/board-grid.spec.ts
+  s_7b8a552cf9f1f8::t_4f923c66460b8b 325-326
+  s_7b8a552cf9f1f8::t_31e17f255021aa 191
+  s_7b8a552cf9f1f8::t_585481e1cd2948 105-106,109-111,127-132,186-187,189-190,230,278,315,324,329,450-479,914,995-1000,1023-1031,1618-1637,1951-1957
+  s_7b8a552cf9f1f8::t_c2d2c208b8b2fb 520-523
+  s_7b8a552cf9f1f8::t_705ed1c5519bf5 192-195
+  s_7b8a552cf9f1f8::t_bbe54187698be8 125,319-321,323,327-328
+  s_7b8a552cf9f1f8::t_f773c3cdaa1bdb 480,682-687,1958-1959
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_7b8a552cf9f1f8::t_e623204223e792 168,172,184,188,207-208,213-214,219-220,225-226
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_7b8a552cf9f1f8::t_e623204223e792 34,127,146
+apps/nextjs/src/components/board/items/widget-hover-overlay.module.css
+  s_7b8a552cf9f1f8::t_4f923c66460b8b 5,9
+  s_7b8a552cf9f1f8::t_e623204223e792 34
+apps/nextjs/src/app/[locale]/boards/(content)/_client.module.css
+  s_7b8a552cf9f1f8::t_e756dab453f366 15-16
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_7b8a552cf9f1f8::t_a510d831e9945b 101,124-128
+apps/nextjs/src/components/board/items/item-content.module.css
+  s_7b8a552cf9f1f8::t_63dc894c297d6f 16-18,23
+apps/nextjs/src/components/board/sections/container/container-menu.tsx
+  s_7b8a552cf9f1f8::t_435ba2ee76c1ef 49-50,52
+apps/nextjs/src/components/board/sections/grid/dnd/coordinates.spec.ts
+  s_7b8a552cf9f1f8::t_f4161f74db02af 20,40-41,50
+apps/nextjs/src/components/board/sections/grid/dnd/coordinates.ts
+  s_7b8a552cf9f1f8::t_31bf9622d17ab0 9-12,15,26-27
+apps/nextjs/src/components/board/sections/grid/dnd/engine.spec.ts
+  s_7b8a552cf9f1f8::t_942a72f7b32d76 261,271-286
+apps/nextjs/src/components/board/sections/grid/dnd/engine.ts
+  s_7b8a552cf9f1f8::t_5ad5b1c51f8bf1 44-47,150-151,153,157
+apps/nextjs/src/components/board/sections/grid/dnd/index.ts
+  s_7b8a552cf9f1f8::t_82cb6b02601caf 11-12
+apps/nextjs/src/components/board/sections/grid/dnd/targeting.spec.ts
+  s_7b8a552cf9f1f8::t_c058892f32e712 1-68
+apps/nextjs/src/components/board/sections/grid/dnd/targeting.ts
+  s_7b8a552cf9f1f8::t_433012a9e7acda 1-90
+apps/nextjs/src/components/board/sections/grid/section-grid.module.css
+  s_7b8a552cf9f1f8::t_7d4b879e38abb1 72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "e3f679237ddb26b18892b2620b45a655d3eaaf57",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
