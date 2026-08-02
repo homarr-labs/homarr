@@ -8,7 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { showErrorNotification } from "@homarr/notifications";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
-import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 
@@ -20,7 +20,8 @@ export default function SmartHomeEntityStateWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"smartHome-entityState">) {
-  const t = useI18n();
+  const t = useScopedI18n("widget.smartHome-entityState");
+  const tCommon = useScopedI18n("common");
   const locale = useCurrentIntlLocale();
   // It will always have at least one integration as otherwise the NoIntegrationSelectedError would be thrown in item-content.tsx
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -42,8 +43,8 @@ export default function SmartHomeEntityStateWidget({
     onSettled: () => void utils.widget.smartHome.entityDetails.invalidate(input),
     onError: () =>
       showErrorNotification({
-        title: t("common.error"),
-        message: t("widget.smartHome-entityState.error.toggleFailed"),
+        title: tCommon("error"),
+        message: t("error.toggleFailed"),
       }),
   });
 
@@ -51,14 +52,16 @@ export default function SmartHomeEntityStateWidget({
   const unit = options.entityUnit || (typeof apiUnit === "string" ? apiUnit : "");
   const attribute = unit.length > 0 ? ` ${unit}` : "";
   const isActionable =
-    options.clickable && canInteract && entity !== undefined && !entityError && !isEntityPending && !isPending;
-  const queryErrorLabel = entityError ? t("widget.smartHome-entityState.error.loadFailed") : undefined;
+    !isEditMode &&
+    options.clickable &&
+    canInteract &&
+    entity !== undefined &&
+    !entityError &&
+    !isEntityPending &&
+    !isPending;
+  const queryErrorLabel = entityError ? t("error.loadFailed") : undefined;
 
   const handleClick = useCallback(() => {
-    if (isEditMode) {
-      return;
-    }
-
     if (!isActionable) {
       return;
     }
@@ -67,7 +70,7 @@ export default function SmartHomeEntityStateWidget({
       entityId: options.entityId,
       integrationId,
     });
-  }, [integrationId, isActionable, isEditMode, mutate, options.entityId]);
+  }, [integrationId, isActionable, mutate, options.entityId]);
 
   useRegisterSpotlightContextActions(
     `smartHome-entityState-${options.entityId}`,
@@ -115,7 +118,7 @@ export default function SmartHomeEntityStateWidget({
       h="100%"
       styles={{
         root: {
-          cursor: isActionable && !isEditMode ? "pointer" : "initial",
+          cursor: isActionable ? "pointer" : "initial",
           pointerEvents: isEditMode ? "none" : undefined,
         },
       }}
@@ -139,15 +142,15 @@ export default function SmartHomeEntityStateWidget({
               <Group justify="center" gap={4}>
                 {advancedAttributes.map(({ key, value }) => (
                   <Badge key={key} size="xs" variant="light" tt="none">
-                    {t(`widget.smartHome-entityState.advanced.attribute.${key}`)}: {String(value)}
+                    {t(`advanced.attribute.${key}`)}: {String(value)}
                   </Badge>
                 ))}
               </Group>
               <Text size="xs" c="dimmed">
-                {t("widget.smartHome-entityState.advanced.entityId", { id: entity.entity_id })}
+                {t("advanced.entityId", { id: entity.entity_id })}
               </Text>
               <Text size="xs" c="dimmed">
-                {t("widget.smartHome-entityState.advanced.lastUpdated", {
+                {t("advanced.lastUpdated", {
                   date: new Date(entity.last_updated).toLocaleString(locale),
                 })}
               </Text>
