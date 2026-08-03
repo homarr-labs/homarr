@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   Anchor,
   Box,
@@ -99,7 +100,10 @@ export default function BookmarksWidget({
     [data],
   );
 
-  const compactLayout = getCompactBookmarkLayout(width, height, data.length, options.layout);
+  const compactLayout = useMemo(
+    () => getCompactBookmarkLayout(width, height, data.length, options.layout),
+    [width, height, data.length, options.layout],
+  );
   const compactHideTitle = options.hideTitle || (compactLayout.hideTitle && !options.hideIcon);
   const compactHideHostname =
     options.hideHostname || (compactLayout.hideHostname && !(options.hideTitle && options.hideIcon));
