@@ -1,0 +1,19 @@
+packages/widgets/src/refetch-intervals.ts
+  s_a570dbe25d2998::t_ca51504bc54a70 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "f612e2f917ff326260e84b9c1ca71d7f07053e2b",
+  "prompts": {},
+  "sessions": {
+    "s_a570dbe25d2998": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc64-228f-7723-a9d8-e1cd6d8945fa",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
