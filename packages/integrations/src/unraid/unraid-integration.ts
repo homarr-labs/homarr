@@ -37,11 +37,11 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
     const systemInfo = await this.getSystemInformationAsync();
 
     const cpuUtilization = systemInfo.metrics.cpu.cpus.reduce((acc, val) => acc + val.percentTotal, 0);
-    const cpuCount = systemInfo.info.cpu.threads;
+    const cpuCount = systemInfo.metrics.cpu.cpus.length;
 
-    // We use the thread count (not physical cores) because each logical CPU entry in cpus[]
-    // represents a thread. Dividing by cores would over-report utilization on SMT systems.
-    // Guard against zero or negative thread counts to avoid Infinity/NaN.
+    // Each entry in cpus[] is one logical CPU (thread). Dividing the summed per-thread
+    // utilization by the thread count (not physical cores) gives the correct average and
+    // avoids over-reporting on SMT systems. Guard against zero to avoid Infinity/NaN.
     const cpuUtilizationNormalized = cpuCount > 0 ? cpuUtilization / cpuCount : 0;
 
     const totalMemory = systemInfo.info.memory.layout.reduce((acc, layout) => layout.size + acc, 0);
