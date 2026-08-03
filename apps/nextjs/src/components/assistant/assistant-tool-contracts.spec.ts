@@ -24,6 +24,14 @@ const supportedToolArguments = {
     summary: "Improve dashboard contrast.",
     changes: { primaryColor: "#7C3AED" },
   },
+  configure_widget: {
+    boardId: "board-1",
+    boardName: "Home",
+    kind: "notebook",
+    summary: "Add a formatted Plex self-hosting guide.",
+    options: { content: "<h2>Self-host Plex</h2><p>Install Docker first.</p>" },
+    integrationIds: [],
+  },
   navigate_to_route: { path: "/manage/apps" },
   open_command_menu: {},
   open_media_request_search: {},
@@ -125,6 +133,20 @@ describe("assistant human tool contracts", () => {
 
   test("converts the board review parameters to a provider JSON schema", () => {
     expect(() => z.toJSONSchema(browserToolContracts.configure_board_settings.parameters)).not.toThrow();
+  });
+
+  test("accepts a native widget configuration with proposed options and integrations", () => {
+    expect(
+      browserToolContracts.configure_widget.parameters.safeParse({
+        boardId: "board-1",
+        boardName: "Home",
+        kind: "mediaServer",
+        summary: "Show current Plex streams.",
+        options: { showOnlyPlaying: true },
+        integrationIds: ["plex-1"],
+      }).success,
+    ).toBe(true);
+    expect(() => z.toJSONSchema(browserToolContracts.configure_widget.parameters)).not.toThrow();
   });
 
   test("only preserves usable app icon URLs", () => {

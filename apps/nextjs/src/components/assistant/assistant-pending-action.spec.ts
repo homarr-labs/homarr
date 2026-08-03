@@ -75,6 +75,20 @@ describe("getPendingAssistantAction", () => {
     ).toEqual({ kind: "form", toolName: "configure_board_settings", detail: "Home" });
   });
 
+  test("exposes the native widget form while configuration still needs review", () => {
+    expect(
+      getPendingAssistantAction(
+        assistantMessage({
+          type: "tool-call",
+          toolCallId: "widget-1",
+          toolName: "configure_widget",
+          args: { boardId: "board-1", boardName: "Home", kind: "notebook" },
+          argsText: "{}",
+        }),
+      ),
+    ).toEqual({ kind: "form", toolName: "configure_widget", detail: "Home" });
+  });
+
   test("exposes an unresolved mutation approval", () => {
     expect(
       getPendingAssistantAction(

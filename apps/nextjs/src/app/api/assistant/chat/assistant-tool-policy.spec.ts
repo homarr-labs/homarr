@@ -87,6 +87,46 @@ describe("getForcedAssistantToolName", () => {
     ).toBeUndefined();
   });
 
+  test("continues directly from reviewed widget settings to board placement", () => {
+    expect(
+      getForcedAssistantToolName([
+        assistantMessage({
+          type: "dynamic-tool",
+          toolName: "configure_widget",
+          toolCallId: "widget-1",
+          input: { boardId: "board-1", boardName: "Home", kind: "notebook" },
+          state: "output-available",
+          output: {
+            boardId: "board-1",
+            kind: "notebook",
+            options: { content: "<h2>Plex</h2>" },
+            integrationIds: [],
+          },
+        }),
+      ]),
+    ).toBe("board_addItem");
+  });
+
+  test("does not add a widget after native configuration was cancelled", () => {
+    expect(
+      getForcedAssistantToolName([
+        assistantMessage({
+          type: "dynamic-tool",
+          toolName: "configure_widget",
+          toolCallId: "widget-1",
+          input: { boardId: "board-1", boardName: "Home", kind: "mediaServer" },
+          state: "output-available",
+          output: {
+            boardId: "board-1",
+            kind: "mediaServer",
+            cancelled: true,
+            reason: "no-compatible-integration",
+          },
+        }),
+      ]),
+    ).toBeUndefined();
+  });
+
   test("does not repeat app creation after the mutation tool has been called", () => {
     expect(
       getForcedAssistantToolName([

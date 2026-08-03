@@ -19,10 +19,11 @@ export const getForcedAssistantToolName = (messages: UIMessage[]) => {
   const nextToolByHumanTool = {
     configure_app: "app_create",
     configure_board_settings: "board_savePartialBoardSettings",
+    configure_widget: "board_addItem",
   } as const;
   const toolName = getToolName(latestToolPart);
   if (
-    toolName === "configure_board_settings" &&
+    (toolName === "configure_board_settings" || toolName === "configure_widget") &&
     typeof latestToolPart.output === "object" &&
     latestToolPart.output !== null &&
     "cancelled" in latestToolPart.output &&
