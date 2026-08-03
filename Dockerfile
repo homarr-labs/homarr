@@ -19,7 +19,7 @@ COPY patches ./patches
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm config set store-dir /pnpm/store && \
     sed -i 's/nodeLinker: hoisted/nodeLinker: isolated/' pnpm-workspace.yaml && \
-    pnpm fetch && \
+    pnpm fetch --ignore-scripts && \
     sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml
 
 COPY . .
