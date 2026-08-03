@@ -53,7 +53,7 @@ import {
   UnstyledButton,
   useCombobox,
 } from "@mantine/core";
-import { useWindowEvent } from "@mantine/hooks";
+import { useReducedMotion, useWindowEvent } from "@mantine/hooks";
 import {
   IconActivityHeartbeat,
   IconAlertTriangle,
@@ -2058,7 +2058,9 @@ export const AssistantConversationSurface = ({
   onMinimize,
 }: AssistantConversationSurfaceProps) => {
   const t = useScopedI18n("common.assistant");
+  const reducedMotion = useReducedMotion();
   const [questionPortalTarget, setQuestionPortalTarget] = useState<HTMLDivElement | null>(null);
+  const scrollToLatestBehavior = isRunning || reducedMotion ? "instant" : "smooth";
 
   return (
     <>
@@ -2122,7 +2124,7 @@ export const AssistantConversationSurface = ({
       </Group>
       <AssistantQuestionPortalProvider target={questionPortalTarget}>
         <ThreadPrimitive.Root className={classes.thread}>
-          <ThreadPrimitive.Viewport className={classes.viewport}>
+          <ThreadPrimitive.Viewport className={classes.viewport} autoScroll>
             <Box className={classes.messages}>
               <EmptyThread />
               <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
@@ -2134,7 +2136,7 @@ export const AssistantConversationSurface = ({
                 </Button>
               </SelectionToolbarPrimitive.Quote>
             </SelectionToolbarPrimitive.Root>
-            <ThreadPrimitive.ScrollToBottom asChild>
+            <ThreadPrimitive.ScrollToBottom behavior={scrollToLatestBehavior} asChild>
               <ActionIcon
                 className={classes.scrollToBottom}
                 variant="default"
