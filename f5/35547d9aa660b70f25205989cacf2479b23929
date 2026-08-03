@@ -1,0 +1,21 @@
+packages/auth/events.ts
+  s_7b8a552cf9f1f8::t_7bb1754834936a 36,38-47,50
+packages/integrations/src/unraid/unraid-integration.ts
+  s_7b8a552cf9f1f8::t_3e464d34525a57 44-46,54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "f535547d9aa660b70f25205989cacf2479b23929",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

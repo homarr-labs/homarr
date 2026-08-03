@@ -1,0 +1,16 @@
+apps/nextjs/src/app/[locale]/manage/integrations/new/page.tsx
+  h_d6e478ca18e517 26
+packages/spotlight/src/modes/command/global-group.tsx
+  h_d6e478ca18e517 98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "0265389ca1d142fb48f3d7faeba22bd7acb539d0",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

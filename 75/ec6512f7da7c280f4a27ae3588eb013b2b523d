@@ -1,0 +1,23 @@
+apps/nextjs/src/app/[locale]/manage/integrations/new/page.tsx
+  s_909ca8cf5b6e15::t_5424634a640538 26-29
+packages/api/src/router/integration/integration-router.ts
+  s_909ca8cf5b6e15::t_ac386577361dc5 71,300
+packages/spotlight/src/modes/command/global-group.tsx
+  s_909ca8cf5b6e15::t_d84f2add5928fd 98-100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "75ec6512f7da7c280f4a27ae3588eb013b2b523d",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
