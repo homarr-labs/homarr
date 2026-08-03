@@ -120,13 +120,30 @@ describe("Board advanced interactions", () => {
         probe.dataset.shiftScrollProbe = "true";
         probe.style.cssText = "height:80px;overflow-y:auto";
         probe.innerHTML = '<div style="height:600px"></div>';
+        probe.addEventListener("wheel", (event) => event.stopPropagation());
         element.append(probe);
       });
       const scrollProbe = advancedSurface.locator("[data-shift-scroll-probe]");
       await page.keyboard.down("Shift");
-      await scrollProbe.dispatchEvent("wheel", { shiftKey: true, deltaX: 120, deltaY: 0 });
+      const pixelEventCancelled = await scrollProbe.evaluate(
+        (element) =>
+          !element.dispatchEvent(
+            new WheelEvent("wheel", { bubbles: true, cancelable: true, shiftKey: true, deltaX: 120 }),
+          ),
+      );
+      expect(pixelEventCancelled).toBe(true);
+      await scrollProbe.evaluate((element) => {
+        element.scrollTop = 0;
+      });
+      const lineEventCancelled = await scrollProbe.evaluate(
+        (element) =>
+          !element.dispatchEvent(
+            new WheelEvent("wheel", { bubbles: true, cancelable: true, shiftKey: true, deltaX: 3, deltaMode: 1 }),
+          ),
+      );
       await page.keyboard.up("Shift");
-      expect(await scrollProbe.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+      expect(lineEventCancelled).toBe(true);
+      expect(await scrollProbe.evaluate((element) => element.scrollTop)).toBeGreaterThanOrEqual(48);
       await page.keyboard.press("Escape");
       await expect(advancedSurface).toBeHidden();
       await expect(widget).toBeFocused();
