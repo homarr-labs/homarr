@@ -1,0 +1,21 @@
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  s_909ca8cf5b6e15::t_d7bd32734ee796 21
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_0892c95768d073 5275
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "60b0f59fe7b3b7b56ff79d96d643c902698dbd7d",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
