@@ -1,0 +1,83 @@
+packages/widgets/src/common/query-state.spec.ts
+  s_909ca8cf5b6e15::t_b6b6b6a6e8a529 3
+packages/widgets/src/custom-api/index.ts
+  s_909ca8cf5b6e15::t_535892e48c9e40 21-26
+packages/widgets/src/weather/component.spec.ts
+  s_909ca8cf5b6e15::t_535892e48c9e40 4,23-34
+  s_7b8a552cf9f1f8::t_f793719a1cf95e 35
+packages/widgets/src/bazarr/component.tsx
+  s_909ca8cf5b6e15::t_535892e48c9e40 29,78-82,107
+packages/widgets/src/bazarr/layout.spec.ts
+  s_909ca8cf5b6e15::t_535892e48c9e40 7,11
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_909ca8cf5b6e15::t_b6b6b6a6e8a529 292
+apps/nextjs/src/components/board/items/widget-query-scope.spec.ts
+  s_909ca8cf5b6e15::t_535892e48c9e40 30,32-37,39
+apps/nextjs/src/components/board/advanced-focus/wheel.ts
+  s_909ca8cf5b6e15::t_535892e48c9e40 25
+apps/docs/src/components/widgets/interactions.tsx
+  s_909ca8cf5b6e15::t_bf69923ae176b5 57
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  s_909ca8cf5b6e15::t_b6b6b6a6e8a529 3
+packages/widgets/src/common/query-state-indicator.tsx
+  s_909ca8cf5b6e15::t_1bcb9cdc77b40f 3,6-7,15,18,21,23-25,29,32,38,42
+  s_909ca8cf5b6e15::t_4ae22d83b91596 26,40
+packages/widgets/src/beszel-alerts/index.ts
+  s_909ca8cf5b6e15::t_b6b6b6a6e8a529 9
+packages/widgets/src/advanced-focus-support.spec.ts
+  s_909ca8cf5b6e15::t_c5bd4ecbd37b8c 9
+packages/widgets/src/beszel-alerts/component.tsx
+  s_909ca8cf5b6e15::t_b6b6b6a6e8a529 87-89
+packages/widgets/src/common/locale.ts
+  s_909ca8cf5b6e15::t_535892e48c9e40 3-4,12,23-29
+packages/widgets/src/bazarr/component.module.css
+  s_909ca8cf5b6e15::t_535892e48c9e40 36-45
+packages/widgets/src/definition.ts
+  s_909ca8cf5b6e15::t_b6b6b6a6e8a529 18
+apps/docs/docs/management/boards/index.mdx
+  s_909ca8cf5b6e15::t_bf69923ae176b5 184
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_909ca8cf5b6e15::t_1bcb9cdc77b40f 40-41,136
+packages/widgets/src/common/query-state-indicator.spec.ts
+  s_909ca8cf5b6e15::t_4ae22d83b91596 70
+  s_909ca8cf5b6e15::t_3cb8fb7b635fd6 8,11-15,57,60-69
+  s_909ca8cf5b6e15::t_deec590954af8b 71
+packages/widgets/src/common/locale.spec.ts
+  s_909ca8cf5b6e15::t_535892e48c9e40 24-27
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_909ca8cf5b6e15::t_1bcb9cdc77b40f 4
+  s_909ca8cf5b6e15::t_6c5841d8ea5bb5 204
+  s_909ca8cf5b6e15::t_b6b6b6a6e8a529 76,81
+packages/widgets/src/weather/icon.tsx
+  s_909ca8cf5b6e15::t_89923fbe0ccb9e 132,139-140,149
+  s_909ca8cf5b6e15::t_535892e48c9e40 133-134,136-138,141-147,150-167
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_1bcb9cdc77b40f 1409-1412
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_553bd5699a50c1 89,109-126
+  s_909ca8cf5b6e15::t_535892e48c9e40 152-155,161-162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "7847eea1a39ac467e06d0e89b63b287173fb6388",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
