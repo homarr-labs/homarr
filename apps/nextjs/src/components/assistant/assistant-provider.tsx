@@ -43,6 +43,7 @@ import { sendAssistantPrompt as sendPromptThroughRuntime } from "./assistant-sen
 import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
 import { AssistantConfigureBoardSettingsTool } from "./assistant-board-settings-tool";
+import { AssistantConfigureWidgetTool } from "./assistant-widget-tool";
 import type { AssistantUIMessage } from "./assistant-message-metadata";
 import {
   getSuccessfulApprovedAssistantMutationIds,
@@ -457,6 +458,12 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
           display: "standalone",
           ...browserToolContracts.configure_board_settings,
           render: AssistantConfigureBoardSettingsTool,
+        },
+        configure_widget: {
+          type: "human",
+          display: "standalone",
+          ...browserToolContracts.configure_widget,
+          render: AssistantConfigureWidgetTool,
         },
         navigate_to_route: {
           type: "frontend",

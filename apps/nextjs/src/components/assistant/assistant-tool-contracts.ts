@@ -1,6 +1,11 @@
 import { z } from "zod/v4";
 
-import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
+import {
+  backgroundImageAttachments,
+  backgroundImageRepeats,
+  backgroundImageSizes,
+  widgetKinds,
+} from "@homarr/definitions";
 
 export const assistantAskUserOptionKinds = ["affirmative", "negative", "alternative"] as const;
 export type AssistantAskUserOptionKind = (typeof assistantAskUserOptionKinds)[number];
@@ -85,6 +90,18 @@ export const browserToolContracts = {
       changes: assistantBoardSettingsChangesSchema,
     }),
   },
+  configure_widget: {
+    description:
+      "Open Homarr's native widget editor with inferred options and integrations preselected. Use this before board_addItem for every dashboard widget, including app and notebook widgets. The editor applies widget defaults, validates supported options, and only offers compatible integrations the user can access. Use the returned boardId, kind, options, and integrationIds directly with board_addItem.",
+    parameters: z.object({
+      boardId: z.string().trim().min(1).max(64),
+      boardName: z.string().trim().min(1).max(255),
+      kind: z.enum(widgetKinds),
+      summary: z.string().trim().min(1).max(400),
+      options: z.record(z.string(), z.unknown()).optional(),
+      integrationIds: z.array(z.string().trim().min(1).max(64)).max(32).optional(),
+    }),
+  },
   navigate_to_route: {
     description:
       "Navigate the current Homarr tab to a safe internal route. Only same-origin paths beginning with a single slash are accepted.",
@@ -122,6 +139,20 @@ export type AssistantBoardSettingsChanges = z.infer<typeof assistantBoardSetting
 export type ConfigureBoardSettingsResult =
   | (AssistantBoardSettingsChanges & { id: string })
   | { id: string; cancelled: true };
+export type ConfigureWidgetArgs = z.infer<(typeof browserToolContracts)["configure_widget"]["parameters"]>;
+export type ConfigureWidgetResult =
+  | {
+      boardId: string;
+      kind: ConfigureWidgetArgs["kind"];
+      options: Record<string, unknown>;
+      integrationIds: string[];
+    }
+  | {
+      boardId: string;
+      kind: ConfigureWidgetArgs["kind"];
+      cancelled: true;
+      reason?: "no-compatible-integration" | "user-cancelled";
+    };
 
 export const normalizeAssistantAppIconUrl = (value: string | undefined) => {
   if (!value) return "";
