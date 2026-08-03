@@ -62,7 +62,8 @@ export const integrationRouter = createTRPCRouter({
         requiredSecrets: def.secretKinds,
       }));
     }),
-  all: protectedProcedure
+  all: permissionRequiredProcedure
+    .requiresPermission("integration-full-all")
     .meta({
       mcp: {
         enabled: true,

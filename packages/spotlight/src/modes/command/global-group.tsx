@@ -95,7 +95,8 @@ export const globalCommandGroup = createGroup<Command>({
         icon: IconPlug,
         name: tOption("newIntegration.label"),
         useInteraction: interaction.children(newIntegrationChildrenOptions),
-        hidden: !session?.user.permissions.includes("integration-create"),
+        hidden:
+          !session?.user.permissions.includes("integration-full-all") || !session?.user.permissions.includes("integration-create"),
       },
       {
         commandKey: "newUser",
