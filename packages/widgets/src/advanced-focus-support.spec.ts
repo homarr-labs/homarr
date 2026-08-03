@@ -6,6 +6,7 @@ import { widgetImports } from ".";
 const compactOnlyWidgetKinds = [
   "app",
   "bazarr",
+  "beszelAlerts",
   "beszelSystemGrid",
   "beszelSystemStats",
   "beszelSystemTable",

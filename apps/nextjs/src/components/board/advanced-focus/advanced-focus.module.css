@@ -76,32 +76,10 @@
   pointer-events: none;
 }
 
-.surfaceControls {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-
 .closeButton {
   position: absolute;
   z-index: 2;
   pointer-events: auto;
-}
-
-.touchButton {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  z-index: 2;
-  display: none;
-  pointer-events: auto;
-}
-
-@media (any-pointer: coarse) {
-  .touchButton {
-    display: inline-flex;
-  }
 }
 
 @keyframes focus-backdrop-in {

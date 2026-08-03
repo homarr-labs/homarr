@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { getUsableWidgetQueryData, hasStaleWidgetQueryError, isInitialWidgetQueryPending } from "./query-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "./query-state";
 
 describe("getUsableWidgetQueryData", () => {
   test.each([[], null, 0, false, ""])("preserves successful empty value %#", (data) => {
@@ -27,13 +27,5 @@ describe("isInitialWidgetQueryPending", () => {
     expect(isInitialWidgetQueryPending({ data: undefined, error: null, isPending: true })).toBe(true);
     expect(isInitialWidgetQueryPending({ data: [], error: null, isPending: true })).toBe(false);
     expect(isInitialWidgetQueryPending({ data: undefined, error: new Error("offline"), isPending: true })).toBe(false);
-  });
-});
-
-describe("hasStaleWidgetQueryError", () => {
-  test("only marks failures that retain usable cached data", () => {
-    expect(hasStaleWidgetQueryError({ data: [{ id: "cached" }], error: new Error("offline") })).toBe(true);
-    expect(hasStaleWidgetQueryError({ data: undefined, error: new Error("offline") })).toBe(false);
-    expect(hasStaleWidgetQueryError({ data: [], error: null })).toBe(false);
   });
 });

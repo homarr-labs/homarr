@@ -19,7 +19,6 @@ import type { TranslationObject } from "@homarr/translation";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
-import { formatLocalizedDate } from "../common/locale";
 import type { WidgetProps } from "../definition";
 
 interface WeatherIconProps {
@@ -130,16 +129,42 @@ export const formatWeatherDate = (
   pattern: WidgetProps<"weather">["options"]["dateFormat"] | undefined,
 ) => {
   if (!value) return "?";
+  const resolvedPattern = pattern ?? "dddd, MMMM D";
+  const date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00Z` : value);
+  if (Number.isNaN(date.getTime())) return "?";
 
-  const options: Intl.DateTimeFormatOptions = pattern?.includes("dddd")
-    ? { weekday: "long", month: "long", day: "numeric" }
-    : pattern?.includes("YYYY")
-      ? { year: "numeric", month: "2-digit", day: "2-digit" }
-      : pattern?.includes("MMM")
-        ? { month: "short", day: "numeric" }
-        : { month: "2-digit", day: "2-digit" };
+  const parts = new Intl.DateTimeFormat(locale, {
+    weekday: "long",
+    year: "numeric",
+    month: resolvedPattern.includes("MMMM") ? "long" : resolvedPattern.includes("MMM") ? "short" : "2-digit",
+    day: resolvedPattern.includes("DD") ? "2-digit" : "numeric",
+    timeZone: "UTC",
+  })
+    .formatToParts(date)
+    .reduce<Record<string, string>>((result, part) => {
+      if (part.type !== "literal") result[part.type] = part.value;
+      return result;
+    }, {});
 
-  return formatLocalizedDate(value, locale, options);
+  switch (resolvedPattern) {
+    case "dddd, D MMMM":
+      return `${parts.weekday}, ${parts.day} ${parts.month}`;
+    case "MMM D":
+      return `${parts.month} ${parts.day}`;
+    case "D MMM":
+      return `${parts.day} ${parts.month}`;
+    case "DD/MM/YYYY":
+      return `${parts.day}/${parts.month}/${parts.year}`;
+    case "MM/DD/YYYY":
+      return `${parts.month}/${parts.day}/${parts.year}`;
+    case "DD/MM":
+      return `${parts.day}/${parts.month}`;
+    case "MM/DD":
+      return `${parts.month}/${parts.day}`;
+    case "dddd, MMMM D":
+    default:
+      return `${parts.weekday}, ${parts.month} ${parts.day}`;
+  }
 };
 
 interface WeatherDefinitionType {

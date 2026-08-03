@@ -50,7 +50,6 @@ export default function BeszelAlertsWidget({
   integrationIds,
   isEditMode,
   height,
-  displayMode = "compact",
 }: WidgetComponentProps<"beszelAlerts">) {
   const t = useScopedI18n("widget.beszelAlerts");
   const alertsInput = useMemo(
@@ -85,9 +84,9 @@ export default function BeszelAlertsWidget({
 
   const triggeredAlerts = alerts.filter((a) => a.triggered);
   const okAlerts = alerts.filter((a) => !a.triggered);
-  const showOkAlerts = displayMode === "advanced" || triggeredAlerts.length === 0 || height >= 260;
-  const showHistory = options.showHistory && (displayMode === "advanced" || height >= 360);
-  const showAlertDescriptions = displayMode === "advanced" || height >= 190;
+  const showOkAlerts = triggeredAlerts.length === 0 || height >= 260;
+  const showHistory = options.showHistory && height >= 360;
+  const showAlertDescriptions = height >= 190;
 
   if (isPending) {
     return (

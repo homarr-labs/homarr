@@ -27,11 +27,16 @@ const matches = (kind: WidgetKind, path: readonly string[], input: unknown, scop
 describe("matchesWidgetItemQuery", () => {
   test("matches only the current Custom API definition", () => {
     const scope = createScope({ options: { definitionId: "definition-1" } });
+    const input = { boardId: "board-1", itemId: "item-1", definitionId: "definition-1" };
 
-    expect(matches("customApi", ["widget", "customApi", "getData"], { definitionId: "definition-1" }, scope)).toBe(
-      true,
+    expect(matches("customApi", ["widget", "customApi", "getData"], input, scope)).toBe(true);
+    expect(
+      matches("customApi", ["widget", "customApi", "getData"], { ...input, definitionId: "definition-2" }, scope),
+    ).toBe(false);
+    expect(matches("customApi", ["widget", "customApi", "getData"], { ...input, itemId: "item-2" }, scope)).toBe(
+      false,
     );
-    expect(matches("customApi", ["widget", "customApi", "getData"], { definitionId: "definition-2" }, scope)).toBe(
+    expect(matches("customApi", ["widget", "customApi", "getData"], { ...input, boardId: "board-2" }, scope)).toBe(
       false,
     );
   });

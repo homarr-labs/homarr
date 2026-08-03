@@ -22,14 +22,5 @@ export const redirectShiftWheel = (root: HTMLElement, target: EventTarget | null
     if (current === root) break;
     current = current.parentElement;
   }
-
-  // A nested control can reach its edge before the widget's main Mantine viewport.
-  // Hand the gesture to that viewport instead of making Shift+wheel feel stuck.
-  const viewport = [...root.querySelectorAll<HTMLElement>("[data-scrollbars='y'], [data-scrollbars='xy']")].find(
-    (element) => isVerticalScrollContainer(element) && canScrollVertically(element, delta),
-  );
-  if (!viewport) return false;
-
-  viewport.scrollTop += delta;
-  return true;
+  return false;
 };
