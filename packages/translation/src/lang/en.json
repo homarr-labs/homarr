@@ -1750,6 +1750,23 @@
         "remoteCssTitle": "This CSS loads a remote resource",
         "remoteCssDescription": "Imported stylesheets and remote URLs contact another server when the board loads. Review them before continuing."
       },
+      "configureWidget": {
+        "title": "Review widget",
+        "preparing": "Preparing widget settings",
+        "review": "Review widget and integrations",
+        "ready": "Widget configuration ready",
+        "cancelled": "Widget was not added",
+        "automaticContinue": "Accepting the proposed widget configuration automatically",
+        "loadErrorTitle": "Integrations could not be loaded",
+        "loadErrorDescription": "Homarr could not load the integrations available for this widget.",
+        "retry": "Try again",
+        "noIntegrationTitle": "A compatible integration is required",
+        "noIntegrationDescription": "Configure an integration supported by this widget before adding it to the dashboard.",
+        "manageIntegrations": "Manage integrations",
+        "skip": "Do not add",
+        "errorTitle": "Widget settings could not be prepared",
+        "errorDescription": "The model did not provide a complete widget configuration. No widget was added."
+      },
       "approvalRequired": "Approval required",
       "complete": "Complete",
       "denied": "Denied",

@@ -36,6 +36,9 @@ import {
   getPermissionsWithChildren,
   getPermissionsWithParents,
   widgetDefaultSizes,
+  widgetIntegrationLimits,
+  widgetIntegrationSupport,
+  widgetKindsWithOptionalIntegrations,
   widgetKinds,
 } from "@homarr/definitions";
 import { importOldmarrAsync } from "@homarr/old-import";
@@ -63,6 +66,7 @@ import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { generateResponsiveGridFor } from "./board/grid-algorithm";
+import { throwIfActionForbiddenAsync as throwIfIntegrationActionForbiddenAsync } from "./integration/integration-access";
 
 export const boardRouter = createTRPCRouter({
   exists: permissionRequiredProcedure
@@ -1485,7 +1489,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Add a widget/app item to a board. Automatically places it in the first empty section at the next free grid position. Provide boardId (from board_getAllBoards), kind (widget type like 'app', 'weather', etc.), optional options map, and optional integrationIds array. To create a formatted dashboard note, use kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Notebook content may use semantic paragraphs, headings, lists, task lists, blockquotes, tables, links, emphasis, and images, but must not contain scripts, styles, iframes, event handlers, or unsafe URL protocols. Returns { itemId }",
+          "Add a widget/app item to a board after configure_widget has reviewed it. Automatically places it in the first empty section at the next free grid position. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
       },
     })
     .input(addItemToBoardSchema)
@@ -1493,15 +1497,48 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
 
+      const supportedIntegrations = widgetIntegrationSupport[input.kind];
+      const integrationLimit = widgetIntegrationLimits[input.kind] ?? Infinity;
+      if (input.integrationIds.length > integrationLimit) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `${input.kind} supports at most ${integrationLimit} integration${integrationLimit === 1 ? "" : "s"}`,
+        });
+      }
+      if (supportedIntegrations === undefined && input.integrationIds.length > 0) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `${input.kind} does not support integrations` });
+      }
+      if (
+        supportedIntegrations !== undefined &&
+        input.integrationIds.length === 0 &&
+        !widgetKindsWithOptionalIntegrations.has(input.kind)
+      ) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `${input.kind} requires an integration` });
+      }
+
       if (input.integrationIds.length > 0) {
         const existing = await ctx.db.query.integrations.findMany({
-          columns: { id: true },
+          columns: { id: true, kind: true },
           where: inArray(integrations.id, input.integrationIds),
         });
         const validIds = new Set(existing.map((row) => row.id));
         const invalid = input.integrationIds.filter((id) => !validIds.has(id));
         if (invalid.length > 0) {
           throw new TRPCError({ code: "BAD_REQUEST", message: `Invalid integration IDs: ${invalid.join(", ")}` });
+        }
+
+        await Promise.all(
+          input.integrationIds.map((integrationId) =>
+            throwIfIntegrationActionForbiddenAsync(ctx, eq(integrations.id, integrationId), "use"),
+          ),
+        );
+
+        const incompatible = existing.filter((integration) => !supportedIntegrations?.includes(integration.kind));
+        if (incompatible.length > 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `${input.kind} does not support integration kind${incompatible.length === 1 ? "" : "s"}: ${incompatible.map((integration) => integration.kind).join(", ")}`,
+          });
         }
       }
 

@@ -10,6 +10,7 @@ const humanToolKinds = {
   ask_user: "question",
   configure_app: "form",
   configure_board_settings: "form",
+  configure_widget: "form",
 } as const;
 
 const getStringArg = (args: unknown, key: string) => {
@@ -40,7 +41,11 @@ export const getPendingAssistantAction = (message: ThreadMessage | undefined): A
       toolName: part.toolName,
       detail: getStringArg(
         part.args,
-        kind === "question" ? "question" : part.toolName === "configure_board_settings" ? "boardName" : "name",
+        kind === "question"
+          ? "question"
+          : part.toolName === "configure_board_settings" || part.toolName === "configure_widget"
+            ? "boardName"
+            : "name",
       ),
     };
   }

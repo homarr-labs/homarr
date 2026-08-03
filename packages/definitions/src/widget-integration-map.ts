@@ -27,9 +27,13 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   healthMonitoring: getIntegrationKindsByCategory("healthMonitoring").filter((kind) => kind !== "patchmon"),
   firewall: getIntegrationKindsByCategory("firewall"),
   notifications: getIntegrationKindsByCategory("notifications"),
-  mediaReleases: ["emby", "jellyfin", "plex"],
+  mediaReleases: ["mock", "emby", "jellyfin", "plex"],
   systemResources: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
   systemDisks: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],
+  beszelAlerts: ["beszel", "mock"],
+  beszelSystemGrid: ["beszel", "mock"],
+  beszelSystemStats: ["beszel", "mock"],
+  beszelSystemTable: ["beszel", "mock"],
   coolify: ["coolify"],
   "immich-serverStats": ["immich"],
   "immich-albumCarousel": ["immich"],
@@ -44,6 +48,16 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   archiveTeamWarrior: ["archiveTeamWarrior"],
   anchorNote: ["anchor"],
   traefik: ["traefik"],
+  umami: ["umami"],
+  ups: getIntegrationKindsByCategory("ups"),
+};
+
+/** Widgets that remain useful without a configured integration. */
+export const widgetKindsWithOptionalIntegrations = new Set<WidgetKind>(["calendar"]);
+
+/** Widgets that support fewer integrations than the default unlimited selection. */
+export const widgetIntegrationLimits: Partial<Record<WidgetKind, number>> = {
+  audioStats: 1,
 };
 
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {

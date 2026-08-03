@@ -84,7 +84,8 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
         )
       : [];
 
-    const integrationIds = matchingIntegrations.map((i) => i.id);
+    const maxIntegrations = "maxIntegrations" in definition ? (definition.maxIntegrations ?? Infinity) : Infinity;
+    const integrationIds = matchingIntegrations.slice(0, maxIntegrations).map((i) => i.id);
     const itemId = createId();
     const defaultOptions = reduceWidgetOptionsWithDefaultValues(kind, settings);
 
