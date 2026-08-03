@@ -1853,6 +1853,10 @@
     "success": "Success",
     "beta": "Beta",
     "error": "Error",
+    "widgetQuery": {
+      "loading": "Loading widget data",
+      "stale": "Could not refresh {widget}; showing saved data"
+    },
     "action": {
       "add": "Add",
       "apply": "Apply",

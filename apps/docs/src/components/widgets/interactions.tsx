@@ -54,7 +54,7 @@ export const WidgetInteractionGuide = ({ advancedView = true }: { advancedView?:
       {advancedView && (
         <p className="m-0 px-4 pb-4 text-xs text-[#696969] dark:text-[#999]">
           Advanced view reuses the widget&apos;s live data and cache. The rest of the board stays visible but dimmed.
-          Touch devices expose a maximize control; compact-only widgets adapt in place instead.
+          On touch devices, use the widget menu; compact-only widgets adapt in place instead.
         </p>
       )}
     </details>

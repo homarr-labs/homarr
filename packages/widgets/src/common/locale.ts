@@ -1,5 +1,7 @@
 export type LocalizedDateValue = Date | number | string;
 
+const dateOnlyPattern = /^\d{4}-\d{2}-\d{2}$/;
+
 interface LocalizedTimeOptions {
   hour12?: boolean;
   includeSeconds?: boolean;
@@ -7,7 +9,7 @@ interface LocalizedTimeOptions {
 }
 
 const toValidDate = (value: LocalizedDateValue): Date | undefined => {
-  const date = value instanceof Date ? value : new Date(value);
+  const date = value instanceof Date ? value : new Date(typeof value === "string" && dateOnlyPattern.test(value) ? `${value}T00:00:00Z` : value);
   return Number.isNaN(date.getTime()) ? undefined : date;
 };
 
@@ -18,7 +20,13 @@ export const formatLocalizedDate = (
   fallback = "?",
 ): string => {
   const date = toValidDate(value);
-  return date ? new Intl.DateTimeFormat(locale, options).format(date) : fallback;
+  if (!date) return fallback;
+
+  const normalizedOptions =
+    typeof value === "string" && dateOnlyPattern.test(value) && options.timeZone === undefined
+      ? { ...options, timeZone: "UTC" }
+      : options;
+  return new Intl.DateTimeFormat(locale, normalizedOptions).format(date);
 };
 
 export const formatLocalizedTime = (

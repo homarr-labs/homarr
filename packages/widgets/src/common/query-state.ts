@@ -16,7 +16,3 @@ export const getUsableWidgetQueryData = <TQuery extends WidgetQueryState>(query:
 /** True only before the first result; successful empty values and cached data are both ready to render. */
 export const isInitialWidgetQueryPending = ({ data, error, isPending }: PendingWidgetQueryState): boolean =>
   isPending && data === undefined && !error;
-
-/** A failed background refresh still has usable cached data, but should remain visible to the user. */
-export const hasStaleWidgetQueryError = ({ data, error }: WidgetQueryState): boolean =>
-  error !== null && error !== undefined && data !== undefined;

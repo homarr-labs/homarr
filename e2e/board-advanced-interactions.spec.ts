@@ -86,6 +86,7 @@ describe("Board advanced interactions", () => {
       await expect(previewSurface).toHaveCSS("animation-name", "none");
       const compactBounds = await widget.boundingBox();
       const advancedBounds = await previewSurface.boundingBox();
+      if (!compactBounds || !advancedBounds) throw new Error("Advanced widget has no bounds");
       expect(advancedBounds?.width).toBeGreaterThan(compactBounds?.width ?? 0);
       await expect(previewSurface).toHaveAttribute("data-lifecycle-probe", "same-instance");
       await expect(dimmingOverlay).toBeVisible();
@@ -105,6 +106,24 @@ describe("Board advanced interactions", () => {
       const otherBounds = await otherWidget.boundingBox();
       expect(otherBounds).not.toBeNull();
       if (!otherBounds) throw new Error("Bookmarks widget has no bounds");
+      await previewSurface.evaluate(
+        (element, position) => {
+          const probe = document.createElement("button");
+          probe.dataset.interactivePreviewProbe = "true";
+          probe.style.cssText = `position:absolute;z-index:20;width:40px;height:40px;left:${position.left}px;top:${position.top}px`;
+          element.append(probe);
+        },
+        {
+          left: otherBounds.x + otherBounds.width / 2 - advancedBounds.x - 20,
+          top: otherBounds.y + otherBounds.height / 2 - advancedBounds.y - 20,
+        },
+      );
+      const interactivePreviewProbe = previewSurface.locator("[data-interactive-preview-probe='true']");
+      await interactivePreviewProbe.hover();
+      await expect(previewSurface).toBeVisible();
+      await expect(bookmarksPreviewSurface).toBeHidden();
+      await interactivePreviewProbe.evaluate((element) => element.remove());
+      await page.mouse.move(compactBounds.x + 4, compactBounds.y + 4);
       await page.mouse.move(otherBounds.x + otherBounds.width / 2, otherBounds.y + otherBounds.height / 2);
       await expect(previewSurface).toBeHidden();
       await expect(bookmarksPreviewSurface).toBeVisible({ timeout: 2_000 });
@@ -130,17 +149,17 @@ describe("Board advanced interactions", () => {
         0,
       );
       await manualSurface.evaluate((element) => {
+        const mainViewport = document.createElement("div");
+        mainViewport.dataset.scrollbars = "y";
+        mainViewport.style.cssText = "height:80px;overflow-y:auto";
+
         const probe = document.createElement("div");
         probe.dataset.shiftScrollProbe = "true";
         probe.style.cssText = "height:80px;overflow-y:auto";
         probe.innerHTML = '<svg data-shift-scroll-target="true"></svg><div style="height:600px"></div>';
         probe.addEventListener("wheel", (event) => event.stopPropagation());
-        element.append(probe);
-
-        const mainViewport = document.createElement("div");
-        mainViewport.dataset.scrollbars = "y";
-        mainViewport.style.cssText = "height:80px;overflow-y:auto";
-        mainViewport.innerHTML = '<div style="height:600px"></div>';
+        mainViewport.append(probe);
+        mainViewport.insertAdjacentHTML("beforeend", '<div style="height:600px"></div>');
         element.append(mainViewport);
 
         const unrelated = document.createElement("div");

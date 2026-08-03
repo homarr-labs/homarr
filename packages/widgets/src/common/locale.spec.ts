@@ -21,6 +21,10 @@ describe("localized widget formatting", () => {
     expect(formatLocalizedTime(sample, "en-US", { hour12: false, timeZone: "UTC" })).toBe("13:05");
   });
 
+  test("keeps date-only values on the requested calendar day", () => {
+    expect(formatLocalizedDate("2026-08-03", "en-US", { month: "long", day: "numeric" })).toBe("August 3");
+  });
+
   test("localizes compact numbers", () => {
     expect(formatLocalizedCompactNumber(1_234_567, "en-US")).toBe("1.2M");
     expect(formatLocalizedCompactNumber(1_234_567, "fr-FR")).toContain("1,2");
