@@ -18,7 +18,7 @@ import type { Params } from "./(content)/_creator";
 import { CustomCss } from "./(content)/_custom-css";
 import { BoardReadyProvider } from "./(content)/_ready-context";
 import { BoardMantineProvider } from "./(content)/_theme";
-import { BoardHotkeys } from "~/components/board/use-board-hotkeys";
+
 
 const logger = createLogger({ module: "createBoardLayout" });
 
@@ -70,7 +70,6 @@ export const createBoardLayout = <TParams extends Params>({
           <EditModeProvider>
             <BoardMantineProvider defaultColorScheme={colorScheme}>
               <CustomCss />
-              <BoardHotkeys />
               <BoardTourWrapper hasSession={withTour && !!session}>
                 <ClientShell hasNavigation={false}>
                   <MainHeader
