@@ -3,6 +3,7 @@ interface AssistantBrowserToolDependencies {
   navigate: (path: string) => void;
   openCommandMenu: () => void;
   openMediaRequestSearch: () => void;
+  refreshCurrentView: () => Promise<void>;
 }
 
 export const resolveAssistantInternalRoute = (path: string, origin: string) => {
@@ -19,6 +20,7 @@ export const createAssistantBrowserToolExecutors = ({
   navigate,
   openCommandMenu,
   openMediaRequestSearch,
+  refreshCurrentView,
 }: AssistantBrowserToolDependencies) => ({
   navigate_to_route: async ({ path }: { path: string }) => {
     const internalPath = resolveAssistantInternalRoute(path, getOrigin());
@@ -36,6 +38,14 @@ export const createAssistantBrowserToolExecutors = ({
   open_media_request_search: async () => {
     openMediaRequestSearch();
     return { success: true as const };
+  },
+  refresh_current_view: async () => {
+    try {
+      await refreshCurrentView();
+      return { success: true as const };
+    } catch {
+      return { success: false as const, error: "The current Homarr view could not be refreshed." };
+    }
   },
 });
 

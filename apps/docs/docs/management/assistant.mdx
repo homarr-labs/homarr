@@ -173,8 +173,13 @@ modify permission on the selected board. The empty conversation includes an **Im
 and `/style` prepares the same guided workflow from the composer.
 
 Homarr also exposes a small set of browser-only actions to the assistant. These actions can navigate to
-safe internal routes and open Homarr interfaces such as the command menu and media request search.
+safe internal routes, refresh the current view, and open Homarr interfaces such as the command menu and media request search.
 They never receive provider credentials and cannot navigate to arbitrary external URLs.
+
+After an approved mutation completes, Homarr automatically refetches active page and dashboard data so
+board items, settings, custom CSS, apps, and other visible results update without a full browser reload.
+The refresh action in the conversation header performs the same safe refetch manually. It keeps the
+conversation open while refreshing both client queries and server-rendered route data.
 
 :::warning
 

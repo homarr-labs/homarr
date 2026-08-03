@@ -97,6 +97,7 @@ import remarkGfm from "remark-gfm";
 
 import { clientApi } from "@homarr/api/client";
 import { assistantReasoningModes } from "@homarr/definitions";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
@@ -114,6 +115,8 @@ export interface AssistantConversationControls {
   models: AssistantRuntimeModelOption[];
   modelOptionsLoading: boolean;
   reasoning: AssistantReasoningMode;
+  isRefreshing: boolean;
+  onRefresh: () => Promise<void>;
   onModelChange: (modelId: string) => void;
   onReasoningChange: (reasoning: AssistantReasoningMode) => void;
 }
@@ -1389,6 +1392,38 @@ const AutoApprovalControl = () => {
   );
 };
 
+const ViewRefreshAction = ({
+  isRefreshing,
+  onRefresh,
+}: Pick<AssistantConversationControls, "isRefreshing" | "onRefresh">) => {
+  const t = useScopedI18n("common.assistant.refresh");
+
+  const refresh = async () => {
+    try {
+      await onRefresh();
+      showSuccessNotification({ title: t("completeTitle"), message: t("completeDescription") });
+    } catch {
+      showErrorNotification({ title: t("failedTitle"), message: t("failedDescription") });
+    }
+  };
+
+  return (
+    <Tooltip label={isRefreshing ? t("working") : t("action")}>
+      <ActionIcon
+        className={classes.panelAction}
+        variant="subtle"
+        color="gray"
+        loading={isRefreshing}
+        loaderProps={{ type: "bars" }}
+        onClick={() => void refresh()}
+        aria-label={isRefreshing ? t("working") : t("action")}
+      >
+        <IconRefresh size={17} />
+      </ActionIcon>
+    </Tooltip>
+  );
+};
+
 const EmptyThread = () => {
   const t = useScopedI18n("common.assistant");
   return (
@@ -2015,6 +2050,8 @@ export const AssistantConversationSurface = ({
   models,
   modelOptionsLoading,
   reasoning,
+  isRefreshing,
+  onRefresh,
   onModelChange,
   onReasoningChange,
   onExpand,
@@ -2041,6 +2078,7 @@ export const AssistantConversationSurface = ({
         </Group>
         <Group className={classes.panelActions} gap={2} wrap="nowrap">
           <ConversationHistory />
+          <ViewRefreshAction isRefreshing={isRefreshing} onRefresh={onRefresh} />
           <AutoApprovalControl />
           <Tooltip label={t("newConversation")}>
             <ThreadListPrimitive.New asChild>
@@ -2114,6 +2152,8 @@ export const AssistantConversationSurface = ({
             models={models}
             modelOptionsLoading={modelOptionsLoading}
             reasoning={reasoning}
+            isRefreshing={isRefreshing}
+            onRefresh={onRefresh}
             onModelChange={onModelChange}
             onReasoningChange={onReasoningChange}
             pendingAction={pendingAction}
@@ -2140,6 +2180,8 @@ export const AssistantPanel = ({
   models,
   modelOptionsLoading,
   reasoning,
+  isRefreshing,
+  onRefresh,
   onModelChange,
   onReasoningChange,
 }: AssistantPanelProps) => {
@@ -2192,6 +2234,8 @@ export const AssistantPanel = ({
               models={models}
               modelOptionsLoading={modelOptionsLoading}
               reasoning={reasoning}
+              isRefreshing={isRefreshing}
+              onRefresh={onRefresh}
               onModelChange={onModelChange}
               onReasoningChange={onReasoningChange}
               onMinimize={onClose}

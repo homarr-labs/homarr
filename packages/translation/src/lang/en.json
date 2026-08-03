@@ -1681,6 +1681,14 @@
         "dismiss": "Dismiss assistant activity"
       },
       "scrollToLatest": "Scroll to latest",
+      "refresh": {
+        "action": "Refresh current view",
+        "working": "Refreshing current view",
+        "completeTitle": "View refreshed",
+        "completeDescription": "Visible Homarr data has been reloaded.",
+        "failedTitle": "View could not be refreshed",
+        "failedDescription": "The change may still be saved. Try the refresh action again."
+      },
       "askUser": {
         "preparing": "Preparing question",
         "answered": "Your answer",
