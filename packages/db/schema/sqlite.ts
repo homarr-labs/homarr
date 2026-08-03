@@ -469,6 +469,7 @@ export const serverSettings = sqliteTable("serverSetting", {
 export const assistantConfigurations = sqliteTable("assistant_configuration", {
   id: text().notNull().primaryKey().default("default"),
   enabled: int({ mode: "boolean" }).notNull().default(false),
+  webSearchEnabled: int({ mode: "boolean" }).notNull().default(false),
   provider: text()
     .$type<
       | "openrouter"

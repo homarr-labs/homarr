@@ -20,7 +20,11 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq } from "@homarr/db";
 import { db } from "@homarr/db";
 import { assistantConfigurations, assistantThreads } from "@homarr/db/schema";
-import { assistantProviderRequiresApiKey, assistantReasoningModes } from "@homarr/definitions";
+import {
+  assistantProviderCanUseOpenRouterServerTools,
+  assistantProviderRequiresApiKey,
+  assistantReasoningModes,
+} from "@homarr/definitions";
 
 import { browserToolContracts } from "~/components/assistant/assistant-tool-contracts";
 import type {
@@ -32,7 +36,7 @@ import type {
 import { extractMcpTools } from "../../mcp/_extract-tools";
 import { getRequestedMentionIds, sanitizeAttachmentFilename } from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
-import { withOpenRouterWebSearch } from "./assistant-openrouter";
+import { getOpenRouterWebSearchRequests, withOpenRouterWebSearch } from "./assistant-openrouter";
 import { assistantExecutionPolicy } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getForcedAssistantToolName, withAssistantToolPolicy } from "./assistant-tool-policy";
@@ -106,7 +110,6 @@ Action rules:
 - To create a formatted note on a dashboard, call configure_widget with kind "notebook". Put valid Tiptap-compatible HTML in options.content and set options.showToolbar and options.allowReadOnlyCheck when useful. Use semantic paragraphs, headings, lists, task lists, blockquotes, tables, links, emphasis, and images as appropriate. Never include scripts, styles, iframes, event handlers, or unsafe URL protocols.
 - When choosing an app icon without configure_app, call the Homarr icon findIcons tool first and use one of its returned local icon URLs. Never invent a third-party icon CDN URL.
 - When a Homarr tool returns a usable image or icon URL and a visual summary helps, embed that exact URL with Markdown image syntax. App summary tables must use an Icon column such as ![Discord icon](exact-returned-url). Never replace an available returned icon with emoji, and never invent or transform image URLs.
-- When the configured provider is OpenRouter and the user asks for live web research or current external information, use OpenRouter's web search server tool. Ground the answer in its results and preserve useful source links in the response or generated note. Do not claim web search is unavailable when that tool is present. For other providers, only claim live research when an actual search tool is available.
 - Complete batch requests in the same run. Use parallel independent read-only calls when supported, reuse results, continue calling tools until every requested item has been attempted, and summarize only after the batch is complete. Do not stop after a partial batch or ask the user to type "Continue".
 - Browser tools can navigate within Homarr, open existing Homarr UI, or refresh the active view after a completed change. Never navigate to an arbitrary external URL and never refresh before a mutation finishes.
 - Keep responses concise and lead with the result. Summarize tool output instead of dumping JSON.
@@ -114,6 +117,10 @@ Action rules:
 - If configuration or a service is unavailable, say what the user or administrator can do next.
 
 Critical approval protocol: when a mutation's inputs are known, your next response must contain the mutation tool call, not a confirmation question. Homarr itself obtains approval after the tool call and before execution.`;
+
+const webSearchInstructions = `
+
+OpenRouter web search is enabled for this request. When the user asks for live research or current external information, use the openrouter:web_search server tool. Ground the answer in its results and preserve useful source links in the response or generated note. Do not claim web search is unavailable.`;
 
 const asRecord = (value: unknown): Record<string, unknown> | null =>
   typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
@@ -131,6 +138,7 @@ const createProviderTelemetryExtractor = (): MetadataExtractor => {
       if (!body) return;
       const usage = asRecord(body.usage);
       const costDetails = asRecord(usage?.cost_details);
+      const webSearchRequests = getOpenRouterWebSearchRequests(body);
       const routerMetadata = asRecord(body.openrouter_metadata);
       const endpoints = asRecord(routerMetadata?.endpoints);
       const selectedEndpoint = Array.isArray(endpoints?.available)
@@ -154,6 +162,7 @@ const createProviderTelemetryExtractor = (): MetadataExtractor => {
         ...(routedProvider ? { routedProvider } : {}),
         ...(cost !== undefined ? { cost } : {}),
         ...(upstreamCost !== undefined ? { upstreamCost } : {}),
+        ...(webSearchRequests !== undefined ? { webSearchRequests } : {}),
         ...(routerAttempt !== undefined ? { fallbackCount: Math.max(routerAttempt - 1, 0) } : {}),
         ...(typeof routerMetadata?.strategy === "string" ? { routerStrategy: routerMetadata.strategy } : {}),
         ...(typeof routerMetadata?.region === "string" ? { routerRegion: routerMetadata.region } : {}),
@@ -479,13 +488,15 @@ export async function POST(request: Request) {
   ) satisfies ToolSet;
   const availableTools = { ...homarrTools, ...frontendTools };
   const forcedToolName = getForcedAssistantToolName(parsed.data.messages as UIMessage[]);
+  const openRouterServerToolsEnabled =
+    configuration.webSearchEnabled && assistantProviderCanUseOpenRouterServerTools(configuration.provider);
 
   try {
     const customHeaders = configuration.encryptedHeaders
       ? z.record(z.string(), z.string()).parse(JSON.parse(decryptSecret(configuration.encryptedHeaders)))
       : {};
     const providerHeaders = {
-      ...(configuration.provider === "openrouter"
+      ...(configuration.provider === "openrouter" || openRouterServerToolsEnabled
         ? {
             "HTTP-Referer": "https://homarr.dev",
             "X-Title": "Homarr Assistant",
@@ -502,7 +513,7 @@ export async function POST(request: Request) {
       apiKey: providerApiKey,
       headers: providerHeaders,
       includeUsage: true,
-      transformRequestBody: configuration.provider === "openrouter" ? withOpenRouterWebSearch : undefined,
+      transformRequestBody: openRouterServerToolsEnabled ? withOpenRouterWebSearch : undefined,
       metadataExtractor: createProviderTelemetryExtractor(),
     });
 
@@ -514,7 +525,7 @@ export async function POST(request: Request) {
     let hasUpstreamCost = false;
     const result = streamText({
       model: provider(modelId),
-      instructions: `${assistantInstructions}${mentionContext}`,
+      instructions: `${assistantInstructions}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${mentionContext}`,
       messages: await convertToModelMessages(prepareMessagesForModel(parsed.data.messages as UIMessage[])),
       tools: availableTools,
       prepareStep: ({ stepNumber }) => {
@@ -535,7 +546,9 @@ export async function POST(request: Request) {
       maxRetries: 2,
       reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
       providerOptions:
-        configuration.provider === "openrouter" ? { [providerName]: { usage: { include: true } } } : undefined,
+        configuration.provider === "openrouter" || openRouterServerToolsEnabled
+          ? { [providerName]: { usage: { include: true } } }
+          : undefined,
       toolApproval,
       experimental_toolApprovalSecret: getToolApprovalSecret(),
       onChunk: ({ chunk }) => {
@@ -578,6 +591,9 @@ export async function POST(request: Request) {
           ...(asFiniteNumber(telemetry?.cost) !== undefined ? { cost: asFiniteNumber(telemetry?.cost) } : {}),
           ...(asFiniteNumber(telemetry?.upstreamCost) !== undefined
             ? { upstreamCost: asFiniteNumber(telemetry?.upstreamCost) }
+            : {}),
+          ...(asFiniteNumber(telemetry?.webSearchRequests) !== undefined
+            ? { webSearchRequests: asFiniteNumber(telemetry?.webSearchRequests) }
             : {}),
           ...(generationId ? { generationId } : {}),
           ...(generationId
@@ -689,6 +705,7 @@ export async function POST(request: Request) {
             : undefined;
         const cacheDiscount = sumCompleteStepMetric(requestSteps, (step) => step.cacheDiscount);
         const fallbackCount = sumCompleteStepMetric(requestSteps, (step) => step.fallbackCount);
+        const webSearchRequests = requestSteps.reduce((sum, step) => sum + (step.webSearchRequests ?? 0), 0);
 
         return {
           usage,
@@ -709,6 +726,7 @@ export async function POST(request: Request) {
               ...(hasUpstreamCost ? { upstreamCost } : {}),
               ...(cacheDiscount !== undefined ? { cacheDiscount } : {}),
               ...(fallbackCount !== undefined ? { fallbackCount } : {}),
+              ...(webSearchRequests > 0 ? { webSearchRequests } : {}),
               finishReason: latestStep?.finishReason ?? part.finishReason,
             },
           },

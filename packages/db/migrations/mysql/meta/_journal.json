@@ -316,6 +316,13 @@
       "when": 1785232800000,
       "tag": "0044_add_assistant",
       "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "5",
+      "when": 1785768750000,
+      "tag": "0045_add_assistant_web_search",
+      "breakpoints": true
     }
   ]
 }

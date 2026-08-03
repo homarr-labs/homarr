@@ -1648,6 +1648,7 @@
         "reported": "Reported by provider",
         "estimated": "Estimated from model pricing",
         "upstreamCost": "Upstream inference",
+        "webSearches": "Web searches",
         "finishReason": "Finish reason",
         "notReported": "Not reported",
         "agentSteps": "Agent steps",
@@ -5333,6 +5334,16 @@
               "context": "{count, number} token context",
               "toolsConfirmed": "Tools advertised",
               "toolsUnknown": "Verify tool support"
+            },
+            "serverTools": {
+              "title": "Server tools",
+              "beta": "Beta",
+              "webSearch": {
+                "label": "Web search",
+                "description": "Allow the model to search the live web through OpenRouter when a request needs current information. Search usage is charged separately by OpenRouter.",
+                "proxyDescription": "Send OpenRouter's web-search server tool to this endpoint. Enable this only when the custom endpoint forwards the OpenRouter server-tools format, such as a Homarr Router proxy.",
+                "limit": "The model decides when to search, with a limit of 3 searches and 5 results per search for each request."
+              }
             },
             "enabled": {
               "label": "Enable Assistant",

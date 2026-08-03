@@ -302,6 +302,13 @@
       "when": 1785252768815,
       "tag": "0042_bumpy_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "6",
+      "when": 1785768736378,
+      "tag": "0043_swift_silver_samurai",
+      "breakpoints": true
     }
   ]
 }

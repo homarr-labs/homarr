@@ -483,6 +483,7 @@ export const serverSettings = pgTable("serverSetting", {
 export const assistantConfigurations = pgTable("assistant_configuration", {
   id: varchar({ length: 64 }).notNull().primaryKey().default("default"),
   enabled: boolean().notNull().default(false),
+  webSearchEnabled: boolean().notNull().default(false),
   provider: varchar({ length: 32 })
     .$type<
       | "openrouter"

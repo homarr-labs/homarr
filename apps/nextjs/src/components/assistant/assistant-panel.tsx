@@ -1052,6 +1052,16 @@ const RequestTelemetry = () => {
                     </Text>
                   </div>
                 )}
+                {telemetry.webSearchRequests !== undefined && (
+                  <div>
+                    <Text size="xs" c="dimmed">
+                      {t("usage.webSearches")}
+                    </Text>
+                    <Text size="sm" fw={600}>
+                      {telemetry.webSearchRequests.toLocaleString()}
+                    </Text>
+                  </div>
+                )}
                 {telemetry.finishReason && (
                   <div>
                     <Text size="xs" c="dimmed">
