@@ -135,13 +135,17 @@ Common collection and widget results are summarized inline as compact responsive
 structured result remains available in the tool card details.
 
 The shield control in the conversation header can enable automatic approvals for the current conversation.
-While enabled, Homarr approves protected mutation calls as they arrive. Human questions and editable review
-forms still wait for input. Automatic approvals turn off when you switch conversations, and the shared
-approval tracker prevents the same call from being approved twice when both a board widget and the floating
-assistant are visible.
+While enabled, Homarr accepts every affirmative approval step as it arrives: protected mutations are approved,
+presented app details and board changes are used, and structured questions with an explicitly categorized
+**Confirm** answer choose that answer. Neutral choices such as selecting a board still wait for input because
+they do not have a safe affirmative default. Automatic approvals turn off when you switch conversations, and
+the shared approval tracker prevents the same call from being handled twice when both a board widget and the
+floating assistant are visible.
 
 When the assistant genuinely needs missing information or a choice, it can pause with a structured
-question. Users can select one of the proposed answers or choose **Other** and enter their own response.
+question. Each proposed answer is visibly categorized as **Confirm**, **Decline**, or **Option**, so the effect
+of automatic approval is unambiguous. Users can select one of the proposed answers or choose **Other** and
+enter their own response.
 Submitting the answer resumes the same agent run automatically. The minimized activity bar shows the
 question or approval that needs attention and opens directly back to the request. While an answer, app
 form, or mutation approval is pending, the composer preserves its draft but does not replace the pending

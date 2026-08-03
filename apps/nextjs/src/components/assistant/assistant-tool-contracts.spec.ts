@@ -7,8 +7,8 @@ const supportedToolArguments = {
   ask_user: {
     question: "How should the app be added?",
     options: [
-      { id: "yes", label: "Yes" },
-      { id: "no", label: "No" },
+      { id: "yes", label: "Yes", kind: "affirmative" },
+      { id: "no", label: "No", kind: "negative" },
     ],
   },
   configure_app: {
@@ -45,9 +45,14 @@ describe("assistant human tool contracts", () => {
       browserToolContracts.ask_user.parameters.safeParse({
         question: "How should the app be added?",
         options: [
-          { id: "yes", label: "Yes" },
-          { id: "no", label: "No" },
-          { id: "alternative", label: "Choose an alternative", description: "Adjust the proposed app first." },
+          { id: "yes", label: "Yes", kind: "affirmative" },
+          { id: "no", label: "No", kind: "negative" },
+          {
+            id: "alternative",
+            label: "Choose an alternative",
+            description: "Adjust the proposed app first.",
+            kind: "alternative",
+          },
         ],
       }).success,
     ).toBe(true);
@@ -57,7 +62,19 @@ describe("assistant human tool contracts", () => {
     expect(
       browserToolContracts.ask_user.parameters.safeParse({
         question: "Continue?",
-        options: [{ id: "yes", label: "Yes" }],
+        options: [{ id: "yes", label: "Yes", kind: "affirmative" }],
+      }).success,
+    ).toBe(false);
+  });
+
+  test("requires every structured choice to declare its category", () => {
+    expect(
+      browserToolContracts.ask_user.parameters.safeParse({
+        question: "Continue?",
+        options: [
+          { id: "yes", label: "Yes" },
+          { id: "no", label: "No" },
+        ],
       }).success,
     ).toBe(false);
   });

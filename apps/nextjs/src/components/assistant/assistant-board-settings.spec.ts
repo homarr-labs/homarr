@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import {
+  getAssistantBoardSettingsResult,
   getAssistantBoardSettingsDefaultTab,
   getChangedBoardSettings,
   getCustomCssWarnings,
@@ -19,6 +20,20 @@ describe("getChangedBoardSettings", () => {
   test("keeps an intentional custom CSS removal", () => {
     expect(getChangedBoardSettings({ customCss: ".item { color: red; }" }, { customCss: "" })).toEqual({
       customCss: "",
+    });
+  });
+
+  test("builds the exact result used by automatic board approval", () => {
+    expect(
+      getAssistantBoardSettingsResult(
+        "board-1",
+        { pageTitle: "Home", primaryColor: "#112233" },
+        { pageTitle: "Home", primaryColor: "#445566" },
+      ),
+    ).toEqual({ id: "board-1", primaryColor: "#445566" });
+    expect(getAssistantBoardSettingsResult("board-1", { pageTitle: "Home" }, { pageTitle: "Home" })).toEqual({
+      id: "board-1",
+      cancelled: true,
     });
   });
 });

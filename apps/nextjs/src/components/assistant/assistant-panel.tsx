@@ -100,7 +100,7 @@ import { assistantReasoningModes } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
-import { useAssistantAutoApproval } from "./assistant-auto-approval";
+import { useAssistantAutoApproval, useAssistantAutomaticAction } from "./assistant-auto-approval";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
 import type { AssistantPendingAction } from "./assistant-pending-action";
@@ -354,11 +354,8 @@ const ToolPart = ({
   timing,
 }: ToolCallMessagePartProps) => {
   const t = useScopedI18n("common.assistant");
-  const autoApproval = useAssistantAutoApproval();
   const [opened, setOpened] = useState(false);
   const [approvalResponse, setApprovalResponse] = useState<"approve" | "deny" | null>(null);
-  const [autoApprovalInProgress, setAutoApprovalInProgress] = useState(false);
-  const autoApprovalAttemptRef = useRef<string | null>(null);
   const completed = status?.type === "complete";
   const awaitingApproval = approval !== undefined && approval.approved === undefined && !approval.resolution;
   const denied = approval?.approved === false;
@@ -369,26 +366,15 @@ const ToolPart = ({
       (typeof result === "object" && result !== null && "error" in result));
   const successful = completed && !denied && !failed;
   const duration = timing?.completedAt !== undefined ? Math.max(0, timing.completedAt - timing.startedAt) : undefined;
-
-  useEffect(() => {
-    if (!awaitingApproval) {
-      autoApprovalAttemptRef.current = null;
-      setAutoApprovalInProgress(false);
-      return;
-    }
-    if (!autoApproval.enabled) {
-      setAutoApprovalInProgress(false);
-      return;
-    }
-    if (autoApprovalAttemptRef.current === toolCallId) return;
-    autoApprovalAttemptRef.current = toolCallId;
-
-    const requested = autoApproval.requestApproval(toolCallId, () => {
+  const autoApprovalInProgress = useAssistantAutomaticAction({
+    toolCallId,
+    ready: awaitingApproval,
+    completed: !awaitingApproval,
+    confirm: () => {
       respondToApproval({ approved: true, reason: "Approved automatically by the user." });
       setApprovalResponse("approve");
-    });
-    setAutoApprovalInProgress(requested);
-  }, [autoApproval, awaitingApproval, respondToApproval, toolCallId]);
+    },
+  });
 
   return (
     <Box className={classes.tool}>
