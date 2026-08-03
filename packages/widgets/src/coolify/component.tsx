@@ -6,17 +6,12 @@ import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { createWidgetKey } from "./coolify-utils";
 import { InstanceCard } from "./instance-card";
 import { SingleInstanceLayout } from "./single-instance-layout";
 
-export default function CoolifyWidget({
-  options,
-  integrationIds,
-  width,
-  height,
-  displayMode,
-}: WidgetComponentProps<"coolify">) {
+export default function CoolifyWidget({ options, integrationIds, width, height }: WidgetComponentProps<"coolify">) {
   const t = useScopedI18n("widget.coolify");
 
   if (integrationIds.length === 0) {
@@ -27,15 +22,7 @@ export default function CoolifyWidget({
     );
   }
 
-  return (
-    <CoolifyContent
-      integrationIds={integrationIds}
-      options={options}
-      width={width}
-      height={height}
-      isAdvanced={displayMode === "advanced"}
-    />
-  );
+  return <CoolifyContent integrationIds={integrationIds} options={options} width={width} height={height} />;
 }
 
 interface CoolifyContentProps {
@@ -43,17 +30,18 @@ interface CoolifyContentProps {
   options: WidgetComponentProps<"coolify">["options"];
   width: number;
   height: number;
-  isAdvanced: boolean;
 }
 
-function CoolifyContent({ integrationIds, options, width, height, isAdvanced }: CoolifyContentProps) {
+function CoolifyContent({ integrationIds, options, width, height }: CoolifyContentProps) {
   const t = useScopedI18n("common");
-  const { data: instancesData = [], isPending } = clientApi.widget.coolify.getInstancesInfo.useQuery({
+  const instancesQuery = clientApi.widget.coolify.getInstancesInfo.useQuery({
     integrationIds,
   });
+  const instancesData = getUsableWidgetQueryData(instancesQuery) ?? [];
+  const { isPending } = instancesQuery;
 
-  const isTiny = !isAdvanced && (width < 256 || height < 144);
-  const hideFooter = !isAdvanced && height < 112;
+  const isTiny = width < 256 || height < 144;
+  const hideFooter = height < 112;
   const [firstInstance] = instancesData;
   const widgetKey = createWidgetKey(integrationIds);
 
@@ -74,7 +62,6 @@ function CoolifyContent({ integrationIds, options, width, height, isAdvanced }: 
         options={options}
         isTiny={isTiny}
         widgetKey={widgetKey}
-        isAdvanced={isAdvanced}
         hideFooter={hideFooter}
       />
     );
@@ -82,7 +69,7 @@ function CoolifyContent({ integrationIds, options, width, height, isAdvanced }: 
 
   return (
     <ScrollArea h="100%">
-      <SimpleGrid cols={isAdvanced && width >= 760 ? 2 : 1} spacing="sm" p="xs">
+      <SimpleGrid cols={width >= 760 ? 2 : 1} spacing="sm" p="xs">
         {instancesData.map((instance) => (
           <InstanceCard
             key={instance.integrationId}
@@ -90,7 +77,6 @@ function CoolifyContent({ integrationIds, options, width, height, isAdvanced }: 
             options={options}
             isTiny={isTiny}
             widgetKey={widgetKey}
-            isAdvanced={isAdvanced}
             hideFooter={hideFooter}
           />
         ))}

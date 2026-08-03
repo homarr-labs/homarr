@@ -19,6 +19,7 @@ import {
 import type { SqliteDatabase } from "./shared/e2e-db";
 import { createSqliteDbFileAsync } from "./shared/e2e-db";
 import { createHomarrContainer } from "./shared/create-homarr-container";
+import { loginAsync } from "./shared/login";
 import { seedAdminUserAsync } from "./shared/seed-admin-user";
 
 const ownerCredentials = { username: "owner", password: "Comp(exP4sswOrd" };
@@ -68,11 +69,12 @@ describe("Board advanced interactions", () => {
 
     try {
       const widget = page.locator(".grid-stack-item[data-kind='clock'] > .grid-stack-item-content").first();
-      const compactSurface = widget.locator(".clock-wrapper");
-      const advancedSurface = page.getByRole("region", { name: "Date and time advanced view" });
-      const iframeAdvancedSurface = page.getByRole("region", { name: "iFrame advanced view" });
+      const compactSurface = page.locator(".clock-wrapper").first();
+      const previewSurface = page.getByRole("region", { name: "Date and time advanced view" });
+      const manualSurface = page.getByRole("dialog", { name: "Date and time advanced view" });
+      const bookmarksPreviewSurface = page.getByRole("region", { name: "Bookmarks advanced view" });
       const dimmingOverlay = page.locator("[data-advanced-focus-overlay]");
-      const otherWidget = page.locator(".grid-stack-item[data-kind='iframe'] > .grid-stack-item-content").first();
+      const otherWidget = page.locator(".grid-stack-item[data-kind='bookmarks'] > .grid-stack-item-content").first();
 
       await compactSurface.evaluate((element) => {
         element.setAttribute("data-lifecycle-probe", "same-instance");
@@ -80,42 +82,54 @@ describe("Board advanced interactions", () => {
       await widget.focus();
       await page.keyboard.down("Shift");
       await widget.hover();
-      await expect(advancedSurface).toBeVisible({ timeout: 2_000 });
-      await expect(advancedSurface).toHaveCSS("animation-name", "none");
+      await expect(previewSurface).toBeVisible({ timeout: 2_000 });
+      await expect(previewSurface).toHaveCSS("animation-name", "none");
       const compactBounds = await widget.boundingBox();
-      const advancedBounds = await advancedSurface.boundingBox();
+      const advancedBounds = await previewSurface.boundingBox();
       expect(advancedBounds?.width).toBeGreaterThan(compactBounds?.width ?? 0);
-      await expect(advancedSurface).toHaveAttribute("data-lifecycle-probe", "same-instance");
+      await expect(previewSurface).toHaveAttribute("data-lifecycle-probe", "same-instance");
       await expect(dimmingOverlay).toBeVisible();
       await expect(dimmingOverlay).toHaveCSS("pointer-events", "none");
       await expect(otherWidget).toBeVisible();
       await expect(widget).toBeFocused();
 
-      await advancedSurface.click({ button: "right", position: { x: 80, y: 80 } });
+      await previewSurface.click({ button: "right", position: { x: 80, y: 80 } });
       const portalledMenuItem = page.getByRole("menuitem", { name: "Open advanced view" });
       await expect(portalledMenuItem).toBeVisible();
       await portalledMenuItem.hover();
-      await expect(advancedSurface).toBeVisible();
+      await expect(previewSurface).toBeVisible();
       await page.keyboard.press("Escape");
       await expect(portalledMenuItem).toBeHidden();
-      await expect(advancedSurface).toBeVisible();
+      await expect(previewSurface).toBeVisible();
 
-      await otherWidget.hover();
-      await expect(advancedSurface).toBeHidden();
-      await expect(iframeAdvancedSurface).toBeVisible({ timeout: 2_000 });
+      const otherBounds = await otherWidget.boundingBox();
+      expect(otherBounds).not.toBeNull();
+      if (!otherBounds) throw new Error("Bookmarks widget has no bounds");
+      await page.mouse.move(otherBounds.x + otherBounds.width / 2, otherBounds.y + otherBounds.height / 2);
+      await expect(previewSurface).toBeHidden();
+      await expect(bookmarksPreviewSurface).toBeVisible({ timeout: 2_000 });
       await page.keyboard.up("Shift");
-      await expect(iframeAdvancedSurface).toBeHidden();
+      await expect(bookmarksPreviewSurface).toBeHidden();
       await expect(dimmingOverlay).toBeHidden();
       await expect(compactSurface).toHaveAttribute("data-lifecycle-probe", "same-instance");
       await expect(widget).toBeFocused();
 
       await page.keyboard.press("Shift+Enter");
-      await expect(advancedSurface).toBeVisible();
+      await expect(manualSurface).toBeVisible();
+      await expect(manualSurface).toHaveAttribute("aria-modal", "true");
+      expect(await manualSurface.evaluate((element) => element.closest(".grid-stack-item"))).toBeNull();
+      await expect(manualSurface.locator(".clock-wrapper")).toHaveAttribute("data-lifecycle-probe", "same-instance");
+      await expect(dimmingOverlay).toHaveCSS("pointer-events", "auto");
+      expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe("hidden");
+      await expect(page.getByRole("button", { name: "Close advanced view" })).toBeFocused();
+      await page.keyboard.press("Tab");
+      await expect(page.getByRole("button", { name: "Close advanced view" })).toBeFocused();
+      await page.keyboard.press("Shift+Tab");
       await expect(page.getByRole("button", { name: "Close advanced view" })).toBeFocused();
       await expect(page.getByRole("button", { name: /advanced view is pinned|keep advanced view open/i })).toHaveCount(
         0,
       );
-      await advancedSurface.evaluate((element) => {
+      await manualSurface.evaluate((element) => {
         const probe = document.createElement("div");
         probe.dataset.shiftScrollProbe = "true";
         probe.style.cssText = "height:80px;overflow-y:auto";
@@ -123,11 +137,19 @@ describe("Board advanced interactions", () => {
         probe.addEventListener("wheel", (event) => event.stopPropagation());
         element.append(probe);
 
-        const unrelated = probe.cloneNode(true) as HTMLDivElement;
+        const mainViewport = document.createElement("div");
+        mainViewport.dataset.scrollbars = "y";
+        mainViewport.style.cssText = "height:80px;overflow-y:auto";
+        mainViewport.innerHTML = '<div style="height:600px"></div>';
+        element.append(mainViewport);
+
+        const unrelated = document.createElement("div");
         unrelated.dataset.shiftScrollProbe = "unrelated";
+        unrelated.style.cssText = "height:80px;overflow-y:hidden";
+        unrelated.innerHTML = '<div style="height:600px"></div>';
         element.append(unrelated);
       });
-      const scrollProbe = advancedSurface.locator("[data-shift-scroll-probe='true']");
+      const scrollProbe = manualSurface.locator("[data-shift-scroll-probe='true']");
       await page.keyboard.down("Shift");
       const pixelEventCancelled = await scrollProbe.evaluate(
         (element) =>
@@ -156,56 +178,78 @@ describe("Board advanced interactions", () => {
           new WheelEvent("wheel", { bubbles: true, cancelable: true, shiftKey: true, deltaX: 120 }),
         );
       });
+      expect(await manualSurface.locator("[data-scrollbars='y']").evaluate((element) => element.scrollTop)).toBe(120);
       expect(
-        await advancedSurface.locator("[data-shift-scroll-probe='unrelated']").evaluate((element) => element.scrollTop),
+        await manualSurface.locator("[data-shift-scroll-probe='unrelated']").evaluate((element) => element.scrollTop),
       ).toBe(0);
+
+      await manualSurface.click({ button: "right", position: { x: 80, y: 80 } });
+      await expect(portalledMenuItem).toBeVisible();
       await page.keyboard.press("Escape");
-      await expect(advancedSurface).toBeHidden();
+      await expect(portalledMenuItem).toBeHidden();
+      await expect(manualSurface).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(manualSurface).toBeHidden();
       await expect(widget).toBeFocused();
+      expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe("hidden");
 
       await widget.click({ button: "right" });
       await page.getByRole("menuitem", { name: "Open advanced view" }).click();
-      await expect(advancedSurface).toBeVisible();
-      await page.keyboard.press("Escape");
-      await expect(advancedSurface).toBeHidden();
+      await expect(manualSurface).toBeVisible();
+      const viewport = page.viewportSize();
+      if (!viewport) throw new Error("Board page has no viewport");
+      await page.mouse.click(4, viewport.height - 4);
+      await expect(manualSurface).toBeHidden();
+      await expect(widget).toBeFocused();
 
-      const appWidget = page.locator(".grid-stack-item[data-kind='app'] > .grid-stack-item-content").first();
-      await expect(appWidget).not.toHaveAttribute("aria-keyshortcuts", "Shift+Enter");
-      await appWidget.click({ button: "right" });
-      await expect(page.getByRole("menuitem", { name: "Open advanced view" })).toHaveCount(0);
-      await page.keyboard.press("Escape");
-      await page.keyboard.down("Shift");
-      await appWidget.hover();
-      await expect(advancedSurface).toBeHidden();
-      await page.keyboard.up("Shift");
+      for (const compactOnlyKind of ["app", "iframe"]) {
+        const compactOnlyWidget = page
+          .locator(`.grid-stack-item[data-kind='${compactOnlyKind}'] > .grid-stack-item-content`)
+          .first();
+        await expect(compactOnlyWidget).not.toHaveAttribute("aria-keyshortcuts", "Shift+Enter");
+        await compactOnlyWidget.dispatchEvent("contextmenu", { button: 2 });
+        await expect(page.getByRole("menuitem", { name: "Open advanced view" })).toHaveCount(0);
+        await page.keyboard.press("Escape");
+        await page.keyboard.down("Shift");
+        await compactOnlyWidget.hover({ position: { x: 4, y: 4 } });
+        await expect(previewSurface).toBeHidden();
+        await expect(dimmingOverlay).toBeHidden();
+        await page.keyboard.up("Shift");
+      }
     } finally {
       await context.close();
     }
   }, 60_000);
 
-  test("preserves iframe browsing state and dismisses focus when a responsive layout remounts", async () => {
+  test("keeps compact-only iframe state and dismisses retained focus when a responsive layout remounts", async () => {
     const { context, page } = await openBoardAsync(browser, baseUrl, ownerCredentials);
 
     try {
       const iframeSlot = page.locator(".grid-stack-item[data-kind='iframe'] > .grid-stack-item-content").first();
       const iframe = iframeSlot.locator("iframe");
       await iframe.evaluate((element) => {
-        element.srcdoc = '<label>State <input id="state" value="initial"></label>';
+        (element as HTMLIFrameElement).srcdoc = '<label>State <input id="state" value="initial"></label>';
+        (element as HTMLIFrameElement).dataset.advancedFocusProbe = "true";
       });
-      const frame = page.frameLocator(".grid-stack-item[data-kind='iframe'] iframe");
+      const frame = page.frameLocator("iframe[data-advanced-focus-probe='true']");
       await frame.locator("#state").fill("changed");
 
-      await iframeSlot.focus();
-      await page.keyboard.press("Shift+Enter");
-      await expect(page.getByRole("region", { name: "iFrame advanced view" })).toBeVisible();
-      await expect(frame.locator("#state")).toHaveValue("changed");
+      await expect(iframeSlot).not.toHaveAttribute("aria-keyshortcuts", "Shift+Enter");
+      await iframeSlot.dispatchEvent("contextmenu", { button: 2 });
+      await expect(page.getByRole("menuitem", { name: "Open advanced view" })).toHaveCount(0);
       await page.keyboard.press("Escape");
+      await page.keyboard.down("Shift");
+      await iframeSlot.hover({ position: { x: 4, y: 4 } });
+      await expect(page.getByRole("region", { name: "iFrame advanced view" })).toHaveCount(0);
+      await page.keyboard.up("Shift");
       await expect(frame.locator("#state")).toHaveValue("changed");
 
-      await iframeSlot.focus();
+      const bookmarksSlot = page.locator(".grid-stack-item[data-kind='bookmarks'] > .grid-stack-item-content").first();
+      await bookmarksSlot.focus();
       await page.keyboard.press("Shift+Enter");
+      await expect(page.getByRole("dialog", { name: "Bookmarks advanced view" })).toBeVisible();
       await page.setViewportSize({ width: 800, height: 900 });
-      await expect(page.getByRole("region", { name: "iFrame advanced view" })).toBeHidden();
+      await expect(page.getByRole("dialog", { name: "Bookmarks advanced view" })).toBeHidden();
       await expect(page.locator(".grid-stack-item[data-kind='iframe'] iframe")).toBeVisible();
     } finally {
       await context.close();
@@ -229,7 +273,7 @@ describe("Board advanced interactions", () => {
       expect(bounds.height).toBeGreaterThanOrEqual(44);
       expect(bounds.x + bounds.width).toBeLessThanOrEqual(1366);
       expect(bounds.y + bounds.height).toBeLessThanOrEqual(768);
-      const surfaceBounds = await page.getByRole("region", { name: "Date and time advanced view" }).boundingBox();
+      const surfaceBounds = await page.getByRole("dialog", { name: "Date and time advanced view" }).boundingBox();
       const contentBounds = await page.locator(".clock-widget-container").boundingBox();
       expect(surfaceBounds).not.toBeNull();
       expect(contentBounds).not.toBeNull();
@@ -240,7 +284,7 @@ describe("Board advanced interactions", () => {
         );
       }
       await closeButton.click();
-      await expect(page.getByRole("region", { name: "Date and time advanced view" })).toBeHidden();
+      await expect(page.getByRole("dialog", { name: "Date and time advanced view" })).toBeHidden();
     } finally {
       await context.close();
     }
@@ -304,7 +348,7 @@ describe("Board advanced interactions", () => {
 
       await widget.click({ button: "right" });
       await page.getByRole("menuitem", { name: "Open advanced view" }).click();
-      await expect(page.getByRole("region", { name: "Date and time advanced view" })).toBeVisible();
+      await expect(page.getByRole("dialog", { name: "Date and time advanced view" })).toBeVisible();
       await page.keyboard.press("Escape");
 
       await expect(grid).not.toHaveAttribute("aria-label", "Add item here");
@@ -325,14 +369,8 @@ const openBoardAsync = async (
   const context = await browser.newContext({ reducedMotion: "reduce", viewport });
   const page = await context.newPage();
 
-  await page.goto(`${baseUrl}/auth/login`);
-  await page.getByLabel("Username").fill(credentials.username);
-  await page.locator("#password").fill(credentials.password);
-  const loginRedirect = page.waitForURL(baseUrl, { timeout: 15_000, waitUntil: "commit" });
-  await page.locator("css=button[type='submit']").click();
-  await loginRedirect;
-  await page.goto(`${baseUrl}/boards/${boardName}`);
-  await expect(page.locator(".grid-stack-item[data-kind='clock'] .clock-wrapper").first()).toBeVisible({
+  await loginAsync({ page, baseUrl, credentials, destination: `/boards/${boardName}` });
+  await expect(page.locator(".clock-wrapper").first()).toBeVisible({
     timeout: 15_000,
   });
 
@@ -368,6 +406,7 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
   const desktopLayoutId = createId();
   const sectionId = createId();
   const clockItemId = createId();
+  const bookmarksItemId = createId();
   const iframeItemId = createId();
   const appItemId = createId();
   const appId = createId();
@@ -393,6 +432,22 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
       advancedOptions: stringify({ title: null, customCssClasses: [], borderColor: "" }),
     },
     {
+      id: bookmarksItemId,
+      kind: "bookmarks",
+      boardId,
+      options: stringify({
+        title: "",
+        layout: "column",
+        hideTitle: false,
+        hideIcon: false,
+        hideHostname: false,
+        openNewTab: true,
+        withBorder: false,
+        items: [appId],
+      }),
+      advancedOptions: stringify({ title: null, customCssClasses: [], borderColor: "" }),
+    },
+    {
       id: iframeItemId,
       kind: "iframe",
       boardId,
@@ -415,6 +470,15 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
         layoutId,
         xOffset: 0,
         yOffset: 0,
+        width: 4,
+        height: 3,
+      },
+      {
+        itemId: bookmarksItemId,
+        sectionId,
+        layoutId,
+        xOffset: 0,
+        yOffset: 3,
         width: 4,
         height: 3,
       },

@@ -36,19 +36,14 @@ const iconSizeByWidth = [
   { minWidth: 0, size: 16 },
 ] as const;
 
-export default function BazarrWidget({
-  integrationIds,
-  options,
-  width,
-  height,
-  displayMode,
-}: WidgetComponentProps<"bazarr">) {
+export default function BazarrWidget({ integrationIds, options, width, height }: WidgetComponentProps<"bazarr">) {
   const t = useScopedI18n("widget.bazarr");
-  const { data: badges } = clientApi.widget.bazarr.getBadges.useQuery(
+  const { data: badges, error } = clientApi.widget.bazarr.getBadges.useQuery(
     { integrationId: integrationIds[0] ?? "" },
     { enabled: Boolean(integrationIds[0]) },
   );
 
+  if (error && !badges) throw error;
   if (!badges) return <WidgetEmptyState />;
 
   const statValues = {
@@ -59,10 +54,10 @@ export default function BazarrWidget({
   } as const;
 
   const visibleStatKeys = Object.entries(statVisibilityByOption)
-    .filter(([optionKey]) => displayMode === "advanced" || options[optionKey as keyof typeof options])
+    .filter(([optionKey]) => options[optionKey as keyof typeof options])
     .map(([, statKey]) => statKey);
 
-  const gridCols = getGridCols(width, height, visibleStatKeys.length, displayMode === "advanced");
+  const gridCols = getGridCols(width, height, visibleStatKeys.length);
   const iconSize = getIconSize(Math.min(width, height));
 
   if (visibleStatKeys.length === 0) {
@@ -100,14 +95,14 @@ export default function BazarrWidget({
   );
 }
 
-export function getGridCols(width: number, height: number, itemCount: number, isAdvanced = false): number {
+export function getGridCols(width: number, height: number, itemCount: number): number {
   if (itemCount <= 1) return 1;
-  if (isAdvanced && width >= 640) return Math.min(itemCount, 4);
 
-  const widthMatch = gridColsByWidth.find(({ minWidth }) => width >= minWidth)?.cols ?? 1;
-  const rowsAtWidth = Math.ceil(itemCount / widthMatch);
-  const rowHeight = height / rowsAtWidth;
-  return rowHeight >= 72 ? widthMatch : Math.min(itemCount, Math.max(widthMatch, 2));
+  const preferredColumns = gridColsByWidth.find(({ minWidth }) => width >= minWidth)?.cols ?? 1;
+  const maxColumnsByWidth = Math.max(1, Math.floor(width / 160));
+  const maxRowsByHeight = Math.max(1, Math.floor(height / 72));
+  const columnsNeededToFit = Math.ceil(itemCount / maxRowsByHeight);
+  return Math.min(itemCount, maxColumnsByWidth, Math.max(preferredColumns, columnsNeededToFit));
 }
 
 export function getIconSize(width: number): number {

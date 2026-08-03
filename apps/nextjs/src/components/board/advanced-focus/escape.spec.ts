@@ -5,7 +5,7 @@ import { isEscapeOwnedByNestedOverlay } from "./escape";
 describe("isEscapeOwnedByNestedOverlay", () => {
   test("allows Escape from the advanced surface itself", () => {
     const surface = document.createElement("section");
-    surface.setAttribute("role", "region");
+    surface.setAttribute("role", "dialog");
     const button = document.createElement("button");
     surface.append(button);
 
@@ -42,6 +42,24 @@ describe("isEscapeOwnedByNestedOverlay", () => {
     surface.append(target);
 
     expect(isEscapeOwnedByNestedOverlay(target, surface)).toBe(true);
+  });
+
+  test("leaves Escape to a visible portalled menu when focus stays in the advanced surface", () => {
+    const surface = document.createElement("section");
+    surface.setAttribute("role", "dialog");
+    const target = document.createElement("button");
+    surface.append(target);
+    document.body.append(surface);
+
+    const menu = document.createElement("div");
+    menu.setAttribute("role", "menu");
+    menu.getClientRects = () => [{ width: 100, height: 100 }] as unknown as DOMRectList;
+    document.body.append(menu);
+
+    expect(isEscapeOwnedByNestedOverlay(target, surface)).toBe(true);
+
+    menu.remove();
+    surface.remove();
   });
 
   test("does not mistake the compact widget source for a nested overlay", () => {

@@ -27,7 +27,7 @@ describe("bookmark display helpers", () => {
 
   test("does not crash on malformed bookmark URLs", () => {
     expect(getBookmarkHostname("https://homarr.dev/docs")).toBe("homarr.dev");
-    expect(getBookmarkHostname("not a URL")).toBe("not a URL");
+    expect(getBookmarkHostname("not a URL")).toBeUndefined();
     expect(getBookmarkHostname(null)).toBeUndefined();
   });
 });

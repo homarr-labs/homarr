@@ -19,7 +19,7 @@ describe("stock summary", () => {
 
 describe("stock layout", () => {
   it("keeps compact widgets focused on symbol and price", () => {
-    expect(getStockLayout(320, 100, false)).toMatchObject({
+    expect(getStockLayout(320, 100)).toMatchObject({
       showName: false,
       showChange: false,
       showRange: false,
@@ -28,12 +28,12 @@ describe("stock layout", () => {
   });
 
   it("reveals secondary data only when both axes have room", () => {
-    expect(getStockLayout(320, 160, false)).toMatchObject({
+    expect(getStockLayout(320, 160)).toMatchObject({
       showName: false,
       showChange: true,
       showRange: true,
     });
-    expect(getStockLayout(320, 220, false)).toMatchObject({
+    expect(getStockLayout(320, 220)).toMatchObject({
       showName: true,
       showChange: true,
       showRange: true,
@@ -41,8 +41,8 @@ describe("stock layout", () => {
     });
   });
 
-  it("always exposes the complete advanced summary", () => {
-    expect(getStockLayout(120, 80, true)).toEqual({
+  it("exposes the complete summary when the widget is roomy", () => {
+    expect(getStockLayout(640, 360)).toEqual({
       showName: true,
       showChange: true,
       showRange: true,

@@ -74,8 +74,12 @@ export type {
   WidgetOptionsSettings,
   WidgetQueryMatcher,
   WidgetQueryMatcherScope,
+  WidgetRuntimeActions,
+  WidgetRuntimeRef,
+  WidgetRuntimeState,
 } from "./definition";
 export {
+  createWidgetRuntimeState,
   getWidgetQueryKeys,
   getWidgetRuntimeQueries,
   normalizeWidgetQuery,

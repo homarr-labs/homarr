@@ -33,6 +33,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
+import { getUsableWidgetQueryData } from "../../common/query-state";
 import actionTargetClasses from "../../common/action-target.module.css";
 import classes from "./component.module.css";
 import TimerModal from "./TimerModal";
@@ -46,7 +47,6 @@ export default function DnsHoleControlsWidget({
   isEditMode,
   width,
   height,
-  displayMode,
 }: WidgetComponentProps<typeof widgetKind>) {
   const board = useRequiredBoard();
   // DnsHole integrations with interaction permissions
@@ -54,9 +54,9 @@ export default function DnsHoleControlsWidget({
     .map(({ id }) => id)
     .filter((id) => integrationIds.includes(id));
 
-  const { data: summaries = [], isPending: isSummaryPending } = clientApi.widget.dnsHole.summary.useQuery({
-    integrationIds,
-  });
+  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({ integrationIds });
+  const summaries = getUsableWidgetQueryData(summaryQuery) ?? [];
+  const { isPending: isSummaryPending } = summaryQuery;
   const utils = clientApi.useUtils();
 
   const {
@@ -118,8 +118,7 @@ export default function DnsHoleControlsWidget({
   const [bulkFailureCount, setBulkFailureCount] = useState(0);
   const [opened, { close, open }] = useDisclosure(false);
 
-  const controlAllButtonsVisible =
-    (options.showToggleAllButtons || displayMode === "advanced") && integrationsWithInteractions.length > 0;
+  const controlAllButtonsVisible = options.showToggleAllButtons && integrationsWithInteractions.length > 0;
   const actionsPending = bulkPending || isEnabling || isDisabling;
   const actionError = enableError ?? disableError;
   const runBulkToggle = async (integrationIdsToToggle: string[]) => {
@@ -229,7 +228,6 @@ export default function DnsHoleControlsWidget({
               hasIconColor={board.iconColor !== null}
               rootWidth={width}
               rootHeight={height}
-              isAdvanced={displayMode === "advanced"}
               actionsPending={actionsPending}
             />
           ))}
@@ -242,7 +240,7 @@ export default function DnsHoleControlsWidget({
         </Text>
       )}
       {actionError && (
-        <Tooltip label={actionError.message} multiline>
+        <Tooltip label={t("widget.dnsHoleControls.error.internalServerError")}>
           <Text size="xs" c="red" ta="center" lineClamp={2} tabIndex={0}>
             {t("widget.dnsHoleControls.error.internalServerError")}
           </Text>
@@ -269,7 +267,6 @@ interface ControlsCardProps {
   hasIconColor: boolean;
   rootWidth: number;
   rootHeight: number;
-  isAdvanced: boolean;
   actionsPending: boolean;
 }
 
@@ -283,7 +280,6 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   hasIconColor,
   rootWidth,
   rootHeight,
-  isAdvanced,
   actionsPending,
 }) => {
   const isConnected = useIntegrationConnected(data.integration.updatedAt, { timeout: 30000 });
@@ -294,7 +290,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   const board = useRequiredBoard();
 
   const iconUrl = integrationDefs[data.integration.kind].iconUrl;
-  const layout = !isAdvanced && (rootWidth < 256 || rootHeight < 112) ? "sm" : "md";
+  const layout = rootWidth < 256 || rootHeight < 112 ? "sm" : "md";
 
   return (
     <Indicator

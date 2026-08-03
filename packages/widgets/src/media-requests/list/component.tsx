@@ -14,6 +14,8 @@ import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../../common/application-url";
+import { getUsableWidgetQueryData } from "../../common/query-state";
 import actionTargetClasses from "../../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
@@ -27,25 +29,27 @@ export default function MediaServerWidget({
   options,
   width,
   height,
-  displayMode,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const interactIntegrationIds = new Set(
     useIntegrationsWithInteractAccess()
       .filter(({ id }) => integrationIds.includes(id))
       .map(({ id }) => id),
   );
-  const { data: mediaRequestData } = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
-    integrationIds,
-    statuses:
-      options.statusFilter.length > 0
-        ? options.statusFilter
-        : ["pending", "approved", "declined", "failed", "completed"],
-    recentDays: options.recentDays,
-  });
+  const mediaRequestData = getUsableWidgetQueryData(
+    clientApi.widget.mediaRequests.getLatestRequests.useQuery({
+      integrationIds,
+      statuses:
+        options.statusFilter.length > 0
+          ? options.statusFilter
+          : ["pending", "approved", "declined", "failed", "completed"],
+      recentDays: options.recentDays,
+    }),
+  );
 
   if (!mediaRequestData) return <WidgetEmptyState />;
   const { requests: mediaRequests, failedIntegrations } = mediaRequestData;
   if (mediaRequests.length === 0 && failedIntegrations.length === 0) throw new NoIntegrationDataError();
+  const showIntegrationSource = new Set(mediaRequests.map(({ integrationId }) => integrationId)).size > 1;
 
   return (
     <Stack className={searchClasses.searchRoot} gap={0}>
@@ -65,9 +69,9 @@ export default function MediaServerWidget({
             <MediaRequestCard
               key={`${mediaRequest.integrationId}-${mediaRequest.id}`}
               request={mediaRequest}
-              isTiny={displayMode !== "advanced" && (width <= 256 || height < 96)}
-              isDense={displayMode !== "advanced" && (width < 340 || height < 150)}
-              isAdvanced={displayMode === "advanced"}
+              isTiny={width <= 256 || height < 96}
+              isDense={width < 340 || height < 150}
+              showIntegrationSource={showIntegrationSource}
               canInteract={interactIntegrationIds.has(mediaRequest.integrationId)}
               options={options}
             />
@@ -100,14 +104,23 @@ interface MediaRequestCardProps {
   request: RouterOutputs["widget"]["mediaRequests"]["getLatestRequests"]["requests"][number];
   isTiny: boolean;
   isDense: boolean;
-  isAdvanced: boolean;
+  showIntegrationSource: boolean;
   canInteract: boolean;
   options: WidgetComponentProps<"mediaRequests-requestList">["options"];
 }
 
-const MediaRequestCard = ({ request, isTiny, isDense, isAdvanced, canInteract, options }: MediaRequestCardProps) => {
+const MediaRequestCard = ({
+  request,
+  isTiny,
+  isDense,
+  showIntegrationSource,
+  canInteract,
+  options,
+}: MediaRequestCardProps) => {
   const board = useRequiredBoard();
   const t = useScopedI18n("widget.mediaRequests-requestList");
+  const requestHref = getSafeApplicationUrl(request.href);
+  const requestedByHref = getSafeApplicationUrl(request.requestedBy?.link);
 
   return (
     <Card
@@ -148,10 +161,11 @@ const MediaRequestCard = ({ request, isTiny, isDense, isAdvanced, canInteract, o
             <Group gap="xs" justify="space-between" wrap="nowrap" className="mediaRequests-list-item-top-group">
               <Anchor
                 className="mediaRequests-list-item-info-second-line mediaRequests-list-item-media-title"
-                href={request.href}
+                component={requestHref ? "a" : "span"}
+                href={requestHref}
                 c="var(--mantine-color-text)"
-                target={options.linksTargetNewTab ? "_blank" : "_self"}
-                rel={options.linksTargetNewTab ? "noopener noreferrer" : undefined}
+                target={requestHref ? (options.linksTargetNewTab ? "_blank" : "_self") : undefined}
+                rel={requestHref && options.linksTargetNewTab ? SAFE_NEW_TAB_REL : undefined}
                 fz={isTiny ? "xs" : "sm"}
                 fw={600}
                 title={request.name}
@@ -186,7 +200,7 @@ const MediaRequestCard = ({ request, isTiny, isDense, isAdvanced, canInteract, o
                     {t(`availability.${request.availability}`)}
                   </Badge>
                 )}
-                {isAdvanced && (
+                {showIntegrationSource && !isTiny && (
                   <Badge size="xs" variant="outline">
                     {request.integration.name}
                   </Badge>
@@ -201,13 +215,14 @@ const MediaRequestCard = ({ request, isTiny, isDense, isAdvanced, canInteract, o
                   />
                   <Anchor
                     className="mediaRequests-list-item-request-user-name"
-                    href={request.requestedBy?.link}
+                    component={requestedByHref ? "a" : "span"}
+                    href={requestedByHref}
                     c="dimmed"
-                    target={options.linksTargetNewTab ? "_blank" : "_self"}
-                    rel={options.linksTargetNewTab ? "noopener noreferrer" : undefined}
+                    target={requestedByHref ? (options.linksTargetNewTab ? "_blank" : "_self") : undefined}
+                    rel={requestedByHref && options.linksTargetNewTab ? SAFE_NEW_TAB_REL : undefined}
                     fz="xs"
                     truncate="end"
-                    style={{ minWidth: 0, maxWidth: isAdvanced ? 180 : 100 }}
+                    style={{ minWidth: 0, maxWidth: isDense ? 100 : 180 }}
                   >
                     {(request.requestedBy?.displayName ?? "") || "unknown"}
                   </Anchor>
@@ -252,7 +267,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible 
       className={`mediaRequests-list-item-pending-buttons ${classes.pendingActions} ${alwaysVisible ? classes.pendingActionsVisible : ""}`}
       gap={4}
       wrap="nowrap"
-      title={error?.message}
+      aria-invalid={Boolean(error)}
     >
       <Tooltip label={t("pending.approve")}>
         <ActionIcon

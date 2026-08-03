@@ -10,6 +10,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import classes from "./component.module.scss";
 
 const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
@@ -33,7 +34,7 @@ const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
   };
 };
 
-export default function RssFeed({ options, width, height, displayMode }: WidgetComponentProps<"rssFeed">) {
+export default function RssFeed({ options, width, height }: WidgetComponentProps<"rssFeed">) {
   const {
     entries: feedEntries,
     failedFeedCount,
@@ -53,64 +54,68 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
 
   const languageDir = options.enableRtl ? "RTL" : "LTR";
 
-  const isAdvanced = displayMode === "advanced";
-  const isDense = !isAdvanced && (width < 420 || height < 180);
-  const isTiny = !isAdvanced && (width < 260 || height < 110);
-  const columns = isAdvanced && width >= 720 ? 2 : 1;
-  const descriptionLines = isAdvanced ? Math.max(options.textLinesClamp, 8) : isDense ? 1 : options.textLinesClamp;
+  const isDense = width < 420 || height < 180;
+  const isTiny = width < 260 || height < 110;
+  const isRoomy = width >= 420 && height >= 240;
+  const columns = width >= 720 && height >= 260 ? 2 : 1;
+  const descriptionLines = isRoomy ? Math.max(options.textLinesClamp, 6) : isDense ? 1 : options.textLinesClamp;
+  const spacing = isRoomy ? "sm" : "xs";
 
   return (
-    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isAdvanced ? "md" : isTiny ? 4 : "xs"}>
+    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isTiny ? 4 : "xs"}>
       {warning && (
         <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs" mb="xs">
           <output>{warning}</output>
         </Alert>
       )}
-      <SimpleGrid cols={columns} w="100%" spacing={isAdvanced ? "md" : "xs"} verticalSpacing={isAdvanced ? "md" : "xs"}>
-        {feedEntries.map((feedEntry) => (
-          <Card
-            key={feedEntry.id}
-            className={classes.entry}
-            component={"a"}
-            href={getSafeExternalUrl(feedEntry.link, feedEntry.feedUrl)}
-            radius={board.itemRadius}
-            target="_blank"
-            rel="noopener noreferrer"
-            w="100%"
-            p={isAdvanced ? "md" : isDense ? 6 : "xs"}
-            title={feedEntry.title}
-          >
-            <Group wrap="nowrap" align="flex-start" gap={isDense ? "xs" : "md"}>
-              {feedEntry.enclosure !== undefined && options.showPosterImage && !isTiny && (
-                <Image
-                  className={classes.poster}
-                  src={feedEntry.enclosure}
-                  alt=""
-                  w={isAdvanced ? 180 : isDense ? 64 : 96}
-                  h={isAdvanced ? 120 : isDense ? 64 : 96}
-                  radius="sm"
-                  fit="cover"
-                />
-              )}
-
-              <Flex gap={isAdvanced ? "sm" : 6} direction="column" w="100%" miw={0}>
-                <Text dir={languageDir} fz={isAdvanced ? "md" : "sm"} fw={600} lh={1.25} lineClamp={2}>
-                  {feedEntry.title}
-                </Text>
-                {!options.hideDescription && feedEntry.description && !isTiny && (
-                  <Text dir={languageDir} c="dimmed" size="sm" lineClamp={descriptionLines}>
-                    {feedDescriptionToText(feedEntry.description)}
-                  </Text>
+      <SimpleGrid cols={columns} w="100%" spacing={spacing} verticalSpacing={spacing}>
+        {feedEntries.map((feedEntry) => {
+          const href = getSafeApplicationUrl(feedEntry.link, { baseUrl: feedEntry.feedUrl });
+          return (
+            <Card
+              key={feedEntry.id}
+              className={classes.entry}
+              component={href ? "a" : "div"}
+              href={href}
+              radius={board.itemRadius}
+              target={href ? "_blank" : undefined}
+              rel={href ? SAFE_NEW_TAB_REL : undefined}
+              w="100%"
+              p={isDense ? 6 : "xs"}
+              title={feedEntry.title}
+            >
+              <Group wrap="nowrap" align="flex-start" gap={isDense ? "xs" : "md"}>
+                {feedEntry.enclosure !== undefined && options.showPosterImage && !isTiny && (
+                  <Image
+                    className={classes.poster}
+                    src={feedEntry.enclosure}
+                    alt=""
+                    w={isRoomy ? 140 : isDense ? 64 : 96}
+                    h={isRoomy ? 96 : isDense ? 64 : 96}
+                    radius="sm"
+                    fit="cover"
+                  />
                 )}
 
-                <InfoDisplay
-                  source={isAdvanced || !isDense ? getHostname(feedEntry.feedUrl) : undefined}
-                  date={feedEntry.published ? dayjs(feedEntry.published).fromNow() : undefined}
-                />
-              </Flex>
-            </Group>
-          </Card>
-        ))}
+                <Flex gap={isRoomy ? "sm" : 6} direction="column" w="100%" miw={0}>
+                  <Text dir={languageDir} fz={isRoomy ? "md" : "sm"} fw={600} lh={1.25} lineClamp={2}>
+                    {feedEntry.title}
+                  </Text>
+                  {!options.hideDescription && feedEntry.description && !isTiny && (
+                    <Text dir={languageDir} c="dimmed" size="sm" lineClamp={descriptionLines}>
+                      {feedDescriptionToText(feedEntry.description)}
+                    </Text>
+                  )}
+
+                  <InfoDisplay
+                    source={!isDense ? getHostname(feedEntry.feedUrl) : undefined}
+                    date={feedEntry.published ? dayjs(feedEntry.published).fromNow() : undefined}
+                  />
+                </Flex>
+              </Group>
+            </Card>
+          );
+        })}
       </SimpleGrid>
     </ScrollArea>
   );
@@ -131,29 +136,6 @@ export const getHostname = (url: string): string => {
     return new URL(url).hostname;
   } catch {
     return url;
-  }
-};
-
-export const getSafeExternalUrl = (value: unknown, baseUrl?: string): string | undefined => {
-  if (typeof value !== "string") return undefined;
-  try {
-    let sanitizedBaseUrl: string | undefined;
-    if (baseUrl) {
-      const parsedBaseUrl = new URL(baseUrl);
-      parsedBaseUrl.username = "";
-      parsedBaseUrl.password = "";
-      parsedBaseUrl.search = "";
-      parsedBaseUrl.hash = "";
-      sanitizedBaseUrl = parsedBaseUrl.toString();
-    }
-
-    const url = new URL(value, sanitizedBaseUrl);
-    if (url.protocol !== "http:" && url.protocol !== "https:") return undefined;
-    url.username = "";
-    url.password = "";
-    return url.toString();
-  } catch {
-    return undefined;
   }
 };
 

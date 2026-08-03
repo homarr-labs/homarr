@@ -18,6 +18,7 @@ import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client"
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import actionTargetClasses from "../common/action-target.module.css";
 
 import "react-quill-new/dist/quill.snow.css";
@@ -181,10 +182,12 @@ const AnchorNoteWidgetContent = ({
 }: AnchorNoteWidgetContentProps) => {
   const t = useScopedI18n("widget.anchorNote");
   const locale = useCurrentIntlLocale();
-  const { data: note, refetch } = clientApi.widget.anchorNotes.getNote.useQuery({
+  const noteQuery = clientApi.widget.anchorNotes.getNote.useQuery({
     integrationId,
     noteId,
   });
+  const note = getUsableWidgetQueryData(noteQuery);
+  const { refetch } = noteQuery;
   const { mutateAsync: updateNoteAsync, isPending: isUpdating } = clientApi.widget.anchorNotes.updateNote.useMutation();
 
   const [isEditing, setIsEditing] = useState(false);

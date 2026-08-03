@@ -7,6 +7,7 @@ import { PATCHMON_STAT_COLOR_PRESETS } from "./stat-colors";
 import { patchmonOptionsSuperRefine } from "./threshold-validation";
 
 export const { definition, componentLoader } = createWidgetDefinition("patchmon", {
+  supportsAdvancedFocus: false,
   icon: IconShieldCheck,
   supportedIntegrations: ["patchmon"],
   integrationsRequired: true,

@@ -7,7 +7,7 @@ import {
 } from "@homarr/request-handler/firewall";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const firewallMiddleware = createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall"));
@@ -35,7 +35,7 @@ const queryFirewall = <
         fallback: (integration, error) => ({
           integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: new Date(0) },
           summary: createFallback(),
-          error: error instanceof Error ? error.message : "Integration request failed",
+          error: toPublicIntegrationError(error),
         }),
         throwOnAllFailures: true,
       },

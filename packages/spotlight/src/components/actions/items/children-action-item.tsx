@@ -1,5 +1,6 @@
 import { Spotlight } from "@mantine/spotlight";
 
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "@homarr/common";
 import { Link } from "@homarr/ui";
 
 import type { inferSearchInteractionOptions } from "../../../lib/interaction";
@@ -15,10 +16,18 @@ interface ChildrenActionItemProps {
 export const ChildrenActionItem = ({ childrenOptions, action, query, setChildrenOptions }: ChildrenActionItemProps) => {
   const interaction = action.useInteraction(childrenOptions.option, query);
 
+  const safeHref = interaction.type === "link" ? getSafeApplicationUrl(interaction.href) : undefined;
   const renderRoot =
-    interaction.type === "link"
+    interaction.type === "link" && safeHref
       ? (props: Record<string, unknown>) => {
-          return <Link href={interaction.href} target={interaction.newTab ? "_blank" : undefined} {...props} />;
+          return (
+            <Link
+              href={safeHref}
+              target={interaction.newTab ? "_blank" : undefined}
+              rel={interaction.newTab ? SAFE_NEW_TAB_REL : undefined}
+              {...props}
+            />
+          );
         }
       : undefined;
 

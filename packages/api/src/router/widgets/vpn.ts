@@ -2,7 +2,7 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { vpnSummaryHandler } from "@homarr/request-handler/vpn";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const vpnRouter = createTRPCRouter({
@@ -33,7 +33,7 @@ export const vpnRouter = createTRPCRouter({
               updatedAt: new Date(0),
             },
             summary: null,
-            error: error instanceof Error ? error.message : String(error),
+            error: toPublicIntegrationError(error),
           }),
           throwOnAllFailures: true,
         },

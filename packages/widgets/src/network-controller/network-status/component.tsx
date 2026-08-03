@@ -11,6 +11,7 @@ import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
+import { getNetworkControllerStatusLayout } from "./layout";
 import { WifiVariant } from "./variants/wifi-variant";
 import { WiredVariant } from "./variants/wired-variant";
 
@@ -36,12 +37,11 @@ export default function NetworkControllerNetworkStatusWidget({
   const tCommon = useScopedI18n("common");
 
   const data = useMemo(() => (summaries ?? []).flatMap(({ summary }) => summary), [summaries]);
-  const isAdvanced = displayMode === "advanced";
   const countWifiGuests = data.reduce((sum, summary) => sum + summary.wifi.guests, 0);
   const countWifiUsers = data.reduce((sum, summary) => sum + summary.wifi.users, 0);
   const countLanGuests = data.reduce((sum, summary) => sum + summary.lan.guests, 0);
   const countLanUsers = data.reduce((sum, summary) => sum + summary.lan.users, 0);
-  const useHorizontalStats = !isAdvanced && height < 150 && width >= 200;
+  const layout = getNetworkControllerStatusLayout({ width, height, displayMode, content: options.content });
 
   if (error && summaries === undefined) throw error;
 
@@ -56,25 +56,25 @@ export default function NetworkControllerNetworkStatusWidget({
   }
 
   return (
-    <Box p={isAdvanced ? "md" : height < 120 ? "xs" : "sm"} h="100%">
-      <SimpleGrid cols={isAdvanced && width >= 560 ? 2 : 1} h="100%" spacing="sm">
-        {(isAdvanced || options.content === "wifi") && (
-          <Card p={isAdvanced ? "md" : 0} withBorder={isAdvanced}>
+    <Box p={layout.padding} h="100%">
+      <SimpleGrid cols={layout.columns} h="100%" spacing="sm">
+        {layout.showWifi && (
+          <Card p={layout.cardPadding} withBorder={layout.withBorder}>
             <WifiVariant
               countGuests={countWifiGuests}
               countUsers={countWifiUsers}
-              compact={!isAdvanced}
-              horizontal={useHorizontalStats}
+              compact={layout.compact}
+              horizontal={layout.horizontalStats}
             />
           </Card>
         )}
-        {(isAdvanced || options.content === "wired") && (
-          <Card p={isAdvanced ? "md" : 0} withBorder={isAdvanced}>
+        {layout.showWired && (
+          <Card p={layout.cardPadding} withBorder={layout.withBorder}>
             <WiredVariant
               countGuests={countLanGuests}
               countUsers={countLanUsers}
-              compact={!isAdvanced}
-              horizontal={useHorizontalStats}
+              compact={layout.compact}
+              horizontal={layout.horizontalStats}
             />
           </Card>
         )}

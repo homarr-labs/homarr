@@ -5,6 +5,10 @@ import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 const logger = createLogger({ module: "settleIntegrations" });
 
+export const PUBLIC_INTEGRATION_ERROR: string = "INTEGRATION_REQUEST_FAILED";
+
+export const toPublicIntegrationError = (_error: unknown): string => PUBLIC_INTEGRATION_ERROR;
+
 interface IntegrationLike {
   id: string;
   name: string;

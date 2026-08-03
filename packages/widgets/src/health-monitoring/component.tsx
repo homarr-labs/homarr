@@ -8,6 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { ClusterHealthMonitoring } from "./cluster/cluster-health";
 import { partitionHealthMonitoringIntegrations } from "./integration-selection";
 import { SystemHealthMonitoring } from "./system-health";
@@ -15,7 +16,7 @@ import { SystemHealthMonitoring } from "./system-health";
 dayjs.extend(duration);
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
-  const { data: integrations = [] } = clientApi.integration.byIds.useQuery(props.integrationIds);
+  const integrations = getUsableWidgetQueryData(clientApi.integration.byIds.useQuery(props.integrationIds)) ?? [];
   const t = useI18n();
 
   const { clusterIntegrationIds, systemIntegrationIds } = partitionHealthMonitoringIntegrations(integrations);

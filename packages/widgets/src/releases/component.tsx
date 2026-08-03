@@ -38,6 +38,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import classes from "./component.module.scss";
 import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
@@ -48,7 +49,7 @@ const formatRelativeDate = (value: string): string => {
   return isMonths ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
 };
 
-export default function ReleasesWidget({ options, itemId, width, displayMode }: WidgetComponentProps<"releases">) {
+export default function ReleasesWidget({ options, itemId, width }: WidgetComponentProps<"releases">) {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -59,7 +60,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
     key: "releases-viewed-versions",
     defaultValue: {},
   });
-  const isAdvanced = displayMode === "advanced";
+  const columns = Math.max(1, Math.floor(width / 420));
 
   const relativeDateOptions = useMemo(
     () => ({
@@ -187,11 +188,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
 
   return (
     <ScrollArea h="100%" className="releases">
-      <SimpleGrid
-        cols={isAdvanced ? Math.max(1, Math.floor(width / 420)) : 1}
-        spacing={isAdvanced ? "sm" : 0}
-        p={isAdvanced ? "xs" : 0}
-      >
+      <SimpleGrid cols={columns} spacing={columns > 1 ? "sm" : 0} p={columns > 1 ? "xs" : 0}>
         {repositories.map((repository: ReleasesRepositoryResponse) => {
           const isActive = expandedRepositoryId === repository.id;
           const hasError = repository.error !== undefined;
@@ -207,7 +204,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
               )}
               gap={0}
               style={
-                isAdvanced
+                columns > 1
                   ? {
                       border: "1px solid var(--mantine-color-default-border)",
                       borderRadius: "var(--mantine-radius-sm)",
@@ -324,7 +321,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
                   </Group>
                 </Group>
               </UnstyledButton>
-              {(options.showDetails || isAdvanced) && (
+              {options.showDetails && (
                 <DetailsDisplay
                   repository={repository}
                   isExpanded={isActive}
@@ -582,6 +579,8 @@ const ExpandedDisplay = ({
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
+  const releaseUrl = getSafeApplicationUrl(repository.releaseUrl);
+  const repositoryUrl = releaseUrl ?? getSafeApplicationUrl(repository.projectUrl);
 
   return (
     <>
@@ -651,19 +650,19 @@ const ExpandedDisplay = ({
           </Group>
         </Button>
 
-        {(repository.releaseUrl ?? repository.projectUrl) && (
+        {repositoryUrl && (
           <Button
             className="releases-repository-expanded-openButton"
             variant="light"
             component="a"
-            href={repository.releaseUrl ?? repository.projectUrl}
+            href={repositoryUrl}
             target="_blank"
-            rel="noreferrer"
+            rel={SAFE_NEW_TAB_REL}
           >
             <Group className="releases-repository-expanded-openButton-wrapper" gap={5} justify="center" align="center">
               <IconExternalLink className="releases-repository-expanded-openButton-icon" size="1.5em" />
               <Text className="releases-repository-expanded-openButton-text">
-                {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
+                {releaseUrl ? t("openReleasePage") : t("openProjectPage")}
               </Text>
             </Group>
           </Button>
@@ -682,8 +681,9 @@ const ExpandedDisplay = ({
               c="red"
               style={{ whiteSpace: "pre-wrap" }}
             >
-              {repository.error.message ??
-                (repository.error.code ? t(`error.messages.${repository.error.code}` as never) : null)}
+              {repository.error.code
+                ? t(`error.messages.${repository.error.code}` as never)
+                : t("error.messages.unexpected")}
             </Text>
           </>
         )}

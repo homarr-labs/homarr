@@ -35,9 +35,22 @@
   }
 }
 
+.indexerLink {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  min-width: 0;
+  flex: 1;
+}
+
 @media (any-pointer: coarse) {
   .testAction {
     opacity: 1;
+  }
+
+  .indexerRow {
+    min-height: 44px;
+    padding-block: 8px;
   }
 }
 
