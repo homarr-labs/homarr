@@ -39,7 +39,12 @@ import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
 import { AssistantConfigureBoardSettingsTool } from "./assistant-board-settings-tool";
 import type { AssistantUIMessage } from "./assistant-message-metadata";
+import {
+  getSuccessfulApprovedAssistantMutationIds,
+  updateAssistantMutationRefreshState,
+} from "./assistant-mutation-refresh";
 import { initialAssistantNotificationState, updateAssistantNotificationState } from "./assistant-notifications";
+import { AssistantViewRefreshProvider, useAssistantViewRefresh } from "./assistant-view-refresh";
 import { AssistantBoardWidget } from "./assistant-widget";
 
 interface AssistantContextValue {
@@ -47,11 +52,13 @@ interface AssistantContextValue {
   unavailableDescription: string | null;
   opened: boolean;
   isRunning: boolean;
+  isRefreshing: boolean;
   unreadCount: number;
   open: () => void;
   close: () => void;
   toggle: () => void;
   sendPrompt: (prompt: string) => void;
+  refreshCurrentView: () => Promise<void>;
 }
 
 const AssistantContext = createContext<AssistantContextValue | null>(null);
@@ -408,6 +415,7 @@ const AssistantThreadRuntime = () => {
 
 const AssistantRuntime = ({ children }: PropsWithChildren) => {
   const router = useRouter();
+  const { refreshCurrentView } = useAssistantViewRefresh();
   const runtime = useRemoteThreadListRuntime({
     adapter: threadAdapter,
     runtimeHook: AssistantThreadRuntime,
@@ -419,8 +427,9 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
         navigate: (path) => router.push(path),
         openCommandMenu: openSpotlight,
         openMediaRequestSearch,
+        refreshCurrentView,
       }),
-    [router],
+    [refreshCurrentView, router],
   );
 
   const toolkit = useMemo(
@@ -464,6 +473,12 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
           ...browserToolContracts.open_media_request_search,
           execute: browserToolExecutors.open_media_request_search,
           renderText: { running: "Opening media search…", complete: "Media search opened" },
+        },
+        refresh_current_view: {
+          type: "frontend",
+          ...browserToolContracts.refresh_current_view,
+          execute: browserToolExecutors.refresh_current_view,
+          renderText: { running: "Refreshing current view…", complete: "Current view refreshed" },
         },
       }) as Toolkit,
     [browserToolExecutors],
@@ -541,6 +556,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const [queuedPrompt, setQueuedPrompt] = useState<string | null>(null);
   const aui = useAui();
   const preferences = useAssistantPreferences();
+  const { isRefreshing, refreshCurrentView } = useAssistantViewRefresh();
   const messages = useAuiState((state) => state.thread.messages);
   // The local id is stable while a new thread is initialized and changes for every real thread switch.
   const conversationId = useAuiState((state) => state.threadListItem.id);
@@ -555,6 +571,11 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const assistantIsRunning = isRunning || queuedPrompt !== null;
   const notificationKey = getNotificationKey(latestAssistantMessage);
   const notificationStateRef = useRef(initialAssistantNotificationState);
+  const mutationRefreshStateRef = useRef<{ conversationId: string | null; toolCallIds: Set<string> }>({
+    conversationId: null,
+    toolCallIds: new Set(),
+  });
+  const successfulMutationIds = useMemo(() => getSuccessfulApprovedAssistantMutationIds(messages), [messages]);
 
   const markRead = useCallback(() => {
     notificationStateRef.current = {
@@ -633,6 +654,25 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     setUnreadCount((current) => current + 1);
   }, [conversationId, isLoading, notificationKey, opened]);
 
+  useEffect(() => {
+    if (isLoading) return;
+
+    const update = updateAssistantMutationRefreshState(
+      mutationRefreshStateRef.current,
+      conversationId,
+      successfulMutationIds,
+    );
+    mutationRefreshStateRef.current = update.state;
+    if (!update.shouldRefresh) return;
+
+    void refreshCurrentView().catch(() => {
+      showWarningNotification({
+        title: t("refresh.failedTitle"),
+        message: t("refresh.failedDescription"),
+      });
+    });
+  }, [conversationId, isLoading, refreshCurrentView, successfulMutationIds, t]);
+
   useHotkeys([[hotkeys.openAssistant, open, { preventDefault: true }]]);
 
   const spotlightItem = useMemo(
@@ -654,13 +694,15 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
       unavailableDescription: null,
       opened,
       isRunning: assistantIsRunning,
+      isRefreshing,
       unreadCount,
       open,
       close,
       toggle,
       sendPrompt,
+      refreshCurrentView,
     }),
-    [assistantIsRunning, close, open, opened, sendPrompt, toggle, unreadCount],
+    [assistantIsRunning, close, isRefreshing, open, opened, refreshCurrentView, sendPrompt, toggle, unreadCount],
   );
 
   return (
@@ -686,6 +728,8 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
           models={preferences.models}
           modelOptionsLoading={preferences.isLoading}
           reasoning={preferences.reasoning}
+          isRefreshing={isRefreshing}
+          onRefresh={refreshCurrentView}
           onModelChange={selectModel}
           onReasoningChange={preferences.setReasoning}
         />
@@ -720,11 +764,13 @@ const DisabledAssistantProvider = ({ children, description }: DisabledAssistantP
       unavailableDescription: description,
       opened: false,
       isRunning: false,
+      isRefreshing: false,
       unreadCount: 0,
       open: () => undefined,
       close: () => undefined,
       toggle: () => undefined,
       sendPrompt: () => undefined,
+      refreshCurrentView: () => Promise.resolve(),
     }),
     [description],
   );
@@ -748,9 +794,11 @@ export const AssistantProvider = ({ children }: PropsWithChildren) => {
   if (enabled) {
     return (
       <AssistantPreferencesProvider>
-        <AssistantRuntime>
-          <EnabledAssistantProvider>{children}</EnabledAssistantProvider>
-        </AssistantRuntime>
+        <AssistantViewRefreshProvider>
+          <AssistantRuntime>
+            <EnabledAssistantProvider>{children}</EnabledAssistantProvider>
+          </AssistantRuntime>
+        </AssistantViewRefreshProvider>
       </AssistantPreferencesProvider>
     );
   }

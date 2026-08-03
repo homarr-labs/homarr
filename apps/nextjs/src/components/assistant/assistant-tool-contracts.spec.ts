@@ -27,6 +27,7 @@ const supportedToolArguments = {
   navigate_to_route: { path: "/manage/apps" },
   open_command_menu: {},
   open_media_request_search: {},
+  refresh_current_view: {},
 } satisfies Record<keyof typeof browserToolContracts, unknown>;
 
 describe("assistant human tool contracts", () => {

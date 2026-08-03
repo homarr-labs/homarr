@@ -16,11 +16,13 @@ describe("assistant browser tool executors", () => {
     const navigate = vi.fn();
     const openCommandMenu = vi.fn();
     const openMediaRequestSearch = vi.fn();
+    const refreshCurrentView = vi.fn().mockResolvedValue(undefined);
     const executors = createAssistantBrowserToolExecutors({
       getOrigin: () => "https://homarr.example",
       navigate,
       openCommandMenu,
       openMediaRequestSearch,
+      refreshCurrentView,
     });
 
     await expect(executors.navigate_to_route({ path: "/manage/apps" })).resolves.toEqual({
@@ -29,11 +31,13 @@ describe("assistant browser tool executors", () => {
     });
     await expect(executors.open_command_menu()).resolves.toEqual({ success: true });
     await expect(executors.open_media_request_search()).resolves.toEqual({ success: true });
+    await expect(executors.refresh_current_view()).resolves.toEqual({ success: true });
 
     expect(navigate).toHaveBeenCalledTimes(1);
     expect(navigate).toHaveBeenCalledWith("/manage/apps");
     expect(openCommandMenu).toHaveBeenCalledOnce();
     expect(openMediaRequestSearch).toHaveBeenCalledOnce();
+    expect(refreshCurrentView).toHaveBeenCalledOnce();
   });
 
   test("does not navigate when the assistant requests an unsafe route", async () => {
@@ -43,6 +47,7 @@ describe("assistant browser tool executors", () => {
       navigate,
       openCommandMenu: vi.fn(),
       openMediaRequestSearch: vi.fn(),
+      refreshCurrentView: vi.fn().mockResolvedValue(undefined),
     });
 
     await expect(executors.navigate_to_route({ path: "https://example.com" })).resolves.toEqual({
@@ -50,5 +55,20 @@ describe("assistant browser tool executors", () => {
       error: "Only internal Homarr paths are allowed.",
     });
     expect(navigate).not.toHaveBeenCalled();
+  });
+
+  test("reports a failed refresh without crashing the assistant run", async () => {
+    const executors = createAssistantBrowserToolExecutors({
+      getOrigin: () => "https://homarr.example",
+      navigate: vi.fn(),
+      openCommandMenu: vi.fn(),
+      openMediaRequestSearch: vi.fn(),
+      refreshCurrentView: vi.fn().mockRejectedValue(new Error("offline")),
+    });
+
+    await expect(executors.refresh_current_view()).resolves.toEqual({
+      success: false,
+      error: "The current Homarr view could not be refreshed.",
+    });
   });
 });
