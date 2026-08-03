@@ -1,0 +1,23 @@
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_909ca8cf5b6e15::t_4f966b152e88da 6,233
+e2e/shared/login.ts
+  s_909ca8cf5b6e15::t_4f966b152e88da 26,33,35
+  s_909ca8cf5b6e15::t_3756d4e88f91ca 32
+  s_909ca8cf5b6e15::t_4d715ed3370cd6 16,27-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "4bb862ee7607180ba057b3832467f77b3d1cd459",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}
