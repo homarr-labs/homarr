@@ -35,6 +35,7 @@ export default function WeatherWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"weather">) {
+  const t = useScopedI18n("widget.weather");
   const input = {
     latitude: options.location.latitude,
     longitude: options.location.longitude,
@@ -75,7 +76,7 @@ export default function WeatherWidget({
       {content}
       {weatherQuery.error && (
         <Box pos="absolute" top={4} right={4}>
-          <WidgetQueryErrorIndicator error={weatherQuery.error} label="Weather" />
+          <WidgetQueryErrorIndicator error={weatherQuery.error} label={t("name")} />
         </Box>
       )}
     </Box>

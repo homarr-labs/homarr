@@ -1,8 +1,12 @@
-import { Box, getDefaultZIndex, Group, HoverCard, Progress, Stack, Text, UnstyledButton } from "@mantine/core";
+import { useEffect, useState } from "react";
+import { Box, Group, Popover, Progress, Stack, Text, UnstyledButton } from "@mantine/core";
+
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { BeszelSystemRow } from "./types";
 import { thresholdColor } from "./colors";
 import { formatPercent, getProgressTrackSize } from "./format";
+import classes from "./disk-usage.module.css";
 
 interface DiskUsageProps {
   system: BeszelSystemRow;
@@ -17,34 +21,44 @@ const mountLabel = (path: string) =>
 const severityColor = (value: number) => `var(--mantine-color-${thresholdColor(value)}-6)`;
 
 export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap = 6 }: DiskUsageProps) => {
+  const t = useScopedI18n("common");
+  const [opened, setOpened] = useState(false);
   const filesystems = Object.entries(system.extraFilesystems).filter(([path]) => path !== "/");
+  const filesystemUsageLabel = t("filesystemUsage", { count: filesystems.length + 1 });
   const trackSize = getProgressTrackSize(progressSize);
   const dotSize = progressSize === "xs" ? 2 : 3;
   const dotGap = 2;
+
+  useEffect(() => {
+    if (filesystems.length === 0) setOpened(false);
+  }, [filesystems.length]);
 
   return (
     <Group gap={valueGap} wrap="nowrap" style={{ flex: 1, minWidth: 0, marginLeft: "auto" }}>
       <Text size={fontSize} fw={500} w={valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
         {formatPercent(system.disk)}
       </Text>
-      <HoverCard
-        zIndex={getDefaultZIndex("modal") - 3}
-        position="right"
-        withArrow
-        shadow="md"
-        openDelay={200}
-        closeDelay={100}
-        disabled={filesystems.length === 0}
-      >
-        <HoverCard.Target>
-          {filesystems.length > 0 ? (
+      {filesystems.length > 0 ? (
+        <Popover
+          opened={opened}
+          onChange={setOpened}
+          zIndex="var(--homarr-z-index-widget-background-tooltip)"
+          position="right"
+          withArrow
+          shadow="md"
+        >
+          <Popover.Target>
             <UnstyledButton
-              aria-label={`Show usage for ${filesystems.length + 1} filesystems`}
+              aria-label={filesystemUsageLabel}
+              className={classes.target}
+              onMouseEnter={() => setOpened(true)}
+              onMouseLeave={() => setOpened(false)}
+              onBlur={() => setOpened(false)}
+              onClick={() => setOpened(true)}
               style={{
                 display: "flex",
                 alignItems: "center",
                 flex: 1,
-                minWidth: 24,
                 cursor: "pointer",
               }}
             >
@@ -75,32 +89,32 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
                 </Group>
               </Box>
             </UnstyledButton>
-          ) : (
-            <Box style={{ display: "flex", alignItems: "center", flex: 1, minWidth: 24 }}>
-              <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
-                <Progress value={system.disk} color={thresholdColor(system.disk)} size={trackSize} />
-              </Box>
-            </Box>
-          )}
-        </HoverCard.Target>
-        <HoverCard.Dropdown p={8}>
-          <Stack gap={6} miw={145}>
-            {[["/", system.disk] as const, ...filesystems].map(([path, value]) => (
-              <Stack key={path} gap={1}>
-                <Text size="10px" c="dimmed" fw={500} lh={1.2}>
-                  {mountLabel(path)}
-                </Text>
-                <Group gap={8} wrap="nowrap">
-                  <Text size="sm" fw={600} miw={48} lh={1.25}>
-                    {formatPercent(value)}
+          </Popover.Target>
+          <Popover.Dropdown aria-label={filesystemUsageLabel} p={8}>
+            <Stack gap={6} miw={145}>
+              {[["/", system.disk] as const, ...filesystems].map(([path, value]) => (
+                <Stack key={path} gap={1}>
+                  <Text size="10px" c="dimmed" fw={500} lh={1.2}>
+                    {mountLabel(path)}
                   </Text>
-                  <Progress value={value} color={thresholdColor(value)} size="xs" style={{ flex: 1 }} />
-                </Group>
-              </Stack>
-            ))}
-          </Stack>
-        </HoverCard.Dropdown>
-      </HoverCard>
+                  <Group gap={8} wrap="nowrap">
+                    <Text size="sm" fw={600} miw={48} lh={1.25}>
+                      {formatPercent(value)}
+                    </Text>
+                    <Progress value={value} color={thresholdColor(value)} size="xs" style={{ flex: 1 }} />
+                  </Group>
+                </Stack>
+              ))}
+            </Stack>
+          </Popover.Dropdown>
+        </Popover>
+      ) : (
+        <Box style={{ display: "flex", alignItems: "center", flex: 1, minWidth: 24 }}>
+          <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
+            <Progress value={system.disk} color={thresholdColor(system.disk)} size={trackSize} />
+          </Box>
+        </Box>
+      )}
     </Group>
   );
 };

@@ -1871,10 +1871,6 @@
     "success": "Success",
     "beta": "Beta",
     "error": "Error",
-    "widgetQuery": {
-      "loading": "Loading widget data",
-      "stale": "Could not refresh {widget}; showing saved data"
-    },
     "action": {
       "add": "Add",
       "apply": "Apply",
@@ -3510,7 +3506,6 @@
       "items": {
         "currentlyPlaying": "Currently playing",
         "user": "User",
-        "unknownUser": "Unknown user",
         "name": "Name",
         "id": "Id",
         "status": "Status",

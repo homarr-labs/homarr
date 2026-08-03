@@ -21,6 +21,7 @@ import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
+import { isSmartHomeTiny } from "../layout";
 
 export default function SmartHomeTriggerAutomationWidget({
   options,
@@ -83,7 +84,7 @@ export default function SmartHomeTriggerAutomationWidget({
     [canInteract, handleClick, integrationId, isPending, options.automationId, options.displayName],
   );
 
-  const isTiny = width < 128 || height < 96;
+  const isTiny = isSmartHomeTiny(width, height);
 
   return (
     <Box pos="relative" w="100%" h="100%">
