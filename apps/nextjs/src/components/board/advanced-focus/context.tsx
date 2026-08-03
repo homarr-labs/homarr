@@ -3,6 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Overlay, Portal } from "@mantine/core";
+import { useIsomorphicEffect } from "@mantine/hooks";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 
@@ -229,7 +230,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
     if (isEditMode && activeRef.current) close(false);
   }, [close, isEditMode]);
 
-  useEffect(() => {
+  useIsomorphicEffect(() => {
     if (active?.activation !== "manual") return;
     const background = document.querySelectorAll<HTMLElement>("[data-advanced-focus-background]");
     background.forEach((element) => {
