@@ -265,11 +265,14 @@ describe("Board advanced interactions", () => {
       await expect(addHereMenuItem).toBeVisible({ timeout: 1_000 });
       await page.keyboard.press("Escape");
       await expect(addHereMenuItem).toBeHidden();
+      await expect(grid).toBeFocused();
 
       await rightClickEmptyGridSpaceAsync(grid);
       await expect(addHereMenuItem).toBeVisible();
+      await addHereMenuItem.click();
+      await expect(page.getByRole("dialog").filter({ hasText: "Choose item to add" })).toBeVisible();
       await page.keyboard.press("Escape");
-      await expect(addHereMenuItem).toBeHidden();
+      await expect(grid).toBeFocused();
     } finally {
       await context.close();
     }

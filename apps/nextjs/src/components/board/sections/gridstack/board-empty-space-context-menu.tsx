@@ -101,6 +101,7 @@ export const BoardEmptySpaceContextMenu = ({ section, refs, children, ...boxProp
     if (!placement) return;
     event.preventDefault();
     event.stopPropagation();
+    returnFocusRef.current = event.currentTarget;
     setMenu({ x: event.clientX, y: event.clientY, placement });
   };
 
@@ -108,11 +109,13 @@ export const BoardEmptySpaceContextMenu = ({ section, refs, children, ...boxProp
     if (!enabled || event.pointerType !== "touch") return;
     const placement = resolvePlacement(event.target, event.pageX, event.pageY);
     if (!placement) return;
+    const returnFocus = event.currentTarget;
     clearLongPress();
     longPressPointer.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
     touchGuardElement.current = event.currentTarget;
     touchGuardElement.current.classList.add(suppressTouchCalloutClass);
     longPressTimer.current = setTimeout(() => {
+      returnFocusRef.current = returnFocus;
       setMenu({ x: event.clientX, y: event.clientY, placement });
       navigator.vibrate?.(20);
     }, 500);
