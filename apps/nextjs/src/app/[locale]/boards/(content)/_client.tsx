@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Box } from "@mantine/core";
 
 import { useCurrentLayout, useInitialViewportWidth, useRequiredBoard } from "@homarr/boards/context";
@@ -24,17 +24,16 @@ import classes from "./_client.module.css";
 const APP_SHELL_INLINE_PADDING = 32;
 
 const useFixedBoardGutters = () => {
-  const columnsRef = useRef<HTMLDivElement>(null);
+  const [columns, setColumns] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const columns = columnsRef.current;
     if (!columns) return;
 
     let frame = 0;
     const update = () => {
       frame = 0;
       const columnsRect = columns.getBoundingClientRect();
-      const headerBottom = document.querySelector("header")?.getBoundingClientRect().bottom ?? 0;
+      const headerBottom = document.querySelector("[data-app-shell-header]")?.getBoundingClientRect().bottom ?? 0;
       const stickyTop = Math.max(0, headerBottom + 16);
 
       for (const gutter of columns.querySelectorAll<HTMLElement>("[data-board-gutter]")) {
@@ -62,6 +61,7 @@ const useFixedBoardGutters = () => {
     const resizeObserver = new ResizeObserver(scheduleUpdate);
     resizeObserver.observe(columns);
     document.addEventListener("scroll", scheduleUpdate, { capture: true, passive: true });
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
     window.addEventListener("resize", scheduleUpdate, { passive: true });
     scheduleUpdate();
 
@@ -69,11 +69,12 @@ const useFixedBoardGutters = () => {
       window.cancelAnimationFrame(frame);
       resizeObserver.disconnect();
       document.removeEventListener("scroll", scheduleUpdate, { capture: true });
+      window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, []);
+  }, [columns]);
 
-  return columnsRef;
+  return setColumns;
 };
 
 export const ClientBoard = () => {

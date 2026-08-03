@@ -177,6 +177,7 @@ describe("Board grid", () => {
       const zoomedTileBox = await expectBoundingBoxAsync(logicalTile);
       expect(zoomedTileBox.width).toBeGreaterThan(normalZoomTileBox.width * 1.25);
       await expectHorizontalOverflowAsync(canvas);
+      await expectDocumentNotHorizontallyScrollableAsync(page);
       const overflowRailY = (await expectBoundingBoxAsync(rail)).y;
       await page.evaluate(() => window.scrollTo({ top: 300, behavior: "auto" }));
       await expect.poll(async () => (await expectBoundingBoxAsync(rail)).y).toBeGreaterThanOrEqual(0);
@@ -348,6 +349,8 @@ describe("Board grid", () => {
 
       await page.setViewportSize({ width: 600, height: 1200 });
       await expect(canvas).toHaveAttribute("data-canvas-scale", String(minimumCanvasScale));
+      await expectHorizontalOverflowAsync(canvas);
+      await expectDocumentNotHorizontallyScrollableAsync(page);
       for (const direction of ["n", "ne", "e", "se", "s", "sw", "w", "nw"] as const) {
         await expectTargetSizeAsync(firstItem.locator(`:scope > [data-grid-resize-handle="${direction}"]`));
       }
@@ -823,8 +826,8 @@ describe("Board grid", () => {
 
       const stickyRailY = (await expectBoundingBoxAsync(rail)).y;
       await page.evaluate(() => window.scrollTo({ top: 500, behavior: "auto" }));
+      await expect.poll(async () => (await expectBoundingBoxAsync(rail)).y).toBeGreaterThanOrEqual(0);
       const scrolledRailY = (await expectBoundingBoxAsync(rail)).y;
-      expect(scrolledRailY).toBeGreaterThanOrEqual(0);
       expect(scrolledRailY).toBeLessThanOrEqual(stickyRailY + 0.5);
       await page.evaluate(() => window.scrollTo({ top: 0, behavior: "auto" }));
 
