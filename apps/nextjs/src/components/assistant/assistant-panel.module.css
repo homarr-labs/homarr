@@ -330,7 +330,6 @@
   flex: 1;
   flex-direction: column;
   overflow-y: auto;
-  scroll-behavior: smooth;
 }
 
 .messages {
@@ -1312,9 +1311,5 @@
   .contextMeter {
     animation: none;
     transition: none;
-  }
-
-  .viewport {
-    scroll-behavior: auto;
   }
 }
