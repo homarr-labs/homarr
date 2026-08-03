@@ -22,7 +22,12 @@ import { createId } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResults } from "@homarr/spotlight";
+import {
+  closeSpotlight,
+  openMediaRequestSearch,
+  openSpotlight,
+  useRegisterSpotlightContextResults,
+} from "@homarr/spotlight";
 import { AssistantWidgetRendererProvider } from "@homarr/widgets";
 
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
@@ -34,7 +39,7 @@ import { getPendingAssistantAction } from "./assistant-pending-action";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 import { resolveAssistantPreferenceModelId, resolveAssistantThreadPreferenceModelId } from "./assistant-preferences";
 import { AssistantRuntimeProviderWithTools } from "./assistant-runtime-provider";
-import { sendAssistantPrompt as sendPromptThroughComposer } from "./assistant-send";
+import { sendAssistantPrompt as sendPromptThroughRuntime } from "./assistant-send";
 import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
 import { AssistantConfigureBoardSettingsTool } from "./assistant-board-settings-tool";
@@ -57,7 +62,7 @@ interface AssistantContextValue {
   open: () => void;
   close: () => void;
   toggle: () => void;
-  sendPrompt: (prompt: string) => void;
+  sendPrompt: (prompt: string) => boolean;
   refreshCurrentView: () => Promise<void>;
 }
 
@@ -598,20 +603,20 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const sendPrompt = useCallback(
     (prompt: string) => {
       const text = prompt.trim();
-      if (text.length === 0) return;
+      if (text.length === 0) return false;
       if (assistantIsRunning || latestStatus?.type === "requires-action") {
         showWarningNotification({
           title: t("busy.title"),
           message: t("busy.description"),
         });
-        return;
+        return false;
       }
       setActivityDismissed(false);
       if (isLoading) {
         setQueuedPrompt(text);
-        return;
+        return true;
       }
-      sendPromptThroughComposer(aui.composer(), text);
+      return sendPromptThroughRuntime(aui, text);
     },
     [assistantIsRunning, aui, isLoading, latestStatus?.type, t],
   );
@@ -633,7 +638,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     if (isLoading || isRunning || queuedPrompt === null) return;
     const prompt = queuedPrompt;
     setQueuedPrompt(null);
-    sendPromptThroughComposer(aui.composer(), prompt);
+    sendPromptThroughRuntime(aui, prompt);
   }, [aui, isLoading, isRunning, queuedPrompt]);
 
   useEffect(() => {
@@ -675,17 +680,24 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
 
   useHotkeys([[hotkeys.openAssistant, open, { preventDefault: true }]]);
 
-  const spotlightItem = useMemo(
-    () => ({
+  const spotlightItem = useMemo(() => {
+    const canSend = !assistantIsRunning && latestStatus?.type !== "requires-action";
+    return {
       id: "homarr-assistant",
       name: t("spotlight"),
       icon: "/logo/logo.png",
-      description: t("spotlightDescription"),
+      description: canSend ? t("spotlightDescription") : t("busy.description"),
+      unavailable: !canSend,
       alwaysVisible: true,
-      interaction: (query: string) => createAssistantPromptInteraction({ sendPrompt, prompt: query }),
-    }),
-    [sendPrompt, t],
-  );
+      interaction: (query: string) =>
+        createAssistantPromptInteraction({
+          sendPrompt,
+          onPromptAccepted: closeSpotlight,
+          prompt: query,
+          canSend,
+        }),
+    };
+  }, [assistantIsRunning, latestStatus?.type, sendPrompt, t]);
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const value = useMemo(
@@ -769,7 +781,7 @@ const DisabledAssistantProvider = ({ children, description }: DisabledAssistantP
       open: () => undefined,
       close: () => undefined,
       toggle: () => undefined,
-      sendPrompt: () => undefined,
+      sendPrompt: () => false,
       refreshCurrentView: () => Promise.resolve(),
     }),
     [description],
