@@ -327,8 +327,9 @@ const openBoardAsync = async (
   await page.goto(`${baseUrl}/auth/login`);
   await page.getByLabel("Username").fill(credentials.username);
   await page.locator("#password").fill(credentials.password);
+  const loginRedirect = page.waitForURL(baseUrl, { timeout: 15_000, waitUntil: "commit" });
   await page.locator("css=button[type='submit']").click();
-  await page.waitForURL(baseUrl, { timeout: 15_000 });
+  await loginRedirect;
   await page.goto(`${baseUrl}/boards/${boardName}`);
   await expect(page.locator(".grid-stack-item[data-kind='clock'] .clock-wrapper").first()).toBeVisible({
     timeout: 15_000,
