@@ -3,7 +3,15 @@ import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 
-import { getWidgetQueryKeys, getWidgetRuntimeQueries, setWidgetRuntimeQueries } from "./definition";
+import { definition as appDefinition } from "./app";
+import { definition as beszelSystemGridDefinition } from "./beszel-system-grid";
+import { definition as beszelSystemTableDefinition } from "./beszel-system-table";
+import {
+  getWidgetQueryKeys,
+  getWidgetRuntimeQueries,
+  setWidgetRuntimeQueries,
+  supportsAdvancedFocus,
+} from "./definition";
 
 const togglePolling = () => undefined;
 
@@ -35,4 +43,23 @@ describe("getWidgetQueryKeys", () => {
     expect(widgetStateRef.current.togglePolling).toBe(togglePolling);
     expect(getWidgetRuntimeQueries(widgetStateRef)).toEqual([{ path: ["widget", "calendar", "findAllEvents"], input }]);
   });
+});
+
+describe("supportsAdvancedFocus", () => {
+  const definition = { supportsAdvancedFocus: undefined } as Parameters<typeof supportsAdvancedFocus>[0];
+
+  test("defaults to enabled", () => {
+    expect(supportsAdvancedFocus(definition)).toBe(true);
+  });
+
+  test("allows widgets to opt out", () => {
+    expect(supportsAdvancedFocus({ ...definition, supportsAdvancedFocus: false })).toBe(false);
+  });
+
+  test.each([appDefinition, beszelSystemGridDefinition, beszelSystemTableDefinition])(
+    "keeps non-enhanced widgets compact",
+    (widgetDefinition) => {
+      expect(supportsAdvancedFocus(widgetDefinition)).toBe(false);
+    },
+  );
 });

@@ -86,6 +86,7 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
 
 export interface WidgetDefinition {
   icon: TablerIcon;
+  supportsAdvancedFocus?: boolean;
   queryKey?: QueryKey;
   queryKeys?: readonly QueryKey[];
   queryMatcher?: WidgetQueryMatcher;
@@ -108,6 +109,8 @@ export interface WidgetDefinition {
   >;
   contextActions?: (props: Omit<WidgetContextActionProps<WidgetKind>, "kind">) => WidgetContextMenuAction[];
 }
+
+export const supportsAdvancedFocus = (definition: WidgetDefinition) => definition.supportsAdvancedFocus !== false;
 
 export const getWidgetQueryKeys = (definition: {
   kind: string;

@@ -35,7 +35,7 @@
 .surfaceHostAdvanced {
   position: fixed;
   inset: 0;
-  z-index: calc(var(--mantine-z-index-modal) - 1);
+  z-index: calc(var(--mantine-z-index-popover) - 1);
   width: auto;
   height: auto;
   pointer-events: none;

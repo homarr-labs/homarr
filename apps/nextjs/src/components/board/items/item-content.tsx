@@ -1,4 +1,4 @@
-import type { CSSProperties, KeyboardEvent, MutableRefObject } from "react";
+import type { CSSProperties, KeyboardEvent, MutableRefObject, WheelEvent } from "react";
 import { useEffect, useRef } from "react";
 import { ActionIcon, Badge, Box, Card } from "@mantine/core";
 import { useElementSize, useViewportSize } from "@mantine/hooks";
@@ -12,13 +12,20 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
+import type { WidgetDefinition } from "@homarr/widgets";
+import {
+  loadWidgetDynamic,
+  reduceWidgetOptionsWithDefaultValues,
+  supportsAdvancedFocus as definitionSupportsAdvancedFocus,
+  widgetImports,
+} from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { getAdvancedFocusClosePosition, getAdvancedFocusRect } from "../advanced-focus/geometry";
+import { redirectShiftWheel } from "../advanced-focus/wheel";
 import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
@@ -48,7 +55,9 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const widgetStateRef = useRef<Record<string, unknown> | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const { active, open, close, dismiss, hover, leave } = useAdvancedFocus();
-  const supportsAdvancedFocus = item.kind !== "app";
+  const supportsAdvancedFocus = definitionSupportsAdvancedFocus(
+    widgetImports[item.kind].definition as WidgetDefinition,
+  );
   const advancedViewId = `advanced-focus-${item.id}`;
   const activeFocus = supportsAdvancedFocus && active?.itemId === item.id ? active : null;
   const isAdvanced = activeFocus !== null;
@@ -80,6 +89,12 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
       return;
     event.preventDefault();
     openAdvanced(true);
+  };
+  const handleWheel = (event: WheelEvent<HTMLDivElement>) => {
+    if (!isAdvanced || !event.shiftKey) return;
+    const delta = event.deltaY || event.deltaX;
+    if (!redirectShiftWheel(event.currentTarget, event.target, delta)) return;
+    event.preventDefault();
   };
 
   return (
@@ -128,6 +143,8 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
               id={isAdvanced ? advancedViewId : undefined}
               role={isAdvanced ? "region" : undefined}
               aria-label={isAdvanced ? advancedViewLabel : undefined}
+              data-advanced-focus-surface={isAdvanced || undefined}
+              onWheel={handleWheel}
               radius={board.itemRadius}
               p={isAdvanced ? undefined : 0}
               h={isAdvanced ? undefined : "100%"}

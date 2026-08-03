@@ -61,7 +61,7 @@ const TOOLTIP_Z_INDEX = getDefaultZIndex("modal");
 
 const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: PortalTooltipProps) => {
   const mouseRef = useRef({ x: 0, y: 0 });
-  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [pos, setPos] = useState({ x: 0, y: 0, isAdvanced: false });
   const rafRef = useRef(0);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
@@ -72,9 +72,10 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
       const el = tooltipRef.current;
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
+      const isAdvanced = Boolean(document.elementFromPoint(mx, my)?.closest("[data-advanced-focus-surface]"));
 
       if (!el) {
-        setPos({ x: mx + MARGIN, y: my });
+        setPos({ x: mx + MARGIN, y: my, isAdvanced });
         return;
       }
 
@@ -89,7 +90,7 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
       if (y < MARGIN) y = MARGIN;
       if (y + height > vh - MARGIN) y = vh - MARGIN - height;
 
-      setPos({ x, y });
+      setPos({ x, y, isAdvanced });
     });
   }, []);
 
@@ -122,7 +123,7 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
     position: "fixed",
     left: pos.x,
     top: pos.y,
-    zIndex: TOOLTIP_Z_INDEX,
+    zIndex: pos.isAdvanced ? getDefaultZIndex("popover") : TOOLTIP_Z_INDEX,
     pointerEvents: "none",
   };
 

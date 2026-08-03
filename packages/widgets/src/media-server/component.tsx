@@ -81,10 +81,10 @@ export default function MediaServerWidget({
 
               Cell: ({ row }) => (
                 <Group gap="xs" wrap="nowrap">
-                  <Avatar size={28} src={row.original.user.profilePictureUrl} />
+                  <Avatar size={28} src={row.original.user?.profilePictureUrl} />
                   <Stack gap={0} style={{ minWidth: 0 }}>
                     <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {row.original.user.username}
+                      {row.original.user?.username ?? t("items.unknownUser")}
                     </Text>
                     <Text
                       size="10px"
@@ -415,8 +415,8 @@ const ItemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
         itemKey={t("user")}
         value={
           <Group gap="sm" align="center">
-            <Avatar size="sm" src={innerProps.item.user.profilePictureUrl} />{" "}
-            <Text>{innerProps.item.user.username}</Text>
+            <Avatar size="sm" src={innerProps.item.user?.profilePictureUrl} />{" "}
+            <Text>{innerProps.item.user?.username ?? t("unknownUser")}</Text>
           </Group>
         }
       />

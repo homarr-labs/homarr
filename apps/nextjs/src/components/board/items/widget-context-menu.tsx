@@ -33,6 +33,7 @@ import {
   getWidgetQueryKeys,
   getWidgetRuntimeQueries,
   reduceWidgetOptionsWithDefaultValues,
+  supportsAdvancedFocus,
   widgetImports,
 } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
@@ -70,6 +71,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
     useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
+  const canOpenAdvancedFocus = supportsAdvancedFocus(currentDefinition as WidgetDefinition);
   const { gridstack } = useSectionContext().refs;
   const queryClient = useQueryClient();
   const { open: openAdvancedFocus } = useAdvancedFocus();
@@ -250,7 +252,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
     >
       <Menu.ContextMenu>{children}</Menu.ContextMenu>
       <Menu.Dropdown>
-        {item.kind !== "app" && (
+        {canOpenAdvancedFocus && (
           <>
             <Menu.Item
               closeMenuOnClick

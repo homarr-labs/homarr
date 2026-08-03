@@ -72,7 +72,7 @@ export default function AudioStatsWidget({
                       {currentlyPlaying.name}
                     </Text>
                     <Text size="xs" c="dimmed" truncate>
-                      {currentlyPlaying.seasonName ?? currentlyPlaying.albumName ?? session.user.username}
+                      {currentlyPlaying.seasonName ?? currentlyPlaying.albumName ?? session.user?.username ?? "—"}
                     </Text>
                   </Stack>
                   <Badge

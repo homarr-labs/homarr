@@ -4,8 +4,6 @@ description: "Table view of all Beszel-monitored systems with sortable columns a
 hide_title: true
 ---
 
-import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
-
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -17,14 +15,14 @@ import { beszelIntegration } from "@site/docs/integrations/beszel";
 
 This widget displays all your Beszel-monitored systems in a sortable data table. Each row shows system metrics like CPU, memory, disk, network, temperature, and more. Columns can be toggled on or off, dragged into a different order, and resized from their headers. Column order and widths are saved automatically for each widget. When Beszel reports extra filesystems, the disk column adds a hover breakdown for each mount alongside the root disk.
 
-In compact mode, select a system row to open the complete statistics view. In advanced mode, selecting a row focuses an inline one-hour view with system, filesystem, network, and Docker charts.
+Select a system row to open the complete statistics view.
 
 ### Interactions
 
 - **Reorder columns** by hovering a header to reveal its grab handle, then dragging it
 - **Resize columns** by dragging a header's right edge
 - **Sort systems** by selecting a sortable column header
-- **Open or focus system statistics** by selecting a row, depending on the display mode
+- **Open system statistics** by selecting a row
 
 ### Supported Integrations
 
@@ -36,8 +34,6 @@ In compact mode, select a system row to open the complete statistics view. In ad
     },
   ]}
 />
-
-<WidgetInteractionGuide />
 
 ### Adding the widget
 
