@@ -89,7 +89,12 @@ describe("Docker runtime memory parsing", () => {
     expect(identities).toEqual(getTrpcRequestIdentities(trpcRequestUrl(reordered)));
     expect(getTrpcRequestIdentities(trpcRequestUrl(different))[0]?.identity).not.toBe(identities[0]?.identity);
     expect(getTrpcRequestIdentities(trpcRequestUrl(different))[1]?.identity).toBe(identities[1]?.identity);
-    expect(identities.every(({ identity }) => /^[^.]+(?:\.[^#]+)+#[a-f0-9]{64}$/.test(identity))).toBe(true);
+    expect(
+      identities.every(
+        ({ identity, inputHash, procedure }) =>
+          procedure.includes(".") && /^[a-f0-9]{64}$/.test(inputHash) && identity === `${procedure}#${inputHash}`,
+      ),
+    ).toBe(true);
     expect(JSON.stringify(identities)).not.toContain("Paris");
     expect(() =>
       getTrpcRequestIdentities("https://homarr.test/api/trpc/widget.weather.atLocation?batch=1&input=%7Bmalformed"),
