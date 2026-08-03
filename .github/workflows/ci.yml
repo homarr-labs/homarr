@@ -34,8 +34,10 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || inputs.pr_number || github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  # Every event for a PR shares one group so a close event cancels stale image
+  # publication and a newer synchronize run cannot be overwritten by an older run.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.pr_number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'pull_request_target' || github.event_name == 'workflow_dispatch' || github.ref != 'refs/heads/main' }}
 
 env:
   FORCE_COLOR: 3
