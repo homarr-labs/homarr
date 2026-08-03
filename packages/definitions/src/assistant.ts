@@ -39,6 +39,7 @@ interface AssistantProviderPreset {
   category: AssistantProviderCategory;
   discoveryAuthentication: "bearer" | "anthropic";
   iconUrl: string | null;
+  darkIconUrl?: string;
 }
 
 export const assistantProviderPresets = {
@@ -89,6 +90,7 @@ export const assistantProviderPresets = {
     category: "hosted",
     discoveryAuthentication: "bearer",
     iconUrl: `${providerIconBaseUrl}/groq.svg`,
+    darkIconUrl: "https://cdn.jsdelivr.net/npm/@lobehub/icons-static-png@latest/dark/groq.png",
   },
   mistral: {
     baseUrl: "https://api.mistral.ai/v1",
