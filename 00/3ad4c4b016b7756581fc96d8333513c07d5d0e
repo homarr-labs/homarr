@@ -1,0 +1,33 @@
+packages/api/src/router/integration/integration-router.ts
+  s_7b8a552cf9f1f8::t_b9e6555760e285 65,70
+apps/nextjs/src/app/[locale]/manage/integrations/new/page.tsx
+  s_7b8a552cf9f1f8::t_450f6309ed9d9f 26
+packages/api/src/router/test/integration/integration-router.spec.ts
+  s_909ca8cf5b6e15::t_a43f8da3afdb1a 297,302,332,337,370,375,420,432,495
+packages/spotlight/src/modes/command/global-group.tsx
+  s_7b8a552cf9f1f8::t_744428bfd86595 98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "003ad4c4b016b7756581fc96d8333513c07d5d0e",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
