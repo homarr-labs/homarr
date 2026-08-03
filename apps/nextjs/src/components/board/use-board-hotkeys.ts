@@ -8,7 +8,16 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { hotkeys } from "@homarr/definitions";
 import { useHotkeys } from "@mantine/hooks";
 
-export const useBoardHotkeys = () => {
+/**
+ * Client component that activates board keyboard shortcuts.
+ * Render it once inside the board provider tree.
+ */
+export const BoardHotkeys = () => {
+  useBoardHotkeys();
+  return null;
+};
+
+const useBoardHotkeys = () => {
   const router = useRouter();
   const currentBoard = useRequiredBoard();
   const { data: boards = [] } = clientApi.board.getAllBoards.useQuery();

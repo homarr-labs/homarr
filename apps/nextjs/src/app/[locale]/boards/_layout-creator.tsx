@@ -18,7 +18,7 @@ import type { Params } from "./(content)/_creator";
 import { CustomCss } from "./(content)/_custom-css";
 import { BoardReadyProvider } from "./(content)/_ready-context";
 import { BoardMantineProvider } from "./(content)/_theme";
-import { BoardHotkeys } from "./_board-hotkeys";
+import { BoardHotkeys } from "~/components/board/use-board-hotkeys";
 
 const logger = createLogger({ module: "createBoardLayout" });
 
