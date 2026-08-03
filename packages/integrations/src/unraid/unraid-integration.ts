@@ -41,6 +41,9 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
 
     // We use the thread count (not physical cores) because each logical CPU entry in cpus[]
     // represents a thread. Dividing by cores would over-report utilization on SMT systems.
+    // Guard against zero or negative thread counts to avoid Infinity/NaN.
+    const cpuUtilizationNormalized = cpuCount > 0 ? cpuUtilization / cpuCount : 0;
+
     const totalMemory = systemInfo.info.memory.layout.reduce((acc, layout) => layout.size + acc, 0);
     const usedMemory = totalMemory * (systemInfo.metrics.memory.percentTotal / 100);
     const uptime = dayjs(systemInfo.info.os.uptime);
@@ -48,7 +51,7 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
     return {
       version: systemInfo.info.os.release,
       cpuModelName: systemInfo.info.cpu.brand,
-      cpuUtilization: cpuUtilization / cpuCount,
+      cpuUtilization: cpuUtilizationNormalized,
       memUsedInBytes: usedMemory,
       memAvailableInBytes: totalMemory - usedMemory,
       uptime: dayjs().diff(uptime, "seconds"),
