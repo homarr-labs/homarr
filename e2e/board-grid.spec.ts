@@ -85,6 +85,7 @@ describe("Board grid", () => {
 
       const canvas = page.locator('[data-testid="board-canvas"][data-board-hydrated="true"]');
       await expect(canvas).toHaveAttribute("data-board-hydrated", "true");
+      const normalCanvasScale = await readCanvasScaleAsync(canvas);
       await expect(page.locator(`[data-grid-runtime="${gridRuntimeMarker}"]`)).toHaveCount(0);
 
       const mainSection = page.locator(`[data-section-id="${fixture.sectionId}"]`);
@@ -104,10 +105,22 @@ describe("Board grid", () => {
       await expect(containerSection).toHaveAttribute("data-grid-h", "2");
       const containerLabel = containerSection.locator("[data-board-container-label]");
       await expect(containerLabel).toHaveText("Nested box");
+      await expect(containerLabel).toHaveCSS("border-top-left-radius", "4px");
       const expandedContainerBox = await expectBoundingBoxAsync(containerSection);
       const expandedContainerLabelBox = await expectBoundingBoxAsync(containerLabel);
       expect(Math.abs(expandedContainerLabelBox.x - expandedContainerBox.x)).toBeLessThanOrEqual(3);
       expect(Math.abs(expandedContainerLabelBox.width - expandedContainerBox.width)).toBeLessThanOrEqual(3);
+      const openContainerApps = containerSection.getByRole("button", {
+        name: "Open all apps in Nested box in tabs",
+        exact: true,
+      });
+      const expandedOpenContainerAppsBox = await expectBoundingBoxAsync(openContainerApps);
+      expect(
+        expandedContainerLabelBox.x +
+          expandedContainerLabelBox.width -
+          expandedOpenContainerAppsBox.x -
+          expandedOpenContainerAppsBox.width,
+      ).toBeCloseTo(8 * normalCanvasScale, 1);
       await expect(nestedItem).toHaveAttribute("data-grid-x", "0");
       await expect(belowItem).toHaveAttribute("data-grid-y", "2");
       const containerLabelBox = await expectBoundingBoxAsync(containerLabel);
@@ -138,7 +151,6 @@ describe("Board grid", () => {
       await expect(page).toHaveURL(/#board-app-opened$/);
       await page.evaluate(() => history.replaceState(null, "", `${location.pathname}${location.search}`));
       const normalZoomTileBox = await expectBoundingBoxAsync(logicalTile);
-      const normalCanvasScale = await readCanvasScaleAsync(canvas);
       const secondItemBox = await expectBoundingBoxAsync(secondItem);
       expect(secondItemBox.x - (normalZoomTileBox.x + normalZoomTileBox.width)).toBeCloseTo(
         (logicalCellPitch - logicalCellSize) * normalCanvasScale,
@@ -208,10 +220,17 @@ describe("Board grid", () => {
         .toBeCloseTo(expectedCollapsedHeight, 1);
       const collapsedContainerBox = await expectBoundingBoxAsync(containerSection);
       const collapsedControlBox = await expectBoundingBoxAsync(collapsedControl);
+      const collapsedOpenContainerAppsBox = await expectBoundingBoxAsync(openContainerApps);
       expect(Math.abs(collapsedControlBox.x - collapsedContainerBox.x)).toBeLessThanOrEqual(3);
       expect(Math.abs(collapsedControlBox.y - collapsedContainerBox.y)).toBeLessThanOrEqual(3);
       expect(Math.abs(collapsedControlBox.width - collapsedContainerBox.width)).toBeLessThanOrEqual(3);
       expect(Math.abs(collapsedControlBox.height - collapsedContainerBox.height)).toBeLessThanOrEqual(3);
+      expect(
+        collapsedControlBox.x +
+          collapsedControlBox.width -
+          collapsedOpenContainerAppsBox.x -
+          collapsedOpenContainerAppsBox.width,
+      ).toBeCloseTo(8 * normalCanvasScale, 1);
 
       await page
         .getByRole("button", {
@@ -1036,7 +1055,7 @@ const seedBoardGridAsync = async (db: SqliteDatabase, creatorId: string) => {
         borderColor: "",
         showLabel: true,
         collapsible: true,
-        showOpenAll: false,
+        showOpenAll: true,
       }),
     },
   ]);
