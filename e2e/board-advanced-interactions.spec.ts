@@ -119,7 +119,7 @@ describe("Board advanced interactions", () => {
         const probe = document.createElement("div");
         probe.dataset.shiftScrollProbe = "true";
         probe.style.cssText = "height:80px;overflow-y:auto";
-        probe.innerHTML = '<div style="height:600px"></div>';
+        probe.innerHTML = '<svg data-shift-scroll-target="true"></svg><div style="height:600px"></div>';
         probe.addEventListener("wheel", (event) => event.stopPropagation());
         element.append(probe);
 
@@ -139,12 +139,14 @@ describe("Board advanced interactions", () => {
       await scrollProbe.evaluate((element) => {
         element.scrollTop = 0;
       });
-      const lineEventCancelled = await scrollProbe.evaluate(
-        (element) =>
-          !element.dispatchEvent(
-            new WheelEvent("wheel", { bubbles: true, cancelable: true, shiftKey: true, deltaX: 3, deltaMode: 1 }),
-          ),
-      );
+      const lineEventCancelled = await scrollProbe
+        .locator("[data-shift-scroll-target='true']")
+        .evaluate(
+          (element) =>
+            !element.dispatchEvent(
+              new WheelEvent("wheel", { bubbles: true, cancelable: true, shiftKey: true, deltaX: 3, deltaMode: 1 }),
+            ),
+        );
       await page.keyboard.up("Shift");
       expect(lineEventCancelled).toBe(true);
       expect(await scrollProbe.evaluate((element) => element.scrollTop)).toBeGreaterThanOrEqual(48);
