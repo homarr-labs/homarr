@@ -142,3 +142,10 @@ export const assistantProviderPresets = {
 
 export const assistantProviderRequiresApiKey = (provider: AssistantProvider) =>
   assistantProviderPresets[provider].requiresApiKey;
+
+/**
+ * OpenRouter and Homarr Router implement OpenRouter server tools directly.
+ * Custom endpoints may opt in when they proxy the OpenRouter request format.
+ */
+export const assistantProviderCanUseOpenRouterServerTools = (provider: AssistantProvider | "homarr") =>
+  provider === "openrouter" || provider === "homarr" || provider === "custom";

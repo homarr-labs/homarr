@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import {
+  assistantProviderCanUseOpenRouterServerTools,
   assistantProviderIds,
   assistantProviderPresets,
   assistantProviderRequiresApiKey,
@@ -46,5 +47,13 @@ describe("assistant provider presets", () => {
     expect(getAssistantModelOptionLabel(model)).toBe("DeepSeek: DeepSeek V4 Pro (deepseek/deepseek-v4-pro)");
     expect(resolveAssistantModelId([model], model.id)).toBe(model.id);
     expect(resolveAssistantModelId([model], getAssistantModelOptionLabel(model))).toBe(model.id);
+  });
+
+  test("allows OpenRouter server tools for OpenRouter, its Homarr proxy, and explicit custom proxies", () => {
+    expect(assistantProviderCanUseOpenRouterServerTools("openrouter")).toBe(true);
+    expect(assistantProviderCanUseOpenRouterServerTools("homarr")).toBe(true);
+    expect(assistantProviderCanUseOpenRouterServerTools("custom")).toBe(true);
+    expect(assistantProviderCanUseOpenRouterServerTools("openai")).toBe(false);
+    expect(assistantProviderCanUseOpenRouterServerTools("anthropic")).toBe(false);
   });
 });

@@ -40,6 +40,7 @@ export type AssistantRequestStep = {
   routerRegion?: string;
   fallbackCount?: number;
   fallbackLatencyMs?: number;
+  webSearchRequests?: number;
   isByok?: boolean;
   streamed?: boolean;
   cancelled?: boolean;
@@ -64,6 +65,7 @@ export type AssistantRequestTelemetry = {
   cacheDiscount?: number;
   fallbackCount?: number;
   fallbackLatencyMs?: number;
+  webSearchRequests?: number;
   costType?: "reported" | "estimated";
   finishReason?: string;
   steps: AssistantRequestStep[];
@@ -208,6 +210,9 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
             ...(getFiniteNonNegativeNumber(candidate.fallbackLatencyMs) !== undefined
               ? { fallbackLatencyMs: getFiniteNonNegativeNumber(candidate.fallbackLatencyMs) }
               : {}),
+            ...(getFiniteNonNegativeNumber(candidate.webSearchRequests) !== undefined
+              ? { webSearchRequests: getFiniteNonNegativeNumber(candidate.webSearchRequests) }
+              : {}),
             ...(typeof candidate.isByok === "boolean" ? { isByok: candidate.isByok } : {}),
             ...(typeof candidate.streamed === "boolean" ? { streamed: candidate.streamed } : {}),
             ...(typeof candidate.cancelled === "boolean" ? { cancelled: candidate.cancelled } : {}),
@@ -258,6 +263,9 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
       : {}),
     ...(getFiniteNonNegativeNumber(value.fallbackLatencyMs) !== undefined
       ? { fallbackLatencyMs: getFiniteNonNegativeNumber(value.fallbackLatencyMs) }
+      : {}),
+    ...(getFiniteNonNegativeNumber(value.webSearchRequests) !== undefined
+      ? { webSearchRequests: getFiniteNonNegativeNumber(value.webSearchRequests) }
       : {}),
     ...(value.costType === "reported" || value.costType === "estimated" ? { costType: value.costType } : {}),
     ...(typeof value.finishReason === "string" ? { finishReason: value.finishReason } : {}),

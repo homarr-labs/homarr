@@ -82,6 +82,26 @@ describe("assistantRouter.updateConnection", () => {
     });
   });
 
+  test("disables OpenRouter server tools when the provider destination changes", async () => {
+    const db = await createConfiguredAssistantAsync();
+    await db
+      .update(assistantConfigurations)
+      .set({ webSearchEnabled: true })
+      .where(eq(assistantConfigurations.id, "default"));
+    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    await caller.updateConnection({
+      provider: "openai",
+      baseUrl: "https://api.openai.com/v1",
+      modelDiscoveryPath: "/models",
+      clearApiKey: false,
+      clearCustomHeaders: false,
+    });
+
+    const [configuration] = await db.select().from(assistantConfigurations);
+    expect(configuration?.webSearchEnabled).toBe(false);
+  });
+
   test("preserves the persisted model when the saved connection is unchanged", async () => {
     const db = await createConfiguredAssistantAsync();
     const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
@@ -138,6 +158,29 @@ describe("assistantRouter.updateConfiguration", () => {
 
     const [configuration] = await db.select().from(assistantConfigurations);
     expect(configuration?.modelId).toBe("deepseek/deepseek-v4-pro");
+  });
+
+  test("persists the OpenRouter web-search server tool option", async () => {
+    const db = await createConfiguredAssistantAsync();
+    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    await caller.updateConfiguration({ enabled: true, modelId: "example/model", webSearchEnabled: true });
+
+    const [configuration] = await db.select().from(assistantConfigurations);
+    expect(configuration?.webSearchEnabled).toBe(true);
+  });
+
+  test("rejects OpenRouter server tools for an incompatible provider", async () => {
+    const db = await createConfiguredAssistantAsync();
+    await db
+      .update(assistantConfigurations)
+      .set({ provider: "openai", baseUrl: "https://api.openai.com/v1" })
+      .where(eq(assistantConfigurations.id, "default"));
+    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    await expect(
+      caller.updateConfiguration({ enabled: true, modelId: "gpt-5", webSearchEnabled: true }),
+    ).rejects.toThrow("Web search requires OpenRouter or an OpenRouter-compatible proxy endpoint.");
   });
 });
 
