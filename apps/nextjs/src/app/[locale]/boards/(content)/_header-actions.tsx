@@ -228,14 +228,20 @@ const BoardNavigationHotkeys = () => {
     // board hasn't synced with the getAllBoards cache yet, currentIndex is -1 and
     // the modulo arithmetic would otherwise jump to an unexpected board.
     if (boards.length > 1 && currentIndex !== -1) {
-      entries.push(["mod+shift+ArrowRight", () => {
-        const nextIndex = getNextBoardIndex(boards.length, currentIndex, 1);
-        if (nextIndex !== null) navigateToBoard(nextIndex);
-      }]);
-      entries.push(["mod+shift+ArrowLeft", () => {
-        const nextIndex = getNextBoardIndex(boards.length, currentIndex, -1);
-        if (nextIndex !== null) navigateToBoard(nextIndex);
-      }]);
+      entries.push([
+        "mod+shift+ArrowRight",
+        () => {
+          const nextIndex = getNextBoardIndex(boards.length, currentIndex, 1);
+          if (nextIndex !== null) navigateToBoard(nextIndex);
+        },
+      ]);
+      entries.push([
+        "mod+shift+ArrowLeft",
+        () => {
+          const nextIndex = getNextBoardIndex(boards.length, currentIndex, -1);
+          if (nextIndex !== null) navigateToBoard(nextIndex);
+        },
+      ]);
     }
 
     for (let i = 0; i < Math.min(boards.length, 9); i++) {
