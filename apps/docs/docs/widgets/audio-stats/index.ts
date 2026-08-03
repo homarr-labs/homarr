@@ -28,24 +28,6 @@ export const audioStatsWidget: WidgetDefinition = {
         defaultValue: "yes",
       },
       {
-        name: "Show now playing",
-        description: "Displays currently playing tracks (Navidrome only)",
-        values: { type: "boolean" },
-        defaultValue: "yes",
-      },
-      {
-        name: "Show now playing list",
-        description: "Displays a detailed list of now playing tracks (Navidrome only)",
-        values: { type: "boolean" },
-        defaultValue: "yes",
-      },
-      {
-        name: "Max now playing items",
-        description: "Maximum number of now playing tracks to display (Navidrome only)",
-        values: "Number (1-5)",
-        defaultValue: "3",
-      },
-      {
         name: "Show library count",
         description: "Displays the number of libraries (Audiobookshelf only)",
         values: { type: "boolean" },

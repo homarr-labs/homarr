@@ -42,7 +42,6 @@ describe("getVisibleStats", () => {
     artistCount: 100,
     albumCount: 200,
     songCount: 3000,
-    nowPlaying: [],
   };
 
   const audiobookshelfStats: AudiobookshelfDashboardData = {
