@@ -71,7 +71,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconAffiliateFilled,
       href: "/manage/integrations",
       label: t("items.integrations"),
-      hidden: !session?.user.permissions.includes("integration-create"),
+      hidden: !session?.user.permissions.includes("integration-full-all"),
       "data-onboarding-tour-id": "manage-integrations",
     },
     {

@@ -92,7 +92,7 @@ export const homeRouter = createTRPCRouter({
       });
     }
 
-    if (ctx.session?.user.permissions.includes("integration-create")) {
+    if (ctx.session?.user.permissions.includes("integration-full-all")) {
       statistics.push({
         titleKey: "integration",
         subtitleKey: "resources",
