@@ -72,7 +72,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             h={isVisuallyCollapsed ? "100%" : 24}
             px={12}
             pe={options.showOpenAll ? 40 : 12}
-            radius={board.itemRadius}
+            radius="sm"
             variant="default"
             justify={options.showLabel ? "flex-start" : "center"}
             leftSection={
@@ -146,7 +146,7 @@ export const BoardContainerSection = ({ section }: Props) => {
           <ActionIcon
             pos="absolute"
             top={isVisuallyCollapsed ? "50%" : -24}
-            right={0}
+            right={8}
             style={{ zIndex: 10, transform: isVisuallyCollapsed ? "translateY(-50%)" : undefined }}
             variant={options.collapsible ? "subtle" : "default"}
             size={24}
