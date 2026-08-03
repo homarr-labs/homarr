@@ -104,6 +104,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import classes from "./assistant-panel.module.css";
 import { useAssistantAutoApproval, useAssistantAutomaticAction } from "./assistant-auto-approval";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
+import { getSafeAssistantMarkdownImageSource } from "./assistant-markdown-image";
 import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
 import type { AssistantPendingAction } from "./assistant-pending-action";
 import { AssistantQuestionPortalProvider } from "./assistant-question-portal";
@@ -153,12 +154,29 @@ const MarkdownTable = ({ children, ...props }: ComponentPropsWithoutRef<"table">
   </div>
 );
 
+const MarkdownImage = ({ src, alt = "", ...props }: ComponentPropsWithoutRef<"img">) => {
+  const safeSource = getSafeAssistantMarkdownImageSource(src);
+  if (!safeSource) return null;
+
+  return (
+    <img
+      {...props}
+      src={safeSource}
+      alt={alt}
+      className={classes.markdownImage}
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+    />
+  );
+};
+
 const AssistantTextPart = () => (
   <MarkdownTextPrimitive
     className={classes.messageMarkdown}
     preprocess={normalizeAssistantMarkdown}
     remarkPlugins={markdownRemarkPlugins}
-    components={{ a: MarkdownLink, table: MarkdownTable }}
+    components={{ a: MarkdownLink, img: MarkdownImage, table: MarkdownTable }}
     defer
   />
 );

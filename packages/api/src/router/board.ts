@@ -1485,7 +1485,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Add a widget/app item to a board. Automatically places it in the first empty section at the next free grid position. Provide boardId (from board_getAllBoards), kind (widget type like 'app', 'weather', etc.), optional options map, and optional integrationIds array. Returns { itemId }",
+          "Add a widget/app item to a board. Automatically places it in the first empty section at the next free grid position. Provide boardId (from board_getAllBoards), kind (widget type like 'app', 'weather', etc.), optional options map, and optional integrationIds array. To create a formatted dashboard note, use kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Notebook content may use semantic paragraphs, headings, lists, task lists, blockquotes, tables, links, emphasis, and images, but must not contain scripts, styles, iframes, event handlers, or unsafe URL protocols. Returns { itemId }",
       },
     })
     .input(addItemToBoardSchema)
