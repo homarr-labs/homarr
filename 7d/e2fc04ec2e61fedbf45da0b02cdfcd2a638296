@@ -1,0 +1,29 @@
+ISSUES.md
+  s_909ca8cf5b6e15::t_896e53059f6113 1-244
+packages/auth/events.ts
+  s_909ca8cf5b6e15::t_2b6c74ff45eb5a 35-42,46,48-49
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_909ca8cf5b6e15::t_8dbc8b04fbf00d 122
+packages/integrations/src/unraid/unraid-integration.ts
+  s_909ca8cf5b6e15::t_a8f2debfa3f21f 40,42-43,143
+packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts
+  s_909ca8cf5b6e15::t_ba3a783208a306 65,68-82
+packages/integrations/src/uptime-kuma/uptime-kuma-types.ts
+  s_909ca8cf5b6e15::t_b1bce5aa84bd8e 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "7de2fc04ec2e61fedbf45da0b02cdfcd2a638296",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
