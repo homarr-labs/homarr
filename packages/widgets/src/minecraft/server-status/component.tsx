@@ -14,9 +14,8 @@ export default function MinecraftServerStatusWidget({
   options,
   width,
   height,
-  displayMode,
 }: WidgetComponentProps<"minecraftServerStatus">) {
-  const { data: result, isPending } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
+  const { data: result, isPending, error } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
   const t = useI18n();
 
   if (isPending) {
@@ -28,14 +27,16 @@ export default function MinecraftServerStatusWidget({
       </Flex>
     );
   }
+  if (error && !result) throw error;
   if (!result) return <WidgetEmptyState />;
   const { data } = result;
 
   const title = options.title.trim().length > 0 ? options.title : options.domain;
-  const isAdvanced = displayMode === "advanced";
-  const isDense = !isAdvanced && (width < 220 || height < 120);
-  const showServerIcon = isAdvanced || (!isDense && height >= 144);
-  const iconSize = Math.max(40, Math.min(isAdvanced ? 128 : 80, width * 0.45, height * 0.45));
+  const isDense = width < 220 || height < 120;
+  const showServerIcon = !isDense && height >= 144;
+  const showMetadata = width >= 260 && height >= 180;
+  const showCapacity = width >= 180 && height >= 140;
+  const iconSize = Math.max(40, Math.min(80, width * 0.45, height * 0.45));
   const playerPercent = data.online && data.players.max > 0 ? (data.players.online / data.players.max) * 100 : 0;
 
   return (
@@ -44,7 +45,7 @@ export default function MinecraftServerStatusWidget({
       h="100%"
       w="100%"
       direction="column"
-      p={isAdvanced ? "lg" : isDense ? "xs" : "sm"}
+      p={isDense ? "xs" : "sm"}
       justify="center"
       align="center"
     >
@@ -63,11 +64,11 @@ export default function MinecraftServerStatusWidget({
             ? t("widget.minecraftServerStatus.status.online")
             : t("widget.minecraftServerStatus.status.offline")}
         </VisuallyHidden>
-        <Text size={isAdvanced ? "xl" : "md"} fw="bold" truncate="end">
+        <Text size={showMetadata ? "lg" : "md"} fw="bold" truncate="end">
           {title}
         </Text>
       </Group>
-      {isAdvanced && (
+      {showMetadata && (
         <Group gap="xs" mt="xs" wrap="wrap" justify="center">
           <Badge variant="light">{options.domain}</Badge>
           {options.isBedrockServer && (
@@ -97,18 +98,18 @@ export default function MinecraftServerStatusWidget({
                 <IconCube size={iconSize} color="var(--mantine-color-gray-5)" />
               </Box>
             ))}
-          <Stack gap={4} w={isAdvanced ? "min(100%, 420px)" : "auto"} align="stretch">
+          <Stack gap={4} w={showCapacity ? "min(100%, 420px)" : "auto"} align="stretch">
             <Group gap={5} c="dimmed" align="center" justify="center">
-              <IconUsersGroup size={isAdvanced ? "1.25rem" : "1rem"} />
-              <Text size={isAdvanced ? "lg" : isDense ? "sm" : "md"}>
+              <IconUsersGroup size={showMetadata ? "1.25rem" : "1rem"} />
+              <Text size={showMetadata ? "lg" : isDense ? "sm" : "md"}>
                 {formatNumber(data.players.online, 1)} / {formatNumber(data.players.max, 1)}
               </Text>
             </Group>
-            {isAdvanced && <Progress value={playerPercent} color={playerPercent >= 90 ? "orange" : "teal"} />}
+            {showCapacity && <Progress value={playerPercent} color={playerPercent >= 90 ? "orange" : "teal"} />}
           </Stack>
         </>
       )}
-      {isAdvanced && !data.online && (
+      {showMetadata && !data.online && (
         <Text mt="md" c="dimmed" size="sm">
           {options.domain}
         </Text>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import { Accordion, Anchor, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
@@ -8,6 +8,7 @@ import { useTimeAgo } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { buildServerResourceCounts } from "./coolify-utils";
 import { ServersSection } from "./servers-section";
 import { ServicesSection } from "./services-section";
@@ -18,8 +19,8 @@ interface SingleInstanceLayoutProps {
   instance: InstanceData;
   options: CoolifyOptions;
   isTiny: boolean;
-  widgetKey: string;
   isAdvanced: boolean;
+  widgetKey: string;
   hideFooter: boolean;
 }
 
@@ -27,8 +28,8 @@ export function SingleInstanceLayout({
   instance,
   options,
   isTiny,
-  widgetKey,
   isAdvanced,
+  widgetKey,
   hideFooter,
 }: SingleInstanceLayoutProps) {
   const t = useScopedI18n("widget.coolify");
@@ -40,36 +41,15 @@ export function SingleInstanceLayout({
     key: `coolify-sections-${widgetKey}`,
     defaultValue: ["applications"],
   });
-  const visibleSections = useMemo(
-    () =>
-      [
-        options.showServers ? "servers" : null,
-        options.showApplications ? "applications" : null,
-        options.showServices ? "services" : null,
-      ].filter((section): section is string => section !== null),
-    [options.showApplications, options.showServers, options.showServices],
-  );
-  const [advancedOpenSections, setAdvancedOpenSections] = useState(visibleSections);
-  const previousVisibleSectionsRef = useRef(visibleSections);
-
-  useEffect(() => {
-    const newlyVisibleSections = visibleSections.filter(
-      (section) => !previousVisibleSectionsRef.current.includes(section),
-    );
-    previousVisibleSectionsRef.current = visibleSections;
-    if (newlyVisibleSections.length === 0) return;
-
-    setAdvancedOpenSections((current) => [...new Set([...current, ...newlyVisibleSections])]);
-  }, [visibleSections]);
-
+  const [advancedOpenSections, setAdvancedOpenSections] = useState(["servers", "applications", "services"]);
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,
     instance.instanceInfo.applications,
     instance.instanceInfo.services,
   );
 
-  const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
-  const displayUrl = baseUrl.replace(/^https?:\/\//, "");
+  const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
+  const displayUrl = baseUrl ? baseUrl.replace(/^https?:\/\//, "") : "—";
   const relativeTime = useTimeAgo(instance.updatedAt);
 
   return (
@@ -82,17 +62,25 @@ export function SingleInstanceLayout({
               oolify
             </Text>
           </Group>
-          <Anchor
-            href={baseUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            fz={isTiny ? "xs" : "sm"}
-            fw={500}
-            c="dimmed"
-            lineClamp={1}
-          >
-            {displayUrl}
-          </Anchor>
+          <Stack gap={0} miw={0}>
+            {isAdvanced && (
+              <Text fz="xs" fw={600} truncate="end">
+                {instance.integrationName}
+              </Text>
+            )}
+            <Anchor
+              component={baseUrl ? "a" : "span"}
+              href={baseUrl}
+              target={baseUrl ? "_blank" : undefined}
+              rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
+              fz={isTiny ? "xs" : "sm"}
+              fw={500}
+              c="dimmed"
+              lineClamp={1}
+            >
+              {isAdvanced ? t("source.url", { url: displayUrl }) : displayUrl}
+            </Anchor>
+          </Stack>
         </Group>
 
         <Accordion
@@ -108,6 +96,7 @@ export function SingleInstanceLayout({
               serverResourceCounts={serverResourceCounts}
               baseUrl={baseUrl}
               isTiny={isTiny}
+              isAdvanced={isAdvanced}
               showIp={showIp}
               onToggleIp={() => setShowIp((prev) => !prev)}
             />
@@ -116,7 +105,12 @@ export function SingleInstanceLayout({
             <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
           )}
           {options.showServices && (
-            <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
+            <ServicesSection
+              services={instance.instanceInfo.services}
+              baseUrl={baseUrl}
+              isTiny={isTiny}
+              isAdvanced={isAdvanced}
+            />
           )}
         </Accordion>
 

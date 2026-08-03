@@ -6,8 +6,14 @@ const escapeOwnerSelector = [
 ].join(", ");
 
 export const isEscapeOwnedByNestedOverlay = (target: EventTarget | null, advancedSurface: Element | null) => {
-  if (!(target instanceof Element)) return false;
+  const escapeOwner = target instanceof Element ? target.closest(escapeOwnerSelector) : null;
+  if (escapeOwner !== null && escapeOwner !== advancedSurface) return true;
 
-  const escapeOwner = target.closest(escapeOwnerSelector);
-  return escapeOwner !== null && escapeOwner !== advancedSurface;
+  return Array.from(document.querySelectorAll(escapeOwnerSelector)).some(
+    (owner) =>
+      owner !== advancedSurface &&
+      owner.getAttribute("aria-hidden") !== "true" &&
+      owner.closest('[aria-hidden="true"]') === null &&
+      owner.getClientRects().length > 0,
+  );
 };

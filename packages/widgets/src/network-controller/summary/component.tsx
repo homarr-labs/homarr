@@ -11,6 +11,8 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
+import { getBinaryStatusKey } from "../../common/locale";
+import { getUsableWidgetQueryData } from "../../common/query-state";
 
 dayjs.extend(objectSupport);
 dayjs.extend(relativeTime);
@@ -20,17 +22,23 @@ export default function NetworkControllerSummaryWidget({
   integrationIds,
   width,
   height,
-  displayMode,
 }: WidgetComponentProps<"networkControllerSummary">) {
-  const { data: summaries = [], isPending } = clientApi.widget.networkController.summary.useQuery({
+  const summaryQuery = clientApi.widget.networkController.summary.useQuery({
     integrationIds,
   });
+  const summaries = getUsableWidgetQueryData(summaryQuery) ?? [];
+  const { isPending } = summaryQuery;
 
   const t = useI18n();
+  const statusLabels = {
+    enabled: t("widget.dnsHoleSummary.status.enabled"),
+    disabled: t("widget.dnsHoleSummary.status.disabled"),
+    unknown: t("widget.dnsHoleSummary.status.unknown"),
+  };
 
-  const isAdvanced = displayMode === "advanced";
-  const isDense = !isAdvanced && height < 160;
-  const columns = isAdvanced && width >= 720 ? 2 : 1;
+  const isDense = height < 160;
+  const showDetails = height >= 180 && width >= 240;
+  const columns = width >= 720 ? 2 : 1;
 
   if (isPending || summaries.length === 0) {
     return (
@@ -43,12 +51,12 @@ export default function NetworkControllerSummaryWidget({
   }
 
   return (
-    <ScrollArea h="100%" p={isAdvanced ? "md" : isDense ? "xs" : "sm"}>
+    <ScrollArea h="100%" p={isDense ? "xs" : "sm"}>
       <SimpleGrid cols={columns} spacing="sm">
         {summaries.map(({ integration, summary }) => (
-          <Card key={integration.id} p={isAdvanced ? "md" : "xs"} withBorder={summaries.length > 1 || isAdvanced}>
+          <Card key={integration.id} p={isDense ? "xs" : "sm"} withBorder={summaries.length > 1}>
             <Stack gap="xs">
-              {(isAdvanced || summaries.length > 1) && (
+              {summaries.length > 1 && (
                 <Group justify="space-between" wrap="nowrap">
                   <Text fw={600} size="sm" truncate="end">
                     {integration.name}
@@ -59,24 +67,66 @@ export default function NetworkControllerSummaryWidget({
                 </Group>
               )}
               <List spacing={isDense ? 2 : "xs"} center size={isDense ? "sm" : undefined}>
-                <List.Item icon={<StatusIcon status={summary.wanStatus} size={isDense ? 16 : 20} />}>WAN</List.Item>
-                <List.Item icon={<StatusIcon status={summary.www.status} size={isDense ? 16 : 20} />}>
+                <List.Item
+                  icon={
+                    <StatusIcon
+                      status={summary.wanStatus}
+                      label={statusLabels[getBinaryStatusKey(summary.wanStatus)]}
+                      size={isDense ? 16 : 20}
+                    />
+                  }
+                >
+                  WAN
+                </List.Item>
+                <List.Item
+                  icon={
+                    <StatusIcon
+                      status={summary.www.status}
+                      label={statusLabels[getBinaryStatusKey(summary.www.status)]}
+                      size={isDense ? 16 : 20}
+                    />
+                  }
+                >
                   <Text>
                     WWW
                     <Text c="dimmed" size="sm" ms="xs" span>
-                      {summary.www.latency}ms{isAdvanced ? ` · ${summary.www.ping}ms` : ""}
+                      {summary.www.latency}ms{showDetails ? ` · ${summary.www.ping}ms` : ""}
                     </Text>
                   </Text>
                 </List.Item>
-                <List.Item icon={<StatusIcon status={summary.wifi.status} size={isDense ? 16 : 20} />}>
-                  Wi-Fi{isAdvanced ? ` · ${summary.wifi.users + summary.wifi.guests}` : ""}
+                <List.Item
+                  icon={
+                    <StatusIcon
+                      status={summary.wifi.status}
+                      label={statusLabels[getBinaryStatusKey(summary.wifi.status)]}
+                      size={isDense ? 16 : 20}
+                    />
+                  }
+                >
+                  Wi-Fi{showDetails ? ` · ${summary.wifi.users + summary.wifi.guests}` : ""}
                 </List.Item>
-                {isAdvanced && (
-                  <List.Item icon={<StatusIcon status={summary.lan.status} size={20} />}>
+                {showDetails && (
+                  <List.Item
+                    icon={
+                      <StatusIcon
+                        status={summary.lan.status}
+                        label={statusLabels[getBinaryStatusKey(summary.lan.status)]}
+                        size={20}
+                      />
+                    }
+                  >
                     LAN · {summary.lan.users + summary.lan.guests}
                   </List.Item>
                 )}
-                <List.Item icon={<StatusIcon status={summary.vpn.status} size={isDense ? 16 : 20} />}>
+                <List.Item
+                  icon={
+                    <StatusIcon
+                      status={summary.vpn.status}
+                      label={statusLabels[getBinaryStatusKey(summary.vpn.status)]}
+                      size={isDense ? 16 : 20}
+                    />
+                  }
+                >
                   <Text>
                     VPN
                     <Text c="dimmed" size="sm" ms="xs" span>
@@ -93,13 +143,13 @@ export default function NetworkControllerSummaryWidget({
   );
 }
 
-const StatusIcon = ({ status, size }: { status?: "enabled" | "disabled"; size: number }) => {
+const StatusIcon = ({ status, label, size }: { status?: "enabled" | "disabled"; label: string; size: number }) => {
   const mantineTheme = useMantineTheme();
   if (status === "enabled") {
-    return <IconCircleCheckFilled aria-label={status} size={size} color={mantineTheme.colors.green[6]} />;
+    return <IconCircleCheckFilled aria-label={label} size={size} color={mantineTheme.colors.green[6]} />;
   }
   if (status === "disabled") {
-    return <IconCircleXFilled aria-label={status} size={size} color={mantineTheme.colors.red[6]} />;
+    return <IconCircleXFilled aria-label={label} size={size} color={mantineTheme.colors.red[6]} />;
   }
-  return <IconCircleXFilled aria-label="unknown" size={size} color={mantineTheme.colors.gray[6]} />;
+  return <IconCircleXFilled aria-label={label} size={size} color={mantineTheme.colors.gray[6]} />;
 };

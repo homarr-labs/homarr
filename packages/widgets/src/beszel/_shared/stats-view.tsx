@@ -6,8 +6,9 @@ import { IconPlugConnectedX, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
+import { getUsableWidgetQueryData } from "../../common/query-state";
 import { containerColors } from "./colors";
 import type { BeszelTimePeriod } from "./chart";
 import {
@@ -71,13 +72,15 @@ export function BeszelStatsView({
   onSwitchToHistorical,
 }: BeszelStatsViewProps) {
   const t = useScopedI18n("widget.beszelSystemStats");
+  const locale = useCurrentIntlLocale();
   const showDocker = visibility.dockerCpu || visibility.dockerMemory || visibility.dockerNetwork;
   const isLive = timePeriod === "1m";
 
-  const { data: historicalData, error: historicalError } = clientApi.widget.beszel.getSystemStats.useQuery(
+  const historicalQuery = clientApi.widget.beszel.getSystemStats.useQuery(
     { integrationIds, systemId, timePeriod, includeDocker: showDocker },
     { refetchInterval: isLive ? false : 5_000, enabled: !isLive && systemId !== "" },
   );
+  const historicalData = isLive ? historicalQuery.data : getUsableWidgetQueryData(historicalQuery);
   const { data: liveData, error: liveError } = useLiveStats(integrationIds, systemId, isLive && systemId !== "");
 
   const activeStats:
@@ -125,10 +128,25 @@ export function BeszelStatsView({
 
   const systemStats = activeStats?.systemStats;
   const containerStats = activeStats?.containerStats;
-  const cpuData = useSystemChartData(whenVisible(visibility.cpu, systemStats), mappers.cpu, timePeriod);
-  const memoryData = useSystemChartData(whenVisible(visibility.memory, systemStats), mappers.memory, timePeriod);
-  const diskIOData = useSystemChartData(whenVisible(visibility.diskIO, systemStats), mappers.diskIO, timePeriod);
-  const networkData = useSystemChartData(whenVisible(visibility.network, systemStats), mappers.network, timePeriod);
+  const cpuData = useSystemChartData(whenVisible(visibility.cpu, systemStats), mappers.cpu, timePeriod, locale);
+  const memoryData = useSystemChartData(
+    whenVisible(visibility.memory, systemStats),
+    mappers.memory,
+    timePeriod,
+    locale,
+  );
+  const diskIOData = useSystemChartData(
+    whenVisible(visibility.diskIO, systemStats),
+    mappers.diskIO,
+    timePeriod,
+    locale,
+  );
+  const networkData = useSystemChartData(
+    whenVisible(visibility.network, systemStats),
+    mappers.network,
+    timePeriod,
+    locale,
+  );
 
   const efsPaths = useMemo(() => {
     const paths = new Set<string>();
@@ -138,7 +156,13 @@ export function BeszelStatsView({
     return [...paths];
   }, [systemStats]);
   const rootSeriesName = t("chart.disk.series");
-  const diskData = useDiskChartData(whenVisible(visibility.disk, systemStats), efsPaths, rootSeriesName, timePeriod);
+  const diskData = useDiskChartData(
+    whenVisible(visibility.disk, systemStats),
+    efsPaths,
+    rootSeriesName,
+    timePeriod,
+    locale,
+  );
   const diskSeries = useMemo(
     () => [
       { name: rootSeriesName, color: "grape.6" },
@@ -161,21 +185,22 @@ export function BeszelStatsView({
     containerNames,
     "cpu",
     timePeriod,
+    locale,
   );
   const dockerMemoryData = useDockerChartData(
     whenVisible(visibility.dockerMemory, containerStats),
     containerNames,
     "memory",
     timePeriod,
+    locale,
   );
   const dockerNetworkData = useDockerChartData(
     whenVisible(visibility.dockerNetwork, containerStats),
     containerNames,
     "network",
     timePeriod,
+    locale,
   );
-
-  if (historicalError) throw historicalError;
 
   if (isLive && liveError) {
     return (
@@ -198,7 +223,7 @@ export function BeszelStatsView({
   if (!activeStats) {
     const visibleChartCount = Object.values(visibility).filter(Boolean).length;
     return (
-      <SimpleGrid cols={columns} spacing="md" aria-label="Loading system statistics">
+      <SimpleGrid cols={columns} spacing="md" aria-label={t("name")}>
         {Array.from({ length: visibleChartCount }, (_, index) => (
           <ChartSkeleton key={index} />
         ))}
@@ -212,7 +237,7 @@ export function BeszelStatsView({
         <Stack align="center" gap="xs">
           <IconServerOff size={24} opacity={0.5} />
           <Text size="sm" c="dimmed">
-            {activeStats.error}
+            {t("error.internalServerError")}
           </Text>
         </Stack>
       </Center>

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { getQueuePageSize, resolveQueuePagination } from "./component";
+import { getQueuePageSize, getTranscodingFooterLayout, resolveQueuePagination } from "./component";
 import { toRingProgressSections } from "./panels/statistics.panel";
 
 describe("media transcoding layout", () => {
@@ -12,6 +12,23 @@ describe("media transcoding layout", () => {
 
   test("loads a bounded deeper queue in advanced mode", () => {
     expect(getQueuePageSize(200, true)).toBe(25);
+  });
+
+  test("reveals footer detail only as space becomes available", () => {
+    expect(getTranscodingFooterLayout(280, 220)).toEqual({
+      showTabLabels: false,
+      showPageEdges: false,
+      showPageItems: false,
+      showPageRange: false,
+    });
+    expect(getTranscodingFooterLayout(600, 220)).toEqual({
+      showTabLabels: true,
+      showPageEdges: true,
+      showPageItems: true,
+      showPageRange: false,
+    });
+    expect(getTranscodingFooterLayout(760, 220).showPageRange).toBe(true);
+    expect(getTranscodingFooterLayout(760, 120).showTabLabels).toBe(false);
   });
 
   test("resets the queue when display mode or page size changes", () => {

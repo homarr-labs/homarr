@@ -12,7 +12,7 @@ import {
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 interface IntegrationQueryResult<TData> {
@@ -47,7 +47,7 @@ export const mediaRequestsRouter = createTRPCRouter({
           fallback: (integration) => ({
             integration: { id: integration.id, name: integration.name, kind: integration.kind },
             data: [],
-            error: "Integration request failed",
+            error: PUBLIC_INTEGRATION_ERROR,
           }),
           throwOnAllFailures: true,
         },
@@ -104,7 +104,7 @@ export const mediaRequestsRouter = createTRPCRouter({
           fallback: (integration) => ({
             integration: { id: integration.id, name: integration.name, kind: integration.kind },
             data: { stats: null, users: [] },
-            error: "Integration request failed",
+            error: PUBLIC_INTEGRATION_ERROR,
           }),
           throwOnAllFailures: true,
         },

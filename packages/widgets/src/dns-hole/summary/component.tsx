@@ -2,7 +2,19 @@
 
 import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
-import { Avatar, AvatarGroup, Badge, Card, Flex, Group, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
+import {
+  Avatar,
+  AvatarGroup,
+  Badge,
+  Card,
+  Flex,
+  Group,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
 
@@ -18,20 +30,25 @@ import type { TablerIcon } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
+import { getUsableWidgetQueryData } from "../../common/query-state";
 
 export default function DnsHoleSummaryWidget({
   options,
   integrationIds,
-  displayMode,
+  width,
+  height,
 }: WidgetComponentProps<typeof widgetKind>) {
-  const { data: summaries = [], isPending } = clientApi.widget.dnsHole.summary.useQuery({
+  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({
     integrationIds,
   });
+  const summaries = getUsableWidgetQueryData(summaryQuery) ?? [];
+  const { isPending } = summaryQuery;
 
   const t = useI18n();
 
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
   const layoutProps = boxPropsByLayout(options.layout);
+  const showSourceStatuses = summaries.length > 1 && width >= 240 && height >= 220;
 
   if (isPending) {
     return (
@@ -74,18 +91,21 @@ export default function DnsHoleSummaryWidget({
           </Stack>
         )}
       </SimpleGrid>
-      {displayMode === "advanced" && summaries.length > 0 && (
-        <Group px="xs" pb="xs" gap="xs">
-          {summaries.map(({ integration, summary }) => (
-            <Badge
-              key={integration.id}
-              variant="light"
-              color={summary.status === "enabled" ? "green" : summary.status === "disabled" ? "red" : "gray"}
-            >
-              {integration.name}: {t(`widget.dnsHoleSummary.status.${summary.status ?? "unknown"}`)}
-            </Badge>
-          ))}
-        </Group>
+      {showSourceStatuses && (
+        <ScrollArea type="auto" scrollbarSize={4} px="xs" pb="xs">
+          <Group gap="xs" wrap="nowrap">
+            {summaries.map(({ integration, summary }) => (
+              <Badge
+                key={integration.id}
+                variant="light"
+                color={summary.status === "enabled" ? "green" : summary.status === "disabled" ? "red" : "gray"}
+                style={{ flexShrink: 0 }}
+              >
+                {integration.name}: {t(`widget.dnsHoleSummary.status.${summary.status ?? "unknown"}` as never)}
+              </Badge>
+            ))}
+          </Group>
+        </ScrollArea>
       )}
     </Stack>
   );
@@ -174,7 +194,7 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
         className="summary-card"
         p="sm"
         radius={board.itemRadius}
-        bg={usePiHoleColors ? item.color : "rgba(96, 96, 96, 0.1)"}
+        bg={usePiHoleColors ? item.color : "var(--mantine-color-default-hover)"}
         style={{
           flex: 1,
         }}

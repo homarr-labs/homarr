@@ -5,6 +5,7 @@ import { optionsBuilder } from "../options";
 import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("systemDisks", {
+  supportsAdvancedFocus: false,
   icon: IconServer2,
   queryKey: [["widget", "healthMonitoring"]],
   refetchInterval: 5,

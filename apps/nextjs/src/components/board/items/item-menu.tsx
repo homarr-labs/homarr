@@ -28,7 +28,6 @@ export const BoardItemMenu = (props: BoardItemMenuProps) => {
 
   return <BoardItemMenuInner {...props} />;
 };
-
 const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemMenuProps) => {
   const { data: session } = useSession();
   const canDuplicate = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);

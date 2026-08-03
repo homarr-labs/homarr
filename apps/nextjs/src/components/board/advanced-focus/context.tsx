@@ -16,6 +16,7 @@ interface ActiveFocus {
   sourceRect: FocusRect;
   activation: "preview" | "manual";
   autofocusClose: boolean;
+  restorePreviewFocus: boolean;
   phase: "visible" | "closing";
 }
 
@@ -79,6 +80,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
         sourceRect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
         activation: options.activation ?? "manual",
         autofocusClose: options.autofocusClose ?? false,
+        restorePreviewFocus: options.activation === "preview" && document.activeElement === source,
         phase: "visible",
       });
     },
@@ -118,11 +120,45 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
       if (current?.activation === "preview" && current.itemId !== itemId) {
         cancelCloseTimer();
         updateActive(null);
+        if (current.restorePreviewFocus && current.source.isConnected) current.source.focus({ preventScroll: true });
       }
       startHoverTimer();
     },
     [cancelCloseTimer, startHoverTimer, updateActive],
   );
+
+  useEffect(() => {
+    const handlePointerMove = (event: PointerEvent) => {
+      const current = activeRef.current;
+      if (!shiftHeldRef.current || current?.activation !== "preview") return;
+
+      const underlyingSource = document
+        .elementsFromPoint(event.clientX, event.clientY)
+        .map((element) =>
+          element instanceof HTMLElement
+            ? element.matches(".grid-stack-item-content")
+              ? element
+              : element.closest<HTMLElement>(".grid-stack-item-content")
+            : null,
+        )
+        .find((source) => source !== null && source !== current.source);
+      const itemId = underlyingSource?.closest<HTMLElement>(".grid-stack-item[data-id]")?.dataset.id;
+      if (!underlyingSource || !itemId) return;
+
+      if (underlyingSource.hasAttribute("aria-keyshortcuts")) {
+        hover(itemId, underlyingSource);
+        return;
+      }
+
+      hoveredRef.current = null;
+      cancelHoverTimer();
+      cancelCloseTimer();
+      updateActive(null);
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { capture: true });
+    return () => window.removeEventListener("pointermove", handlePointerMove, { capture: true });
+  }, [cancelCloseTimer, cancelHoverTimer, hover, updateActive]);
 
   const leave = useCallback(
     (itemId: string) => {
@@ -145,7 +181,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape" && activeRef.current) {
-        const advancedSurface = document.querySelector(`.${classes.surface}`);
+        const advancedSurface = document.querySelector("[data-advanced-focus-surface]");
         if (event.defaultPrevented || event.isComposing || isEscapeOwnedByNestedOverlay(event.target, advancedSurface))
           return;
         event.preventDefault();
@@ -170,11 +206,11 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
       if (activeRef.current?.activation === "preview") close(false);
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown, { capture: true });
     window.addEventListener("keyup", handleKeyUp);
     window.addEventListener("blur", handleBlur);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown, { capture: true });
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("blur", handleBlur);
       cancelHoverTimer();
@@ -194,7 +230,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   return (
     <AdvancedFocusContext.Provider value={value}>
       {children}
-      {active && (
+      {active?.activation === "preview" && (
         <Portal>
           <Overlay
             fixed

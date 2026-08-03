@@ -7,6 +7,7 @@ import type { CoolifyServer } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import actionTargetClasses from "../common/action-target.module.css";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getBadgeColor } from "./coolify-utils";
 
 interface ServersSectionProps {
@@ -92,7 +93,7 @@ function ServerRow({ server, counts, baseUrl, isTiny, showIp }: ServerRowProps) 
   const t = useScopedI18n("widget.coolify");
   const isBuildServer = server.settings?.is_build_server === true;
   const isOnline = server.is_reachable !== false;
-  const serverUrl = `${baseUrl}/server/${server.uuid}`;
+  const serverUrl = getSafeApplicationUrl(`${baseUrl}/server/${server.uuid}`);
   const StatusIcon = isOnline ? IconCircleCheckFilled : IconCircleXFilled;
 
   return (
@@ -105,9 +106,10 @@ function ServerRow({ server, counts, baseUrl, isTiny, showIp }: ServerRowProps) 
         />
         <Anchor
           className={actionTargetClasses.root}
+          component={serverUrl ? "a" : "span"}
           href={serverUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          target={serverUrl ? "_blank" : undefined}
+          rel={serverUrl ? SAFE_NEW_TAB_REL : undefined}
           fz="xs"
           c="inherit"
           truncate="end"

@@ -7,6 +7,7 @@ import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
+import { getUsableWidgetQueryData } from "../../common/query-state";
 import type { WidgetComponentProps } from "../../definition";
 import { formatUptime } from "../system-health";
 import { getClusterAccordionDefault } from "./accordion-state";
@@ -38,9 +39,9 @@ export const ClusterHealthMonitoring = ({
   displayMode,
 }: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
   const t = useI18n();
-  const { data: healthData } = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({
-    integrationId,
-  });
+  const healthData = getUsableWidgetQueryData(
+    clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({ integrationId }),
+  );
   const accordionScope = `${displayMode}:${options.visibleClusterSections.join(",")}`;
   const accordionDefault = getClusterAccordionDefault(displayMode, options.visibleClusterSections);
   const [accordionValues, setAccordionValues] = useState<Record<string, string[]>>({});
@@ -67,9 +68,9 @@ export const ClusterHealthMonitoring = ({
   const isTiny = displayMode !== "advanced" && width < 256;
   return (
     <Stack h={displayMode === "advanced" ? "auto" : "100%"} p="xs" gap={isTiny ? "xs" : "md"}>
-      {options.showUptime && (
+      {options.showUptime && !isTiny && (
         <Group justify="center" wrap="nowrap">
-          <Text fz={isTiny ? 8 : "xs"} fw={700} c="dimmed" ta="center">
+          <Text fz="xs" fw={700} c="dimmed" ta="center">
             {formatUptime(uptime, t)}
           </Text>
         </Group>
@@ -190,10 +191,12 @@ const SummaryHeader = ({ cpu, memory, isTiny }: SummaryHeaderProps) => {
               sections={[{ value: cpu.value, color: cpu.value > 75 ? "orange" : "green" }]}
             />
             <Stack align="center" justify="center" gap={0}>
-              <Text fw={500} size={isTiny ? "xs" : "sm"}>
-                {t("widget.healthMonitoring.cluster.summary.cpu")}
-              </Text>
-              <Text size={isTiny ? "8px" : "xs"}>{cpu.value.toFixed(1)}%</Text>
+              {!isTiny && (
+                <Text fw={500} size="sm">
+                  {t("widget.healthMonitoring.cluster.summary.cpu")}
+                </Text>
+              )}
+              <Text size="xs">{cpu.value.toFixed(1)}%</Text>
             </Stack>
           </Flex>
         )}
@@ -211,10 +214,12 @@ const SummaryHeader = ({ cpu, memory, isTiny }: SummaryHeaderProps) => {
               sections={[{ value: memory.value, color: memory.value > 75 ? "orange" : "green" }]}
             />
             <Stack align="center" justify="center" gap={0}>
-              <Text size={isTiny ? "xs" : "sm"} fw={500}>
-                {t("widget.healthMonitoring.cluster.summary.memory")}
-              </Text>
-              <Text size={isTiny ? "8px" : "xs"}>{memory.value.toFixed(1)}%</Text>
+              {!isTiny && (
+                <Text size="sm" fw={500}>
+                  {t("widget.healthMonitoring.cluster.summary.memory")}
+                </Text>
+              )}
+              <Text size="xs">{memory.value.toFixed(1)}%</Text>
             </Stack>
           </Flex>
         )}

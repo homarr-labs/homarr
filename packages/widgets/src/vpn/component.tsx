@@ -6,23 +6,20 @@ import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { VpnIntegrationCard } from "./vpn-card";
 
-export default function VpnWidget({
-  options,
-  integrationIds,
-  width,
-  height,
-  displayMode = "compact",
-}: WidgetComponentProps<"vpn">) {
-  const { data: integrations = [], isPending } = clientApi.widget.vpn.getSummaries.useQuery({
+export default function VpnWidget({ options, integrationIds, width, height }: WidgetComponentProps<"vpn">) {
+  const summariesQuery = clientApi.widget.vpn.getSummaries.useQuery({
     ...options,
     integrationIds,
   });
+  const integrations = getUsableWidgetQueryData(summariesQuery) ?? [];
+  const { isPending } = summariesQuery;
   const t = useScopedI18n("widget.vpn");
   const tCommon = useScopedI18n("common");
   const locale = useCurrentIntlLocale();
-  const dense = displayMode === "compact" && (width < 240 || height < 120);
+  const dense = width < 240 || height < 120;
 
   if (isPending || integrations.length === 0) {
     return (
@@ -35,7 +32,7 @@ export default function VpnWidget({
   }
 
   const [vpn] = integrations;
-  if (displayMode === "compact" && integrations.length === 1 && vpn) {
+  if (integrations.length === 1 && vpn) {
     return (
       <Flex align="center" justify="center" w="100%" h="100%" px="xs" py="sm">
         <VpnIntegrationCard
@@ -48,38 +45,25 @@ export default function VpnWidget({
     );
   }
 
-  if (displayMode === "advanced") {
-    return (
-      <ScrollArea h="100%" p="md">
-        <SimpleGrid cols={width >= 760 ? 2 : 1} spacing="md">
-          {integrations.map((result) => (
-            <Stack key={result.integration.id} gap={4} p="sm">
-              <VpnIntegrationCard vpn={result.summary} integrationName={result.integration.name} variant="list" />
-              {!result.error && new Date(result.integration.updatedAt).getTime() > 0 && (
-                <Text size="xs" c="dimmed" ta="right">
-                  {new Date(result.integration.updatedAt).toLocaleString(locale)}
-                </Text>
-              )}
-            </Stack>
-          ))}
-        </SimpleGrid>
-      </ScrollArea>
-    );
-  }
-
   return (
-    <ScrollArea className="scroll-area-w100" w="100%" h="100%" offsetScrollbars>
-      <Stack w="100%" gap="sm" py="xs" px="xs">
+    <ScrollArea className="scroll-area-w100" w="100%" h="100%" offsetScrollbars p="xs">
+      <SimpleGrid cols={width >= 640 ? 2 : 1} spacing="sm">
         {integrations.map((result) => (
-          <VpnIntegrationCard
-            key={result.integration.id}
-            vpn={result.summary}
-            integrationName={result.integration.name}
-            variant="list"
-            dense={dense}
-          />
+          <Stack key={result.integration.id} gap={4}>
+            <VpnIntegrationCard
+              vpn={result.summary}
+              integrationName={result.integration.name}
+              variant="list"
+              dense={dense}
+            />
+            {height >= 180 && !result.error && new Date(result.integration.updatedAt).getTime() > 0 && (
+              <Text size="xs" c="dimmed" ta="right">
+                {new Date(result.integration.updatedAt).toLocaleString(locale)}
+              </Text>
+            )}
+          </Stack>
         ))}
-      </Stack>
+      </SimpleGrid>
     </ScrollArea>
   );
 }

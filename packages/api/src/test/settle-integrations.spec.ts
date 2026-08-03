@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-import { settleIntegrationQueries } from "../settle-integrations";
+import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries, toPublicIntegrationError } from "../settle-integrations";
 
 const mocks = vi.hoisted(() => ({
   logger: { warn: vi.fn() },
@@ -22,6 +22,17 @@ const integrations = [
 beforeEach(() => vi.clearAllMocks());
 
 describe("settleIntegrationQueries", () => {
+  test("maps sensitive integration failures to a stable public code", () => {
+    const error = new Error(
+      "GET http://admin:password@nas.internal.local/private/path?token=secret returned\nprivate response body",
+    );
+
+    const publicError = toPublicIntegrationError(error);
+
+    expect(publicError).toBe(PUBLIC_INTEGRATION_ERROR);
+    expect(publicError).not.toMatch(/admin|password|nas\.internal|private|token|secret|response body/i);
+  });
+
   test("returns an empty result when no integrations are configured", async () => {
     await expect(settleIntegrationQueries([], vi.fn())).resolves.toEqual([]);
   });

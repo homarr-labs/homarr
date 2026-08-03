@@ -22,6 +22,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { NoIntegrationSelectedError } from "../errors/no-integration-selected";
 
 const statusColors: Record<UpsStatus, string> = {
@@ -66,7 +67,7 @@ interface UpsContentProps {
 
 function UpsContent({ integrationIds, options, width, height, displayMode }: UpsContentProps) {
   const t = useScopedI18n("widget.ups");
-  const { data } = clientApi.widget.ups.getSummaries.useQuery({ integrationIds });
+  const data = getUsableWidgetQueryData(clientApi.widget.ups.getSummaries.useQuery({ integrationIds }));
 
   if (!data) return <WidgetEmptyState />;
 

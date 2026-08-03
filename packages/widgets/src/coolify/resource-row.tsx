@@ -13,6 +13,7 @@ import {
 import { useScopedI18n } from "@homarr/translation/client";
 
 import actionTargetClasses from "../common/action-target.module.css";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { cleanFqdn, getResourceTimestamp, getStatusColor, parseStatus } from "./coolify-utils";
 
 interface ResourceRowProps {
@@ -59,13 +60,14 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
               ? t("status.restarting")
               : t("status.unknown");
 
-  const resourceUrl =
+  const resourceUrl = getSafeApplicationUrl(
     item.projectUuid && item.environmentUuid
       ? `${baseUrl}/project/${item.projectUuid}/environment/${item.environmentUuid}/${resourceType}/${item.uuid}`
-      : undefined;
+      : undefined,
+  );
 
-  const logsUrl = resourceUrl ? `${resourceUrl}/logs` : undefined;
-  const publicUrl = cleanFqdn(item.fqdn);
+  const logsUrl = getSafeApplicationUrl(resourceUrl ? `${resourceUrl}/logs` : undefined);
+  const publicUrl = getSafeApplicationUrl(cleanFqdn(item.fqdn));
   const resourceTimestamp = getResourceTimestamp(item, resourceType);
 
   return (
@@ -77,7 +79,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             className={actionTargetClasses.root}
             href={resourceUrl}
             target="_blank"
-            rel="noopener noreferrer"
+            rel={SAFE_NEW_TAB_REL}
             fz="xs"
             c="inherit"
             truncate="end"
@@ -98,7 +100,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             component="a"
             href={publicUrl}
             target="_blank"
-            rel="noopener noreferrer"
+            rel={SAFE_NEW_TAB_REL}
             aria-label={t("action.openResource", { name: item.name })}
             size="xs"
             variant="subtle"
@@ -113,7 +115,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             component="a"
             href={logsUrl}
             target="_blank"
-            rel="noopener noreferrer"
+            rel={SAFE_NEW_TAB_REL}
             aria-label={t("action.openLogs", { name: item.name })}
             size="xs"
             variant="subtle"

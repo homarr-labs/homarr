@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { ActionIcon, Anchor, Badge, Card, Flex, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
 import combineClasses from "clsx";
@@ -10,6 +10,9 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { useWidgetRuntimeActions } from "../runtime-hooks";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import actionTargetClasses from "../common/action-target.module.css";
 import classes from "./component.module.css";
 
@@ -18,36 +21,27 @@ export default function IndexerManagerWidget({
   integrationIds,
   width,
   height,
-  displayMode,
   isEditMode,
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
-  const { data: indexersData = [] } = clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds });
+  const indexersData =
+    getUsableWidgetQueryData(clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds })) ?? [];
 
   const utils = clientApi.useUtils();
   const { mutate: testAll, isPending } = clientApi.widget.indexerManager.testAllIndexers.useMutation({
     onSettled: () => void utils.widget.indexerManager.getIndexersStatus.invalidate(),
   });
   const board = useRequiredBoard();
-  const isAdvanced = displayMode === "advanced";
-  const hasSmallWidth = !isAdvanced && width < 256;
-  const isDense = !isAdvanced && (width < 280 || height < 180);
+  const hasSmallWidth = width < 256;
+  const isDense = width < 280 || height < 180;
+  const showHealthCounts = width >= 200 && height >= 100;
   const allIndexers = useMemo(() => indexersData.flatMap((entry) => entry.indexers), [indexersData]);
   const unavailableCount = allIndexers.filter(
     (indexer) => indexer.status === false || indexer.enabled === false,
   ).length;
 
-  useEffect(() => {
-    if (!widgetStateRef) return;
-    widgetStateRef.current = {
-      ...widgetStateRef.current,
-      testAllIndexers: () => testAll({ integrationIds }),
-    };
-    return () => {
-      if (widgetStateRef.current) delete widgetStateRef.current.testAllIndexers;
-    };
-  }, [integrationIds, testAll, widgetStateRef]);
+  useWidgetRuntimeActions(widgetRuntimeRef, { testAllIndexers: () => testAll({ integrationIds }) });
 
   return (
     <Flex
@@ -70,7 +64,7 @@ export default function IndexerManagerWidget({
             {t("widget.indexerManager.title")}
           </Text>
         )}
-        {isAdvanced && (
+        {showHealthCounts && (
           <Group gap={4} wrap="nowrap">
             <Badge size="xs" color="green" variant="light">
               {allIndexers.length - unavailableCount}
@@ -110,64 +104,61 @@ export default function IndexerManagerWidget({
         <ScrollArea className="indexer-manager-list-scroll-area" h="100%" scrollbars="y">
           {indexersData.map(({ integrationId, integrationName, indexers, error }) => (
             <Stack gap={4} className={`indexer-manager-${integrationId}-list-container`} p={0} key={integrationId}>
-              {(isAdvanced || indexersData.length > 1) && (
+              {indexersData.length > 1 && (
                 <Group justify="space-between" wrap="nowrap" py={4}>
                   <Text size="xs" fw={600} truncate="end">
                     {integrationName}
                   </Text>
                   {error && (
-                    <Tooltip label={error} multiline maw={360}>
-                      <Badge size="xs" color="red" variant="light">
-                        {t("common.error")}
-                      </Badge>
-                    </Tooltip>
+                    <Badge size="xs" color="red" variant="light">
+                      {t("common.error")}
+                    </Badge>
                   )}
                 </Group>
               )}
-              {indexers.map((indexer) => (
-                <Group
-                  className={`indexer-manager-line indexer-manager-${indexer.name} ${classes.indexerRow}`}
-                  key={indexer.id}
-                  justify="space-between"
-                  gap="xs"
-                  wrap="nowrap"
-                >
-                  <Anchor
-                    className="indexer-manager-line-anchor"
-                    href={indexer.url}
-                    target={options.openIndexerSiteInNewTab ? "_blank" : "_self"}
-                    rel={options.openIndexerSiteInNewTab ? "noopener noreferrer" : undefined}
-                    style={{ minWidth: 0, flex: 1 }}
+              {indexers.map((indexer) => {
+                const href = getSafeApplicationUrl(indexer.url);
+                return (
+                  <Group
+                    className={`indexer-manager-line indexer-manager-${indexer.name} ${classes.indexerRow}`}
+                    key={indexer.id}
+                    justify="space-between"
+                    gap="xs"
+                    wrap="nowrap"
                   >
-                    <Text
-                      className="indexer-manager-line-anchor-text"
-                      c="dimmed"
-                      size={hasSmallWidth ? "xs" : "sm"}
-                      truncate="end"
+                    <Anchor
+                      className={combineClasses("indexer-manager-line-anchor", classes.indexerLink)}
+                      component={href ? "a" : "span"}
+                      href={href}
+                      target={href ? (options.openIndexerSiteInNewTab ? "_blank" : "_self") : undefined}
+                      rel={href && options.openIndexerSiteInNewTab ? SAFE_NEW_TAB_REL : undefined}
+                      title={href}
                     >
-                      {indexer.name}
-                    </Text>
-                  </Anchor>
-                  {isAdvanced && (
-                    <Text size="xs" c="dimmed" truncate="end" style={{ flex: 1 }}>
-                      {indexer.url}
-                    </Text>
-                  )}
-                  {indexer.status === false || indexer.enabled === false ? (
-                    <IconCircleX
-                      className="indexer-manager-line-status-icon indexer-manager-line-icon-disabled"
-                      color="#d9534f"
-                      size={hasSmallWidth ? 12 : 16}
-                    />
-                  ) : (
-                    <IconCircleCheck
-                      className="indexer-manager-line-status-icon indexer-manager-line-icon-enabled"
-                      color="#2ecc71"
-                      size={hasSmallWidth ? 12 : 16}
-                    />
-                  )}
-                </Group>
-              ))}
+                      <Text
+                        className="indexer-manager-line-anchor-text"
+                        c="dimmed"
+                        size={hasSmallWidth ? "xs" : "sm"}
+                        truncate="end"
+                      >
+                        {indexer.name}
+                      </Text>
+                    </Anchor>
+                    {indexer.status === false || indexer.enabled === false ? (
+                      <IconCircleX
+                        className="indexer-manager-line-status-icon indexer-manager-line-icon-disabled"
+                        color="var(--mantine-color-red-6)"
+                        size={hasSmallWidth ? 12 : 16}
+                      />
+                    ) : (
+                      <IconCircleCheck
+                        className="indexer-manager-line-status-icon indexer-manager-line-icon-enabled"
+                        color="var(--mantine-color-green-6)"
+                        size={hasSmallWidth ? 12 : 16}
+                      />
+                    )}
+                  </Group>
+                );
+              })}
             </Stack>
           ))}
         </ScrollArea>

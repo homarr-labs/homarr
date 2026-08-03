@@ -1,13 +1,14 @@
 "use client";
 
 import { BarChart, LineChart } from "@mantine/charts";
-import { Box, Group, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { Box, Group, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { UmamiEventSeries } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { EVENT_COLORS, formatXLabel, umamiQueryOptions } from "./umami-utils";
+import { getUsableWidgetQueryData } from "../common/query-state";
 
 interface UmamiEventsContentProps {
   integrationIds: string[];
@@ -28,13 +29,15 @@ export function UmamiEventsContent({
 }: UmamiEventsContentProps) {
   const t = useScopedI18n("widget.umami");
   const locale = useCurrentIntlLocale();
-  const { colorScheme } = useMantineColorScheme();
-  const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
+  const tickColor = "var(--mantine-color-dimmed)";
 
-  const { data: series = [] } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
-    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
-    umamiQueryOptions,
-  );
+  const series =
+    getUsableWidgetQueryData(
+      clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
+        { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
+        umamiQueryOptions,
+      ),
+    ) ?? [];
 
   if (eventNames.length === 0) {
     return (

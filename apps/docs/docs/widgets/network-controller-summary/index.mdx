@@ -18,7 +18,7 @@ import { networkControllerSummaryWidget } from ".";
 
 <WidgetHeader widget={networkControllerSummaryWidget} categories={["Network controller"]} />
 
-Shows information whether your WAN is connected, Wi-Fi is active and several other information.
+Shows whether your WAN, internet, Wi-Fi, LAN, and VPN are available. Wider or taller layouts progressively reveal latency, ping, and connected-client counts without a separate view.
 
 ### Screenshots
 
@@ -36,7 +36,7 @@ import summaryCard from "./img/summary.png";
   ]}
 />
 
-<WidgetInteractionGuide />
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

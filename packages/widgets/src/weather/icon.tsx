@@ -14,13 +14,12 @@ import {
   IconTemperaturePlus,
   IconWind,
 } from "@tabler/icons-react";
-import dayjs from "dayjs";
-
 import { metricToImperial } from "@homarr/common";
 import type { TranslationObject } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
+import { formatLocalizedDate } from "../common/locale";
 import type { WidgetProps } from "../definition";
 
 interface WeatherIconProps {
@@ -84,6 +83,7 @@ export const WeatherDescription = ({
 }: WeatherDescriptionProps) => {
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
+  const locale = useCurrentIntlLocale();
 
   const { name } = weatherDefinitions.find((definition) => definition.codes.includes(weatherCode)) ?? unknownWeather;
 
@@ -93,7 +93,7 @@ export const WeatherDescription = ({
 
   return (
     <Stack align="center" gap="0">
-      <Text fz="24px">{dayjs(time).format(dateFormat)}</Text>
+      <Text fz="24px">{formatWeatherDate(time, locale, dateFormat)}</Text>
       <Text fz="16px">{t(`kind.${name}`)}</Text>
       <List>
         <List.Item icon={<IconTemperaturePlus size={15} />}>{`${tCommon("information.max")}: ${maxTemp}`}</List.Item>
@@ -122,6 +122,24 @@ export const WeatherDescription = ({
       </List>
     </Stack>
   );
+};
+
+export const formatWeatherDate = (
+  value: string | undefined,
+  locale: string,
+  pattern: WidgetProps<"weather">["options"]["dateFormat"] | undefined,
+) => {
+  if (!value) return "?";
+
+  const options: Intl.DateTimeFormatOptions = pattern?.includes("dddd")
+    ? { weekday: "long", month: "long", day: "numeric" }
+    : pattern?.includes("YYYY")
+      ? { year: "numeric", month: "2-digit", day: "2-digit" }
+      : pattern?.includes("MMM")
+        ? { month: "short", day: "numeric" }
+        : { month: "2-digit", day: "2-digit" };
+
+  return formatLocalizedDate(value, locale, options);
 };
 
 interface WeatherDefinitionType {

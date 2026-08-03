@@ -19,14 +19,18 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconDownload, IconMovie, IconQuestionMark, IconVideo } from "@tabler/icons-react";
+import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import type { MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getUsableWidgetQueryData } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
-import { setWidgetRuntimeQueries } from "../definition";
+import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
 import type { MediaMissingTab } from "./tabs";
@@ -38,20 +42,23 @@ export default function MediaMissingWidget({
   width,
   height,
   displayMode,
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"mediaMissing">) {
   const t = useScopedI18n("widget.mediaMissing");
   const isAdvanced = displayMode === "advanced";
+  const showMissing = isAdvanced || options.showMissing;
+  const showQueued = isAdvanced || options.showQueued;
   const pageSize = isAdvanced ? Math.max(Number(options.pageSize), 50) : Number(options.pageSize);
   const input = { integrationIds, pageSize };
-  setWidgetRuntimeQueries(widgetStateRef, [{ path: ["widget", "mediaOrganizer", "getData"], input }]);
-  const { data } = clientApi.widget.mediaOrganizer.getData.useQuery(input, {
+  useWidgetRuntimeQueries(widgetRuntimeRef, [getQueryKey(clientApi.widget.mediaOrganizer.getData, input, "query")]);
+  const mediaQuery = clientApi.widget.mediaOrganizer.getData.useQuery(input, {
     staleTime: 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
-  const [selectedTab, setSelectedTab] = useState<MediaMissingTab>(options.showMissing ? "missing" : "queued");
-  const activeTab = resolveMediaMissingTab(selectedTab, options.showMissing, options.showQueued);
+  const data = getUsableWidgetQueryData(mediaQuery);
+  const [selectedTab, setSelectedTab] = useState<MediaMissingTab>(showMissing ? "missing" : "queued");
+  const activeTab = resolveMediaMissingTab(selectedTab, showMissing, showQueued);
 
   useEffect(() => {
     if (activeTab !== null && activeTab !== selectedTab) setSelectedTab(activeTab);
@@ -59,7 +66,7 @@ export default function MediaMissingWidget({
 
   if (!data) return <WidgetEmptyState />;
   if (data.length === 0) throw new NoIntegrationDataError();
-  if (!options.showMissing && !options.showQueued)
+  if (!showMissing && !showQueued)
     return (
       <Center h="100%" p="sm">
         <Text c="dimmed" size="sm" ta="center">
@@ -74,7 +81,7 @@ export default function MediaMissingWidget({
   const queuedCount = data.reduce((sum, entry) => sum + entry.queuedCount, 0);
   const failedIntegrations = data.filter((entry): entry is typeof entry & { error: string } => Boolean(entry.error));
 
-  const enabledPanelCount = Number(options.showMissing) + Number(options.showQueued);
+  const enabledPanelCount = Number(showMissing) + Number(showQueued);
   const panelWidth = isAdvanced && enabledPanelCount > 1 ? width / enabledPanelCount : width;
   const isThin = !isAdvanced && panelWidth > 0 && panelWidth < 160;
   const isShort = !isAdvanced && height > 0 && height < 180;
@@ -97,7 +104,12 @@ export default function MediaMissingWidget({
         ) : (
           <SimpleGrid cols={columns} spacing="xs" verticalSpacing="xs">
             {entries.map(({ item, integrationId }) => (
-              <MediaCard key={`${integrationId}-${item.type}-${item.id}`} item={item} density={density} />
+              <MediaCard
+                key={`${integrationId}-${item.type}-${item.id}`}
+                item={item}
+                density={density}
+                showQueueDetails={isAdvanced}
+              />
             ))}
           </SimpleGrid>
         )}
@@ -108,7 +120,7 @@ export default function MediaMissingWidget({
   const partialFailures = failedIntegrations.length > 0 && (
     <Group gap={4} p={4} wrap="wrap">
       {failedIntegrations.map((entry) => (
-        <Tooltip key={entry.integrationId} label={entry.error} multiline maw={360}>
+        <Tooltip key={entry.integrationId} label={`${entry.integrationName}: ${t("name")}`}>
           <Badge size="xs" color="red" variant="light">
             {entry.integrationName}
           </Badge>
@@ -116,13 +128,17 @@ export default function MediaMissingWidget({
       ))}
     </Group>
   );
+  const queryFailure = <WidgetQueryErrorIndicator error={mediaQuery.error} label={t("name")} />;
 
   if (isAdvanced) {
     return (
       <Stack h="100%" gap={0}>
-        {partialFailures}
+        <Group justify="flex-end" px="xs">
+          {queryFailure}
+          {partialFailures}
+        </Group>
         <SimpleGrid cols={enabledPanelCount} spacing="sm" p="sm" style={{ flex: 1, minHeight: 0 }}>
-          {options.showMissing && (
+          {showMissing && (
             <Paper withBorder radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
               <Group p="xs" gap="xs">
                 <IconQuestionMark size={16} />
@@ -133,7 +149,7 @@ export default function MediaMissingWidget({
               <Box h="calc(100% - 40px)">{renderPanel(missing, t("empty.missing"))}</Box>
             </Paper>
           )}
-          {options.showQueued && (
+          {showQueued && (
             <Paper withBorder radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
               <Group p="xs" gap="xs">
                 <IconDownload size={16} />
@@ -158,26 +174,29 @@ export default function MediaMissingWidget({
       h="100%"
       style={{ display: "flex", flexDirection: "column" }}
     >
-      {partialFailures}
+      <Group justify="flex-end" px="xs">
+        {queryFailure}
+        {partialFailures}
+      </Group>
       <Tabs.List grow>
-        {options.showMissing && (
+        {showMissing && (
           <Tabs.Tab value="missing" px={isThin ? 6 : undefined} leftSection={<IconQuestionMark size={14} />}>
             {tabLabel(t("tab.missing"), missing.length, missingCount)}
           </Tabs.Tab>
         )}
-        {options.showQueued && (
+        {showQueued && (
           <Tabs.Tab value="queued" px={isThin ? 6 : undefined} leftSection={<IconDownload size={14} />}>
             {tabLabel(t("tab.queued"), queued.length, queuedCount)}
           </Tabs.Tab>
         )}
       </Tabs.List>
 
-      {options.showMissing && (
+      {showMissing && (
         <Tabs.Panel value="missing" flex={1} style={{ overflow: "hidden" }}>
           {renderPanel(missing, t("empty.missing"))}
         </Tabs.Panel>
       )}
-      {options.showQueued && (
+      {showQueued && (
         <Tabs.Panel value="queued" flex={1} style={{ overflow: "hidden" }}>
           {renderPanel(queued, t("empty.queued"))}
         </Tabs.Panel>
@@ -283,22 +302,33 @@ const CardShell = ({
   item: MissingMediaItem | QueuedMediaItem;
   density: Density;
   children: ReactNode;
-}) => (
-  <Paper
-    className={classes.card}
-    component="a"
-    href={item.link}
-    target="_blank"
-    rel="noreferrer"
-    radius="sm"
-    p="xs"
-    h={CARD_HEIGHT[density]}
-  >
-    <div className={classes.content}>{children}</div>
-  </Paper>
-);
+}) => {
+  const href = getSafeApplicationUrl(item.link);
+  return (
+    <Paper
+      className={classes.card}
+      component={href ? "a" : "div"}
+      href={href}
+      target={href ? "_blank" : undefined}
+      rel={href ? SAFE_NEW_TAB_REL : undefined}
+      radius="sm"
+      p="xs"
+      h={CARD_HEIGHT[density]}
+    >
+      <div className={classes.content}>{children}</div>
+    </Paper>
+  );
+};
 
-const MediaCard = ({ item, density }: { item: MissingMediaItem | QueuedMediaItem; density: Density }) => {
+const MediaCard = ({
+  item,
+  density,
+  showQueueDetails,
+}: {
+  item: MissingMediaItem | QueuedMediaItem;
+  density: Density;
+  showQueueDetails: boolean;
+}) => {
   const isQueued = "percentComplete" in item;
 
   return (
@@ -313,6 +343,11 @@ const MediaCard = ({ item, density }: { item: MissingMediaItem | QueuedMediaItem
           {density === "comfortable" && (
             <Text fz="xs" c="dimmed" lineClamp={1} lh={1.1}>
               {item.type === "episode" ? item.title : item.year}
+            </Text>
+          )}
+          {isQueued && showQueueDetails && (
+            <Text fz="10px" c="dimmed" lineClamp={1} lh={1.1}>
+              {[item.status, item.timeLeft].filter(Boolean).join(" · ")}
             </Text>
           )}
         </Stack>

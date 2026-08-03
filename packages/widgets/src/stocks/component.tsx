@@ -38,22 +38,12 @@ export interface StockLayout {
   priceOrder: 1 | 2;
 }
 
-export function getStockLayout(width: number, height: number, isAdvanced: boolean): StockLayout {
-  if (isAdvanced) {
-    return {
-      showName: true,
-      showChange: true,
-      showRange: true,
-      graphHeight: "75%",
-      priceOrder: 1,
-    };
-  }
-
+export function getStockLayout(width: number, height: number): StockLayout {
   return {
     showName: width >= 300 && height >= 190,
     showChange: width >= 260 && height >= 130,
     showRange: width >= 220 && height >= 130,
-    graphHeight: height >= 220 ? "68%" : "48%",
+    graphHeight: height >= 320 ? "75%" : height >= 220 ? "68%" : "48%",
     priceOrder: width >= 280 && height >= 120 ? 1 : 2,
   };
 }
@@ -71,13 +61,14 @@ export function getStockSummary(priceHistory: number[], previousClose: number): 
   };
 }
 
-export default function StockPriceWidget({ options, width, height, displayMode }: WidgetComponentProps<"stockPrice">) {
+export default function StockPriceWidget({ options, width, height }: WidgetComponentProps<"stockPrice">) {
   const t = useScopedI18n("widget.stockPrice");
   const locale = useCurrentIntlLocale();
   const numberFormatter = new Intl.NumberFormat(locale);
   const theme = useMantineTheme();
-  const { data: result } = clientApi.widget.stockPrice.getPriceHistory.useQuery(options);
+  const { data: result, error } = clientApi.widget.stockPrice.getPriceHistory.useQuery(options);
 
+  if (error && !result) throw error;
   if (!result) return <WidgetEmptyState />;
   const { data } = result;
 
@@ -87,7 +78,7 @@ export default function StockPriceWidget({ options, width, height, displayMode }
   const stockValuesChangePercentage = summary.changePercentage === null ? null : round(summary.changePercentage);
   const stockGraphValues = summary.graphValues;
   const trendColor = stockValuesChange > 0 ? "green.7" : stockValuesChange < 0 ? "red.7" : "gray.6";
-  const layout = getStockLayout(width, height, displayMode === "advanced");
+  const layout = getStockLayout(width, height);
 
   return (
     <Flex h="100%" w="100%">

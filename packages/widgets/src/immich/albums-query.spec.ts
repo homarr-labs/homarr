@@ -1,4 +1,9 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+// @vitest-environment jsdom
+
+import { act, createElement } from "react";
+import { createRoot } from "react-dom/client";
+import { MantineProvider } from "@mantine/core";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { WidgetComponentProps } from "../definition";
 import ImmichServerStatsWidget from "./server-stats/component";
@@ -26,20 +31,52 @@ vi.mock("@homarr/translation/client", () => ({
 }));
 
 describe("Immich album queries", () => {
+  let host: HTMLDivElement | undefined;
+  let root: ReturnType<typeof createRoot> | undefined;
+
   beforeEach(() => vi.clearAllMocks());
 
-  test("server stats requests a bounded album response", () => {
-    ImmichServerStatsWidget({
-      integrationIds: ["immich-id"],
-      options: { showUsers: true, showPhotos: true, showVideos: true, showStorage: true },
-      displayMode: "advanced",
-      width: 800,
-      height: 600,
-      isEditMode: false,
-      boardId: "board-id",
-      itemId: "item-id",
-      setOptions: vi.fn(),
-    } satisfies WidgetComponentProps<"immich-serverStats">);
+  afterEach(async () => {
+    if (root) await act(async () => root?.unmount());
+    host?.remove();
+    vi.unstubAllGlobals();
+  });
+
+  test("server stats requests a bounded album response", async () => {
+    vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      dispatchEvent: () => false,
+    }));
+    host = document.createElement("div");
+    document.body.append(host);
+    root = createRoot(host);
+
+    await act(async () =>
+      root?.render(
+        createElement(
+          MantineProvider,
+          null,
+          createElement(ImmichServerStatsWidget, {
+            integrationIds: ["immich-id"],
+            options: { showUsers: true, showPhotos: true, showVideos: true, showStorage: true },
+            displayMode: "advanced",
+            width: 800,
+            height: 600,
+            isEditMode: false,
+            boardId: "board-id",
+            itemId: "item-id",
+            setOptions: vi.fn(),
+          } satisfies WidgetComponentProps<"immich-serverStats">),
+        ),
+      ),
+    );
 
     expect(mocks.getAlbums).toHaveBeenCalledWith(
       { integrationId: "immich-id", limit: 50 },

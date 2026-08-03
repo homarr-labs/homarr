@@ -28,7 +28,11 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
 
+import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
 import classes from "./component.module.css";
 
 export default function MediaReleasesWidget({
@@ -38,23 +42,33 @@ export default function MediaReleasesWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"mediaReleases">) {
-  const { data: releases = [] } = clientApi.widget.mediaRelease.getMediaReleases.useQuery({
-    integrationIds,
-  });
+  const t = useI18n();
+  const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery({ integrationIds });
+  const releases = getUsableWidgetQueryData(releasesQuery);
+
+  if (isInitialWidgetQueryPending(releasesQuery)) return <WidgetQueryLoadingState />;
+  if (!releases || releases.length === 0) return <WidgetEmptyState />;
 
   const isAdvanced = displayMode === "advanced";
 
   return (
-    <ScrollArea h="100%">
-      <SimpleGrid cols={isAdvanced ? Math.max(1, Math.floor(width / 360)) : 1} p="xs" spacing="sm">
-        {releases.map((item, index) => (
-          <Fragment key={`${item.integration.id}:${item.id}`}>
-            {!isAdvanced && index !== 0 && options.layout === "poster" && <Divider />}
-            <Item item={item} options={options} isAdvanced={isAdvanced} width={width} height={height} />
-          </Fragment>
-        ))}
-      </SimpleGrid>
-    </ScrollArea>
+    <Box h="100%" pos="relative">
+      <ScrollArea h="100%">
+        <SimpleGrid cols={isAdvanced ? Math.max(1, Math.floor(width / 360)) : 1} p="xs" spacing="sm">
+          {releases.map((item, index) => (
+            <Fragment key={`${item.integration.id}:${item.id}`}>
+              {!isAdvanced && index !== 0 && options.layout === "poster" && <Divider />}
+              <Item item={item} options={options} isAdvanced={isAdvanced} width={width} height={height} />
+            </Fragment>
+          ))}
+        </SimpleGrid>
+      </ScrollArea>
+      {releasesQuery.error && (
+        <Box pos="absolute" top={4} right={4}>
+          <WidgetQueryErrorIndicator error={releasesQuery.error} label={t("widget.mediaReleases.name")} />
+        </Box>
+      )}
+    </Box>
   );
 }
 
@@ -86,6 +100,7 @@ const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
   const showPoster = (isAdvanced || options.layout === "poster") && !isTiny;
   const showExtendedMetadata = isAdvanced || (!isCompact && width >= 360);
   const showSide = isAdvanced || (!isTiny && (options.showType || options.showSource));
+  const href = getSafeApplicationUrl(item.href);
 
   return (
     <Tooltip
@@ -102,10 +117,10 @@ const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
     >
       <UnstyledButton
         className={classes.item}
-        component="a"
-        href={item.href}
-        target="_blank"
-        rel="noopener noreferrer"
+        component={href ? "a" : "div"}
+        href={href}
+        target={href ? "_blank" : undefined}
+        rel={href ? SAFE_NEW_TAB_REL : undefined}
         pos="relative"
         p={isAdvanced ? "sm" : options.layout === "poster" ? 4 : isTiny ? 4 : 6}
         h="100%"

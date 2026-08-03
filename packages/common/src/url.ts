@@ -48,3 +48,38 @@ const absoluteUrlRegex = /^[a-z]+:(\/\/)?/;
 export const isAbsoluteUrl = (urlOrPath: string): boolean => {
   return absoluteUrlRegex.test(urlOrPath.toLowerCase());
 };
+
+export const SAFE_NEW_TAB_REL = "noopener noreferrer";
+
+interface SafeApplicationUrlOptions {
+  baseUrl?: unknown;
+}
+
+/** Returns an absolute, credential-free HTTP(S) URL suitable for application navigation. */
+export const getSafeApplicationUrl = (value: unknown, options: SafeApplicationUrlOptions = {}): string | undefined => {
+  if (typeof value !== "string" || value.trim() === "") return undefined;
+
+  try {
+    let baseUrl: string | undefined;
+    if (options.baseUrl !== undefined) {
+      const parsedBase = parseHttpUrl(options.baseUrl);
+      if (!parsedBase) return undefined;
+      parsedBase.search = "";
+      parsedBase.hash = "";
+      baseUrl = parsedBase.toString();
+    }
+
+    return parseHttpUrl(value, baseUrl)?.toString();
+  } catch {
+    return undefined;
+  }
+};
+
+const parseHttpUrl = (value: unknown, baseUrl?: string): URL | undefined => {
+  if (typeof value !== "string") return undefined;
+  const url = new URL(value, baseUrl);
+  if ((url.protocol !== "http:" && url.protocol !== "https:") || url.username !== "" || url.password !== "") {
+    return undefined;
+  }
+  return url;
+};

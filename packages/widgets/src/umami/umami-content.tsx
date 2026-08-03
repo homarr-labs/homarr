@@ -1,7 +1,7 @@
 "use client";
 
 import { BarChart, LineChart } from "@mantine/charts";
-import { Box, Group, ScrollArea, SimpleGrid, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { formatDuration } from "@homarr/common";
@@ -12,6 +12,8 @@ import { UmamiEventsContent } from "./umami-events-content";
 import { UmamiTopPagesContent, UmamiTopReferrersContent } from "./umami-top-list";
 import { formatTimeFrameLabel, formatXLabel, umamiQueryOptions } from "./umami-utils";
 import type { TimeFrame } from "./umami-utils";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
 
 interface UmamiContentProps {
   integrationIds: string[];
@@ -43,46 +45,31 @@ export function UmamiContent({
   displayMode,
 }: UmamiContentProps) {
   const t = useScopedI18n("widget.umami");
-  const tCommon = useScopedI18n("common");
   const locale = useCurrentIntlLocale();
-  const { colorScheme } = useMantineColorScheme();
-  const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
+  const tickColor = "var(--mantine-color-dimmed)";
 
-  const {
-    data: results,
-    isPending: isStatsPending,
-    error: statsError,
-  } = clientApi.widget.umami.getVisitorStats.useQuery(
+  const statsQuery = clientApi.widget.umami.getVisitorStats.useQuery(
     { integrationIds, websiteId, timeFrame, eventName },
     umamiQueryOptions,
   );
+  const results = getUsableWidgetQueryData(statsQuery);
 
   const activeVisitorsInput = { integrationId: integrationIds[0] ?? "", websiteId };
-  const { data: activeVisitors = 0 } = clientApi.widget.umami.getActiveVisitors.useQuery(
-    activeVisitorsInput,
-    umamiQueryOptions,
-  );
+  const activeVisitorsQuery = clientApi.widget.umami.getActiveVisitors.useQuery(activeVisitorsInput, umamiQueryOptions);
+  const activeVisitors = activeVisitorsQuery.data;
 
-  const { data: multiEventSeries } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
+  const multiEventQuery = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
     { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
     { enabled: viewMode === "events" && eventNames.length > 0, ...umamiQueryOptions },
   );
+  const multiEventSeries = multiEventQuery.data;
 
   const multiEventTotal = multiEventSeries
     ? multiEventSeries.flatMap(({ dataPoints }) => dataPoints).reduce((sum, { y }) => sum + y, 0)
     : undefined;
 
   const firstResult = results?.[0];
-  if (isStatsPending) {
-    return (
-      <Stack align="center" justify="center" h="100%">
-        <Text c="dimmed" size="sm">
-          {tCommon("action.loading")}
-        </Text>
-      </Stack>
-    );
-  }
-  if (statsError && results === undefined) throw statsError;
+  if (isInitialWidgetQueryPending(statsQuery)) return <WidgetQueryLoadingState />;
   if (!firstResult) {
     return (
       <Stack align="center" justify="center" h="100%">
@@ -212,7 +199,7 @@ export function UmamiContent({
     );
 
   return (
-    <Stack gap={isDense ? 2 : 4} p={isDense ? 4 : "xs"} h="100%">
+    <Stack gap={isDense ? 2 : 4} p={isDense ? 4 : "xs"} h="100%" pos="relative">
       <Group justify="space-between" align="baseline" wrap="nowrap">
         <Text size="xs" c="dimmed" truncate="end" style={{ maxWidth: "55%" }}>
           {visitorStats.domain} ({formatTimeFrameLabel(timeFrame, t)})
@@ -255,9 +242,11 @@ export function UmamiContent({
       </Group>
       {showSecondaryStats && (
         <Group wrap="wrap" style={{ columnGap: 12, rowGap: 4 }}>
-          <Text size="xs" c="green">
-            ● {activeVisitors.toLocaleString(locale)} {t("active")}
-          </Text>
+          {activeVisitors !== undefined && (
+            <Text size="xs" c="green">
+              ● {activeVisitors.toLocaleString(locale)} {t("active")}
+            </Text>
+          )}
           <Text size="xs" c="dimmed">
             {visitorStats.totalPageviews.toLocaleString(locale)} {t("pageviews")}
           </Text>
@@ -279,6 +268,14 @@ export function UmamiContent({
       <Box mt={4} style={{ flex: 1, minHeight: 0 }}>
         {displayMode === "advanced" ? advancedContent : selectedView}
       </Box>
+      {(statsQuery.error || activeVisitorsQuery.error || multiEventQuery.error) && (
+        <Box pos="absolute" top={4} right={4}>
+          <WidgetQueryErrorIndicator
+            error={statsQuery.error ?? activeVisitorsQuery.error ?? multiEventQuery.error}
+            label={t("name")}
+          />
+        </Box>
+      )}
     </Stack>
   );
 }

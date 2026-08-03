@@ -11,8 +11,8 @@ describe("weather formatting", () => {
   it("keeps zero wind speeds and missing forecast values truthful", () => {
     expect(getPreferredWindSpeed(0)).toBe("0.0");
     expect(getPreferredWindSpeed(undefined)).toBe("?");
-    expect(getPreferredTime(undefined)).toBe("?");
-    expect(getPreferredTime("invalid")).toBe("?");
+    expect(getPreferredTime(undefined, "en-US")).toBe("?");
+    expect(getPreferredTime("invalid", "en-US")).toBe("?");
   });
 
   it("limits compact forecasts by both axes", () => {

@@ -6,7 +6,7 @@ import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-ma
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createIndexerManagerIntegrationMiddleware = (action: IntegrationAction) =>
@@ -34,7 +34,7 @@ export const indexerManagerRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             indexers: [],
-            error: error instanceof Error ? error.message : String(error),
+            error: toPublicIntegrationError(error),
           }),
           throwOnAllFailures: true,
         },

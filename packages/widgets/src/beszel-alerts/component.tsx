@@ -26,6 +26,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import { getUsableWidgetQueryData } from "../common/query-state";
 
 const alertIconMap: Record<string, LucideIcon> = {
   CPU: Cpu,
@@ -56,7 +57,9 @@ export default function BeszelAlertsWidget({
     () => ({ integrationIds, includeHistory: options.showHistory, maxHistoryItems: options.maxHistoryItems }),
     [integrationIds, options.showHistory, options.maxHistoryItems],
   );
-  const { data: results = [], error: alertsError, isPending } = clientApi.widget.beszel.getAlerts.useQuery(alertsInput);
+  const alertsQuery = clientApi.widget.beszel.getAlerts.useQuery(alertsInput);
+  const results = getUsableWidgetQueryData(alertsQuery) ?? [];
+  const { isPending } = alertsQuery;
 
   const systemNameMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -85,8 +88,6 @@ export default function BeszelAlertsWidget({
   const showOkAlerts = displayMode === "advanced" || triggeredAlerts.length === 0 || height >= 260;
   const showHistory = options.showHistory && (displayMode === "advanced" || height >= 360);
   const showAlertDescriptions = displayMode === "advanced" || height >= 190;
-
-  if (alertsError) throw alertsError;
 
   if (isPending) {
     return (

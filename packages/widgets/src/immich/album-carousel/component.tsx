@@ -1,7 +1,7 @@
 "use client";
 
 import type { Dispatch, SetStateAction } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ActionIcon, Box, Center, Group, Image, ScrollArea, Stack, Text, UnstyledButton } from "@mantine/core";
 import { useReducedMotion } from "@mantine/hooks";
 import {
@@ -18,6 +18,8 @@ import { useCurrentIntlLocale, useI18n, useScopedI18n } from "@homarr/translatio
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
+import { useWidgetRuntimeActions } from "../../runtime-hooks";
+import { getUsableWidgetQueryData } from "../../common/query-state";
 import classes from "./component.module.css";
 import { ALL_PHOTOS_ALBUM_ID } from "./constants";
 
@@ -25,17 +27,19 @@ export default function ImmichAlbumCarouselWidget({
   integrationIds,
   options,
   displayMode = "compact",
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"immich-albumCarousel">) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  const { data: album } = clientApi.widget.immich.getAlbum.useQuery(
-    {
-      integrationId: integrationIds[0] ?? "",
-      albumId: options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID ? options.albumId : undefined,
-    },
-    { enabled: integrationIds.length > 0 },
+  const album = getUsableWidgetQueryData(
+    clientApi.widget.immich.getAlbum.useQuery(
+      {
+        integrationId: integrationIds[0] ?? "",
+        albumId: options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID ? options.albumId : undefined,
+      },
+      { enabled: integrationIds.length > 0 },
+    ),
   );
 
   const photoAssets = useMemo(() => {
@@ -48,30 +52,19 @@ export default function ImmichAlbumCarouselWidget({
     setCurrentPhotoIndex((current) => Math.min(current, photoAssets.length - 1));
   }, [photoAssets.length]);
 
-  useEffect(() => {
-    if (!widgetStateRef) return;
-    const clearActions = () => {
-      if (!widgetStateRef.current) return;
-      delete widgetStateRef.current.previousPhoto;
-      delete widgetStateRef.current.nextPhoto;
-      delete widgetStateRef.current.toggleSlideshow;
-    };
-    if (photoAssets.length <= 1) {
-      clearActions();
-      return;
-    }
-    const previousPhoto = () =>
-      setCurrentPhotoIndex((current) => (current - 1 + photoAssets.length) % photoAssets.length);
-    const nextPhoto = () => setCurrentPhotoIndex((current) => (current + 1) % photoAssets.length);
-    const toggleSlideshow = () => setPaused((value) => !value);
-    widgetStateRef.current = {
-      ...widgetStateRef.current,
-      previousPhoto,
-      nextPhoto,
-      toggleSlideshow,
-    };
-    return clearActions;
-  }, [photoAssets.length, widgetStateRef]);
+  const previousPhoto = useCallback(
+    () => setCurrentPhotoIndex((current) => (current - 1 + photoAssets.length) % photoAssets.length),
+    [photoAssets.length],
+  );
+  const nextPhoto = useCallback(
+    () => setCurrentPhotoIndex((current) => (current + 1) % photoAssets.length),
+    [photoAssets.length],
+  );
+  const toggleSlideshow = useCallback(() => setPaused((value) => !value), []);
+  useWidgetRuntimeActions(
+    widgetRuntimeRef,
+    photoAssets.length > 1 ? { previousPhoto, nextPhoto, toggleSlideshow } : {},
+  );
 
   if (!album) return <WidgetEmptyState />;
 
