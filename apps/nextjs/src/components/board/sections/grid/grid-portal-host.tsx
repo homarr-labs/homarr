@@ -50,7 +50,7 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
     if (existing) return existing;
 
     const container = document.createElement("div");
-    container.className = "board-grid-item-content";
+    container.className = "board-grid-portal-content";
     container.dataset.boardGridPortal = id;
     containersRef.current.set(id, container);
     setContainers(new Map(containersRef.current));

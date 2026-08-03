@@ -29,10 +29,11 @@ interface BoardItemContentProps {
   item: SectionItem;
 }
 
-const getOverflowFromKind = (kind: SectionItem["kind"]) => {
-  if (kind === "iframe") return "hidden";
-  if (kind === "systemResources") return "visible";
-  return undefined;
+const getOverflowFromKind = (kind: SectionItem["kind"], hasCustomCssClasses: boolean) => {
+  if (kind === "systemResources") return { overflowX: "visible", overflowY: "visible" } as const;
+  if (kind === "iframe") return { overflowX: "hidden", overflowY: "hidden" } as const;
+  if (hasCustomCssClasses) return {};
+  return { overflowX: "hidden", overflowY: "auto" } as const;
 };
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
@@ -59,7 +60,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
             root: {
               "--opacity": board.opacity / 100,
               containerType: "size",
-              overflow: getOverflowFromKind(item.kind),
+              ...getOverflowFromKind(item.kind, item.advancedOptions.customCssClasses.length > 0),
               "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
             },
           }}

@@ -126,7 +126,8 @@ describe("Board grid", () => {
       const logicalTile = firstItem.locator("[data-grid-item-content]");
       await expect(logicalTile).toHaveCount(1);
       await expectFixedLogicalTileAsync(logicalTile);
-      await expect(logicalTile).toHaveCSS("overflow", "hidden");
+      await expect(logicalTile).toHaveCSS("overflow-x", "hidden");
+      await expect(logicalTile).toHaveCSS("overflow-y", "auto");
       await page.addStyleTag({ content: ".e2e-widget-overflow { overflow: visible; }" });
       await expect(secondItem.locator("[data-grid-item-content]")).toHaveCSS("overflow", "visible");
       await expect(canvas).toHaveAttribute("data-canvas-overflow", "false");
@@ -230,6 +231,30 @@ describe("Board grid", () => {
       await expect(page.locator(`[data-grid-runtime="${gridRuntimeMarker}"]`)).toHaveCount(3);
       await expect(page.getByTestId("board-grid-editor-loading")).toHaveCount(0);
       await expect(page.getByTestId("board-canvas-row-count-button")).toHaveCount(0);
+      await expect(logicalTile).toHaveCSS("overflow-x", "hidden");
+      await expect(logicalTile).toHaveCSS("overflow-y", "auto");
+      await logicalTile.evaluate((element) => {
+        const overflowFixture = document.createElement("div");
+        overflowFixture.dataset.e2eWidgetOverflowFixture = "true";
+        overflowFixture.style.width = "800px";
+        overflowFixture.style.minWidth = "800px";
+        overflowFixture.style.height = "800px";
+        overflowFixture.style.minHeight = "800px";
+        overflowFixture.style.flex = "0 0 800px";
+        element.appendChild(overflowFixture);
+      });
+      await expect
+        .poll(async () => await logicalTile.evaluate((element) => element.scrollWidth - element.clientWidth))
+        .toBeGreaterThan(0);
+      await expect
+        .poll(async () => await logicalTile.evaluate((element) => element.scrollHeight - element.clientHeight))
+        .toBeGreaterThan(0);
+      await logicalTile.evaluate((element) => {
+        element.scrollTop = 100;
+      });
+      await expect.poll(async () => await logicalTile.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+      await expectDocumentNotHorizontallyScrollableAsync(page);
+      await logicalTile.locator('[data-e2e-widget-overflow-fixture="true"]').evaluate((element) => element.remove());
       await expectBoundingBoxToMatchAsync(mainSection, viewMainSectionBox);
       await expectBoundingBoxToMatchAsync(logicalTile, viewFirstItemBox);
       await runtimeResources.waitForQuietAsync();
@@ -691,6 +716,7 @@ describe("Board grid", () => {
       await dragLocatorByAsync(page, northResizeHandle, 0, logicalCellPitch * canvasScale);
       await expect(containerSection).toHaveAttribute("data-grid-y", "1");
       await expect(containerSection).toHaveAttribute("data-grid-h", "1");
+      await expectGridEntryGeometrySettledAsync(containerSection);
 
       const minimumSectionBox = await expectBoundingBoxAsync(containerSection);
       const minimumHandleBox = await expectBoundingBoxAsync(northResizeHandle);

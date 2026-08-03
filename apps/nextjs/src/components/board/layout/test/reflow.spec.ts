@@ -28,7 +28,7 @@ describe("dashboard layout reflow", () => {
     expect(hasOverlap(result)).toBe(false);
   });
 
-  test("shrinks a collapsed inline container and pulls neighbors up", () => {
+  test("shrinks a collapsed inline container without compacting unrelated columns", () => {
     const result = getCollapsedDisplayLayout(
       [
         { id: "section", x: 0, y: 0, w: 2, h: 3 },
@@ -44,7 +44,41 @@ describe("dashboard layout reflow", () => {
     expect(result).toEqual([
       { id: "section", x: 0, y: 0, w: 2, h: 0.5 },
       { id: "below", x: 0, y: 0.5, w: 2, h: 1 },
-      { id: "other-lane", x: 2, y: 0, w: 1, h: 1 },
+      { id: "other-lane", x: 2, y: 4, w: 1, h: 1 },
+    ]);
+  });
+
+  test("preserves intentional gaps below a collapsed container", () => {
+    const result = getCollapsedDisplayLayout(
+      [
+        { id: "section", x: 0, y: 1, w: 2, h: 3 },
+        { id: "below", x: 0, y: 6, w: 2, h: 1 },
+        { id: "above", x: 0, y: 0, w: 2, h: 1 },
+      ],
+      { columnCount: 2, collapsedItemIds: new Set(["section"]) },
+    );
+
+    expect(result).toEqual([
+      { id: "section", x: 0, y: 1, w: 2, h: 0.5 },
+      { id: "below", x: 0, y: 3.5, w: 2, h: 1 },
+      { id: "above", x: 0, y: 0, w: 2, h: 1 },
+    ]);
+  });
+
+  test("does not double-count side-by-side collapsed space", () => {
+    const result = getCollapsedDisplayLayout(
+      [
+        { id: "left", x: 0, y: 0, w: 1, h: 3 },
+        { id: "right", x: 1, y: 0, w: 1, h: 3 },
+        { id: "below", x: 0, y: 3, w: 2, h: 1 },
+      ],
+      { columnCount: 2, collapsedItemIds: new Set(["left", "right"]) },
+    );
+
+    expect(result).toEqual([
+      { id: "left", x: 0, y: 0, w: 1, h: 0.5 },
+      { id: "right", x: 1, y: 0, w: 1, h: 0.5 },
+      { id: "below", x: 0, y: 0.5, w: 2, h: 1 },
     ]);
   });
 
