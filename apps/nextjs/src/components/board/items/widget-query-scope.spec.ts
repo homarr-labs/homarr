@@ -33,9 +33,7 @@ describe("matchesWidgetItemQuery", () => {
     expect(
       matches("customApi", ["widget", "customApi", "getData"], { ...input, definitionId: "definition-2" }, scope),
     ).toBe(false);
-    expect(matches("customApi", ["widget", "customApi", "getData"], { ...input, itemId: "item-2" }, scope)).toBe(
-      false,
-    );
+    expect(matches("customApi", ["widget", "customApi", "getData"], { ...input, itemId: "item-2" }, scope)).toBe(false);
     expect(matches("customApi", ["widget", "customApi", "getData"], { ...input, boardId: "board-2" }, scope)).toBe(
       false,
     );

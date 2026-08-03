@@ -9,7 +9,10 @@ interface LocalizedTimeOptions {
 }
 
 const toValidDate = (value: LocalizedDateValue): Date | undefined => {
-  const date = value instanceof Date ? value : new Date(typeof value === "string" && dateOnlyPattern.test(value) ? `${value}T00:00:00Z` : value);
+  const date =
+    value instanceof Date
+      ? value
+      : new Date(typeof value === "string" && dateOnlyPattern.test(value) ? `${value}T00:00:00Z` : value);
   return Number.isNaN(date.getTime()) ? undefined : date;
 };
 
