@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { act, createElement } from "react";
+import { act, createElement, Fragment } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 
@@ -8,12 +8,14 @@ import {
   AssistantAutoApprovalProvider,
   createAssistantAutoApprovalTracker,
   useAssistantAutoApproval,
+  useAssistantAutomaticAction,
 } from "./assistant-auto-approval";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 type AutoApproval = ReturnType<typeof useAssistantAutoApproval>;
 let currentAutoApproval: AutoApproval | null = null;
+let automaticActionInProgress = false;
 const containers: HTMLDivElement[] = [];
 
 const AutoApprovalProbe = () => {
@@ -21,8 +23,27 @@ const AutoApprovalProbe = () => {
   return null;
 };
 
+const AutomaticActionProbe = ({
+  ready,
+  completed,
+  confirm,
+}: {
+  ready: boolean;
+  completed: boolean;
+  confirm: () => void;
+}) => {
+  automaticActionInProgress = useAssistantAutomaticAction({
+    toolCallId: "configure-app-1",
+    ready,
+    completed,
+    confirm,
+  });
+  return null;
+};
+
 afterEach(() => {
   currentAutoApproval = null;
+  automaticActionInProgress = false;
   for (const container of containers.splice(0)) container.remove();
 });
 
@@ -87,12 +108,12 @@ describe("assistant automatic approval tracker", () => {
     });
     act(() => currentAutoApproval?.setEnabled(true));
 
-    expect(currentAutoApproval?.requestApproval("app-create-1", () => undefined)).toBe(true);
-    expect(currentAutoApproval?.requestApproval("app-create-1", () => undefined)).toBe(false);
+    expect(currentAutoApproval?.requestAction("app-create-1", () => undefined)).toBe(true);
+    expect(currentAutoApproval?.requestAction("app-create-1", () => undefined)).toBe(false);
 
     act(() => currentAutoApproval?.setEnabled(false));
     act(() => currentAutoApproval?.setEnabled(true));
-    expect(currentAutoApproval?.requestApproval("app-create-1", () => undefined)).toBe(true);
+    expect(currentAutoApproval?.requestAction("app-create-1", () => undefined)).toBe(true);
 
     await act(async () => root.unmount());
   });
@@ -115,11 +136,52 @@ describe("assistant automatic approval tracker", () => {
     act(() => currentAutoApproval?.setEnabled(true));
 
     expect(
-      currentAutoApproval?.requestApproval("app-create-1", () => {
+      currentAutoApproval?.requestAction("app-create-1", () => {
         throw new Error("Approval transport failed");
       }),
     ).toBe(false);
-    expect(currentAutoApproval?.requestApproval("app-create-1", () => undefined)).toBe(true);
+    expect(currentAutoApproval?.requestAction("app-create-1", () => undefined)).toBe(true);
+
+    await act(async () => root.unmount());
+  });
+
+  test("confirms a ready human-tool action exactly once and clears progress on completion", async () => {
+    const container = document.createElement("div");
+    containers.push(container);
+    document.body.append(container);
+    const root = createRoot(container);
+    let confirmationCount = 0;
+    const confirm = () => {
+      confirmationCount += 1;
+    };
+    const renderAction = async (ready: boolean, completed: boolean) => {
+      await act(async () => {
+        root.render(
+          createElement(
+            AssistantAutoApprovalProvider,
+            { conversationId: "local-thread-1" },
+            createElement(
+              Fragment,
+              null,
+              createElement(AutoApprovalProbe),
+              createElement(AutomaticActionProbe, { ready, completed, confirm }),
+            ),
+          ),
+        );
+      });
+    };
+
+    await renderAction(false, false);
+    act(() => currentAutoApproval?.setEnabled(true));
+    await renderAction(true, false);
+    expect(confirmationCount).toBe(1);
+    expect(automaticActionInProgress).toBe(true);
+
+    await renderAction(true, false);
+    expect(confirmationCount).toBe(1);
+
+    await renderAction(false, true);
+    expect(automaticActionInProgress).toBe(false);
 
     await act(async () => root.unmount());
   });

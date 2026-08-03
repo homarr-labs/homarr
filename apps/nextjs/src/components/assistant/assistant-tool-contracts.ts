@@ -2,10 +2,18 @@ import { z } from "zod/v4";
 
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 
+export const assistantAskUserOptionKinds = ["affirmative", "negative", "alternative"] as const;
+export type AssistantAskUserOptionKind = (typeof assistantAskUserOptionKinds)[number];
+
 const askUserOptionSchema = z.object({
   id: z.string().trim().min(1).max(48),
   label: z.string().trim().min(1).max(80),
   description: z.string().trim().max(180).optional(),
+  kind: z
+    .enum(assistantAskUserOptionKinds)
+    .describe(
+      "Classify agreement, approval, or proceeding as affirmative; refusal or stopping as negative; and unrelated selections as alternative.",
+    ),
 });
 
 const boardImageValueSchema = z.string().trim().max(2_048).nullable();
@@ -41,7 +49,7 @@ export const assistantBoardSettingsChangesSchema = z
 export const browserToolContracts = {
   ask_user: {
     description:
-      "Pause and ask the user one concise structured question. Use this for missing information or a meaningful choice, never as a second confirmation before a mutating tool. Provide 2-4 distinct options; the UI adds a freeform Other choice when allowOther is not false.",
+      "Pause and ask the user one concise structured question. Use this for missing information or a meaningful choice, never as a second confirmation before a mutating tool. Provide 2-4 distinct options and classify every option: agreement, approval, or proceeding is affirmative; refusal or stopping is negative; unrelated selections are alternative. A confirmation question must have exactly one affirmative option. The UI adds a freeform Other choice when allowOther is not false.",
     parameters: z.object({
       question: z.string().trim().min(1).max(240),
       description: z.string().trim().max(400).optional(),
@@ -98,6 +106,7 @@ export type AskUserArgs = z.infer<(typeof browserToolContracts)["ask_user"]["par
 export type AskUserResult = {
   answer: string;
   optionId?: string;
+  optionKind?: AssistantAskUserOptionKind;
   source: "option" | "other";
 };
 export type ConfigureAppArgs = z.infer<(typeof browserToolContracts)["configure_app"]["parameters"]>;

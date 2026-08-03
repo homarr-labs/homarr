@@ -24,7 +24,7 @@ export const createAssistantAutoApprovalTracker = () => {
 interface AssistantAutoApprovalContextValue {
   enabled: boolean;
   setEnabled: (enabled: boolean) => void;
-  requestApproval: (toolCallId: string, approve: () => void) => boolean;
+  requestAction: (toolCallId: string, confirm: () => void) => boolean;
 }
 
 const AssistantAutoApprovalContext = createContext<AssistantAutoApprovalContextValue | null>(null);
@@ -51,12 +51,12 @@ export const AssistantAutoApprovalProvider = ({
     setEnabledState(false);
   }, [conversationId]);
 
-  const requestApproval = useCallback(
-    (toolCallId: string, approve: () => void) => {
+  const requestAction = useCallback(
+    (toolCallId: string, confirm: () => void) => {
       if (!enabled || !trackerRef.current.claim(toolCallId)) return false;
 
       try {
-        approve();
+        confirm();
         return true;
       } catch {
         trackerRef.current.release(toolCallId);
@@ -66,7 +66,7 @@ export const AssistantAutoApprovalProvider = ({
     [enabled],
   );
 
-  const value = useMemo(() => ({ enabled, setEnabled, requestApproval }), [enabled, requestApproval, setEnabled]);
+  const value = useMemo(() => ({ enabled, setEnabled, requestAction }), [enabled, requestAction, setEnabled]);
 
   return <AssistantAutoApprovalContext.Provider value={value}>{children}</AssistantAutoApprovalContext.Provider>;
 };
@@ -75,4 +75,33 @@ export const useAssistantAutoApproval = () => {
   const value = useContext(AssistantAutoApprovalContext);
   if (value === null) throw new Error("useAssistantAutoApproval must be used within AssistantAutoApprovalProvider");
   return value;
+};
+
+export const useAssistantAutomaticAction = ({
+  toolCallId,
+  ready,
+  completed,
+  confirm,
+}: {
+  toolCallId: string;
+  ready: boolean;
+  completed: boolean;
+  confirm: () => void;
+}) => {
+  const { enabled, requestAction } = useAssistantAutoApproval();
+  const [inProgress, setInProgress] = useState(false);
+  const confirmRef = useRef(confirm);
+  confirmRef.current = confirm;
+
+  useEffect(() => {
+    if (!ready || completed || !enabled) {
+      setInProgress(false);
+      return;
+    }
+
+    const requested = requestAction(toolCallId, () => confirmRef.current());
+    setInProgress(requested);
+  }, [completed, enabled, ready, requestAction, toolCallId]);
+
+  return inProgress;
 };

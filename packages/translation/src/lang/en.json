@@ -2164,14 +2164,22 @@
         "otherLabel": "Your answer",
         "otherPlaceholder": "Type another answer…",
         "submit": "Send answer",
-        "cancelOther": "Cancel other answer"
+        "cancelOther": "Cancel other answer",
+        "automaticAffirmative": "Choosing the affirmative answer automatically",
+        "optionKind": {
+          "affirmative": "Confirm",
+          "negative": "Decline",
+          "alternative": "Option",
+          "custom": "Custom"
+        }
       },
       "configureApp": {
         "title": "Review app details",
         "description": "Choose a local icon and adjust anything before the assistant requests creation approval.",
         "preparing": "Preparing app details",
         "continue": "Use these details",
-        "ready": "App details ready"
+        "ready": "App details ready",
+        "automaticContinue": "Using these app details automatically"
       },
       "configureBoardSettings": {
         "title": "Review board changes",
@@ -2186,6 +2194,7 @@
         "noChanges": "No settings will change",
         "keepCurrent": "Keep current settings",
         "continue": "Continue to approval",
+        "automaticContinue": "Accepting the proposed board changes automatically",
         "resetAll": "Reset all changes",
         "tabs": {
           "css": "Custom CSS",
@@ -2213,7 +2222,7 @@
       "autoApproval": {
         "label": "Automatic approvals",
         "title": "Automatic approvals",
-        "description": "Approve every protected change in this conversation without another click. Your Homarr permissions still apply. This turns off when you switch conversations.",
+        "description": "Automatically approve protected changes, use presented form details, and choose answers categorized as affirmative. Neutral selections still wait for you. Your Homarr permissions still apply. This turns off when you switch conversations.",
         "enable": "Enable for this conversation",
         "disable": "Turn off automatic approvals",
         "enabled": "Automatic approvals are on",
