@@ -688,6 +688,19 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   }, [previewRefreshSignal]);
 
   const previewInput = getPreviewInput();
+  const aiPromptCurrentConfig = {
+    $schema: "homarr-custom-widget-v2",
+    name: form.values.name,
+    description: form.values.description || undefined,
+    iconUrl: form.values.iconUrl || undefined,
+    url: form.values.url,
+    authType: form.values.authType,
+    headerName: form.values.headerName || undefined,
+    method: form.values.method,
+    requestBody: form.values.requestBody || undefined,
+    displayType: form.values.displayType,
+    displayConfig: previewInput.displayConfig,
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -809,15 +822,22 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           </Fieldset>
 
           <Box hiddenFrom="md">
-            <CustomWidgetPreview
-              getFormValues={getPreviewInput}
-              formValues={previewInput}
-              fetchResult={previewFetchResult}
-              cachedJson={previewJson}
-              onTest={() => void handlePreviewTest()}
-              isTesting={previewMutation.isPending}
-              testError={previewMutation.error?.message ?? null}
-            />
+            <Stack gap="sm">
+              <CopyAiPromptButton
+                rawResponse={previewFetchResult?.rawResponse}
+                currentConfig={aiPromptCurrentConfig}
+                definitionId={definitionId}
+              />
+              <CustomWidgetPreview
+                getFormValues={getPreviewInput}
+                formValues={previewInput}
+                fetchResult={previewFetchResult}
+                cachedJson={previewJson}
+                onTest={() => void handlePreviewTest()}
+                isTesting={previewMutation.isPending}
+                testError={previewMutation.error?.message ?? null}
+              />
+            </Stack>
           </Box>
 
           <Group justify="end">
@@ -845,19 +865,8 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
             </Button>
             <CopyAiPromptButton
               rawResponse={previewFetchResult?.rawResponse}
-              currentConfig={{
-                $schema: "homarr-custom-widget-v2",
-                name: form.values.name,
-                description: form.values.description,
-                iconUrl: form.values.iconUrl,
-                url: form.values.url,
-                authType: form.values.authType,
-                headerName: form.values.headerName,
-                method: form.values.method,
-                requestBody: form.values.requestBody,
-                displayType: form.values.displayType,
-                displayConfig: previewInput.displayConfig,
-              }}
+              currentConfig={aiPromptCurrentConfig}
+              definitionId={definitionId}
             />
             <CustomWidgetPreview
               getFormValues={getPreviewInput}

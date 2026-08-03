@@ -39,6 +39,10 @@ Homarr includes presets for OpenRouter, OpenAI, Anthropic Claude, Google Gemini,
 DeepSeek, Together AI, Ollama, and LM Studio. Provider icons make the presets easy to identify. A custom
 preset connects any other service that implements the OpenAI Chat Completions API.
 
+The provider list also shows **Homarr — Coming soon** as a disabled option. It reserves a clear place for
+Homarr's future managed assistant service without making an unavailable backend selectable or changing
+the server-side provider configuration today.
+
 The management page presents setup as three compact sections: provider and endpoint, credentials, then
 model and availability. A status summary at the top shows whether the connection is ready, whether a key
 is protected, which model is selected, and whether users can open the assistant.
@@ -135,6 +139,12 @@ the assistant does not require a second typed confirmation first. Tool cards exp
 validated input, result, and error state without flooding the conversation with raw JSON by default.
 Common collection and widget results are summarized inline as compact responsive cards, while the full
 structured result remains available in the tool card details.
+
+Custom-widget tools let an administrator list, inspect, create, and update definitions. The custom-widget
+form's **Design with AI** action sends a focused request into the current conversation, where the assistant
+can propose the matching mutation and use the same approval controls. Existing stored secret values are
+reported only as configured/not configured and are preserved on update unless replacements are explicitly
+provided.
 
 The shield control in the conversation header can enable automatic approvals for the current conversation.
 While enabled, Homarr accepts every affirmative approval step as it arrives: protected mutations are approved,

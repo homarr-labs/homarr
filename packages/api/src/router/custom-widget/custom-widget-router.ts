@@ -54,130 +54,165 @@ function getImportJsonSchema() {
 export const customWidgetRouter = createTRPCRouter({
   schema: publicProcedure.query(() => getImportJsonSchema()),
 
-  all: protectedProcedure.query(async ({ ctx }) => {
-    const definitions = await ctx.db.query.customWidgetDefinitions.findMany({
-      orderBy: (table, { asc }) => asc(table.name),
-    });
+  all: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "List custom widget definitions. Returns IDs, names, endpoints, request methods, display types, authentication types, and enabled states.",
+      },
+    })
+    .query(async ({ ctx }) => {
+      const definitions = await ctx.db.query.customWidgetDefinitions.findMany({
+        orderBy: (table, { asc }) => asc(table.name),
+      });
 
-    return definitions.map((def) => ({
-      id: def.id,
-      name: def.name,
-      description: def.description,
-      iconUrl: def.iconUrl,
-      url: def.url,
-      method: def.method,
-      displayType: def.displayType,
-      authType: def.authType,
-      enabled: def.enabled,
-    }));
-  }),
+      return definitions.map((def) => ({
+        id: def.id,
+        name: def.name,
+        description: def.description,
+        iconUrl: def.iconUrl,
+        url: def.url,
+        method: def.method,
+        displayType: def.displayType,
+        authType: def.authType,
+        enabled: def.enabled,
+      }));
+    }),
 
-  byId: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-    const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
-      where: eq(customWidgetDefinitions.id, input.id),
-      with: { secrets: true },
-    });
+  byId: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get one custom widget definition by ID, including its display configuration and flags indicating which secrets are configured. Secret values are never returned.",
+      },
+    })
+    .query(async ({ ctx, input }) => {
+      const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+        where: eq(customWidgetDefinitions.id, input.id),
+        with: { secrets: true },
+      });
 
-    if (!definition) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
-    }
-
-    const displayConfig = parseDisplayConfig(
-      definition.displayConfig,
-      input.id,
-      logger,
-      "Corrupt displayConfig in custom widget",
-    );
-
-    return {
-      ...definition,
-      enabled: definition.enabled,
-      displayConfig,
-      secrets: definition.secrets.map((s) => ({
-        kind: s.kind,
-        hasValue: true,
-        updatedAt: s.updatedAt,
-      })),
-    };
-  }),
-
-  create: adminProcedure.input(customWidgetCreateSchema).mutation(async ({ ctx, input }) => {
-    const id = createId();
-
-    await ctx.db.insert(customWidgetDefinitions).values({
-      id,
-      name: input.name,
-      description: input.description,
-      iconUrl: input.iconUrl,
-      url: input.url,
-      authType: input.authType,
-      headerName: input.headerName,
-      method: input.method,
-      requestBody: input.requestBody,
-      displayType: input.displayType,
-      displayConfig: superjson.stringify(input.displayConfig),
-      creatorId: ctx.session.user.id,
-    });
-
-    if (input.secrets.length > 0) {
-      await ctx.db.insert(customWidgetSecrets).values(
-        input.secrets.map((secret) => ({
-          kind: secret.kind,
-          value: encryptSecret(secret.value),
-          definitionId: id,
-          updatedAt: new Date(),
-        })),
-      );
-    }
-
-    logger.info("Created custom widget definition", { id, name: input.name });
-    return { id };
-  }),
-
-  update: adminProcedure.input(customWidgetUpdateSchema).mutation(async ({ ctx, input }) => {
-    const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
-      where: eq(customWidgetDefinitions.id, input.id),
-    });
-
-    if (!existing) {
-      throw new TRPCError({ code: "NOT_FOUND" });
-    }
-
-    const { id, secrets, ...updateFields } = input;
-    const updateValues: Record<string, unknown> = { updatedAt: new Date() };
-
-    for (const [key, value] of Object.entries(updateFields)) {
-      if (value === undefined) continue;
-      const serialize = updateFieldSerializers[key];
-      if (serialize) {
-        updateValues[key] = serialize(value);
-      } else {
-        updateValues[key] = value;
+      if (!definition) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
       }
-    }
 
-    await ctx.db.update(customWidgetDefinitions).set(updateValues).where(eq(customWidgetDefinitions.id, id));
+      const displayConfig = parseDisplayConfig(
+        definition.displayConfig,
+        input.id,
+        logger,
+        "Corrupt displayConfig in custom widget",
+      );
 
-    if (secrets !== undefined) {
-      const effectiveAuthType = (updateFields.authType as string | undefined) ?? existing.authType;
+      return {
+        ...definition,
+        enabled: definition.enabled,
+        displayConfig,
+        secrets: definition.secrets.map((s) => ({
+          kind: s.kind,
+          hasValue: true,
+          updatedAt: s.updatedAt,
+        })),
+      };
+    }),
 
-      if (secrets.length > 0) {
-        await ctx.db.delete(customWidgetSecrets).where(eq(customWidgetSecrets.definitionId, id));
+  create: adminProcedure
+    .input(customWidgetCreateSchema)
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Create a custom widget definition. Admin only. Validate that displayConfig.type matches displayType. Pass secrets as an empty array unless the user explicitly provided new secret values.",
+      },
+    })
+    .mutation(async ({ ctx, input }) => {
+      const id = createId();
+
+      await ctx.db.insert(customWidgetDefinitions).values({
+        id,
+        name: input.name,
+        description: input.description,
+        iconUrl: input.iconUrl,
+        url: input.url,
+        authType: input.authType,
+        headerName: input.headerName,
+        method: input.method,
+        requestBody: input.requestBody,
+        displayType: input.displayType,
+        displayConfig: superjson.stringify(input.displayConfig),
+        creatorId: ctx.session.user.id,
+      });
+
+      if (input.secrets.length > 0) {
         await ctx.db.insert(customWidgetSecrets).values(
-          secrets.map((secret) => ({
+          input.secrets.map((secret) => ({
             kind: secret.kind,
             value: encryptSecret(secret.value),
             definitionId: id,
             updatedAt: new Date(),
           })),
         );
-      } else if (effectiveAuthType === "none") {
-        await ctx.db.delete(customWidgetSecrets).where(eq(customWidgetSecrets.definitionId, id));
       }
-    }
 
-    logger.info("Updated custom widget definition", { id });
-  }),
+      logger.info("Created custom widget definition", { id, name: input.name });
+      return { id };
+    }),
+
+  update: adminProcedure
+    .input(customWidgetUpdateSchema)
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Update a custom widget definition by ID. Admin only. Call customWidget_byId first, send only the fields that should change, and omit secrets to preserve stored secret values.",
+      },
+    })
+    .mutation(async ({ ctx, input }) => {
+      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+        where: eq(customWidgetDefinitions.id, input.id),
+      });
+
+      if (!existing) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      const { id, secrets, ...updateFields } = input;
+      const updateValues: Record<string, unknown> = { updatedAt: new Date() };
+
+      for (const [key, value] of Object.entries(updateFields)) {
+        if (value === undefined) continue;
+        const serialize = updateFieldSerializers[key];
+        if (serialize) {
+          updateValues[key] = serialize(value);
+        } else {
+          updateValues[key] = value;
+        }
+      }
+
+      await ctx.db.update(customWidgetDefinitions).set(updateValues).where(eq(customWidgetDefinitions.id, id));
+
+      if (secrets !== undefined) {
+        const effectiveAuthType = (updateFields.authType as string | undefined) ?? existing.authType;
+
+        if (secrets.length > 0) {
+          await ctx.db.delete(customWidgetSecrets).where(eq(customWidgetSecrets.definitionId, id));
+          await ctx.db.insert(customWidgetSecrets).values(
+            secrets.map((secret) => ({
+              kind: secret.kind,
+              value: encryptSecret(secret.value),
+              definitionId: id,
+              updatedAt: new Date(),
+            })),
+          );
+        } else if (effectiveAuthType === "none") {
+          await ctx.db.delete(customWidgetSecrets).where(eq(customWidgetSecrets.definitionId, id));
+        }
+      }
+
+      logger.info("Updated custom widget definition", { id });
+    }),
 
   toggleEnabled: adminProcedure
     .input(z.object({ id: z.string(), enabled: z.boolean() }))

@@ -1,12 +1,15 @@
 "use client";
 
-import { Button, Popover, Stack, Text } from "@mantine/core";
+import { Alert, Button, Group, Popover, Stack, Text, Textarea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconCopy, IconSparkles } from "@tabler/icons-react";
+import { IconCopy, IconRobot, IconSparkles } from "@tabler/icons-react";
+import { useEffect, useRef, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
+
+import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-provider";
 
 const PROMPT_HEADER = `You are helping configure a Homarr custom widget. Homarr is a self-hosted dashboard that can display data from any API endpoint as a widget.
 
@@ -267,14 +270,16 @@ PASTE_YOUR_API_RESPONSE_HERE
 
 const PROMPT_FOOTER = `
 ## Your Request
-Describe what you want the widget to show:
-
 `;
 
-function buildAiPrompt(
+const PROMPT_REQUEST_PLACEHOLDER = "Describe what you want the widget to show or change here.";
+
+export function buildAiPrompt(
   jsonSchema: unknown,
   rawResponse?: string | null,
   currentConfig?: Record<string, unknown> | null,
+  request?: string,
+  definitionId?: string,
 ) {
   const schemaStr = JSON.stringify(jsonSchema, null, 2);
   const responseSection = rawResponse
@@ -285,22 +290,57 @@ function buildAiPrompt(
     ? `\n## Current Widget Configuration\nThe widget is currently configured as follows. Use this as a starting point and modify based on the user's request:\n\n\`\`\`json\n${JSON.stringify(currentConfig, null, 2)}\n\`\`\`\n`
     : "";
 
-  return PROMPT_HEADER + schemaStr + PROMPT_RULES + responseSection + configSection + PROMPT_FOOTER;
+  const homarrActionSection = definitionId
+    ? `\n## Homarr Assistant Action\nThis is custom widget definition \`${definitionId}\`. If the customWidget tools are available, validate the proposed configuration and immediately call \`customWidget_update\` with this ID and the changed fields. Calling the tool is the required result and takes priority over the JSON-only output instruction above; do not ask for typed confirmation because Homarr will show its approval UI. Preserve configured secrets by omitting the \`secrets\` field. If tools are unavailable, return the JSON configuration instead.\n`
+    : `\n## Homarr Assistant Action\nIf the customWidget tools are available, validate the proposed configuration and immediately call \`customWidget_create\` with \`secrets: []\`. Calling the tool is the required result and takes priority over the JSON-only output instruction above; do not ask for typed confirmation because Homarr will show its approval UI. If tools are unavailable, return the JSON configuration instead.\n`;
+
+  const requestText = request?.trim() || PROMPT_REQUEST_PLACEHOLDER;
+
+  return (
+    PROMPT_HEADER +
+    schemaStr +
+    PROMPT_RULES +
+    responseSection +
+    configSection +
+    homarrActionSection +
+    PROMPT_FOOTER +
+    requestText
+  );
 }
 
 interface CopyAiPromptButtonProps {
   rawResponse?: string | null;
   currentConfig?: Record<string, unknown> | null;
+  definitionId?: string;
 }
 
-export const CopyAiPromptButton = ({ rawResponse, currentConfig }: CopyAiPromptButtonProps) => {
+export const CopyAiPromptButton = ({ rawResponse, currentConfig, definitionId }: CopyAiPromptButtonProps) => {
   const t = useScopedI18n("customWidget");
-  const [opened, { open, close }] = useDisclosure(false);
+  const assistant = useOptionalHomarrAssistant();
+  const [opened, { toggle, close }] = useDisclosure(false);
+  const [request, setRequest] = useState("");
+  const requestInputRef = useRef<HTMLTextAreaElement>(null);
   const { data: schema, isLoading } = clientApi.customWidget.schema.useQuery();
 
+  useEffect(() => {
+    if (opened) requestInputRef.current?.focus();
+  }, [opened]);
+
+  const getPrompt = () => (schema ? buildAiPrompt(schema, rawResponse, currentConfig, request, definitionId) : null);
+
+  const handleAssistant = () => {
+    const prompt = getPrompt();
+    if (!prompt || !assistant?.enabled || request.trim().length === 0) return;
+    if (!assistant.sendPrompt(prompt)) return;
+
+    close();
+    setRequest("");
+    showSuccessNotification({ title: t("action.aiPrompt"), message: t("notification.aiPromptSent") });
+  };
+
   const handleCopy = async () => {
-    if (!schema) return;
-    const prompt = buildAiPrompt(schema, rawResponse, currentConfig);
+    const prompt = getPrompt();
+    if (!prompt) return;
     try {
       await navigator.clipboard.writeText(prompt);
       close();
@@ -311,31 +351,70 @@ export const CopyAiPromptButton = ({ rawResponse, currentConfig }: CopyAiPromptB
   };
 
   return (
-    <Popover opened={opened} onClose={close} width={320} position="bottom" shadow="md" withinPortal>
+    <Popover opened={opened} onClose={close} width="target" position="bottom" shadow="md" withinPortal>
       <Popover.Target>
         <Button
+          type="button"
           variant="light"
           leftSection={<IconSparkles size={16} />}
-          onClick={open}
+          onClick={toggle}
           loading={isLoading}
           disabled={!schema}
           fullWidth
           size="sm"
         >
-          {t("action.copyAiPrompt")}
+          {t("action.aiPrompt")}
         </Button>
       </Popover.Target>
       <Popover.Dropdown>
         <Stack gap="sm">
           <Text size="sm">{t("notification.aiPromptDescription")}</Text>
+          <Textarea
+            ref={requestInputRef}
+            label={t("notification.aiPromptRequestLabel")}
+            placeholder={t("notification.aiPromptRequestPlaceholder")}
+            value={request}
+            onChange={(event) => setRequest(event.currentTarget.value)}
+            autosize
+            minRows={3}
+            maxRows={6}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+                event.preventDefault();
+                handleAssistant();
+              }
+            }}
+          />
           {!rawResponse && (
             <Text size="xs" c="dimmed" fs="italic">
               {t("notification.aiPromptNoResponse")}
             </Text>
           )}
-          <Button leftSection={<IconCopy size={16} />} onClick={() => void handleCopy()} fullWidth>
-            {t("notification.aiPromptCopy")}
-          </Button>
+          {assistant?.enabled ? (
+            <Button
+              type="button"
+              leftSection={<IconRobot size={16} />}
+              onClick={handleAssistant}
+              disabled={request.trim().length === 0 || assistant.isRunning}
+              fullWidth
+            >
+              {assistant.isRunning ? t("notification.aiPromptAssistantBusy") : t("notification.aiPromptAssistant")}
+            </Button>
+          ) : (
+            <Alert color="gray" icon={<IconRobot size={16} />}>
+              {t("notification.aiPromptAssistantUnavailable")}
+            </Alert>
+          )}
+          <Group justify="flex-end">
+            <Button
+              type="button"
+              variant="default"
+              leftSection={<IconCopy size={16} />}
+              onClick={() => void handleCopy()}
+            >
+              {t("notification.aiPromptCopy")}
+            </Button>
+          </Group>
         </Stack>
       </Popover.Dropdown>
     </Popover>
