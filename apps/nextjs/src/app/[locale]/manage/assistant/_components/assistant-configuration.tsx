@@ -64,11 +64,23 @@ type CredentialFlow = "idle" | "replace" | "remove";
 type AssistantProviderOption = AssistantProvider | "homarr";
 
 const ProviderIcon = ({ providerId, size = 20 }: { providerId: AssistantProviderOption; size?: number }) => {
-  const iconUrl = providerId === "homarr" ? "/logo/logo.png" : assistantProviderPresets[providerId].iconUrl;
-  return iconUrl ? (
-    <Image src={iconUrl} alt="" aria-hidden w={size} h={size} fit="contain" />
-  ) : (
-    <IconWorld size={size} aria-hidden />
+  if (providerId === "homarr") {
+    return <Image src="/logo/logo.png" alt="" aria-hidden w={size} h={size} fit="contain" />;
+  }
+
+  const preset = assistantProviderPresets[providerId];
+  if (!preset.iconUrl) return <IconWorld size={size} aria-hidden />;
+
+  const darkIconUrl = "darkIconUrl" in preset ? preset.darkIconUrl : null;
+  if (!darkIconUrl) {
+    return <Image src={preset.iconUrl} alt="" aria-hidden w={size} h={size} fit="contain" />;
+  }
+
+  return (
+    <>
+      <Image src={preset.iconUrl} alt="" aria-hidden w={size} h={size} fit="contain" darkHidden />
+      <Image src={darkIconUrl} alt="" aria-hidden w={size} h={size} fit="contain" lightHidden />
+    </>
   );
 };
 
