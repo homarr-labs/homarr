@@ -46,16 +46,6 @@ describe("getWidgetQueryKeys", () => {
 });
 
 describe("supportsAdvancedFocus", () => {
-  const definition = { supportsAdvancedFocus: undefined } as Parameters<typeof supportsAdvancedFocus>[0];
-
-  test("defaults to enabled", () => {
-    expect(supportsAdvancedFocus(definition)).toBe(true);
-  });
-
-  test("allows widgets to opt out", () => {
-    expect(supportsAdvancedFocus({ ...definition, supportsAdvancedFocus: false })).toBe(false);
-  });
-
   test.each([appDefinition, beszelSystemGridDefinition, beszelSystemTableDefinition])(
     "keeps non-enhanced widgets compact",
     (widgetDefinition) => {

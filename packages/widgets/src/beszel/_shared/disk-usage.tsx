@@ -28,7 +28,7 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
         {formatPercent(system.disk)}
       </Text>
       <HoverCard
-        zIndex={getDefaultZIndex("popover") - 3}
+        zIndex={getDefaultZIndex("modal") - 3}
         position="right"
         withArrow
         shadow="md"

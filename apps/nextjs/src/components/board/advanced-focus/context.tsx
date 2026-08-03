@@ -201,7 +201,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
             data-advanced-focus-overlay
             backgroundOpacity={0.38}
             blur={0}
-            zIndex="calc(var(--mantine-z-index-popover) - 2)"
+            zIndex="calc(var(--mantine-z-index-modal) - 2)"
             className={`${classes.backdrop} ${active.phase === "closing" ? classes.backdropClosing : ""}`}
             aria-hidden
           />

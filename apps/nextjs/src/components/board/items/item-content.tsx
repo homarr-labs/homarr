@@ -1,4 +1,4 @@
-import type { CSSProperties, KeyboardEvent, MutableRefObject, WheelEvent } from "react";
+import type { CSSProperties, KeyboardEvent, MutableRefObject } from "react";
 import { useEffect, useRef } from "react";
 import { ActionIcon, Badge, Box, Card } from "@mantine/core";
 import { useElementSize, useViewportSize } from "@mantine/hooks";
@@ -54,6 +54,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const [isEditMode] = useEditMode();
   const widgetStateRef = useRef<Record<string, unknown> | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const surfaceRef = useRef<HTMLDivElement>(null);
   const { active, open, close, dismiss, hover, leave } = useAdvancedFocus();
   const supportsAdvancedFocus = definitionSupportsAdvancedFocus(
     widgetImports[item.kind].definition as WidgetDefinition,
@@ -90,12 +91,22 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
     event.preventDefault();
     openAdvanced(true);
   };
-  const handleWheel = (event: WheelEvent<HTMLDivElement>) => {
-    if (!isAdvanced || !event.shiftKey) return;
-    const delta = event.deltaY || event.deltaX;
-    if (!redirectShiftWheel(event.currentTarget, event.target, delta)) return;
-    event.preventDefault();
-  };
+  useEffect(() => {
+    const surface = surfaceRef.current;
+    if (!isAdvanced || !surface) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      if (!event.shiftKey) return;
+      const multiplier = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? surface.clientHeight : 1;
+      const delta = (event.deltaY || event.deltaX) * multiplier;
+      if (!redirectShiftWheel(surface, event.target, delta)) return;
+      event.preventDefault();
+      event.stopPropagation();
+    };
+
+    surface.addEventListener("wheel", handleWheel, { capture: true, passive: false });
+    return () => surface.removeEventListener("wheel", handleWheel, { capture: true });
+  }, [isAdvanced]);
 
   return (
     <>
@@ -140,11 +151,11 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
               </ActionIcon>
             )}
             <Card
+              ref={surfaceRef}
               id={isAdvanced ? advancedViewId : undefined}
               role={isAdvanced ? "region" : undefined}
               aria-label={isAdvanced ? advancedViewLabel : undefined}
               data-advanced-focus-surface={isAdvanced || undefined}
-              onWheel={handleWheel}
               radius={board.itemRadius}
               p={isAdvanced ? undefined : 0}
               h={isAdvanced ? undefined : "100%"}

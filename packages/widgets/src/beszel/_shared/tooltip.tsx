@@ -57,7 +57,7 @@ interface PortalTooltipProps {
 }
 
 const MARGIN = 14;
-const TOOLTIP_Z_INDEX = getDefaultZIndex("modal");
+const BACKGROUND_TOOLTIP_Z_INDEX = getDefaultZIndex("modal") - 3;
 
 const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: PortalTooltipProps) => {
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -123,7 +123,7 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
     position: "fixed",
     left: pos.x,
     top: pos.y,
-    zIndex: pos.isAdvanced ? getDefaultZIndex("popover") : TOOLTIP_Z_INDEX,
+    zIndex: pos.isAdvanced ? getDefaultZIndex("modal") : BACKGROUND_TOOLTIP_Z_INDEX,
     pointerEvents: "none",
   };
 
