@@ -59,9 +59,10 @@ import { getAssistantConnectionState } from "./assistant-configuration-state";
 
 type HeaderEntry = { id: number; name: string; value: string };
 type CredentialFlow = "idle" | "replace" | "remove";
+type AssistantProviderOption = AssistantProvider | "homarr";
 
-const ProviderIcon = ({ providerId, size = 20 }: { providerId: AssistantProvider; size?: number }) => {
-  const iconUrl = assistantProviderPresets[providerId].iconUrl;
+const ProviderIcon = ({ providerId, size = 20 }: { providerId: AssistantProviderOption; size?: number }) => {
+  const iconUrl = providerId === "homarr" ? "/logo/logo.png" : assistantProviderPresets[providerId].iconUrl;
   return iconUrl ? (
     <Image src={iconUrl} alt="" aria-hidden w={size} h={size} fit="contain" />
   ) : (
@@ -187,15 +188,29 @@ export const AssistantConfiguration = () => {
   );
   const providerOptions = useMemo(
     () =>
-      (["hosted", "local", "custom"] satisfies AssistantProviderCategory[]).map((category) => ({
-        group: t(`provider.groups.${category}`),
-        items: assistantProviderIds
+      (["hosted", "local", "custom"] satisfies AssistantProviderCategory[]).map((category) => {
+        const items = assistantProviderIds
           .filter((providerId) => assistantProviderPresets[providerId].category === category)
           .map((providerId) => ({
             value: providerId,
             label: t(`provider.options.${providerId}.label`),
-          })),
-      })),
+          }));
+
+        return {
+          group: t(`provider.groups.${category}`),
+          items:
+            category === "hosted"
+              ? [
+                  {
+                    value: "homarr",
+                    label: t("provider.options.homarr.label"),
+                    disabled: true,
+                  },
+                  ...items,
+                ]
+              : items,
+        };
+      }),
     [t],
   );
   const selectedModel = connectionChanged ? undefined : models?.find((model) => model.id === modelId);
@@ -431,9 +446,16 @@ export const AssistantConfiguration = () => {
               allowDeselect={false}
               leftSection={<ProviderIcon providerId={provider} />}
               renderOption={({ option }) => (
-                <Group gap="sm" wrap="nowrap">
-                  <ProviderIcon providerId={option.value as AssistantProvider} />
-                  <Text size="sm">{option.label}</Text>
+                <Group gap="sm" wrap="nowrap" justify="space-between" w="100%">
+                  <Group gap="sm" wrap="nowrap">
+                    <ProviderIcon providerId={option.value as AssistantProviderOption} />
+                    <Text size="sm">{option.label}</Text>
+                  </Group>
+                  {option.value === "homarr" && (
+                    <Badge size="xs" variant="light" color="gray">
+                      {t("provider.comingSoon")}
+                    </Badge>
+                  )}
                 </Group>
               )}
             />

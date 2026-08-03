@@ -40,6 +40,12 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
+### Design with AI
+
+The **Design with AI** action is available while creating or editing a custom widget. Describe what the widget should show and, when [Homarr Assistant](../assistant) is enabled, send the request directly from the form. The assistant receives the widget schema, current non-secret configuration, and latest test response, then proposes the matching create or update tool for your approval.
+
+Run **Test** first when possible so the prompt includes the endpoint's real response shape. Saved secrets are never added to the prompt. **Copy to clipboard** remains available when the Assistant is disabled or when you prefer another AI service.
+
 <CustomWidgetCodeExample
   id="complete-widget-manifest"
   label="Complete manifest"
