@@ -1,0 +1,275 @@
+packages/widgets/src/audio-stats/shared.ts
+  s_3610582ca2943b::t_37358b99aa37f6 77
+  s_3610582ca2943b::t_cc198350757b51 64
+  s_3610582ca2943b::t_a00591f68f2c65 112,119
+  s_3610582ca2943b::t_7959ec6562e8ed 145
+  s_3610582ca2943b::t_a91c14eb33d5d0 161-162,166
+  s_3610582ca2943b::t_0f349ebe5788fd 1-36,38,40-44,46-52,54-57,59-63,65-71,73-76,78-91,93-111,113-118,120-127,135-141,143-144,146-160,163-165,167-173
+  s_3610582ca2943b::t_ba7c101606a93f 92
+  s_3610582ca2943b::t_048ac841c17e3f 128-134,142
+  s_3610582ca2943b::t_2905a532612256 58
+  s_3610582ca2943b::t_e9cf80b3704da5 37
+  s_3610582ca2943b::t_7d70053f0303dc 45
+  s_3610582ca2943b::t_87663bad7fb2d0 53
+  s_3610582ca2943b::t_a56519995d15ca 39
+  s_3610582ca2943b::t_243f3241641448 72
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  s_3610582ca2943b::t_4ef07075e5d87d 32
+  s_3610582ca2943b::t_dbe30455447656 52-53,56,65,73-74
+  s_3610582ca2943b::t_93429c9ae8b4fa 5
+  s_3610582ca2943b::t_a95f61937322d1 54-55,58
+packages/api/src/router/widgets/navidrome.ts
+  s_3610582ca2943b::t_01f650ef738fa7 1-21
+packages/widgets/src/navidrome/index.ts
+  s_3610582ca2943b::t_f6e283809740c4 9
+  s_3610582ca2943b::t_48de596b905d18 29-36
+  s_3610582ca2943b::t_03ec399a1223ca 41-46
+  s_3610582ca2943b::t_a1b1b5eac72dd6 1
+  s_3610582ca2943b::t_aac79e4f522ec9 2
+  s_3610582ca2943b::t_d3cce971160e21 3-8,10-28,37-40,47
+packages/integrations/src/paperless-ngx/paperless-ngx-types.ts
+  s_3610582ca2943b::t_1de5c3edb701ea 1-4,6-18
+  s_3610582ca2943b::t_28553e2d6e8f4c 5
+packages/integrations/src/base/creator.ts
+  s_3610582ca2943b::t_4a5c45b19cd353 132
+  s_3610582ca2943b::t_4fa66baeae4f54 41
+  s_3610582ca2943b::t_2ebd2a6bb8a053 54
+  s_3610582ca2943b::t_b71fd9dd1f5a16 34
+  s_3610582ca2943b::t_1d71c278e8c566 134
+  s_3610582ca2943b::t_e2c112dd65a7e8 129
+  s_3610582ca2943b::t_f8688739ec6ac4 131
+  s_3610582ca2943b::t_428d0217a50d45 5
+packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts
+  s_3610582ca2943b::t_9fe21fcd538971 2-16,43-71,76-78,80-154
+  s_3610582ca2943b::t_dd7bec98005bf0 1
+  s_3610582ca2943b::t_d45d6451ccb08d 72-75
+  s_3610582ca2943b::t_3d8c2fb3f40cfc 17-42
+  s_3610582ca2943b::t_d44755e0564429 79
+packages/definitions/src/widget.ts
+  s_3610582ca2943b::t_9610a15b6b78f5 38
+  s_3610582ca2943b::t_68ebdfe58b6fb9 43
+  s_3610582ca2943b::t_ae3ed14130dece 52,58
+  s_3610582ca2943b::t_34adacec130d2b 41
+  s_3610582ca2943b::t_d95fad83495f06 42
+  s_3610582ca2943b::t_e9007e684a8b4d 54
+  s_3610582ca2943b::t_fdd92f5367af8f 49,53,55-57
+  s_3610582ca2943b::t_36ebd1e417a320 50-51
+  s_3610582ca2943b::t_622e9e8aaa3e1a 44
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_3610582ca2943b::t_7c6b6131a12da3 61
+  s_3610582ca2943b::t_e5e9369b9519b1 62
+  s_3610582ca2943b::t_ead4e4f968fc35 60
+packages/definitions/src/widget-integration-map.ts
+  s_3610582ca2943b::t_f66f791dd3fb9a 39
+  s_3610582ca2943b::t_09d358f399cd3c 36
+  s_3610582ca2943b::t_a45000bf5503cd 40
+packages/integrations/src/navidrome/navidrome-integration.ts
+  s_3610582ca2943b::t_690aa82ac1e786 162
+  s_3610582ca2943b::t_947458a89d0ed2 2-3,17-18,22-23,72,87,101-112,130,133-139,141,145,159,165,174
+  s_3610582ca2943b::t_9f64cc950e338a 1,4-16,19-21,24-71,73-86,88-100,113-129,131-132,140,142-144,146-158,160-161,163-164,166-171,179-193
+packages/widgets/src/paperless-ngx/component.module.css
+  s_3610582ca2943b::t_a0a18d626cdcfe 22-28
+  s_3610582ca2943b::t_b68081459d79c8 7-8,16,18,29-41,51,64,71,84,97-98,110,121,135
+  s_3610582ca2943b::t_2d71ebf83eb9a1 1-6,9-15,17,19-21,42-50,52-63,65-70,72-83,85-96,101-109,111-120,122-134,136
+  s_3610582ca2943b::t_1ad1d3eea73471 99-100,137
+packages/integrations/src/paperless-ngx/paperless-ngx-integration.ts
+  s_3610582ca2943b::t_159bda69855986 1-5,7-18,20-73
+  s_3610582ca2943b::t_5e5ba32c7f64e5 6
+  s_3610582ca2943b::t_495fe05127f6b7 19
+packages/integrations/src/audiobookshelf/audiobookshelf-types.ts
+  s_3610582ca2943b::t_aa48d4f6a94763 1-36
+packages/definitions/src/integration.ts
+  s_3610582ca2943b::t_851e1a9f8181dd 489
+  s_3610582ca2943b::t_2a6f7c89fd8356 20
+  s_3610582ca2943b::t_cf18dc8a39523a 579
+  s_3610582ca2943b::t_46b3b4ab8208be 405-409,411-412
+  s_3610582ca2943b::t_c646192d3b6134 580
+  s_3610582ca2943b::t_5c4ac0c3b0606d 450
+  s_3610582ca2943b::t_c4e030fba53d6f 410
+  s_3610582ca2943b::t_9ef8451e8f0cf8 446-449,451-453
+  s_3610582ca2943b::t_c6be72541e11f8 437-441,443-445
+  s_3610582ca2943b::t_26a9df6d693ecc 578
+  s_3610582ca2943b::t_ac2ae1abdbad83 434,442
+  s_3610582ca2943b::t_5ec02f3260a7a2 429-433,435-436
+packages/widgets/src/paperless-ngx/component.tsx
+  s_3610582ca2943b::t_9023c0e2753574 19-26,35,44,48-59,67-76,86-89,91-97,99-103,107-114,116-146,151-152,156,160,168,170-171,173,175-176,184-191,205,207-211
+  s_3610582ca2943b::t_712b8c5e0339b7 153-155
+  s_3610582ca2943b::t_2f146c6aa54b4c 4,36-43,45-47,60-61,80,104-106,149-150,157-159,161-165,172,174,177-182,192-204,206
+  s_3610582ca2943b::t_b836aea6c6374e 62-66
+  s_3610582ca2943b::t_eaa9c83acf075f 3
+  s_3610582ca2943b::t_8bf73cb98544ab 1-2,5-18,27-34,77-79,81-85,90,98,147-148,166-167,183,212
+  s_3610582ca2943b::t_ac3cfd52d39584 115
+  s_3610582ca2943b::t_609596aeee615c 169
+packages/integrations/src/index.ts
+  s_3610582ca2943b::t_5cc33fd7401cb9 67
+  s_3610582ca2943b::t_bd85b429943c72 37
+  s_3610582ca2943b::t_f49f8466bfde63 36
+  s_3610582ca2943b::t_9ca3b994d1823c 38
+  s_3610582ca2943b::t_be30747fc12798 77
+  s_3610582ca2943b::t_d76c0fb5d13497 78
+  s_3610582ca2943b::t_84a0969d49f89d 79
+packages/definitions/src/docker-integration-match.ts
+  s_3610582ca2943b::t_b742ba9e902ef1 33
+  s_3610582ca2943b::t_5a7a4981b5d466 32
+  s_3610582ca2943b::t_aaa8e520a783fe 31
+  s_3610582ca2943b::t_d0e82000d21341 30
+packages/widgets/src/uptime-kuma/index.ts
+  s_3610582ca2943b::t_0125b400393f34 4,9-34
+  s_3610582ca2943b::t_55976d3aa92856 1-3,5-8,35-43
+packages/integrations/src/audiobookshelf/audiobookshelf-integration.ts
+  s_3610582ca2943b::t_20fb799e77ea30 1-130
+packages/widgets/src/audiobookshelf/index.ts
+  s_3610582ca2943b::t_a32bc78a0fdbef 32-35
+  s_3610582ca2943b::t_040a80cf1e5449 2-7,9-31,36-37,44
+  s_3610582ca2943b::t_c5cfb26634dddc 8
+  s_3610582ca2943b::t_07453e9b76c5d3 38-43
+  s_3610582ca2943b::t_c8a3283dc87b65 1
+packages/widgets/src/navidrome/component.tsx
+  s_3610582ca2943b::t_a5c10af2ca779f 18
+  s_3610582ca2943b::t_527ca441362abf 1-5,17,19-21,24-25,33-34
+  s_3610582ca2943b::t_ad27561aa1c5ec 6-16,23,26-32
+  s_3610582ca2943b::t_8deddb24cfb2c4 22
+packages/request-handler/src/uptime-kuma.ts
+  s_3610582ca2943b::t_1f0f104bbec66e 1-19
+packages/integrations/src/uptime-kuma/uptime-kuma-types.ts
+  s_3610582ca2943b::t_74b5dca6148ba1 1-62
+packages/widgets/src/paperless-ngx/index.ts
+  s_3610582ca2943b::t_71ebbeb632db0a 12-19
+  s_3610582ca2943b::t_924ab3eb3ae51e 1
+  s_3610582ca2943b::t_6eb5e466aa1146 2-11,20-41,48
+  s_3610582ca2943b::t_fe04f7108dbd65 42-47
+packages/request-handler/src/navidrome.ts
+  s_3610582ca2943b::t_a04f5cba700651 1-19
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-icons.ts
+  s_3610582ca2943b::t_8441a91bb04a6e 11
+  s_3610582ca2943b::t_224317a0b0cdce 32
+apps/nextjs/src/components/layout/navigation-link.tsx
+  s_3610582ca2943b::t_3c2952d0064136 4
+  s_3610582ca2943b::t_6aa8b78b759252 19-21,23-33,43,50-51
+packages/widgets/src/audio-stats/component.module.css
+  s_3610582ca2943b::t_23bb246ef01e68 1-185
+packages/widgets/src/index.tsx
+  s_3610582ca2943b::t_f50364e5e92a29 48
+  s_3610582ca2943b::t_aaa2b3b867fd64 105
+  s_3610582ca2943b::t_859e17980d83eb 40
+  s_3610582ca2943b::t_54698606d1a32e 104
+  s_3610582ca2943b::t_6ca21f291bd9de 103
+  s_3610582ca2943b::t_3927a617126304 12
+  s_3610582ca2943b::t_2a3b8d3a4186ab 13
+  s_3610582ca2943b::t_c29e3652356927 102
+  s_3610582ca2943b::t_e17f44f94f12a7 11
+  s_3610582ca2943b::t_639df92e2949f9 99
+packages/request-handler/src/paperless-ngx.ts
+  s_3610582ca2943b::t_4c39d4736b2f41 1-19
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_3610582ca2943b::t_deba7894f60143 29
+  s_3610582ca2943b::t_8cc402f32368d8 6
+packages/widgets/src/widget-integration-select.tsx
+  s_3610582ca2943b::t_ce466fdd71d2a0 54-61
+packages/widgets/src/audio-stats/audio-stats-shared.spec.ts
+  s_3610582ca2943b::t_2fe6af3fe114fc 18
+  s_3610582ca2943b::t_c91b2b530b5610 1-17,19-88
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_3610582ca2943b::t_78ee629a97827c 120
+packages/request-handler/src/audiobookshelf.ts
+  s_3610582ca2943b::t_4044975ad05db0 1-19
+packages/api/src/router/widgets/audiobookshelf.ts
+  s_3610582ca2943b::t_b50f0bff40fe64 1-6,12
+  s_3610582ca2943b::t_5ce8a5744b1f6e 7-11
+packages/translation/src/lang/en.json
+  s_3610582ca2943b::t_6fe18609fd0c29 3223-3245,3250-3255,3260
+  s_3610582ca2943b::t_961d71d6c38c78 2475-2482
+  s_3610582ca2943b::t_622f49dc62a28b 1101-1104
+  s_3610582ca2943b::t_ffaeac74d235af 3256-3259
+  s_3610582ca2943b::t_1cddd2d0835754 1090-1093
+  s_3610582ca2943b::t_b4323cff146e37 811
+  s_3610582ca2943b::t_61bcba34b9b471 815
+  s_3610582ca2943b::t_b644b59aa76d67 3119-3144
+  s_3610582ca2943b::t_b9c326bfa12483 3261-3280,3288-3293,3297-3298
+  s_3610582ca2943b::t_02cb8b44069904 3295-3296
+  s_3610582ca2943b::t_3f136ba773a09a 1121-1124
+  s_3610582ca2943b::t_7815833bbcf987 3246-3249
+  s_3610582ca2943b::t_693a6299801202 2463-2474,2483-2502,2506-2507
+  s_3610582ca2943b::t_49d4b2d7e1854f 3116-3118,3145-3155
+  s_3610582ca2943b::t_cbfcc17c06d4ee 1105-1108
+  s_3610582ca2943b::t_78bc9f2d140b9c 2503-2505
+  s_3610582ca2943b::t_a671617d6d80b4 3281-3287,3294
+  s_3610582ca2943b::t_560cbae6407f68 816-817
+  s_3610582ca2943b::t_09d7443f707726 3156-3222
+  s_3610582ca2943b::t_158d355d02d790 1109-1120
+packages/widgets/src/uptime-kuma/component.tsx
+  s_3610582ca2943b::t_3c2fec39c98ac1 1-2,5-13,15-24,93-96,100-104,107-108,110-120,127-143,158,163,217-219,222-223,228-229,232-233,247
+  s_3610582ca2943b::t_bc3b155b517a01 3,25-44,58-63,65-74,76-80,82-92,97-99,105,109,149-157,159-162,165-213,215,234-238,241-246
+  s_3610582ca2943b::t_9a03e1ebde23b0 121-126
+  s_3610582ca2943b::t_0a8a21d5372815 145
+  s_3610582ca2943b::t_8e295ecb26f8ef 4,14,45-57,64,75,81,106,144,146-148,164,214,216,220-221,224-227,230-231,239-240
+packages/widgets/src/audio-stats/audio-stats-content.tsx
+  s_3610582ca2943b::t_b8fae1b2f54a27 50-54
+  s_3610582ca2943b::t_f75a08c89c17be 1-49,55,62-63,68-97,102-134
+  s_3610582ca2943b::t_6c222d811b8486 57-58,60-61,64-67
+  s_3610582ca2943b::t_2da73ff627ec18 56
+  s_3610582ca2943b::t_65e3a515778c31 98
+  s_3610582ca2943b::t_6d091781589062 99-101
+  s_3610582ca2943b::t_3cbf3702763d0c 59
+packages/integrations/src/navidrome/test/navidrome-integration.spec.ts
+  s_3610582ca2943b::t_384fcb608a3c2e 57,110,160
+  s_3610582ca2943b::t_54ad08ed776d3f 21-22
+  s_3610582ca2943b::t_4652090f1ce3e7 154
+  s_3610582ca2943b::t_31af34b10179fb 1-20,23-56,58-109,111-153,155-159,161-202
+packages/widgets/src/audio-stats/component.tsx
+  s_3610582ca2943b::t_2373290395a115 1-40
+packages/api/src/router/widgets/paperless-ngx.ts
+  s_3610582ca2943b::t_aee8155410fcd4 1-12
+packages/integrations/src/types.ts
+  s_3610582ca2943b::t_875739f7908691 21
+  s_3610582ca2943b::t_6bf5f9c0d8dcce 22
+  s_3610582ca2943b::t_2a7673bf80b6a2 23
+  s_3610582ca2943b::t_827cfe2fc0c08d 20
+packages/widgets/src/uptime-kuma/component.module.css
+  s_3610582ca2943b::t_747525aa7f5625 1-6,9-15,17,19-21,42-44,46-50,52-56,58-69,72,74-82,85-94,96-101,103-109,121
+  s_3610582ca2943b::t_e645c6b6c05325 7-8,16,18,22-41,45,51,57,70-71,73,83-84,95,102,110-120
+packages/widgets/src/audiobookshelf/component.tsx
+  s_3610582ca2943b::t_640328dccf952e 17
+  s_3610582ca2943b::t_410430db383596 6-16,27,30-36
+  s_3610582ca2943b::t_7ba9532275d1ec 1-5,18-20,22-26,28-29,37-38
+  s_3610582ca2943b::t_67624e55dfc7ea 21
+packages/integrations/src/navidrome/navidrome-types.ts
+  s_3610582ca2943b::t_dd8645722774cb 1-71
+packages/api/src/router/widgets/uptime-kuma.ts
+  s_3610582ca2943b::t_46bb04015bdab0 1-55
+packages/widgets/src/audio-stats/index.ts
+  s_3610582ca2943b::t_5740a485249939 1-6,15-19,54-61
+  s_3610582ca2943b::t_3c59c3d936b0c3 20-21,27-32,39-40,52-53
+  s_3610582ca2943b::t_0f5ffbdff0f795 7-14,22-26,33-38,41-51
+packages/api/src/router/widgets/audio-stats.ts
+  s_3610582ca2943b::t_bfb8c85c535c86 1-16,26,35-37,39-40
+  s_3610582ca2943b::t_ecfee1d74c8522 17-18,21-25,27,30-34,38
+  s_3610582ca2943b::t_91b26db084f5cb 19-20,28-29
+packages/integrations/src/uptime-kuma/test/uptime-kuma-integration.spec.ts
+  s_3610582ca2943b::t_b17373d26c7289 128
+  s_3610582ca2943b::t_76fc8fd1c039cb 85
+  s_3610582ca2943b::t_0c91a572cd9569 17-18
+  s_3610582ca2943b::t_8a2b5ce7efe3ff 1-16,19-84,86-127,129-163
+packages/api/src/router/widgets/index.ts
+  s_3610582ca2943b::t_71c4faf7d6095b 9
+  s_3610582ca2943b::t_338461e3f460ee 37
+  s_3610582ca2943b::t_af003e29c68b01 35
+  s_3610582ca2943b::t_dfe66330a84339 34
+  s_3610582ca2943b::t_3c0bf096513056 36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c9f003dadd527b0fbe5e882b1a382985e9fdcdea",
+  "prompts": {},
+  "sessions": {
+    "s_3610582ca2943b": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "aa2f49da-9959-4b5e-b271-a951fddc12ad",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+packages/api/src/router/user.ts
+  s_c85821d37d2ac8::t_144c5da8e8f483 615,618,620
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "acd248cca2907c6ba64486369d47628d3d772476",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_c85821d37d2ac8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f27cd5c6-4a58-411c-af64-0675652a4c37",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,295 @@
+packages/api/src/router/widgets/media-requests.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 16-22,28-30,42-48,86-92,98-100,114-119,121,126-132,134-139,144-149
+packages/widgets/src/beszel/_shared/colors.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-39
+apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-tools-accordion.module.css
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-6
+packages/widgets/src/beszel/_shared/format.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-56
+apps/nextjs/src/components/board/items/widget-hover-overlay.module.css
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-116
+apps/nextjs/src/app/[locale]/manage/tools/api/components/scalar-theme.css
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-51
+apps/nextjs/src/app/[locale]/init/_steps/start/sqlite-restore.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-43
+packages/api/src/router/widgets/health-monitoring.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 12-18,26-28,44-48,69-75,79-81
+packages/api/src/router/widgets/dns-hole.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 17-23,29-31,75-81,95-101
+packages/widgets/src/paperless-ngx/component.module.css
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-137
+apps/nextjs/src/app/api/backup/shared.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-12
+apps/nextjs/src/app/api/mcp/oauth/authorize/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-143
+packages/api/src/router/info.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 10-16
+packages/api/src/trpc.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 11,43-47,64
+packages/request-handler/src/audiobookshelf.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-19
+packages/api/src/router/app.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 24-36,56-64,71-76,78-89,101-108,135-143,165-177,212-224,251-259
+.gitignore
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 69
+packages/definitions/src/widget-integration-map.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 36,39-40
+packages/integrations/src/uptime-kuma/test/uptime-kuma-integration.spec.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-162
+packages/widgets/src/beszel/_shared/tooltip.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-132
+packages/api/src/test/mcp.spec.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-41
+packages/widgets/src/audio-stats/component.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-14
+.cursor/rules/mcp-integration.mdc
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-103
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 120-123
+packages/widgets/src/audio-stats/index.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-62
+packages/widgets/src/beszel-system-table/index.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-48
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 60-62
+packages/api/src/router/icons.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 8-32,35-38
+packages/api/src/router/widgets/uptime-kuma.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-55
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 8
+packages/api/src/router/widgets/paperless-ngx.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-12
+packages/integrations/src/navidrome/navidrome-types.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-71
+packages/integrations/src/types.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 20-23,25
+apps/nextjs/src/components/layout/navigation-link.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 4,19-21,23-33,43,50-51
+apps/nextjs/src/app/[locale]/manage/tools/backup/page.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-40
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-378
+packages/widgets/src/uptime-kuma/component.module.css
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-121
+apps/nextjs/src/app/api/backup/migrations/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-63
+apps/nextjs/src/app/api/mcp/oauth/token/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-143
+apps/nextjs/src/components/backup/backup-preview-panel.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-114
+apps/nextjs/src/components/backup/restore-confirmation.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-32
+apps/nextjs/src/components/board/items/widget-hover-metadata.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-155
+packages/integrations/src/beszel/beszel-types.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-389
+packages/integrations/src/mock/data/beszel.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-343
+packages/validation/src/board.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 8,98-121
+packages/widgets/src/audio-stats/component.module.css
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-185
+packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-140
+apps/nextjs/src/app/[locale]/manage/tools/api/components/scalar-api-reference.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-35
+packages/widgets/src/beszel/_shared/types.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1
+packages/cron-jobs/src/jobs/integrations/health-monitoring.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 13-15
+apps/nextjs/src/app/api/mcp/_extract-tools.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-23
+packages/api/src/router/widgets/downloads.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 21-27,35-37,80-96,108-121
+packages/widgets/src/beszel-system-table/component.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-260
+packages/api/src/router/widgets/smart-home.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 17-23,28-30,54-60,73-79
+packages/definitions/src/integration.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 20,405-412,429-453,470-477,497,586-588
+packages/api/src/router/apiKeys.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 3-4,13-31,34-41,43-56,59-64
+apps/nextjs/src/app/[locale]/init/_steps/start/init-start.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 5,9,14,33
+apps/nextjs/src/app/[locale]/manage/tools/backup/_components/backup-import-card.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-27
+packages/widgets/src/paperless-ngx/component.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-201
+packages/api/src/router/widgets/index.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 6,10,35-36
+packages/request-handler/src/navidrome.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-19
+apps/nextjs/next.config.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 8-9,13-22,29-31,42
+apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-instructions.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-343
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-248
+apps/nextjs/src/app/[locale]/manage/tools/backup/_components/backup-export-card.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-87
+packages/integrations/src/navidrome/test/navidrome-integration.spec.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-201
+packages/widgets/src/beszel/_shared/options.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-6
+packages/widgets/src/uptime-kuma/index.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-43
+packages/api/src/router/widgets/beszel.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-135
+packages/integrations/src/paperless-ngx/paperless-ngx-types.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-21
+packages/integrations/src/beszel/beszel-integration.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-269
+apps/nextjs/src/app/api/mcp/[transport]/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-300
+apps/nextjs/src/styles/gridstack.scss
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 105-108
+packages/widgets/src/definition.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 45
+apps/nextjs/src/app/api/backup/test/backup.spec.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-308
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 5,23,32,52-56,58,65,73-74
+packages/widgets/src/beszel-system-stats/index.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-31
+packages/request-handler/src/beszel.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-122
+apps/nextjs/src/app/api/trpc/[trpc]/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 47-48
+packages/integrations/src/paperless-ngx/paperless-ngx-integration.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-67
+packages/widgets/src/beszel-alerts/index.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-17
+.cursor/plans/revert_demo_mcp_8d8927a6.plan.md
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-197
+packages/integrations/src/base/creator.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 4,6,35,42,55,130,132-133,135,137
+packages/integrations/src/mock/mock-integration.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 32,65,135-142
+apps/nextjs/package.json
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 59-60,77,80-81,83,85-86,88,97,99,106-107
+apps/nextjs/src/app/[locale]/manage/tools/api/components/api-page-tabs.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-58
+apps/nextjs/src/app/api/backup/sql-wasm/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-30
+scripts/run.sh
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 14-17,42,45-50,53,61-76
+apps/nextjs/src/react-app-env.d.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 5
+packages/api/src/mcp.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-36
+apps/nextjs/src/app/api/mcp/oauth/register/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-107
+packages/api/src/router/integration/integration-router.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 48-53,55-75,77-80,82-113,214-226,244-263,265-271,276-296,299-305,473-479,481-482,485-493,659-665,672-680,682-683,685-695,697-703,751-757,765-771
+apps/nextjs/src/components/backup/types.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-30
+packages/widgets/src/beszel/_shared/hooks.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-42
+packages/widgets/src/beszel-system-grid/index.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-27
+apps/nextjs/src/app/.well-known/oauth-protected-resource/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-25
+packages/widgets/src/beszel-alerts/component.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-264
+packages/widgets/src/audio-stats/audio-stats-shared.spec.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-94
+apps/nextjs/src/components/backup/index.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-3
+packages/api/src/router/widgets/calendar.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 21-27,42-44
+packages/request-handler/src/health-monitoring.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 11
+packages/widgets/src/audio-stats/audio-stats-content.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-125
+packages/widgets/src/paperless-ngx/index.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-48
+nginx.conf
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 26
+packages/integrations/src/uptime-kuma/uptime-kuma-types.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-62
+apps/nextjs/src/app/api/backup/export/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-75
+packages/widgets/src/beszel-system-table/styles.css
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-24
+apps/nextjs/src/components/board/sections/content.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 5-7,10,18,26,38,47,50,67
+apps/nextjs/src/components/backup/restore-progress-panel.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-159
+packages/api/src/router/user.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 147-159,174-181,227-246,261-278,298-315,355-363,405-412,456-464,479-486,551-558,624-631,638-645,702-709
+apps/nextjs/src/components/backup/dangerous-action-confirmation.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-91
+packages/request-handler/src/uptime-kuma.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-19
+apps/nextjs/src/components/backup/migration-progress-panel.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-60
+packages/api/src/router/invite.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 23-25,29-37,63-75,101-109
+apps/nextjs/src/components/backup/use-backup-analysis.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-187
+apps/nextjs/src/app/api/mcp/oauth/_store.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-157
+packages/widgets/src/uptime-kuma/component.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-245
+packages/api/src/router/docker/docker-router.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 19-24,28-30,61-66,82-87,103-109,125-131,147-153
+packages/api/src/router/widgets/media-server.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 17-23,32-34
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-194
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 14,33,166-170
+packages/integrations/src/audiobookshelf/audiobookshelf-integration.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-133
+packages/widgets/src/audio-stats/shared.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-169
+packages/definitions/src/docker-integration-match.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 30-33
+packages/widgets/src/widget-integration-select.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 54-61
+packages/integrations/src/navidrome/navidrome-integration.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-171
+apps/nextjs/src/components/board/items/widget-hover-overlay.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-86
+apps/nextjs/src/app/.well-known/oauth-authorization-server/route.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-32
+packages/integrations/src/audiobookshelf/audiobookshelf-types.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-36
+packages/request-handler/src/paperless-ngx.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-19
+packages/api/src/router/widgets/audio-stats.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-29
+apps/nextjs/src/components/backup/database-restore-flow.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-227
+packages/api/src/router/board.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 23,44,54,121-136,138-144,147-154,156-158,160-165,167-187,189-203,280-287,289,574-586,588-589,1365-1476
+packages/api/src/open-api.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 6,14
+apps/nextjs/src/app/[locale]/manage/tools/api/page.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 3,5,13,15-54,74-76,79,83-92
+packages/integrations/src/index.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 36-38,67,77-79
+packages/integrations/src/beszel/test/beszel-integration.spec.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-226
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-icons.ts
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 11,32
+packages/widgets/src/beszel/_shared/chart.tsx
+  s_65eb5a0f296edf::t_1b0d5b8586cfb0 1-109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "737ac5105a1cdb24eea9077942ddff38a816a705",
+  "prompts": {},
+  "sessions": {
+    "s_65eb5a0f296edf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "17059b15-dc38-4d70-8e3c-e208500f63b4",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

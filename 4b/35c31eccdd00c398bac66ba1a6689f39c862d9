@@ -1,0 +1,23 @@
+pnpm-workspace.yaml
+  s_cedc0c9887ccd0::t_372238d8bf0191 134
+pnpm-lock.yaml
+  ai_agent 391-392,822,2207,2262,2453,7442-7443,7446-7448,7452-7453,14791
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  s_cedc0c9887ccd0::t_0a1b4bf5c57ed6 110-126,145-154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "4b35c31eccdd00c398bac66ba1a6689f39c862d9",
+  "prompts": {},
+  "sessions": {
+    "s_cedc0c9887ccd0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "bcd8c258-e64f-4aa4-b49a-9c55a7b8f7a1",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

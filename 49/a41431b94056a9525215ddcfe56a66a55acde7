@@ -1,0 +1,21 @@
+apps/docs/docs/advanced/command-line/development/index.mdx
+  s_1c2c60ab8959b8::t_7d7f31db49a794 10,13
+tools/homarr-dev/README.md
+  s_1c2c60ab8959b8::t_7d7f31db49a794 49-51,80,100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "49a41431b94056a9525215ddcfe56a66a55acde7",
+  "prompts": {},
+  "sessions": {
+    "s_1c2c60ab8959b8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_04800f60fffebifl2JH2wvlokh",
+        "model": "gpt-5.6-sol-fast"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

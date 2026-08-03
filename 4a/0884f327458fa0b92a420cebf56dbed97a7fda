@@ -1,0 +1,99 @@
+apps/nextjs/package.json
+  s_812f0bd91cbce5::t_db2e59f982a88d 21
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_reset-tours.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-53
+packages/form/src/index.ts
+  s_812f0bd91cbce5::t_db2e59f982a88d 1,36
+apps/nextjs/src/components/onboarding/board-tour.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-108
+packages/api/src/router/user.ts
+  s_812f0bd91cbce5::t_db2e59f982a88d 281-282,309-310,612-644
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 4,146
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-card.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 87
+apps/nextjs/src/components/onboarding/manage-tour.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-220
+apps/nextjs/src/app/[locale]/boards/(content)/_theme.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 27
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 14,24-28,32,38,72-81
+packages/db/migrations/mysql/meta/0039_snapshot.json
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-2120
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 39,49,55,65,72,82,89,95,164,203-205,212-215
+packages/db/migrations/postgresql/meta/0005_snapshot.json
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-2016
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 229
+packages/db/migrations/postgresql/meta/_journal.json
+  s_812f0bd91cbce5::t_db2e59f982a88d 39-45
+packages/db/migrations/sqlite/meta/_journal.json
+  s_812f0bd91cbce5::t_db2e59f982a88d 263-269
+packages/db/migrations/sqlite/meta/0037_snapshot.json
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-2035
+packages/db/schema/postgresql.ts
+  s_812f0bd91cbce5::t_db2e59f982a88d 82-83
+packages/db/schema/sqlite.ts
+  s_812f0bd91cbce5::t_db2e59f982a88d 65-66
+packages/db/migrations/mysql/meta/_journal.json
+  s_812f0bd91cbce5::t_db2e59f982a88d 277-283
+packages/db/migrations/postgresql/0005_add_user_onboarding_tour_status.sql
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-2
+packages/forms-collection/src/new-app/_form.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 117
+packages/widgets/package.json
+  s_812f0bd91cbce5::t_db2e59f982a88d 52
+packages/widgets/src/downloads/component.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 808
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 5,53,73
+apps/nextjs/src/components/layout/header/tour-target.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-11
+apps/nextjs/src/app/[locale]/auth/login/_login-form.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 201
+apps/nextjs/src/components/layout/header.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 9,29-31,35-37
+packages/db/migrations/sqlite/0037_add_user_onboarding_tour_status.sql
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-2
+apps/nextjs/src/components/board/sections/category-section.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 59
+apps/nextjs/src/components/layout/navigation.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 30,41,45,47-48,54,69
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 86
+packages/translation/src/lang/en.json
+  s_812f0bd91cbce5::t_db2e59f982a88d 3495-3512,4967-5031
+packages/ui/src/styles.css
+  s_812f0bd91cbce5::t_db2e59f982a88d 4
+pnpm-workspace.yaml
+  s_812f0bd91cbce5::t_7ae96dfca17f47 16,18,22,26-37,49-70,76,89,97-98,105,125-131,138,142,152,154-155,167,171,176,178,183
+apps/nextjs/src/components/onboarding/tour-step-content.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-39
+packages/widgets/src/firewall/component.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 156,167
+packages/db/schema/mysql.ts
+  s_812f0bd91cbce5::t_db2e59f982a88d 83-84
+packages/widgets/src/media-requests/stats/component.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 109
+apps/nextjs/src/components/onboarding/tour-shell.tsx
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-197
+packages/db/migrations/mysql/0039_add_user_onboarding_tour_status.sql
+  s_812f0bd91cbce5::t_db2e59f982a88d 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "4a0884f327458fa0b92a420cebf56dbed97a7fda",
+  "prompts": {},
+  "sessions": {
+    "s_812f0bd91cbce5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1a178a5f8ffetT6wwTqIOEiYJ7",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

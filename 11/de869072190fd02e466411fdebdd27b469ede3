@@ -1,0 +1,35 @@
+packages/db/seed/custom-widgets/currency-exchange.json
+  s_a779988d600484::t_ab2f3816da426e 1,3-4,6-18
+  s_a779988d600484::t_0f7ec8067b6e65 2,5
+packages/db/seed/custom-widgets/jellyfin.json
+  s_a779988d600484::t_fa8b6025cdb8af 1-23
+packages/db/seed/custom-widgets/dog-facts.json
+  s_a779988d600484::t_da2c25dcc861e8 1,3-4,6-11,13-17
+  s_a779988d600484::t_472b3d15bf5a1a 2,5
+  s_a779988d600484::t_491b3a47c7c64b 12
+packages/db/migrations/seed.ts
+  s_a779988d600484::t_b78e5faacf01f9 568,570-572,574-592,595-597
+  s_a779988d600484::t_2b0922ffa5a69a 23
+  s_a779988d600484::t_be474b6cdd4320 1-4,8
+  s_a779988d600484::t_abe94552afe36e 74
+  s_a779988d600484::t_1996e3588fb14b 46
+  s_a779988d600484::t_3ee7dcd50a4c0e 564-567,569,573,593-594,598-614
+  s_a779988d600484::t_9d0bbcb08f68cf 57
+  s_a779988d600484::t_a284680f0eceb3 52-56,58-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "11de869072190fd02e466411fdebdd27b469ede3",
+  "prompts": {},
+  "sessions": {
+    "s_a779988d600484": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "29175f63-17b3-4e72-b510-05e08dd6845e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

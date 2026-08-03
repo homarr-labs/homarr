@@ -1,0 +1,24 @@
+packages/custom-widgets/src/core/import.ts
+  s_909110c6d23990::t_04b2cecf1a3810 11-34,37-38
+packages/custom-widgets/src/test/import.spec.ts
+  s_909110c6d23990::t_0c4a2cf15b0859 62
+  s_909110c6d23990::t_04b2cecf1a3810 56-61,63-67
+pnpm-lock.yaml
+  s_909110c6d23990::t_e6ee7231f728a9 1758,1776,18921,20504,21479,21483,21494,21498,21644,21650,21661,21693,21723,21787,21794,21803,21813,21817,21821,21833,21858,24146,25452,25466,27869
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "b573b4d46f285e840eefab940919bb97a858e048",
+  "prompts": {},
+  "sessions": {
+    "s_909110c6d23990": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f535c-afd7-7fb0-9155-c9a02e203597",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

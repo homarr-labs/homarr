@@ -1,0 +1,416 @@
+package.json
+  s_1e4006e883cdcb::t_ecc46a939e6719 39
+  s_1e4006e883cdcb::t_78ae858e292b24 33
+apps/web/components/features/protocols/shared/tabs/ClusterScatterExplorerTab.tsx
+  s_1e4006e883cdcb::t_c22165a97818ec 1-219,223-512
+  s_1e4006e883cdcb::t_2d09fd8e9c95df 220-222
+apps/web/lib/services/pilotes/queries.ts
+  s_2202991a5efe3d::t_c20d8808f3007c 7-13,15-16,24-28,30-43,45-55,57-61,63-65,67-99
+  s_2202991a5efe3d::t_727fb2cebcc26a 29,56,62
+  s_2202991a5efe3d::t_0dae5718487107 1-6
+  s_2202991a5efe3d::t_6bbb2b76512188 17-21,23,44,66
+apps/web/components/features/protocols/danone/DanoneReportDashboard.tsx
+  s_1e4006e883cdcb::t_8022cff00da701 70-73
+  s_1e4006e883cdcb::t_deccbd0c0d7d66 29
+  s_1e4006e883cdcb::t_242eae4d40bb01 41
+  s_1e4006e883cdcb::t_43ef8672837a52 5
+  s_1e4006e883cdcb::t_6fd189c82079b8 605,612,614,619,621,643,645,649,653,656
+  s_2202991a5efe3d::t_622712f9283186 93-115
+apps/web/components/features/protocols/shared/tabs/YogurtComparisonTab.tsx
+  s_1e4006e883cdcb::t_ab68576ccf5cea 1-6,9-13,15-20,22-34
+apps/web/app/pilote/[id]/decisions/[decisionId]/page.tsx
+  s_2202991a5efe3d::t_96a550a2865840 63-69
+  s_2202991a5efe3d::t_00613659a4f81d 22
+apps/web/components/features/pilote/AlternativesEntry.tsx
+  s_2202991a5efe3d::t_1023bb27a2377b 104
+  s_2202991a5efe3d::t_0b9e0eb66b24d7 92-93
+  s_2202991a5efe3d::t_67449b4d08c568 4
+apps/web/components/features/result/seven-dimensions/ImageSevenDimensionsView.tsx
+  s_1e4006e883cdcb::t_85b1ee7a71b2fb 22
+apps/web/components/features/result/insight-engine/BestEngineMatrix.tsx
+  s_2202991a5efe3d::t_a662c67ef3ef8a 1,3-11,20,22-24,26-37,39-46,75-494
+  s_1e4006e883cdcb::t_ae6cbb4155cf2c 12-16,18
+  s_1e4006e883cdcb::t_baceaf85e22293 2,19,21,25,38,47-74
+apps/web/components/features/protocols/danone/YogurtComparisonDashboard.tsx
+  s_1e4006e883cdcb::t_e368491f1522c2 2,5,11-12,31,39
+apps/web/components/features/protocols/bel/tabs/BelProductClusterComparison.tsx
+  s_1e4006e883cdcb::t_ce2e05ecb25fbc 2,5,9-12,16-19,22,24-28
+apps/web/scripts/dictionary-dedup.mjs
+  s_1e4006e883cdcb::t_afd2f7c6924fcf 145
+  s_1e4006e883cdcb::t_2d09fd8e9c95df 54-56
+  s_1e4006e883cdcb::t_271787d3a6e804 1-10,13-14,17-22,46,50-52,58-129,141-142,146-169,173-186,190-193,195-201,214-216
+  s_1e4006e883cdcb::t_0b0fddd6d5accc 202-210,212-213
+  s_2202991a5efe3d::t_a3c816a7963b6f 23-28,30,33,35-41,43,45
+  s_1e4006e883cdcb::t_2cc155726998c4 194
+  s_1e4006e883cdcb::t_a79cff9c794c6b 11-12,15-16
+  s_1e4006e883cdcb::t_a570114456cd83 187-189
+  s_1e4006e883cdcb::t_ba33c31864433e 170-172
+  s_1e4006e883cdcb::t_0228a8dda850b0 53,57
+  s_1e4006e883cdcb::t_075c9a3aa4438c 130-140
+  s_2202991a5efe3d::t_7e1aa5ea9282c8 29,31-32,34,42,44
+  s_1e4006e883cdcb::t_0756973a4b1631 47-49
+  s_2202991a5efe3d::t_8d6818e27a89b9 143-144
+  s_1e4006e883cdcb::t_7d361ce6691e30 211
+apps/web/lib/services/pilotes/mutations.ts
+  s_2202991a5efe3d::t_6bbb2b76512188 1,53
+  s_2202991a5efe3d::t_c20d8808f3007c 2-3,7-52,55,71-72,115
+  s_2202991a5efe3d::t_444dc2bce41133 5-6,54,56-70,73-114
+  s_2202991a5efe3d::t_154f8cdd8c1413 4
+apps/web/components/features/protocols/danone/CustomClusterBuilder.tsx
+  s_1e4006e883cdcb::t_ac3b38c2c828d5 2,5,9-11,21-22
+apps/web/lib/services/pilotes.ts
+  s_1e4006e883cdcb::t_9d299db86a4891 4-5
+  s_2202991a5efe3d::t_6bbb2b76512188 2,7
+apps/web/components/features/protocols/bel/tabs/BelProductDeltaDashboard.tsx
+  s_1e4006e883cdcb::t_8d20967daf9a68 2,5,9-12,22,24-28
+apps/web/components/features/result/SocialPanel.tsx
+  s_2202991a5efe3d::t_729baf59cd09a9 5,9-13
+apps/web/components/features/result/social/TikTokBlocks.tsx
+  s_2202991a5efe3d::t_729baf59cd09a9 1-26,28-32,34-35,37-103
+  s_1e4006e883cdcb::t_926b78a2dea185 27
+apps/web/components/features/protocols/danone/report-helpers.tsx
+  s_2202991a5efe3d::t_622712f9283186 1-21,28-39,42-43,45-732
+  s_2202991a5efe3d::t_5f7e6e4e2ee88d 22-27,40-41,44
+apps/web/components/features/protocols/shared/tabs/ParticipantTimelineTab.tsx
+  s_1e4006e883cdcb::t_ee730b5a82dd09 153
+  s_1e4006e883cdcb::t_ca0ebe43fe3f1d 1-41,50-152,154-686
+  s_2202991a5efe3d::t_cde10efad9dc71 42-49
+apps/web/components/features/result/insight-engine/constants.ts
+  s_1e4006e883cdcb::t_baceaf85e22293 2,4,212
+  s_2202991a5efe3d::t_a662c67ef3ef8a 1,3,5-211,213-226
+apps/web/components/features/result/NeuroMiniStory.tsx
+  s_1e4006e883cdcb::t_c49eb0fcecf169 11
+apps/web/components/features/protocols/danone/ClusterScatterExplorer.tsx
+  ai_agent 2,5,9-11,13,15-20
+apps/web/components/features/result/SyntheseSection.tsx
+  s_1e4006e883cdcb::t_834b42741f72ef 14
+apps/web/components/features/result/EyeTrackingPanel.tsx
+  s_1e4006e883cdcb::t_cd68c8c7b48560 5-6
+  s_1e4006e883cdcb::t_f84d82a5bf5e9e 14-16
+  s_1e4006e883cdcb::t_d80e2714719363 22-24
+apps/web/components/features/protocols/danone/ProductClusterComparison.tsx
+  s_1e4006e883cdcb::t_9ff334d198a94f 2,5,9-11,21-22
+apps/web/components/features/result/InsightEngineDetailPanel.tsx
+  s_2202991a5efe3d::t_a662c67ef3ef8a 5,9,15-23,35
+  s_1e4006e883cdcb::t_baceaf85e22293 24-34
+apps/web/components/features/protocols/bel/tabs/BelInsightsByClusterDashboard.tsx
+  s_1e4006e883cdcb::t_85767f68249bba 2,5,9-12,31,33-46,48-49
+apps/web/components/features/protocols/danone/InsightsByClusterDashboard.tsx
+  s_1e4006e883cdcb::t_d7e1f9b2f2dddd 2,5,9-11,31-44,46-47
+apps/web/components/features/protocols/bel/tabs/BelDiffClusterLabDashboard.tsx
+  s_1e4006e883cdcb::t_05d50f31783527 2,5,9-19,22-28,30-36
+apps/web/components/features/protocols/bel/BelReportDashboard.tsx
+  s_1e4006e883cdcb::t_ae1d828bfb28ed 501
+  s_1e4006e883cdcb::t_87ae59e0196f71 51
+  s_1e4006e883cdcb::t_cce1d0b2ad2b45 508
+  s_1e4006e883cdcb::t_2653a876543a93 542
+  s_2202991a5efe3d::t_622712f9283186 107-120
+  s_1e4006e883cdcb::t_152b011e19d0ae 525
+  s_1e4006e883cdcb::t_c85be74e07e884 545
+  s_1e4006e883cdcb::t_ad1c58945e67f0 122-124
+  s_1e4006e883cdcb::t_45324af1f566f6 79-82
+  s_1e4006e883cdcb::t_e62b3b0ec9bbf3 5-6
+  s_1e4006e883cdcb::t_044e79c2be8523 518
+apps/web/lib/services/pilotes/internal.ts
+  s_2202991a5efe3d::t_6bbb2b76512188 1,3-12,14
+  s_2202991a5efe3d::t_446eaaea27f8c9 324
+  s_2202991a5efe3d::t_f7528de7c9dabb 2,15-257,332-668
+  s_2202991a5efe3d::t_727fb2cebcc26a 258-323,325-331
+apps/web/components/features/compte/ReportDebugCard.tsx
+  s_1e4006e883cdcb::t_220fee582b0ec3 7
+apps/web/app/analyse/[id]/page.tsx
+  s_1e4006e883cdcb::t_808dd5766180a3 32-33
+apps/web/components/features/protocols/bel/tabs/BelInlineTabs.tsx
+  s_2202991a5efe3d::t_622712f9283186 1-23,27-39,41-57,62-63,65-736,738-740,742-844
+  s_1e4006e883cdcb::t_9bfc4b7c970f1f 58-61,64
+  s_1e4006e883cdcb::t_6dce480aaf7945 24-26
+apps/web/components/report/report-prefs.ts
+  s_2202991a5efe3d::t_091ce818091391 1-48,54-87
+  s_1e4006e883cdcb::t_2d09fd8e9c95df 49-53
+apps/web/components/features/pilote/EvolutionPage.tsx
+  s_2202991a5efe3d::t_13fa886ab06ddb 110-112
+  s_2202991a5efe3d::t_27bb7cc0c1d0f0 25
+apps/web/components/features/protocols/bel/tabs/BelClusterCompositionDashboard.tsx
+  ai_agent 2,5,10,12-13
+apps/web/components/report/ReportContent.tsx
+  s_2202991a5efe3d::t_f33c0d5b16a1be 1-186
+apps/web/lib/i18n/dictionary/common.ts
+  s_2202991a5efe3d::t_75ec150252431c 1-48,347-387,678
+AGENTS.md
+  s_d7c79764846ef3::t_6b1acec3a49fce 88
+apps/web/scripts/apply-file-splits.mjs
+  s_2202991a5efe3d::t_9c2b4a9d52daf4 217-225,227,230
+  s_2202991a5efe3d::t_ee81c31332ce2e 1-112,122,124-125,127-216,226,228-229,231-234
+  s_2202991a5efe3d::t_a459fa35150a54 113-121,123,126
+.cursor/rules/habs-web.mdc
+  s_d7c79764846ef3::t_ee6bf7a59e1df3 64-78
+apps/web/lib/i18n/dictionary.ts
+  ai_agent 4-5,7-8,12-38,49-75,80-106
+apps/web/scripts/dictionary-split.mjs
+  s_2202991a5efe3d::t_5a0b8365fae7c2 80
+  s_2202991a5efe3d::t_6fbf08e0889f06 93-104
+  s_2202991a5efe3d::t_5001d891573c04 1-79,81-92,105-344
+apps/web/components/features/result/social/YouTubeBlocks.tsx
+  s_2202991a5efe3d::t_729baf59cd09a9 1-26,32-120,122-290
+  s_1e4006e883cdcb::t_3d5cc38837e434 27-31
+  s_1e4006e883cdcb::t_8b389435dc7183 121
+apps/web/components/features/protocols/bel/tabs/BelYogurtDiffClusterDashboard.tsx
+  s_1e4006e883cdcb::t_369ca721f87b52 2,5,10-12,19
+apps/web/components/features/protocols/shared/tabs/ProductClusterComparisonTab.tsx
+  s_1e4006e883cdcb::t_ee730b5a82dd09 34,67
+  s_2202991a5efe3d::t_cde10efad9dc71 35-38
+  s_1e4006e883cdcb::t_ca0ebe43fe3f1d 1-33,39-66,68-385
+apps/web/lib/i18n/dictionary/result-4.ts
+  ai_agent 1-44
+apps/web/components/report/ReportDataProvider.tsx
+  s_2202991a5efe3d::t_838524907847b5 1-48,50-390
+apps/web/components/features/result/insight-engine/ui-bits.tsx
+  s_1e4006e883cdcb::t_73bcd0cbe58da5 123-124
+  s_2202991a5efe3d::t_a662c67ef3ef8a 1,3,5-10,12,126-161
+  s_1e4006e883cdcb::t_baceaf85e22293 2,4,11,13-111,125
+  s_1e4006e883cdcb::t_28c7cde353943c 112-122
+apps/web/lib/pdf/sections/synthese.ts
+  s_1e4006e883cdcb::t_a570114456cd83 4-7
+apps/web/components/features/protocols/bel/bel-protocol-config.ts
+  s_1e4006e883cdcb::t_dabca21fb4b2ba 1-43,139-165,172-179,181-184,190-203
+  s_1e4006e883cdcb::t_2d09fd8e9c95df 44-138,166-171,186-189
+  s_1e4006e883cdcb::t_a6b75156e4ae81 180,185
+apps/web/components/features/protocols/shared/tabs/DiffClusterLabTab.tsx
+  s_1e4006e883cdcb::t_ca0ebe43fe3f1d 1-43,45-53,55-58,60-70,72-583
+  s_1e4006e883cdcb::t_ee730b5a82dd09 44,54,59,71
+apps/web/components/features/protocols/bel/tabs/BelSegmentPatternDashboard.tsx
+  s_1e4006e883cdcb::t_b091afb8493a29 2,10
+  s_1e4006e883cdcb::t_cea4cc60efecc6 5,13
+apps/web/components/features/protocols/shared/tabs/CommercialDrilldownTab.tsx
+  s_1e4006e883cdcb::t_ee730b5a82dd09 30,39,44,56
+  s_1e4006e883cdcb::t_ca0ebe43fe3f1d 1-29,31-38,40-43,45-55,57-379
+apps/web/components/report/report-utils.ts
+  s_2202991a5efe3d::t_8c7f4bea00427c 1-56
+apps/web/components/features/protocols/danone/YogurtDiffClusterDashboard.tsx
+  s_1e4006e883cdcb::t_c256a6fa2ef765 2,5,10-12,14-15
+apps/web/components/features/result/social/TwitterBlocks.tsx
+  s_1e4006e883cdcb::t_498111d7f3876e 80
+  s_2202991a5efe3d::t_729baf59cd09a9 1-26,28-79,81-300,302-340
+  s_1e4006e883cdcb::t_67313420bba748 301
+apps/web/components/features/protocols/bel/tabs/BelCommercialSummaryDashboard.tsx
+  s_1e4006e883cdcb::t_c1357588aefc64 2,5,9-12,22,24-28
+apps/web/components/report/ReportActions.tsx
+  s_2202991a5efe3d::t_1f13e3a36ba22f 6,17-19,28-43,46,48-54,56,76,143,164,197
+  s_2202991a5efe3d::t_01139ddf7662af 4,7-8,14-16,20-26,58-75,77-81,83-87,89-94,97-121,123-128,130-134,136-139,141-142,166-168,180-183,186-188,205
+  s_2202991a5efe3d::t_4ce996e50490a4 144-155,159,161-163,169-179,191-193,195-196,199-204,206-208,210-214,218-224,227-229
+apps/web/components/features/result/charts/EffortImpactMatrixChart.tsx
+  s_1e4006e883cdcb::t_f925a48453b60d 1-6
+  s_1e4006e883cdcb::t_8acc474fb89128 25-26
+apps/web/components/features/protocols/shared/ProtocolDataQualityBanner.tsx
+  s_1e4006e883cdcb::t_7f606e10f45e95 1-46
+apps/web/components/features/protocols/shared/tabs/CommercialSummaryTab.tsx
+  s_1e4006e883cdcb::t_ca0ebe43fe3f1d 1-27,29-50,52-367
+  s_1e4006e883cdcb::t_ee730b5a82dd09 28,51
+apps/web/lib/i18n/dictionary/pilote-1.ts
+  s_2202991a5efe3d::t_1626a2f2bd34c8 371-376
+  s_2202991a5efe3d::t_e6aefaae1f848f 306-310
+  s_2202991a5efe3d::t_a0c69e87ba4492 91-96
+  s_2202991a5efe3d::t_c2aa6b2781bd48 163-170
+  s_2202991a5efe3d::t_ae2788a36f47c3 348-354
+  s_2202991a5efe3d::t_a9b236f6aded01 297-300
+  s_2202991a5efe3d::t_d448f0c0668f6a 139-145
+  s_2202991a5efe3d::t_250a4ea1d8b8e5 82-85
+codebase-analysis-docs/CODEBASE_KNOWLEDGE.md
+  s_d7c79764846ef3::t_28c9534d2b1dce 128
+  s_d7c79764846ef3::t_a454f30846af62 328
+apps/web/lib/services/pilotes/index.ts
+  s_2202991a5efe3d::t_06697abdeae6a9 1-5
+  s_2202991a5efe3d::t_c20d8808f3007c 6,8-10
+  s_2202991a5efe3d::t_6bbb2b76512188 7
+apps/web/lib/i18n/dictionary/sync.ts
+  ai_agent 1-102
+apps/web/components/features/result/HeroBlock.tsx
+  s_1e4006e883cdcb::t_02a70b6eec45c2 22
+  s_1e4006e883cdcb::t_c257fc2d79209b 1-7
+apps/web/components/features/protocols/shared/tabs/CustomClusterBuilderTab.tsx
+  s_1e4006e883cdcb::t_ca0ebe43fe3f1d 1-47,49-53,55-105,107-557
+  s_1e4006e883cdcb::t_ee730b5a82dd09 48,54,106
+apps/web/components/features/protocols/danone/ProductDeltaDashboard.tsx
+  s_1e4006e883cdcb::t_c40cd40305d77e 2,5,9-11,21-22
+apps/web/components/features/protocols/shared/tabs/YogurtDiffClusterTab.tsx
+  s_1e4006e883cdcb::t_2d09fd8e9c95df 163-169,263-269
+  s_1e4006e883cdcb::t_4d7c78cca139d3 1-162,170-262,270-327
+apps/web/components/features/protocols/bel/tabs/BelProductEngineComparisonDashboard.tsx
+  s_1e4006e883cdcb::t_6a4671efc559d4 2,5,9-12,30-38
+apps/web/app/rapports/[slug]/report/ReportClient.tsx
+  s_2202991a5efe3d::t_70fc1ac086c10a 31-32,43,50
+  s_2202991a5efe3d::t_e91040b6c5bf14 42,44-45
+  s_2202991a5efe3d::t_ea419e0583b0a3 4,7,11,20-21,37,40,51-52,56
+  s_2202991a5efe3d::t_ae44b236cf003b 8,15-19,53-55
+apps/web/lib/services/pilotes/types.ts
+  s_2202991a5efe3d::t_6bbb2b76512188 1
+  s_2202991a5efe3d::t_c20d8808f3007c 2-27,29-34,40-90
+  s_2202991a5efe3d::t_0d60c083e547f8 35-39
+  s_2202991a5efe3d::t_444dc2bce41133 28
+apps/web/components/features/protocols/shared/tabs/InsightsByClusterTab.tsx
+  s_1e4006e883cdcb::t_5f9fa4259ffac7 111-112
+  s_1e4006e883cdcb::t_ee730b5a82dd09 2,4-5
+  s_1e4006e883cdcb::t_84b5295c4863d0 9
+  s_1e4006e883cdcb::t_ca0ebe43fe3f1d 1,3,6-8,10-45,50-62,64-70,73-104,106-110,113-312,315-789
+  s_2202991a5efe3d::t_cde10efad9dc71 46-49
+  s_1e4006e883cdcb::t_a3f6befa42e526 71-72
+  s_1e4006e883cdcb::t_be72d4106d20d5 313-314
+apps/web/components/features/protocols/danone/ParticipantTimelineCompare.tsx
+  s_1e4006e883cdcb::t_3cf3ef34452d43 2,5,10-11,15,20-21
+apps/web/components/features/protocols/shared/tabs/ClusterCompositionTab.tsx
+  s_1e4006e883cdcb::t_fac81347d081bc 38
+  s_1e4006e883cdcb::t_ee730b5a82dd09 2,4-5
+  s_1e4006e883cdcb::t_62addb0061f1ae 274
+  s_1e4006e883cdcb::t_ca0ebe43fe3f1d 7
+  s_1e4006e883cdcb::t_e4fcfb75602a10 374
+  s_1e4006e883cdcb::t_09e67d0b547182 10-12,14-19,21-22,25-37,39-44,50-54,57-66,68-80,83-92,94,96-104,106-111,113-119,121-138,140-142,144-177,181-239,241-263,267-273,275-346,349-361,366,368-373,375-388,390-433,435,437,439-445,447-492
+  s_1e4006e883cdcb::t_a8ba8378154506 20
+  s_1e4006e883cdcb::t_ebb61058977dc7 23,81
+apps/web/components/features/pilote/ingestion/media-ingestion-config.ts
+  s_2202991a5efe3d::t_be49b4e77ca98d 1-280
+apps/web/components/features/protocols/danone/CommercialSummaryDashboard.tsx
+  s_1e4006e883cdcb::t_29e89a354fc2be 2,5,9-11,21-22
+apps/web/components/features/protocols/shared/ProtocolKpiCard.tsx
+  s_1e4006e883cdcb::t_2d09fd8e9c95df 20
+  s_1e4006e883cdcb::t_0788e2f12a826c 1-19,21-33
+codebase-analysis-docs/NORTH_STAR.md
+  s_1e4006e883cdcb::t_91f93d31a0444b 258-259
+  s_1e4006e883cdcb::t_b0b238c1500326 5,16,18
+  s_1e4006e883cdcb::t_548bb8dfb63c3a 54,57-58
+  s_1e4006e883cdcb::t_9f66487aad3030 241
+  s_1e4006e883cdcb::t_a41f52169a737d 9-11,13,15,17,19-21
+  s_1e4006e883cdcb::t_b55876112e48d3 74-78
+  s_1e4006e883cdcb::t_a4b31b60404774 231
+  s_1e4006e883cdcb::t_7ad85f1735311d 232-233
+  s_1e4006e883cdcb::t_790c8156bab4b8 237
+  s_1e4006e883cdcb::t_793b555a6bfd7c 6-8,12,14,22,33-34,52-53,55-56,72-73,92-96,108-117,131-139,153-154,156-159,173-177,191-195,209-221,229-230,234-236,238-240,247-253,256-257
+  s_1e4006e883cdcb::t_83dea93a26d0c3 35-38
+  s_1e4006e883cdcb::t_495069a4166f1d 155
+  s_1e4006e883cdcb::t_1e3f7742f42466 254-255
+apps/web/components/features/result/seven-dimensions/DimensionCard.tsx
+  s_1e4006e883cdcb::t_0d83dea9e509b2 19-20
+  s_1e4006e883cdcb::t_49710f3f9ce798 5
+apps/web/components/features/pilote/SourcesPage.tsx
+  s_2202991a5efe3d::t_61d713e8cb8193 22-23
+  s_2202991a5efe3d::t_e42f914dda8fc1 284-285,291-292,298-299,305-306
+apps/web/lib/services/pilotes/social.ts
+  s_2202991a5efe3d::t_c20d8808f3007c 2-5,7-44
+  s_2202991a5efe3d::t_6bbb2b76512188 1
+apps/web/components/features/protocols/danone/SegmentPatternDashboard.tsx
+  s_1e4006e883cdcb::t_e0cab0cf89b6f6 5,13
+  s_1e4006e883cdcb::t_955dcb75171406 2,10
+apps/web/components/features/protocols/bel/tabs/BelParticipantTimelineCompare.tsx
+  s_1e4006e883cdcb::t_d58917376e8508 2,5,10-12,16,20,22-27
+apps/web/components/features/result/social/shared.tsx
+  s_2202991a5efe3d::t_729baf59cd09a9 1-6,9,11,13-22,24-30,33-71,73-75,77-98
+apps/web/components/features/protocols/shared/types.ts
+  s_1e4006e883cdcb::t_591f280579735e 26-27
+  s_1e4006e883cdcb::t_34b688067fbb1f 163
+  s_1e4006e883cdcb::t_aa4f3de869f8fc 1-25,28-38,41-83,86-149
+  s_2202991a5efe3d::t_5f380ab0c22a8a 169-178
+  s_2202991a5efe3d::t_f3884d122c4d2c 39-40
+  s_1e4006e883cdcb::t_2aea11d844379a 84-85
+  s_1e4006e883cdcb::t_165163c7f646d1 186-206
+  s_1e4006e883cdcb::t_27fdff78f3329c 150-162,164-168,179-185
+apps/web/components/features/protocols/shared/tabs/ProductEngineComparisonTab.tsx
+  s_1e4006e883cdcb::t_9b7e91e93459f5 105
+  s_1e4006e883cdcb::t_3236f78a3871e2 114
+  s_1e4006e883cdcb::t_310d61c6f057bd 57
+  s_1e4006e883cdcb::t_2d09fd8e9c95df 86,315
+  s_1e4006e883cdcb::t_34bcbfee37dfc6 1-56,58-85,87-104,106-113,115-314,316-339
+.github/workflows/ci.yml
+  s_1e4006e883cdcb::t_45af783c00d158 28
+apps/web/components/report/sections/Cover.tsx
+  s_2202991a5efe3d::t_751e6e7a76f2e9 20
+apps/web/components/features/protocols/bel/tabs/BelCommercialDrilldownDashboard.tsx
+  s_1e4006e883cdcb::t_883d85bb906961 2,5,9-11,13,15-21
+apps/web/components/features/pilote/ingestion/MediaIngestionModal.tsx
+  s_2202991a5efe3d::t_497de23b29a5e6 262,264-265,268,272-273
+  s_2202991a5efe3d::t_41282d7210e7a9 4,6-8,10-11,18-19,21,23-24,26,33,47-54,57,68-76,88-108,111,114,116,120-122,125-136,140-144,150-156,162,164,167,180,184-185,195-237,239-240,260-261,266-267,269-271,274-310,312-314,316-321,323,325-328,332-340,342-350,352-371,373-375,377-378,387,398-399,401-414,433-434,437
+  s_2202991a5efe3d::t_d299ab85962830 137-139
+  s_2202991a5efe3d::t_3f18f515542a59 186-187,190-194
+  s_2202991a5efe3d::t_6c004d7946add4 263
+  s_2202991a5efe3d::t_cda900b9756a9f 372,376
+  s_2202991a5efe3d::t_c42e6e033e9625 157
+apps/web/components/features/protocols/shared/ProtocolTabNav.tsx
+  s_1e4006e883cdcb::t_d0930883d98203 1-42
+apps/web/components/features/protocols/danone/DiffClusterLabDashboard.tsx
+  s_1e4006e883cdcb::t_f97f3cc3b4a879 2,5,9-11,13,21-22
+apps/web/components/features/protocols/shared/tabs/SegmentPatternTab.tsx
+  s_1e4006e883cdcb::t_ee730b5a82dd09 2,4-5,32
+  s_1e4006e883cdcb::t_09e67d0b547182 9,11-21,23-29,46,48-51,53-104,106-113,115-126,128-132,134-154,156-190
+  s_1e4006e883cdcb::t_ecf31a4fe58d2e 31,42,44
+  s_1e4006e883cdcb::t_ca0ebe43fe3f1d 7,33-41,43
+  s_1e4006e883cdcb::t_0e7237604f7097 47
+apps/web/components/features/collection/CollectionDetail.tsx
+  s_2202991a5efe3d::t_916744bd160d66 19
+  s_2202991a5efe3d::t_8cdf9bbb3f425c 11-12
+apps/web/components/features/protocols/bel/tabs/BelCustomClusterBuilder.tsx
+  s_1e4006e883cdcb::t_93a5f2751340be 2,5,10-12,19,30,36
+  s_1e4006e883cdcb::t_82beb3817057af 16-18,22-28,31-35
+apps/web/components/features/protocols/bel/tabs/BelYogurtComparisonDashboard.tsx
+  s_1e4006e883cdcb::t_3ad943f36bbf34 2,5,11-12,29,36
+apps/web/components/features/result/social/InstagramBlocks.tsx
+  s_2202991a5efe3d::t_729baf59cd09a9 1-24,26,28-142
+  s_1e4006e883cdcb::t_506dd1baf77786 25,27
+apps/web/components/features/protocols/shared/tabs/ProductDeltaTab.tsx
+  s_1e4006e883cdcb::t_ee730b5a82dd09 48,165
+  s_1e4006e883cdcb::t_ca0ebe43fe3f1d 1-47,49-164,166-397
+apps/web/lib/i18n/dictionary/types.ts
+  s_2202991a5efe3d::t_75ec150252431c 1-6
+apps/web/components/features/protocols/bel/tabs/BelClusterScatterExplorer.tsx
+  s_1e4006e883cdcb::t_2862794b1e672a 2,5,9-11,19,21-24
+  s_1e4006e883cdcb::t_764209f34f454a 20
+apps/web/components/features/protocols/danone/danone-protocol-config.ts
+  s_1e4006e883cdcb::t_9c4c5bfeb1db77 130-132
+  s_1e4006e883cdcb::t_152e490b07b27b 1-129,133-174
+apps/web/components/features/pilote/ingestion/SocialAccountConnectModal.tsx
+  s_1e4006e883cdcb::t_551ffe37a30fcb 57-58,62-63,67-68,72-73,123,163,238,240,242,265,268,281,306,327,343,421-422,438,444,452,465,474,487,494
+  s_1e4006e883cdcb::t_2d09fd8e9c95df 341,436
+apps/web/components/features/result/charts/registry.tsx
+  s_1e4006e883cdcb::t_4911b811efa699 2-5,13
+  s_1e4006e883cdcb::t_e81652ab8ba29b 84
+apps/web/components/features/pilote/BrandRepresentationPanel.tsx
+  s_2202991a5efe3d::t_46c43ede473dce 47-49
+  s_2202991a5efe3d::t_d01fa3ff16f05e 4
+apps/web/components/features/protocols/danone/ClusterCompositionDashboard.tsx
+  s_1e4006e883cdcb::t_c0ed0208180ce3 2,5,10,12-13
+apps/web/components/features/protocols/danone/ProductEngineComparisonDashboard.tsx
+  s_1e4006e883cdcb::t_71560950d10f61 2,5,9-12,30-38
+apps/web/components/features/result/social/formatters.ts
+  s_2202991a5efe3d::t_09d1ae7ef9b331 2,4-5,7-45
+apps/web/components/features/protocols/danone/CommercialDrilldownDashboard.tsx
+  s_1e4006e883cdcb::t_3675c15ae735de 2,5,9-11,21-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "078231df063b4b8fb2fabb104a0ba42b479a7318",
+  "prompts": {},
+  "sessions": {
+    "s_1e4006e883cdcb": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "829376a2-a550-4426-8fa2-ec5688b901d0",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_2202991a5efe3d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4dc7d059-1787-42e6-9dfa-626dc104290d",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_d7c79764846ef3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b578f5eeffe2Ko3w6G6Ab4q2G",
+        "model": "moonshotai/kimi-k2.6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

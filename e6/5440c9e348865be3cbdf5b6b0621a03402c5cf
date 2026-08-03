@@ -1,0 +1,29 @@
+packages/board-portability/src/resolve-entities.ts
+  s_e7a9f157bc08ec::t_da5f574ec22c61 1-54
+packages/board-portability/src/import/import-full-config.ts
+  s_e7a9f157bc08ec::t_895896255a6117 23-24,53-66,71-83,85,89-90,102,107-111,117,146-161,164,167,170-174,178-187,190-193,195-197,203-220,225,228-229,232,237,241,243,250,257,265-272,401-414,442,452-453,497
+packages/board-portability/src/export/export-full-config.ts
+  s_e7a9f157bc08ec::t_47c79b3160bf81 21-22,28-46,64,71-74,169-172,181-190,193,207
+packages/board-portability/src/entity-fields.ts
+  s_e7a9f157bc08ec::t_b6d5c9d5c6b5b2 1-71
+packages/board-portability/src/schema.ts
+  s_e7a9f157bc08ec::t_74aa1213e3ac64 145-161
+packages/board-portability/index.ts
+  s_e7a9f157bc08ec::t_e51fe4f202a707 7-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "e65440c9e348865be3cbdf5b6b0621a03402c5cf",
+  "prompts": {},
+  "sessions": {
+    "s_e7a9f157bc08ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cb17b45e-4e23-40d1-9720-f00392d43e0a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

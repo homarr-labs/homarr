@@ -1,0 +1,43 @@
+.agents/skills/homarr-custom-widget/SKILL.md
+  s_955a5b644d1c62::t_70fc00807f8c4e 34
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_955a5b644d1c62::t_434f3df98680ed 7,28
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-ai-card.tsx
+  s_1d0cab1b4c5a42::t_d817a66fda2873 4
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_955a5b644d1c62::t_f72ab60e7f852a 4-15,20,22,135-145,181-203
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-actions.ts
+  s_955a5b644d1c62::t_f9bf0f30580274 8,14
+packages/custom-widgets/src/core/authoring-resources.ts
+  s_955a5b644d1c62::t_8da8cf0385c5c3 49
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  s_955a5b644d1c62::t_b2be58efaf02f2 3,20-21
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  s_955a5b644d1c62::t_5da711c4c75924 15-16
+packages/translation/src/lang/en.json
+  s_955a5b644d1c62::t_22ba363d9a684b 834-837,896
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "211e0595210f9d7ccfe60d555aeac8c3546d98ea",
+  "prompts": {},
+  "sessions": {
+    "s_1d0cab1b4c5a42": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7fee-358c-78a0-96a8-90dd5e841067",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

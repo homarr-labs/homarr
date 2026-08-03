@@ -1,0 +1,40 @@
+packages/forms-collection/src/user-create/user-create-password-fields.tsx
+  s_fa5c69089c033c::t_abb7441c60e493 30
+packages/ui/src/components/password-input/password-requirements-popover.tsx
+  s_fa5c69089c033c::t_10a5389b30e540 21
+packages/redis/src/lib/channel-subscription-tracker.ts
+  s_fa5c69089c033c::t_8737090f853e35 78
+  s_fa5c69089c033c::t_a2cd2148dc7a8d 68
+apps/nextjs/src/app/[locale]/manage/users/create/_components/create-user-stepper.tsx
+  s_fa5c69089c033c::t_abb7441c60e493 4,14
+packages/redis/src/lib/channel.ts
+  s_fa5c69089c033c::t_9842d18f884b44 15
+  s_fa5c69089c033c::t_3e764185fe1e5c 334
+  s_fa5c69089c033c::t_5de68eea43df94 335-336
+  s_fa5c69089c033c::t_c27730a45fca90 211,253-255,258
+  s_fa5c69089c033c::t_1a976ac80d320b 83-84,91,97,104
+  s_fa5c69089c033c::t_c0e646084c2249 267-268,271,279,290-291,294,304-305,309,313,316-317,324-325,328,330-332,345,359-360,363,366,387,391
+  s_fa5c69089c033c::t_92deeaa284206c 438
+  s_fa5c69089c033c::t_10a5389b30e540 272-276
+  s_fa5c69089c033c::t_d57e664c081965 120,128,134,154,170,176
+apps/nextjs/src/app/[locale]/auth/login/_login-form.tsx
+  s_fa5c69089c033c::t_abb7441c60e493 119-124
+packages/redis/src/lib/connection.ts
+  s_fa5c69089c033c::t_774e0279380f5d 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "63d50ed5fb96d8b1e5f49b300dc68d4f94663185",
+  "prompts": {},
+  "sessions": {
+    "s_fa5c69089c033c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b502b5eaffe01QuQz59u02xAV",
+        "model": "moonshotai/kimi-k2.6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

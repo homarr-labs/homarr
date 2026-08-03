@@ -1,0 +1,21 @@
+packages/definitions/src/docs/codegen.ts
+  s_6d61b414731daa::t_fa07a3f8dea485 71-73,75,83,85,91
+  s_6d61b414731daa::t_9046d70573668c 62-68,70,74,76-82
+  s_6d61b414731daa::t_fe875361553238 59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "7f8b0121b303fa09a213c73e6a690463e9fc6b44",
+  "prompts": {},
+  "sessions": {
+    "s_6d61b414731daa": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "de711b7a-5949-4ab2-942d-f31b6bf2d776",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

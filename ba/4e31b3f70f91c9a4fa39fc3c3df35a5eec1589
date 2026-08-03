@@ -1,0 +1,49 @@
+packages/board-portability/src/homepage/widget-type-map.spec.ts
+  s_e7a9f157bc08ec::t_2020bdd82d4708 3
+packages/board-portability/src/homepage/index.ts
+  s_e7a9f157bc08ec::t_7d1561a3713d0c 2
+packages/board-portability/src/homepage/prepare-homepage-import.ts
+  s_e7a9f157bc08ec::t_c9202aceb43d64 24,40-49,84-208,229,241,253,288,298-299,304,309,316-330
+  s_e7a9f157bc08ec::t_f732fe2845d405 80
+  s_e7a9f157bc08ec::t_60926f1e5e88ad 16
+packages/board-portability/src/import/load-existing-entities.ts
+  s_e7a9f157bc08ec::t_3f8bf8203983f2 1-38
+packages/board-portability/src/homepage/parse-services-yaml.ts
+  s_e7a9f157bc08ec::t_b21b55d7c75744 36
+packages/board-portability/src/import/import-full-config.ts
+  s_e7a9f157bc08ec::t_15fed5ee9338b0 497-498,500-504,507,513
+  s_e7a9f157bc08ec::t_e5c6460ab7221a 26
+  s_e7a9f157bc08ec::t_1892c9e5916fee 52-55,57-60,62-65,67,81,91-104,106-109,113,123,133,145-157,160-161,165-168,175,179-192,194-221,224-237,239-240,242,244,253,258-260,264-266,270-290,292-298,303,311,315-317,321,329-344,350,354-363,365-375,377-385,387,409,489-490,492-496,499,505-506,508-512,515-533,535-554,559-560,562,571-572,574,584-590,593-597
+  s_e7a9f157bc08ec::t_caede7caa45793 20
+packages/board-portability/src/import/plan-full-config-import.ts
+  s_e7a9f157bc08ec::t_3df8ffeecd276f 9
+  s_e7a9f157bc08ec::t_2da409affe64e7 26-48,66-69,75,89,132-134,155-156,184
+  s_e7a9f157bc08ec::t_d163e0f521e413 78,80,83-86
+  s_e7a9f157bc08ec::t_855a1d5207349d 99,108,116-117
+apps/nextjs/src/components/config-import/config-import-preview-panel.tsx
+  s_e7a9f157bc08ec::t_a74c9cb4b1db16 108
+packages/definitions/src/index.ts
+  s_e7a9f157bc08ec::t_fccb6441b60e50 20
+packages/definitions/src/homepage-widget-map.ts
+  s_e7a9f157bc08ec::t_2adbc9fe0dcd32 1-3
+packages/board-portability/src/homepage/types.ts
+  s_e7a9f157bc08ec::t_493751baa1ca16 16
+packages/board-portability/src/homepage/parse-services-yaml.spec.ts
+  s_e7a9f157bc08ec::t_332d75fe625e4b 59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "ba4e31b3f70f91c9a4fa39fc3c3df35a5eec1589",
+  "prompts": {},
+  "sessions": {
+    "s_e7a9f157bc08ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cb17b45e-4e23-40d1-9720-f00392d43e0a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

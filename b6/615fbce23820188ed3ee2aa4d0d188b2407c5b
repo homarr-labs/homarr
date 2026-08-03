@@ -1,0 +1,28 @@
+packages/db/migrations/seed.ts
+  4ce654cf70f9902c 4,19,28-29,195-252
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "b6615fbce23820188ed3ee2aa4d0d188b2407c5b",
+  "prompts": {
+    "4ce654cf70f9902c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7cdaa66a-445e-4f22-9e7a-578bc0f0c13b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 915,
+      "overriden_lines": 1
+    }
+  },
+  "humans": {
+    "h_32d929d7363456": {
+      "author": "Thomas Camlong"
+    }
+  }
+}

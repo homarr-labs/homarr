@@ -1,0 +1,59 @@
+apps/web/components/features/protocols/shared/tabs/ProductEngineComparisonTab.tsx
+  s_1e4006e883cdcb::t_563896f3f50c0c 34
+apps/api/app/api/cloud_browse.py
+  s_9c62c458b153c3::t_1621b3e375d5e1 199-203
+apps/web/components/features/protocols/shared/types.ts
+  s_1e4006e883cdcb::t_2f8c98065bdc9f 4-5,9-11
+apps/web/components/features/protocols/danone/shared.ts
+  s_1e4006e883cdcb::t_e83567ee1e41e8 1-7
+  s_1e4006e883cdcb::t_a8b0b335f0ca36 11-35
+apps/web/components/features/protocols/shared/chart-utils.ts
+  s_1e4006e883cdcb::t_39d550ed8c3e07 4-6,9-29
+  s_1e4006e883cdcb::t_5abf3f15061382 56-66
+apps/web/components/features/protocols/shared/tabs/ClusterCompositionTab.tsx
+  s_1e4006e883cdcb::t_a5736266941227 23
+apps/api/app/integrations/composio/client.py
+  s_9c62c458b153c3::t_054d1f51497dc7 3-4,11,19-20,30-67,70-74,103-110
+apps/web/next.config.mjs
+  s_1e4006e883cdcb::t_fd48a86783969e 33-46
+codebase-analysis-docs/NORTH_STAR.md
+  s_1e4006e883cdcb::t_d07afae4f43e79 119-120,122
+  s_1e4006e883cdcb::t_eaaf7ee58fc2aa 17,19,21-24
+  s_1e4006e883cdcb::t_4d6caa1341d13f 181-183
+  s_1e4006e883cdcb::t_c02ebf6e3c3c99 247
+  s_1e4006e883cdcb::t_7fef4e439b766e 244
+  s_1e4006e883cdcb::t_079e89adb60243 44
+  s_1e4006e883cdcb::t_b5c39a13c7c50a 13
+  s_1e4006e883cdcb::t_60288aa5ebcd0c 100-102
+  s_1e4006e883cdcb::t_32b88e9c31472e 258-259,261
+  s_1e4006e883cdcb::t_21c407be6de971 25-27
+  s_1e4006e883cdcb::t_5d588f279f138c 240-241
+  s_1e4006e883cdcb::t_0600fab60848bd 243
+  s_1e4006e883cdcb::t_29d0734a8f63d7 265
+  s_1e4006e883cdcb::t_97d78783bafa69 9-10
+  s_1e4006e883cdcb::t_fbb072a85e91c8 164-165
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "3b7d0f165c18b97b385ccceba8bb1093b5cb473e",
+  "prompts": {},
+  "sessions": {
+    "s_1e4006e883cdcb": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "829376a2-a550-4426-8fa2-ec5688b901d0",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9c62c458b153c3": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "af1d9271-26aa-45ef-b26b-37b607b5bed7",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

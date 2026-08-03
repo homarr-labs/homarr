@@ -1,0 +1,69 @@
+packages/request-handler/src/notifications.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/media-server.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/ups.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/calendar.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 7,9
+packages/request-handler/src/coolify.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 4,6
+packages/request-handler/src/network-controller.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/paperless-ngx.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 4,6
+packages/request-handler/src/rss-feeds.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 8,12
+packages/request-handler/src/navidrome.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 4,6
+packages/request-handler/src/uptime-kuma.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 4,6
+packages/request-handler/src/archive-team-warrior.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/smart-home-entity-state.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 4,6
+packages/request-handler/src/weather.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 6,8
+packages/request-handler/src/releases.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/downloads.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/audiobookshelf.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 4,6
+packages/request-handler/src/media-release.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/media-request-stats.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/tracearr.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 4,6
+packages/request-handler/src/indexer-manager.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/media-transcoding.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/media-request-list.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+packages/request-handler/src/speedtest-tracker.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 4,6
+packages/request-handler/src/stock-price.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 6,8
+packages/request-handler/src/minecraft-server-status.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 6,8
+packages/request-handler/src/dns-hole.ts
+  s_3dcc22b87e2334::t_2c25d0e2b3f785 5,7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "45c58c967e2036c6ffa64baa1dea2d2b4c4e9840",
+  "prompts": {},
+  "sessions": {
+    "s_3dcc22b87e2334": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "52c1f4dc-82eb-45e2-85c7-95add5cdff11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

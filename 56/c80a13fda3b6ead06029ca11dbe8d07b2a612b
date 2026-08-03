@@ -1,0 +1,41 @@
+packages/board-portability/src/config-bundle-compat.ts
+  s_e7a9f157bc08ec::t_e5b786ecd68c63 100-118
+packages/api/src/router/import/import-router.ts
+  s_e7a9f157bc08ec::t_2707306d490832 4,26,44,50,53-54,56-63
+packages/board-portability/src/import/import-full-config.ts
+  s_e7a9f157bc08ec::t_fe42d11a9890b2 390
+  s_e7a9f157bc08ec::t_f75758e8043d39 375
+  s_e7a9f157bc08ec::t_6a31a397f7efb2 24
+packages/board-portability/index.ts
+  s_e7a9f157bc08ec::t_01aeda43528660 4
+packages/board-portability/src/import/prepare-board.ts
+  s_e7a9f157bc08ec::t_461062157c8483 125
+  s_e7a9f157bc08ec::t_00f057f35cc699 16
+packages/board-portability/src/export/export-full-config.ts
+  s_e7a9f157bc08ec::t_bc066845234f99 24
+packages/board-portability/src/import/load-existing-entities.ts
+  s_e7a9f157bc08ec::t_5c626eb3516970 1-3,9-13,22-26
+packages/board-portability/src/utils.ts
+  s_e7a9f157bc08ec::t_71e192dde01ddd 3-7,48-74
+  s_e7a9f157bc08ec::t_d9c861f9d35de3 20-23,28,30,34,39,45-47
+packages/api/src/router/config.ts
+  s_e7a9f157bc08ec::t_4e411040f76d09 7,22,33,36-39
+packages/board-portability/src/export/serialize-board.ts
+  s_e7a9f157bc08ec::t_43dfb687d19bf7 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "56c80a13fda3b6ead06029ca11dbe8d07b2a612b",
+  "prompts": {},
+  "sessions": {
+    "s_e7a9f157bc08ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cb17b45e-4e23-40d1-9720-f00392d43e0a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

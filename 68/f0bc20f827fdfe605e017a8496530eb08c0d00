@@ -1,0 +1,39 @@
+packages/widgets/src/downloads/component.tsx
+  s_7cadbcfd6ae838::t_603c2153ab8151 138-139
+  s_7cadbcfd6ae838::t_35f3ad250e674f 1046-1070
+  s_7cadbcfd6ae838::t_f1d2c04bb1e978 610-615
+  s_7cadbcfd6ae838::t_acffa9b52b862f 45
+  s_7cadbcfd6ae838::t_02a07500f6480b 586
+  s_7cadbcfd6ae838::t_43b3fe3b499317 546,555-559,570-571,575,584-585,589-590
+  s_7cadbcfd6ae838::t_02026e6fbbd2f3 254-263,265-285,289,293,300,305,323,328,343,349,352,358,366,372,380,386,392,396,403,409,412,417,422,428,431,437,440,445,452,457,460,465,470-481
+  s_7cadbcfd6ae838::t_d09d3a0b60b15c 90-91
+  s_7cadbcfd6ae838::t_ee57bdbea9cde8 252
+  s_7cadbcfd6ae838::t_a77d0ba08257c7 918-923
+  s_7cadbcfd6ae838::t_40ebcdbbff48be 942-947
+  s_7cadbcfd6ae838::t_9f42ac4b82c545 29
+  s_7cadbcfd6ae838::t_b8dfb09794cb10 253
+packages/translation/src/lang/en.json
+  s_7cadbcfd6ae838::t_c795bda42bcd4d 3192-3199
+.cursor/goal/scratchpad.md
+  s_7cadbcfd6ae838::t_29c145d0869ada 22-32,45
+  s_7cadbcfd6ae838::t_0d10f3c20fd9d8 2,33-43,48-52
+apps/docs/docs/widgets/downloads/index.mdx
+  s_7cadbcfd6ae838::t_cad96c66cd6842 86-88
+  s_7cadbcfd6ae838::t_f81abfde583008 47,50-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "68f0bc20f827fdfe605e017a8496530eb08c0d00",
+  "prompts": {},
+  "sessions": {
+    "s_7cadbcfd6ae838": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "781480e9-8d2f-4366-99a4-54d0da9eba34",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

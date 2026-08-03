@@ -1,0 +1,60 @@
+packages/widgets/src/health-monitoring/cluster/resource-table.tsx
+  s_a779988d600484::t_c44a76105884d0 1
+  s_a779988d600484::t_db6e865ba72408 59
+  s_a779988d600484::t_df2572d0699f5b 52
+  s_a779988d600484::t_56418fee1783d6 54
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview.tsx
+  s_a779988d600484::t_3aa3db3cbd94e9 166-167
+  s_a779988d600484::t_dcfe1e2b884740 168
+packages/widgets/src/custom-api/jsx-interactive-components.tsx
+  s_a779988d600484::t_f3277443ec3ce6 3-4
+packages/api/src/router/custom-widget/display-data.ts
+  s_a779988d600484::t_f988d45b20f36d 140-141,145
+packages/widgets/src/custom-api/jsx-whitelist.ts
+  s_a779988d600484::t_59383d28602811 1-2
+packages/api/src/router/widgets/__tests__/custom-api-extractors.spec.ts
+  s_a779988d600484::t_21fcfbadf86bfb 118-120
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_a779988d600484::t_3838589817bfca 683-684
+  s_a779988d600484::t_88eea8776949a2 1009
+  s_a779988d600484::t_3000860f8b3fb5 561
+  s_a779988d600484::t_df6cdd0440de91 30-31
+  s_a779988d600484::t_e85c515e95f24f 556-557,560
+  s_a779988d600484::t_7c81ecda70cbd3 458
+  s_a779988d600484::t_30a4f450f5034f 941
+  s_a779988d600484::t_b8e7fb2975fdcd 562-564
+  s_a779988d600484::t_6d26479471a753 884
+  s_a779988d600484::t_91116b901dd1ef 1153
+  s_a779988d600484::t_0c574c18d9af6f 445-457
+  s_a779988d600484::t_f81c53cefe364c 504
+  s_a779988d600484::t_a3bb03a3cf21da 1086
+  s_a779988d600484::t_920fe9a3e8c044 1215
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  s_a779988d600484::t_08ed27faa18ca9 203
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_a779988d600484::t_6bbff412ee2fac 564
+  s_a779988d600484::t_96af5d6beb5dcb 568
+  s_a779988d600484::t_a16ab9632fe34b 460
+packages/widgets/src/_inputs/json-path-tree-picker.tsx
+  s_a779988d600484::t_f50f4302aacee2 188-190
+packages/widgets/src/custom-api/component.tsx
+  s_a779988d600484::t_9b03f8c016960a 480-481
+  s_a779988d600484::t_a935aaaf1ae063 482
+  s_a779988d600484::t_b24879f3a29723 343
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "5820ffab1cd957c7ac67947a0bda752a58946468",
+  "prompts": {},
+  "sessions": {
+    "s_a779988d600484": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "29175f63-17b3-4e72-b510-05e08dd6845e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+packages/db/queries/widget-placement.ts
+  s_6a45a2406bd723::t_53f6a83d2375b7 1
+  s_6a45a2406bd723::t_ec0da8526a871b 83-86
+  s_6a45a2406bd723::t_519a8e5fd0e38b 72
+  s_6a45a2406bd723::t_88f0d0376a46e6 4
+  s_6a45a2406bd723::t_9bd1eb01be241a 101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "6d204c9aaa391f4679b3de5d530e9f3a3b9f451b",
+  "prompts": {},
+  "sessions": {
+    "s_6a45a2406bd723": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0800c9155ffefFLtDoQidEssZ7",
+        "model": "deepseek/deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

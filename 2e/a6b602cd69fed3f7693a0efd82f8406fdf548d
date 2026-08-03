@@ -1,0 +1,26 @@
+.cursor/rules/codebase-context.mdc
+  s_d845807fb8b082::t_a310adf21eb7c3 99,101
+  s_d845807fb8b082::t_cf44f012bdaddb 16,18,21,24,32-33,48,78,80,82-90,92-93,140,143,156,172,177-178,186
+  s_d845807fb8b082::t_6df594ff89347e 91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "2ea6b602cd69fed3f7693a0efd82f8406fdf548d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_d845807fb8b082": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "34c67ed5-1f18-4831-823c-06e276d50036",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

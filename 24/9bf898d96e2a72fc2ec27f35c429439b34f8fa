@@ -1,0 +1,37 @@
+e2e/custom-widgets-custom-jsx.spec.ts
+  s_a779988d600484::t_dd944434f41bb4 65
+  s_a779988d600484::t_bb140c9093322f 1-2
+  s_a779988d600484::t_f0186d7119003a 17
+  s_a779988d600484::t_c390de2cbf2d8f 54
+  s_a779988d600484::t_dd69ac82578ec8 61-63
+  s_a779988d600484::t_d821dab19393d2 49,52-53
+  s_a779988d600484::t_f887e4bf6fbbb9 3-16,18-48,50-51,56-59,64,66,68-70,72,74-82
+  s_a779988d600484::t_368554a98c7d83 60
+  s_a779988d600484::t_a14e8bfbdd3ca6 67
+  s_a779988d600484::t_5cac5dcf0b661d 55
+  s_a779988d600484::t_8a59b42324a0b3 73
+  s_a779988d600484::t_43b6acf0e35546 71
+e2e/shared/seed-admin-user.ts
+  s_a779988d600484::t_d17274b09f5bf9 3-4,6
+  s_a779988d600484::t_d7795c7f265a08 16-28
+  s_a779988d600484::t_623fdb851b9267 1-2,5,7-15,29-59
+e2e/shared/mock-api-server.ts
+  s_a779988d600484::t_29aad752f041bb 1-3
+  s_a779988d600484::t_413b5d1ecb8cd0 4-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "249bf898d96e2a72fc2ec27f35c429439b34f8fa",
+  "prompts": {},
+  "sessions": {
+    "s_a779988d600484": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "29175f63-17b3-4e72-b510-05e08dd6845e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

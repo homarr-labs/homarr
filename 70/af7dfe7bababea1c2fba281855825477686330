@@ -1,0 +1,19 @@
+apps/nextjs/next.config.ts
+  s_981b9e673fe1cf::t_c0f534b15564f6 45-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "70af7dfe7bababea1c2fba281855825477686330",
+  "prompts": {},
+  "sessions": {
+    "s_981b9e673fe1cf": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "019f6132-50d6-7302-a6bb-29a26119a46a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

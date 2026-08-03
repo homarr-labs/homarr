@@ -1,0 +1,25 @@
+packages/custom-widgets/package.json
+  s_955a5b644d1c62::t_abaec52a83b297 31-32
+packages/custom-widgets/scripts/ai-evaluation.ts
+  s_955a5b644d1c62::t_25f1f99f53daef 17-30,34-47,49-52,55-68,107,118-134,138-158,185,210,256,258-261,264,281-287,299-302
+packages/custom-widgets/src/test/ai-evaluation.spec.ts
+  s_955a5b644d1c62::t_6d462a088a7ca8 4-46,72-82,85-86,89,92,95-98,101,105-106
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  s_955a5b644d1c62::t_e70df969488aab 2,23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "49193c37e0498bf91947da5b43851528c9b72d64",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

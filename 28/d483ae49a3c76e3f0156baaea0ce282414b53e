@@ -1,0 +1,115 @@
+packages/forms-collection/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/cron-jobs-core/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 21-22
+packages/spotlight/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+apps/tasks/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 15-16
+packages/validation/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/widgets/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 22-23
+packages/translation/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 24-25
+packages/cron-job-status/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/db/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 23-24
+.oxfmtrc.json
+  s_b76ab56b2a7361::t_d63f2fe8bf0a2c 3-6
+  s_b76ab56b2a7361::t_fe036f99a49899 2
+apps/websocket/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 15-16
+packages/auth/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 21-22
+pnpm-workspace.yaml
+  s_b76ab56b2a7361::t_93a987c78378cf 142-143,166
+packages/ui/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 22-23
+packages/notifications/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/cron-jobs/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/icons/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/analytics/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/common/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 23-24
+package.json
+  s_b76ab56b2a7361::t_c48581bc109523 20-23
+  s_b76ab56b2a7361::t_93a987c78378cf 52-53
+packages/modals/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/redis/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/docker/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 21-22
+packages/modals-collection/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/core/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 34-35
+packages/cli/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/server-settings/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+.oxlintrc.json
+  s_b76ab56b2a7361::t_53c8eb1aac7b31 30
+  s_b76ab56b2a7361::t_b470035824d610 1-29,31-33
+packages/old-schema/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/form/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+pnpm-lock.yaml
+  ai_agent 417-422,490-491,610-613,615,624,2495,2499,4007-4011,4013-4015,4019-4021,4025-4027,4031-4033,4037-4039,4043-4051,4056-4058,4063-4093,4098-4100,4105-4113,4117-4119,4123-4125,4129-4133,4135-4139,4141-4343,5223-5224,5228-5229,5237-5238,5242-5243,5247-5248,5252-5253,6701-6703,6705-6706,8191-8209,9449-9452,9596-9597,10843-10845,10847-10851,10853,11625-11738,12918,12921,12931,12934,12937,12940,15068-15070,15072,15074,16009,16011-16053,17571-17572,17702,17704-17709
+turbo.json
+  s_b76ab56b2a7361::t_22fee080fc91b7 68
+tooling/eslint/package.json
+  s_b76ab56b2a7361::t_e3ca7801c40a23 7
+packages/old-import/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 23-24
+packages/settings/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/request-handler/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/definitions/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19,21
+.github/workflows/code-quality.yml
+  s_b76ab56b2a7361::t_58ea0268684c59 21-52,83
+packages/api/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+tooling/prettier/package.json
+  s_b76ab56b2a7361::t_a95a069c0b435f 6
+packages/image-proxy/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+apps/nextjs/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 10-11
+packages/integrations/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 22-23
+packages/boards/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 21-22
+packages/ping/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "28d483ae49a3c76e3f0156baaea0ce282414b53e",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_b76ab56b2a7361": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05d8b873-8c52-4964-9e34-0bb4380b4e9f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

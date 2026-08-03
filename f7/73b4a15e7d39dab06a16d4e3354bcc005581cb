@@ -1,0 +1,89 @@
+packages/db/schema/postgresql.ts
+  s_c85821d37d2ac8::t_09d4d23f378b10 82-83
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_c85821d37d2ac8::t_535e59b407d311 39
+  s_c85821d37d2ac8::t_180a73f8ec2256 49,55,65,72,82,89,95
+  s_c85821d37d2ac8::t_ada48514e79d2f 164
+  s_c85821d37d2ac8::t_2718d412e30c30 203-204
+  s_c85821d37d2ac8::t_82b1f5d8cc693d 205,212-215
+apps/nextjs/src/components/onboarding/manage-tour.tsx
+  s_c85821d37d2ac8::t_13b015ec1ac664 8,65,96,137-140
+  s_c85821d37d2ac8::t_e6618acd8d1a97 1-7,9-10,12-22,24-36,38,40-41,43-46,48,50-53,55,57-60,62-63,66-76,78,80-83,85,87-90,92-94,97-107,109-110,112-115,117-118,120-126,128-136,141-144
+  s_c85821d37d2ac8::t_657a69026dacf1 11,23,37,39,42,47,49,54,56,61,64,77,79,84,86,91,95,108,111,116,119,127
+packages/db/schema/sqlite.ts
+  s_c85821d37d2ac8::t_e6d90a947f132c 65-66
+packages/translation/src/lang/en.json
+  s_c85821d37d2ac8::t_2230a228709044 4951-4959,4961-4963,4965-4967,4969-4971,4973-4979,4981-4983,4985-4986,4989-4994,4997-4999,5001-5005,5007-5009,5011-5013,5015-5017,5019-5021,5023-5024
+  s_c85821d37d2ac8::t_55937d7f846344 4960,4964,4968,4972,4980,4984,4987-4988,4995-4996,5000,5006,5010,5014,5018,5022
+  s_c85821d37d2ac8::t_b867428bae9d50 3485-3502
+apps/nextjs/src/components/onboarding/skip-hold-button.tsx
+  s_c85821d37d2ac8::t_b8506f5bcd19c5 3,20-28,30,38,42,45,47
+  s_c85821d37d2ac8::t_ce9850196b3964 6-7,16,59
+  s_c85821d37d2ac8::t_cc643f8ca50a57 1-2,4-5,8-15,17-19,29,31-37,39-41,43-44,46,48-58,60-64
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_reset-tours.tsx
+  s_c85821d37d2ac8::t_bea7ef6f3834ff 1-7,9,17-20,23-27,32-35,39-42,44-52,54-57
+  s_c85821d37d2ac8::t_8e1ef3afd5a5a7 8,16,21-22,37-38,43,53
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_c85821d37d2ac8::t_e0453fc53d9708 56
+  s_c85821d37d2ac8::t_43de9dbdb3f3c9 188
+  s_c85821d37d2ac8::t_06c995244f543e 176
+apps/nextjs/src/components/onboarding/board-tour.tsx
+  s_c85821d37d2ac8::t_550f88023de8a5 1-3,5-8,11,13-16,20-28,85-97
+  s_c85821d37d2ac8::t_40d9dfb6c38eac 4,9,12,18-19,29-84
+  s_c85821d37d2ac8::t_8e43fdf42d7759 10,17
+apps/nextjs/src/components/layout/navigation.tsx
+  s_c85821d37d2ac8::t_a58c5666b36122 30,41,45,47-48,54
+  s_c85821d37d2ac8::t_d098a70996d4be 69
+apps/nextjs/src/components/onboarding/tour-step-content.tsx
+  s_c85821d37d2ac8::t_9e3fad37151607 8,17-18,24
+  s_c85821d37d2ac8::t_16d0247cd0e38b 1-7,9-16,19-23,25-28
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_c85821d37d2ac8::t_bc9a5038609171 4
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  s_c85821d37d2ac8::t_8df094947ea60a 14
+  s_c85821d37d2ac8::t_60a3c040e2aeb5 70-79
+  s_c85821d37d2ac8::t_854a8189073e79 24-28
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/page.tsx
+  s_c85821d37d2ac8::t_a4726115c343a3 122-123,129-131
+  s_c85821d37d2ac8::t_6a0ca0eafe26b9 21
+  s_c85821d37d2ac8::t_46303fe8d9622e 124
+  s_c85821d37d2ac8::t_5684daf7f69d0d 125-128
+packages/db/schema/mysql.ts
+  s_c85821d37d2ac8::t_573187536d2cf4 83-84
+apps/nextjs/src/components/layout/navigation-link.tsx
+  s_c85821d37d2ac8::t_98d4d07acd7e17 53
+  s_c85821d37d2ac8::t_ca9b82dc11be4a 14,25,37
+  s_c85821d37d2ac8::t_78a5fe0f322d81 65
+apps/nextjs/src/components/layout/header.tsx
+  s_c85821d37d2ac8::t_e09d36c5f0d8ab 2,28-30,34-36
+pnpm-workspace.yaml
+  s_c85821d37d2ac8::t_8eb737cd719257 18
+apps/nextjs/src/components/onboarding/tour-fork-step.tsx
+  s_c85821d37d2ac8::t_f8686a2dd92023 1-7,9-11,13-17,21-22,24-28,30-31,33-36,38-41
+  s_c85821d37d2ac8::t_97fbebc6d0ac75 8,19-20,29,32,37
+  s_c85821d37d2ac8::t_394458fc704a71 12,18,23
+packages/api/src/router/user.ts
+  s_c85821d37d2ac8::t_edff2bd390a295 281-282,309-310
+  s_c85821d37d2ac8::t_e58d7af71df19a 612-647
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "f773b4a15e7d39dab06a16d4e3354bcc005581cb",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_c85821d37d2ac8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f27cd5c6-4a58-411c-af64-0675652a4c37",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

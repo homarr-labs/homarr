@@ -1,0 +1,19 @@
+packages/integrations/src/beszel/test/beszel-integration.spec.ts
+  s_347e30388145b4::t_e22fa2af43e76e 78-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "79b3e5cc18dff5b213c5fb077e43af629025d9eb",
+  "prompts": {},
+  "sessions": {
+    "s_347e30388145b4": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7756af9a-5934-4e59-9294-0175c79383e3",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

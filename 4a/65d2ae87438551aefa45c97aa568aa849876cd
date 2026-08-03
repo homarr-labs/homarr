@@ -1,0 +1,19 @@
+packages/widgets/src/beszel/_shared/chart.tsx
+  s_b0ac32075bb65c::t_a180889311324b 64,83-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "4a65d2ae87438551aefa45c97aa568aa849876cd",
+  "prompts": {},
+  "sessions": {
+    "s_b0ac32075bb65c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "9ae9748d-024f-4cab-b681-b306b8f498ed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+.agents/skills/homarr-custom-widget/SKILL.md
+  s_955a5b644d1c62::t_c861898ffc17fb 3,13,15-18,30
+apps/docs/docs/management/custom-widgets/agent-authoring.mdx
+  s_955a5b644d1c62::t_711317e5ae91bf 15-16
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_955a5b644d1c62::t_121bbaa9f29bbd 23
+packages/custom-widgets/src/core/ai-prompt.ts
+  s_955a5b644d1c62::t_14b029da2dcc7b 9,54,57,62-64
+packages/custom-widgets/src/core/authoring-resources.ts
+  s_955a5b644d1c62::t_fc784ca47a548b 18,28,30-33,45
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  s_955a5b644d1c62::t_f826f5210bee9f 18-19,21-22,24-25,43-46
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  s_955a5b644d1c62::t_d22a01474666ea 16-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "1e56ed5884661f2aa5aafd40870c9654ec4db964",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

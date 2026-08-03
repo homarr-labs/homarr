@@ -1,0 +1,23 @@
+packages/integrations/src/mock/data/beszel.ts
+  s_418dc48b19ebb2::t_9654a0732afc5b 12-15
+  s_418dc48b19ebb2::t_4991cc6c43cf37 16-22,24-26,28-30,38-47,51,53-62,74-86,89-92,95-98,101-107,112-115,117-125,131,133,137-138,146,153,155,158,160-162,192,215,221
+  s_418dc48b19ebb2::t_55032e11435a8e 23,27,31-35,65-73,87-88,93-94,99-100,110-111,128,130,132,134,149,156-157,171,182,189-191,193,196-201
+packages/db/migrations/seed.ts
+  s_418dc48b19ebb2::t_d35bf1ab793948 415-417
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "cfa510dbf9fa2a5c1a57253d0f58a78653b23384",
+  "prompts": {},
+  "sessions": {
+    "s_418dc48b19ebb2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "590b33f2-3f1d-49b2-b3f0-45b978bc7bed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

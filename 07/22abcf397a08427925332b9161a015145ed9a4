@@ -1,0 +1,61 @@
+packages/spotlight/src/modes/index.tsx
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 5,15
+packages/widgets/src/media-requests/search-button.module.css
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 1-24
+packages/spotlight/src/index.ts
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 3,6,14-28
+packages/api/src/router/integration/integration-router.ts
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 4-5,36,45,85,133,184,319,487,495,506,610-687,690-751
+packages/spotlight/src/components/actions/items/group-action-item.tsx
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 47-49
+packages/spotlight/src/components/spotlight.tsx
+  ai_agent 4,8,14,19-25,61,65,86-108,139,145
+packages/spotlight/src/spotlight-store.ts
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 6,10-15
+packages/spotlight/src/modes/media/index.tsx
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 1-8
+packages/spotlight/src/modes/external/search-engines-search-group.tsx
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 67-96,118,128,134-136
+packages/integrations/src/interfaces/media-requests/media-request-types.ts
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 15,22
+packages/spotlight/src/modes/help/home-empty-groups.tsx
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 22,37,87,96
+packages/spotlight/src/lib/interaction.ts
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 18
+packages/widgets/src/media-requests/stats/component.tsx
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 3,12,21,28,101-168,171-173,176-178,181,184-201
+packages/integrations/src/overseerr/overseerr-integration.ts
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 63-65,76-81,352-367,382,388,392-397,408,416,423
+packages/api/src/router/test/integration/integration-router.spec.ts
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 7,62-182,332,367
+packages/translation/src/lang/en-gb.json
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 4554,4557-4570,4846-4850
+packages/spotlight/src/modes/home/home-search-engine-group.tsx
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 23,41,95
+packages/modals-collection/src/search-engines/request-media-modal.tsx
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 2-3,19,25,36,48-57,59,70
+packages/translation/src/lang/en.json
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 4760,4763-4783,5059-5063
+packages/widgets/src/media-requests/list/component.tsx
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 3-17,24,30,81-99,103-119
+packages/spotlight/src/modes/media/media-request-search-group.tsx
+  s_fefa5a268e61e0::t_1ca58f2ed565d7 1-174
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  ai_agent 168-170
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "0722abcf397a08427925332b9161a015145ed9a4",
+  "prompts": {},
+  "sessions": {
+    "s_fefa5a268e61e0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8bc5eeae-b92b-4486-a152-4ba2a153ec50",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+apps/nextjs/src/app/api/mcp/oauth/_store.ts
+  s_84cb939c27de54::t_048a8bac5b230f 37-40,48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "7d9207e930166dd7b8065d49c4af449fa7909058",
+  "prompts": {},
+  "sessions": {
+    "s_84cb939c27de54": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f513ffc-4b9c-447d-a6c5-af68259536b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

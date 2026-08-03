@@ -1,0 +1,35 @@
+packages/widgets/src/releases/component.tsx
+  s_ecc5e3d3796371::t_df6c66e04ece5c 84
+  s_ecc5e3d3796371::t_562f9b7bb9b6f8 97,99-100
+  s_ecc5e3d3796371::t_40a45ba129cbec 98
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_ecc5e3d3796371::t_aa170526437ba1 20-27
+packages/widgets/src/system-disks/component.tsx
+  s_ecc5e3d3796371::t_4c31cd6b2ab9b8 35
+  s_ecc5e3d3796371::t_fce2a528c945fb 50-54
+packages/widgets/src/app/ping/ping-indicator.tsx
+  s_ecc5e3d3796371::t_cf41386bb9cbe2 28
+  s_ecc5e3d3796371::t_4925f618d0109c 12-14,17,22,27,29,36-38
+packages/widgets/src/docker/component.tsx
+  s_ecc5e3d3796371::t_9b6f10a59bbbf5 207-208
+  s_ecc5e3d3796371::t_2025c3f7d3e094 209-210
+packages/widgets/src/media-transcoding/component.tsx
+  s_ecc5e3d3796371::t_581381d3ff4fad 40,55-57
+  s_ecc5e3d3796371::t_2e6b4c7ebe7515 54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "1b003bfc50aa6e98309c6f83cfdcc9f7c78bfba5",
+  "prompts": {},
+  "sessions": {
+    "s_ecc5e3d3796371": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "650ba9eb-19a6-478e-af08-f0ee37db5e53",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

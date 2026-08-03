@@ -1,0 +1,19 @@
+pnpm-workspace.yaml
+  s_78b4baa0d2e00c::t_65978b0b15be0c 196
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "d5776e7d2a251e049c1569427fff1293bff2a810",
+  "prompts": {},
+  "sessions": {
+    "s_78b4baa0d2e00c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b4a79297-dd44-4d15-88e4-f73789588b11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

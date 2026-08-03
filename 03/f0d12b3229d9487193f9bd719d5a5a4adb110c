@@ -1,0 +1,24 @@
+scripts/run.sh
+  s_f29d210cd90a9d::t_94f836450fb903 52-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "03f0d12b3229d9487193f9bd719d5a5a4adb110c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_f29d210cd90a9d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e11fd9d2-7782-4a8b-9001-650c2263e559",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+pnpm-lock.yaml
+  s_b7084109db7ef7::t_546ebac769d244 480-482,846,859-861,867,906,1213,1395,1567,1570,2525,9543-9545,10906,10911,14315,14318,14337,14897,14910,14912,16206-16213,17436,18460,18464
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "1079a5a4c5209f7e076f890e670087b2a5940569",
+  "prompts": {},
+  "sessions": {
+    "s_b7084109db7ef7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7ba9762a-b6e0-425c-a395-de68c39a3a9b",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

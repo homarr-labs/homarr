@@ -1,0 +1,19 @@
+packages/db/migrations/postgresql/meta/0006_snapshot.json
+  s_e7a9f157bc08ec::t_18a27b77eb7dae 1-2360
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "1f7b7f0516b66d1ee7d74062b74bdcda8ae3e88b",
+  "prompts": {},
+  "sessions": {
+    "s_e7a9f157bc08ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cb17b45e-4e23-40d1-9720-f00392d43e0a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

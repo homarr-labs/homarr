@@ -1,0 +1,660 @@
+apps/api/app/compute/_framework_image_en.py
+  s_ca1c9b9ed48724::t_e8aaea18c5d6c0 1-892
+apps/web/components/features/result/seven-dimensions/image/DifferenciationNiveauxTable.tsx
+  s_ca1c9b9ed48724::t_a097e5a851ac35 105
+  s_ca1c9b9ed48724::t_8c8d860d38de9d 45
+  s_bfa1f6631becdc::t_167e09d7bba664 34-35
+  s_ca1c9b9ed48724::t_d85c615ffe8da7 13-15,17
+  s_ca1c9b9ed48724::t_a00d0e5537ce9f 87
+apps/api/app/compute/_framework_image.py
+  s_ca1c9b9ed48724::t_32ed9a8eb9144e 33
+  s_ca1c9b9ed48724::t_5e61fa6b0259ae 1037-1048,1050-1169
+  s_ca1c9b9ed48724::t_c6665dba37ec02 521-529
+  s_ca1c9b9ed48724::t_71b26e2dc7099a 8-12,19-32
+  s_ca1c9b9ed48724::t_00f20d6173acbb 1049
+apps/api/tests/llm/test_narrative_i18n.py
+  s_ca1c9b9ed48724::t_44e9fa44878624 17-18,30
+  s_ca1c9b9ed48724::t_aa62032aab885d 1-16,19-29,31-67
+apps/web/components/features/result/seven-dimensions/ImageSevenDimensionsView.tsx
+  s_ca1c9b9ed48724::t_9dc58a2fdf5be7 47-52
+  s_ca1c9b9ed48724::t_3670fb5ad7f202 64
+  s_ca1c9b9ed48724::t_58fea903f2d77d 15
+  s_ca1c9b9ed48724::t_a5e3dfa88b2ace 16
+  s_ca1c9b9ed48724::t_ea2a679e3279f4 46
+apps/web/components/features/protocols/bel/tabs/bel-diff-utils.ts
+  s_bfa1f6631becdc::t_e6a4bb3c1bccc1 66-70
+apps/web/components/features/analyse/HeaderAnalyseSearch.tsx
+  s_5195f04c373700::t_339ca26c2c1c93 13
+  s_7d777d3954db6e::t_491abfa9161d12 88
+  s_7d777d3954db6e::t_6502e056b10947 17-18,31-32
+apps/api/Dockerfile
+  s_bfa1f6631becdc::t_eb87f5c6af2d86 23-25
+apps/web/lib/ai/llm/deterministic.ts
+  s_bfa1f6631becdc::t_d2265c26e76547 17
+apps/web/lib/tokens.ts
+  s_bfa1f6631becdc::t_852ffa2929a7ce 9
+  s_bfa1f6631becdc::t_2e86a5ae2a2856 171,174-175,181,183
+  s_bfa1f6631becdc::t_13dcea45a7f61d 1-6
+apps/api/app/compute/chart_payloads.py
+  s_ca1c9b9ed48724::t_b4e0771ff44e30 40
+  s_ca1c9b9ed48724::t_b7134b64db4b86 653,679
+  s_ca1c9b9ed48724::t_45806f9fdbd26f 702,704,711-717
+apps/api/tests/compute/test_video_seven_dimensions.py
+  s_7d777d3954db6e::t_af7a35de0f4d5e 15,18
+  s_7d777d3954db6e::t_b70d0093e2f520 1-14,16-17,19-36,38-40,42-46,48-175
+  s_7d777d3954db6e::t_d687fa9b18846c 37,41,47
+apps/web/components/features/protocols/shared/tabs/ProductDeltaTab.tsx
+  s_bfa1f6631becdc::t_7acbcb0814c447 160
+  s_bfa1f6631becdc::t_783ec0bcce371f 31
+  s_bfa1f6631becdc::t_af34a454a64d0f 32
+  s_bfa1f6631becdc::t_c9c6e9e423ee8d 150
+  s_bfa1f6631becdc::t_e5356479294c3f 47
+apps/web/components/features/protocols/shared/tabs/DiffClusterLabTab.tsx
+  s_bfa1f6631becdc::t_0b99a949da26db 33
+  s_bfa1f6631becdc::t_5652668133a19b 60
+  s_bfa1f6631becdc::t_0f778e9cf45cc8 78
+  s_bfa1f6631becdc::t_50b2416d85f178 86
+  s_bfa1f6631becdc::t_d4fb62af5cd333 34
+apps/web/components/features/protocols/bel/tabs/BelParticipantTimelineCompare.tsx
+  s_bfa1f6631becdc::t_a3a04dd3f0ae31 5,12,25
+  s_bfa1f6631becdc::t_b1662e0d1a77aa 23-24
+apps/web/components/features/result/seven-dimensions/image/AttractiviteVsEngagementTable.tsx
+  s_ca1c9b9ed48724::t_f0fcdc37e249b8 19-20,43
+  s_ca1c9b9ed48724::t_12d94ad0f14d63 9,11
+apps/api/app/compute/attention_decomposition.py
+  s_ca1c9b9ed48724::t_0f5979072552e6 118
+  s_ca1c9b9ed48724::t_98a507a20bfd5f 382
+  s_ca1c9b9ed48724::t_865b4086663b27 193-194,196-215,217,219,221
+apps/web/components/features/cloud/CloudImportShortcut.tsx
+  s_3284e5eb76ab83::t_e6d9f553afeac3 66
+  s_3284e5eb76ab83::t_d9b5c4e8110176 148-154,156-162,164-168,171
+  s_7d777d3954db6e::t_e2f9b246d711e2 204
+  s_9cad72b34b7960::t_d5d2f3f64feb69 102-106
+  s_9cad72b34b7960::t_505555624b7128 26
+  s_5195f04c373700::t_87fcfb2192cc70 31,40
+  s_7d777d3954db6e::t_20243efa99d74c 116-121,128
+  s_9cad72b34b7960::t_38b6a318028317 140-147,155,163
+  s_5195f04c373700::t_b732410e24956c 58
+  s_5195f04c373700::t_e6f729d8af819f 354
+apps/web/lib/habs/__tests__/narrative-i18n.test.ts
+  s_ca1c9b9ed48724::t_9c95b183cf6bc6 6-7
+  s_ca1c9b9ed48724::t_c7ec3a37fa4939 4,8-20,25,27-28,34-35,37-39,42,47,53,59,68-70
+  s_ca1c9b9ed48724::t_11af9a0afe6411 3,22-24,26,29-33,40,48,54,67
+  s_ca1c9b9ed48724::t_1f22b9586325d4 1-2,5,21,36,43-46,50-52,55-58,60-66,71-72
+  s_ca1c9b9ed48724::t_48b1623f912767 41
+  s_ca1c9b9ed48724::t_9f587728c57922 49
+apps/web/components/features/protocols/bel/tabs/BelCommercialDrilldownDashboard.tsx
+  s_bfa1f6631becdc::t_c019b15ef7f0be 5,11,13-14
+apps/web/components/features/protocols/danone/diff-utils.ts
+  s_bfa1f6631becdc::t_aa1c20e1b8152a 1-2
+  s_bfa1f6631becdc::t_57ddf0e539bda1 151,223,300
+  s_bfa1f6631becdc::t_f8a5458844b96b 3
+  s_bfa1f6631becdc::t_4565febb7d8fc6 163-167
+  s_bfa1f6631becdc::t_8576a0464fe0f3 331
+apps/web/components/features/result/charts/SectorDistributionChart.tsx
+  s_ca1c9b9ed48724::t_6850da8f3c7282 141
+  s_bfa1f6631becdc::t_61b916bf9fc7cf 72-76
+  s_ca1c9b9ed48724::t_04626ccebc219b 120
+apps/web/lib/bff-client.ts
+  s_bfa1f6631becdc::t_182afc47b149bb 9,13-20,48,64,77,81
+  s_bfa1f6631becdc::t_4b5b8cdf726500 1-8,10-12,21-26,28-47,49-63,65-76,78-80,82-111
+  s_bfa1f6631becdc::t_783ec0bcce371f 27
+apps/api/app/tasks/analyse_task.py
+  s_ca1c9b9ed48724::t_e6c88c76ec0192 433
+  s_ca1c9b9ed48724::t_67c83e490749e5 443
+  s_7d777d3954db6e::t_d74a9ec6ec2044 125-126,128-133
+  s_ca1c9b9ed48724::t_0d1a8113674aad 79-80
+  s_ca1c9b9ed48724::t_0f4c64f1cdc8eb 118
+  s_ca1c9b9ed48724::t_789424ac3cec86 247
+  s_ca1c9b9ed48724::t_dbae779924c229 390
+apps/api/tests/tasks/test_analyse_video_errors.py
+  s_7d777d3954db6e::t_57739a419e2262 1-17,19-25,28-38,48-52,54-74,76-77,87,89,92,94,96-100
+  s_7d777d3954db6e::t_08a48f3a367575 75,78-79,86,88,90-91,93,95,101
+  s_7d777d3954db6e::t_587e8551645b4d 18,26-27,39-47,53
+  s_7d777d3954db6e::t_c7ef8d44bb4345 80-85
+apps/web/lib/jobs/analyse.ts
+  s_ca1c9b9ed48724::t_60cbb0cc762388 510
+  s_ca1c9b9ed48724::t_615ae7328df01d 536
+  s_ca1c9b9ed48724::t_7e2e9090272185 716
+  s_ca1c9b9ed48724::t_5b3a8a8cd484f7 428
+  s_bfa1f6631becdc::t_e9c1dbee48b18c 290,412,523,622
+  s_ca1c9b9ed48724::t_3533bd1a99c448 276-277
+  s_ca1c9b9ed48724::t_a07801644fcf3d 631
+  s_ca1c9b9ed48724::t_0a45d457e2e040 673-677
+  s_ca1c9b9ed48724::t_f8e71da1f25902 304
+  s_ca1c9b9ed48724::t_029be84abd0b6c 293,415,526,625
+  s_ca1c9b9ed48724::t_6cbf28bb348b75 369
+apps/web/lib/analyse/detect-media-type.ts
+  s_bfa1f6631becdc::t_e0c2f276edb192 2,8-21,26-27,33,38
+  s_bfa1f6631becdc::t_0733cb613e5bff 4
+apps/web/lib/services/upload-media.ts
+  s_3284e5eb76ab83::t_b9c22262b021e6 1-59
+codebase-analysis-docs/PATTERN_MAP.md
+  s_bfa1f6631becdc::t_fdd0ebef2ffca1 6-7
+  s_bfa1f6631becdc::t_bcd73a21a2fb81 1-5,8-528
+apps/api/app/compute/video_seven_dimensions.py
+  s_7d777d3954db6e::t_2b51b185189f87 95-174
+  s_7d777d3954db6e::t_eacb9934519d4c 5,7-8
+  s_7d777d3954db6e::t_ca699256b55db8 599
+  s_7d777d3954db6e::t_81ec8c7eb257f0 1-4,6,9-94,175-230,239-598,600-733
+  s_7d777d3954db6e::t_6f395c69f5e4fa 231-238
+apps/web/components/features/protocols/bel/tabs/BelCustomClusterBuilder.tsx
+  s_bfa1f6631becdc::t_70928af6f20630 5,11,13-14
+apps/web/app/analyse/[id]/page.tsx
+  s_7d777d3954db6e::t_28875f9df4f9fe 161,164
+apps/api/app/schemas/analyses.py
+  s_7d777d3954db6e::t_ac35d67bc704e4 38-45
+apps/web/lib/report/__tests__/llm-prompt-i18n.test.ts
+  s_ca1c9b9ed48724::t_f5723333b02042 1-54
+apps/web/lib/queries/analyses.ts
+  s_3284e5eb76ab83::t_52cae88539cf00 93-99
+  s_bfa1f6631becdc::t_1eea8efde02dd8 5-6,11
+  s_3284e5eb76ab83::t_0e8e3f8feeeec7 16
+apps/web/components/features/result/seven-dimensions/video/VideoSevenDimensionsView.tsx
+  s_7d777d3954db6e::t_bec9a814ca9021 47-67
+  s_7d777d3954db6e::t_be3d4998d860d0 107-110
+  s_7d777d3954db6e::t_e494940e07f3ce 29
+  s_7d777d3954db6e::t_db0c2c4e049c46 30-32,34
+  s_7d777d3954db6e::t_fcafc5b210a907 3-4,7-8
+apps/web/components/features/protocols/bel/bel-tab-props.ts
+  s_bfa1f6631becdc::t_93a0c54af6a920 1-24,28-35
+  s_bfa1f6631becdc::t_61b916bf9fc7cf 25-27
+apps/web/lib/i18n/dictionary/insights.ts
+  s_ca1c9b9ed48724::t_f4a18503608c5c 93-94
+  s_ca1c9b9ed48724::t_37b3743eac51d8 296-297
+  s_ca1c9b9ed48724::t_ad19351a734150 298-299
+  s_7d777d3954db6e::t_fab3850dbaff5d 406-415
+  s_7d777d3954db6e::t_1a44a56c1032d8 204-213
+  s_ca1c9b9ed48724::t_982179ce9a5876 95-96
+packages/shared/insight-tokens.json
+  s_bfa1f6631becdc::t_da912c47533c88 1-41
+apps/api/app/api/llm.py
+  s_ca1c9b9ed48724::t_0085c09962d856 106
+  s_ca1c9b9ed48724::t_afacea10b4d384 174-175,178,180
+  s_ca1c9b9ed48724::t_5b3b3c3ef85849 25
+  s_ca1c9b9ed48724::t_5bdab7a3bc384e 1,6-7
+  s_ca1c9b9ed48724::t_184842c8bd9e32 273-276
+  s_ca1c9b9ed48724::t_5908cb9a83e1c8 265-272,286,291
+  s_ca1c9b9ed48724::t_7dd7650d70e649 111-112,117-135
+  s_ca1c9b9ed48724::t_78821795eb3967 292
+apps/web/lib/ai/llm/mistral.ts
+  s_ca1c9b9ed48724::t_ea629d8fa377e0 58,62-64,66
+  s_bfa1f6631becdc::t_783ec0bcce371f 60-61
+AGENTS.md
+  s_bfa1f6631becdc::t_275ec0dd853feb 9,12
+  s_bfa1f6631becdc::t_38e7cd2898224c 10
+apps/web/components/features/result/seven-dimensions/RadarSevenAxes.tsx
+  s_ca1c9b9ed48724::t_6ce97934de5fad 188
+  s_ca1c9b9ed48724::t_e5c23f3ff9f40b 59
+  s_ca1c9b9ed48724::t_89cbb515268c0e 11
+apps/api/packages/shared/insight-tokens.json
+  s_bfa1f6631becdc::t_24a247c64070a7 1-41
+apps/web/components/features/analyse/AnalyseFilePickers.tsx
+  s_bfa1f6631becdc::t_783ec0bcce371f 46-52
+  s_5195f04c373700::t_de94c9ad234afe 22
+  s_5195f04c373700::t_251630ea10362b 78
+apps/web/components/features/result/seven-dimensions/video/VideoTemporalInsights.tsx
+  s_7d777d3954db6e::t_5f195479c7984c 1-160
+apps/web/README.md
+  s_7d777d3954db6e::t_d05bb824665d41 60
+apps/web/lib/ai/framework-copy/image.ts
+  s_ca1c9b9ed48724::t_c9d8619b6a6bfd 713-714,717-718,725-726,734-762,766-776,780-803
+  s_ca1c9b9ed48724::t_d3a25e872a4af2 2,6,12-15,19,21-42
+  s_bfa1f6631becdc::t_783ec0bcce371f 708-712,721-724,763-765,777-779
+  s_ca1c9b9ed48724::t_637d48c8fa2c89 1091,1098,1100,1102,1104
+  s_bfa1f6631becdc::t_61b916bf9fc7cf 1093-1094
+  s_ca1c9b9ed48724::t_de6bf00df93bd9 64-67
+  s_ca1c9b9ed48724::t_c7b0d87a26a0ee 806-816
+apps/api/app/compute/narrative_overlay.py
+  s_ca1c9b9ed48724::t_cfef3308ab3f5b 857-858,860
+  s_ca1c9b9ed48724::t_528bde901ad186 1-4,13
+  s_ca1c9b9ed48724::t_ca35ad872751f1 75-76,79,84,94-95,97,122-123,126-162,165-181,183
+  s_ca1c9b9ed48724::t_10a036c534db45 386-446,449-450,454-456,458,460-462,464,466,468
+  s_ca1c9b9ed48724::t_a054b12749e28d 192-199,202,215-216,219-221
+  s_ca1c9b9ed48724::t_61e1e8ff8c79ac 224-226
+apps/web/components/features/analyse/funnel/AnalyseKindIngestion.tsx
+  s_5195f04c373700::t_9caf2b9bd47674 149
+  s_5195f04c373700::t_5680b2125d760c 117
+  s_5195f04c373700::t_ee8bf880049f4a 2-3,6-7,11,13-14,16-21,24,26-28,33-35,37-45,49,56-71,77,82-116,118-131,134-140,142-148,150-156,158-180
+  s_5195f04c373700::t_0e3997b65b855d 46-48
+  s_5195f04c373700::t_ad3d54559ca8c2 141
+  s_bfa1f6631becdc::t_783ec0bcce371f 50-55,132-133,157
+apps/web/lib/ai/framework-copy/image-en.ts
+  s_bfa1f6631becdc::t_783ec0bcce371f 43,162-163,168-169,175-178,182-183,200-201,233-236,240-241,247-248,251-252,261-262,266-267,271-274,283-286,292-295,299-304,307-312,317-318,321-324,330-335,338-339,341-342,345-350,354-357,360-361,363-364,371-399,402-419,422-439,442-468,471-500,503-526,529-558,563-601,605-616,624-633,637-640,642-653,666-704,708-737,747-764,774-808,812-847
+  s_ca1c9b9ed48724::t_6291e1c1460a99 1-42,44-161,164-167,170-174,179-181,184-199,202-232,237-239,242-246,249-250,253-260,263-265,268-270,275-282,287-291,296-298,305-306,313-316,319-320,325-329,336-337,340,343-344,351-353,358-359,362,365-370,400-401,420-421,440-441,469-470,501-502,527-528,559-562,602-604,617-623,634-636,641,654-665,705-707,738-746,765-773,809-811,848
+apps/web/components/features/protocols/shared/tabs/InsightsByClusterTab.tsx
+  s_bfa1f6631becdc::t_10396c6cd96591 723,733-736
+  s_bfa1f6631becdc::t_0d84da3e52c88f 40-44
+  s_bfa1f6631becdc::t_4c96d1d3b4cbec 96
+  s_bfa1f6631becdc::t_01e440331a176e 137
+  s_bfa1f6631becdc::t_8aa26271821db6 99,101-102
+  s_bfa1f6631becdc::t_c70eca3d8a16ee 141
+  s_bfa1f6631becdc::t_68b5a3f5e9d99a 182
+  s_bfa1f6631becdc::t_783ec0bcce371f 38
+  s_bfa1f6631becdc::t_0b8bce849734db 66,68,71
+  s_bfa1f6631becdc::t_c09ebe8cdd5a4d 597
+codebase-analysis-docs/CODEBASE_KNOWLEDGE.md
+  s_7d777d3954db6e::t_24f688fcd2442d 188-200
+  s_ca1c9b9ed48724::t_f3a09c39fd86a2 186
+  s_bfa1f6631becdc::t_a9eba49fbbd182 5
+  s_bfa1f6631becdc::t_5c524c50979973 6
+apps/api/app/compute/tokens.py
+  s_bfa1f6631becdc::t_f9811fc78a8b7f 1,5,9-11,30-44,47-48,58
+  s_bfa1f6631becdc::t_bd98268e4964bd 26-28
+  s_bfa1f6631becdc::t_af4db747bfb7d6 15-25
+apps/web/app/api/reports/[slug]/generate-analysis/route.ts
+  s_ca1c9b9ed48724::t_2119d0cc781c10 2,7
+  s_ca1c9b9ed48724::t_6726cb370dc9a6 9-10,35-36
+  s_ca1c9b9ed48724::t_113014901addab 288
+  s_ca1c9b9ed48724::t_188aa34e0f825d 224
+  s_ca1c9b9ed48724::t_75f1a2899a4dae 130-134,138,142,144
+  s_ca1c9b9ed48724::t_491e919c4fdea4 206
+  s_bfa1f6631becdc::t_783ec0bcce371f 143
+  s_ca1c9b9ed48724::t_3c9f08590f1395 208,220
+apps/web/lib/hooks/useAnalyseIngestion.ts
+  s_5195f04c373700::t_3248e81dbdbe70 86-92,99
+  s_5195f04c373700::t_1e9c4289c97ec8 115,130
+  s_bfa1f6631becdc::t_2de622a723c7f5 94
+  s_bfa1f6631becdc::t_783ec0bcce371f 29-33,85,114
+  s_bfa1f6631becdc::t_b50fb106ae0556 12
+  s_5195f04c373700::t_01590eaa896208 56-62
+  s_3284e5eb76ab83::t_57b4dad9966346 95
+  s_3284e5eb76ab83::t_cc1b9ddea87711 97,100
+  s_3284e5eb76ab83::t_69fcad28c58c3a 5
+apps/web/lib/analyse/analyse-kind-config.ts
+  s_7d777d3954db6e::t_4616b1a545a1d7 46
+apps/api/app/tasks/pipeline.py
+  s_7d777d3954db6e::t_bfc2f8864f7977 53-56
+  s_ca1c9b9ed48724::t_9233203de9a661 415
+  s_7d777d3954db6e::t_2a809896369d34 785-814
+  s_ca1c9b9ed48724::t_affe9c64146458 724
+  s_ca1c9b9ed48724::t_a6f87a58e24dbc 460
+  s_ca1c9b9ed48724::t_b2ff8005629d5b 630
+apps/api/app/llm/analysis_prompts.py
+  s_5195f04c373700::t_beb6ebf0820a74 131-141,143
+apps/web/components/features/protocols/bel/tabs/BelDiffClusterLabDashboard.tsx
+  s_bfa1f6631becdc::t_95090eac6f3a9e 5,11,13-14
+apps/web/components/features/protocols/bel/tabs/BelProductDeltaDashboard.tsx
+  s_bfa1f6631becdc::t_61b916bf9fc7cf 15-18
+  s_bfa1f6631becdc::t_f1434da84d98a3 5,10,12,14,19,22
+apps/web/lib/services/analyses.ts
+  s_9cad72b34b7960::t_c393bfbbd5a970 353
+  s_bfa1f6631becdc::t_8bcac90908ff27 9
+  s_bfa1f6631becdc::t_0f826d28b52458 44-47,53-56
+  s_9cad72b34b7960::t_eca4e9ef360a7e 16
+  s_9cad72b34b7960::t_2ca3eebb6ee978 48-52
+  s_bfa1f6631becdc::t_3f7b37f1592883 347
+apps/web/components/features/protocols/danone/danone-protocol-config.ts
+  s_bfa1f6631becdc::t_783ec0bcce371f 8,10-12
+  s_bfa1f6631becdc::t_669d84f488412e 137
+  s_bfa1f6631becdc::t_97096803e67179 115
+  s_bfa1f6631becdc::t_dd2dc2fa538f9a 116
+  s_bfa1f6631becdc::t_b714cfa55e8019 156
+apps/web/components/features/protocols/bel/tabs/BelInsightsByClusterDashboard.tsx
+  s_bfa1f6631becdc::t_9fd5c5e8a40e2b 5,10,12,16,21,23-24,27-29
+  s_bfa1f6631becdc::t_61b916bf9fc7cf 17-20
+apps/web/components/features/result/seven-dimensions/DimensionCard.tsx
+  s_ca1c9b9ed48724::t_35c78715d6b3a6 16,18,22
+  s_ca1c9b9ed48724::t_b98fa58211fcad 19
+  s_ca1c9b9ed48724::t_c9e4364c02a883 150-152
+  s_ca1c9b9ed48724::t_cff23c44f49e89 52,58
+  s_ca1c9b9ed48724::t_384931da4ea540 153-155,157-176
+  s_ca1c9b9ed48724::t_a6dda3bf2dfc12 137-139
+  s_ca1c9b9ed48724::t_5ec9cee97bc448 216
+  s_bfa1f6631becdc::t_783ec0bcce371f 54-56
+  s_ca1c9b9ed48724::t_d7c1218c263b0e 97
+apps/web/components/features/result/NeuroMiniStory.tsx
+  s_ca1c9b9ed48724::t_d04ca31ae141eb 90,92,107
+  s_ca1c9b9ed48724::t_7bd2553ae29787 16,21
+  s_ca1c9b9ed48724::t_df83f17fac9ee8 123,125,136
+apps/web/components/features/protocols/shared/types.ts
+  s_bfa1f6631becdc::t_e7f4023408fddc 4-6,9-10,13-19
+apps/web/components/features/result/synthese/forcesAmeliorations.ts
+  s_ca1c9b9ed48724::t_14396ca7019830 98,100-101
+  s_ca1c9b9ed48724::t_31161cca24d479 106-109
+  s_ca1c9b9ed48724::t_dc6957d41d81f8 93-94
+  s_ca1c9b9ed48724::t_8b2e9f13b4673c 111-115,119,122,125-127,129
+  s_ca1c9b9ed48724::t_65f1ab54d88fa9 118
+  s_ca1c9b9ed48724::t_4bfb43dd9b512f 97
+  s_ca1c9b9ed48724::t_8e0c6c973f0414 28-29
+apps/web/lib/services/pilote-ingestion.ts
+  s_bfa1f6631becdc::t_63fd0f8a4b8471 2,4
+  s_3284e5eb76ab83::t_32405e5d68eda7 5,10
+  s_bfa1f6631becdc::t_ddbbf6b2373297 9,11
+  s_bfa1f6631becdc::t_608a55e1814375 64
+  s_3284e5eb76ab83::t_5551d9947a6650 63,68,71
+apps/web/lib/services/protocols.ts
+  s_bfa1f6631becdc::t_783ec0bcce371f 78
+  s_bfa1f6631becdc::t_61e1ba98194418 1-6,8-21,42,44,46,48,56,58,67,80,94,100,110-115,122,138,153,217,219,284-285
+apps/web/lib/habs/narrative.ts
+  s_bfa1f6631becdc::t_783ec0bcce371f 368-373,391,499-501,503
+  s_ca1c9b9ed48724::t_1641ad8ff19bb7 493,495-498,502,504
+  s_ca1c9b9ed48724::t_3bfbfd882fc86b 424
+  s_ca1c9b9ed48724::t_39a5721c7fa24d 335-367,376,379-381,384-386,389-390,394-395,398-399,402-403,406-408,411
+apps/web/lib/services/protocols-shared.ts
+  s_bfa1f6631becdc::t_3a51934caaff83 7
+  s_bfa1f6631becdc::t_545286d69fd41b 1-6,8-221,234-236
+  s_bfa1f6631becdc::t_ed84e9699d784a 222-233
+  s_bfa1f6631becdc::t_eff9d29a9a2feb 237-246
+apps/web/components/features/protocols/shared/tabs/ParticipantTimelineTab.tsx
+  s_bfa1f6631becdc::t_81bb6d0e59f197 32-35
+  s_bfa1f6631becdc::t_13576706bdc450 56-57
+  s_bfa1f6631becdc::t_f7dc57bfc8bbfd 571
+  s_bfa1f6631becdc::t_47c01c52ed3163 36
+  s_bfa1f6631becdc::t_ab0d7b927dccfb 370
+apps/web/lib/habs/score.ts
+  s_ca1c9b9ed48724::t_0c5a8f2d53818f 48-58
+  s_ca1c9b9ed48724::t_7b41fe7bb09e15 12
+  s_ca1c9b9ed48724::t_c8be0a5c47d4e6 69,80-82,87,95,105
+  s_ca1c9b9ed48724::t_bb4a11c7462b5c 7-9
+  s_bfa1f6631becdc::t_783ec0bcce371f 70-79
+apps/web/components/features/result/seven-dimensions/TopActionsStrip.tsx
+  s_ca1c9b9ed48724::t_0e0e9a067822eb 12
+  s_ca1c9b9ed48724::t_2f3d438361419f 37
+  s_ca1c9b9ed48724::t_99ebd876f857f0 20
+apps/web/components/features/result/seven-dimensions/image/ClarteDetruitConstruitTable.tsx
+  s_ca1c9b9ed48724::t_938d5cdc91223b 18-19,32
+  s_ca1c9b9ed48724::t_8e95f6cb9849ae 9,11
+  s_ca1c9b9ed48724::t_4f25fbc42f5227 45
+apps/web/components/features/result/seven-dimensions/FormatThresholdBanner.tsx
+  s_ca1c9b9ed48724::t_b7ba325ffe791d 10,12
+  s_ca1c9b9ed48724::t_f5607759f2c810 21-22,52
+apps/api/app/compute/seven_dimensions.py
+  s_ca1c9b9ed48724::t_b4d08dda77a77d 3,5-7
+  s_ca1c9b9ed48724::t_50524f5bd600fb 418,425,428-436,441,444-451,456,459-467,474,477-485,489-505,521,527,530-536,542,545-551,556,559-565,570,573-579
+  s_ca1c9b9ed48724::t_83b95b62efebef 1309
+  s_ca1c9b9ed48724::t_db10de55499f40 393-394
+  s_ca1c9b9ed48724::t_582e99b9435b03 1358-1363,1372-1376,1378-1384,1392-1396,1398-1405,1414,1416-1421
+  s_ca1c9b9ed48724::t_5f0c2a5ff9653d 1334-1336
+  s_ca1c9b9ed48724::t_3b636f92d08255 1317
+  s_ca1c9b9ed48724::t_c81a5a308209f8 235-254
+  s_ca1c9b9ed48724::t_61445f1448262e 28-31
+  s_ca1c9b9ed48724::t_6077615e17d3e5 1023-1024,1027
+  s_ca1c9b9ed48724::t_2c35e17613e816 1186-1188,1190-1192
+  s_ca1c9b9ed48724::t_045ba808a4d4a9 1266,1276-1277,1280
+  s_ca1c9b9ed48724::t_4c106e8bd11435 1091-1094,1101-1106,1113-1118,1124-1128,1133-1146
+  s_ca1c9b9ed48724::t_ba0d414d4b7378 1162-1165,1178
+  s_ca1c9b9ed48724::t_0134a000a21640 45-54,59
+  s_ca1c9b9ed48724::t_229f06b9699595 1046,1050
+  s_ca1c9b9ed48724::t_20f5ef08c000f0 1150-1151,1153-1154,1156-1158
+  s_ca1c9b9ed48724::t_3735678bfc3a8c 1066,1069,1077-1079
+  s_ca1c9b9ed48724::t_ae5958eae141da 1433,1441,1444,1453,1461,1464,1473,1477,1480,1482-1483
+apps/web/lib/ai/framework-benchmarks/image.ts
+  s_ca1c9b9ed48724::t_499e66567a12f3 107,111
+  s_bfa1f6631becdc::t_61b916bf9fc7cf 134,136
+  s_ca1c9b9ed48724::t_325bd8d2891e82 30-42
+  s_ca1c9b9ed48724::t_e13a64c2e2595f 128-133,135,137-143
+apps/api/app/compute/llm_narrative.py
+  s_ca1c9b9ed48724::t_fd6bd24142beda 33-34,64-126,136,155-157,159
+  s_ca1c9b9ed48724::t_a056f01cef00c1 1-4
+  s_ca1c9b9ed48724::t_d2bed9caa47615 192-193,195
+apps/ml-worker/tests/test_video_highlight_timestamps.py
+  s_7d777d3954db6e::t_e6b711623618f2 1-10
+codebase-analysis-docs/NORTH_STAR.md
+  s_bfa1f6631becdc::t_03ccc04bbe28b4 4-5
+apps/web/lib/storage/disk.ts
+  s_bfa1f6631becdc::t_7b85396d462344 133
+apps/web/components/features/result/seven-dimensions/image/MemorisationFrequenceTable.tsx
+  s_ca1c9b9ed48724::t_7b8ddd2dbb19b0 92
+  s_ca1c9b9ed48724::t_17100e4e900e26 31,33
+  s_bfa1f6631becdc::t_783ec0bcce371f 87-89
+  s_ca1c9b9ed48724::t_dc44d027d2f7cc 12-14,16,18
+  s_ca1c9b9ed48724::t_caa71ea2a0abbc 55
+apps/web/lib/services/protocols-bel.ts
+  s_bfa1f6631becdc::t_d23b56de804436 39
+  s_bfa1f6631becdc::t_e8c676d14a93e1 1-6,8-21,30,34,46,48,58,109,119,126,128,137,145,148,163,182,189,205,288-289
+apps/web/components/features/protocols/shared/tabs/CommercialSummaryTab.tsx
+  s_bfa1f6631becdc::t_783ec0bcce371f 14,92-94
+  s_bfa1f6631becdc::t_55f4e93a342dd8 111
+  s_bfa1f6631becdc::t_8864ac307def65 176-177
+  s_bfa1f6631becdc::t_f51023d95b8aa3 43,45-46
+  s_bfa1f6631becdc::t_a9029d1dd53b3b 15-19
+  s_bfa1f6631becdc::t_a894d3c0ce5ab5 33
+  s_bfa1f6631becdc::t_13301fe137b740 41
+apps/web/components/features/protocols/bel/BelReportDashboard.tsx
+  s_bfa1f6631becdc::t_3c8cf04266cb4d 336
+apps/web/components/features/result/seven-dimensions/image/UniversalGrilleLegend.tsx
+  s_ca1c9b9ed48724::t_4470aa9dd177ea 22,24
+  s_ca1c9b9ed48724::t_9759a284346e0a 43
+  s_ca1c9b9ed48724::t_1b1e00eb6324b8 13-14
+apps/web/lib/http-session.ts
+  s_bfa1f6631becdc::t_2261bf38ac6acf 1-68
+apps/api/app/compute/score.py
+  s_ca1c9b9ed48724::t_d16d22cb2693d2 68-84,98,109
+  s_ca1c9b9ed48724::t_fd48aa5de3c0d2 14
+  s_ca1c9b9ed48724::t_851772a88620c3 45-53,55,57,59-60
+  s_ca1c9b9ed48724::t_38be28c2b4e157 6-8
+apps/web/lib/analyse/__tests__/detect-media-type.test.ts
+  s_7d777d3954db6e::t_35afc3f2d6bd42 1-43
+apps/web/lib/social/content-evolution.ts
+  s_328312367dfd4e::t_62e471cc3f38be 89
+  s_328312367dfd4e::t_aefc620a293244 172,176-177,179
+  s_bfa1f6631becdc::t_783ec0bcce371f 38
+apps/web/components/features/result/seven-dimensions/HabsInsightsScoringGuide.tsx
+  s_ca1c9b9ed48724::t_5f42dc6b7e158f 68,70
+  s_bfa1f6631becdc::t_783ec0bcce371f 73
+  s_ca1c9b9ed48724::t_e49164113a7fc1 102
+  s_ca1c9b9ed48724::t_85400860db008b 14-15
+apps/ml-worker/habs_worker/features/video_pipeline.py
+  s_7d777d3954db6e::t_acb14ebbdb34a0 396
+apps/web/components/features/cloud/CloudDriveBrowser.tsx
+  s_5195f04c373700::t_3f3520295ca2f6 207,214
+  s_5195f04c373700::t_4e2ccd32467a7d 18,24,27
+  s_5195f04c373700::t_ca43ce167536fa 238-239,242-243
+  s_5195f04c373700::t_d4323a44706122 160-176
+apps/web/lib/types.ts
+  s_7d777d3954db6e::t_6b6c519b557e8f 286-287
+  s_bfa1f6631becdc::t_7572020c14895e 248
+  s_7d777d3954db6e::t_75d6624cce21ab 1045-1052
+apps/api/README.md
+  s_7d777d3954db6e::t_a676facc773b73 104-107
+apps/web/components/features/protocols/bel/tabs/BelProductClusterComparison.tsx
+  s_bfa1f6631becdc::t_c2e44cce1ee0c7 5,10,12,14,19,22
+  s_bfa1f6631becdc::t_61b916bf9fc7cf 15-18
+apps/web/lib/queries/pilotes.ts
+  s_bfa1f6631becdc::t_da24fca1140d1b 4
+apps/api/app/main.py
+  s_5195f04c373700::t_bb6d8ef53c4b06 9,11
+  s_5195f04c373700::t_2f33793b01a392 69-84
+apps/web/app/api/pilote/[id]/route.ts
+  s_bfa1f6631becdc::t_703557c82b98de 1-7
+apps/web/components/features/result/seven-dimensions/image/ConfortPositionnementTable.tsx
+  s_ca1c9b9ed48724::t_6d47544e083254 13-14
+  s_bfa1f6631becdc::t_783ec0bcce371f 56
+  s_ca1c9b9ed48724::t_05ac96ae4b9fa9 97
+  s_ca1c9b9ed48724::t_afcdebd624cf63 39-40
+apps/web/components/features/protocols/danone/report-helpers.tsx
+  s_bfa1f6631becdc::t_fb68c7e0d6d47b 218
+apps/web/lib/ai/llm/openrouter.ts
+  s_ca1c9b9ed48724::t_6fdc0cb3afaa18 162
+  s_bfa1f6631becdc::t_d81d3a06e98f11 174-175
+  s_ca1c9b9ed48724::t_ea61aaa4a544ce 51-53,56-66
+  s_bfa1f6631becdc::t_783ec0bcce371f 67-69
+apps/web/components/features/evolution/ContentEvolutionPanel.tsx
+  s_328312367dfd4e::t_b78aeb5e5ba29a 40
+  s_328312367dfd4e::t_282abbcccb2452 25
+apps/api/app/api/analyses.py
+  s_7d777d3954db6e::t_4a7372c3313e75 186-193
+  s_5195f04c373700::t_b57807ac582ec0 108
+  s_7d777d3954db6e::t_99e5e450da2479 109-116
+  s_ca1c9b9ed48724::t_dd11fb27a12df4 202
+  s_bfa1f6631becdc::t_18753cd5f33dbd 326
+apps/web/app/home-client.tsx
+  s_328312367dfd4e::t_22cd01fd65c6d7 40
+apps/web/lib/ai/seven-dimensions/image-deriver.ts
+  s_ca1c9b9ed48724::t_6c03c04c7c5f11 15,24,42
+apps/web/components/features/protocols/shared/tabs/ProductClusterComparisonTab.tsx
+  s_bfa1f6631becdc::t_7f85bc1994ed46 22-23
+  s_bfa1f6631becdc::t_cb228b272f1dbb 20-21,25-26
+  s_bfa1f6631becdc::t_0dbceb7b14b2a9 345-346
+  s_bfa1f6631becdc::t_a36ca37d50e957 181-183
+  s_bfa1f6631becdc::t_783ec0bcce371f 84-87
+  s_bfa1f6631becdc::t_0c7197055ac898 24
+  s_bfa1f6631becdc::t_1cbfa465cbb561 167
+  s_bfa1f6631becdc::t_a6a7ce8ef9b544 71
+  s_bfa1f6631becdc::t_aadc54066a66b2 162-165
+  s_bfa1f6631becdc::t_211031872c988b 192
+  s_bfa1f6631becdc::t_0427b1c7ff1934 44
+apps/web/components/features/evolution/ContentEvolutionChart.tsx
+  s_bfa1f6631becdc::t_783ec0bcce371f 32-36
+  s_328312367dfd4e::t_5722cc353cbb8f 90,101,112,125
+  s_328312367dfd4e::t_38790660efb7c4 21,28-31,47
+apps/web/lib/queries/__tests__/analyses.test.tsx
+  s_bfa1f6631becdc::t_24044f77e994d0 26-27
+apps/web/components/features/result/seven-dimensions/image/AttentionComposantesBlock.tsx
+  s_ca1c9b9ed48724::t_e250d31ba8402d 11,13-14
+  s_ca1c9b9ed48724::t_ba7c849f8d7444 26-27,35
+  s_ca1c9b9ed48724::t_37dce2c64f5ce6 68
+apps/api/tests/llm/test_analysis_prompts.py
+  s_ca1c9b9ed48724::t_541a5d559e41d6 17,64-81
+  s_ca1c9b9ed48724::t_aed39bc418060b 1-16,18-63
+apps/web/components/features/protocols/bel/tabs/BelCommercialSummaryDashboard.tsx
+  s_bfa1f6631becdc::t_32f031b20c3214 5,10-12,14,19,22
+  s_bfa1f6631becdc::t_61b916bf9fc7cf 15-18
+apps/web/lib/habs/seven-dimensions-image.ts
+  s_ca1c9b9ed48724::t_eba611d9ad31f7 947
+  s_ca1c9b9ed48724::t_81fe0310794f37 1051,1057-1059,1063,1066-1067,1075-1077
+  s_ca1c9b9ed48724::t_1c2aaf242fc9fa 1078
+  s_ca1c9b9ed48724::t_fdcd704f8723c6 1005-1006,1012,1031,1037-1038
+  s_ca1c9b9ed48724::t_da20977b89bb54 746
+  s_ca1c9b9ed48724::t_f5ea794c6d49b2 827,833,835-837,840-842,845-847,857-859
+  s_ca1c9b9ed48724::t_6b83e4fdc33c1c 55
+  s_ca1c9b9ed48724::t_b875d7867fe3da 901-903,905
+  s_ca1c9b9ed48724::t_632edc58a6bf79 993
+  s_ca1c9b9ed48724::t_97a430bb54c8be 54
+  s_ca1c9b9ed48724::t_4f53530e6fd5fb 1090,1093,1131,1141-1142
+  s_ca1c9b9ed48724::t_99c82c9ec133f6 38,40
+  s_ca1c9b9ed48724::t_da4362981f83d0 865,875,881-900,906,908-910,912
+  s_ca1c9b9ed48724::t_ecfff3adc2b80d 1094-1097,1099-1104,1117-1121,1132
+  s_ca1c9b9ed48724::t_f09d7987a07e2a 298,318,327,336,345,359,368,385,397,406,415
+  s_ca1c9b9ed48724::t_a02bfe2171885d 815
+  s_bfa1f6631becdc::t_d8e5a11be72832 915,917-919
+  s_ca1c9b9ed48724::t_6a90a93505b027 1082-1089,1091-1092,1105-1116,1122-1130,1133-1140,1143,1145-1146
+  s_ca1c9b9ed48724::t_430f75aaf2a683 1144
+  s_ca1c9b9ed48724::t_aadb6c742fb318 734,741,759-760,768,788,794-796,800,803-804,812-814
+  s_bfa1f6631becdc::t_a9ebdfb166c1b7 697
+  s_ca1c9b9ed48724::t_7271a3a84087e7 705-707
+  s_ca1c9b9ed48724::t_d5a055d5c1bc35 708
+  s_ca1c9b9ed48724::t_ec898cda433439 15-18
+  s_ca1c9b9ed48724::t_8a2b59c9254002 41,43
+  s_bfa1f6631becdc::t_61b916bf9fc7cf 329-332,338-341,347-350,361-364,371-381,387-390,399-402,408-411,417-420,769-772,778-779,781-783,849,851-856,1013-1016,1022-1023,1025-1027,1032-1036,1039,1098
+  s_ca1c9b9ed48724::t_2c5efe5d230679 585,587
+apps/web/components/features/protocols/shared/tabs/CustomClusterBuilderTab.tsx
+  s_bfa1f6631becdc::t_5098039c6253a1 59
+  s_bfa1f6631becdc::t_d345d402f1746e 242
+  s_bfa1f6631becdc::t_6ffa41504ca441 32-34,36-37
+  s_bfa1f6631becdc::t_3a810296b260c7 88
+  s_bfa1f6631becdc::t_b59077745cd360 97
+  s_bfa1f6631becdc::t_321338421ed315 186,193-196
+  s_bfa1f6631becdc::t_99a23740bd301e 35
+  s_bfa1f6631becdc::t_10444988c718b7 260
+  s_bfa1f6631becdc::t_783ec0bcce371f 226
+  s_bfa1f6631becdc::t_3d97b683a8557e 98,100-101
+apps/web/lib/report/llm-prompt.ts
+  s_bfa1f6631becdc::t_783ec0bcce371f 130-133,194-198
+  s_ca1c9b9ed48724::t_6efc4043a8d41a 230,232,234,236,239,249
+  s_ca1c9b9ed48724::t_617381576b8aa3 2,4-5,9,11-12,70-129,134-191,199,201,206,211,213
+codebase-analysis-docs/rectification_plan.md
+  s_bfa1f6631becdc::t_13e7db037ddd00 1-493
+apps/web/src/domain/dimensions.ts
+  s_ca1c9b9ed48724::t_5e3bf229f218cd 2,4-6,9-11,30,36,38-39,41-52
+apps/web/components/features/protocols/shared/tabs/CommercialDrilldownTab.tsx
+  s_bfa1f6631becdc::t_3b48fa2ccffde6 21
+  s_bfa1f6631becdc::t_b82f9cfbef7c3f 22
+  s_bfa1f6631becdc::t_4b160080c6babe 55
+  s_bfa1f6631becdc::t_7cccb231886834 61
+  s_bfa1f6631becdc::t_c4932f4096535a 45
+apps/web/app/api/cloud/[provider]/import/route.ts
+  s_7d777d3954db6e::t_5c150b3501adbb 99-104,110
+  s_5195f04c373700::t_71db30811f94a2 85-88,96-97
+  s_bfa1f6631becdc::t_4ead7086a9eee9 15
+  s_bfa1f6631becdc::t_63e45a88fa467c 1-8
+  s_bfa1f6631becdc::t_99ac6abdece2df 16
+  s_bfa1f6631becdc::t_783ec0bcce371f 92-95
+  s_bfa1f6631becdc::t_1a201604b61ea7 90
+  s_3284e5eb76ab83::t_cdbdeb74b9911f 61-71
+apps/web/components/features/result/SyntheseSection.tsx
+  s_7d777d3954db6e::t_0f791995ffaa29 54,57-70
+  s_7d777d3954db6e::t_2468668a3b31e5 179-181
+  s_7d777d3954db6e::t_65c949efdbd9a6 16,20
+  s_ca1c9b9ed48724::t_9db543300ea413 18
+  s_bfa1f6631becdc::t_61b916bf9fc7cf 117-123,153-159
+  s_ca1c9b9ed48724::t_d53773012ae978 15
+  s_7d777d3954db6e::t_1cb287858de28d 78-79
+  s_7d777d3954db6e::t_4b7ba37329a19c 98,102,116,134,138,152
+  s_7d777d3954db6e::t_b8532b03f88a01 242
+  s_ca1c9b9ed48724::t_59e3b25feb5700 253
+  s_ca1c9b9ed48724::t_1abe2e065ac8b8 17
+  s_ca1c9b9ed48724::t_943a6c215c226f 104
+  s_ca1c9b9ed48724::t_90ac5572601a0e 140
+  s_ca1c9b9ed48724::t_d25a3c72830dc2 254,264
+  s_ca1c9b9ed48724::t_ad53ac0236ecd5 241
+  s_7d777d3954db6e::t_cd1aa1836eccfe 171,176
+  s_7d777d3954db6e::t_e4042cb2488909 246-249
+  s_7d777d3954db6e::t_f96a778e497cf0 32-33
+  s_ca1c9b9ed48724::t_8d0083ca42e7cb 178
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8128449c8cb5ad6e91251bf8b2b0883381dd3f77",
+  "prompts": {},
+  "sessions": {
+    "s_328312367dfd4e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "0b8e3476-7bdb-4832-8b2b-08d995d371c2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_3284e5eb76ab83": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a2ff96e9-4998-4c22-9daf-6dab00138f7a",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5195f04c373700": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "72426dd2-74ed-418d-9f74-2c96b0cb11aa",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7d777d3954db6e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "102cc0cb-f472-47bf-ad48-d0d9cbecbaf9",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9cad72b34b7960": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "99160ebf-a4af-4801-a3d2-777b0177f4a0",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_bfa1f6631becdc": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "38953d60-1247-4382-bd85-23fa1758e5c4",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_ca1c9b9ed48724": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb8c5a7-f420-4532-a0b5-0876ce937fa5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

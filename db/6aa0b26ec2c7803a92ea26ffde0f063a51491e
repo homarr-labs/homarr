@@ -1,0 +1,33 @@
+tools/homarr-dev/internal/tui/app.go
+  s_1c2c60ab8959b8::t_a10a66046efe17 31
+tools/homarr-dev/internal/tui/dev_test.go
+  s_1c2c60ab8959b8::t_d648d740253afe 80-86,88-95,99-116,188-202
+  s_1c2c60ab8959b8::t_1f477a60a5f978 87,96-98
+  s_1c2c60ab8959b8::t_c45b5816108bb1 203
+tools/homarr-dev/internal/tui/dev.go
+  s_1c2c60ab8959b8::t_1f477a60a5f978 327-337,1021-1023
+  s_1c2c60ab8959b8::t_3c7e21bf83a40d 633,836-849
+  s_1c2c60ab8959b8::t_315bb64588b4c8 38,50,62-65,273-275,310-326,338-341,482-492
+  s_1c2c60ab8959b8::t_8896cf5d1c6644 685
+  s_1c2c60ab8959b8::t_1a7e7687f40d61 1017-1020,1024,1054-1056
+  s_1c2c60ab8959b8::t_a10a66046efe17 759,916-919,1043,1117,1121-1123,1125
+  s_1c2c60ab8959b8::t_e7e19ca4e94e78 493
+tools/homarr-dev/internal/tui/app_test.go
+  s_1c2c60ab8959b8::t_d648d740253afe 38-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "db6aa0b26ec2c7803a92ea26ffde0f063a51491e",
+  "prompts": {},
+  "sessions": {
+    "s_1c2c60ab8959b8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_04800f60fffebifl2JH2wvlokh",
+        "model": "gpt-5.6-sol-fast"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

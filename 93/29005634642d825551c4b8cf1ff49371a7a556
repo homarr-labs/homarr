@@ -1,0 +1,19 @@
+packages/image-proxy/src/index.ts
+  s_ea57263591378e::t_db903d438843e0 13-14,50,74,80,83,118-125
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9329005634642d825551c4b8cf1ff49371a7a556",
+  "prompts": {},
+  "sessions": {
+    "s_ea57263591378e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "df8cd1c7-802e-4ab9-87f1-61ea57478337",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+apps/web/components/layout/HeaderBar.tsx
+  s_d7c79764846ef3::t_912bd7e7ac9077 22
+  s_d7c79764846ef3::t_e33de7f9dc5c43 54,68-76
+  s_d7c79764846ef3::t_72608601227a70 1-2,4,7,12-20,25-35,55,57,59,61-62,67,95-110,112-120,122-130,132-138,140-147,149-154,162-164
+  s_031521479674bc::t_65cfd322614413 58,60,63-66,111,121,131,139,148,158
+  s_d7c79764846ef3::t_51f13ae40cb8bc 155-157,159-161
+apps/web/app/providers.tsx
+  s_031521479674bc::t_65cfd322614413 16-19
+  s_d7c79764846ef3::t_83428e73a89362 74-75
+apps/web/stores/usePreferencesStore.ts
+  s_031521479674bc::t_65cfd322614413 45-52
+  s_d7c79764846ef3::t_805d4fe9b19423 97
+  s_d7c79764846ef3::t_456592cd944a5b 15-16,22-44
+  s_d7c79764846ef3::t_ab857ae5f849bb 2-14,17-21,53-96,98-161
+apps/web/stores/useConnectionsStore.ts
+  s_d7c79764846ef3::t_a131db741acf0b 1-53
+apps/web/stores/useConnectionsStore.client.tsx
+  s_d7c79764846ef3::t_03fc52e62c4b2c 19
+  s_d7c79764846ef3::t_65670cf43ac574 52-53
+  s_d7c79764846ef3::t_6cd003e450b798 18
+  s_d7c79764846ef3::t_178525fce6d145 1-17,20-50,54-64
+  s_031521479674bc::t_65cfd322614413 51
+apps/web/lib/i18n/dictionary.ts
+  s_d7c79764846ef3::t_dc0f1347c8865a 4028-4029
+  s_d7c79764846ef3::t_fe395a8c7774d5 401-402
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "60b26ba4e81b45fa6f65376ec3e85c531d70f945",
+  "prompts": {},
+  "sessions": {
+    "s_031521479674bc": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b5734287ffebyM1rl8pqPYnfy",
+        "model": "moonshotai/kimi-k2.6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_d7c79764846ef3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b578f5eeffe2Ko3w6G6Ab4q2G",
+        "model": "moonshotai/kimi-k2.6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

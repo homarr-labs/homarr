@@ -1,0 +1,60 @@
+packages/widgets/src/beszel-system-table/component.tsx
+  s_e69b825ec6dfea::t_5dbf9e37c0b2b3 420,427,442,444
+  s_e69b825ec6dfea::t_4e1564f5f5de58 89,105
+  s_e69b825ec6dfea::t_34fcf44e479892 5,8,24,47-61,90-104,106-122,128-130,139-157,202,222,234,246,266,278,295,311,323,334,346,358,373-375,380-403,405-406,408-419,429,431-441,443,446-453,475-478,481,489-496
+  s_e69b825ec6dfea::t_e4e0e15fbc23d1 165-170,376-379,404,421-426,428,430,445
+  s_e69b825ec6dfea::t_5a8cda669e1182 407
+  s_e69b825ec6dfea::t_7c28c30d4bf012 203,212,488
+packages/translation/src/lang/en.json
+  s_e69b825ec6dfea::t_df5c40c2c228f7 2431-2436,2440-2442,5375
+  s_e69b825ec6dfea::t_34fcf44e479892 3965-3970,3975-3977
+packages/widgets/src/beszel-system-table/component.spec.ts
+  s_e69b825ec6dfea::t_4e1564f5f5de58 1-28
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_e69b825ec6dfea::t_34fcf44e479892 20,24-29
+  s_5126ece19484bf::t_883901d7236e22 30
+packages/widgets/src/docker/component.tsx
+  s_e69b825ec6dfea::t_c732ada5518e02 234
+  s_e69b825ec6dfea::t_e667dd5c13be68 3-20,27-28,34-53,55-69,71-87,100,102,104-107,109-125,128-130,132,135-137,139-144,147-149,151-152,154,161-163,165-166,168-169,175-179,183-226,228-230,242-243,248-293,295-298,300,302-313,322-336,338-394,396-397,402-403,409,412-447,453-454,458,474,480,485-492,496-497,499-503,506-555,557-617
+  s_e69b825ec6dfea::t_0386a77bb7db00 398-401,450,481,498,556
+  s_e69b825ec6dfea::t_df5c40c2c228f7 101,108,131,138,150,164,238-241,244-247,315-321,493-495,504-505
+  s_e69b825ec6dfea::t_7418839f9d1de7 54,70
+apps/docs/docs/widgets/docker-containers/index.ts
+  s_e69b825ec6dfea::t_df5c40c2c228f7 12-13,15-16
+  s_e69b825ec6dfea::t_6891ecf3e8e1bd 14
+  s_e69b825ec6dfea::t_f988cb4fd1b4e8 11
+packages/widgets/src/docker/index.ts
+  s_e69b825ec6dfea::t_e667dd5c13be68 30-54,56-60
+apps/docs/docs/widgets/docker-containers/index.mdx
+  s_e69b825ec6dfea::t_df5c40c2c228f7 43-46,49
+packages/widgets/src/docker/styles.css
+  s_e69b825ec6dfea::t_e667dd5c13be68 1-45
+packages/widgets/src/docker/component.spec.ts
+  s_e69b825ec6dfea::t_7418839f9d1de7 1-31
+packages/widgets/src/beszel-system-table/index.ts
+  s_e69b825ec6dfea::t_34fcf44e479892 32-55,57-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e0f5ab9f6bd1a21ea84ab49994a7ada4c087cbb6",
+  "prompts": {},
+  "sessions": {
+    "s_5126ece19484bf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019faf09-9790-7e51-a9e2-60e0f621e2b9",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e69b825ec6dfea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb3a0-792a-7381-8801-1495fcc9663b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

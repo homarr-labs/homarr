@@ -1,0 +1,64 @@
+apps/nextjs/src/components/integration/integration-select-modal.tsx
+  4ce654cf70f9902c 1-56
+apps/nextjs/src/components/integration/integration-picker-page.tsx
+  4ce654cf70f9902c 1-25
+apps/nextjs/src/components/integration/integration-select-grid.tsx
+  4ce654cf70f9902c 1-79,81-117,123,128-131,157-171
+  927e59816d4cf9a8 80
+  d2938a1713d18ef7 118-122,124-127,132-155
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  927e59816d4cf9a8 100
+  4ce654cf70f9902c 1-19,21-99,101-201
+  h_32d929d7363456 20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "e3fb8572cd0b35fb5ba0d192fb53800e876967b3",
+  "prompts": {
+    "4ce654cf70f9902c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7cdaa66a-445e-4f22-9e7a-578bc0f0c13b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 743,
+      "overriden_lines": 0
+    },
+    "927e59816d4cf9a8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "9038f9c1-9ff2-4c72-ba9a-634999e41e6e",
+        "model": "composer-2"
+      },
+      "human_author": "Thomas Camlong",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    },
+    "d2938a1713d18ef7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a87f9f57-f5e2-4df8-9e3c-1d7e5d5c6197",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thomas Camlong",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 21,
+      "overriden_lines": 0
+    }
+  },
+  "humans": {
+    "h_32d929d7363456": {
+      "author": "Thomas Camlong"
+    }
+  }
+}

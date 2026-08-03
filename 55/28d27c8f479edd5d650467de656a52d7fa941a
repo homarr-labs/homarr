@@ -1,0 +1,26 @@
+apps/websocket/tsconfig.json
+  s_b76ab56b2a7361::t_91e3459c2b7f23 12
+apps/tasks/tsconfig.json
+  s_b76ab56b2a7361::t_46493e9d9e91fa 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "5528d27c8f479edd5d650467de656a52d7fa941a",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_b76ab56b2a7361": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05d8b873-8c52-4964-9e34-0bb4380b4e9f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

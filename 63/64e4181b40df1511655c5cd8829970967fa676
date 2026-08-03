@@ -1,0 +1,21 @@
+packages/definitions/src/widget-integration-map.ts
+  s_0d1d16cf775ae9::t_da02aeb0d6d9a3 99
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_0d1d16cf775ae9::t_eb3cf06752fdda 41-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "6364e4181b40df1511655c5cd8829970967fa676",
+  "prompts": {},
+  "sessions": {
+    "s_0d1d16cf775ae9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "285a70ae-9bc6-4d84-bd3c-1052b3460760",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

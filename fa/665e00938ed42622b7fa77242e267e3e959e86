@@ -1,0 +1,27 @@
+apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/terminal.tsx
+  s_afed71d5356da4::t_22c85cdfe0b7de 75-76
+apps/nextjs/src/app/[locale]/manage/tools/logs/terminal.tsx
+  s_afed71d5356da4::t_3c301851708410 61-62
+apps/nextjs/src/components/navigation/dynamic-breadcrumb.tsx
+  s_afed71d5356da4::t_6c4d79a1532694 61,63-66,69,74-75
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  s_afed71d5356da4::t_0a152395d6a186 234-310,323-325,327-329
+  s_afed71d5356da4::t_1f22d5ba24b1e0 5,8
+  s_afed71d5356da4::t_9e54c9fb9e85fc 200
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "fa665e00938ed42622b7fa77242e267e3e959e86",
+  "prompts": {},
+  "sessions": {
+    "s_afed71d5356da4": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d39885f2-3e12-48c7-8328-840b5e7b484e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+packages/widgets/src/firewall/component.tsx
+  s_b162e7e1ec0b9f::t_41749699bcc867 167
+  s_b162e7e1ec0b9f::t_4ad8cffb6b61b1 156
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_b162e7e1ec0b9f::t_b7f81bdf2f2b70 53,73
+  s_b162e7e1ec0b9f::t_c1fad1d96272db 5
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  s_b162e7e1ec0b9f::t_85e482ead2d71e 86
+packages/widgets/src/media-requests/stats/component.tsx
+  s_b162e7e1ec0b9f::t_7119ad2158cd3a 106
+apps/nextjs/src/app/[locale]/_client-providers/mantine.tsx
+  s_b162e7e1ec0b9f::t_61428b78f9740e 26
+packages/forms-collection/src/new-app/_form.tsx
+  s_b162e7e1ec0b9f::t_fdc2b039cfe0d4 117
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-card.tsx
+  s_b162e7e1ec0b9f::t_e62268fe6662f9 82
+packages/ui/src/theme.ts
+  s_b162e7e1ec0b9f::t_bad90ee1c7593d 12
+packages/form/src/index.ts
+  s_b162e7e1ec0b9f::t_c49e0fdaeb331a 1,36
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_b162e7e1ec0b9f::t_e3f103b4cb61be 229
+apps/nextjs/src/app/[locale]/boards/(content)/_theme.tsx
+  s_b162e7e1ec0b9f::t_e76edba26f0475 27
+apps/nextjs/src/components/board/sections/category-section.tsx
+  s_b162e7e1ec0b9f::t_ca71514f40dc64 47
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_b162e7e1ec0b9f::t_3c16ff607961aa 145
+apps/nextjs/src/app/[locale]/auth/login/_login-form.tsx
+  s_b162e7e1ec0b9f::t_f8f1e804b30afc 201
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "cb5b73ddbd04520be1bc58a5ee1a081f782c7dd6",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_b162e7e1ec0b9f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "5f0ad3b5-db2a-41b6-a858-543dbeeb0d90",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

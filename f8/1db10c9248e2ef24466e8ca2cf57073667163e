@@ -1,0 +1,28 @@
+packages/db/seed/custom-widgets/pokedex.json
+  s_a779988d600484::t_12d833d605a2c8 1-2,5,7-11,13-14
+  s_a779988d600484::t_c487b2007061ed 3-4,6
+  s_a779988d600484::t_8382e790066dd7 12
+packages/db/migrations/seed.ts
+  s_a779988d600484::t_bfb4521d692fce 58,60
+  s_a779988d600484::t_dd8fee44391e7e 67
+  s_a779988d600484::t_5a92ee3bbd3753 56
+  s_a779988d600484::t_06ebed99af05ff 52-55,57,59,61
+Dockerfile
+  s_a779988d600484::t_62e19b711cf23c 49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "f81db10c9248e2ef24466e8ca2cf57073667163e",
+  "prompts": {},
+  "sessions": {
+    "s_a779988d600484": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "29175f63-17b3-4e72-b510-05e08dd6845e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

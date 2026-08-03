@@ -1,0 +1,25 @@
+packages/redis/src/lib/channel.ts
+  s_c94b6216942c75::t_5b7dd88f56877e 29,72-73,80,86,93,109,117,123,143,159,165,197,239-241,244,253-254,257-260,263,274-275,278,288-289,293,297,300-302,308-309,312,314,316-318,327,341-342,345,348,369,373,420
+packages/redis/src/lib/channel-subscription-tracker.ts
+  s_c94b6216942c75::t_5b7dd88f56877e 45,68,78
+Dockerfile
+  s_c94b6216942c75::t_5b7dd88f56877e 18-19
+packages/redis/src/lib/connection.ts
+  s_c94b6216942c75::t_5b7dd88f56877e 8-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "d2ce64252cbd794189d94a1cd9732c656be56597",
+  "prompts": {},
+  "sessions": {
+    "s_c94b6216942c75": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1a1f02a87ffeoNAUSl8l8ne1fs",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

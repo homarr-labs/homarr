@@ -1,0 +1,35 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview.tsx
+  s_909110c6d23990::t_7797cb945057cb 49,99
+packages/api/src/router/custom-widget/custom-widget-router.ts
+  s_909110c6d23990::t_0801dbeaef62bb 10,117,171,201-218,228,270,368,403-409,474-480,559,597,621-627,758,827,835,838
+packages/definitions/src/custom-jsx.ts
+  s_909110c6d23990::t_779837925c2cb2 294-298
+packages/validation/src/custom-widget.ts
+  s_909110c6d23990::t_f6a9200bd5d22a 444
+packages/widgets/src/_inputs/widget-custom-widget-select-input.tsx
+  s_909110c6d23990::t_46c130f649fd7b 21,23
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  s_909110c6d23990::t_60c149ea275e06 23,176
+packages/widgets/src/custom-api/jsx-sub-fetch.tsx
+  s_909110c6d23990::t_237ca80c69b619 188
+packages/widgets/src/custom-api/jsx-whitelist.ts
+  s_909110c6d23990::t_a5529b1d2b2e59 242-248,254-260,316-322,330-335,756
+packages/widgets/src/custom-api/safe-jsx-interpreter.tsx
+  s_909110c6d23990::t_ceb58afa0474e8 841
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "c5703e7e5372c5f3430d9950a854fc037671f032",
+  "prompts": {},
+  "sessions": {
+    "s_909110c6d23990": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f535c-afd7-7fb0-9155-c9a02e203597",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

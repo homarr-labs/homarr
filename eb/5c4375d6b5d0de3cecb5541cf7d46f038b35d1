@@ -1,0 +1,24 @@
+packages/widgets/src/_inputs/widget-dynamic-select-input.tsx
+  s_6f9a7a2b478481::t_078343da31ef89 59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "eb5c4375d6b5d0de3cecb5541cf7d46f038b35d1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_6f9a7a2b478481": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "74ca5e3c-cb06-4832-8a05-bc15c3755de6",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+packages/spotlight/src/modes/command/children/preferences/search-engine.tsx
+  s_71a4264bdea2c6::t_b4003ce0c73d00 11-19,24-31
+  s_71a4264bdea2c6::t_b24fdcf642196a 21
+  s_71a4264bdea2c6::t_c731a6b77d75fe 2
+  s_71a4264bdea2c6::t_8c5a4596323153 6
+packages/spotlight/src/modes/command/children/preferences/selectable-actions.tsx
+  s_71a4264bdea2c6::t_b63805d3a3373e 27-29,31-32,43
+  s_71a4264bdea2c6::t_9009f6ba3c4d87 13-26,40,49-50
+  s_71a4264bdea2c6::t_dd4227663ab1a2 30
+packages/spotlight/src/modes/command/children/language.tsx
+  s_71a4264bdea2c6::t_164242487de34e 38
+  s_71a4264bdea2c6::t_5481dcbefac6a1 13
+  s_71a4264bdea2c6::t_76c87fd3066567 4
+packages/spotlight/src/modes/command/children/preferences/action-row.tsx
+  s_71a4264bdea2c6::t_846017654b59b3 30-65
+  s_71a4264bdea2c6::t_ef289787334c2a 2
+packages/spotlight/src/modes/command/children/preferences/settings-children.tsx
+  s_71a4264bdea2c6::t_602b84dff3b079 1-3,7-19,21,24-25,54,56,61,71-75,88-89,101-103,105-109,139-148,150-154
+  s_71a4264bdea2c6::t_7062362e47c20f 133,136
+  s_71a4264bdea2c6::t_e358fa3050521f 104
+  s_71a4264bdea2c6::t_98e05814517224 4-6,20,22-23,26-53,55,57-60,62-70,76-87,90-100,110-132,134-135,137-138,149
+packages/spotlight/src/components/spotlight.tsx
+  s_71a4264bdea2c6::t_769e0fc21dac38 155,163
+  s_71a4264bdea2c6::t_fa7ea080c3a883 63-65
+packages/spotlight/src/modes/command/children/preferences/registry.ts
+  s_71a4264bdea2c6::t_eb921c24959b82 38
+  s_71a4264bdea2c6::t_017390d0506a2f 15
+  s_71a4264bdea2c6::t_ba7e7caeb7c87b 2
+  s_71a4264bdea2c6::t_42b848aa1c3a5b 25-26,42
+packages/translation/src/lang/en.json
+  s_71a4264bdea2c6::t_9030d663c3351e 4568-4573
+packages/spotlight/src/preferences/use-user-preference.ts
+  s_71a4264bdea2c6::t_21c2c2deb1eab5 1-207
+packages/spotlight/src/modes/command/children/preferences/board.tsx
+  s_71a4264bdea2c6::t_2774468e51d43a 33
+  s_71a4264bdea2c6::t_0fca8af179d0cf 1
+  s_71a4264bdea2c6::t_e4578f786b7f71 8
+  s_71a4264bdea2c6::t_c0e78c1c05dd3b 23-31,36-43
+packages/spotlight/src/modes/command/children/preferences/index.tsx
+  s_71a4264bdea2c6::t_a4bf351e3303e7 1
+packages/spotlight/src/modes/command/children/preferences/color-scheme.tsx
+  s_71a4264bdea2c6::t_a06e259c3bc97f 21
+  s_71a4264bdea2c6::t_b79f36c4338d9f 3
+  s_71a4264bdea2c6::t_e72175f4cec49b 12
+packages/spotlight/src/modes/command/children/preferences/first-day-of-week.tsx
+  s_71a4264bdea2c6::t_63dc8b46271689 26
+  s_71a4264bdea2c6::t_f3ec78fa2e9357 5
+  s_71a4264bdea2c6::t_585ee08fc252ab 17
+packages/spotlight/src/modes/preferences/groups.tsx
+  s_71a4264bdea2c6::t_7c033a1a3ffcea 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "19d86daa871790baa452e84a7bf2d986eae8eb22",
+  "prompts": {},
+  "sessions": {
+    "s_71a4264bdea2c6": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "5c54321e-b58b-4372-b44d-15d8cd509b4a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

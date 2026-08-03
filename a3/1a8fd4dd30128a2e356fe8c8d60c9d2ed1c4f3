@@ -1,0 +1,29 @@
+packages/widgets/src/test/translation.spec.ts
+  s_955a5b644d1c62::t_0c6f4ff39e2552 9-12
+  s_955a5b644d1c62::t_10ffdf5df38e1a 20-26,28,40-45,47
+  s_955a5b644d1c62::t_02dd307d3a5fa3 13,17-19,29,37-39,48
+.github/workflows/ci.yml
+  s_955a5b644d1c62::t_02dd307d3a5fa3 315-326
+apps/workshop/Dockerfile
+  s_955a5b644d1c62::t_fc5ffe64535de9 14
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_955a5b644d1c62::t_10ffdf5df38e1a 108-110
+packages/custom-widgets/src/core/component-props.generated.json
+  s_955a5b644d1c62::t_aa075027bbbbfa 6865-6866,8166,12179,12335,12491-12492,15742,15907-15909,16074,16603,21492,21648-21649,21805,30270,34653,34817,39774
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a31a8fd4dd30128a2e356fe8c8d60c9d2ed1c4f3",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+apps/web/components/features/analyse/InstagramPostPicker.tsx
+  s_882373fed589ec::t_418611b19cfe47 1-10,23-39,48-49,51-70,74-84,86-247,261-269
+  s_882373fed589ec::t_7d47baacdfb16e 249,255
+  s_882373fed589ec::t_9501ec6b7f57d0 248,250-254,256-260
+  s_882373fed589ec::t_633f9ee9d45c8d 11-20,22
+  s_882373fed589ec::t_b66a15582a1f81 40-47
+  s_882373fed589ec::t_53581c9070a0e0 50
+  s_882373fed589ec::t_8d8d03d20c3210 71-73
+  s_882373fed589ec::t_0a2c6a23f62eaf 85
+apps/web/components/layout/nav-items.ts
+  s_882373fed589ec::t_0e4e0b5128398c 31-34
+  s_882373fed589ec::t_10a230b0cff01a 2
+  s_882373fed589ec::t_a97c65614cdbe8 63
+apps/web/components/features/analyse/funnel/AnalyseKindIngestion.tsx
+  s_882373fed589ec::t_b9e928e06509ae 19
+  s_882373fed589ec::t_7210f313d49da0 4-5
+  s_882373fed589ec::t_3270f8427a2d0c 72-75,77
+  s_882373fed589ec::t_d55b75437229c8 82-85,88-91,99
+  s_882373fed589ec::t_caa3ddc63a448f 102-106,110,112,114
+  s_882373fed589ec::t_8363bdb4e35d49 248-251
+  s_882373fed589ec::t_ce5a5e6d7c3ba6 16
+  s_882373fed589ec::t_c3eae06fec2059 9-10
+  s_882373fed589ec::t_5d6fe5cb72b17f 30
+  s_882373fed589ec::t_c85fc328958cb9 65,80-81,86-87,92-98,100-101,107-109,111,113,115-116
+  s_882373fed589ec::t_8243bace1c2569 56
+  s_882373fed589ec::t_d7b84ce4f63044 3,18,31,33
+  s_882373fed589ec::t_326d248947aec8 144-145
+  s_882373fed589ec::t_9d1d3068ffcbb3 39,43-47,49,53
+apps/web/lib/hooks/useAnalyseIngestion.ts
+  s_882373fed589ec::t_2f722f4237c95f 61
+  s_882373fed589ec::t_5c8e8e5cad20c9 66
+  s_882373fed589ec::t_04ee667430b960 3,6-8
+  s_882373fed589ec::t_b7d5622c9f9801 110
+  s_882373fed589ec::t_8fd207a3c639c4 142
+apps/web/lib/analyse/analyse-kind-config.ts
+  s_882373fed589ec::t_08def0fcc1db81 16,18-23
+  s_882373fed589ec::t_db936940f91d77 49,61
+apps/web/components/features/result/ProjectLinkBanner.tsx
+  s_882373fed589ec::t_eb2164273c836a 7
+  s_882373fed589ec::t_cc309f64162e83 1-6,8-13,15-50,52-69
+  s_882373fed589ec::t_5cd110bd046092 14
+  s_882373fed589ec::t_2d00fa16ee08a9 51
+apps/web/components/features/analyse/funnel/AnalyseKindPicker.tsx
+  s_882373fed589ec::t_12d666833138cf 10
+  s_882373fed589ec::t_b6d36d4f7e130c 47-48
+  s_882373fed589ec::t_d6c10923f8e6eb 31-32
+  s_882373fed589ec::t_51506442235437 3,6
+apps/web/components/features/result/HeroBlock.tsx
+  s_882373fed589ec::t_5d60e0f9292fce 2,5,13,23
+  s_7d777d3954db6e::t_6b072b42192bb1 32
+  s_7d777d3954db6e::t_4749e0d5df01a6 100
+  s_882373fed589ec::t_d4ea857ee63111 6
+  s_882373fed589ec::t_ea6e02f3b44c9d 97
+apps/web/lib/analyse/frame-highlights.ts
+  s_7d777d3954db6e::t_59580856d5a560 1-34
+apps/web/app/api/social/[platform]/import/route.ts
+  s_882373fed589ec::t_4781f09288a4c6 1-75,79-99,101-105
+  s_882373fed589ec::t_9488dd4b1db0c4 76-77
+apps/web/components/features/analyse/PiloteProjectPicker.tsx
+  s_882373fed589ec::t_dc9f201ba11e23 1-48,50-65,68-70
+apps/web/lib/analyse/analysis-display-kind.ts
+  s_7d777d3954db6e::t_b5c08811a21bb6 1-28
+apps/web/lib/analyse/__tests__/frame-highlights.test.ts
+  s_7d777d3954db6e::t_2969062b824330 1-5,7-11
+apps/web/lib/analyse/__tests__/analysis-display-kind.test.ts
+  s_882373fed589ec::t_9d503380ae1ad5 2,9-11,14,16,20
+  s_7d777d3954db6e::t_d2a255ff2a0ca5 1,3-8,12-13,15,17-19,21-28
+apps/web/components/features/analyse/HeaderAnalyseSearch.tsx
+  s_882373fed589ec::t_9302e305540425 17
+apps/web/components/features/pilote/PiloteSettingsForm.tsx
+  s_882373fed589ec::t_47ad393f71fdb7 117-133
+  s_882373fed589ec::t_fc234a6cc3c126 50
+  s_882373fed589ec::t_2b1a5c1dd757c4 72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "03d68860025ce98e166d21e7c656dff8875fd0a1",
+  "prompts": {},
+  "sessions": {
+    "s_7d777d3954db6e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "102cc0cb-f472-47bf-ad48-d0d9cbecbaf9",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_882373fed589ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8f290bfc-109d-47d4-a041-c9ef08c1b867",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

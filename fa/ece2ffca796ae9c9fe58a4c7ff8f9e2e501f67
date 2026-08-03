@@ -1,0 +1,27 @@
+apps/nextjs/src/app/api/mcp/[transport]/route.ts
+  s_84cb939c27de54::t_ba77525d2a89bc 176
+  s_84cb939c27de54::t_da2a7574faee31 147
+  s_84cb939c27de54::t_79b4a40af76233 10
+  s_84cb939c27de54::t_2e4fbf3476499e 159
+apps/nextjs/src/app/[locale]/manage/tools/api/page.tsx
+  s_84cb939c27de54::t_a8162dae5a3c83 5
+  s_84cb939c27de54::t_cbc5ce7c72cbeb 100
+packages/api/src/mcp.ts
+  s_84cb939c27de54::t_e3d55f7d83af9f 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "faece2ffca796ae9c9fe58a4c7ff8f9e2e501f67",
+  "prompts": {},
+  "sessions": {
+    "s_84cb939c27de54": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f513ffc-4b9c-447d-a6c5-af68259536b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

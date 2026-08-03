@@ -1,0 +1,28 @@
+packages/widgets/src/_inputs/index.ts
+  s_b0ac32075bb65c::t_c36b800381ce90 39
+  s_b0ac32075bb65c::t_9ca69ba7554215 19
+packages/widgets/src/beszel-system-stats/index.ts
+  s_b0ac32075bb65c::t_4c08023d60f8f2 21
+packages/translation/src/lang/en.json
+  s_b0ac32075bb65c::t_e710a9c0be049a 3667-3672
+packages/widgets/src/_inputs/widget-beszel-system-input.tsx
+  s_b0ac32075bb65c::t_5fd75905f12a86 1-46
+packages/widgets/src/options.ts
+  s_b0ac32075bb65c::t_faf33987b6c6cc 178-182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "ed333e1cbbc3dd1a010af8152153df11c83bf68c",
+  "prompts": {},
+  "sessions": {
+    "s_b0ac32075bb65c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "9ae9748d-024f-4cab-b681-b306b8f498ed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

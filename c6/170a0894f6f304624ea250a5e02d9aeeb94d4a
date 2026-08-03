@@ -1,0 +1,32 @@
+apps/docs/tsconfig.json
+  s_984a6d41b3a442::t_bf70af37738d1e 20-21
+apps/docs/src/components/store/StoreApp.tsx
+  s_984a6d41b3a442::t_09f0ad224f3737 182
+apps/docs/src/components/store/DetailPage.tsx
+  s_984a6d41b3a442::t_44619a42510f6e 256
+  s_984a6d41b3a442::t_75d01fbbf441ff 307
+apps/docs/src/components/store/SubmitForm.tsx
+  s_984a6d41b3a442::t_73556c01965a8d 472
+  s_984a6d41b3a442::t_d094b2690bf655 351
+  s_984a6d41b3a442::t_b5001a84f560bb 409,411
+  s_984a6d41b3a442::t_615c829ff22f63 187,191
+  s_984a6d41b3a442::t_30aa648ea7b1ba 427,429
+  s_984a6d41b3a442::t_968f4c846a0951 439,441
+  s_984a6d41b3a442::t_61685b4540c097 477
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "c6170a0894f6f304624ea250a5e02d9aeeb94d4a",
+  "prompts": {},
+  "sessions": {
+    "s_984a6d41b3a442": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "08d3b3ed-29c6-438d-af31-77f8d659e29e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

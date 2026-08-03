@@ -1,0 +1,19 @@
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_955a5b644d1c62::t_9db1d46195c9af 475,477,479,481-485,487,490,496,499
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "511369feb8d67ef563a2ffc73f09c356fcd2a4a8",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

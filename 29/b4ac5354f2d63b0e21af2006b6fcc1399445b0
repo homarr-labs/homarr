@@ -1,0 +1,26 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "29b4ac5354f2d63b0e21af2006b6fcc1399445b0",
+  "prompts": {
+    "ebfcd15b75261a62": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b521ec5c-7458-4402-bb2b-08c73a844306",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 19,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    }
+  },
+  "humans": {
+    "h_32d929d7363456": {
+      "author": "Thomas Camlong"
+    }
+  }
+}

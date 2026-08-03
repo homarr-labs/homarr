@@ -1,0 +1,19 @@
+pnpm-workspace.yaml
+  s_1d07710942012d::t_80dd5b026f9c41 194
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "ea49384e71df66b6f1be68e74bc03cd77499ee73",
+  "prompts": {},
+  "sessions": {
+    "s_1d07710942012d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0f738d7ceffe1DCbG1BDL2TS2l",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

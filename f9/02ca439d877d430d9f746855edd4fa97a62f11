@@ -1,0 +1,125 @@
+apps/nextjs/src/app/[locale]/init/_steps/start/init-start.tsx
+  s_aeafc49ade5052::t_fb2f4c508dc431 13
+apps/nextjs/src/components/layout/navigation-link.tsx
+  s_aeafc49ade5052::t_4b89b1a65e8da0 31
+apps/nextjs/src/app/[locale]/manage/settings/_components/analytics.settings.tsx
+  s_aeafc49ade5052::t_6bfb3dbf1ccb0c 44
+  s_aeafc49ade5052::t_1016398a24e3fb 45
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-gauge/resource-gauge.tsx
+  s_aeafc49ade5052::t_efd36f00463e63 22
+  s_aeafc49ade5052::t_2a1e5f95f06ae1 21
+apps/nextjs/src/app/[locale]/manage/settings/_components/crawling-and-indexing.settings.tsx
+  s_aeafc49ade5052::t_2d5acae5a50088 44
+  s_aeafc49ade5052::t_b48953a8a4c9f4 48
+apps/nextjs/src/app/[locale]/init/_steps/import/init-import.tsx
+  s_aeafc49ade5052::t_d5c31a9d71c228 23
+apps/nextjs/src/app/[locale]/manage/tools/certificates/page.tsx
+  s_aeafc49ade5052::t_dbe7b3e0fb660e 82
+apps/nextjs/src/components/manage/danger-zone.tsx
+  s_aeafc49ade5052::t_5105640f182cf5 18
+apps/nextjs/src/app/[locale]/init/_steps/import/file-info-card.tsx
+  s_aeafc49ade5052::t_9ef1df400b4840 16
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_aeafc49ade5052::t_684c69faca1d0c 110-118
+  s_aeafc49ade5052::t_2ad2adb9fd419b 108
+apps/nextjs/src/app/[locale]/manage/not-found.tsx
+  s_aeafc49ade5052::t_dc32afbd44f2ba 10
+apps/nextjs/src/app/[locale]/manage/page.tsx
+  s_aeafc49ade5052::t_de8aaba60a89c3 35,39,42
+  s_aeafc49ade5052::t_942cea91a7fb31 45
+  s_aeafc49ade5052::t_af3fa4ad10c577 32
+apps/nextjs/src/app/[locale]/manage/boards/page.tsx
+  s_aeafc49ade5052::t_ebd04e69110153 76
+  s_aeafc49ade5052::t_0ac3b50a1cb5d2 124
+  s_aeafc49ade5052::t_6d8c8557c42feb 69
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/test-connection-certificate.tsx
+  s_aeafc49ade5052::t_a995ae9918deac 219
+apps/nextjs/src/components/board/sections/category/category-menu.tsx
+  s_aeafc49ade5052::t_7d50173b2f9268 33
+  s_aeafc49ade5052::t_3f45ea08d4674a 35
+apps/nextjs/src/app/[locale]/manage/users/create/_components/create-user-stepper.tsx
+  s_aeafc49ade5052::t_16b4a6eac01826 207
+  s_aeafc49ade5052::t_67c14193de7a45 152,168,188,201,214
+apps/nextjs/src/app/[locale]/manage/users/groups/_groups-table.tsx
+  s_aeafc49ade5052::t_0c3ae1e7c93154 262
+apps/nextjs/src/app/[locale]/widgets/[kind]/_content.tsx
+  s_aeafc49ade5052::t_eae4c168d7f427 102
+  s_aeafc49ade5052::t_51a5f38c6eb6ad 137-143
+  s_aeafc49ade5052::t_7c1c10b55ccceb 126-132
+  s_aeafc49ade5052::t_16e66df63390cd 148-154
+apps/nextjs/src/app/[locale]/init/_steps/user/init-user.tsx
+  s_aeafc49ade5052::t_8620aa45dffcd6 7
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  s_aeafc49ade5052::t_f3321b4dc9095e 205
+apps/nextjs/src/components/board/sections/dynamic/dynamic-menu.tsx
+  s_aeafc49ade5052::t_64df9691e49432 46
+  s_aeafc49ade5052::t_9a5c1e9a2e18a8 48-56
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_aeafc49ade5052::t_362bcb71766c2b 47,51,53
+apps/nextjs/src/app/[locale]/init/_steps/finish/init-finish.tsx
+  s_aeafc49ade5052::t_f97db4e86d5e1e 18
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_aeafc49ade5052::t_f7016e2a371970 112,186
+apps/nextjs/src/components/user-avatar-menu.tsx
+  s_aeafc49ade5052::t_0e68769f23af64 55
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/integration-test-connection-error.tsx
+  s_aeafc49ade5052::t_d06dca4e5db140 21
+apps/nextjs/src/app/[locale]/manage/integrations/page.module.css
+  s_aeafc49ade5052::t_df821fdd9909a8 11
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_profile-avatar-form.tsx
+  s_aeafc49ade5052::t_cbd0c489fe5657 98
+apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+  s_aeafc49ade5052::t_70aa96a1fd4869 81
+apps/nextjs/src/app/[locale]/auth/invite/[id]/page.tsx
+  s_aeafc49ade5052::t_1871eab6559a0b 62
+apps/nextjs/src/app/[locale]/init/_steps/group/init-group.tsx
+  s_aeafc49ade5052::t_312d976de59d07 37
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  s_aeafc49ade5052::t_8bc113fcf4fa7a 40
+apps/nextjs/src/app/[locale]/_client-providers/mantine.tsx
+  s_aeafc49ade5052::t_2c217feecd5cb9 5
+  s_aeafc49ade5052::t_e9cd54106ecb5e 21
+apps/nextjs/src/components/no-results.tsx
+  s_aeafc49ade5052::t_0f534e22a1181e 17
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-card.module.css
+  s_aeafc49ade5052::t_7d1ae1472eaca7 7-11,16-17
+apps/nextjs/src/app/[locale]/manage/about/page.tsx
+  s_aeafc49ade5052::t_e0aed3a9c3faa6 197
+  s_aeafc49ade5052::t_dca40a4b6422a7 199
+  s_aeafc49ade5052::t_f0948ba3b95486 93
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_aeafc49ade5052::t_23c420f6eb5836 107
+  s_aeafc49ade5052::t_9546aa7e316128 132
+apps/nextjs/src/app/[locale]/manage/users/create/_components/stepper-navigation.tsx
+  s_aeafc49ade5052::t_c462bd05222c58 28
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/_group-permission-form.tsx
+  s_aeafc49ade5052::t_fedb762f244e87 104
+apps/nextjs/src/app/[locale]/manage/apps/page.tsx
+  s_aeafc49ade5052::t_efcfe5291b6cd3 82
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-card.tsx
+  s_aeafc49ade5052::t_13d77b3eb8fe89 61-66
+  s_aeafc49ade5052::t_602626d9f4cbb6 36
+apps/nextjs/src/app/[locale]/init/_steps/settings/init-settings.tsx
+  s_aeafc49ade5052::t_4337cfeeedf6e4 33,42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "f902ca439d877d430d9f746855edd4fa97a62f11",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_aeafc49ade5052": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a85d005f-1ea5-47e0-8bd5-c264d2f9b82e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

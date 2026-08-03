@@ -1,0 +1,69 @@
+.env.example
+  s_6852af5a167b0b::t_3126e49e2e9964 65-66
+.github/act/README.md
+  s_6852af5a167b0b::t_b9e5151cd0db5b 9,14,26,32,42-49
+Dockerfile
+  s_6852af5a167b0b::t_7570760abf3f23 58-65,90-92,98-103
+apps/nextjs/next.config.ts
+  s_6852af5a167b0b::t_566a3bc3158565 22-25,40-43,62
+apps/nextjs/package.json
+  s_6852af5a167b0b::t_140c6ef6139b76 7
+apps/nextjs/scripts/build.mts
+  s_6852af5a167b0b::t_34caef27c20933 1-19
+apps/nextjs/src/app/[locale]/_client-providers/persisted-query-content.tsx
+  s_6852af5a167b0b::t_d3c0c98ef28924 8,25
+apps/nextjs/src/app/api/health/runtime-memory/route.ts
+  s_6852af5a167b0b::t_3937cc5c87dd6c 1,3-6,8-9
+package.json
+  s_6852af5a167b0b::t_f3b9af88a7a462 9,18
+packages/api/src/query-cache.ts
+  s_6852af5a167b0b::t_aa9adebcb671d3 9-10
+packages/api/src/router/certificates/certificate-router.ts
+  s_6852af5a167b0b::t_f25fb1db825685 10,47,80,105,128
+packages/api/src/router/query-cache.ts
+  s_6852af5a167b0b::t_5e50fcc396b168 7,32
+packages/api/src/test/query-cache.spec.ts
+  s_6852af5a167b0b::t_22bec6fd3739a0 1-2,15,99
+packages/core/src/infrastructure/http/index.ts
+  s_6852af5a167b0b::t_ad1d86c326ea40 8
+packages/core/src/infrastructure/http/request.ts
+  s_6852af5a167b0b::t_6d48b551b656b4 17-19,42-72,75-97,100-108
+packages/integrations/src/synology/synology-client.ts
+  s_6852af5a167b0b::t_84fec08441bdbc 32-33,52,339-345,378-382
+packages/integrations/src/synology/test/synology-integration.spec.ts
+  s_6852af5a167b0b::t_ec5bb9c401ffa3 512-536
+packages/integrations/src/truenas/test/truenas-integration.spec.ts
+  s_6852af5a167b0b::t_19b3122635f7ad 1-2,233-246
+packages/integrations/src/truenas/truenas-client.ts
+  s_6852af5a167b0b::t_0e28f8b86001ff 21-23,39-40,72-89,92,97-99,102,122,133-134,136,144,157,162-169
+packages/ping/src/index.ts
+  s_6852af5a167b0b::t_e26789a8114076 10-14,21-24
+packages/request-handler/src/lib/integration-request-handler.ts
+  s_6852af5a167b0b::t_ce637f2073ffa4 16,27-30,32,38-39
+scripts/ci/act.sh
+  s_6852af5a167b0b::t_725cdb50beefc3 10,14,69-81,87,111
+scripts/ci/runtime-memory-benchmark.mts
+  s_6852af5a167b0b::t_f5ae56eef59dde 1-316
+scripts/ci/runtime-memory-lib.mts
+  s_6852af5a167b0b::t_862ddd72a78484 1-147
+scripts/ci/runtime-memory-lib.spec.ts
+  s_6852af5a167b0b::t_140cbf60dadf31 1-70
+turbo.json
+  s_6852af5a167b0b::t_91fd78b805fa0c 56-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "74d2d7fbb7bbe90daf5e8f85422fa957136b9eb2",
+  "prompts": {},
+  "sessions": {
+    "s_6852af5a167b0b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8a85-e8ee-7e40-9d0e-25fc837d497c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

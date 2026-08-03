@@ -1,0 +1,56 @@
+packages/spotlight/src/modes/command/children/preferences/registry.ts
+  s_b909df6a4ab431::t_fe025019764703 18
+  s_b909df6a4ab431::t_26e0cfe0ecdf35 25-31
+packages/spotlight/src/modes/command/children/language.tsx
+  s_b909df6a4ab431::t_fe025019764703 22
+packages/settings/src/preferences/definitions.ts
+  s_b909df6a4ab431::t_c0b988c7c17b91 2-11
+packages/spotlight/src/modes/command/children/preferences/settings-children.tsx
+  s_b909df6a4ab431::t_c718319469a6c3 19,73,75-83,85-86,126
+  s_b909df6a4ab431::t_26e0cfe0ecdf35 28-38,54-56,91-94,109-110,125,131-140,144-152,156-164,175-177
+packages/spotlight/package.json
+  s_b909df6a4ab431::t_ea210bf2179de8 32
+packages/spotlight/src/components/spotlight.tsx
+  s_b909df6a4ab431::t_2f82add52ec9ef 7,123-127,140-144,146
+  s_b909df6a4ab431::t_26e0cfe0ecdf35 61-68
+packages/api/src/router/user.ts
+  s_b909df6a4ab431::t_1b0bea71223d0d 545,606
+packages/spotlight/src/modes/preferences/groups.tsx
+  s_b909df6a4ab431::t_9e579662234cb3 80-83
+  s_b909df6a4ab431::t_9ac840a2e67164 6,13-14
+  s_b909df6a4ab431::t_4eb5bcd11a5399 47,70
+  s_b909df6a4ab431::t_7b7542dddab32c 4,35-37,43,46
+  s_b909df6a4ab431::t_9261191fdc826f 5,34
+  s_b909df6a4ab431::t_4e5f52634d4d15 7,32-33,38,40,42,44,59,65,79
+  s_b909df6a4ab431::t_16bcf8d3772de0 15-16,23-24,55
+  s_b909df6a4ab431::t_26e0cfe0ecdf35 62-64
+  s_b909df6a4ab431::t_03321c79c7be00 10,17-22,25-29,39,41,45,48-54,56,58,60-61,66,68-69,71,74-75
+  s_b909df6a4ab431::t_38f484fd12845a 57
+packages/translation/src/lang/en.json
+  s_b909df6a4ab431::t_fb86c05f072523 4556,4558-4562
+  s_b909df6a4ab431::t_0064d64c91029e 4557
+packages/spotlight/src/preferences/use-user-preference.ts
+  s_b909df6a4ab431::t_fe025019764703 3,135-160,175
+  s_b909df6a4ab431::t_69ba953dee760a 11,15,28-29,34-48,57,83,93-99,101-113,123,128,162,168-169,173-174,177,180,183,185-188,193-196,198,200-203,210-213,215,217-220,227-230,232,234-240,242,244-247,251-254,256,258-261,265-268,270,272-278,283,297,302,305-316,333-339,342-346
+  s_b909df6a4ab431::t_83b41342f03751 50,52,55-56,189-192,204,208-209,221,225-226,248-250,262-264
+  s_b909df6a4ab431::t_4db605dcf30d7a 163-165
+  s_b909df6a4ab431::t_26e0cfe0ecdf35 118-121,170-172,205-207,222-224,287-290
+  s_b909df6a4ab431::t_117e0b76075061 286,291-294,299-300,322-328
+  s_b909df6a4ab431::t_fc54b953b3e12c 298
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "e182d28605c87066f6e50b11aa21777a04543e3e",
+  "prompts": {},
+  "sessions": {
+    "s_b909df6a4ab431": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e73f5-daf2-76e3-8a2c-8417863e8ecb",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

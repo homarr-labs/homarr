@@ -1,0 +1,26 @@
+packages/request-handler/src/test/media-release.spec.ts
+  s_0d6d027c10adc7::t_794a2936dfb799 1-45
+packages/request-handler/src/media-release.ts
+  s_0d6d027c10adc7::t_bcc81c712afabe 16-17
+packages/api/src/settle-integrations.ts
+  s_0d6d027c10adc7::t_7ca20946fc053f 22-30,39-45,47-52
+packages/api/src/test/settle-integrations.spec.ts
+  s_0d6d027c10adc7::t_7ca20946fc053f 1-4,17-50
+  s_0d6d027c10adc7::t_11a9b8f19077b6 5-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "6e53c4dc987435c81c61853ea249829c7b61d111",
+  "prompts": {},
+  "sessions": {
+    "s_0d6d027c10adc7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019faa48-a744-74d0-915e-7bb475b16614",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

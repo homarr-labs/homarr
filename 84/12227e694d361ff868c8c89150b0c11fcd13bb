@@ -1,0 +1,19 @@
+packages/spotlight/src/modes/external/search-engines-search-group.tsx
+  s_61c7b6e1cafadf::t_68c24fb507f556 381,387
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "8412227e694d361ff868c8c89150b0c11fcd13bb",
+  "prompts": {},
+  "sessions": {
+    "s_61c7b6e1cafadf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed2ef1ca-8df6-4b45-acdd-1af69e8322dc",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  s_afed71d5356da4::t_e96898750872a0 87-91
+  s_afed71d5356da4::t_7aa022716d076c 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "83366e86aa0856e2847ac4f2e4cd002a2b2f3039",
+  "prompts": {},
+  "sessions": {
+    "s_afed71d5356da4": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d39885f2-3e12-48c7-8328-840b5e7b484e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

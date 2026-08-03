@@ -1,0 +1,607 @@
+packages/custom-widgets/src/workbench/preview-header.tsx
+  s_909110c6d23990::t_1f7dd977ff2bf1 64-70,111
+  s_909110c6d23990::t_fea305fd265bc6 1-63,71-110,112-154
+packages/custom-widgets/src/test/import.spec.ts
+  s_909110c6d23990::t_75b3a20a2b4571 37-38
+  s_909110c6d23990::t_02d27784eb0f8d 34
+  s_909110c6d23990::t_1f903699f710ab 3
+  s_909110c6d23990::t_762cbdd6c4dd78 4,28-33,35-36
+packages/custom-widgets/src/core/definition-schemas.ts
+  s_909110c6d23990::t_4a7f449aa21e16 1-2,13-184
+  s_909110c6d23990::t_5713db8992da89 3-12
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_display-fields-metric.tsx
+  s_909110c6d23990::t_9de0ab5c06bab1 83
+  s_909110c6d23990::t_212b8a85c3427b 10-57,59-69,71-82,84-139,141-151,153-165
+  s_909110c6d23990::t_30b708a1399864 1-9,166-167
+  s_909110c6d23990::t_22d94bd9158def 58,70,140,152
+packages/custom-widgets/src/workbench/analyzer.ts
+  s_909110c6d23990::t_b40afc26642b01 1-22,27-36,49-58,66-79,83-93,97
+  s_909110c6d23990::t_476ae0996ec00c 23-26,37-48,59-65,80-82,94-96
+packages/custom-widgets/src/test/request-limits.spec.ts
+  s_909110c6d23990::t_476ae0996ec00c 37-39
+  s_909110c6d23990::t_11a6bcc2cdc762 1-36,40-42
+packages/custom-widgets/src/core/component-props.ts
+  s_909110c6d23990::t_d8f43a0e7e9e10 3-230
+  s_909110c6d23990::t_422f560736cf69 2
+  s_909110c6d23990::t_acbcbef92d429c 1
+packages/db/schema/sqlite.ts
+  s_909110c6d23990::t_e8903b6f23ae9b 35
+packages/widgets/package.json
+  s_909110c6d23990::t_0b617a91508635 39
+packages/custom-widgets/src/jsx/runtime-components.tsx
+  s_909110c6d23990::t_f1fcd40a01155e 26-27,42-46,56-63,65-74,96-110,116-124,127-131,134-146
+  s_909110c6d23990::t_6e15f1f5c8f865 8-11
+  s_909110c6d23990::t_1d9f7d62938596 1-7,12-19,23-25,28-41,47-55,64,75-95,111-115,125-126,132-133,147-149
+  s_909110c6d23990::t_982a9ec8d67764 20-22
+apps/docs/src/generated/custom-jsx-components.json
+  s_909110c6d23990::t_c3586419156421 49,77,84,126,140,196,210,217,343,350,357,364,371,378,385,392,399,406,420,448,455,483,560,567,574,658,693,707,728,749,770,777,784,791,798,805,812,819,826,840,847,854,861,868,875,903,910,924,938,945,952,959,966,973,980,987,994,1001,1008,1015,1022,1029,1036,1115-1121,1128,1144,1168,1176,1200,1224,1232,1256,1264,1280,1288,1304,1312,1320,1328,1336,1344,1352,1360,1368,1392,1408,1416,1424,1432,1456,1464,1472,1480,1488,1496,1504,1512,1520,1528,1536,1544,1552,1560,1568,1576,1584,1592,1600,1608,1616,1624,1632,1640,1648,1656,1664,1672,1680,1688,1696,1704,1712,1720,1728,1736,1744,1752,1760,1768,1776,1784,1792,1800,1808,1816,1824,1832,1840,1848,1856,1864,1872,1880,1888,1896,1904,1912,1920,1928,1936,1944,1952,1960,1968,1976,1984,1992,2000,2008,2016,2024,2032,2040,2048,2056,2064,2072,2080,2088,2096,2104,2112,2120,2128,2136,2144,2152,2160,2168,2176,2184,2192,2200,2208,2216,2224,2232,2240,2248,2256,2264,2272,2280,2288,2296,2304,2312,2320,2328,2336,2344,2352,2360,2368,2376,2384,2392,2400,2408,2416,2424,2432,2440,2448,2456,2464,2472,2480,2488,2496
+packages/api/src/router/custom-widget/preview-query-procedures.ts
+  s_909110c6d23990::t_0b520cbcb2a3e5 4-5,7,98
+  s_909110c6d23990::t_294ef5d29ae8d7 1-3,6,8-97
+packages/widgets/src/custom-api/jsx-whitelist.ts
+  s_909110c6d23990::t_4635ce22d817f3 1,3,5,7-8,12
+  s_909110c6d23990::t_f52b95f06e155d 9-10
+packages/custom-widgets/src/test/display-form.spec.ts
+  s_909110c6d23990::t_ad07de8870bb25 3
+  s_909110c6d23990::t_818ae20e8ac865 46
+  s_909110c6d23990::t_6d237bbf0ac3d9 1-2,4-45,47-65
+packages/custom-widgets/src/test/workbench.spec.ts
+  s_909110c6d23990::t_476ae0996ec00c 43-45
+  s_909110c6d23990::t_3710db52aac5b4 1-5,8-15,23-42,46-57,66-67
+  s_909110c6d23990::t_757dccfa2ce89c 6-7,58-65
+  s_909110c6d23990::t_3a81862e68147f 16-22
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_909110c6d23990::t_dd03fe596d39a0 15-23,25
+  s_909110c6d23990::t_a28a892b93c686 24
+packages/custom-widgets/src/test/server-policy.spec.ts
+  s_909110c6d23990::t_9886186b88c40b 51
+  s_909110c6d23990::t_44adea020450a5 1,8,31-50,52
+  s_909110c6d23990::t_a046aa3185dec5 2-7,9-15,23-30,53-64,73-79,84-86
+  s_909110c6d23990::t_476ae0996ec00c 16-22,65-72,80-83
+packages/api/src/router/custom-widget/domain-error.ts
+  s_909110c6d23990::t_df4e5f3d6c788a 6-7,11
+  s_909110c6d23990::t_ca5ad36b5806e0 1-2,4-5,8-9,14-16
+  s_909110c6d23990::t_f3efe01fb4dcbc 3,10,12-13
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_909110c6d23990::t_dd03fe596d39a0 1-36
+packages/api/src/router/custom-widget/request-manifest.ts
+  s_909110c6d23990::t_e8903b6f23ae9b 1
+  s_909110c6d23990::t_ca5ad36b5806e0 2-19,21,23-27,29,31-37
+packages/custom-widgets/src/workbench/preview-error-boundary.tsx
+  s_909110c6d23990::t_cf343cc3046b94 15-17,23-34,36-40
+  s_909110c6d23990::t_1f7dd977ff2bf1 35
+  s_909110c6d23990::t_f8c632470608c1 1-14,18-22,41-42
+packages/custom-widgets/src/jsx/index.ts
+  s_909110c6d23990::t_19a505e768450f 1
+  s_909110c6d23990::t_2e6cd2df2c7e21 7
+  s_909110c6d23990::t_3352bc1819c9a3 8
+  s_909110c6d23990::t_de715102f0f5ae 3
+  s_909110c6d23990::t_1d9f7d62938596 5-6
+  s_909110c6d23990::t_3937242c0e76f8 2,4
+packages/custom-widgets/src/workbench/ports.ts
+  s_909110c6d23990::t_963cf587210c18 1-25
+  s_909110c6d23990::t_df79663db532e7 26-32
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_display-fields-basic.tsx
+  s_909110c6d23990::t_9de0ab5c06bab1 50
+  s_909110c6d23990::t_30b708a1399864 1-9,177-178
+  s_909110c6d23990::t_212b8a85c3427b 10-49,51-93,95-105,107-152,154-164,166-176
+  s_909110c6d23990::t_22d94bd9158def 94,106,153,165
+packages/custom-widgets/src/test/schema.spec.ts
+  s_909110c6d23990::t_47d850e24671a5 3-5
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-sections.tsx
+  s_909110c6d23990::t_1f7dd977ff2bf1 123,233
+  s_909110c6d23990::t_bf28d8c3b4f829 1-17,22-58,61-105,110-114,131-134,153,161-169,175,179-190,194-198,202-203,207-217,228-230,238
+  s_909110c6d23990::t_61a8ad4fbece72 18-21,59-60,106-109,115-122,124-130,135-152,154-160,176-178,191-193,199-201,204-206,218-227,231-232,234-237
+  s_909110c6d23990::t_3dfa6ff48d04a2 170-174
+packages/custom-widgets/src/server/errors.ts
+  s_909110c6d23990::t_f3efe01fb4dcbc 1-8,12,23
+  s_909110c6d23990::t_5b9bf25c75c91f 9-11,13,20-22,24-25
+  s_909110c6d23990::t_476ae0996ec00c 14-19
+packages/custom-widgets/src/core/component-registry.ts
+  s_909110c6d23990::t_2188753de6cce2 1-13,15,18
+  s_909110c6d23990::t_53a713be15a589 14,16-17,19
+packages/custom-widgets/src/core/component-registry-enabled.ts
+  s_909110c6d23990::t_d8f43a0e7e9e10 1-189
+  s_909110c6d23990::t_2188753de6cce2 190-192
+packages/custom-widgets/src/core/ai-prompt.ts
+  s_909110c6d23990::t_31bf1bf741948e 1-2,119
+  s_909110c6d23990::t_35c57d8f3e90e9 3-118,120-168
+packages/custom-widgets/src/core/display-form.ts
+  s_909110c6d23990::t_5b2d2e6b4ff8bc 189-198,212-221,226-229
+  s_909110c6d23990::t_ac78b449ee4601 4,6,114,187-188,199-211,222-225,230-245,247-249,252
+  s_909110c6d23990::t_9ea8b402de39fb 1-3
+  s_909110c6d23990::t_a8366810c69412 113,115,117-186,250-251,253-258
+  s_909110c6d23990::t_5f5301c5ff3d60 110-112
+  s_909110c6d23990::t_ad07de8870bb25 116
+packages/custom-widgets/src/runtime/context.tsx
+  s_909110c6d23990::t_150d33c803c0a6 1-25
+packages/custom-widgets/src/core/schema-types.ts
+  s_909110c6d23990::t_5713db8992da89 1-4,15-22
+  s_909110c6d23990::t_e0ac08b48a120c 5-14
+packages/custom-widgets/src/workbench/response-tree.tsx
+  s_909110c6d23990::t_476ae0996ec00c 8-12,19-22,28-35,39-46,53-58,60-62,64-76,78,80-87,100-110
+  s_909110c6d23990::t_4a81ad0b958e9a 1-7,13-18,23-27,36-38,47-52,59,77,88-99,111-123
+  s_909110c6d23990::t_1f7dd977ff2bf1 63,79
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_display-fields-status.tsx
+  s_909110c6d23990::t_30b708a1399864 1-9,197-198
+  s_909110c6d23990::t_9de0ab5c06bab1 84
+  s_909110c6d23990::t_212b8a85c3427b 10-58,60-70,72-83,85-125,127-137,139-196
+  s_909110c6d23990::t_22d94bd9158def 59,71,126,138
+packages/custom-widgets/src/test/runtime.spec.tsx
+  s_909110c6d23990::t_dd21ea2be56b5f 1-2,7-11,18-19,36-39,51-54,56-60,62-71,78-82,90-94,96,98,102,104-106,111-113,116-117,124-127,130-140,143,147-148,152-155
+  s_909110c6d23990::t_dac4bc3f8ca8ec 41-50
+  s_909110c6d23990::t_328322b7ff728a 40,118-123
+  s_909110c6d23990::t_476ae0996ec00c 12-17,20-33,73-77,83-89,99-100,107-110,144-146,149-151
+  s_909110c6d23990::t_cf343cc3046b94 3-6
+AUDIT.md
+  s_909110c6d23990::t_60ecaf25d298d9 1-2,5,23-37,44-48,57-497,499-535
+  s_909110c6d23990::t_1405d59bc2bd1b 498
+  s_909110c6d23990::t_c5f827c103a754 38-43,49-56
+  s_909110c6d23990::t_fcfd7edc933eb5 3-4
+  s_909110c6d23990::t_0241ff3a11bf28 6-22
+packages/api/src/router/custom-widget/parse-display-config.ts
+  s_909110c6d23990::t_ea24542a63f1ea 5-6,10,12
+  s_909110c6d23990::t_cac4118652b676 2
+packages/custom-widgets/src/core/display-config-schema.ts
+  s_909110c6d23990::t_5713db8992da89 3-13
+  s_909110c6d23990::t_4a7f449aa21e16 1-2,14-57
+vitest.config.mts
+  s_909110c6d23990::t_b47e10ac3c7093 25
+  s_909110c6d23990::t_bdae605f6c3146 19-24,26-33,44-46
+  s_909110c6d23990::t_e9cc78a1cf9a9d 34-43
+apps/docs/docs/management/custom-widgets/migration.mdx
+  s_909110c6d23990::t_dd03fe596d39a0 1-19
+vitest.setup.node.ts
+  s_909110c6d23990::t_b47e10ac3c7093 1-6
+packages/custom-widgets/src/runtime/custom-jsx-renderer.tsx
+  s_909110c6d23990::t_35a9d73fe26123 10-14,43-60,69-77,81-85,88-95,100-104,107-114,120-193
+  s_909110c6d23990::t_6a6ef3db648425 1-9,15-42,61-68,78-80,86-87,96-99,105-106,115-119,194
+packages/widgets/src/custom-api/jsx-icon-adapter.tsx
+  s_909110c6d23990::t_4635ce22d817f3 230,241
+  s_909110c6d23990::t_2e6cd2df2c7e21 242
+  s_909110c6d23990::t_c8bb1fe89ef6ce 1-102,104-111,113-214,216-223,226-228,231-240
+apps/docs/docs/management/custom-widgets/agent-authoring.mdx
+  s_909110c6d23990::t_dd03fe596d39a0 1-26
+packages/custom-widgets/src/test/jsx-policy.spec.ts
+  s_909110c6d23990::t_92e27d971af0a9 28
+  s_909110c6d23990::t_fad68deb63688c 1-10,15,20-27,29-31
+  s_909110c6d23990::t_2c9b99a0737a8f 11-14,16-19
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
+  s_909110c6d23990::t_b431e116161577 8,25
+  s_909110c6d23990::t_1f7dd977ff2bf1 37,57
+packages/api/package.json
+  s_909110c6d23990::t_0b617a91508635 30
+packages/api/src/router/custom-widget/request-limits.ts
+  s_909110c6d23990::t_8e30c01b48400c 4-5,7,9-10,15,18,21,23,27-28,30-32,35-37,39-42,44-50,55-57,59-61,66-69,72,74
+  s_909110c6d23990::t_476ae0996ec00c 51-54,63-65
+apps/docs/docs/management/custom-widgets/troubleshooting.mdx
+  s_909110c6d23990::t_dd03fe596d39a0 1-33
+packages/custom-widgets/scripts/check-architecture.mjs
+  s_909110c6d23990::t_0d2a07c09fcd56 36
+  s_909110c6d23990::t_f14b3548320a8b 43-45
+  s_909110c6d23990::t_a95fa7b588e846 42,46-50,80-91
+  s_909110c6d23990::t_e0820b5c944c78 1-3,12-18,20-24,26-28,31-34,37-38,40-41,51-53,61-69,71-79,92-98
+  s_909110c6d23990::t_2b034bb9c7d209 54-60
+  s_909110c6d23990::t_2176dd04ccb849 4-11,25,29-30,35,39,70
+  s_909110c6d23990::t_a90f66447a56d6 19
+packages/custom-widgets/src/jsx/jsx-emitter.tsx
+  s_909110c6d23990::t_11674fd5e914d8 1-93
+packages/custom-widgets/src/workbench/preview-utils.ts
+  s_909110c6d23990::t_faa0e9c78cf4d7 1-37
+packages/custom-widgets/src/runtime/display-types.ts
+  s_909110c6d23990::t_aed211e16fc7bb 1-10
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_909110c6d23990::t_605cfda8714897 23
+  s_909110c6d23990::t_ce4503f109b263 16-17,19-20,31,54,58
+  s_909110c6d23990::t_623f4237e750b2 219,261,273,277-288
+  s_909110c6d23990::t_5d7022e2337d1f 59-66
+  s_909110c6d23990::t_bd2647b1ab42f3 123
+  s_909110c6d23990::t_148bfdd23f7759 5,11-12,24-26
+  s_909110c6d23990::t_61a8ad4fbece72 203-218
+apps/nextjs/src/app/[locale]/manage/custom-widgets/edit/[id]/page.tsx
+  s_909110c6d23990::t_c6d21ed3f5d336 6,46
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  s_909110c6d23990::t_982a9ec8d67764 17-21,23-30,32-33,42,44-45
+  s_909110c6d23990::t_35a9d73fe26123 35-39
+  s_909110c6d23990::t_6a6ef3db648425 3,6,11,15,40
+  s_909110c6d23990::t_f52b95f06e155d 8,22
+  s_909110c6d23990::t_13bd2efdad040e 16
+packages/custom-widgets/src/server/preview-sessions.ts
+  s_909110c6d23990::t_c4341ca77f1769 1-15,22,27-30,40-80,87,92-127,129-148,154
+  s_909110c6d23990::t_476ae0996ec00c 16-21,23-26,31-39,81-86,88-91,128,149-153
+packages/custom-widgets/src/server/request-manifest.ts
+  s_909110c6d23990::t_5b9bf25c75c91f 5
+  s_909110c6d23990::t_476ae0996ec00c 22-25,42-45,66-69
+  s_909110c6d23990::t_10fb44b0355fc8 1-4,6-21,26-41,46-65,70-79
+packages/custom-widgets/src/workbench/component-reference.tsx
+  s_909110c6d23990::t_fc4e54c4764148 1-10,12-17,24,68
+  s_909110c6d23990::t_467399734797ad 11
+  s_909110c6d23990::t_1f7dd977ff2bf1 18-23,25-67
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_display-field-types.ts
+  s_909110c6d23990::t_ef1e818bcffd1f 5-7,9-10
+  s_909110c6d23990::t_9de0ab5c06bab1 1-4,8,11-12
+packages/custom-widgets/src/runtime/types.ts
+  s_909110c6d23990::t_150d33c803c0a6 1-79
+packages/custom-widgets/src/runtime/status.tsx
+  s_909110c6d23990::t_6e9a9ff802c74f 1-15
+packages/custom-widgets/src/core/component-registry-denied.ts
+  s_909110c6d23990::t_2188753de6cce2 1-2,4
+packages/custom-widgets/src/server/response.ts
+  s_909110c6d23990::t_502b6a1ec14e9f 1-10,15,18-32,37-40,45-63
+  s_909110c6d23990::t_476ae0996ec00c 11-14,16-17,33-36,41-44,64-65
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  s_909110c6d23990::t_294ef5d29ae8d7 1-3,5,8-14,17-18,21-22,24-158
+  s_909110c6d23990::t_0b520cbcb2a3e5 4,6-7,19-20,23,159
+  s_909110c6d23990::t_68e4a0d5e6a014 15-16
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-errors.ts
+  s_909110c6d23990::t_ef1e818bcffd1f 1-42
+packages/custom-widgets/src/core/custom-jsx-schema.ts
+  s_909110c6d23990::t_d0ee88f268dc5d 191
+  s_909110c6d23990::t_4a7f449aa21e16 3
+  s_909110c6d23990::t_5713db8992da89 4
+packages/api/src/router/custom-widget/management-queries.ts
+  s_909110c6d23990::t_13e050e7edc783 17-23,25-27,29-37,42-48,52-53,58-68
+  s_909110c6d23990::t_edacbfb8d42436 1-16,24,28,38-41,49-51,54-57,69-84
+packages/custom-widgets/src/runtime/display-registry.ts
+  s_909110c6d23990::t_aed211e16fc7bb 1-4,8-20
+  s_909110c6d23990::t_d040a8c244ee9b 5-7
+packages/custom-widgets/vitest.config.ts
+  s_909110c6d23990::t_dd21ea2be56b5f 7
+  s_909110c6d23990::t_6452c0e9ff3ebc 1-6,8-9
+packages/api/src/router/custom-widget/preview-procedure-helpers.ts
+  s_909110c6d23990::t_0b520cbcb2a3e5 1-23
+packages/custom-widgets/src/core/display-data.ts
+  s_909110c6d23990::t_a61fc28d0c9465 3-4,6-8,12,15,17-23,25-49,55-105,118,120-122
+  s_909110c6d23990::t_96d6ebec8d77d8 106-113
+  s_909110c6d23990::t_59b56cff54a999 50-54
+packages/widgets/src/custom-api/custom-jsx-display.spec.ts
+  s_909110c6d23990::t_d74c86a4fc7a0b 16-18
+  s_909110c6d23990::t_0d0f5222320d71 12
+  s_909110c6d23990::t_2d0443ceae64eb 455
+  s_909110c6d23990::t_3937242c0e76f8 13
+  s_909110c6d23990::t_4c549277a80aa1 382-384
+packages/api/src/router/custom-widget/metadata-procedures.ts
+  s_909110c6d23990::t_98e61affa1dad4 1-21,29-31,39-44,50-54
+  s_909110c6d23990::t_13e050e7edc783 22-28,32-38,45-49
+apps/docs/docs/management/custom-widgets/extension-recipes.mdx
+  s_909110c6d23990::t_a28a892b93c686 1-66
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  s_909110c6d23990::t_1f903699f710ab 10
+  s_909110c6d23990::t_7c34ceda31cccb 4
+  s_909110c6d23990::t_a07bab02fe342c 6,11,205-211,225-226
+  s_909110c6d23990::t_a0155021474b05 212-224
+packages/custom-widgets/src/runtime/actions.tsx
+  s_909110c6d23990::t_6e9a9ff802c74f 3-7,9-11,22,26,30-31,42,45,47,55-56,79-84,86-87,89-94,97-98,113-116,118,131,153-155,157-159,163-166,170,178,196
+  s_909110c6d23990::t_476ae0996ec00c 32-39,48-49,95-96,99-103,106-109,121-125,127-129,161,173-177,179-182,187-190,193,199-201,203,205-210
+  s_909110c6d23990::t_cd2f842367d9db 12,40
+apps/docs/docs/management/custom-widgets/requests-and-security.mdx
+  s_909110c6d23990::t_dd03fe596d39a0 1-32
+apps/nextjs/package.json
+  s_909110c6d23990::t_0b617a91508635 34
+packages/custom-widgets/tsconfig.json
+  s_909110c6d23990::t_19a505e768450f 1-3,5-9
+  s_909110c6d23990::t_bbb1d782e98fa0 4
+packages/db/schema/postgresql.ts
+  s_909110c6d23990::t_e8903b6f23ae9b 46
+packages/custom-widgets/src/core/index.ts
+  s_909110c6d23990::t_1f903699f710ab 6
+  s_909110c6d23990::t_5f5301c5ff3d60 4
+  s_909110c6d23990::t_19a505e768450f 2,5,7
+  s_909110c6d23990::t_a61fc28d0c9465 3
+  s_909110c6d23990::t_31bf1bf741948e 1
+packages/custom-widgets/src/core/schema.ts
+  s_909110c6d23990::t_5713db8992da89 1-5
+packages/custom-widgets/src/server/network-policy.ts
+  s_909110c6d23990::t_476ae0996ec00c 11-29,34-45,47-53,70-72,83-86,89-93,96-104,111-119,127-131,138-143,161-167
+  s_909110c6d23990::t_502b6a1ec14e9f 1-10,30-33,46,54-69,73-82,87-88,94-95,105-110,120-126,132-137,144-160,168
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview.tsx
+  s_909110c6d23990::t_c98a7c02c26317 206-219
+  s_909110c6d23990::t_13bd2efdad040e 256
+  s_909110c6d23990::t_68e4a0d5e6a014 14
+  s_909110c6d23990::t_56449eb104ad27 3,200-205,220-222
+  s_909110c6d23990::t_faa0e9c78cf4d7 17-18,24,229
+  s_909110c6d23990::t_552efbb9b671df 15-16,19-20,22-23,25,226-228,230-248,252,254-255,257-271
+  s_909110c6d23990::t_4e6c6f24cd518b 4,21,29,148-178,189-196
+  s_909110c6d23990::t_9bc8eb51df2c66 7-11,13,33-34,37,39
+  s_909110c6d23990::t_852abfa1e1c854 12,38
+  s_909110c6d23990::t_de42cc574dfec2 31
+  s_909110c6d23990::t_2f2445c188e9ff 98,106,119,121,125-126,131-132,136,253
+apps/docs/docs/management/custom-widgets/custom-jsx.mdx
+  s_909110c6d23990::t_476ae0996ec00c 15-22,36-41
+  s_909110c6d23990::t_dd03fe596d39a0 1-14,23-35,42-49
+packages/custom-widgets/src/test/generated-docs.spec.ts
+  s_909110c6d23990::t_12ab6a08bee8a4 1-23
+packages/custom-widgets/src/core/import.ts
+  s_909110c6d23990::t_75b3a20a2b4571 1-84
+packages/custom-widgets/src/server/index.ts
+  s_909110c6d23990::t_5b9bf25c75c91f 1-16,27-28
+  s_909110c6d23990::t_c4341ca77f1769 19-26
+  s_909110c6d23990::t_f3efe01fb4dcbc 17-18
+packages/custom-widgets/src/test/display-data.spec.ts
+  s_909110c6d23990::t_6c5da320a17eb6 1-19,26-49,57-83,89-135
+  s_909110c6d23990::t_96d6ebec8d77d8 20-25,50-56,84-88
+packages/api/src/router/custom-widget/preview-action-procedures.ts
+  s_909110c6d23990::t_0b520cbcb2a3e5 4-5,7
+  s_909110c6d23990::t_294ef5d29ae8d7 1,3,6,8,10-118
+  s_909110c6d23990::t_a92dca00a9bdfa 9
+  s_909110c6d23990::t_bd3c29d50f7e92 119
+  s_909110c6d23990::t_59617eb6ca3649 2
+packages/custom-widgets/src/runtime/metric-displays.tsx
+  s_909110c6d23990::t_e5d0fa1b8e3d12 9-13,18-19,26-31,41-49,60-69,82-101,109-123
+  s_909110c6d23990::t_aed211e16fc7bb 1-8,14-17,20-25,32-40,50-59,70-81,102-108,124
+packages/api/src/router/custom-widget/transfer-procedures.ts
+  s_909110c6d23990::t_14bd97e9990dda 19-25,28-30,34-48,53-59,64-75
+  s_909110c6d23990::t_cf4d758096221e 1-18,26-27,31-33,49-52,60-63,76-80
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_code-editor.tsx
+  s_909110c6d23990::t_fc4e54c4764148 15
+  s_909110c6d23990::t_a6c34f9fec519f 13
+  s_909110c6d23990::t_6b0d9815499799 16
+  s_909110c6d23990::t_44dc30974891e1 11,90-93,95-102,196
+  s_909110c6d23990::t_3e35eac0f53834 12,19,258-268
+  s_909110c6d23990::t_908e543a8b9165 14,160-169
+  s_909110c6d23990::t_1f7dd977ff2bf1 141,151,172,182
+packages/db/package.json
+  s_909110c6d23990::t_0b617a91508635 49
+packages/api/src/router/custom-widget/template-procedures.ts
+  s_909110c6d23990::t_2519d0c5583178 8-10,12
+  s_909110c6d23990::t_3a900b0b81a07b 1-7,11,13-225
+  s_909110c6d23990::t_f9401c4d888f21 226
+packages/translation/src/lang/en.json
+  s_909110c6d23990::t_2916d9e12bb347 702-706
+  s_909110c6d23990::t_1afa70f856b45d 4069-4070
+  s_969e77f6bcbd27::t_c0aab1f54b1dff 707
+packages/custom-widgets/src/core/built-in-display-schemas.ts
+  s_909110c6d23990::t_4a7f449aa21e16 1-235
+packages/custom-widgets/src/test/request-manifest.spec.ts
+  s_909110c6d23990::t_476ae0996ec00c 21-23,28-34,38-51
+  s_909110c6d23990::t_a046aa3185dec5 1-20,24-27,35-37,52-57
+packages/custom-widgets/src/workbench/preview-diagnostics-panel.tsx
+  s_909110c6d23990::t_b9f1e134de8b65 1-7,9-35,37-73
+  s_909110c6d23990::t_552efbb9b671df 8,36
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_beta-banner.tsx
+  s_909110c6d23990::t_b6b11ddba0263d 1-2
+  s_909110c6d23990::t_42eb59b03907f1 5,10,12,16,18
+  s_909110c6d23990::t_13bd2efdad040e 14
+packages/custom-widgets/src/runtime/collection-displays.tsx
+  s_909110c6d23990::t_aed211e16fc7bb 1-7,28-32,59-63,93-102,124-125
+  s_909110c6d23990::t_e5d0fa1b8e3d12 8-27,33-58,64-92,103-123
+packages/api/src/router/custom-widget/custom-widget-router.ts
+  s_909110c6d23990::t_b25739b1e00268 16
+  s_909110c6d23990::t_14bd97e9990dda 181
+  s_909110c6d23990::t_cf4d758096221e 23
+  s_909110c6d23990::t_3a900b0b81a07b 179
+  s_909110c6d23990::t_0b520cbcb2a3e5 19-21
+  s_909110c6d23990::t_edacbfb8d42436 17,37
+  s_909110c6d23990::t_650728c151fdcf 14
+  s_909110c6d23990::t_4ed683ffcbf6d5 7-8
+  s_909110c6d23990::t_2519d0c5583178 6
+  s_909110c6d23990::t_294ef5d29ae8d7 183-185
+  s_909110c6d23990::t_f9401c4d888f21 24
+  s_909110c6d23990::t_e156236a6f0e8c 35
+  s_909110c6d23990::t_98e61affa1dad4 18
+  s_909110c6d23990::t_7e3589cf17c8a1 15
+packages/db/migrations/seed.ts
+  s_909110c6d23990::t_e8903b6f23ae9b 4
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_code-editor-diagnostics.tsx
+  s_909110c6d23990::t_3e35eac0f53834 1-51
+packages/custom-widgets/src/jsx/collection-methods.ts
+  s_909110c6d23990::t_3ba9b692cf57e5 10,21-23,27-29,33,36,50,85,106,114,116,118,140,143-144,153,155,157,193,196,198,210,248-249,251,256,269
+  s_909110c6d23990::t_b6cb1577b4a47c 17-20,24-26,30-32,34-35,37-49,51-84,86-105,107-113,115,117,119-130,133-139,141-142,145-152,154,156,158-192,194-195,197,199-209,211-247,250,252-255,257-268,270
+  s_909110c6d23990::t_37ba67f63af7ed 1-9,11-16,271
+  s_909110c6d23990::t_cac4118652b676 131-132
+packages/api/src/test/mcp.spec.ts
+  s_909110c6d23990::t_1879820ee75f4a 65-92
+scripts/check-custom-widget-bundle.mjs
+  s_909110c6d23990::t_58013dcc31029c 3,14,32,35-40,45-54,62-65,67,69-78,80-81,83-86,88,92
+  s_909110c6d23990::t_1c4a8f64954e80 56-61
+  s_909110c6d23990::t_1405d59bc2bd1b 1-2,4-13,15-31,33-34,41-44,55,66,68,79,82,87,89-91,93
+packages/custom-widgets/src/core/component-types.ts
+  s_909110c6d23990::t_acbcbef92d429c 1-12
+packages/custom-widgets/src/server/request-executor.ts
+  s_909110c6d23990::t_502b6a1ec14e9f 1-2,15,30,34,62-63,65-66,70,75,104,128-130,137-138,140-149,151-154,156-158,168-170,172-179
+  s_909110c6d23990::t_5b9bf25c75c91f 5,7,53
+  s_909110c6d23990::t_10fb44b0355fc8 3-4,6,16,31-33,35-52,54-55,64,67-69,76-79,88-90,115-117,120,123,126-127,139,150,155,171
+  s_909110c6d23990::t_476ae0996ec00c 8-14,17-29,56-61,71-74,80-87,91-103,105-114,118-119,121-122,124-125,131-136,159-167
+packages/custom-widgets/src/test/workbench-ui.spec.tsx
+  s_909110c6d23990::t_0d2d570cbd1661 1-45,48-85,88-118
+  s_909110c6d23990::t_cb374aa3e1cdab 46-47,86-87
+packages/custom-widgets/src/runtime/sub-fetch.tsx
+  s_909110c6d23990::t_6e9a9ff802c74f 1-52,54-62,68-77,85-109,115-117,124-128,131-133
+  s_909110c6d23990::t_476ae0996ec00c 53,63-67,78-84,110-114,118-123,129-130
+packages/definitions/src/docs/codegen.ts
+  s_909110c6d23990::t_0d0f5222320d71 10
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-preview.ts
+  s_909110c6d23990::t_de42cc574dfec2 1-110,113-156
+  s_909110c6d23990::t_9d01211acbea1f 111-112
+packages/widgets/src/custom-api/component.tsx
+  s_909110c6d23990::t_1afa70f856b45d 24,78,126
+  s_909110c6d23990::t_c079a268a7097e 4
+  s_909110c6d23990::t_7c34ceda31cccb 6
+  s_909110c6d23990::t_4c549277a80aa1 5
+  s_909110c6d23990::t_ad6005f6a2ef78 12
+  s_909110c6d23990::t_13bd2efdad040e 79-83
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-clipboard.tsx
+  s_909110c6d23990::t_c7ad476219967f 1-87
+apps/docs/docs/management/custom-widgets/architecture.mdx
+  s_909110c6d23990::t_dd03fe596d39a0 1-28
+  s_909110c6d23990::t_1405d59bc2bd1b 29
+packages/custom-widgets/src/jsx/analyzer.ts
+  s_909110c6d23990::t_19a505e768450f 4
+  s_909110c6d23990::t_f8da9900c600f0 95-96,98
+  s_909110c6d23990::t_3a81862e68147f 58-74,243-246
+  s_909110c6d23990::t_1b96b00d58c419 5-10
+  s_909110c6d23990::t_5f154ed2ad121e 247
+  s_909110c6d23990::t_2c9b99a0737a8f 93-94,152-155,207-211
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  s_909110c6d23990::t_ad07de8870bb25 10,22-25
+  s_909110c6d23990::t_05cc7ea6d86ea8 1-9,11-21,26-32
+packages/custom-widgets/src/runtime/data.tsx
+  s_909110c6d23990::t_150d33c803c0a6 1-59,65-69,73,79-90
+  s_909110c6d23990::t_476ae0996ec00c 60-64,70-72,74-78
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_display-fields-jsx.tsx
+  s_909110c6d23990::t_30b708a1399864 1-3,10-16
+  s_909110c6d23990::t_212b8a85c3427b 17-95
+  s_909110c6d23990::t_3ad8a29387d01a 4-9
+  s_909110c6d23990::t_9de0ab5c06bab1 96-97
+packages/custom-widgets/src/server/auth.ts
+  s_909110c6d23990::t_10fb44b0355fc8 1-45
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_preview-widget-panel.tsx
+  s_909110c6d23990::t_fea305fd265bc6 1-51,53-83,85-99
+  s_909110c6d23990::t_1f7dd977ff2bf1 84
+  s_909110c6d23990::t_74d5eb63d039cd 52
+packages/db/schema/mysql.ts
+  s_909110c6d23990::t_e8903b6f23ae9b 47
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_display-field-shared.ts
+  s_909110c6d23990::t_3ad8a29387d01a 14-27
+  s_909110c6d23990::t_9de0ab5c06bab1 1-13,28-39
+packages/custom-widgets/src/jsx/interpreter.tsx
+  s_909110c6d23990::t_11674fd5e914d8 6,19-20
+  s_909110c6d23990::t_3ba9b692cf57e5 307-308,310
+  s_909110c6d23990::t_37ba67f63af7ed 5
+  s_909110c6d23990::t_2daa5e4b1fbc53 359-360
+  s_909110c6d23990::t_b6cb1577b4a47c 309
+  s_909110c6d23990::t_b3fc69a5d48c9d 10-17,21-23
+  s_909110c6d23990::t_82951ae631e4e4 9
+  s_909110c6d23990::t_034605ec432e21 18
+  s_909110c6d23990::t_1ad01761a39ec5 24
+  s_909110c6d23990::t_9ed25781ba66d2 124,128,131-139
+  s_909110c6d23990::t_77e53ff41b99ee 7
+packages/api/src/router/custom-widget/preview-sessions.ts
+  s_909110c6d23990::t_24cccc02afcb5f 5-11,13,15-16,18-19,21-23,32-33,40,42-43,45,47-58,60,66,68,70-74,77-79
+  s_909110c6d23990::t_476ae0996ec00c 25-30,34-39,61-64
+packages/widgets/src/custom-api/widget-definition-context.tsx
+  s_909110c6d23990::t_7d1177f057dab7 5-16,21,23,26-30,45-58,73,78-83,90,92-100,102-103
+  s_909110c6d23990::t_476ae0996ec00c 31-44,59-72,74-77,84-89
+packages/api/src/router/widgets/custom-api.ts
+  s_909110c6d23990::t_68e4a0d5e6a014 10-15
+  s_909110c6d23990::t_e8903b6f23ae9b 16
+packages/custom-widgets/src/runtime/refresh-button.tsx
+  s_909110c6d23990::t_7d1177f057dab7 1-45
+packages/custom-widgets/src/test/component-registry.spec.ts
+  s_909110c6d23990::t_47d850e24671a5 3
+packages/custom-widgets/src/runtime/index.ts
+  s_909110c6d23990::t_7d1177f057dab7 1-5,9-12,14
+  s_909110c6d23990::t_aed211e16fc7bb 6,13
+  s_909110c6d23990::t_6a6ef3db648425 7-8
+packages/custom-widgets/src/test/preview-sessions.spec.ts
+  s_909110c6d23990::t_9ab19b131d1a1b 1-3,5-14,21-22,24-29,31-57,65-72
+  s_909110c6d23990::t_476ae0996ec00c 15-20,58-64
+  s_909110c6d23990::t_b737dde06c793f 4,23,30
+packages/custom-widgets/src/workbench/index.ts
+  s_909110c6d23990::t_4a81ad0b958e9a 2
+  s_909110c6d23990::t_fea305fd265bc6 10
+  s_909110c6d23990::t_f8c632470608c1 6
+  s_909110c6d23990::t_faa0e9c78cf4d7 11
+  s_909110c6d23990::t_a07bab02fe342c 3
+  s_909110c6d23990::t_963cf587210c18 4
+  s_909110c6d23990::t_fc4e54c4764148 5
+  s_909110c6d23990::t_b9f1e134de8b65 8-9
+  s_909110c6d23990::t_2a73280ef97880 7
+  s_909110c6d23990::t_b40afc26642b01 1
+  s_909110c6d23990::t_23cd6685b4b3ad 12-18
+packages/custom-widgets/src/core/component-descriptor.ts
+  s_909110c6d23990::t_d8f43a0e7e9e10 8-91
+  s_909110c6d23990::t_acbcbef92d429c 2-7
+  s_909110c6d23990::t_422f560736cf69 1
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_display-type-fields.tsx
+  s_909110c6d23990::t_83bf04674a8469 3-12,26-35
+  s_909110c6d23990::t_bf28d8c3b4f829 25
+  s_909110c6d23990::t_22d94bd9158def 55
+  s_909110c6d23990::t_528367d78eb10a 77-87
+  s_909110c6d23990::t_755ff5d6147492 1-2,13-24,36-37
+  s_909110c6d23990::t_2b9455a143b147 39-54,56-76,88-89
+  s_909110c6d23990::t_8b8d5371a048ee 38
+e2e/custom-widgets-custom-jsx.spec.ts
+  s_909110c6d23990::t_a1aee7b13c7cfb 56
+  s_909110c6d23990::t_41e82b8dd3f85b 6,80
+  s_909110c6d23990::t_86c08235e48d35 60-61
+  s_909110c6d23990::t_278e29e8a1eec0 57
+  s_909110c6d23990::t_12ab6a08bee8a4 55
+  s_909110c6d23990::t_6bcedeb8cef665 69,72,76
+  s_909110c6d23990::t_87163ae5396b2d 21
+package.json
+  s_909110c6d23990::t_e0820b5c944c78 9
+  s_909110c6d23990::t_e9cc78a1cf9a9d 32-33
+  s_909110c6d23990::t_1405d59bc2bd1b 10
+  s_909110c6d23990::t_ae6bc0e2880235 38-40,72
+packages/custom-widgets/src/jsx/bindings.ts
+  s_909110c6d23990::t_f1fcd40a01155e 14-26,28-46,56-58,62-65
+  s_909110c6d23990::t_1d9f7d62938596 1-13,27,47,76-84
+  s_909110c6d23990::t_2e6cd2df2c7e21 48
+  s_909110c6d23990::t_982a9ec8d67764 49-55,59-61,66-75
+packages/custom-widgets/src/jsx/safe-properties.ts
+  s_909110c6d23990::t_1ad01761a39ec5 1-10
+  s_909110c6d23990::t_47adab34ec0f96 11-96
+packages/custom-widgets/package.json
+  s_909110c6d23990::t_a61fc28d0c9465 38
+  s_909110c6d23990::t_19a505e768450f 1-8,12-15,20-22,24-29,36-37,41-44,50-53
+  s_909110c6d23990::t_dd21ea2be56b5f 48
+  s_909110c6d23990::t_1d9f7d62938596 30,32
+  s_909110c6d23990::t_a67449eb64a420 47,49
+  s_909110c6d23990::t_5b9bf25c75c91f 17,40
+  s_909110c6d23990::t_ad07de8870bb25 9-11
+  s_909110c6d23990::t_150d33c803c0a6 16,34-35
+  s_909110c6d23990::t_13bd2efdad040e 31
+  s_909110c6d23990::t_e0820b5c944c78 23
+  s_909110c6d23990::t_aed211e16fc7bb 33
+  s_909110c6d23990::t_3937242c0e76f8 39,46
+  s_909110c6d23990::t_476ae0996ec00c 45
+  s_909110c6d23990::t_23cd6685b4b3ad 18-19
+packages/custom-widgets/src/server/request-limits.ts
+  s_909110c6d23990::t_476ae0996ec00c 45-49,60-69,72-78,88-90,108-112
+  s_909110c6d23990::t_f3efe01fb4dcbc 1-44,50-59,70-71,79-87,91-107,113
+packages/custom-widgets/src/workbench/preview-response-panel.tsx
+  s_909110c6d23990::t_c98a7c02c26317 8-22,39-45,51-56,67-74,76-82,84-110,112-113,115-131,133-148
+  s_909110c6d23990::t_1f7dd977ff2bf1 75,83,111,114,132
+  s_909110c6d23990::t_2a73280ef97880 1-7,23-38,46-50,57-66,149
+e2e/shared/mock-api-container.ts
+  s_909110c6d23990::t_41e82b8dd3f85b 1,5,7,12-18,20-21,25,27
+  s_909110c6d23990::t_87163ae5396b2d 3,10,19,24
+packages/custom-widgets/src/workbench/preview-request-panel.tsx
+  s_909110c6d23990::t_b9f1e134de8b65 1-155
+packages/custom-widgets/src/jsx/interpreter-foundation.ts
+  s_909110c6d23990::t_e5de0bbb9db306 1-42,47-62,67-69,72-73,76-77,80-84,87-108
+  s_909110c6d23990::t_476ae0996ec00c 43-46,63-66,70-71,74-75,78-79,85-86
+packages/custom-widgets/src/workbench/import-review.tsx
+  s_909110c6d23990::t_22d94bd9158def 93,96
+  s_909110c6d23990::t_a07bab02fe342c 1-31,40-42,104
+  s_909110c6d23990::t_a0155021474b05 32-39,43-92,94-95,97-103
+packages/definitions/package.json
+  s_909110c6d23990::t_19a505e768450f 27
+packages/api/src/router/custom-widget/request-executor.ts
+  s_909110c6d23990::t_476ae0996ec00c 19-29,36-38,43-46,51-54,60,62,67-70
+  s_909110c6d23990::t_ca5ad36b5806e0 2-18,34,40,42,48,50,56,58,64,66,72,74-81,83
+  s_909110c6d23990::t_19511428b385d8 32
+packages/custom-widgets/src/workbench/form-schema.ts
+  s_909110c6d23990::t_9dfdada38d9e92 3
+  s_909110c6d23990::t_23cd6685b4b3ad 1-2,4-5,11-21,103-105,110-121,132-138,144
+  s_909110c6d23990::t_476ae0996ec00c 6-10,22-102,106-109,122-131,139-143
+packages/custom-widgets/src/jsx/policy.ts
+  s_909110c6d23990::t_de715102f0f5ae 1-73
+pnpm-lock.yaml
+  s_909110c6d23990::t_aefc11736b1dfa 863-865,1320-1322,1714-1777,1789-1791,1865-1867,2663-2665,4396,4400,20141,20144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "4c6ffcd0fa32c0ac87286967c28e128efdbc3377",
+  "prompts": {},
+  "sessions": {
+    "s_909110c6d23990": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f535c-afd7-7fb0-9155-c9a02e203597",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_969e77f6bcbd27": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c47-020a-7a12-b6b9-f3305b2e6beb",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

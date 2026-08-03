@@ -1,0 +1,23 @@
+packages/form/src/index.ts
+  s_aac9680e6041a8::t_d40f27f807966d 1
+  s_aac9680e6041a8::t_a799cc7118485b 36
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_aac9680e6041a8::t_032be54e9a4453 53
+  s_aac9680e6041a8::t_fcf7f98333d23f 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "d62533e322ae858c9fc9560cf661fa2fbb52b389",
+  "prompts": {},
+  "sessions": {
+    "s_aac9680e6041a8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "92249a51-c3ca-438b-a38e-6a39dfcc9bcd",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

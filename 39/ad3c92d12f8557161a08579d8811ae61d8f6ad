@@ -1,0 +1,23 @@
+packages/widgets/src/calendar/component.tsx
+  s_8f234bf38d1be1::t_fa880dbb9e11b9 91-110
+  s_8f234bf38d1be1::t_60e78578b92aa4 42,64,66
+  s_8f234bf38d1be1::t_ba5503b9d1c4c2 176
+  s_8f234bf38d1be1::t_6b19d65ef8718a 5
+  s_8f234bf38d1be1::t_872872f11ef3e8 75,78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "39ad3c92d12f8557161a08579d8811ae61d8f6ad",
+  "prompts": {},
+  "sessions": {
+    "s_8f234bf38d1be1": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26c18160-55ae-46d7-a2c7-e491e223bf11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,118 @@
+packages/old-schema/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/validation/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/cron-jobs-core/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 21-22
+packages/boards/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 21-22
+packages/form/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/cron-job-status/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/server-settings/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/notifications/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/common/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 23-24
+apps/nextjs/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 10-11
+tooling/prettier/package.json
+  s_b76ab56b2a7361::t_a95a069c0b435f 6
+packages/image-proxy/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/integrations/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 22-23
+packages/widgets/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 22-23
+packages/cli/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/modals/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/icons/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/modals-collection/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+.oxfmtrc.json
+  s_b76ab56b2a7361::t_2d8831073106d9 5
+  s_b76ab56b2a7361::t_fe036f99a49899 2
+  s_b76ab56b2a7361::t_d63f2fe8bf0a2c 3-4,6
+.github/workflows/code-quality.yml
+  s_b76ab56b2a7361::t_58ea0268684c59 21-52,83
+packages/redis/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+turbo.json
+  s_b76ab56b2a7361::t_22fee080fc91b7 68
+packages/translation/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 24-25
+.oxlintrc.json
+  s_b76ab56b2a7361::t_bff46ca9630a6a 8-11,30
+  s_b76ab56b2a7361::t_f2770a0c50f65e 23
+  s_b76ab56b2a7361::t_b470035824d610 1-2,4-7,12-16,28-29,31-33,35-36
+  s_b76ab56b2a7361::t_135dfa37e5a085 24-27
+  s_b76ab56b2a7361::t_8c579cbcae2504 17-22
+  s_b76ab56b2a7361::t_211f1d8fbbbb73 3,34
+package.json
+  s_b76ab56b2a7361::t_93a987c78378cf 52-53
+  s_b76ab56b2a7361::t_c48581bc109523 20-23
+packages/ping/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/forms-collection/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/core/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 34-35
+tooling/eslint/package.json
+  s_b76ab56b2a7361::t_e3ca7801c40a23 7
+packages/db/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 23-24
+packages/cron-jobs/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/api/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/definitions/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19,21
+packages/spotlight/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+pnpm-workspace.yaml
+  s_b76ab56b2a7361::t_93a987c78378cf 142-143,166
+apps/websocket/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 15-16
+packages/old-import/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 23-24
+apps/tasks/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 15-16
+packages/settings/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 20-21
+packages/analytics/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+packages/ui/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 22-23
+packages/auth/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 21-22
+packages/docker/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 21-22
+packages/request-handler/package.json
+  s_b76ab56b2a7361::t_2d165f81de9673 19-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "dba219cdbca12d6cf7beabda41543eb77656c3d1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_b76ab56b2a7361": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05d8b873-8c52-4964-9e34-0bb4380b4e9f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": null
+    }
+  }
+}

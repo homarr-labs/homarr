@@ -1,0 +1,19 @@
+apps/nextjs/src/app/[locale]/boards/(content)/[name]/(board)/_definition.tsx
+  s_c94b6216942c75::t_28818076737ce9 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "71d7332505a4d4ca1c3afec8f54cdc67994368e7",
+  "prompts": {},
+  "sessions": {
+    "s_c94b6216942c75": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1a1f02a87ffeoNAUSl8l8ne1fs",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

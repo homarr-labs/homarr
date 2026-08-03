@@ -1,0 +1,31 @@
+packages/widgets/src/downloads/index.ts
+  s_7cadbcfd6ae838::t_ea7b2737bd1245 11-17,19-21,24-28,31-35,39,41,50,58-59
+apps/docs/docs/widgets/downloads/index.mdx
+  s_7cadbcfd6ae838::t_0976cbfa4a68d0 7,26,28,30-37,56-58,61,66-70
+packages/widgets/src/downloads/styles.css
+  s_7cadbcfd6ae838::t_e245ba8bce1f1c 1-10,13-52
+packages/widgets/src/downloads/component.tsx
+  s_7cadbcfd6ae838::t_06cec837762ba5 6,10-11,15-16,18-19,23,27-30,32,37-38,43-44,57-63,66-73,76-100,105,117-121,128-129,131-134,136-219,221-266,268-278,280-297,299-304,306-316,318-328,330-337,340-348,350-355,357-364,366-371,373-378,380-388,390-395,397-402,404-411,413-414,416-438,444,447-469,471-495,500-501,504-527,529-531,533,535,537-539,542,544-634,636-647,650-669,677-728,730,732-787,789-790,792-805,807-812,814-815,817-824,826
+packages/translation/src/lang/en.json
+  s_7cadbcfd6ae838::t_16af415d01bf5c 3177-3185
+packages/old-import/src/widgets/options.ts
+  s_7cadbcfd6ae838::t_a9af520b9b628a 79-80
+apps/docs/docs/widgets/downloads/index.ts
+  s_7cadbcfd6ae838::t_7dfbf38623086d 7-12,16-18,21,32,34,37-40,44,70,74-76,88,94
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "bc2eb9257af672096812670f0a5d8d77fcbff16f",
+  "prompts": {},
+  "sessions": {
+    "s_7cadbcfd6ae838": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "781480e9-8d2f-4366-99a4-54d0da9eba34",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+.agents/skills/homarr-custom-widget/SKILL.md
+  s_955a5b644d1c62::t_8b845defc68f0e 28
+.agents/skills/homarr-custom-widget/references/runtime.md
+  s_955a5b644d1c62::t_9aca01d63756e9 11-31
+.agents/skills/homarr-custom-widget/references/schema.md
+  s_955a5b644d1c62::t_677e2c7dd729c5 21-25
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_1d0cab1b4c5a42::t_d0bfd95df399f2 42-60
+apps/docs/docs/management/custom-widgets/requests-and-security.mdx
+  s_955a5b644d1c62::t_30e2f753502bfe 16
+apps/docs/docs/management/custom-widgets/troubleshooting.mdx
+  s_955a5b644d1c62::t_cac352dcff143c 13
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.ts
+  s_955a5b644d1c62::t_dae7dd401f6a3e 2,74
+apps/nextjs/src/app/[locale]/manage/custom-widgets/preview/[id]/page.tsx
+  s_955a5b644d1c62::t_927fb1e9360709 6,19-23
+packages/api/src/router/custom-widget/management-queries.ts
+  s_955a5b644d1c62::t_548d25ef454108 110
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  s_955a5b644d1c62::t_110e5c37c64484 92,99-109
+packages/custom-widgets/src/core/ai-prompt.ts
+  s_955a5b644d1c62::t_63836e69dfaa86 11,20,36
+packages/custom-widgets/src/core/authoring-resources.ts
+  s_955a5b644d1c62::t_a8ddc142555017 43
+packages/custom-widgets/src/core/bundled-widgets.ts
+  s_955a5b644d1c62::t_a04db1e92c3557 74-78,175
+packages/custom-widgets/src/core/definition-security.ts
+  s_955a5b644d1c62::t_afa448c758e169 30,70
+packages/custom-widgets/src/core/request-schema.ts
+  s_955a5b644d1c62::t_c81a5d4da092ed 24-28,162,201-228,239-261
+packages/custom-widgets/src/core/schema-references.ts
+  s_955a5b644d1c62::t_ab181065cc1c61 62-78
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  s_955a5b644d1c62::t_87b9c01a3887e2 35-37
+packages/custom-widgets/src/test/request-manifest.spec.ts
+  s_955a5b644d1c62::t_c299b2de485a85 3,62-85
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx
+  s_955a5b644d1c62::t_eead4d9053786d 26,339-346,348-349
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a26846fa316b26f3b2cfae7ea738b210f2c72392",
+  "prompts": {},
+  "sessions": {
+    "s_1d0cab1b4c5a42": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7fee-358c-78a0-96a8-90dd5e841067",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

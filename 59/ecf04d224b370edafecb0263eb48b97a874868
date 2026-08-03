@@ -1,0 +1,53 @@
+apps/docs/src/components/custom-widget-code-client.tsx
+  s_7cadbcfd6ae838::t_560b1c6d56a4dd 25,27-31,58,81-88
+apps/docs/docs/management/workshop/index.mdx
+  s_955a5b644d1c62::t_cf16301f408890 45-46
+apps/docs/src/components/custom-widget-code.tsx
+  s_955a5b644d1c62::t_95e39758ff94f1 6,18-30,54-61
+packages/custom-widgets/package.json
+  s_955a5b644d1c62::t_1e008c956f2578 42
+packages/custom-widgets/src/workbench/code-editor-toolbar.tsx
+  s_955a5b644d1c62::t_dce49fc2094a2c 49-53,109
+packages/custom-widgets/src/workbench/code-editor-types.ts
+  s_955a5b644d1c62::t_f24413176af9db 46
+packages/custom-widgets/src/workbench/code-editor.tsx
+  s_2d5f10e48cf4ae::t_3e9242dd000ec6 259
+packages/custom-widgets/src/workbench/direct-code-mirror.tsx
+  s_955a5b644d1c62::t_93922e47cbc061 5,22,107-109
+pnpm-lock.yaml
+  s_955a5b644d1c62::t_1fb00f78c90cf8 21-23,1737-1739
+pnpm-workspace.yaml
+  s_955a5b644d1c62::t_adf220b4e5aef3 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "59ecf04d224b370edafecb0263eb48b97a874868",
+  "prompts": {},
+  "sessions": {
+    "s_2d5f10e48cf4ae": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8407-74a6-7d41-951e-631503fd0ac6",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7cadbcfd6ae838": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "781480e9-8d2f-4366-99a4-54d0da9eba34",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

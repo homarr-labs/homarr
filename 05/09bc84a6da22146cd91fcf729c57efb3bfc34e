@@ -1,0 +1,24 @@
+packages/cron-jobs-core/src/test/expressions.spec.ts
+  s_d845807fb8b082::t_ba3df808ec1995 1-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "0509bc84a6da22146cd91fcf729c57efb3bfc34e",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_d845807fb8b082": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "34c67ed5-1f18-4831-823c-06e276d50036",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

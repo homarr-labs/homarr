@@ -1,0 +1,87 @@
+apps/docs/docs/advanced/development/getting-started.mdx
+  s_1c2c60ab8959b8::t_0ae0a541b93578 19,21,37,39,41,48-52,67,69-70
+.github/workflows/ci.yml
+  s_1c2c60ab8959b8::t_0ae0a541b93578 81-90
+AGENTS.md
+  s_1c2c60ab8959b8::t_0ae0a541b93578 49-50,73,87-91
+package.json
+  s_1c2c60ab8959b8::t_0ae0a541b93578 24
+tools/homarr-dev/README.md
+  s_8c1f355365c9af::t_58398c4740870f 1-94
+tools/homarr-dev/go.mod
+  s_1c2c60ab8959b8::t_8f0a29c78288f1 1-32
+tools/homarr-dev/go.sum
+  s_1c2c60ab8959b8::t_5425b5ab33747a 1-56
+tools/homarr-dev/internal/docker/docker_test.go
+  s_1c2c60ab8959b8::t_e0cfc0a78cf965 1-27
+tools/homarr-dev/internal/docker/images.go
+  s_8c1f355365c9af::t_5e98739cb92368 1-153
+tools/homarr-dev/internal/gh/gh.go
+  s_1c2c60ab8959b8::t_6c969b6317aed2 1-135
+tools/homarr-dev/internal/gh/gh_test.go
+  s_1c2c60ab8959b8::t_3dba2a431aaf13 1-62
+tools/homarr-dev/internal/platform/clipboard.go
+  s_8c1f355365c9af::t_6d03b4944163ea 1-7
+tools/homarr-dev/internal/run/build.go
+  s_8c1f355365c9af::t_c8de9ba9e744ec 1-101
+tools/homarr-dev/internal/run/run.go
+  s_8c1f355365c9af::t_2d1ccc224946c3 1-138
+tools/homarr-dev/internal/run/run_test.go
+  s_466eefa8303e91::t_6c8d05349d1fca 1-44
+tools/homarr-dev/internal/tui/dashboard.go
+  s_8c1f355365c9af::t_a3849eef7fba31 1-417
+tools/homarr-dev/internal/tui/dashboard_test.go
+  s_1c2c60ab8959b8::t_58357dfd9db93a 1-61
+tools/homarr-dev/internal/tui/dev.go
+  s_8c1f355365c9af::t_7da3c580815c3c 1-998
+tools/homarr-dev/internal/tui/dev_test.go
+  s_8c1f355365c9af::t_2281fd0d8f0b74 1-117
+tools/homarr-dev/main.go
+  s_466eefa8303e91::t_d3f12f2eab9687 1-291
+tools/homarr-dev/main_test.go
+  s_466eefa8303e91::t_409d7cfcf78f8b 1-28
+scripts/setup-dev.sh
+  s_c3d9a11dc1dbf1::t_182b875d63e303 1-45
+tools/homarr-dev/internal/docker/docker.go
+  s_466eefa8303e91::t_d0c7b4026c5f6e 1-317
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "e97eb7fc58dd117260f45b390c1660b6bf45ed56",
+  "prompts": {},
+  "sessions": {
+    "s_1c2c60ab8959b8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_04800f60fffebifl2JH2wvlokh",
+        "model": "gpt-5.6-sol-fast"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_466eefa8303e91": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb800-4ac6-7880-aa90-d69a71cfc6e1",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8c1f355365c9af": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb819-9df1-71e3-bf79-61683d5d9203",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_c3d9a11dc1dbf1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb809-e262-7ab1-8f8c-725dafda5d34",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

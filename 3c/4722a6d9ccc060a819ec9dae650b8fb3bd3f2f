@@ -1,0 +1,34 @@
+packages/api/src/router/custom-widget/custom-widget-router.ts
+  s_a779988d600484::t_aeeff24e86e77d 29-64
+  s_a779988d600484::t_d25ef27be30dc4 543-546,548-550,564,575-576,600-609,611-612,617-622,633-634,636-647
+  s_a779988d600484::t_72f10ce304dad6 470-474
+  s_a779988d600484::t_f40ac4f98d5806 547,551-563,565-574,577-599,610,613-616,623-632,635
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
+  s_a779988d600484::t_870d5af06fb098 120,122-128,130-135
+  s_a779988d600484::t_bbbb1bfe288c7c 129
+  s_a779988d600484::t_0044f4204f565b 58-111,145-151,153-154,174-175,178
+  s_a779988d600484::t_cba0123b1ac090 169
+  s_a779988d600484::t_653824e8f74374 46-57,112-113,119,179-180
+  s_a779988d600484::t_eaca69f3da5906 114-118,136-143,176-177
+  s_a779988d600484::t_0b457c15b0be9c 144,152,155-168,170-173
+  s_a779988d600484::t_d5d343e93b9fa5 121
+packages/widgets/src/custom-api/sub-fetch.tsx
+  s_a779988d600484::t_28c4ad661a2b9e 3,27,78-93,97-100,103-104,106,109
+  s_a779988d600484::t_f28e6c39449c4e 1-2,4-26,28-77,94-96,101-102,105,107-108,110-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "3c4722a6d9ccc060a819ec9dae650b8fb3bd3f2f",
+  "prompts": {},
+  "sessions": {
+    "s_a779988d600484": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "29175f63-17b3-4e72-b510-05e08dd6845e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+packages/forms-collection/src/icon-picker/icon-picker.spec.ts
+  s_c3d9a11dc1dbf1::t_14beb9dd8b0e2d 3,8-16,21,76-79,103,107,118,123
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.19",
+  "base_commit_sha": "a717bb43d0e033c209ae100dd6c7cd58b2dd0d4e",
+  "prompts": {},
+  "sessions": {
+    "s_c3d9a11dc1dbf1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb809-e262-7ab1-8f8c-725dafda5d34",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,84 @@
+packages/widgets/src/coolify/resource-row.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 6,62,77
+packages/widgets/src/weather/component.tsx
+  s_909ca8cf5b6e15::t_b5e96787820551 4,26,250-251,254-256,258-259,329-330,343-344,347-349,351-352,369,373-377,380,382-389,393,396-400,422-423
+  s_909ca8cf5b6e15::t_bed11b717fa171 60,64,74-77,243,252,328,345,362,367,378
+  s_909ca8cf5b6e15::t_1b25e808d0356a 381,390-392,394
+  s_909ca8cf5b6e15::t_9d87113130d0bf 395
+packages/widgets/src/calendar/component.tsx
+  s_909ca8cf5b6e15::t_10f61b7d5b9020 18,269,289
+  s_909ca8cf5b6e15::t_7b2ecaeca2312a 305
+  s_909ca8cf5b6e15::t_9d87113130d0bf 38-47
+  s_909ca8cf5b6e15::t_d9d43e665e4314 75,88,101,112,149,244,251-259,304,308
+  s_909ca8cf5b6e15::t_a4f70fa7204787 5,284,306-307
+packages/widgets/src/releases/component.tsx
+  s_909ca8cf5b6e15::t_d9d43e665e4314 224-227,328-332,353,357,367-371
+packages/widgets/src/media-requests/search-button.module.css
+  s_909ca8cf5b6e15::t_e946120fd657c0 20
+  s_909ca8cf5b6e15::t_0040dfa2e469b1 21-22
+  s_909ca8cf5b6e15::t_d88b5594760a78 23-24
+packages/widgets/src/media-requests/stats/component.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 25,224
+packages/widgets/src/weather/component.module.css
+  s_909ca8cf5b6e15::t_b5e96787820551 1-31
+packages/widgets/src/stocks/component.tsx
+  s_909ca8cf5b6e15::t_77a3862e1add9e 5,108,110-111
+packages/widgets/src/anchor-note/component.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 21,357-364
+packages/widgets/src/beszel-system-stats/component.module.css
+  s_909ca8cf5b6e15::t_e946120fd657c0 17
+packages/widgets/src/media-requests/list/component.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 17,87,259,274
+packages/widgets/src/health-monitoring/system-health.tsx
+  s_909ca8cf5b6e15::t_9d87113130d0bf 122
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 45
+packages/widgets/src/docker/component.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 46,413,448
+packages/widgets/src/coolify/servers-section.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 9,44
+packages/widgets/src/media-transcoding/health-check-status.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 9-10,28
+packages/widgets/src/health-monitoring/system-health.module.css
+  s_909ca8cf5b6e15::t_e946120fd657c0 28
+packages/widgets/src/indexer-manager/component.module.css
+  s_909ca8cf5b6e15::t_e946120fd657c0 38
+packages/widgets/src/media-requests/list/component.module.css
+  s_909ca8cf5b6e15::t_e946120fd657c0 27
+apps/docs/docs/widgets/weather/index.mdx
+  s_909ca8cf5b6e15::t_10f61b7d5b9020 17
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_d9d43e665e4314 1015,3691-3692
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 4096
+  s_909ca8cf5b6e15::t_b5e96787820551 2362-2363
+  s_909ca8cf5b6e15::t_bed11b717fa171 2303
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_909ca8cf5b6e15::t_d9d43e665e4314 48
+packages/widgets/src/common/action-target.module.css
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 1-11
+packages/widgets/src/notebook/notebook.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 71,532,547
+  s_909ca8cf5b6e15::t_0040dfa2e469b1 530,560,738-744,747-753,756-762
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 36,357,369,381,447
+packages/widgets/src/custom-api/component.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 35,347,354-361,606
+packages/widgets/src/indexer-manager/component.tsx
+  s_909ca8cf5b6e15::t_a46cfa0de58de0 13
+  s_909ca8cf5b6e15::t_9d87113130d0bf 87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "7b7045202d289b7d83946befcee5d2845ea4a706",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

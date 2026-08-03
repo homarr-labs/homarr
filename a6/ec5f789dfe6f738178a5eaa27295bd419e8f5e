@@ -1,0 +1,37 @@
+packages/redis/src/lib/channel-subscription-tracker.ts
+  s_5868729544b04b::t_0861004fba5d2f 22-25
+  s_5868729544b04b::t_44763d6db59b40 5
+packages/redis/src/lib/channel.ts
+  s_5868729544b04b::t_0d428dabd4b69f 360-361
+  s_5868729544b04b::t_b763488ebc4601 89
+  s_5868729544b04b::t_868a3678f96a33 373,377
+  s_5868729544b04b::t_faddf9804ea049 96
+  s_5868729544b04b::t_020697c076f074 48,50,53
+  s_5868729544b04b::t_46b31e301001f5 75
+  s_5868729544b04b::t_ba403d72335bad 13-17
+  s_5868729544b04b::t_44763d6db59b40 5,34-40
+  s_5868729544b04b::t_8cffa349dc6989 83
+  s_5868729544b04b::t_85af688e6bd193 112,120,126,146,162,168,193,200,243-244,247,256,260,266,277,281,292,296,300,303-304,311,315,317,330,345,348,351,424
+  s_5868729544b04b::t_04de72b3acb921 59-60
+  s_5868729544b04b::t_94bee8a366592e 242,291,344
+apps/tasks/src/main.ts
+  s_5868729544b04b::t_915e9b670d8ea5 4,6,10-28,30
+packages/redis/src/lib/connection.ts
+  s_5868729544b04b::t_522db12bb6a93e 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "a6ec5f789dfe6f738178a5eaa27295bd419e8f5e",
+  "prompts": {},
+  "sessions": {
+    "s_5868729544b04b": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7bbd4daf-51bb-48c6-b3a3-5940fbcff8d1",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": null
+    }
+  }
+}

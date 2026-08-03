@@ -1,0 +1,19 @@
+packages/request-handler/src/media-organizer.ts
+  s_74ad3f42b7aefc::t_8cc56f7c42f26e 5,14,32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "b302e5aa77e75160c2f2ebc5c60118ca18d35122",
+  "prompts": {},
+  "sessions": {
+    "s_74ad3f42b7aefc": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0b3446cf2ffeEF0TKiv9ulDvAK",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

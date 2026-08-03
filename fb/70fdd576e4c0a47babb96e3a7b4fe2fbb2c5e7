@@ -1,0 +1,27 @@
+packages/board-portability/src/import/plan-full-config-import.ts
+  s_e7a9f157bc08ec::t_d4cb3cc02617f9 9
+packages/board-portability/src/types.ts
+  s_e7a9f157bc08ec::t_0699a2bbd7451e 3-22
+packages/board-portability/index.ts
+  s_e7a9f157bc08ec::t_c60f32b58b4fe1 8-9
+apps/nextjs/src/components/config-import/config-summary-list.tsx
+  s_e7a9f157bc08ec::t_b3f589150918bb 5-6,8,16,21,28,30
+apps/nextjs/src/components/config-import/config-import-preview-panel.tsx
+  s_e7a9f157bc08ec::t_21bfe67377444f 16-40,106-121
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "fb70fdd576e4c0a47babb96e3a7b4fe2fbb2c5e7",
+  "prompts": {},
+  "sessions": {
+    "s_e7a9f157bc08ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cb17b45e-4e23-40d1-9720-f00392d43e0a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

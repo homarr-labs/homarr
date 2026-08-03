@@ -1,0 +1,19 @@
+apps/nextjs/src/components/board/sections/gridstack/board-empty-space-context-menu.tsx
+  s_909ca8cf5b6e15::t_7e0fa25350bf71 185,198
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "6e15f8bcf82c56c482b18b0b28aab0165a65337a",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

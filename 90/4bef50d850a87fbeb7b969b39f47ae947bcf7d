@@ -1,0 +1,19 @@
+packages/ui/src/theme.ts
+  s_0d1d16cf775ae9::t_c8a47b9ef9137a 1,13-14,20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "904bef50d850a87fbeb7b969b39f47ae947bcf7d",
+  "prompts": {},
+  "sessions": {
+    "s_0d1d16cf775ae9": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "285a70ae-9bc6-4d84-bd3c-1052b3460760",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": null
+    }
+  }
+}

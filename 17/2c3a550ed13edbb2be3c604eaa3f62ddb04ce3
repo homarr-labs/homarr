@@ -1,0 +1,23 @@
+packages/db/proxy.ts
+  s_6852af5a167b0b::t_ed1facb7042e40 26-27,89-90,94-100,117,121-126
+packages/widgets/src/modals/widget-edit-modal-content.tsx
+  s_6852af5a167b0b::t_d1314ff4ea243c 16
+scripts/ci/dev-benchmark.mts
+  s_6852af5a167b0b::t_503de732d6ba52 5,496-497,500,649-650
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "172c3a550ed13edbb2be3c604eaa3f62ddb04ce3",
+  "prompts": {},
+  "sessions": {
+    "s_6852af5a167b0b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8a85-e8ee-7e40-9d0e-25fc837d497c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

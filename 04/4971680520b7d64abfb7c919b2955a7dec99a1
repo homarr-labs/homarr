@@ -1,0 +1,24 @@
+packages/spotlight/src/preferences/preference-registry.tsx
+  s_0ba1ea5409f719::t_14d233b4d87324 118
+packages/spotlight/src/preferences/use-user-preference.ts
+  s_0ba1ea5409f719::t_58e7783ec3a240 76-82
+  s_0ba1ea5409f719::t_4dfdbe4cbc355a 177
+packages/spotlight/src/modes/command/children/preferences/settings-children.tsx
+  s_0ba1ea5409f719::t_bf0cdda18d533e 87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "044971680520b7d64abfb7c919b2955a7dec99a1",
+  "prompts": {},
+  "sessions": {
+    "s_0ba1ea5409f719": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e0e14fe8-b2ce-4799-8a38-c86da6298520",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

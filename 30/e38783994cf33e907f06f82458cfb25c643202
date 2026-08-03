@@ -1,0 +1,63 @@
+apps/web/components/features/cloud/CloudDrivesConnectCard.tsx
+  s_5af6053cbf3544::t_7a5d40231843dc 218
+apps/web/components/features/result/insight-engine/ui-bits.tsx
+  s_5af6053cbf3544::t_a3bf195539f544 14,16
+  s_5af6053cbf3544::t_82e030ca051511 26-27
+apps/web/components/features/result/InsightEngineDetailPanel.tsx
+  s_5af6053cbf3544::t_8bac1ad251c055 434
+apps/web/components/features/result/insight-engine/constants.ts
+  s_5af6053cbf3544::t_a442c2af635622 98
+  s_5af6053cbf3544::t_baa653e3bc1359 207
+apps/web/components/features/pilote/SourceDetailView.tsx
+  s_5af6053cbf3544::t_8e48d2eebe56ac 233
+apps/web/components/features/connections/__tests__/ConnectionStatusBadge.test.ts
+  s_5af6053cbf3544::t_eabdbb65a53b06 39-40,43-44
+  s_5af6053cbf3544::t_29cf47d4995c15 10-11
+apps/web/components/features/result/seven-dimensions/video/VideoSevenDimensionsView.tsx
+  s_5af6053cbf3544::t_008177a2a0a0b7 48
+apps/web/components/features/pilote/AlternativesEntry.tsx
+  s_5af6053cbf3544::t_8e48d2eebe56ac 79
+apps/web/app/pilote/[id]/decisions/[decisionId]/page.tsx
+  s_5af6053cbf3544::t_94530ae38b1f07 46
+apps/web/components/features/result/seven-dimensions/HabsInsightsScoringGuide.tsx
+  s_5af6053cbf3544::t_cac41c21b6e32a 53
+apps/web/components/features/connections/ConnectionStatusBadge.tsx
+  s_5af6053cbf3544::t_aea81a6f524199 16
+  s_5af6053cbf3544::t_b761045c7c4d17 17
+apps/web/components/features/connections/ConnectionActionButton.tsx
+  s_5af6053cbf3544::t_d14cbbc2ae0bb7 21
+apps/web/components/features/pilote/BestCandidatePodium.tsx
+  s_5af6053cbf3544::t_8e48d2eebe56ac 59
+apps/web/components/features/pilote/BrandRepresentationPanel.tsx
+  s_5af6053cbf3544::t_8e48d2eebe56ac 91
+apps/web/components/features/pilote/PiloteSettingsForm.tsx
+  s_5af6053cbf3544::t_8e48d2eebe56ac 104
+apps/web/components/features/pilote/SourcesPage.tsx
+  s_5af6053cbf3544::t_8e48d2eebe56ac 143
+apps/web/components/features/result/seven-dimensions/ImageSevenDimensionsView.tsx
+  s_5af6053cbf3544::t_008177a2a0a0b7 80
+apps/web/components/features/pilote/BestCombinationCard.tsx
+  s_5af6053cbf3544::t_8e48d2eebe56ac 43
+apps/web/components/features/accueil/RecentAnalyses.tsx
+  s_5af6053cbf3544::t_bcdc165e6509c5 97-98
+apps/web/components/features/pilote/DecisionsList.tsx
+  s_5af6053cbf3544::t_8e48d2eebe56ac 42
+apps/web/components/features/pilote/EvolutionPage.tsx
+  s_5af6053cbf3544::t_8e48d2eebe56ac 82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "30e38783994cf33e907f06f82458cfb25c643202",
+  "prompts": {},
+  "sessions": {
+    "s_5af6053cbf3544": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "af71945f-5a5e-45cd-8704-d1869e2be954",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

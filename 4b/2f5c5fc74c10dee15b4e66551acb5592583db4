@@ -1,0 +1,24 @@
+apps/web/components/features/result/HeroBlock.tsx
+  s_3f7abfee110f3a::t_3263e38885a39f 54
+  s_3f7abfee110f3a::t_7af946407172cf 14
+apps/web/lib/video/stats.ts
+  s_3f7abfee110f3a::t_a525e4eb7e9306 36-38
+apps/web/lib/worker/types.ts
+  s_3f7abfee110f3a::t_7f3d5f7b9b763c 257
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "4b2f5c5fc74c10dee15b4e66551acb5592583db4",
+  "prompts": {},
+  "sessions": {
+    "s_3f7abfee110f3a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "691b8e91-12d7-4ad5-a75d-6f389a6bd753",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

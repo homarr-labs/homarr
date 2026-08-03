@@ -1,0 +1,35 @@
+packages/definitions/src/integration.ts
+  s_0a92508e7b1d2f::t_c5eaf86673cf45 478
+  s_0a92508e7b1d2f::t_09e7b31abea835 1
+packages/common/src/url.ts
+  s_0a92508e7b1d2f::t_26a8543a519d4e 4-8
+packages/definitions/src/test/integration-url-template.spec.ts
+  s_0a92508e7b1d2f::t_226db24be835de 25
+packages/modals-collection/src/apps/quick-add-app/quick-add-app-modal.tsx
+  s_0a92508e7b1d2f::t_c0448d77b645bf 6
+packages/definitions/src/integration-url-template.ts
+  s_0a92508e7b1d2f::t_2cc727d9141075 25
+  s_0a92508e7b1d2f::t_d80a1146ca549b 37
+  s_0a92508e7b1d2f::t_c9c46f6f1d8564 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "1c9a63d9ef6472b1f0ba0e5904cfdf1234349ed0",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_0a92508e7b1d2f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c346f7a5-6119-427f-bdd2-748260eb05fb",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

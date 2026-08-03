@@ -1,0 +1,40 @@
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_909ca8cf5b6e15::t_42e01bca98be01 160
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 161-162
+packages/widgets/src/vpn/component.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 6,24,60
+packages/widgets/src/network-controller/network-status/component.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 11,35-36,38,46-47,52
+  s_909ca8cf5b6e15::t_42e01bca98be01 28-32
+packages/widgets/src/paperless-ngx/component.tsx
+  s_909ca8cf5b6e15::t_42e01bca98be01 82-86
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 99
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 2570-2575,2599-2604
+packages/widgets/src/coolify/resource-row.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 6-7,30,70,85
+packages/widgets/src/vpn/vpn-card.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 105,108-110,121,188,190-192,202
+packages/widgets/src/custom-api/component.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 534-537,613
+packages/widgets/src/coolify/servers-section.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 45
+e2e/custom-widgets-custom-jsx.spec.ts
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 43,46,49-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "d5c3aebd2665e5215103543a1c8992a9cb5771cc",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

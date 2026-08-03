@@ -1,0 +1,30 @@
+apps/docs/docs/management/apps/index.mdx
+  s_c3d9a11dc1dbf1::t_923ca744475a9d 31,53
+packages/forms-collection/src/icon-picker/icon-url.ts
+  s_c3d9a11dc1dbf1::t_923ca744475a9d 1
+packages/forms-collection/src/icon-picker/icon-picker.spec.ts
+  s_c3d9a11dc1dbf1::t_923ca744475a9d 3
+  s_c3d9a11dc1dbf1::t_22a492b6802b5a 1-2,4-6,12-14
+  s_c3d9a11dc1dbf1::t_f53eefd491dd0b 7-11
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  s_c3d9a11dc1dbf1::t_22a492b6802b5a 169-179
+  s_c3d9a11dc1dbf1::t_923ca744475a9d 32
+apps/docs/docs/advanced/icons/index.mdx
+  s_c3d9a11dc1dbf1::t_923ca744475a9d 34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.19",
+  "base_commit_sha": "51acf977d0ba9727f90a43da9b2ff423a2fabb2f",
+  "prompts": {},
+  "sessions": {
+    "s_c3d9a11dc1dbf1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb809-e262-7ab1-8f8c-725dafda5d34",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+docs/README.md
+  s_d845807fb8b082::t_539214265ac985 431
+docs/ARCHITECTURE.md
+  s_d845807fb8b082::t_123fb95dbca0c4 135
+  s_d845807fb8b082::t_2dce749f724a19 63
+  s_d845807fb8b082::t_37df5948caa7aa 68,70-72
+  s_d845807fb8b082::t_ac6488788166bd 1-39,41-62,64-67,69,73-79,115-133,136-142,149-150
+  s_d845807fb8b082::t_012ca08e04207d 40
+  s_d845807fb8b082::t_95ee5c3c200bae 80-114,134,143-148
+apps/nextjs/README.md
+  s_d845807fb8b082::t_a49809a986bd94 1,3,5,7-10,12
+AGENTS.md
+  s_d845807fb8b082::t_7e8f1cc797cfac 1-7,9-13,22-27
+  h_d6e478ca18e517 8,28
+  ai_agent 14-21
+README.md
+  s_d845807fb8b082::t_33be2025f6a170 1-20
+CONTRIBUTING.md
+  s_d845807fb8b082::t_079a1c1a487d41 1-6,11-29,31-72,89-93,103-125,127-132,177-186
+  s_d845807fb8b082::t_95ee5c3c200bae 7-10,73-88,94-102
+  h_d6e478ca18e517 126
+  s_d845807fb8b082::t_389c3b7b4d8c4c 30
+  s_d845807fb8b082::t_bd66e5f24efe72 133-176
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "d418a9fc1afa7a8ac141759dad7d24fa9b7b1275",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_d845807fb8b082": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "34c67ed5-1f18-4831-823c-06e276d50036",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

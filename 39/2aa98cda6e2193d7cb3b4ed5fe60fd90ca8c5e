@@ -1,0 +1,21 @@
+pnpm-workspace.yaml
+  s_43b7496500caae::t_088d547e3bef24 180
+pnpm-lock.yaml
+  s_43b7496500caae::t_49dfb6593552ef 520,17356,17358,17360,17362-17366,17379,17404,17409,17415,17418,17450,17452-17456,17461,17486,17776,17778-17783,17785-17788,17795,19362-19364,21712,22041,25510,26517,28505
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "392aa98cda6e2193d7cb3b4ed5fe60fd90ca8c5e",
+  "prompts": {},
+  "sessions": {
+    "s_43b7496500caae": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0c968b37fffeMR4EdkW53TJ0KH",
+        "model": "deepseek/deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

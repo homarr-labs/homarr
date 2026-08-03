@@ -1,0 +1,20 @@
+packages/api/src/router/board.ts
+  s_ff29cabf3d5d19::t_5aa7031095c6ec 1607-1624
+  s_ff29cabf3d5d19::t_8f755308bb21bf 1640
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "57f585416a9fdcc26b12a8f29b15c20bd393e4ff",
+  "prompts": {},
+  "sessions": {
+    "s_ff29cabf3d5d19": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b628983b-10ca-432f-9c8a-9f8922763ccb",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

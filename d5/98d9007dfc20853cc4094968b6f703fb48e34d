@@ -1,0 +1,21 @@
+apps/docs/docusaurus.config.ts
+  s_5f1fe4cd971115::t_0dfc46d1a89e9b 11
+  s_5f1fe4cd971115::t_2b515d7cd10293 82,86-102
+  s_5f1fe4cd971115::t_071f1a2e3e8ce9 84-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d598d9007dfc20853cc4094968b6f703fb48e34d",
+  "prompts": {},
+  "sessions": {
+    "s_5f1fe4cd971115": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0c484b39dffeKD4kAo0OVMUEHZ",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

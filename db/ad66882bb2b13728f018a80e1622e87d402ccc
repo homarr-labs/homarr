@@ -1,0 +1,22 @@
+apps/nextjs/src/app/[locale]/_client-providers/query-cache-persister.ts
+  s_c7e7ee8a76120e::t_90896c357a8376 5
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_c7e7ee8a76120e::t_226796e95bb7ca 27
+  s_c7e7ee8a76120e::t_d4f09fc5ac88ec 140
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "dbad66882bb2b13728f018a80e1622e87d402ccc",
+  "prompts": {},
+  "sessions": {
+    "s_c7e7ee8a76120e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cc68c1df-119c-4aa1-973f-0c6a5a42ade8",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

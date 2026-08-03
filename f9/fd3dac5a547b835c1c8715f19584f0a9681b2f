@@ -1,0 +1,26 @@
+Dockerfile
+  s_ad9d2eb5cbf9f1::t_97b813e0710014 1
+  s_ad9d2eb5cbf9f1::t_647f6faeb31248 12
+.github/workflows/ci.yml
+  s_ad9d2eb5cbf9f1::t_a70e78966dfffd 63,114,123,127,168,170,319
+  s_ad9d2eb5cbf9f1::t_222d74718d9693 320
+  s_ad9d2eb5cbf9f1::t_1a60ae5774e720 188
+pnpm-workspace.yaml
+  s_ad9d2eb5cbf9f1::t_d0806f0af9d298 180
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "f9fd3dac5a547b835c1c8715f19584f0a9681b2f",
+  "prompts": {},
+  "sessions": {
+    "s_ad9d2eb5cbf9f1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0a3a50a11ffeKixM8BIpcyEnax",
+        "model": "deepseek/deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

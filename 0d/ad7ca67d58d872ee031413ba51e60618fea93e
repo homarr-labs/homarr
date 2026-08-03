@@ -1,0 +1,28 @@
+packages/widgets/src/common/use-persisted-table-layout.ts
+  s_e69b825ec6dfea::t_55381b1668e740 7
+  s_e69b825ec6dfea::t_59458bd0c56a71 3,12-19,32-46,173-182,186,188,216-217
+packages/widgets/src/downloads/component.tsx
+  s_e69b825ec6dfea::t_59458bd0c56a71 57,341-347
+apps/docs/docs/widgets/docker-containers/index.mdx
+  s_e69b825ec6dfea::t_59458bd0c56a71 55-58
+packages/widgets/src/beszel-system-table/component.tsx
+  s_e69b825ec6dfea::t_59458bd0c56a71 29,119-125
+packages/widgets/src/docker/component.tsx
+  s_e69b825ec6dfea::t_59458bd0c56a71 33,245-251
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "0dad7ca67d58d872ee031413ba51e60618fea93e",
+  "prompts": {},
+  "sessions": {
+    "s_e69b825ec6dfea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb3a0-792a-7381-8801-1495fcc9663b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

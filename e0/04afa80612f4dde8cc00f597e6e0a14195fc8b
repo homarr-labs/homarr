@@ -1,0 +1,28 @@
+Dockerfile
+  s_6d865fc7a8b709::t_a3e03b7b74ed80 68-70
+development/docker-run.cmd
+  s_6d865fc7a8b709::t_f1a1358877781c 2
+nginx.conf
+  s_6d865fc7a8b709::t_b24e2380d04f6c 7-8
+apps/nextjs/package.json
+  s_6d865fc7a8b709::t_ac3afc56b54be9 12
+scripts/run.sh
+  s_6d865fc7a8b709::t_e8603bfe53b6c9 41
+  s_6d865fc7a8b709::t_8f88ff6360b5b0 20-21,23,27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "e004afa80612f4dde8cc00f597e6e0a14195fc8b",
+  "prompts": {},
+  "sessions": {
+    "s_6d865fc7a8b709": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2a9089af-6f49-4b0b-82cb-fa69c5c27344",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

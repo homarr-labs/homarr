@@ -1,0 +1,23 @@
+apps/nextjs/src/app/[locale]/_client-providers/mantine.tsx
+  s_738e4e8448b788::t_f2aa1da38127eb 5
+  s_738e4e8448b788::t_6cb1371e46ca86 21
+apps/nextjs/src/app/[locale]/boards/(content)/_theme.tsx
+  s_738e4e8448b788::t_bdd58716093d79 36
+  s_738e4e8448b788::t_a41ed367b71116 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "adef3aff6550b92634c4eec464186c8424d2b3bd",
+  "prompts": {},
+  "sessions": {
+    "s_738e4e8448b788": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "04247e7b-63f0-4f5c-93da-998b7f02d8df",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

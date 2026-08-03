@@ -1,0 +1,29 @@
+apps/nextjs/src/app/[locale]/init/_steps/integrations/docker-discovery-panel.tsx
+  s_a2dfecb58231be::t_34b0698e506136 7,11-12,18,44-45,48-49,53-54,61,65-66,72-73,84,114-129,132-170
+packages/translation/src/lang/en.json
+  s_a2dfecb58231be::t_23f7029f292f81 128
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_a2dfecb58231be::t_6a8e73e94a08e1 77
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  s_a2dfecb58231be::t_51f8449f457b25 207-208
+  s_a2dfecb58231be::t_5f54c472dfd07a 67
+  s_a2dfecb58231be::t_e726af032a4130 99-110
+  s_a2dfecb58231be::t_f177e5949ed796 92
+  s_a2dfecb58231be::t_d24eb4b1cebe90 135-136,138
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "1df84cbccd76d186b5b6d10b620587a0e393d07a",
+  "prompts": {},
+  "sessions": {
+    "s_a2dfecb58231be": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f4c6d2f-efab-46a4-9597-2b42074b48c7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

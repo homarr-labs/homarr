@@ -1,0 +1,19 @@
+.github/workflows/code-quality.yml
+  s_49af85ce82109e::t_b73683ac5ae205 45-46,49,51-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "946dc8ac23e5466a572015b6d9220e4117e89b07",
+  "prompts": {},
+  "sessions": {
+    "s_49af85ce82109e": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_19792065dffe0O8nQnXmkuYTJG",
+        "model": "deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

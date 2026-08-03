@@ -1,0 +1,137 @@
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  s_3dcc22b87e2334::t_5a4559fc817a3d 164
+  s_7ba3fee1318525::t_8a0da984ffcf8a 153-157,161,181-182,184-185,198
+packages/widgets/src/vpn/component.tsx
+  s_3dcc22b87e2334::t_5d8391decef172 12-15
+  s_7ba3fee1318525::t_276492918ed0b4 1-11,16-41
+packages/api/src/router/widgets/vpn.ts
+  s_3dcc22b87e2334::t_1a004c99f01556 5-24
+  s_3dcc22b87e2334::t_27179fd6156c3c 2-4
+  s_3dcc22b87e2334::t_8cd95c3f197b04 25
+packages/request-handler/src/vpn.ts
+  s_3dcc22b87e2334::t_be56a3b83efcea 6-10
+  s_3dcc22b87e2334::t_270d05c7186b7e 3-5
+  s_3dcc22b87e2334::t_eef5c4692e2a37 11-13
+CHANGELOG.md
+  s_3dcc22b87e2334::t_e47ec5a8197fde 1-26
+CODEOWNERS
+  s_3dcc22b87e2334::t_3ddd82f014bcb0 4-8
+apps/docs/docs/integrations/gluetun/index.mdx
+  s_3dcc22b87e2334::t_b6fd6a14fc8355 1-52
+apps/docs/docs/integrations/gluetun/index.ts
+  s_3dcc22b87e2334::t_6c46b36c5063ea 1-8
+apps/docs/docs/widgets/vpn/index.mdx
+  s_3dcc22b87e2334::t_9887ef1a2de68d 1-40
+apps/docs/docs/widgets/vpn/index.ts
+  s_3dcc22b87e2334::t_6b0f65e45b9862 1-9
+apps/nextjs/src/app/[locale]/manage/about/page.tsx
+  s_3dcc22b87e2334::t_919e9df9ba04b9 43-46,60,164
+apps/nextjs/src/app/[locale]/manage/error.tsx
+  s_3dcc22b87e2334::t_865e0f7aa8b4ef 1-42
+apps/nextjs/src/app/[locale]/manage/tools/docker/page.tsx
+  s_3dcc22b87e2334::t_80996711f7ae4c 26
+apps/nextjs/src/app/api/about/contributors/crowdin/route.ts
+  s_3dcc22b87e2334::t_9409ce903cbc76 3
+apps/nextjs/src/app/api/about/contributors/github/route.ts
+  s_3dcc22b87e2334::t_f2be6fa75ea061 3
+apps/nextjs/src/app/api/about/contributors/opencollective/route.ts
+  s_3dcc22b87e2334::t_22ddf916743b4d 3
+apps/nextjs/src/app/api/backup/test/backup.spec.ts
+  s_3dcc22b87e2334::t_ca3228f35106b6 214-224
+apps/nextjs/src/components/backup/use-backup-analysis.ts
+  s_3dcc22b87e2334::t_1cca9265e05b6a 145-146
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_3dcc22b87e2334::t_1d752b3a2be621 44-49
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_3dcc22b87e2334::t_5916b5acdc5f91 60
+apps/nextjs/src/components/layout/header/docker-quick-access-modal.tsx
+  s_3dcc22b87e2334::t_91d8a20bd6f5d9 1-10
+apps/nextjs/src/components/layout/header/user.tsx
+  s_3dcc22b87e2334::t_ecd5b85142c242 6,15,18
+apps/nextjs/src/components/user-avatar-menu.tsx
+  s_3dcc22b87e2334::t_c7a762182a48aa 8-16,28,34,37,47,94-98
+apps/nextjs/tsconfig.json
+  s_3dcc22b87e2334::t_b34a159e9d19ce 6
+package.json
+  s_3dcc22b87e2334::t_e2bc8de5485005 3
+packages/api/src/router/widgets/index.ts
+  s_3dcc22b87e2334::t_33b84b057ea2d5 39
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_3dcc22b87e2334::t_eb358d0acb2eda 182,284,342,386
+packages/definitions/src/docs/integration-doc-slugs.ts
+  s_3dcc22b87e2334::t_6851548ed04432 58
+packages/definitions/src/docs/widget-doc-slugs.ts
+  s_3dcc22b87e2334::t_be0a46dbc77ea5 46
+packages/definitions/src/integration.ts
+  s_3dcc22b87e2334::t_9c8b599127de0c 492-498,614
+packages/definitions/src/widget-integration-map.ts
+  s_3dcc22b87e2334::t_e0cd23814ab36d 41
+packages/definitions/src/widget.ts
+  s_3dcc22b87e2334::t_613ff14c54cad1 44
+packages/integrations/src/base/creator.ts
+  s_3dcc22b87e2334::t_74eb43576a7fb9 24,141
+packages/integrations/src/gluetun/gluetun-integration.ts
+  s_3dcc22b87e2334::t_76dcb926594e11 1-115
+packages/integrations/src/gluetun/gluetun-types.ts
+  s_3dcc22b87e2334::t_8e31bf140b0060 1-116
+packages/integrations/src/gluetun/test/gluetun-integration.spec.ts
+  s_3dcc22b87e2334::t_90083bb55a2688 1-371
+packages/integrations/src/gotify/gotify-integration.ts
+  s_3dcc22b87e2334::t_b8fe559c5916f3 18-20,34-41
+packages/integrations/src/interfaces/vpn-summary/vpn-summary-integration.ts
+  s_3dcc22b87e2334::t_6758b87be4019b 1-5
+packages/integrations/src/interfaces/vpn-summary/vpn-summary-types.ts
+  s_3dcc22b87e2334::t_3dffae817aa58c 1-13
+packages/integrations/src/plex/plex-integration.ts
+  s_3dcc22b87e2334::t_ca12a98efd8c1e 130-136,140-141,232-233
+packages/integrations/src/plex/test/plex-integration.spec.ts
+  s_3dcc22b87e2334::t_18ca54fd93cbba 1-140
+packages/integrations/src/types.ts
+  s_3dcc22b87e2334::t_60c43fc1bc0287 7,26
+packages/integrations/test/technitium.spec.ts
+  s_3dcc22b87e2334::t_c940f72fff6c75 5,26,29,80,97,107,127,132,142,147-211,213-215,217-219,221-222,224-225,227-232,234,236,238-242,244,246-248,250-251,253,255-256,258-259,261-263,265-347
+packages/widgets/src/downloads/component.tsx
+  s_3dcc22b87e2334::t_0f28deb5eb42e2 4,545
+packages/widgets/src/downloads/styles.css
+  s_3dcc22b87e2334::t_e274cd42041bcb 1-12
+packages/widgets/src/index.tsx
+  s_3dcc22b87e2334::t_8d8b71ca3c190c 55,112
+packages/widgets/src/vpn/helpers.ts
+  s_7ba3fee1318525::t_2974d7f1ee9380 1-5
+packages/widgets/src/vpn/index.ts
+  s_3dcc22b87e2334::t_ff24256bc113c8 1-14
+packages/widgets/src/vpn/vpn-card.tsx
+  s_3dcc22b87e2334::t_180051aa25374e 1-164
+pnpm-lock.yaml
+  s_3dcc22b87e2334::t_4c4b589336f3a3 508-509,535-536,578,1968,2700,7885-7886,7895-7898,11809-11810,14266-14267,14727-14728,21482,21485,21489,21491,21498-21502,25999,26002,28812,29261,29264-29265,29270,29272,29276,29279
+pnpm-workspace.yaml
+  s_3dcc22b87e2334::t_a621785723b4e3 174,184,217
+static-data/contributors.json
+  s_3dcc22b87e2334::t_407a0230c04e4e 1
+static-data/translators.json
+  s_3dcc22b87e2334::t_0acee362d4fdcc 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "96fe0d55c768549edbf6c074d0e46caeb82f9c8e",
+  "prompts": {},
+  "sessions": {
+    "s_3dcc22b87e2334": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "52c1f4dc-82eb-45e2-85c7-95add5cdff11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7ba3fee1318525": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a27f97ff-185c-401c-9c33-42c2e5ecb237",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

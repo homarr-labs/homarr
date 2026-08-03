@@ -1,0 +1,19 @@
+scripts/run.sh
+  s_969e77f6bcbd27::t_56d95c009ea69e 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "0d06b56483de41acaacc67a48143b36f9b5d3a32",
+  "prompts": {},
+  "sessions": {
+    "s_969e77f6bcbd27": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5c47-020a-7a12-b6b9-f3305b2e6beb",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

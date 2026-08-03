@@ -1,0 +1,21 @@
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_54eadb91a468f1::t_d8356bd6bc56a4 26-30
+  s_54eadb91a468f1::t_ad4906e2aa4cf1 111-116
+  s_54eadb91a468f1::t_e10c798016b522 134,144,153-158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "5f5b5379e8e638d8879dd3bc78620a22f133e646",
+  "prompts": {},
+  "sessions": {
+    "s_54eadb91a468f1": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ac182926-57a2-42f3-86e5-adca2b273cb5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

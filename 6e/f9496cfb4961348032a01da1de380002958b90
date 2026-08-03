@@ -1,0 +1,62 @@
+apps/nextjs/src/app/[locale]/manage/tools/api/page.tsx
+  s_fb267ae774f6cf::t_57e03177734ec1 13
+  s_fb267ae774f6cf::t_4219ded6cfa660 96-97
+  s_fb267ae774f6cf::t_b183d6c5899ab0 83-86
+Dockerfile
+  s_fb267ae774f6cf::t_9b80fec0823255 56
+packages/integrations/src/media-organizer/lidarr/lidarr-integration.ts
+  s_fb267ae774f6cf::t_5b1b60b5a43965 70-78,81-83,85
+  s_fb267ae774f6cf::t_a8bfabeb02aa42 136-140,143-148
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/layout.tsx
+  s_fb267ae774f6cf::t_8a07d1471b46a4 28
+  s_fb267ae774f6cf::t_645b7351d3e90e 10
+packages/widgets/src/app/component.tsx
+  s_fb267ae774f6cf::t_f8ff9ac39d0362 90
+apps/nextjs/src/components/navigation/dynamic-breadcrumb.tsx
+  s_fb267ae774f6cf::t_02dc4b2696d044 17-18
+  s_fb267ae774f6cf::t_f7921efbd0f216 65-66,68,78
+apps/nextjs/src/app/[locale]/manage/tools/backup/page.tsx
+  s_fb267ae774f6cf::t_9b28cd2ec1ec39 9
+  s_fb267ae774f6cf::t_53bdf6180dd8f3 35-42
+apps/nextjs/src/components/board/sections/item.module.css
+  s_fb267ae774f6cf::t_9f52a03312a744 13-17
+apps/nextjs/src/versions/package-reader.ts
+  s_fb267ae774f6cf::t_d645c5ac5cf049 38-47
+packages/integrations/test/glances-unit.spec.ts
+  s_fb267ae774f6cf::t_47c583d03e7bda 3
+  s_fb267ae774f6cf::t_dc0842f9ce8799 91-94
+  s_fb267ae774f6cf::t_5662b396fa32f3 67,69-76,78-79
+  s_fb267ae774f6cf::t_273da3c9033747 8
+  s_fb267ae774f6cf::t_a3a14b42375574 68,77
+  s_fb267ae774f6cf::t_a80420d4603a86 96,106,115,120-151
+packages/widgets/src/notebook/notebook.tsx
+  s_fb267ae774f6cf::t_28500f96737417 266-271,273
+packages/integrations/src/glances/glances-integration.ts
+  s_fb267ae774f6cf::t_2c876c70488bee 38,61
+  s_fb267ae774f6cf::t_f9713e880e6661 83-93
+  s_fb267ae774f6cf::t_00a1fb6a6985ea 187-216
+packages/integrations/test/lidarr-unit.spec.ts
+  s_fb267ae774f6cf::t_a2555208681ca2 33
+  s_fb267ae774f6cf::t_0668bd32e643bb 1-32,34-66
+packages/widgets/src/releases/component.tsx
+  s_fb267ae774f6cf::t_1b7f457c1bc873 567
+  s_fb267ae774f6cf::t_ff590e26bf4c06 250
+packages/widgets/src/app/app.module.css
+  s_fb267ae774f6cf::t_d05e51f4e979f9 11-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "6ef9496cfb4961348032a01da1de380002958b90",
+  "prompts": {},
+  "sessions": {
+    "s_fb267ae774f6cf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3c202296-f9b1-465e-87da-f0fe04af617d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

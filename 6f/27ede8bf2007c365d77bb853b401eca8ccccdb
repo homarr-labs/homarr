@@ -1,0 +1,101 @@
+packages/modals/src/index.tsx
+  s_909ca8cf5b6e15::t_7feb27fce73bc8 128
+packages/widgets/src/media-requests/list/component.tsx
+  s_909ca8cf5b6e15::t_1f979008b7df23 17,35,44-46,97
+  s_909ca8cf5b6e15::t_8bb5f74c15356e 3
+  s_909ca8cf5b6e15::t_d95b7f5ed7c113 49,51-55,59,74
+packages/widgets/src/health-monitoring/system-health.tsx
+  s_909ca8cf5b6e15::t_f02c872b9e5692 73
+  s_909ca8cf5b6e15::t_d95b7f5ed7c113 58-59
+apps/nextjs/src/components/board/items/widget-query-scope.ts
+  s_909ca8cf5b6e15::t_96561238e8f526 3-4,30,56,75
+packages/widgets/src/traefik/component.tsx
+  s_909ca8cf5b6e15::t_6523b3d0888c44 149-190,192-194,197-203
+packages/widgets/src/umami/umami-content.tsx
+  s_909ca8cf5b6e15::t_2a552509c7c2b1 155
+  s_909ca8cf5b6e15::t_6ecea0064af1d5 4,27,42,154,156-191,256
+packages/widgets/src/common/integration-error-indicator.tsx
+  s_909ca8cf5b6e15::t_d95b7f5ed7c113 6-7,19,23-24
+  s_909ca8cf5b6e15::t_fd27abe45942bb 14-15,18,20,22,28-33,35
+  s_909ca8cf5b6e15::t_b6fa66b90438f7 3,27,34
+packages/widgets/src/media-requests/stats/component.tsx
+  s_909ca8cf5b6e15::t_1f979008b7df23 25,49-54,108-110
+packages/api/src/router/widgets/calendar.ts
+  s_909ca8cf5b6e15::t_62bc616cbd6a59 30-35,37-59
+packages/widgets/src/uptime-kuma/component.tsx
+  s_909ca8cf5b6e15::t_6523b3d0888c44 4,216-242,244-246,249-255
+apps/nextjs/src/components/board/sections/gridstack/board-empty-space-context-menu.tsx
+  s_909ca8cf5b6e15::t_7feb27fce73bc8 51,57,200-211
+  s_909ca8cf5b6e15::t_14d094190acd92 190
+  s_909ca8cf5b6e15::t_91e1089bb525c5 52-56,58-59,186,199,212
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_909ca8cf5b6e15::t_fd27abe45942bb 19,103,139
+packages/api/src/router/widgets/beszel.ts
+  s_909ca8cf5b6e15::t_96561238e8f526 58,132
+packages/widgets/src/media-server/component.tsx
+  s_909ca8cf5b6e15::t_1f979008b7df23 28,309,322-329
+packages/widgets/src/beszel-system-table/component.tsx
+  s_909ca8cf5b6e15::t_fd27abe45942bb 43,429
+apps/docs/docs/widgets/media-request-list/index.mdx
+  s_909ca8cf5b6e15::t_cb0a028ac127fe 49
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_c3b7e5b14cc3f1 198,203
+  s_909ca8cf5b6e15::t_91e1089bb525c5 201-202
+  s_909ca8cf5b6e15::t_1636adcdd92716 186,188-191
+packages/widgets/src/definition.ts
+  s_909ca8cf5b6e15::t_96561238e8f526 123-131,139-140
+packages/widgets/src/audio-stats/component.tsx
+  s_909ca8cf5b6e15::t_1f979008b7df23 11
+  s_909ca8cf5b6e15::t_450807a6a24813 51,55-59
+packages/widgets/src/beszel-alerts/component.tsx
+  s_909ca8cf5b6e15::t_fd27abe45942bb 15,88
+apps/docs/docs/management/api/index.mdx
+  s_909ca8cf5b6e15::t_cb0a028ac127fe 86-92
+packages/api/src/router/widgets/media-server.ts
+  s_909ca8cf5b6e15::t_62bc616cbd6a59 26-50
+packages/widgets/src/calendar/component.tsx
+  s_909ca8cf5b6e15::t_450807a6a24813 5
+  s_909ca8cf5b6e15::t_1f979008b7df23 18,29,60-63,69,81,88-96
+  s_909ca8cf5b6e15::t_d95b7f5ed7c113 123-127
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_909ca8cf5b6e15::t_fd27abe45942bb 39,409,439
+packages/widgets/src/index.tsx
+  s_909ca8cf5b6e15::t_96561238e8f526 77-82
+packages/api/src/router/widgets/media-requests.ts
+  s_909ca8cf5b6e15::t_62bc616cbd6a59 37-41,43-55,73-78,94-98,100-105,107-111,124-126
+  s_909ca8cf5b6e15::t_9797f81190441f 42,99
+  s_909ca8cf5b6e15::t_3f6c74923867d7 106,113
+  s_909ca8cf5b6e15::t_b77822d48e42f1 3,6,18-23,36,90-93
+packages/widgets/src/umami/component.tsx
+  s_909ca8cf5b6e15::t_6ecea0064af1d5 17,79
+packages/api/src/router/test/widgets/partial-integration-failures.spec.ts
+  s_909ca8cf5b6e15::t_3f6c74923867d7 166
+  s_909ca8cf5b6e15::t_163fb0e8211829 37,39-40,57-58
+  s_909ca8cf5b6e15::t_0d510dfaadcdd8 1-10,13-21,23-36,59-64,75-100,102-149,158-165,174-175
+  s_909ca8cf5b6e15::t_9797f81190441f 11-12,22,38,41-56,65-74,101,150-157,167-173
+apps/docs/docs/widgets/calendar/index.mdx
+  s_909ca8cf5b6e15::t_cb0a028ac127fe 77
+apps/docs/docs/widgets/media-server/index.mdx
+  s_909ca8cf5b6e15::t_cb0a028ac127fe 28
+packages/widgets/src/health-monitoring/component.tsx
+  s_909ca8cf5b6e15::t_d95b7f5ed7c113 48
+  s_909ca8cf5b6e15::t_6ecea0064af1d5 44-47,49-54,56
+apps/docs/docs/widgets/media-request-stats/index.mdx
+  s_909ca8cf5b6e15::t_cb0a028ac127fe 46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "6f27ede8bf2007c365d77bb853b401eca8ccccdb",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

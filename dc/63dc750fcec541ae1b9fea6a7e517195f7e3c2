@@ -1,0 +1,23 @@
+apps/workshop/README.md
+  s_955a5b644d1c62::t_a9d5a44e702396 37-43
+apps/workshop/docker-compose.yml
+  s_955a5b644d1c62::t_8703c5204f7c60 22-37
+package.json
+  s_955a5b644d1c62::t_5ee93f8e898abf 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "dc63dc750fcec541ae1b9fea6a7e517195f7e3c2",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

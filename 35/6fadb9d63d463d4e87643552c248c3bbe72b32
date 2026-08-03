@@ -1,0 +1,116 @@
+packages/request-handler/src/releases.ts
+  s_3dcc22b87e2334::t_623f9b344a1cd0 3,5-7,9
+  s_3dcc22b87e2334::t_87d765f337bf3e 1-2
+packages/widgets/src/timetable/component.tsx
+  s_3dcc22b87e2334::t_49dd79fdbd4ca8 25,27
+packages/request-handler/src/timetable.ts
+  s_3dcc22b87e2334::t_6ddec58aee941b 6-37,39,42-44,46
+  s_3dcc22b87e2334::t_29f75c08d6fec8 3-5
+packages/api/src/router/widgets/releases.ts
+  s_3dcc22b87e2334::t_5942d9fc86c183 91
+  s_3dcc22b87e2334::t_a377fca4aeeeaa 88-90
+.gitignore
+  s_3dcc22b87e2334::t_3f226d07bb6488 5,74-75
+CHANGES.md
+  s_3dcc22b87e2334::t_d8ca523dd81884 1-96
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_3dcc22b87e2334::t_b8f3f55cfa1f55 31,50-61,64-66,68-72,77-81,88,93,96,101,105,110,119-123,126,130-134,137-138,142-143,150,153,166,172,183,185,200-204,211-215,220-224,228-231,278,283,289,305,312,342,347,357,384,389,393,400,404
+apps/docs/docs/widgets/immich-album-carousel/index.ts
+  s_3dcc22b87e2334::t_5002a32045a02b 12-13,27-33
+apps/docs/docs/widgets/releases/index.mdx
+  s_3dcc22b87e2334::t_b313e91a6e3283 2-3,7-15,19-21,23,29-34,41
+apps/docs/docs/widgets/releases/index.ts
+  s_3dcc22b87e2334::t_526bf9cd7b9935 57-58,63-65,68-73
+apps/docs/docs/widgets/timetable/index.mdx
+  s_3dcc22b87e2334::t_a0ed54616b31cd 2-3,7-10,12,18-19,22-31,39
+apps/docs/docs/widgets/timetable/index.ts
+  s_3dcc22b87e2334::t_dfd2dd6a6906fc 11-16
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_3dcc22b87e2334::t_a8a13d56ca4266 88
+docs/README.md
+  s_3dcc22b87e2334::t_56075505a459ff 110-111,133-134,136,140-141,143,159-160,180-181,208-209,215-216,257-258,264-265,348-349,355-356,397-398
+packages/api/src/mcp.ts
+  s_3dcc22b87e2334::t_44e74318c11d52 20,39
+packages/api/src/router/widgets/index.ts
+  s_3dcc22b87e2334::t_4b60026175d737 42
+packages/api/src/router/widgets/timetable.ts
+  s_3dcc22b87e2334::t_66208107495fcb 10-11,14-23,35,39-41
+packages/api/src/router/widgets/widget-secrets.ts
+  s_3dcc22b87e2334::t_9c35683da5888a 1,4-95
+packages/db/migrations/custom/0000_release_widget_provider_to_options.ts
+  s_3dcc22b87e2334::t_ef4780b4a56c27 4,26-27,29-30,34,37-38,58
+packages/db/migrations/custom/0003_remove_widget_only_integrations.ts
+  s_3dcc22b87e2334::t_063704fb8c6213 1,3-5,7-17,19,21-30,32-33,35-46,48,50-59,61,63-79,81-85,87,89-93,95-99
+packages/db/migrations/custom/index.ts
+  s_3dcc22b87e2334::t_7dadd2391952f1 5,11
+packages/db/schema/index.ts
+  s_3dcc22b87e2334::t_9d6cd836a6470b 54
+packages/db/schema/mysql.ts
+  s_3dcc22b87e2334::t_2ffa2f307be6d0 544-562,768,775-781
+packages/db/schema/postgresql.ts
+  s_3dcc22b87e2334::t_a3bee48d4c8c18 543-561,767,774-780
+packages/db/schema/sqlite.ts
+  s_3dcc22b87e2334::t_94c72640c41f5d 533-551,757,764-770
+packages/definitions/src/docker-integration-match.ts
+  s_3dcc22b87e2334::t_07ac11f64910ec 63
+packages/definitions/src/index.ts
+  s_3dcc22b87e2334::t_e9c60d08a14cf5 20
+packages/definitions/src/integration.ts
+  s_3dcc22b87e2334::t_28b8cd60539a51 433
+packages/definitions/src/release-provider.ts
+  s_3dcc22b87e2334::t_4edfefe66c797a 1-78
+packages/definitions/src/test/release-provider.spec.ts
+  s_3dcc22b87e2334::t_a54701bec90299 1-32
+packages/definitions/src/widget-integration-map.ts
+  s_3dcc22b87e2334::t_18651899b99903 41,83
+packages/integrations/src/base/creator.ts
+  s_3dcc22b87e2334::t_81a2e9a0f315ba 18
+packages/integrations/src/index.ts
+  s_3dcc22b87e2334::t_bfa34a3c6ecef9 3,83-87
+packages/request-handler/src/release-providers.ts
+  s_3dcc22b87e2334::t_de2d3f7f6adce5 1-2,4-15,17,20-21,44-48,50-57,59-829
+packages/request-handler/src/test/release-providers.spec.ts
+  s_3dcc22b87e2334::t_51151d4bbdc082 1-2,5-29,33-37,39,41-63,65-70,72-87,89-94,96-107,109-114,116-117,119-123,125-127,129-134,136-148,150-151,153-157,159-160,162,164-167,169-176,178-192
+packages/translation/src/lang/en.json
+  s_3dcc22b87e2334::t_7cff3b1e5cbf8b 1906-1908,2782-2783,2792-2795,3160-3162,3210-3216,3239-3241
+packages/widgets/src/_inputs/common.tsx
+  s_3dcc22b87e2334::t_b4f2f93aa50536 11
+packages/widgets/src/_inputs/widget-dynamic-select-input.tsx
+  s_3dcc22b87e2334::t_baaceffcd0f40b 27-31
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_3dcc22b87e2334::t_2abadcc538377a 4,29-37,63-75
+packages/widgets/src/immich/album-carousel/index.ts
+  s_3dcc22b87e2334::t_fae5be610728c1 4-5,15,17-28,39-42
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_3dcc22b87e2334::t_61cbf86f247d60 41,150
+packages/widgets/src/options.ts
+  s_3dcc22b87e2334::t_5f44f2ac0ee752 58
+packages/widgets/src/releases/component.tsx
+  s_3dcc22b87e2334::t_65d218b5cc0004 23-25,39,59-64,66,68,76,78,82,84,90-93,96,99,111,113,119,127,150,184,198,540,544,548,555-556,620,630-631
+packages/widgets/src/releases/index.ts
+  s_3dcc22b87e2334::t_5a59a90206eea6 4-6,45-54,57-58,69
+packages/widgets/src/releases/releases-repository.ts
+  s_3dcc22b87e2334::t_316538228317e4 1-2,11,16,38
+packages/widgets/src/timetable/index.ts
+  s_3dcc22b87e2334::t_9a4994e3b8c71d 2,13-16,18-22
+pnpm-lock.yaml
+  s_3dcc22b87e2334::t_9842caa4533092 445,578-579,14312-14314,27464,28957-28966
+pnpm-workspace.yaml
+  s_3dcc22b87e2334::t_6290c8878ccbca 96,223-224
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.9",
+  "base_commit_sha": "356fadb9d63d463d4e87643552c248c3bbe72b32",
+  "prompts": {},
+  "sessions": {
+    "s_3dcc22b87e2334": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "52c1f4dc-82eb-45e2-85c7-95add5cdff11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

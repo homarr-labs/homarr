@@ -1,0 +1,19 @@
+apps/docs/docusaurus.config.ts
+  s_6d61b414731daa::t_6e6d55d41c26ec 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "28ceb37cbfe45f8ce45fd88e6a8c87ffe4c9b5c2",
+  "prompts": {},
+  "sessions": {
+    "s_6d61b414731daa": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "de711b7a-5949-4ab2-942d-f31b6bf2d776",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

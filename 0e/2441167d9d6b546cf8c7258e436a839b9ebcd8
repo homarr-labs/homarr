@@ -1,0 +1,265 @@
+pnpm-workspace.yaml
+  ai_agent 23-33,46-48,142,174
+packages/widgets/src/system-resources/chart/combined-network-traffic.tsx
+  ai_agent 41
+packages/ui/src/components/user-avatar-group.tsx
+  ai_agent 15
+packages/modals/src/modal-sizes.ts
+  ai_agent 1
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-card.tsx
+  ai_agent 36,61-66
+apps/nextjs/src/app/[locale]/init/_steps/finish/init-finish.tsx
+  ai_agent 16
+apps/nextjs/src/components/integration/integration-select-grid.tsx
+  s_a2dfecb58231be::t_6d324b77d4a419 4-5,9,26-42,44-46,48-82,84-89
+  s_a2dfecb58231be::t_3534f0a1b42c7a 11
+apps/nextjs/src/app/[locale]/manage/users/invites/page.tsx
+  ai_agent 6,8-10,23,25,27-35,37
+.nvmrc
+  ai_agent 1
+tooling/github/setup/action.yml
+  ai_agent 10
+packages/widgets/src/coolify/single-instance-layout.tsx
+  ai_agent 14,47,50,78-82
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-card.module.css
+  ai_agent 7-11,16-17
+packages/widgets/src/coolify/instance-card.tsx
+  ai_agent 53
+packages/ui/src/theme.ts
+  ai_agent 1,3,6-40,42-59,61-101,104
+packages/widgets/src/system-resources/chart/memory-chart.tsx
+  ai_agent 45
+packages/ui/src/components/index.tsx
+  s_a2dfecb58231be::t_345f0de89d8085 19-24
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  ai_agent 205
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  ai_agent 113
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  ai_agent 81
+apps/nextjs/src/components/board/sections/category-section.tsx
+  ai_agent 48
+packages/modals-collection/src/docker/add-docker-app-to-homarr.tsx
+  ai_agent 61
+deployments/prebuilt-debian/package.json
+  ai_agent 8
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-gauge/resource-gauge.tsx
+  ai_agent 11-12,23-24
+apps/nextjs/src/app/[locale]/manage/users/create/_components/stepper-navigation.tsx
+  ai_agent 28
+apps/nextjs/src/components/no-results.tsx
+  ai_agent 17,23
+packages/widgets/src/system-resources/chart/cpu-chart.tsx
+  ai_agent 39
+apps/nextjs/src/app/[locale]/manage/boards/page.tsx
+  ai_agent 15-22,31-32,43-50,57-58,73,80,128
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_profile-avatar-form.tsx
+  ai_agent 98
+.github/workflows/deployment-docker-image.yml
+  ai_agent 69
+packages/widgets/src/media-transcoding/panels/statistics.panel.tsx
+  ai_agent 94
+packages/widgets/src/tracearr/recent-activity-section.tsx
+  ai_agent 27
+packages/modals-collection/src/search-engines/request-media-modal.tsx
+  ai_agent 86,89
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-list.tsx
+  ai_agent 4,13,75
+packages/widgets/src/modals/widget-advanced-options-modal.tsx
+  ai_agent 3,6,37,57,65
+packages/ui/src/select-grid-layout.tsx
+  s_a2dfecb58231be::t_626db293248e98 1-42
+apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+  ai_agent 2,13,40,42-64,77
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/_group-permission-form.tsx
+  ai_agent 104
+apps/nextjs/src/app/[locale]/manage/not-found.tsx
+  ai_agent 10
+apps/nextjs/src/app/[locale]/manage/users/create/_components/create-user-stepper.tsx
+  ai_agent 152,168,188,201,207,214
+apps/nextjs/src/app/[locale]/init/_steps/user/init-user.tsx
+  ai_agent 7
+packages/widgets/src/media-transcoding/panels/queue.panel.tsx
+  ai_agent 1-14,41,54-55,79
+package.json
+  ai_agent 62
+packages/translation/src/lang/en.json
+  ai_agent 1131-1133,1165-1167,1332-1333,3536-3537
+packages/widgets/src/notifications/component.tsx
+  ai_agent 70
+apps/nextjs/src/app/[locale]/init/_steps/group/init-group.tsx
+  ai_agent 37
+packages/widgets/src/coolify/types.ts
+  ai_agent 6
+apps/nextjs/src/app/[locale]/init/_steps/start/init-start.tsx
+  ai_agent 13
+packages/ui/src/theme/modal.ts
+  ai_agent 1-33
+apps/nextjs/src/app/[locale]/manage/tools/certificates/page.tsx
+  ai_agent 82
+Dockerfile
+  ai_agent 1
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  ai_agent 119,197
+apps/nextjs/src/app/[locale]/init/_steps/import/init-import.tsx
+  ai_agent 23
+apps/nextjs/src/app/[locale]/_client-providers/mantine.tsx
+  ai_agent 5,12,21
+apps/nextjs/src/app/[locale]/widgets/[kind]/_content.tsx
+  ai_agent 102,126-132,137-143,148-154
+apps/nextjs/src/app/[locale]/manage/users/groups/_groups-table.tsx
+  ai_agent 262
+apps/nextjs/src/app/[locale]/manage/settings/_components/analytics.settings.tsx
+  ai_agent 44-45
+packages/integrations/src/speedtest-tracker/test/speedtest-tracker-types.spec.ts
+  ai_agent 1-19
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_a2dfecb58231be::t_7c5fc9e9f0467f 2,88-101,108,131,133-142,144,146-149
+  ai_agent 8,112,145,168
+  s_a2dfecb58231be::t_fa2a55deceb03b 102-107
+  s_a2dfecb58231be::t_d6adc0ea9d3f82 132
+  s_a2dfecb58231be::t_72bc57b8c1f737 11
+apps/nextjs/src/components/board/sections/dynamic/dynamic-menu.tsx
+  ai_agent 46,48-56
+apps/nextjs/src/app/[locale]/manage/users/invites/_components/invite-create-button.tsx
+  ai_agent 1-20
+apps/nextjs/src/components/layout/navigation-link.tsx
+  ai_agent 15,31
+apps/nextjs/src/components/board/items/item-menu.tsx
+  ai_agent 108,110-118
+apps/nextjs/src/app/[locale]/manage/users/groups/_client.tsx
+  ai_agent 3-4,36-41,47,51
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_a2dfecb58231be::t_05e2b20d1d89e0 9,47-58,60-70,72-76,78-79,81-91,93-97,100-104
+  s_a2dfecb58231be::t_9e1d35caa82f71 80
+  ai_agent 2-3,7-8,11,21-22,37-39,71,92,99,108
+  s_a2dfecb58231be::t_43268eac3b0f6e 59
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/test-connection-certificate.tsx
+  ai_agent 219
+apps/nextjs/src/app/[locale]/manage/users/_components/user-list.tsx
+  ai_agent 4,11,19,75
+packages/widgets/src/tracearr/streams-section.tsx
+  ai_agent 48,103
+apps/nextjs/src/components/manage/danger-zone.tsx
+  ai_agent 18
+packages/old-import/src/components/initial/import-settings-card.tsx
+  ai_agent 20
+packages/widgets/src/system-resources/chart/gpu-chart.tsx
+  ai_agent 39
+packages/widgets/src/health-monitoring/cluster/resource-table.tsx
+  ai_agent 1,20,22,24,26,29,31,34,36
+apps/nextjs/src/app/[locale]/manage/about/page.tsx
+  ai_agent 93,196,198
+packages/widgets/src/tracearr/violations-section.tsx
+  ai_agent 22
+apps/nextjs/src/components/board/sections/category/category-menu.tsx
+  ai_agent 33,35
+apps/nextjs/src/app/[locale]/init/_steps/import/file-info-card.tsx
+  ai_agent 16
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  s_a2dfecb58231be::t_7de19e664ce323 4-5,9,11,50-75,77-79,81-116,118-123
+packages/modals/src/modal-form-footer.tsx
+  ai_agent 1-59
+packages/widgets/src/releases/component.module.scss
+  ai_agent 5
+apps/nextjs/src/app/[locale]/manage/boards/_components/create-board-button.tsx
+  ai_agent 3,10-11,18-36
+pnpm-lock.yaml
+  ai_agent 61,64,67,70,73,76,79,82,85,88,91,127-128,130-131,133-134,415-416,511-512,612,765,768,771,777,780,1016,1126,1132,1138,4007-4008,4013-4014,4019-4020,4025-4026,4031-4032,4037-4038,4043-4044,4049-4050,4056-4057,4063-4064,4070-4071,4077-4078,4084-4085,4091-4092,4098-4099,4105-4106,4111-4112,4117-4118,4123-4124,4878-4879,4881-4882,4884-4885,4887,4890-4891,4893,4897-4898,7971-7972,9743-9754,10459,10469,11217,11220,11223,11226,11229,11232,11235,11238,11241,11244,11247,11250,11253,11256,11259,11262,11265,11268,11271,12168,12170,12172,12174-12175,12178,12180,12184,12186,12459,12468-12469,12471,12473,12483,12485,15370,15374-15392,17376
+packages/widgets/src/docker/component.tsx
+  ai_agent 65
+apps/nextjs/src/app/[locale]/init/_steps/settings/init-settings.tsx
+  ai_agent 33,42
+packages/modals/index.ts
+  ai_agent 3-4
+apps/nextjs/src/app/[locale]/manage/users/page.tsx
+  ai_agent 7,9-10,32,37-49
+packages/modals-collection/src/apps/quick-add-app/quick-add-app-modal.tsx
+  ai_agent 6,57
+packages/widgets/src/tracearr/stats-section.tsx
+  ai_agent 35
+packages/widgets/src/media-requests/stats/component.tsx
+  ai_agent 26-28,157
+apps/nextjs/src/components/manage/manage-page-layout.tsx
+  ai_agent 1-44
+deployments/prebuilt-debian/Dockerfile
+  ai_agent 1
+apps/nextjs/src/app/[locale]/manage/apps/page.tsx
+  ai_agent 3,14,41,43-65,78
+packages/widgets/src/modals/widget-edit-modal.tsx
+  ai_agent 4,10,126-145,147-148,158
+packages/old-import/src/components/initial/import-summary-card.tsx
+  ai_agent 16,27
+packages/integrations/src/speedtest-tracker/speedtest-tracker-types.ts
+  ai_agent 5
+apps/nextjs/src/app/[locale]/manage/page.tsx
+  ai_agent 32,35,39,42,45
+packages/widgets/src/downloads/component.tsx
+  ai_agent 867
+apps/nextjs/src/app/[locale]/manage/integrations/page.tsx
+  ai_agent 26,37-38,66-82
+packages/widgets/src/bookmarks/app-select-modal.tsx
+  ai_agent 5,11,50,65,71
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  ai_agent 40
+packages/widgets/src/system-resources/chart/network-traffic.tsx
+  ai_agent 42
+apps/nextjs/src/app/[locale]/manage/integrations/page.module.css
+  ai_agent 11
+packages/old-import/src/components/initial/board-selection-card.tsx
+  ai_agent 41,60
+apps/nextjs/src/app/[locale]/auth/invite/[id]/page.tsx
+  ai_agent 62
+apps/nextjs/src/components/manage/manage-page.constants.ts
+  ai_agent 1-5
+packages/spotlight/src/components/spotlight.tsx
+  ai_agent 113
+packages/widgets/src/media-transcoding/health-check-status.tsx
+  ai_agent 30-34
+apps/nextjs/src/components/manage/manage-mobile-primary-action.tsx
+  ai_agent 1-15
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/integration-test-connection-error.tsx
+  ai_agent 21
+apps/nextjs/src/app/[locale]/layout.tsx
+  ai_agent 47,51,53
+apps/nextjs/src/app/[locale]/manage/medias/page.tsx
+  ai_agent 15,27-29,50,60,63-77,79-84,101-102
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-tile/resource-tile.tsx
+  ai_agent 20
+apps/nextjs/src/components/user-avatar-menu.tsx
+  ai_agent 55
+apps/nextjs/src/components/board/items/item-move-modal.tsx
+  ai_agent 2,7-8,70,94,102
+apps/nextjs/src/components/manage/mobile-affix-button.tsx
+  ai_agent 5-6,12-13
+apps/nextjs/src/app/[locale]/manage/users/groups/page.tsx
+  ai_agent 2,11-12,28,52
+apps/nextjs/src/components/board/sections/dynamic/dynamic-edit-modal.tsx
+  ai_agent 3,7,34,51,59
+apps/nextjs/src/components/board/sections/category/category-edit-modal.tsx
+  ai_agent 1,5,39,43-45
+packages/ui/src/index.ts
+  ai_agent 5-6
+packages/widgets/src/media-transcoding/panels/workers.panel.tsx
+  ai_agent 7,10,40,58-59,106
+apps/nextjs/src/components/integration/integration-select-modal.tsx
+  ai_agent 9,55
+apps/nextjs/src/app/[locale]/manage/settings/_components/crawling-and-indexing.settings.tsx
+  ai_agent 44,48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "0e2441167d9d6b546cf8c7258e436a839b9ebcd8",
+  "prompts": {},
+  "sessions": {
+    "s_a2dfecb58231be": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f4c6d2f-efab-46a4-9597-2b42074b48c7",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

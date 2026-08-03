@@ -1,0 +1,19 @@
+pnpm-workspace.yaml
+  s_00731a1effef9c::t_5b68f2b2364f06 48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "3b0f9bec1e56a00dc532bbfab393a12588ff307b",
+  "prompts": {},
+  "sessions": {
+    "s_00731a1effef9c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a1f100df-4bb5-48a8-a3f0-88a4c011e509",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

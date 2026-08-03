@@ -1,0 +1,28 @@
+apps/nextjs/src/app/[locale]/init/_steps/integrations/init-integrations.tsx
+  4ce654cf70f9902c 58-67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "dc30b56e61362407b3f8e16af4a99afcc75d276d",
+  "prompts": {
+    "4ce654cf70f9902c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7cdaa66a-445e-4f22-9e7a-578bc0f0c13b",
+        "model": "composer-2"
+      },
+      "human_author": "Thomas Camlong",
+      "messages": [],
+      "total_additions": 10,
+      "total_deletions": 1,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    }
+  },
+  "humans": {
+    "h_32d929d7363456": {
+      "author": "Thomas Camlong"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+apps/web/components/features/result/charts/EngagementCharts.tsx
+  ai_agent 238
+  s_5af6053cbf3544::t_4501b83340ecd3 232
+  s_5af6053cbf3544::t_97bdaf64f6bc91 251
+apps/web/components/features/result/charts/ConfortCharts.tsx
+  s_5af6053cbf3544::t_dea56498431c02 223
+  ai_agent 97,100
+  s_5af6053cbf3544::t_5c547eec9373f6 268
+  s_5af6053cbf3544::t_a084dd11981346 28
+apps/web/components/features/result/gaze/OffPathMarker.tsx
+  ai_agent 64,67,71,74
+apps/web/components/features/result/charts/ClarteCharts.tsx
+  s_5af6053cbf3544::t_75b8d48c1d0659 28
+  ai_agent 56,59,138,188
+apps/web/components/features/result/seven-dimensions/video/DimensionTimelineChart.tsx
+  s_5af6053cbf3544::t_2092ee9bd18330 62
+apps/web/components/features/result/heatmap/GazePathOverlay.tsx
+  ai_agent 133
+apps/web/components/features/result/gaze/ZPatternExplainer.tsx
+  s_5af6053cbf3544::t_462a27887cf01d 107
+  ai_agent 68
+  s_5af6053cbf3544::t_d264034e37045e 123
+apps/web/components/features/result/SyntheseSection.tsx
+  ai_agent 118,161,175,341
+  s_5af6053cbf3544::t_9ae20b4b739c4f 155
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "eaceddf1275ff7a028e3e7f83afef05dfb1144dd",
+  "prompts": {},
+  "sessions": {
+    "s_5af6053cbf3544": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "af71945f-5a5e-45cd-8704-d1869e2be954",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

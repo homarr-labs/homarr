@@ -1,0 +1,43 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_0bc28c7da85a1f::t_3ccfc53906c094 91-96
+  s_0bc28c7da85a1f::t_d97679afde7625 21,33,38
+  s_0bc28c7da85a1f::t_2ae65aec69a076 48,51-54
+apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts
+  s_0bc28c7da85a1f::t_506c6564dd3a88 9-11
+packages/api/src/router/board.ts
+  s_0bc28c7da85a1f::t_54e6a6f5d841db 1530-1616
+apps/nextjs/src/app/[locale]/boards/_cached-board.ts
+  s_0bc28c7da85a1f::t_123847a041db51 1-21
+apps/nextjs/src/app/[locale]/boards/_invalidate-board-cache.ts
+  s_0bc28c7da85a1f::t_7faed08a1f2c2d 1-8
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout.tsx
+  s_0bc28c7da85a1f::t_c60e157ac95348 12
+  s_0bc28c7da85a1f::t_6136c07484b016 24
+packages/api/package.json
+  s_0bc28c7da85a1f::t_72a3cfea82b9a0 13-14
+packages/api/src/router/board-exports.ts
+  s_0bc28c7da85a1f::t_2f1856d3eb69a6 1
+apps/nextjs/src/app/[locale]/boards/(content)/[name]/(board)/_definition.tsx
+  s_0bc28c7da85a1f::t_c76f6384988da0 9-11
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_shared.tsx
+  s_0bc28c7da85a1f::t_a723176fb628a2 4,12
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_0bc28c7da85a1f::t_cd142b83913ed6 157
+  s_0bc28c7da85a1f::t_ef856bc23bbefc 32-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "22af9e2c3e6ec0e918eed8b008d971e9eacea167",
+  "prompts": {},
+  "sessions": {
+    "s_0bc28c7da85a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1f87fc49-f346-47f1-ab20-ba38733680b7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,126 @@
+apps/web/lib/i18n/dictionary/synthese.ts
+  s_5af6053cbf3544::t_495ea9a3112dfc 2
+apps/web/lib/i18n/dictionary/connections.ts
+  s_5af6053cbf3544::t_104b1147ecb4eb 26
+  s_5af6053cbf3544::t_7fe877c2abd58e 53
+apps/web/lib/i18n/dictionary/pilote-1.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,11,18,20,63,226,233,235,278
+apps/web/lib/i18n/dictionary/pilote-2.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,13,29,32,42,150,170,173,175,177,202,218,221,231,233,339,358,361,363-364
+apps/web/lib/i18n/dictionary/collection.ts
+  s_5af6053cbf3544::t_e512cba155f767 74
+  s_5af6053cbf3544::t_55e5e7dce3472f 94
+  s_5af6053cbf3544::t_82e92532ea9ce5 43
+  s_5af6053cbf3544::t_00366e1763f6ef 23
+apps/web/components/layout/HeaderBar.tsx
+  ai_agent 127
+  s_5af6053cbf3544::t_3f9439d7fd8668 57-59
+apps/web/lib/i18n/dictionary/rapports.ts
+  s_5af6053cbf3544::t_495ea9a3112dfc 2
+apps/web/lib/i18n/dictionary/analyse.ts
+  s_5af6053cbf3544::t_478d5b3054d770 142
+  s_5af6053cbf3544::t_f9839313d58a7c 120
+  s_5af6053cbf3544::t_620cbd53387fab 27
+  s_5af6053cbf3544::t_1ff9b7352ef7da 50
+apps/web/lib/i18n/dictionary/cloud.ts
+  s_5af6053cbf3544::t_d90b2b8531c75b 2,16,34,41,51,53,64,74,107,124,131,140,142,151,160
+apps/web/lib/i18n/dictionary/insights.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,24,31,38,40,42,64-65,82,92,96,108,111,117,122,150-151,154-158,175,177-178,193,215,222,229,231,233,254-255,271,281,285,297,300,306,311,338-339,342-346,363,365-366,381
+  s_5af6053cbf3544::t_5126baaa046cdf 162
+  s_5af6053cbf3544::t_b4a79e0f821d35 350
+apps/web/lib/i18n/dictionary/protocol-1.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,107,314
+apps/web/lib/i18n/dictionary/result-2.ts
+  s_5af6053cbf3544::t_495ea9a3112dfc 2,21,60,131,170
+apps/web/lib/i18n/dictionary/compte.ts
+  s_5af6053cbf3544::t_495ea9a3112dfc 2,63,67,81,89,99,182,185,199,207,217
+.impeccable/slop-cleanup-plan.md
+  s_5af6053cbf3544::t_3df3805a7c1634 93-94
+  s_5af6053cbf3544::t_60ec2354050db4 1-92,95-101
+apps/web/lib/i18n/dictionary/pilote-4.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2
+apps/web/lib/i18n/dictionary/protocol-2.ts
+  s_5af6053cbf3544::t_495ea9a3112dfc 2,50,76,80,287,313,317
+apps/web/components/features/result/social/TwitterBlocks.tsx
+  s_5af6053cbf3544::t_54212db9d9758d 292
+apps/web/lib/i18n/dictionary/compare.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,32,76
+apps/web/lib/i18n/dictionary/result-0.ts
+  s_5af6053cbf3544::t_495ea9a3112dfc 2,28,86,139,149,194,215,273,326,336,380
+apps/web/components/features/result/StreamingQAPanel.tsx
+  s_5af6053cbf3544::t_c94955c7600694 185-187
+apps/web/lib/i18n/dictionary/pilote-0.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,33,56,61,85,108,117,125,127,147,161,177,212,234,238,262,285,294,301,303,323,336,351
+apps/web/lib/i18n/dictionary/social.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,78,83,85,87,174,179,181,183
+apps/web/lib/i18n/dictionary/protocol-0.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,65,90,98,137,155,238,263,271,310,328
+apps/web/components/features/accueil/ActionCards.tsx
+  s_5af6053cbf3544::t_637dc8d982e34e 54
+apps/web/lib/i18n/dictionary/protocol-3.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,14-15,17,19,21,32-33,35,37,39
+apps/web/app/(auth)/layout.tsx
+  ai_agent 9
+apps/web/lib/i18n/dictionary/result-3.ts
+  s_5af6053cbf3544::t_d4e51138595b90 136,324
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,31,35,57,74,80,117,134,190,219,223,245,262,268,305,322,378
+apps/web/components/primitives/GlassCard.tsx
+  s_5af6053cbf3544::t_a989d241da0a6b 29
+apps/web/lib/i18n/dictionary/pilote-3.ts
+  s_5af6053cbf3544::t_5e802d6bf676c1 2,28,59,70,75,91,123,126,180,183,219,238,269,280,285,301,333,336,387,390,424
+  s_5af6053cbf3544::t_5614240f0e48bc 119,329
+apps/web/lib/i18n/dictionary/result-1.ts
+  s_5af6053cbf3544::t_1b4e7189c747fd 42,289
+  s_5af6053cbf3544::t_a15225d1469c9a 62,309
+  s_5af6053cbf3544::t_495ea9a3112dfc 2,20,73,75,120,126,132,136,138,142,144,148,150,156,158,176,196,242,267,320,322,367,373,379,383,385,389,391,395,397,403,405,423,443,489
+apps/web/lib/i18n/dictionary/result-4.ts
+  s_5af6053cbf3544::t_495ea9a3112dfc 2
+apps/web/lib/i18n/dictionary/common.ts
+  s_5af6053cbf3544::t_495de9fb755526 280
+  s_5af6053cbf3544::t_1d6ce92cda20d7 468
+  s_5af6053cbf3544::t_b16471d573d90a 545
+  s_5af6053cbf3544::t_45fe08afa9eeca 610
+  s_5af6053cbf3544::t_d480919496add5 606
+  s_5af6053cbf3544::t_bf83667de38ce0 276,608
+  s_5af6053cbf3544::t_11a829cfdce008 477
+  s_5af6053cbf3544::t_9dba8e7edb9b1a 131
+  s_5af6053cbf3544::t_d057c3388b8be4 612
+  s_5af6053cbf3544::t_d0bc6e942d52e5 271
+  s_5af6053cbf3544::t_49455dd0d53ccd 603
+  s_5af6053cbf3544::t_bcf135e320244c 274
+  s_5af6053cbf3544::t_8d3148e71b95a6 140
+  s_5af6053cbf3544::t_6b27bc3b00a033 604
+  s_5af6053cbf3544::t_f2de1f412cf3db 632
+  s_5af6053cbf3544::t_6ef9ee34a44f60 585
+  s_5af6053cbf3544::t_43038bc243380a 185
+  s_5af6053cbf3544::t_819e13b61cf1c8 110
+  s_5af6053cbf3544::t_c3965b2aab6535 272
+  s_5af6053cbf3544::t_66f02773eee7fd 278
+  s_5af6053cbf3544::t_a62d5b8f018c5f 445
+  s_5af6053cbf3544::t_88f105f9ab4c76 49
+  s_5af6053cbf3544::t_4e7c595975f6bd 108
+  s_5af6053cbf3544::t_58854c87c88bcc 213
+  s_5af6053cbf3544::t_fe7fd1188f01be 300
+  s_5af6053cbf3544::t_15210dab030bfd 447
+  s_5af6053cbf3544::t_b1ffb1643cb6d2 518
+  s_5af6053cbf3544::t_076f021b73edb2 388
+apps/web/components/features/accueil/BrainPanelHero.tsx
+  ai_agent 46,51-53,72,83,109,138,145,179,201,234
+  s_5af6053cbf3544::t_32a8f952bd1c6f 22-29,47,60,126-127,223-224
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "e3239c13735bb8b60f4c45a80656b938bb50cca7",
+  "prompts": {},
+  "sessions": {
+    "s_5af6053cbf3544": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "af71945f-5a5e-45cd-8704-d1869e2be954",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+packages/widgets/src/beszel/_shared/colors.ts
+  s_b0ac32075bb65c::t_560016a85f1576 24,27,29-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "4d8beac7d3bf39f99edeaca680741b34716519d4",
+  "prompts": {},
+  "sessions": {
+    "s_b0ac32075bb65c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "9ae9748d-024f-4cab-b681-b306b8f498ed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

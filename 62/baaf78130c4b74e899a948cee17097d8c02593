@@ -1,0 +1,21 @@
+CHANGES.md
+  s_7ba3fee1318525::t_f9548b001ef0ce 45-46
+  s_7ba3fee1318525::t_a2cdc5358653c5 76-78
+  s_7ba3fee1318525::t_81a8e23c8dedd6 7-9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "62baaf78130c4b74e899a948cee17097d8c02593",
+  "prompts": {},
+  "sessions": {
+    "s_7ba3fee1318525": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a27f97ff-185c-401c-9c33-42c2e5ecb237",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

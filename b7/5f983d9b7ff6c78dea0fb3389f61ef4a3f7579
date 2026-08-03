@@ -1,0 +1,24 @@
+packages/widgets/src/docker/component.tsx
+  s_e69b825ec6dfea::t_001dd5b6d821d5 24-26,234-236,284,286
+  s_e69b825ec6dfea::t_506cbaf711f5fe 433,613-620
+packages/widgets/src/beszel-system-table/component.tsx
+  s_e69b825ec6dfea::t_001dd5b6d821d5 23-25,137-139,157,159
+packages/translation/src/lang/en.json
+  s_e69b825ec6dfea::t_506cbaf711f5fe 2443-2445
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "b75f983d9b7ff6c78dea0fb3389f61ef4a3f7579",
+  "prompts": {},
+  "sessions": {
+    "s_e69b825ec6dfea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb3a0-792a-7381-8801-1495fcc9663b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  ai_agent 1,38-40,44,51,88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "9fb2fafb9cad4a11f0fb43d355f99eae5687aa49",
+  "prompts": {}
+}

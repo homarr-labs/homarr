@@ -1,0 +1,19 @@
+apps/nextjs/src/app/[locale]/manage/tools/api/components/scalar-theme.css
+  s_c3c72f13aa79cd::t_bd7543a9354a2d 5-7,12,14-20,27-29,34,36-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "4dc110f71c05bb70c3afc5e18353c89ed8246e7f",
+  "prompts": {},
+  "sessions": {
+    "s_c3c72f13aa79cd": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "24c3fc21-bf31-4ac8-8b66-1f7b1d1a6a62",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

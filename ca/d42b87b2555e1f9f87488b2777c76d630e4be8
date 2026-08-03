@@ -1,0 +1,25 @@
+apps/nextjs/src/components/board/sections/dynamic/dynamic-menu.tsx
+  s_7a80e026b7f124::t_7804ddbda749ff 56
+apps/nextjs/src/components/board/sections/category-section.tsx
+  s_7a80e026b7f124::t_b948fa9cfac2d4 60
+  s_7a80e026b7f124::t_6a66e3bc1a40bd 11
+apps/nextjs/src/components/board/sections/empty-section.tsx
+  s_7a80e026b7f124::t_7b3ee3a8a861b3 4
+  s_7a80e026b7f124::t_2f1906a57524ea 16-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "cad42b87b2555e1f9f87488b2777c76d630e4be8",
+  "prompts": {},
+  "sessions": {
+    "s_7a80e026b7f124": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "69e44cf8-02ea-4ffe-bbd9-aaf6642da2a6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

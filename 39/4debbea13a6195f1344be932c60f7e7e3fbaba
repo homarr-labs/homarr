@@ -1,0 +1,75 @@
+packages/widgets/src/app/ping/ping-indicator.tsx
+  s_ecc5e3d3796371::t_cf41386bb9cbe2 37
+packages/widgets/src/media-server/component.tsx
+  s_ecc5e3d3796371::t_90ccc1ff921253 26
+packages/widgets/src/coolify/component.tsx
+  s_ecc5e3d3796371::t_47fb4a2f570194 34
+packages/widgets/src/health-monitoring/system-health.tsx
+  s_ecc5e3d3796371::t_0653b0bfc09fcf 54
+packages/widgets/src/rssFeed/component.tsx
+  s_ecc5e3d3796371::t_9bd3bf90d5464e 15
+packages/widgets/src/firewall/component.tsx
+  s_ecc5e3d3796371::t_e1570654867dcb 187
+  s_ecc5e3d3796371::t_776d29108d4040 228
+  s_ecc5e3d3796371::t_43e6f3a53aa57f 269
+  s_ecc5e3d3796371::t_08c9a2b87663fc 309
+packages/widgets/src/health-monitoring/component.tsx
+  s_ecc5e3d3796371::t_338b0b337a79cb 21
+packages/widgets/src/network-controller/summary/component.tsx
+  s_ecc5e3d3796371::t_d110d1d1a974f7 23
+packages/widgets/src/indexer-manager/component.tsx
+  s_ecc5e3d3796371::t_484ed8d8652ede 21
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_ecc5e3d3796371::t_b8ecb09e9b8a53 23
+packages/widgets/src/umami/umami-top-list.tsx
+  s_ecc5e3d3796371::t_7657eb8bbf1d79 18
+  s_ecc5e3d3796371::t_faa04c7397fb9f 29
+packages/widgets/src/system-resources/component.tsx
+  s_ecc5e3d3796371::t_e71fc30fa57241 21
+packages/widgets/src/media-requests/stats/component.tsx
+  s_ecc5e3d3796371::t_554fe519531e82 35,48
+packages/widgets/src/notifications/component.tsx
+  s_ecc5e3d3796371::t_46073aacd89e72 15
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_ecc5e3d3796371::t_05e872118ef91a 26
+packages/widgets/src/downloads/component.tsx
+  s_ecc5e3d3796371::t_d489fadf88280f 90
+packages/widgets/src/releases/component.tsx
+  s_ecc5e3d3796371::t_df6c66e04ece5c 84
+packages/widgets/src/speedtest-tracker/component.tsx
+  s_ecc5e3d3796371::t_05c0e6f0adc6e0 22
+packages/widgets/src/tracearr/component.tsx
+  s_ecc5e3d3796371::t_d97387fc8bb154 38
+packages/widgets/src/docker/component.tsx
+  s_ecc5e3d3796371::t_9b6f10a59bbbf5 207-208
+packages/widgets/src/system-disks/component.tsx
+  s_ecc5e3d3796371::t_4c31cd6b2ab9b8 35
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_ecc5e3d3796371::t_1cee802fd3fdcb 54
+packages/widgets/src/umami/umami-events-content.tsx
+  s_ecc5e3d3796371::t_18fcb038e0b231 31
+packages/widgets/src/umami/umami-content.tsx
+  s_ecc5e3d3796371::t_0b4a4d73d8079d 43,51
+packages/widgets/src/media-transcoding/component.tsx
+  s_ecc5e3d3796371::t_581381d3ff4fad 40,54-56
+packages/widgets/src/health-monitoring/cluster/cluster-health.tsx
+  s_ecc5e3d3796371::t_7ee9731a896156 37,59
+packages/widgets/src/network-controller/network-status/component.tsx
+  s_ecc5e3d3796371::t_5b35cb32b41735 24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "394debbea13a6195f1344be932c60f7e7e3fbaba",
+  "prompts": {},
+  "sessions": {
+    "s_ecc5e3d3796371": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "650ba9eb-19a6-478e-af08-f0ee37db5e53",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

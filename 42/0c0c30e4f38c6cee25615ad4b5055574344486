@@ -1,0 +1,22 @@
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_1f672ca9074713::t_e1e6edf6ead929 157
+  s_1f672ca9074713::t_9f97a37798c987 3
+packages/api/src/router/widgets/beszel.ts
+  s_1f672ca9074713::t_b24d3dd5950711 150,157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "420c0c30e4f38c6cee25615ad4b5055574344486",
+  "prompts": {},
+  "sessions": {
+    "s_1f672ca9074713": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ebb68ba1-8a75-47f3-9ad0-5aad1b6d8a5b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

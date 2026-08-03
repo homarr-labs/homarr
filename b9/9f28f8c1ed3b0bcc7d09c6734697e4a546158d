@@ -1,0 +1,32 @@
+packages/widgets/src/coolify/types.ts
+  s_be44d72510d3c4::t_6afc7e6af50e68 6
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-gauge/resource-gauge.tsx
+  s_be44d72510d3c4::t_5b18c7fdc212e4 24
+  s_be44d72510d3c4::t_627fa679044c1d 11-12
+packages/widgets/src/media-requests/stats/component.tsx
+  h_d6e478ca18e517 26-27,157
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_be44d72510d3c4::t_102b5510c5d348 14
+  s_be44d72510d3c4::t_d56a10903d1490 47,50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "b99f28f8c1ed3b0bcc7d09c6734697e4a546158d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_be44d72510d3c4": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e045b46d-773c-416e-9432-1861dabb6ba7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

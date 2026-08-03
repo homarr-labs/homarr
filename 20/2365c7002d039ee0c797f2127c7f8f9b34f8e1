@@ -1,0 +1,24 @@
+.github/workflows/code-quality.yml
+  s_6124a7a87c7cc5::t_9f62875f58e173 86-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "202365c7002d039ee0c797f2127c7f8f9b34f8e1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_6124a7a87c7cc5": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "9fef5cbe-0139-404a-b3de-6c651d2e717f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

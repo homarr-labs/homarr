@@ -1,0 +1,19 @@
+packages/api/src/router/custom-widget/custom-widget-router.ts
+  s_a779988d600484::t_a3f2766bae0ce9 126
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "194b7827baac0228158f4784a8c1f24dd73fb929",
+  "prompts": {},
+  "sessions": {
+    "s_a779988d600484": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "29175f63-17b3-4e72-b510-05e08dd6845e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

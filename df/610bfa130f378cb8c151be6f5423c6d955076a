@@ -1,0 +1,27 @@
+apps/web/components/features/result/biometric/TrustSealBadge.tsx
+  s_5af6053cbf3544::t_4d0d2379b25437 35
+apps/web/components/features/result/social/shared.tsx
+  s_5af6053cbf3544::t_e09c7195dade9b 93
+apps/web/components/features/cloud/CloudDrivesConnectCard.tsx
+  s_5af6053cbf3544::t_ba830cc9755b72 254
+  s_5af6053cbf3544::t_b2eff476381602 321
+apps/web/components/features/pilote/SocialAccountsConnectCard.tsx
+  s_5af6053cbf3544::t_eaa095277201dc 125
+  s_5af6053cbf3544::t_0e16c8bf881d36 202
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "df610bfa130f378cb8c151be6f5423c6d955076a",
+  "prompts": {},
+  "sessions": {
+    "s_5af6053cbf3544": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "af71945f-5a5e-45cd-8704-d1869e2be954",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

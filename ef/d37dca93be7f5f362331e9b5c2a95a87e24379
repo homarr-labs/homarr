@@ -1,0 +1,20 @@
+packages/db/migrations/seed.ts
+  s_1f1fca869fec42::t_476f4a3e450156 63
+  s_1f1fca869fec42::t_1c9f1651e841c9 44-46,48-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "efd37dca93be7f5f362331e9b5c2a95a87e24379",
+  "prompts": {},
+  "sessions": {
+    "s_1f1fca869fec42": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "20c8b2e6-a8d3-444c-8d61-fbdad113a937",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

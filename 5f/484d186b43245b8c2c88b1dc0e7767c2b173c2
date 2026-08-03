@@ -1,0 +1,20 @@
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  s_e93dcd2ae13fd1::t_3a563f7b2b2339 157-159,165,183-184,186-187,200
+  s_e93dcd2ae13fd1::t_9fe19f6b19c0fb 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "5f484d186b43245b8c2c88b1dc0e7767c2b173c2",
+  "prompts": {},
+  "sessions": {
+    "s_e93dcd2ae13fd1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_110740a21ffeBfXcnpk5UghUYy",
+        "model": "z-ai/glm-5.2"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

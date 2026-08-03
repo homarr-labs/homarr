@@ -1,0 +1,51 @@
+packages/widgets/src/weather/icon.tsx
+  s_d000e0b76b42a2::t_21853e7d81465b 8
+  s_d000e0b76b42a2::t_0a5efc0f22b27e 103-105
+  s_d000e0b76b42a2::t_69932d03599e86 83
+  s_d000e0b76b42a2::t_ed7c0ca6194577 55
+packages/request-handler/src/weather.ts
+  s_d000e0b76b42a2::t_e786414b513d73 71
+packages/translation/src/lang/en.json
+  s_d000e0b76b42a2::t_15926da3ee34fe 2270-2271
+packages/widgets/src/weather/component.tsx
+  s_d000e0b76b42a2::t_fb7756df9955b2 4
+  s_d000e0b76b42a2::t_db8e18f495188e 91-96
+  s_d000e0b76b42a2::t_e54e6cdcc715b9 214
+apps/docs/docs/management/apps/index.mdx
+  s_c3d9a11dc1dbf1::t_923ca744475a9d 31,53
+packages/forms-collection/src/icon-picker/icon-url.ts
+  s_c3d9a11dc1dbf1::t_923ca744475a9d 1
+packages/forms-collection/src/icon-picker/icon-picker.spec.ts
+  s_c3d9a11dc1dbf1::t_923ca744475a9d 3
+  s_c3d9a11dc1dbf1::t_22a492b6802b5a 1-2,4-6,12-14
+  s_c3d9a11dc1dbf1::t_f53eefd491dd0b 7-11
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  s_c3d9a11dc1dbf1::t_22a492b6802b5a 169-179
+  s_c3d9a11dc1dbf1::t_923ca744475a9d 32
+apps/docs/docs/advanced/icons/index.mdx
+  s_c3d9a11dc1dbf1::t_923ca744475a9d 34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a54800057c42bf3505f13c92310ec4f3ce21984d",
+  "prompts": {},
+  "sessions": {
+    "s_c3d9a11dc1dbf1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb809-e262-7ab1-8f8c-725dafda5d34",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_d000e0b76b42a2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_07c265631ffefhEw2oNjltHPdN",
+        "model": "deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

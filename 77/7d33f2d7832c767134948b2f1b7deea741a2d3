@@ -1,0 +1,19 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_0417b8e2c0aa72::t_3cefcc09e337e6 3,167-170,197,200
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "777d33f2d7832c767134948b2f1b7deea741a2d3",
+  "prompts": {},
+  "sessions": {
+    "s_0417b8e2c0aa72": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f83de-b8b8-70c2-a301-140f96fd107b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

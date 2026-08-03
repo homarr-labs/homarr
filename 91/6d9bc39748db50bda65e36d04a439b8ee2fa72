@@ -1,0 +1,27 @@
+packages/widgets/src/tracearr/component.tsx
+  s_3dcc22b87e2334::t_5e254fe0787916 25
+  s_3dcc22b87e2334::t_1f66b9dc6bb030 34
+packages/widgets/src/uptime-kuma/component.tsx
+  s_3dcc22b87e2334::t_42161477b658f2 97
+  s_3dcc22b87e2334::t_75e6f70b4f20ce 106
+packages/widgets/src/ups/component.tsx
+  s_3dcc22b87e2334::t_1a6629d5f1c003 31
+  s_3dcc22b87e2334::t_8ca8c633ece5dc 40
+  s_3dcc22b87e2334::t_d4054a0e2d7f0b 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "916d9bc39748db50bda65e36d04a439b8ee2fa72",
+  "prompts": {},
+  "sessions": {
+    "s_3dcc22b87e2334": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "52c1f4dc-82eb-45e2-85c7-95add5cdff11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,91 @@
+apps/web/components/features/pilote/EvolutionPage.tsx
+  s_5af6053cbf3544::t_7f16ab2ba23188 132
+apps/web/app/pilote/[id]/representation/page.tsx
+  s_5af6053cbf3544::t_07ee88a2ed5eb2 17
+apps/web/app/analyse/page.tsx
+  ai_agent 27
+apps/web/app/collection/[id]/page.tsx
+  s_5af6053cbf3544::t_3e028762bfe34a 80,86,94,102
+apps/web/components/features/pilote/AlternativesEntry.tsx
+  s_5af6053cbf3544::t_7f16ab2ba23188 93,110
+apps/web/components/features/pilote/BestCandidatePodium.tsx
+  s_5af6053cbf3544::t_7f16ab2ba23188 60
+apps/web/app/pilote/[id]/representants/page.tsx
+  s_5af6053cbf3544::t_4ae9c07cf6913b 25-26
+  s_5af6053cbf3544::t_07ee88a2ed5eb2 24
+apps/web/components/features/pilote/SourceDetailView.tsx
+  s_5af6053cbf3544::t_7f16ab2ba23188 350,366
+apps/web/components/features/pilote/SocialAccountsConnectCard.tsx
+  s_5af6053cbf3544::t_7f16ab2ba23188 93
+apps/web/app/compte/connections/page-client.tsx
+  ai_agent 64
+apps/web/components/features/pilote/PiloteQA.tsx
+  s_5af6053cbf3544::t_7f16ab2ba23188 62,84
+apps/web/app/pilote/[id]/page.tsx
+  s_5af6053cbf3544::t_dad0133ad0db0f 28
+apps/web/lib/i18n/dictionary/cloud.ts
+  s_6b51a0038b32cf::t_4c37cff441df53 184
+  s_6b51a0038b32cf::t_b230c05d099093 99
+apps/web/app/pilote/[id]/layout.tsx
+  s_5af6053cbf3544::t_bccce68ebc3022 31
+apps/web/components/features/pilote/BestCombinationCard.tsx
+  s_5af6053cbf3544::t_7f16ab2ba23188 44
+apps/web/components/features/pilote/BrandRepresentationPanel.tsx
+  s_5af6053cbf3544::t_7f16ab2ba23188 41,92,118
+apps/web/components/features/pilote/PiloteResumeOuverture.tsx
+  s_5af6053cbf3544::t_a7032414e6bf89 171
+apps/web/app/(auth)/login/page.tsx
+  ai_agent 60-62
+apps/web/components/features/pilote/PiloteSettingsForm.tsx
+  s_5af6053cbf3544::t_4253e938f6be03 192
+  s_5af6053cbf3544::t_7f16ab2ba23188 113,142
+apps/web/app/pilote/[id]/take/[takeId]/page.tsx
+  s_5af6053cbf3544::t_3e028762bfe34a 48
+  s_5af6053cbf3544::t_07ee88a2ed5eb2 39
+apps/web/lib/hooks/useAnalyseIngestion.ts
+  ai_agent 1-140
+apps/web/app/pilote/[id]/sources/loading.tsx
+  s_5af6053cbf3544::t_07ee88a2ed5eb2 6
+apps/web/components/features/pilote/SelfPresentationRecorder.tsx
+  s_5af6053cbf3544::t_7f16ab2ba23188 265
+apps/web/lib/analyse/detect-media-type.ts
+  ai_agent 1-35
+apps/web/app/compte/page-client.tsx
+  s_5af6053cbf3544::t_c1f8d7f00ac055 229,232
+  s_5af6053cbf3544::t_da8a3397415d33 319,337
+  s_5af6053cbf3544::t_99d04f8a9f7815 368
+  s_5af6053cbf3544::t_429e465267a2d2 284
+  s_5af6053cbf3544::t_ee8b4d1bebca09 251-252
+apps/web/components/features/pilote/SourcesPage.tsx
+  s_5af6053cbf3544::t_7f16ab2ba23188 145
+apps/web/app/loading.tsx
+  s_5af6053cbf3544::t_79e7944f9ce381 6
+apps/web/app/compte/recharger/page.tsx
+  ai_agent 29-31
+apps/web/app/comparaison/[id]/page.tsx
+  s_5af6053cbf3544::t_214313a2af8b36 63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "a083bf3fa10f49f2d6a9d6b02978b4ae9f34d16a",
+  "prompts": {},
+  "sessions": {
+    "s_5af6053cbf3544": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "af71945f-5a5e-45cd-8704-d1869e2be954",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_6b51a0038b32cf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2100b362-7d19-403d-8763-82b636952974",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

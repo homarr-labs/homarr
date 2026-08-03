@@ -1,0 +1,33 @@
+.github/workflows/ci.yml
+  s_96a66d3ceaf6dc::t_b6757049fb3cae 12,19,21,27,33,35,46,48,59,61
+apps/web/scripts/check-i18n-strings.mjs
+  s_96a66d3ceaf6dc::t_eef120852e2796 6,9
+  s_96a66d3ceaf6dc::t_62d724caa18831 161-167
+  s_96a66d3ceaf6dc::t_85340cb044a2de 168
+package.json
+  s_96a66d3ceaf6dc::t_625d68d1d66169 32
+  s_96a66d3ceaf6dc::t_61cbad296aeb65 38
+apps/web/app/styleguide/page.tsx
+  s_96a66d3ceaf6dc::t_07c95c27a34e49 31,35
+  s_96a66d3ceaf6dc::t_cec0c2a5faff14 28,30,32-34,36,39,46,53,60,67,71-73,75-80,86-87
+  s_96a66d3ceaf6dc::t_5f540151db0fa7 100
+  s_96a66d3ceaf6dc::t_e1eb07b7ec5636 27
+  s_96a66d3ceaf6dc::t_85340cb044a2de 74
+  s_96a66d3ceaf6dc::t_be940772d5e5f5 293,298
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "7a2387a20a919e8bede4963a05ee806997e2868f",
+  "prompts": {},
+  "sessions": {
+    "s_96a66d3ceaf6dc": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fe98c248-743f-4979-9101-96e05750c86d",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

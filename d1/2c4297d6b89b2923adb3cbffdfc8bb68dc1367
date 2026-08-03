@@ -1,0 +1,19 @@
+apps/web/components/features/result/video/VideoHighlightsStrip.tsx
+  s_7d777d3954db6e::t_cb1578dbe9a4c7 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "d12c4297d6b89b2923adb3cbffdfc8bb68dc1367",
+  "prompts": {},
+  "sessions": {
+    "s_7d777d3954db6e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "102cc0cb-f472-47bf-ad48-d0d9cbecbaf9",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

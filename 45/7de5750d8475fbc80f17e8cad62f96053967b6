@@ -1,0 +1,19 @@
+scripts/entrypoint.sh
+  s_b8e0fcfb71e307::t_e452ce1928276e 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "457de5750d8475fbc80f17e8cad62f96053967b6",
+  "prompts": {},
+  "sessions": {
+    "s_b8e0fcfb71e307": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_168a67eebffegJLm7XaYCrlN1E",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

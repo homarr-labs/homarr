@@ -1,0 +1,19 @@
+packages/old-import/src/widgets/options.ts
+  s_38212c6b8c9f1a::t_a490fe6368efec 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "15feac9aaab156dcd1301d415b97cfde35a633ad",
+  "prompts": {},
+  "sessions": {
+    "s_38212c6b8c9f1a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cb804b2c-d5c2-47ce-9bb2-6774fe3849b2",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

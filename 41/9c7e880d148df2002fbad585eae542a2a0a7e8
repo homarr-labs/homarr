@@ -1,0 +1,36 @@
+packages/integrations/src/open-webui/open-webui-types.ts
+  s_37b821a6ce4f24::t_0baebcbf98f868 50-61,65,73
+  s_37b821a6ce4f24::t_be59e46c8e62b0 214
+  s_37b821a6ce4f24::t_fb9746eaa6268c 198
+packages/widgets/src/open-webui/chat-utils.ts
+  s_37b821a6ce4f24::t_6ff76c63b12299 45-47,54-72
+packages/widgets/src/open-webui/use-chat-stream.ts
+  s_37b821a6ce4f24::t_c69811daf204ba 80-85
+  s_37b821a6ce4f24::t_18f5246d03b9bb 173-174,179-180
+  s_37b821a6ce4f24::t_7239008e9d84d5 139,145-147
+apps/docs/docs/integrations/open-webui/index.mdx
+  s_37b821a6ce4f24::t_56cc31d87d470b 27
+packages/api/src/router/widgets/open-webui.ts
+  s_37b821a6ce4f24::t_012115c79a1c24 241,252-254,264-266
+  s_37b821a6ce4f24::t_b6e6512306c036 41-81
+packages/widgets/src/open-webui/chat.tsx
+  s_37b821a6ce4f24::t_9be9ce1df184ac 173
+packages/widgets/src/open-webui/use-attachments.ts
+  s_37b821a6ce4f24::t_0cb127b802e982 103-105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "419c7e880d148df2002fbad585eae542a2a0a7e8",
+  "prompts": {},
+  "sessions": {
+    "s_37b821a6ce4f24": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ffbc0292-971b-4a0b-91de-23bf0bfa31dc",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

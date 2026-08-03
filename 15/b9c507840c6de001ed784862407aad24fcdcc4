@@ -1,0 +1,42 @@
+apps/nextjs/src/components/manage/manage-page.constants.ts
+  s_a3055e40d16f76::t_f854816793539f 4-5
+  s_a3055e40d16f76::t_80f4530c6a2907 1,3
+  s_a3055e40d16f76::t_57a9d1c71ee33d 2
+apps/nextjs/src/components/manage/manage-mobile-primary-action.tsx
+  s_a3055e40d16f76::t_1042e731d6e676 11
+  s_a3055e40d16f76::t_46b7b3523f204c 1-3,5-7,12-15
+  s_a3055e40d16f76::t_c85f99876971a8 4,8-10
+apps/nextjs/src/components/manage/mobile-affix-button.tsx
+  s_a3055e40d16f76::t_59a504a350d8c5 5,12
+  s_a3055e40d16f76::t_e806f000e0cdff 6,13
+apps/nextjs/src/components/manage/manage-page-layout.tsx
+  s_a3055e40d16f76::t_2bacbb997cb801 18
+  s_a3055e40d16f76::t_ed3d55a2aed418 2,15,25
+  s_a3055e40d16f76::t_4d1525f2426c9b 7
+  s_a3055e40d16f76::t_e32e09f7fef74c 40
+  s_a3055e40d16f76::t_8effdb96922074 31
+  s_a3055e40d16f76::t_5a578b8965f735 33
+  s_a3055e40d16f76::t_38f510d01bb3c1 1,3-6,8-14,16-17,19-24,26-30,32,34,37-38,41-44
+  s_a3055e40d16f76::t_cfae06b6026dbd 35-36,39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "15b9c507840c6de001ed784862407aad24fcdcc4",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_a3055e40d16f76": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "62ac77f0-9510-4c61-82de-45df0f952cdc",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

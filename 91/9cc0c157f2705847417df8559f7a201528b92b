@@ -1,0 +1,21 @@
+packages/translation/src/lang/fi.json
+  s_597ba33d075c06::t_8aac3edc70e4c5 1-5289
+packages/translation/src/config.ts
+  s_597ba33d075c06::t_c1c441724ca542 143-153
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "919cc0c157f2705847417df8559f7a201528b92b",
+  "prompts": {},
+  "sessions": {
+    "s_597ba33d075c06": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_15db4f8cbffe4saO15tqyQTi6T",
+        "model": "glm-5.1"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

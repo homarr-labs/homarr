@@ -1,0 +1,29 @@
+packages/widgets/src/index.tsx
+  s_1e61740b949747::t_250be86fbb84b1 56
+packages/widgets/src/widget-size.tsx
+  s_1e61740b949747::t_13bd0c6449c69a 1-3,5,7-18,20-22
+  s_1e61740b949747::t_a0d92c4ba72121 4,6,19,23-25
+packages/widgets/src/weather/component.tsx
+  s_1e61740b949747::t_caff5be801a0f4 14
+  s_1e61740b949747::t_cc7a352247af23 33-36,40,46,49
+  s_1e61740b949747::t_99762e01a900dc 59,63-66,73,80,89,91-92,107-108,117-118,128,131-132
+apps/nextjs/src/components/board/sections/content.tsx
+  s_1e61740b949747::t_10c1016da02979 4
+  s_1e61740b949747::t_fa1ae1075c3d11 63-69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "69e64356bbda99c214bffe96d04e0e3b9e46def8",
+  "prompts": {},
+  "sessions": {
+    "s_1e61740b949747": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "bd4beab6-c933-4dc3-be75-34b21adab95d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

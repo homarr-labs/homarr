@@ -1,0 +1,27 @@
+packages/translation/src/lang/en.json
+  s_84cb939c27de54::t_be17e6fcc34bbd 4052-4054,4056-4061
+  s_84cb939c27de54::t_f43e813822c958 4087-4088,4093
+  s_84cb939c27de54::t_c1b9b1f5e5e358 4102
+  s_84cb939c27de54::t_afa4ce6a4faa34 4117-4127
+  s_84cb939c27de54::t_a2eecf60d4dbae 4055
+  s_84cb939c27de54::t_6baf6750fa289b 4039-4044,4047-4051,4062-4074,4076-4086,4094-4101,4103-4116
+  s_84cb939c27de54::t_7bf0ab3acca776 4075
+  s_84cb939c27de54::t_c6796c260224d5 4045-4046
+  s_84cb939c27de54::t_3dceb06ac35481 4089-4092
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "7229068bf0ccf6876825394dd91a1acae2d1e6fe",
+  "prompts": {},
+  "sessions": {
+    "s_84cb939c27de54": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4f513ffc-4b9c-447d-a6c5-af68259536b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

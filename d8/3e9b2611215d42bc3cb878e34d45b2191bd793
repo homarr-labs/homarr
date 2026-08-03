@@ -1,0 +1,21 @@
+packages/widgets/src/modals/embedded-app-edit-form.tsx
+  s_35458c8228ba47::t_780d993732dca0 42-52
+  s_35458c8228ba47::t_401e4165704e2b 1-2,4-41,53-80
+  s_35458c8228ba47::t_d778c964a00407 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "d83e9b2611215d42bc3cb878e34d45b2191bd793",
+  "prompts": {},
+  "sessions": {
+    "s_35458c8228ba47": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "223eee8c-f1c6-42ab-86ba-db89aec9e266",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

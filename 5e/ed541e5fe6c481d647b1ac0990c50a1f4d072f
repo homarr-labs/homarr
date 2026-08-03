@@ -1,0 +1,164 @@
+apps/web/components/features/protocols/danone/CustomClusterBuilder.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 385,389,394
+apps/web/components/features/protocols/bel/InsightMethodDebugPanel.tsx
+  s_1afc1dc33b1536::t_9c9e629b1d048a 76
+  s_1afc1dc33b1536::t_9942cf6dece3b0 44
+  s_1afc1dc33b1536::t_244fb588b9549a 215
+apps/web/components/features/result/InsightEngineDetailPanel.tsx
+  s_1afc1dc33b1536::t_d84c2f41e71702 14
+  s_1afc1dc33b1536::t_c341c2f6a92df1 521,950
+apps/api/app/integrations/composio/log_helpers.py
+  s_342719deabd7d2::t_4e41b5d3a683ba 1-38
+apps/web/components/features/protocols/danone/ClusterCompositionDashboard.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 215,235,480
+apps/web/lib/services/connections.ts
+  s_342719deabd7d2::t_84e491343a9106 23-28,32-43
+apps/web/components/features/protocols/bel/tabs/BelClusterCompositionDashboard.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 202,222,467
+apps/web/components/features/connections/useOAuthCallbackToast.ts
+  s_342719deabd7d2::t_ca80c577e71093 4-6,28-31,43
+apps/web/components/features/protocols/bel/tabs/BelCommercialDrilldownDashboard.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 124,198
+i18n.md
+  s_4647a5944836e3::t_bad5df66147d96 1-457
+apps/web/lib/admin.ts
+  s_1afc1dc33b1536::t_0671e428f842b4 231-249,253-259
+apps/web/components/features/pilote/SocialAccountsConnectCard.tsx
+  s_1afc1dc33b1536::t_fd88c753ac9a4c 19-20
+  s_1afc1dc33b1536::t_70f2b2947606e6 110-111
+  s_1afc1dc33b1536::t_d31e6ecac31918 58-62
+  s_1afc1dc33b1536::t_445acb0adff99c 70
+apps/web/components/features/protocols/danone/YogurtDiffClusterDashboard.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 153,198,213
+apps/api/app/api/connections.py
+  s_342719deabd7d2::t_414bc530874219 23,54,57,66-70,73,84-87,94-97,99-104,115,127,129-134,140,143,156-161,169-176,180,187-190,198-202,205,214-219,222,226-228,231,233,235,239,242-248,250-252,256-265,279-284,315-319,324,331
+apps/web/components/features/protocols/danone/SegmentPatternDashboard.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 121,130
+apps/web/components/features/protocols/danone/InsightMethodDebugPanel.tsx
+  s_1afc1dc33b1536::t_11ff179de7d0f4 44-45
+  s_1afc1dc33b1536::t_d82075add1110a 243
+apps/web/components/features/protocols/danone/shared.ts
+  s_1afc1dc33b1536::t_1cec99a69b5182 39-40,47-53,56-62
+  s_1afc1dc33b1536::t_dcaeee710f15b2 113
+  s_1afc1dc33b1536::t_34314210e68c08 98-109,112,114-116
+apps/api/tests/integrations/composio/test_platforms.py
+  s_342719deabd7d2::t_8df8f79f1855db 23
+apps/web/components/features/protocols/danone/ClusterScatterExplorer.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 150,287,308,487
+apps/web/components/features/protocols/bel/tabs/BelDiffClusterLabDashboard.tsx
+  s_1afc1dc33b1536::t_653c817022db17 197
+  s_1afc1dc33b1536::t_27c81ac2d1bbca 276-281
+  s_1afc1dc33b1536::t_d9e63e1c2ca348 302,306,320-324
+  s_1afc1dc33b1536::t_e5d505745edf76 70,77,201,343,374
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 128,245,283,428
+apps/web/components/features/protocols/bel/shared.ts
+  s_1afc1dc33b1536::t_e1413842a2882d 20-21,33-38,41-47
+  s_1afc1dc33b1536::t_d0fc85e1e36b70 126-137,140,142-144
+  s_1afc1dc33b1536::t_aeb8d00a2dbd7c 141
+apps/web/components/features/social/SocialCanauxPanel.tsx
+  s_1afc1dc33b1536::t_b1e0a39e32aec1 23-24
+  s_1afc1dc33b1536::t_f21ed5fd619abe 74-81
+apps/web/app/compte/connections/page-client.tsx
+  s_1afc1dc33b1536::t_3487afbf56a2fb 89
+  s_1afc1dc33b1536::t_de76d6051f916a 10,19-22,30-61
+  s_1afc1dc33b1536::t_7172c5585528cb 81
+apps/web/lib/habs/cloud-provider-i18n.ts
+  s_1afc1dc33b1536::t_d13e3fbfd4c0c8 1-48
+apps/api/tests/api/test_connections_callback.py
+  s_342719deabd7d2::t_b1ea1a6836cca7 1-51
+apps/web/components/features/protocols/bel/tabs/BelClusterScatterExplorer.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 150,287,308,487
+apps/web/lib/i18n/dictionary.ts
+  s_1afc1dc33b1536::t_af89a4d68730a5 5424-5434,5436-5467
+  s_1afc1dc33b1536::t_99ca2a9e4d862b 6956-7107
+  s_1afc1dc33b1536::t_380f8c82002389 5435
+  s_1afc1dc33b1536::t_2086bc591dd34d 752
+  s_1afc1dc33b1536::t_5b04874b8da7e8 3397-3551
+  s_1afc1dc33b1536::t_9229d58ee2a603 1847
+  s_1afc1dc33b1536::t_b74e8d05c22b34 1836-1846,1848-1879
+  s_1afc1dc33b1536::t_6027061190c00c 4350
+apps/web/components/features/protocols/bel/tabs/BelCustomClusterBuilder.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 287,291,296
+apps/web/components/features/protocols/bel/tabs/BelSegmentPatternDashboard.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 117,126
+apps/web/components/features/cloud/CloudDrivesConnectCard.tsx
+  s_1afc1dc33b1536::t_2842a19ac99a3b 199
+  s_1afc1dc33b1536::t_2b67c53fea4a1a 25
+  s_1afc1dc33b1536::t_4a957f807ddac7 184-188
+  s_1afc1dc33b1536::t_ce4b6b68ab6006 124
+  s_1afc1dc33b1536::t_2bb4ab59fcd71b 151
+  s_1afc1dc33b1536::t_6ef37a0b7df516 355
+  s_1afc1dc33b1536::t_d95a00f35a915f 233-234
+apps/web/components/features/protocols/danone/CommercialDrilldownDashboard.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 188,262
+apps/web/components/insights/charts/EffortImpactMatrix.tsx
+  s_1afc1dc33b1536::t_c18c37e9c1994e 44
+apps/api/app/integrations/composio/actions.py
+  s_342719deabd7d2::t_05c14ed947fb25 52-54
+  s_342719deabd7d2::t_e9473789e8382e 73
+apps/web/components/features/protocols/danone/csv-export.ts
+  s_1afc1dc33b1536::t_7f8f28134de0ca 257,259
+  s_1afc1dc33b1536::t_5bfa2dd544b953 187
+  s_1afc1dc33b1536::t_43ab3f78074504 21,30
+  s_1afc1dc33b1536::t_2a8f9fbbf9d513 157
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 274,520
+  s_1afc1dc33b1536::t_854c71069ed731 510
+pnpm-lock.yaml
+  ai_agent 397,403,409,415,421,427,433,439,446,453,460,467,474,481,488,495,569,576,583,590,654,661,668,675,682,689,696,703,776,783,790,797,804,811,818,825,1349,1356,1363,1370,1377,1384,1459,1466,1473,1480,2488,2495,2502,2509
+apps/web/components/features/pilote/ingestion/SocialAccountConnectModal.tsx
+  s_1afc1dc33b1536::t_a013c12a7a0b19 82
+  s_1afc1dc33b1536::t_c54033d0da9681 96-100
+  s_1afc1dc33b1536::t_ba760b5b0a8841 200,333,338
+  s_1afc1dc33b1536::t_2823e8802ac3e4 403
+apps/web/components/features/protocols/danone/DiffClusterLabDashboard.tsx
+  s_1afc1dc33b1536::t_ce0023af17883a 144,151,281,435,466
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 190,325,358,412,416,520
+apps/web/lib/habs/platform-sync-i18n.ts
+  s_1afc1dc33b1536::t_e7c4d689bb70c8 76-77
+  s_1afc1dc33b1536::t_fb3a22d061fb16 11-20
+apps/web/components/features/analyse/SmartDropZone.tsx
+  s_1afc1dc33b1536::t_4bf5f509c14525 296
+  s_1afc1dc33b1536::t_8ca1c38aea25bb 24
+apps/web/components/features/protocols/danone/DanoneReportDashboard.tsx
+  s_1afc1dc33b1536::t_c5a8a933a4f82e 520
+  s_1afc1dc33b1536::t_7339b40f844450 275,641
+  s_1afc1dc33b1536::t_f8b28b6b2fe731 71-72
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 1243
+apps/web/components/features/protocols/bel/tabs/BelYogurtDiffClusterDashboard.tsx
+  s_1afc1dc33b1536::t_0a4c5fe8deb820 153,198,213
+apps/web/components/features/protocols/bel/BelReportDashboard.tsx
+  s_1afc1dc33b1536::t_cea7232280e4b5 86-87
+  s_1afc1dc33b1536::t_8f6d2d131d12e3 311,542
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "5eed541e5fe6c481d647b1ac0990c50a1f4d072f",
+  "prompts": {},
+  "sessions": {
+    "s_1afc1dc33b1536": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "480bcd80-10bb-4c97-8fb1-927bc4e08b9f",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_342719deabd7d2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "5e3dc962-ef55-444e-bacf-5be96c62b029",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_4647a5944836e3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b6374667ffe1j46fXegEtt3Ps",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

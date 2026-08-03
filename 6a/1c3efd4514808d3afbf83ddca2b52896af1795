@@ -1,0 +1,19 @@
+packages/integrations/src/immich/immich-integration.ts
+  s_d6360a65ee5c4c::t_c6a45507ed19d9 78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "6a1c3efd4514808d3afbf83ddca2b52896af1795",
+  "prompts": {},
+  "sessions": {
+    "s_d6360a65ee5c4c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_089006b9cffewMI5tMkA0hPSZy",
+        "model": "deepseek/deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

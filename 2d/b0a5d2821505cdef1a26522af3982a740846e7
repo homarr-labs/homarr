@@ -1,0 +1,19 @@
+apps/docs/tsconfig.json
+  s_4d67a314be2aff::t_5db1771ff0cbe5 12,17-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "2db0a5d2821505cdef1a26522af3982a740846e7",
+  "prompts": {},
+  "sessions": {
+    "s_4d67a314be2aff": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_101dfce42ffeW5tW28bTfCynyM",
+        "model": "minimax-m3"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

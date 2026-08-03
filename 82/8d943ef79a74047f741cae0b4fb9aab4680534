@@ -1,0 +1,28 @@
+turbo.json
+  s_b76ab56b2a7361::t_4e7085393ed4f1 3
+.github/workflows/code-quality.yml
+  s_b76ab56b2a7361::t_00ae7706375a41 19-22
+.env.example
+  s_b76ab56b2a7361::t_47dd04efff15ff 44-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "828d943ef79a74047f741cae0b4fb9aab4680534",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_b76ab56b2a7361": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05d8b873-8c52-4964-9e34-0bb4380b4e9f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

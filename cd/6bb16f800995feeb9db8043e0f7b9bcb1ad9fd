@@ -1,0 +1,32 @@
+packages/integrations/src/synology/synology-client.ts
+  s_b3f215476b328d::t_0e2fde17ce398c 9
+  s_b3f215476b328d::t_5d3a46027dc6fd 160
+packages/widgets/src/traefik/component.tsx
+  s_b3f215476b328d::t_a260e381825c56 140
+packages/integrations/src/synology/test/synology-integration.spec.ts
+  s_b3f215476b328d::t_ee3ed3bf7573ff 5,41,207-208
+  s_b3f215476b328d::t_dba3ceac8677d2 246-248
+packages/api/src/router/widgets/media-organizer.ts
+  s_b3f215476b328d::t_a260e381825c56 24
+packages/widgets/src/patchmon/component.tsx
+  s_b3f215476b328d::t_385545039f01d7 3,81,136,236
+  s_b3f215476b328d::t_f2459c02a46b24 27-28
+apps/nextjs/src/components/onboarding/manage-tour.tsx
+  s_b3f215476b328d::t_a9ad794db310df 108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "cd6bb16f800995feeb9db8043e0f7b9bcb1ad9fd",
+  "prompts": {},
+  "sessions": {
+    "s_b3f215476b328d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0b2a8d506ffeToQVhtr5kzzchq",
+        "model": "deepseek/deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+apps/docs/src/components/custom-widget-code.tsx
+  s_955a5b644d1c62::t_0dd649b76be4ff 4-18
+apps/workshop/README.md
+  s_955a5b644d1c62::t_08f67af1a5255a 29-38
+apps/workshop/run-docs.sh
+  s_955a5b644d1c62::t_edd8c94f0febff 1-18
+package.json
+  s_955a5b644d1c62::t_598537084d69af 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a49b0869f7ac28859be8708a94998610e3df4b0a",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

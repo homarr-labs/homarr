@@ -1,0 +1,36 @@
+packages/translation/src/lang/en.json
+  s_e93dcd2ae13fd1::t_e7ff06cd3ae2af 1470
+  s_e93dcd2ae13fd1::t_a0572cb5385f83 4299
+apps/nextjs/src/components/layout/header/docker-quick-access-modal.tsx
+  s_e93dcd2ae13fd1::t_8d3ec26933b90c 7
+  s_e93dcd2ae13fd1::t_1a7ddcb18f8365 9
+  s_e93dcd2ae13fd1::t_0498177d6f81a4 1-6,8
+apps/nextjs/src/components/layout/header/user.tsx
+  s_e93dcd2ae13fd1::t_655e2851dbe4fd 6,15,18
+apps/nextjs/src/components/user-avatar-menu.tsx
+  s_e93dcd2ae13fd1::t_5eebe82133aee0 47
+  s_e93dcd2ae13fd1::t_9fea3318cc216d 94-98
+  s_e93dcd2ae13fd1::t_bb04c259bf6d85 28,34,37
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  s_e93dcd2ae13fd1::t_322ec2d126ca2f 152-156
+  s_e93dcd2ae13fd1::t_18c451d13a80f4 160
+  s_e93dcd2ae13fd1::t_3a563f7b2b2339 159,165,183-184,186-187,200
+apps/nextjs/src/app/[locale]/manage/tools/docker/page.tsx
+  s_e93dcd2ae13fd1::t_a0029037a5b85e 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "4978f6f311849bc5636ce650992f8576d9fc6b49",
+  "prompts": {},
+  "sessions": {
+    "s_e93dcd2ae13fd1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_110740a21ffeBfXcnpk5UghUYy",
+        "model": "z-ai/glm-5.2"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

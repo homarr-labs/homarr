@@ -1,0 +1,19 @@
+packages/integrations/src/download-client/qbittorrent/qbittorrent-integration.ts
+  s_a605bbe361c51a::t_56e8a9098b3cf4 33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "b9339250a547e55204a8d9f9961701aba66fca9a",
+  "prompts": {},
+  "sessions": {
+    "s_a605bbe361c51a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_099cc0bf2ffeqtOdrIN3bX4R3m",
+        "model": "deepseek/deepseek-v4-pro"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,268 @@
+packages/translation/src/lang/cn.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/custom-widgets/src/workbench/code-language.ts
+  s_955a5b644d1c62::t_7331fddc7c9047 4
+packages/custom-widgets/src/jsx/runtime-components.tsx
+  s_955a5b644d1c62::t_42c2e53243fcfb 39,41-45,48,50,52-56,58,60,78,96,100-108,112,115,120,125,128,130,133-146
+  s_955a5b644d1c62::t_14f46008f3cc12 7-12,40,99
+packages/custom-widgets/scripts/check-architecture.mjs
+  s_955a5b644d1c62::t_fec5f365e4567a 86,89
+packages/translation/src/lang/lt.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+apps/nextjs/src/components/workshop/workshop-browser.tsx
+  s_955a5b644d1c62::t_e1875d77001215 39,66-67,85-97,153,162
+packages/translation/src/lang/ro.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/custom-widgets/src/workbench/code-editor.tsx
+  s_955a5b644d1c62::t_404dbf6145c879 197
+  s_955a5b644d1c62::t_cdd14a984d20a9 4,11-12,16,102-111
+  s_955a5b644d1c62::t_bc70a2b65f9c61 47-52,56-58,60-67,74-77,93-100,112,114-116,118-151,153-178,185-187,189-195,198-218,221-242
+  s_955a5b644d1c62::t_f73a9c37aef2a8 1-3,5-10,13-14,22-23,29,32-33,35-46,53-55,59,68-73,78-83,91-92,101,117,152,179-184,188,196,219-220
+  s_955a5b644d1c62::t_7e0299aa82640b 15,17-21,24-28,30
+  s_955a5b644d1c62::t_603d15c0766bcd 31,34
+  s_955a5b644d1c62::t_9a524362cf4a81 84-90
+  s_955a5b644d1c62::t_1890fdbe528953 113
+packages/translation/src/lang/sv.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/translation/src/lang/vi.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/translation/src/lang/zh.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/custom-widgets/src/core/ai-prompt.ts
+  s_955a5b644d1c62::t_f9577631a3cdba 7,15,17,20,36,94
+packages/translation/src/lang/sl.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-analysis.ts
+  s_955a5b644d1c62::t_203355377bdf19 16
+packages/translation/src/lang/tr.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-action.tsx
+  s_955a5b644d1c62::t_4aad2f914d7f8d 28
+.agents/skills/homarr-custom-widget/references/schema.md
+  s_955a5b644d1c62::t_f9577631a3cdba 3,25
+apps/docs/src/components/custom-widget-code.tsx
+  s_955a5b644d1c62::t_3e742327f74e82 6-10,46-65
+  s_955a5b644d1c62::t_14e61ca144337e 72,101,134-137
+  s_955a5b644d1c62::t_b3a348d4ee225c 4
+  s_955a5b644d1c62::t_877045128b5bda 107-109
+  s_955a5b644d1c62::t_5c90f74443363e 1-3,5,11-45,66-71,73-100,102-106,110-133,138
+.agents/skills/homarr-custom-widget/SKILL.md
+  s_955a5b644d1c62::t_f9577631a3cdba 3,26
+packages/translation/src/lang/en.json
+  s_955a5b644d1c62::t_8d3e2485e68c31 988,5857-5858
+  s_955a5b644d1c62::t_620738242537fc 725,745,767-775,796
+  s_955a5b644d1c62::t_02ec63ee397d02 794
+  s_955a5b644d1c62::t_1d3bad68f674d8 5859
+packages/custom-widgets/src/test/workshop-translations.spec.ts
+  s_955a5b644d1c62::t_363ff83729e55d 1-20
+packages/translation/src/lang/da.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/translation/src/lang/de-CH.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+apps/docs/docs/management/mcp.mdx
+  s_955a5b644d1c62::t_bc79cdbc5b46c5 190
+packages/translation/src/lang/he.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/translation/src/lang/pl.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 4038,5178-5180
+packages/custom-widgets/src/workbench/code-editor-types.ts
+  s_955a5b644d1c62::t_7e0299aa82640b 1-58
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  s_955a5b644d1c62::t_d192f97ed87f66 184
+  s_955a5b644d1c62::t_25d48682361f21 10-15,169-170,172-180,193-200
+packages/translation/src/lang/ko.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 4023,5162-5164
+packages/custom-widgets/src/core/custom-jsx-schema.ts
+  s_955a5b644d1c62::t_a4f0d7604a6110 4,74,87,214,216,218-219
+  s_955a5b644d1c62::t_ba5f4abd547a15 233-234
+  s_955a5b644d1c62::t_bc70a2b65f9c61 217
+packages/translation/src/lang/lv.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3979,5118-5120
+packages/translation/src/lang/sk.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/custom-widgets/src/workbench/code-editor.module.css
+  s_955a5b644d1c62::t_bc70a2b65f9c61 52-54
+packages/custom-widgets/src/test/schema.spec.ts
+  s_955a5b644d1c62::t_10ad282a1cbbfb 126,244,305,315
+  s_955a5b644d1c62::t_542d1f842e6af5 16,18-29
+  s_955a5b644d1c62::t_d18e008dedce99 321
+  s_955a5b644d1c62::t_7c6dd61c20987c 3,13-15
+  s_955a5b644d1c62::t_b6876f493ef8b9 17
+apps/docs/docs/management/api/index.mdx
+  s_955a5b644d1c62::t_bc79cdbc5b46c5 92
+packages/custom-widgets/src/server/preview-sessions.ts
+  s_955a5b644d1c62::t_bc70a2b65f9c61 3
+apps/nextjs/src/components/workshop/workshop-publish-modal.tsx
+  s_955a5b644d1c62::t_ed1e1cb659a04c 7,82-85
+packages/custom-widgets/src/styles.d.ts
+  s_955a5b644d1c62::t_1890fdbe528953 1-4
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-actions.ts
+  s_955a5b644d1c62::t_d192f97ed87f66 3,45,127-131,154
+  s_955a5b644d1c62::t_25d48682361f21 12-13,126,134-140
+packages/custom-widgets/src/core/bundled-widgets.ts
+  s_955a5b644d1c62::t_941f13268b9f1a 43,138
+  s_955a5b644d1c62::t_70088930de63c9 100
+  s_955a5b644d1c62::t_add40deb3a3e97 1-42,44-99,101-137,139-211
+packages/translation/src/lang/no.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/custom-widgets/src/workbench/analyzer.ts
+  s_955a5b644d1c62::t_02ec63ee397d02 1,6,29,73,75-76,84-88,90,94,96-97
+  s_955a5b644d1c62::t_203355377bdf19 8,35,74,77,79
+packages/translation/src/lang/ru.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/db/migrations/seed.ts
+  s_955a5b644d1c62::t_941f13268b9f1a 4,19,30,62
+  s_955a5b644d1c62::t_0ec8abad5a12d1 558-588
+packages/custom-widgets/package.json
+  s_955a5b644d1c62::t_0b4f6727deeed2 33-38,45
+packages/custom-widgets/src/runtime/custom-jsx-renderer.tsx
+  s_955a5b644d1c62::t_58f6de95144076 7-8,117-123,125-133,150-151,230-235,239
+  s_955a5b644d1c62::t_ecdc12881f3e0c 116,124,134-145,147,242,245,247
+packages/custom-widgets/src/core/schema-references.ts
+  s_955a5b644d1c62::t_79b1c609caec2f 51-62
+  s_955a5b644d1c62::t_6c1b08afa68e7e 1-50,63-126
+packages/translation/src/lang/cs.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/translation/src/lang/hr.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/custom-widgets/src/core/authoring-resources.ts
+  s_955a5b644d1c62::t_f9577631a3cdba 10-14,18,41,56-58
+packages/translation/src/lang/pt.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/custom-widgets/src/test/import.spec.ts
+  s_955a5b644d1c62::t_88a105f4a97587 50-52,55-62
+  s_955a5b644d1c62::t_73cdffabe8aca8 1-3
+  s_955a5b644d1c62::t_ac956ce5d923f7 7-11,13,18,20,23-47,53-54,63-65,69-79,82-87
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_955a5b644d1c62::t_b3a348d4ee225c 4,7-9,16-17,39-43,50-54
+  s_955a5b644d1c62::t_54a97d1719342d 3,44-49,55-67
+apps/docs/docs/management/workshop/index.mdx
+  s_955a5b644d1c62::t_92952671e0caac 12-25
+packages/custom-widgets/src/test/component-registry.spec.ts
+  s_955a5b644d1c62::t_19f7b645eb1fb6 3-7,238-258
+packages/custom-widgets/src/workbench/code-editor-diagnostics.tsx
+  s_955a5b644d1c62::t_bc70a2b65f9c61 20
+  s_955a5b644d1c62::t_7e0299aa82640b 5-7,9,12-17,40
+packages/translation/src/lang/fr.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 4022,5161-5163
+packages/translation/src/lang/pt-br.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 4021,5160-5162
+packages/translation/src/lang/de.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 4038,5177-5179
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx
+  s_955a5b644d1c62::t_4aad2f914d7f8d 130
+packages/custom-widgets/src/test/workbench.spec.ts
+  s_955a5b644d1c62::t_94aff5157ac364 69-72
+  s_955a5b644d1c62::t_02ec63ee397d02 74-75
+  s_955a5b644d1c62::t_ab564e2294b26c 15-21,51-56
+  s_955a5b644d1c62::t_6041634e5a7f61 57-58
+  s_955a5b644d1c62::t_bf950e6d1a7c78 73
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_955a5b644d1c62::t_54a97d1719342d 5,64-69
+  s_955a5b644d1c62::t_b3a348d4ee225c 6-33,36,45,75,84-89
+  s_955a5b644d1c62::t_e4e0eafe324a66 70
+apps/docs/docs/widgets/custom-api/index.mdx
+  s_955a5b644d1c62::t_956ffb7d6dab80 13
+packages/custom-widgets/src/test/runtime.spec.tsx
+  s_955a5b644d1c62::t_82a8e5b6dd6645 7,12,109-110,117-121,123,126,132,134-135
+packages/custom-widgets/src/workbench/code-editor-toolbar.tsx
+  s_955a5b644d1c62::t_cdd14a984d20a9 1-38,40-82,84-88,90-131
+  s_955a5b644d1c62::t_603d15c0766bcd 39,83,89
+packages/custom-widgets/src/core/import.ts
+  s_955a5b644d1c62::t_bc70a2b65f9c61 73,81-82,137-143,169,189
+  s_955a5b644d1c62::t_603d15c0766bcd 102-106,112,115,117,132,165,176
+  s_955a5b644d1c62::t_1487fd142f5227 134-136,144
+  s_955a5b644d1c62::t_781fde5fc6a65b 1,14-34,36,39-47,50-72,74-80,83-95,97-101,107-109,118-131,133,146-164,166-168,170-175,177-188,190-208
+apps/nextjs/src/app/[locale]/manage/custom-widgets/page.tsx
+  s_955a5b644d1c62::t_0bd60b8a733b19 3,34-36
+  s_955a5b644d1c62::t_afdde67acfba46 33
+packages/translation/src/lang/et.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/translation/src/lang/nl.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+apps/docs/docs/management/custom-widgets/agent-authoring.mdx
+  s_955a5b644d1c62::t_b3a348d4ee225c 1,5-6,9-15,25-38
+  s_955a5b644d1c62::t_b0f6b37ee3a8f4 39
+packages/translation/src/lang/es.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/translation/src/lang/cr.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 4038,5178-5180
+packages/translation/src/lang/en-gb.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 4000,5139-5141
+packages/custom-widgets/src/workbench/index.ts
+  s_955a5b644d1c62::t_f73a9c37aef2a8 6-7
+apps/docs/package.json
+  s_955a5b644d1c62::t_ba80f567682981 32
+  s_955a5b644d1c62::t_0b4f6727deeed2 29
+packages/workshop/src/schema.ts
+  s_955a5b644d1c62::t_cd74075ae23e3a 154
+packages/custom-widgets/src/jsx/analyzer.ts
+  s_955a5b644d1c62::t_a66d8fe72a5709 69
+apps/nextjs/src/app/api/mcp/[transport]/route.ts
+  s_955a5b644d1c62::t_afdde67acfba46 257
+packages/custom-widgets/src/core/component-registry.ts
+  s_955a5b644d1c62::t_14f46008f3cc12 68-88
+packages/translation/src/lang/ca.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/translation/src/lang/el.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+.agents/skills/homarr-custom-widget/references/runtime.md
+  s_955a5b644d1c62::t_f9577631a3cdba 3,19
+packages/translation/src/lang/fi.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_code-editor.tsx
+  s_955a5b644d1c62::t_14e5094e2a0ad6 3,5-6,8-9,11,14-40,44-46
+apps/docs/docs/management/custom-widgets/troubleshooting.mdx
+  s_955a5b644d1c62::t_b3a348d4ee225c 9,17
+apps/workshop/pb_hooks/workshop-utils.js
+  s_955a5b644d1c62::t_bc79cdbc5b46c5 494,498-500,581
+  s_955a5b644d1c62::t_1281692e6d7cb3 473
+apps/workshop/README.md
+  s_955a5b644d1c62::t_88d04c16bbfdc2 15-22
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  s_955a5b644d1c62::t_bc70a2b65f9c61 6
+  s_955a5b644d1c62::t_10ad282a1cbbfb 17-22,24-25
+packages/translation/src/lang/it.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 4038,5178-5180
+apps/docs/docs/management/custom-widgets/requests-and-security.mdx
+  s_955a5b644d1c62::t_b3a348d4ee225c 16
+apps/docs/docs/management/custom-widgets/custom-jsx.mdx
+  s_955a5b644d1c62::t_b3a348d4ee225c 10,25,37,39,42,44,46,49-51,60
+packages/custom-widgets/src/test/fixtures/pokedex-ai-response.md
+  s_955a5b644d1c62::t_bc70a2b65f9c61 46-52,58-62
+  s_955a5b644d1c62::t_73cdffabe8aca8 1-45,53-57,63-88
+packages/custom-widgets/src/core/index.ts
+  s_955a5b644d1c62::t_6c1b08afa68e7e 9
+  s_955a5b644d1c62::t_add40deb3a3e97 3
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_955a5b644d1c62::t_603d15c0766bcd 38
+  s_955a5b644d1c62::t_4523d2ad3cee4b 4,107-108
+  s_955a5b644d1c62::t_404dbf6145c879 16-21,61-76,207,219,228
+  s_955a5b644d1c62::t_d6bb83d41ddcb4 15
+packages/translation/src/lang/hu.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/translation/src/lang/ja.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3969,5108-5110
+packages/translation/src/lang/uk.json
+  s_955a5b644d1c62::t_f2c79a2db062fa 3979,5118-5120
+packages/api/src/router/custom-widget/stored-definition.ts
+  s_955a5b644d1c62::t_29e562008f97ee 23
+pnpm-lock.yaml
+  s_955a5b644d1c62::t_1aed928dcf6386 721-723,730-732,1707-1724,1743-1745
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "f9863b8402133e279d032f1ea1972e506c2844b7",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+packages/integrations/src/immich/immich-integration.ts
+  s_1ee2f508a8c9e6::t_b78be643fdc36e 66-69,75
+  s_1ee2f508a8c9e6::t_636690268e57cc 117-134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.9",
+  "base_commit_sha": "240ebc562db43d3970f61aaf776f48d59abecde2",
+  "prompts": {},
+  "sessions": {
+    "s_1ee2f508a8c9e6": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "11a5af03-3ef1-4f2f-83bc-053f786c0e43",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

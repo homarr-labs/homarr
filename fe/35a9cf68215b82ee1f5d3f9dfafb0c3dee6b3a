@@ -1,0 +1,33 @@
+packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts
+  s_3610582ca2943b::t_172a1198866a2c 97-98
+  s_3610582ca2943b::t_82f92be0c49d5d 110
+  s_3610582ca2943b::t_7faa03a5e34808 111,118-120,122-123
+  s_3610582ca2943b::t_45c5b3b08181f4 73-74
+  s_3610582ca2943b::t_07fd312fd80b01 72
+packages/widgets/src/audio-stats/component.tsx
+  s_3610582ca2943b::t_c50b88b832fe80 13
+packages/api/src/router/widgets/audio-stats.ts
+  s_3610582ca2943b::t_9e2a28ea9de069 11
+  s_3610582ca2943b::t_e6b63670c9e29a 12-13,15-16,19-20,24
+packages/integrations/src/navidrome/navidrome-integration.ts
+  s_3610582ca2943b::t_102eb337e2202d 72-75
+  s_3610582ca2943b::t_c05d3fb2be9beb 22-23
+packages/integrations/src/paperless-ngx/paperless-ngx-integration.ts
+  s_3610582ca2943b::t_75a4123aedf6e2 42-43,49-50,52-53,58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "fe35a9cf68215b82ee1f5d3f9dfafb0c3dee6b3a",
+  "prompts": {},
+  "sessions": {
+    "s_3610582ca2943b": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "aa2f49da-9959-4b5e-b271-a951fddc12ad",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

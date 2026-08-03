@@ -1,0 +1,33 @@
+packages/integrations/src/archive-team-warrior/archive-team-warrior-integration.ts
+  s_b77428fd657e13::t_8c044243e268bf 1-386
+packages/integrations/src/archive-team-warrior/archive-team-warrior-types.ts
+  s_b77428fd657e13::t_8c044243e268bf 1-37
+packages/widgets/src/releases/component.tsx
+  s_39ce8a1abb67fe::t_fb511c52c002d5 534,552
+packages/integrations/src/archive-team-warrior/archive-team-warrior-schemas.ts
+  s_b77428fd657e13::t_8c044243e268bf 1-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "8a5ad5861ba4c2d0978f1fa3f6115a1c5974f8a2",
+  "prompts": {},
+  "sessions": {
+    "s_39ce8a1abb67fe": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "643aa214-a766-43c7-8601-b45ed469e8b1",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b77428fd657e13": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f0435-23ce-7421-91ea-2c226983d6f3",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

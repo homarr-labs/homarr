@@ -1,0 +1,70 @@
+packages/widgets/src/beszel/_shared/chart.tsx
+  s_80b43caaf12795::t_dd10dd4e38c0e4 131,135,138,142
+  s_80b43caaf12795::t_700313733d65c3 136,141
+  s_80b43caaf12795::t_eb2e5f76d6fd35 181,187,189,197
+  s_80b43caaf12795::t_34aa598cf7c1f8 11-17,20-21,24-27,29
+  s_80b43caaf12795::t_b1de7c8b87f24d 188,196
+  s_80b43caaf12795::t_795539194b0fd6 112
+  s_80b43caaf12795::t_fe5159f191b858 22,30-50
+  s_80b43caaf12795::t_07e6a80effccdf 18-19
+packages/widgets/src/beszel-system-table/component.tsx
+  s_80b43caaf12795::t_dd36fc6e01fcc6 282
+  s_80b43caaf12795::t_6a49ad5e89ffe2 71
+  s_80b43caaf12795::t_5606cf954439e8 283
+  s_80b43caaf12795::t_201e8b38646037 23
+  s_80b43caaf12795::t_f4537d1bfde35c 31
+  s_80b43caaf12795::t_07b58ac2b61158 278-281,284-285
+packages/widgets/src/beszel-system-grid/component.module.css
+  s_80b43caaf12795::t_e2c88610f432fa 1-4,6
+  s_80b43caaf12795::t_d7bb87a3016bb9 5,7
+packages/widgets/src/beszel/_shared/system-stats-modal.tsx
+  s_80b43caaf12795::t_79ec9ee4d387f1 171
+  s_80b43caaf12795::t_b3a012a5c3b85d 1-170,173
+  s_80b43caaf12795::t_d0c0b66d61fbaa 172
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_80b43caaf12795::t_020abc700dea4b 157-162,169,175,181
+  s_80b43caaf12795::t_e1fae139e0c0be 18
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_80b43caaf12795::t_0db593e06a4b1e 318,327,334
+  s_80b43caaf12795::t_60ef64b109f649 161
+  s_80b43caaf12795::t_08026e92dd3e96 328
+  s_80b43caaf12795::t_7118643dfa517c 364
+  s_80b43caaf12795::t_e2718dc1b27751 21
+  s_80b43caaf12795::t_b810802e1c9c0f 398
+  s_80b43caaf12795::t_8d12e9bd948f00 412
+  s_80b43caaf12795::t_15d772c9d819cb 24-25
+  s_80b43caaf12795::t_4d2ca4a89e996f 397,399-411,413-416
+  s_80b43caaf12795::t_374a276bd12aaa 31
+packages/request-handler/src/beszel.ts
+  s_80b43caaf12795::t_55977c4936e04a 98
+  s_80b43caaf12795::t_347d2701ea7e31 99
+packages/widgets/src/beszel-system-table/styles.css
+  s_80b43caaf12795::t_990f751c689005 19
+  s_80b43caaf12795::t_3eb87bc797a4b2 24-25
+  s_80b43caaf12795::t_165ffef8150cb7 14-18,20
+packages/widgets/src/beszel/_shared/tooltip.tsx
+  s_80b43caaf12795::t_8a623ca9847713 115
+  s_80b43caaf12795::t_03a8a7543d85b5 116
+  s_80b43caaf12795::t_ddd5877fde7f0f 7-9
+  s_80b43caaf12795::t_68d515504e98e5 58-59,62,64,70-90,121-122,128,130
+  s_80b43caaf12795::t_686ffb3431265f 6
+  s_80b43caaf12795::t_ca450bfdb0e2dc 47
+packages/widgets/src/beszel/_shared/hooks.ts
+  s_80b43caaf12795::t_a1c6b03fe7f272 34-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "b73ea6d3dd631a7de0886a72dd1a7ef885d53cb7",
+  "prompts": {},
+  "sessions": {
+    "s_80b43caaf12795": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fb1c7184-cf39-4bb0-baa0-3a49382ea7a8",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

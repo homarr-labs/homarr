@@ -1,0 +1,11 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  ai_agent 203-210
+packages/api/src/router/widgets/__tests__/custom-api-extractors.spec.ts
+  ai_agent 118-119,131-134,145-147,160-161,172-173,184-188,200-201
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "5314b173d3f2d1d248d185b9eea80fddbb801fa6",
+  "prompts": {}
+}

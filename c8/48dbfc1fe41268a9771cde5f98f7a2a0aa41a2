@@ -1,0 +1,50 @@
+packages/widgets/src/umami/umami-content.tsx
+  s_3dcc22b87e2334::t_e408c5771675ad 13
+  s_3dcc22b87e2334::t_7d8a2a769d9257 43-46,49-52,56
+packages/widgets/src/umami/umami-events-content.tsx
+  s_3dcc22b87e2334::t_e8f8364ef4660a 31-32,34
+  s_3dcc22b87e2334::t_7057353587c46d 10
+  s_3dcc22b87e2334::t_5d79123d90697b 33
+packages/widgets/src/umami/umami-top-list.tsx
+  s_3dcc22b87e2334::t_2e3e2451ff5ae2 29-30,32
+  s_3dcc22b87e2334::t_fb93149ce3014f 22
+  s_3dcc22b87e2334::t_7080e9f6328c49 9-10
+  s_3dcc22b87e2334::t_32c5fc68d7b2e4 31
+  s_3dcc22b87e2334::t_bf049d4ca1145d 20-21,23
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_3dcc22b87e2334::t_4a3d3a3f0121aa 101,110
+  s_3dcc22b87e2334::t_873e16757b11ab 3
+  s_3dcc22b87e2334::t_2abc2bc52b5c28 107-109
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_3dcc22b87e2334::t_2dba70a639a53c 64-73
+  s_3dcc22b87e2334::t_c578f2bea51280 74-85,88-92
+packages/widgets/src/media-releases/component.tsx
+  s_3dcc22b87e2334::t_fbaa03ef259d54 9
+  s_3dcc22b87e2334::t_ca96ea52c09319 42-54
+  s_3dcc22b87e2334::t_47b0a032607ea6 109
+packages/widgets/src/media-requests/list/component.tsx
+  s_3dcc22b87e2334::t_9abd1ac6e908de 22
+  s_3dcc22b87e2334::t_3543241abddae5 138
+packages/widgets/src/umami/umami-utils.ts
+  s_3dcc22b87e2334::t_c58c2f06ce53f4 5-6
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_3dcc22b87e2334::t_314c701c2fa82c 60,63
+packages/common/src/date.ts
+  s_3dcc22b87e2334::t_e90f8d61193762 20-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "c848dbfc1fe41268a9771cde5f98f7a2a0aa41a2",
+  "prompts": {},
+  "sessions": {
+    "s_3dcc22b87e2334": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "52c1f4dc-82eb-45e2-85c7-95add5cdff11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

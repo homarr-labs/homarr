@@ -1,0 +1,27 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_955a5b644d1c62::t_9a67b4380530a9 4,122,167-181
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-save-errors.spec.ts
+  s_955a5b644d1c62::t_21f2ee69ae958f 1-57
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-save-errors.ts
+  s_955a5b644d1c62::t_0aee04f38d05e0 1-54
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-actions.ts
+  s_955a5b644d1c62::t_84ac6951f81917 21-22,48,52-53,56-62,99-107,223,228-254
+packages/translation/src/lang/en.json
+  s_955a5b644d1c62::t_655b53c120d37f 831-835
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "b5096792749b57755ebb3a76738488187657efdb",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

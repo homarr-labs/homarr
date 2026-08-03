@@ -1,0 +1,29 @@
+packages/translation/src/lang/en.json
+  s_2eb7de3ebd67d7::t_83fff285892631 3675
+  s_2eb7de3ebd67d7::t_a4c634b54a638c 1655-1661
+packages/widgets/src/beszel-system-stats/index.ts
+  s_2eb7de3ebd67d7::t_4e2a012e2593e8 3-4,23-36
+packages/widgets/src/_inputs/index.ts
+  s_2eb7de3ebd67d7::t_026af67fde308f 19,39
+packages/widgets/src/options.ts
+  s_2eb7de3ebd67d7::t_499c83d6e38a2f 190-196
+  s_2eb7de3ebd67d7::t_4866a839e1f6ee 63-74
+packages/widgets/src/_inputs/widget-integration-select-input.tsx
+  s_2eb7de3ebd67d7::t_aa8c9d3c4a6906 11-19,23,25,38,40-43,49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "cbb5e301dc80d8118a66395d45ba49cff3808239",
+  "prompts": {},
+  "sessions": {
+    "s_2eb7de3ebd67d7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_12fbdc9adffemKOZiq8OkcpWYP",
+        "model": "glm-5.1"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+apps/web/playwright.config.ts
+  s_f7e50673f58a9e::t_f5adbec423a7e9 1-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "dcb5ca6a0b0dbb2004d98524a2d59b7045d19b1b",
+  "prompts": {},
+  "sessions": {
+    "s_f7e50673f58a9e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "04b7ba50-9df2-4b37-9572-ad7bb78b79ce",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

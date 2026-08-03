@@ -1,0 +1,19 @@
+.vscode/extensions.json
+  s_fb9187908eefc7::t_554ebc0643407d 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "f9a915b02778a1f3bf00584cf79f6b0fe9418498",
+  "prompts": {},
+  "sessions": {
+    "s_fb9187908eefc7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fd6ad890-f3fb-44f5-97c1-51dc8861aa27",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

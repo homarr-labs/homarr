@@ -1,0 +1,50 @@
+packages/api/src/router/widgets/rssFeed.ts
+  s_909ca8cf5b6e15::t_ea5f797005030e 65-78
+packages/widgets/src/timetable/component.tsx
+  s_909ca8cf5b6e15::t_a7ec00c03f83c7 51
+  s_909ca8cf5b6e15::t_b2d2de6f46ba97 1-2,60-64
+  s_909ca8cf5b6e15::t_fbb0cef9974996 43
+  s_909ca8cf5b6e15::t_a515d61a130ce2 54-55
+  s_909ca8cf5b6e15::t_cdbf87b9b6a120 52
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_909ca8cf5b6e15::t_de341feee30b36 83,85,102,107,110,127
+  s_909ca8cf5b6e15::t_792dd5f8e5e8d7 3,89-93,97-99,109,111,114-118,122-124
+  s_909ca8cf5b6e15::t_77aa29f7bc6940 40-48,84,88,94-96,108,113,119-121,167,194,206,220
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_fbb0cef9974996 2002
+  s_909ca8cf5b6e15::t_b2d2de6f46ba97 2004-2006
+  s_909ca8cf5b6e15::t_ea5f797005030e 3555-3558
+packages/widgets/src/timetable/index.ts
+  s_909ca8cf5b6e15::t_fbb0cef9974996 1,12-18
+packages/api/src/router/test/widgets/rssFeed.spec.ts
+  s_909ca8cf5b6e15::t_ea5f797005030e 68-87
+packages/widgets/src/rssFeed/component.tsx
+  s_909ca8cf5b6e15::t_e1fdc98b2d3485 19
+  s_909ca8cf5b6e15::t_d627827b8776de 7,20-21,23,29-33
+  s_909ca8cf5b6e15::t_b2d2de6f46ba97 22,24-28
+  s_909ca8cf5b6e15::t_ea5f797005030e 3-4,10,15-17,47-52,62-66
+  s_909ca8cf5b6e15::t_a5ed1fcdf8f9b3 37-41
+apps/docs/docs/widgets/timetable/index.mdx
+  s_909ca8cf5b6e15::t_b2d2de6f46ba97 39-40
+apps/docs/docs/widgets/rss-feed/index.mdx
+  s_909ca8cf5b6e15::t_c44d122f89cc19 34-35
+e2e/health-checks.spec.ts
+  s_909ca8cf5b6e15::t_a515d61a130ce2 7-9
+  s_909ca8cf5b6e15::t_2756e5f5150f29 12,23,26,35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "45ff97972c892ac82818bf8f743e5a51b47c561c",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

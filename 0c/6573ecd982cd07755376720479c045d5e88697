@@ -1,0 +1,232 @@
+packages/api/src/test/open-api.spec.ts
+  s_b190005d8ed817::t_9670618d1a2311 17-25
+packages/integrations/src/media-organizer/radarr/radarr-integration.ts
+  s_b190005d8ed817::t_9670618d1a2311 13-14,19,116-188,209-242
+  s_b190005d8ed817::t_3f0676856a92e4 243
+packages/request-handler/src/beszel.ts
+  s_b190005d8ed817::t_9670618d1a2311 125-127
+packages/integrations/src/interfaces/media-organizer/media-organizer-integration.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-6
+apps/docs/docs/integrations/bazarr/index.mdx
+  s_b190005d8ed817::t_9670618d1a2311 1-54
+packages/translation/src/lang/el.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/hu.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/lt.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/integrations/src/mock/mock-integration.ts
+  s_b190005d8ed817::t_9670618d1a2311 12,25,46,61,104-106
+  s_b190005d8ed817::t_2c7b6ff40ce58b 107
+packages/translation/src/lang/ro.json
+  s_b190005d8ed817::t_9670618d1a2311 5-7,9-13,17-18,20-21,25,29-30,33-34,36-37,41-42,44,49-50,54,57-58,63-64,70-71,74-75,78,83-84,87-88,94,97-99,101-102,105-107,109-110,113-114,118-122,124-125,129-135,139-141,143-146,150,157-158,161-163,166,2287-2291,3546-3550
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_b190005d8ed817::t_9670618d1a2311 203,266,287,365
+packages/validation/src/form/i18n.spec.ts
+  s_b190005d8ed817::t_9670618d1a2311 7,115-129
+packages/integrations/src/mock/data/media-organizer.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-116
+packages/api/src/router/widgets/media-organizer.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-33
+packages/api/src/router/widgets/index.ts
+  s_b190005d8ed817::t_9670618d1a2311 13,25
+packages/translation/src/lang/de-CH.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/widgets/src/bazarr/component.tsx
+  s_b190005d8ed817::t_9670618d1a2311 1-103
+packages/widgets/src/beszel/_shared/use-live-stats.ts
+  s_b190005d8ed817::t_9670618d1a2311 3-4,6-9,12-46,49-63
+packages/widgets/src/media-missing/index.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-26
+packages/api/src/mcp.ts
+  s_b190005d8ed817::t_9670618d1a2311 12-13,34-35
+packages/api/src/router/serverSettings.ts
+  s_b190005d8ed817::t_9670618d1a2311 1,4-11,19-27,35-95
+packages/translation/src/lang/sk.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/tr.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+apps/docs/docs/widgets/bazarr/index.mdx
+  s_b190005d8ed817::t_9670618d1a2311 1-41
+packages/translation/src/lang/et.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/integrations/src/types.ts
+  s_b190005d8ed817::t_9670618d1a2311 2-3
+packages/integrations/src/beszel/beszel-integration.ts
+  s_b190005d8ed817::t_9670618d1a2311 23,288-404
+  s_b190005d8ed817::t_3f45ecc1c423a3 405-406
+packages/translation/src/lang/lv.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/uk.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3540,3546-3550,3600,3603,3606,3609,3612,3626,3678,3699,3782,3787,3984,4299,4668
+packages/widgets/src/index.tsx
+  s_b190005d8ed817::t_9670618d1a2311 15,36,96,101
+packages/widgets/src/media-missing/component.tsx
+  s_b190005d8ed817::t_9670618d1a2311 1-217
+apps/docs/docs/widgets/bazarr/index.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-37
+packages/translation/src/lang/en.json
+  s_b190005d8ed817::t_c7a5ee2e0f9efb 1350,3331
+  s_b190005d8ed817::t_9670618d1a2311 1351-1353,2935-2963,3303-3330
+packages/definitions/src/widget.ts
+  s_b190005d8ed817::t_9670618d1a2311 20,41,64-65
+packages/translation/src/lang/ca.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+apps/docs/docs/management/api/index.mdx
+  s_b190005d8ed817::t_9670618d1a2311 73-85
+packages/integrations/src/beszel/beszel-types.ts
+  s_b190005d8ed817::t_9670618d1a2311 346-361
+packages/integrations/src/index.ts
+  s_b190005d8ed817::t_9670618d1a2311 45,87
+packages/widgets/src/bazarr/index.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-36
+packages/translation/src/lang/cr.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/sl.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+apps/docs/static/api/open-api-schema.json
+  s_b190005d8ed817::t_9670618d1a2311 1
+CODEOWNERS
+  s_b190005d8ed817::t_9670618d1a2311 22-29
+packages/api/src/open-api.ts
+  s_b190005d8ed817::t_9670618d1a2311 9,18,25
+packages/api/src/router/widgets/beszel.ts
+  s_b190005d8ed817::t_9670618d1a2311 2,6-7,14,20-21,35-37,47-57,91-93,119-130,194,198-260
+  s_b190005d8ed817::t_6c902882af96e8 261
+packages/integrations/test/bazarr-unit.spec.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-110
+packages/integrations/src/bazarr/bazarr-types.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-19
+apps/docs/docs/getting-started/installation/helm.md
+  s_b190005d8ed817::t_9670618d1a2311 5,7,432
+packages/integrations/src/media-organizer/sonarr/sonarr-integration.ts
+  s_b190005d8ed817::t_9670618d1a2311 12-13,18,112-193,206-252
+  s_b190005d8ed817::t_34831720280cc6 253
+packages/definitions/src/widget-integration-map.ts
+  s_b190005d8ed817::t_9670618d1a2311 23,38
+packages/translation/src/lang/cs.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/hr.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/definitions/src/integration.ts
+  s_b190005d8ed817::t_9670618d1a2311 101,110,142-150,492,558,586
+packages/integrations/src/base/creator.ts
+  s_b190005d8ed817::t_9670618d1a2311 5,134
+packages/integrations/src/mock/data/beszel.ts
+  s_b190005d8ed817::t_9670618d1a2311 10,336,352
+packages/widgets/src/bazarr/component.module.css
+  s_b190005d8ed817::t_9670618d1a2311 1-77
+static-data/contributors.json
+  s_b190005d8ed817::t_9670618d1a2311 1
+static-data/translators.json
+  s_b190005d8ed817::t_9670618d1a2311 1
+packages/translation/src/lang/da.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/ja.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/vi.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/fi.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/widgets/src/media-missing/component.module.css
+  s_b190005d8ed817::t_9670618d1a2311 1-49
+packages/translation/src/lang/pt-br.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/de.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/es.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+apps/docs/docs/widgets/media-missing/index.mdx
+  s_b190005d8ed817::t_9670618d1a2311 1-65
+packages/definitions/src/docker-integration-match.ts
+  s_b190005d8ed817::t_9670618d1a2311 40
+packages/request-handler/src/lib/integration-request-handler.ts
+  s_b190005d8ed817::t_9670618d1a2311 15,34
+packages/translation/src/lang/it.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+docs/README.md
+  s_b190005d8ed817::t_9670618d1a2311 343-349,355-356,362-363,371-377,404-405
+packages/definitions/src/docs/widget-doc-slugs.ts
+  s_b190005d8ed817::t_9670618d1a2311 22,43
+packages/translation/src/lang/nl.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/validation/src/user.ts
+  s_b190005d8ed817::t_9670618d1a2311 9,46,89
+packages/widgets/src/ups/component.tsx
+  s_b190005d8ed817::t_9670618d1a2311 50
+packages/api/src/router/test/serverSettings.spec.ts
+  s_b190005d8ed817::t_9670618d1a2311 1,6,36,70,85,93-179
+  s_b190005d8ed817::t_e804679a404e61 180
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_b190005d8ed817::t_9670618d1a2311 82-91
+packages/api/src/test/mcp.spec.ts
+  s_b190005d8ed817::t_9670618d1a2311 5,8,15,18,35-36,39-40
+packages/definitions/src/docs/integration-doc-slugs.ts
+  s_b190005d8ed817::t_9670618d1a2311 16
+packages/integrations/src/bazarr/bazarr-integration.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-45
+packages/request-handler/src/media-organizer.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-36
+packages/translation/src/lang/en-gb.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/pt.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/ru.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/validation/src/email.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-16
+packages/translation/src/lang/sv.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+apps/nextjs/src/app/[locale]/manage/users/create/_components/create-user-stepper.tsx
+  s_b190005d8ed817::t_9670618d1a2311 20,64
+packages/integrations/src/interfaces/media-organizer/media-organizer-types.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-26
+packages/api/src/router/widgets/bazarr.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-21
+packages/old-import/src/user-schema.ts
+  s_b190005d8ed817::t_9670618d1a2311 3-4,12
+packages/translation/src/lang/cn.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/api/src/router/board.ts
+  s_b190005d8ed817::t_9670618d1a2311 38,334-341,343,557-558,560-572,574,576-591,593-601,603-607,624-636,638-652,654-655,811-820,1506-1519,1524,1531-1532
+packages/auth/providers/credentials/authorization/ldap-authorization.ts
+  s_b190005d8ed817::t_9670618d1a2311 2,10,56
+apps/docs/docs/integrations/bazarr/index.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-9
+packages/translation/src/lang/fr.json
+  s_b190005d8ed817::t_9670618d1a2311 11-13,113-114,118-121,125,129-135,180,208,301,304,690-692,695-696,699,703-708,710-711,713-721,724-728,756,767,773-777,800,803-804,807-809,812-813,817,820,851-852,862-865,868,870-881,884-886,889,1010-1016,1018-1019,1023-1024,1302,1316,1388,1410-1411,1417-1419,1423,1471,1581,1602-1604,1632-1633,1636,1664-1668,1749,1762,1902,2000,2005-2007,2009-2010,2287-2291,2438,2441,2444,2448-2452,2455-2458,2469,2482,2484,2488,2530-2535,2538-2539,2541-2546,2550-2555,2605,2608,2612-2613,2713-2716,2725,3166,3217-3221,3244,3246,3342,3346,3349,3352,3355,3358-3359,3394,3409,3411,3417,3421,3425-3426,3429-3430,3433,3437,3546-3550
+apps/docs/docs/widgets/media-missing/index.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-31
+packages/api/src/settle-integrations.ts
+  s_b190005d8ed817::t_9670618d1a2311 12-15,19,32
+packages/translation/src/lang/he.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+apps/nextjs/src/components/access/inherit-access-table.tsx
+  s_b190005d8ed817::t_9670618d1a2311 33-45
+packages/request-handler/src/bazarr.ts
+  s_b190005d8ed817::t_9670618d1a2311 1-15
+packages/translation/src/lang/ko.json
+  s_b190005d8ed817::t_9670618d1a2311 785,788,793-794,797-800,808-809,824-828,831-835,838-847,850-851,895,902,920,922,930,943-944,954,958,990,1007-1009,1024,1030-1031,1040,1044,1048,1052,1056-1061,1065,1067,1074,1078,1104,1130,1133,1139,1178,1232,1250,1254,1258,1262,1270,1274,1278,1282,1286,1290,1294,1298,1530,1556,1563,1566,1579,1585-1586,1592-1597,1602-1604,1613,1622,1625,1630,1632-1633,1636,1840,1844-1845,1848,1851-1852,1855,1858,1861-1862,1865,1868-1869,1872-1873,1876-1877,1916,1922,1929-1958,1962,1966-1970,1974,1976-1977,1979-1980,2013,2044,2048-2049,2164,2166,2170,2172-2174,2178,2181,2184,2193,2196,2199-2200,2203,2209,2212,2215-2216,2219-2220,2223,2225-2228,2262-2263,2265-2266,2270,2273,2276,2279,2282,2285-2290,2293,2296,2299,2303-2314,2318,2322-2323,2327,2330,2333,2336,2341-2343,2346-2350,2352-2353,2359-2362,2428-2430,2679-2680,2683-2684,2688-2691,2693,2695-2696,2699-2701,2704-2707,2808-2809,2812,2815,2818,2821,2824,2827,2830,2836,2839,2842,2845-2846,2850-2851,2855,2858-2859,2862-2863,2870-2871,2874,2880,2884,2887-2888,2891-2892,2895-2896,2899-2900,2904,2907-2908,2911-2912,2916,2920-2921,2924-2927,2929,2933-2934,3254,3336-3338,3381-3382,3385,3488-3489,3492,3495-3496,3498-3501,3505,3507-3510,3515-3520,3524-3525,3528,3531,3534,3537,3540,3545-3550,3554,3938,3976,3995,3998,4001,4004,4007,4012-4013,4016,4019-4020,4022-4026,4034,4041,4045,4050,4052,4060,4063,5028
+packages/translation/src/lang/no.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/pl.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+packages/translation/src/lang/zh.json
+  s_b190005d8ed817::t_9670618d1a2311 2287-2291,3546-3550
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "0c6573ecd982cd07755376720479c045d5e88697",
+  "prompts": {},
+  "sessions": {
+    "s_b190005d8ed817": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0b34c3202ffeib5J19D7z5LrqK",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

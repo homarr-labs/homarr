@@ -1,0 +1,35 @@
+apps/nextjs/src/components/board/sections/item.module.css
+  s_7a80e026b7f124::t_a6f6347fac6b96 7-8
+apps/nextjs/src/components/board/items/item-move-modal.tsx
+  s_7a80e026b7f124::t_5206144a533e6c 121
+  s_7a80e026b7f124::t_a1dac453304764 1-2,12-16,19,27,29,35-37,39-41,50-51,53-58,61,65,72,79-83,87-88,90,92,99-100,102-105,109-113,119-120,122-125,132,145
+  s_7a80e026b7f124::t_fbee35104eb8a6 10,21,108
+  s_7a80e026b7f124::t_3c7dafbfbdbab3 101
+  s_7a80e026b7f124::t_934a9e32fb6ffd 5,22,28,30-34,38,42-49,52
+  s_7a80e026b7f124::t_6b3957b9732d52 84-86,91
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_7a80e026b7f124::t_c072044b80c4cb 40
+  s_7a80e026b7f124::t_8dc76d9519ea4b 44,118,131-139,146
+  s_7a80e026b7f124::t_1428cf5e0bd435 140-145
+apps/nextjs/src/components/board/items/item-content.module.css
+  s_7a80e026b7f124::t_4e6c7b4d14405a 7-8
+apps/nextjs/src/components/board/items/widget-hover-overlay.module.css
+  s_7a80e026b7f124::t_87b6b92887cfa9 28-29
+  s_7a80e026b7f124::t_a9b6a5a603fbf2 16-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "2f9f396740e0dc6e3797aca8d67dd0cb0ddd725e",
+  "prompts": {},
+  "sessions": {
+    "s_7a80e026b7f124": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "69e44cf8-02ea-4ffe-bbd9-aaf6642da2a6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+packages/widgets/src/_inputs/widget-dynamic-select-input.tsx
+  s_6f9a7a2b478481::t_c1ae685c218898 92-101
+  s_6f9a7a2b478481::t_781d27571ca82e 35-37,41
+  s_6f9a7a2b478481::t_b8a2ba52165fe6 28
+  s_6f9a7a2b478481::t_b66ed2e7d220c3 91
+  s_6f9a7a2b478481::t_b805b04e1a3256 31-34,38-40,42-43
+  s_6f9a7a2b478481::t_104cee1b601fe9 57,59-61,64-65
+packages/widgets/src/media-transcoding/component.tsx
+  s_6f9a7a2b478481::t_ceb0e6b299a9d6 89
+  s_6f9a7a2b478481::t_a3712b7f3ceff6 88,90-93
+  s_6f9a7a2b478481::t_d0d45378cddb2f 20-21
+packages/widgets/src/_inputs/widget-select-input.tsx
+  s_6f9a7a2b478481::t_01f4b1527fd866 56
+apps/nextjs/src/app/[locale]/manage/settings/_components/setting-switch.tsx
+  s_6f9a7a2b478481::t_3ea3195ea5d4b2 18
+e2e/lldap.spec.ts
+  s_6f9a7a2b478481::t_9fad8082b805b8 48
+apps/nextjs/src/app/[locale]/manage/tools/logs/level-selection.tsx
+  s_6f9a7a2b478481::t_9eb9fc8add4687 11-12,24-29
+  s_6f9a7a2b478481::t_94be21983a0b39 6
+apps/nextjs/src/app/[locale]/manage/integrations/_components/secrets/integration-secret-segmented-control.tsx
+  s_6f9a7a2b478481::t_79c0f2357eb611 15
+apps/nextjs/src/app/[locale]/auth/login/_login-form.tsx
+  s_6f9a7a2b478481::t_b89bfe611dcb12 165
+  s_6f9a7a2b478481::t_3fda3a49e4c253 12
+apps/nextjs/src/components/board/sections/gridstack/use-gridstack.ts
+  s_6f9a7a2b478481::t_8d5be8dfb25158 197
+  s_6f9a7a2b478481::t_227de360141276 297
+  s_6f9a7a2b478481::t_7a62cc83701dd9 1
+  s_6f9a7a2b478481::t_69e522274f4bf4 280
+  s_6f9a7a2b478481::t_a7ad53ef77ba5f 3
+  s_6f9a7a2b478481::t_1149512f3ea0d8 62-64
+  s_6f9a7a2b478481::t_ccde48b2341c5b 16
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_first-day-of-week.tsx
+  s_6f9a7a2b478481::t_5249c1f46ecf2f 65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "9bbce7a20fdce734767c749a4f2f6ba40b8bdee1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_6f9a7a2b478481": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "74ca5e3c-cb06-4832-8a05-bc15c3755de6",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

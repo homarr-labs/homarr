@@ -1,0 +1,37 @@
+packages/translation/src/lang/en.json
+  s_cac0ffa91a7ee0::t_dfa6848d096324 4130-4131
+apps/nextjs/src/app/api/backup/migrations/route.ts
+  s_cac0ffa91a7ee0::t_ab674f74a511fe 31-35,37-40,42,44-47,49-55,57-62,64-69
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_cac0ffa91a7ee0::t_28485b1ef869c1 53-57
+  s_cac0ffa91a7ee0::t_c909b212d1c45d 82
+  s_cac0ffa91a7ee0::t_7a779e26847cf0 189
+  s_cac0ffa91a7ee0::t_54a1ec33372787 153-163
+  s_cac0ffa91a7ee0::t_17fb620f64c398 173-180
+apps/nextjs/src/app/api/backup/export/route.ts
+  s_cac0ffa91a7ee0::t_7a09f6510cbeaa 64,69-72
+apps/nextjs/src/components/backup/backup-preview-panel.tsx
+  s_cac0ffa91a7ee0::t_ec8fb636a91118 93-94
+apps/nextjs/src/components/backup/use-backup-analysis.ts
+  s_cac0ffa91a7ee0::t_a0ff69d96ef64a 25
+  s_cac0ffa91a7ee0::t_bbe3bf76e82efa 136,143-145
+apps/nextjs/src/components/backup/database-restore-flow.tsx
+  s_cac0ffa91a7ee0::t_fa1c27ea961e2e 58-59,63,65-68
+  s_cac0ffa91a7ee0::t_900bda05433aa5 85-90,92-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "79b27815fe27b6ff8a6c13531184265b31bd0606",
+  "prompts": {},
+  "sessions": {
+    "s_cac0ffa91a7ee0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "296e16db-2c61-4c85-b9c5-4c8468e519e2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

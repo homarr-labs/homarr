@@ -1,0 +1,19 @@
+apps/docs/src/components/workshop/WorkshopAdmin.tsx
+  s_955a5b644d1c62::t_b92b783062aa3a 16-17,20-21,26-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "3eef50e43ccf7fb4519b24a18595b2098937c985",
+  "prompts": {},
+  "sessions": {
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,280 @@
+apps/api/README.md
+  s_d61aeb49b349f1::t_44299db89c7ded 132
+apps/web/app/api/ai/detect-type/route.ts
+  s_df7542ffde29df::t_ea0789218f2d4b 134
+  s_c45a09f95fdd8f::t_5c2b966aa76191 11
+apps/web/app/api/ai/combination/route.ts
+  s_c45a09f95fdd8f::t_7287ca603b456c 8
+  s_c45a09f95fdd8f::t_79f7ab2b5e8e61 52
+apps/web/app/api/pilote/[id]/social-account/route.ts
+  s_c45a09f95fdd8f::t_6ea99db651ee3d 53
+  s_c45a09f95fdd8f::t_c15abf22e7b6f4 15
+apps/web/lib/services/analyses.ts
+  s_df7542ffde29df::t_6d6ed939c1922d 20,22
+  s_c45a09f95fdd8f::t_66066252979b97 21,23
+  s_df7542ffde29df::t_5623d1eaf3caa9 399-403,419-423,428-438
+  s_c45a09f95fdd8f::t_2fb72a8cf05142 11
+.cursor/skills/habs-web-architecture/SKILL.md
+  s_d61aeb49b349f1::t_88e16ea8d85905 58
+  s_d61aeb49b349f1::t_30e6aedff1514e 36
+apps/web/app/api/ai/brand-representation/route.ts
+  s_c45a09f95fdd8f::t_5d521ea14cb388 36
+  s_c45a09f95fdd8f::t_90c216dc61dedf 8
+apps/web/lib/server/log-context.ts
+  s_df7542ffde29df::t_5623d1eaf3caa9 20
+  s_c45a09f95fdd8f::t_f875c756ab9d22 1-19,21-31
+apps/web/lib/storage/idb.ts
+  s_c45a09f95fdd8f::t_648ae9d58b4c10 11
+  s_c45a09f95fdd8f::t_a540fac0d8425c 58
+apps/web/app/api/pilote/[id]/candidate/[analyseId]/evaluate/route.ts
+  s_c45a09f95fdd8f::t_d7af3464c0ecec 46
+  s_c45a09f95fdd8f::t_87b51fb9304332 7
+apps/web/lib/server/log-events.ts
+  s_c45a09f95fdd8f::t_fd1a2329736a6e 1-85,87-97,99-100
+  s_df7542ffde29df::t_5623d1eaf3caa9 86,98
+apps/web/app/providers.tsx
+  s_d61aeb49b349f1::t_30a6916fdbff03 19
+apps/web/lib/client/log-action.ts
+  s_c45a09f95fdd8f::t_261a6851cbf714 1-22,26-67
+  s_df7542ffde29df::t_5623d1eaf3caa9 23-25
+apps/web/lib/comparison-url.ts
+  s_df7542ffde29df::t_7eccf1c723e011 7
+apps/web/app/api/ai/verdict/route.ts
+  s_c45a09f95fdd8f::t_c8ebccd449b14e 32
+  s_c45a09f95fdd8f::t_b73dc5a0c008cb 7
+apps/web/app/error.tsx
+  s_c45a09f95fdd8f::t_6af7a006578158 26
+  s_c45a09f95fdd8f::t_3f5a369adb79a0 8
+apps/web/components/features/protocols/danone/DanoneReportDashboard.tsx
+  s_df7542ffde29df::t_5623d1eaf3caa9 524-526
+  s_c45a09f95fdd8f::t_64e75c2e4acaae 54
+apps/web/lib/services/account.ts
+  s_df7542ffde29df::t_5623d1eaf3caa9 4-8,150-154
+  s_c45a09f95fdd8f::t_f63be344143adc 9-11
+  s_d61aeb49b349f1::t_96d3d9d1bf56cb 129-130
+apps/web/components/features/compte/ReportDebugCard.tsx
+  s_df7542ffde29df::t_d5303351b0e57c 10
+  s_df7542ffde29df::t_1bff6657e6923d 20,72
+apps/web/app/api/pilote/[id]/route.ts
+  s_c45a09f95fdd8f::t_b7839d549a5761 6
+  s_c45a09f95fdd8f::t_7cc2b95d58f756 99
+apps/web/lib/ai/mocks/MockAIProvider.ts
+  s_df7542ffde29df::t_5623d1eaf3caa9 21-44,58-64
+  s_df7542ffde29df::t_129acbd3363776 13-20,45-55,66-67
+  s_df7542ffde29df::t_08444947558142 56,65
+  s_df7542ffde29df::t_d2cd09739ba823 57
+  s_df7542ffde29df::t_d6754a1ffa1e9a 93
+apps/web/app/api/reports/[slug]/generate-pdf/route.ts
+  s_c45a09f95fdd8f::t_c988e08025b326 150
+  s_c45a09f95fdd8f::t_797742a41476e8 153
+  s_c45a09f95fdd8f::t_b0161cd242df10 26
+  s_c45a09f95fdd8f::t_da853bc14928fc 25
+  s_c45a09f95fdd8f::t_5ca406d948730e 139
+apps/web/components/fx/SegmentError.tsx
+  s_c45a09f95fdd8f::t_68520862898ef9 8
+  s_df7542ffde29df::t_5623d1eaf3caa9 44-48
+apps/web/app/page.tsx
+  s_d61aeb49b349f1::t_dddc9c97784c49 17-18
+apps/web/components/features/connections/useOAuthCallbackToast.ts
+  s_c45a09f95fdd8f::t_8ef7567162cb27 16
+  s_df7542ffde29df::t_5623d1eaf3caa9 31-35
+apps/web/app/api/analyse/[id]/route.ts
+  s_c45a09f95fdd8f::t_f7a39e92a73397 15
+  s_c45a09f95fdd8f::t_60953564ffc711 107
+apps/web/app/api/pilote/[id]/qa/route.ts
+  s_c45a09f95fdd8f::t_f37650ef02da92 6
+  s_c45a09f95fdd8f::t_c4ec58f1f35f94 37
+apps/web/app/api/pilote/[id]/refresh/route.ts
+  s_c45a09f95fdd8f::t_e7ca3dc3819167 5
+  s_c45a09f95fdd8f::t_622e9e67af731f 59
+apps/web/app/api/analyse/route.ts
+  s_c45a09f95fdd8f::t_b079b54438a3a7 237
+  s_c45a09f95fdd8f::t_9c3c20a2932728 240
+  s_c45a09f95fdd8f::t_35744f8c7e8476 21
+  s_c45a09f95fdd8f::t_ab073f48cec879 22
+apps/web/lib/services/connections.ts
+  s_c45a09f95fdd8f::t_51fad802c25cc8 13,15
+  s_df7542ffde29df::t_5623d1eaf3caa9 31-35,51-55
+  s_c45a09f95fdd8f::t_8db0ec6a221470 7
+  s_df7542ffde29df::t_4dfa65604a798f 12,14
+apps/web/app/api/upload/route.ts
+  s_c45a09f95fdd8f::t_ee43b3731f7b29 9
+  s_c45a09f95fdd8f::t_8807bd131cde14 117
+codebase-analysis-docs/NORTH_STAR.md
+  s_4647a5944836e3::t_a650849b7942a2 1-240
+apps/web/app/api/pilote/[id]/decision/route.ts
+  s_c45a09f95fdd8f::t_5a33409b96a3ff 7
+  s_c45a09f95fdd8f::t_4de99328250e25 84
+apps/web/lib/server/logger.ts
+  s_c45a09f95fdd8f::t_adec5deb5b412b 1-39
+DESIGN.md
+  s_a0651daa3436df::t_1c6b63f556544c 1-158
+.cursor/rules/habs-web.mdc
+  s_d61aeb49b349f1::t_c3011843e6281a 48
+.cursor/rules/habs-page-patterns.mdc
+  s_d61aeb49b349f1::t_0e0572da076dc5 150
+  s_d61aeb49b349f1::t_bbed24aad5d14f 191
+apps/web/README.md
+  s_d61aeb49b349f1::t_a39b5c5c79b0e4 36
+  s_d61aeb49b349f1::t_4fdef22fc85ffa 97
+apps/api/app/main.py
+  s_342719deabd7d2::t_a5c3ec230a2970 14
+  s_342719deabd7d2::t_d0aa2f84ab8667 79
+apps/web/package.json
+  s_c45a09f95fdd8f::t_79eb4b44964eec 51,64,75
+apps/web/app/api/ai/brand-fit/route.ts
+  s_c45a09f95fdd8f::t_3047a928bc5d2b 8
+  s_c45a09f95fdd8f::t_d66751d137ab9f 50
+apps/web/app/comparaison/[id]/page.tsx
+  s_df7542ffde29df::t_5623d1eaf3caa9 24-26,31-32
+  s_c45a09f95fdd8f::t_606d4dcf58a8a0 10
+.oxlintrc.json
+  s_a0651daa3436df::t_f2a4e1de0eaa1c 93-94,96-97,104-105,110
+  s_a0651daa3436df::t_7df838662eab01 48
+  s_a0651daa3436df::t_fa76ecb9b3f5df 114-119
+  s_a0651daa3436df::t_3e26420149cca4 4,13-14,24-25,27-29,31-33,37-39,42-47,49-77,81-83,120-126
+  s_a0651daa3436df::t_9ab4752e16808d 34-36,78-80,84-92
+  s_a0651daa3436df::t_ec980c3f16c920 30
+  s_a0651daa3436df::t_4043d3d588c3b2 95,98-103,106-109,111-113
+  s_a0651daa3436df::t_d2d39e8a855cfe 40-41
+apps/web/components/features/result/HeroBlock.tsx
+  s_df7542ffde29df::t_cb5aa3aac78a4f 280,282-283
+  s_df7542ffde29df::t_238ed9107ec701 279
+  s_df7542ffde29df::t_3b9219b0e2856a 7
+i18n.md
+  s_a0651daa3436df::t_1a3854316978a7 418
+  s_a0651daa3436df::t_2e0abd97111c61 454-455,458
+  s_a0651daa3436df::t_5605455a781083 357
+  s_a0651daa3436df::t_1413262cef73b7 318-321
+  s_a0651daa3436df::t_cc25d3e695b8dd 30
+  s_a0651daa3436df::t_9e491bf3bd05ae 405-407
+  s_a0651daa3436df::t_67d086a14ce304 50-52,61-100,152,154-156,172-182,239-244,261-262,264-268,283,285,287-288,350-352,363,395,404,421,429,431-432
+  s_a0651daa3436df::t_f92e3790eb141a 374-375,377-386
+  s_a0651daa3436df::t_3fd344de745e5d 3
+  s_a0651daa3436df::t_7f2c1f6367bb37 230
+  s_a0651daa3436df::t_4ec73dd95e953d 436,438-446
+package.json
+  s_a0651daa3436df::t_bb5d8d9836e2c1 32
+  s_a0651daa3436df::t_454fca2012070e 48
+PRODUCT.md
+  s_a0651daa3436df::t_4841c511357e62 1-51
+apps/web/lib/auth/guard.ts
+  s_d61aeb49b349f1::t_a9b424fcd82464 10,14
+apps/web/app/api/cloud/[provider]/disconnect/route.ts
+  s_c45a09f95fdd8f::t_341196499b00d1 41
+  s_c45a09f95fdd8f::t_71e45bca780355 6
+apps/web/app/styleguide/page.tsx
+  s_d61aeb49b349f1::t_4d9da42b49ca8d 104
+  s_df7542ffde29df::t_422d54da805dab 23
+  s_d61aeb49b349f1::t_958a0db76f9cfe 4
+  s_df7542ffde29df::t_f1abb6b5e80426 27-29
+  s_df7542ffde29df::t_5623d1eaf3caa9 30-89
+  s_df7542ffde29df::t_5bda9bd6299d1a 90
+apps/web/app/api/ai/qa/route.ts
+  s_c45a09f95fdd8f::t_20c5d5cfa2545b 10
+  s_c45a09f95fdd8f::t_5c4166633d052f 360
+apps/web/lib/api-client.ts
+  s_d61aeb49b349f1::t_aedee0bd27b30a 55
+  s_d61aeb49b349f1::t_d6912feca19655 10
+apps/web/components/fx/ProtocolReportError.tsx
+  s_df7542ffde29df::t_5623d1eaf3caa9 25-29
+  s_c45a09f95fdd8f::t_bd18f42619b923 8
+.cursor/skills/habs-full-stack/SKILL.md
+  s_d61aeb49b349f1::t_48e6212807ec5f 67
+  s_d61aeb49b349f1::t_5464d4cbabefd9 45
+codebase-analysis-docs/CODEBASE_KNOWLEDGE.md
+  s_d61aeb49b349f1::t_d8336195d25bbf 30
+  s_d61aeb49b349f1::t_3c1aeb53c664d1 234
+  s_d61aeb49b349f1::t_e8c6addfb494b0 170
+  s_d61aeb49b349f1::t_123259645d3bc8 129
+apps/web/proxy.ts
+  s_d61aeb49b349f1::t_3fe11e810e3b26 2,12-15,23-24,26,28-30,46-47,64,152
+  s_df7542ffde29df::t_5623d1eaf3caa9 243
+apps/web/app/api/cloud/[provider]/connect/route.ts
+  s_c45a09f95fdd8f::t_e403485f7c8f58 7
+  s_c45a09f95fdd8f::t_1bd56ffd83e658 73
+apps/web/app/api/health/route.ts
+  s_d61aeb49b349f1::t_c25ff0d7e4c7ec 5
+apps/web/app/api/reports/[slug]/generate-analysis/route.ts
+  s_c45a09f95fdd8f::t_395eeb1bee663f 35
+  s_c45a09f95fdd8f::t_31a6e1810fd943 36
+  s_df7542ffde29df::t_5623d1eaf3caa9 223-231,246-253,267-274,288-291,297-299
+  s_c45a09f95fdd8f::t_b314a5ab9a5da4 307
+apps/api/app/api/cloud_browse.py
+  s_342719deabd7d2::t_8a1b3684700fd8 1-7,9,11-212,218-223,225-242
+  s_342719deabd7d2::t_866db21d9fbca3 224
+  s_342719deabd7d2::t_04f5132f60b405 213-217
+  s_342719deabd7d2::t_b28bb4fc00ce78 8,10
+apps/web/components/fx/ComponentErrorBoundary.tsx
+  s_c45a09f95fdd8f::t_a20fb41d905bf4 36-40
+  s_c45a09f95fdd8f::t_a7a5e4b74b7d19 14
+.cursor/rules/habs-i18n.mdc
+  s_a0651daa3436df::t_f4f934c05bc3a2 47
+  s_a0651daa3436df::t_651cbfa4980b23 48
+apps/web/app/api/log/route.ts
+  s_c45a09f95fdd8f::t_165be5f0d06429 1-26,28-70
+  s_df7542ffde29df::t_98b539d83a901a 27
+apps/web/app/api/cloud/[provider]/import/route.ts
+  s_c45a09f95fdd8f::t_68b8ec563d2de4 6
+  s_c45a09f95fdd8f::t_53fd89c888a5ae 99
+pnpm-lock.yaml
+  ai_agent 11-13,126-128,193-195,860-862,1872-1875,2147-2149,2207-2209,2232-2235,2249-2251,2255-2257,2325-2327,2412-2415,2575-2577,2620-2622,2671-2677,2732-2745,2775-2777,2781-2783,2788-2790,2867-2873,2905-2908,2944-2947,2958-2960,3002-3004,3015-3018,3057-3060,3102-3105,3318-3320,3810-3811,4776-4777,5081-5082,5125-5128,5144-5148,5159-5160,5167-5168,5210-5211,5282-5283,5439-5440,5481-5482,5526-5531,5610-5645,5680-5681,5688-5692,5695-5696,5762-5765,5804-5805,5851-5852,5861-5862,5921-5924,5932-5933,5972-5973,6002-6005,6175
+apps/web/lib/auth/session-token.ts
+  s_d61aeb49b349f1::t_b38df0438cc91b 2-4,6-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "32c640e83f2ea36839d5ecdd1f5071692fd1a90a",
+  "prompts": {},
+  "sessions": {
+    "s_342719deabd7d2": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "5e3dc962-ef55-444e-bacf-5be96c62b029",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_4647a5944836e3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b6374667ffe1j46fXegEtt3Ps",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a0651daa3436df": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6727856b-a555-46b0-a5c5-25d332028c93",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_c45a09f95fdd8f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6421a431-b216-4da9-ad01-cbf3b7637549",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_d61aeb49b349f1": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b5cdf4f4-2d8f-4256-ab20-d49656c8dc12",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_df7542ffde29df": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b62f72fbffexmYMJSebLTA161",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

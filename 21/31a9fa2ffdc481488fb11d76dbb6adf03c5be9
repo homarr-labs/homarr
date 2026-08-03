@@ -1,0 +1,19 @@
+packages/api/src/router/onboard/onboard-router.ts
+  s_b0f9a549e10606::t_79165f5b3470ce 190-191
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "2131a9fa2ffdc481488fb11d76dbb6adf03c5be9",
+  "prompts": {},
+  "sessions": {
+    "s_b0f9a549e10606": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e9604008-1773-4bb5-832a-18948694970f",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

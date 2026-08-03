@@ -1,0 +1,92 @@
+apps/api/app/schemas/analyses.py
+  s_882373fed589ec::t_905003b8a93010 5-7
+  s_882373fed589ec::t_abe31ed5d05a3f 51
+  s_882373fed589ec::t_cfc9a1fe6ce1f2 45,49,52-53
+  s_12a1a17dcc424e::t_5ee57abe6687e4 50
+apps/api/tests/tasks/test_persist_frame_highlights.py
+  s_7d777d3954db6e::t_cd333056cf357a 1-43
+apps/api/tests/llm/test_pilote_digest.py
+  s_882373fed589ec::t_c1a4f650ab17be 1-89
+apps/api/app/tasks/pipeline.py
+  s_7d777d3954db6e::t_1767f35240d4ed 796-803
+  s_882373fed589ec::t_247495b47c5a2b 6-10
+  s_882373fed589ec::t_037bbef9277d36 299
+  s_882373fed589ec::t_19abc61b12efe7 370
+  s_882373fed589ec::t_4d9692693c7655 406
+  s_882373fed589ec::t_a063e5d542feb8 449
+  s_882373fed589ec::t_eee2f3d72e6905 326
+  s_882373fed589ec::t_216492d6318dae 502
+apps/api/app/ml_client/worker_client.py
+  s_12a1a17dcc424e::t_63872bb1817e2c 107
+  s_12a1a17dcc424e::t_a443da077f7b2c 137-138
+apps/api/app/compute/brand_context.py
+  s_882373fed589ec::t_23fe64788924ad 306-307
+  s_882373fed589ec::t_aa566b90570e9f 272
+apps/api/app/compute/llm_narrative.py
+  s_882373fed589ec::t_71c515e2eb98ce 175
+  s_882373fed589ec::t_1d0019b5a20430 194-195
+apps/api/app/llm/analysis_digest.py
+  s_882373fed589ec::t_15bfe0fbcc2779 1-4,12-14,26
+  s_882373fed589ec::t_87a0a843e760dc 141-201
+apps/api/app/api/analyses.py
+  s_12a1a17dcc424e::t_67f080f3317140 201-202
+  s_12a1a17dcc424e::t_a8b41e002b3bbe 118
+  s_882373fed589ec::t_ba847d2e78b75c 119
+  s_882373fed589ec::t_410e3ff46847a5 113,117,120-121
+  s_882373fed589ec::t_ba9d5fa1bd0669 199-200,205-208
+  s_882373fed589ec::t_6da6c0fab6b36d 203-204
+apps/api/app/tasks/analyse_task.py
+  s_882373fed589ec::t_e58b3637dfd655 6-8,11-12
+  s_882373fed589ec::t_bc161b658f4a49 37
+  s_882373fed589ec::t_3bebd22c7cc501 401
+  s_882373fed589ec::t_9bd494daf1b037 281
+  s_12a1a17dcc424e::t_c475d2a5121314 306-307,309-312,318
+  s_7d777d3954db6e::t_8a137b7bd7e086 58-70,72-95,97-113
+  s_882373fed589ec::t_7f61606975c00a 305
+  s_882373fed589ec::t_f7b5251a5c3927 414
+  s_12a1a17dcc424e::t_15f8085021f17b 44,46-57,140-144,146-151,153-155,176-179,183-198
+  s_882373fed589ec::t_2ca97f47e1dabd 30-32
+  s_882373fed589ec::t_1ac33ff6d19e74 446-447,460
+  s_882373fed589ec::t_5c72e026f4a175 45
+  s_12a1a17dcc424e::t_1f73ced31a6c86 26-27,29
+  s_882373fed589ec::t_bcecec70783ed8 114-138
+  s_12a1a17dcc424e::t_6ebb2bae5a3f51 175,181-182
+  s_7d777d3954db6e::t_cd719ee4e0ea91 9-10,16
+  s_882373fed589ec::t_8ce49e497b12c0 139,145,152,156-174
+  s_12a1a17dcc424e::t_88d68f7bab5fa7 28
+  s_7d777d3954db6e::t_2584bfd67c3aa3 539-544
+  s_12a1a17dcc424e::t_0a68519cd58e9f 180
+  s_7d777d3954db6e::t_418d5679138b80 71,96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "f31be01cb9136fd19d21e118762c1b37542400b5",
+  "prompts": {},
+  "sessions": {
+    "s_12a1a17dcc424e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7e2a9e33-cc34-438a-b654-9f878c2f0230",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7d777d3954db6e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "102cc0cb-f472-47bf-ad48-d0d9cbecbaf9",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_882373fed589ec": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8f290bfc-109d-47d4-a041-c9ef08c1b867",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

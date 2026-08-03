@@ -1,0 +1,19 @@
+packages/db/migrations/seed.ts
+  ai_agent 52
+packages/db/seed/custom-widgets/pokedex.json
+  ai_agent 3-4,6,12
+packages/widgets/src/custom-api/component.tsx
+  ai_agent 480
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
+  ai_agent 128-172,180,183-187,189-192
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  ai_agent 29
+packages/widgets/src/custom-api/jsx-whitelist.ts
+  ai_agent 65,176
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "0f274ec9e577a14843f3f1b158296ca291386de4",
+  "prompts": {}
+}

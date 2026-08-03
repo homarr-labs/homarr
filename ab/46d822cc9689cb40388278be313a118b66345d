@@ -1,0 +1,19 @@
+deployments/prebuilt-debian/Dockerfile
+  s_78b4baa0d2e00c::t_7fc29f058ddcad 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ab46d822cc9689cb40388278be313a118b66345d",
+  "prompts": {},
+  "sessions": {
+    "s_78b4baa0d2e00c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b4a79297-dd44-4d15-88e4-f73789588b11",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

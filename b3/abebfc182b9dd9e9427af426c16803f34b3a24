@@ -1,0 +1,34 @@
+apps/nextjs/src/components/backup/restore-progress-panel.tsx
+  s_65eb5a0f296edf::t_5ddc992829478e 70-72
+  s_65eb5a0f296edf::t_2a352160274e62 48
+  s_65eb5a0f296edf::t_c7e6ae5d2592d7 83,86
+  s_65eb5a0f296edf::t_8e7bc5fb3fb19a 20,25
+apps/nextjs/src/components/backup/use-backup-analysis.ts
+  s_65eb5a0f296edf::t_7427f6708c06d2 112
+apps/nextjs/src/app/[locale]/init/_steps/start/sqlite-restore.tsx
+  s_65eb5a0f296edf::t_42bcd5890c4bf2 4
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_65eb5a0f296edf::t_d6e63acb67a04d 132-135,142-145
+packages/api/src/router/board.ts
+  s_65eb5a0f296edf::t_137c4546849627 1433-1434,1436,1444-1445,1447
+apps/nextjs/src/app/api/backup/test/backup.spec.ts
+  s_65eb5a0f296edf::t_04831bcc82b2b6 259
+  s_65eb5a0f296edf::t_bcea66dac4efd7 88
+  s_65eb5a0f296edf::t_c48eb60e2dc740 286
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b3abebfc182b9dd9e9427af426c16803f34b3a24",
+  "prompts": {},
+  "sessions": {
+    "s_65eb5a0f296edf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "17059b15-dc38-4d70-8e3c-e208500f63b4",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

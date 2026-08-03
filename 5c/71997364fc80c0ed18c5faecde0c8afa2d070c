@@ -1,0 +1,19 @@
+pnpm-lock.yaml
+  s_00731a1effef9c::t_9bd6905c266a37 135-137,796-798,5217-5219,13196-13199,18778
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "5c71997364fc80c0ed18c5faecde0c8afa2d070c",
+  "prompts": {},
+  "sessions": {
+    "s_00731a1effef9c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a1f100df-4bb5-48a8-a3f0-88a4c011e509",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

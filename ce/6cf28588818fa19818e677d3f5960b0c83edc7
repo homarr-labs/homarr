@@ -1,0 +1,133 @@
+.agents/skills/impeccable/reference/spatial-design.md
+  ai_agent 1-100
+.agents/skills/impeccable/reference/typeset.md
+  ai_agent 1-124
+.agents/skills/impeccable/reference/brand.md
+  ai_agent 1-118
+.agents/skills/impeccable/reference/craft.md
+  ai_agent 1-123
+.agents/skills/impeccable/reference/interaction-design.md
+  ai_agent 1-195
+.agents/skills/impeccable/reference/shape.md
+  ai_agent 1-165
+.agents/skills/impeccable/scripts/live-completion.mjs
+  ai_agent 1-18
+.agents/skills/impeccable/reference/optimize.md
+  ai_agent 1-258
+.agents/skills/impeccable/scripts/live-complete.mjs
+  ai_agent 1-75
+.agents/skills/impeccable/scripts/live-session-store.mjs
+  ai_agent 1-254
+.agents/skills/impeccable/scripts/modern-screenshot.umd.js
+  ai_agent 1-14
+.agents/skills/impeccable/scripts/live-wrap.mjs
+  ai_agent 1-632
+.agents/skills/impeccable/scripts/live-inject.mjs
+  ai_agent 1-446
+.agents/skills/impeccable/scripts/live.mjs
+  ai_agent 1-247
+.agents/skills/impeccable/reference/product.md
+  ai_agent 1-62
+.agents/skills/impeccable/reference/document.md
+  ai_agent 1-427
+.agents/skills/impeccable/reference/teach.md
+  ai_agent 1-156
+skills-lock.json
+  ai_agent 1-11
+.agents/skills/impeccable/scripts/impeccable-paths.mjs
+  ai_agent 1-110
+.agents/skills/impeccable/reference/colorize.md
+  ai_agent 1-154
+.agents/skills/impeccable/reference/distill.md
+  ai_agent 1-111
+.agents/skills/impeccable/scripts/detect.mjs
+  ai_agent 1-21
+.agents/skills/impeccable/scripts/detect-csp.mjs
+  ai_agent 1-198
+.agents/skills/impeccable/reference/extract.md
+  ai_agent 1-69
+.agents/skills/impeccable/reference/color-and-contrast.md
+  ai_agent 1-105
+.agents/skills/impeccable/SKILL.md
+  ai_agent 1-168
+.agents/skills/impeccable/reference/audit.md
+  ai_agent 1-133
+.agents/skills/impeccable/reference/overdrive.md
+  ai_agent 1-130
+.agents/skills/impeccable/reference/cognitive-load.md
+  ai_agent 1-106
+.agents/skills/impeccable/reference/quieter.md
+  ai_agent 1-99
+.agents/skills/impeccable/scripts/live-server.mjs
+  ai_agent 1-838
+.agents/skills/impeccable/reference/delight.md
+  ai_agent 1-302
+.agents/skills/impeccable/scripts/load-context.mjs
+  ai_agent 1-141
+.agents/skills/impeccable/scripts/pin.mjs
+  ai_agent 1-214
+.agents/skills/impeccable/reference/animate.md
+  ai_agent 1-175
+.agents/skills/impeccable/scripts/design-parser.mjs
+  ai_agent 1-820
+.agents/skills/impeccable/scripts/live-poll.mjs
+  ai_agent 1-200
+.agents/skills/impeccable/scripts/live-browser-session.js
+  ai_agent 1-123
+.agents/skills/impeccable/scripts/live-status.mjs
+  ai_agent 1-47
+.agents/skills/impeccable/reference/responsive-design.md
+  ai_agent 1-114
+.agents/skills/impeccable/reference/heuristics-scoring.md
+  ai_agent 1-234
+.agents/skills/impeccable/reference/clarify.md
+  ai_agent 1-174
+.agents/skills/impeccable/reference/critique.md
+  ai_agent 1-273
+.agents/skills/impeccable/scripts/cleanup-deprecated.mjs
+  ai_agent 1-284
+.agents/skills/impeccable/reference/motion-design.md
+  ai_agent 1-109
+.agents/skills/impeccable/scripts/critique-storage.mjs
+  ai_agent 1-242
+.agents/skills/impeccable/reference/layout.md
+  ai_agent 1-141
+.agents/skills/impeccable/reference/codex.md
+  ai_agent 1-105
+.agents/skills/impeccable/scripts/command-metadata.json
+  ai_agent 1-94
+.agents/skills/impeccable/reference/polish.md
+  ai_agent 1-242
+.agents/skills/impeccable/scripts/live-accept.mjs
+  ai_agent 1-595
+.agents/skills/impeccable/scripts/live-browser.js
+  ai_agent 1-4860
+.agents/skills/impeccable/scripts/is-generated.mjs
+  ai_agent 1-69
+.agents/skills/impeccable/agents/impeccable-asset-producer.md
+  ai_agent 1-101
+.agents/skills/impeccable/reference/personas.md
+  ai_agent 1-179
+.agents/skills/impeccable/reference/typography.md
+  ai_agent 1-159
+.agents/skills/impeccable/reference/ux-writing.md
+  ai_agent 1-107
+.agents/skills/impeccable/reference/onboard.md
+  ai_agent 1-234
+.agents/skills/impeccable/scripts/live-resume.mjs
+  ai_agent 1-48
+.agents/skills/impeccable/reference/bolder.md
+  ai_agent 1-113
+.agents/skills/impeccable/reference/adapt.md
+  ai_agent 1-190
+.agents/skills/impeccable/reference/harden.md
+  ai_agent 1-347
+.agents/skills/impeccable/reference/live.md
+  ai_agent 1-622
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "ce6cf28588818fa19818e677d3f5960b0c83edc7",
+  "prompts": {}
+}

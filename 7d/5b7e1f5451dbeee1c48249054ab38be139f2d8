@@ -1,0 +1,21 @@
+packages/common/src/object.ts
+  s_b6fbe21f6253b4::t_2ca39e3065a6c4 12-25
+packages/core/src/infrastructure/logs/transports/redis-transport.ts
+  s_b6fbe21f6253b4::t_189540f164781e 2,10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "7d5b7e1f5451dbeee1c48249054ab38be139f2d8",
+  "prompts": {},
+  "sessions": {
+    "s_b6fbe21f6253b4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_12a978a9fffeyw5WsmJZOGuQ0w",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

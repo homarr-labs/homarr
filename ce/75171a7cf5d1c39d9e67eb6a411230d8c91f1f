@@ -1,0 +1,21 @@
+packages/widgets/src/common/use-persisted-table-layout.ts
+  s_e69b825ec6dfea::t_80e1a728e1a00a 24-46,110-111,119-124,126-128,130-146,176
+packages/widgets/src/beszel-system-table/component.tsx
+  s_e69b825ec6dfea::t_80e1a728e1a00a 341-355
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "ce75171a7cf5d1c39d9e67eb6a411230d8c91f1f",
+  "prompts": {},
+  "sessions": {
+    "s_e69b825ec6dfea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb3a0-792a-7381-8801-1495fcc9663b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

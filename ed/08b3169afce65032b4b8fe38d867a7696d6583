@@ -1,0 +1,23 @@
+turbo/generators/config.ts
+  s_c176b06e8c451e::t_96aca729313c1c 82
+turbo/generators/templates/package.json.hbs
+  s_c176b06e8c451e::t_4610973537fefd 19-20,26
+.oxfmtrc.json
+  s_c176b06e8c451e::t_e0d1caeb78c8b7 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "ed08b3169afce65032b4b8fe38d867a7696d6583",
+  "prompts": {},
+  "sessions": {
+    "s_c176b06e8c451e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8d6e43a7-56f3-4f3d-961e-0d3189cc2903",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": null
+    }
+  }
+}

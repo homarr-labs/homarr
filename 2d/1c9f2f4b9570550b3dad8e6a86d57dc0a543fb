@@ -1,0 +1,320 @@
+scripts/docs/sync-openapi.mts
+  s_cb942215339550::t_f1661e5453b262 1-17
+apps/docs-worker/src/types.ts
+  s_727b0b57d670d5::t_2b543983f80bae 1-2,4,6-7
+  s_395c43ff5099cd::t_75bba81e9efc04 3
+  s_395c43ff5099cd::t_7b20bed773d482 5
+apps/docs-worker/wrangler.jsonc
+  s_727b0b57d670d5::t_163ceebc09900f 16
+  s_cb942215339550::t_b3cd41888ea0a9 5,7-10,23
+  s_727b0b57d670d5::t_60deb92532b2c3 6,11-15,21-22
+  s_395c43ff5099cd::t_3b03db1cd76039 17-19
+packages/validation/src/init-config.ts
+  s_395c43ff5099cd::t_dcc8b3d0a8a3c1 50
+  s_395c43ff5099cd::t_5eba9b8251c58e 30-32
+  s_395c43ff5099cd::t_d6c84ca71f63ae 55-58
+  s_395c43ff5099cd::t_28f207730428fb 16-19
+  s_395c43ff5099cd::t_e64bc751d9a01a 37
+  s_395c43ff5099cd::t_e3c810c22bbabf 24
+apps/docs-worker/worker-configuration.d.ts
+  s_cb942215339550::t_01bdc5e55286c0 1-13627
+apps/documentation/src/components/configure/how-it-works.tsx
+  s_411bbdda8233ac::t_a8a320578db299 39,43
+  s_727b0b57d670d5::t_198415c3b305f8 2-4,6-9,11-14,16-22,44,51-52
+  s_411bbdda8233ac::t_c7b816b29e8d76 1,5,10,15,23-38,40-42,45-50
+apps/docs-worker/src/lib/session.ts
+  s_395c43ff5099cd::t_1dc971620cc9a9 1-2,4-7,10-15,17-26,39-46,48-49,51-52,54-58
+  s_395c43ff5099cd::t_8d04dfd8af20e8 3,9,16,27-28,38,47,50,53,59-64
+  s_395c43ff5099cd::t_a92ed647dae2f6 29-37
+  s_395c43ff5099cd::t_1604103822867a 8
+apps/docs-worker/package.json
+  s_727b0b57d670d5::t_a6007050ec4b96 12-14
+  s_cb942215339550::t_3f832e64884257 2-7,17
+apps/documentation/package.json
+  s_411bbdda8233ac::t_31b51bbd09e2b8 45
+  s_727b0b57d670d5::t_6fb44ca532a4cf 20
+  s_cb942215339550::t_82149b1d803e96 2,8,11,21-40,43-44,48-66
+  s_727b0b57d670d5::t_97d61780a7b3af 41-42
+apps/docs-worker/src/routes/configs.ts
+  s_727b0b57d670d5::t_b5e6a2d327c92f 1-3,6-7,9-13,15-34,39-43,46,53-54,56
+  s_395c43ff5099cd::t_71fa464859ba1e 52,55
+  s_395c43ff5099cd::t_d8ea3b4685d437 5,8,35,38
+  s_395c43ff5099cd::t_9391f835580b7e 14,36-37
+  s_395c43ff5099cd::t_73f259a10c31bc 44-45,47-51
+  s_395c43ff5099cd::t_cfbdbc797f9705 4
+.github/workflows/on-release.yml
+  s_cb942215339550::t_eeab66a0943ca0 8-9,11,17-47,51
+apps/documentation/src/css/configure.css
+  s_411bbdda8233ac::t_cf6c8508d7d82c 105-106
+  s_411bbdda8233ac::t_4efc7d06111a2b 332-343
+  s_411bbdda8233ac::t_d97cd160ff3765 11-46,48-74,76-77,81-82,107-108,121-126,128-172,174-192,194-331
+  s_411bbdda8233ac::t_a33732b686d995 1-10
+  s_411bbdda8233ac::t_ec193f1f75cd99 47,127,173,193
+  s_411bbdda8233ac::t_2bb36d21719d2a 75,78-80,83-104,109-120
+apps/docs-worker/src/index.ts
+  s_395c43ff5099cd::t_574fa8409d9b49 5
+  s_395c43ff5099cd::t_f72d21a0202eda 3,10-11,31-32
+  s_cb942215339550::t_87ffa8ba10498d 1-2,14,16,28-29,37-39
+  s_727b0b57d670d5::t_6194529a08685e 19-21
+  s_395c43ff5099cd::t_337991d7cf92fd 33
+  s_727b0b57d670d5::t_3a16567aeff6bb 6-8,12-13,15,17-18,22-25,27,35-36
+  s_395c43ff5099cd::t_93e0d2fed7b0a1 26,30
+apps/docs-worker/src/lib/tools.ts
+  s_727b0b57d670d5::t_29cee0afc6c011 9
+  s_727b0b57d670d5::t_92c7cbef6d2b86 1-8,10-68
+apps/docs-worker/src/lib/config-storage.ts
+  s_411bbdda8233ac::t_59a3d1cf9956d4 2,5,7-11,15-16,18-34
+  s_727b0b57d670d5::t_a1c1c085bb320f 1
+  s_727b0b57d670d5::t_824100e78644d0 3-4,6,12-14,17,35
+apps/documentation/src/components/configure/config-summary.tsx
+  s_411bbdda8233ac::t_363a2aae55ef89 19-25,33-41,52,54-125
+  s_727b0b57d670d5::t_b25ae68b4314d7 1,6,18,26-29,126-128
+  s_727b0b57d670d5::t_5b6975b608219e 2-5,11-12,16-17
+  s_411bbdda8233ac::t_0c4d7dbb117bfe 30
+  s_727b0b57d670d5::t_2991338cd0ea04 7-10,13-15,31-32
+  s_411bbdda8233ac::t_70565fef63e3fc 42-51,53
+apps/documentation/tailwind.config.js
+  s_411bbdda8233ac::t_21ca1d0130056c 3,7,10,14
+apps/documentation/src/hooks/use-config-chat.ts
+  s_727b0b57d670d5::t_cae597a5fc14ed 1-8,51,55-87,92,96-99,105-113,115-117,119,126,128-146,151,154-159,189-190,193-198,200-202,205-209,212-225,227,239-251,256-257,261-262,264-269,272-276,281-282
+  s_395c43ff5099cd::t_aa908820d3a4f5 182-183,185
+  s_395c43ff5099cd::t_daaafc2b9e72f3 24-50
+  s_395c43ff5099cd::t_ba83706bfcf3c8 104
+  s_395c43ff5099cd::t_c10efd13c11ea3 148,152
+  s_395c43ff5099cd::t_b49f5ec6fb3b41 90
+  s_395c43ff5099cd::t_4923d10d6b5ffa 270
+  s_727b0b57d670d5::t_07a26e379903f0 279-280
+  s_727b0b57d670d5::t_2a623997efeeb4 23
+  s_395c43ff5099cd::t_56cd8a82e9515d 114,118,120-125,127
+  s_395c43ff5099cd::t_00661966ee26b2 235-237
+  s_395c43ff5099cd::t_d91afb401972fc 258-260
+  s_727b0b57d670d5::t_49b2ad0c042668 94-95,100-103
+  s_395c43ff5099cd::t_d92e252fdf16dc 88
+  s_727b0b57d670d5::t_a711926c061103 252-255
+  s_395c43ff5099cd::t_a0e51cf18a7156 181,184,186-187
+  s_395c43ff5099cd::t_a0bac83fb4bb78 226,228-234,238
+  s_395c43ff5099cd::t_bdd22ab162356f 89,91,93
+  s_395c43ff5099cd::t_73461038cc8d86 52-54
+  s_395c43ff5099cd::t_0e09489be2d5a3 191
+  s_395c43ff5099cd::t_67941f62ae3872 199
+  s_395c43ff5099cd::t_279aa9dbd761ac 203,210
+  s_395c43ff5099cd::t_dca96343a6997e 9
+  s_395c43ff5099cd::t_0d56d2c6a1a5ac 271
+  s_395c43ff5099cd::t_d7b1e0a03465e3 263,277-278
+  s_395c43ff5099cd::t_66a78c3125097d 147,149-150,153,160,163-178,180,188,192,204,211
+  s_395c43ff5099cd::t_6051dc6f926256 10-22
+  s_395c43ff5099cd::t_0c51fe907f4760 161-162
+  s_727b0b57d670d5::t_8d67be784bc5bf 179
+apps/documentation/src/pages/configure.tsx
+  s_411bbdda8233ac::t_47a220ca801d3e 11
+  s_727b0b57d670d5::t_491fe23ed8be61 1-9,12-21
+  s_411bbdda8233ac::t_5e245cca8eaa72 10
+apps/documentation/src/css/custom.css
+  s_411bbdda8233ac::t_abcee2987b661e 5
+  s_411bbdda8233ac::t_cdcf6bbf4cf4e9 6
+  s_727b0b57d670d5::t_8e621dffb9ab83 226
+  s_411bbdda8233ac::t_afb348a9380f8f 7-16
+apps/documentation/src/lib/message-text.ts
+  s_727b0b57d670d5::t_7701628524a67f 1-6,9-11,13-14
+  s_727b0b57d670d5::t_8cb47758e81719 12
+  s_727b0b57d670d5::t_bd62a881d4dff8 7-8
+scripts/generate-llm-system-prompt.mts
+  s_727b0b57d670d5::t_1f835423d9f5c7 323,332
+  s_395c43ff5099cd::t_f7a0911056de3e 131-149,158-159,161-164,170,175-178,180,182,184,186-188,190-196,198,200,202-242,244,246-250,252,256,260-322,324-330,334
+  s_395c43ff5099cd::t_0081c9d21e4526 189
+apps/documentation/src/constants/api-url.ts
+  s_727b0b57d670d5::t_a40504041ef678 1-10
+  s_727b0b57d670d5::t_b6c4e830aecf41 11
+apps/documentation/src/components/configure/markdown-text.tsx
+  s_727b0b57d670d5::t_b2de9d918ed3b4 1-6,41-42
+  s_411bbdda8233ac::t_ed4016b500e1aa 11-12,16-24,26-34
+  s_395c43ff5099cd::t_9852a4c717aeca 40
+  s_411bbdda8233ac::t_a80a69355aa983 8-10,13-15,25,35-39
+  s_411bbdda8233ac::t_0c6dfdfa001a83 7
+apps/documentation/src/components/configure/config-actions.tsx
+  s_395c43ff5099cd::t_5a04607e09bac1 12-20,26,34-38,43,56,65-66
+  s_411bbdda8233ac::t_ce056806e444d4 2,22-23,27-32,49-52,60-63,68,70
+  s_727b0b57d670d5::t_7967a7ba210f41 1,3-11,39-42,44-48,53-54,59,71,73-75
+  s_411bbdda8233ac::t_f93f3f1fb53835 21,24-25,33,64,67,72
+  s_395c43ff5099cd::t_1d92fd095d9176 55,57-58,69
+apps/docs-worker/src/data/system-prompt.ts
+  s_727b0b57d670d5::t_64a8cde3beda49 1-3
+.gitignore
+  s_cb942215339550::t_3a9bc0fa017f7d 72-77
+apps/documentation/src/components/configure/configure-shell.tsx
+  s_411bbdda8233ac::t_f208b00f767cb4 4
+  s_411bbdda8233ac::t_1808a4186549e0 1-3,5
+scripts/docs/sync-integrations.mts
+  s_cb942215339550::t_f81b3fc58c4d1d 1-19
+.github/pull_request_template.md
+  s_cb942215339550::t_e01046331ababb 13
+apps/documentation/docusaurus.config.ts
+  s_cb942215339550::t_0406a47ab97044 282-297
+  s_cb942215339550::t_f4de6de3ccc12a 62
+  s_cb942215339550::t_66412cacef5864 18-21
+  s_cb942215339550::t_07a3329ed9397f 8-9
+  s_cb942215339550::t_bcf0eb652a9331 72
+  s_727b0b57d670d5::t_b82e48aae0961a 127-131
+apps/documentation/src/constants/supported-integrations.tsx
+  s_cb942215339550::t_d4985749323534 1,3-194
+apps/documentation/src/components/configure/share-button.tsx
+  s_395c43ff5099cd::t_a09e1f5cc7fcde 1,9,12-13,15-18,20-24,26-63,78-79,81-84,87-88,90,92-93,110-113,118-124,126,128,134,154-155,160,166
+  s_727b0b57d670d5::t_98522ad814576f 14,19,64-65,104,159
+  s_411bbdda8233ac::t_42948f333b7046 2-3,66-68,139-153,156-157,161-165
+  s_411bbdda8233ac::t_67165ecaee0ffa 69-77,105,129-133,136-137
+  s_727b0b57d670d5::t_ad79b38aeb4070 4-8,10-11,80,86,94-103,107-109,114,116-117,125,135,138,167-168
+  s_395c43ff5099cd::t_b96288caa5affa 25,85,89,91,106,115,127,158
+apps/docs-worker/src/middleware/rate-limit.ts
+  s_395c43ff5099cd::t_ebb7b8003704af 4,12,19-32,47-67
+  s_395c43ff5099cd::t_33f97c5c81aee0 1-3,5-11,13-15,17-18,33-46,68
+  s_395c43ff5099cd::t_6ebf7790b9fa3a 16
+package.json
+  s_cb942215339550::t_7b33c9d13b6065 83-84
+  s_cb942215339550::t_ae6575a0843faf 19-20
+  s_cb942215339550::t_4fb642b2d63239 29-30
+apps/docs-worker/src/lib/validate.ts
+  s_395c43ff5099cd::t_a22512f7290bd8 57
+  s_395c43ff5099cd::t_4085ab41ec048d 44
+  s_395c43ff5099cd::t_ffe24005603071 62-65
+  s_395c43ff5099cd::t_b8ea4d83e8bc63 39
+  s_727b0b57d670d5::t_f6702536e218dc 1-2,5-22,27-30,32-36,40-43,45-56,58-61,66-117
+  s_395c43ff5099cd::t_a4baa1ed3bc5f0 31
+  s_395c43ff5099cd::t_ea128aabaa0a34 37-38
+  s_395c43ff5099cd::t_f9432d4506f7ea 23-26
+  s_727b0b57d670d5::t_40b2b8aafc7666 3-4
+apps/docs-worker/src/lib/lookup.ts
+  s_727b0b57d670d5::t_ad0f1f66d3d710 1-69
+apps/documentation/src/lib/sse-parser.ts
+  s_727b0b57d670d5::t_8415128965aff9 1-45
+apps/docs-worker/src/lib/openrouter.ts
+  s_727b0b57d670d5::t_793c3fd4d50960 1-9
+apps/docs-worker/src/routes/chat.ts
+  s_395c43ff5099cd::t_b8de4a4d044393 94
+  s_395c43ff5099cd::t_d290b7e048fc84 8
+  s_395c43ff5099cd::t_a405b9eaf5ae47 57-65
+  s_395c43ff5099cd::t_70aa42042879b2 16-18,23,25
+  s_727b0b57d670d5::t_0ef9945beda44a 92-93,95,101,105-112
+  s_727b0b57d670d5::t_6c20b10d4ced6d 257
+  s_395c43ff5099cd::t_7795e70adc1fc9 30
+  s_727b0b57d670d5::t_129ab2862cdd05 1-7,9,11-13,15,19-22,24,26-29,32,47-48,56,66-71,83,85-91,100,102-104,113-116,118-119,128-130,133-134,163-164,177-183,185,187-189,191-196,199,207-209,211-215,217,220-236,238-256,258-265
+  s_727b0b57d670d5::t_436a2c4ae061bd 31
+  s_727b0b57d670d5::t_c254d57c3e7b6b 203-206
+  s_727b0b57d670d5::t_337de08f5cb5ee 131
+  s_727b0b57d670d5::t_d9fcda6df9b5f5 10
+  s_395c43ff5099cd::t_3d2840bec96f3d 84,96-99
+  s_395c43ff5099cd::t_ea15547fcab9e4 126,201-202,218-219
+  s_395c43ff5099cd::t_6aa5eeaa1d40fe 14
+  s_395c43ff5099cd::t_e5e84d62c7bf51 72-82,120,127,132,135-162,165-176,184,186,190,197-198,200,210,216,237
+  s_395c43ff5099cd::t_38d75e3b387805 117,121-125
+apps/documentation/src/types/init-config.ts
+  s_727b0b57d670d5::t_76d22b0296dc5f 1-52
+apps/docs-worker/src/lib/guest-id.ts
+  s_395c43ff5099cd::t_c5d893175358de 1-3,7-15,24,27
+  s_395c43ff5099cd::t_6394f4e7d341ec 4-5,17,20
+  s_395c43ff5099cd::t_27a619710a78c0 6,16,18-19,21-23,25-26
+pnpm-workspace.yaml
+  s_727b0b57d670d5::t_97d61780a7b3af 195
+  s_cb942215339550::t_65c81791d5a8bf 180
+  s_cb942215339550::t_73a87f178db688 52
+  s_cb942215339550::t_0a4bc07fcea1c6 19-27
+  s_cb942215339550::t_37ce0c912bf9cd 121
+  s_cb942215339550::t_16223124995dd5 111-112
+  s_727b0b57d670d5::t_a6007050ec4b96 50,91,139,151,154,159,167,178,202
+  s_cb942215339550::t_55a37b3c637cbe 187
+  s_cb942215339550::t_9c92f71c093c08 14
+  s_727b0b57d670d5::t_6fb44ca532a4cf 8
+  s_cb942215339550::t_11a1fa6e6f9eae 232
+  s_cb942215339550::t_636cadddd77c08 31
+  s_cb942215339550::t_0d8a3fc02e3b83 6-7
+  s_cb942215339550::t_958bd98c06f201 218
+  s_cb942215339550::t_626acb45093caf 125
+  s_cb942215339550::t_ba0b5b10aa908b 203
+  s_cb942215339550::t_2fc242d31d57ff 184
+apps/documentation/src/components/configure/configure-page.tsx
+  s_727b0b57d670d5::t_f377b1b70aa54e 1,4,6,9-15,21-34,61,82-139,164,179-180,212-213
+  s_727b0b57d670d5::t_5d218623f5809f 5,7
+  s_411bbdda8233ac::t_60b6cb832f3ed6 8,16-17,19-20,35-45,51,56,58-60,142,144-145,147,149-152,159-160,165,167,170-171,173,175-177,182,185,187,191-193,200,202,205-207,209-211
+  s_411bbdda8233ac::t_614517a81bd2ae 2-3,18,46-49,52-55,57,62-81,143,146,148,153-158,166,172,174,178,181,183-184,186,188-190,194-199,201,203-204,208
+  s_727b0b57d670d5::t_a8647d70f85820 140-141,161-163
+  s_411bbdda8233ac::t_3be815aa1fd4cc 168-169
+  s_411bbdda8233ac::t_c82dac3b4cadc0 50
+apps/docs-worker/tsconfig.json
+  s_cb942215339550::t_a2619385b026a2 8-14
+.env.example
+  s_cb942215339550::t_e18cff464035c6 62-65
+turbo.json
+  s_cb942215339550::t_3bf2e424fb29a6 23-31
+static-data/llm-system-prompt.json
+  s_395c43ff5099cd::t_9f4d755f194ba0 2-3
+apps/documentation/src/components/configure/chat-thread.tsx
+  s_395c43ff5099cd::t_937da6b8ed00eb 59-61,66,69-72
+  s_395c43ff5099cd::t_cdc23f5d1dc23c 43-45,47-49,55-58,62-63,77-83
+  s_411bbdda8233ac::t_803b981c70d137 6,102,104-110,164-167,173-181
+  s_727b0b57d670d5::t_bb91dc5a0556cb 1-5,7,9,14-21,24-31,36-39,103,120-124,127,145-146,152-162,186-187
+  s_727b0b57d670d5::t_e287517dbbfcd8 11,13,125-126,129,132-133,147,150-151
+  s_411bbdda8233ac::t_c72b9b22db0177 8,22-23,32-33,40-42,46,50-51,54,64-65,67-68,73,113-115,128,130,134,136,142-144,148,163,168-172,182,185
+  s_727b0b57d670d5::t_fd9850da6c4c39 10
+  s_395c43ff5099cd::t_f828c3c33684df 12
+  s_727b0b57d670d5::t_46c44674ca6e83 119
+  s_395c43ff5099cd::t_6e90a8060641e0 86,88,91,93,96,98
+  s_395c43ff5099cd::t_5c8b79d624dbe8 84-85,87,89-90,92,94-95,97,99-101,111,117-118
+  s_411bbdda8233ac::t_6664d9905d2e1f 135,137-140,183-184
+  s_411bbdda8233ac::t_8a9fbabea1627a 52-53,74-76,112,116,141,149
+  s_395c43ff5099cd::t_fa0706343f10ec 34-35
+  s_395c43ff5099cd::t_4f7fbfaef80e24 131
+packages/db/migrations/init-config/index.ts
+  s_727b0b57d670d5::t_7eb061a0f27127 12-13,29,54,57
+  s_395c43ff5099cd::t_fa0152e7612c81 6-11,14-28,30-53,55-56
+apps/docs-worker/src/lib/sse.ts
+  s_727b0b57d670d5::t_acdb17c2f06daa 1-23
+apps/documentation/src/components/configure/runtime-provider.tsx
+  s_395c43ff5099cd::t_a8b500fab21077 15,22
+  s_395c43ff5099cd::t_6ccabe649c4c90 52
+  s_395c43ff5099cd::t_120192a96eca95 30
+  s_395c43ff5099cd::t_da9199ea51193d 4,16,19-21,23-24,29,31-32
+  s_727b0b57d670d5::t_108f6cc451d059 42,48
+  s_727b0b57d670d5::t_c2130a8b6d2389 2
+  s_727b0b57d670d5::t_bedac17e20e960 3,5-11,28,33-35,37-41,43,45-47,49-50,56
+  s_727b0b57d670d5::t_57d8d54cbd492e 1,12-14,17-18,25-27,51,53-55
+  s_727b0b57d670d5::t_f87159ba21baa6 44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "2d1c9f2f4b9570550b3dad8e6a86d57dc0a543fb",
+  "prompts": {},
+  "sessions": {
+    "s_395c43ff5099cd": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "05fcc734-a466-4197-a3dd-06907a95c039",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_411bbdda8233ac": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a8796a27-a032-4e9d-b596-44bf42093350",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_727b0b57d670d5": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1f784a50-2933-49c3-90e2-1c705851faba",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_cb942215339550": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c444b29e-d2a5-4e25-ba44-f73e5cef95fb",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

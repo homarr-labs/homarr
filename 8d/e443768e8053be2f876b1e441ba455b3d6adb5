@@ -1,0 +1,14 @@
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  h_d6e478ca18e517 221
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "8de443768e8053be2f876b1e441ba455b3d6adb5",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

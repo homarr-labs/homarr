@@ -1,0 +1,31 @@
+apps/docs/docs/widgets/audio-stats/index.mdx
+  s_0954fe11b9e1fc::t_4b3ed8bfe5ff4c 3
+packages/integrations/src/navidrome/test/navidrome-integration.spec.ts
+  s_0954fe11b9e1fc::t_4b3ed8bfe5ff4c 93,122
+  s_0954fe11b9e1fc::t_972c90e27d5675 1,5-8
+  s_466eefa8303e91::t_5c9b18ae49fd68 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "d63a9945bd479ad8c4ef795f693bad93c6f3bbb1",
+  "prompts": {},
+  "sessions": {
+    "s_0954fe11b9e1fc": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb825-ef62-7cf2-83a0-19ac33ee8503",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_466eefa8303e91": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb800-4ac6-7880-aa90-d69a71cfc6e1",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

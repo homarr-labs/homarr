@@ -1,0 +1,19 @@
+packages/core/src/infrastructure/redis/client.ts
+  s_ded556cdcb2646::t_7ee1e5158dd316 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "8203ca0c638073350016959b8c4471fa736799d4",
+  "prompts": {},
+  "sessions": {
+    "s_ded556cdcb2646": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8145cbe7-4038-4db5-9fc2-a459115c8fed",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+packages/widgets/src/open-webui/use-chat-stream.ts
+  s_37b821a6ce4f24::t_8fcd29b2e2f97d 77
+  s_37b821a6ce4f24::t_45242082c9a625 48-51
+  s_37b821a6ce4f24::t_a246f3e075c54e 92-94,98
+  s_37b821a6ce4f24::t_e6672c26874603 67
+  s_37b821a6ce4f24::t_29f5dd1bf139cd 110,120
+  s_37b821a6ce4f24::t_0fbf73793b2144 220
+packages/integrations/src/open-webui/open-webui-integration.ts
+  s_37b821a6ce4f24::t_50e91421d0859c 38-41
+  s_37b821a6ce4f24::t_31f391b1f60046 227-230
+  s_37b821a6ce4f24::t_809eff79f880a7 259-265
+  s_37b821a6ce4f24::t_074f4588c0613a 274-282
+  s_37b821a6ce4f24::t_477e9001f8cec0 325-328
+packages/widgets/src/open-webui/use-attachments.ts
+  s_37b821a6ce4f24::t_3f3bfeefa90776 159-165
+  s_37b821a6ce4f24::t_414ce8b98784f0 131-137
+packages/api/src/router/widgets/open-webui.ts
+  s_37b821a6ce4f24::t_af072e4ff2acc5 143-148
+  s_37b821a6ce4f24::t_6d4b0abb7e6f5d 242-247
+  s_37b821a6ce4f24::t_53e3b134f82d64 125-138
+  s_37b821a6ce4f24::t_93c5035bbccde6 157-211,213,215,221-227,229,231
+packages/widgets/src/open-webui/use-voice-recording.ts
+  s_37b821a6ce4f24::t_4c14da9d0b8224 130-139
+  s_37b821a6ce4f24::t_e7f7bdba1eace1 110-115
+packages/api/src/router/integration/integration-router.ts
+  s_37b821a6ce4f24::t_74182200039a40 348-351,353,355-407
+packages/widgets/src/open-webui/chat-components.tsx
+  s_37b821a6ce4f24::t_00595329c0d901 582-587
+  s_37b821a6ce4f24::t_2e12cf9cca2380 216-219
+packages/widgets/src/open-webui/chat.tsx
+  s_37b821a6ce4f24::t_92276e8784eb1a 516-522
+  s_37b821a6ce4f24::t_f49e69883a9777 115-117,119-126
+packages/api/src/router/test/integration/integration-router.spec.ts
+  s_37b821a6ce4f24::t_5a58998a55112c 7
+  s_37b821a6ce4f24::t_dd1a4627040f77 325-330
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "951e707438fa2ee6656ef67f314435b70e1a7c34",
+  "prompts": {},
+  "sessions": {
+    "s_37b821a6ce4f24": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ffbc0292-971b-4a0b-91de-23bf0bfa31dc",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,70 @@
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_bf4ba4587867cb 3550
+  s_909ca8cf5b6e15::t_ce6b590c02cc43 1994-1995,3548-3549
+  s_909ca8cf5b6e15::t_971dc69bee4fb9 4294-4295
+  s_909ca8cf5b6e15::t_990371ffad0a1f 2000-2002
+packages/request-handler/src/timetable.ts
+  s_909ca8cf5b6e15::t_36432dffc7bd42 57,60-64,149,164-210
+packages/widgets/src/health-monitoring/system-health.tsx
+  s_909ca8cf5b6e15::t_d053229b6d0052 72-73,75,226
+packages/widgets/src/_inputs/widget-dynamic-select-input.tsx
+  s_909ca8cf5b6e15::t_14999a88a8d7fd 33-37
+  s_909ca8cf5b6e15::t_990371ffad0a1f 99
+packages/widgets/src/rssFeed/component.tsx
+  s_909ca8cf5b6e15::t_ce6b590c02cc43 15-16,18
+packages/widgets/src/umami/component.tsx
+  s_909ca8cf5b6e15::t_6c21df03f72ba6 45
+packages/api/src/router/test/widgets/rssFeed.spec.ts
+  s_909ca8cf5b6e15::t_5931d294b8425a 61
+packages/widgets/src/beszel-system-table/component.tsx
+  s_909ca8cf5b6e15::t_971dc69bee4fb9 408,475-477
+packages/widgets/src/definition.ts
+  s_909ca8cf5b6e15::t_6c21df03f72ba6 137
+packages/widgets/src/rssFeed/index.ts
+  s_909ca8cf5b6e15::t_ce6b590c02cc43 1,22-27
+apps/docs/docs/widgets/timetable/index.mdx
+  s_909ca8cf5b6e15::t_e763b16e00b82f 38
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_909ca8cf5b6e15::t_6c21df03f72ba6 12,40-46
+packages/widgets/src/options.ts
+  s_909ca8cf5b6e15::t_990371ffad0a1f 62
+packages/api/src/router/widgets/timetable.ts
+  s_909ca8cf5b6e15::t_d4cff60ac951d9 209
+  s_909ca8cf5b6e15::t_db775d46da63cf 40,214,218-219,245-248,260,262-264
+  s_909ca8cf5b6e15::t_8648df5a47f35a 157
+packages/api/src/router/widgets/rssFeed.ts
+  s_909ca8cf5b6e15::t_5931d294b8425a 25-26,54
+packages/request-handler/src/immich.spec.ts
+  s_909ca8cf5b6e15::t_6c21df03f72ba6 31,43
+packages/widgets/src/archive-team-warrior/component.tsx
+  s_909ca8cf5b6e15::t_5931d294b8425a 105-124
+packages/widgets/src/timetable/index.ts
+  s_909ca8cf5b6e15::t_ce6b590c02cc43 17
+  s_909ca8cf5b6e15::t_990371ffad0a1f 5,21,34
+  s_909ca8cf5b6e15::t_14999a88a8d7fd 22-26
+packages/api/src/router/test/widgets/timetable.spec.ts
+  s_909ca8cf5b6e15::t_8648df5a47f35a 200
+  s_909ca8cf5b6e15::t_ade32be851939e 89,95-98,133,179,184-186,189-199,201-210
+  s_909ca8cf5b6e15::t_17ccd2571b368e 212-226
+  s_909ca8cf5b6e15::t_bfe60ac9420af4 211
+packages/request-handler/src/timetable.spec.ts
+  s_909ca8cf5b6e15::t_4c9bc851e8abdf 72-91
+  s_909ca8cf5b6e15::t_169ed07e757379 121-137,139-146,148-155
+  s_909ca8cf5b6e15::t_61b7a1b107b170 118-119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "36b75a071b9c9c16491d48be38fa1f52d3fffcbf",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

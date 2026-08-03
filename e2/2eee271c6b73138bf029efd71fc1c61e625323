@@ -1,0 +1,21 @@
+apps/docs/docs/widgets/beszel-system-stats/index.ts
+  s_30eb43d75f3695::t_d8e6c446a4cb94 13,16
+packages/widgets/src/beszel/_shared/time-period.ts
+  s_30eb43d75f3695::t_2fbc3d4d25df84 1-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "e22eee271c6b73138bf029efd71fc1c61e625323",
+  "prompts": {},
+  "sessions": {
+    "s_30eb43d75f3695": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ef5cb8a1-a055-43cd-a77f-063538fd3a72",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

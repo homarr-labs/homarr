@@ -1,0 +1,153 @@
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_7b8a552cf9f1f8::t_3ca6f3340555ef 8
+packages/translation/src/lang/he.json
+  s_7b8a552cf9f1f8::t_cbd8ae075f8f53 1554-1555,1569-1570
+packages/api/src/router/board.ts
+  s_7b8a552cf9f1f8::t_ec4b2e022ad2b0 918-931,933-935,1118-1135
+apps/docs/docs/management/boards/index.mdx
+  s_7b8a552cf9f1f8::t_ec4b2e022ad2b0 158
+e2e/shared/create-homarr-container.ts
+  s_7b8a552cf9f1f8::t_0ce825eb33033d 13-15
+packages/translation/src/lang/sk.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554-1555,1569-1570
+packages/translation/src/lang/zh.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554-1555,1569-1570
+packages/translation/src/lang/de-CH.json
+  s_7b8a552cf9f1f8::t_99a2ceb3a507c9 1554-1555,1569-1570
+packages/translation/src/lang/cs.json
+  s_7b8a552cf9f1f8::t_99a2ceb3a507c9 1554-1555,1569-1570
+packages/translation/src/lang/hu.json
+  s_7b8a552cf9f1f8::t_cbd8ae075f8f53 1554-1555,1569-1570
+apps/nextjs/src/components/board/sections/container/container-actions.ts
+  s_7b8a552cf9f1f8::t_e315bcaa6535af 4,12
+packages/translation/src/lang/tr.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554-1555,1569-1570
+packages/translation/src/lang/es.json
+  s_7b8a552cf9f1f8::t_99a2ceb3a507c9 1554-1555,1569-1570
+packages/translation/src/lang/cn.json
+  s_7b8a552cf9f1f8::t_99a2ceb3a507c9 1554-1555,1569-1570
+apps/nextjs/src/components/board/sections/grid/grid-portal-host.tsx
+  s_7b8a552cf9f1f8::t_80903ea9635f14 4,36,44-47,61,64-71
+  s_7b8a552cf9f1f8::t_9cc704f245c0df 62-63
+packages/translation/src/lang/uk.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554-1555,1569-1570
+packages/translation/src/lang/ro.json
+  s_7b8a552cf9f1f8::t_0e408d59e94dd4 1554-1555,1569-1570
+apps/nextjs/src/components/board/sections/container/actions/remove-container.ts
+  s_7b8a552cf9f1f8::t_591669aee19350 135
+  s_7b8a552cf9f1f8::t_8bd2c1c6934c4c 21-36,39,91-112
+  s_7b8a552cf9f1f8::t_e315bcaa6535af 3-6,57,76,129,131-134
+  s_7b8a552cf9f1f8::t_eb590c1e52b8c8 37
+  s_7b8a552cf9f1f8::t_ff2e89d0e64972 38,40-41
+  s_7b8a552cf9f1f8::t_06d2a67ee0718d 113
+packages/translation/src/lang/fi.json
+  s_7b8a552cf9f1f8::t_0e408d59e94dd4 1555,1569
+  s_7b8a552cf9f1f8::t_99a2ceb3a507c9 1554,1570
+apps/nextjs/src/components/board/sections/grid/grid-depth.ts
+  s_7b8a552cf9f1f8::t_22812b9210a9f9 1-14
+packages/translation/src/lang/vi.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554-1555,1569-1570
+apps/nextjs/src/components/board/sections/grid/test/fixed-grid-item.spec.ts
+  s_7b8a552cf9f1f8::t_11c87e2fdec7b5 95-96,205-212,214-217
+  s_7b8a552cf9f1f8::t_cdb7bae05971d6 306-309
+  s_7b8a552cf9f1f8::t_13d37031197fb5 213
+  s_7b8a552cf9f1f8::t_0d3f21ef0eaeda 218-219
+  s_7b8a552cf9f1f8::t_9e3588a75840b1 310-311
+packages/translation/src/lang/pt-br.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554-1555,1569-1570
+packages/translation/src/lang/ca.json
+  s_7b8a552cf9f1f8::t_99a2ceb3a507c9 1554-1555,1569-1570
+packages/translation/src/lang/el.json
+  s_7b8a552cf9f1f8::t_0e408d59e94dd4 1554-1555,1569-1570
+packages/translation/src/lang/lv.json
+  s_7b8a552cf9f1f8::t_cbd8ae075f8f53 1554-1555,1569-1570
+packages/translation/src/lang/nl.json
+  s_7b8a552cf9f1f8::t_cbd8ae075f8f53 1554-1555,1569-1570
+packages/translation/src/lang/ru.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554-1555,1569-1570
+packages/translation/src/lang/it.json
+  s_7b8a552cf9f1f8::t_cbd8ae075f8f53 1554-1555,1569-1570
+apps/nextjs/src/components/board/sections/grid/test/grid-depth.spec.ts
+  s_7b8a552cf9f1f8::t_22812b9210a9f9 1-26
+apps/docs/docs/getting-started/glossary.mdx
+  s_7b8a552cf9f1f8::t_ec4b2e022ad2b0 3
+packages/translation/src/lang/pl.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554-1555,1569-1570
+packages/translation/src/lang/sl.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554-1555,1569-1570
+packages/translation/src/lang/pt.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554-1555,1569-1570
+packages/translation/src/lang/sv.json
+  s_7b8a552cf9f1f8::t_721ff4443da8b8 1554
+  s_7b8a552cf9f1f8::t_0e408d59e94dd4 1555,1569-1570
+packages/translation/src/lang/ko.json
+  s_7b8a552cf9f1f8::t_cbd8ae075f8f53 1554-1555,1569-1570
+packages/api/src/router/test/board.spec.ts
+  s_7b8a552cf9f1f8::t_ec4b2e022ad2b0 1014-1050
+packages/translation/src/lang/no.json
+  s_7b8a552cf9f1f8::t_cbd8ae075f8f53 1554-1555,1569-1570
+packages/translation/src/lang/de.json
+  s_7b8a552cf9f1f8::t_99a2ceb3a507c9 1554-1555,1569-1570
+apps/nextjs/src/components/board/sections/grid/test/grid-import-boundary.spec.ts
+  s_7b8a552cf9f1f8::t_c12173afbcadc0 15,112-115
+  s_7b8a552cf9f1f8::t_7906b395c07719 46-47
+  s_7b8a552cf9f1f8::t_54674b51fc38e5 43-45
+packages/translation/src/lang/et.json
+  s_7b8a552cf9f1f8::t_99a2ceb3a507c9 1554-1555,1569-1570
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_7b8a552cf9f1f8::t_a229faeadea95b 160-161,536-537
+  s_7b8a552cf9f1f8::t_977802910f861a 24,27-32,46,128,147,158-159,162-170,617,633,694,697,700,716,720,816-822,1153,1165,1247-1260
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  s_7b8a552cf9f1f8::t_a229faeadea95b 21,113
+  s_7b8a552cf9f1f8::t_11c87e2fdec7b5 114-135
+packages/translation/src/lang/lt.json
+  s_7b8a552cf9f1f8::t_cbd8ae075f8f53 1554-1555,1569-1570
+packages/translation/src/lang/ja.json
+  s_7b8a552cf9f1f8::t_cbd8ae075f8f53 1554-1555,1569-1570
+packages/translation/src/lang/hr.json
+  s_7b8a552cf9f1f8::t_cbd8ae075f8f53 1554-1555,1569-1570
+apps/nextjs/src/components/board/sections/grid/test/grid-portal-host.spec.ts
+  s_7b8a552cf9f1f8::t_0abcb019c72f75 1-54,56-65,67-90
+  s_7b8a552cf9f1f8::t_9cc704f245c0df 55
+  s_7b8a552cf9f1f8::t_b883ec3daa3b21 66
+apps/nextjs/src/components/board/sections/grid/section-grid-placements.ts
+  s_7b8a552cf9f1f8::t_e315bcaa6535af 1-5,7-49
+  s_7b8a552cf9f1f8::t_591669aee19350 6
+packages/translation/src/lang/da.json
+  s_7b8a552cf9f1f8::t_99a2ceb3a507c9 1554-1555,1569-1570
+packages/translation/src/lang/fr.json
+  s_7b8a552cf9f1f8::t_99a2ceb3a507c9 1554-1555,1569-1570
+apps/nextjs/src/components/board/items/item-move-modal.tsx
+  s_7b8a552cf9f1f8::t_e315bcaa6535af 12,14,121,141,294-296,310
+apps/nextjs/src/components/board/sections/container/actions/container-actions.spec.ts
+  s_7b8a552cf9f1f8::t_8bd2c1c6934c4c 154-183
+  s_7b8a552cf9f1f8::t_ff2e89d0e64972 126,133-144,148,152-153
+  s_7b8a552cf9f1f8::t_1836bfc77dd484 61-69
+  s_7b8a552cf9f1f8::t_e315bcaa6535af 89,122-125,127-132,145-147,149-151
+e2e/board-grid.spec.ts
+  s_909ca8cf5b6e15::t_4523bd08cf4dd8 483
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "d0c7ba401ffbf9f18af0dfc8fa195d9021f4ae1c",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

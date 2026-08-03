@@ -1,0 +1,42 @@
+packages/core/src/infrastructure/db/drivers/sqlite.ts
+  s_935d91db0e98e1::t_a5b507ecb36a01 8-9
+.dockerignore
+  h_d6e478ca18e517 13
+packages/db/migrations/seed.ts
+  s_935d91db0e98e1::t_6a104b761c7e5c 228
+  s_02596233731ef9::t_ab99c1a3afcccb 253-275
+  s_02596233731ef9::t_e24a4a4f50cc50 211-227,229-252,276-277
+  s_02596233731ef9::t_e2bbf3f1953ac0 41-44
+  s_02596233731ef9::t_911aa07c9b77c6 15
+  s_02596233731ef9::t_4f3de5767b966b 4
+  s_02596233731ef9::t_4c86a9556f1f0c 21-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "27fcf9332633bd591dd9cb6399497fbc997fea2f",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_02596233731ef9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1c4b5395dffexjAtEr60q52hXG",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_935d91db0e98e1": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "458fefb8-dbe9-4f4d-9ec6-b51998052116",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": null
+    }
+  }
+}

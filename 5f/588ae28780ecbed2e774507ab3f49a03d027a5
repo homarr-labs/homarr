@@ -1,0 +1,27 @@
+packages/definitions/src/docs/widget-doc-slugs.ts
+  s_1f672ca9074713::t_7dfcfdd413f7c4 47
+packages/definitions/src/docs/integration-doc-slugs.ts
+  s_1f672ca9074713::t_6cfde93537635a 43
+  s_1f672ca9074713::t_c14eb8e1483538 60
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_1f672ca9074713::t_4b7138de80ede8 326
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/members/page.tsx
+  s_1f672ca9074713::t_748546e0724913 2,62,69,88,115
+  s_1f672ca9074713::t_f506d2e1af9e16 44-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "5f588ae28780ecbed2e774507ab3f49a03d027a5",
+  "prompts": {},
+  "sessions": {
+    "s_1f672ca9074713": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ebb68ba1-8a75-47f3-9ad0-5aad1b6d8a5b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

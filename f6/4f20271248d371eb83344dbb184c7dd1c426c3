@@ -1,0 +1,21 @@
+packages/analytics/src/send-server-analytics.ts
+  s_32c69770219762::t_64e7e060a6ee5a 70-80,95-105,126,128-130,132-136
+packages/translation/src/lang/en.json
+  s_32c69770219762::t_79f35678263c91 4382
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "f64f20271248d371eb83344dbb184c7dd1c426c3",
+  "prompts": {},
+  "sessions": {
+    "s_32c69770219762": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "586ce994-362d-456d-8003-2cee54793542",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

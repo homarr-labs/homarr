@@ -1,0 +1,199 @@
+.agents/skills/homarr-custom-widget/SKILL.md
+  s_5166e2b2e27b97::t_8980d5a73643cb 19-31,46
+.agents/skills/homarr-custom-widget/references/mantine-charts.md
+  s_787bde936079ee::t_54aa6231d56d3e 3,5
+.agents/skills/homarr-custom-widget/references/mantine-core.md
+  s_787bde936079ee::t_799329a7dab213 1-470
+.agents/skills/homarr-custom-widget/references/mantine-dates.md
+  s_787bde936079ee::t_a3b104219bde48 1-3,5,7-9,11-13,15,17-21,23,25-28,30-32,34,36,40,42,44,46-48,50,52-53,55-58,60-62,64-72,75,77-78,80-81,83-90,93,95-97,99-101,103-104,106,108-109,111,113-114,116,118-125,127-130,132-133,135,137,139-146
+.agents/skills/homarr-custom-widget/references/runtime.md
+  s_787bde936079ee::t_bd5210e1b7cb58 5-18
+apps/docs/docs/management/api/index.mdx
+  s_955a5b644d1c62::t_c841454a8fab04 89,91-94
+apps/docs/docs/management/custom-widgets/agent-authoring.mdx
+  s_955a5b644d1c62::t_ebeeb7a545aa02 19,42,46,53-55,62-63
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_955a5b644d1c62::t_506a5b28e12c7f 3-13,81,83-84,86,116,136-141
+apps/docs/docs/management/mcp.mdx
+  s_955a5b644d1c62::t_eca0750a042b29 196-197
+apps/docs/src/components/custom-jsx-component-reference.module.css
+  s_738d1f426f8a9e::t_e87d27ab551a2e 384
+apps/docs/src/components/custom-jsx-component-reference.tsx
+  s_42288025d21ad8::t_9287a18440ce62 5-12,15-17,369-375,434-439
+apps/docs/src/components/workshop/WorkshopPage.tsx
+  s_955a5b644d1c62::t_c8624f07a39b37 10,35,46,64-65,260,281-283,299-300,320-322
+apps/nextjs/package.json
+  s_787bde936079ee::t_df7244ac7c04ea 58
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.spec.ts
+  s_787bde936079ee::t_86dc6ccaef8c47 5,67-85
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.ts
+  s_787bde936079ee::t_3af0669ca9a6c5 27-36
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_787bde936079ee::t_4675c484871bce 168-175
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-actions.ts
+  s_787bde936079ee::t_121f091803f388 21,67,133
+apps/nextjs/src/app/api/custom-widgets/schema/route.ts
+  s_955a5b644d1c62::t_060dca076737b1 1-9
+apps/nextjs/src/app/api/mcp/[transport]/route.ts
+  s_955a5b644d1c62::t_d715ba83d89bda 25,255
+apps/nextjs/src/components/workshop/workshop-install-button.tsx
+  s_955a5b644d1c62::t_05af3c569dcee8 26-28
+apps/nextjs/src/components/workshop/workshop-installer.tsx
+  s_955a5b644d1c62::t_42b8f5fa660af7 17-19
+apps/workshop/Dockerfile
+  s_787bde936079ee::t_2a7841aacd891f 35
+apps/workshop/README.md
+  s_15f0f84d174324::t_f825cccd37c9f9 6,23-25,43-45,48-49,62-63
+apps/workshop/pb_migrations/1784240000_workshop_widgets.js
+  s_955a5b644d1c62::t_1d2c875967be7b 20,36,131
+apps/workshop/test.sh
+  s_15f0f84d174324::t_9f2c6d118ccf23 5,8-9,13-14,21-22,28-29
+apps/workshop/tests/workshop.integration.mjs
+  s_955a5b644d1c62::t_51b856a4452ba8 40-42,73,109,114-118,127-128,172-178,239
+e2e/custom-widgets-custom-jsx-v2.spec.ts
+  s_787bde936079ee::t_4ab074970218a5 1-101
+packages/api/src/router/custom-widget/custom-widget-router.ts
+  s_787bde936079ee::t_2e9d026de51fb9 16,52
+packages/api/src/router/custom-widget/definition-insert.ts
+  s_4e197f3e703e3f::t_2f13a767e07a5a 1-6,8,10-25,27-39,41-43
+packages/api/src/router/custom-widget/transfer-procedures.ts
+  s_787bde936079ee::t_c9c332f93418d4 5-6,10,12,36
+packages/api/src/router/test/widgets/custom-api-v2.spec.ts
+  s_787bde936079ee::t_f82f512aff98a3 1-202
+packages/custom-widgets/package.json
+  s_955a5b644d1c62::t_797a82ee9ef1b5 18
+packages/custom-widgets/scripts/check-architecture.mjs
+  s_4e197f3e703e3f::t_ff2093db256f8a 96-97,99-100
+packages/custom-widgets/scripts/generate-component-metadata.ts
+  s_787bde936079ee::t_ff7aa8e30aa620 154,231-236,243,326-327,445,683-684
+packages/custom-widgets/scripts/generate-skill-content.ts
+  s_1d0cab1b4c5a42::t_d87295dc0e207e 4-7,11,15-16,28-37
+packages/custom-widgets/src/core/ai-prompt.ts
+  s_955a5b644d1c62::t_88d7c25d4f6eab 2,4,7,14,20,41,64
+packages/custom-widgets/src/core/authoring-resources.ts
+  s_955a5b644d1c62::t_db5add1e42c916 3-8,22-24,31-34
+packages/custom-widgets/src/core/component-example.ts
+  s_955a5b644d1c62::t_2fae969d03b50d 1-57
+packages/custom-widgets/src/core/component-registry.ts
+  s_955a5b644d1c62::t_fc128ac0fe20fd 1-2,5,8,20,37,51
+packages/custom-widgets/src/core/definition-security.ts
+  s_4e197f3e703e3f::t_5170face25f2d5 20
+packages/custom-widgets/src/core/options-schema.ts
+  s_787bde936079ee::t_544c7ebab6f055 48-49,136-174,204,211
+packages/custom-widgets/src/core/options.ts
+  s_787bde936079ee::t_0d94bfd1314747 1-2,30,35-44,61,63-70,72-89,91-94
+packages/custom-widgets/src/jsx/analyzer-jsx.ts
+  s_4e197f3e703e3f::t_94e3476012d410 121-124,130-133
+packages/custom-widgets/src/jsx/analyzer.ts
+  s_955a5b644d1c62::t_daaf01adb1198d 12-13,15-20,27,30-59,119-121,146-148,184,274-277,306-308,316-318,396
+packages/custom-widgets/src/jsx/interpreter-parser.ts
+  s_955a5b644d1c62::t_b40acfb71642d6 23-28
+packages/custom-widgets/src/jsx/interpreter.tsx
+  s_955a5b644d1c62::t_18d5334792a57d 267-271
+packages/custom-widgets/src/jsx/recursive-list-helpers.ts
+  s_955a5b644d1c62::t_ad0bf1c98612b9 2,16,19-20,26,31,36,80
+packages/custom-widgets/src/jsx/recursive-list.tsx
+  s_4e197f3e703e3f::t_580a68374aaa05 21,54-55,57,59-60,72,88,97-101
+packages/custom-widgets/src/runtime/actions.tsx
+  s_955a5b644d1c62::t_2691e44154f650 148-149,163-164,172,234-235
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  s_955a5b644d1c62::t_e659d7e8b95592 45
+packages/custom-widgets/src/test/component-catalog.spec.ts
+  s_787bde936079ee::t_e1e48ff5344cfc 23
+packages/custom-widgets/src/test/jsx-policy.spec.ts
+  s_955a5b644d1c62::t_ea883893920ba6 14-34,312-357
+packages/custom-widgets/src/test/recursive-list.spec.tsx
+  s_4e197f3e703e3f::t_484c2ed47c9f3f 35-37,164-196,242,265-270,274-275
+packages/custom-widgets/src/test/workbench.spec.ts
+  s_787bde936079ee::t_b29c1340ac192c 22-26,115-125
+packages/custom-widgets/src/workbench/code-editor.tsx
+  s_955a5b644d1c62::t_164a789a510410 133-137,208,212,228
+packages/custom-widgets/src/workbench/code-language.ts
+  s_955a5b644d1c62::t_ebc67351708c51 12,44,57-62,73-84,119-125
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx
+  s_787bde936079ee::t_1a9a09f1a02e65 3,20,25,190,192-195,200,205-341,445-462,467-470,475-478,483-484,486-522
+packages/workshop/src/schema.ts
+  s_955a5b644d1c62::t_7a9c6d82d67f88 37
+pnpm-lock.yaml
+  s_e1cb108a9beb30::t_5340cf92def460 947-949
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "1c02678a7e86335d1dfe6394d1d6cf3e9b54fbf3",
+  "prompts": {},
+  "sessions": {
+    "s_15f0f84d174324": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8143-7b2f-7f93-9efc-1308f89d8cbe",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_1d0cab1b4c5a42": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7fee-358c-78a0-96a8-90dd5e841067",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_42288025d21ad8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8153-6782-7680-b541-eb55e19c6ede",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_4e197f3e703e3f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8122-ce78-7bc1-8f29-d3809c77eabd",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5166e2b2e27b97": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f80ba-cbf5-7352-a20f-ea7df8ec4f8e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_738d1f426f8a9e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8153-5391-7491-a823-c1f8f5122bca",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_787bde936079ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8087-9ff9-7a42-8bbc-67f5905a4fa7",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_955a5b644d1c62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7093-b426-7a53-bec9-ce2a1aed6a5b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e1cb108a9beb30": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8153-3eee-79b2-863e-3190f1ad1e89",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

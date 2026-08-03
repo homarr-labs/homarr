@@ -1,0 +1,19 @@
+turbo.json
+  s_c176b06e8c451e::t_44387e4f9954b7 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "313758a47fdb83f6b587c67a153a4acd4e88025a",
+  "prompts": {},
+  "sessions": {
+    "s_c176b06e8c451e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8d6e43a7-56f3-4f3d-961e-0d3189cc2903",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

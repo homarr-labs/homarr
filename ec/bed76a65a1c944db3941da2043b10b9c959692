@@ -1,0 +1,35 @@
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_108d94b6b866e3::t_17e91e64314175 170-172,180
+  s_108d94b6b866e3::t_48fdd1f7dd8fca 3
+  s_108d94b6b866e3::t_9802c376b0d61e 90-106,109-111
+  s_108d94b6b866e3::t_1e10e309f18cec 48
+  s_108d94b6b866e3::t_66ef8da0a8bf37 200-202
+packages/widgets/src/modals/embedded-app-edit-form.tsx
+  s_108d94b6b866e3::t_d3f0cd21b1c104 4,14,25,27,45-47,49-50,56,64-74,86-87
+packages/forms-collection/src/new-app/_form.tsx
+  s_108d94b6b866e3::t_80f0b2b522aa47 82
+  s_108d94b6b866e3::t_1c1fa2947d41fe 77-81,83-90
+  s_108d94b6b866e3::t_21a8034be4e3b2 32
+  s_108d94b6b866e3::t_fa6549d113fddc 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ecbed76a65a1c944db3941da2043b10b9c959692",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_108d94b6b866e3": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fe20169c-a144-4cbb-9454-51772fe28c9e",
+        "model": "composer-2.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

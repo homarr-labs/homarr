@@ -1,0 +1,23 @@
+packages/integrations/src/base/creator.ts
+  s_80c289f5a90c8e::t_4fd214d0544810 58,65-66,138-140
+  s_80c289f5a90c8e::t_0fa361afec7463 78-82,85-135
+  s_80c289f5a90c8e::t_cbc6d411963f19 74-75,136
+  s_80c289f5a90c8e::t_c35b46847d7824 68-70
+  s_80c289f5a90c8e::t_54eaa5cef142ed 71-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "e4b061920c29c293b08cfc0eda62375799e94b9c",
+  "prompts": {},
+  "sessions": {
+    "s_80c289f5a90c8e": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0b84af40cffeytabBU5xUWFddj",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

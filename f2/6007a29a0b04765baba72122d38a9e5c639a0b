@@ -1,0 +1,20 @@
+packages/db/migrations/seed.ts
+  s_65eb5a0f296edf::t_767bfc7b3c7a40 622,625-642
+  s_65eb5a0f296edf::t_d144e3ed880360 48-109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f26007a29a0b04765baba72122d38a9e5c639a0b",
+  "prompts": {},
+  "sessions": {
+    "s_65eb5a0f296edf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "17059b15-dc38-4d70-8e3c-e208500f63b4",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

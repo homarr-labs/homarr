@@ -1,0 +1,32 @@
+packages/db/migrations/seed.ts
+  s_c8a21169ab92ce::t_f7d2ef1ac51b1c 364
+  s_c8a21169ab92ce::t_9a80e0480813f5 326-328,334,346,348-361,363,365-417,424-427,429-433,435-445,447-451
+  s_c8a21169ab92ce::t_a191e70c0140f5 362
+  s_c8a21169ab92ce::t_2f389aa22f02bc 325,335-345,452
+  s_c8a21169ab92ce::t_3f6cd16a16f94d 8-9,13,17,34,36-37
+  s_c8a21169ab92ce::t_3c8c84e1665583 54
+  s_c8a21169ab92ce::t_1a65c289a76598 1-2
+  s_c8a21169ab92ce::t_8e54057e726cba 347
+  s_c8a21169ab92ce::t_a44a7f7809e9c2 418-423
+  s_c8a21169ab92ce::t_a9ffca63d15bdb 428
+  s_c8a21169ab92ce::t_4279086f134cb1 434
+  s_c8a21169ab92ce::t_1b813b76d73f08 446
+packages/definitions/src/widget-integration-map.ts
+  s_c8a21169ab92ce::t_2e53067a4ca99b 98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "1fcc149c911f36d94f4cf7eb994b16c93bc2306c",
+  "prompts": {},
+  "sessions": {
+    "s_c8a21169ab92ce": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4c6d29e6-8b74-4a5d-a5e2-4574a8bba0a3",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
