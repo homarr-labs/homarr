@@ -297,7 +297,6 @@ export const integrationRouter = createTRPCRouter({
       };
     }),
   create: permissionRequiredProcedure
-    .requiresPermission("integration-full-all")
     .requiresPermission("integration-create")
     .meta({
       mcp: {
