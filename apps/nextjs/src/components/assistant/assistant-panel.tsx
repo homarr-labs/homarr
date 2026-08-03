@@ -104,6 +104,7 @@ import { useAssistantAutoApproval, useAssistantAutomaticAction } from "./assista
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
 import type { AssistantPendingAction } from "./assistant-pending-action";
+import { AssistantQuestionPortalProvider } from "./assistant-question-portal";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
@@ -1851,7 +1852,7 @@ const usePendingActionCopy = (action: AssistantPendingAction | undefined) => {
 const PendingActionBanner = ({ pendingAction }: { pendingAction: AssistantPendingAction | undefined }) => {
   const t = useScopedI18n("common.assistant");
   const copy = usePendingActionCopy(pendingAction);
-  if (!copy) return null;
+  if (!copy || pendingAction?.kind === "question") return null;
 
   return (
     <Box component="output" className={classes.pendingActionBanner}>
@@ -1873,6 +1874,23 @@ const PendingActionBanner = ({ pendingAction }: { pendingAction: AssistantPendin
           </Button>
         </ThreadPrimitive.ScrollToBottom>
       </Group>
+    </Box>
+  );
+};
+
+const PendingQuestionDock = ({
+  pendingAction,
+  setTarget,
+}: {
+  pendingAction: AssistantPendingAction | undefined;
+  setTarget: (target: HTMLDivElement | null) => void;
+}) => {
+  const t = useScopedI18n("common.assistant");
+  if (pendingAction?.kind !== "question") return null;
+
+  return (
+    <Box component="section" className={classes.pendingQuestionDock} aria-label={t("pendingAction.answerTitle")}>
+      <div ref={setTarget} className={classes.pendingQuestionTarget} />
     </Box>
   );
 };
@@ -2003,6 +2021,7 @@ export const AssistantConversationSurface = ({
   onMinimize,
 }: AssistantConversationSurfaceProps) => {
   const t = useScopedI18n("common.assistant");
+  const [questionPortalTarget, setQuestionPortalTarget] = useState<HTMLDivElement | null>(null);
 
   return (
     <>
@@ -2063,41 +2082,44 @@ export const AssistantConversationSurface = ({
           )}
         </Group>
       </Group>
-      <ThreadPrimitive.Root className={classes.thread}>
-        <ThreadPrimitive.Viewport className={classes.viewport}>
-          <Box className={classes.messages}>
-            <EmptyThread />
-            <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
-          </Box>
-          <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
-            <SelectionToolbarPrimitive.Quote asChild>
-              <Button variant="filled" color="dark" size="compact-sm" leftSection={<IconQuote size={14} />}>
-                {t("quoteSelection")}
-              </Button>
-            </SelectionToolbarPrimitive.Quote>
-          </SelectionToolbarPrimitive.Root>
-          <ThreadPrimitive.ScrollToBottom asChild>
-            <ActionIcon
-              className={classes.scrollToBottom}
-              variant="default"
-              radius="xl"
-              aria-label={t("scrollToLatest")}
-            >
-              <IconArrowUp size={16} style={{ transform: "rotate(180deg)" }} />
-            </ActionIcon>
-          </ThreadPrimitive.ScrollToBottom>
-        </ThreadPrimitive.Viewport>
-        <PendingActionBanner pendingAction={pendingAction} />
-        <Composer
-          modelId={modelId}
-          models={models}
-          modelOptionsLoading={modelOptionsLoading}
-          reasoning={reasoning}
-          onModelChange={onModelChange}
-          onReasoningChange={onReasoningChange}
-          pendingAction={pendingAction}
-        />
-      </ThreadPrimitive.Root>
+      <AssistantQuestionPortalProvider target={questionPortalTarget}>
+        <ThreadPrimitive.Root className={classes.thread}>
+          <ThreadPrimitive.Viewport className={classes.viewport}>
+            <Box className={classes.messages}>
+              <EmptyThread />
+              <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
+            </Box>
+            <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
+              <SelectionToolbarPrimitive.Quote asChild>
+                <Button variant="filled" color="dark" size="compact-sm" leftSection={<IconQuote size={14} />}>
+                  {t("quoteSelection")}
+                </Button>
+              </SelectionToolbarPrimitive.Quote>
+            </SelectionToolbarPrimitive.Root>
+            <ThreadPrimitive.ScrollToBottom asChild>
+              <ActionIcon
+                className={classes.scrollToBottom}
+                variant="default"
+                radius="xl"
+                aria-label={t("scrollToLatest")}
+              >
+                <IconArrowUp size={16} style={{ transform: "rotate(180deg)" }} />
+              </ActionIcon>
+            </ThreadPrimitive.ScrollToBottom>
+          </ThreadPrimitive.Viewport>
+          <PendingQuestionDock pendingAction={pendingAction} setTarget={setQuestionPortalTarget} />
+          <PendingActionBanner pendingAction={pendingAction} />
+          <Composer
+            modelId={modelId}
+            models={models}
+            modelOptionsLoading={modelOptionsLoading}
+            reasoning={reasoning}
+            onModelChange={onModelChange}
+            onReasoningChange={onReasoningChange}
+            pendingAction={pendingAction}
+          />
+        </ThreadPrimitive.Root>
+      </AssistantQuestionPortalProvider>
     </>
   );
 };
