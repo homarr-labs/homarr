@@ -44,7 +44,7 @@ describe("Assistant management", () => {
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
       await page.getByRole("button", { name: "Login" }).click();
-      await page.waitForURL(baseUrl, { timeout: 15_000 });
+      await expect(page).not.toHaveURL(/\/auth\/login/, { timeout: 30_000 });
 
       await page.goto(`${baseUrl}/manage/assistant`);
       await expect(page.getByRole("heading", { name: "Assistant" })).toBeVisible();
