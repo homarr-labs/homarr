@@ -5203,7 +5203,7 @@
               "options": {
                 "homarr": {
                   "label": "Homarr",
-                  "description": "Homarr's managed assistant provider. Backend availability will be added in a future release."
+                  "description": "A Homarr-hosted OpenRouter proxy with the same model discovery, tool, and web search features. Available in a future release."
                 },
                 "openrouter": {
                   "label": "OpenRouter",

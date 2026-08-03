@@ -473,16 +473,25 @@ export const AssistantConfiguration = () => {
               allowDeselect={false}
               leftSection={<ProviderIcon providerId={provider} />}
               renderOption={({ option }) => (
-                <Group gap="sm" wrap="nowrap" justify="space-between" w="100%">
-                  <Group gap="sm" wrap="nowrap">
-                    <ProviderIcon providerId={option.value as AssistantProviderOption} />
-                    <Text size="sm">{option.label}</Text>
-                  </Group>
-                  {option.value === "homarr" && (
-                    <Badge size="xs" variant="light" color="gray">
-                      {t("provider.comingSoon")}
-                    </Badge>
-                  )}
+                <Group gap="sm" wrap="nowrap" align={option.value === "homarr" ? "flex-start" : "center"} w="100%">
+                  <ProviderIcon providerId={option.value as AssistantProviderOption} />
+                  <Box flex={1} miw={0}>
+                    <Group gap="xs" wrap="nowrap" justify="space-between">
+                      <Text size="sm" truncate>
+                        {option.label}
+                      </Text>
+                      {option.value === "homarr" && (
+                        <Badge size="xs" variant="light" color="gray" flex="0 0 auto">
+                          {t("provider.comingSoon")}
+                        </Badge>
+                      )}
+                    </Group>
+                    {option.value === "homarr" && (
+                      <Text size="xs" c="dimmed" lineClamp={2} maw="46ch">
+                        {t("provider.options.homarr.description")}
+                      </Text>
+                    )}
+                  </Box>
                 </Group>
               )}
             />
