@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Text } from "@mantine/core";
-import { IconAlertTriangle, IconClock } from "@tabler/icons-react";
+import { IconAlertTriangle, IconClock, IconServerOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
@@ -11,45 +11,57 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { BaseWidgetError } from "../errors/base-component";
 import classes from "./component.module.scss";
 
 const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
-  const { data, error } = clientApi.widget.rssFeed.getFeeds.useQuery(input);
-  if (error && data === undefined) throw error;
+  const query = clientApi.widget.rssFeed.getFeeds.useQuery(input);
+  if (query.error && query.data === undefined) {
+    return { hasError: true as const, refetch: query.refetch };
+  }
 
   // Persisted query caches can still contain the array response used before failed-feed metadata was added.
-  const normalizedData = data as typeof data | RouterOutputs["widget"]["rssFeed"]["getFeeds"]["entries"];
+  const normalizedData = query.data as typeof query.data | RouterOutputs["widget"]["rssFeed"]["getFeeds"]["entries"];
   if (Array.isArray(normalizedData)) {
     return {
+      hasError: false as const,
       entries: normalizedData,
       failedFeedCount: 0,
-      isStale: Boolean(error),
+      isStale: Boolean(query.error),
     };
   }
 
   return {
+    hasError: false as const,
     entries: normalizedData?.entries ?? [],
     failedFeedCount: normalizedData?.failedFeedCount ?? 0,
-    isStale: Boolean(error),
+    isStale: Boolean(query.error),
   };
 };
 
 export default function RssFeed({ options, width, height }: WidgetComponentProps<"rssFeed">) {
-  const {
-    entries: feedEntries,
-    failedFeedCount,
-    isStale,
-  } = useLiveFeed({
+  const feed = useLiveFeed({
     urls: options.feedUrls,
     maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
   });
 
   const board = useRequiredBoard();
   const t = useScopedI18n("widget.rssFeed");
-  const warning = isStale
+  if (feed.hasError) {
+    return (
+      <BaseWidgetError
+        icon={IconServerOff}
+        message={t("error.allFeedsFailed")}
+        showLogsLink
+        onRetry={() => void feed.refetch()}
+      />
+    );
+  }
+
+  const warning = feed.isStale
     ? t("warning.stale")
-    : failedFeedCount > 0
-      ? t("warning.partial", { count: failedFeedCount })
+    : feed.failedFeedCount > 0
+      ? t("warning.partial", { count: feed.failedFeedCount })
       : undefined;
 
   const languageDir = options.enableRtl ? "RTL" : "LTR";
@@ -69,7 +81,7 @@ export default function RssFeed({ options, width, height }: WidgetComponentProps
         </Alert>
       )}
       <SimpleGrid cols={columns} w="100%" spacing={spacing} verticalSpacing={spacing}>
-        {feedEntries.map((feedEntry) => {
+        {feed.entries.map((feedEntry) => {
           const href = getSafeApplicationUrl(feedEntry.link, { baseUrl: feedEntry.feedUrl });
           return (
             <Card
