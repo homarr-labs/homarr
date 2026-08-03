@@ -208,6 +208,7 @@ export const integrations = pgTable(
     name: text().notNull(),
     url: text().notNull(),
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
+    options: text().default(emptySuperJSON).notNull(),
     appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },
   (integrations) => ({

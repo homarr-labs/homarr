@@ -36,6 +36,11 @@ import {
 } from "@homarr/validation/integration";
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
+import {
+  deserializeIntegrationOptions,
+  parseIntegrationOptionsInput,
+  serializeIntegrationOptions,
+} from "../../integration-options";
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
@@ -228,6 +233,9 @@ export const integrationRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.query.integrations.findMany({
         where: like(integrations.name, `%${input.query}%`),
+        columns: {
+          options: false,
+        },
         orderBy: asc(integrations.name),
         limit: input.limit,
       });
@@ -286,6 +294,7 @@ export const integrationRouter = createTRPCRouter({
         name: integration.name,
         kind: integration.kind,
         url: integration.url,
+        options: deserializeIntegrationOptions(integration.kind, integration.options),
         secrets: integration.secrets.map((secret) => ({
           kind: secret.kind,
           // Only return the value if the secret is public, so for example the username
@@ -319,11 +328,14 @@ export const integrationRouter = createTRPCRouter({
         });
       }
 
+      const options = parseIntegrationOptionsInput(input.kind, input.options);
+
       const result = await testConnectionAsync({
         id: "new",
         name: input.name,
         url: input.url,
         kind: input.kind,
+        options,
         secrets: input.secrets,
       }).catch((error) => {
         if (!(error instanceof MissingSecretError)) throw error;
@@ -349,6 +361,7 @@ export const integrationRouter = createTRPCRouter({
         name: input.name,
         url: input.url,
         kind: input.kind,
+        options: serializeIntegrationOptions(input.kind, options),
         appId,
       });
 
@@ -390,12 +403,18 @@ export const integrationRouter = createTRPCRouter({
       });
     }
 
+    const options =
+      input.options === undefined
+        ? deserializeIntegrationOptions(integration.kind, integration.options)
+        : parseIntegrationOptionsInput(integration.kind, input.options);
+
     const testResult = await testConnectionAsync(
       {
         id: input.id,
         name: input.name,
         url: input.url,
         kind: integration.kind,
+        options,
         secrets: input.secrets,
       },
       integration.secrets,
@@ -420,6 +439,7 @@ export const integrationRouter = createTRPCRouter({
       .set({
         name: input.name,
         url: input.url,
+        ...(input.options === undefined ? {} : { options: serializeIntegrationOptions(integration.kind, options) }),
         appId: input.appId,
       })
       .where(eq(integrations.id, input.id));
@@ -728,6 +748,7 @@ export const integrationRouter = createTRPCRouter({
             name: integration.name,
             url: integration.url,
             kind: integration.kind as (typeof mediaRequestSearchKinds)[number],
+            options: deserializeIntegrationOptions(integration.kind, integration.options),
             externalUrl: integration.app?.href ?? null,
             decryptedSecrets: integration.secrets.map((secret) => ({
               ...secret,

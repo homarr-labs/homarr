@@ -33,5 +33,13 @@
   "ignorePatterns": ["**/*.config.js", "**/*.config.mjs", "**/*.cjs", "**/lang/*.d.json.ts", ".next/**", "apps/docs/.docusaurus/**", "apps/docs/build/**"],
   "settings": {
     "react": { "version": "19" }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["packages/db/collection.ts", "packages/db/test/schema.spec.ts"],
+      "rules": {
+        "import/namespace": ["error", { "allowComputed": true }]
+      }
+    }
+  ]
 }

@@ -28,6 +28,7 @@ import {
 import type { IntegrationKind } from "@homarr/definitions";
 import { zodEnumFromArray } from "@homarr/validation/enums";
 
+import { parseIntegrationOptionsInput, serializeIntegrationOptions } from "../../integration-options";
 import { createTRPCRouter, onboardingProcedure, publicProcedure } from "../../trpc";
 import { MissingSecretError, testConnectionAsync } from "../integration/integration-test-connection";
 import { mapTestConnectionError } from "../integration/map-test-connection-error";
@@ -85,6 +86,7 @@ export const onboardRouter = createTRPCRouter({
         name: z.string().nonempty().max(127),
         url: z.string().nonempty(),
         kind: zodEnumFromArray(integrationKinds),
+        options: z.record(z.string(), z.unknown()).optional(),
         secrets: z.array(
           z.object({
             kind: zodEnumFromArray(integrationSecretKinds),
@@ -94,11 +96,14 @@ export const onboardRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const options = parseIntegrationOptionsInput(input.kind, input.options);
+
       const result = await testConnectionAsync({
         id: "new",
         name: input.name,
         url: input.url,
         kind: input.kind,
+        options,
         secrets: input.secrets,
       }).catch((error) => {
         if (!(error instanceof MissingSecretError)) throw error;
@@ -130,6 +135,7 @@ export const onboardRouter = createTRPCRouter({
         name: input.name,
         url: input.url,
         kind: input.kind,
+        options: serializeIntegrationOptions(input.kind, options),
         appId,
       });
 

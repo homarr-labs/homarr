@@ -6,6 +6,7 @@ import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
 import {
   boolean,
   customType,
+  foreignKey,
   index,
   int,
   mysqlTable,
@@ -209,6 +210,7 @@ export const integrations = mysqlTable(
     name: text().notNull(),
     url: text().notNull(),
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
+    options: text().default(emptySuperJSON).notNull(),
     appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },
   (integrations) => ({
@@ -531,11 +533,14 @@ export const customWidgetSecrets = mysqlTable(
     updatedAt: timestamp()
       .$onUpdateFn(() => new Date())
       .notNull(),
-    definitionId: varchar({ length: 64 })
-      .notNull()
-      .references(() => customWidgetDefinitions.id, { onDelete: "cascade" }),
+    definitionId: varchar({ length: 64 }).notNull(),
   },
   (table) => ({
+    definitionForeignKey: foreignKey({
+      name: "cw_secret_definition_id_cw_definition_id_fk",
+      columns: [table.definitionId],
+      foreignColumns: [customWidgetDefinitions.id],
+    }).onDelete("cascade"),
     compoundKey: primaryKey({
       columns: [table.definitionId, table.kind],
     }),

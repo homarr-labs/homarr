@@ -6,6 +6,8 @@ import { appManageSchema } from "./app";
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
 
+const integrationOptionsInputSchema = z.record(z.string(), z.unknown());
+
 export const integrationCreateSchema = z.object({
   name: z.string().nonempty().max(127),
   url: z
@@ -13,6 +15,7 @@ export const integrationCreateSchema = z.object({
     .url()
     .regex(/^https?:\/\//), // Only allow http and https for security reasons (javascript: is not allowed)
   kind: zodEnumFromArray(integrationKinds),
+  options: integrationOptionsInputSchema.default({}),
   secrets: z.array(
     z.object({
       kind: zodEnumFromArray(integrationSecretKinds),
@@ -32,6 +35,7 @@ export const integrationUpdateSchema = z.object({
   id: z.string().cuid2(),
   name: z.string().nonempty().max(127),
   url: z.string().url(),
+  options: integrationOptionsInputSchema.optional(),
   secrets: z.array(
     z.object({
       kind: zodEnumFromArray(integrationSecretKinds),

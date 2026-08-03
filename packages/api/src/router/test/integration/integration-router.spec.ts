@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { eq } from "drizzle-orm";
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
@@ -8,6 +9,8 @@ import { apps, integrations, integrationSecrets, integrationUserPermissions, use
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
+import { serializeIntegrationOptions } from "../../../integration-options";
+import { testConnectionAsync } from "../../integration/integration-test-connection";
 import { integrationRouter } from "../../integration/integration-router";
 import { expectToBeDefined } from "../helper";
 
@@ -25,7 +28,7 @@ const defaultSessionWithPermissions = (permissions: GroupPermissionKey[] = []) =
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 vi.mock("../../integration/integration-test-connection", () => ({
-  testConnectionAsync: async () => await Promise.resolve({ success: true }),
+  testConnectionAsync: vi.fn(async () => await Promise.resolve({ success: true })),
 }));
 
 describe("all should return all integrations", () => {
@@ -599,6 +602,53 @@ describe("update should update an integration", () => {
     expect(username.value).not.toEqual(usernameToInsert.value);
     expect(password.value).toEqual(passwordToInsert.value);
     expect(apiKey.value).not.toEqual(input.secrets[2]!.value);
+  });
+
+  test("with omitted options should not overwrite a concurrent options update", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+
+    const integrationId = createId();
+    const initialOptions = serializeIntegrationOptions("sabNzbd", {
+      includeArchivedHistory: false,
+      historyWindowDays: 10,
+    });
+    const concurrentOptions = serializeIntegrationOptions("sabNzbd", {
+      includeArchivedHistory: true,
+      historyWindowDays: 30,
+    });
+
+    await db.insert(integrations).values({
+      id: integrationId,
+      name: "SABnzbd",
+      kind: "sabNzbd",
+      url: "http://sabnzbd.local",
+      options: initialOptions,
+    });
+
+    vi.mocked(testConnectionAsync).mockImplementationOnce(async () => {
+      await db.update(integrations).set({ options: concurrentOptions }).where(eq(integrations.id, integrationId));
+
+      return { success: true };
+    });
+
+    await caller.update({
+      id: integrationId,
+      name: "Updated SABnzbd",
+      url: "http://sabnzbd.local",
+      secrets: [],
+      appId: null,
+    });
+
+    const dbIntegration = await db.query.integrations.findFirst({
+      where: eq(integrations.id, integrationId),
+    });
+
+    expect(dbIntegration?.options).toBe(concurrentOptions);
   });
 
   test("with full access should throw an error if the integration does not exist", async () => {
