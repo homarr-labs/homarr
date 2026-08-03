@@ -9,7 +9,7 @@
 }
 
 .gutter {
-  position: sticky;
+  position: relative;
   top: 0;
   align-self: start;
   padding-top: 24px;
