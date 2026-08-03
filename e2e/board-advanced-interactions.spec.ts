@@ -115,6 +115,18 @@ describe("Board advanced interactions", () => {
       await expect(page.getByRole("button", { name: /advanced view is pinned|keep advanced view open/i })).toHaveCount(
         0,
       );
+      await advancedSurface.evaluate((element) => {
+        const probe = document.createElement("div");
+        probe.dataset.shiftScrollProbe = "true";
+        probe.style.cssText = "height:80px;overflow-y:auto";
+        probe.innerHTML = '<div style="height:600px"></div>';
+        element.append(probe);
+      });
+      const scrollProbe = advancedSurface.locator("[data-shift-scroll-probe]");
+      await page.keyboard.down("Shift");
+      await scrollProbe.dispatchEvent("wheel", { shiftKey: true, deltaX: 120, deltaY: 0 });
+      await page.keyboard.up("Shift");
+      expect(await scrollProbe.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
       await page.keyboard.press("Escape");
       await expect(advancedSurface).toBeHidden();
       await expect(widget).toBeFocused();

@@ -79,6 +79,7 @@ export {
   getWidgetQueryKeys,
   getWidgetRuntimeQueries,
   normalizeWidgetQuery,
+  supportsAdvancedFocus,
   widgetQueryValueEquals,
 } from "./definition";
 export type { WidgetComponentProps };

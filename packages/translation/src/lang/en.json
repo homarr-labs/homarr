@@ -3506,6 +3506,7 @@
       "items": {
         "currentlyPlaying": "Currently playing",
         "user": "User",
+        "unknownUser": "Unknown user",
         "name": "Name",
         "id": "Id",
         "status": "Status",

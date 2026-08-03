@@ -1,4 +1,4 @@
-import { Box, Group, HoverCard, Progress, Stack, Text, UnstyledButton } from "@mantine/core";
+import { Box, getDefaultZIndex, Group, HoverCard, Progress, Stack, Text, UnstyledButton } from "@mantine/core";
 
 import type { BeszelSystemRow } from "./types";
 import { thresholdColor } from "./colors";
@@ -28,6 +28,7 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
         {formatPercent(system.disk)}
       </Text>
       <HoverCard
+        zIndex={getDefaultZIndex("popover") - 3}
         position="right"
         withArrow
         shadow="md"
