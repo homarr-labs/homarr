@@ -13,7 +13,7 @@ interface LoginInput {
 export const loginAsync = async ({ page, baseUrl, credentials, destination = "/" }: LoginInput) => {
   const destinationUrl = new URL(destination, baseUrl);
   const loginUrl = new URL("/auth/login", baseUrl);
-  loginUrl.searchParams.set("callbackUrl", destinationUrl.href);
+  loginUrl.searchParams.set("callbackUrl", `${destinationUrl.pathname}${destinationUrl.search}${destinationUrl.hash}`);
 
   await page.goto(loginUrl.href, { waitUntil: "load" });
   await page.waitForFunction(() => {
@@ -23,29 +23,14 @@ export const loginAsync = async ({ page, baseUrl, credentials, destination = "/"
   await page.getByLabel("Username").fill(credentials.username);
   await page.locator("#password").fill(credentials.password);
 
+  const destinationNavigation = page.waitForURL(
+    (url) =>
+      url.origin === destinationUrl.origin &&
+      url.pathname === destinationUrl.pathname &&
+      url.search === destinationUrl.search &&
+      url.hash === destinationUrl.hash,
+    { timeout: 60_000 },
+  );
   await page.locator("button[type='submit']").click();
-  await waitForAuthenticatedSessionAsync(page, baseUrl);
-
-  await page.goto(destinationUrl.href, { waitUntil: "domcontentloaded" });
-  const currentUrl = new URL(page.url());
-  if (currentUrl.origin !== destinationUrl.origin || currentUrl.pathname !== destinationUrl.pathname) {
-    throw new Error("Authenticated destination was not reached");
-  }
-};
-
-const waitForAuthenticatedSessionAsync = async (page: Page, baseUrl: string) => {
-  const sessionUrl = new URL("/api/auth/session", baseUrl).href;
-  const deadline = Date.now() + 30_000;
-
-  while (Date.now() < deadline) {
-    const response = await page.request.get(sessionUrl);
-    if (response.ok()) {
-      const session = (await response.json()) as { user?: unknown } | null;
-      if (session?.user !== undefined) return;
-    }
-
-    await page.waitForTimeout(100);
-  }
-
-  throw new Error("Authentication session was not established");
+  await destinationNavigation;
 };
