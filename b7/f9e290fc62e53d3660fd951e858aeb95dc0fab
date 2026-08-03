@@ -1,0 +1,39 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_board-navigation.ts
+  s_ed5e67d07f0a6b::t_872651378388a0 1-4
+apps/docs/docs/advanced/keyboard-shortcuts/index.mdx
+  s_ed5e67d07f0a6b::t_76ddf7cecc8f0f 9-15
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_ed5e67d07f0a6b::t_34e0ce9f450f67 7-21,324-325
+  s_ed5e67d07f0a6b::t_603a56739ff7c4 311-317,344
+  s_ed5e67d07f0a6b::t_a9ab8106555999 6,323,343,346,352,355
+  s_ed5e67d07f0a6b::t_872651378388a0 3,58,228-230,242-265,267,269-271,275,279,283-310,318-322,326-342,345,347-351,353-354,356-364,366-392
+  s_ed5e67d07f0a6b::t_76ddf7cecc8f0f 365
+apps/nextjs/src/app/[locale]/boards/(content)/_board-navigation.spec.ts
+  s_ed5e67d07f0a6b::t_872651378388a0 1-23
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_7b8a552cf9f1f8::t_2a3f4ae6bc583d 122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "b7f9e290fc62e53d3660fd951e858aeb95dc0fab",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_ed5e67d07f0a6b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb31e-8fc2-7232-825f-98dac6a849ef",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
