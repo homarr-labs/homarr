@@ -133,7 +133,11 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
     const handlePointerMove = (event: PointerEvent) => {
       const current = activeRef.current;
       if (!shiftHeldRef.current || current?.activation !== "preview") return;
-      if (event.target instanceof Element && event.target.closest(interactiveSelector)) return;
+      if (
+        event.target instanceof Element &&
+        event.target.closest(interactiveSelector)?.closest("[data-advanced-focus-surface]")
+      )
+        return;
 
       const underlyingSource = document
         .elementsFromPoint(event.clientX, event.clientY)
