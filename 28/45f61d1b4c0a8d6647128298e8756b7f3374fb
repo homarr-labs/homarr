@@ -1,0 +1,31 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_909ca8cf5b6e15::t_d8ace67d969c8f 43,227-238
+apps/nextjs/src/app/[locale]/boards/(content)/_board-navigation.spec.ts
+  s_7b8a552cf9f1f8::t_c79cfebc1eec24 1-23
+apps/nextjs/src/app/[locale]/boards/(content)/_board-navigation.ts
+  s_7b8a552cf9f1f8::t_60a326d677579c 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "2845f61d1b4c0a8d6647128298e8756b7f3374fb",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
