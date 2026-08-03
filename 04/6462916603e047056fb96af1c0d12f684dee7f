@@ -1,0 +1,19 @@
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_df3f69d80d46f0::t_5489045a13d908 173-175
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "046462916603e047056fb96af1c0d12f684dee7f",
+  "prompts": {},
+  "sessions": {
+    "s_df3f69d80d46f0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fc834-919f-7140-b8db-29afe4e079af",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
