@@ -1,0 +1,19 @@
+e2e/custom-widgets-custom-jsx.spec.ts
+  s_a570dbe25d2998::t_09fc002a3baa88 48,50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "366ec6bdbc1614731e476b16bdb0d026264a6d3a",
+  "prompts": {},
+  "sessions": {
+    "s_a570dbe25d2998": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc64-228f-7723-a9d8-e1cd6d8945fa",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
