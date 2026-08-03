@@ -35,16 +35,8 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
     // Some providers send a single group as a string instead of an array — normalize it.
     const oidcGroups = profile && groupsKey in profile ? profile[groupsKey] : undefined;
     const normalizedOidcGroups =
-      oidcGroups !== undefined
-        ? Array.isArray(oidcGroups)
-          ? oidcGroups
-          : [oidcGroups]
-        : undefined;
-    if (
-      !env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT &&
-      dbUser.provider === "oidc" &&
-      normalizedOidcGroups !== undefined
-    ) {
+      oidcGroups !== undefined ? (Array.isArray(oidcGroups) ? oidcGroups : [oidcGroups]) : undefined;
+    if (!env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT && dbUser.provider === "oidc" && normalizedOidcGroups !== undefined) {
       logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(normalizedOidcGroups)}`);
       await synchronizeGroupsWithExternalForUserAsync(db, user.id, normalizedOidcGroups as string[]);
     }
