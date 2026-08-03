@@ -3,7 +3,7 @@
 import { mediaRequestSearchEvent, spotlightActions } from "./spotlight-store";
 
 export { Spotlight } from "./components/spotlight";
-export { openSpotlight, openMediaRequestSearch };
+export { closeSpotlight, openSpotlight, openMediaRequestSearch };
 export {
   SpotlightProvider,
   useRegisterSpotlightContextResults,
@@ -11,6 +11,7 @@ export {
 } from "./modes/home/context";
 
 const openSpotlight = spotlightActions.open;
+const closeSpotlight = spotlightActions.close;
 
 export interface OpenMediaRequestSearchOptions {
   integrationIds?: string[];
