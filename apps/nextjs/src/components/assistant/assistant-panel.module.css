@@ -572,6 +572,31 @@
   background: var(--mantine-color-yellow-light);
 }
 
+.pendingQuestionDock {
+  flex: 0 1 auto;
+  max-height: min(22rem, 50cqh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.65rem 0.75rem 0.35rem;
+  border-top: 1px solid var(--mantine-color-default-border);
+  background: var(--mantine-color-body);
+}
+
+.pendingQuestionTarget {
+  width: 100%;
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.pendingQuestionTarget .humanTool {
+  margin-block: 0;
+}
+
+.pendingQuestionDock + .composerWrap {
+  padding-top: 0.35rem;
+  border-top: 0;
+}
+
 .humanTool,
 .appTool {
   width: 100%;

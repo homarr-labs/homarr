@@ -21,6 +21,7 @@ import { getAssistantAffirmativeResult, getAssistantAskUserOptionKind } from "./
 import { useAssistantAutomaticAction } from "./assistant-auto-approval";
 import { AssistantAutomaticActionProgress } from "./assistant-automatic-action-progress";
 import classes from "./assistant-panel.module.css";
+import { AssistantPendingQuestionPortal } from "./assistant-question-portal";
 import { hasCompleteAssistantToolArguments, hasFailedAssistantToolArguments } from "./assistant-human-tool-status";
 import { normalizeAssistantAppIconUrl } from "./assistant-tool-contracts";
 import type { AskUserArgs, AskUserResult, ConfigureAppArgs } from "./assistant-tool-contracts";
@@ -101,17 +102,25 @@ export const AssistantAskUserTool = ({
 
   if (!hasCompleteAssistantToolArguments(status)) {
     return (
-      <Box className={classes.humanTool} aria-label={t("preparing")}>
-        <Stack gap="xs">
-          <Skeleton height={18} width="62%" />
-          <Skeleton height={52} />
-          <Skeleton height={52} />
-        </Stack>
-      </Box>
+      <AssistantPendingQuestionPortal>
+        <Box className={classes.humanTool} aria-label={t("preparing")}>
+          <Stack gap="xs">
+            <Skeleton height={18} width="62%" />
+            <Skeleton height={52} />
+            <Skeleton height={52} />
+          </Stack>
+        </Box>
+      </AssistantPendingQuestionPortal>
     );
   }
 
-  if (!args?.question || options.length < 2) return <AssistantHumanToolError />;
+  if (!args?.question || options.length < 2) {
+    return (
+      <AssistantPendingQuestionPortal>
+        <AssistantHumanToolError />
+      </AssistantPendingQuestionPortal>
+    );
+  }
 
   const submitResult = (answer: AskUserResult) => {
     if (submitting) return;
@@ -126,128 +135,130 @@ export const AssistantAskUserTool = ({
   };
 
   return (
-    <Box className={classes.humanTool}>
-      <Group align="flex-start" wrap="nowrap" gap="sm">
-        <ThemeIcon size="lg" radius="xl" variant="light" color="red">
-          <IconMessageQuestion size={18} />
-        </ThemeIcon>
-        <Box flex={1} miw={0}>
-          <Text fw={700} className={classes.humanToolQuestion}>
-            {args.question}
-          </Text>
-          {args.description && (
-            <Text size="sm" c="dimmed" mt={3}>
-              {args.description}
+    <AssistantPendingQuestionPortal>
+      <Box className={classes.humanTool}>
+        <Group align="flex-start" wrap="nowrap" gap="sm">
+          <ThemeIcon size="lg" radius="xl" variant="light" color="red">
+            <IconMessageQuestion size={18} />
+          </ThemeIcon>
+          <Box flex={1} miw={0}>
+            <Text fw={700} className={classes.humanToolQuestion}>
+              {args.question}
             </Text>
-          )}
-        </Box>
-      </Group>
+            {args.description && (
+              <Text size="sm" c="dimmed" mt={3}>
+                {args.description}
+              </Text>
+            )}
+          </Box>
+        </Group>
 
-      <Stack gap="xs" mt="md">
-        {autoConfirming ? (
-          <AssistantAutomaticActionProgress label={t("automaticAffirmative")} />
-        ) : (
-          options.map((option, index) => {
-            const kind = getAssistantAskUserOptionKind(option);
-            const icon =
-              kind === "affirmative" ? (
-                <IconCheck size={17} />
-              ) : kind === "negative" ? (
-                <IconX size={17} />
-              ) : (
-                <IconArrowRight size={17} />
+        <Stack gap="xs" mt="md">
+          {autoConfirming ? (
+            <AssistantAutomaticActionProgress label={t("automaticAffirmative")} />
+          ) : (
+            options.map((option, index) => {
+              const kind = getAssistantAskUserOptionKind(option);
+              const icon =
+                kind === "affirmative" ? (
+                  <IconCheck size={17} />
+                ) : kind === "negative" ? (
+                  <IconX size={17} />
+                ) : (
+                  <IconArrowRight size={17} />
+                );
+              const color = kind === "affirmative" ? "green" : kind === "negative" ? "red" : "gray";
+
+              return (
+                <Button
+                  key={`${option.id}:${index}`}
+                  className={classes.humanToolOption}
+                  variant={kind === "alternative" ? "default" : "light"}
+                  color={color}
+                  size="md"
+                  fullWidth
+                  justify="space-between"
+                  leftSection={icon}
+                  rightSection={
+                    <Badge variant="light" color={color} size="xs">
+                      {t(`optionKind.${kind}`)}
+                    </Badge>
+                  }
+                  disabled={submitting}
+                  onClick={() =>
+                    submitResult({ answer: option.label, optionId: option.id, optionKind: kind, source: "option" })
+                  }
+                >
+                  <Box ta="start">
+                    <Text component="span" size="sm" fw={650}>
+                      {option.label}
+                    </Text>
+                    {option.description && (
+                      <Text component="span" display="block" size="xs" c="dimmed" fw={400}>
+                        {option.description}
+                      </Text>
+                    )}
+                  </Box>
+                </Button>
               );
-            const color = kind === "affirmative" ? "green" : kind === "negative" ? "red" : "gray";
+            })
+          )}
 
-            return (
+          {!autoConfirming &&
+            args.allowOther !== false &&
+            (showOther ? (
+              <Group align="flex-end" gap="xs" wrap="nowrap">
+                <TextInput
+                  ref={otherInputRef}
+                  className={classes.humanToolOtherInput}
+                  value={other}
+                  onChange={(event) => setOther(event.currentTarget.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+                      event.preventDefault();
+                      submitOther();
+                    }
+                  }}
+                  label={t("otherLabel")}
+                  placeholder={t("otherPlaceholder")}
+                />
+                <Button size="md" onClick={submitOther} disabled={!other.trim() || submitting} loading={submitting}>
+                  {t("submit")}
+                </Button>
+                <Button
+                  size="md"
+                  variant="default"
+                  px="sm"
+                  aria-label={t("cancelOther")}
+                  onClick={() => {
+                    setShowOther(false);
+                    setOther("");
+                  }}
+                >
+                  <IconX size={17} />
+                </Button>
+              </Group>
+            ) : (
               <Button
-                key={`${option.id}:${index}`}
                 className={classes.humanToolOption}
-                variant={kind === "alternative" ? "default" : "light"}
-                color={color}
+                variant="default"
                 size="md"
                 fullWidth
-                justify="space-between"
-                leftSection={icon}
+                leftSection={<IconPencil size={17} />}
                 rightSection={
-                  <Badge variant="light" color={color} size="xs">
-                    {t(`optionKind.${kind}`)}
+                  <Badge variant="light" color="gray" size="xs">
+                    {t("optionKind.custom")}
                   </Badge>
                 }
-                disabled={submitting}
-                onClick={() =>
-                  submitResult({ answer: option.label, optionId: option.id, optionKind: kind, source: "option" })
-                }
+                justify="flex-start"
+                onClick={() => setShowOther(true)}
               >
-                <Box ta="start">
-                  <Text component="span" size="sm" fw={650}>
-                    {option.label}
-                  </Text>
-                  {option.description && (
-                    <Text component="span" display="block" size="xs" c="dimmed" fw={400}>
-                      {option.description}
-                    </Text>
-                  )}
-                </Box>
+                {t("other")}
               </Button>
-            );
-          })
-        )}
-
-        {!autoConfirming &&
-          args.allowOther !== false &&
-          (showOther ? (
-            <Group align="flex-end" gap="xs" wrap="nowrap">
-              <TextInput
-                ref={otherInputRef}
-                className={classes.humanToolOtherInput}
-                value={other}
-                onChange={(event) => setOther(event.currentTarget.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && !event.nativeEvent.isComposing) {
-                    event.preventDefault();
-                    submitOther();
-                  }
-                }}
-                label={t("otherLabel")}
-                placeholder={t("otherPlaceholder")}
-              />
-              <Button size="md" onClick={submitOther} disabled={!other.trim() || submitting} loading={submitting}>
-                {t("submit")}
-              </Button>
-              <Button
-                size="md"
-                variant="default"
-                px="sm"
-                aria-label={t("cancelOther")}
-                onClick={() => {
-                  setShowOther(false);
-                  setOther("");
-                }}
-              >
-                <IconX size={17} />
-              </Button>
-            </Group>
-          ) : (
-            <Button
-              className={classes.humanToolOption}
-              variant="default"
-              size="md"
-              fullWidth
-              leftSection={<IconPencil size={17} />}
-              rightSection={
-                <Badge variant="light" color="gray" size="xs">
-                  {t("optionKind.custom")}
-                </Badge>
-              }
-              justify="flex-start"
-              onClick={() => setShowOther(true)}
-            >
-              {t("other")}
-            </Button>
-          ))}
-      </Stack>
-    </Box>
+            ))}
+        </Stack>
+      </Box>
+    </AssistantPendingQuestionPortal>
   );
 };
 
