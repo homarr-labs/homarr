@@ -1,4 +1,4 @@
-import { ResponseError } from "@homarr/common/server";
+import { ParseError, ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -163,7 +163,18 @@ export class BeszelIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as BeszelAuthResponse;
+    let data: BeszelAuthResponse;
+    try {
+      data = (await response.json()) as BeszelAuthResponse;
+    } catch (error) {
+      logger.warn("Failed to parse Beszel auth response JSON", {
+        integrationId: this.integration.id,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      throw new ErrorWithMetadata("Beszel authentication response was not valid JSON", {
+        integrationId: this.integration.id,
+      });
+    }
     const expiresAt = parseTokenExpiration(data.token) ?? undefined;
 
     // A token that has already lapsed by the time it reaches us means our clock and Beszel's
@@ -608,7 +619,15 @@ export class BeszelIntegration extends Integration {
       return TestConnectionError.StatusResult({ status: response.status, url: response.url });
     }
 
-    const data = (await response.json()) as BeszelAuthResponse;
+    let data: BeszelAuthResponse;
+    try {
+      data = (await response.json()) as BeszelAuthResponse;
+    } catch (error) {
+      logger.warn("Failed to parse Beszel testing response JSON", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return TestConnectionError.ParseResult(new ParseError("Beszel testing response was not valid JSON"));
+    }
     if (!data.token) {
       return TestConnectionError.UnauthorizedResult(401);
     }

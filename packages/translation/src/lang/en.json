@@ -5272,7 +5272,18 @@
               "toggleBoardEdit": "Toggle board edit mode",
               "toggleColorScheme": "Toggle light/dark mode",
               "saveNotebook": "Save notebook (only inside notebook widget)",
-              "openSpotlight": "Open search"
+              "openSpotlight": "Open search",
+              "nextBoard": "Switch to next board",
+              "previousBoard": "Switch to previous board",
+              "switchBoard1": "Switch to first board",
+              "switchBoard2": "Switch to second board",
+              "switchBoard3": "Switch to third board",
+              "switchBoard4": "Switch to fourth board",
+              "switchBoard5": "Switch to fifth board",
+              "switchBoard6": "Switch to sixth board",
+              "switchBoard7": "Switch to seventh board",
+              "switchBoard8": "Switch to eighth board",
+              "switchBoard9": "Switch to ninth board"
             },
             "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }

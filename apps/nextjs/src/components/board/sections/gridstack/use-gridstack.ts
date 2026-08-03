@@ -319,9 +319,24 @@ const useCssVariableConfiguration = ({
   columnCount,
   isDynamic,
 }: UseCssVariableConfiguration) => {
+  const prevWidthRef = useRef<number | null>(null);
+
   const onResize = useCallback(() => {
     if (!wrapperRef.current) return;
     if (!gridRef.current) return;
+
+    const currentWidth = wrapperRef.current.clientWidth;
+    const prevWidth = prevWidthRef.current;
+
+    // Only recalculate if the width change is significant enough (> 20px)
+    // This prevents infinite feedback loops when the vertical scrollbar
+    // appears/disappears, causing clientWidth to oscillate by ~15px
+    if (prevWidth !== null && Math.abs(currentWidth - prevWidth) < 20) {
+      return;
+    }
+
+    prevWidthRef.current = currentWidth;
+
     handleResizeChange(
       wrapperRef.current,
       gridRef.current,

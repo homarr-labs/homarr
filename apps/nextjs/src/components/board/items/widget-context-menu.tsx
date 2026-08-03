@@ -170,6 +170,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
 
   if (!session) return <>{children}</>;
   if (!isRightClickEnabled) return <>{children}</>;
+  if (item.kind === "app") return <>{children}</>;
 
   const visibleWidgetActions = widgetContextActions.filter((a) => !a.hidden);
 
