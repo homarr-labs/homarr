@@ -104,7 +104,6 @@ export const releasesRouter = createTRPCRouter({
               id: repositoryId,
               provider: repository.provider,
               timestamp: response.timestamp,
-              success: true as const,
               ...response.data,
             };
           } catch (error) {
