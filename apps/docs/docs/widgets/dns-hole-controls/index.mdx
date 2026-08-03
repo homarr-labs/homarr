@@ -20,7 +20,7 @@ import { technitiumDnsIntegration } from "@site/docs/integrations/technitium-dns
 
 <WidgetHeader widget={dnsHoleControlsWidget} categories={["DNS Hole"]} />
 
-This widget lets permitted users enable, disable, or temporarily pause one or more DNS services. It shares the summary query and cache with DNS Hole Summary. Advanced view exposes every selected source, while compact layouts reduce controls according to both widget width and height.
+This widget lets permitted users enable, disable, or temporarily pause one or more DNS services. It shares the summary query and cache with DNS Hole Summary. Every selected source stays available in the normal scrollable view, while cards and controls adapt to the widget&apos;s width and height.
 
 ### Screenshots
 
@@ -53,7 +53,7 @@ import smallSize from "./img/small.png";
 - Apply an action to all available services from the top action row. Homarr keeps successful results visible and reports how many sources failed.
 - Interaction controls only appear when the current user has permission for that integration.
 
-<WidgetInteractionGuide />
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

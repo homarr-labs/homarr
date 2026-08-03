@@ -26,8 +26,10 @@ import type { MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/typ
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
-import { setWidgetRuntimeQueries } from "../definition";
+import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
 import type { MediaMissingTab } from "./tabs";
@@ -39,18 +41,20 @@ export default function MediaMissingWidget({
   width,
   height,
   displayMode,
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"mediaMissing">) {
   const t = useScopedI18n("widget.mediaMissing");
   const isAdvanced = displayMode === "advanced";
   const pageSize = isAdvanced ? Math.max(Number(options.pageSize), 50) : Number(options.pageSize);
   const input = { integrationIds, pageSize };
-  setWidgetRuntimeQueries(widgetStateRef, [getQueryKey(clientApi.widget.mediaOrganizer.getData, input, "query")]);
-  const { data } = clientApi.widget.mediaOrganizer.getData.useQuery(input, {
-    staleTime: 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  useWidgetRuntimeQueries(widgetRuntimeRef, [getQueryKey(clientApi.widget.mediaOrganizer.getData, input, "query")]);
+  const data = getUsableWidgetQueryData(
+    clientApi.widget.mediaOrganizer.getData.useQuery(input, {
+      staleTime: 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }),
+  );
   const [selectedTab, setSelectedTab] = useState<MediaMissingTab>(options.showMissing ? "missing" : "queued");
   const activeTab = resolveMediaMissingTab(selectedTab, options.showMissing, options.showQueued);
 
@@ -109,7 +113,7 @@ export default function MediaMissingWidget({
   const partialFailures = failedIntegrations.length > 0 && (
     <Group gap={4} p={4} wrap="wrap">
       {failedIntegrations.map((entry) => (
-        <Tooltip key={entry.integrationId} label={entry.error} multiline maw={360}>
+        <Tooltip key={entry.integrationId} label={`${entry.integrationName}: ${t("name")}`}>
           <Badge size="xs" color="red" variant="light">
             {entry.integrationName}
           </Badge>
@@ -284,20 +288,23 @@ const CardShell = ({
   item: MissingMediaItem | QueuedMediaItem;
   density: Density;
   children: ReactNode;
-}) => (
-  <Paper
-    className={classes.card}
-    component="a"
-    href={item.link}
-    target="_blank"
-    rel="noreferrer"
-    radius="sm"
-    p="xs"
-    h={CARD_HEIGHT[density]}
-  >
-    <div className={classes.content}>{children}</div>
-  </Paper>
-);
+}) => {
+  const href = getSafeApplicationUrl(item.link);
+  return (
+    <Paper
+      className={classes.card}
+      component={href ? "a" : "div"}
+      href={href}
+      target={href ? "_blank" : undefined}
+      rel={href ? SAFE_NEW_TAB_REL : undefined}
+      radius="sm"
+      p="xs"
+      h={CARD_HEIGHT[density]}
+    >
+      <div className={classes.content}>{children}</div>
+    </Paper>
+  );
+};
 
 const MediaCard = ({ item, density }: { item: MissingMediaItem | QueuedMediaItem; density: Density }) => {
   const isQueued = "percentComplete" in item;

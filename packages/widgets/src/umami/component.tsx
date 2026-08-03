@@ -7,7 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { setWidgetRuntimeQueries } from "../definition";
+import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { UmamiContent } from "./umami-content";
 
 export default function UmamiWidget({
@@ -16,13 +16,8 @@ export default function UmamiWidget({
   width,
   height,
   displayMode = "compact",
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"umami">) {
-  if (!options.websiteId || options.websiteId.trim() === "") {
-    setWidgetRuntimeQueries(widgetStateRef, []);
-    return <NoWebsiteConfigured />;
-  }
-
   const integrationId = integrationIds[0] ?? "";
   const commonTopInput = {
     integrationId,
@@ -30,39 +25,51 @@ export default function UmamiWidget({
     timeFrame: options.timeFrame,
     limit: options.topCount,
   };
-  setWidgetRuntimeQueries(widgetStateRef, [
-    getQueryKey(
-      clientApi.widget.umami.getVisitorStats,
-      {
-        integrationIds,
-        websiteId: options.websiteId,
-        timeFrame: options.timeFrame,
-        eventName: options.eventName || undefined,
-      },
-      "query",
-    ),
-    getQueryKey(clientApi.widget.umami.getActiveVisitors, { integrationId, websiteId: options.websiteId }, "query"),
-    ...(options.viewMode === "events" && options.eventNames.length > 0
+  const hasWebsite = Boolean(options.websiteId?.trim());
+  useWidgetRuntimeQueries(
+    widgetRuntimeRef,
+    hasWebsite
       ? [
           getQueryKey(
-            clientApi.widget.umami.getMultiEventTimeSeries,
+            clientApi.widget.umami.getVisitorStats,
             {
-              integrationId,
+              integrationIds,
               websiteId: options.websiteId,
               timeFrame: options.timeFrame,
-              eventNames: [...options.eventNames].toSorted(),
+              eventName: options.eventName || undefined,
             },
             "query",
           ),
+          getQueryKey(
+            clientApi.widget.umami.getActiveVisitors,
+            { integrationId, websiteId: options.websiteId },
+            "query",
+          ),
+          ...(options.viewMode === "events" && options.eventNames.length > 0
+            ? [
+                getQueryKey(
+                  clientApi.widget.umami.getMultiEventTimeSeries,
+                  {
+                    integrationId,
+                    websiteId: options.websiteId,
+                    timeFrame: options.timeFrame,
+                    eventNames: [...options.eventNames].toSorted(),
+                  },
+                  "query",
+                ),
+              ]
+            : []),
+          ...(displayMode === "advanced" || options.viewMode === "topPages"
+            ? [getQueryKey(clientApi.widget.umami.getTopPages, commonTopInput, "query")]
+            : []),
+          ...(displayMode === "advanced" || options.viewMode === "topReferrers"
+            ? [getQueryKey(clientApi.widget.umami.getTopReferrers, commonTopInput, "query")]
+            : []),
         ]
-      : []),
-    ...(displayMode === "advanced" || options.viewMode === "topPages"
-      ? [getQueryKey(clientApi.widget.umami.getTopPages, commonTopInput, "query")]
-      : []),
-    ...(displayMode === "advanced" || options.viewMode === "topReferrers"
-      ? [getQueryKey(clientApi.widget.umami.getTopReferrers, commonTopInput, "query")]
-      : []),
-  ]);
+      : [],
+  );
+
+  if (!hasWebsite) return <NoWebsiteConfigured />;
 
   return (
     <UmamiContent

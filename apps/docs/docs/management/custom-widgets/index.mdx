@@ -50,6 +50,16 @@ To create a custom widget, navigate to the **Custom Widgets** section in the man
 | **Action Button**    | Clickable button executing the API request           | Triggers: restart, clear cache           |
 | **Custom JSX**       | Custom JSX template with Mantine v9 components       | Full layout control                      |
 
+## Security and permissions
+
+Custom widget definitions, endpoint details, authentication settings, and secrets are managed by administrators.
+Board editors can select an enabled definition without receiving its endpoint or credentials, while board viewers only
+receive the rendered widget data they are allowed to view. **Action Button** requests are administrator-only.
+
+Custom API requests accept HTTP and HTTPS endpoints without URL-embedded credentials. Redirects are rejected, requests
+time out after 10 seconds, and responses are limited to 2 MiB. Detailed upstream errors stay in the server logs; the
+dashboard only shows a generic failure.
+
 ### AI-Powered JSX Generation
 
 When editing or creating a custom widget with the **Custom JSX** display type, you'll find a **Copy Prompt** button. Clicking it copies a pre-formatted prompt describing your widget's name, API endpoint, and available Mantine components. Paste this into your preferred AI assistant (ChatGPT, Claude, Copilot, etc.) to generate a JSX template tailored to your data.

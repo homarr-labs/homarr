@@ -25,6 +25,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import classes from "./component.module.css";
 
@@ -63,10 +64,13 @@ export default function MediaServerWidget({
   isEditMode,
   displayMode,
 }: WidgetComponentProps<"mediaServer">) {
-  const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
-    integrationIds,
-    showOnlyPlaying: options.showOnlyPlaying,
-  });
+  const currentStreams =
+    getUsableWidgetQueryData(
+      clientApi.widget.mediaServer.getCurrentStreams.useQuery({
+        integrationIds,
+        showOnlyPlaying: options.showOnlyPlaying,
+      }),
+    ) ?? [];
 
   const t = useScopedI18n("widget.mediaServer");
   const isAdvanced = displayMode === "advanced";
@@ -149,7 +153,7 @@ export default function MediaServerWidget({
                   value={progressPercent}
                   size={4}
                   color={isPaused ? "yellow" : "green"}
-                  style={{ backgroundColor: "rgba(255, 255, 255, 0.15)" }}
+                  style={{ backgroundColor: "var(--mantine-color-default-border)" }}
                 />
               )}
             </Stack>

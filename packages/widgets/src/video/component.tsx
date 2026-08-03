@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Anchor, Badge, Box, Center, Group, Stack, Title } from "@mantine/core";
+import { Anchor, Box, Center, Group, Stack, Title } from "@mantine/core";
 import { IconBrandYoutube, IconDeviceCctvOff } from "@tabler/icons-react";
 import videojs from "video.js";
 
@@ -16,7 +16,7 @@ import type Player from "video.js/dist/types/player";
 
 import { createDocumentationLink } from "@homarr/definitions";
 
-export default function VideoWidget({ options, isEditMode, displayMode }: WidgetComponentProps<"video">) {
+export default function VideoWidget({ options, isEditMode }: WidgetComponentProps<"video">) {
   if (options.feedUrl.trim() === "") {
     return <NoUrl />;
   }
@@ -25,7 +25,7 @@ export default function VideoWidget({ options, isEditMode, displayMode }: Widget
     return <ForYoutubeUseIframe />;
   }
 
-  return <Feed options={options} isEditMode={isEditMode} isAdvanced={displayMode === "advanced"} />;
+  return <Feed options={options} isEditMode={isEditMode} />;
 }
 
 export const isYouTubeUrl = (value: string): boolean => {
@@ -64,11 +64,7 @@ const ForYoutubeUseIframe = () => {
   );
 };
 
-const Feed = ({
-  options,
-  isEditMode,
-  isAdvanced,
-}: Pick<WidgetComponentProps<"video">, "options"> & { isEditMode: boolean; isAdvanced: boolean }) => {
+const Feed = ({ options, isEditMode }: Pick<WidgetComponentProps<"video">, "options"> & { isEditMode: boolean }) => {
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Player>(null);
 
@@ -111,8 +107,8 @@ const Feed = ({
 
   useEffect(() => {
     if (!playerRef.current) return;
-    playerRef.current.controls(!isEditMode && (options.hasControls || isAdvanced));
-  }, [isAdvanced, isEditMode, options.hasControls]);
+    playerRef.current.controls(!isEditMode && options.hasControls);
+  }, [isEditMode, options.hasControls]);
 
   useEffect(() => {
     const player = playerRef.current;
@@ -128,19 +124,6 @@ const Feed = ({
   return (
     <Group justify="center" w="100%" h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
       <Box w="100%" h="100%" ref={videoRef} />
-      {isAdvanced && (
-        <Badge pos="absolute" top={8} left={8} variant="filled" color="dark" maw="calc(100% - 16px)">
-          {getVideoHost(options.feedUrl)}
-        </Badge>
-      )}
     </Group>
   );
-};
-
-const getVideoHost = (value: string) => {
-  try {
-    return new URL(value).host;
-  } catch {
-    return value;
-  }
 };

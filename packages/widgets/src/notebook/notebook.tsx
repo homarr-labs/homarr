@@ -97,7 +97,6 @@ export function Notebook({
   isEditMode,
   boardId,
   itemId,
-  displayMode,
   height,
 }: WidgetComponentProps<"notebook">) {
   const [content, setContent] = useState(options.content);
@@ -146,8 +145,8 @@ export function Notebook({
         previousContentRef.current = contentUpdate;
         setOptions({ newOptions: { content: contentUpdate } });
         return true;
-      } catch (error) {
-        setSaveError(error instanceof Error ? error.message : t("widget.notebook.saveFailed"));
+      } catch {
+        setSaveError(t("widget.notebook.saveFailed"));
         return false;
       } finally {
         savingRef.current = false;
@@ -366,7 +365,7 @@ export function Notebook({
           },
           content: {
             backgroundColor: "transparent",
-            padding: height < 120 && displayMode !== "advanced" ? "0.25rem" : "0.5rem",
+            padding: height < 120 ? "0.25rem" : "0.5rem",
             height: "100%",
           },
           typographyStylesProvider: {
@@ -376,8 +375,9 @@ export function Notebook({
       >
         <RichTextEditor.Toolbar
           style={{
-            display:
-              isEditing && !isSaving && options.showToolbar === true && displayMode === "advanced" ? "flex" : "none",
+            display: isEditing && !isSaving && options.showToolbar === true ? "flex" : "none",
+            maxHeight: height < 180 ? "4.5rem" : "10rem",
+            overflowY: "auto",
           }}
         >
           <RichTextEditor.ControlsGroup>
@@ -505,8 +505,8 @@ export function Notebook({
           <RichTextEditor.Content />
         </ScrollArea>
       </RichTextEditor>
-      {displayMode === "advanced" && (
-        <Group pos="absolute" bottom={4} right={8} gap="xs">
+      {(saveError || height >= 180) && (
+        <Group pos="absolute" bottom={4} right={8} gap="xs" style={{ pointerEvents: saveError ? undefined : "none" }}>
           {saveError && (
             <Tooltip label={saveError} multiline>
               <Text
@@ -521,16 +521,18 @@ export function Notebook({
               </Text>
             </Tooltip>
           )}
-          <Text size="xs" c="dimmed">
-            {t("widget.notebook.documentStats", documentStats)}
-          </Text>
+          {height >= 180 && (
+            <Text size="xs" c="dimmed">
+              {t("widget.notebook.documentStats", documentStats)}
+            </Text>
+          )}
         </Group>
       )}
       {canChange && (
         <Stack pos="absolute" top={7} right={7} gap={7} style={{ zIndex: 1 }}>
           <ActionIcon
             className={`homarr-notebook-action ${actionTargetClasses.root}`}
-            data-visible={isEditing || displayMode === "advanced" || undefined}
+            data-visible={isEditing || undefined}
             title={isEditing ? t("common.action.save") : t("common.action.edit")}
             aria-label={isEditing ? t("common.action.save") : t("common.action.edit")}
             color={primaryColor}

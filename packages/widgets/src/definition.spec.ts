@@ -1,19 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { getQueryKey } from "@trpc/react-query";
-
-import { clientApi } from "@homarr/api/client";
-
 import { definition as appDefinition } from "./app";
 import { definition as beszelSystemGridDefinition } from "./beszel-system-grid";
 import { definition as beszelSystemTableDefinition } from "./beszel-system-table";
-import {
-  getWidgetQueryKeys,
-  getWidgetRuntimeQueries,
-  setWidgetRuntimeQueries,
-  supportsAdvancedFocus,
-} from "./definition";
-
-const togglePolling = () => undefined;
+import { getWidgetQueryKeys, supportsAdvancedFocus } from "./definition";
 
 describe("getWidgetQueryKeys", () => {
   test("falls back to the widget router namespace", () => {
@@ -31,17 +20,6 @@ describe("getWidgetQueryKeys", () => {
     ] as const;
 
     expect(getWidgetQueryKeys({ kind: "audioStats", queryKeys })).toBe(queryKeys);
-  });
-
-  test("registers runtime queries without replacing imperative widget actions", () => {
-    const widgetStateRef = { current: { togglePolling } };
-    const input = { integrationIds: [], month: 7, year: 2026, releaseType: [], showUnmonitored: false };
-    const queryKey = getQueryKey(clientApi.widget.calendar.findAllEvents, input, "query");
-
-    setWidgetRuntimeQueries(widgetStateRef, [queryKey]);
-
-    expect(widgetStateRef.current.togglePolling).toBe(togglePolling);
-    expect(getWidgetRuntimeQueries(widgetStateRef)).toEqual([{ path: ["widget", "calendar", "findAllEvents"], input }]);
   });
 });
 

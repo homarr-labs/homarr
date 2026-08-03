@@ -25,7 +25,8 @@ import type { TablerIcon } from "@homarr/ui";
 import { views } from ".";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
-import { setWidgetRuntimeQueries } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
+import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { HealthCheckStatus } from "./health-check-status";
 import { QueuePanel } from "./panels/queue.panel";
 import { StatisticsPanel } from "./panels/statistics.panel";
@@ -47,7 +48,7 @@ export default function MediaTranscodingWidget({
   width,
   height,
   displayMode,
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"mediaTranscoding">) {
   const isAdvanced = displayMode === "advanced";
   const queuePageSize = getQueuePageSize(height, isAdvanced);
@@ -62,10 +63,10 @@ export default function MediaTranscodingWidget({
     pageSize: queuePageSize,
     page: requestPagination.page,
   };
-  setWidgetRuntimeQueries(widgetStateRef, [
+  useWidgetRuntimeQueries(widgetRuntimeRef, [
     getQueryKey(clientApi.widget.mediaTranscoding.getDataAsync, input, "query"),
   ]);
-  const { data: transcodingData } = clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input);
+  const transcodingData = getUsableWidgetQueryData(clientApi.widget.mediaTranscoding.getDataAsync.useQuery(input));
 
   const [view, setView] = useState<View>(options.defaultView);
   const t = useI18n("widget.mediaTranscoding");
@@ -92,6 +93,7 @@ export default function MediaTranscodingWidget({
 
   const queuePageCount = totalQueuePages ?? 1;
   const isTiny = !isAdvanced && (width < 280 || height < 140);
+  const footerLayout = getTranscodingFooterLayout(width, height);
 
   if (isAdvanced) {
     return (
@@ -109,8 +111,15 @@ export default function MediaTranscodingWidget({
             </AdvancedPanel>
           </SimpleGrid>
         </ScrollArea>
-        <Group gap="xs" justify="space-between" wrap="nowrap">
-          <Pagination total={queuePageCount} value={queuePage} onChange={handleQueuePageChange} size="xs" />
+        <Group gap="xs" justify={queuePageCount > 1 ? "space-between" : "flex-end"} wrap="nowrap">
+          {queuePageCount > 1 && (
+            <QueuePaginationControls
+              total={queuePageCount}
+              value={queuePage}
+              onChange={handleQueuePageChange}
+              layout={footerLayout}
+            />
+          )}
           <HealthCheckStatus statistics={transcodingData.data.statistics} />
         </Group>
       </Stack>
@@ -127,7 +136,7 @@ export default function MediaTranscodingWidget({
         <StatisticsPanel statistics={transcodingData.data.statistics} />
       )}
       <Divider />
-      <Group gap="xs" mb={4} ms={4} me={8}>
+      <Group gap="xs" mb={4} ms={4} me={8} wrap="nowrap">
         <SegmentedControl
           data={views.map((value) => {
             const Icon = viewIcons[value];
@@ -135,12 +144,12 @@ export default function MediaTranscodingWidget({
               label: (
                 <Center style={{ gap: 4 }}>
                   <Icon size={12} />
-                  {isTiny ? (
-                    <VisuallyHidden>{t(`tab.${value}`)}</VisuallyHidden>
-                  ) : (
+                  {footerLayout.showTabLabels ? (
                     <Text span size="xs">
                       {t(`tab.${value}`)}
                     </Text>
+                  ) : (
+                    <VisuallyHidden>{t(`tab.${value}`)}</VisuallyHidden>
                   )}
                 </Center>
               ),
@@ -155,26 +164,27 @@ export default function MediaTranscodingWidget({
             }
           }}
           size="xs"
+          style={{ minWidth: 0, flexShrink: footerLayout.showTabLabels ? 1 : 0 }}
         />
 
-        <Group gap="xs" ml="auto">
-          {view === "queue" && (
+        <Group gap="xs" ml="auto" wrap="nowrap">
+          {view === "queue" && queuePageCount > 1 && (
             <>
-              <Pagination.Root total={queuePageCount} value={queuePage} onChange={handleQueuePageChange} size="xs">
-                <Group gap={2} justify="center">
-                  {!isTiny && <Pagination.First disabled={queuePage === 1} />}
-                  <Pagination.Previous disabled={queuePage === 1} />
-                  <Pagination.Next disabled={queuePage === queuePageCount} />
-                  {!isTiny && <Pagination.Last disabled={queuePage === queuePageCount} />}
-                </Group>
-              </Pagination.Root>
-              <Text size="xs">
-                {t("currentIndex", {
-                  start: String(transcodingData.data.queue.startIndex + 1),
-                  end: String(transcodingData.data.queue.endIndex + 1),
-                  total: String(transcodingData.data.queue.totalCount),
-                })}
-              </Text>
+              <QueuePaginationControls
+                total={queuePageCount}
+                value={queuePage}
+                onChange={handleQueuePageChange}
+                layout={footerLayout}
+              />
+              {footerLayout.showPageRange && (
+                <Text size="xs" style={{ whiteSpace: "nowrap" }}>
+                  {t("currentIndex", {
+                    start: String(transcodingData.data.queue.startIndex + 1),
+                    end: String(transcodingData.data.queue.endIndex + 1),
+                    total: String(transcodingData.data.queue.totalCount),
+                  })}
+                </Text>
+              )}
             </>
           )}
 
@@ -189,6 +199,32 @@ export const getQueuePageSize = (height: number, isAdvanced: boolean): number =>
   if (isAdvanced) return 25;
   return Math.max(3, Math.min(15, Math.floor((height - 84) / 28)));
 };
+
+export const getTranscodingFooterLayout = (width: number, height: number) => ({
+  showTabLabels: width >= 420 && height >= 160,
+  showPageEdges: width >= 360,
+  showPageItems: width >= 600,
+  showPageRange: width >= 760,
+});
+
+interface QueuePaginationControlsProps {
+  total: number;
+  value: number;
+  onChange: (page: number) => void;
+  layout: ReturnType<typeof getTranscodingFooterLayout>;
+}
+
+const QueuePaginationControls = ({ total, value, onChange, layout }: QueuePaginationControlsProps) => (
+  <Pagination.Root total={total} value={value} onChange={onChange} size="xs">
+    <Group gap={2} justify="center" wrap="nowrap">
+      {layout.showPageEdges && <Pagination.First disabled={value === 1} />}
+      <Pagination.Previous disabled={value === 1} />
+      {layout.showPageItems && <Pagination.Items />}
+      <Pagination.Next disabled={value === total} />
+      {layout.showPageEdges && <Pagination.Last disabled={value === total} />}
+    </Group>
+  </Pagination.Root>
+);
 
 interface QueuePaginationState {
   page: number;

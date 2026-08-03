@@ -11,11 +11,11 @@ import type { stringOrTranslation } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetImports } from ".";
-import type { inferOptionsFromCreator, inferOptionsFromDefinition, WidgetOptionsRecord } from "./options";
+import type { inferOptionsFromCreator, WidgetOptionsRecord } from "./options";
 
 export interface WidgetContextMenuAction {
   key: string;
-  label: stringOrTranslation;
+  label: string;
   icon?: TablerIcon;
   onClick: () => void;
   hidden?: boolean;
@@ -29,6 +29,26 @@ export interface WidgetContextMenuContext {
   itemId: string | undefined;
   canInteractWithSelectedIntegrations: boolean;
 }
+
+export interface WidgetRuntimeActions {
+  togglePolling?: () => void;
+  testAllIndexers?: () => void;
+  previousPhoto?: () => void;
+  nextPhoto?: () => void;
+  toggleSlideshow?: () => void;
+}
+
+export interface WidgetRuntimeState {
+  queries: readonly NormalizedWidgetQuery[];
+  actions: WidgetRuntimeActions;
+}
+
+export type WidgetRuntimeRef = React.MutableRefObject<WidgetRuntimeState>;
+
+export const createWidgetRuntimeState = (): WidgetRuntimeState => ({
+  queries: [],
+  actions: {},
+});
 
 export interface NormalizedWidgetQuery {
   path: readonly string[];
@@ -45,16 +65,12 @@ export interface WidgetQueryMatcherScope {
 
 export type WidgetQueryMatcher = (query: NormalizedWidgetQuery, scope: WidgetQueryMatcherScope) => boolean;
 
-export interface WidgetContextActionProps<
-  TKind extends WidgetKind,
-  TOptions extends WidgetOptionsRecord = WidgetOptionsRecord,
-> {
-  kind: TKind;
-  options: inferOptionsFromDefinition<TOptions>;
-  setOptions: (partial: Partial<inferOptionsFromDefinition<TOptions>>) => void;
+export interface WidgetContextActionProps {
+  options: Record<string, unknown>;
+  setOptions: (partial: Record<string, unknown>) => void;
   integrationIds: string[];
   context: WidgetContextMenuContext;
-  widgetStateRef: React.MutableRefObject<Record<string, unknown> | null>;
+  widgetRuntimeRef: WidgetRuntimeRef;
 }
 
 const createWithDynamicImport =
@@ -107,10 +123,11 @@ export interface WidgetDefinition {
       }
     >
   >;
-  contextActions?: (props: Omit<WidgetContextActionProps<WidgetKind>, "kind">) => WidgetContextMenuAction[];
+  contextActions?: (props: WidgetContextActionProps) => WidgetContextMenuAction[];
 }
 
-export const supportsAdvancedFocus = (definition: WidgetDefinition) => definition.supportsAdvancedFocus !== false;
+export const supportsAdvancedFocus = (definition: object) =>
+  !("supportsAdvancedFocus" in definition) || definition.supportsAdvancedFocus !== false;
 
 export const getWidgetQueryKeys = (definition: {
   kind: string;
@@ -121,8 +138,6 @@ export const getWidgetQueryKeys = (definition: {
   return [definition.queryKey ?? [["widget", definition.kind]]];
 };
 
-const runtimeQueriesStateKey = "__homarrRuntimeQueries";
-
 export const normalizeWidgetQuery = (queryKey: QueryKey): NormalizedWidgetQuery | null => {
   const path = queryKey[0];
   if (!Array.isArray(path) || !path.every((part): part is string => typeof part === "string")) return null;
@@ -132,26 +147,8 @@ export const normalizeWidgetQuery = (queryKey: QueryKey): NormalizedWidgetQuery 
   return { path, input };
 };
 
-export const setWidgetRuntimeQueries = (
-  widgetStateRef: React.MutableRefObject<Record<string, unknown> | null> | undefined,
-  queryKeys: readonly QueryKey[],
-) => {
-  if (!widgetStateRef) return;
-  // This render-time ref write is idempotent and does not trigger a render.
-  const state = widgetStateRef.current ?? {};
-  state[runtimeQueriesStateKey] = queryKeys.flatMap((queryKey) => {
-    const query = normalizeWidgetQuery(queryKey);
-    return query ? [query] : [];
-  });
-  widgetStateRef.current = state;
-};
-
-export const getWidgetRuntimeQueries = (
-  widgetStateRef: React.MutableRefObject<Record<string, unknown> | null>,
-): readonly NormalizedWidgetQuery[] => {
-  const queries = widgetStateRef.current?.[runtimeQueriesStateKey];
-  return Array.isArray(queries) ? (queries as NormalizedWidgetQuery[]) : [];
-};
+export const getWidgetRuntimeQueries = (widgetRuntimeRef: WidgetRuntimeRef): readonly NormalizedWidgetQuery[] =>
+  widgetRuntimeRef.current.queries;
 
 export const matchesWidgetRuntimeQuery: WidgetQueryMatcher = (query, scope) =>
   scope.runtimeQueries.some(
@@ -180,7 +177,7 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
   setOptions: ({ newOptions }: { newOptions: Partial<inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>> }) => void;
   width: number;
   height: number;
-  widgetStateRef?: React.MutableRefObject<Record<string, unknown> | null>;
+  widgetRuntimeRef?: WidgetRuntimeRef;
 };
 
 export type WidgetOptionsRecordOf<TKind extends WidgetKind> = WidgetImports[TKind]["definition"]["createOptions"];

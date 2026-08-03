@@ -14,7 +14,7 @@ import { stockPriceWidget } from ".";
 <WidgetHeader widget={stockPriceWidget} categories={["Finance", "Market"]} />
 
 Using the Stocks widget, you can show the current stock prices of your favorite companies on your dashboard.
-The compact view prioritizes the symbol, current price, and trend. Company name, change, and time range appear only when both the widget width and height can support them; the advanced view always shows the complete summary.
+The widget prioritizes the symbol, current price, and trend. Company name, change, time range, and a taller chart appear progressively when both widget dimensions can support them.
 
 ### Screenshots
 
@@ -34,7 +34,7 @@ import nvidia from "./img/nvidia.png";
   <img src={nvidia} alt="stock-price nvidia" width={128 * 2 + 2} height={128 * 2 + 4} />
 </div>
 
-<WidgetInteractionGuide />
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

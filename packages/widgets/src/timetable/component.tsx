@@ -1,11 +1,11 @@
 import { Alert, Badge, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
-import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import type { DynamicSelectOption } from "../_inputs/widget-dynamic-select-input";
+import { formatLocalizedTime } from "../common/locale";
 import type { WidgetComponentProps } from "../definition";
 
 export default function TimetableWidget({
@@ -55,11 +55,12 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, he
   });
   const t = useScopedI18n("widget.timetable");
   const tCommon = useScopedI18n("common");
+  const locale = useCurrentIntlLocale();
 
   if (error && timetable === undefined) throw error;
 
   const entries = timetable?.entries ?? [];
-  const staleTime = timetable ? dayjs(timetable.timestamp).format("HH:mm:ss") : undefined;
+  const staleTime = timetable ? formatLocalizedTime(timetable.timestamp, locale, { includeSeconds: true }) : undefined;
   const staleWarning = error && staleTime ? t("warning.stale", { time: staleTime }) : undefined;
   const compactStaleWarning = error && staleTime ? t("warning.staleCompact") : undefined;
   const isAdvanced = displayMode === "advanced";
@@ -104,6 +105,7 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, he
                 dense={isDense}
                 showLine={showLine}
                 showPlatform={showPlatform}
+                locale={locale}
               />
             ))
           ) : (
@@ -117,7 +119,7 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, he
       </ScrollArea>
       {displayMode === "advanced" && timetable && (
         <Text size="xs" c="dimmed" ta="right">
-          {dayjs(timetable.timestamp).format("HH:mm:ss")}
+          {formatLocalizedTime(timetable.timestamp, locale, { includeSeconds: true })}
         </Text>
       )}
     </Stack>
@@ -137,11 +139,13 @@ function DepartureRow({
   dense,
   showLine,
   showPlatform,
+  locale,
 }: {
   entry: TimetableEntryView;
   dense: boolean;
   showLine: boolean;
   showPlatform: boolean;
+  locale: string;
 }) {
   return (
     <Group justify="space-between" w="100%" wrap="nowrap">
@@ -159,7 +163,7 @@ function DepartureRow({
           </Badge>
         )}
         <Text size={dense ? "xs" : "sm"} fw={dense ? 600 : undefined} style={{ whiteSpace: "nowrap" }}>
-          {dayjs(entry.timestamp).format("HH:mm")}{" "}
+          {formatLocalizedTime(entry.timestamp, locale)}{" "}
           {entry.delay >= 1 && (
             <Text size={dense ? "xs" : "sm"} span c="red">
               +{entry.delay}&apos;

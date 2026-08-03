@@ -42,7 +42,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
       {
         onSuccess: () => {
           void utils.customWidget.all.invalidate();
-          void utils.widget.customApi.getData.invalidate({ definitionId: widget.id });
+          void utils.widget.customApi.getData.invalidate();
           void revalidatePathActionAsync("/manage/custom-widgets");
         },
         onError: () => {
@@ -103,7 +103,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
                 message: t("notification.deleted", { name: widget.name }),
               });
               void utils.customWidget.all.invalidate();
-              void utils.widget.customApi.getData.invalidate({ definitionId: widget.id });
+              void utils.widget.customApi.getData.invalidate();
               void revalidatePathActionAsync("/manage/custom-widgets");
             },
             onError: () => {

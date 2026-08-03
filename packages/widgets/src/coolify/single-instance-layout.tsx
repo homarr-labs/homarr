@@ -7,30 +7,22 @@ import { useTimeAgo } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { buildServerResourceCounts } from "./coolify-utils";
 import { ServersSection } from "./servers-section";
 import { ServicesSection } from "./services-section";
 import type { CoolifyOptions, InstanceData } from "./types";
 import { COOLIFY_BRAND_COLOR, COOLIFY_ICON_URL } from "./types";
-import { useAdvancedOpenSections } from "./use-advanced-open-sections";
 
 interface SingleInstanceLayoutProps {
   instance: InstanceData;
   options: CoolifyOptions;
   isTiny: boolean;
   widgetKey: string;
-  isAdvanced: boolean;
   hideFooter: boolean;
 }
 
-export function SingleInstanceLayout({
-  instance,
-  options,
-  isTiny,
-  widgetKey,
-  isAdvanced,
-  hideFooter,
-}: SingleInstanceLayoutProps) {
+export function SingleInstanceLayout({ instance, options, isTiny, widgetKey, hideFooter }: SingleInstanceLayoutProps) {
   const t = useScopedI18n("widget.coolify");
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${widgetKey}`,
@@ -40,16 +32,14 @@ export function SingleInstanceLayout({
     key: `coolify-sections-${widgetKey}`,
     defaultValue: ["applications"],
   });
-  const [advancedOpenSections, setAdvancedOpenSections] = useAdvancedOpenSections(options);
-
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,
     instance.instanceInfo.applications,
     instance.instanceInfo.services,
   );
 
-  const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
-  const displayUrl = baseUrl.replace(/^https?:\/\//, "");
+  const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
+  const displayUrl = baseUrl ? baseUrl.replace(/^https?:\/\//, "") : "—";
   const relativeTime = useTimeAgo(instance.updatedAt);
 
   return (
@@ -63,9 +53,10 @@ export function SingleInstanceLayout({
             </Text>
           </Group>
           <Anchor
+            component={baseUrl ? "a" : "span"}
             href={baseUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            target={baseUrl ? "_blank" : undefined}
+            rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
             fz={isTiny ? "xs" : "sm"}
             fw={500}
             c="dimmed"
@@ -75,13 +66,7 @@ export function SingleInstanceLayout({
           </Anchor>
         </Group>
 
-        <Accordion
-          variant="contained"
-          chevronPosition="right"
-          multiple
-          value={isAdvanced ? advancedOpenSections : openSections}
-          onChange={isAdvanced ? setAdvancedOpenSections : setOpenSections}
-        >
+        <Accordion variant="contained" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
           {options.showServers && (
             <ServersSection
               servers={instance.instanceInfo.servers}

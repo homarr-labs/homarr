@@ -5,31 +5,32 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
+const createOptions = () =>
+  optionsBuilder.from((factory) => ({
+    openIndexerSiteInNewTab: factory.switch({
+      defaultValue: true,
+    }),
+  }));
+
 export const { definition, componentLoader } = createWidgetDefinition("indexerManager", {
+  supportsAdvancedFocus: false,
   icon: IconReportSearch,
-  contextActions: ({ widgetStateRef, context }) => [
+  contextActions: ({ widgetRuntimeRef, context }) => [
     {
       key: "test-all-indexers",
-      label: (t) => t("widget.indexerManager.testAll"),
+      label: "widget.indexerManager.testAll",
       icon: IconTestPipe,
       disabled:
         context.isEditMode ||
         !context.canInteractWithSelectedIntegrations ||
-        typeof widgetStateRef?.current?.testAllIndexers !== "function",
+        typeof widgetRuntimeRef.current.actions.testAllIndexers !== "function",
       onClick: () => {
-        const action = widgetStateRef?.current?.testAllIndexers;
-        if (typeof action === "function") action();
+        widgetRuntimeRef.current.actions.testAllIndexers?.();
       },
     },
   ],
   refetchInterval: null,
-  createOptions() {
-    return optionsBuilder.from((factory) => ({
-      openIndexerSiteInNewTab: factory.switch({
-        defaultValue: true,
-      }),
-    }));
-  },
+  createOptions,
   supportedIntegrations: getIntegrationKindsByCategory("indexerManager"),
   errors: {
     INTERNAL_SERVER_ERROR: {

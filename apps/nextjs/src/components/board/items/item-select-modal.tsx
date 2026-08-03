@@ -33,7 +33,7 @@ export const ItemSelectModal = createModal<ItemSelectModalProps>(({ actions, inn
   const { createItem } = useItemActions();
   const { openModal: openEditModal } = useModalAction(WidgetEditModal);
   const { data: integrationData } = clientApi.integration.all.useQuery();
-  const { data: customWidgetDefs } = clientApi.customWidget.all.useQuery();
+  const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery({ boardId: innerProps.board.id });
   const settings = useSettings();
   const { updateAndPersistBoard } = usePersistBoard(innerProps.board);
 
@@ -208,7 +208,7 @@ export const ItemSelectModal = createModal<ItemSelectModalProps>(({ actions, inn
                   </Text>
                 </Group>
                 <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
-                  {def.description ?? def.url}
+                  {def.description}
                 </Text>
               </Stack>
               <Box

@@ -24,7 +24,7 @@ interface PreviewInput {
 export interface PreviewFetchResult {
   success: boolean;
   error?: string;
-  responseInfo: { status: number; statusText: string } | null;
+  responseInfo: { status: number } | null;
   rawResponse: string | null;
 }
 
@@ -93,7 +93,7 @@ export function CustomWidgetPreview({
             </Text>
             {fetchResult.responseInfo && (
               <Badge size="xs" color="red" variant="light" mt={4}>
-                {fetchResult.responseInfo.status} {fetchResult.responseInfo.statusText}
+                {fetchResult.responseInfo.status}
               </Badge>
             )}
           </Alert>
@@ -104,7 +104,7 @@ export function CustomWidgetPreview({
             {fetchResult?.success && (
               <Group gap="xs">
                 <Badge size="xs" color="green" variant="light">
-                  {fetchResult.responseInfo?.status} {fetchResult.responseInfo?.statusText}
+                  {fetchResult.responseInfo?.status}
                 </Badge>
               </Group>
             )}

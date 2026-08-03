@@ -44,7 +44,8 @@ export const hasTotalFirewallFailure = (queries: readonly FirewallQueryState[]) 
   queries.every((query) => !query.isPending && !query.isFetching) &&
   queries.every(
     (query) =>
-      query.isError || (query.data !== undefined && query.data.length > 0 && query.data.every(({ error }) => error)),
+      (query.isError && query.data === undefined) ||
+      (query.data !== undefined && query.data.length > 0 && query.data.every(({ error }) => error)),
   );
 
 export const hasFirewallPartialFailure = (firewallId: string, queries: readonly FirewallQueryState[]) =>
@@ -65,7 +66,7 @@ export default function FirewallWidget({
   const isAdvanced = displayMode === "advanced";
   const isTiny = !isAdvanced && (width < 256 || height < 180);
   const ringSize = isAdvanced ? 100 : height < 120 ? 44 : isTiny ? 64 : 100;
-  const showInterfaces = isAdvanced || height >= 120;
+  const showInterfaces = isAdvanced || (!isTiny && height >= 120);
   const t = useI18n();
 
   const handleSelect = useCallback((value: string | null) => {
@@ -174,7 +175,6 @@ export default function FirewallWidget({
                 interfacesError={interfacesQuery.isError || Boolean(interfaces?.error)}
                 hasError={hasError}
                 isAdvanced={isAdvanced}
-                isTiny={isTiny}
                 ringSize={ringSize}
                 showInterfaces={showInterfaces}
                 accordionValue={accordionValue}
@@ -205,7 +205,6 @@ interface FirewallPanelProps {
   interfacesError: boolean;
   hasError: boolean;
   isAdvanced: boolean;
-  isTiny: boolean;
   ringSize: number;
   showInterfaces: boolean;
   accordionValue: string | null;
@@ -229,7 +228,6 @@ const FirewallPanel = ({
   interfacesError,
   hasError,
   isAdvanced,
-  isTiny,
   ringSize,
   showInterfaces,
   accordionValue,
@@ -291,7 +289,6 @@ const FirewallPanel = ({
           hasResult={interfacesLoaded}
           hasError={interfacesError}
           isAdvanced={isAdvanced}
-          isTiny={isTiny}
           accordionValue={accordionValue}
           setAccordionValue={setAccordionValue}
           errorLabel={errorLabel}
@@ -317,6 +314,8 @@ const MetricRing = ({ value, icon: Icon, size, label, t }: MetricRingProps) => {
   const safeValue = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
   const status = getMetricStatus(safeValue);
   const statusLabel = t(`widget.firewall.status.${status}`);
+  const showIcon = size >= 64;
+  const showStatus = size >= 96;
 
   return (
     <RingProgress
@@ -330,9 +329,9 @@ const MetricRing = ({ value, icon: Icon, size, label, t }: MetricRingProps) => {
       thickness={size < 72 ? 4 : 8}
       label={
         <Center style={{ flexDirection: "column" }}>
-          <Text size={size < 72 ? "8px" : "xs"}>{safeValue.toFixed(1)}%</Text>
-          <Icon size={size < 72 ? 8 : 16} />
-          {size >= 72 && <Text size="8px">{statusLabel}</Text>}
+          <Text size="xs">{safeValue.toFixed(1)}%</Text>
+          {showIcon && <Icon size={size < 96 ? 12 : 16} />}
+          {showStatus && <Text size="xs">{statusLabel}</Text>}
         </Center>
       }
       sections={[
@@ -356,7 +355,6 @@ interface InterfacesPanelProps {
   hasResult: boolean;
   hasError: boolean;
   isAdvanced: boolean;
-  isTiny: boolean;
   accordionValue: string | null;
   setAccordionValue: (value: string | null) => void;
   errorLabel: string;
@@ -371,7 +369,6 @@ const InterfacesPanel = ({
   hasResult,
   hasError,
   isAdvanced,
-  isTiny,
   accordionValue,
   setAccordionValue,
   errorLabel,
@@ -389,9 +386,9 @@ const InterfacesPanel = ({
       variant={isAdvanced ? "contained" : "default"}
     >
       <Accordion.Item value="interfaces">
-        <Accordion.Control icon={isTiny ? null : <IconTopologyBus size={16} />}>
+        <Accordion.Control icon={<IconTopologyBus size={16} />}>
           <Group justify="space-between" wrap="nowrap" gap="xs">
-            <Text size={isTiny ? "8px" : "xs"}>{label}</Text>
+            <Text size="xs">{label}</Text>
             {hasError && (
               <Badge color="red" variant="light" size="xs">
                 {errorBadgeLabel}
@@ -402,19 +399,30 @@ const InterfacesPanel = ({
         <Accordion.Panel>
           <Stack gap={4}>
             {bandwidth.map(({ name, receive, transmit }) => (
-              <Group key={name} gap="xs" wrap={isTiny ? "wrap" : "nowrap"} justify="space-between">
-                <Text size={isTiny ? "8px" : "xs"} c="blue.3" truncate="end" style={{ flex: 1 }}>
+              <Group key={name} gap="xs" wrap="nowrap" justify="space-between">
+                <Text
+                  size="xs"
+                  c="light-dark(var(--mantine-color-blue-8), var(--mantine-color-blue-3))"
+                  truncate="end"
+                  style={{ flex: 1 }}
+                >
                   {name}
                 </Text>
                 <Group gap={4} wrap="nowrap">
-                  <IconArrowBarUp size={isTiny ? 8 : 12} color="lightgreen" />
-                  <Text size={isTiny ? "8px" : "xs"} c="green.3">
+                  <IconArrowBarUp
+                    size={12}
+                    color="light-dark(var(--mantine-color-green-8), var(--mantine-color-green-3))"
+                  />
+                  <Text size="xs" c="light-dark(var(--mantine-color-green-8), var(--mantine-color-green-3))">
                     {formatBitsPerSec(transmit, 2)}
                   </Text>
                 </Group>
                 <Group gap={4} wrap="nowrap">
-                  <IconArrowBarDown size={isTiny ? 8 : 12} color="yellow" />
-                  <Text size={isTiny ? "8px" : "xs"} c="yellow.3">
+                  <IconArrowBarDown
+                    size={12}
+                    color="light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-3))"
+                  />
+                  <Text size="xs" c="light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-3))">
                     {formatBitsPerSec(receive, 2)}
                   </Text>
                 </Group>

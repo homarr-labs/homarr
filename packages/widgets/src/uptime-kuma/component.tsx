@@ -10,6 +10,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
 import { aggregateUptimeKumaDashboards } from "./aggregate";
@@ -127,7 +128,7 @@ interface UptimeKumaContentProps {
 
 function UptimeKumaContent({ integrationIds, options, width, height, displayMode }: UptimeKumaContentProps) {
   const t = useScopedI18n("widget.uptimeKuma");
-  const { data: dashboardData } = clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds });
+  const dashboardData = getUsableWidgetQueryData(clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds }));
 
   if (!dashboardData) return <WidgetEmptyState />;
 

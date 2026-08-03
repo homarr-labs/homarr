@@ -5,7 +5,7 @@ import { radarrReleaseTypes } from "@homarr/integrations/types";
 import { calendarMonthRequestHandler } from "@homarr/request-handler/calendar";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const calendarRouter = createTRPCRouter({
@@ -52,7 +52,7 @@ export const calendarRouter = createTRPCRouter({
               name: integration.name,
               kind: integration.kind,
             },
-            error: "Integration request failed",
+            error: PUBLIC_INTEGRATION_ERROR,
           }),
           throwOnAllFailures: true,
         },

@@ -22,6 +22,8 @@ import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import classes from "./bookmark.module.css";
 
 type BookmarkLayout = WidgetComponentProps<"bookmarks">["options"]["layout"];
@@ -64,30 +66,36 @@ export default function BookmarksWidget({
   displayMode,
 }: WidgetComponentProps<"bookmarks">) {
   const board = useRequiredBoard();
-  const { data = [] } = clientApi.app.byIds.useQuery(options.items, {
-    select(apps) {
-      return apps.toSorted((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
-    },
-  });
+  const data =
+    getUsableWidgetQueryData(
+      clientApi.app.byIds.useQuery(options.items, {
+        select(apps) {
+          return apps.toSorted((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
+        },
+      }),
+    ) ?? [];
 
   useRegisterSpotlightContextResults(
     `bookmark-${itemId}`,
-    data
-      .filter((app) => app.href !== null)
-      .map((app) => ({
-        id: app.id,
-        name: app.name,
-        icon: app.iconUrl,
-        interaction() {
-          return {
-            type: "link",
-            // We checked above that app.href is defined
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            href: app.href!,
-            newTab: false,
-          };
-        },
-      })),
+    data.flatMap((app) => {
+      const href = getSafeApplicationUrl(app.href);
+      return href
+        ? [
+            {
+              id: app.id,
+              name: app.name,
+              icon: app.iconUrl,
+              interaction() {
+                return {
+                  type: "link",
+                  href,
+                  newTab: false,
+                };
+              },
+            },
+          ]
+        : [];
+    }),
     [data],
   );
 
@@ -174,47 +182,50 @@ const FlexLayout = ({
   const board = useRequiredBoard();
   return (
     <Flex direction={direction} gap={4} w="100%" mih="100%" wrap="nowrap">
-      {data.map((app) => (
-        <div key={app.id} style={{ display: "flex", flex: `1 0 ${minimumItemSize}px`, flexDirection: direction }}>
-          <UnstyledButton
-            className={classes.bookmarkButton}
-            component="a"
-            href={app.href ?? undefined}
-            target={openNewTab ? "_blank" : "_self"}
-            rel="noopener noreferrer"
-            key={app.id}
-            w="100%"
-          >
-            <Card
-              radius={board.itemRadius}
-              className={classes.card}
+      {data.map((app) => {
+        const href = getSafeApplicationUrl(app.href);
+        return (
+          <div key={app.id} style={{ display: "flex", flex: `1 0 ${minimumItemSize}px`, flexDirection: direction }}>
+            <UnstyledButton
+              className={classes.bookmarkButton}
+              component={href ? "a" : "div"}
+              href={href}
+              target={href ? (openNewTab ? "_blank" : "_self") : undefined}
+              rel={href && openNewTab ? SAFE_NEW_TAB_REL : undefined}
+              key={app.id}
               w="100%"
-              display="flex"
-              p={4}
-              h="100%"
-              withBorder={withBorder}
             >
-              {direction === "row" ? (
-                <VerticalItem
-                  app={app}
-                  hideTitle={hideTitle}
-                  hideIcon={hideIcon}
-                  hideHostname={hideHostname}
-                  hasIconColor={hasIconColor}
-                />
-              ) : (
-                <HorizontalItem
-                  app={app}
-                  hideTitle={hideTitle}
-                  hideIcon={hideIcon}
-                  hideHostname={hideHostname}
-                  hasIconColor={hasIconColor}
-                />
-              )}
-            </Card>
-          </UnstyledButton>
-        </div>
-      ))}
+              <Card
+                radius={board.itemRadius}
+                className={classes.card}
+                w="100%"
+                display="flex"
+                p={4}
+                h="100%"
+                withBorder={withBorder}
+              >
+                {direction === "row" ? (
+                  <VerticalItem
+                    app={app}
+                    hideTitle={hideTitle}
+                    hideIcon={hideIcon}
+                    hideHostname={hideHostname}
+                    hasIconColor={hasIconColor}
+                  />
+                ) : (
+                  <HorizontalItem
+                    app={app}
+                    hideTitle={hideTitle}
+                    hideIcon={hideIcon}
+                    hideHostname={hideHostname}
+                    hasIconColor={hasIconColor}
+                  />
+                )}
+              </Card>
+            </UnstyledButton>
+          </div>
+        );
+      })}
     </Flex>
   );
 };
@@ -231,12 +242,8 @@ export const getAdvancedBookmarkColumns = (width: number, itemCount: number): nu
   Math.max(1, Math.min(itemCount || 1, Math.floor(width / 280)));
 
 export const getBookmarkHostname = (href: string | null): string | undefined => {
-  if (!href) return undefined;
-  try {
-    return new URL(href).hostname;
-  } catch {
-    return href;
-  }
+  const safeHref = getSafeApplicationUrl(href);
+  return safeHref ? new URL(safeHref).hostname : undefined;
 };
 
 const AdvancedBookmarksLayout = ({
@@ -251,41 +258,44 @@ const AdvancedBookmarksLayout = ({
   return (
     <ScrollArea h="100%" style={{ flex: 1 }}>
       <SimpleGrid cols={getAdvancedBookmarkColumns(width, data.length)} spacing="sm">
-        {data.map((app) => (
-          <UnstyledButton
-            key={app.id}
-            className={classes.bookmarkButton}
-            component="a"
-            href={app.href ?? undefined}
-            target={openNewTab ? "_blank" : "_self"}
-            rel="noopener noreferrer"
-          >
-            <Card radius={board.itemRadius} className={classes.card} withBorder={withBorder} p="md" h="100%">
-              <Group align="flex-start" wrap="nowrap">
-                <MaskedOrNormalImage
-                  imageUrl={app.iconUrl}
-                  hasColor={hasIconColor}
-                  alt={app.name}
-                  className={classes.bookmarkIcon}
-                  style={{ width: 40, height: 40, flex: "0 0 auto" }}
-                />
-                <Stack gap={3} miw={0}>
-                  <Text fw={700} size="sm" truncate="end">
-                    {app.name}
-                  </Text>
-                  <Anchor component="span" size="xs" truncate="end">
-                    {getBookmarkHostname(app.href)}
-                  </Anchor>
-                  {app.description && (
-                    <Text size="xs" c="dimmed" lineClamp={3}>
-                      {app.description}
+        {data.map((app) => {
+          const href = getSafeApplicationUrl(app.href);
+          return (
+            <UnstyledButton
+              key={app.id}
+              className={classes.bookmarkButton}
+              component={href ? "a" : "div"}
+              href={href}
+              target={href ? (openNewTab ? "_blank" : "_self") : undefined}
+              rel={href && openNewTab ? SAFE_NEW_TAB_REL : undefined}
+            >
+              <Card radius={board.itemRadius} className={classes.card} withBorder={withBorder} p="md" h="100%">
+                <Group align="flex-start" wrap="nowrap">
+                  <MaskedOrNormalImage
+                    imageUrl={app.iconUrl}
+                    hasColor={hasIconColor}
+                    alt={app.name}
+                    className={classes.bookmarkIcon}
+                    style={{ width: 40, height: 40, flex: "0 0 auto" }}
+                  />
+                  <Stack gap={3} miw={0}>
+                    <Text fw={700} size="sm" truncate="end">
+                      {app.name}
                     </Text>
-                  )}
-                </Stack>
-              </Group>
-            </Card>
-          </UnstyledButton>
-        ))}
+                    <Anchor component="span" size="xs" truncate="end">
+                      {getBookmarkHostname(app.href)}
+                    </Anchor>
+                    {app.description && (
+                      <Text size="xs" c="dimmed" lineClamp={3}>
+                        {app.description}
+                      </Text>
+                    )}
+                  </Stack>
+                </Group>
+              </Card>
+            </UnstyledButton>
+          );
+        })}
       </SimpleGrid>
     </ScrollArea>
   );
@@ -327,43 +337,46 @@ const GridLayout = ({
       mih="100%"
       style={{ gridAutoRows: `minmax(${minimumItemHeight}px, 1fr)` }}
     >
-      {data.map((app) => (
-        <UnstyledButton
-          className={classes.bookmarkButton}
-          component="a"
-          href={app.href ?? undefined}
-          target={openNewTab ? "_blank" : "_self"}
-          rel="noopener noreferrer"
-          key={app.id}
-          h="100%"
-        >
-          <Card
+      {data.map((app) => {
+        const href = getSafeApplicationUrl(app.href);
+        return (
+          <UnstyledButton
+            className={classes.bookmarkButton}
+            component={href ? "a" : "div"}
+            href={href}
+            target={href ? (openNewTab ? "_blank" : "_self") : undefined}
+            rel={href && openNewTab ? SAFE_NEW_TAB_REL : undefined}
+            key={app.id}
             h="100%"
-            className={combineClasses(classes.card, classes["card-grid"])}
-            radius={board.itemRadius}
-            withBorder={withBorder}
-            p="xs"
           >
-            {itemDirection === "horizontal" ? (
-              <HorizontalItem
-                app={app}
-                hideTitle={hideTitle}
-                hideIcon={hideIcon}
-                hideHostname={hideHostname}
-                hasIconColor={hasIconColor}
-              />
-            ) : (
-              <VerticalItem
-                app={app}
-                hideTitle={hideTitle}
-                hideIcon={hideIcon}
-                hideHostname={hideHostname}
-                hasIconColor={hasIconColor}
-              />
-            )}
-          </Card>
-        </UnstyledButton>
-      ))}
+            <Card
+              h="100%"
+              className={combineClasses(classes.card, classes["card-grid"])}
+              radius={board.itemRadius}
+              withBorder={withBorder}
+              p="xs"
+            >
+              {itemDirection === "horizontal" ? (
+                <HorizontalItem
+                  app={app}
+                  hideTitle={hideTitle}
+                  hideIcon={hideIcon}
+                  hideHostname={hideHostname}
+                  hasIconColor={hasIconColor}
+                />
+              ) : (
+                <VerticalItem
+                  app={app}
+                  hideTitle={hideTitle}
+                  hideIcon={hideIcon}
+                  hideHostname={hideHostname}
+                  hasIconColor={hasIconColor}
+                />
+              )}
+            </Card>
+          </UnstyledButton>
+        );
+      })}
     </SimpleGrid>
   );
 };

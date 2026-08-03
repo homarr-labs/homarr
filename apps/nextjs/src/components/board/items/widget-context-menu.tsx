@@ -1,6 +1,6 @@
 "use client";
 
-import type { MutableRefObject, ReactNode, RefObject } from "react";
+import type { ReactNode, RefObject } from "react";
 import { useCallback, useMemo, useState } from "react";
 import { Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
 import {
@@ -28,7 +28,7 @@ import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TranslationFunction } from "@homarr/translation";
-import type { WidgetContextMenuAction, WidgetDefinition } from "@homarr/widgets";
+import type { WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets";
 import {
   getWidgetQueryKeys,
   getWidgetRuntimeQueries,
@@ -48,12 +48,12 @@ import { matchesWidgetItemQuery } from "./widget-query-scope";
 
 interface WidgetContextMenuProps {
   item: SectionItem;
-  widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
+  widgetRuntimeRef: WidgetRuntimeRef;
   sourceRef: RefObject<HTMLElement | null>;
   children: ReactNode;
 }
 
-export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }: WidgetContextMenuProps) => {
+export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children }: WidgetContextMenuProps) => {
   const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
@@ -70,8 +70,11 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
-  const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
-  const canOpenAdvancedFocus = supportsAdvancedFocus(currentDefinition as WidgetDefinition);
+  const currentDefinition = useMemo(
+    () => widgetImports[item.kind].definition as WidgetDefinition & { kind: string },
+    [item.kind],
+  );
+  const canOpenAdvancedFocus = supportsAdvancedFocus(currentDefinition);
   const { gridstack } = useSectionContext().refs;
   const queryClient = useQueryClient();
   const { open: openAdvancedFocus } = useAdvancedFocus();
@@ -93,15 +96,12 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
   );
 
   const options = useMemo(
-    () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options) as Record<string, unknown>,
+    () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options),
     [item.kind, settings, item.options],
   );
 
-  const widgetQueryKeys = useMemo(
-    () => getWidgetQueryKeys(currentDefinition as Parameters<typeof getWidgetQueryKeys>[0]),
-    [currentDefinition],
-  );
-  const widgetQueryMatcher = (currentDefinition as WidgetDefinition).queryMatcher;
+  const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(currentDefinition), [currentDefinition]);
+  const widgetQueryMatcher = "queryMatcher" in currentDefinition ? currentDefinition.queryMatcher : undefined;
   const matchesWidgetQuery = useCallback(
     (queryKey: QueryKey) =>
       matchesWidgetItemQuery(
@@ -112,11 +112,11 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
           boardId: board.id,
           integrationIds: item.integrationIds,
           options,
-          runtimeQueries: getWidgetRuntimeQueries(widgetStateRef),
+          runtimeQueries: getWidgetRuntimeQueries(widgetRuntimeRef),
         },
         widgetQueryMatcher,
       ),
-    [board.id, item.id, item.integrationIds, options, widgetQueryKeys, widgetQueryMatcher, widgetStateRef],
+    [board.id, item.id, item.integrationIds, options, widgetQueryKeys, widgetQueryMatcher, widgetRuntimeRef],
   );
   const isWidgetFetching =
     useIsFetching({
@@ -156,11 +156,8 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
     return Object.entries(rawOptions).filter(([, def]) => def.type === "switch" && !def.skipContextMenu);
   }, [currentDefinition, hasChangeAccess, settings]);
 
-  const widgetContextActions = (() => {
-    const def = currentDefinition as Record<string, unknown>;
-    if (typeof def.contextActions !== "function") return [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const actions = (def.contextActions as any)({
+  const widgetContextActions =
+    currentDefinition.contextActions?.({
       options,
       setOptions: setItemOptions,
       integrationIds: item.integrationIds,
@@ -170,10 +167,8 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
         itemId: item.id,
         canInteractWithSelectedIntegrations,
       },
-      widgetStateRef,
-    });
-    return (Array.isArray(actions) ? actions : []) as WidgetContextMenuAction[];
-  })();
+      widgetRuntimeRef,
+    }) ?? [];
 
   const openEditModal = useCallback(() => {
     openModal(
@@ -294,7 +289,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, sourceRef, children }:
                   disabled={action.disabled}
                   color={action.color}
                 >
-                  {String(translateIfNecessary(t, action.label))}
+                  {t(action.label as never)}
                 </Menu.Item>
               );
             })}
@@ -416,14 +411,8 @@ const WidgetQueryStatus = ({ queryClient, matchesQuery, isFetching, t }: WidgetQ
   const hasError = queries.some((q) => q.state.status === "error");
 
   if (hasError) {
-    const errorQuery = queries.find((q) => q.state.status === "error");
-    const errorMessage =
-      errorQuery?.state.error instanceof Error
-        ? errorQuery.state.error.message
-        : String(errorQuery?.state.error ?? "Unknown error");
-
     return (
-      <Tooltip label={errorMessage} multiline position="left" w={250}>
+      <Tooltip label={t("item.menu.status.error")} position="left">
         <Group gap={4} wrap="nowrap">
           <IconAlertTriangle size={12} color="var(--mantine-color-red-6)" />
           <Text size="xs" c="red.6">

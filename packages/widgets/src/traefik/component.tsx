@@ -17,6 +17,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
 
@@ -65,7 +66,7 @@ function TraefikWidgetContent({
   displayMode = "compact",
 }: WidgetComponentProps<"traefik">) {
   const t = useScopedI18n("widget.traefik");
-  const { data } = clientApi.widget.traefik.getDashboard.useQuery({ integrationIds });
+  const data = getUsableWidgetQueryData(clientApi.widget.traefik.getDashboard.useQuery({ integrationIds }));
 
   if (!data) return <WidgetEmptyState />;
 

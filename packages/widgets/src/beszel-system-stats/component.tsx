@@ -15,9 +15,10 @@ import { useScopedI18n } from "@homarr/translation/client";
 import classes from "./component.module.css";
 
 import type { WidgetComponentProps } from "../definition";
-import { setWidgetRuntimeQueries } from "../definition";
+import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import type { BeszelTimePeriod } from "../beszel/_shared/chart";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
 import { createBeszelSystemChoices, resolveBeszelSystemChoice } from "./selection";
 
@@ -26,12 +27,10 @@ export default function BeszelSystemStatsWidget({
   integrationIds,
   isEditMode,
   width,
-  height,
-  displayMode = "compact",
   boardId,
   itemId,
   setOptions,
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"beszelSystemStats">) {
   const t = useScopedI18n("widget.beszelSystemStats");
   const board = useOptionalBoard();
@@ -46,22 +45,26 @@ export default function BeszelSystemStatsWidget({
           message: t("error.selectionSaveMessage"),
         }),
     });
-  const {
-    data: systemsResult = [],
-    isPending: systemsPending,
-    error: systemsError,
-  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsResult = getUsableWidgetQueryData(systemsQuery) ?? [];
+  const { isPending: systemsPending } = systemsQuery;
 
   const systems = useMemo(() => createBeszelSystemChoices(systemsResult), [systemsResult]);
   const selectedSystem = resolveBeszelSystemChoice(systems, options.systemId);
   const selectedValue = selectedSystem?.value ?? "";
   const selectedLabel = selectedSystem?.label;
   const systemExists = selectedSystem !== undefined;
-  const includeDocker =
-    (displayMode === "advanced" || height >= 380) &&
-    (options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork);
-  setWidgetRuntimeQueries(
-    widgetStateRef,
+  const includeDocker = options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork;
+  const periodOptions = [
+    { value: "1m", label: t("period.live") },
+    { value: "1h", label: t("period.oneHour") },
+    { value: "12h", label: t("period.twelveHours") },
+    { value: "24h", label: t("period.oneDay") },
+    { value: "1w", label: t("period.oneWeek") },
+    { value: "30d", label: t("period.thirtyDays") },
+  ];
+  useWidgetRuntimeQueries(
+    widgetRuntimeRef,
     selectedSystem && options.timePeriod !== "1m"
       ? [
           getQueryKey(
@@ -127,7 +130,6 @@ export default function BeszelSystemStatsWidget({
     [boardId, hasChangeAccess, itemId, options.timePeriod, saveItemOptions, setOptions],
   );
 
-  if (systemsError) throw systemsError;
   if (systemsPending)
     return (
       <Center h="100%">
@@ -212,36 +214,39 @@ export default function BeszelSystemStatsWidget({
               </Menu.Dropdown>
             </Menu>
           )}
-          {!isEditMode && displayMode === "advanced" && (
-            <SegmentedControl
-              size="xs"
-              value={options.timePeriod}
-              onChange={handleTimePeriod}
-              disabled={isSelectionSavePending}
-              data={[
-                { value: "1m", label: t("period.live") },
-                { value: "1h", label: t("period.oneHour") },
-                { value: "12h", label: t("period.twelveHours") },
-                { value: "24h", label: t("period.oneDay") },
-                { value: "1w", label: t("period.oneWeek") },
-                { value: "30d", label: t("period.thirtyDays") },
-              ]}
-            />
-          )}
+          {!isEditMode &&
+            (width >= 560 ? (
+              <SegmentedControl
+                size="xs"
+                fullWidth
+                value={options.timePeriod}
+                onChange={handleTimePeriod}
+                disabled={isSelectionSavePending}
+                data={periodOptions}
+              />
+            ) : (
+              <Select
+                size="xs"
+                value={options.timePeriod}
+                onChange={(value) => value && handleTimePeriod(value)}
+                disabled={isSelectionSavePending}
+                data={periodOptions}
+              />
+            ))}
           <BeszelStatsView
             integrationIds={selectedSystem ? [selectedSystem.integrationId] : []}
             systemId={selectedSystem?.systemId ?? ""}
             timePeriod={options.timePeriod as BeszelTimePeriod}
-            columns={displayMode === "advanced" || width > 600 ? 2 : 1}
+            columns={width > 600 ? 2 : 1}
             visibility={{
               cpu: options.showCpu,
               memory: options.showMemory,
               disk: options.showDisk,
-              diskIO: options.showDiskIO && (displayMode === "advanced" || height >= 260),
-              network: options.showNetwork && (displayMode === "advanced" || height >= 260),
-              dockerCpu: options.showDockerCpu && (displayMode === "advanced" || height >= 380),
-              dockerMemory: options.showDockerMemory && (displayMode === "advanced" || height >= 380),
-              dockerNetwork: options.showDockerNetwork && (displayMode === "advanced" || height >= 380),
+              diskIO: options.showDiskIO,
+              network: options.showNetwork,
+              dockerCpu: options.showDockerCpu,
+              dockerMemory: options.showDockerMemory,
+              dockerNetwork: options.showDockerNetwork,
             }}
             onSwitchToHistorical={() => handleTimePeriod("1h")}
           />

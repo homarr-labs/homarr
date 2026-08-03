@@ -7,23 +7,22 @@ import { useTimeAgo } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { buildServerResourceCounts, getBadgeColor, parseStatus } from "./coolify-utils";
 import { ServersSection } from "./servers-section";
 import { ServicesSection } from "./services-section";
 import type { CoolifyOptions, InstanceData } from "./types";
 import { COOLIFY_ICON_URL } from "./types";
-import { useAdvancedOpenSections } from "./use-advanced-open-sections";
 
 interface InstanceCardProps {
   instance: InstanceData;
   options: CoolifyOptions;
   isTiny: boolean;
   widgetKey: string;
-  isAdvanced: boolean;
   hideFooter: boolean;
 }
 
-export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced, hideFooter }: InstanceCardProps) {
+export function InstanceCard({ instance, options, isTiny, widgetKey, hideFooter }: InstanceCardProps) {
   const t = useScopedI18n("widget.coolify");
   const tCommon = useScopedI18n("common");
   const cardKey = `${widgetKey}-${instance.integrationId}`;
@@ -35,15 +34,13 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced,
     key: `coolify-sections-${cardKey}`,
     defaultValue: ["applications"],
   });
-  const [advancedOpenSections, setAdvancedOpenSections] = useAdvancedOpenSections(options);
-
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,
     instance.instanceInfo.applications,
     instance.instanceInfo.services,
   );
 
-  const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
+  const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
   const relativeTime = useTimeAgo(instance.updatedAt);
 
   const onlineServers = instance.instanceInfo.servers.filter((s) => s.is_reachable !== false).length;
@@ -82,9 +79,10 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced,
         <Group gap={4} wrap="nowrap">
           <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
           <Anchor
+            component={baseUrl ? "a" : "span"}
             href={baseUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            target={baseUrl ? "_blank" : undefined}
+            rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
             fz={isTiny ? "10px" : "xs"}
             fw={600}
             c="inherit"
@@ -127,13 +125,7 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, isAdvanced,
         </Group>
       </Group>
 
-      <Accordion
-        variant="filled"
-        chevronPosition="right"
-        multiple
-        value={isAdvanced ? advancedOpenSections : openSections}
-        onChange={isAdvanced ? setAdvancedOpenSections : setOpenSections}
-      >
+      <Accordion variant="filled" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
         {options.showServers && (
           <ServersSection
             servers={instance.instanceInfo.servers}

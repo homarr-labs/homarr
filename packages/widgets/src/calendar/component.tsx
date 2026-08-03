@@ -16,7 +16,8 @@ import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client"
 
 import actionTargetClasses from "../common/action-target.module.css";
 import type { WidgetComponentProps } from "../definition";
-import { setWidgetRuntimeQueries } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
+import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { CalendarDay } from "./calender-day";
 import {
@@ -31,9 +32,21 @@ import classes from "./component.module.css";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(() => new Date());
+  const runtimeInput = {
+    integrationIds: props.integrationIds,
+    month: month.getMonth(),
+    year: month.getFullYear(),
+    releaseType: props.options.releaseType,
+    showUnmonitored: props.options.showUnmonitored,
+  };
+  useWidgetRuntimeQueries(
+    props.widgetRuntimeRef,
+    props.integrationIds.length > 0
+      ? [getQueryKey(clientApi.widget.calendar.findAllEvents, runtimeInput, "query")]
+      : [],
+  );
 
   if (props.integrationIds.length === 0) {
-    setWidgetRuntimeQueries(props.widgetStateRef, []);
     return (
       <CalendarBase
         {...props}
@@ -54,15 +67,7 @@ interface FetchCalendarProps extends WidgetComponentProps<"calendar"> {
   setMonth: (date: Date) => void;
 }
 
-const FetchCalendar = ({
-  month,
-  setMonth,
-  isEditMode,
-  integrationIds,
-  options,
-  displayMode,
-  widgetStateRef,
-}: FetchCalendarProps) => {
+const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, displayMode }: FetchCalendarProps) => {
   const input = {
     integrationIds,
     month: month.getMonth(),
@@ -70,8 +75,9 @@ const FetchCalendar = ({
     releaseType: options.releaseType,
     showUnmonitored: options.showUnmonitored,
   };
-  setWidgetRuntimeQueries(widgetStateRef, [getQueryKey(clientApi.widget.calendar.findAllEvents, input, "query")]);
-  const { data, isPending } = clientApi.widget.calendar.findAllEvents.useQuery(input);
+  const calendarQuery = clientApi.widget.calendar.findAllEvents.useQuery(input);
+  const data = getUsableWidgetQueryData(calendarQuery);
+  const { isPending } = calendarQuery;
 
   const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
   const failedIntegrations =

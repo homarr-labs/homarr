@@ -5,6 +5,7 @@ import { createWidgetDefinition, widgetQueryInputMatches } from "../../definitio
 import { optionsBuilder } from "../../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("minecraftServerStatus", {
+  supportsAdvancedFocus: false,
   icon: IconBrandMinecraft,
   queryKey: [["widget", "minecraft", "getServerStatus"]],
   queryMatcher: ({ input }, scope) =>

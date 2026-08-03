@@ -17,9 +17,11 @@ import dayjs from "dayjs";
 
 import { isNullOrWhitespace } from "@homarr/common";
 import type { CalendarEvent } from "@homarr/integrations/types";
-import { useI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { groupEventsByDate } from "./calendar-events";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { formatLocalizedTime } from "../common/locale";
 import classes from "./calendar-event-list.module.css";
 
 interface CalendarEventListProps {
@@ -36,7 +38,9 @@ export const CalendarEventList = ({
   locale,
 }: CalendarEventListProps) => {
   const headingIdPrefix = useId();
-  const dateFormatter = new Intl.DateTimeFormat(locale, {
+  const currentLocale = useCurrentIntlLocale();
+  const effectiveLocale = locale ?? currentLocale;
+  const dateFormatter = new Intl.DateTimeFormat(effectiveLocale, {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -66,20 +70,20 @@ export const CalendarEventList = ({
                   {dateFormatter.format(groupedEvents[0]?.startDate)}
                 </Text>
                 <Stack mt="xs">
-                  <CalendarEventRows events={groupedEvents} />
+                  <CalendarEventRows events={groupedEvents} locale={effectiveLocale} />
                 </Stack>
               </Box>
             );
           })
         ) : (
-          <CalendarEventRows events={events} />
+          <CalendarEventRows events={events} locale={effectiveLocale} />
         )}
       </Stack>
     </ScrollArea>
   );
 };
 
-const CalendarEventRows = ({ events }: Pick<CalendarEventListProps, "events">) => {
+const CalendarEventRows = ({ events, locale }: Pick<CalendarEventListProps, "events"> & { locale: string }) => {
   const { colorScheme } = useMantineColorScheme();
   const t = useI18n();
   return (
@@ -136,14 +140,14 @@ const CalendarEventRows = ({ events }: Pick<CalendarEventListProps, "events">) =
                 ) : (
                   <>
                     <Text c={"dimmed"} size={"sm"}>
-                      {dayjs(event.startDate).format("HH:mm")}
+                      {formatLocalizedTime(event.startDate, locale)}
                     </Text>
 
                     {event.endDate !== null && (
                       <>
                         -{" "}
                         <Text c={"dimmed"} size={"sm"}>
-                          {dayjs(event.endDate).format("HH:mm")}
+                          {formatLocalizedTime(event.endDate, locale)}
                         </Text>
                       </>
                     )}
@@ -171,31 +175,35 @@ const CalendarEventRows = ({ events }: Pick<CalendarEventListProps, "events">) =
               <Group pt={5} gap={5} mt={"auto"} wrap="nowrap">
                 {event.links
                   .filter((link) => link.href)
-                  .map((link) => (
-                    <Button
-                      key={link.href}
-                      component={"a"}
-                      href={link.href.toString()}
-                      target={"_blank"}
-                      size={"xs"}
-                      radius={"xl"}
-                      variant={link.color ? undefined : "default"}
-                      styles={{
-                        root: {
-                          backgroundColor: link.color,
-                          color: link.isDark && colorScheme === "dark" ? "white" : "black",
-                          "&:hover": link.color
-                            ? {
-                                backgroundColor: link.isDark ? lighten(link.color, 0.1) : darken(link.color, 0.1),
-                              }
-                            : undefined,
-                        },
-                      }}
-                      leftSection={link.logo ? <Image src={link.logo} fit="contain" w={20} h={20} /> : undefined}
-                    >
-                      <Text>{link.name}</Text>
-                    </Button>
-                  ))}
+                  .map((link) => {
+                    const href = getSafeApplicationUrl(link.href.toString());
+                    return (
+                      <Button
+                        key={link.href}
+                        component={href ? "a" : "div"}
+                        href={href}
+                        target={href ? "_blank" : undefined}
+                        rel={href ? SAFE_NEW_TAB_REL : undefined}
+                        size={"xs"}
+                        radius={"xl"}
+                        variant={link.color ? undefined : "default"}
+                        styles={{
+                          root: {
+                            backgroundColor: link.color,
+                            color: link.isDark && colorScheme === "dark" ? "white" : "black",
+                            "&:hover": link.color
+                              ? {
+                                  backgroundColor: link.isDark ? lighten(link.color, 0.1) : darken(link.color, 0.1),
+                                }
+                              : undefined,
+                          },
+                        }}
+                        leftSection={link.logo ? <Image src={link.logo} fit="contain" w={20} h={20} /> : undefined}
+                      >
+                        <Text>{link.name}</Text>
+                      </Button>
+                    );
+                  })}
               </Group>
             )}
           </Stack>

@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Center, Group, Indicator, Loader, Progress, ScrollArea, Stack, Text } from "@mantine/core";
+import { Center, Group, Indicator, Loader, Progress, Text } from "@mantine/core";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
-import { getQueryKey } from "@trpc/react-query";
 import {
   Activity,
   Battery,
@@ -26,8 +25,8 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { setWidgetRuntimeQueries } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
@@ -43,7 +42,6 @@ import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
-import { BeszelStatsView } from "../beszel/_shared/stats-view";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
@@ -96,8 +94,6 @@ export default function BeszelSystemTableWidget({
   integrationIds,
   isEditMode,
   width,
-  displayMode = "compact",
-  widgetStateRef,
   boardId,
   itemId,
   setOptions,
@@ -107,14 +103,10 @@ export default function BeszelSystemTableWidget({
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
-  const {
-    data: results = [],
-    error: systemsError,
-    isPending,
-  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const results = getUsableWidgetQueryData(systemsQuery) ?? [];
+  const { isPending } = systemsQuery;
   const size = useMemo(() => getSizeConfig(width), [width]);
-  const [selectedSystem, setSelectedSystem] = useState<SystemRowWithKey | null>(null);
-
   const visibleMetricKeys = useMemo(() => {
     const enabled = [
       "showCpu",
@@ -129,18 +121,9 @@ export default function BeszelSystemTableWidget({
       "showUptime",
       "showAgent",
     ].filter((key) => options[key as keyof typeof options]) as string[];
-    const budget =
-      displayMode === "advanced"
-        ? enabled.length
-        : width < 360
-          ? 1
-          : width < 560
-            ? 2
-            : width < 760
-              ? 4
-              : enabled.length;
+    const budget = width < 360 ? 1 : width < 560 ? 2 : width < 760 ? 4 : enabled.length;
     return new Set(enabled.slice(0, budget));
-  }, [displayMode, options, width]);
+  }, [options, width]);
 
   const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
     onError: () =>
@@ -383,37 +366,11 @@ export default function BeszelSystemTableWidget({
 
   const handleRowClick = useCallback(
     ({ record }: { record: SystemRowWithKey }) => {
-      if (displayMode === "advanced") {
-        setSelectedSystem(record);
-        return;
-      }
       const integrationId = record._key.split(":")[0] ?? "";
       openModal({ integrationId, systemId: record.id }, { title: record.name });
     },
-    [displayMode, openModal],
+    [openModal],
   );
-
-  const activeSystem = selectedSystem ?? sortedSystems[0];
-  const activeIntegrationId = activeSystem?._key.split(":")[0] ?? "";
-  setWidgetRuntimeQueries(
-    widgetStateRef,
-    displayMode === "advanced" && activeSystem
-      ? [
-          getQueryKey(
-            clientApi.widget.beszel.getSystemStats,
-            {
-              integrationIds: [activeIntegrationId],
-              systemId: activeSystem.id,
-              timePeriod: "1h",
-              includeDocker: false,
-            },
-            "query",
-          ),
-        ]
-      : [],
-  );
-
-  if (systemsError) throw systemsError;
 
   if (isPending) {
     return (
@@ -444,42 +401,5 @@ export default function BeszelSystemTableWidget({
     </div>
   );
 
-  if (displayMode === "compact") return table;
-
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: width >= 900 ? "minmax(0, 3fr) minmax(320px, 2fr)" : "1fr",
-        height: "100%",
-        gap: 12,
-        padding: 12,
-      }}
-    >
-      {table}
-      {activeSystem && (
-        <ScrollArea h="100%">
-          <Stack gap="sm">
-            <Text fw={700}>{activeSystem.name}</Text>
-            <BeszelStatsView
-              integrationIds={[activeIntegrationId]}
-              systemId={activeSystem.id}
-              timePeriod="1h"
-              columns={1}
-              visibility={{
-                cpu: options.showCpu,
-                memory: options.showMemory,
-                disk: options.showDisk,
-                diskIO: options.showDisk,
-                network: options.showNet,
-                dockerCpu: false,
-                dockerMemory: false,
-                dockerNetwork: false,
-              }}
-            />
-          </Stack>
-        </ScrollArea>
-      )}
-    </div>
-  );
+  return table;
 }

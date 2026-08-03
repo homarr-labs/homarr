@@ -51,7 +51,7 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
           pos="absolute"
           top={4}
           right={4}
-          style={{ zIndex: 10 }}
+          style={{ zIndex: "var(--mantine-z-index-popover)" }}
           aria-label={tItem("menu.label.settings")}
         >
           <IconDotsVertical size={"1rem"} />

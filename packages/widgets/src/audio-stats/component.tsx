@@ -8,9 +8,9 @@ import { formatBytes, formatDuration } from "@homarr/common";
 import type { AudiobookshelfDashboardData } from "@homarr/integrations/types";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
-import { setWidgetRuntimeQueries } from "../definition";
-import { NoIntegrationDataError } from "../errors/no-data-integration";
+import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { AudioStatsContent } from "./audio-stats-content";
 
 export default function AudioStatsWidget({
@@ -19,7 +19,7 @@ export default function AudioStatsWidget({
   width,
   height,
   displayMode = "compact",
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"audioStats">) {
   const statsInput = { integrationId: integrationIds[0] ?? "" };
   const { data: response, error: statsError } = clientApi.widget.audioStats.getStats.useQuery(statsInput);
@@ -29,7 +29,7 @@ export default function AudioStatsWidget({
     streamsInput,
     { enabled: streamsEnabled },
   );
-  setWidgetRuntimeQueries(widgetStateRef, [
+  useWidgetRuntimeQueries(widgetRuntimeRef, [
     getQueryKey(clientApi.widget.audioStats.getStats, statsInput, "query"),
     ...(streamsEnabled ? [getQueryKey(clientApi.widget.mediaServer.getCurrentStreams, streamsInput, "query")] : []),
   ]);
@@ -37,7 +37,6 @@ export default function AudioStatsWidget({
   if (statsError && response === undefined) throw statsError;
   if (streamsEnabled && streamsError && streamResults === undefined) throw streamsError;
   const currentStreams = streamResults ?? [];
-  if (streamsEnabled && currentStreams.some(({ error }) => Boolean(error))) throw new NoIntegrationDataError();
   if (!response) return <WidgetEmptyState />;
 
   const summary = (
@@ -56,9 +55,15 @@ export default function AudioStatsWidget({
   );
   const audiobookStats = response.kind === "audiobookshelf" ? (response.data as AudiobookshelfDashboardData) : null;
   const advancedGridColumns = width >= 760 ? 2 : 1;
+  const hasStreamErrors = currentStreams.some(({ error }) => Boolean(error));
   return (
     <Stack h="100%" gap="lg" p="md">
       <div style={{ minHeight: 150 }}>{summary}</div>
+      {hasStreamErrors && (
+        <Group justify="flex-end">
+          <IntegrationErrorIndicator results={currentStreams} />
+        </Group>
+      )}
       <ScrollArea style={{ flex: 1, minHeight: 0 }}>
         {response.kind === "navidrome" ? (
           <SimpleGrid cols={advancedGridColumns} spacing="xs">

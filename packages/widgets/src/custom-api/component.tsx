@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import type { ComponentType } from "react";
 import {
   ActionIcon,
@@ -32,6 +32,8 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { useWidgetRuntimeActions } from "../runtime-hooks";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import actionTargetClasses from "../common/action-target.module.css";
 
 const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
@@ -383,18 +385,21 @@ function ActionButtonDisplay({ data, width, height }: CustomDisplayProps) {
   const confirmText = (data.confirmText as string) || "";
   const successMessage = (data.successMessage as string) || t("executeSuccess");
   const definitionId = data.widgetDefinitionId as string | undefined;
+  const boardId = data.boardId as string | undefined;
+  const itemId = data.itemId as string | undefined;
+  const canExecute = data.canExecute === true;
 
   const handleExecute = async () => {
-    if (!definitionId) return;
+    if (!definitionId || !boardId || !itemId || !canExecute) return;
     setLastSuccess(false);
     try {
-      const result = await executeMutation.mutateAsync({ definitionId });
+      const result = await executeMutation.mutateAsync({ boardId, itemId, definitionId });
       if (result.success) {
         setLastSuccess(true);
         showSuccessNotification({ title: buttonLabel, message: successMessage });
         setTimeout(() => setLastSuccess(false), 3000);
       } else {
-        showErrorNotification({ title: buttonLabel, message: result.error ?? t("executeFailed") });
+        showErrorNotification({ title: buttonLabel, message: t("executeFailed") });
       }
     } catch {
       showErrorNotification({ title: buttonLabel, message: t("executeFailed") });
@@ -420,6 +425,7 @@ function ActionButtonDisplay({ data, width, height }: CustomDisplayProps) {
         color={buttonColor}
         onClick={handleClick}
         loading={executeMutation.isPending}
+        disabled={!canExecute || !boardId || !itemId || !definitionId}
         leftSection={lastSuccess ? <IconCheck size={18} /> : <IconPlayerPlay size={18} />}
         variant={lastSuccess ? "light" : "filled"}
         maw="calc(100% - var(--mantine-spacing-sm) * 2)"
@@ -460,10 +466,12 @@ const displayTypeTranslationKeys = {
 
 export default function CustomApiWidget({
   options,
+  boardId,
+  itemId,
   width,
   height,
   displayMode = "compact",
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"customApi">) {
   const t = useScopedI18n("widget.customApi");
   const { definitionId, refreshInterval } = options;
@@ -481,40 +489,48 @@ export default function CustomApiWidget({
     );
   }
 
+  if (!boardId || !itemId) return null;
+
   return (
     <CustomApiWidgetInner
+      boardId={boardId}
+      itemId={itemId}
       definitionId={definitionId}
       refreshInterval={refreshInterval as number}
       width={width}
       height={height}
       displayMode={displayMode}
-      widgetStateRef={widgetStateRef}
+      widgetRuntimeRef={widgetRuntimeRef}
     />
   );
 }
 
 function CustomApiWidgetInner({
+  boardId,
+  itemId,
   definitionId,
   refreshInterval,
   width,
   height,
   displayMode,
-  widgetStateRef,
+  widgetRuntimeRef,
 }: {
+  boardId: string;
+  itemId: string;
   definitionId: string;
   refreshInterval: number;
   width: number;
   height: number;
   displayMode: "compact" | "advanced";
-  widgetStateRef?: WidgetComponentProps<"customApi">["widgetStateRef"];
+  widgetRuntimeRef?: WidgetComponentProps<"customApi">["widgetRuntimeRef"];
 }) {
   const t = useScopedI18n("widget.customApi");
   const tCustomWidget = useScopedI18n("customWidget");
   const safeInterval = Number.isFinite(refreshInterval) ? refreshInterval : 30;
   const intervalMs = Math.max(1000, safeInterval * 1000);
   const [pollingPaused, setPollingPaused] = useState(false);
-  const { data, isLoading, error, refetch, isFetching } = clientApi.widget.customApi.getData.useQuery(
-    { definitionId },
+  const query = clientApi.widget.customApi.getData.useQuery(
+    { boardId, itemId, definitionId },
     {
       refetchInterval: (query) => {
         const result = query.state.data as Record<string, unknown> | undefined;
@@ -527,6 +543,8 @@ function CustomApiWidgetInner({
       },
     },
   );
+  const data = getUsableWidgetQueryData(query);
+  const { isLoading, refetch, isFetching } = query;
 
   const widgetData = (data ?? {}) as Record<string, unknown>;
   const dataType = widgetData.type as string | undefined;
@@ -536,46 +554,12 @@ function CustomApiWidgetInner({
     setPollingPaused((value) => !value);
   }, [pollingPaused, refetch]);
 
-  useEffect(() => {
-    if (!widgetStateRef) return;
-    if (canTogglePolling) {
-      widgetStateRef.current = { ...widgetStateRef.current, togglePolling };
-    } else if (widgetStateRef.current) {
-      delete widgetStateRef.current.togglePolling;
-    }
-    return () => {
-      if (widgetStateRef.current?.togglePolling === togglePolling) {
-        delete widgetStateRef.current.togglePolling;
-      }
-    };
-  }, [canTogglePolling, togglePolling, widgetStateRef]);
+  useWidgetRuntimeActions(widgetRuntimeRef, canTogglePolling ? { togglePolling } : {});
 
   if (isLoading) {
     return (
       <Center h="100%">
         <Loader size="sm" />
-      </Center>
-    );
-  }
-
-  if (error) {
-    const isNotFound = error.data?.code === "NOT_FOUND";
-    return (
-      <Center h="100%">
-        <Stack align="center" gap="xs">
-          <IconAlertTriangle size={32} color={`var(--mantine-color-${isNotFound ? "yellow" : "red"}-6)`} />
-          {isNotFound ? (
-            <Text c="dimmed" size="sm" ta="center">
-              {t("definitionNotFound")}
-            </Text>
-          ) : (
-            <Tooltip label={error.message} multiline>
-              <Text c="dimmed" size="sm" ta="center" tabIndex={0} aria-label={`${t("fetchFailed")}. ${error.message}`}>
-                {t("fetchFailed")}
-              </Text>
-            </Tooltip>
-          )}
-        </Stack>
       </Center>
     );
   }
@@ -596,7 +580,8 @@ function CustomApiWidgetInner({
   if (Component) {
     const displayTypeKey = displayTypeTranslationKeys[dataType as keyof typeof displayTypeTranslationKeys];
     const pollingLabel = pollingPaused ? t("actions.resumePolling") : t("actions.pausePolling");
-    const enrichedData = dataType === "actionButton" ? { ...widgetData, widgetDefinitionId: definitionId } : widgetData;
+    const enrichedData =
+      dataType === "actionButton" ? { ...widgetData, boardId, itemId, widgetDefinitionId: definitionId } : widgetData;
     const content = <Component data={enrichedData} displayMode={displayMode} width={width} height={height} />;
     if (displayMode === "compact") return content;
     return (

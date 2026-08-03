@@ -111,13 +111,7 @@ const extractors: Record<string, Extractor> = {
     data: query(json, (c.jsonPath as string) ?? "$"),
     maxHeight: c.maxHeight ?? 300,
   }),
-  actionButton: (_json, c) => ({
-    type: "actionButton",
-    buttonLabel: c.buttonLabel ?? "Execute",
-    buttonColor: c.buttonColor ?? "blue",
-    confirmText: c.confirmText ?? "",
-    successMessage: c.successMessage ?? "",
-  }),
+  actionButton: (_json, c) => extractActionButtonDisplay(c),
   customJsx: (json, config) => ({
     type: "customJsx" as const,
     template: config.template as string,
@@ -140,6 +134,20 @@ export function extractDisplayDataWithFallback(json: unknown, displayType: strin
   return extractor?.(json, displayConfig);
 }
 
-export function extractActionButtonDisplay(displayConfig: Config): unknown {
-  return extractors.actionButton?.(null, displayConfig);
+export interface ActionButtonDisplayData {
+  type: "actionButton";
+  buttonLabel: string;
+  buttonColor: string;
+  confirmText: string;
+  successMessage: string;
+}
+
+export function extractActionButtonDisplay(displayConfig: Config): ActionButtonDisplayData {
+  return {
+    type: "actionButton",
+    buttonLabel: typeof displayConfig.buttonLabel === "string" ? displayConfig.buttonLabel : "Execute",
+    buttonColor: typeof displayConfig.buttonColor === "string" ? displayConfig.buttonColor : "blue",
+    confirmText: typeof displayConfig.confirmText === "string" ? displayConfig.confirmText : "",
+    successMessage: typeof displayConfig.successMessage === "string" ? displayConfig.successMessage : "",
+  };
 }

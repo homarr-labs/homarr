@@ -13,10 +13,14 @@ export const WidgetCustomWidgetSelectInput = ({
   property,
   kind,
   options,
+  boardId,
 }: CommonWidgetInputProps<"customWidgetSelect">) => {
   const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
-  const { data, isLoading } = clientApi.customWidget.all.useQuery();
+  const { data, isLoading } = clientApi.customWidget.available.useQuery(
+    { boardId: boardId ?? "" },
+    { enabled: Boolean(boardId) },
+  );
   const [search, setSearch] = useState("");
 
   const currentValue = form.values.options[property] as string;

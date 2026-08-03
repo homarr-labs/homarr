@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
-import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
+import { boards, customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 import { eq } from "@homarr/db";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import {
@@ -19,17 +19,23 @@ import {
 } from "@homarr/validation/custom-widget";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
+import { throwIfActionForbiddenAsync } from "../board/board-access";
+import { assertCustomApiItemBindingAsync, customApiItemInputSchema } from "./custom-widget-access";
 import { applyAuth } from "./auth";
 import { extractDisplayDataWithFallback } from "./display-data";
 import { parseDisplayConfig } from "./parse-display-config";
+import {
+  consumeBoundedResponseAsync,
+  readBoundedJsonResponseAsync,
+  validateCustomApiUrl,
+  withCustomApiResponseAsync,
+} from "../widgets/custom-api-security";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
 
 const logger = createLogger({ module: "custom-widget" });
 
-const FETCH_TIMEOUT_MS = 10_000;
-
-const validateUrl = (urlString: string): URL => new URL(urlString);
+const PUBLIC_PREVIEW_ERROR = "Custom API preview failed";
 
 const updateFieldSerializers: Record<string, (value: unknown) => unknown> = {
   displayConfig: (value) => superjson.stringify(value),
@@ -54,7 +60,7 @@ function getImportJsonSchema() {
 export const customWidgetRouter = createTRPCRouter({
   schema: publicProcedure.query(() => getImportJsonSchema()),
 
-  all: protectedProcedure.query(async ({ ctx }) => {
+  all: adminProcedure.query(async ({ ctx }) => {
     const definitions = await ctx.db.query.customWidgetDefinitions.findMany({
       orderBy: (table, { asc }) => asc(table.name),
     });
@@ -72,7 +78,24 @@ export const customWidgetRouter = createTRPCRouter({
     }));
   }),
 
-  byId: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+  available: protectedProcedure
+    .input(z.object({ boardId: z.string().min(1).max(100) }))
+    .query(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+      return await ctx.db.query.customWidgetDefinitions.findMany({
+        columns: {
+          id: true,
+          name: true,
+          description: true,
+          iconUrl: true,
+          displayType: true,
+          enabled: true,
+        },
+        orderBy: (table, { asc }) => asc(table.name),
+      });
+    }),
+
+  byId: adminProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
     const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
       where: eq(customWidgetDefinitions.id, input.id),
       with: { secrets: true },
@@ -275,75 +298,65 @@ export const customWidgetRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const secrets = [...input.secrets];
-
-      if (input.definitionId) {
-        const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
-          where: eq(customWidgetDefinitions.id, input.definitionId),
-          with: { secrets: true },
-        });
-        if (existing) {
-          for (const dbSecret of existing.secrets) {
-            if (!secrets.some((s) => s.kind === dbSecret.kind)) {
-              secrets.push({ kind: dbSecret.kind, value: decryptSecret(dbSecret.value) });
+      try {
+        const secrets = [...input.secrets];
+        if (input.definitionId) {
+          const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+            where: eq(customWidgetDefinitions.id, input.definitionId),
+            with: { secrets: true },
+          });
+          if (existing) {
+            for (const dbSecret of existing.secrets) {
+              if (!secrets.some((s) => s.kind === dbSecret.kind)) {
+                secrets.push({ kind: dbSecret.kind, value: decryptSecret(dbSecret.value) });
+              }
             }
           }
         }
-      }
 
-      const url = validateUrl(input.url);
-      const headers = new Headers({ Accept: "application/json" });
+        const url = validateCustomApiUrl(input.url);
+        const headers = new Headers({ Accept: "application/json" });
+        if (input.method !== "GET" && input.requestBody) headers.set("Content-Type", "application/json");
+        applyAuth(headers, url, input.authType, secrets, input.headerName);
 
-      if (input.method !== "GET" && input.requestBody) {
-        headers.set("Content-Type", "application/json");
-      }
+        return await withCustomApiResponseAsync(
+          url,
+          {
+            method: input.method,
+            headers,
+            body: input.method !== "GET" ? input.requestBody : undefined,
+          },
+          async (response) => {
+            const responseInfo = { status: response.status };
+            if (!response.ok) {
+              await consumeBoundedResponseAsync(response);
+              return {
+                success: false as const,
+                error: PUBLIC_PREVIEW_ERROR,
+                responseInfo,
+                rawResponse: null,
+              };
+            }
 
-      applyAuth(headers, url, input.authType, secrets, input.headerName);
-
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
-      try {
-        const response = await fetch(url.toString(), {
-          method: input.method,
-          headers,
-          body: input.method !== "GET" ? input.requestBody : undefined,
-          redirect: "follow",
-          signal: controller.signal,
-        });
-
-        const responseInfo = { status: response.status, statusText: response.statusText };
-
-        if (!response.ok) {
-          const body = await response.text().catch(() => "");
-          return {
-            success: false as const,
-            error: `HTTP ${response.status}: ${response.statusText}`,
-            responseInfo,
-            rawResponse: body,
-          };
-        }
-
-        const json: unknown = await response.json();
-        const displayData = extractDisplayDataWithFallback(json, input.displayType, input.displayConfig);
-
-        return {
-          success: true as const,
-          responseInfo,
-          rawResponse: JSON.stringify(json, null, 2),
-          displayData,
-        };
+            const json = await readBoundedJsonResponseAsync(response);
+            const displayData = extractDisplayDataWithFallback(json, input.displayType, input.displayConfig);
+            return {
+              success: true as const,
+              responseInfo,
+              rawResponse: JSON.stringify(json, null, 2),
+              displayData,
+            };
+          },
+        );
       } catch (error) {
-        if (error instanceof TRPCError) throw error;
-        logger.error("Custom widget preview failed", { error });
+        const errorId = createId();
+        logger.error("Custom widget preview failed", { errorId, error });
         return {
           success: false as const,
-          error: error instanceof Error ? error.message : "Failed to fetch data",
+          error: PUBLIC_PREVIEW_ERROR,
           responseInfo: null,
           rawResponse: null,
         };
-      } finally {
-        clearTimeout(timeout);
       }
     }),
 
@@ -389,7 +402,8 @@ export const customWidgetRouter = createTRPCRouter({
     return { id: newId, name: `${definition.name} (copy)` };
   }),
 
-  execute: protectedProcedure.input(z.object({ definitionId: z.string() })).mutation(async ({ ctx, input }) => {
+  execute: adminProcedure.input(customApiItemInputSchema).mutation(async ({ ctx, input }) => {
+    await assertCustomApiItemBindingAsync(ctx, input);
     const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
       where: eq(customWidgetDefinitions.id, input.definitionId),
       with: { secrets: true },
@@ -407,50 +421,41 @@ export const customWidgetRouter = createTRPCRouter({
       throw new TRPCError({ code: "BAD_REQUEST", message: "Only actionButton widgets can be executed" });
     }
 
-    const decryptedSecrets = definition.secrets.map((s) => ({
-      kind: s.kind,
-      value: decryptSecret(s.value),
-    }));
-
-    const url = validateUrl(definition.url);
-    const headers = new Headers({ Accept: "application/json" });
-
-    if (definition.method !== "GET" && definition.requestBody) {
-      headers.set("Content-Type", "application/json");
-    }
-
-    applyAuth(headers, url, definition.authType, decryptedSecrets, definition.headerName);
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
     try {
-      const response = await fetch(url.toString(), {
-        method: definition.method,
-        headers,
-        body: definition.method !== "GET" ? definition.requestBody : undefined,
-        redirect: "follow",
-        signal: controller.signal,
-      });
+      const decryptedSecrets = definition.secrets.map((s) => ({
+        kind: s.kind,
+        value: decryptSecret(s.value),
+      }));
+      const url = validateCustomApiUrl(definition.url);
+      const headers = new Headers({ Accept: "application/json" });
+      if (definition.method !== "GET" && definition.requestBody) headers.set("Content-Type", "application/json");
+      applyAuth(headers, url, definition.authType, decryptedSecrets, definition.headerName);
 
-      const responseInfo = { status: response.status, statusText: response.statusText };
-
-      if (!response.ok) {
-        return { success: false as const, error: `HTTP ${response.status}: ${response.statusText}`, responseInfo };
-      }
-
-      logger.info("Executed custom widget action", { definitionId: input.definitionId, status: response.status });
-      return { success: true as const, responseInfo };
+      return await withCustomApiResponseAsync(
+        url,
+        {
+          method: definition.method,
+          headers,
+          body: definition.method !== "GET" ? definition.requestBody : undefined,
+        },
+        async (response) => {
+          await consumeBoundedResponseAsync(response);
+          const responseInfo = { status: response.status };
+          if (!response.ok) {
+            return { success: false as const, errorCode: "UPSTREAM_REJECTED" as const, responseInfo };
+          }
+          logger.info("Executed custom widget action", { definitionId: input.definitionId, status: response.status });
+          return { success: true as const, responseInfo };
+        },
+      );
     } catch (error) {
-      if (error instanceof TRPCError) throw error;
-      logger.error("Custom widget execute failed", { definitionId: input.definitionId, error });
+      const errorId = createId();
+      logger.error("Custom widget execute failed", { errorId, definitionId: input.definitionId, error });
       return {
         success: false as const,
-        error: error instanceof Error ? error.message : "Request failed",
+        errorCode: "REQUEST_FAILED" as const,
         responseInfo: null,
       };
-    } finally {
-      clearTimeout(timeout);
     }
   }),
 });

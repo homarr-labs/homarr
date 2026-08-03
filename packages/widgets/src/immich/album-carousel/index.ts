@@ -8,6 +8,47 @@ import { createWidgetDefinition, widgetQueryInputMatches } from "../../definitio
 import { optionsBuilder } from "../../options";
 import { ALL_PHOTOS_ALBUM_ID } from "./constants";
 
+const createOptions = () =>
+  optionsBuilder.from((factory) => ({
+    albumId: factory.integrationSelect({
+      defaultValue: ALL_PHOTOS_ALBUM_ID,
+      withDescription: true,
+      clearable: true,
+      useOptions: (integrationIds: string[]) => {
+        const t = useScopedI18n("widget.immich-albumCarousel");
+        const {
+          data = [],
+          isPending,
+          isError,
+        } = clientApi.widget.immich.getAlbums.useQuery(
+          { integrationId: integrationIds[0] ?? "" },
+          { enabled: integrationIds.length > 0, staleTime: 15 * 60 * 1000 },
+        );
+        return {
+          data: [
+            { value: ALL_PHOTOS_ALBUM_ID, label: t("allPhotos") },
+            ...data.map((album) => ({ value: album.id, label: album.albumName })),
+          ],
+          isPending,
+          isError,
+        };
+      },
+    }),
+    rotationIntervalSeconds: factory.number({
+      defaultValue: 5,
+      validate: z.number().min(1).max(3600),
+      withDescription: true,
+    }),
+    showPhotoInfo: factory.switch({
+      defaultValue: false,
+      withDescription: true,
+    }),
+    randomizePhotos: factory.switch({
+      defaultValue: false,
+      withDescription: true,
+    }),
+  }));
+
 export const { definition, componentLoader } = createWidgetDefinition("immich-albumCarousel", {
   icon: IconPhoto,
   queryKey: [["widget", "immich", "getAlbum"]],
@@ -23,75 +64,31 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-al
   supportedIntegrations: ["immich"],
   integrationsRequired: true,
   maxIntegrations: 1,
-  contextActions({ widgetStateRef }) {
-    const call = (key: string) => () => {
-      const action = widgetStateRef?.current?.[key];
-      if (typeof action === "function") action();
-    };
-    const disabled = (key: string) => typeof widgetStateRef?.current?.[key] !== "function";
+  contextActions: ({ widgetRuntimeRef }) => {
+    const actions = widgetRuntimeRef.current.actions;
     return [
       {
         key: "previousPhoto",
-        label: (t) => t("widget.immich-albumCarousel.actions.previousPhoto"),
+        label: "widget.immich-albumCarousel.actions.previousPhoto",
         icon: IconChevronLeft,
-        disabled: disabled("previousPhoto"),
-        onClick: call("previousPhoto"),
+        disabled: typeof actions.previousPhoto !== "function",
+        onClick: () => actions.previousPhoto?.(),
       },
       {
         key: "nextPhoto",
-        label: (t) => t("widget.immich-albumCarousel.actions.nextPhoto"),
+        label: "widget.immich-albumCarousel.actions.nextPhoto",
         icon: IconChevronRight,
-        disabled: disabled("nextPhoto"),
-        onClick: call("nextPhoto"),
+        disabled: typeof actions.nextPhoto !== "function",
+        onClick: () => actions.nextPhoto?.(),
       },
       {
         key: "toggleSlideshow",
-        label: (t) => t("widget.immich-albumCarousel.actions.toggleSlideshow"),
+        label: "widget.immich-albumCarousel.actions.toggleSlideshow",
         icon: IconPlayerPause,
-        disabled: disabled("toggleSlideshow"),
-        onClick: call("toggleSlideshow"),
+        disabled: typeof actions.toggleSlideshow !== "function",
+        onClick: () => actions.toggleSlideshow?.(),
       },
     ];
   },
-  createOptions() {
-    return optionsBuilder.from((factory) => ({
-      albumId: factory.integrationSelect({
-        defaultValue: ALL_PHOTOS_ALBUM_ID,
-        withDescription: true,
-        clearable: true,
-        useOptions: (integrationIds: string[]) => {
-          const t = useScopedI18n("widget.immich-albumCarousel");
-          const {
-            data = [],
-            isPending,
-            isError,
-          } = clientApi.widget.immich.getAlbums.useQuery(
-            { integrationId: integrationIds[0] ?? "" },
-            { enabled: integrationIds.length > 0, staleTime: 15 * 60 * 1000 },
-          );
-          return {
-            data: [
-              { value: ALL_PHOTOS_ALBUM_ID, label: t("allPhotos") },
-              ...data.map((album) => ({ value: album.id, label: album.albumName })),
-            ],
-            isPending,
-            isError,
-          };
-        },
-      }),
-      rotationIntervalSeconds: factory.number({
-        defaultValue: 5,
-        validate: z.number().min(1).max(3600),
-        withDescription: true,
-      }),
-      showPhotoInfo: factory.switch({
-        defaultValue: false,
-        withDescription: true,
-      }),
-      randomizePhotos: factory.switch({
-        defaultValue: false,
-        withDescription: true,
-      }),
-    }));
-  },
+  createOptions,
 }).withDynamicImport(() => import("./component"));

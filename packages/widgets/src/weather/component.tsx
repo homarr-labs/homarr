@@ -1,7 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import { Group, Popover, Stack, Table, Text, UnstyledButton } from "@mantine/core";
+import { Box, Group, Popover, Stack, Table, Text, UnstyledButton } from "@mantine/core";
 import {
   IconArrowDownRight,
   IconArrowUpRight,
@@ -17,12 +17,15 @@ import dayjs from "dayjs";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { metricToImperial } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { formatLocalizedDate, formatLocalizedTime } from "../common/locale";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { AnimatedWeatherIcon } from "./animated-icon";
-import { WeatherDescription } from "./icon";
+import { formatWeatherDate, WeatherDescription } from "./icon";
 import classes from "./component.module.css";
 
 export default function WeatherWidget({
@@ -36,34 +39,46 @@ export default function WeatherWidget({
     latitude: options.location.latitude,
     longitude: options.location.longitude,
   };
-  const { data: weather } = clientApi.widget.weather.atLocation.useQuery(input);
+  const weatherQuery = clientApi.widget.weather.atLocation.useQuery(input);
+  const weather = getUsableWidgetQueryData(weatherQuery);
 
+  if (isInitialWidgetQueryPending(weatherQuery)) return <WidgetQueryLoadingState />;
   if (!weather) return <WidgetEmptyState />;
 
-  if (displayMode === "advanced") {
-    return <AdvancedWeather weather={weather} options={options} />;
-  }
+  const content =
+    displayMode === "advanced" ? (
+      <AdvancedWeather weather={weather} options={options} />
+    ) : (
+      <Stack
+        align="center"
+        gap="sm"
+        justify="center"
+        w="100%"
+        h="100%"
+        style={{ pointerEvents: isEditMode ? "none" : undefined }}
+      >
+        {options.hasForecast ? (
+          <WeeklyForecast
+            weather={weather}
+            options={options}
+            isEditMode={isEditMode}
+            maxDays={getVisibleForecastDays(options.forecastDayCount, width, height)}
+          />
+        ) : (
+          <DailyWeather weather={weather} options={options} isEditMode={isEditMode} />
+        )}
+      </Stack>
+    );
 
   return (
-    <Stack
-      align="center"
-      gap="sm"
-      justify="center"
-      w="100%"
-      h="100%"
-      style={{ pointerEvents: isEditMode ? "none" : undefined }}
-    >
-      {options.hasForecast ? (
-        <WeeklyForecast
-          weather={weather}
-          options={options}
-          isEditMode={isEditMode}
-          maxDays={getVisibleForecastDays(options.forecastDayCount, width, height)}
-        />
-      ) : (
-        <DailyWeather weather={weather} options={options} isEditMode={isEditMode} />
+    <Box h="100%" w="100%" pos="relative">
+      {content}
+      {weatherQuery.error && (
+        <Box pos="absolute" top={4} right={4}>
+          <WidgetQueryErrorIndicator error={weatherQuery.error} label="Weather" />
+        </Box>
       )}
-    </Stack>
+    </Box>
   );
 }
 
@@ -77,6 +92,7 @@ interface CompactWeatherProps extends WeatherProps {
 
 const AdvancedWeather = ({ options, weather }: WeatherProps) => {
   const forecastHeadingId = useId();
+  const locale = useCurrentIntlLocale();
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
 
@@ -164,10 +180,10 @@ const AdvancedWeather = ({ options, weather }: WeatherProps) => {
                   <Table.Td>
                     <Stack gap={0}>
                       <Text size="sm" fw={600} tt="capitalize">
-                        {dayjs(dayWeather.time).format("ddd")}
+                        {formatLocalizedDate(dayWeather.time, locale, { weekday: "short" })}
                       </Text>
                       <Text size="xs" c="dimmed">
-                        {dayjs(dayWeather.time).format("MMM D")}
+                        {formatLocalizedDate(dayWeather.time, locale, { month: "short", day: "numeric" })}
                       </Text>
                     </Stack>
                   </Table.Td>
@@ -219,14 +235,14 @@ const AdvancedWeather = ({ options, weather }: WeatherProps) => {
                     <Group gap="xs" wrap="nowrap">
                       <Group gap={3} wrap="nowrap">
                         <IconSunrise size={15} aria-hidden />
-                        <Text size="sm">{getPreferredTime(dayWeather.sunrise)}</Text>
+                        <Text size="sm">{getPreferredTime(dayWeather.sunrise, locale)}</Text>
                       </Group>
                       <Text size="sm" c="dimmed">
                         /
                       </Text>
                       <Group gap={3} wrap="nowrap">
                         <IconSunset size={15} aria-hidden />
-                        <Text size="sm">{getPreferredTime(dayWeather.sunset)}</Text>
+                        <Text size="sm">{getPreferredTime(dayWeather.sunset, locale)}</Text>
                       </Group>
                     </Group>
                   </Table.Td>
@@ -367,6 +383,7 @@ const WeeklyForecast = ({ options, weather, isEditMode, maxDays }: CompactWeathe
 function Forecast({ weather, options, isEditMode, maxDays }: CompactWeatherProps & { maxDays: number }) {
   const dateFormat = options.dateFormat;
   const t = useScopedI18n("widget.weather");
+  const locale = useCurrentIntlLocale();
   return (
     <Group className="weather-forecast-days-group" w="100%" justify="space-evenly" wrap="nowrap" pb="sm">
       {weather.daily.slice(0, maxDays).map((dayWeather, index) => (
@@ -374,7 +391,7 @@ function Forecast({ weather, options, isEditMode, maxDays }: CompactWeatherProps
           <Popover.Target>
             <UnstyledButton
               className={classes.forecastButton}
-              aria-label={t("detailsFor", { date: dayjs(dayWeather.time).format(dateFormat) })}
+              aria-label={t("detailsFor", { date: formatWeatherDate(dayWeather.time, locale, dateFormat) })}
               disabled={isEditMode}
             >
               <Stack
@@ -388,7 +405,7 @@ function Forecast({ weather, options, isEditMode, maxDays }: CompactWeatherProps
                 align="center"
               >
                 <Text component="span" fz="xl">
-                  {dayjs(dayWeather.time).format("dd")}
+                  {formatLocalizedDate(dayWeather.time, locale, { weekday: "short" })}
                 </Text>
                 <AnimatedWeatherIcon size={16} code={dayWeather.weatherCode} />
                 <Text component="span" fz={16}>
@@ -413,8 +430,8 @@ function Forecast({ weather, options, isEditMode, maxDays }: CompactWeatherProps
                 options.isFormatFahrenheit,
                 options.disableTemperatureDecimals,
               )}
-              sunrise={dayjs(dayWeather.sunrise).format("HH:mm")}
-              sunset={dayjs(dayWeather.sunset).format("HH:mm")}
+              sunrise={getPreferredTime(dayWeather.sunrise, locale)}
+              sunset={getPreferredTime(dayWeather.sunset, locale)}
               maxWindSpeed={dayWeather.maxWindSpeed}
               maxWindGusts={dayWeather.maxWindGusts}
               humidity={dayWeather.humidity}
@@ -436,11 +453,8 @@ export const getPreferredUnit = (value?: number, isFahrenheit = false, disableTe
 export const getPreferredWindSpeed = (value: number | undefined, useImperialSpeed = false): string =>
   value === undefined ? "?" : (useImperialSpeed ? metricToImperial(value) : value).toFixed(1);
 
-export const getPreferredTime = (value: string | undefined): string => {
-  if (!value) return "?";
-  const time = dayjs(value);
-  return time.isValid() ? time.format("HH:mm") : "?";
-};
+export const getPreferredTime = (value: string | undefined, locale = "en-US"): string =>
+  value ? formatLocalizedTime(value, locale) : "?";
 
 export const getVisibleForecastDays = (configuredDays: number, width: number, height: number): number => {
   const widthBudget = Math.max(1, Math.floor(width / 58));

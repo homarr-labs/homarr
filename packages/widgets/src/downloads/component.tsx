@@ -50,10 +50,12 @@ import { formatByteRate, formatBytes, useIntegrationConnected } from "@homarr/co
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { HomarrDataTable } from "../common/homarr-data-table";
+import { formatLocalizedDateTime } from "../common/locale";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 import { filterDownloadItemsByStatus, getAvailableDownloadStates } from "./helpers";
 
@@ -133,8 +135,8 @@ const stateColorMap: Record<DownloadState, string> = {
 };
 
 const rowBgAlpha: Partial<Record<DownloadState, string>> = {
-  failed: "rgba(255, 0, 0, 0.04)",
-  paused: "rgba(255, 200, 0, 0.03)",
+  failed: "var(--mantine-color-red-light)",
+  paused: "var(--mantine-color-yellow-light)",
 };
 
 const columnVisibilityChecks: Partial<Record<string, (ctx: ColumnContext) => boolean>> = {
@@ -314,14 +316,12 @@ export default function DownloadClientsWidget({
     [allInteractAccess, integrationIds],
   );
 
-  const {
-    data: currentItems = [],
-    isFetching,
-    isError,
-  } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
+  const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
     integrationIds,
     limitPerIntegration: options.limitPerIntegration,
   });
+  const currentItems = getUsableWidgetQueryData(downloadsQuery) ?? [];
+  const { isFetching } = downloadsQuery;
 
   const t = useScopedI18n("widget.downloads");
 
@@ -733,14 +733,6 @@ export default function DownloadClientsWidget({
     );
   }
 
-  if (isError && currentItems.length === 0) {
-    return (
-      <Center h="100%">
-        <Text c="red">{t("errors.noCommunications")}</Text>
-      </Center>
-    );
-  }
-
   let rowContextMenuHandler: typeof handleContextMenu | undefined = handleContextMenu;
   if (isEditMode) rowContextMenuHandler = undefined;
 
@@ -859,6 +851,7 @@ function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): R
 
 function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; collapse: () => void }) {
   const t = useScopedI18n("widget.downloads");
+  const locale = useCurrentIntlLocale();
   const progressPercent = Math.floor(item.progress * 100);
   const categoryDisplay = formatCategoryDisplay(item.category);
 
@@ -921,7 +914,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
               <DetailPair label={t("items.sent.detailsTitle")} value={formatBytes(item.sent)} />
             )}
             {item.added !== undefined && (
-              <DetailPair label={t("items.added.detailsTitle")} value={dayjs(item.added).format("YYYY-MM-DD HH:mm")} />
+              <DetailPair label={t("items.added.detailsTitle")} value={formatLocalizedDateTime(item.added, locale)} />
             )}
             {categoryDisplay && <DetailPair label={t("items.category.detailsTitle")} value={categoryDisplay} />}
             <DetailPair label={t("items.id.detailsTitle")} value={item.id} />
@@ -1058,7 +1051,7 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
         left={0}
         w="100vw"
         h="100vh"
-        style={{ zIndex: 1000 }}
+        style={{ zIndex: "var(--mantine-z-index-popover)" }}
         onClick={onClose}
         onContextMenu={(e) => {
           e.preventDefault();

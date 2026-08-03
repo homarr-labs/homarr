@@ -4,7 +4,7 @@
   right: 10px;
   bottom: calc(100% - 10px);
   margin-bottom: 1px;
-  z-index: 200;
+  z-index: var(--mantine-z-index-app);
   pointer-events: none;
   opacity: 0;
   transform: translateY(6px);
@@ -99,6 +99,15 @@
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
+}
+
+@media (forced-colors: active) {
+  .panel {
+    border-color: CanvasText;
+    background: Canvas;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
 }
 
 .metadataLabel {

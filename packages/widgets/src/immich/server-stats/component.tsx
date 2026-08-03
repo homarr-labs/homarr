@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Group, Progress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Box, Center, Group, Progress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconDatabase, IconPhoto, IconUsers, IconVideo } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
 
@@ -11,7 +11,9 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
-import { setWidgetRuntimeQueries } from "../../definition";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../../common/query-state-indicator";
+import { useWidgetRuntimeQueries } from "../../runtime-hooks";
 import classes from "./component.module.css";
 
 const MAX_ADVANCED_ALBUMS = 50;
@@ -22,7 +24,7 @@ export default function ImmichServerStatsWidget({
   displayMode = "compact",
   width,
   height,
-  widgetStateRef,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"immich-serverStats">) {
   const t = useI18n();
   const locale = useCurrentIntlLocale();
@@ -30,16 +32,19 @@ export default function ImmichServerStatsWidget({
   const albumsInput = { ...input, limit: MAX_ADVANCED_ALBUMS };
   const isAdvanced = displayMode === "advanced";
   const albumsEnabled = isAdvanced && integrationIds.length > 0;
-  const { data: stats } = clientApi.widget.immich.getServerStats.useQuery(input);
-  const { data: albums = [] } = clientApi.widget.immich.getAlbums.useQuery(albumsInput, {
+  const statsQuery = clientApi.widget.immich.getServerStats.useQuery(input);
+  const stats = getUsableWidgetQueryData(statsQuery);
+  const albumsQuery = clientApi.widget.immich.getAlbums.useQuery(albumsInput, {
     enabled: albumsEnabled,
     staleTime: 15 * 60 * 1000,
   });
-  setWidgetRuntimeQueries(widgetStateRef, [
+  const albums = albumsQuery.data ?? [];
+  useWidgetRuntimeQueries(widgetRuntimeRef, [
     getQueryKey(clientApi.widget.immich.getServerStats, input, "query"),
     ...(albumsEnabled ? [getQueryKey(clientApi.widget.immich.getAlbums, albumsInput, "query")] : []),
   ]);
 
+  if (isInitialWidgetQueryPending(statsQuery)) return <WidgetQueryLoadingState />;
   if (!stats) return <WidgetEmptyState />;
 
   const statCount =
@@ -85,8 +90,13 @@ export default function ImmichServerStatsWidget({
 
   if (!isAdvanced) {
     return (
-      <Stack gap="md" h="100%" p={statsLayout.dense ? "xs" : "md"} justify="center">
+      <Stack gap="md" h="100%" p={statsLayout.dense ? "xs" : "md"} justify="center" pos="relative">
         {statsContent}
+        {statsQuery.error && (
+          <Box pos="absolute" top={4} right={4}>
+            <WidgetQueryErrorIndicator error={statsQuery.error} label={t("widget.immich-serverStats.name")} />
+          </Box>
+        )}
       </Stack>
     );
   }
@@ -96,25 +106,41 @@ export default function ImmichServerStatsWidget({
   return (
     <Stack gap="lg" h="100%" p="lg">
       {statsContent}
-      <Text size="xs" c="dimmed">
-        {t("widget.immich-serverStats.albumLimit", { count: MAX_ADVANCED_ALBUMS })}
-      </Text>
+      <Group justify="space-between" wrap="nowrap">
+        <Text size="xs" c="dimmed">
+          {t("widget.immich-serverStats.albumLimit", { count: MAX_ADVANCED_ALBUMS })}
+        </Text>
+        <WidgetQueryErrorIndicator
+          error={statsQuery.error ?? albumsQuery.error}
+          label={t("widget.immich-serverStats.name")}
+        />
+      </Group>
       <ScrollArea style={{ flex: 1, minHeight: 0 }}>
-        <SimpleGrid cols={width >= 900 ? 2 : 1} spacing="xs">
-          {sortedAlbums.map((album) => (
-            <Stack key={album.id} gap={4} p="xs">
-              <Group justify="space-between" wrap="nowrap">
-                <Text size="sm" fw={600} truncate>
-                  {album.albumName}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {album.assetCount.toLocaleString(locale)}
-                </Text>
-              </Group>
-              <Progress value={(album.assetCount / Math.max(maxAssets, 1)) * 100} size="sm" />
-            </Stack>
-          ))}
-        </SimpleGrid>
+        {isInitialWidgetQueryPending(albumsQuery) ? (
+          <WidgetQueryLoadingState />
+        ) : albumsQuery.error && albumsQuery.data === undefined ? (
+          <Center h="100%" p="md">
+            <WidgetQueryErrorIndicator error={albumsQuery.error} label={t("widget.immich-serverStats.name")} />
+          </Center>
+        ) : albums.length === 0 ? (
+          <WidgetEmptyState />
+        ) : (
+          <SimpleGrid cols={width >= 900 ? 2 : 1} spacing="xs">
+            {sortedAlbums.map((album) => (
+              <Stack key={album.id} gap={4} p="xs">
+                <Group justify="space-between" wrap="nowrap">
+                  <Text size="sm" fw={600} truncate>
+                    {album.albumName}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {album.assetCount.toLocaleString(locale)}
+                  </Text>
+                </Group>
+                <Progress value={(album.assetCount / Math.max(maxAssets, 1)) * 100} size="sm" />
+              </Stack>
+            ))}
+          </SimpleGrid>
+        )}
       </ScrollArea>
     </Stack>
   );

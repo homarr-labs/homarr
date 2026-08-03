@@ -41,6 +41,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
 import { WidgetEmptyState } from "../common/empty-state";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import actionTargetClasses from "../common/action-target.module.css";
 import { CpuRing } from "./rings/cpu-ring";
@@ -59,9 +60,9 @@ export const SystemHealthMonitoring = ({
   withScrollArea = true,
 }: WidgetComponentProps<"healthMonitoring"> & { withScrollArea?: boolean }) => {
   const t = useI18n();
-  const { data: healthData = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
-    integrationIds,
-  });
+  const healthData =
+    getUsableWidgetQueryData(clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds })) ??
+    [];
   const [openedIntegrationId, setOpenedIntegrationId] = useState<string | null>(null);
   const board = useRequiredBoard();
 

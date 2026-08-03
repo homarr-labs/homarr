@@ -1,8 +1,9 @@
-import type { CSSProperties, KeyboardEvent, MutableRefObject } from "react";
-import { useEffect, useRef } from "react";
-import { ActionIcon, Badge, Box, Card } from "@mantine/core";
-import { useElementSize, useViewportSize } from "@mantine/hooks";
-import { IconMaximize, IconX } from "@tabler/icons-react";
+import type { CSSProperties, KeyboardEvent } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { ActionIcon, Badge, Box, Card, Portal } from "@mantine/core";
+import { useElementSize, useIsomorphicEffect, useViewportSize } from "@mantine/hooks";
+import { IconMaximize } from "@tabler/icons-react";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
@@ -12,8 +13,9 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import type { WidgetDefinition } from "@homarr/widgets";
+import type { WidgetRuntimeRef } from "@homarr/widgets";
 import {
+  createWidgetRuntimeState,
   loadWidgetDynamic,
   reduceWidgetOptionsWithDefaultValues,
   supportsAdvancedFocus as definitionSupportsAdvancedFocus,
@@ -25,6 +27,7 @@ import type { SectionItem } from "~/app/[locale]/boards/_types";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { getAdvancedFocusClosePosition, getAdvancedFocusRect } from "../advanced-focus/geometry";
+import { AdvancedFocusManualSurface } from "../advanced-focus/manual-surface";
 import { redirectShiftWheel } from "../advanced-focus/wheel";
 import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
@@ -52,13 +55,12 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const widgetName = t(`widget.${item.kind}.name`);
   const advancedViewLabel = t("item.advancedFocus.label", { widget: widgetName });
   const [isEditMode] = useEditMode();
-  const widgetStateRef = useRef<Record<string, unknown> | null>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const surfaceRef = useRef<HTMLDivElement>(null);
+  const widgetRuntimeRef = useRef(createWidgetRuntimeState());
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [manualSurface, setManualSurface] = useState<HTMLDivElement | null>(null);
+  const [surfacePortalTarget, setSurfacePortalTarget] = useState<HTMLDivElement | null>(null);
   const { active, open, close, dismiss, hover, leave } = useAdvancedFocus();
-  const supportsAdvancedFocus = definitionSupportsAdvancedFocus(
-    widgetImports[item.kind].definition as WidgetDefinition,
-  );
+  const supportsAdvancedFocus = definitionSupportsAdvancedFocus(widgetImports[item.kind].definition);
   const advancedViewId = `advanced-focus-${item.id}`;
   const activeFocus = supportsAdvancedFocus && active?.itemId === item.id ? active : null;
   const isAdvanced = activeFocus !== null;
@@ -66,15 +68,20 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
     ? getAdvancedFocusRect(activeFocus.sourceRect, { width: viewportWidth, height: viewportHeight })
     : null;
   const closePosition = advancedRect ? getAdvancedFocusClosePosition(advancedRect, viewportWidth) : null;
+  const isPreview = activeFocus?.activation === "preview";
+  const isManual = activeFocus?.activation === "manual";
+
+  // Keep one widget subtree mounted while moving its stable portal target between the grid and viewport layers.
+  // This preserves iframe/editor state and escapes Gridstack's transformed containing block.
+  useIsomorphicEffect(() => {
+    const target = document.createElement("div");
+    target.className = advancedFocusClasses.surfacePortalTarget ?? "";
+    setSurfacePortalTarget(target);
+    return () => target.remove();
+  }, []);
 
   // Responsive layout changes remount grid items. Never leave their focus backdrop orphaned.
   useEffect(() => () => dismiss(item.id), [dismiss, item.id]);
-
-  useEffect(() => {
-    if (!activeFocus?.autofocusClose || activeFocus.phase !== "visible") return;
-    const frame = requestAnimationFrame(() => closeButtonRef.current?.focus());
-    return () => cancelAnimationFrame(frame);
-  }, [activeFocus?.autofocusClose, activeFocus?.phase]);
 
   const openAdvanced = (autofocusClose = false) => {
     if (sourceRef.current) open(item.id, sourceRef.current, { activation: "manual", autofocusClose });
@@ -92,7 +99,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
     openAdvanced(true);
   };
   useEffect(() => {
-    const surface = surfaceRef.current;
+    const surface = isManual ? manualSurface : cardRef.current;
     if (!isAdvanced || !surface) return;
 
     const handleWheel = (event: WheelEvent) => {
@@ -106,11 +113,87 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
 
     surface.addEventListener("wheel", handleWheel, { capture: true, passive: false });
     return () => surface.removeEventListener("wheel", handleWheel, { capture: true });
-  }, [isAdvanced]);
+  }, [isAdvanced, isManual, manualSurface]);
+
+  const mountPortalTarget = (node: HTMLDivElement | null, activation: "compact" | "preview" | "manual") => {
+    if (!node || !surfacePortalTarget) return;
+    const shouldMount =
+      (activation === "compact" && !isAdvanced) ||
+      (activation === "preview" && isPreview) ||
+      (activation === "manual" && isManual);
+    if (shouldMount) node.append(surfacePortalTarget);
+  };
+
+  const previewStyle =
+    isPreview && advancedRect
+      ? ({
+          left: advancedRect.left,
+          top: advancedRect.top,
+          width: advancedRect.width,
+          height: advancedRect.height,
+          "--focus-translate-x": `${activeFocus.sourceRect.left - advancedRect.left}px`,
+          "--focus-translate-y": `${activeFocus.sourceRect.top - advancedRect.top}px`,
+          "--focus-scale-x": advancedRect.width > 0 ? activeFocus.sourceRect.width / advancedRect.width : 1,
+          "--focus-scale-y": advancedRect.height > 0 ? activeFocus.sourceRect.height / advancedRect.height : 1,
+        } as CSSProperties)
+      : undefined;
+
+  const widgetCard = (
+    <Card
+      ref={cardRef}
+      id={isPreview ? advancedViewId : undefined}
+      role={isPreview ? "region" : undefined}
+      aria-label={isPreview ? advancedViewLabel : undefined}
+      data-advanced-focus-surface={isPreview || undefined}
+      radius={board.itemRadius}
+      p={isAdvanced ? undefined : 0}
+      h={isManual ? "100%" : isAdvanced ? undefined : "100%"}
+      w={isManual ? "100%" : isAdvanced ? undefined : "100%"}
+      className={combineClasses(
+        classes.itemCard,
+        `${item.kind}-wrapper`,
+        isPreview && advancedFocusClasses.surface,
+        activeFocus?.phase === "closing" && isPreview && advancedFocusClasses.surfaceClosing,
+        item.advancedOptions.customCssClasses.join(" "),
+      )}
+      styles={{
+        root: {
+          "--opacity": isAdvanced ? 0.98 : board.opacity / 100,
+          containerType: "size",
+          overflow: getOverflowFromKind(item.kind),
+          "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+        },
+      }}
+      style={previewStyle}
+    >
+      <div className={advancedFocusClasses.surfaceControls}>
+        {!isEditMode && supportsAdvancedFocus && !isAdvanced && (
+          <ActionIcon
+            className={advancedFocusClasses.touchButton}
+            variant="default"
+            size={44}
+            aria-label={t("item.advancedFocus.open")}
+            onClick={() => openAdvanced()}
+          >
+            <IconMaximize size={18} />
+          </ActionIcon>
+        )}
+      </div>
+      <Box ref={contentRef} w="100%" h="100%" mih={0}>
+        <InnerContent
+          item={item}
+          width={width}
+          height={height}
+          widgetRuntimeRef={widgetRuntimeRef}
+          displayMode={isAdvanced ? "advanced" : "compact"}
+        />
+      </Box>
+    </Card>
+  );
 
   return (
     <>
-      <WidgetContextMenu item={item} widgetStateRef={widgetStateRef} sourceRef={sourceRef}>
+      <WidgetContextMenu item={item} widgetRuntimeRef={widgetRuntimeRef} sourceRef={sourceRef}>
         <Box
           ref={sourceRef}
           tabIndex={!isEditMode && supportsAdvancedFocus ? 0 : undefined}
@@ -130,99 +213,44 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
           }}
           className={combineClasses("grid-stack-item-content", isAdvanced && advancedFocusClasses.sourcePlaceholder)}
         >
-          <div
-            className={combineClasses(
-              advancedFocusClasses.surfaceHost,
-              isAdvanced && advancedFocusClasses.surfaceHostAdvanced,
-            )}
-          >
-            {activeFocus?.activation === "manual" && closePosition && (
-              <ActionIcon
-                ref={closeButtonRef}
-                className={advancedFocusClasses.closeButton}
-                variant="default"
-                size={44}
-                aria-label={t("item.advancedFocus.close")}
-                aria-controls={advancedViewId}
-                style={closePosition}
-                onClick={() => close()}
-              >
-                <IconX size={18} />
-              </ActionIcon>
-            )}
-            <Card
-              ref={surfaceRef}
-              id={isAdvanced ? advancedViewId : undefined}
-              role={isAdvanced ? "region" : undefined}
-              aria-label={isAdvanced ? advancedViewLabel : undefined}
-              data-advanced-focus-surface={isAdvanced || undefined}
-              radius={board.itemRadius}
-              p={isAdvanced ? undefined : 0}
-              h={isAdvanced ? undefined : "100%"}
-              w={isAdvanced ? undefined : "100%"}
-              className={combineClasses(
-                classes.itemCard,
-                `${item.kind}-wrapper`,
-                isAdvanced && advancedFocusClasses.surface,
-                activeFocus?.phase === "closing" && advancedFocusClasses.surfaceClosing,
-                item.advancedOptions.customCssClasses.join(" "),
-              )}
-              styles={{
-                root: {
-                  "--opacity": isAdvanced ? 0.98 : board.opacity / 100,
-                  containerType: "size",
-                  overflow: getOverflowFromKind(item.kind),
-                  "--border-color":
-                    item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-                },
-              }}
-              style={
-                activeFocus && advancedRect
-                  ? ({
-                      left: advancedRect.left,
-                      top: advancedRect.top,
-                      width: advancedRect.width,
-                      height: advancedRect.height,
-                      "--focus-translate-x": `${activeFocus.sourceRect.left - advancedRect.left}px`,
-                      "--focus-translate-y": `${activeFocus.sourceRect.top - advancedRect.top}px`,
-                      "--focus-scale-x": advancedRect.width > 0 ? activeFocus.sourceRect.width / advancedRect.width : 1,
-                      "--focus-scale-y":
-                        advancedRect.height > 0 ? activeFocus.sourceRect.height / advancedRect.height : 1,
-                    } as CSSProperties)
-                  : undefined
-              }
-            >
-              <div className={advancedFocusClasses.surfaceControls}>
-                {!isEditMode && supportsAdvancedFocus && !isAdvanced && (
-                  <ActionIcon
-                    className={advancedFocusClasses.touchButton}
-                    variant="default"
-                    size={44}
-                    aria-label={t("item.advancedFocus.open")}
-                    onClick={() => openAdvanced()}
-                  >
-                    <IconMaximize size={18} />
-                  </ActionIcon>
-                )}
-              </div>
-              <Box ref={contentRef} w="100%" h="100%" mih={0}>
-                <InnerContent
-                  item={item}
-                  width={width}
-                  height={height}
-                  widgetStateRef={widgetStateRef}
-                  displayMode={isAdvanced ? "advanced" : "compact"}
-                />
-              </Box>
-            </Card>
+          <div ref={(node) => mountPortalTarget(node, "compact")} className={advancedFocusClasses.surfaceHost}>
+            {!surfacePortalTarget && widgetCard}
           </div>
+          {surfacePortalTarget && createPortal(widgetCard, surfacePortalTarget)}
+          {isPreview && (
+            <Portal reuseTargetNode={false}>
+              <div
+                ref={(node) => mountPortalTarget(node, "preview")}
+                className={advancedFocusClasses.surfaceHostAdvanced}
+              />
+            </Portal>
+          )}
+          {isManual && advancedRect && closePosition && (
+            <AdvancedFocusManualSurface
+              opened={activeFocus.phase === "visible"}
+              phase={activeFocus.phase}
+              id={advancedViewId}
+              label={advancedViewLabel}
+              closeLabel={t("item.advancedFocus.close")}
+              rect={advancedRect}
+              closePosition={closePosition}
+              sourceRect={activeFocus.sourceRect}
+              radius={board.itemRadius}
+              contentRef={setManualSurface}
+              onClose={() => close()}
+            >
+              <div
+                ref={(node) => mountPortalTarget(node, "manual")}
+                className={advancedFocusClasses.manualSurfaceMount}
+              />
+            </AdvancedFocusManualSurface>
+          )}
         </Box>
       </WidgetContextMenu>
       {!isAdvanced && item.advancedOptions.title?.trim() && (
         <Badge
           pos="absolute"
-          // It's 4 because of the mantine-react-table that has z-index 3
-          style={{ zIndex: 4 }}
+          style={{ zIndex: "var(--mantine-z-index-app)" }}
           top={2}
           left={16}
           size="xs"
@@ -247,7 +275,7 @@ interface InnerContentProps {
   item: SectionItem;
   width: number;
   height: number;
-  widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
+  widgetRuntimeRef: WidgetRuntimeRef;
   displayMode: "compact" | "advanced";
 }
 

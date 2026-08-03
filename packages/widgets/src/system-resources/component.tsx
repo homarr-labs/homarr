@@ -7,6 +7,7 @@ import { clientApi } from "@homarr/api/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
 import { SystemResourceGPUChart } from "./chart/gpu-chart";
@@ -57,11 +58,9 @@ export default function SystemResources({
   height,
   displayMode,
 }: WidgetComponentProps<"systemResources">) {
-  const {
-    data = [],
-    dataUpdatedAt,
-    isPending,
-  } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
+  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
+  const data = getUsableWidgetQueryData(healthQuery) ?? [];
+  const { dataUpdatedAt, isPending } = healthQuery;
   const isAdvanced = displayMode === "advanced";
   const integrationKey = useMemo(() => integrationIds.join("\u0000"), [integrationIds]);
   const [historyByIntegration, setHistoryByIntegration] = useState<Record<string, ChartItem[]>>({});

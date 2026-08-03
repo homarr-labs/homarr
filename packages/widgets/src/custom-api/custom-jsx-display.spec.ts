@@ -64,6 +64,16 @@ describe("CustomJsxDisplay", () => {
     expect(container.textContent).toContain("Safe");
   });
 
+  it("does not expose parser failures in rendered or accessible text", async () => {
+    await renderDisplay({
+      template: "<Text>http://admin:password@nas.internal/private/path?token=secret",
+      data: {},
+    });
+
+    expect(container.textContent).not.toMatch(/admin|password|nas\.internal|private\/path|token|secret/i);
+    expect(container.innerHTML).not.toMatch(/admin|password|nas\.internal|private\/path|token|secret/i);
+  });
+
   describe("safe bindings security", () => {
     it("exposes wrapper functions, not native constructors", () => {
       const bindings = SAFE_BINDINGS({ value: 7 });

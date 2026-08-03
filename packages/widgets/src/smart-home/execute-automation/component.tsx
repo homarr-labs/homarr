@@ -9,7 +9,6 @@ import {
   Stack,
   Text,
   ThemeIcon,
-  Tooltip,
   UnstyledButton,
   VisuallyHidden,
 } from "@mantine/core";
@@ -106,7 +105,7 @@ export default function SmartHomeTriggerAutomationWidget({
           cursor: !isEditMode && integrationId && canInteract ? "pointer" : "initial",
           pointerEvents: isEditMode ? "none" : undefined,
         }}
-        aria-description={error?.message}
+        aria-description={error ? t("widget.smartHome-executeAutomation.error.executeFailed") : undefined}
         w="100%"
         h="100%"
       >
@@ -123,11 +122,9 @@ export default function SmartHomeTriggerAutomationWidget({
         {error && displayMode !== "advanced" && (
           <Overlay>
             <Center w="100%" h="100%" p="xs">
-              <Tooltip label={error.message} multiline>
-                <Text size="xs" c="red" ta="center" lineClamp={3}>
-                  {t("widget.smartHome-executeAutomation.error.executeFailed")}
-                </Text>
-              </Tooltip>
+              <Text size="xs" c="red" ta="center" lineClamp={3}>
+                {t("widget.smartHome-executeAutomation.error.executeFailed")}
+              </Text>
             </Center>
           </Overlay>
         )}
@@ -142,11 +139,9 @@ export default function SmartHomeTriggerAutomationWidget({
             {displayMode === "advanced" && (
               <>
                 {error ? (
-                  <Tooltip label={error.message} multiline>
-                    <Text ta="center" size="xs" c="red">
-                      {t("widget.smartHome-executeAutomation.error.executeFailed")}
-                    </Text>
-                  </Tooltip>
+                  <Text ta="center" size="xs" c="red">
+                    {t("widget.smartHome-executeAutomation.error.executeFailed")}
+                  </Text>
                 ) : (
                   <Text ta="center" size="xs" c="dimmed">
                     {lastExecutedAt

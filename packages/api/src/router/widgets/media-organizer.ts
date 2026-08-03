@@ -4,7 +4,7 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { mediaOrganizerRequestHandler } from "@homarr/request-handler/media-organizer";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const mediaOrganizerRouter = createTRPCRouter({
@@ -39,7 +39,7 @@ export const mediaOrganizerRouter = createTRPCRouter({
             missingCount: 0,
             queued: [],
             queuedCount: 0,
-            error: error instanceof Error ? error.message : String(error),
+            error: toPublicIntegrationError(error),
           }),
           throwOnAllFailures: true,
         },

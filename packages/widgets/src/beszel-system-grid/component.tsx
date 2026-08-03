@@ -37,6 +37,7 @@ import {
 } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
 
@@ -385,21 +386,16 @@ export default function BeszelSystemGridWidget({
   isEditMode,
   width,
   height,
-  displayMode = "compact",
 }: WidgetComponentProps<"beszelSystemGrid">) {
   const t = useScopedI18n("widget.beszelSystemGrid");
   const board = useRequiredBoard();
   const { openModal } = useModalAction(BeszelSystemStatsModal);
 
-  const {
-    data: results = [],
-    error: systemsError,
-    isPending,
-  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const results = getUsableWidgetQueryData(systemsQuery) ?? [];
+  const { isPending } = systemsQuery;
 
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
-
-  if (systemsError) throw systemsError;
 
   if (isPending) {
     return (
@@ -425,20 +421,15 @@ export default function BeszelSystemGridWidget({
     );
   }
 
-  const advanced = displayMode === "advanced";
-  const cols = advanced
-    ? Math.min(filteredSystems.length, width >= 900 ? 2 : 1)
-    : getColCount(width, height, filteredSystems.length);
+  const cols = getColCount(width, height, filteredSystems.length);
   const rows = Math.ceil(filteredSystems.length / cols) || 1;
   const rawCellHeight = height / rows;
-  const minimumCellHeight = advanced ? 320 : MIN_CELL_HEIGHT;
+  const minimumCellHeight = MIN_CELL_HEIGHT;
   const scrollEnabled = rawCellHeight < minimumCellHeight;
   const effectiveCellHeight = scrollEnabled ? minimumCellHeight : rawCellHeight;
   const cellWidth = width / cols;
   const size = getSizeConfig(cellWidth, effectiveCellHeight);
-  const maxMetrics = advanced
-    ? Math.min(metricRenderers.length, getMaxVisibleMetrics(effectiveCellHeight, size))
-    : getMaxVisibleMetrics(effectiveCellHeight, size);
+  const maxMetrics = getMaxVisibleMetrics(effectiveCellHeight, size);
 
   return (
     <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>

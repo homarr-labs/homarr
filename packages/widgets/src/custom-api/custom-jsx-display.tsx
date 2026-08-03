@@ -7,27 +7,17 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { WHITELISTED_COMPONENTS, SAFE_BINDINGS } from "./jsx-whitelist";
 
-const MAX_PARSE_ERRORS = 5;
-
-function appendParseError(prev: string[], message: string): string[] {
-  if (prev.length >= MAX_PARSE_ERRORS) return prev;
-  if (prev.includes(message)) return prev;
-  return [...prev, message];
-}
-
 export default function CustomJsxDisplay({ data }: { data: Record<string, unknown> }) {
   const template = String(data.template ?? "");
   const apiData = data.data;
-  const [parseErrors, setParseErrors] = useState<string[]>([]);
+  const [hasParseError, setHasParseError] = useState(false);
   const bindings = useMemo(() => SAFE_BINDINGS(apiData), [apiData]);
 
   useEffect(() => {
-    setParseErrors([]);
+    setHasParseError(false);
   }, [template, bindings]);
 
-  const handleError = useCallback((error: Error) => {
-    setParseErrors((prev) => appendParseError(prev, error.message));
-  }, []);
+  const handleError = useCallback(() => setHasParseError(true), []);
 
   if (!template.trim()) {
     return (
@@ -51,22 +41,17 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
         blacklistedAttrs={[/^on.+/i, /^dangerously/i]}
         blacklistedTags={["script", "iframe", "object", "embed", "form", "style", "link", "meta", "base"]}
         onError={handleError}
-        renderError={({ error }) => (
+        renderError={() => (
           <Alert color="red" variant="light" icon={<IconAlertTriangle size={16} />} p="xs">
-            <Text size="xs">{String(error)}</Text>
+            <Text size="xs">Invalid widget template</Text>
           </Alert>
         )}
       />
-      {parseErrors.length > 0 && (
+      {hasParseError && (
         <Alert color="yellow" variant="light" p="xs" mt="xs">
           <Text size="xs" c="dimmed">
-            {parseErrors.length} template warning(s):
+            Invalid widget template
           </Text>
-          {parseErrors.map((msg) => (
-            <Text key={msg} size="xs" c="dimmed" style={{ fontFamily: "monospace" }}>
-              {msg}
-            </Text>
-          ))}
         </Alert>
       )}
     </Stack>

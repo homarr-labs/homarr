@@ -9,6 +9,7 @@ import { formatBytesPair } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
@@ -57,7 +58,7 @@ interface SystemDiskCardProps {
   showBackgroundBar: boolean;
   integrationName?: string;
   secondaryText?: string;
-  isAdvanced: boolean;
+  showSecondaryText: boolean;
   showTemperature: boolean;
 }
 
@@ -70,7 +71,7 @@ const SystemDiskCard = ({
   showBackgroundBar,
   integrationName,
   secondaryText,
-  isAdvanced,
+  showSecondaryText,
   showTemperature,
 }: SystemDiskCardProps) => {
   const board = useRequiredBoard();
@@ -98,8 +99,10 @@ const SystemDiskCard = ({
 
   const unhealthyLabel = t("widget.systemDisks.status.unhealthy");
   const hasHiddenTemperature = temperature !== null && temperature !== undefined && !showTemperature;
+  const hasHiddenSecondaryText = Boolean(secondaryText && secondaryText !== displayText && !showSecondaryText);
   const tooltipLabel = [
     healthy ? displayText : `${displayText} (${unhealthyLabel})`,
+    hasHiddenSecondaryText ? secondaryText : null,
     hasHiddenTemperature ? `${temperature}°C` : null,
   ]
     .filter(Boolean)
@@ -108,7 +111,7 @@ const SystemDiskCard = ({
   return (
     <Tooltip
       label={tooltipLabel}
-      disabled={(valueFits && !hasHiddenTemperature) || isAdvanced}
+      disabled={valueFits && !hasHiddenTemperature && !hasHiddenSecondaryText}
       position="top"
       withinPortal
     >
@@ -132,7 +135,7 @@ const SystemDiskCard = ({
               <span>{displayText}</span>
               {!healthy && <span style={{ marginLeft: 5 }}>{unhealthyLabel}</span>}
             </Text>
-            {isAdvanced && secondaryText && (
+            {showSecondaryText && secondaryText && secondaryText !== displayText && (
               <Text size="xs" c="dimmed">
                 {secondaryText}
               </Text>
@@ -166,10 +169,10 @@ export default function SystemResources({
   options,
   width,
   height,
-  displayMode: surfaceMode,
 }: WidgetComponentProps<"systemDisks">) {
   const queryInput = { integrationIds };
-  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
+  const data =
+    getUsableWidgetQueryData(clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput)) ?? [];
 
   if (data.length === 0) return <WidgetEmptyState />;
 
@@ -193,8 +196,7 @@ export default function SystemResources({
   if (data.every((entry) => entry.healthInfo.fileSystem.length === 0)) throw new NoIntegrationDataError();
   if (disks.length === 0) return <WidgetEmptyState />;
 
-  const isAdvanced = surfaceMode === "advanced";
-  const minimumCardWidth = isAdvanced ? 320 : 260;
+  const minimumCardWidth = 260;
   const columns = Math.max(1, Math.min(disks.length, Math.floor(width / minimumCardWidth)));
   const cellWidth = width / columns;
 
@@ -210,10 +212,10 @@ export default function SystemResources({
             temperature={options.showTemperatureIfAvailable ? smartItem?.temperature : undefined}
             healthy={smartItem?.healthy ?? true} // fall back to healthy if no information is available
             showBackgroundBar={options.showBackgroundBar}
-            integrationName={isAdvanced || data.length > 1 ? integrationName : undefined}
+            integrationName={data.length > 1 ? integrationName : undefined}
             secondaryText={getAbsoluteText(item)}
-            isAdvanced={isAdvanced}
-            showTemperature={isAdvanced || (height >= 100 && cellWidth >= 220)}
+            showSecondaryText={height >= 160 && cellWidth >= 260}
+            showTemperature={height >= 100 && cellWidth >= 220}
           />
         ))}
       </SimpleGrid>

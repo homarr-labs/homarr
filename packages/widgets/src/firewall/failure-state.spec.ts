@@ -28,6 +28,16 @@ describe("firewall failure state", () => {
     );
   });
 
+  it("preserves stale cached data when a query-wide refetch fails", () => {
+    const staleQuery = {
+      ...failedQuery,
+      isError: true,
+      data: [{ integration: { id: "firewall-1" }, error: undefined }],
+    };
+
+    expect(hasTotalFirewallFailure([staleQuery, failedQuery, failedQuery, failedQuery])).toBe(false);
+  });
+
   it("surfaces query-wide and integration-specific partial failures", () => {
     const successfulQuery = {
       isPending: false,

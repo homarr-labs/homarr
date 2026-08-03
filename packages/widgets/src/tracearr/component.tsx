@@ -7,6 +7,7 @@ import type { TracearrDashboardData } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import { formatTotalTracearrBitrate } from "./bitrate";
 import { RecentActivityList } from "./recent-activity-section";
@@ -67,7 +68,8 @@ interface TracearrContentProps {
 
 function TracearrContent({ integrationIds, options, width, height, displayMode }: TracearrContentProps) {
   const t = useScopedI18n("widget.tracearr");
-  const { data: dashboardData = [] } = clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds });
+  const dashboardData =
+    getUsableWidgetQueryData(clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds })) ?? [];
 
   // Merge data from all integrations
   const combinedData = dashboardData.reduce<TracearrDashboardData>(

@@ -4,10 +4,10 @@ import type { CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getDefaultZIndex } from "@mantine/core";
-import dayjs from "dayjs";
-import localizedFormat from "dayjs/plugin/localizedFormat";
 
-dayjs.extend(localizedFormat);
+import { useCurrentIntlLocale } from "@homarr/translation/client";
+
+import { formatLocalizedDate } from "../../common/locale";
 
 const styles: Record<string, CSSProperties> = {
   wrapper: {
@@ -60,6 +60,7 @@ const MARGIN = 14;
 const BACKGROUND_TOOLTIP_Z_INDEX = getDefaultZIndex("modal") - 3;
 
 const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: PortalTooltipProps) => {
+  const locale = useCurrentIntlLocale();
   const mouseRef = useRef({ x: 0, y: 0 });
   const [pos, setPos] = useState({ x: 0, y: 0, isAdvanced: false });
   const rafRef = useRef(0);
@@ -116,7 +117,9 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
   if (!sorted.length) return null;
 
   const rawTime = sorted[0]?.payload?.rawTime as string | undefined;
-  const tooltipLabel = rawTime ? dayjs(rawTime).format("MMM D, LT") : label;
+  const tooltipLabel = rawTime
+    ? formatLocalizedDate(rawTime, locale, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })
+    : label;
   const total = sorted.reduce((sum, p) => sum + p.value, 0);
 
   const portalStyle: CSSProperties = {

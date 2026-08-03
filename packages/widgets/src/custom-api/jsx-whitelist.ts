@@ -54,19 +54,19 @@ import {
   Sparkline,
 } from "@mantine/charts";
 
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { PaginatedList, TabsContainer, TabPanel, Collapsible, StatBar, TypeBadge } from "./jsx-interactive-components";
 
-const SAFE_URL_PATTERN = /^https?:\/\//i;
-
-function isSafeUrl(url: unknown): boolean {
-  if (typeof url !== "string") return false;
-  return SAFE_URL_PATTERN.test(url) || url.startsWith("/") || url.startsWith("#");
-}
-
 function SafeAnchor(props: Record<string, unknown>) {
-  const href = props.href;
-  const safeHref = href && isSafeUrl(href) ? href : undefined;
-  return createElement(Anchor as never, { ...props, href: safeHref });
+  const safeHref = getSafeApplicationUrl(props.href);
+  const target = safeHref ? props.target : undefined;
+  return createElement(Anchor as never, {
+    ...props,
+    component: safeHref ? "a" : "span",
+    href: safeHref,
+    target,
+    rel: target === "_blank" ? SAFE_NEW_TAB_REL : undefined,
+  });
 }
 
 export const WHITELISTED_COMPONENTS: Record<string, ComponentType<never>> = {

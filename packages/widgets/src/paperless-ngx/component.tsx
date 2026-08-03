@@ -75,7 +75,6 @@ export default function PaperlessNgxWidget({
   options,
   width,
   height,
-  displayMode = "compact",
 }: WidgetComponentProps<"paperlessNgx">) {
   const t = useScopedI18n("widget.paperlessNgx");
   const tCommon = useScopedI18n("common");
@@ -116,16 +115,15 @@ export default function PaperlessNgxWidget({
     .map(([, statKey]) => statKey)
     .filter((statKey) => !(showHero && gridHiddenWhenHeroShown.has(statKey)));
 
-  const advanced = displayMode === "advanced";
-  const gridCols = advanced ? Math.max(1, Math.min(5, visibleStatKeys.length)) : getGridCols(width);
-  const ringSize = advanced ? 112 : getRingSize(width);
+  const gridCols = Math.max(1, Math.min(visibleStatKeys.length, getGridCols(width, height)));
+  const ringSize = getRingSize(Math.min(width, height * 2));
   const iconSize = getIconSize(width);
   const ringLabelSize = getRingLabelSize(ringSize);
   const hasContent = showHero || visibleStatKeys.length > 0;
 
   const heroLayoutClass =
     heroLayoutBySecondaryStats[String(visibleStatKeys.length > 0) as keyof typeof heroLayoutBySecondaryStats];
-  const showInboxRing = options.showInboxRing && (advanced || height >= 120);
+  const showInboxRing = options.showInboxRing && height >= 120;
   const heroRingClass = heroVariantByRing[String(showInboxRing) as keyof typeof heroVariantByRing];
 
   const visibleHeroParts = Object.entries(heroPartVisibility).filter(
@@ -163,11 +161,7 @@ export default function PaperlessNgxWidget({
   } as const;
 
   return (
-    <div
-      className={classes.root}
-      data-display-mode={displayMode}
-      style={advanced ? { padding: 16, gap: 16 } : undefined}
-    >
+    <div className={classes.root}>
       {showHero && (
         <div className={`${classes.hero} ${heroLayoutClass} ${heroRingClass}`}>
           {visibleHeroParts.map(([partKey]) => (
@@ -210,9 +204,9 @@ function computeInboxProgress(total: number, inbox: number): number {
   return Math.round((inbox / total) * 100);
 }
 
-function getGridCols(width: number): number {
+function getGridCols(width: number, height: number): number {
   const match = gridColsByWidth.find(({ minWidth }) => width >= minWidth);
-  return match?.cols ?? 1;
+  return Math.min(match?.cols ?? 1, height < 140 ? 2 : 5);
 }
 
 function getRingSize(width: number): number {

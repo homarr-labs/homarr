@@ -19,7 +19,7 @@ import { overseerrIntegration } from "@site/docs/integrations/overseerr";
 
 <WidgetHeader widget={mediaRequestStatsWidget} categories={["Media requests"]} />
 
-Provide an overview of your media requests, including total requests, open requests, approvals, and rejections.
+Provides an overview of media requests, including totals, availability, approvals, and rejections. Resize the widget to reveal denser stat tiles; the user ranking remains scrollable instead of being truncated.
 
 ### Supported Integrations
 
@@ -45,7 +45,7 @@ import mediaRequestStats from "./img/stats.png";
 - Hover over the widget to reveal a **search button** that opens Spotlight in media request search mode, scoped to the widget's integrations.
 - A warning indicator identifies unavailable integrations while totals from healthy integrations remain visible.
 
-<WidgetInteractionGuide />
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

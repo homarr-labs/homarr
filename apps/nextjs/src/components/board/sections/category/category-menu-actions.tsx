@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { fetchApi } from "@homarr/api/client";
 import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
-import { createId } from "@homarr/common";
+import { createId, getSafeApplicationUrl } from "@homarr/common";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
@@ -116,10 +116,13 @@ export const useCategoryMenuActions = (category: CategorySection) => {
     });
 
     const apps = await fetchApi.app.byIds.query(appIds);
-    const appsWithUrls = apps.filter((app) => app.href && app.href.length > 0);
+    const safeUrls = apps.flatMap((app) => {
+      const href = getSafeApplicationUrl(app.href);
+      return href ? [href] : [];
+    });
 
-    for (const app of appsWithUrls) {
-      const openedWindow = window.open(app.href ?? undefined);
+    for (const href of safeUrls) {
+      const openedWindow = window.open(href, "_blank", "noopener,noreferrer");
       if (openedWindow) {
         continue;
       }

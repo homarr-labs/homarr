@@ -43,6 +43,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import actionTargetClasses from "../common/action-target.module.css";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
@@ -240,7 +241,9 @@ export default function DockerWidget({
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const isAdvanced = displayMode === "advanced";
 
-  const { data, refetch, isFetching } = clientApi.docker.getContainers.useQuery();
+  const containersQuery = clientApi.docker.getContainers.useQuery();
+  const data = getUsableWidgetQueryData(containersQuery);
+  const { refetch, isFetching } = containersQuery;
   const containers = useMemo(() => data?.containers ?? [], [data?.containers]);
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);

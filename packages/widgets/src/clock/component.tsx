@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Stack, Text, Title } from "@mantine/core";
+import { Box, Loader, Stack, Text, Title } from "@mantine/core";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import timezones from "dayjs/plugin/timezone";
@@ -9,8 +9,10 @@ import utc from "dayjs/plugin/utc";
 
 import { clientApi } from "@homarr/api/client";
 import { metricToImperial } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
+import { isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { AnimatedWeatherIcon } from "../weather/animated-icon";
 
@@ -79,10 +81,22 @@ interface ClockWeatherCornerProps {
 }
 
 const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit, showDetails }: ClockWeatherCornerProps) => {
+  const t = useI18n();
   const tCommon = useScopedI18n("common");
-  const { data: weather } = clientApi.widget.weather.atLocation.useQuery({ latitude, longitude });
+  const weatherQuery = clientApi.widget.weather.atLocation.useQuery({ latitude, longitude });
+  const weather = weatherQuery.data;
 
-  if (!weather) return null;
+  if (!weather) {
+    return (
+      <Box pos="absolute" top={4} left={4}>
+        {isInitialWidgetQueryPending(weatherQuery) ? (
+          <Loader size="xs" aria-label={tCommon("action.loading")} />
+        ) : (
+          <WidgetQueryErrorIndicator error={weatherQuery.error} label={t("widget.weather.name")} />
+        )}
+      </Box>
+    );
+  }
 
   const temp = isFahrenheit ? weather.current.temperature * (9 / 5) + 32 : weather.current.temperature;
   const unit = isFahrenheit ? "°F" : "°C";
@@ -100,6 +114,7 @@ const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit, showDetails }: 
           {isFahrenheit ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour")}
         </Text>
       )}
+      <WidgetQueryErrorIndicator error={weatherQuery.error} label={t("widget.weather.name")} />
     </Stack>
   );
 };

@@ -7,6 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { WidgetEmptyState } from "../common/empty-state";
 import { AveragesSection } from "./averages";
 import { combineSpeedtestDashboards, getCompactSections } from "./helpers";
@@ -21,7 +22,8 @@ export default function SpeedtestTrackerWidget({
   displayMode = "compact",
 }: WidgetComponentProps<"speedtestTracker">) {
   const t = useScopedI18n("widget.speedtestTracker");
-  const { data: dashboardData = [] } = clientApi.widget.speedtestTracker.getDashboard.useQuery({ integrationIds });
+  const dashboardData =
+    getUsableWidgetQueryData(clientApi.widget.speedtestTracker.getDashboard.useQuery({ integrationIds })) ?? [];
   const [advancedRange, setAdvancedRange] = useState("24");
 
   const combined = useMemo(

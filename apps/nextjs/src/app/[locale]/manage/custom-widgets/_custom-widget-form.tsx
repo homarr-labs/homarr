@@ -611,7 +611,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         setPreviewRefreshSignal((n) => n + 1);
         await utils.customWidget.all.invalidate();
         await utils.customWidget.byId.invalidate({ id: definitionId });
-        await utils.widget.customApi.getData.invalidate({ definitionId });
+        await utils.widget.customApi.getData.invalidate();
       }
     } catch (err) {
       const serverErrors = extractServerErrors(err, values.displayType);
@@ -657,7 +657,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       hasTestedRef.current = true;
       setPreviewFetchResult({
         success: res.success,
-        error: res.success ? undefined : res.error,
+        error: res.success ? undefined : t("notification.previewError"),
         responseInfo: res.responseInfo,
         rawResponse: res.rawResponse,
       });
@@ -679,7 +679,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       });
       setPreviewJson(null);
     }
-  }, [getPreviewInput, previewMutation]);
+  }, [getPreviewInput, previewMutation, t]);
 
   useEffect(() => {
     if (previewRefreshSignal > 0 && hasTestedRef.current) {
@@ -816,7 +816,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               cachedJson={previewJson}
               onTest={() => void handlePreviewTest()}
               isTesting={previewMutation.isPending}
-              testError={previewMutation.error?.message ?? null}
+              testError={previewMutation.error ? t("notification.previewError") : null}
             />
           </Box>
 
@@ -866,7 +866,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
               cachedJson={previewJson}
               onTest={() => void handlePreviewTest()}
               isTesting={previewMutation.isPending}
-              testError={previewMutation.error?.message ?? null}
+              testError={previewMutation.error ? t("notification.previewError") : null}
             />
           </Stack>
         </Box>

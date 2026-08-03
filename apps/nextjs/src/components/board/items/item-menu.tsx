@@ -115,7 +115,7 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
           pos="absolute"
           top={offset}
           right={offset}
-          style={{ zIndex: 10 }}
+          style={{ zIndex: "var(--mantine-z-index-popover)" }}
           aria-label={tItem("menu.label.settings")}
         >
           <IconDotsVertical size={"1rem"} />
