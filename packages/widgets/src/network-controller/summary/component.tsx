@@ -76,7 +76,7 @@ export default function NetworkControllerSummaryWidget({
                     />
                   }
                 >
-                  WAN
+                  {t("widget.networkControllerSummary.card.wan")}
                 </List.Item>
                 <List.Item
                   icon={
@@ -88,7 +88,7 @@ export default function NetworkControllerSummaryWidget({
                   }
                 >
                   <Text>
-                    WWW
+                    {t("widget.networkControllerSummary.card.web")}
                     <Text c="dimmed" size="sm" ms="xs" span>
                       {summary.www.latency}ms{showDetails ? ` · ${summary.www.ping}ms` : ""}
                     </Text>
@@ -103,7 +103,8 @@ export default function NetworkControllerSummaryWidget({
                     />
                   }
                 >
-                  Wi-Fi{showDetails ? ` · ${summary.wifi.users + summary.wifi.guests}` : ""}
+                  {t("widget.networkControllerSummary.card.wifi")}
+                  {showDetails ? ` · ${summary.wifi.users + summary.wifi.guests}` : ""}
                 </List.Item>
                 {showDetails && (
                   <List.Item
@@ -115,7 +116,7 @@ export default function NetworkControllerSummaryWidget({
                       />
                     }
                   >
-                    LAN · {summary.lan.users + summary.lan.guests}
+                    {t("widget.networkControllerSummary.card.lan")} · {summary.lan.users + summary.lan.guests}
                   </List.Item>
                 )}
                 <List.Item
@@ -128,9 +129,9 @@ export default function NetworkControllerSummaryWidget({
                   }
                 >
                   <Text>
-                    VPN
+                    {t("widget.networkControllerSummary.card.vpn.label")}
                     <Text c="dimmed" size="sm" ms="xs" span>
-                      {t("widget.networkControllerSummary.card.vpn.countConnected", { count: `${summary.vpn.users}` })}
+                      {t("widget.networkControllerSummary.card.vpn.countConnected", { count: summary.vpn.users })}
                     </Text>
                   </Text>
                 </List.Item>

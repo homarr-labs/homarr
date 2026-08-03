@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
 import {
   Avatar,
@@ -46,7 +45,7 @@ export default function DnsHoleSummaryWidget({
 
   const t = useI18n();
 
-  const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
+  const data = summaries.flatMap(({ summary }) => summary);
   const layoutProps = boxPropsByLayout(options.layout);
   const showSourceStatuses = summaries.length > 1 && width >= 240 && height >= 220;
 
@@ -120,7 +119,7 @@ const stats = [
         size === "sm" ? 0 : 2,
       ),
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedToday"),
-    color: "rgba(240, 82, 60, 0.4)", // RED
+    color: "var(--mantine-color-red-light)",
   },
   {
     icon: IconPercentage,
@@ -130,7 +129,7 @@ const stats = [
       return `${formatNumber(totalCount === 0 ? 0 : (blocked / totalCount) * 100, size === "sm" ? 0 : 2)}%`;
     },
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedTodayPercentage"),
-    color: "rgba(255, 165, 20, 0.4)", // YELLOW
+    color: "var(--mantine-color-yellow-light)",
   },
   {
     icon: IconSearch,
@@ -140,7 +139,7 @@ const stats = [
         size === "sm" ? 0 : 2,
       ),
     label: (t) => t("widget.dnsHoleSummary.data.dnsQueriesToday"),
-    color: "rgba(0, 175, 218, 0.4)", // BLUE
+    color: "var(--mantine-color-cyan-light)",
   },
   {
     icon: IconWorldWww,
@@ -156,7 +155,7 @@ const stats = [
     },
     tooltip: (data, t) => (data.length >= 2 ? t("widget.dnsHoleSummary.domainsTooltip") : undefined),
     label: (t) => t("widget.dnsHoleSummary.data.domainsBeingBlocked"),
-    color: "rgba(0, 176, 96, 0.4)", // GREEN
+    color: "var(--mantine-color-green-light)",
   },
 ] satisfies StatItem[];
 

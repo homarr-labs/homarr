@@ -75,6 +75,8 @@ describe("Board advanced interactions", () => {
       const bookmarksPreviewSurface = page.getByRole("region", { name: "Bookmarks advanced view" });
       const dimmingOverlay = page.locator("[data-advanced-focus-overlay]");
       const otherWidget = page.locator(".grid-stack-item[data-kind='bookmarks'] > .grid-stack-item-content").first();
+      const header = page.locator("header[data-advanced-focus-background]");
+      const boardMain = page.locator("main[data-advanced-focus-background]");
 
       await compactSurface.evaluate((element) => {
         element.setAttribute("data-lifecycle-probe", "same-instance");
@@ -93,6 +95,8 @@ describe("Board advanced interactions", () => {
       await expect(dimmingOverlay).toHaveCSS("pointer-events", "none");
       await expect(otherWidget).toBeVisible();
       await expect(widget).toBeFocused();
+      await expect(header).not.toHaveAttribute("inert", "");
+      await expect(boardMain).not.toHaveAttribute("inert", "");
 
       await previewSurface.click({ button: "right", position: { x: 80, y: 80 } });
       const portalledMenuItem = page.getByRole("menuitem", { name: "Open advanced view" });
@@ -136,6 +140,8 @@ describe("Board advanced interactions", () => {
       await page.keyboard.press("Shift+Enter");
       await expect(manualSurface).toBeVisible();
       await expect(manualSurface).toHaveAttribute("aria-modal", "true");
+      await expect(header).toHaveAttribute("inert", "");
+      await expect(boardMain).toHaveAttribute("inert", "");
       expect(await manualSurface.evaluate((element) => element.closest(".grid-stack-item"))).toBeNull();
       await expect(manualSurface.locator(".clock-wrapper")).toHaveAttribute("data-lifecycle-probe", "same-instance");
       await expect(dimmingOverlay).toHaveCSS("pointer-events", "auto");
@@ -210,6 +216,8 @@ describe("Board advanced interactions", () => {
       await page.keyboard.press("Escape");
       await expect(manualSurface).toBeHidden();
       await expect(widget).toBeFocused();
+      await expect(header).not.toHaveAttribute("inert", "");
+      await expect(boardMain).not.toHaveAttribute("inert", "");
       expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe("hidden");
 
       await widget.click({ button: "right" });

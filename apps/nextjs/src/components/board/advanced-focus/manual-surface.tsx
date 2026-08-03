@@ -59,7 +59,7 @@ export const AdvancedFocusManualSurface = ({
       radius={radius}
       padding={0}
       shadow="none"
-      zIndex="calc(var(--mantine-z-index-modal) - 1)"
+      zIndex="var(--homarr-z-index-widget-focus)"
       closeOnEscape={false}
       closeOnClickOutside
       lockScroll

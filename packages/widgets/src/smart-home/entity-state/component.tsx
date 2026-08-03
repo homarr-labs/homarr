@@ -11,6 +11,8 @@ import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
+import { isSmartHomeTiny } from "../layout";
+import { getEntityStateLabel } from "./state";
 
 export default function SmartHomeEntityStateWidget({
   options,
@@ -95,7 +97,7 @@ export default function SmartHomeEntityStateWidget({
 
   if (entityError && entity === undefined) throw entityError;
 
-  const isTiny = width < 128 || height < 96;
+  const isTiny = isSmartHomeTiny(width, height);
   const advancedAttributes = [
     { key: "unit" as const, value: entity?.attributes.unit_of_measurement },
     { key: "deviceClass" as const, value: entity?.attributes.device_class },
@@ -105,7 +107,13 @@ export default function SmartHomeEntityStateWidget({
     displayMode === "advanced" && typeof entity?.attributes.friendly_name === "string"
       ? entity.attributes.friendly_name
       : options.displayName;
-  const state = entity?.state ?? "—";
+  const knownStates = {
+    on: t("state.on"),
+    off: t("state.off"),
+    unavailable: t("state.unavailable"),
+    unknown: t("state.unknown"),
+  };
+  const state = getEntityStateLabel(entity?.state, knownStates);
 
   return (
     <UnstyledButton

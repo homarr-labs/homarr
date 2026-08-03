@@ -9,6 +9,7 @@ import type { UmamiVisitorStats } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { UmamiEventsContent } from "./umami-events-content";
+import { getUmamiLayout } from "./umami-layout";
 import { UmamiTopPagesContent, UmamiTopReferrersContent } from "./umami-top-list";
 import { formatTimeFrameLabel, formatXLabel, umamiQueryOptions } from "./umami-utils";
 import type { TimeFrame } from "./umami-utils";
@@ -96,11 +97,11 @@ export function UmamiContent({
 
   const isOverlay = chartStyle === "overlay" && hasEventSeries;
   const overlayBarSize = 16;
-  const isAdvanced = displayMode === "advanced";
-  const isDense = !isAdvanced && height < 120;
-  const showXAxis = isAdvanced || height >= 140;
-  const showSecondaryStats = isAdvanced || height >= 96;
-  const showDetailedStats = isAdvanced || (width >= 260 && height >= 150);
+  const { isDense, showXAxis, showSecondaryStats, showDetailedStats, stackAdvancedContent } = getUmamiLayout({
+    width,
+    height,
+    displayMode,
+  });
 
   const selectedView =
     viewMode === "events" ? (
@@ -181,22 +182,21 @@ export function UmamiContent({
     </SimpleGrid>
   );
 
-  const advancedContent =
-    width < 900 ? (
-      <ScrollArea h="100%">
-        <Stack gap="md">
-          <Box h={Math.max(280, Math.min(420, height - 160))}>{selectedView}</Box>
-          {advancedLists}
-        </Stack>
-      </ScrollArea>
-    ) : (
-      <SimpleGrid cols={2} spacing="md" h="100%" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
-        <Box h="100%" mih={260}>
-          {selectedView}
-        </Box>
-        <ScrollArea h="100%">{advancedLists}</ScrollArea>
-      </SimpleGrid>
-    );
+  const advancedContent = stackAdvancedContent ? (
+    <ScrollArea h="100%">
+      <Stack gap="md">
+        <Box h={Math.max(280, Math.min(420, height - 160))}>{selectedView}</Box>
+        {advancedLists}
+      </Stack>
+    </ScrollArea>
+  ) : (
+    <SimpleGrid cols={2} spacing="md" h="100%" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
+      <Box h="100%" mih={260}>
+        {selectedView}
+      </Box>
+      <ScrollArea h="100%">{advancedLists}</ScrollArea>
+    </SimpleGrid>
+  );
 
   return (
     <Stack gap={isDense ? 2 : 4} p={isDense ? 4 : "xs"} h="100%" pos="relative">
