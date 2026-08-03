@@ -27,6 +27,7 @@ const excludedKeys = new Set([
 ]);
 const sensitiveKeyPattern = /(?:api.?key|authorization|cookie|credential|password|secret|token)/iu;
 const maximumItems = 6;
+const maximumIconItems = 8;
 const maximumFields = 6;
 
 type ToolResultPrimitive = string | number | boolean;
@@ -54,7 +55,19 @@ export interface ToolResultItem {
   fields: ToolResultField[];
 }
 
+export interface ToolResultIconItem {
+  name: string;
+  url: string;
+  repository?: string;
+  variant: string;
+}
+
 export type ToolResultPresentation =
+  | {
+      type: "icons";
+      items: ToolResultIconItem[];
+      totalCount: number;
+    }
   | {
       type: "collection";
       items: ToolResultItem[];
@@ -68,6 +81,10 @@ export type ToolResultPresentation =
       type: "text";
       text: string;
     };
+
+interface ToolResultPresentationOptions {
+  toolName?: string;
+}
 
 const asRecord = (value: unknown): Record<string, unknown> | undefined =>
   typeof value === "object" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : undefined;
@@ -148,7 +165,56 @@ const findCollection = (record: Record<string, unknown>) => {
   return undefined;
 };
 
-export const getToolResultPresentation = (result: unknown): ToolResultPresentation | undefined => {
+const getIconVariant = (name: string) => {
+  const extension = name.slice(name.lastIndexOf(".") + 1).trim();
+  return extension.length > 0 && extension !== name ? extension.toUpperCase() : "ICON";
+};
+
+const getSafeIconUrl = (value: unknown) => {
+  if (typeof value !== "string" || !URL.canParse(value)) return undefined;
+  const url = new URL(value);
+  if ((url.protocol !== "http:" && url.protocol !== "https:") || url.username || url.password) return undefined;
+  return value;
+};
+
+const getIconPresentation = (record: Record<string, unknown>): ToolResultPresentation | undefined => {
+  const repositories = record.icons;
+  if (!Array.isArray(repositories)) return undefined;
+
+  const isIconSearchResult =
+    "countIcons" in record || repositories.some((value) => Array.isArray(asRecord(value)?.icons));
+  if (!isIconSearchResult) return undefined;
+
+  const items = repositories.flatMap((value) => {
+    const repository = asRecord(value);
+    if (!repository || !Array.isArray(repository.icons)) return [];
+    const repositoryName = toDisplayValue(repository.slug);
+
+    return repository.icons.flatMap((iconValue) => {
+      const icon = asRecord(iconValue);
+      if (!icon) return [];
+      const name = toDisplayValue(icon.name);
+      const url = getSafeIconUrl(icon.url);
+      if (typeof name !== "string" || !url) return [];
+
+      return [
+        {
+          name,
+          url,
+          repository: typeof repositoryName === "string" ? repositoryName : undefined,
+          variant: getIconVariant(name),
+        },
+      ];
+    });
+  });
+
+  return { type: "icons", items: items.slice(0, maximumIconItems), totalCount: items.length };
+};
+
+export const getToolResultPresentation = (
+  result: unknown,
+  options: ToolResultPresentationOptions = {},
+): ToolResultPresentation | undefined => {
   if (typeof result === "string") {
     const text = result.trim();
     if (text.length === 0) return undefined;
@@ -156,6 +222,9 @@ export const getToolResultPresentation = (result: unknown): ToolResultPresentati
   }
 
   const record = asRecord(result);
+  const iconPresentation = record && options.toolName === "icon_findIcons" ? getIconPresentation(record) : undefined;
+  if (iconPresentation) return iconPresentation;
+
   const collection = Array.isArray(result) ? result : record ? findCollection(record) : undefined;
   if (collection) {
     const items = collection
