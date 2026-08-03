@@ -26,6 +26,7 @@ const statIcons = {
 } as const;
 
 const gridColsByWidth = [
+  { minWidth: 640, cols: 4 },
   { minWidth: 380, cols: 2 },
   { minWidth: 0, cols: 1 },
 ] as const;
@@ -74,7 +75,11 @@ export default function BazarrWidget({ integrationIds, options, width, height }:
 
   return (
     <div className={classes.root}>
-      <div className={classes.grid} style={{ "--stat-cols": gridCols } as CSSProperties}>
+      <div
+        className={classes.grid}
+        data-short={height < 120 || undefined}
+        style={{ "--stat-cols": gridCols } as CSSProperties}
+      >
         {visibleStatKeys.map((statKey) => {
           const Icon = statIcons[statKey];
           const value = statValues[statKey];
@@ -99,7 +104,7 @@ export function getGridCols(width: number, height: number, itemCount: number): n
   if (itemCount <= 1) return 1;
 
   const preferredColumns = gridColsByWidth.find(({ minWidth }) => width >= minWidth)?.cols ?? 1;
-  const maxColumnsByWidth = Math.max(1, Math.floor(width / 160));
+  const maxColumnsByWidth = Math.max(1, Math.floor(width / 100));
   const maxRowsByHeight = Math.max(1, Math.floor(height / 72));
   const columnsNeededToFit = Math.ceil(itemCount / maxRowsByHeight);
   return Math.min(itemCount, maxColumnsByWidth, Math.max(preferredColumns, columnsNeededToFit));

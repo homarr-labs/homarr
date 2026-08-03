@@ -15,7 +15,7 @@ import type { inferOptionsFromCreator, WidgetOptionsRecord } from "./options";
 
 export interface WidgetContextMenuAction {
   key: string;
-  label: string;
+  label: stringOrTranslation;
   icon?: TablerIcon;
   onClick: () => void;
   hidden?: boolean;

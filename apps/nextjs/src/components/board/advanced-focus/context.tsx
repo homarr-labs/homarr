@@ -37,6 +37,8 @@ interface AdvancedFocusContextValue {
 const AdvancedFocusContext = createContext<AdvancedFocusContextValue | null>(null);
 const HOVER_DELAY_MS = 150;
 const CLOSE_DURATION_MS = 180;
+const interactiveSelector =
+  "a[href], button, input, textarea, select, [contenteditable='true'], [role='button'], [role='link'], [role='menuitem'], [role='option']";
 
 const isEditableTarget = (target: EventTarget | null) =>
   target instanceof HTMLElement &&
@@ -131,6 +133,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
     const handlePointerMove = (event: PointerEvent) => {
       const current = activeRef.current;
       if (!shiftHeldRef.current || current?.activation !== "preview") return;
+      if (event.target instanceof Element && event.target.closest(interactiveSelector)) return;
 
       const underlyingSource = document
         .elementsFromPoint(event.clientX, event.clientY)

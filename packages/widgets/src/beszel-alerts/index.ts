@@ -6,6 +6,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelAlerts", {
   icon: IconBell,
+  supportsAdvancedFocus: false,
   queryKey: [["widget", "beszel", "getAlerts"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {

@@ -1,7 +1,9 @@
 "use client";
 
-import { Box, Center, Loader, Tooltip } from "@mantine/core";
+import { ActionIcon, Center, Loader, Tooltip, VisuallyHidden } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
+
+import { useScopedI18n } from "@homarr/translation/client";
 
 interface WidgetQueryErrorIndicatorProps {
   error: unknown;
@@ -10,29 +12,34 @@ interface WidgetQueryErrorIndicatorProps {
 
 /** Localized warning for stale or optional-query failures. Never renders the raw error. */
 export function WidgetQueryErrorIndicator({ error, label }: WidgetQueryErrorIndicatorProps) {
+  const t = useScopedI18n("common.widgetQuery");
   if (!error) return null;
 
-  const accessibleLabel = label;
+  const accessibleLabel = t("stale", { widget: label });
   return (
     <Tooltip label={accessibleLabel} position="left" withArrow>
-      <Box
+      <ActionIcon
         component="span"
-        c="orange"
-        role="img"
+        color="orange"
+        variant="subtle"
+        size="sm"
+        role="note"
         aria-label={accessibleLabel}
         tabIndex={0}
-        style={{ display: "inline-flex", cursor: "help" }}
+        style={{ cursor: "help" }}
       >
         <IconAlertTriangle aria-hidden size={14} />
-      </Box>
+      </ActionIcon>
     </Tooltip>
   );
 }
 
 export function WidgetQueryLoadingState() {
+  const t = useScopedI18n("common.widgetQuery");
   return (
-    <Center h="100%" w="100%" p="sm" role="status" aria-live="polite">
+    <Center component="output" h="100%" w="100%" p="sm" aria-live="polite">
       <Loader size="sm" />
+      <VisuallyHidden>{t("loading")}</VisuallyHidden>
     </Center>
   );
 }

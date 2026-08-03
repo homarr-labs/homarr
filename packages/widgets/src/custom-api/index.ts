@@ -18,7 +18,12 @@ const createOptions = () =>
 export const { definition, componentLoader } = createWidgetDefinition("customApi", {
   icon: IconApi,
   queryKey: [["widget", "customApi", "getData"]],
-  queryMatcher: ({ input }, scope) => widgetQueryInputMatches(input, { definitionId: scope.options.definitionId }),
+  queryMatcher: ({ input }, scope) =>
+    widgetQueryInputMatches(input, {
+      boardId: scope.boardId,
+      itemId: scope.itemId,
+      definitionId: scope.options.definitionId,
+    }),
   contextActions: ({ options, widgetRuntimeRef }) => {
     return [
       {

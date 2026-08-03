@@ -289,7 +289,7 @@ export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children 
                   disabled={action.disabled}
                   color={action.color}
                 >
-                  {t(action.label as never)}
+                  {translateIfNecessary(t, action.label)}
                 </Menu.Item>
               );
             })}

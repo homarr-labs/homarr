@@ -1,9 +1,8 @@
 import type { CSSProperties, KeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ActionIcon, Badge, Box, Card, Portal } from "@mantine/core";
+import { Badge, Box, Card, Portal } from "@mantine/core";
 import { useElementSize, useIsomorphicEffect, useViewportSize } from "@mantine/hooks";
-import { IconMaximize } from "@tabler/icons-react";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
@@ -74,11 +73,12 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   // Keep one widget subtree mounted while moving its stable portal target between the grid and viewport layers.
   // This preserves iframe/editor state and escapes Gridstack's transformed containing block.
   useIsomorphicEffect(() => {
+    if (!supportsAdvancedFocus) return;
     const target = document.createElement("div");
     target.className = advancedFocusClasses.surfacePortalTarget ?? "";
     setSurfacePortalTarget(target);
     return () => target.remove();
-  }, []);
+  }, [supportsAdvancedFocus]);
 
   // Responsive layout changes remount grid items. Never leave their focus backdrop orphaned.
   useEffect(() => () => dismiss(item.id), [dismiss, item.id]);
@@ -166,19 +166,6 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
       }}
       style={previewStyle}
     >
-      <div className={advancedFocusClasses.surfaceControls}>
-        {!isEditMode && supportsAdvancedFocus && !isAdvanced && (
-          <ActionIcon
-            className={advancedFocusClasses.touchButton}
-            variant="default"
-            size={44}
-            aria-label={t("item.advancedFocus.open")}
-            onClick={() => openAdvanced()}
-          >
-            <IconMaximize size={18} />
-          </ActionIcon>
-        )}
-      </div>
       <Box ref={contentRef} w="100%" h="100%" mih={0}>
         <InnerContent
           item={item}
@@ -214,7 +201,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
           className={combineClasses("grid-stack-item-content", isAdvanced && advancedFocusClasses.sourcePlaceholder)}
         >
           <div ref={(node) => mountPortalTarget(node, "compact")} className={advancedFocusClasses.surfaceHost}>
-            {!surfacePortalTarget && widgetCard}
+            {!supportsAdvancedFocus && widgetCard}
           </div>
           {surfacePortalTarget && createPortal(widgetCard, surfacePortalTarget)}
           {isPreview && (
