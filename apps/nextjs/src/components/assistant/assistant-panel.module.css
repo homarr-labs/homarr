@@ -643,7 +643,8 @@
 
 .toolResultText,
 .toolResultProperties,
-.toolResultCollection {
+.toolResultCollection,
+.toolResultIconCollection {
   margin-top: 0.65rem;
 }
 
@@ -673,6 +674,33 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
   gap: 0.4rem;
+}
+
+.toolResultIconCollection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(7rem, 100%), 1fr));
+  gap: 0.4rem;
+}
+
+.toolResultIconItem {
+  min-width: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.toolResultIconPreview {
+  display: grid;
+  height: 3.25rem;
+  place-items: center;
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-default-hover);
+}
+
+.toolResultIconImage {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .toolResultIdentity {

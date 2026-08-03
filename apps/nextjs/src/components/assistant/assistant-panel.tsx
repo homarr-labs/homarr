@@ -41,6 +41,7 @@ import {
   Divider,
   FocusTrap,
   Group,
+  Image,
   Loader,
   Menu,
   Popover,
@@ -268,8 +269,8 @@ const ImagePart = ({ image, filename }: ImageMessagePartProps) => {
 const formatToolResultValue = (value: string | number | boolean) =>
   typeof value === "number" ? value.toLocaleString() : String(value);
 
-const ToolResultPreview = ({ result }: { result: unknown }) => {
-  const presentation = getToolResultPresentation(result);
+const ToolResultPreview = ({ result, toolName }: { result: unknown; toolName: string }) => {
+  const presentation = getToolResultPresentation(result, { toolName });
   if (!presentation) return null;
 
   if (presentation.type === "text") {
@@ -293,6 +294,47 @@ const ToolResultPreview = ({ result }: { result: unknown }) => {
             </Text>
           </Box>
         ))}
+      </Box>
+    );
+  }
+
+  if (presentation.type === "icons") {
+    if (presentation.items.length === 0) return null;
+    const hiddenCount = Math.max(0, presentation.totalCount - presentation.items.length);
+
+    return (
+      <Box className={classes.toolResultIconCollection}>
+        {presentation.items.map((item) => (
+          <Box key={`${item.repository ?? "icon"}-${item.url}`} className={classes.toolResultIconItem}>
+            <Box className={classes.toolResultIconPreview}>
+              <Image
+                src={item.url}
+                alt={item.name}
+                className={classes.toolResultIconImage}
+                fit="contain"
+                loading="lazy"
+              />
+            </Box>
+            <Group gap={4} mt="xs" wrap="nowrap" justify="space-between">
+              <Text size="xs" fw={650} lineClamp={1} title={item.name}>
+                {item.name}
+              </Text>
+              <Badge size="xs" variant="light" color="gray" flex="0 0 auto">
+                {item.variant}
+              </Badge>
+            </Group>
+            {item.repository && (
+              <Text size="xs" c="dimmed" lineClamp={1} title={item.repository}>
+                {item.repository}
+              </Text>
+            )}
+          </Box>
+        ))}
+        {hiddenCount > 0 && (
+          <Badge className={classes.toolResultMore} size="sm" variant="outline" color="gray">
+            +{hiddenCount}
+          </Badge>
+        )}
       </Box>
     );
   }
@@ -431,7 +473,7 @@ const ToolPart = ({
           <Text size="sm" fw={600}>
             {t("approvalDescription")}
           </Text>
-          <ToolResultPreview result={args} />
+          <ToolResultPreview result={args} toolName={toolName} />
           {autoApprovalInProgress ? (
             <Group className={classes.autoApprovalProgress} gap="sm" wrap="nowrap">
               <Loader type="bars" size="sm" color="green" />
@@ -472,7 +514,7 @@ const ToolPart = ({
           )}
         </Box>
       )}
-      {successful && result !== undefined && <ToolResultPreview result={result} />}
+      {successful && result !== undefined && <ToolResultPreview result={result} toolName={toolName} />}
       <Collapse expanded={opened}>
         <Stack gap="xs" mt="sm">
           <Box>

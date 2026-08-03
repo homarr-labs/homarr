@@ -3,6 +3,73 @@ import { describe, expect, test } from "vitest";
 import { getToolResultPresentation, humanizeToolResultKey } from "./assistant-tool-result";
 
 describe("getToolResultPresentation", () => {
+  test("presents icon search variants as image previews instead of the catalog count", () => {
+    expect(
+      getToolResultPresentation(
+        {
+          icons: [
+            {
+              id: "repository-id",
+              slug: "homarr-labs/dashboard-icons",
+              icons: [
+                {
+                  id: "svg-id",
+                  name: "discord.svg",
+                  url: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/discord.svg",
+                },
+                {
+                  id: "png-id",
+                  name: "discord.png",
+                  url: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/discord.png",
+                },
+              ],
+            },
+            { id: "empty-repository", slug: "another/repository", icons: [] },
+          ],
+          countIcons: 28_154,
+        },
+        { toolName: "icon_findIcons" },
+      ),
+    ).toEqual({
+      type: "icons",
+      totalCount: 2,
+      items: [
+        {
+          name: "discord.svg",
+          url: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/discord.svg",
+          repository: "homarr-labs/dashboard-icons",
+          variant: "SVG",
+        },
+        {
+          name: "discord.png",
+          url: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/discord.png",
+          repository: "homarr-labs/dashboard-icons",
+          variant: "PNG",
+        },
+      ],
+    });
+  });
+
+  test("does not render unsafe icon URLs", () => {
+    expect(
+      getToolResultPresentation(
+        {
+          icons: [
+            {
+              slug: "unsafe/repository",
+              icons: [
+                { name: "script.svg", url: "javascript:alert(1)" },
+                { name: "credential.svg", url: "https://user:password@example.com/icon.svg" },
+              ],
+            },
+          ],
+          countIcons: 2,
+        },
+        { toolName: "icon_findIcons" },
+      ),
+    ).toEqual({ type: "icons", totalCount: 0, items: [] });
+  });
+
   test("presents common widget collections as compact cards", () => {
     expect(
       getToolResultPresentation({
