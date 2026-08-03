@@ -30,13 +30,19 @@ describe("assistant provider presets", () => {
   });
 
   test.each(assistantProviderIds.filter((provider) => provider !== "custom"))(
-    "%s has a Dashboard Icons provider mark",
+    "%s has a valid provider mark",
     (provider) => {
       const iconUrl = assistantProviderPresets[provider].iconUrl;
       expect(iconUrl).not.toBeNull();
       expect(() => new URL(iconUrl ?? "")).not.toThrow();
     },
   );
+
+  test("uses Groq's high-contrast LobeHub mark in dark mode", () => {
+    expect(assistantProviderPresets.groq.darkIconUrl).toBe(
+      "https://cdn.jsdelivr.net/npm/@lobehub/icons-static-png@latest/dark/groq.png",
+    );
+  });
 
   test("keeps the display label separate from the provider model ID", () => {
     const model = {
