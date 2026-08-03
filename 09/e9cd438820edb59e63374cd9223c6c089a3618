@@ -1,0 +1,61 @@
+apps/nextjs/src/components/board/advanced-focus/wheel.ts
+  s_909ca8cf5b6e15::t_43602752a3326d 1-30
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_909ca8cf5b6e15::t_43602752a3326d 1,15-21,28,58-60,93-98,146-147
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_909ca8cf5b6e15::t_43602752a3326d 204
+packages/widgets/src/audio-stats/component.tsx
+  s_909ca8cf5b6e15::t_43602752a3326d 75
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_909ca8cf5b6e15::t_43602752a3326d 38
+packages/widgets/src/definition.spec.ts
+  s_909ca8cf5b6e15::t_43602752a3326d 9-14,47-57
+  s_909ca8cf5b6e15::t_f1e095f0dbda83 6-8,58-64
+  s_909ca8cf5b6e15::t_3de9acea82cf9e 65
+packages/widgets/src/beszel-system-table/index.ts
+  s_909ca8cf5b6e15::t_43602752a3326d 28
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_43602752a3326d 2894
+packages/widgets/src/beszel/_shared/disk-usage.tsx
+  s_909ca8cf5b6e15::t_43602752a3326d 1
+  s_909ca8cf5b6e15::t_9a92e25b37696e 31
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_909ca8cf5b6e15::t_43602752a3326d 36,74,255
+packages/integrations/src/interfaces/media-server/media-server-types.ts
+  s_909ca8cf5b6e15::t_43602752a3326d 4
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_b232c0914b66ef 118-129
+packages/widgets/src/definition.ts
+  s_909ca8cf5b6e15::t_43602752a3326d 89,113
+  s_909ca8cf5b6e15::t_702d279f1bd5cc 114
+packages/widgets/src/index.tsx
+  s_909ca8cf5b6e15::t_750da579c82fe0 81
+packages/widgets/src/app/index.ts
+  s_909ca8cf5b6e15::t_43602752a3326d 18
+packages/widgets/src/beszel-system-grid/index.ts
+  s_909ca8cf5b6e15::t_43602752a3326d 9
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_909ca8cf5b6e15::t_43602752a3326d 18,25
+packages/widgets/src/beszel/_shared/tooltip.tsx
+  s_909ca8cf5b6e15::t_9a92e25b37696e 64,75,78,93,126
+apps/docs/docs/widgets/media-server/index.mdx
+  s_909ca8cf5b6e15::t_43602752a3326d 29
+packages/widgets/src/media-server/component.tsx
+  s_909ca8cf5b6e15::t_43602752a3326d 84,87,418-419
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "09e9cd438820edb59e63374cd9223c6c089a3618",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
