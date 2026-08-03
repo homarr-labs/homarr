@@ -68,7 +68,7 @@ export const integrationRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List all configured integrations (connections to services like Sonarr, Radarr, Plex, etc.). Returns each integration's id, name, kind, url, and permissions. Use the 'id' field as 'integrationId' in other tools. Check permissions.hasUseAccess before reading data and permissions.hasInteractAccess before performing actions — false means the API key owner lacks that permission level for this integration, not an error",
+          "List all configured integrations (connections to services like Sonarr, Radarr, Plex, etc.). Requires integration-full-all permission. Returns each integration's id, name, kind, url, and permissions. Use the 'id' field as 'integrationId' in other tools. Check permissions.hasUseAccess before reading data and permissions.hasInteractAccess before performing actions — false means the API key owner lacks that permission level for this integration, not an error",
       },
     })
     .query(async ({ ctx }) => {
@@ -297,6 +297,7 @@ export const integrationRouter = createTRPCRouter({
       };
     }),
   create: permissionRequiredProcedure
+    .requiresPermission("integration-full-all")
     .requiresPermission("integration-create")
     .meta({
       mcp: {

@@ -23,7 +23,10 @@ interface NewIntegrationPageProps {
 export default async function IntegrationsNewPage(props: NewIntegrationPageProps) {
   const searchParams = await props.searchParams;
   const session = await auth();
-  if (!session?.user.permissions.includes("integration-full-all")) {
+  if (
+    !session?.user.permissions.includes("integration-full-all") ||
+    !session?.user.permissions.includes("integration-create")
+  ) {
     notFound();
   }
 
