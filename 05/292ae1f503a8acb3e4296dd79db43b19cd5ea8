@@ -1,0 +1,19 @@
+packages/old-import/src/widgets/options.ts
+  s_eb9832ea542c78::t_b1d6a0df6e4ab5 151-152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "05292ae1f503a8acb3e4296dd79db43b19cd5ea8",
+  "prompts": {},
+  "sessions": {
+    "s_eb9832ea542c78": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fc7ca-6e33-7402-a6ef-40e1dd9c1519",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
