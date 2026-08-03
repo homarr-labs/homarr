@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import {
   AccordionControl,
   AccordionItem,
@@ -49,9 +49,6 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
 
   if (!session) {
     redirect("/auth/login");
-  }
-  if (!session.user.permissions.includes("integration-full-all")) {
-    notFound();
   }
 
   const integrations = await api.integration.all();
