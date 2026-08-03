@@ -44,10 +44,13 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import {
+  getAssistantBoardSettingsResult,
   getAssistantBoardSettingsDefaultTab,
   getChangedBoardSettings,
   getCustomCssWarnings,
 } from "./assistant-board-settings";
+import { useAssistantAutomaticAction } from "./assistant-auto-approval";
+import { AssistantAutomaticActionProgress } from "./assistant-automatic-action-progress";
 import { hasCompleteAssistantToolArguments, hasFailedAssistantToolArguments } from "./assistant-human-tool-status";
 import { AssistantHumanToolError } from "./assistant-human-tools";
 import classes from "./assistant-panel.module.css";
@@ -92,6 +95,7 @@ export const AssistantConfigureBoardSettingsTool = ({
   result,
   addResult,
   status,
+  toolCallId,
 }: ToolCallMessagePartProps<ConfigureBoardSettingsArgs, ConfigureBoardSettingsResult>) => {
   const t = useScopedI18n("common.assistant.configureBoardSettings");
   const hasCompleteArguments = hasCompleteAssistantToolArguments(status);
@@ -100,6 +104,17 @@ export const AssistantConfigureBoardSettingsTool = ({
     { id: boardId },
     { enabled: result === undefined && hasCompleteArguments && boardId.length > 0, retry: false },
   );
+  const autoConfirming = useAssistantAutomaticAction({
+    toolCallId,
+    ready: result === undefined && settings.data !== undefined && hasCompleteArguments,
+    completed: result !== undefined,
+    confirm: () => {
+      if (!settings.data || !args) return;
+      const currentValues = toCurrentValues(settings.data);
+      const proposedValues = normalizeFormValues(settings.data, args.changes);
+      addResult(getAssistantBoardSettingsResult(settings.data.id, currentValues, proposedValues));
+    },
+  });
 
   if (result) {
     const cancelled = "cancelled" in result && result.cancelled;
@@ -143,6 +158,14 @@ export const AssistantConfigureBoardSettingsTool = ({
   }
 
   if (!settings.data) return <BoardSettingsSkeleton label={t("loading")} />;
+
+  if (autoConfirming) {
+    return (
+      <Box className={classes.boardSettingsTool}>
+        <AssistantAutomaticActionProgress label={t("automaticContinue")} />
+      </Box>
+    );
+  }
 
   return (
     <BoardSettingsForm

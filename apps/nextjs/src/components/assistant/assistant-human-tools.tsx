@@ -2,14 +2,24 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ToolCallMessagePartProps, ToolCallMessagePartStatus } from "@assistant-ui/react";
-import { Alert, Box, Button, Group, Skeleton, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
-import { IconAlertTriangle, IconCheck, IconMessageQuestion, IconPencil, IconX } from "@tabler/icons-react";
+import { Alert, Badge, Box, Button, Group, Skeleton, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
+import {
+  IconAlertTriangle,
+  IconArrowRight,
+  IconCheck,
+  IconMessageQuestion,
+  IconPencil,
+  IconX,
+} from "@tabler/icons-react";
 import type { z } from "zod/v4";
 
 import { AppForm } from "@homarr/forms-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
 
+import { getAssistantAffirmativeResult, getAssistantAskUserOptionKind } from "./assistant-ask-user";
+import { useAssistantAutomaticAction } from "./assistant-auto-approval";
+import { AssistantAutomaticActionProgress } from "./assistant-automatic-action-progress";
 import classes from "./assistant-panel.module.css";
 import { hasCompleteAssistantToolArguments, hasFailedAssistantToolArguments } from "./assistant-human-tool-status";
 import { normalizeAssistantAppIconUrl } from "./assistant-tool-contracts";
@@ -44,6 +54,7 @@ export const AssistantAskUserTool = ({
   result,
   addResult,
   status,
+  toolCallId,
 }: ToolCallMessagePartProps<AskUserArgs, AskUserResult>) => {
   const t = useScopedI18n("common.assistant.askUser");
   const [showOther, setShowOther] = useState(false);
@@ -51,6 +62,18 @@ export const AssistantAskUserTool = ({
   const [submitting, setSubmitting] = useState(false);
   const otherInputRef = useRef<HTMLInputElement>(null);
   const options = Array.isArray(args?.options) ? args.options : [];
+  const affirmativeResult = getAssistantAffirmativeResult(options);
+  const hasValidQuestion = hasCompleteAssistantToolArguments(status) && Boolean(args?.question) && options.length >= 2;
+  const autoConfirming = useAssistantAutomaticAction({
+    toolCallId,
+    ready: result === undefined && hasValidQuestion && affirmativeResult !== undefined,
+    completed: result !== undefined,
+    confirm: () => {
+      if (!affirmativeResult) return;
+      setSubmitting(true);
+      addResult(affirmativeResult);
+    },
+  });
 
   useEffect(() => {
     if (showOther) otherInputRef.current?.focus();
@@ -99,7 +122,7 @@ export const AssistantAskUserTool = ({
   const submitOther = () => {
     const answer = other.trim();
     if (!answer) return;
-    submitResult({ answer, source: "other" });
+    submitResult({ answer, optionKind: "alternative", source: "other" });
   };
 
   return (
@@ -121,31 +144,58 @@ export const AssistantAskUserTool = ({
       </Group>
 
       <Stack gap="xs" mt="md">
-        {options.map((option, index) => (
-          <Button
-            key={`${option.id}:${index}`}
-            className={classes.humanToolOption}
-            variant="default"
-            size="md"
-            fullWidth
-            justify="space-between"
-            disabled={submitting}
-            onClick={() => submitResult({ answer: option.label, optionId: option.id, source: "option" })}
-          >
-            <Box ta="start">
-              <Text component="span" size="sm" fw={650}>
-                {option.label}
-              </Text>
-              {option.description && (
-                <Text component="span" display="block" size="xs" c="dimmed" fw={400}>
-                  {option.description}
-                </Text>
-              )}
-            </Box>
-          </Button>
-        ))}
+        {autoConfirming ? (
+          <AssistantAutomaticActionProgress label={t("automaticAffirmative")} />
+        ) : (
+          options.map((option, index) => {
+            const kind = getAssistantAskUserOptionKind(option);
+            const icon =
+              kind === "affirmative" ? (
+                <IconCheck size={17} />
+              ) : kind === "negative" ? (
+                <IconX size={17} />
+              ) : (
+                <IconArrowRight size={17} />
+              );
+            const color = kind === "affirmative" ? "green" : kind === "negative" ? "red" : "gray";
 
-        {args.allowOther !== false &&
+            return (
+              <Button
+                key={`${option.id}:${index}`}
+                className={classes.humanToolOption}
+                variant={kind === "alternative" ? "default" : "light"}
+                color={color}
+                size="md"
+                fullWidth
+                justify="space-between"
+                leftSection={icon}
+                rightSection={
+                  <Badge variant="light" color={color} size="xs">
+                    {t(`optionKind.${kind}`)}
+                  </Badge>
+                }
+                disabled={submitting}
+                onClick={() =>
+                  submitResult({ answer: option.label, optionId: option.id, optionKind: kind, source: "option" })
+                }
+              >
+                <Box ta="start">
+                  <Text component="span" size="sm" fw={650}>
+                    {option.label}
+                  </Text>
+                  {option.description && (
+                    <Text component="span" display="block" size="xs" c="dimmed" fw={400}>
+                      {option.description}
+                    </Text>
+                  )}
+                </Box>
+              </Button>
+            );
+          })
+        )}
+
+        {!autoConfirming &&
+          args.allowOther !== false &&
           (showOther ? (
             <Group align="flex-end" gap="xs" wrap="nowrap">
               <TextInput
@@ -185,6 +235,11 @@ export const AssistantAskUserTool = ({
               size="md"
               fullWidth
               leftSection={<IconPencil size={17} />}
+              rightSection={
+                <Badge variant="light" color="gray" size="xs">
+                  {t("optionKind.custom")}
+                </Badge>
+              }
               justify="flex-start"
               onClick={() => setShowOther(true)}
             >
@@ -206,6 +261,16 @@ export const AssistantConfigureAppTool = ({
   const t = useScopedI18n("common.assistant.configureApp");
   const [submitting, setSubmitting] = useState(false);
   const initialValues = getAssistantAppFormValues(args, status);
+  const autoConfirming = useAssistantAutomaticAction({
+    toolCallId,
+    ready: result === undefined && initialValues !== null,
+    completed: result !== undefined,
+    confirm: () => {
+      if (!initialValues) return;
+      setSubmitting(true);
+      addResult(initialValues);
+    },
+  });
 
   if (result) {
     return (
@@ -237,6 +302,14 @@ export const AssistantConfigureAppTool = ({
           <Skeleton height={72} />
           <Skeleton height={36} />
         </Stack>
+      </Box>
+    );
+  }
+
+  if (autoConfirming) {
+    return (
+      <Box className={classes.appTool}>
+        <AssistantAutomaticActionProgress label={t("automaticContinue")} />
       </Box>
     );
   }

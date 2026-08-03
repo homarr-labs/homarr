@@ -1,4 +1,4 @@
-import type { AssistantBoardSettingsChanges } from "./assistant-tool-contracts";
+import type { AssistantBoardSettingsChanges, ConfigureBoardSettingsResult } from "./assistant-tool-contracts";
 
 export const assistantBoardSettingKeys = [
   "pageTitle",
@@ -26,6 +26,15 @@ export const getChangedBoardSettings = (current: AssistantBoardSettingsChanges, 
       comparableValue(current[key]) === comparableValue(next[key]) ? [] : [[key, next[key]]],
     ),
   ) as AssistantBoardSettingsChanges;
+
+export const getAssistantBoardSettingsResult = (
+  id: string,
+  current: AssistantBoardSettingsChanges,
+  next: AssistantBoardSettingsChanges,
+): ConfigureBoardSettingsResult => {
+  const changes = getChangedBoardSettings(current, next);
+  return Object.keys(changes).length === 0 ? { id, cancelled: true } : { id, ...changes };
+};
 
 export const getCustomCssWarnings = (css: string) => ({
   importsStylesheet: /@import\b/iu.test(css),
