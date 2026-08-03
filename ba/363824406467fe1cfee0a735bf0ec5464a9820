@@ -1,0 +1,19 @@
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_7b8a552cf9f1f8::t_b2464b734e12e0 122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "ba363824406467fe1cfee0a735bf0ec5464a9820",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
