@@ -466,11 +466,13 @@
   border-top: 1px solid var(--mantine-color-default-border);
 }
 
-.messageMarkdown img {
+.markdownImage {
   display: block;
   max-width: 100%;
+  max-height: 24rem;
   height: auto;
   margin-block: 0.65rem;
+  object-fit: contain;
   border-radius: var(--mantine-radius-md);
 }
 
@@ -509,6 +511,13 @@
 
 .markdownTableWrap tr:last-child td {
   border-bottom: 0;
+}
+
+.markdownTableWrap .markdownImage {
+  width: 2rem;
+  height: 2rem;
+  margin: 0 auto;
+  border-radius: var(--mantine-radius-sm);
 }
 
 .messageQuote {

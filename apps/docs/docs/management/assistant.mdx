@@ -103,6 +103,9 @@ Files returned by a compatible model can be downloaded directly from the message
 Assistant responses render GitHub-flavored Markdown, including headings, links, lists, task lists, tables,
 quotes, inline code, and fenced code blocks. Line breaks are preserved, and Homarr repairs common streamed
 responses where a provider returns escaped line breaks or places a bold-label list on one line.
+When Homarr's icon search returns an image URL, visual result tables render that actual icon in a compact
+image column instead of substituting an emoji. Assistant-provided Markdown images accept safe relative,
+HTTP, and HTTPS sources and load without forwarding the Homarr page as the referrer.
 Images up to 1 MB and text, Markdown, CSV, HTML, XML, or JSON documents up to 350 KB can be attached by
 using the paperclip or dropping files onto the composer. A request can contain up to five attachments.
 Image understanding depends on the selected model; document text is extracted locally by Homarr and sent
@@ -142,6 +145,14 @@ validated input, result, and error state without flooding the conversation with 
 Common collection and widget results are summarized inline as compact responsive cards, while the full
 structured result remains available in the tool card details. Icon searches show the returned image variants,
 file formats, and repositories instead of the size of the complete icon catalog.
+
+Large tool-driven requests can use up to 32 agent steps and a larger response budget within one request, so
+multi-item dashboard changes normally finish without requiring a follow-up “Continue” message. Independent
+read-only lookups may be performed together, while every mutation still pauses for its normal approval.
+
+The assistant can create a formatted dashboard note by adding a **Notebook** widget. Ask it for a note with
+headings, lists, tasks, links, emphasis, tables, or images; it generates compatible rich-text content, shows
+the standard mutation approval, and places the widget in the next available dashboard position.
 
 Custom-widget tools let an administrator list, inspect, create, and update definitions. The custom-widget
 form's **Design with AI** action sends a focused request into the current conversation, where the assistant
