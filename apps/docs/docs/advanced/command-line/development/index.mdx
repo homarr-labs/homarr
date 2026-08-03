@@ -1,0 +1,41 @@
+# Developer Docker CLI
+
+The host-side developer CLI builds and runs local Homarr images and pull-request previews. Run it directly from a checkout with `pnpm dev:cli -- ...`; no shell-specific setup script is required. It is separate from the recovery CLI included in production images.
+
+To install an optional `homarr` binary, run `pnpm dev:cli:install` and make your Go bin directory available on `PATH`. GitHub CLI authentication is only needed for pull-request features.
+
+## Browse development images
+
+```bash
+pnpm dev:cli --
+```
+
+The main screen combines local `homarr:*` images with open pull requests and their GHCR preview status. Select an image to start or stop it, use `R` to build a remote pull request locally in the background or rebuild a local image, or use `p` to force a remote preview pull. Press `d` to switch to the instance dashboard and `d` again to return without losing the browser state. The explicit `dev` and `dash` subcommands start on either screen.
+
+A locally built PR image is folded into its remote PR row only when its recorded revision exactly matches the current GitHub head SHA. The row is marked `◆ local`, and starting it prefers that local image without a registry pull. Outdated local builds remain separate rows. Navigation and dashboard switching remain available during background builds.
+
+## Build images
+
+```bash
+pnpm dev:cli -- build <name>
+pnpm dev:cli -- build --pr <number> [name]
+```
+
+The first command builds the current checkout as `homarr:<name>`. The pull-request form uses a depth-one clone in a temporary directory and defaults to `homarr:pr-<number>` when `name` is omitted.
+
+## Rebuild images
+
+```bash
+pnpm dev:cli -- rebuild <name>
+```
+
+Images built by this CLI record their source checkout, revision, and optional pull-request number. Rebuild uses that provenance to select the original checkout or create a fresh temporary pull-request checkout.
+
+## Run images
+
+```bash
+homarr run <name>
+homarr run --pr <number>
+```
+
+Add `--detach` to run in the background, `--demo` to enable demo data, or repeat `--env KEY=VALUE` to provide additional environment variables.

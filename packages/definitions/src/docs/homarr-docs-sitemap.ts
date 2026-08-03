@@ -119,6 +119,7 @@ export type HomarrDocumentationPath =
   | "/docs/tags/variables"
   | "/docs/tags/widgets"
   | "/docs/advanced/command-line"
+  | "/docs/advanced/command-line/development"
   | "/docs/advanced/command-line/fix-usernames"
   | "/docs/advanced/command-line/integrations"
   | "/docs/advanced/command-line/password-recovery"

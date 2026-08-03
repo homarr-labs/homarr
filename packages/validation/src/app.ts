@@ -5,6 +5,10 @@ export const appHrefSchema = z
   .trim()
   .url()
   .regex(/^(?!javascript)[a-zA-Z]*:\/\//i) // javascript: is not allowed, i for case insensitive (so Javascript: is also not allowed)
+  .or(z.string().trim().includes("[homarr_base]"))
+  .or(z.string().trim().includes("[homarr_hostname]"))
+  .or(z.string().trim().includes("[homarr_domain]"))
+  .or(z.string().trim().includes("[homarr_protocol]"))
   .or(z.literal(""))
   .transform((value) => (value.length === 0 ? null : value))
   .nullable();
