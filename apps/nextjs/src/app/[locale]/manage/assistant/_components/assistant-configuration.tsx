@@ -36,6 +36,7 @@ import {
   IconKey,
   IconLock,
   IconPlus,
+  IconSearch,
   IconShieldCheck,
   IconShieldLock,
   IconTool,
@@ -45,6 +46,7 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import {
+  assistantProviderCanUseOpenRouterServerTools,
   assistantProviderIds,
   assistantProviderPresets,
   getAssistantModelOptionLabel,
@@ -143,6 +145,7 @@ export const AssistantConfiguration = () => {
   const [nextHeaderId, setNextHeaderId] = useState(1);
   const [modelId, setModelId] = useState("");
   const [enabled, setEnabled] = useState(false);
+  const [webSearchEnabled, setWebSearchEnabled] = useState(false);
   const [clearCredentialsOpened, setClearCredentialsOpened] = useState(false);
   const replacementKeyInputRef = useRef<HTMLInputElement>(null);
 
@@ -152,6 +155,7 @@ export const AssistantConfiguration = () => {
     setModelDiscoveryPath(configuration?.modelDiscoveryPath ?? "");
     setModelId(configuration?.modelId ?? "");
     setEnabled(configuration?.enabled ?? false);
+    setWebSearchEnabled(configuration?.webSearchEnabled ?? false);
     setApiKey("");
     setCredentialFlow("idle");
     setCredentialStep(0);
@@ -243,6 +247,7 @@ export const AssistantConfiguration = () => {
     baseUrl.trim().length > 0 && headerValuesValid && (!preset.requiresApiKey || hasEffectiveApiKey);
   const modelControlsDisabled = connectionPending || isDiscovering;
   const canSaveConfiguration = !modelControlsDisabled && modelId.trim().length > 0;
+  const canUseOpenRouterServerTools = assistantProviderCanUseOpenRouterServerTools(provider);
 
   const updateConnection = clientApi.assistant.updateConnection.useMutation({
     onSuccess: async ({ credentialsClearedForDestinationChange }) => {
@@ -315,6 +320,7 @@ export const AssistantConfiguration = () => {
     setClearHeaders(false);
     setModelId("");
     setEnabled(false);
+    setWebSearchEnabled(false);
   };
 
   const changeProvider = (value: string | null) => {
@@ -368,7 +374,11 @@ export const AssistantConfiguration = () => {
 
   const saveAssistantConfiguration = () => {
     if (!canSaveConfiguration) return;
-    saveConfiguration.mutate({ enabled, modelId: modelId.trim() });
+    saveConfiguration.mutate({
+      enabled,
+      modelId: modelId.trim(),
+      webSearchEnabled: canUseOpenRouterServerTools && webSearchEnabled,
+    });
   };
 
   if (isLoading) {
@@ -406,6 +416,11 @@ export const AssistantConfiguration = () => {
               </Box>
             </Group>
             <Group className={classes.summaryActions} gap="xs">
+              {configuration?.webSearchEnabled && (
+                <Badge variant="light" leftSection={<IconSearch size={12} />}>
+                  {t("serverTools.webSearch.label")}
+                </Badge>
+              )}
               {hasStoredApiKey && (
                 <Badge variant="light" color="teal" leftSection={<IconLock size={12} />}>
                   {t("overview.keyProtected")}
@@ -848,6 +863,44 @@ export const AssistantConfiguration = () => {
                 </Badge>
               </Group>
             </Group>
+          )}
+
+          {canUseOpenRouterServerTools && (
+            <Stack gap="xs">
+              <Divider label={t("serverTools.title")} labelPosition="left" />
+              <Group className={classes.capabilityRow} justify="space-between" align="center" wrap="nowrap">
+                <Group gap="sm" align="flex-start" wrap="nowrap">
+                  <ThemeIcon variant="light" radius="xl" size="md">
+                    <IconSearch size={17} />
+                  </ThemeIcon>
+                  <Box>
+                    <Group gap="xs">
+                      <Text size="sm" fw={600}>
+                        {t("serverTools.webSearch.label")}
+                      </Text>
+                      <Badge size="xs" variant="light">
+                        {t("serverTools.beta")}
+                      </Badge>
+                    </Group>
+                    <Text size="sm" c="dimmed" maw="66ch">
+                      {provider === "custom"
+                        ? t("serverTools.webSearch.proxyDescription")
+                        : t("serverTools.webSearch.description")}
+                    </Text>
+                    <Text size="xs" c="dimmed" mt={4}>
+                      {t("serverTools.webSearch.limit")}
+                    </Text>
+                  </Box>
+                </Group>
+                <Switch
+                  checked={webSearchEnabled}
+                  onChange={(event) => setWebSearchEnabled(event.currentTarget.checked)}
+                  disabled={modelControlsDisabled}
+                  aria-label={t("serverTools.webSearch.label")}
+                  size="md"
+                />
+              </Group>
+            </Stack>
           )}
 
           <Group className={classes.enableRow} justify="space-between" align="center" wrap="nowrap">

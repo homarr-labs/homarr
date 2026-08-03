@@ -85,11 +85,16 @@ The configured endpoint must support streaming Chat Completions and structured t
 assistant experience. Model discovery alone does not guarantee tool support, except when OpenRouter
 explicitly advertises the model's `tools` capability.
 
-OpenRouter connections also expose OpenRouter's provider-executed web-search server tool to the model. When
-a user explicitly asks for live research or current external information, the assistant can search without
-receiving the stored OpenRouter credential in the browser. Search results can be used in dashboard notes and
-responses, including source links. Web search has separate OpenRouter usage costs and remains unavailable for
-other OpenAI-compatible endpoints unless those providers expose their own supported search tool.
+OpenRouter web search is an opt-in option in the model section. It registers OpenRouter's model-callable
+[`openrouter:web_search` server tool](https://openrouter.ai/docs/guides/features/server-tools/web-search)
+alongside Homarr's tools, so OpenRouter performs each search without
+exposing the stored credential to the browser. The model decides when live research is needed and can use the
+grounded results and source links in responses or dashboard notes. Homarr limits each assistant request to
+three searches with five results per search. OpenRouter charges web-search usage separately from model tokens.
+
+The option is also available for custom endpoints that forward OpenRouter's server-tools request format. This
+supports OpenRouter proxies, including the future Homarr Router provider. Leave it disabled for ordinary
+OpenAI-compatible endpoints because the `openrouter:*` tool type is not part of the standard OpenAI API.
 
 The Claude preset uses Anthropic's OpenAI SDK compatibility layer. Anthropic describes that layer as
 suited to testing and comparison rather than as its full native API; unsupported OpenAI fields may be

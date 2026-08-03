@@ -484,6 +484,7 @@ export const serverSettings = mysqlTable("serverSetting", {
 export const assistantConfigurations = mysqlTable("assistant_configuration", {
   id: varchar({ length: 64 }).notNull().primaryKey().default("default"),
   enabled: boolean().notNull().default(false),
+  webSearchEnabled: boolean().notNull().default(false),
   provider: varchar({ length: 32 })
     .$type<
       | "openrouter"

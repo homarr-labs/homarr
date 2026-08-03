@@ -19,6 +19,7 @@ import {
   items,
 } from "@homarr/db/schema";
 import {
+  assistantProviderCanUseOpenRouterServerTools,
   assistantProviderIds,
   assistantProviderPresets,
   assistantProviderRequiresApiKey,
@@ -517,6 +518,7 @@ export const assistantRouter = createTRPCRouter({
     return {
       connectionConfigured: Boolean(configuration),
       enabled: configuration?.enabled ?? false,
+      webSearchEnabled: configuration?.webSearchEnabled ?? false,
       provider: configuration?.provider ?? "openrouter",
       baseUrl: configuration?.baseUrl ?? "https://openrouter.ai/api/v1",
       modelDiscoveryPath: configuration?.modelDiscoveryPath ?? "/models",
@@ -569,6 +571,10 @@ export const assistantRouter = createTRPCRouter({
             encryptedHeaders,
             modelId: connectionChanged ? null : existing.modelId,
             enabled: connectionChanged ? false : existing.enabled,
+            webSearchEnabled:
+              destinationChanged || !assistantProviderCanUseOpenRouterServerTools(input.provider)
+                ? false
+                : existing.webSearchEnabled,
             updatedAt: new Date(),
           })
           .where(eq(assistantConfigurations.id, configurationId));
@@ -614,7 +620,13 @@ export const assistantRouter = createTRPCRouter({
   }),
 
   updateConfiguration: adminProcedure
-    .input(z.object({ enabled: z.boolean(), modelId: z.string().trim().min(1).max(256) }))
+    .input(
+      z.object({
+        enabled: z.boolean(),
+        modelId: z.string().trim().min(1).max(256),
+        webSearchEnabled: z.boolean().default(false),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const configuration = await getConfigurationAsync(ctx.db);
       if (!configuration) {
@@ -624,6 +636,12 @@ export const assistantRouter = createTRPCRouter({
       if (input.enabled && requiresApiKey && !configuration.encryptedApiKey) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This provider requires an API key." });
       }
+      if (input.webSearchEnabled && !assistantProviderCanUseOpenRouterServerTools(configuration.provider)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Web search requires OpenRouter or an OpenRouter-compatible proxy endpoint.",
+        });
+      }
       const discoveredModels = configuration.modelDiscoveryPath
         ? await fetchModelsAsync(configuration).catch(() => null)
         : null;
@@ -632,7 +650,7 @@ export const assistantRouter = createTRPCRouter({
         : input.modelId;
       await ctx.db
         .update(assistantConfigurations)
-        .set({ enabled: input.enabled, modelId, updatedAt: new Date() })
+        .set({ enabled: input.enabled, modelId, webSearchEnabled: input.webSearchEnabled, updatedAt: new Date() })
         .where(eq(assistantConfigurations.id, configurationId));
     }),
 

@@ -104,6 +104,7 @@
   flex-shrink: 0;
 }
 
+.capabilityRow,
 .enableRow {
   padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
   border-radius: var(--mantine-radius-sm);
@@ -159,6 +160,10 @@
   .selectedModelBadges {
     justify-content: flex-start;
     flex-shrink: 1;
+  }
+
+  .capabilityRow {
+    align-items: flex-start;
   }
 }
 

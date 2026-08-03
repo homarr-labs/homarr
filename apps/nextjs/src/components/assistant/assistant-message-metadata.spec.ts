@@ -23,6 +23,7 @@ describe("getAssistantTelemetry", () => {
             generationTimeMs: 1451,
             cacheDiscount: 0.00003,
             fallbackCount: 1,
+            webSearchRequests: 2,
             steps: [
               {
                 index: 1,
@@ -40,6 +41,7 @@ describe("getAssistantTelemetry", () => {
                 reasoningTokens: 7,
                 cacheDiscount: 0.00003,
                 fallbackCount: 1,
+                webSearchRequests: 2,
                 routedProvider: "Alibaba",
                 serviceTier: "default",
                 dataRegion: "US",
@@ -61,6 +63,7 @@ describe("getAssistantTelemetry", () => {
       generationTimeMs: 1451,
       cacheDiscount: 0.00003,
       fallbackCount: 1,
+      webSearchRequests: 2,
       steps: [
         expect.objectContaining({
           providerLatencyMs: 964,
@@ -68,6 +71,7 @@ describe("getAssistantTelemetry", () => {
           cachedInputTokens: 2048,
           routedProvider: "Alibaba",
           serviceTier: "default",
+          webSearchRequests: 2,
         }),
       ],
     });
