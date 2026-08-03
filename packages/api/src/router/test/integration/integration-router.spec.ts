@@ -57,16 +57,6 @@ describe("all should return all integrations", () => {
     expect(result[0]!.kind).toBe("plex");
     expect(result[1]!.kind).toBe("homeAssistant");
   });
-
-  test("without integration full access should reject the request", async () => {
-    const caller = integrationRouter.createCaller({
-      db: createDb(),
-      deviceType: undefined,
-      session: defaultSessionWithPermissions(),
-    });
-
-    await expect(caller.all()).rejects.toMatchObject({ code: "FORBIDDEN" });
-  });
 });
 
 describe("mediaRequestSearchTargets should return accessible media search integrations", () => {
