@@ -182,6 +182,7 @@ export const BoardEmptySpaceContextMenu = ({ section, refs, children, ...boxProp
       </Box>
       <Menu
         opened={menu !== null}
+        withInitialFocusPlaceholder={false}
         onChange={(opened) => {
           if (!opened) closeMenu();
         }}
@@ -194,6 +195,7 @@ export const BoardEmptySpaceContextMenu = ({ section, refs, children, ...boxProp
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Item
+            data-autofocus
             leftSection={<IconPlus size={18} />}
             onClick={() => {
               const placement = menu?.placement;
