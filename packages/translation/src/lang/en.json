@@ -1410,6 +1410,8 @@
       "loading": "Loading widget data",
       "stale": "Could not refresh {widget}; showing saved data"
     },
+    "total": "Total",
+    "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}",
     "action": {
       "add": "Add",
       "apply": "Apply",
@@ -2178,6 +2180,12 @@
         "clickable": {
           "label": "Clickable"
         }
+      },
+      "state": {
+        "on": "On",
+        "off": "Off",
+        "unavailable": "Unavailable",
+        "unknown": "Unknown"
       },
       "advanced": {
         "entityId": "Entity ID: {id}",
@@ -3740,8 +3748,13 @@
     "networkControllerSummary": {
       "option": {},
       "card": {
+        "wan": "WAN",
+        "web": "Web",
+        "wifi": "Wi-Fi",
+        "lan": "LAN",
         "vpn": {
-          "countConnected": "{count} connected"
+          "label": "VPN",
+          "countConnected": "{count, plural, one {# connected} other {# connected}}"
         }
       },
       "error": {

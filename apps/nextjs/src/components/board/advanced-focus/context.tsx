@@ -229,6 +229,19 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
     if (isEditMode && activeRef.current) close(false);
   }, [close, isEditMode]);
 
+  useEffect(() => {
+    if (active?.activation !== "manual") return;
+    const background = document.querySelectorAll<HTMLElement>("[data-advanced-focus-background]");
+    background.forEach((element) => {
+      element.inert = true;
+    });
+    return () => {
+      background.forEach((element) => {
+        element.inert = false;
+      });
+    };
+  }, [active?.activation]);
+
   const value = useMemo(
     () => ({ active, open, close, dismiss, hover, leave }),
     [active, close, dismiss, hover, leave, open],
@@ -244,7 +257,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
             data-advanced-focus-overlay
             backgroundOpacity={0.38}
             blur={0}
-            zIndex="calc(var(--mantine-z-index-modal) - 2)"
+            zIndex="var(--homarr-z-index-widget-preview-backdrop)"
             className={`${classes.backdrop} ${active.phase === "closing" ? classes.backdropClosing : ""}`}
             aria-hidden
           />

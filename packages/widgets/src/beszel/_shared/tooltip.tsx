@@ -3,9 +3,7 @@
 import type { CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getDefaultZIndex } from "@mantine/core";
-
-import { useCurrentIntlLocale } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { formatLocalizedDate } from "../../common/locale";
 
@@ -54,15 +52,17 @@ interface PortalTooltipProps {
   payload?: TooltipPayloadItem[];
   formatter: (value: number) => string;
   showTotal?: boolean;
+  layer: BeszelTooltipLayer;
 }
 
-const MARGIN = 14;
-const BACKGROUND_TOOLTIP_Z_INDEX = getDefaultZIndex("modal") - 3;
+export type BeszelTooltipLayer = "background" | "modal";
 
-const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: PortalTooltipProps) => {
+const MARGIN = 14;
+const PortalTooltipContent = ({ active, label, payload, formatter, showTotal, layer }: PortalTooltipProps) => {
   const locale = useCurrentIntlLocale();
+  const t = useScopedI18n("common");
   const mouseRef = useRef({ x: 0, y: 0 });
-  const [pos, setPos] = useState({ x: 0, y: 0, isAdvanced: false });
+  const [pos, setPos] = useState({ x: 0, y: 0 });
   const rafRef = useRef(0);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
@@ -73,10 +73,8 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
       const el = tooltipRef.current;
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
-      const isAdvanced = Boolean(document.elementFromPoint(mx, my)?.closest("[data-advanced-focus-surface]"));
-
       if (!el) {
-        setPos({ x: mx + MARGIN, y: my, isAdvanced });
+        setPos({ x: mx + MARGIN, y: my });
         return;
       }
 
@@ -91,7 +89,7 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
       if (y < MARGIN) y = MARGIN;
       if (y + height > vh - MARGIN) y = vh - MARGIN - height;
 
-      setPos({ x, y, isAdvanced });
+      setPos({ x, y });
     });
   }, []);
 
@@ -126,7 +124,8 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
     position: "fixed",
     left: pos.x,
     top: pos.y,
-    zIndex: pos.isAdvanced ? getDefaultZIndex("modal") : BACKGROUND_TOOLTIP_Z_INDEX,
+    zIndex:
+      layer === "modal" ? "var(--homarr-z-index-modal-tooltip)" : "var(--homarr-z-index-widget-background-tooltip)",
     pointerEvents: "none",
   };
 
@@ -143,7 +142,7 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
         ))}
         {showTotal && sorted.length > 1 && (
           <div style={{ ...styles.row, ...styles.separator }}>
-            <span style={styles.name}>Total</span>
+            <span style={styles.name}>{t("total")}</span>
             <span style={styles.value}>{formatter(total)}</span>
           </div>
         )}
@@ -154,7 +153,11 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const makeTooltipProps = (formatter: (v: number) => string, showTotal = false) => ({
+export const makeTooltipProps = (
+  formatter: (v: number) => string,
+  showTotal = false,
+  layer: BeszelTooltipLayer = "background",
+) => ({
   content: (props: any) => (
     <PortalTooltipContent
       active={props.active}
@@ -162,6 +165,7 @@ export const makeTooltipProps = (formatter: (v: number) => string, showTotal = f
       payload={props.payload}
       formatter={formatter}
       showTotal={showTotal}
+      layer={layer}
     />
   ),
   wrapperStyle: { visibility: "hidden" as const, position: "absolute" as const, width: 0, height: 0 },
