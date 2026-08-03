@@ -6,8 +6,10 @@ import { IconArrowUp, IconRobot } from "@tabler/icons-react";
 import { useScopedI18n } from "@homarr/translation/client";
 
 interface AssistantPromptInteractionOptions {
-  sendPrompt: (prompt: string) => void;
+  sendPrompt: (prompt: string) => boolean;
+  onPromptAccepted: () => void;
   prompt?: string;
+  canSend?: boolean;
 }
 
 const AssistantPromptDetail = () => {
@@ -40,13 +42,22 @@ const AssistantPromptAction = ({ hasPrompt }: { hasPrompt: boolean }) => {
   );
 };
 
-export const createAssistantPromptInteraction = ({ sendPrompt, prompt = "" }: AssistantPromptInteractionOptions) => {
+export const createAssistantPromptInteraction = ({
+  sendPrompt,
+  onPromptAccepted,
+  prompt = "",
+  canSend = true,
+}: AssistantPromptInteractionOptions) => {
+  if (!canSend) return { type: "none" as const };
+
   const trimmedPrompt = prompt.trim();
   if (trimmedPrompt.length > 0) {
     return {
       type: "javaScript" as const,
-      onSelect: () => sendPrompt(trimmedPrompt),
-      closeSpotlightOnTrigger: true,
+      onSelect: () => {
+        if (sendPrompt(trimmedPrompt)) onPromptAccepted();
+      },
+      closeSpotlightOnTrigger: false,
     };
   }
 
@@ -63,9 +74,9 @@ export const createAssistantPromptInteraction = ({ sendPrompt, prompt = "" }: As
           useInteraction: () => ({
             type: "javaScript" as const,
             onSelect: () => {
-              if (nextPrompt.length > 0) sendPrompt(nextPrompt);
+              if (nextPrompt.length > 0 && sendPrompt(nextPrompt)) onPromptAccepted();
             },
-            closeSpotlightOnTrigger: nextPrompt.length > 0,
+            closeSpotlightOnTrigger: false,
           }),
         },
       ];
