@@ -77,7 +77,7 @@ export const getCollapsedDisplayLayout = <TPlacement extends GridPlacement>(
       : placement,
   );
 
-  return reflowDisplayLayout(displayPlacements);
+  return reflowCollapsedDisplayLayout(normalized, displayPlacements, collapsedItemIds, collapsedRowCount);
 };
 
 /**
@@ -118,19 +118,71 @@ const findFirstAvailableRow = (candidate: GridPlacement, placed: readonly GridPl
   }
 };
 
-const reflowDisplayLayout = <TPlacement extends GridPlacement>(placements: readonly TPlacement[]): TPlacement[] => {
-  assertUniqueIds(placements);
+const reflowCollapsedDisplayLayout = <TPlacement extends GridPlacement>(
+  expandedPlacements: readonly TPlacement[],
+  displayPlacements: readonly TPlacement[],
+  collapsedItemIds: ReadonlySet<string>,
+  collapsedRowCount: number,
+): TPlacement[] => {
+  assertUniqueIds(expandedPlacements);
+  const displayById = new Map(displayPlacements.map((placement) => [placement.id, placement]));
+  const collapsedPlacements = expandedPlacements.filter((placement) => collapsedItemIds.has(placement.id));
   const placed: TPlacement[] = [];
 
-  for (const candidate of placements.toSorted(comparePlacements)) {
+  for (const expandedPlacement of expandedPlacements.toSorted(comparePlacements)) {
+    const candidate = getRequiredPlacement(displayById, expandedPlacement.id);
+    const verticalShift = getCollapsedVerticalShift(expandedPlacement, collapsedPlacements, collapsedRowCount);
     placed.push({
       ...candidate,
-      y: findFirstAvailableRow(candidate, placed),
+      y: findFirstAvailableRowAtOrAfter(candidate, placed, Math.max(0, candidate.y - verticalShift)),
     });
   }
 
   const byId = new Map(placed.map((placement) => [placement.id, placement]));
-  return placements.map((placement) => getRequiredPlacement(byId, placement.id));
+  return displayPlacements.map((placement) => getRequiredPlacement(byId, placement.id));
+};
+
+const getCollapsedVerticalShift = (
+  candidate: GridPlacement,
+  collapsedPlacements: readonly GridPlacement[],
+  collapsedRowCount: number,
+) => {
+  const removedIntervals = collapsedPlacements
+    .filter(
+      (collapsed) =>
+        collapsed.id !== candidate.id &&
+        collapsed.y + collapsed.h <= candidate.y &&
+        doGridPlacementsOverlapHorizontally(candidate, collapsed),
+    )
+    .map((collapsed) => ({ start: collapsed.y + collapsedRowCount, end: collapsed.y + collapsed.h }))
+    .toSorted((first, second) => first.start - second.start || first.end - second.end);
+
+  let shift = 0;
+  let intervalEnd = Number.NEGATIVE_INFINITY;
+  for (const interval of removedIntervals) {
+    const start = Math.max(interval.start, intervalEnd);
+    if (interval.end > start) shift += interval.end - start;
+    intervalEnd = Math.max(intervalEnd, interval.end);
+  }
+  return shift;
+};
+
+const doGridPlacementsOverlapHorizontally = (first: GridPlacement, second: GridPlacement) =>
+  first.x < second.x + second.w && first.x + first.w > second.x;
+
+const findFirstAvailableRowAtOrAfter = (
+  candidate: GridPlacement,
+  placed: readonly GridPlacement[],
+  minimumRow: number,
+) => {
+  let y = minimumRow;
+  for (;;) {
+    const atRow = { ...candidate, y };
+    const collisions = placed.filter((placement) => doGridPlacementsOverlap(atRow, placement));
+    if (collisions.length === 0) return y;
+
+    y = Math.max(...collisions.map((placement) => placement.y + placement.h));
+  }
 };
 
 const comparePlacements = (first: GridPlacement, second: GridPlacement) =>

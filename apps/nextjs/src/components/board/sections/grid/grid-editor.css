@@ -79,8 +79,8 @@ body[data-board-grid-interacting="drag"] .board-grid-placeholder {
 }
 
 .board-grid-content-mount,
-.board-grid-item-content,
-.board-grid-item-content > [data-editor-grid-entry] {
+.board-grid-portal-content,
+.board-grid-portal-content > [data-editor-grid-entry] {
   width: 100%;
   height: 100%;
   overflow: visible;
