@@ -1,0 +1,85 @@
+AGENTS.md
+  s_7b8a552cf9f1f8::t_9e2429e54570a7 49-50,73-75,89-92
+apps/docs/docs/advanced/command-line/development/index.mdx
+  s_7b8a552cf9f1f8::t_049a3822d63120 1-41
+apps/docs/docs/advanced/development/getting-started.mdx
+  s_7b8a552cf9f1f8::t_8633bb377d2ec1 20-22,38,40,42,53-57,60-61,74,76-77
+package.json
+  s_7b8a552cf9f1f8::t_a1e51660703633 20,24-25,28
+packages/definitions/src/integration.ts
+  s_7b8a552cf9f1f8::t_1ed90ecb068492 445,568
+pnpm-lock.yaml
+  s_909ca8cf5b6e15::t_ed5decf3a122c2 115-116,121-122,609,615,684,687,690,693,696,699,702,717,732,6836-6838,6840,6852-6854,6856,10138-10141,10825-10828,15114-15117,15285-15288,17020,17032,17041,17047,17065,17068,17113,17143,17146,17244,17246,17249-17250,17292,17294,17298,17338,17340,17374,17376,17407,17409,17441,17443,17473,17475,17506,17508,17538,17540,17575,17577,17611-17626,17662,17664,17668-17671,17715,17719,17748,17750,17752,17784,17788,17790-17791,20121,20484,20486-20488,20507,20509-20510,20513-20514,20516,20585,20587,23066,23069,23081,23543,23545,23976-23991,24886,24986-24987,29855,29887-29888,30051-30052
+pnpm-workspace.yaml
+  s_7b8a552cf9f1f8::t_c782749863608d 43,45
+tools/homarr-dev/README.md
+  s_7b8a552cf9f1f8::t_8f30b10e17b22b 1-103
+tools/homarr-dev/go.mod
+  s_7b8a552cf9f1f8::t_681b76f2037173 1-32
+tools/homarr-dev/go.sum
+  s_7b8a552cf9f1f8::t_43332eec5dbb03 1-56
+tools/homarr-dev/internal/docker/docker.go
+  s_7b8a552cf9f1f8::t_4dc17d6e9d2ab5 1-427
+tools/homarr-dev/internal/docker/docker_test.go
+  s_7b8a552cf9f1f8::t_0f17bf0ad17a0d 1-125
+tools/homarr-dev/internal/docker/images.go
+  s_7b8a552cf9f1f8::t_5294d13eb4b26a 1-149
+tools/homarr-dev/internal/docker/images_test.go
+  s_7b8a552cf9f1f8::t_fe2403d14e3bfd 1-69
+tools/homarr-dev/internal/gh/gh.go
+  s_7b8a552cf9f1f8::t_6c1b8a0a3bce11 1-199
+tools/homarr-dev/internal/gh/gh_test.go
+  s_7b8a552cf9f1f8::t_9bab20bf5be89c 1-91
+tools/homarr-dev/internal/platform/clipboard.go
+  s_7b8a552cf9f1f8::t_9efba563710795 1-7
+tools/homarr-dev/internal/platform/open.go
+  s_7b8a552cf9f1f8::t_12e28e2a366968 1-28
+tools/homarr-dev/internal/platform/open_test.go
+  s_7b8a552cf9f1f8::t_4674fa739d8ce2 1-25
+tools/homarr-dev/internal/run/build.go
+  s_7b8a552cf9f1f8::t_22a127dfb37e6a 1-105
+tools/homarr-dev/internal/run/run.go
+  s_7b8a552cf9f1f8::t_c3022525cd668c 1-119
+tools/homarr-dev/internal/run/run_test.go
+  s_7b8a552cf9f1f8::t_80ac8f4c30862a 1-59
+tools/homarr-dev/internal/tui/app.go
+  s_7b8a552cf9f1f8::t_60caf43d64ebd8 1-122
+tools/homarr-dev/internal/tui/app_test.go
+  s_7b8a552cf9f1f8::t_f96b4543cfe030 1-47
+tools/homarr-dev/internal/tui/dashboard.go
+  s_7b8a552cf9f1f8::t_fc0447c7d96209 1-415
+tools/homarr-dev/internal/tui/dashboard_test.go
+  s_7b8a552cf9f1f8::t_b1a4b1f9e53f69 1-62
+tools/homarr-dev/internal/tui/dev.go
+  s_7b8a552cf9f1f8::t_b4c23edf9fccfa 1-1158
+tools/homarr-dev/internal/tui/dev_test.go
+  s_7b8a552cf9f1f8::t_59432230b2e9de 1-228
+tools/homarr-dev/main.go
+  s_7b8a552cf9f1f8::t_f45997cc56383e 1-301
+tools/homarr-dev/main_test.go
+  s_7b8a552cf9f1f8::t_e0b6834645103e 1-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "41fffbb79b9558b4805445ca4cb184e779e41400",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
