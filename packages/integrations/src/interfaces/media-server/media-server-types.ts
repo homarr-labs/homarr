@@ -1,7 +1,7 @@
 export interface StreamSession {
   sessionId: string;
   sessionName: string;
-  user: {
+  user?: {
     userId: string;
     username: string;
     profilePictureUrl: string | null;
