@@ -39,11 +39,7 @@ export const useBoardHotkeys = () => {
   ]);
 };
 
-const navigateToNextBoard = (
-  boards: { name: string }[],
-  currentIndex: number,
-  navigate: (name: string) => void,
-) => {
+const navigateToNextBoard = (boards: { name: string }[], currentIndex: number, navigate: (name: string) => void) => {
   if (boards.length === 0) return;
   const nextIndex = (currentIndex + 1) % boards.length;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -61,11 +57,7 @@ const navigateToPreviousBoard = (
   navigate(boards[previousIndex]!.name);
 };
 
-const navigateToBoardByIndex = (
-  boards: { name: string }[],
-  index: number,
-  navigate: (name: string) => void,
-) => {
+const navigateToBoardByIndex = (boards: { name: string }[], index: number, navigate: (name: string) => void) => {
   if (index < boards.length) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     navigate(boards[index]!.name);
