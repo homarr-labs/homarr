@@ -19,7 +19,6 @@ import { CustomCss } from "./(content)/_custom-css";
 import { BoardReadyProvider } from "./(content)/_ready-context";
 import { BoardMantineProvider } from "./(content)/_theme";
 
-
 const logger = createLogger({ module: "createBoardLayout" });
 
 const BoardTourWrapper = ({ hasSession, children }: PropsWithChildren<{ hasSession: boolean }>) => {
