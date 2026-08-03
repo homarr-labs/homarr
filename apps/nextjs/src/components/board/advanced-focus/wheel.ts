@@ -1,18 +1,18 @@
-const isVerticalScrollContainer = (element: HTMLElement) => {
+const isVerticalScrollContainer = (element: Element) => {
   if (element.scrollHeight <= element.clientHeight) return false;
 
   const overflowY = getComputedStyle(element).overflowY;
   return overflowY === "auto" || overflowY === "scroll";
 };
 
-const canScrollVertically = (element: HTMLElement, delta: number) => {
+const canScrollVertically = (element: Element, delta: number) => {
   return delta < 0 ? element.scrollTop > 0 : element.scrollTop + element.clientHeight < element.scrollHeight;
 };
 
 export const redirectShiftWheel = (root: HTMLElement, target: EventTarget | null, delta: number) => {
   if (delta === 0) return false;
 
-  let current = target instanceof HTMLElement ? target : null;
+  let current = target instanceof Element ? target : null;
   let startedInScrollContainer = false;
   while (current && root.contains(current)) {
     const isCurrentScrollContainer = isVerticalScrollContainer(current);
