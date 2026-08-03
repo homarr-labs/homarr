@@ -37,9 +37,10 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
     const systemInfo = await this.getSystemInformationAsync();
 
     const cpuUtilization = systemInfo.metrics.cpu.cpus.reduce((acc, val) => acc + val.percentTotal, 0);
-    const cpuCount = systemInfo.info.cpu.cores;
+    const cpuCount = systemInfo.info.cpu.threads;
 
-    // We use "info" object instead of the stats since this is the exact amount the kernel sees, which is what Unraid displays.
+    // We use the thread count (not physical cores) because each logical CPU entry in cpus[]
+    // represents a thread. Dividing by cores would over-report utilization on SMT systems.
     const totalMemory = systemInfo.info.memory.layout.reduce((acc, layout) => layout.size + acc, 0);
     const usedMemory = totalMemory * (systemInfo.metrics.memory.percentTotal / 100);
     const uptime = dayjs(systemInfo.info.os.uptime);
@@ -139,7 +140,7 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
           },
           memory {
             layout {
-              size     
+              size
             }
           }
         }

@@ -32,15 +32,21 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
 
     const groupsKey = env.AUTH_OIDC_GROUPS_ATTRIBUTE;
     // Groups from oidc provider are provided from the profile, it's not typed.
+    // Some providers send a single group as a string instead of an array — normalize it.
+    const oidcGroups = profile && groupsKey in profile ? profile[groupsKey] : undefined;
+    const normalizedOidcGroups =
+      oidcGroups !== undefined
+        ? Array.isArray(oidcGroups)
+          ? oidcGroups
+          : [oidcGroups]
+        : undefined;
     if (
       !env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT &&
       dbUser.provider === "oidc" &&
-      profile &&
-      groupsKey in profile &&
-      Array.isArray(profile[groupsKey])
+      normalizedOidcGroups !== undefined
     ) {
-      logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profile[groupsKey])}`);
-      await synchronizeGroupsWithExternalForUserAsync(db, user.id, profile[groupsKey] as string[]);
+      logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(normalizedOidcGroups)}`);
+      await synchronizeGroupsWithExternalForUserAsync(db, user.id, normalizedOidcGroups as string[]);
     }
 
     // In ldap-authroization we return the groups from ldap, it's not typed.

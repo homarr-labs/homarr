@@ -62,9 +62,24 @@ export class UptimeKumaIntegration extends Integration {
   }
 
   private mapMonitor(
-    monitor: { id: number; name: string },
+    monitor: { id: number; name: string; status?: number },
     heartbeat: { heartbeatList: Record<string, { status: number }[]>; uptimeList: Record<string, number> },
   ): UptimeKumaMonitor {
+    // If the status page reports a monitor status directly, prefer it over heartbeat inference.
+    // Uptime-Kuma status page returns status=2 for paused monitors, and once paused,
+    // heartbeats stop arriving so the latest heartbeat may still show "up" from before pausing.
+    if (monitor.status !== undefined) {
+      const statusFromPage = uptimeKumaHeartbeatCategoryMap[monitor.status];
+      if (statusFromPage === "paused") {
+        return {
+          id: monitor.id,
+          name: monitor.name,
+          status: "paused",
+          uptimePercent24h: null,
+        };
+      }
+    }
+
     const heartbeats = heartbeat.heartbeatList[String(monitor.id)] ?? [];
     const latestHeartbeat = heartbeats.at(-1);
     const uptimeKey = `${monitor.id}_24`;

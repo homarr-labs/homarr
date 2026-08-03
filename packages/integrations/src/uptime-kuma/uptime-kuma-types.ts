@@ -19,6 +19,7 @@ export const uptimeKumaHeartbeatCategoryMap: Record<number, UptimeKumaMonitorCat
 export const uptimeKumaStatusPageMonitorSchema = z.object({
   id: z.number().int(),
   name: z.string(),
+  status: z.number().int().optional(),
 });
 
 export const uptimeKumaStatusPageGroupSchema = z.object({
