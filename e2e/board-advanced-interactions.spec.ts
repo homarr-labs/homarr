@@ -255,8 +255,6 @@ describe("Board advanced interactions", () => {
       await expect(grid).toHaveAttribute("aria-label", "Add item here");
 
       await grid.press("Shift+F10");
-      await expect(addHereMenuItem).toBeVisible();
-      await page.keyboard.press("ArrowDown");
       await expect(addHereMenuItem).toBeFocused();
       await page.keyboard.press("Enter");
       await expect(page.getByRole("dialog").filter({ hasText: "Choose item to add" })).toBeVisible();
