@@ -199,8 +199,8 @@
         "label": "Symbole für Pings verwenden"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "Aktiviere Rechtsklick auf Widgets",
+        "description": "Zeigt Homarrs Kontextmenü, wenn mit der rechten Maustaste auf ein Widget geklickt wird. Deaktivieren, um das Standardmenü des Browsers zu verwenden (z.B. \"Link in neuem Tab öffnen\")."
       },
       "defaultSearchEngine": {
         "label": "Standard Suchmaschine"
@@ -1353,7 +1353,7 @@
       "description": ""
     },
     "bazarr": {
-      "name": "",
+      "name": "Bazarr",
       "description": ""
     }
   },
@@ -1492,7 +1492,7 @@
         "switchToDarkMode": "Zum dunklen Design wechseln",
         "switchToLightMode": "Zum hellen Design wechseln",
         "management": "Verwaltung",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Ihre Einstellungen",
         "logout": "Abmelden",
         "login": "Anmelden",
@@ -1628,7 +1628,7 @@
         "actions": "Aktionen"
       },
       "status": {
-        "success": "",
+        "success": "Ok",
         "error": "Fehler",
         "loading": "Wird geladen",
         "idle": "Leerlauf"
@@ -1907,14 +1907,14 @@
           "description": "ISO 8601 Standard benutzen um das Datum zu formatieren (dies wird andere Optionen überschreiben)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Wetter anzeigen",
+          "description": "Zeigt ein kleines animiertes Wettersymbol und die Temperatur in der Ecke der Karte an"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Ort für Wetterbericht"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Fahrenheit verwenden"
         }
       }
     },
@@ -1944,7 +1944,7 @@
       "noStation": "Keine Station ausgewählt",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "Search.ch URL"
         },
         "station": {
           "label": "Station"
@@ -1976,8 +1976,8 @@
         "clear": "Formatierung entfernen",
         "heading": "Überschrift {level}",
         "align": "Text ausrichten: {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Setze Textausrichtung von links nach rechts",
+        "directionRtl": "Setze Textausrichtung von rechts nach links",
         "blockquote": "Blockzitat",
         "horizontalLine": "Horizontale Linie",
         "bulletList": "Aufzählung",
@@ -2268,7 +2268,7 @@
         "sunset": "Sonnenuntergang",
         "maxWindSpeed": "Maximale Windgeschwindigkeit: {maxWindSpeed} {unit}",
         "maxWindGusts": "Maximale Windböen: {maxWindGusts} {unit}",
-        "humidity": ""
+        "humidity": "Luftfeuchtigkeit: {humidity}%"
       },
       "kind": {
         "clear": "Klar",
@@ -2412,7 +2412,7 @@
       "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Anzuzeigende Spalten"
         },
         "enableRowSorting": {
           "label": "Sortierung von Elementen aktivieren"
@@ -2468,7 +2468,7 @@
       }
     },
     "vpn": {
-      "name": "",
+      "name": "VPN",
       "description": "Übersicht deiner VPN-Verbindungen",
       "serviceUnavailable": "VPN nicht verfügbar",
       "option": {}
@@ -2733,10 +2733,10 @@
         "name": "Name",
         "id": "Id",
         "status": "Status",
-        "directPlay": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "directPlay": "Direkte Wiedergabe",
+        "transcoding": "Transkodierung",
+        "paused": "Pausiert",
+        "remaining": "{minutes} Min. verbleibend",
         "metadata": {
           "title": "Statistiken für Nerds",
           "video": {
@@ -2806,14 +2806,14 @@
       "name": "",
       "description": "",
       "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
+      "totalHosts": "Hosts gesamt",
+      "hostsNeedingUpdates": "Update erforderlich",
+      "securityUpdates": "Sicherheits-Updates",
       "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
+      "hostsWithSecurityUpdates": "Hosts mit Sicherheits-Updates",
+      "recentUpdates24h": "Updates (24h)",
+      "totalOutdatedPackages": "Veraltete Pakete",
+      "totalRepos": "Repositories",
       "osDistribution": "",
       "compliance": "",
       "complianceRatio": "",
@@ -2832,7 +2832,7 @@
           "description": "Gesamtzahl der verfügbaren Sicherheits-Updates anzeigen"
         },
         "showUpToDateHosts": {
-          "label": "",
+          "label": "Zeige aktuelle Hosts",
           "description": ""
         },
         "showHostsWithSecurityUpdates": {
@@ -3079,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "Elemente pro Integration begrenzen",
           "description": "Dies begrenzt die Anzahl der Elemente pro Integration, jedoch nicht global"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Spalten in Elementen auswählen",
-        "noCommunications": "Kann keine Daten von der Integration laden"
+        "noCommunications": "Kann keine Daten von der Integration laden",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3115,8 @@
           "detailsTitle": "Aktueller Index im Client"
         },
         "id": {
-          "columnTitle": "ID"
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integration"
@@ -3140,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "Endzeit",
-          "detailsTitle": "Zeit danach/zur Fertigstellung"
+          "detailsTitle": "Zeit danach/zur Fertigstellung",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Typ",
@@ -3184,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": "Globales Verhältnis"
+      "globalRatio": "Globales Verhältnis",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Medien Veröffentlichungen",
@@ -5207,8 +5234,8 @@
             "subtitle": "{count} tragen Übersetzungen in viele Sprachen bei"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponsoren",
+            "subtitle": "{count} unterstützen das Projekt finanziell"
           },
           "libraries": {
             "title": "Bibliotheken",

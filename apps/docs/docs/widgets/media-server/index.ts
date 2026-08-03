@@ -10,7 +10,7 @@ export const mediaServerWidget: WidgetDefinition = {
     items: [
       {
         name: "Show only currently playing",
-        description: "Disabling this will not work for plex.",
+        description: "Plex and Navidrome always show only currently playing streams.",
         values: { type: "boolean" },
         defaultValue: "yes",
       },

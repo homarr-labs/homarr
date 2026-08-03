@@ -150,33 +150,33 @@
     "backToStart": ""
   },
   "user": {
-    "title": "",
-    "name": "",
+    "title": "Kasutajad",
+    "name": "Kasutaja",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Logi sisse oma kontole",
+        "subtitle": "Tere tulemast tagasi! Palun sisesta oma sisselogimisandmed"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Liitu Homarriga",
+        "subtitle": "Tere tulemast Homarrisse! Palun loo oma konto",
+        "description": "Sind kutsus {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Uus Homarri paigaldus",
+        "subtitle": "Palun loo esmane administraatori kasutaja"
       }
     },
     "field": {
       "email": {
-        "label": "",
-        "verified": ""
+        "label": "E-post",
+        "verified": "Kinnitatud"
       },
       "username": {
-        "label": ""
+        "label": "Kasutajanimi"
       },
       "password": {
-        "label": "",
+        "label": "Parool",
         "suggestionsTitle": "",
         "suggestion": {
           "length": "",
@@ -187,16 +187,16 @@
         }
       },
       "passwordConfirm": {
-        "label": ""
+        "label": "Kinnita parool"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Eelmine parool"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Kodujuhtpaneel"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Kasuta pingide jaoks ikoone"
       },
       "enableRightClickOnWidgets": {
         "label": "",
@@ -213,59 +213,59 @@
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Kasutajanimi on juba võetud"
     },
     "action": {
       "login": {
-        "label": "",
-        "labelWith": "",
+        "label": "Logi sisse",
+        "labelWith": "Logi sisse kontoga {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sisselogimine õnnestus",
+            "message": "Oled nüüd sisse logitud"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sisselogimine ebaõnnestus",
+            "message": "Sisselogimine ebaõnnestus"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Unustasid parooli?",
+          "description": "Administraator saab järgmise käsuga sinu parooli lähtestada:"
         }
       },
       "register": {
-        "label": "",
+        "label": "Loo konto",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Konto loodud",
+            "message": "Jätkamiseks logi sisse"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Konto loomine ebaõnnestus",
+            "message": "Kontot ei saanud luua"
           }
         }
       },
-      "create": "",
+      "create": "Loo kasutaja",
       "changePassword": {
-        "label": "",
+        "label": "Muuda parooli",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Parool edukalt muudetud"
           },
           "error": {
-            "message": ""
+            "message": "Parooli ei saanud muuta"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Kodujuhtpaneel edukalt muudetud"
           },
           "error": {
-            "message": ""
+            "message": "Kodujuhtpaneeli ei saanud muuta"
           }
         }
       },
@@ -282,20 +282,20 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Nädala esimene päev edukalt muudetud"
           },
           "error": {
-            "message": ""
+            "message": "Nädala esimest päeva ei saanud muuta"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Pingiikoonid edukalt lülitatud"
           },
           "error": {
-            "message": ""
+            "message": "Pingiikoone ei saanud lülitada"
           }
         }
       },
@@ -311,29 +311,29 @@
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Muuda pilti",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Pilt edukalt muudetud"
             },
             "error": {
-              "message": ""
+              "message": "Pilti ei saanud muuta"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Pilt on liiga suur",
+              "message": "Maksimaalne pildi suurus on {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Eemalda pilt",
+          "confirm": "Kas oled kindel, et soovid pildi eemaldada?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Pilt edukalt eemaldatud"
             },
             "error": {
-              "message": ""
+              "message": "Pilti ei saanud eemaldada"
             }
           }
         }
@@ -341,34 +341,34 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profiil edukalt uuendatud"
           },
           "error": {
-            "message": ""
+            "message": "Profiili ei saanud uuendada"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Kustuta kasutaja jäädavalt",
+        "description": "Kustutab selle kasutaja koos tema eelistustega. Ei kustuta ühtegi juhtpaneeli. Kasutajat ei teavitata.",
+        "confirm": "Kas oled kindel, et soovid kustutada kasutaja {username} koos tema eelistustega?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Vali kasutaja",
+        "notFound": "Kasutajat ei leitud"
       },
       "transfer": {
-        "label": ""
+        "label": "Vali uus omanik"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Rühmad",
+    "name": "Rühm",
+    "search": "Otsi rühma",
     "field": {
-      "name": "",
-      "members": "",
+      "name": "Nimi",
+      "members": "Liikmed",
       "homeBoard": {
         "label": "",
         "description": ""
@@ -380,198 +380,198 @@
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Administraator",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administraator",
+            "description": "Selle õigusega liikmetel on täielik juurdepääs kõikidele funktsioonidele ja seadetele"
           }
         }
       },
       "app": {
-        "title": "",
+        "title": "Rakendused",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Loo rakendusi",
+            "description": "Luba liikmetel rakendusi luua"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Kasuta kõiki rakendusi",
+            "description": "Luba liikmetel lisada oma juhtpaneelidele mis tahes rakendusi"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Muuda kõiki rakendusi",
+            "description": "Luba liikmetel muuta kõiki rakendusi"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Täielik rakenduste juurdepääs",
+            "description": "Luba liikmetel hallata, kasutada ja kustutada mis tahes rakendust"
           }
         }
       },
       "board": {
-        "title": "",
+        "title": "Juhtpaneelid",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Loo juhtpaneele",
+            "description": "Luba liikmetel luua juhtpaneele"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Vaata kõiki juhtpaneele",
+            "description": "Luba liikmetel vaadata kõiki juhtpaneele"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Muuda kõiki juhtpaneele",
+            "description": "Luba liikmetel muuta kõiki juhtpaneele (ei sisalda juurdepääsukontrolli ja ohtlike toimingute ala)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Täielik juhtpaneelide juurdepääs",
+            "description": "Luba liikmetel vaadata, muuta ja kustutada kõiki juhtpaneele (sh juurdepääsukontroll ja ohtlikud toimingud)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integratsioonid",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Loo integratsioone",
+            "description": "Luba liikmetel luua integratsioone"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Kasuta kõiki integratsioone",
+            "description": "Luba liikmetel lisada oma juhtpaneelidele mis tahes integratsioone"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Suhtle mis tahes integratsiooniga",
+            "description": "Luba liikmetel suhelda mis tahes integratsiooniga"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Täielik integratsioonide juurdepääs",
+            "description": "Luba liikmetel hallata, kasutada ja suhelda mis tahes integratsiooniga"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Meedia",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Laadi meediaid üles",
+            "description": "Luba liikmetel meediaid üles laadida"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Vaata kõiki meediaid",
+            "description": "Luba liikmetel vaadata kõiki meediaid"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Täielik meedia juurdepääs",
+            "description": "Luba liikmetel hallata ja kustutada mis tahes meediat"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Muu",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Vaata logisid",
+            "description": "Luba liikmetel vaadata logisid"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Otsingumootorid",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Loo otsingumootoreid",
+            "description": "Luba liikmetel luua otsingumootoreid"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Muuda kõiki otsingumootoreid",
+            "description": "Luba liikmetel muuta kõiki otsingumootoreid"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Täielik otsingumootorite juurdepääs",
+            "description": "Luba liikmetel hallata ja kustutada mis tahes otsingumootorit"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Mõned liikmed on välistest pakkujatest ja neid ei saa siin hallata",
+      "external": "Kõik liikmed on välistest pakkujatest ja neid ei saa siin hallata"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "See rühm on reserveeritud süsteemi kasutamiseks ja piirab mõningaid toiminguid. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Uus rühm",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Rühm loodi edukalt"
           },
           "error": {
-            "message": ""
+            "message": "Rühma ei saanud luua"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Anna omandiõigus üle",
+        "description": "Anna selle rühma omandiõigus üle teisele kasutajale.",
+        "confirm": "Kas oled kindel, et soovid rühma {name} omandiõiguse üle anda kasutajale {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Rühm {group} edukalt üle antud kasutajale {user}"
           },
           "error": {
-            "message": ""
+            "message": "Omandiõigust ei saanud üle anda"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Lisa liige"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Eemalda liige",
+        "confirm": "Kas oled kindel, et soovid eemaldada kasutaja {user} sellest rühmast?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Kustuta rühm",
+        "description": "Kui oled rühma kustutanud, pole enam tagasiteed. Palun ole kindel.",
+        "confirm": "Kas oled kindel, et soovid kustutada rühma {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Rühm {name} edukalt kustutatud"
           },
           "error": {
-            "message": ""
+            "message": "Rühma {name} ei saanud kustutada"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Õigused salvestatud",
+            "message": "Õigused on edukalt salvestatud"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Õigusi ei salvestatud",
+            "message": "Õigusi ei salvestatud"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Rühm {name} edukalt salvestatud"
           },
           "error": {
-            "message": ""
+            "message": "Rühma {name} ei saanud salvestada"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Vali rühm",
+        "notFound": "Rühma ei leitud"
       },
       "settings": {
         "board": {
@@ -607,62 +607,62 @@
     "search": "",
     "page": {
       "list": {
-        "title": "",
+        "title": "Rakendused",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Ühtegi rakendust pole veel",
+          "action": "Loo oma esimene rakendus"
         }
       },
       "create": {
-        "title": "",
+        "title": "Uus rakendus",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Loomine õnnestus",
+            "message": "Rakendus loodi edukalt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Loomine ebaõnnestus",
+            "message": "Rakendust ei saanud luua"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Muuda rakendust",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Muudatused rakendati edukalt",
+            "message": "Rakendus edukalt salvestatud"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Muudatusi ei saanud rakendada",
+            "message": "Rakendust ei saanud salvestada"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Kustuta rakendus",
+        "message": "Kas oled kindel, et soovid kustutada rakenduse {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Kustutamine õnnestus",
+            "message": "Rakendus edukalt kustutatud"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kustutamine ebaõnnestus",
+            "message": "Rakendust ei saanud kustutada"
           }
         }
       }
     },
     "field": {
       "name": {
-        "label": ""
+        "label": "Nimi"
       },
       "description": {
-        "label": ""
+        "label": "Kirjeldus"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
@@ -673,8 +673,8 @@
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
+        "label": "Vali rakendus",
+        "notFound": "Rakendust ei leitud",
         "search": "",
         "noResults": "",
         "action": "",
@@ -896,22 +896,22 @@
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integratsioonid",
+        "search": "Otsi integratsioone",
         "noResults": {
-          "title": ""
+          "title": "Ühtegi integratsiooni pole veel"
         }
       },
       "create": {
-        "title": "",
+        "title": "Uus {name} integratsioon",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Loomine õnnestus",
+            "message": "Integratsioon loodi edukalt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Loomine ebaõnnestus",
+            "message": "Integratsiooni ei saanud luua"
           }
         },
         "app": {
@@ -931,15 +931,15 @@
         }
       },
       "edit": {
-        "title": "",
+        "title": "Muuda {name} integratsiooni",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Muudatused rakendati edukalt",
+            "message": "Integratsioon edukalt salvestatud"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Muudatusi ei saanud rakendada",
+            "message": "Integratsiooni ei saanud salvestada"
           }
         },
         "app": {
@@ -951,26 +951,26 @@
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Kustuta integratsioon",
+        "message": "Kas oled kindel, et soovid kustutada integratsiooni {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Kustutamine õnnestus",
+            "message": "Integratsioon edukalt kustutatud"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kustutamine ebaõnnestus",
+            "message": "Integratsiooni ei saanud kustutada"
           }
         }
       }
     },
     "field": {
       "name": {
-        "label": ""
+        "label": "Nimi"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "attemptSearchEngineCreation": {
         "label": "",
@@ -991,7 +991,7 @@
       }
     },
     "action": {
-      "create": ""
+      "create": "Uus integratsioon"
     },
     "grid": {
       "widgetCount": "",
@@ -1031,8 +1031,8 @@
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Testi ühendust ja loo",
+        "edit": "Testi ühendust ja salvesta"
       },
       "error": {
         "common": {
@@ -1160,71 +1160,71 @@
           }
         }
       },
-      "alertNotice": "",
+      "alertNotice": "Salvestamise nupp aktiveeritakse, kui ühendus on edukalt loodud",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Ühendus õnnestus",
+          "message": "Ühendus loodi edukalt"
         },
         "invalidUrl": {
-          "title": "",
-          "message": ""
+          "title": "Vigane URL",
+          "message": "URL on vigane"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Puuduvad volitused",
+          "message": "Kõiki volitusi ei esitatud"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Vigased volitused",
+          "message": "Volitused on vigased"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Ühendus ebaõnnestus",
+          "message": "Ühendust ei saanud luua"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Vigane päring",
+          "message": "Päring oli valesti koostatud"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Volitamata",
+          "message": "Tõenäoliselt valed volitused"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Keelatud",
+          "message": "Tõenäoliselt puuduvad õigused"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Ei leitud",
+          "message": "Tõenäoliselt vale url või tee"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Serveri sisemine viga",
+          "message": "Serveris tekkis viga"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Teenus pole saadaval",
+          "message": "Server pole praegu saadaval"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Ühendus katkestati",
+          "message": "Ühendus katkestati"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Domeeni ei leitud",
+          "message": "Domeeni ei leitud"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Ühendusest keelduti",
+          "message": "Ühendusest keelduti"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Vigane JSON",
+          "message": "Vastus ei olnud korrektne JSON"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Vale tee",
+          "message": "Tee on tõenäoliselt vale"
         },
         "tooManyRequests": {
           "title": "",
@@ -1233,33 +1233,33 @@
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Saladused",
+      "lastUpdated": "Viimati uuendatud {date}",
       "notSet": {
         "label": "",
         "tooltip": ""
       },
-      "secureNotice": "",
+      "secureNotice": "Seda saladust ei saa pärast loomist enam hankida",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Lähtesta saladus",
+        "message": "Kas oled kindel, et soovid selle saladuse lähtestada?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Saladusi pole",
+        "text": "Selle integratsiooni jaoks pole saladusi vaja"
       },
       "kind": {
         "username": {
-          "label": "",
-          "newLabel": ""
+          "label": "Kasutajanimi",
+          "newLabel": "Uus kasutajanimi"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API võti",
+          "newLabel": "Uus API võti"
         },
         "password": {
-          "label": "",
-          "newLabel": ""
+          "label": "Parool",
+          "newLabel": "Uus parool"
         },
         "tokenId": {
           "label": "",
@@ -1316,9 +1316,9 @@
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Vali integratsioonid kirjetes",
+      "interact": "Suhtle integratsioonidega",
+      "full": "Täielik integratsioonide juurdepääs"
     },
     "audiobookshelf": {
       "name": "",
@@ -1358,40 +1358,40 @@
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Meedia",
+    "search": "Otsi meediat",
     "field": {
-      "name": "",
-      "size": "",
-      "creator": ""
+      "name": "Nimi",
+      "size": "Suurus",
+      "creator": "Looja"
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Laadi meedia üles",
+        "file": "Vali fail",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Meedia laaditi edukalt üles"
           },
           "error": {
-            "message": ""
+            "message": "Meediat ei saanud üles laadida"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Kustuta meedia",
+        "description": "Kas oled kindel, et soovid kustutada meedia <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Meedia edukalt kustutatud"
           },
           "error": {
-            "message": ""
+            "message": "Meediat ei saanud kustutada"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Kopeeri URL"
       },
       "open": {
         "label": ""
@@ -1403,41 +1403,41 @@
   },
   "common": {
     "success": "",
-    "beta": "",
-    "error": "",
+    "beta": "Beeta",
+    "error": "Viga",
     "action": {
-      "add": "",
-      "apply": "",
-      "backToOverview": "",
+      "add": "Lisa",
+      "apply": "Rakenda",
+      "backToOverview": "Tagasi ülevaatesse",
       "skip": "",
       "change": "",
-      "create": "",
+      "create": "Loo",
       "createAnother": "",
-      "edit": "",
-      "import": "",
-      "insert": "",
-      "remove": "",
-      "save": "",
-      "saveChanges": "",
-      "cancel": "",
-      "delete": "",
-      "discard": "",
+      "edit": "Muuda",
+      "import": "Impordi",
+      "insert": "Sisesta",
+      "remove": "Eemalda",
+      "save": "Salvesta",
+      "saveChanges": "Salvesta muudatused",
+      "cancel": "Tühista",
+      "delete": "Kustuta",
+      "discard": "Loobu",
       "close": "",
-      "confirm": "",
-      "continue": "",
-      "previous": "",
-      "next": "",
-      "checkoutDocs": "",
+      "confirm": "Kinnita",
+      "continue": "Jätka",
+      "previous": "Eelmine",
+      "next": "Järgmine",
+      "checkoutDocs": "Tutvu dokumentatsiooniga",
       "checkLogs": "",
-      "tryAgain": "",
-      "loading": "",
+      "tryAgain": "Proovi uuesti",
+      "loading": "Laadimine",
       "show": "",
       "hide": ""
     },
-    "here": "",
+    "here": "siin",
     "iconPicker": {
-      "label": "",
-      "header": "",
+      "label": "Ikooni URL",
+      "header": "Sisesta nimi või objektid ikoonide filtreerimiseks... Homarr otsib {countIcons} ikooni seast.",
       "headerLoading": "",
       "noResults": "",
       "error": ""
@@ -1450,93 +1450,93 @@
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "min": "Minimaalne",
+      "max": "Maksimaalne",
+      "days": "Päevad",
+      "hours": "Tunnid",
+      "minutes": "Minutid"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Loomine õnnestus",
+        "error": "Loomine ebaõnnestus"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Kustutamine õnnestus",
+        "error": "Kustutamine ebaõnnestus"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Muudatused rakendati edukalt",
+        "error": "Muudatusi ei saanud rakendada"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Üleandmine õnnestus",
+        "error": "Üleandmine ebaõnnestus"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Vali üks või mitu väärtust"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Lisa rohkem väärtusi",
+      "addLabel": "Lisa {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Vali väärtus",
       "badge": {
-        "recommended": ""
+        "recommended": "Soovitatav"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "Lülita tumedale režiimile",
+        "switchToLightMode": "Lülita heledale režiimile",
+        "management": "Haldus",
         "docker": "",
         "preferences": "Teie eelistused",
-        "logout": "",
-        "login": "",
-        "homeBoard": "",
-        "loggedOut": "",
+        "logout": "Logi välja",
+        "login": "Logi sisse",
+        "homeBoard": "Sinu kodujuhtpaneel",
+        "loggedOut": "Välja logitud",
         "updateAvailable": ""
       }
     },
-    "dangerZone": "",
-    "noResults": "",
+    "dangerZone": "Ohtlike toimingute ala",
+    "noResults": "Tulemusi ei leitud",
     "unsavedChanges": "",
     "servers": "",
     "applications": "",
     "services": "",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Näita eelvaadet",
+      "hide": "Peida eelvaade"
     },
     "zod": {
       "errors": {
-        "default": "",
-        "required": "",
+        "default": "See väli on vigane",
+        "required": "See väli on kohustuslik",
         "string": {
-          "startsWith": "",
-          "endsWith": "",
-          "includes": "",
-          "invalidEmail": ""
+          "startsWith": "See väli peab algama {startsWith}",
+          "endsWith": "See väli peab lõppema {endsWith}",
+          "includes": "See väli peab sisaldama {includes}",
+          "invalidEmail": "See väli peab olema korrektne e-posti aadress"
         },
         "tooSmall": {
-          "string": "",
-          "number": ""
+          "string": "See väli peab olema vähemalt {minimum} tähemärki pikk",
+          "number": "See väli peab olema suurem või võrdne {minimum}"
         },
         "tooBig": {
-          "string": "",
-          "number": ""
+          "string": "See väli võib olla maksimaalselt {maximum} tähemärki pikk",
+          "number": "See väli peab olema väiksem või võrdne {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
+          "passwordsDoNotMatch": "Paroolid ei kattu",
+          "passwordRequirements": "Parool ei vasta nõuetele",
+          "boardAlreadyExists": "Selle nimega juhtpaneel on juba olemas",
+          "invalidFileType": "Vigane failitüüp, oodati {expected}",
           "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
+          "fileTooLarge": "Fail on liiga suur, maksimaalne suurus on {maxSize}",
+          "invalidConfiguration": "Vigane seadistus",
           "groupNameTaken": ""
         }
       }
@@ -1551,8 +1551,8 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Uus dünaamiline sektsioon",
+        "remove": "Eemalda dünaamiline sektsioon"
       },
       "option": {
         "title": {
@@ -1566,42 +1566,42 @@
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Eemalda dünaamiline sektsioon",
+        "message": "Kas oled kindel, et soovid selle dünaamilise sektsiooni eemaldada? Üksused teisaldatakse ülemsektsiooni samasse asukohta."
       }
     },
     "category": {
       "field": {
         "name": {
-          "label": ""
+          "label": "Nimi"
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
-        "moveUp": "",
-        "moveDown": "",
-        "createAbove": "",
-        "createBelow": "",
+        "create": "Uus kategooria",
+        "edit": "Nimeta kategooria ümber",
+        "remove": "Eemalda kategooria",
+        "moveUp": "Liiguta üles",
+        "moveDown": "Liiguta alla",
+        "createAbove": "Uus kategooria ülal",
+        "createBelow": "Uus kategooria all",
         "openAllInNewTabs": ""
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Uus kategooria",
+        "submit": "Lisa kategooria"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Eemalda kategooria",
+        "message": "Kas oled kindel, et soovid eemaldada kategooria {name}?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Nimeta kategooria ümber",
+        "submit": "Nimeta kategooria ümber"
       },
       "menu": {
         "label": {
-          "create": "",
-          "changePosition": "",
+          "create": "Uus kategooria",
+          "changePosition": "Muuda asukohta",
           "settings": ""
         }
       },
@@ -1613,16 +1613,16 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Uus üksus",
+      "import": "Impordi üksus",
+      "edit": "Muuda üksust",
+      "moveResize": "Liiguta / muuda suurust",
+      "duplicate": "Dubleeri üksus",
+      "remove": "Eemalda üksus"
     },
     "menu": {
       "label": {
-        "settings": "",
+        "settings": "Seaded",
         "refresh": "",
         "options": "",
         "actions": ""
@@ -1635,29 +1635,29 @@
       }
     },
     "create": {
-      "title": "",
+      "title": "Vali lisatav üksus",
       "search": "",
-      "addToBoard": ""
+      "addToBoard": "Lisa juhtpaneelile"
     },
     "moveResize": {
-      "title": "",
+      "title": "Liiguta / muuda suurust",
       "field": {
         "width": {
-          "label": ""
+          "label": "Laius"
         },
         "height": {
-          "label": ""
+          "label": "Kõrgus"
         },
         "xOffset": {
-          "label": ""
+          "label": "X nihe"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y nihe"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Muuda üksust",
       "tab": {
         "widget": "",
         "app": ""
@@ -1666,18 +1666,18 @@
         "propagationNotice": ""
       },
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Täpsemad valikud",
+        "title": "Üksuse täpsemad valikud"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integratsioonid"
         },
         "title": {
           "label": ""
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Kohandatud css klassid"
         },
         "borderColor": {
           "label": ""
@@ -1685,8 +1685,8 @@
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Eemalda üksus",
+      "message": "Kas oled kindel, et soovid selle üksuse eemaldada?"
     }
   },
   "widget": {
@@ -1698,17 +1698,17 @@
       "loadError": ""
     },
     "app": {
-      "name": "",
-      "description": "",
+      "name": "Rakendus",
+      "description": "Manustab rakenduse juhtpaneelile.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Vali rakendus"
         },
         "openInNewTab": {
-          "label": ""
+          "label": "Ava uues vahekaardis"
         },
         "showTitle": {
-          "label": ""
+          "label": "Näita rakenduse nime"
         },
         "pingEnabled": {
           "label": ""
@@ -1734,29 +1734,29 @@
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Rakendust pole",
+          "tooltip": "Sul pole valitud sobivat rakendust"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Järjehoidjad",
+      "description": "Kuvab mitu rakenduse linki",
       "option": {
         "title": {
-          "label": ""
+          "label": "Pealkiri"
         },
         "layout": {
-          "label": "",
+          "label": "Paigutus",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horisontaalne"
             },
             "column": {
-              "label": ""
+              "label": "Vertikaalne"
             },
             "grid": {
-              "label": ""
+              "label": "Ruudustik"
             },
             "gridHorizontal": {
               "label": ""
@@ -1779,8 +1779,8 @@
           "label": ""
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Järjehoidjad",
+          "add": "Lisa järjehoidja"
         }
       }
     },
@@ -1794,109 +1794,109 @@
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "DNS Hole kokkuvõte",
+      "description": "Kuvab sinu DNS Hole kokkuvõtte",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Paigutus",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horisontaalne"
             },
             "column": {
-              "label": ""
+              "label": "Vertikaalne"
             },
             "grid": {
-              "label": ""
+              "label": "Ruudustik"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Kasuta Pi-Hole värve"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "DNS Hole kokkuvõtte hankimine ebaõnnestus",
+        "integrationsDisconnected": "Andmeid pole, kõik integratsioonid on katkestatud"
       },
       "data": {
-        "adsBlockedToday": "",
-        "adsBlockedTodayPercentage": "",
-        "dnsQueriesToday": "",
-        "domainsBeingBlocked": ""
+        "adsBlockedToday": "Täna blokeeritud",
+        "adsBlockedTodayPercentage": "Täna blokeeritud",
+        "dnsQueriesToday": "Tänased päringud",
+        "domainsBeingBlocked": "Domeene blokeerimisnimekirjas"
       },
       "domainsTooltip": ""
     },
     "dnsHoleControls": {
-      "name": "",
-      "description": "",
+      "name": "DNS Hole juhtimine",
+      "description": "Juhti PiHole või AdGuard oma juhtpaneelilt",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Paigutus",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horisontaalne"
             },
             "column": {
-              "label": ""
+              "label": "Vertikaalne"
             },
             "grid": {
-              "label": ""
+              "label": "Ruudustik"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Näita lülita kõik nuppe"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "DNS Hole juhtimine ebaõnnestus"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
-        "set": "",
-        "enabled": "",
-        "disabled": "",
-        "processing": "",
-        "disconnected": "",
-        "hours": "",
-        "minutes": "",
-        "unlimited": ""
+        "enableAll": "Luba kõik",
+        "disableAll": "Keela kõik",
+        "setTimer": "Määra taimer",
+        "set": "Määra",
+        "enabled": "Lubatud",
+        "disabled": "Keelatud",
+        "processing": "Töötlemine",
+        "disconnected": "Katkestatud",
+        "hours": "Tunnid",
+        "minutes": "Minutid",
+        "unlimited": "Tühjaks jättes piiramatu"
       }
     },
     "clock": {
-      "name": "",
-      "description": "",
+      "name": "Kuupäev ja kellaaeg",
+      "description": "Kuvab praeguse kuupäeva ja kellaaja.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Kohandatud pealkirja/linna kuvamine",
+          "description": "Näita kohandatud pealkirja või linna/riigi nime kella kohal."
         },
         "customTitle": {
-          "label": ""
+          "label": "Pealkiri"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24-tunni formaat",
+          "description": "Kasuta 24-tunnist vormingut 12-tunnise asemel"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Näita sekundeid"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Kasuta fikseeritud ajavööndit"
         },
         "timezone": {
-          "label": "",
-          "description": ""
+          "label": "Ajavöönd",
+          "description": "Vali ajavöönd IANA standardi järgi"
         },
         "showDate": {
-          "label": ""
+          "label": "Näita kuupäeva"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Kuupäeva vorming",
+          "description": "Kuidas kuupäev peaks välja nägema"
         },
         "customTimeFormat": {
           "label": "",
@@ -1952,66 +1952,66 @@
       }
     },
     "notebook": {
-      "name": "",
-      "description": "",
+      "name": "Märkmik",
+      "description": "Lihtne märkmiku vidin, mis toetab markdown'ist",
       "option": {
         "showToolbar": {
-          "label": ""
+          "label": "Näita tööriistariba, mis aitab sul markdown'i kirjutada"
         },
         "allowReadOnlyCheck": {
-          "label": ""
+          "label": "Luba märkeruut ainult lugemisrežiimis"
         },
         "content": {
-          "label": ""
+          "label": "Märkmiku sisu"
         }
       },
       "controls": {
-        "bold": "",
-        "italic": "",
-        "strikethrough": "",
-        "underline": "",
-        "colorText": "",
-        "colorHighlight": "",
-        "code": "",
-        "clear": "",
-        "heading": "",
-        "align": "",
+        "bold": "Paks kiri",
+        "italic": "Kaldkiri",
+        "strikethrough": "Läbikriipsutus",
+        "underline": "Allajoonitud",
+        "colorText": "Teksti värv",
+        "colorHighlight": "Värviline esiletõstetud tekst",
+        "code": "Kood",
+        "clear": "Eemalda vorming",
+        "heading": "Pealkiri {level}",
+        "align": "Joonda tekst: {position}",
         "directionLtr": "",
         "directionRtl": "",
-        "blockquote": "",
-        "horizontalLine": "",
-        "bulletList": "",
-        "orderedList": "",
-        "checkList": "",
-        "increaseIndent": "",
-        "decreaseIndent": "",
-        "link": "",
-        "unlink": "",
-        "image": "",
-        "addTable": "",
-        "deleteTable": "",
-        "colorCell": "",
-        "mergeCell": "",
-        "addColumnLeft": "",
-        "addColumnRight": "",
-        "deleteColumn": "",
-        "addRowTop": "",
-        "addRowBelow": "",
-        "deleteRow": ""
+        "blockquote": "Tsitaat",
+        "horizontalLine": "Horisontaaljoon",
+        "bulletList": "Täpploend",
+        "orderedList": "Nummerdatud loend",
+        "checkList": "Kontroll-loend",
+        "increaseIndent": "Suurenda taanet",
+        "decreaseIndent": "Vähenda taanet",
+        "link": "Link",
+        "unlink": "Eemalda link",
+        "image": "Lisa pilt",
+        "addTable": "Lisa tabel",
+        "deleteTable": "Kustuta tabel",
+        "colorCell": "Lahtri värv",
+        "mergeCell": "Lülita lahtrite ühendamine",
+        "addColumnLeft": "Lisa veerg ette",
+        "addColumnRight": "Lisa veerg järele",
+        "deleteColumn": "Kustuta veerg",
+        "addRowTop": "Lisa rida ette",
+        "addRowBelow": "Lisa rida järele",
+        "deleteRow": "Kustuta rida"
       },
       "align": {
-        "left": "",
-        "center": "",
-        "right": ""
+        "left": "Vasakule",
+        "center": "Keskele",
+        "right": "Paremale"
       },
       "popover": {
-        "clearColor": "",
-        "source": "",
-        "widthPlaceholder": "",
-        "columns": "",
-        "rows": "",
-        "width": "",
-        "height": ""
+        "clearColor": "Eemalda värv",
+        "source": "Allikas",
+        "widthPlaceholder": "Väärtus % või pikslites",
+        "columns": "Veerud",
+        "rows": "Read",
+        "width": "Laius",
+        "height": "Kõrgus"
       },
       "placeholder": "",
       "dismiss": {
@@ -2052,73 +2052,73 @@
       "saveFailed": ""
     },
     "iframe": {
-      "name": "",
-      "description": "",
+      "name": "iFrame",
+      "description": "Lisa mis tahes sisu internetist. Mõned veebisaidid võivad juurdepääsu piirata.",
       "option": {
         "embedUrl": {
-          "label": ""
+          "label": "Manus-URL"
         },
         "allowFullScreen": {
-          "label": ""
+          "label": "Luba täisekraan"
         },
         "allowTransparency": {
-          "label": ""
+          "label": "Luba läbipaistvus"
         },
         "allowScrolling": {
-          "label": ""
+          "label": "Luba kerimine"
         },
         "allowPayment": {
-          "label": ""
+          "label": "Luba makse"
         },
         "allowAutoPlay": {
-          "label": ""
+          "label": "Luba automaatesitus"
         },
         "allowMicrophone": {
-          "label": ""
+          "label": "Luba mikrofon"
         },
         "allowCamera": {
-          "label": ""
+          "label": "Luba kaamera"
         },
         "allowGeolocation": {
-          "label": ""
+          "label": "Luba geolokatsioon"
         },
         "allowModals": {
           "label": ""
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Pole esitatud iFrame'i URL-i",
         "unsupportedProtocol": "",
-        "noBrowerSupport": ""
+        "noBrowerSupport": "Teie brauser ei toeta iframe'e. Palun uuendage brauserit."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Olemi olek",
+      "description": "Kuva olemi olek ja lülita seda valikuliselt",
       "option": {
         "entityId": {
-          "label": ""
+          "label": "Olemi ID"
         },
         "displayName": {
-          "label": ""
+          "label": "Kuvatav nimi"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Olemi ühik"
         },
         "clickable": {
-          "label": ""
+          "label": "Klikitav"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Käivita automatiseering",
+      "description": "Käivita automatiseering ühe klõpsuga",
       "option": {
         "displayName": {
-          "label": ""
+          "label": "Kuvatav nimi"
         },
         "automationId": {
-          "label": ""
+          "label": "Automatiseeringu ID"
         }
       },
       "spotlightAction": {
@@ -2202,25 +2202,25 @@
       }
     },
     "calendar": {
-      "name": "",
-      "description": "",
+      "name": "Kalender",
+      "description": "Kuva integratsioonidest pärit sündmused kalendrivaates kindlal suhtelisel ajaperioodil",
       "duration": {
         "allDay": ""
       },
       "option": {
         "releaseType": {
-          "label": "",
+          "label": "Radarr'i väljalaske tüüp",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "Kinodes",
+            "digitalRelease": "Digitaalne väljalase",
+            "physicalRelease": "Füüsiline väljalase"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Alates"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Kuni"
         },
         "showUnmonitored": {
           "label": ""
@@ -2228,11 +2228,11 @@
       }
     },
     "weather": {
-      "name": "",
-      "description": "",
+      "name": "Ilm",
+      "description": "Näitab määratud asukoha praegust ilmateavet.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatuur Fahrenheitis"
         },
         "disableTemperatureDecimals": {
           "label": ""
@@ -2245,21 +2245,21 @@
           "label": ""
         },
         "location": {
-          "label": ""
+          "label": "Ilmakoht"
         },
         "showCity": {
-          "label": ""
+          "label": "Näita linna"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Näita ilmaprognoosi"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Prognoosipäevade arv",
+          "description": "Kui vidin pole piisavalt lai, näidatakse vähem päevi"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Kuupäeva vorming",
+          "description": "Kuidas kuupäev peaks välja nägema"
         }
       },
       "currentWindSpeed": "",
@@ -2271,52 +2271,52 @@
         "humidity": ""
       },
       "kind": {
-        "clear": "",
-        "mainlyClear": "",
-        "fog": "",
-        "drizzle": "",
-        "freezingDrizzle": "",
-        "rain": "",
-        "freezingRain": "",
-        "snowFall": "",
-        "snowGrains": "",
-        "rainShowers": "",
-        "snowShowers": "",
-        "thunderstorm": "",
-        "thunderstormWithHail": "",
-        "unknown": ""
+        "clear": "Selge",
+        "mainlyClear": "Peamiselt selge",
+        "fog": "Udu",
+        "drizzle": "Uduvihm",
+        "freezingDrizzle": "Jäätuv uduvihm",
+        "rain": "Vihm",
+        "freezingRain": "Jäätuv vihm",
+        "snowFall": "Lumesadu",
+        "snowGrains": "Lumeterad",
+        "rainShowers": "Vihmahood",
+        "snowShowers": "Lumehood",
+        "thunderstorm": "Äike",
+        "thunderstormWithHail": "Äike koos rahega",
+        "unknown": "Tundmatu"
       }
     },
     "indexerManager": {
-      "name": "",
-      "description": "",
+      "name": "Indekseerijate halduri olek",
+      "description": "Teie indekseerijate olek",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Ava indekseerija sait uuel vahelehel"
         }
       },
-      "title": "",
-      "testAll": "",
+      "title": "Indekseerijate haldur",
+      "testAll": "Testi kõiki",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Indekseerijate oleku hankimine ebaõnnestus"
       }
     },
     "healthMonitoring": {
-      "name": "",
-      "description": "",
+      "name": "Süsteemi tervise jälgimine",
+      "description": "Näitab teavet, mis kajastab teie süsteemi(de) tervist ja olekut.",
       "tab": {
         "system": "",
         "cluster": ""
       },
       "option": {
         "fahrenheit": {
-          "label": ""
+          "label": "CPU temperatuur Fahrenheitis"
         },
         "cpu": {
-          "label": ""
+          "label": "Näita CPU teavet"
         },
         "memory": {
-          "label": ""
+          "label": "Näita mälu teavet"
         },
         "gpu": {
           "label": ""
@@ -2325,7 +2325,7 @@
           "label": ""
         },
         "fileSystem": {
-          "label": ""
+          "label": "Näita failisüsteemi teavet"
         },
         "visibleStorageVolumes": {
           "label": "",
@@ -2343,22 +2343,22 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
+        "information": "Teave",
+        "processor": "Protsessor: {cpuModelName}",
+        "memory": "Mälu: {memory} GiB",
+        "memoryAvailable": "Saadaval: {memoryAvailable} GiB ({percent}%)",
+        "version": "Versioon: {version}",
         "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
-        "available": "",
-        "lastSeen": ""
+        "loadAverage": "Keskmine koormus:",
+        "minute": "1 minut",
+        "minutes": "{count} minutit",
+        "used": "Kasutatud",
+        "available": "Saadaval",
+        "lastSeen": "Viimane oleku uuendus: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Tervisliku seisundi hankimine ebaõnnestus"
       },
       "cluster": {
         "summary": {
@@ -2659,68 +2659,68 @@
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
-        "search": "",
+        "query": "Linn / postiindeks",
+        "latitude": "Laiuskraad",
+        "longitude": "Pikkuskraad",
+        "disabledTooltip": "Palun sisestage linn või postiindeks",
+        "unknownLocation": "Tundmatu asukoht",
+        "search": "Otsi",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "Linn",
+            "country": "Riik",
+            "coordinates": "Koordinaadid",
+            "population": "Rahvaarv"
           },
           "action": {
-            "select": ""
+            "select": "Vali {city}, {countryCode}"
           },
           "population": {
-            "fallback": ""
+            "fallback": "Tundmatu"
           }
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "Integratsiooni ei leitud",
+        "description": "Klõpsa <here></here> uue integratsiooni loomiseks"
       },
       "app": {
-        "noData": "",
-        "description": "",
+        "noData": "Rakendust ei leitud",
+        "description": "Klõpsa <here></here> uue rakenduse loomiseks",
         "quickCreate": ""
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Integratsiooni pole valitud",
+        "noData": "Integratsiooni andmed pole saadaval"
       },
       "option": {}
     },
     "video": {
-      "name": "",
-      "description": "",
+      "name": "Video voog",
+      "description": "Lisa video voog või video kaamerast või veebisaidilt",
       "option": {
         "feedUrl": {
-          "label": ""
+          "label": "Voo URL"
         },
         "hasAutoPlay": {
-          "label": "",
-          "description": ""
+          "label": "Automaatesitus",
+          "description": "Automaatesitus töötab ainult vaigistatult brauseri piirangute tõttu"
         },
         "isMuted": {
-          "label": ""
+          "label": "Vaigistatud"
         },
         "hasControls": {
-          "label": ""
+          "label": "Näita juhtelemente"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "Video URL-i pole antud",
+        "forYoutubeUseIframe": "YouTube'i videote puhul kasuta iframe valikut"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Praegused meediaserveri voogedastused",
+      "description": "Näita praeguseid voogedastusi oma meediaserverites",
       "option": {
         "showOnlyPlaying": {
           "label": "",
@@ -3040,151 +3040,178 @@
       "noPhotos": ""
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Allalaadimishaldur",
+      "description": "Võimaldab vaadata ja hallata allalaadimisi nii Torrenti kui Usenet'i klientidest.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Näidatavad veerud"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Luba üksuste sorteerimine"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Vaikimisi sorteerimise veerg"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Pööra sorteerimine ümber"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Näita Usenet'i kirjeid, mis on märgitud lõpetatuks"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Näita torrentikirjeid, mis on märgitud lõpetatuks"
         },
         "showCompletedHttp": {
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Peida lõpetatud torrent alla selle läve (kiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Filtreeritavad kategooriad/sildid"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Filtreeri lubatute loendina"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Kasuta filtrit suhte arvutamiseks"
         },
         "limitPerIntegration": {
           "label": "",
           "description": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Vali üksuste veerud",
+        "noCommunications": "Andmeid ei saa integratsioonist laadida",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Juhtelemendid"
         },
         "added": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Lisatud",
+          "detailsTitle": "Lisamise kuupäev"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Lisad",
+          "detailsTitle": "Kategooriad (või lisateave)"
         },
         "downSpeed": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Alla",
+          "detailsTitle": "Allalaadimiskiirus"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "Praegune indeks kliendi sees"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
-          "columnTitle": ""
+          "columnTitle": "Integratsioon"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Töö nimetus"
         },
         "progress": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Edenemine",
+          "detailsTitle": "Allalaadimise edenemine"
         },
         "ratio": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Suhe",
+          "detailsTitle": "Torrenti suhe (vastuvõetud/saadetud)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Kokku alla",
+          "detailsTitle": "Kokku alla laetud"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Kokku üles",
+          "detailsTitle": "Kokku üles laetud"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Faili suurus",
+          "detailsTitle": "Valiku/failide kogusuurus"
         },
         "state": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Olek",
+          "detailsTitle": "Töö olek"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Lõpuaeg",
+          "detailsTitle": "Aeg lõpetamisest/kuni lõpetamiseni",
+          "eta": ""
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Tüüp",
+          "detailsTitle": "Allalaadimishalduri tüüp"
         },
         "upSpeed": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Üles",
+          "detailsTitle": "Üleslaadimiskiirus"
         }
       },
       "states": {
-        "downloading": "",
-        "queued": "",
-        "paused": "",
-        "completed": "",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
-        "unknown": "",
-        "seeding": ""
+        "downloading": "Allalaadimine",
+        "queued": "Järjekorras",
+        "paused": "Peatatud",
+        "completed": "Lõpetatud",
+        "failed": "Ebaõnnestunud",
+        "processing": "Töötlemine",
+        "leeching": "Leech'imine",
+        "stalled": "Seiskunud",
+        "unknown": "Tundmatu",
+        "seeding": "Seeditamine"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "Allalaadimishaldurite nimekiri",
+          "pause": "Peata kõik kliendid/üksused",
+          "resume": "Jätka kõiki kliente/üksuseid"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Peata klient",
+          "resume": "Jätka klienti"
         },
         "item": {
-          "pause": "",
-          "resume": "",
+          "pause": "Peata üksus",
+          "resume": "Jätka üksust",
           "delete": {
-            "title": "",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "title": "Kustuta üksus",
+            "modalTitle": "Kas olete kindel, et soovite selle töö kustutada?",
+            "entry": "Kustuta kirje",
+            "entryAndFiles": "Kustuta kirje ja fail(id)"
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "Globaalne suhe",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "",
@@ -3216,11 +3243,11 @@
       }
     },
     "mediaRequests-requestList": {
-      "name": "",
-      "description": "",
+      "name": "Meediapäringute nimekiri",
+      "description": "Vaata kõiki meediapäringuid oma Overseerr või Jellyseerr eksemplarist",
       "option": {
         "linksTargetNewTab": {
-          "label": ""
+          "label": "Ava lingid uuel vahelehel"
         },
         "statusFilter": {
           "label": ""
@@ -3230,17 +3257,17 @@
         }
       },
       "pending": {
-        "approve": "",
-        "approving": "",
-        "decline": ""
+        "approve": "Kinnita päring",
+        "approving": "Päringu kinnitamine...",
+        "decline": "Keeldu päringust"
       },
       "availability": {
-        "unknown": "",
-        "pending": "",
-        "processing": "",
+        "unknown": "Tundmatu",
+        "pending": "Ootel",
+        "processing": "Töötlemine",
         "requested": "",
-        "partiallyAvailable": "",
-        "available": "",
+        "partiallyAvailable": "Osaline",
+        "available": "Saadaval",
         "blacklisted": "",
         "deleted": ""
       },
@@ -3251,27 +3278,27 @@
         "failed": "",
         "completed": ""
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "Tuleb määrata"
     },
     "mediaRequests-requestStats": {
-      "name": "",
-      "description": "",
+      "name": "Meediapäringute statistika",
+      "description": "Statistika teie meediapäringute kohta",
       "option": {},
       "titles": {
         "stats": {
-          "main": "",
-          "approved": "",
-          "pending": "",
-          "processing": "",
-          "declined": "",
-          "available": "",
-          "tv": "",
-          "movie": "",
-          "total": ""
+          "main": "Meedia statistika",
+          "approved": "Juba kinnitatud",
+          "pending": "Kinnitamist ootavad",
+          "processing": "Töötlemisel",
+          "declined": "Juba tagasi lükatud",
+          "available": "Juba saadaval",
+          "tv": "TV päringud",
+          "movie": "Filmipäringud",
+          "total": "Kokku"
         },
         "users": {
-          "main": "",
-          "requests": ""
+          "main": "Parimad kasutajad",
+          "requests": "Päringud"
         }
       }
     },
@@ -3364,20 +3391,20 @@
       "timeLeft": ""
     },
     "rssFeed": {
-      "name": "",
-      "description": "",
+      "name": "RSS-voogud",
+      "description": "Jälgi ja kuva üht või enamat üldist RSS-, ATOM- või JSON-voogu",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "Voo URL-id"
         },
         "enableRtl": {
-          "label": ""
+          "label": "Luba RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Kirjelduse ridade piiramine"
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Postituste arvu limiit"
         },
         "hideDescription": {
           "label": ""
@@ -4128,11 +4155,11 @@
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "Redigeerimisrežiim lubatud",
+      "disabled": "Redigeerimisrežiim keelatud"
     },
     "dimensions": {
-      "title": ""
+      "title": "Muuda mõõtmeid"
     }
   },
   "board": {
@@ -4154,70 +4181,70 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Muudatused rakendati edukalt",
+            "message": "Töölaud salvestati edukalt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Muudatusi ei saa rakendada",
+            "message": "Töölauda ei saanud salvestada"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "Salvestamata muudatused",
+          "message": "Teil on salvestamata muudatusi, kas olete kindel, et soovite lahkuda?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "Impordi Homarr'ist enne 1.0.0",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Importimine õnnestus",
+            "message": "Töölaud imporditi edukalt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Importimine ebaõnnestus",
+            "message": "Töölauda ei saanud importida, vaadake logisid täpsema teabe saamiseks"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "Vali JSON fail",
+            "invalidError": "Vigane seadistusfail"
           },
           "apps": {
-            "label": "",
+            "label": "Rakendused",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Väldi duplikaate",
+              "description": "Ignoreerib rakendusi, kui sama href'iga rakendus on juba olemas"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "Impordi ainult rakendusi",
+              "description": "Lisab ainult rakendused, töölaud tuleb käsitsi uuesti luua"
             }
           },
           "name": {
-            "label": ""
+            "label": "Töölaua nimi"
           },
           "screenSize": {
-            "label": "",
+            "label": "Ekraani suurus",
             "description": "",
             "option": {
-              "sm": "",
-              "md": "",
-              "lg": ""
+              "sm": "Väike",
+              "md": "Keskmine",
+              "lg": "Suur"
             }
           },
           "sidebarBehavior": {
-            "label": "",
-            "description": "",
+            "label": "Külgriba käitumine",
+            "description": "Külgribad eemaldati versioonis 1.0, saate valida, mis peaks juhtuma neis olevate üksustega.",
             "option": {
               "lastSection": {
-                "label": "",
-                "description": ""
+                "label": "Viimane jaotis",
+                "description": "Külgriba kuvatakse viimase jaotise all"
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "Eemalda üksused",
+                "description": "Külgribal olevad üksused eemaldatakse"
               }
             }
           }
@@ -4232,19 +4259,19 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "Lehe pealkiri"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Meta-pealkiri"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "Logo pildi URL"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "Favicon'i pildi URL"
       },
       "backgroundImageUrl": {
-        "label": "",
+        "label": "Taustapildi URL",
         "placeholder": "",
         "group": {
           "your": "",
@@ -4252,60 +4279,60 @@
         }
       },
       "backgroundImageAttachment": {
-        "label": "",
+        "label": "Taustapildi kinnitus",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "Fikseeritud",
+            "description": "Taust püsib samas asendis."
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "Keritav",
+            "description": "Taust kerib koos hiirega."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "Taustapildi kordamine",
         "option": {
           "repeat": {
-            "label": "",
-            "description": ""
+            "label": "Korda",
+            "description": "Pilti korratakse nii palju kui vaja, et katta kogu taustapildi värvimisala."
           },
           "no-repeat": {
-            "label": "",
-            "description": ""
+            "label": "Ära korda",
+            "description": "Pilti ei korrata ja see ei pruugi täita kogu ruumi."
           },
           "repeat-x": {
-            "label": "",
-            "description": ""
+            "label": "Korda X",
+            "description": "Sama nagu 'Korda', kuid ainult horisontaalteljel."
           },
           "repeat-y": {
-            "label": "",
-            "description": ""
+            "label": "Korda Y",
+            "description": "Sama nagu 'Korda', kuid ainult vertikaalteljel."
           }
         }
       },
       "backgroundImageSize": {
-        "label": "",
+        "label": "Taustapildi suurus",
         "option": {
           "cover": {
-            "label": "",
-            "description": ""
+            "label": "Katab",
+            "description": "Skaalab pildi võimalikult väikeseks, et katta kogu aken, kärpides liigset ruumi."
           },
           "contain": {
-            "label": "",
-            "description": ""
+            "label": "Sisaldab",
+            "description": "Skaalab pildi võimalikult suureks oma konteineri sees, ilma et pilti kärbitaks või venitataks."
           }
         }
       },
       "primaryColor": {
-        "label": ""
+        "label": "Peamine värv"
       },
       "secondaryColor": {
-        "label": ""
+        "label": "Teisene värv"
       },
       "opacity": {
-        "label": ""
+        "label": "Läbipaistmatus"
       },
       "iconColor": {
         "label": ""
@@ -4314,11 +4341,11 @@
         "label": ""
       },
       "customCss": {
-        "label": "",
-        "description": "",
+        "label": "Kohandatud css sellele töölauale",
+        "description": "Kohanda oma juhtpaneeli CSS-i abil, soovitatav ainult kogenud kasutajatele",
         "customClassesAlert": {
-          "title": "",
-          "description": ""
+          "title": "Kohandatud klassid",
+          "description": "Saate lisada kohandatud klasse oma töölaua üksustele iga üksuse täpsemates valikutes ja kasutada neid ülaltoodud kohandatud CSS-is."
         }
       },
       "disableStatus": {
@@ -4326,7 +4353,7 @@
         "description": ""
       },
       "columnCount": {
-        "label": ""
+        "label": "Veergude arv"
       },
       "itemRadius": {
         "label": "",
@@ -4340,25 +4367,25 @@
         }
       },
       "name": {
-        "label": ""
+        "label": "Nimi"
       },
       "isPublic": {
-        "label": "",
-        "description": ""
+        "label": "Avalik",
+        "description": "Avalikud töölauad on kõigile juurdepääsetavad, isegi ilma kontota."
       }
     },
     "content": {
-      "metaTitle": ""
+      "metaTitle": "{boardName} töölaud"
     },
     "setting": {
-      "title": "",
+      "title": "{boardName} töölaua seaded",
       "section": {
         "general": {
-          "title": "",
-          "unrecognizedLink": ""
+          "title": "Üldine",
+          "unrecognizedLink": "Antud linki ei tuvastatud ja seda ei kuvata eelvaates, see võib siiski töötada."
         },
         "layout": {
-          "title": "",
+          "title": "Paigutus",
           "responsive": {
             "title": "",
             "action": {
@@ -4367,72 +4394,72 @@
           }
         },
         "background": {
-          "title": ""
+          "title": "Taust"
         },
         "appearance": {
           "title": ""
         },
         "customCss": {
-          "title": ""
+          "title": "Kohandatud css"
         },
         "behavior": {
           "title": ""
         },
         "access": {
-          "title": "",
+          "title": "Juurdepääsukontroll",
           "permission": {
             "item": {
               "view": {
-                "label": ""
+                "label": "Vaata töölauda"
               },
               "modify": {
-                "label": ""
+                "label": "Muuda töölauda"
               },
               "full": {
-                "label": ""
+                "label": "Täielik juurdepääs"
               }
             }
           }
         },
         "dangerZone": {
-          "title": "",
+          "title": "Ohtlik tsoon",
           "action": {
             "rename": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Nimeta töölaud ümber",
+              "description": "Nime muutmine lõhub kõik selle töölaua lingid.",
+              "button": "Muuda nime",
               "modal": {
-                "title": ""
+                "title": "Nimeta töölaud ümber"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "Muuda töölaua nähtavust",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "See töölaud on praegu avalik.",
+                "private": "See töölaud on praegu privaatne."
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "Muuda privaatseks",
+                "private": "Muuda avalikuks"
               },
               "confirm": {
                 "public": {
-                  "title": "",
-                  "description": ""
+                  "title": "Muuda töölaud privaatseks",
+                  "description": "Kas olete kindel, et soovite selle töölaua privaatseks muuta? See peidab töölaua avalikkuse eest. Lingid külaliskasutajatele lõhutakse."
                 },
                 "private": {
-                  "title": "",
-                  "description": ""
+                  "title": "Muuda töölaud avalikuks",
+                  "description": "Kas olete kindel, et soovite selle töölaua avalikuks muuta? See muudab töölaua kõigile juurdepääsetavaks."
                 }
               }
             },
             "delete": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Kustuta see töölaud",
+              "description": "Kui olete töölaua kustutanud, pole seda võimalik tagasi võtta. Palun olge kindel.",
+              "button": "Kustuta see töölaud",
               "confirm": {
-                "title": "",
-                "description": ""
+                "title": "Kustuta töölaud",
+                "description": "Kas olete kindel, et soovite selle töölaua kustutada? See kustutab töölaua ja kogu selle sisu jäädavalt."
               }
             }
           }
@@ -4487,15 +4514,15 @@
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Haldus",
     "title": {
-      "morning": "",
-      "afternoon": "",
-      "evening": ""
+      "morning": "Tere hommikust, {username}",
+      "afternoon": "Tere päevast, {username}",
+      "evening": "Tere õhtust, {username}"
     },
     "notFound": {
-      "title": "",
-      "text": ""
+      "title": "Ei leitud",
+      "text": "Taotletud ressurssi ei leitud"
     },
     "error": {
       "title": "",
@@ -4504,40 +4531,40 @@
     },
     "navbar": {
       "items": {
-        "home": "",
-        "boards": "",
-        "apps": "",
-        "integrations": "",
+        "home": "Kodu",
+        "boards": "Töölauad",
+        "apps": "Rakendused",
+        "integrations": "Integratsioonid",
         "customWidgets": "",
-        "searchEngies": "",
-        "medias": "",
+        "searchEngies": "Otsingumootorid",
+        "medias": "Meedia",
         "users": {
-          "label": "",
+          "label": "Kasutajad",
           "items": {
-            "manage": "",
-            "invites": "",
-            "groups": ""
+            "manage": "Halda",
+            "invites": "Kutsed",
+            "groups": "Rühmad"
           }
         },
         "tools": {
-          "label": "",
+          "label": "Tööriistad",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "kubernetes": "",
-            "logs": "",
+            "logs": "Logid",
             "api": "",
             "certificates": "",
-            "tasks": "",
+            "tasks": "Ülesanded",
             "backup": ""
           }
         },
-        "settings": "",
+        "settings": "Seaded",
         "help": {
-          "label": "",
+          "label": "Abi",
           "items": {
-            "documentation": "",
-            "submitIssue": "",
-            "discord": "",
+            "documentation": "Dokumentatsioon",
+            "submitIssue": "Esita probleem",
+            "discord": "Kogukonna Discord",
             "sourceCode": ""
           }
         },
