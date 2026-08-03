@@ -32,10 +32,11 @@ import type {
 import { extractMcpTools } from "../../mcp/_extract-tools";
 import { getRequestedMentionIds, sanitizeAttachmentFilename } from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
+import { assistantExecutionPolicy } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getForcedAssistantToolName, withAssistantToolPolicy } from "./assistant-tool-policy";
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 const logger = createLogger({ module: "assistant" });
 const getToolApprovalSecret = () =>
@@ -98,9 +99,12 @@ Action rules:
 - Mutating Homarr tools already pause for native user approval. Calling a mutation only proposes the action; it cannot execute until the user selects Approve and run. Once the requested change is sufficiently specified, call the mutation immediately so the approval UI appears.
 - A prose response such as "Please confirm if you would like me to proceed", "Would you like me to proceed?", or a parameter summary that asks for confirmation is incorrect. Never ask for a second textual confirmation before an approval-gated tool call.
 - Do not retry a denied action.
-- Before creating an app, call configure_app with the app name and every useful default you can infer, including its description, href, pingUrl, and an icon URL returned by icon_findIcons. The user reviews Homarr's native app form. Its icon picker searches Homarr's local icon repository. Use the returned values for app_create.
+- Before creating an app, call configure_app with the app name and every useful default you can infer, including its description, href, pingUrl, and an icon URL returned by icon_findIcons. The user reviews Homarr's native app form. Its icon picker searches Homarr's local icon repository. Use the returned values for app_create. If the user asked to place it on a board, use the appId returned by app_create in a board_addItem call with kind "app" and options { appId } before reporting success.
 - Before changing a board's custom CSS or visual and behavior settings, call board_getBoardSettings to read the current values, then call configure_board_settings with only the requested proposed changes. The user can edit the complete CSS and settings in Homarr's native form. Use its returned flat object for board_savePartialBoardSettings, which then shows the mutation approval. Never overwrite existing CSS rules unless the user explicitly requests replacement.
+- To create a formatted note on a dashboard, call board_addItem with kind "notebook". Put valid Tiptap-compatible HTML in options.content and set options.showToolbar and options.allowReadOnlyCheck when useful. Use semantic paragraphs, headings, lists, task lists, blockquotes, tables, links, emphasis, and images as appropriate. Never include scripts, styles, iframes, event handlers, or unsafe URL protocols.
 - When choosing an app icon without configure_app, call the Homarr icon findIcons tool first and use one of its returned local icon URLs. Never invent a third-party icon CDN URL.
+- When a Homarr tool returns a usable image or icon URL and a visual summary helps, embed that exact URL with Markdown image syntax. App summary tables must use an Icon column such as ![Discord icon](exact-returned-url). Never replace an available returned icon with emoji, and never invent or transform image URLs.
+- Complete batch requests in the same run. Use parallel independent read-only calls when supported, reuse results, continue calling tools until every requested item has been attempted, and summarize only after the batch is complete. Do not stop after a partial batch or ask the user to type "Continue".
 - Browser tools can navigate within Homarr, open existing Homarr UI, or refresh the active view after a completed change. Never navigate to an arbitrary external URL and never refresh before a mutation finishes.
 - Keep responses concise and lead with the result. Summarize tool output instead of dumping JSON.
 - Use well-formed GitHub-flavored Markdown. Put each list item on its own line and leave a blank line before lists.
@@ -516,9 +520,14 @@ export async function POST(request: Request) {
           toolChoice: { type: "tool", toolName: forcedToolName },
         };
       },
-      stopWhen: stepCountIs(8),
+      stopWhen: stepCountIs(assistantExecutionPolicy.maxSteps),
       abortSignal: request.signal,
-      timeout: { totalMs: 55_000, stepMs: 30_000, toolMs: 30_000 },
+      timeout: {
+        totalMs: assistantExecutionPolicy.totalTimeoutMs,
+        stepMs: assistantExecutionPolicy.stepTimeoutMs,
+        toolMs: assistantExecutionPolicy.toolTimeoutMs,
+      },
+      maxOutputTokens: assistantExecutionPolicy.maxOutputTokens,
       maxRetries: 2,
       reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
       providerOptions:
