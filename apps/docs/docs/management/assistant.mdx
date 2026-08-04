@@ -91,6 +91,10 @@ alongside Homarr's tools, so OpenRouter performs each search without
 exposing the stored credential to the browser. The model decides when live research is needed and can use the
 grounded results and source links in responses or dashboard notes. Homarr limits each assistant request to
 three searches with five results per search. OpenRouter charges web-search usage separately from model tokens.
+Completed responses show a compact web-search activity card when OpenRouter reports search usage. OpenRouter
+does not expose these server-side searches as ordinary client-executed tool calls, so Homarr shows the reported
+search count and the safe title and URL from each returned `url_citation` annotation instead. Citation excerpts
+stay in the provider response and are not persisted in the activity card.
 
 The option is also available for custom endpoints that forward OpenRouter's server-tools request format. This
 supports OpenRouter proxies, including the future Homarr Router provider. Leave it disabled for ordinary
@@ -114,6 +118,8 @@ Files returned by a compatible model can be downloaded directly from the message
 Assistant responses render GitHub-flavored Markdown, including headings, links, lists, task lists, tables,
 quotes, inline code, and fenced code blocks. Line breaks are preserved, and Homarr repairs common streamed
 responses where a provider returns escaped line breaks or places a bold-label list on one line.
+Fenced `mermaid` blocks render as diagrams in the current color scheme using Mermaid's strict security mode;
+invalid diagrams fall back to their source instead of breaking the response.
 When Homarr's icon search returns an image URL, visual result tables render that actual icon in a compact
 image column instead of substituting an emoji. Assistant-provided Markdown images accept safe relative,
 HTTP, and HTTPS sources and load without forwarding the Homarr page as the referrer.
@@ -124,12 +130,14 @@ as part of the prompt.
 
 Type `@` in the composer to add permission-checked context. The nested menu contains apps, integrations,
 boards, widgets, and tools available to the current user. Homarr validates every referenced ID again on
-the server before adding it to the model context. Type `/` for common prompt shortcuts. Both menus support
-keyboard navigation and keep the active result visible while moving through long lists. The joined
-controls below the composer open a searchable model picker and the thinking-level menu. Model selection
-is stored on the conversation after a completed request. Thinking mode can be left on **Auto**, disabled,
-or set from minimal through high; explicit levels are sent using the AI SDK's provider-neutral reasoning
-setting and still depend on support from the chosen model and endpoint.
+the server before adding it to the model context. Selected references appear as compact, typed pills in the
+composer and sent message, while preserving assistant-ui's underlying directive syntax for the model. Type `/`
+for common prompt shortcuts. Both menus support keyboard navigation and keep the active result visible while
+moving through long lists. The selector below the composer combines searchable, provider-grouped models with
+their description, context size and image-input capability, plus the thinking-level control. Model selection is
+stored on the conversation after a completed request. Thinking mode can be left on **Auto**, disabled, or set
+from minimal through high; explicit levels are sent using the AI SDK's provider-neutral reasoning setting and
+still depend on support from the chosen model and endpoint.
 
 Each completed response includes a circular context-window meter. Select it to open request details when
 the provider reports them: input, output, cached-input and reasoning tokens, used and remaining context,

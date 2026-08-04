@@ -1,7 +1,7 @@
 "use client";
 
-import type { ComponentPropsWithoutRef, RefObject } from "react";
-import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { ComponentPropsWithoutRef, ReactNode, RefObject } from "react";
+import { createContext, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type {
   FileMessagePartProps,
   ImageMessagePartProps,
@@ -17,19 +17,23 @@ import {
   BranchPickerPrimitive,
   ComposerPrimitive,
   ErrorPrimitive,
-  MessagePartPrimitive,
   MessagePrimitive,
   SelectionToolbarPrimitive,
   ThreadListItemPrimitive,
   ThreadListPrimitive,
   ThreadPrimitive,
+  groupPartByType,
   useAui,
   useAuiState,
+  useMessagePartText,
   unstable_useMentionAdapter,
   unstable_useSlashCommandAdapter,
   unstable_useTriggerPopoverScopeContext,
 } from "@assistant-ui/react";
+import { LexicalComposerInput } from "@assistant-ui/react-lexical";
+import type { DirectiveChipProps } from "@assistant-ui/react-lexical";
 import { MarkdownTextPrimitive } from "@assistant-ui/react-markdown";
+import type { SyntaxHighlighterProps } from "@assistant-ui/react-markdown";
 import {
   ActionIcon,
   Anchor,
@@ -43,16 +47,17 @@ import {
   Group,
   Image,
   Loader,
-  Menu,
   Popover,
   RingProgress,
   ScrollArea,
+  SegmentedControl,
   Stack,
   Text,
   ThemeIcon,
   Tooltip,
   UnstyledButton,
   useCombobox,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { useReducedMotion, useWindowEvent } from "@mantine/hooks";
 import {
@@ -78,6 +83,7 @@ import {
   IconPaperclip,
   IconPalette,
   IconPencil,
+  IconPhoto,
   IconHistory,
   IconPlayerStop,
   IconPlus,
@@ -103,6 +109,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
 import { useAssistantAutoApproval, useAssistantAutomaticAction } from "./assistant-auto-approval";
+import { getAssistantDirectiveTranslationKey, parseAssistantDirectives } from "./assistant-directives";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getSafeAssistantMarkdownImageSource } from "./assistant-markdown-image";
 import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
@@ -139,6 +146,34 @@ interface AssistantPanelProps extends AssistantConversationControls {
 
 const markdownRemarkPlugins = [remarkGfm, remarkBreaks];
 
+const contextIcons = {
+  app: IconApps,
+  integration: IconLink,
+  board: IconMessage,
+  widget: IconTool,
+  tool: IconTool,
+  tools: IconTool,
+};
+
+const ContextDirectiveChip = ({ directiveId, directiveType, label }: DirectiveChipProps) => {
+  const t = useScopedI18n("common.assistant");
+  const Icon = contextIcons[directiveType as keyof typeof contextIcons] ?? IconAt;
+  const translationKey = getAssistantDirectiveTranslationKey(directiveType);
+  const typeLabel = t(`mentions.${translationKey}`);
+
+  return (
+    <span
+      className={classes.directiveChip}
+      data-directive-type={directiveType}
+      data-directive-id={directiveId}
+      title={`${typeLabel}: ${label}`}
+    >
+      <Icon size={12} aria-hidden />
+      <span className={classes.directiveChipLabel}>{label}</span>
+    </span>
+  );
+};
+
 const MarkdownLink = ({ href, children, ...props }: ComponentPropsWithoutRef<"a">) => {
   const external = href !== undefined && /^https?:\/\//iu.test(href);
   return (
@@ -171,17 +206,104 @@ const MarkdownImage = ({ src, alt = "", ...props }: ComponentPropsWithoutRef<"im
   );
 };
 
+const MermaidDiagram = ({ code, components }: SyntaxHighlighterProps) => {
+  const t = useScopedI18n("common.assistant");
+  const colorScheme = useComputedColorScheme("light");
+  const diagramId = `assistant-mermaid-${useId().replaceAll(/[^A-Za-z0-9_-]/gu, "")}`;
+  const [rendered, setRendered] = useState<{ code: string; svg?: string; failed?: boolean }>({ code });
+
+  useEffect(() => {
+    let active = true;
+    setRendered({ code });
+    void import("mermaid")
+      .then(async ({ default: mermaid }) => {
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "strict",
+          suppressErrorRendering: true,
+          theme: colorScheme === "dark" ? "dark" : "neutral",
+          fontFamily: "Inter, system-ui, sans-serif",
+        });
+        return await mermaid.render(diagramId, code);
+      })
+      .then(({ svg }) => {
+        if (active) setRendered({ code, svg });
+      })
+      .catch(() => {
+        document.getElementById(`d${diagramId}`)?.remove();
+        if (active) setRendered({ code, failed: true });
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [code, colorScheme, diagramId]);
+
+  if (rendered.code !== code || (!rendered.svg && !rendered.failed)) {
+    return (
+      <Group component="output" className={classes.mermaidStatus} gap="xs">
+        <Loader type="bars" size="xs" />
+        <Text size="xs" c="dimmed">
+          {t("markdown.renderingDiagram")}
+        </Text>
+      </Group>
+    );
+  }
+  if (rendered.failed || !rendered.svg) {
+    const Pre = components.Pre;
+    const Code = components.Code;
+    return (
+      <Box className={classes.mermaidFallback}>
+        <Text size="xs" c="dimmed" mb="xs">
+          {t("markdown.diagramUnavailable")}
+        </Text>
+        <Pre>
+          <Code>{code}</Code>
+        </Pre>
+      </Box>
+    );
+  }
+  return (
+    <Box
+      component="figure"
+      className={classes.mermaidDiagram}
+      aria-label={t("markdown.diagram")}
+      dangerouslySetInnerHTML={{ __html: rendered.svg }}
+    />
+  );
+};
+
 const AssistantTextPart = () => (
   <MarkdownTextPrimitive
     className={classes.messageMarkdown}
     preprocess={normalizeAssistantMarkdown}
     remarkPlugins={markdownRemarkPlugins}
     components={{ a: MarkdownLink, img: MarkdownImage, table: MarkdownTable }}
+    componentsByLanguage={{ mermaid: { SyntaxHighlighter: MermaidDiagram } }}
     defer
   />
 );
 
-const UserTextPart = () => <MessagePartPrimitive.Text className={classes.messageText} />;
+const UserTextPart = () => {
+  const { text } = useMessagePartText();
+  const segments = parseAssistantDirectives(text);
+  return (
+    <span className={classes.messageText}>
+      {segments.map((segment, index) =>
+        segment.kind === "text" ? (
+          <span key={`${index}:${segment.text}`}>{segment.text}</span>
+        ) : (
+          <ContextDirectiveChip
+            key={`${index}:${segment.type}:${segment.id}`}
+            directiveId={segment.id}
+            directiveType={segment.type}
+            label={segment.label}
+          />
+        ),
+      )}
+    </span>
+  );
+};
 
 const Attachment = ({ removable = false }: { removable?: boolean }) => {
   const t = useScopedI18n("common.assistant");
@@ -203,21 +325,30 @@ const Attachment = ({ removable = false }: { removable?: boolean }) => {
 };
 const SentAttachment = () => <Attachment />;
 
-const ReasoningPart = ({ text, status }: ReasoningMessagePartProps) => {
+const ReasoningPart = ({ text }: ReasoningMessagePartProps) => (
+  <Text component="div" size="sm" c="dimmed" className={classes.reasoningText}>
+    {text}
+  </Text>
+);
+
+const ReasoningGroup = ({ children, running }: { children: ReactNode; running: boolean }) => {
   const t = useScopedI18n("common.assistant");
   return (
-    <details className={classes.reasoning} open={status.type === "running"}>
+    <details className={classes.reasoning} open={running}>
       <summary>
-        <Group gap="xs" wrap="nowrap">
-          <Loader type="bars" size="xs" color="gray" style={{ opacity: status.type === "running" ? 1 : 0 }} />
-          <Text size="xs" fw={600} c="dimmed">
-            {t("reasoning")}
-          </Text>
+        <Group gap="xs" wrap="nowrap" justify="space-between">
+          <Group gap="xs" wrap="nowrap">
+            {running ? <Loader type="bars" size="xs" color="gray" /> : <IconBrain size={14} />}
+            <Text size="xs" fw={600} c="dimmed">
+              {t("reasoning")}
+            </Text>
+          </Group>
+          <IconChevronDown size={14} className={classes.reasoningChevron} />
         </Group>
       </summary>
-      <Text size="sm" c="dimmed" className={classes.reasoningText}>
-        {text}
-      </Text>
+      <Box className={classes.reasoningContent} aria-busy={running}>
+        {children}
+      </Box>
     </details>
   );
 };
@@ -1289,19 +1420,95 @@ const RuntimeError = () => {
   );
 };
 
+const WebSearchActivity = () => {
+  const t = useScopedI18n("common.assistant");
+  const metadata = useAuiState((state) => state.message.metadata);
+  const telemetry = getAssistantTelemetry(metadata);
+  if (!telemetry) return null;
+  const sources = telemetry.webSearchSources ?? [];
+  if (telemetry.webSearchRequests === undefined && sources.length === 0) return null;
+
+  return (
+    <Box className={`${classes.tool} ${classes.webSearchActivity}`}>
+      <Group justify="space-between" align="flex-start" wrap="nowrap" gap="sm">
+        <Group gap="xs" wrap="nowrap" align="flex-start">
+          <ThemeIcon size="sm" radius="xl" variant="light" color="blue">
+            <IconSearch size={13} />
+          </ThemeIcon>
+          <div>
+            <Text size="sm" fw={600}>
+              {t("webSearch.title")}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {t("webSearch.completed")}
+            </Text>
+          </div>
+        </Group>
+        <Group gap={4} wrap="wrap" justify="flex-end">
+          {telemetry.webSearchRequests !== undefined && (
+            <Badge size="xs" variant="light" color="blue">
+              {t("webSearch.searches", { count: telemetry.webSearchRequests })}
+            </Badge>
+          )}
+          {sources.length > 0 && (
+            <Badge size="xs" variant="light" color="gray">
+              {t("webSearch.sources", { count: sources.length })}
+            </Badge>
+          )}
+        </Group>
+      </Group>
+      {sources.length > 0 && (
+        <Group className={classes.webSearchSources} gap="xs" wrap="wrap">
+          {sources.map((source) => (
+            <Anchor
+              key={source.url}
+              className={classes.webSearchSource}
+              href={source.url}
+              target="_blank"
+              rel="noreferrer"
+              size="xs"
+              title={source.title ?? source.url}
+            >
+              <IconLink size={13} />
+              <Text component="span" inherit lineClamp={1}>
+                {source.title ?? new URL(source.url).hostname}
+              </Text>
+            </Anchor>
+          ))}
+        </Group>
+      )}
+    </Box>
+  );
+};
+
 const AssistantMessage = () => (
   <MessagePrimitive.Root className={`${classes.message} ${classes.assistantMessage}`}>
-    <MessagePrimitive.Parts
-      components={{
-        Text: AssistantTextPart,
-        Reasoning: ReasoningPart,
-        Source: SourcePart,
-        File: FilePart,
-        Image: ImagePart,
-        tools: { Fallback: ToolPart },
+    <MessagePrimitive.GroupedParts groupBy={groupPartByType({ reasoning: ["group-reasoning"] })}>
+      {({ part, children }) => {
+        switch (part.type) {
+          case "group-reasoning":
+            return <ReasoningGroup running={part.status.type === "running"}>{children}</ReasoningGroup>;
+          case "text":
+            return <AssistantTextPart />;
+          case "reasoning":
+            return <ReasoningPart {...part} />;
+          case "source":
+            return <SourcePart {...part} />;
+          case "file":
+            return <FilePart {...part} />;
+          case "image":
+            return <ImagePart {...part} />;
+          case "tool-call":
+            return part.toolUI ?? <ToolPart {...part} />;
+          case "indicator":
+            return null;
+          default:
+            return null;
+        }
       }}
-    />
+    </MessagePrimitive.GroupedParts>
     <RuntimeError />
+    <WebSearchActivity />
     <RequestTelemetry />
     <AssistantMessageActions />
   </MessagePrimitive.Root>
@@ -1543,14 +1750,6 @@ const EmptyThread = () => {
   );
 };
 
-const contextIcons = {
-  app: IconApps,
-  integration: IconLink,
-  board: IconMessage,
-  widget: IconTool,
-  tools: IconTool,
-};
-
 const TriggerPopoverAutoScroll = ({ viewportRef }: { viewportRef: RefObject<HTMLDivElement | null> }) => {
   const { activeCategoryId, categories, highlightedIndex, isSearchMode, items, open, query } =
     unstable_useTriggerPopoverScopeContext();
@@ -1727,6 +1926,16 @@ const ComposerTriggers = () => {
 
 type ComposerProps = AssistantConversationControls & { pendingAction: AssistantPendingAction | undefined };
 
+const getModelProviderLabel = (modelId: string, fallback: string) => {
+  const separator = modelId.indexOf("/");
+  if (separator <= 0) return fallback;
+  const provider = modelId.slice(0, separator).replaceAll(/[-_]/gu, " ");
+  return `${provider.charAt(0).toLocaleUpperCase()}${provider.slice(1)}`;
+};
+
+const formatCompactModelNumber = (value: number) =>
+  new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 }).format(value);
+
 const RuntimeControls = ({
   modelId,
   models,
@@ -1747,6 +1956,13 @@ const RuntimeControls = ({
             model.name.toLocaleLowerCase().includes(normalizedModelSearch) ||
             model.id.toLocaleLowerCase().includes(normalizedModelSearch),
         );
+  const groupedModels = visibleModels.reduce((groups, model) => {
+    const provider = getModelProviderLabel(model.id, t("runtime.otherModels"));
+    const providerModels = groups.get(provider);
+    if (providerModels) providerModels.push(model);
+    else groups.set(provider, [model]);
+    return groups;
+  }, new Map<string, AssistantRuntimeModelOption[]>());
   const modelCombobox = useCombobox({
     onDropdownOpen: () => {
       modelCombobox.selectActiveOption();
@@ -1765,40 +1981,45 @@ const RuntimeControls = ({
   };
 
   return (
-    <Group className={classes.runtimeControls} gap={0} wrap="nowrap">
-      <Button.Group
-        className={classes.runtimeButtonGroup}
-        aria-label={`${t("runtime.model")}, ${t("runtime.thinking")}`}
-      >
-        <Combobox store={modelCombobox} onOptionSubmit={selectModel} withinPortal position="top-start" width={320}>
-          <Combobox.Target>
-            <Button
-              className={classes.modelButton}
-              classNames={{ root: classes.runtimeButton, label: classes.runtimeButtonLabel }}
-              variant="default"
-              size="compact-sm"
-              disabled={modelOptionsLoading || models.length === 0}
-              leftSection={modelOptionsLoading ? <Loader size={13} /> : <IconSparkles size={14} />}
-              rightSection={<Combobox.Chevron size="xs" />}
-              onClick={() => modelCombobox.toggleDropdown()}
-              aria-label={`${t("runtime.model")}: ${selectedModel?.name ?? t("runtime.noModels")}`}
-              title={selectedModel?.name}
-            >
+    <Combobox store={modelCombobox} onOptionSubmit={selectModel} withinPortal position="top-start" width={360}>
+      <Combobox.Target>
+        <UnstyledButton
+          className={classes.runtimeSelectorTrigger}
+          type="button"
+          disabled={modelOptionsLoading || models.length === 0}
+          onClick={() => modelCombobox.toggleDropdown()}
+          aria-label={`${t("runtime.model")}: ${selectedModel?.name ?? t("runtime.noModels")}. ${t("runtime.thinking")}: ${t(`runtime.reasoning.${reasoning}`)}`}
+          aria-expanded={modelCombobox.dropdownOpened}
+        >
+          <Group gap="xs" wrap="nowrap">
+            <ThemeIcon className={classes.runtimeSelectorIcon} size="sm" variant="light" color="gray">
+              {modelOptionsLoading ? <Loader size={12} /> : <IconSparkles size={13} />}
+            </ThemeIcon>
+            <Text className={classes.runtimeSelectorName} size="xs" fw={650} lineClamp={1}>
               {selectedModel?.name ?? t("runtime.model")}
-            </Button>
-          </Combobox.Target>
-          <Combobox.Dropdown className={classes.modelDropdown}>
-            <Combobox.Search
-              value={modelSearch}
-              onChange={(event) => {
-                setModelSearch(event.currentTarget.value);
-                modelCombobox.updateSelectedOptionIndex();
-              }}
-              placeholder={t("runtime.model")}
-              aria-label={t("runtime.model")}
-            />
-            <Combobox.Options className={classes.modelOptions}>
-              {visibleModels.map((model) => (
+            </Text>
+            <Badge className={classes.runtimeSelectorEffort} size="xs" variant="light" color="gray">
+              <IconBrain size={11} />
+              {t(`runtime.reasoning.${reasoning}`)}
+            </Badge>
+            <Combobox.Chevron size="xs" />
+          </Group>
+        </UnstyledButton>
+      </Combobox.Target>
+      <Combobox.Dropdown className={classes.modelDropdown}>
+        <Combobox.Search
+          value={modelSearch}
+          onChange={(event) => {
+            setModelSearch(event.currentTarget.value);
+            modelCombobox.updateSelectedOptionIndex();
+          }}
+          placeholder={t("runtime.searchModels")}
+          aria-label={t("runtime.searchModels")}
+        />
+        <Combobox.Options className={classes.modelOptions}>
+          {[...groupedModels.entries()].map(([provider, providerModels]) => (
+            <Combobox.Group key={provider} label={provider}>
+              {providerModels.map((model) => (
                 <Combobox.Option
                   className={classes.modelOption}
                   key={model.id}
@@ -1806,54 +2027,63 @@ const RuntimeControls = ({
                   active={model.id === modelId}
                 >
                   <Group gap="xs" wrap="nowrap">
-                    <Stack gap={0} className={classes.modelOptionText}>
+                    <ThemeIcon size="md" radius="md" variant="light" color="gray">
+                      <IconSparkles size={14} />
+                    </ThemeIcon>
+                    <Stack gap={1} className={classes.modelOptionText}>
                       <Text size="sm" fw={model.id === modelId ? 650 : 500} lineClamp={1}>
                         {model.name}
                       </Text>
                       <Text size="xs" c="dimmed" lineClamp={1}>
-                        {model.id}
+                        {model.description?.trim() || model.id}
                       </Text>
                     </Stack>
-                    {model.id === modelId && <IconCheck size={15} className={classes.runtimeOptionCheck} />}
+                    <Group className={classes.modelOptionMeta} gap={4} wrap="nowrap">
+                      {model.inputModalities.includes("image") && (
+                        <Tooltip label={t("runtime.imageInput")}>
+                          <IconPhoto size={14} aria-label={t("runtime.imageInput")} />
+                        </Tooltip>
+                      )}
+                      {model.contextLength && (
+                        <Badge size="xs" variant="light" color="gray">
+                          {formatCompactModelNumber(model.contextLength)}
+                        </Badge>
+                      )}
+                      {model.id === modelId && <IconCheck size={15} className={classes.runtimeOptionCheck} />}
+                    </Group>
                   </Group>
                 </Combobox.Option>
               ))}
-              {visibleModels.length === 0 && <Combobox.Empty>{t("runtime.noModels")}</Combobox.Empty>}
-            </Combobox.Options>
-          </Combobox.Dropdown>
-        </Combobox>
-        <Menu position="top-end" width={210} withinPortal>
-          <Menu.Target>
-            <Button
-              className={classes.reasoningButton}
-              classNames={{ root: classes.runtimeButton, label: classes.runtimeButtonLabel }}
-              variant="default"
-              size="compact-sm"
-              leftSection={<IconBrain size={14} />}
-              rightSection={<IconChevronUp size={14} />}
-              aria-label={`${t("runtime.thinking")}: ${t(`runtime.reasoning.${reasoning}`)}`}
-              title={t(`runtime.reasoning.${reasoning}`)}
-            >
-              {t(`runtime.reasoning.${reasoning}`)}
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Label>{t("runtime.thinking")}</Menu.Label>
-            {assistantReasoningModes.map((mode) => (
-              <Menu.Item
-                key={mode}
-                className={classes.runtimeMenuItem}
-                data-selected={mode === reasoning || undefined}
-                rightSection={mode === reasoning ? <IconCheck size={15} /> : null}
-                onClick={() => onReasoningChange(mode)}
-              >
-                {t(`runtime.reasoning.${mode}`)}
-              </Menu.Item>
-            ))}
-          </Menu.Dropdown>
-        </Menu>
-      </Button.Group>
-    </Group>
+            </Combobox.Group>
+          ))}
+          {visibleModels.length === 0 && <Combobox.Empty>{t("runtime.noModels")}</Combobox.Empty>}
+        </Combobox.Options>
+        <Divider />
+        <Box className={classes.reasoningSelector}>
+          <Group gap="xs" mb={6} wrap="nowrap">
+            <IconBrain size={14} />
+            <Text size="xs" fw={650}>
+              {t("runtime.thinking")}
+            </Text>
+          </Group>
+          <SegmentedControl
+            className={classes.reasoningSegmentedControl}
+            value={reasoning}
+            onChange={(value) => {
+              if (assistantReasoningModes.includes(value as AssistantReasoningMode)) {
+                onReasoningChange(value as AssistantReasoningMode);
+              }
+            }}
+            size="xs"
+            fullWidth
+            data={assistantReasoningModes.map((mode) => ({
+              value: mode,
+              label: t(`runtime.reasoning.${mode}`),
+            }))}
+          />
+        </Box>
+      </Combobox.Dropdown>
+    </Combobox>
   );
 };
 
@@ -1893,10 +2123,12 @@ const Composer = (props: ComposerProps) => {
                   </ComposerPrimitive.AddAttachment>
                 </Tooltip>
               </Group>
-              <ComposerPrimitive.Input
+              <LexicalComposerInput
                 className={classes.composerInput}
                 placeholder={t("composerPlaceholder")}
-                rows={1}
+                directiveChip={ContextDirectiveChip}
+                // oxlint-disable-next-line jsx-a11y/no-autofocus -- opening the assistant is an explicit intent to compose
+                autoFocus
                 data-autofocus
               />
               {running ? (

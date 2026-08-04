@@ -9,6 +9,11 @@ export type AssistantUsage = {
   cacheWriteTokens?: number;
 };
 
+export type AssistantWebSearchSource = {
+  url: string;
+  title?: string;
+};
+
 export type AssistantRequestStep = {
   index: number;
   durationMs: number;
@@ -41,6 +46,7 @@ export type AssistantRequestStep = {
   fallbackCount?: number;
   fallbackLatencyMs?: number;
   webSearchRequests?: number;
+  webSearchSources?: AssistantWebSearchSource[];
   isByok?: boolean;
   streamed?: boolean;
   cancelled?: boolean;
@@ -66,6 +72,7 @@ export type AssistantRequestTelemetry = {
   fallbackCount?: number;
   fallbackLatencyMs?: number;
   webSearchRequests?: number;
+  webSearchSources?: AssistantWebSearchSource[];
   costType?: "reported" | "estimated";
   finishReason?: string;
   steps: AssistantRequestStep[];
@@ -82,6 +89,22 @@ export type AssistantUIMessage = UIMessage<AssistantMessageMetadata>;
 
 const getFiniteNonNegativeNumber = (value: unknown) =>
   typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : undefined;
+
+const getWebSearchSources = (value: unknown): AssistantWebSearchSource[] => {
+  if (!Array.isArray(value)) return [];
+  const sources = new Map<string, AssistantWebSearchSource>();
+  for (const item of value) {
+    if (!item || typeof item !== "object" || Array.isArray(item)) continue;
+    const candidate = item as Record<string, unknown>;
+    if (typeof candidate.url !== "string" || !URL.canParse(candidate.url)) continue;
+    const url = new URL(candidate.url);
+    if ((url.protocol !== "http:" && url.protocol !== "https:") || url.username || url.password) continue;
+    const title = typeof candidate.title === "string" ? candidate.title.trim().slice(0, 200) : "";
+    if (!sources.has(url.href)) sources.set(url.href, { url: url.href, ...(title ? { title } : {}) });
+    if (sources.size >= 12) break;
+  }
+  return [...sources.values()];
+};
 
 export const getAssistantUsage = (metadata: unknown): AssistantUsage | null => {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata) || !("usage" in metadata)) return null;
@@ -213,6 +236,9 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
             ...(getFiniteNonNegativeNumber(candidate.webSearchRequests) !== undefined
               ? { webSearchRequests: getFiniteNonNegativeNumber(candidate.webSearchRequests) }
               : {}),
+            ...(getWebSearchSources(candidate.webSearchSources).length > 0
+              ? { webSearchSources: getWebSearchSources(candidate.webSearchSources) }
+              : {}),
             ...(typeof candidate.isByok === "boolean" ? { isByok: candidate.isByok } : {}),
             ...(typeof candidate.streamed === "boolean" ? { streamed: candidate.streamed } : {}),
             ...(typeof candidate.cancelled === "boolean" ? { cancelled: candidate.cancelled } : {}),
@@ -266,6 +292,9 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
       : {}),
     ...(getFiniteNonNegativeNumber(value.webSearchRequests) !== undefined
       ? { webSearchRequests: getFiniteNonNegativeNumber(value.webSearchRequests) }
+      : {}),
+    ...(getWebSearchSources(value.webSearchSources).length > 0
+      ? { webSearchSources: getWebSearchSources(value.webSearchSources) }
       : {}),
     ...(value.costType === "reported" || value.costType === "estimated" ? { costType: value.costType } : {}),
     ...(typeof value.finishReason === "string" ? { finishReason: value.finishReason } : {}),
