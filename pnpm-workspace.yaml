@@ -224,6 +224,7 @@ catalog:
   assistant-stream: ^0.3.26
   "@ai-sdk/openai-compatible": 3.0.14
   remark-breaks: ^4.0.0
+  remark-directive: ^3.0.1
   remark-gfm: ^4.0.1
 
 catalogMode: strict

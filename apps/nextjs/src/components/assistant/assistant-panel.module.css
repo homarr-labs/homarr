@@ -48,6 +48,7 @@
   border-radius: var(--mantine-radius-sm);
   color: var(--mantine-color-yellow-light-color);
   background: var(--mantine-color-yellow-light);
+  white-space: nowrap;
 }
 
 .activityDismiss {
@@ -213,8 +214,8 @@
   }
 
   .composerInput {
-    min-height: 2.625rem;
-    padding: 0.6rem 0.5rem;
+    min-height: 2.25rem;
+    padding: 0.35rem 0.45rem;
   }
 
   .runtimeSelectorTrigger {
@@ -388,6 +389,13 @@
 .directiveChipLabel {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.directiveChipImage {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: 0 0 auto;
+  object-fit: contain;
 }
 
 .messageMarkdown {
@@ -670,16 +678,65 @@
 }
 
 .humanToolOption {
+  display: grid;
+  width: 100%;
   height: auto;
   min-height: 3.25rem;
-  padding-block: 0.55rem;
-  padding-inline: 0.8rem;
-  white-space: normal;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+  text-align: start;
 }
 
-.humanToolOption :global(.mantine-Button-inner),
-.humanToolOption :global(.mantine-Button-label) {
-  width: 100%;
+.humanToolOption:hover:not(:disabled) {
+  border-color: var(--mantine-color-default-border);
+  background: var(--mantine-color-default-hover);
+}
+
+.humanToolOption:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.humanToolOption:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.humanToolOption[data-kind="affirmative"] {
+  border-color: color-mix(in srgb, var(--mantine-color-green-filled) 35%, var(--mantine-color-default-border));
+}
+
+.humanToolOption[data-kind="negative"] {
+  border-color: color-mix(in srgb, var(--mantine-color-red-filled) 30%, var(--mantine-color-default-border));
+}
+
+.humanToolOptionIcon,
+.humanToolOptionBadge {
+  width: max-content;
+  flex: 0 0 auto;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+.humanToolOptionText {
+  min-width: 0;
+}
+
+.humanToolOptionBadgeLabel {
+  width: max-content;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.humanToolOptionLabel,
+.humanToolOptionDescription {
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .humanToolOtherInput {
@@ -797,20 +854,25 @@
   background: var(--mantine-color-default);
 }
 
-.reasoning summary {
+.reasoningToggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--mantine-radius-sm);
   cursor: pointer;
-  list-style: none;
 }
 
-.reasoning summary::-webkit-details-marker {
-  display: none;
+.reasoningToggle:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
 }
 
 .reasoningChevron {
   transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.reasoning[open] .reasoningChevron {
+.reasoning[data-opened] .reasoningChevron {
   transform: rotate(180deg);
 }
 
@@ -1091,27 +1153,35 @@
 
 .composerInput {
   position: relative;
-  min-height: 2.5rem;
+  min-height: 2.25rem;
   max-height: 9rem;
   flex: 1;
-  padding: 0.55rem 0.65rem;
+  box-sizing: border-box;
+  padding: 0.35rem 0.45rem;
   color: var(--mantine-color-text);
   background: transparent;
   font: inherit;
+  line-height: 1.5;
   cursor: text;
 }
 
 .composerInput :global(.aui-lexical-input) {
   min-height: 1.5rem;
+  line-height: 1.5;
   outline: 0;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
+.composerInput :global(.aui-lexical-input > p) {
+  margin: 0;
+}
+
 .composerInput :global(.aui-lexical-placeholder) {
   position: absolute;
-  inset: 0.55rem 0.65rem auto;
+  inset: 0.35rem 0.45rem auto;
   color: var(--mantine-color-dimmed);
+  line-height: 1.5;
   pointer-events: none;
 }
 
@@ -1128,7 +1198,7 @@
   width: fit-content;
   min-width: 0;
   max-width: min(24rem, 100%);
-  padding: 0.3rem 0.45rem;
+  padding: 0.22rem 0.4rem;
   border: 1px solid var(--mantine-color-default-border);
   border-radius: var(--mantine-radius-sm);
   color: var(--mantine-color-text);
@@ -1149,10 +1219,6 @@
   cursor: not-allowed;
 }
 
-.runtimeSelectorIcon {
-  flex: 0 0 auto;
-}
-
 .runtimeSelectorName {
   min-width: 0;
   flex: 1;
@@ -1165,7 +1231,6 @@
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 0.2rem;
   text-transform: none;
 }
 
@@ -1180,7 +1245,16 @@
 }
 
 .modelOption {
-  padding-block: 0.45rem;
+  margin-inline: 0.25rem;
+  padding: 0.32rem 0.45rem;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.modelOption[data-combobox-selected],
+.modelOption[data-combobox-active] {
+  color: var(--mantine-color-text);
+  background: var(--mantine-color-default-hover);
+  box-shadow: inset 2px 0 0 var(--mantine-primary-color-filled);
 }
 
 .modelOptionText {
@@ -1193,13 +1267,17 @@
   color: var(--mantine-color-dimmed);
 }
 
+.modelOptionDescription {
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
+}
+
 .runtimeOptionCheck {
   flex: 0 0 auto;
   color: var(--mantine-primary-color-filled);
 }
 
 .reasoningSelector {
-  padding: 0.55rem;
+  padding: 0.4rem 0.45rem 0.45rem;
 }
 
 .reasoningSegmentedControl :global(.mantine-SegmentedControl-label) {
@@ -1342,8 +1420,8 @@
   }
 
   .composerInput {
-    min-height: 2.625rem;
-    padding: 0.6rem 0.55rem;
+    min-height: 2.25rem;
+    padding: 0.35rem 0.45rem;
   }
 
   .composerFooter {
@@ -1369,10 +1447,6 @@
 }
 
 @media (max-width: 30em) {
-  .activityReviewAction > span {
-    display: none;
-  }
-
   .historyButton {
     width: 2.625rem;
     max-width: 2.625rem;
