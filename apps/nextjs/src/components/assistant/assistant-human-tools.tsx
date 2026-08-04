@@ -2,7 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ToolCallMessagePartProps, ToolCallMessagePartStatus } from "@assistant-ui/react";
-import { Alert, Badge, Box, Button, Group, Skeleton, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
+import {
+  Alert,
+  Badge,
+  Box,
+  Button,
+  Group,
+  Skeleton,
+  Stack,
+  Text,
+  TextInput,
+  ThemeIcon,
+  UnstyledButton,
+} from "@mantine/core";
 import {
   IconAlertTriangle,
   IconArrowRight,
@@ -170,36 +182,45 @@ export const AssistantAskUserTool = ({
               const color = kind === "affirmative" ? "green" : kind === "negative" ? "red" : "gray";
 
               return (
-                <Button
+                <UnstyledButton
                   key={`${option.id}:${index}`}
                   className={classes.humanToolOption}
-                  variant={kind === "alternative" ? "default" : "light"}
-                  color={color}
-                  size="md"
-                  fullWidth
-                  justify="space-between"
-                  leftSection={icon}
-                  rightSection={
-                    <Badge variant="light" color={color} size="xs">
-                      {t(`optionKind.${kind}`)}
-                    </Badge>
-                  }
+                  data-kind={kind}
                   disabled={submitting}
                   onClick={() =>
                     submitResult({ answer: option.label, optionId: option.id, optionKind: kind, source: "option" })
                   }
                 >
-                  <Box ta="start">
-                    <Text component="span" size="sm" fw={650}>
+                  <ThemeIcon className={classes.humanToolOptionIcon} variant="light" color={color} size="sm">
+                    {icon}
+                  </ThemeIcon>
+                  <Box className={classes.humanToolOptionText} ta="start">
+                    <Text component="span" size="sm" fw={650} className={classes.humanToolOptionLabel}>
                       {option.label}
                     </Text>
                     {option.description && (
-                      <Text component="span" display="block" size="xs" c="dimmed" fw={400}>
+                      <Text
+                        component="span"
+                        display="block"
+                        size="xs"
+                        c="dimmed"
+                        fw={400}
+                        className={classes.humanToolOptionDescription}
+                      >
                         {option.description}
                       </Text>
                     )}
                   </Box>
-                </Button>
+                  <Badge
+                    className={classes.humanToolOptionBadge}
+                    classNames={{ label: classes.humanToolOptionBadgeLabel }}
+                    variant="light"
+                    color={color}
+                    size="xs"
+                  >
+                    {t(`optionKind.${kind}`)}
+                  </Badge>
+                </UnstyledButton>
               );
             })
           )}

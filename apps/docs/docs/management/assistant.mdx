@@ -131,18 +131,24 @@ as part of the prompt.
 Type `@` in the composer to add permission-checked context. The nested menu contains apps, integrations,
 boards, widgets, and tools available to the current user. Homarr validates every referenced ID again on
 the server before adding it to the model context. Selected references appear as compact, typed pills in the
-composer and sent message, while preserving assistant-ui's underlying directive syntax for the model. Type `/`
+composer and sent message, while preserving assistant-ui's underlying directive syntax for the model. When the
+assistant cites one of those references in its own response, Homarr renders the same typed pill and uses the
+stored app or integration icon when one is available. Type `/`
 for common prompt shortcuts. Both menus support keyboard navigation and keep the active result visible while
 moving through long lists. The selector below the composer combines searchable, provider-grouped models with
 their description, context size and image-input capability, plus the thinking-level control. Model selection is
 stored on the conversation after a completed request. Thinking mode can be left on **Auto**, disabled, or set
 from minimal through high; explicit levels are sent using the AI SDK's provider-neutral reasoning setting and
-still depend on support from the chosen model and endpoint.
+still depend on support from the chosen model and endpoint. Reasoning text is shown live when the provider
+streams it. The **Thinking** disclosure can be opened or closed without interrupting the response.
 
 Each completed response includes a circular context-window meter. Select it to open request details when
 the provider reports them: input, output, cached-input and reasoning tokens, used and remaining context,
 time to first output, total duration, output speed, agent-step timing, and cost. OpenRouter-reported cost
 is labeled as reported.
+While the next response is still streaming, the meter keeps the last completed reading for the same model and
+context capacity instead of briefly showing an incorrect zero. It switches to the new request when token usage
+arrives; incompatible model capacities are never mixed.
 OpenRouter responses request inline usage and routing metadata. When request details are opened, Homarr also
 loads the server-side generation record for each model step and briefly polls while OpenRouter finishes
 processing it. The details separate Homarr's end-to-end timing from OpenRouter's provider latency,

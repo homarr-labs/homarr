@@ -67,7 +67,6 @@ import {
   IconArrowUp,
   IconArrowsMaximize,
   IconAt,
-  IconBrain,
   IconCheck,
   IconChevronDown,
   IconChevronLeft,
@@ -92,7 +91,6 @@ import {
   IconRobot,
   IconSearch,
   IconShieldCheck,
-  IconSparkles,
   IconThumbDown,
   IconThumbUp,
   IconTool,
@@ -100,6 +98,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import remarkBreaks from "remark-breaks";
+import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 
 import { clientApi } from "@homarr/api/client";
@@ -110,9 +109,15 @@ import { useScopedI18n } from "@homarr/translation/client";
 import classes from "./assistant-panel.module.css";
 import { useAssistantAutoApproval, useAssistantAutomaticAction } from "./assistant-auto-approval";
 import { getAssistantDirectiveTranslationKey, parseAssistantDirectives } from "./assistant-directives";
+import { remarkAssistantDirectives, resolveAssistantDirectiveEntity } from "./assistant-markdown-directives";
+import type { AssistantDirectiveEntity } from "./assistant-markdown-directives";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getSafeAssistantMarkdownImageSource } from "./assistant-markdown-image";
-import { getAssistantTelemetry, getAssistantUsage } from "./assistant-message-metadata";
+import {
+  getAssistantTelemetry,
+  getAssistantUsage,
+  resolveAssistantContextWindowTelemetry,
+} from "./assistant-message-metadata";
 import type { AssistantPendingAction } from "./assistant-pending-action";
 import { AssistantQuestionPortalProvider } from "./assistant-question-portal";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
@@ -144,7 +149,7 @@ interface AssistantPanelProps extends AssistantConversationControls {
   pendingAction: AssistantPendingAction | undefined;
 }
 
-const markdownRemarkPlugins = [remarkGfm, remarkBreaks];
+const markdownRemarkPlugins = [remarkDirective, remarkAssistantDirectives, remarkGfm, remarkBreaks];
 
 const contextIcons = {
   app: IconApps,
@@ -155,9 +160,15 @@ const contextIcons = {
   tools: IconTool,
 };
 
-const ContextDirectiveChip = ({ directiveId, directiveType, label }: DirectiveChipProps) => {
+const ContextDirectiveChip = ({
+  directiveId,
+  directiveType,
+  label,
+  iconUrl,
+}: DirectiveChipProps & { iconUrl?: string }) => {
   const t = useScopedI18n("common.assistant");
   const Icon = contextIcons[directiveType as keyof typeof contextIcons] ?? IconAt;
+  const safeIconUrl = getSafeAssistantMarkdownImageSource(iconUrl);
   const translationKey = getAssistantDirectiveTranslationKey(directiveType);
   const typeLabel = t(`mentions.${translationKey}`);
 
@@ -168,7 +179,11 @@ const ContextDirectiveChip = ({ directiveId, directiveType, label }: DirectiveCh
       data-directive-id={directiveId}
       title={`${typeLabel}: ${label}`}
     >
-      <Icon size={12} aria-hidden />
+      {safeIconUrl ? (
+        <img className={classes.directiveChipImage} src={safeIconUrl} alt="" aria-hidden referrerPolicy="no-referrer" />
+      ) : (
+        <Icon size={12} aria-hidden />
+      )}
       <span className={classes.directiveChipLabel}>{label}</span>
     </span>
   );
@@ -273,34 +288,78 @@ const MermaidDiagram = ({ code, components }: SyntaxHighlighterProps) => {
   );
 };
 
-const AssistantTextPart = () => (
-  <MarkdownTextPrimitive
-    className={classes.messageMarkdown}
-    preprocess={normalizeAssistantMarkdown}
-    remarkPlugins={markdownRemarkPlugins}
-    components={{ a: MarkdownLink, img: MarkdownImage, table: MarkdownTable }}
-    componentsByLanguage={{ mermaid: { SyntaxHighlighter: MermaidDiagram } }}
-    defer
-  />
-);
+type MarkdownSpanProps = ComponentPropsWithoutRef<"span"> & {
+  "data-assistant-directive"?: string;
+  "data-directive-id"?: string;
+  "data-directive-label"?: string;
+  "data-directive-type"?: string;
+};
+
+const AssistantDirectiveEntitiesContext = createContext<AssistantDirectiveEntity[]>([]);
+
+const AssistantMarkdownSpan = ({
+  children,
+  "data-assistant-directive": assistantDirective,
+  "data-directive-id": directiveId,
+  "data-directive-label": directiveLabel,
+  "data-directive-type": directiveType,
+  ...props
+}: MarkdownSpanProps) => {
+  const entities = useContext(AssistantDirectiveEntitiesContext);
+  if (assistantDirective === "true" && directiveId && directiveLabel && directiveType) {
+    const entity = resolveAssistantDirectiveEntity(entities, {
+      id: directiveId,
+      label: directiveLabel,
+      type: directiveType,
+    });
+    return (
+      <ContextDirectiveChip
+        directiveId={entity?.id ?? directiveId}
+        directiveType={directiveType}
+        label={entity?.label ?? directiveLabel}
+        iconUrl={entity?.iconUrl}
+      />
+    );
+  }
+  return <span {...props}>{children}</span>;
+};
+
+const AssistantTextPart = () => {
+  const { data: entities = [] } = clientApi.assistant.getContextEntities.useQuery(undefined, { staleTime: 60_000 });
+
+  return (
+    <AssistantDirectiveEntitiesContext.Provider value={entities}>
+      <MarkdownTextPrimitive
+        className={classes.messageMarkdown}
+        preprocess={normalizeAssistantMarkdown}
+        remarkPlugins={markdownRemarkPlugins}
+        components={{ a: MarkdownLink, img: MarkdownImage, span: AssistantMarkdownSpan, table: MarkdownTable }}
+        componentsByLanguage={{ mermaid: { SyntaxHighlighter: MermaidDiagram } }}
+        defer
+      />
+    </AssistantDirectiveEntitiesContext.Provider>
+  );
+};
 
 const UserTextPart = () => {
   const { text } = useMessagePartText();
+  const { data: entities = [] } = clientApi.assistant.getContextEntities.useQuery(undefined, { staleTime: 60_000 });
   const segments = parseAssistantDirectives(text);
   return (
     <span className={classes.messageText}>
-      {segments.map((segment, index) =>
-        segment.kind === "text" ? (
-          <span key={`${index}:${segment.text}`}>{segment.text}</span>
-        ) : (
+      {segments.map((segment, index) => {
+        if (segment.kind === "text") return <span key={`${index}:${segment.text}`}>{segment.text}</span>;
+        const entity = resolveAssistantDirectiveEntity(entities, segment);
+        return (
           <ContextDirectiveChip
             key={`${index}:${segment.type}:${segment.id}`}
-            directiveId={segment.id}
+            directiveId={entity?.id ?? segment.id}
             directiveType={segment.type}
-            label={segment.label}
+            label={entity?.label ?? segment.label}
+            iconUrl={entity?.iconUrl}
           />
-        ),
-      )}
+        );
+      })}
     </span>
   );
 };
@@ -333,23 +392,40 @@ const ReasoningPart = ({ text }: ReasoningMessagePartProps) => (
 
 const ReasoningGroup = ({ children, running }: { children: ReactNode; running: boolean }) => {
   const t = useScopedI18n("common.assistant");
+  const contentId = useId();
+  const [opened, setOpened] = useState(running);
+  const [manuallyToggled, setManuallyToggled] = useState(false);
+
+  useEffect(() => {
+    if (running && !manuallyToggled) setOpened(true);
+  }, [manuallyToggled, running]);
+
   return (
-    <details className={classes.reasoning} open={running}>
-      <summary>
-        <Group gap="xs" wrap="nowrap" justify="space-between">
-          <Group gap="xs" wrap="nowrap">
-            {running ? <Loader type="bars" size="xs" color="gray" /> : <IconBrain size={14} />}
-            <Text size="xs" fw={600} c="dimmed">
-              {t("reasoning")}
-            </Text>
-          </Group>
-          <IconChevronDown size={14} className={classes.reasoningChevron} />
+    <Box className={classes.reasoning} data-opened={opened || undefined}>
+      <UnstyledButton
+        className={classes.reasoningToggle}
+        type="button"
+        aria-expanded={opened}
+        aria-controls={contentId}
+        onClick={() => {
+          setManuallyToggled(true);
+          setOpened((value) => !value);
+        }}
+      >
+        <Group gap="xs" wrap="nowrap">
+          {running && <Loader type="bars" size="xs" color="gray" />}
+          <Text size="xs" fw={650} c="dimmed">
+            {t("reasoning")}
+          </Text>
         </Group>
-      </summary>
-      <Box className={classes.reasoningContent} aria-busy={running}>
-        {children}
-      </Box>
-    </details>
+        <IconChevronDown size={14} className={classes.reasoningChevron} />
+      </UnstyledButton>
+      <Collapse expanded={opened}>
+        <Box id={contentId} className={classes.reasoningContent} aria-busy={running}>
+          {children}
+        </Box>
+      </Collapse>
+    </Box>
   );
 };
 
@@ -847,6 +923,7 @@ const RequestTelemetry = () => {
   const metadata = useAuiState((state) => state.message.metadata);
   const messageId = useAuiState((state) => state.message.id);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
+  const threadMessageMetadata = useAuiState((state) => state.thread.messages.map((message) => message.metadata));
   const persistedTelemetry = getAssistantTelemetry(metadata);
   const persistedUsage = getAssistantUsage(metadata);
   const generationQuery = clientApi.assistant.getGenerationTelemetry.useQuery(
@@ -941,13 +1018,18 @@ const RequestTelemetry = () => {
       : {}),
   };
 
-  const contextLength = telemetry.contextLength ?? 0;
-  const contextUsed = telemetry.contextUsed ?? 0;
-  const hasContextWindow = telemetry.contextLength !== undefined && telemetry.contextUsed !== undefined;
+  const contextWindow = resolveAssistantContextWindowTelemetry(telemetry, threadMessageMetadata);
+  const contextTelemetry = contextWindow?.telemetry;
+  const contextLength = contextTelemetry?.contextLength ?? 0;
+  const contextUsed = contextTelemetry?.contextUsed ?? 0;
+  const hasContextWindow = contextTelemetry?.contextLength !== undefined && contextTelemetry.contextUsed !== undefined;
   const contextPercentage = hasContextWindow
     ? Math.min(
         100,
-        Math.max(0, Math.round((telemetry.contextUtilization ?? contextUsed / Math.max(contextLength, 1)) * 100)),
+        Math.max(
+          0,
+          Math.round((contextTelemetry.contextUtilization ?? contextUsed / Math.max(contextLength, 1)) * 100),
+        ),
       )
     : 0;
   const contextRemaining = hasContextWindow ? Math.max(contextLength - contextUsed, 0) : undefined;
@@ -1054,7 +1136,7 @@ const RequestTelemetry = () => {
                     {t("usage.used")}
                   </Text>
                   <Text size="sm" fw={600}>
-                    {telemetry.contextUsed?.toLocaleString() ?? t("usage.notReported")}
+                    {contextTelemetry?.contextUsed?.toLocaleString() ?? t("usage.notReported")}
                   </Text>
                 </div>
                 <div>
@@ -1070,7 +1152,7 @@ const RequestTelemetry = () => {
                     {t("usage.capacity")}
                   </Text>
                   <Text size="sm" fw={600}>
-                    {telemetry.contextLength?.toLocaleString() ?? t("usage.notReported")}
+                    {contextTelemetry?.contextLength?.toLocaleString() ?? t("usage.notReported")}
                   </Text>
                 </div>
               </Box>
@@ -1929,7 +2011,11 @@ type ComposerProps = AssistantConversationControls & { pendingAction: AssistantP
 const getModelProviderLabel = (modelId: string, fallback: string) => {
   const separator = modelId.indexOf("/");
   if (separator <= 0) return fallback;
-  const provider = modelId.slice(0, separator).replaceAll(/[-_]/gu, " ");
+  const provider = modelId
+    .slice(0, separator)
+    .replace(/^[^\p{L}\p{N}]+/u, "")
+    .replaceAll(/[-_]/gu, " ");
+  if (!provider) return fallback;
   return `${provider.charAt(0).toLocaleUpperCase()}${provider.slice(1)}`;
 };
 
@@ -1981,7 +2067,7 @@ const RuntimeControls = ({
   };
 
   return (
-    <Combobox store={modelCombobox} onOptionSubmit={selectModel} withinPortal position="top-start" width={360}>
+    <Combobox store={modelCombobox} onOptionSubmit={selectModel} withinPortal position="top-start" width={340}>
       <Combobox.Target>
         <UnstyledButton
           className={classes.runtimeSelectorTrigger}
@@ -1992,14 +2078,11 @@ const RuntimeControls = ({
           aria-expanded={modelCombobox.dropdownOpened}
         >
           <Group gap="xs" wrap="nowrap">
-            <ThemeIcon className={classes.runtimeSelectorIcon} size="sm" variant="light" color="gray">
-              {modelOptionsLoading ? <Loader size={12} /> : <IconSparkles size={13} />}
-            </ThemeIcon>
+            {modelOptionsLoading && <Loader size={12} />}
             <Text className={classes.runtimeSelectorName} size="xs" fw={650} lineClamp={1}>
               {selectedModel?.name ?? t("runtime.model")}
             </Text>
             <Badge className={classes.runtimeSelectorEffort} size="xs" variant="light" color="gray">
-              <IconBrain size={11} />
               {t(`runtime.reasoning.${reasoning}`)}
             </Badge>
             <Combobox.Chevron size="xs" />
@@ -2015,6 +2098,7 @@ const RuntimeControls = ({
           }}
           placeholder={t("runtime.searchModels")}
           aria-label={t("runtime.searchModels")}
+          size="xs"
         />
         <Combobox.Options className={classes.modelOptions}>
           {[...groupedModels.entries()].map(([provider, providerModels]) => (
@@ -2027,14 +2111,11 @@ const RuntimeControls = ({
                   active={model.id === modelId}
                 >
                   <Group gap="xs" wrap="nowrap">
-                    <ThemeIcon size="md" radius="md" variant="light" color="gray">
-                      <IconSparkles size={14} />
-                    </ThemeIcon>
                     <Stack gap={1} className={classes.modelOptionText}>
                       <Text size="sm" fw={model.id === modelId ? 650 : 500} lineClamp={1}>
                         {model.name}
                       </Text>
-                      <Text size="xs" c="dimmed" lineClamp={1}>
+                      <Text size="xs" className={classes.modelOptionDescription} lineClamp={1}>
                         {model.description?.trim() || model.id}
                       </Text>
                     </Stack>
@@ -2060,12 +2141,9 @@ const RuntimeControls = ({
         </Combobox.Options>
         <Divider />
         <Box className={classes.reasoningSelector}>
-          <Group gap="xs" mb={6} wrap="nowrap">
-            <IconBrain size={14} />
-            <Text size="xs" fw={650}>
-              {t("runtime.thinking")}
-            </Text>
-          </Group>
+          <Text size="xs" fw={650} mb={5}>
+            {t("runtime.thinking")}
+          </Text>
           <SegmentedControl
             className={classes.reasoningSegmentedControl}
             value={reasoning}

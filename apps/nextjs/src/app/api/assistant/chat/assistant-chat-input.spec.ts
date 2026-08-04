@@ -11,7 +11,7 @@ describe("assistant chat input", () => {
           parts: [
             {
               type: "text",
-              text: "Check :integration[integration-1]{name=Media server} on :board[board-1]",
+              text: "Check :integration[Media server]{name=integration-1} on :board[Home]{name=board-1}",
             },
           ],
         },

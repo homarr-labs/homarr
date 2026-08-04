@@ -646,6 +646,7 @@ export async function POST(request: Request) {
 
     return result.toUIMessageStreamResponse<UIMessage<AssistantMessageMetadata>>({
       originalMessages: parsed.data.messages as UIMessage<AssistantMessageMetadata>[],
+      sendReasoning: true,
       messageMetadata: ({ part }) => {
         const common = {
           requestId,
@@ -682,7 +683,11 @@ export async function POST(request: Request) {
           latestStep?.inputTokens !== undefined && latestStep.outputTokens !== undefined
             ? latestStep.inputTokens + latestStep.outputTokens
             : undefined;
-        const contextUsed = latestContextUsed ?? (usage.inputTokens ?? 0) + (usage.outputTokens ?? 0);
+        const contextUsed =
+          latestContextUsed ??
+          (usage.inputTokens !== undefined || usage.outputTokens !== undefined
+            ? (usage.inputTokens ?? 0) + (usage.outputTokens ?? 0)
+            : undefined);
         const promptPrice = asFiniteNumber(selectedModel?.promptPrice);
         const completionPrice = asFiniteNumber(selectedModel?.completionPrice);
         const estimatedCost =
@@ -721,8 +726,8 @@ export async function POST(request: Request) {
               ...(outputTokensPerSecond !== undefined ? { outputTokensPerSecond } : {}),
               ...(providerOutputTokensPerSecond !== undefined ? { providerOutputTokensPerSecond } : {}),
               ...(providerGenerationTimeMs !== undefined ? { generationTimeMs: providerGenerationTimeMs } : {}),
-              ...(contextUsed > 0 ? { contextUsed } : {}),
-              ...(selectedModel?.contextLength && contextUsed > 0
+              ...(contextUsed !== undefined && contextUsed > 0 ? { contextUsed } : {}),
+              ...(selectedModel?.contextLength && contextUsed !== undefined && contextUsed > 0
                 ? { contextUtilization: Math.min(contextUsed / selectedModel.contextLength, 1) }
                 : {}),
               ...(cost !== undefined ? { cost, costType: hasReportedCost ? "reported" : "estimated" } : {}),

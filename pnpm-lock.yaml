@@ -504,6 +504,9 @@ catalogs:
     remark-breaks:
       specifier: ^4.0.0
       version: 4.0.0
+    remark-directive:
+      specifier: ^3.0.1
+      version: 3.0.1
     remark-gfm:
       specifier: ^4.0.1
       version: 4.0.1
@@ -1085,6 +1088,9 @@ importers:
       remark-breaks:
         specifier: 'catalog:'
         version: 4.0.0
+      remark-directive:
+        specifier: 'catalog:'
+        version: 3.0.1(supports-color@10.2.2)
       remark-gfm:
         specifier: 'catalog:'
         version: 4.0.1(supports-color@10.2.2)
