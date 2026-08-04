@@ -1,4 +1,5 @@
 import { createPublicKey, publicEncrypt, constants } from "node:crypto";
+import type { z } from "zod";
 
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -22,11 +23,16 @@ const logger = createLogger({ module: "UgosIntegration" });
 
 @HandleIntegrationErrors([])
 export class UgosIntegration extends Integration implements ISystemHealthMonitoringIntegration {
-  // Token di sessione, ottenuto al login e riutilizzato tra chiamate.
-  // Il login richiede due round-trip: prima /verify/check per ottenere la
-  // chiave pubblica RSA (nell'header di risposta x-rsa-token, non nel body!),
-  // poi /verify/login con la password cifrata RSA/PKCS1v1.5.
+  // Session token, obtained at login and reused across calls.
+  // Login requires two round-trips: first /verify/check to obtain the
+  // RSA public key (in the x-rsa-token response header, not the body!),
+  // then /verify/login with the RSA/PKCS1v1.5-encrypted password.
   private cachedToken: string | undefined;
+
+  // Shared login promise across concurrent calls. getSystemInfoAsync fires
+  // 4 GETs in Promise.all: without this guard, each would find cachedToken
+  // empty on the first pass and open a separate login.
+  private loginPromise: Promise<string> | undefined;
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     await this.loginAsync(input.fetchAsync);
@@ -44,21 +50,33 @@ export class UgosIntegration extends Integration implements ISystemHealthMonitor
     const cpuSample = stats.cpu.series[0];
     const volumes = volumesData.volumes;
 
-    // Un volume UGOS può coprire più dischi fisici (es. JBOD/RAID), quindi
-    // non esiste sempre una temperatura o uno stato SMART univoco da
-    // associare al volume - stesso limite di TrueNAS/Unraid con i pool
-    // ZFS/array multi-disco. Colleghiamo un disco al suo volume solo quando
-    // il pool sottostante (used_for) è composto da un unico disco; altrimenti
-    // Homarr mostra correttamente "N/A" per lo stato e nessuna temperatura.
-    // Nota: questo endpoint elenca solo i dischi interni SATA/NVMe - i dischi
-    // USB esterni non compaiono qui, quindi restano sempre senza corrispondenza.
+    // A UGOS volume can span multiple physical disks (e.g. JBOD/RAID), so
+    // there isn't always a single temperature or SMART status to associate
+    // with the volume - same limitation as TrueNAS/Unraid with ZFS pools /
+    // multi-disk arrays. We link a disk to its volume only when the
+    // underlying pool (used_for) consists of a single disk AND that pool has
+    // exactly one associated volume (a pool with 1 disk can still have
+    // multiple volumes, in which case the association would remain
+    // ambiguous); otherwise Homarr correctly shows "N/A" for status and no
+    // temperature. Disks not yet assigned to a pool (empty used_for) are
+    // excluded from this association but still appear in the SMART list
+    // below, identified by model/serial.
+    // Note: this endpoint only lists internal SATA/NVMe disks - external USB
+    // disks don't appear here, so they always remain unmatched.
     const diskCountByPool = new Map<string, number>();
     for (const disk of disks.result) {
+      if (!disk.used_for) continue;
       diskCountByPool.set(disk.used_for, (diskCountByPool.get(disk.used_for) ?? 0) + 1);
+    }
+    const volumeCountByPool = new Map<string, number>();
+    for (const volume of volumes) {
+      volumeCountByPool.set(volume.for_pool, (volumeCountByPool.get(volume.for_pool) ?? 0) + 1);
     }
     const volumeLabelByDiskName = new Map<string, string>();
     for (const disk of disks.result) {
+      if (!disk.used_for) continue;
       if (diskCountByPool.get(disk.used_for) !== 1) continue;
+      if (volumeCountByPool.get(disk.used_for) !== 1) continue;
       const volume = volumes.find((v) => v.for_pool === disk.used_for);
       if (volume) volumeLabelByDiskName.set(disk.name, volume.label);
     }
@@ -79,7 +97,7 @@ export class UgosIntegration extends Integration implements ISystemHealthMonitor
         deviceName: volume.label,
         used: `${volume.used}`,
         available: `${volume.total - volume.used}`,
-        percentage: (volume.used / volume.total) * 100,
+        percentage: volume.total > 0 ? (volume.used / volume.total) * 100 : 0,
       })),
       smart: disks.result.map((disk) => ({
         deviceName: volumeLabelByDiskName.get(disk.name) ?? `${disk.model} (${disk.serial})`,
@@ -93,34 +111,67 @@ export class UgosIntegration extends Integration implements ISystemHealthMonitor
 
   private async getStatsAsync() {
     const response = await this.getAsync("/ugreen/v1/taskmgr/stat/get_all");
-    return ugosStatGetAllResponseSchema.parse(response).data;
+    return this.parseUgosResponse(ugosStatGetAllResponseSchema, response, "taskmgr/stat/get_all");
   }
 
   private async getDisksAsync() {
-    // Nota: a differenza degli altri endpoint (v1), questo è sotto /v2/ -
-    // incoerenza osservata nell'API UGOS stessa, non un errore di battitura.
+    // Note: unlike the other endpoints (v1), this one is under /v2/ -
+    // an inconsistency observed in the UGOS API itself, not a typo.
     const response = await this.getAsync("/ugreen/v2/storage/disk/list");
-    return ugosDiskListResponseSchema.parse(response).data;
+    return this.parseUgosResponse(ugosDiskListResponseSchema, response, "storage/disk/list");
   }
 
   private async getVolumesAsync() {
     const response = await this.getAsync("/ugreen/v1/sysinfo/storage/info");
-    return ugosStorageInfoResponseSchema.parse(response).data;
+    return this.parseUgosResponse(ugosStorageInfoResponseSchema, response, "sysinfo/storage/info");
   }
 
   private async getCommonInfoAsync() {
     const response = await this.getAsync("/ugreen/v1/sysinfo/machine/common");
-    return ugosCommonInfoResponseSchema.parse(response).data;
+    return this.parseUgosResponse(ugosCommonInfoResponseSchema, response, "sysinfo/machine/common");
   }
 
-  private async getAsync(path: `/${string}`, fetchAsync = fetchWithTrustedCertificatesAsync): Promise<unknown> {
+  /**
+   * Validates the UGOS application-level code (distinct from the HTTP
+   * status): a transport-level 200 can still wrap an application error in
+   * the body (same pattern already used by /verify/login, where code !== 200
+   * means failure even with HTTP 200). Only code === 200 is considered
+   * success.
+   */
+  private parseUgosResponse<TData>(
+    schema: z.ZodType<{ code: number; msg: string; data: TData; time: number }>,
+    response: unknown,
+    endpointLabel: string,
+  ): TData {
+    const parsed = schema.parse(response);
+    if (parsed.code !== 200) {
+      throw new Error(`UGOS request to ${endpointLabel} failed: ${parsed.msg}`);
+    }
+    return parsed.data;
+  }
+
+  private async getAsync(
+    path: `/${string}`,
+    fetchAsync = fetchWithTrustedCertificatesAsync,
+    isRetry = false,
+  ): Promise<unknown> {
     const token = await this.loginAsync(fetchAsync);
     const url = this.url(path);
     url.searchParams.set("token", token);
 
-    logger.debug("Sending UGOS request", { url: url.toString() });
+    logger.debug("Sending UGOS request", { url: url.toString(), isRetry });
 
     const response = await fetchAsync(url);
+
+    if (response.status === 401 && !isRetry) {
+      // The cached token may have expired on the NAS side: invalidate it and
+      // retry once with a fresh login. The isRetry flag prevents infinite
+      // loops if the problem isn't actually the token (e.g. changed/revoked
+      // credentials).
+      this.cachedToken = undefined;
+      return this.getAsync(path, fetchAsync, true);
+    }
+
     if (!response.ok) {
       throw new ResponseError(response);
     }
@@ -129,13 +180,16 @@ export class UgosIntegration extends Integration implements ISystemHealthMonitor
   }
 
   /**
-   * Recupera la chiave pubblica RSA del NAS.
-   * UGOS la restituisce nell'header di risposta `x-rsa-token` (codificata in
-   * base64), non nel body JSON - dettaglio ricostruito dal bundle JS ufficiale
-   * della web UI (funzione `ue$2` in main-*.js). Il body della POST richiede
-   * comunque lo username per cui si vuole autenticare.
+   * Retrieves the NAS's RSA public key.
+   * UGOS returns it in the `x-rsa-token` response header (base64-encoded),
+   * not in the JSON body - detail reconstructed from the official web UI's
+   * JS bundle (function `ue$2` in main-*.js). The POST body still requires
+   * the username being authenticated.
    */
-  private async getRsaPublicKeyAsync(username: string, fetchAsync = fetchWithTrustedCertificatesAsync): Promise<string> {
+  private async getRsaPublicKeyAsync(
+    username: string,
+    fetchAsync = fetchWithTrustedCertificatesAsync,
+  ): Promise<string> {
     const url = this.url("/ugreen/v1/verify/check");
     const response = await fetchAsync(url, {
       method: "POST",
@@ -153,12 +207,12 @@ export class UgosIntegration extends Integration implements ISystemHealthMonitor
     }
 
     const rawKey = Buffer.from(rsaToken, "base64").toString("utf-8");
-    // Nota: UGOS etichetta questa chiave come "-----BEGIN RSA PUBLIC KEY-----"
-    // (suggerendo il formato legacy PKCS#1), ma i byte ASN.1 al suo interno
-    // sono in realtà SPKI/X.509 (contengono l'OID rsaEncryption, assente in
-    // un PKCS#1 puro) - verificato decodificando manualmente il DER. Va quindi
-    // sempre re-incapsulata con l'etichetta generica SPKI, indipendentemente
-    // da quale etichetta arrivi dal server.
+    // Note: UGOS labels this key as "-----BEGIN RSA PUBLIC KEY-----"
+    // (suggesting the legacy PKCS#1 format), but the ASN.1 bytes inside are
+    // actually SPKI/X.509 (they contain the rsaEncryption OID, absent in a
+    // pure PKCS#1) - verified by manually decoding the DER. It must
+    // therefore always be re-wrapped with the generic SPKI label,
+    // regardless of which label the server sends.
     const base64Body = rawKey
       .replace(/-----BEGIN [^-]+-----/, "")
       .replace(/-----END [^-]+-----/, "")
@@ -167,9 +221,9 @@ export class UgosIntegration extends Integration implements ISystemHealthMonitor
   }
 
   /**
-   * Cifra la password con la chiave pubblica RSA del NAS usando padding
-   * PKCS1v1.5 (non OAEP) - stesso schema usato dalla web UI ufficiale e da
-   * ugos-cli (client Rust reverse-engineered per UGOS).
+   * Encrypts the password with the NAS's RSA public key using PKCS1v1.5
+   * padding (not OAEP) - same scheme used by the official web UI and by
+   * ugos-cli (a reverse-engineered Rust client for UGOS).
    */
   private encryptPassword(publicKeyPem: string, password: string): string {
     const keyObject = createPublicKey(publicKeyPem);
@@ -185,6 +239,14 @@ export class UgosIntegration extends Integration implements ISystemHealthMonitor
       return this.cachedToken;
     }
 
+    this.loginPromise ??= this.performLoginAsync(fetchAsync).finally(() => {
+      this.loginPromise = undefined;
+    });
+
+    return this.loginPromise;
+  }
+
+  private async performLoginAsync(fetchAsync: typeof fetchWithTrustedCertificatesAsync): Promise<string> {
     const username = this.getSecretValue("username");
     const plainPassword = this.getSecretValue("password");
 
