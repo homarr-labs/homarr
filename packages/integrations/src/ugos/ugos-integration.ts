@@ -159,7 +159,7 @@ export class UgosIntegration extends Integration implements ISystemHealthMonitor
     const url = this.url(path);
     url.searchParams.set("token", token);
 
-    logger.debug("Sending UGOS request", { url: url.toString(), isRetry });
+    logger.debug("Sending UGOS request", { path, isRetry });
 
     const response = await fetchAsync(url);
 
