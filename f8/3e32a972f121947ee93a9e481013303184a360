@@ -1,0 +1,64 @@
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_909ca8cf5b6e15::t_138ea136e613da 195
+  s_909ca8cf5b6e15::t_eb5c4cc7962a53 196-199
+apps/docs/docs/management/boards/index.mdx
+  s_909ca8cf5b6e15::t_eb5c4cc7962a53 184-186
+  s_909ca8cf5b6e15::t_138ea136e613da 183
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_909ca8cf5b6e15::t_659406b274ac3c 4-6,28
+  s_909ca8cf5b6e15::t_d122b60b0801ed 7,29-31
+  s_909ca8cf5b6e15::t_65400de1fa2046 110
+  s_909ca8cf5b6e15::t_88129a9c4c30ba 26-27
+  s_909ca8cf5b6e15::t_6147d7048e5fe1 3,23-25,43-45,56,60-62,105
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_a645d202c97208 283-285
+  s_909ca8cf5b6e15::t_c357a88973fba2 141-145,147-153,155-156,330-331,359,362-363
+  s_909ca8cf5b6e15::t_d122b60b0801ed 290-291,295,298-299,306-311,315-319,322-327,329,350
+  s_909ca8cf5b6e15::t_2ef92ecc45a206 292-294,296-297
+  s_909ca8cf5b6e15::t_32ee76e408f101 140,146
+  s_909ca8cf5b6e15::t_51c341aebdd9d2 354
+  s_909ca8cf5b6e15::t_6147d7048e5fe1 356-358,360-361,364-366
+  s_909ca8cf5b6e15::t_b391bc6f262f28 286,333-349,351-353
+  s_909ca8cf5b6e15::t_4eeaed15dd7796 312-314,320
+  s_909ca8cf5b6e15::t_74785de4e4e215 130-139,157-158
+  s_909ca8cf5b6e15::t_43ae447408e5a6 165
+  s_909ca8cf5b6e15::t_1019e15305b214 287,328,332
+  s_909ca8cf5b6e15::t_b10382f84c190d 277-282,288-289,300-305,321,355,367-374,519,521
+apps/nextjs/src/components/board/advanced-focus/manual-surface.tsx
+  s_909ca8cf5b6e15::t_04bd2eeba23505 12,27,77,85-87
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_909ca8cf5b6e15::t_659406b274ac3c 164
+  s_909ca8cf5b6e15::t_976ea909900d09 2,92-99,236
+  s_909ca8cf5b6e15::t_c570b3499f18ae 59-61,86-91,212,218
+  s_909ca8cf5b6e15::t_04bd2eeba23505 224
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_909ca8cf5b6e15::t_c570b3499f18ae 47-56,200-206,210-214,261-269,272-273,275,287-288,303
+  s_909ca8cf5b6e15::t_1c406a38c8385d 181
+  s_909ca8cf5b6e15::t_43ae447408e5a6 155
+  s_909ca8cf5b6e15::t_04bd2eeba23505 310
+  s_909ca8cf5b6e15::t_ec2c020428872c 169,171-176,178,249-258
+  s_909ca8cf5b6e15::t_34238056efe2ea 57,63,88-90,105,134-147,167,170,184,199,215,259-260,270-271,276
+  s_909ca8cf5b6e15::t_f94167886fdbb1 91-97
+  s_909ca8cf5b6e15::t_d122b60b0801ed 120,309,311-317
+  s_909ca8cf5b6e15::t_04bdd761c175c6 152,159
+  s_909ca8cf5b6e15::t_1019e15305b214 179,182,186-190
+  s_909ca8cf5b6e15::t_88129a9c4c30ba 318
+  s_909ca8cf5b6e15::t_41656481bfc307 180
+  s_909ca8cf5b6e15::t_659406b274ac3c 21,108,157,274,348
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "f83e32a972f121947ee93a9e481013303184a360",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}
