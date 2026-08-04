@@ -3,7 +3,7 @@ export type AssistantMentionReference = {
   id: string;
 };
 
-const mentionPattern = /:(app|integration|board|widget)\[([^\]\n]{1,1024})\](?:\{name=[^}\n]{1,1024}\})?/gu;
+const mentionPattern = /:(app|integration|board|widget)\[([^\]\n]{1,1024})\](?:\{name=([^}\n]{1,1024})\})?/gu;
 
 const getMessageText = (message: { parts: unknown[] }) =>
   message.parts
@@ -20,7 +20,9 @@ export const getRequestedMentionIds = (messages: { role: "user" | "assistant"; p
     if (message.role !== "user") continue;
     for (const match of getMessageText(message).matchAll(mentionPattern)) {
       const type = match[1] as AssistantMentionReference["type"];
-      const id = match[2];
+      // assistant-ui stores the display label between brackets and the stable entity ID in `name`.
+      // Keep the bracket value as a fallback for older messages written before named directives.
+      const id = match[3] ?? match[2];
       if (id) mentions.set(`${type}:${id}`, { type, id });
       if (mentions.size >= 30) return [...mentions.values()];
     }

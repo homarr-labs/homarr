@@ -87,6 +87,11 @@ export type AssistantMessageMetadata = {
 
 export type AssistantUIMessage = UIMessage<AssistantMessageMetadata>;
 
+export type AssistantContextWindowTelemetry = {
+  telemetry: AssistantRequestTelemetry;
+  source: "current" | "previous";
+};
+
 const getFiniteNonNegativeNumber = (value: unknown) =>
   typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : undefined;
 
@@ -299,4 +304,27 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
     ...(value.costType === "reported" || value.costType === "estimated" ? { costType: value.costType } : {}),
     ...(typeof value.finishReason === "string" ? { finishReason: value.finishReason } : {}),
   };
+};
+
+export const resolveAssistantContextWindowTelemetry = (
+  current: AssistantRequestTelemetry,
+  previousMetadata: unknown[],
+): AssistantContextWindowTelemetry | null => {
+  if (current.contextLength !== undefined && current.contextUsed !== undefined) {
+    return { telemetry: current, source: "current" };
+  }
+
+  for (const metadata of previousMetadata.toReversed()) {
+    const previous = getAssistantTelemetry(metadata);
+    if (
+      previous?.completedAt &&
+      previous.requestId !== current.requestId &&
+      previous.modelId === current.modelId &&
+      previous.contextLength === current.contextLength &&
+      previous.contextUsed !== undefined
+    ) {
+      return { telemetry: previous, source: "previous" };
+    }
+  }
+  return null;
 };

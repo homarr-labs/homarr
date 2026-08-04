@@ -23,6 +23,7 @@ import {
   assistantProviderIds,
   assistantProviderPresets,
   assistantProviderRequiresApiKey,
+  getIconUrl,
   resolveAssistantModelId,
 } from "@homarr/definitions";
 
@@ -71,6 +72,7 @@ export type AssistantContextEntity = {
   type: "app" | "integration" | "board" | "widget";
   label: string;
   description: string;
+  iconUrl?: string;
   boardId?: string;
 };
 
@@ -340,7 +342,7 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
       limit: 250,
     }),
     ctx.db.query.apps.findMany({
-      columns: { id: true, name: true, description: true },
+      columns: { id: true, name: true, description: true, iconUrl: true },
       orderBy: asc(apps.name),
       limit: 250,
     }),
@@ -366,6 +368,7 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
         type: "app",
         label: app.name,
         description: app.description ?? "Homarr app",
+        iconUrl: app.iconUrl,
       }),
     ),
     ...availableIntegrations
@@ -376,6 +379,7 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
           type: "integration",
           label: integration.name,
           description: `${integration.kind} integration`,
+          iconUrl: getIconUrl(integration.kind),
         }),
       ),
     ...availableBoards.map(

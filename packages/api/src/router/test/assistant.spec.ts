@@ -271,10 +271,20 @@ describe("assistant conversation features", () => {
 
     expect(entities).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ id: "app-1", type: "app", label: "Plex" }),
+        expect.objectContaining({
+          id: "app-1",
+          type: "app",
+          label: "Plex",
+          iconUrl: "https://example.com/plex.svg",
+        }),
         expect.objectContaining({ id: "board-1", type: "board", label: "Home" }),
         expect.objectContaining({ id: "widget-1", type: "widget", boardId: "board-1" }),
-        expect.objectContaining({ id: "integration-1", type: "integration", label: "Media server" }),
+        expect.objectContaining({
+          id: "integration-1",
+          type: "integration",
+          label: "Media server",
+          iconUrl: expect.stringContaining("plex"),
+        }),
       ]),
     );
   });
