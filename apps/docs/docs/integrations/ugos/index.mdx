@@ -1,0 +1,90 @@
+---
+title: "UGREEN NAS (UGOS)"
+description: "Monitor CPU, memory, storage volumes, and disk health from a UGREEN NAS running UGOS."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { ugosIntegration } from ".";
+import { systemResourcesWidget } from "@site/docs/widgets/system-resources";
+import { systemDisksWidget } from "@site/docs/widgets/system-disks";
+import { healthMonitoringWidget } from "@site/docs/widgets/health-monitoring";
+import Alert from "@theme/Admonition";
+
+<IntegrationHeader integration={ugosIntegration} categories={["NAS", "Hardware"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites
+  items={[
+    { widget: healthMonitoringWidget },
+    { widget: systemResourcesWidget },
+    { widget: systemDisksWidget },
+  ]}
+/>
+
+### Supported metrics
+
+| Widget section                | UGOS API source                       | May be unavailable                                                          |
+| ------------------------------ | -------------------------------------- | ----------------------------------------------------------------------------- |
+| CPU ring / chart               | `taskmgr/stat/get_all`                 | —                                                                             |
+| CPU temperature ring           | `taskmgr/stat/get_all`                 | —                                                                             |
+| Memory ring / chart            | `taskmgr/stat/get_all`                 | —                                                                             |
+| Storage volume usage           | `sysinfo/storage/info`                 | —                                                                             |
+| SMART status and temperature   | `v2/storage/disk/list`                 | Volumes spanning multiple disks (JBOD/RAID) and external USB disks           |
+| Network charts                 | Not available                          | Always                                                                        |
+| Load average (info modal)      | Not available                          | Always                                                                        |
+| Reboot / update indicator      | Not available                          | Always                                                                        |
+| GPU                            | Not available                          | Typical UGREEN NAS models                                                    |
+
+<Alert type="note" title="Disk-to-volume matching">
+  UGOS storage volumes can span more than one physical disk (for example a JBOD pool). Homarr can only show a single
+  temperature and status per volume, so this is only reported when the underlying pool is made up of exactly one
+  disk. Multi-disk volumes correctly show no temperature and an "N/A" status, matching the behavior of other
+  multi-disk integrations such as TrueNAS and Unraid.
+</Alert>
+
+### Adding the integration
+
+<AddingIntegration />
+
+<Alert type="info" title="Include the port in the URL">
+  Enter the full HTTPS URL of your UGOS web interface including the port, for example{" "}
+  <code>https://192.168.1.10:9443</code>. The port is not appended automatically.
+</Alert>
+
+<Alert type="info" title="Self-signed certificate">
+  UGOS uses a self-signed certificate by default. The first connection attempt will prompt you to trust it; you can
+  also add it manually under{" "}
+  <a href="/docs/management/certificates">Management &gt; Tools &gt; Certificates</a>.
+</Alert>
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["username", "password"],
+      steps: [
+        "Use an existing UGOS admin account, or create a dedicated one in the UGOS web interface under Control Panel > Users.",
+        "No API key or token is needed - Homarr authenticates the same way the UGOS web interface does.",
+      ],
+      body: (
+        <>
+          <Alert type="warning" title="Undocumented API">
+            UGOS does not publish an official public API. This integration relies on the same internal endpoints used
+            by the UGOS web interface, reverse-engineered from network traffic. Future UGOS firmware updates could
+            change these endpoints and break the integration.
+          </Alert>
+          <Alert type="tip" title="One-time password / 2FA">
+            Accounts with one-time password (OTP) verification enabled have not been tested with this integration.
+            Use a dedicated account without OTP if you run into login issues.
+          </Alert>
+        </>
+      ),
+    },
+  ]}
+/>

@@ -13,6 +13,7 @@ const healthMonitoringIntegrationKinds = [
   "unraid",
   "glances",
   "synology",
+  "ugos",
   "mock",
 ] as const;
 
@@ -22,7 +23,7 @@ export const healthMonitoringRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get system health status (CPU, memory, disk, network) from NAS/server monitoring integrations. REQUIRED: integrationIds (array of TrueNAS/Synology/Unraid/Glances/OpenMediaVault/DashDot integration IDs from integration_all)",
+          "Get system health status (CPU, memory, disk, network) from NAS/server monitoring integrations. REQUIRED: integrationIds (array of TrueNAS/Synology/Unraid/UGOS/Glances/OpenMediaVault/DashDot integration IDs from integration_all)",
       },
     })
     .concat(createManyIntegrationMiddleware("query", ...healthMonitoringIntegrationKinds))

@@ -54,5 +54,6 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   beszel: "beszel",
   traefik: "traefik",
   archiveTeamWarrior: null,
+  ugos: "ugos",
   mock: null,
 };

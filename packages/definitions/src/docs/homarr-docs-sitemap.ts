@@ -329,6 +329,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/peanut"
   | "/docs/integrations/beszel"
   | "/docs/integrations/traefik"
+  | "/docs/integrations/ugos"
   | "/docs/widgets/clock"
   | "/docs/widgets/weather"
   | "/docs/widgets/app"
