@@ -41,35 +41,37 @@ describe("Home Assistant integration", () => {
   test("Test connection should work", async () => {
     // Arrange
     const startedContainer = await prepareHomeAssistantContainerAsync();
-    const homeAssistantIntegration = createHomeAssistantIntegration(startedContainer);
+    try {
+      const homeAssistantIntegration = createHomeAssistantIntegration(startedContainer);
 
-    // Act
-    const result = await homeAssistantIntegration.testConnectionAsync();
+      // Act
+      const result = await homeAssistantIntegration.testConnectionAsync();
 
-    // Assert
-    expect(result.success).toBe(true);
-
-    // Cleanup
-    await startedContainer.stop();
-  }, 30_000); // Timeout of 30 seconds
+      // Assert
+      expect(result.success).toBe(true);
+    } finally {
+      await startedContainer.stop();
+    }
+  }, 60_000);
   test("Test connection should fail with wrong credentials", async () => {
     // Arrange
     const startedContainer = await prepareHomeAssistantContainerAsync();
-    const homeAssistantIntegration = createHomeAssistantIntegration(startedContainer, "wrong-api-key");
+    try {
+      const homeAssistantIntegration = createHomeAssistantIntegration(startedContainer, "wrong-api-key");
 
-    // Act
-    const result = await homeAssistantIntegration.testConnectionAsync();
+      // Act
+      const result = await homeAssistantIntegration.testConnectionAsync();
 
-    // Assert
-    expect(result.success).toBe(false);
-    if (result.success) return;
+      // Assert
+      expect(result.success).toBe(false);
+      if (result.success) return;
 
-    expect(result.error).toBeInstanceOf(TestConnectionError);
-    expect(result.error.type).toBe("authorization");
-
-    // Cleanup
-    await startedContainer.stop();
-  }, 30_000); // Timeout of 30 seconds
+      expect(result.error).toBeInstanceOf(TestConnectionError);
+      expect(result.error.type).toBe("authorization");
+    } finally {
+      await startedContainer.stop();
+    }
+  }, 60_000);
 });
 
 const prepareHomeAssistantContainerAsync = async () => {
@@ -77,7 +79,29 @@ const prepareHomeAssistantContainerAsync = async () => {
   const startedContainer = await homeAssistantContainer.start();
   await startedContainer.exec(["unzip", "-o", "/tmp/config.zip", "-d", "/config"]);
   await startedContainer.restart();
+  await waitForHomeAssistantApiAsync(startedContainer);
   return startedContainer;
+};
+
+const waitForHomeAssistantApiAsync = async (container: StartedTestContainer) => {
+  const url = `http://${container.getHost()}:${container.getMappedPort(8123)}/api/config`;
+  const deadline = Date.now() + 45_000;
+
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${DEFAULT_API_KEY}` },
+        signal: AbortSignal.timeout(1_000),
+      });
+      if (response.ok) return;
+    } catch {
+      // Home Assistant closes connections while restarting. Retry until the deadline.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+
+  await container.stop();
+  throw new Error("Home Assistant API did not become ready after restart");
 };
 
 const createHomeAssistantContainer = () => {
