@@ -186,7 +186,16 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
     reasoning: "auto",
   });
   const models = useMemo<AssistantRuntimeModelOption[]>(
-    () => data?.models.map(({ id, name, inputModalities }) => ({ id, name, inputModalities })) ?? [],
+    () =>
+      data?.models.map(({ id, name, description, contextLength, promptPrice, completionPrice, inputModalities }) => ({
+        id,
+        name,
+        description,
+        contextLength,
+        promptPrice,
+        completionPrice,
+        inputModalities,
+      })) ?? [],
     [data?.models],
   );
 

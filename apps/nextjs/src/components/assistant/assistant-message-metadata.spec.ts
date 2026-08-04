@@ -24,6 +24,10 @@ describe("getAssistantTelemetry", () => {
             cacheDiscount: 0.00003,
             fallbackCount: 1,
             webSearchRequests: 2,
+            webSearchSources: [
+              { url: "https://example.com/research", title: "Research source" },
+              { url: "javascript:alert(1)", title: "Unsafe source" },
+            ],
             steps: [
               {
                 index: 1,
@@ -42,6 +46,7 @@ describe("getAssistantTelemetry", () => {
                 cacheDiscount: 0.00003,
                 fallbackCount: 1,
                 webSearchRequests: 2,
+                webSearchSources: [{ url: "https://example.com/research", title: "Research source" }],
                 routedProvider: "Alibaba",
                 serviceTier: "default",
                 dataRegion: "US",
@@ -64,6 +69,7 @@ describe("getAssistantTelemetry", () => {
       cacheDiscount: 0.00003,
       fallbackCount: 1,
       webSearchRequests: 2,
+      webSearchSources: [{ url: "https://example.com/research", title: "Research source" }],
       steps: [
         expect.objectContaining({
           providerLatencyMs: 964,
@@ -72,6 +78,7 @@ describe("getAssistantTelemetry", () => {
           routedProvider: "Alibaba",
           serviceTier: "default",
           webSearchRequests: 2,
+          webSearchSources: [{ url: "https://example.com/research", title: "Research source" }],
         }),
       ],
     });

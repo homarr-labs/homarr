@@ -1559,7 +1559,10 @@
       "composerPlaceholder": "Ask Homarr Assistant…",
       "runtime": {
         "model": "Model",
+        "searchModels": "Search models",
         "noModels": "No models available",
+        "otherModels": "Other models",
+        "imageInput": "Accepts image input",
         "thinking": "Thinking mode",
         "reasoning": {
           "auto": "Auto",
@@ -1598,11 +1601,17 @@
       "mentions": {
         "menu": "Add Homarr context",
         "hint": "Type @ to add context",
+        "context": "Context",
         "app": "Apps",
         "integration": "Integrations",
         "board": "Boards",
         "widget": "Widgets",
         "tools": "Available tools"
+      },
+      "markdown": {
+        "diagram": "Diagram",
+        "renderingDiagram": "Rendering diagram…",
+        "diagramUnavailable": "This diagram could not be rendered."
       },
       "commands": {
         "menu": "Assistant commands",
@@ -1657,6 +1666,12 @@
       },
       "toolInput": "Input",
       "toolOutput": "Output",
+      "webSearch": {
+        "title": "Web search",
+        "completed": "OpenRouter searched the live web for this response.",
+        "searches": "{count, plural, one {# search} other {# searches}}",
+        "sources": "{count, plural, one {# source} other {# sources}}"
+      },
       "responseError": {
         "title": "The assistant could not finish",
         "description": "Try again. If the problem continues, ask an administrator to verify the configured model endpoint.",

@@ -3,8 +3,24 @@ import { describe, expect, test } from "vitest";
 import { resolveAssistantPreferenceModelId, resolveAssistantThreadPreferenceModelId } from "./assistant-preferences";
 
 const models = [
-  { id: "provider/default", name: "Default", inputModalities: ["text"] },
-  { id: "provider/alternate", name: "Alternate", inputModalities: ["text"] },
+  {
+    id: "provider/default",
+    name: "Default",
+    description: null,
+    contextLength: null,
+    promptPrice: null,
+    completionPrice: null,
+    inputModalities: ["text"],
+  },
+  {
+    id: "provider/alternate",
+    name: "Alternate",
+    description: null,
+    contextLength: null,
+    promptPrice: null,
+    completionPrice: null,
+    inputModalities: ["text"],
+  },
 ];
 
 describe("resolveAssistantPreferenceModelId", () => {

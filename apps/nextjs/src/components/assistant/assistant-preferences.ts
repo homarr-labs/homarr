@@ -3,6 +3,10 @@ export type { AssistantReasoningMode } from "@homarr/definitions";
 export type AssistantRuntimeModelOption = {
   id: string;
   name: string;
+  description: string | null;
+  contextLength: number | null;
+  promptPrice: string | null;
+  completionPrice: string | null;
   inputModalities: string[];
 };
 
