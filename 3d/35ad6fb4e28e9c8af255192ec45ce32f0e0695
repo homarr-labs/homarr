@@ -1,0 +1,55 @@
+apps/docs/docs/management/boards/index.mdx
+  s_909ca8cf5b6e15::t_138ea136e613da 183
+  s_909ca8cf5b6e15::t_eb5c4cc7962a53 184-186
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_c357a88973fba2 141-145,147-153,155-156,311-312,342,345-346
+  s_909ca8cf5b6e15::t_1019e15305b214 287,309,313
+  s_909ca8cf5b6e15::t_2ef92ecc45a206 292-297
+  s_909ca8cf5b6e15::t_6147d7048e5fe1 339-341,343-344,347-349
+  s_909ca8cf5b6e15::t_16f13056ef4d04 306
+  s_909ca8cf5b6e15::t_32ee76e408f101 140,146
+  s_909ca8cf5b6e15::t_5c319d7e7af416 310
+  s_909ca8cf5b6e15::t_74785de4e4e215 130-139,157-158
+  s_909ca8cf5b6e15::t_b10382f84c190d 277-282,288-291,298-305,307-308,336,338,350-358,503,505
+  s_909ca8cf5b6e15::t_a645d202c97208 283-285
+  s_909ca8cf5b6e15::t_b391bc6f262f28 286,314-335
+  s_909ca8cf5b6e15::t_43ae447408e5a6 165
+  s_909ca8cf5b6e15::t_51c341aebdd9d2 337
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_909ca8cf5b6e15::t_c570b3499f18ae 59-61,86-91,212,218
+  s_909ca8cf5b6e15::t_659406b274ac3c 164
+  s_909ca8cf5b6e15::t_976ea909900d09 2,92-99,235
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_909ca8cf5b6e15::t_138ea136e613da 195
+  s_909ca8cf5b6e15::t_eb5c4cc7962a53 196-199
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_909ca8cf5b6e15::t_88129a9c4c30ba 26-27
+  s_909ca8cf5b6e15::t_6147d7048e5fe1 3,23-25,42-44,55,59-61,119
+  s_909ca8cf5b6e15::t_659406b274ac3c 4-6,28-29
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_909ca8cf5b6e15::t_1019e15305b214 179,182,186-190
+  s_909ca8cf5b6e15::t_659406b274ac3c 21,108,157,274,338
+  s_909ca8cf5b6e15::t_ec2c020428872c 169,171-178,249-258
+  s_909ca8cf5b6e15::t_c570b3499f18ae 47-56,200-206,210-214,261-269,272-273,275,287-288,303
+  s_909ca8cf5b6e15::t_41656481bfc307 180
+  s_909ca8cf5b6e15::t_43ae447408e5a6 155
+  s_909ca8cf5b6e15::t_04bdd761c175c6 152,159
+  s_909ca8cf5b6e15::t_34238056efe2ea 57,63,88-90,105,134-147,167,170,184,199,215,259-260,270-271,276
+  s_909ca8cf5b6e15::t_f94167886fdbb1 91-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "3d35ad6fb4e28e9c8af255192ec45ce32f0e0695",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}
