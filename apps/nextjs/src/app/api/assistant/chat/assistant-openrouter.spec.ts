@@ -1,6 +1,11 @@
 import { describe, expect, test } from "vitest";
 
-import { getOpenRouterWebSearchRequests, withOpenRouterWebSearch } from "./assistant-openrouter";
+import {
+  getOpenRouterWebSearchRequests,
+  getOpenRouterWebSearchSources,
+  normalizeOpenRouterWebSearchSources,
+  withOpenRouterWebSearch,
+} from "./assistant-openrouter";
 
 describe("withOpenRouterWebSearch", () => {
   test("adds the current OpenRouter server tool alongside Homarr function tools", () => {
@@ -27,5 +32,63 @@ describe("withOpenRouterWebSearch", () => {
     expect(getOpenRouterWebSearchRequests({ usage: { server_tool_use: { web_search_requests: 2 } } })).toBe(2);
     expect(getOpenRouterWebSearchRequests({ usage: {} })).toBeUndefined();
     expect(getOpenRouterWebSearchRequests({ usage: { server_tool_use: { web_search_requests: -1 } } })).toBeUndefined();
+  });
+
+  test("extracts and deduplicates Chat Completions web-search citations", () => {
+    expect(
+      getOpenRouterWebSearchSources({
+        choices: [
+          {
+            delta: {
+              annotations: [
+                {
+                  type: "url_citation",
+                  url_citation: {
+                    url: "https://example.com/plex",
+                    title: "Self-host Plex",
+                    content: "A long excerpt that must not be persisted.",
+                  },
+                },
+              ],
+            },
+          },
+          {
+            message: {
+              annotations: [
+                {
+                  type: "url_citation",
+                  url_citation: { url: "https://example.com/plex", title: "Duplicate" },
+                },
+                {
+                  type: "url_citation",
+                  url_citation: { url: "https://docs.plex.tv/install", title: "Plex documentation" },
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    ).toEqual([
+      { url: "https://example.com/plex", title: "Self-host Plex" },
+      { url: "https://docs.plex.tv/install", title: "Plex documentation" },
+    ]);
+  });
+
+  test("rejects unsafe citations and normalizes persisted source metadata", () => {
+    expect(
+      getOpenRouterWebSearchSources({
+        annotations: [
+          { type: "url_citation", url_citation: { url: "javascript:alert(1)" } },
+          { type: "url_citation", url_citation: { url: "https://user:password@example.com/private" } },
+        ],
+      }),
+    ).toEqual([]);
+    expect(
+      normalizeOpenRouterWebSearchSources([
+        { url: "https://example.com/result", title: " Result " },
+        { url: "https://example.com/result" },
+        { url: "file:///etc/passwd", title: "Unsafe" },
+      ]),
+    ).toEqual([{ url: "https://example.com/result", title: "Result" }]);
   });
 });

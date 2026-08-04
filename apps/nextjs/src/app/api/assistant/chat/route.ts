@@ -31,14 +31,21 @@ import type {
   AssistantMessageMetadata,
   AssistantRequestStep,
   AssistantUsage,
+  AssistantWebSearchSource,
 } from "~/components/assistant/assistant-message-metadata";
 
 import { extractMcpTools } from "../../mcp/_extract-tools";
 import { getRequestedMentionIds, sanitizeAttachmentFilename } from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
-import { getOpenRouterWebSearchRequests, withOpenRouterWebSearch } from "./assistant-openrouter";
+import {
+  getOpenRouterWebSearchRequests,
+  getOpenRouterWebSearchSources,
+  normalizeOpenRouterWebSearchSources,
+  withOpenRouterWebSearch,
+} from "./assistant-openrouter";
 import { assistantExecutionPolicy } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
+import { getSafeAssistantToolError } from "./assistant-tool-error";
 import { getForcedAssistantToolName, withAssistantToolPolicy } from "./assistant-tool-policy";
 
 export const maxDuration = 300;
@@ -132,13 +139,18 @@ const asFiniteNumber = (value: unknown) => {
 
 const createProviderTelemetryExtractor = (): MetadataExtractor => {
   const createAccumulator = () => {
-    let metadata: Record<string, string | number> = {};
+    let metadata: Record<string, string | number | AssistantWebSearchSource[]> = {};
+    const webSearchSources = new Map<string, AssistantWebSearchSource>();
     const process = (value: unknown) => {
       const body = asRecord(value);
       if (!body) return;
       const usage = asRecord(body.usage);
       const costDetails = asRecord(usage?.cost_details);
       const webSearchRequests = getOpenRouterWebSearchRequests(body);
+      for (const source of getOpenRouterWebSearchSources(body)) {
+        const existing = webSearchSources.get(source.url);
+        webSearchSources.set(source.url, existing?.title || !source.title ? (existing ?? source) : source);
+      }
       const routerMetadata = asRecord(body.openrouter_metadata);
       const endpoints = asRecord(routerMetadata?.endpoints);
       const selectedEndpoint = Array.isArray(endpoints?.available)
@@ -163,6 +175,7 @@ const createProviderTelemetryExtractor = (): MetadataExtractor => {
         ...(cost !== undefined ? { cost } : {}),
         ...(upstreamCost !== undefined ? { upstreamCost } : {}),
         ...(webSearchRequests !== undefined ? { webSearchRequests } : {}),
+        ...(webSearchSources.size > 0 ? { webSearchSources: [...webSearchSources.values()] } : {}),
         ...(routerAttempt !== undefined ? { fallbackCount: Math.max(routerAttempt - 1, 0) } : {}),
         ...(typeof routerMetadata?.strategy === "string" ? { routerStrategy: routerMetadata.strategy } : {}),
         ...(typeof routerMetadata?.region === "string" ? { routerRegion: routerMetadata.region } : {}),
@@ -293,23 +306,6 @@ const sumCompleteStepMetric = (
   const values = steps.map(getValue);
   if (values.some((value) => value === undefined)) return undefined;
   return (values as number[]).reduce((sum, value) => sum + value, 0);
-};
-
-const safeToolError = (error: unknown) => {
-  if (error instanceof Error && "code" in error) {
-    switch ((error as Error & { code: string }).code) {
-      case "UNAUTHORIZED":
-      case "FORBIDDEN":
-        return "You do not have permission to perform this action.";
-      case "NOT_FOUND":
-        return "The requested resource was not found.";
-      case "BAD_REQUEST":
-        return "The tool input was not valid.";
-      case "TOO_MANY_REQUESTS":
-        return "The operation is rate limited. Try again later.";
-    }
-  }
-  return "The Homarr tool could not complete this request.";
 };
 
 const getProcedureTypeMap = () => {
@@ -456,7 +452,7 @@ export async function POST(request: Request) {
                 toolName: mcpTool.name,
                 error: error instanceof Error ? error.message : String(error),
               });
-              return { error: safeToolError(error) };
+              return { error: getSafeAssistantToolError(error) };
             }
           },
         }),
@@ -569,6 +565,7 @@ export async function POST(request: Request) {
       },
       onStepFinish: ({ performance, providerMetadata, response, usage }) => {
         const telemetry = asRecord(providerMetadata?.homarrTelemetry);
+        const webSearchSources = normalizeOpenRouterWebSearchSources(telemetry?.webSearchSources);
         const generationId =
           typeof telemetry?.generationId === "string"
             ? telemetry.generationId
@@ -595,6 +592,7 @@ export async function POST(request: Request) {
           ...(asFiniteNumber(telemetry?.webSearchRequests) !== undefined
             ? { webSearchRequests: asFiniteNumber(telemetry?.webSearchRequests) }
             : {}),
+          ...(webSearchSources.length > 0 ? { webSearchSources } : {}),
           ...(generationId ? { generationId } : {}),
           ...(generationId
             ? {
@@ -706,6 +704,11 @@ export async function POST(request: Request) {
         const cacheDiscount = sumCompleteStepMetric(requestSteps, (step) => step.cacheDiscount);
         const fallbackCount = sumCompleteStepMetric(requestSteps, (step) => step.fallbackCount);
         const webSearchRequests = requestSteps.reduce((sum, step) => sum + (step.webSearchRequests ?? 0), 0);
+        const webSearchSources = [
+          ...new Map(
+            requestSteps.flatMap((step) => step.webSearchSources ?? []).map((source) => [source.url, source] as const),
+          ).values(),
+        ];
 
         return {
           usage,
@@ -727,6 +730,7 @@ export async function POST(request: Request) {
               ...(cacheDiscount !== undefined ? { cacheDiscount } : {}),
               ...(fallbackCount !== undefined ? { fallbackCount } : {}),
               ...(webSearchRequests > 0 ? { webSearchRequests } : {}),
+              ...(webSearchSources.length > 0 ? { webSearchSources } : {}),
               finishReason: latestStep?.finishReason ?? part.finishReason,
             },
           },

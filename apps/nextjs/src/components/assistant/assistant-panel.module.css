@@ -217,19 +217,8 @@
     padding: 0.6rem 0.5rem;
   }
 
-  .runtimeButtonGroup,
-  .runtimeControls {
-    width: 100%;
-  }
-
-  .modelButton {
-    min-width: 0;
-    max-width: none;
-  }
-
-  .reasoningButton {
-    min-width: 2.5rem;
-    max-width: 7.75rem;
+  .runtimeSelectorTrigger {
+    max-width: 100%;
   }
 
   .suggestions {
@@ -258,23 +247,8 @@
     overflow: hidden;
   }
 
-  .runtimeButton {
-    padding-inline: 0.5rem;
-  }
-
-  .reasoningButton {
-    width: 2.5rem;
-    min-width: 2.5rem;
-    max-width: 2.5rem;
-  }
-
-  .reasoningButton :global(.mantine-Button-label),
-  .reasoningButton :global(.mantine-Button-section[data-position="right"]) {
+  .runtimeSelectorEffort {
     display: none;
-  }
-
-  .reasoningButton :global(.mantine-Button-section[data-position="left"]) {
-    margin-inline: 0;
   }
 }
 
@@ -363,6 +337,57 @@
   line-height: 1.6;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
+}
+
+.directiveChip {
+  --mention-color: var(--mantine-color-gray-light-color);
+  --mention-background: var(--mantine-color-gray-light);
+
+  display: inline-flex;
+  max-width: min(12rem, 80%);
+  align-items: center;
+  gap: 0.28rem;
+  margin-inline: 0.12rem;
+  padding: 0.08rem 0.42rem 0.08rem 0.3rem;
+  border-radius: 999px;
+  color: var(--mention-color);
+  background: var(--mention-background);
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 650;
+  line-height: 1.55;
+  vertical-align: 0.02em;
+  white-space: nowrap;
+}
+
+.directiveChip[data-directive-type="app"] {
+  --mention-color: var(--mantine-color-red-light-color);
+  --mention-background: var(--mantine-color-red-light);
+}
+
+.directiveChip[data-directive-type="integration"] {
+  --mention-color: var(--mantine-color-blue-light-color);
+  --mention-background: var(--mantine-color-blue-light);
+}
+
+.directiveChip[data-directive-type="board"] {
+  --mention-color: var(--mantine-color-grape-light-color);
+  --mention-background: var(--mantine-color-grape-light);
+}
+
+.directiveChip[data-directive-type="widget"] {
+  --mention-color: var(--mantine-color-teal-light-color);
+  --mention-background: var(--mantine-color-teal-light);
+}
+
+.directiveChip[data-directive-type="tool"],
+.directiveChip[data-directive-type="tools"] {
+  --mention-color: var(--mantine-color-orange-light-color);
+  --mention-background: var(--mantine-color-orange-light);
+}
+
+.directiveChipLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .messageMarkdown {
@@ -474,6 +499,30 @@
   margin-block: 0.65rem;
   object-fit: contain;
   border-radius: var(--mantine-radius-md);
+}
+
+.mermaidStatus,
+.mermaidFallback,
+.mermaidDiagram {
+  margin-block: 0.75rem;
+  padding: 0.75rem;
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-default);
+}
+
+.mermaidDiagram {
+  overflow-x: auto;
+}
+
+.mermaidDiagram :global(svg) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
+.mermaidFallback pre {
+  margin: 0;
 }
 
 .messageMarkdown input[type="checkbox"] {
@@ -744,7 +793,8 @@
 .reasoning {
   margin-block: 0.45rem;
   padding: 0.45rem 0.6rem;
-  border-inline-start: 2px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-default);
 }
 
 .reasoning summary {
@@ -756,8 +806,19 @@
   display: none;
 }
 
+.reasoningChevron {
+  transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reasoning[open] .reasoningChevron {
+  transform: rotate(180deg);
+}
+
+.reasoningContent {
+  padding-top: 0.45rem;
+}
+
 .reasoningText {
-  margin-top: 0.45rem;
   white-space: pre-wrap;
 }
 
@@ -766,6 +827,34 @@
   align-items: center;
   gap: 0.25rem;
   margin-inline-end: 0.4rem;
+}
+
+.webSearchActivity {
+  background: color-mix(in srgb, var(--mantine-color-blue-light) 45%, var(--mantine-color-default));
+}
+
+.webSearchSources {
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.webSearchSource {
+  display: inline-flex;
+  max-width: min(100%, 18rem);
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-xl);
+  color: var(--mantine-color-text);
+  background: var(--mantine-color-body);
+  text-decoration: none;
+}
+
+.webSearchSource:hover {
+  border-color: var(--mantine-primary-color-filled);
+  color: var(--mantine-primary-color-filled);
 }
 
 .messageFile,
@@ -1001,16 +1090,29 @@
 }
 
 .composerInput {
+  position: relative;
   min-height: 2.5rem;
   max-height: 9rem;
   flex: 1;
-  resize: none;
-  border: 0;
-  outline: 0;
   padding: 0.55rem 0.65rem;
   color: var(--mantine-color-text);
   background: transparent;
   font: inherit;
+  cursor: text;
+}
+
+.composerInput :global(.aui-lexical-input) {
+  min-height: 1.5rem;
+  outline: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.composerInput :global(.aui-lexical-placeholder) {
+  position: absolute;
+  inset: 0.55rem 0.65rem auto;
+  color: var(--mantine-color-dimmed);
+  pointer-events: none;
 }
 
 .composerHints {
@@ -1022,49 +1124,49 @@
   padding-inline: 0.2rem;
 }
 
-.runtimeControls {
+.runtimeSelectorTrigger {
+  width: fit-content;
   min-width: 0;
-  flex: 1 1 auto;
-}
-
-.runtimeButtonGroup {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.runtimeButton {
-  min-width: 0;
-  border-color: var(--mantine-color-default-border);
+  max-width: min(24rem, 100%);
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
   color: var(--mantine-color-text);
   background: var(--mantine-color-body);
-  font-weight: 600;
 }
 
-.runtimeButton:hover {
+.runtimeSelectorTrigger:hover {
   background: var(--mantine-color-default-hover);
 }
 
-.runtimeButtonLabel {
+.runtimeSelectorTrigger:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.runtimeSelectorTrigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.runtimeSelectorIcon {
+  flex: 0 0 auto;
+}
+
+.runtimeSelectorName {
   min-width: 0;
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.modelButton {
-  min-width: 8rem;
-  max-width: 15rem;
-  flex: 1 1 auto;
-}
-
-.modelButton :global(.mantine-Button-label) {
-  font-size: var(--mantine-font-size-xs);
-}
-
-.reasoningButton {
-  min-width: 7.5rem;
-  max-width: 10.5rem;
-  flex: 0 1 auto;
+.runtimeSelectorEffort {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.2rem;
+  text-transform: none;
 }
 
 .modelDropdown {
@@ -1086,15 +1188,23 @@
   flex: 1;
 }
 
+.modelOptionMeta {
+  flex: 0 0 auto;
+  color: var(--mantine-color-dimmed);
+}
+
 .runtimeOptionCheck {
   flex: 0 0 auto;
   color: var(--mantine-primary-color-filled);
 }
 
-.runtimeMenuItem[data-selected] {
-  color: var(--mantine-primary-color-filled);
-  background: var(--mantine-primary-color-light);
-  font-weight: 600;
+.reasoningSelector {
+  padding: 0.55rem;
+}
+
+.reasoningSegmentedControl :global(.mantine-SegmentedControl-label) {
+  padding-inline: 0.35rem;
+  font-size: 0.68rem;
 }
 
 .triggerPopover {
@@ -1138,11 +1248,6 @@
 .triggerItemText {
   min-width: 0;
   flex: 1;
-}
-
-.composerInput::placeholder {
-  color: var(--mantine-color-dimmed);
-  opacity: 1;
 }
 
 .empty {
@@ -1249,21 +1354,8 @@
     display: none;
   }
 
-  .runtimeControls {
-    width: 100%;
-  }
-
-  .runtimeButtonGroup {
-    width: 100%;
-  }
-
-  .modelButton {
-    min-width: 0;
-    max-width: none;
-  }
-
-  .reasoningButton {
-    max-width: 9rem;
+  .runtimeSelectorTrigger {
+    max-width: 100%;
   }
 
   .suggestions {
@@ -1316,11 +1408,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .reasoningButton {
-    min-width: 2.5rem;
-    max-width: 7.75rem;
-  }
-
   .approvalActions {
     flex-direction: column;
   }
@@ -1345,7 +1432,9 @@
 @media (prefers-reduced-motion: reduce) {
   .activityBar,
   .floatingPanel,
-  .contextMeter {
+  .contextMeter,
+  .disclosureIcon,
+  .reasoningChevron {
     animation: none;
     transition: none;
   }
