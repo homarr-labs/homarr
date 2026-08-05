@@ -20,6 +20,12 @@ export const wudWidget: WidgetDefinition = {
         values: { type: "select", options: ["Horizontal", "Vertical"] },
         defaultValue: "Horizontal",
       },
+      {
+        name: "Show container update list",
+        description: "Lists each monitored container that has an image update available, linking to its release notes when known",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
     ],
   },
 };

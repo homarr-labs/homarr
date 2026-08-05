@@ -92,7 +92,7 @@ export type {
   ArchiveTeamWarriorItem,
   ArchiveTeamWarriorStatus,
 } from "./archive-team-warrior/archive-team-warrior-types";
-export type { WudStats } from "./wud/wud-types";
+export type { WudStats, WudContainerUpdate } from "./wud/wud-types";
 
 // Schemas
 export { anchorNotesListInputSchema } from "./anchor/anchor-types";

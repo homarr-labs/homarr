@@ -1,9 +1,10 @@
 "use client";
 
-import { Avatar, Group, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Anchor, Avatar, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { getIconUrl } from "@homarr/definitions";
+import type { WudContainerUpdate } from "@homarr/integrations";
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -27,6 +28,7 @@ const WudWidgetContent = ({
   const [data] = clientApi.widget.wud.getStats.useSuspenseQuery({ integrationId });
 
   const stats = data.stats;
+  const showUpdateList = options.showUpdateList && stats.updates.length > 0;
 
   const metrics = (
     <>
@@ -53,6 +55,16 @@ const WudWidgetContent = ({
       ) : (
         <Stack gap="xs">{metrics}</Stack>
       )}
+
+      {showUpdateList && (
+        <ScrollArea style={{ flex: 1, minHeight: 0 }} scrollbars="y">
+          <Stack gap={4}>
+            {stats.updates.map((update) => (
+              <UpdateRow key={update.id} update={update} />
+            ))}
+          </Stack>
+        </ScrollArea>
+      )}
     </Stack>
   );
 };
@@ -67,3 +79,29 @@ const Metric = ({ label, value }: { label: string; value: number }) => (
     </Text>
   </Stack>
 );
+
+const UpdateRow = ({ update }: { update: WudContainerUpdate }) => {
+  const versionText =
+    update.currentVersion && update.newVersion
+      ? `${update.currentVersion} → ${update.newVersion}`
+      : (update.newVersion ?? "Update available");
+
+  const content = (
+    <Group gap="xs" wrap="nowrap" justify="space-between" miw={0}>
+      <Text size="xs" fw={500} lineClamp={1} miw={0}>
+        {update.name}
+      </Text>
+      <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+        {versionText}
+      </Text>
+    </Group>
+  );
+
+  return update.link ? (
+    <Anchor href={update.link} target="_blank" rel="noreferrer noopener" underline="never" c="inherit">
+      {content}
+    </Anchor>
+  ) : (
+    content
+  );
+};

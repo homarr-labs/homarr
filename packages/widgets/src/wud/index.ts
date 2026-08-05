@@ -17,6 +17,7 @@ export const { definition, componentLoader } = createWidgetDefinition("wud", {
         })),
         defaultValue: "horizontal",
       }),
+      showUpdateList: factory.switch({ defaultValue: false, withDescription: true }),
     }));
   },
 }).withDynamicImport(() => import("./component"));
