@@ -173,7 +173,7 @@ export const appRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Create a new app (bookmark/shortcut to a service). REQUIRED: name (string), iconUrl (icon URL string), href (app URL, http/https or blank). OPTIONAL: description (string or null), pingUrl (URL to check reachability, or empty string)",
+          "Create a new app (bookmark/shortcut to a service). REQUIRED: name (string), iconUrl (icon URL string), href (app URL or custom URI scheme such as vscode://, or blank). OPTIONAL: description (string or null), pingUrl (URL to check reachability, or empty string)",
       },
     })
     .mutation(async ({ ctx, input }) => {
