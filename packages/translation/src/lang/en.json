@@ -1800,7 +1800,22 @@
     "wud": {
       "name": "What's Up Docker",
       "description": "Show how many watched containers have updates available.",
-      "option": {}
+      "option": {
+        "showTitle": {
+          "label": "Show title"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        }
+      }
     },
     "dnsHoleSummary": {
       "name": "DNS Hole Summary",

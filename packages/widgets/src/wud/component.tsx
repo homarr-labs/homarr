@@ -7,34 +7,52 @@ import { getIconUrl } from "@homarr/definitions";
 
 import type { WidgetComponentProps } from "../definition";
 
-export default function WudWidget({ integrationIds }: WidgetComponentProps<"wud">) {
+export default function WudWidget({ integrationIds, options }: WidgetComponentProps<"wud">) {
   const integrationId = integrationIds[0];
 
   if (!integrationId) {
     return null;
   }
 
-  return <WudWidgetContent integrationId={integrationId} />;
+  return <WudWidgetContent integrationId={integrationId} options={options} />;
 }
 
-const WudWidgetContent = ({ integrationId }: { integrationId: string }) => {
+const WudWidgetContent = ({
+  integrationId,
+  options,
+}: {
+  integrationId: string;
+  options: WidgetComponentProps<"wud">["options"];
+}) => {
   const [data] = clientApi.widget.wud.getStats.useSuspenseQuery({ integrationId });
 
   const stats = data.stats;
 
+  const metrics = (
+    <>
+      <Metric label="Monitored" value={stats.totalContainers} />
+      <Metric label="Updates available" value={stats.updatesAvailable} />
+    </>
+  );
+
   return (
     <Stack p="xs" gap="xs" h="100%">
-      <Group gap="xs" wrap="nowrap" miw={0}>
-        <Avatar size="sm" radius="md" src={getIconUrl("wud")} />
-        <Text size="sm" c="dimmed" lineClamp={1}>
-          What's Up Docker
-        </Text>
-      </Group>
+      {options.showTitle && (
+        <Group gap="xs" wrap="nowrap" miw={0}>
+          <Avatar size="sm" radius="md" src={getIconUrl("wud")} />
+          <Text size="sm" c="dimmed" lineClamp={1}>
+            What's Up Docker
+          </Text>
+        </Group>
+      )}
 
-      <SimpleGrid cols={2} spacing="xs">
-        <Metric label="Monitored" value={stats.totalContainers} />
-        <Metric label="Updates available" value={stats.updatesAvailable} />
-      </SimpleGrid>
+      {options.layout === "horizontal" ? (
+        <SimpleGrid cols={2} spacing="xs">
+          {metrics}
+        </SimpleGrid>
+      ) : (
+        <Stack gap="xs">{metrics}</Stack>
+      )}
     </Stack>
   );
 };
