@@ -5,6 +5,7 @@ import { Anchor, Avatar, Group, ScrollArea, SimpleGrid, Stack, Text } from "@man
 import { clientApi } from "@homarr/api/client";
 import { getIconUrl } from "@homarr/definitions";
 import type { WudContainerUpdate } from "@homarr/integrations";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -25,6 +26,7 @@ const WudWidgetContent = ({
   integrationId: string;
   options: WidgetComponentProps<"wud">["options"];
 }) => {
+  const t = useScopedI18n("widget.wud");
   const [data] = clientApi.widget.wud.getStats.useSuspenseQuery({ integrationId });
 
   const stats = data.stats;
@@ -32,8 +34,8 @@ const WudWidgetContent = ({
 
   const metrics = (
     <>
-      <Metric label="Monitored" value={stats.totalContainers} />
-      <Metric label="Updates available" value={stats.updatesAvailable} />
+      <Metric label={t("monitored")} value={stats.totalContainers} />
+      <Metric label={t("updatesAvailable")} value={stats.updatesAvailable} />
     </>
   );
 
@@ -43,7 +45,7 @@ const WudWidgetContent = ({
         <Group gap="xs" wrap="nowrap" miw={0}>
           <Avatar size="sm" radius="md" src={getIconUrl("wud")} />
           <Text size="sm" c="dimmed" lineClamp={1}>
-            What's Up Docker
+            {t("title")}
           </Text>
         </Group>
       )}
@@ -60,7 +62,7 @@ const WudWidgetContent = ({
         <ScrollArea style={{ flex: 1, minHeight: 0 }} scrollbars="y">
           <Stack gap={4}>
             {stats.updates.map((update) => (
-              <UpdateRow key={update.id} update={update} />
+              <UpdateRow key={update.id} update={update} updateAvailableFallback={t("updateAvailable")} />
             ))}
           </Stack>
         </ScrollArea>
@@ -80,11 +82,17 @@ const Metric = ({ label, value }: { label: string; value: number }) => (
   </Stack>
 );
 
-const UpdateRow = ({ update }: { update: WudContainerUpdate }) => {
+const UpdateRow = ({
+  update,
+  updateAvailableFallback,
+}: {
+  update: WudContainerUpdate;
+  updateAvailableFallback: string;
+}) => {
   const versionText =
     update.currentVersion && update.newVersion
       ? `${update.currentVersion} → ${update.newVersion}`
-      : (update.newVersion ?? "Update available");
+      : (update.newVersion ?? updateAvailableFallback);
 
   const content = (
     <Group gap="xs" wrap="nowrap" justify="space-between" miw={0}>

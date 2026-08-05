@@ -55,6 +55,10 @@ export class WudIntegration extends Integration {
       return undefined;
     }
 
+    if (this.url("/api/app").protocol !== "https:") {
+      return undefined;
+    }
+
     const credentials = Buffer.from(`${this.getSecretValue("username")}:${this.getSecretValue("password")}`).toString(
       "base64",
     );
