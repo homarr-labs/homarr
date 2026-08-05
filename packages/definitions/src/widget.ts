@@ -53,6 +53,7 @@ export const widgetKinds = [
   "beszelSystemStats",
   "traefik",
   "customApi",
+  "wud",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
 
