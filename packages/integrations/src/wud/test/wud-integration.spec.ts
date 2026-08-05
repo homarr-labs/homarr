@@ -26,9 +26,40 @@ const TEST_PASSWORD = "p@ss";
 const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
 
 const sampleContainersResponse = [
-  { id: "1", name: "homeassistant", updateAvailable: true },
+  {
+    id: "1",
+    name: "homeassistant",
+    displayName: "Home Assistant",
+    updateAvailable: true,
+    link: "https://github.com/home-assistant/core/releases/tag/2024.1.0",
+    image: { tag: { value: "2023.12.0" } },
+    updateKind: { remoteValue: "2024.1.0" },
+  },
   { id: "2", name: "traefik", updateAvailable: false },
-  { id: "3", name: "grafana", updateAvailable: true },
+  {
+    id: "3",
+    name: "grafana",
+    updateAvailable: true,
+    image: { tag: { value: "10.0.0" } },
+    result: { tag: "10.1.0" },
+  },
+];
+
+const sampleUpdates = [
+  {
+    id: "1",
+    name: "Home Assistant",
+    currentVersion: "2023.12.0",
+    newVersion: "2024.1.0",
+    link: "https://github.com/home-assistant/core/releases/tag/2024.1.0",
+  },
+  {
+    id: "3",
+    name: "grafana",
+    currentVersion: "10.0.0",
+    newVersion: "10.1.0",
+    link: null,
+  },
 ];
 
 const createIntegration = (decryptedSecrets: IntegrationSecret[] = []) =>
@@ -61,7 +92,7 @@ describe("WudIntegration getStatsAsync", () => {
 
     const stats = await createIntegration().getStatsAsync();
 
-    expect(stats).toStrictEqual({ totalContainers: 3, updatesAvailable: 2 });
+    expect(stats).toStrictEqual({ totalContainers: 3, updatesAvailable: 2, updates: sampleUpdates });
   });
 
   test("returns zero counts for an empty containers list", async () => {
@@ -74,7 +105,20 @@ describe("WudIntegration getStatsAsync", () => {
 
     const stats = await createIntegration().getStatsAsync();
 
-    expect(stats).toStrictEqual({ totalContainers: 0, updatesAvailable: 0 });
+    expect(stats).toStrictEqual({ totalContainers: 0, updatesAvailable: 0, updates: [] });
+  });
+
+  test("maps container updates using displayName, falling back to result.tag and null link", async () => {
+    mockFetch.mockResolvedValue(
+      new Response(JSON.stringify(sampleContainersResponse), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+    );
+
+    const stats = await createIntegration().getStatsAsync();
+
+    expect(stats.updates).toStrictEqual(sampleUpdates);
   });
 
   test("throws ParseError when API response is not valid JSON", async () => {

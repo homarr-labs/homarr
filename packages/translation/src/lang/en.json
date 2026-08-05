@@ -1814,6 +1814,10 @@
               "label": "Vertical"
             }
           }
+        },
+        "showUpdateList": {
+          "label": "Show container update list",
+          "description": "Lists each monitored container that has an image update available"
         }
       }
     },
