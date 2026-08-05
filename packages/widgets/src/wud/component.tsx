@@ -153,6 +153,7 @@ const UpdateCard = ({
   radius: string | undefined;
   className: string | undefined;
 }) => {
+  const t = useScopedI18n("widget.wud");
   const fullVersionText = buildVersionText(update.currentVersion, update.newVersion);
   const versionText = buildVersionText(
     truncateVersion(update.currentVersion),
@@ -182,6 +183,7 @@ const UpdateCard = ({
               variant="subtle"
               color="gray"
               size="sm"
+              aria-label={t("openReleaseNotes")}
             >
               <IconExternalLink size="0.9rem" />
             </ActionIcon>

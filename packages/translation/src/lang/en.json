@@ -1804,6 +1804,7 @@
       "monitored": "Monitored",
       "updatesAvailable": "{count, plural, one {# update available} other {# updates available}}",
       "updateAvailable": "Update available",
+      "openReleaseNotes": "Open release notes",
       "option": {
         "showTitle": {
           "label": "Show title"
