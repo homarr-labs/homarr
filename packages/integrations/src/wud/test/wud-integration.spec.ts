@@ -197,6 +197,32 @@ describe("WudIntegration authentication", () => {
     expect(requestInit?.headers).toMatchObject({ Authorization: expected });
     expect(requestInit?.timeout).toBe(10_000);
   });
+
+  test("does not send credentials over a non-HTTPS URL", async () => {
+    mockFetch.mockResolvedValue(
+      new Response(JSON.stringify(sampleContainersResponse), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+    );
+
+    const integration = new WudIntegration({
+      id: "test-wud-http",
+      name: "Test WUD HTTP",
+      url: "http://wud.example.com",
+      externalUrl: null,
+      decryptedSecrets: [
+        { kind: "username", value: TEST_USERNAME },
+        { kind: "password", value: TEST_PASSWORD },
+      ],
+    });
+
+    await integration.getStatsAsync();
+
+    const [, requestInit] = mockFetch.mock.calls[0] ?? [];
+    const headers = (requestInit?.headers ?? {}) as Record<string, string>;
+    expect(headers.Authorization).toBeUndefined();
+  });
 });
 
 describe("WudIntegration testing endpoint", () => {
