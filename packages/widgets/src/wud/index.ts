@@ -5,10 +5,12 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("wud", {
   icon: IconBrandDocker,
+  refetchInterval: 5,
   supportedIntegrations: ["wud"],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showTitle: factory.switch({ defaultValue: true }),
+      showRing: factory.switch({ defaultValue: true }),
       layout: factory.select({
         options: (["horizontal", "vertical"] as const).map((value) => ({
           value,

@@ -1802,11 +1802,14 @@
       "description": "Show how many watched containers have updates available.",
       "title": "What's Up Docker",
       "monitored": "Monitored",
-      "updatesAvailable": "Updates available",
+      "updatesAvailable": "{count, plural, one {# update available} other {# updates available}}",
       "updateAvailable": "Update available",
       "option": {
         "showTitle": {
           "label": "Show title"
+        },
+        "showRing": {
+          "label": "Show update ring"
         },
         "layout": {
           "label": "Layout",
