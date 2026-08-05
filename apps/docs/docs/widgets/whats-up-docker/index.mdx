@@ -1,0 +1,30 @@
+---
+title: "What's Up Docker"
+description: "Displays how many watched containers have image updates available."
+hide_title: true
+---
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { wudWidget } from ".";
+import { wudIntegration } from "@site/docs/integrations/whats-up-docker";
+
+<WidgetHeader widget={wudWidget} categories={["Health Monitoring"]} />
+
+This widget shows two stats from your WUD instance: the total number of monitored containers, and how many of them currently have an image update available.
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: wudIntegration,
+      note: "Displays monitored container and available-update counts",
+    },
+  ]}
+/>
+
+### Adding the widget
+
+<AddingWidget />

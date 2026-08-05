@@ -24,7 +24,9 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   networkControllerSummary: getIntegrationKindsByCategory("networkController"),
   networkControllerStatus: getIntegrationKindsByCategory("networkController"),
   indexerManager: getIntegrationKindsByCategory("indexerManager"),
-  healthMonitoring: getIntegrationKindsByCategory("healthMonitoring").filter((kind) => kind !== "patchmon"),
+  healthMonitoring: getIntegrationKindsByCategory("healthMonitoring").filter(
+    (kind) => kind !== "patchmon" && kind !== "wud",
+  ),
   firewall: getIntegrationKindsByCategory("firewall"),
   notifications: getIntegrationKindsByCategory("notifications"),
   mediaReleases: ["emby", "jellyfin", "plex"],
@@ -44,6 +46,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   archiveTeamWarrior: ["archiveTeamWarrior"],
   anchorNote: ["anchor"],
   traefik: ["traefik"],
+  wud: ["wud"],
 };
 
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {

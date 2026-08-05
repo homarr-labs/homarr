@@ -1344,6 +1344,10 @@
       "name": "Traefik",
       "description": "Cloud-native reverse proxy and load balancer"
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Monitor which of your Docker containers have image updates available"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Document management system for archiving and organizing scanned documents"
@@ -1792,6 +1796,11 @@
           "label": "Show broadcast messages"
         }
       }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Show how many watched containers have updates available.",
+      "option": {}
     },
     "dnsHoleSummary": {
       "name": "DNS Hole Summary",
