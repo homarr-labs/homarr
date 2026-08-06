@@ -30,7 +30,7 @@ import {
 import type { createTRPCContext } from "../trpc";
 import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation-telemetry";
 import { verifyAssistantGenerationAccessToken } from "../assistant-generation-access";
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, isDemoMode, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import { boardRouter } from "./board";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
@@ -448,6 +448,9 @@ export const assistantRouter = createTRPCRouter({
       },
     })
     .query(async ({ ctx }) => {
+      if (isDemoMode) {
+        return { enabled: true };
+      }
       const configuration = await getConfigurationAsync(ctx.db);
       const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
       return {
@@ -495,6 +498,24 @@ export const assistantRouter = createTRPCRouter({
 
   getRuntimeOptions: protectedProcedure.query(async ({ ctx }) => {
     const configuration = await getConfigurationAsync(ctx.db);
+    if (isDemoMode) {
+      return {
+        provider: "homarr",
+        defaultModelId: "homarr-assistant",
+        models: [
+          {
+            id: "homarr-assistant",
+            name: "Homarr Assistant (Demo)",
+            description: null,
+            contextLength: null,
+            promptPrice: null,
+            completionPrice: null,
+            inputModalities: [],
+            toolSupport: "unknown" as const,
+          },
+        ],
+      };
+    }
     if (!configuration?.enabled || !configuration.modelId) {
       throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Homarr Assistant is not configured." });
     }

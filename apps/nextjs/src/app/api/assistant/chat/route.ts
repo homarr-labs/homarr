@@ -3,7 +3,7 @@ import { hkdfSync } from "node:crypto";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { MetadataExtractor } from "@ai-sdk/openai-compatible";
 import type { ToolSet, UIMessage } from "ai";
-import { convertToModelMessages, jsonSchema, stepCountIs, streamText, tool } from "ai";
+import { convertToModelMessages, createUIMessageStream, createUIMessageStreamResponse, jsonSchema, stepCountIs, streamText, tool } from "ai";
 import { parse, stringify } from "superjson";
 import { z } from "zod/v4";
 
@@ -27,6 +27,7 @@ import {
 } from "@homarr/definitions";
 
 import { browserToolContracts } from "~/components/assistant/assistant-tool-contracts";
+import { env as appEnv } from "~/env";
 import type {
   AssistantMessageMetadata,
   AssistantRequestStep,
@@ -43,6 +44,7 @@ import {
   normalizeOpenRouterWebSearchSources,
   withOpenRouterWebSearch,
 } from "./assistant-openrouter";
+import { toProviderOptionsKey } from "./assistant-provider-options";
 import { assistantExecutionPolicy } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getSafeAssistantToolError } from "./assistant-tool-error";
@@ -322,6 +324,31 @@ const getProcedureTypeMap = () => {
   );
 };
 
+const createDemoAssistantResponse = (request: z.infer<typeof requestSchema>) => {
+  const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+  const text =
+    "This is the Homarr demo assistant. It is running in preview/mock mode, so it responds with a canned answer instead of calling a real language model. In a real deployment, an administrator configures a provider and a model for full conversations.";
+  const responseId = crypto.randomUUID();
+  const partId = crypto.randomUUID();
+  const chunkTexts = text.match(/.{1,3}/gs) ?? [text];
+
+  const stream = createUIMessageStream<UIMessage>({
+    originalMessages: request.messages as UIMessage[],
+    execute: async ({ writer }) => {
+      writer.write({ type: "start", messageId: responseId });
+      writer.write({ type: "text-start", id: partId });
+      for (const chunk of chunkTexts) {
+        writer.write({ type: "text-delta", id: partId, delta: chunk });
+        await delay(18);
+      }
+      writer.write({ type: "text-end", id: partId });
+      writer.write({ type: "finish", finishReason: "stop" });
+    },
+  });
+
+  return createUIMessageStreamResponse({ stream });
+};
+
 export async function POST(request: Request) {
   const contentLength = Number(request.headers.get("content-length") ?? 0);
   if (contentLength > 2_000_000) {
@@ -359,15 +386,21 @@ export async function POST(request: Request) {
   const configuration = await db.query.assistantConfigurations.findFirst({
     where: eq(assistantConfigurations.id, "default"),
   });
-  const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
-  if (!configuration?.enabled || !configuration.modelId || (requiresApiKey && !configuration.encryptedApiKey)) {
-    return Response.json({ error: "Homarr Assistant is not configured." }, { status: 503 });
-  }
+
   const thread = await db.query.assistantThreads.findFirst({
     where: and(eq(assistantThreads.id, parsed.data.id), eq(assistantThreads.userId, session.user.id)),
   });
   if (!thread) {
     return Response.json({ error: "Conversation not found." }, { status: 404 });
+  }
+
+  if (appEnv.DEMO_MODE) {
+    return createDemoAssistantResponse(parsed.data);
+  }
+
+  const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
+  if (!configuration?.enabled || !configuration.modelId || (requiresApiKey && !configuration.encryptedApiKey)) {
+    return Response.json({ error: "Homarr Assistant is not configured." }, { status: 503 });
   }
 
   const context = createTRPCContext({ headers: request.headers, session });
@@ -543,7 +576,7 @@ export async function POST(request: Request) {
       reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
       providerOptions:
         configuration.provider === "openrouter" || openRouterServerToolsEnabled
-          ? { [providerName]: { usage: { include: true } } }
+          ? { [toProviderOptionsKey(providerName)]: { usage: { include: true } } }
           : undefined,
       toolApproval,
       experimental_toolApprovalSecret: getToolApprovalSecret(),

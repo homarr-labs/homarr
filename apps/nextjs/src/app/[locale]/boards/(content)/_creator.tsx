@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 
 // Placed here because gridstack styles are used for board content
@@ -50,7 +51,15 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       const resolvedParams = await params;
       const queryClient = getQueryClient();
 
-      const [board, session] = await Promise.all([getInitialBoard(resolvedParams), auth()]);
+      const [board, session] = await Promise.all([
+        getInitialBoard(resolvedParams).catch((error) => {
+          if (error instanceof TRPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
+            notFound();
+          }
+          throw error;
+        }),
+        auth(),
+      ]);
 
       const itemsMap = board.items.reduce((acc, item) => {
         const existing = acc.get(item.kind);
