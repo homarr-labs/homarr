@@ -1,0 +1,25 @@
+apps/nextjs/src/app/api/assistant/chat/assistant-provider-options.spec.ts
+  h_d6e478ca18e517 1-18
+apps/nextjs/src/app/api/assistant/chat/assistant-provider-options.ts
+  h_d6e478ca18e517 1-17
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  h_d6e478ca18e517 47,579
+  h_d6e478ca18e517 6,30,327-351,389,397-405
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  h_d6e478ca18e517 3,54-62
+apps/nextjs/src/app/[locale]/manage/assistant/_components/assistant-configuration.tsx
+  h_d6e478ca18e517 465,506-513
+packages/api/src/router/assistant.ts
+  h_d6e478ca18e517 33,451-453,501-518
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "f61e3591bd29723817ae3de69e4d05d3bbdc2749",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
