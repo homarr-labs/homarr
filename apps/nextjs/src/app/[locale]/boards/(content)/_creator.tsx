@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { notFound, redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 
 // Placed here because gridstack styles are used for board content
@@ -49,8 +50,24 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     page: async ({ params }: { params: Promise<TParams> }) => {
       const resolvedParams = await params;
       const queryClient = getQueryClient();
+      const session = await auth();
 
-      const [board, session] = await Promise.all([getInitialBoard(resolvedParams), auth()]);
+      const board = await getInitialBoard(resolvedParams).catch((error) => {
+        if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+          if (!session) {
+            logger.debug("No home board found for anonymous user, redirecting to login");
+            redirect("/auth/login");
+          }
+
+          notFound();
+        }
+
+        if (error instanceof TRPCError && error.code === "BAD_REQUEST") {
+          notFound();
+        }
+
+        throw error;
+      });
 
       const itemsMap = board.items.reduce((acc, item) => {
         const existing = acc.get(item.kind);
@@ -110,8 +127,11 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
           },
         };
       } catch (error) {
-        // Ignore not found errors and return empty metadata
-        if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+        // Ignore not found and bad-request errors and return empty metadata
+        if (
+          error instanceof TRPCError &&
+          (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")
+        ) {
           return {};
         }
 

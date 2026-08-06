@@ -462,7 +462,7 @@ export const AssistantConfiguration = () => {
             </Badge>
           }
         >
-          <SimpleGrid cols={{ base: 1, sm: 2 }}>
+          <Stack gap="md">
             <Select
               label={t("provider.title")}
               description={t(`provider.options.${provider}.description`)}
@@ -503,14 +503,14 @@ export const AssistantConfiguration = () => {
               onChange={(event) => changeBaseUrl(event.currentTarget.value)}
               placeholder="https://provider.example/v1"
             />
-          </SimpleGrid>
-          <TextInput
-            label={t("model.discoveryPath")}
-            description={t("model.discoveryPathDescription")}
-            value={modelDiscoveryPath}
-            onChange={(event) => changeModelDiscoveryPath(event.currentTarget.value)}
-            placeholder="/models"
-          />
+            <TextInput
+              label={t("model.discoveryPath")}
+              description={t("model.discoveryPathDescription")}
+              value={modelDiscoveryPath}
+              onChange={(event) => changeModelDiscoveryPath(event.currentTarget.value)}
+              placeholder="/models"
+            />
+          </Stack>
 
           {destinationChanged && (
             <Alert icon={<IconAlertTriangle size={18} />} color="yellow" title={t("destinationChanged.title")}>

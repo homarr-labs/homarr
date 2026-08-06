@@ -3,7 +3,6 @@
 import { expect, test, vi } from "vitest";
 import { extractToolsFromProcedures } from "trpc-to-mcp";
 
-import { assistantRouter } from "../router/assistant";
 import { appRouter } from "../router/app";
 import { boardRouter } from "../router/board";
 import { customWidgetRouter } from "../router/custom-widget/custom-widget-router";
@@ -28,7 +27,6 @@ vi.mock("@homarr/core/infrastructure/db/env", () => ({
 }));
 
 const mcpTestRouter = createTRPCRouter({
-  assistant: assistantRouter,
   app: appRouter,
   board: boardRouter,
   customWidget: customWidgetRouter,
@@ -49,9 +47,6 @@ test("MCP tools should contain expected procedures", () => {
   const toolNames = tools.map((tool) => tool.name);
 
   expect(tools.length).toBeGreaterThan(0);
-  expect(toolNames).toContain("assistant_getAvailability");
-  expect(toolNames).toContain("assistant_getContextEntities");
-  expect(toolNames).toContain("assistant_getModelCapabilities");
   expect(toolNames).toContain("app_all");
   expect(toolNames).toContain("app_byId");
   expect(toolNames).toContain("app_create");
