@@ -9,13 +9,25 @@ interface IntegrationLike {
   kind: string;
 }
 
+interface Options<TIntegration extends IntegrationLike, TResult> {
+  fallback?: (integration: TIntegration, error: unknown) => TResult;
+}
+
 export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
   integrations: TIntegration[],
   fn: (integration: TIntegration) => Promise<TResult>,
+  options?: Options<TIntegration, TResult>,
 ): Promise<TResult[]> {
   const settled = await Promise.allSettled(integrations.map(async (integration) => fn(integration)));
-  return settled.flatMap((result, index) => {
-    if (result.status === "fulfilled") return [result.value];
+  const results: TResult[] = [];
+  const errors: unknown[] = [];
+
+  settled.forEach((result, index) => {
+    if (result.status === "fulfilled") {
+      results.push(result.value);
+      return;
+    }
+
     const integration = integrations[index];
     logger.warn(
       new ErrorWithMetadata(
@@ -24,6 +36,18 @@ export async function settleIntegrationQueries<TIntegration extends IntegrationL
         { cause: result.reason },
       ),
     );
-    return [];
+
+    if (options?.fallback && integration) {
+      results.push(options.fallback(integration, result.reason));
+      return;
+    }
+
+    errors.push(result.reason);
   });
+
+  if (results.length === 0 && errors.length > 0) {
+    throw errors[0];
+  }
+
+  return results;
 }

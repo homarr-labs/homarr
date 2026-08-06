@@ -357,6 +357,83 @@ describe("delete should delete user", () => {
   });
 });
 
+describe("changeEnableRightClickOnWidgets should toggle the right-click preference", () => {
+  test("non-admin can toggle their own preference", async () => {
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+
+    await db.insert(users).values({
+      id: defaultOwnerId,
+      name: "owner",
+    });
+
+    await caller.changeEnableRightClickOnWidgets({ id: defaultOwnerId, enableRightClickOnWidgets: false });
+
+    const updated = await db.query.users.findFirst({
+      where: eq(users.id, defaultOwnerId),
+      columns: { enableRightClickOnWidgets: true },
+    });
+    expect(updated?.enableRightClickOnWidgets).toBe(false);
+
+    await caller.changeEnableRightClickOnWidgets({ id: defaultOwnerId, enableRightClickOnWidgets: true });
+
+    const restored = await db.query.users.findFirst({
+      where: eq(users.id, defaultOwnerId),
+      columns: { enableRightClickOnWidgets: true },
+    });
+    expect(restored?.enableRightClickOnWidgets).toBe(true);
+  });
+
+  test("non-admin cannot toggle another user's preference", async () => {
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+
+    const otherUserId = createId();
+    await db.insert(users).values({ id: defaultOwnerId });
+    await db.insert(users).values({ id: otherUserId, name: "other" });
+
+    await expect(
+      caller.changeEnableRightClickOnWidgets({ id: otherUserId, enableRightClickOnWidgets: false }),
+    ).rejects.toThrow("User not found");
+
+    const other = await db.query.users.findFirst({
+      where: eq(users.id, otherUserId),
+      columns: { enableRightClickOnWidgets: true },
+    });
+    expect(other?.enableRightClickOnWidgets).toBe(true);
+  });
+
+  test("admin can toggle another user's preference", async () => {
+    const db = createDb();
+    const adminSession = createSession(["admin"]);
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: adminSession,
+    });
+
+    const targetUserId = createId();
+    await db.insert(users).values({ id: defaultOwnerId });
+    await db.insert(users).values({ id: targetUserId, name: "target" });
+
+    await caller.changeEnableRightClickOnWidgets({ id: targetUserId, enableRightClickOnWidgets: false });
+
+    const target = await db.query.users.findFirst({
+      where: eq(users.id, targetUserId),
+      columns: { enableRightClickOnWidgets: true },
+    });
+    expect(target?.enableRightClickOnWidgets).toBe(false);
+  });
+});
+
 const createOnboardingStepAsync = async (db: Database, step: OnboardingStep) => {
   await db.insert(onboarding).values({
     id: createId(),

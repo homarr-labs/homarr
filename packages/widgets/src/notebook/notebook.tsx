@@ -39,6 +39,8 @@ import {
   IconRowRemove,
   IconTableOff,
   IconTablePlus,
+  IconTextDirectionLtr,
+  IconTextDirectionRtl,
   IconX,
 } from "@tabler/icons-react";
 import { Color } from "@tiptap/extension-color";
@@ -66,6 +68,7 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { NotebookTextDirection, setTextDirection } from "./text-direction";
 
 import "@mantine/tiptap/styles.css";
 import "./notebook.css";
@@ -171,6 +174,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
         }),
         TaskList.configure({ itemTypeName: "taskItem" }),
         TextAlign.configure({ types: ["heading", "paragraph"] }),
+        NotebookTextDirection,
         TextStyle,
       ],
       shouldRerenderOnTransaction: true,
@@ -347,6 +351,22 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
                 position: t("widget.notebook.align.right"),
               })}
             />
+            <RichTextEditor.Control
+              title={tControls("directionLtr")}
+              aria-label={tControls("directionLtr")}
+              active={editor?.isActive({ dir: "ltr" })}
+              onClick={() => editor && setTextDirection(editor, "ltr").run()}
+            >
+              <IconTextDirectionLtr {...controlIconProps} />
+            </RichTextEditor.Control>
+            <RichTextEditor.Control
+              title={tControls("directionRtl")}
+              aria-label={tControls("directionRtl")}
+              active={editor?.isActive({ dir: "rtl" })}
+              onClick={() => editor && setTextDirection(editor, "rtl").run()}
+            >
+              <IconTextDirectionRtl {...controlIconProps} />
+            </RichTextEditor.Control>
           </RichTextEditor.ControlsGroup>
 
           <RichTextEditor.ControlsGroup>

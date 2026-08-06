@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
@@ -65,11 +65,6 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   const isSmall = width < 256;
 
   const normalizedEvents = useMemo(() => splitEvents(events), [events]);
-  const activeCloseRef = useRef<(() => void) | null>(null);
-  const onDayOpen = useCallback((close: () => void) => {
-    activeCloseRef.current?.();
-    activeCloseRef.current = close;
-  }, []);
 
   return (
     <Calendar
@@ -146,7 +141,6 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
             disabled={isEditMode || eventsForDate.length === 0}
             rootWidth={width}
             rootHeight={height}
-            onOpen={onDayOpen}
           />
         );
       }}

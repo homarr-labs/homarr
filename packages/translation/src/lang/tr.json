@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Sıfırdan Başla",
           "importOldmarr": "Homarr 1.0'dan Önceki Yedeğinizi İçe Aktarın",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "SQLite yedeklemesinden geri yükle",
+          "restoreSqliteDescription": "Önceki bir Homarr örneğinden tam SQLite veritabanı yedeklemesi yükleyin. Bu, tüm panoları, kullanıcıları, uygulamaları, entegrasyonları ve ayarları geri yükler.",
+          "backToOptions": "← Kurulum seçeneklerine geri dön"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": "Sunucu ayarlarınızı yapılandırın."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Entegrasyonlar",
+        "subtitle": "Kullandığınız hizmetleri seçin.",
+        "description": "Bağlanmak istediğiniz entegrasyonları seçin. Panonuzu eşleşen widget'larla otomatik olarak kuracağız.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Devam Et",
+          "skip": "Şimdilik atla"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{current} / {total}",
+          "skip": "Bu entegrasyonu atla",
+          "finishing": "Panonuz kuruluyor...",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kurulum başarısız oldu",
+            "message": "Panonuzu kurarken bir şeyler yanlış gitti. Lütfen tekrar deneyin."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "URL yardımcıları",
+            "description": "Bu yardımcılar, hizmetlerinizin URL'sini tahmin etmeye çalışır. Çalışmazsa, adresi manuel olarak yazın."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "Temel URL",
+          "placeholder": "homelab.local veya 192.168.1.1",
+          "hint": "Entegrasyon URL'lerini otomatik doldurmak için temel alan adınızı veya IP'nizi girin",
+          "warning": "Temel URL'nizi şimdi ayarlamak, tüm entegrasyon URL'lerini otomatik olarak dolduracak ve kurulum sırasında zaman kazandıracak",
+          "preview": "örn. {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Alt alan adı",
+            "hostPort": "Ana Bilgisayar:Port"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker {count} hizmet tespit etti",
+          "detectedBreakdown": "{integrations} entegrasyon · {apps} uygulama",
+          "summary": "Homarr {apps} uygulama tespit etti, bunların {integrations} tanesinde entegrasyon yerleşik",
+          "appBadge": "Uygulama",
+          "appSectionLabel": "Panoya eklenecek uygulamalar ({count} seçili)",
+          "scanning": "Docker taranıyor...",
+          "scanningDescription": "Sisteminizdeki çalışan konteynerler aranıyor"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Şifre",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Şifre önerileri",
         "suggestion": {
           "length": "En az 8 karakter içermeli",
           "lowercase": "Küçük harf içermeli",
@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Pingler İçin Simge Kullanın"
       },
+      "enableRightClickOnWidgets": {
+        "label": "",
+        "description": ""
+      },
       "defaultSearchEngine": {
         "label": "Öntanımlı arama motoru"
       },
@@ -205,7 +209,7 @@
         "label": "Arama sonucunu yeni sekmede aç"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "DuckDuckGo bang'lerini etkinleştir"
       }
     },
     "error": {
@@ -298,10 +302,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo bang'leri başarıyla değiştirildi"
           },
           "error": {
-            "message": ""
+            "message": "DuckDuckGo bang'leri değiştirilemiyor"
           }
         }
       },
@@ -983,44 +987,44 @@
         "placeholder": "Özel Uygulama URL'si"
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "API anahtarı al"
       }
     },
     "action": {
       "create": "Yeni Entegrasyon"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} widget",
+      "noWidgets": "Widget yok",
+      "detected": "Docker üzerinden tespit edildi"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
+      "dnsHole": "DNS",
+      "mediaService": "Medya",
+      "calendar": "Takvim",
+      "mediaSearch": "Ara",
+      "mediaRelease": "Sürümler",
+      "mediaRequest": "Talepler",
+      "downloadClient": "İndirmeler",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Diğer",
+      "smartHomeServer": "Akıllı Ev",
+      "indexerManager": "İndeksleyici",
+      "healthMonitoring": "Sağlık",
+      "search": "Ara",
+      "mediaTranscoding": "Kod Dönüştürme",
+      "networkController": "Ağ",
+      "releasesProvider": "Sürümler",
+      "notifications": "Bildirimler",
+      "firewall": "Güvenlik Duvarı",
+      "timetable": "Zaman Çizelgesi",
+      "photoService": "Fotoğraflar",
       "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
+      "notes": "Notlar",
+      "mediaMonitoring": "İzleme",
+      "speedtest": "Hız Testi",
+      "analytics": "Analiz",
       "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
@@ -1285,6 +1289,14 @@
           "label": "API Anahtarı (Gizli Anahtar)",
           "newLabel": "Yeni API Anahtarı (Gizli Anahtar)"
         },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
         "githubAppId": {
           "label": "Uygulama Kimliği",
           "newLabel": "Yeni Uygulama Kimliği"
@@ -1328,7 +1340,19 @@
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
+      "name": "",
+      "description": ""
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
       "name": "",
       "description": ""
     }
@@ -1374,7 +1398,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Medya yüklenmedi"
     }
   },
   "common": {
@@ -1385,7 +1409,7 @@
       "add": "Ekle",
       "apply": "Uygula",
       "backToOverview": "Genel bakışa dön",
-      "skip": "",
+      "skip": "Atla",
       "change": "Değiştir",
       "create": "Oluştur",
       "createAnother": "Kaydet ve Yeni Oluştur",
@@ -1407,8 +1431,8 @@
       "checkLogs": "Daha fazla ayrıntı için günlükleri kontrol edin",
       "tryAgain": "Tekrar Deneyin",
       "loading": "Yükleniyor",
-      "show": "",
-      "hide": ""
+      "show": "Göster",
+      "hide": "Gizle"
     },
     "here": "buraya",
     "iconPicker": {
@@ -1420,7 +1444,7 @@
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Otomatik",
         "light": "Aydınlık",
         "dark": "Koyu"
       }
@@ -1578,7 +1602,7 @@
         "label": {
           "create": "Yeni Kategori",
           "changePosition": "Pozisyonu değiştir",
-          "settings": ""
+          "settings": "Ayarlar"
         }
       },
       "openAllInNewTabs": {
@@ -1602,6 +1626,12 @@
         "refresh": "",
         "options": "",
         "actions": ""
+      },
+      "status": {
+        "success": "",
+        "error": "",
+        "loading": "",
+        "idle": ""
       }
     },
     "create": {
@@ -1629,11 +1659,11 @@
     "edit": {
       "title": "Öğeyi Düzenle",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Widget'ı düzenle",
+        "app": "Uygulamayı düzenle"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Bu uygulamada yapılan değişiklikler, tüm panolarda kullanıldığı her yerde uygulanacaktır."
       },
       "advancedOptions": {
         "label": "Gelişmiş seçenekler",
@@ -1746,7 +1776,7 @@
           "label": "Yeni sekmede aç"
         },
         "withBorder": {
-          "label": ""
+          "label": "Kenarlık göster"
         },
         "items": {
           "label": "Yer İmleri",
@@ -1875,6 +1905,16 @@
         "customDateFormat": {
           "label": "Özel tarih biçimi",
           "description": "Tarih biçimini değiştirmek için ISO 8601 standardını kullanın (bu diğer seçenekleri geçersiz kılacaktır)"
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1936,6 +1976,8 @@
         "clear": "Biçimlendirmeyi temizle",
         "heading": "Başlık {level}",
         "align": "Metin hizalama: {position}",
+        "directionLtr": "",
+        "directionRtl": "",
         "blockquote": "Blok alıntı",
         "horizontalLine": "Yatay çizgi",
         "bulletList": "Maddeli liste",
@@ -2225,7 +2267,8 @@
         "sunrise": "Gün Doğumu",
         "sunset": "Gün Batımı",
         "maxWindSpeed": "Maks. Rüzgar Hızı: {maxWindSpeed} km/s",
-        "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/s"
+        "maxWindGusts": "Maks. Rüzgar Hamlesi: {maxWindGusts} km/s",
+        "humidity": ""
       },
       "kind": {
         "clear": "Açık",
@@ -2283,6 +2326,11 @@
         },
         "fileSystem": {
           "label": "Dosya Sistemi Bilgilerini Göster"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         },
         "defaultTab": {
           "label": "Varsayılan sekme"
@@ -2426,34 +2474,34 @@
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Bir NUT sunucusu aracılığıyla UPS cihazlarınızın durumunu izleyin",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Pili göster"
         },
         "showLoad": {
-          "label": ""
+          "label": "Yükü göster"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Voltajı göster"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Çevrimiçi",
+        "onBattery": "Pilde",
+        "lowBattery": "Düşük pil",
+        "charging": "Şarj oluyor",
+        "unknown": "Bilinmeyen"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Çalışma Süresi",
+        "load": "Yük",
+        "input": "Giriş",
+        "output": "Çıkış"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "UPS verileri alınamadı"
       }
     },
     "tracearr": {
@@ -2512,101 +2560,101 @@
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami Analiz",
+      "description": "Umami analiz kurulumunuzdaki ziyaretçi istatistiklerini gösterir",
+      "visitors": "ziyaretçiler",
+      "active": "aktif",
+      "pageviews": "sayfa görüntüleme",
+      "visits": "ziyaretler",
+      "bounceRate": "hemen çıkma",
+      "avgDuration": "ortalama",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Web sitesi",
+          "description": "Umami kurulumunuz tarafından izlenen bir web sitesi seçin",
+          "placeholder": "Bir web sitesi seçin",
+          "loading": "Web siteleri yükleniyor...",
+          "noWebsites": "Web sitesi bulunamadı",
+          "configureIntegrationFirst": "Önce bir Umami entegrasyonu bağlayın"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Zaman aralığı",
+          "description": "Ziyaretçi verilerinin görüntüleneceği zaman aralığı",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "Bugün",
+            "24h": "Son 24 saat",
+            "7d": "Son 7 gün",
+            "30d": "Son 30 gün",
+            "month": "Bu ay",
+            "lastMonth": "Geçen ay"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Etkinlik",
+          "description": "Belirli bir etkinliğin toplam oluşum sayısını göster",
+          "placeholder": "Bir etkinlik seçin",
+          "loading": "Etkinlikler yükleniyor...",
+          "noEvents": "Etkinlik bulunamadı",
+          "none": "Etkinlik yok",
+          "configureWebsiteFirst": "Etkinlikleri yüklemek için önce bir web sitesi seçin"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Grafik türü",
+          "description": "Grafik için görüntüleme stili",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Çubuk grafik",
+            "sparkline": "Mini Grafik"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Grafik stili",
+          "description": "Etkinlik serilerinin grafikte nasıl gösterileceği",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Yan yana",
+            "overlay": "Bindirme (alt kümelenme)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Görünüm",
+          "description": "Widget gövdesinde ne gösterileceği",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Grafik",
+            "events": "Etkinlik grafiği",
+            "topPages": "En çok sayfa",
+            "topReferrers": "En çok yönlendiren"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Etkinlikler",
+          "description": "Grafik için bir veya daha fazla etkinlik seçin",
+          "placeholder": "Etkinlik seç...",
+          "loading": "Etkinlikler yükleniyor...",
+          "noEvents": "Etkinlik bulunamadı",
+          "configureWebsiteFirst": "Etkinlikleri yüklemek için önce bir web sitesi seçin"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Gösterilecek öğeler",
+          "description": "Gösterilecek en yüksek öğe sayısı (maks 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "etkinlik",
+        "label": "etkinlik"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Doğrudan"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Doğrudan"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Grafik için etkinlik seçin"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Umami entegrasyonu yapılandırılmadı",
+        "noWebsite": "Web sitesi yapılandırılmadı",
+        "noData": "Veri yok",
+        "internalServerError": "Umami verileri alınamadı"
       }
     },
     "common": {
@@ -2684,6 +2732,11 @@
         "user": "Kullanıcı",
         "name": "İsim",
         "id": "Kimlik",
+        "status": "",
+        "directPlay": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
           "title": "Meraklısı için istatistikler",
           "video": {
@@ -2749,6 +2802,193 @@
         "internalServerError": ""
       }
     },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "immich-serverStats": {
       "name": "Immich Server Stats",
       "description": "Information about your Immich instance",
@@ -2777,6 +3017,7 @@
     },
     "immich-albumCarousel": {
       "name": "Immich Album",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "Album ID",
@@ -2796,7 +3037,6 @@
         }
       },
       "description": "Slideshow of pictures in your Immich album",
-      "noAlbumSelected": "No album selected, edit widget and choose an album",
       "noPhotos": "No photos in this album"
     },
     "downloads": {
@@ -2839,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "Her entegrasyon için öğe sınırı",
           "description": "Bu, gösterilecek öğe sayısını tüm entegrasyonlar için değil, her entegrasyon özelinde sınırlar"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Öğelerdeki Sütunları Seç",
-        "noCommunications": "Entegrasyondan veri yüklenemiyor"
+        "noCommunications": "Entegrasyondan veri yüklenemiyor",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -2866,7 +3115,8 @@
           "detailsTitle": "İstemci içindeki mevcut endeks"
         },
         "id": {
-          "columnTitle": "İd"
+          "columnTitle": "İd",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Entegrasyon"
@@ -2900,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "Bitiş zamanı",
-          "detailsTitle": "Tamamlanmasından bu yana geçen süre"
+          "detailsTitle": "Tamamlanmasından bu yana geçen süre",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Tür",
@@ -2944,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": "Genel Oran"
+      "globalRatio": "Genel Oran",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Medya yayınları",
@@ -2981,6 +3248,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Bağlantıları yeni sekmede aç"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -3087,6 +3360,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
     },
     "rssFeed": {
       "name": "RSS Beslemeleri",
@@ -3331,7 +3633,11 @@
       "name": "Bildirimler",
       "description": "Entegrasyonların bildirim geçmişini görüntüle",
       "noItems": "Görüntülenecek bildirim yok.",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": ""
+        }
+      }
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",
@@ -3407,6 +3713,40 @@
         "upCount": "",
         "downCount": "",
         "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
       },
       "error": {
         "internalServerError": ""
@@ -3538,6 +3878,11 @@
         },
         "showBackgroundBar": {
           "label": "Show background usage bar"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3565,110 +3910,110 @@
       "executeFailed": ""
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Beszel Sistemleri (Tablo)",
+      "description": "Sıralanabilir sütunlar ve durum göstergeleri ile tüm Beszel tarafından izlenen sistemlerin tablo görünümü",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Durum filtresi"
         },
         "sortBy": {
-          "label": ""
+          "label": "Sıralama ölçütü"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Sıralama yönü"
         },
         "showCpu": {
-          "label": ""
+          "label": "CPU'yu göster"
         },
         "showMemory": {
-          "label": ""
+          "label": "Belleği göster"
         },
         "showDisk": {
-          "label": ""
+          "label": "Disk göster"
         },
         "showGpu": {
-          "label": ""
+          "label": "GPU'yu göster"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Yük ortalamasını göster"
         },
         "showNet": {
-          "label": ""
+          "label": "Ağı göster"
         },
         "showTemp": {
-          "label": ""
+          "label": "Sıcaklığı göster"
         },
         "showBattery": {
-          "label": ""
+          "label": "Pili göster"
         },
         "showServices": {
-          "label": ""
+          "label": "Hizmetleri göster"
         },
         "showUptime": {
-          "label": ""
+          "label": "Çalışma süresini göster"
         },
         "showAgent": {
-          "label": ""
+          "label": "Ajan sürümünü göster"
         }
       },
-      "noRecords": "",
+      "noRecords": "Sistem bulunamadı",
       "error": {
         "internalServerError": ""
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "Sistem",
+        "cpu": "İşlemci",
+        "memory": "Bellek",
+        "disk": "Disk",
+        "gpu": "GPU",
+        "loadAvg": "Yük Ort",
+        "net": "Ağ",
+        "temp": "Sıc",
+        "battery": "Pil",
+        "services": "Hizmetler",
+        "uptime": "Çalışma Süresi",
+        "agent": "Ajan"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Beszel Sistemleri (Izgara)",
+      "description": "Gerçek zamanlı metrikler ile tüm Beszel tarafından izlenen sistemlerin kart ızgara görünümü",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Durum filtresi"
         },
         "showCpu": {
-          "label": ""
+          "label": "CPU'yu göster"
         },
         "showMemory": {
-          "label": ""
+          "label": "Belleği göster"
         },
         "showDisk": {
-          "label": ""
+          "label": "Disk göster"
         },
         "showGpu": {
-          "label": ""
+          "label": "GPU'yu göster"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Yük ortalamasını göster"
         },
         "showNet": {
-          "label": ""
+          "label": "Ağı göster"
         },
         "showTemp": {
-          "label": ""
+          "label": "Sıcaklığı göster"
         },
         "showBattery": {
-          "label": ""
+          "label": "Pili göster"
         },
         "showServices": {
-          "label": ""
+          "label": "Hizmetleri göster"
         },
         "showUptime": {
-          "label": ""
+          "label": "Çalışma süresini göster"
         },
         "showAgent": {
-          "label": ""
+          "label": "Ajan sürümünü göster"
         }
       },
       "error": {
@@ -3781,6 +4126,11 @@
           "subtitle": "",
           "read": "",
           "write": ""
+        },
+        "storage": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
         },
         "network": {
           "title": "",
@@ -4205,7 +4555,7 @@
             "api": "API",
             "certificates": "Sertifikalar",
             "tasks": "Görevler",
-            "backup": ""
+            "backup": "Yedekleme"
           }
         },
         "settings": "Ayarlar",
@@ -4286,7 +4636,7 @@
           "private": "Bu panel özeldir"
         },
         "noResults": {
-          "title": ""
+          "title": "Henüz panel yok"
         },
         "modal": {
           "createBoard": {
@@ -4320,20 +4670,20 @@
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Kurulum Turları",
+                "description": "Yönetim alanına veya panoya bir sonraki ziyaretinizde bunları tekrar görmek için kurulum turlarını sıfırlayın.",
+                "reset": "Kurulum turlarını sıfırla",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Turlar sıfırlandı",
+                  "message": "Kurulum turları bir sonraki ziyaretinizde tekrar gösterilecek"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Tamamlandı",
+                  "notStarted": "Başlamadı"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Yönetim",
+                  "dashboard": "Panel"
                 }
               }
             }
@@ -4521,7 +4871,7 @@
             "defaultColorScheme": {
               "label": "Öntanımlı Renk Düzeni",
               "options": {
-                "auto": "",
+                "auto": "Otomatik",
                 "light": "Aydınlık",
                 "dark": "Koyu"
               }
@@ -4752,122 +5102,122 @@
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Tam Veritabanı Yedekleme",
+          "metaTitle": "Yedekleme ve Geri Yükleme",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Veritabanını Dışa Aktar",
+            "description": "Tüm ayarlar, kullanıcılar, panolar ve şifrelenmiş entegrasyon gizli anahtarları dahil olmak üzere SQLite veritabanınızın tam yedeklemesini indirin. Yedekleme, şifreleme anahtarı ve meta verilerle birlikte bir ZIP dosyası olarak paketlenir.",
+            "button": "Yedeği İndir",
+            "error": "Dışa aktarma başarısız oldu",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Hassas veri dışa aktarımı",
+              "warningTitle": "Bu dışa aktarma tüm veritabanınızı içerir.",
+              "warningBody": "Yedekleme, tüm kullanıcıları, entegrasyon gizli anahtarlarını (şifrelenmiş), API anahtarlarını, panel yapılandırmalarını ve uygulama verilerini içerir. Dışa aktarılan dosyayı güvenli bir şekilde saklayın ve paylaşmayın.",
+              "typePrompt": "Devam etmek için \"{phrase}\" yazın",
+              "submit": "Veritabanını Dışa Aktar",
+              "cancel": "İptal"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Veritabanını Geri Yükle",
+            "description": "Veritabanınızı geri yüklemek için daha önce dışa aktarılmış bir yedek ZIP dosyası yükleyin. Bu, tüm veritabanınızı değiştirir. Yedekleme farklı bir şifreleme anahtarıyla oluşturulmuşsa, gizli anahtarlar otomatik olarak yeniden şifrelenir.",
+            "warning": "Bir yedeklemeyi geri yüklemek, mevcut veritabanınızı tamamen değiştirir ve uygulamayı yeniden başlatır. Bu eylem geri alınamaz.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Yedekleme ZIP dosyanızı buraya bırakın veya göz atmak için tıklayın",
+              "description": "Yalnızca bir Homarr SQLite yedeklemesinden gelen .zip dosyaları kabul edilir"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Dosyayı değiştir",
+            "button": "Veritabanını Geri Yükle",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Geri Yükleme Tamamlandı",
+              "message": "Veritabanı başarıyla geri yüklendi. Uygulama yeniden başlatılıyor..."
             },
-            "error": ""
+            "error": "İçe aktarma başarısız oldu"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Yedekleme İçeriği",
+            "exported": "Dışa aktarıldı {date}",
+            "loading": "Yedekleme dosyası analiz ediliyor...",
+            "errorTitle": "Önizleme Hatası",
+            "entity": "Varlık",
+            "count": "Sayı",
+            "boards": "Paneller",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Paneller",
+              "user": "Kullanıcılar",
+              "app": "Uygulamalar",
+              "integration": "Entegrasyonlar",
+              "item": "Widget'lar",
+              "media": "Medya",
+              "search_engine": "Arama Motorları"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Yedekleme dosyası analiz edilemedi",
+            "invalidMissingMetadata": "Geçersiz yedekleme: metadata.json eksik",
+            "invalidMissingDb": "Geçersiz yedekleme: db.sqlite eksik"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Yedekleme ZIP dosyanızı buraya bırakın",
+              "description": "Homarr SQLite yedeklemesinden .zip dosyalarını kabul eder (maks 256 MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Yedekleme analiz ediliyor...",
+            "changeFile": "Dosyayı değiştir",
+            "continueToRestore": "Geri yüklemeye devam et",
+            "tryAgain": "Tekrar dene",
+            "analysisError": "Analiz Hatası",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Yedekleme İçeriği",
+              "exported": "Dışa aktarıldı {date}",
+              "entity": "Varlık",
+              "count": "Sayı",
+              "boards": "Paneller",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Paneller",
+                "user": "Kullanıcılar",
+                "app": "Uygulamalar",
+                "integration": "Entegrasyonlar",
+                "item": "Widget'lar",
+                "media": "Medya",
+                "search_engine": "Arama Motorları"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "{count} geçiş uygulandı",
+              "migrationsAppliedPlural": "{count} geçiş uygulandı",
+              "migrationsOlderVersion": "Bu yedekleme daha eski bir Homarr sürümündendi. Güncellemek için {count} şema geçişi uygulandı.",
+              "migrationsOlderVersionPlural": "Bu yedekleme daha eski bir Homarr sürümündendi. Güncellemek için {count} şema geçişi uygulandı.",
+              "migrationsUpToDate": "Veritabanı şeması güncel ({count} geçiş uygulandı)",
+              "upToDate": "Güncel",
+              "migrationsPending": "{count} bekleyen"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Geçişler uygulanıyor ({current}/{total})",
+              "migrationLabel": "Geçiş {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Yıkıcı eylem",
+              "warningTitle": "Bu, tüm veritabanınızı kalıcı olarak değiştirir.",
+              "warningBody": "Tüm mevcut panolar, kullanıcılar, uygulamalar, entegrasyonlar, ayarlar ve oturumlar kaybolacaktır. Bu eylem geri alınamaz. Uygulama, geri yüklemeden sonra yeniden başlatılacaktır.",
+              "typePrompt": "Devam etmek için \"{phrase}\" yazın",
+              "cancel": "İptal",
+              "submit": "Veritabanını Geri Yükle"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Veritabanı geri yükleniyor...",
+              "extracting": "Yedekleme arşivi çıkarılıyor",
+              "migrating": "Veritabanı geçişleri uygulanıyor",
+              "encrypting": "Entegrasyon gizli anahtarları yeniden şifreleniyor",
+              "swapping": "Veritabanı dosyası değiştiriliyor",
+              "restarting": "Sunucu yeniden başlatılıyor"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Geri Yükleme Tamamlandı",
+              "message": "Veritabanı başarıyla geri yüklendi. Sunucu yeniden başlatılıyor — lütfen birkaç saniye içinde sayfayı yenileyin."
             },
             "failed": {
-              "title": ""
+              "title": "Geri Yükleme Başarısız Oldu"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Geçersiz yedekleme: metadata.json eksik",
+            "invalidMissingDb": "Geçersiz yedekleme: db.sqlite eksik",
+            "analyzeError": "Yedekleme analiz edilemedi"
           }
         }
       },
@@ -4884,8 +5234,8 @@
             "subtitle": "Birçok kişi Homarr'ın {count} dile çevrilmesine katkı sağlıyor"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponsorlar",
+            "subtitle": "{count} projeyi finansal olarak destekliyor"
           },
           "libraries": {
             "title": "Kütüphaneler",
@@ -4914,6 +5264,9 @@
     "title": "Konteynerler",
     "table": {
       "updated": "{when} Güncellendi",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "{count} konteyner içinde ara",
       "selected": "{selectCount} / {totalCount} konteyner seçildi",
       "footer": "Toplam {count} konteyner",
@@ -4951,15 +5304,15 @@
         "label": "Bağlantı noktaları"
       },
       "host": {
-        "label": ""
+        "label": "Ana Bilgisayar"
       }
     },
     "action": {
       "title": "Eylemler",
       "logs": {
-        "label": "",
+        "label": "Günlükleri görüntüle",
         "page": {
-          "title": ""
+          "title": "{name} günlükleri"
         }
       },
       "start": {
@@ -5389,7 +5742,7 @@
         "docker": {
           "label": "Docker",
           "logs": {
-            "label": ""
+            "label": "Günlükler"
           }
         },
         "kubernetes": {
@@ -5500,7 +5853,7 @@
             "title": "Genel komutlar",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Görünüm modunu değiştir",
                 "light": "Aydınlık Temaya Geç",
                 "dark": "Koyu Temaya Geç"
               },
@@ -5541,100 +5894,108 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Tercihler",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Değiştirmek için bir tercih seçin",
+                "backHint": "Geri dönmek için Backspace tuşuna basın veya geri düğmesini kullanın",
+                "backAction": "Geri dön"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Tercih güncellenemiyor"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Tercihleri aç"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Etkin",
+                "disabled": "Pasif"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Hiçbiri",
+                "unavailable": "Şu anda seçili (kullanılamıyor)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "Hiçbiri",
+                "unavailable": "Şu anda seçili (kullanılamıyor)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Renk şeması",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Renk şemanızı seçin"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Dil",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Tercih ettiğiniz dili seçin"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Öntanımlı arama motoru",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Öntanımlı arama motorunuzu seçin"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Arama sonuçlarını yeni sekmede aç",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Arama sonuçlarını yeni sekmede aç"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "DuckDuckGo bang'lerini etkinleştir",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "DuckDuckGo bang'lerini etkinleştir"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Haftanın ilk günü",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Haftanın ilk gününü seçin"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Ana Panel",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Ana panelinizi seçin"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Mobil ana panel",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Mobil ana panelinizi seçin"
                   }
                 }
               },
               "pingIconsEnabled": {
+                "label": "Pingler için simge kullan",
+                "children": {
+                  "detail": {
+                    "title": "Pingler için simge kullan"
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {
@@ -5643,36 +6004,36 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Tam tercihler sayfasını aç"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Talep etmek için film veya dizi ara",
         "requestMovie": "Filmi Talep Et",
         "requestSeries": "Diziyi Talep Et",
         "openIn": "{kind} üzerinde göster",
         "group": {
-          "title": ""
+          "title": "Filmler ve diziler"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Film veya dizi ara",
+            "description": "Medya talep entegrasyonlarınızı aramak için yazmaya başlayın",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Medya aramasını etkinleştirmek için bir Overseerr, Jellyseerr veya Seerr entegrasyonu ekleyin.",
+              "scoped": "Bu widget'ın erişilebilir bir medya talep entegrasyonu yok."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Mevcut",
+          "partiallyAvailable": "Kısmen mevcut",
+          "processing": "İşleniyor",
+          "requested": "Talep edildi",
+          "pending": "Talep edildi"
         }
       },
       "external": {
@@ -5680,13 +6041,13 @@
         "group": {
           "searchEngine": {
             "title": "Arama Motorları",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "İpucu: Burada DuckDuckGo bang'lerini de kullanabilirsiniz, örn. !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "\"{query}\" ifadesini {label} ile ara",
+              "pressEnterToOpen": "Açmak için Enter'a basın",
+              "engineSelected": "{label} seçildi (!{bang})",
+              "typeQueryToContinue": "Devam etmek için arama sorgunuzu yazın",
+              "emptyBangHint": "Bir bang yazın, örn. !yt, ardından seçmek için Boşluk tuşuna basın"
             },
             "children": {
               "action": {
@@ -5950,10 +6311,10 @@
               "header": {
                 "season": "Sezon",
                 "episodes": "Bölüm",
-                "status": ""
+                "status": "Durum"
               },
               "status": {
-                "requested": ""
+                "requested": "Talep edildi"
               }
             },
             "button": {
@@ -6066,69 +6427,69 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Belgeleri oku",
+    "next": "İleri",
+    "prev": "Geri",
+    "done": "Tamam",
+    "skip": "Turu atla",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Homarr'a Hoş Geldiniz!",
+        "description": "Burası sizin kontrol merkeziniz. Buradan panoları, uygulamaları, entegrasyonları, kullanıcıları ve sunucu ayarlarını yönetirsiniz. Her bölümün turuna çıkalım."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Panelleriniz",
+        "description": "Tüm panolarınız burada. Her panonun kendi düzeni, arka planı ve erişim ayarları vardır. Her birini kimin oluşturduğunu ve herkese açık mı yoksa özel mi olduğunu görebilirsiniz."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Panel Oluştur",
+        "description": "Yeni bir panel oluşturmak veya önceki bir Homarr kurulumundan içe aktarmak için buraya tıklayın. Her panel, paylaşabileceğiniz kendi URL'sini alır."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Uygulamalarınız",
+        "description": "Bunlar, eklediğiniz tüm uygulamalardır — kendi barındırdığınız hizmetlere bağlantılar. Her uygulamanın bir simgesi, isteğe bağlı sağlık kontrolü ve panoda bir durum rozeti vardır."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Uygulama Ekle",
+        "description": "Buraya yeni bir hizmet kaydedin. Bir ad, URL ve simge verin — canlı durum izleme ile panolarınızda bir kutucuk olarak görünecektir."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Entegrasyonlarınız",
+        "description": "Bunlar Homarr'a bağlı hizmetlerdir — Sonarr, Radarr, Plex, Jellyfin ve 50'den fazlası. Tüm kimlik bilgileri beklemede şifrelenir."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Entegrasyon Ekle",
+        "description": "Buraya yeni bir hizmet bağlayın. Türü seçin, URL ve API anahtarını girin — Homarr kaydetmeden önce bağlantıyı doğrular."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Kullanıcılarınız",
+        "description": "Erişimi olan herkesi görün. Kullanıcıları gruplara ayırın ve her panoyu kimlerin görüntüleyebileceğini veya düzenleyebileceğini kontrol edin."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Kullanıcı Oluştur",
+        "description": "Buraya yeni bir kullanıcı hesabı ekleyin. Kolay katılım için davet bağlantılarını da kullanabilirsiniz. Tur bu kadar — hepiniz hazırsınız!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Bu sizin paneliniz",
+        "description": "Uygulamaları ve widget'ları düzenlediğiniz sürükle-bırak bir panel. Uygulamalar, panolar ve eylemler arasında arama yapmak için istediğiniz zaman Ctrl+K tuşlarına basın."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Düzenleme Modu",
+        "description": "Düzenleme moduna girmek için buraya tıklayın. Ardından widget'lar, uygulamalar ve bölümler ekleyebilirsiniz — yeniden konumlandırmak için sürükleyin, köşe tutacağı ile yeniden boyutlandırın. Değişikliklerinizi kaydetmek için tekrar tıklayın."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Panel Ayarları",
+        "description": "Bu panelin adını, sütunlarını, arka planını, renklerini ve kimlerin erişebileceğini değiştirin. Her panel herkese açık veya özel olabilir."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Panoları Değiştir",
+        "description": "Panolar arasında geçiş yapın. Farklı amaçlar için ayrı panolar oluşturun — medya, ağ, kullanıcı başına veya istediğiniz herhangi bir şey."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Profiliniz",
+        "description": "Renk şemanızı, dilinizi, ana panelinizi ve tercihlerinizi değiştirin. Buradan yönetim alanına da geçebilirsiniz."
       }
     }
   }

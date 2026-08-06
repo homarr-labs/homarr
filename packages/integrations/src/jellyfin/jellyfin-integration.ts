@@ -17,6 +17,10 @@ import type { IMediaServerIntegration } from "../interfaces/media-server/media-s
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import type { IMediaReleasesIntegration, MediaRelease, MediaType } from "../types";
 
+function ticksToMs(ticks: number | null | undefined): number | null {
+  return ticks ? Math.round(ticks / 10_000) : null;
+}
+
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class JellyfinIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
   private readonly jellyfin: Jellyfin = new Jellyfin({
@@ -50,6 +54,12 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
         let currentlyPlaying: StreamSession["currentlyPlaying"] | null = null;
 
         if (sessionInfo.NowPlayingItem) {
+          const positionMs = ticksToMs(sessionInfo.PlayState?.PositionTicks);
+          const durationMs = ticksToMs(sessionInfo.NowPlayingItem.RunTimeTicks);
+          const bitrateBps =
+            sessionInfo.TranscodingInfo?.Bitrate ?? sessionInfo.NowPlayingItem.MediaSources?.[0]?.Bitrate ?? null;
+          const bitrateKbps = bitrateBps !== null ? Math.round(bitrateBps / 1000) : null;
+
           currentlyPlaying = {
             type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
             name: sessionInfo.NowPlayingItem.SeriesName ?? sessionInfo.NowPlayingItem.Name ?? "",
@@ -57,6 +67,12 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
             episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
+            playback: {
+              state: sessionInfo.PlayState?.IsPaused ? "paused" : "playing",
+              positionMs,
+              durationMs,
+            },
+            location: null,
             metadata: {
               video: {
                 resolution:
@@ -85,7 +101,11 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
                   videoCodec: sessionInfo.TranscodingInfo?.VideoCodec ?? null,
                 },
                 container: sessionInfo.TranscodingInfo?.Container ?? null,
+                isVideoDirect: sessionInfo.TranscodingInfo?.IsVideoDirect ?? true,
+                isAudioDirect: sessionInfo.TranscodingInfo?.IsAudioDirect ?? true,
+                containerChanged: sessionInfo.PlayState?.PlayMethod === "DirectStream",
               },
+              bitrateKbps,
             },
           };
         }

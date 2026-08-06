@@ -19,7 +19,7 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { humanFileSize, useTimeAgo } from "@homarr/common";
+import { formatBytes, useTimeAgo } from "@homarr/common";
 import type { ContainerState } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
@@ -143,7 +143,7 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<DockerContainer>[]
 
       return (
         <Text size="sm" c={memoryUsageColor(bytesUsage, row.original.state)}>
-          {humanFileSize(bytesUsage)}
+          {formatBytes(bytesUsage)}
         </Text>
       );
     },
@@ -193,6 +193,10 @@ export function DockerTable({ initialData }: DockerTableProps) {
     positionToolbarAlertBanner: "top",
     enableTableFooter: false,
     enableBottomToolbar: false,
+    // MRT's built-in full-screen mode does not stretch the table to fill the
+    // viewport, so with few containers it renders as a thin strip (#6230). Disable
+    // it, matching the other management tables (users, invites).
+    enableFullScreenToggle: false,
     positionGlobalFilter: "right",
     mantineSearchTextInputProps: {
       placeholder: tDocker("table.search", { count: String(containers.length) }),

@@ -134,7 +134,33 @@ const getGithubApi = (baseUrl: string, userAgent: string, token?: string) =>
     baseUrl,
     auth: token,
     request: { fetch: fetchWithTrustedCertificatesAsync },
-    throttle: { enabled: false },
+    throttle: {
+      enabled: true,
+      onRateLimit: (
+        retryAfter: number,
+        options: { url?: string; method?: string },
+        _octokit: unknown,
+        retryCount: number,
+      ) => {
+        logger.warn(`GitHub rate limit exceeded, retrying after ${retryAfter}s (attempt ${retryCount + 1})`, {
+          url: options.url,
+          method: options.method,
+        });
+        return retryCount < 1;
+      },
+      onSecondaryRateLimit: (
+        retryAfter: number,
+        options: { url?: string; method?: string },
+        _octokit: unknown,
+        retryCount: number,
+      ) => {
+        logger.warn(`GitHub secondary rate limit exceeded, retrying after ${retryAfter}s (attempt ${retryCount + 1})`, {
+          url: options.url,
+          method: options.method,
+        });
+        return retryCount < 1;
+      },
+    },
     userAgent,
   });
 
@@ -719,6 +745,19 @@ const linuxServerIOReleasesSchema = z.object({
   }),
 });
 
+// Parse a github.com project URL (as returned by the LSIO registry) into an
+// "owner/repo" identifier, or null if it is not a github.com repository URL.
+const parseGithubRepo = (url: string): string | null => {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname !== "github.com") return null;
+    const [owner, repo] = parsed.pathname.replace(/^\/+/, "").split("/");
+    return owner && repo ? `${owner}/${repo}` : null;
+  } catch {
+    return null;
+  }
+};
+
 const getLinuxServerIOReleaseAsync = async (
   baseUrl: string,
   identifier: string,
@@ -756,27 +795,50 @@ const getLinuxServerIOReleaseAsync = async (
     };
   }
 
-  if (regex && !regex.test(release.version)) {
+  if (!regex || regex.test(release.version)) {
     return {
-      success: false,
-      error: {
-        code: "noMatchingVersion",
-        message: `Regex /${versionRegex}/ does not match LSIO version "${release.version}"`,
+      success: true,
+      data: {
+        latestRelease: release.version,
+        latestReleaseAt: release.version_timestamp,
+        releaseDescription: release.changelog?.shift()?.desc,
+        projectUrl: release.github_url,
+        projectDescription: release.description,
+        isArchived: release.deprecated,
+        createdAt: release.initial_date,
+        starsCount: release.stars,
       },
     };
   }
 
+  // LSIO's /api/v1/images only exposes the single latest version, so a filter
+  // that does not match it cannot surface an older release (#4351). Delegate to
+  // the image's GitHub repository to fetch the real release history while
+  // keeping LSIO's own image metadata.
+  const githubRepo = parseGithubRepo(release.github_url);
+  if (githubRepo) {
+    const githubResult = await getGithubReleaseAsync(getReleaseProviderDefaultUrl("github"), githubRepo, versionRegex);
+    if (githubResult.success) {
+      return {
+        success: true,
+        data: {
+          ...githubResult.data,
+          projectUrl: release.github_url,
+          projectDescription: release.description,
+          isArchived: release.deprecated,
+          starsCount: release.stars,
+          createdAt: release.initial_date ?? githubResult.data.createdAt,
+        },
+      };
+    }
+    return githubResult;
+  }
+
   return {
-    success: true,
-    data: {
-      latestRelease: release.version,
-      latestReleaseAt: release.version_timestamp,
-      releaseDescription: release.changelog?.shift()?.desc,
-      projectUrl: release.github_url,
-      projectDescription: release.description,
-      isArchived: release.deprecated,
-      createdAt: release.initial_date,
-      starsCount: release.stars,
+    success: false,
+    error: {
+      code: "noMatchingVersion",
+      message: `Regex /${versionRegex}/ does not match LSIO version "${release.version}"`,
     },
   };
 };

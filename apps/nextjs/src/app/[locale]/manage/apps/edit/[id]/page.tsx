@@ -16,7 +16,10 @@ export default async function AppEditPage(props: AppEditPageProps) {
   const params = await props.params;
   const session = await auth();
 
-  if (!session?.user.permissions.includes("app-modify-all")) {
+  if (
+    !session?.user.permissions.includes("board-modify-all") ||
+    !session?.user.permissions.includes("app-modify-all")
+  ) {
     notFound();
   }
   const app = await api.app.byId({ id: params.id });

@@ -1,0 +1,125 @@
+.root {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: clamp(6px, 3cqi, 12px);
+  gap: clamp(6px, 3cqi, 12px);
+}
+
+.titleBlock {
+  min-width: 0;
+}
+
+.title {
+  font-size: clamp(12px, 4cqi, 15px);
+  font-weight: 700;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subtitle {
+  font-size: clamp(9px, 3cqi, 12px);
+  color: var(--mantine-color-dimmed);
+  line-height: 1.2;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(6px, 3cqi, 10px);
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: clamp(5px, 2cqi, 8px);
+  padding: clamp(6px, 3cqi, 10px);
+  border-radius: var(--mantine-radius-sm);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.metricIcon {
+  flex-shrink: 0;
+  color: var(--mantine-color-teal-6);
+}
+
+.metricText {
+  min-width: 0;
+}
+
+.metricValue {
+  font-size: clamp(16px, 7cqi, 24px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.metricLabel {
+  font-size: clamp(8px, 2.8cqi, 11px);
+  color: var(--mantine-color-dimmed);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.protocolGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: clamp(6px, 3cqi, 10px);
+}
+
+.protocolCard {
+  min-width: 0;
+  padding: clamp(6px, 3cqi, 10px);
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+  border-radius: var(--mantine-radius-sm);
+}
+
+.protocolTitle {
+  font-size: clamp(10px, 3.5cqi, 13px);
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.protocolRows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.protocolRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  gap: 6px;
+}
+
+.protocolLabel {
+  min-width: 0;
+  color: var(--mantine-color-dimmed);
+  font-size: clamp(9px, 3cqi, 12px);
+}
+
+.protocolLabel p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.counts {
+  flex-shrink: 0;
+  font-size: clamp(10px, 3.5cqi, 13px);
+}
+
+.entryPoints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}

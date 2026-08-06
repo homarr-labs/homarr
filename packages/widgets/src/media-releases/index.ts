@@ -5,6 +5,8 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("mediaReleases", {
   icon: IconTicket,
+  queryKey: [["widget", "mediaRelease"]],
+  refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       layout: factory.select({

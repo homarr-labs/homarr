@@ -23,6 +23,8 @@ type OptionMapping = {
 const optionMapping: OptionMapping = {
   "mediaRequests-requestList": {
     linksTargetNewTab: (oldOptions) => oldOptions.openInNewTab,
+    statusFilter: () => undefined,
+    recentDays: () => undefined,
   },
   "mediaRequests-requestStats": {},
   bookmarks: {
@@ -63,6 +65,9 @@ const optionMapping: OptionMapping = {
     useCustomTimezone: () => true,
     customTimeFormat: () => undefined,
     customDateFormat: () => undefined,
+    showWeather: () => undefined,
+    weatherLocation: () => undefined,
+    isWeatherFormatFahrenheit: () => undefined,
   },
   downloads: {
     activeTorrentThreshold: (oldOptions) =>
@@ -72,15 +77,16 @@ const optionMapping: OptionMapping = {
     categoryFilter: (oldOptions) => ("labelFilter" in oldOptions ? oldOptions.labelFilter : undefined),
     filterIsWhitelist: (oldOptions) =>
       "labelFilterIsWhitelist" in oldOptions ? oldOptions.labelFilterIsWhitelist : undefined,
-    enableRowSorting: (oldOptions) => ("rowSorting" in oldOptions ? oldOptions.rowSorting : undefined),
     showCompletedTorrent: (oldOptions) =>
       "displayCompletedTorrents" in oldOptions ? oldOptions.displayCompletedTorrents : undefined,
-    columns: () => ["integration", "name", "progress", "time", "actions"],
-    defaultSort: () => "type",
+    columns: () => ["integration", "name", "progress", "time", "state"],
+    defaultSort: () => "progress",
     descendingDefaultSort: () => false,
     showCompletedUsenet: () => true,
     showCompletedHttp: () => true,
     limitPerIntegration: () => undefined,
+    columnOrder: () => undefined,
+    columnWidths: () => undefined,
   },
   weather: {
     forecastDayCount: (oldOptions) => oldOptions.forecastDays,
@@ -142,6 +148,8 @@ const optionMapping: OptionMapping = {
   },
   mediaServer: {
     showOnlyPlaying: () => undefined,
+    showBitrate: () => undefined,
+    showLocation: () => undefined,
   },
   indexerManager: {
     openIndexerSiteInNewTab: (oldOptions) => oldOptions.openIndexerSiteInNewTab,
@@ -165,6 +173,7 @@ const optionMapping: OptionMapping = {
       "sectionIndicatorColor" in oldOptions ? oldOptions.sectionIndicatorColor : undefined,
     showUptime: () => undefined,
     gpu: () => undefined,
+    visibleStorageVolumes: () => undefined,
     visibleClusterSections: (oldOptions) => {
       if (!("showNode" in oldOptions)) return undefined;
 

@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Pingにアイコンを使う"
       },
+      "enableRightClickOnWidgets": {
+        "label": "",
+        "description": ""
+      },
       "defaultSearchEngine": {
         "label": "既定の検索エンジン"
       },
@@ -1285,6 +1289,14 @@
           "label": "API キー (シークレット)",
           "newLabel": "新しい API キー (シークレット)"
         },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
         "githubAppId": {
           "label": "App Id",
           "newLabel": "新規App Id"
@@ -1328,7 +1340,19 @@
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
+      "name": "",
+      "description": ""
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
       "name": "",
       "description": ""
     }
@@ -1602,6 +1626,12 @@
         "refresh": "",
         "options": "",
         "actions": ""
+      },
+      "status": {
+        "success": "",
+        "error": "",
+        "loading": "",
+        "idle": ""
       }
     },
     "create": {
@@ -1875,6 +1905,16 @@
         "customDateFormat": {
           "label": "日付の書式をカスタマイズ",
           "description": "日付の書式に ISO-8601を使用します（これは他のオプションを上書きします）"
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1936,6 +1976,8 @@
         "clear": "書式をクリア",
         "heading": "見出し {level}",
         "align": "テキストの整列: {position}",
+        "directionLtr": "",
+        "directionRtl": "",
         "blockquote": "引用",
         "horizontalLine": "水平線",
         "bulletList": "箇条書きリスト",
@@ -2225,7 +2267,8 @@
         "sunrise": "日出",
         "sunset": "日没",
         "maxWindSpeed": "最大風速： {maxWindSpeed} {unit}",
-        "maxWindGusts": "最大瞬間風速： {maxWindGusts} {unit}"
+        "maxWindGusts": "最大瞬間風速： {maxWindGusts} {unit}",
+        "humidity": ""
       },
       "kind": {
         "clear": "晴れ",
@@ -2283,6 +2326,11 @@
         },
         "fileSystem": {
           "label": "ファイルシステム情報を表示"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         },
         "defaultTab": {
           "label": "デフォルトのタブ"
@@ -2512,30 +2560,30 @@
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami 統計情報",
+      "description": "あなたの Umami 統計情報インスタンスから訪問者統計を表示します",
+      "visitors": "訪問者数",
+      "active": "活動中",
+      "pageviews": "ページビュー",
+      "visits": "訪問数",
+      "bounceRate": "直帰率",
+      "avgDuration": "平均",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "ウェブサイト",
+          "description": "あなたの Umami インスタンスで追跡されているウェブサイトを選択してください",
+          "placeholder": "ウェブサイトを選択",
+          "loading": "ウェブサイトを読み込み中…",
+          "noWebsites": "ウェブサイトが見つかりません",
+          "configureIntegrationFirst": "最初に Umami 統合を接続してください"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "期間",
+          "description": "訪問者データを表示する期間",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
+            "today": "今日",
+            "24h": "過去24時間",
+            "7d": "過去7日間",
             "30d": "",
             "month": "",
             "lastMonth": ""
@@ -2684,6 +2732,11 @@
         "user": "ユーザー",
         "name": "名称",
         "id": "Id",
+        "status": "",
+        "directPlay": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
           "title": "詳細統計情報",
           "video": {
@@ -2749,6 +2802,193 @@
         "internalServerError": ""
       }
     },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "immich-serverStats": {
       "name": "Immich サーバーの統計",
       "description": "Immich インスタンスに関する情報",
@@ -2777,6 +3017,7 @@
     },
     "immich-albumCarousel": {
       "name": "Immich アルバム",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "アルバム ID",
@@ -2796,7 +3037,6 @@
         }
       },
       "description": "Immichアルバムの写真のスライド",
-      "noAlbumSelected": "アルバムが選択されていない、ウィジェットを編集してアルバムを選択してください",
       "noPhotos": "このアルバムには写真がありません"
     },
     "downloads": {
@@ -2839,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "連携機能ごとに項目を制限",
           "description": "これは、連携機能ごとに表示されるアイテム数を制限します。グローバルではありません"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "項目内の列を選択",
-        "noCommunications": "連携機能からデータを読み込めません"
+        "noCommunications": "連携機能からデータを読み込めません",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -2866,7 +3115,8 @@
           "detailsTitle": "クライアント内の現在のインデックス"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "連携機能"
@@ -2900,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "終了時刻",
-          "detailsTitle": "完了までの時間"
+          "detailsTitle": "完了までの時間",
+          "eta": ""
         },
         "type": {
           "columnTitle": "種類",
@@ -2944,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": "グローバル比"
+      "globalRatio": "グローバル比",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "メディアリリース",
@@ -2981,6 +3248,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "リンクを新しいタブで開く"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -3087,6 +3360,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
     },
     "rssFeed": {
       "name": "RSS フィード",
@@ -3331,7 +3633,11 @@
       "name": "通知",
       "description": "連携機能からの通知履歴を表示する",
       "noItems": "表示する通知はありません。",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": ""
+        }
+      }
     },
     "speedtestTracker": {
       "name": "スピードテストトラッカー",
@@ -3407,6 +3713,40 @@
         "upCount": "",
         "downCount": "",
         "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
       },
       "error": {
         "internalServerError": ""
@@ -3538,6 +3878,11 @@
         },
         "showBackgroundBar": {
           "label": "バックグラウンドの使用状況バーを表示"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3781,6 +4126,11 @@
           "subtitle": "",
           "read": "",
           "write": ""
+        },
+        "storage": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
         },
         "network": {
           "title": "",
@@ -4884,8 +5234,8 @@
             "subtitle": "{count} の多くの言語で翻訳を行っている"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "スポンサー",
+            "subtitle": "{count}人がプロジェクトを財政的に支援しています"
           },
           "libraries": {
             "title": "ライブラリ",
@@ -4914,6 +5264,9 @@
     "title": "コンテナ",
     "table": {
       "updated": "{when} に更新しました",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "{count} 個のコンテナを検索",
       "selected": "{totalCount} 個のうち、{selectCount} 個のコンテナが選択されています",
       "footer": "合計 {count} 個のコンテナ",
@@ -5635,6 +5988,14 @@
                 }
               },
               "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {

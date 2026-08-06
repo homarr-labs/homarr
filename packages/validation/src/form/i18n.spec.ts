@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import type { TranslationFunction } from "@homarr/translation";
 
 import { createCustomErrorParams, zodErrorMap } from "./i18n";
+import { utf8EmailSchema } from "../email";
 
 const expectError = (error: z.core.$ZodIssue, key: string) => {
   expect(error.message).toContain(key);
@@ -110,5 +111,20 @@ describe("i18n", () => {
     if (result.success) return;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "boardAlreadyExists");
+  });
+
+  test("should validate UTF8SMTP email with umlauts", () => {
+    const result = utf8EmailSchema.safeParse("jörg@example.com");
+    expect(result.success).toBe(true);
+  });
+
+  test("should validate UTF8SMTP email with unicode domain", () => {
+    const result = utf8EmailSchema.safeParse("user@münchen.de");
+    expect(result.success).toBe(true);
+  });
+
+  test("should validate standard ASCII emails", () => {
+    const result = utf8EmailSchema.safeParse("user@example.com");
+    expect(result.success).toBe(true);
   });
 });

@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Начать с нуля",
           "importOldmarr": "Импортировать из Homarr версии до 1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Восстановить из резервной копии SQLite",
+          "restoreSqliteDescription": "Загрузите полную резервную копию базы данных SQLite из предыдущего экземпляра Homarr. Это восстановит все панели, пользователей, приложения, интеграции и настройки.",
+          "backToOptions": "← Назад к вариантам настройки"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": "Настройте параметры сервера."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Интеграции",
+        "subtitle": "Выберите используемые сервисы.",
+        "description": "Выберите интеграции, которые хотите подключить. Мы автоматически настроим панель с соответствующими виджетами.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Продолжить",
+          "skip": "Пропустить"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{current} из {total}",
+          "skip": "Пропустить эту интеграцию",
+          "finishing": "Настройка панели...",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Ошибка настройки",
+            "message": "Что-то пошло не так при настройке панели. Пожалуйста, попробуйте снова."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "Помощники URL",
+            "description": "Эти помощники пытаются угадать URL ваших сервисов. Если не сработает, просто введите адрес вручную."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "Базовый URL",
+          "placeholder": "homelab.local или 192.168.1.1",
+          "hint": "Введите базовый домен или IP для автозаполнения URL интеграций",
+          "warning": "Установка базового URL сейчас автоматически заполнит все URL интеграций, сэкономив время при настройке",
+          "preview": "например, {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Поддомен",
+            "hostPort": "Хост:Порт"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker обнаружил {count} сервисов",
+          "detectedBreakdown": "{integrations} интеграций · {apps} приложений",
+          "summary": "Homarr обнаружил {apps} приложений, {integrations} из которых имеют встроенные интеграции",
+          "appBadge": "Приложение",
+          "appSectionLabel": "Приложения для добавления на панель (выбрано {count})",
+          "scanning": "Сканирование Docker...",
+          "scanningDescription": "Поиск запущенных контейнеров в системе"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Пароль",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Предложения пароля",
         "suggestion": {
           "length": "Содержит не менее 8 символов",
           "lowercase": "Содержит строчную букву",
@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Использовать индикаторы доступности"
       },
+      "enableRightClickOnWidgets": {
+        "label": "",
+        "description": ""
+      },
       "defaultSearchEngine": {
         "label": "Поисковая система по умолчанию"
       },
@@ -205,7 +209,7 @@
         "label": "Открыть результаты поиска в новой вкладке"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Включить DuckDuckGo bangs"
       }
     },
     "error": {
@@ -298,10 +302,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo bangs успешно переключены"
           },
           "error": {
-            "message": ""
+            "message": "Не удалось переключить DuckDuckGo bangs"
           }
         }
       },
@@ -983,47 +987,47 @@
         "placeholder": "Свой URL приложения"
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Получить API-ключ"
       }
     },
     "action": {
       "create": "Новая интеграция"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} виджетов",
+      "noWidgets": "Нет виджетов",
+      "detected": "Обнаружено через Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
+      "dnsHole": "DNS",
+      "mediaService": "Медиа",
+      "calendar": "Календарь",
+      "mediaSearch": "Поиск",
+      "mediaRelease": "Релизы",
+      "mediaRequest": "Запросы",
+      "downloadClient": "Загрузки",
+      "usenet": "Usenet",
+      "torrent": "Торрент",
+      "miscellaneous": "Разное",
+      "smartHomeServer": "Умный дом",
+      "indexerManager": "Индексатор",
+      "healthMonitoring": "Здоровье",
+      "search": "Поиск",
+      "mediaTranscoding": "Транскодирование",
+      "networkController": "Сеть",
+      "releasesProvider": "Релизы",
+      "notifications": "Уведомления",
+      "firewall": "Брандмауэр",
+      "timetable": "Расписание",
+      "photoService": "Фото",
+      "documents": "Документы",
+      "notes": "Заметки",
+      "mediaMonitoring": "Мониторинг",
+      "speedtest": "Тест скорости",
+      "analytics": "Аналитика",
       "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "mediaLibrary": "Медиа-библиотека",
+      "uptimeMonitoring": "Мониторинг доступности"
     },
     "testConnection": {
       "action": {
@@ -1285,6 +1289,14 @@
           "label": "API-ключ (Secret)",
           "newLabel": "Новый API-ключ (Secret)"
         },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
         "githubAppId": {
           "label": "App Id",
           "newLabel": "Новый App Id"
@@ -1298,8 +1310,8 @@
           "newLabel": "Новый приватный ключ"
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Slug страницы статуса",
+          "newLabel": "Новый slug страницы статуса"
         }
       }
     },
@@ -1309,15 +1321,15 @@
       "full": "Полное управление интеграциями"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Сервер аудиокниг и подкастов с собственным хостингом"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Сервер потоковой музыки с собственным хостингом и совместимостью с Subsonic API"
     },
     "uptimeKuma": {
-      "name": "",
+      "name": "Uptime Kuma",
       "description": "",
       "secret": {
         "slug": {
@@ -1328,7 +1340,19 @@
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
+      "name": "",
+      "description": ""
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
       "name": "",
       "description": ""
     }
@@ -1374,7 +1398,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Медиа не загружено"
     }
   },
   "common": {
@@ -1385,7 +1409,7 @@
       "add": "Добавить",
       "apply": "Применить",
       "backToOverview": "Вернуться к обзору",
-      "skip": "",
+      "skip": "Пропустить",
       "change": "Изменить",
       "create": "Создать",
       "createAnother": "Создать и начать заново",
@@ -1407,8 +1431,8 @@
       "checkLogs": "Проверить логи для подробностей",
       "tryAgain": "Попробовать снова",
       "loading": "Загрузка",
-      "show": "",
-      "hide": ""
+      "show": "Показать",
+      "hide": "Скрыть"
     },
     "here": "здесь",
     "iconPicker": {
@@ -1420,7 +1444,7 @@
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Авто",
         "light": "Светлая",
         "dark": "Тёмная"
       }
@@ -1578,7 +1602,7 @@
         "label": {
           "create": "Новая категория",
           "changePosition": "Изменить позицию",
-          "settings": ""
+          "settings": "Настройки"
         }
       },
       "openAllInNewTabs": {
@@ -1602,6 +1626,12 @@
         "refresh": "",
         "options": "",
         "actions": ""
+      },
+      "status": {
+        "success": "",
+        "error": "",
+        "loading": "",
+        "idle": ""
       }
     },
     "create": {
@@ -1629,11 +1659,11 @@
     "edit": {
       "title": "Редактировать элемент",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Редактировать виджет",
+        "app": "Редактировать приложение"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Изменения этого приложения будут применены везде, где оно используется на всех панелях."
       },
       "advancedOptions": {
         "label": "Расширенные настройки",
@@ -1746,7 +1776,7 @@
           "label": "Открывать в новой вкладке"
         },
         "withBorder": {
-          "label": ""
+          "label": "Показывать рамку"
         },
         "items": {
           "label": "Закладки",
@@ -1875,6 +1905,16 @@
         "customDateFormat": {
           "label": "Пользовательский формат даты",
           "description": "Используйте формат ISO 8601 для отображения даты (это переопределит другие настройки)"
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1936,6 +1976,8 @@
         "clear": "Очистить форматирование",
         "heading": "Заголовок {level}",
         "align": "Выравнивание текста: {position}",
+        "directionLtr": "",
+        "directionRtl": "",
         "blockquote": "Цитата",
         "horizontalLine": "Горизонтальная линия",
         "bulletList": "Маркированный список",
@@ -1982,32 +2024,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Заметка Anchor",
+      "description": "Отображает выбранную заметку из Anchor",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Заметка"
         },
         "showTitle": {
-          "label": ""
+          "label": "Показывать заголовок"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Показывать последнее обновление"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Выберите заметку для отображения",
+      "emptyContent": "Эта заметка не содержит текста",
+      "notFound": "Заметка не найдена",
+      "noNotes": "Заметки не найдены",
+      "integrationRequired": "Сначала выберите интеграцию Anchor",
+      "updatedAt": "Обновлено {date}",
+      "untitled": "Без названия",
+      "edit": "Редактировать",
+      "save": "Сохранить",
+      "cancel": "Отмена",
+      "readOnlyViewer": "У вас есть доступ только для просмотра этой заметки. Редактирование отключено.",
+      "saveForbidden": "У вас нет прав на редактирование этой заметки.",
+      "saveFailed": "Не удалось сохранить эту заметку. Пожалуйста, повторите попытку."
     },
     "iframe": {
       "name": "iFrame",
@@ -2225,7 +2267,8 @@
         "sunrise": "Восход",
         "sunset": "Закат",
         "maxWindSpeed": "Макс. скорость ветра: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Макс. порывы ветра: {maxWindGusts} {unit}"
+        "maxWindGusts": "Макс. порывы ветра: {maxWindGusts} {unit}",
+        "humidity": ""
       },
       "kind": {
         "clear": "Ясно",
@@ -2283,6 +2326,11 @@
         },
         "fileSystem": {
           "label": "Показать информацию о файловой системе"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         },
         "defaultTab": {
           "label": "Вкладка по умолчанию"
@@ -2426,34 +2474,34 @@
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "ИБП",
+      "description": "Мониторинг состояния ИБП через сервер NUT",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Показать батарею"
         },
         "showLoad": {
-          "label": ""
+          "label": "Показать нагрузку"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Показать напряжение"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "В сети",
+        "onBattery": "От батареи",
+        "lowBattery": "Низкий заряд батареи",
+        "charging": "Зарядка",
+        "unknown": "Неизвестно"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Время работы",
+        "load": "Нагрузка",
+        "input": "Вход",
+        "output": "Выход"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не удалось получить данные ИБП"
       }
     },
     "tracearr": {
@@ -2512,101 +2560,101 @@
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami Аналитика",
+      "description": "Отображает статистику посетителей из вашего экземпляра Umami Analytics",
+      "visitors": "посетители",
+      "active": "активно",
+      "pageviews": "просмотры страниц",
+      "visits": "посещения",
+      "bounceRate": "отказы",
+      "avgDuration": "среднее",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Веб-сайт",
+          "description": "Выберите веб-сайт, отслеживаемый вашим экземпляром Umami",
+          "placeholder": "Выберите веб-сайт",
+          "loading": "Загрузка веб-сайтов...",
+          "noWebsites": "Веб-сайты не найдены",
+          "configureIntegrationFirst": "Сначала подключите интеграцию Umami"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Временной период",
+          "description": "Временной период для отображения данных о посетителях",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "Сегодня",
+            "24h": "Последние 24 часа",
+            "7d": "Последние 7 дней",
+            "30d": "Последние 30 дней",
+            "month": "Этот месяц",
+            "lastMonth": "Прошлый месяц"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Событие",
+          "description": "Показать общее количество вхождений определенного события",
+          "placeholder": "Выберите событие",
+          "loading": "Загрузка событий...",
+          "noEvents": "События не найдены",
+          "none": "Нет событий",
+          "configureWebsiteFirst": "Сначала выберите веб-сайт для загрузки событий"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Тип диаграммы",
+          "description": "Стиль отображения диаграммы",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Столбчатая диаграмма",
+            "sparkline": "Спарклайн"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Стиль диаграммы",
+          "description": "Как отображать серии событий на диаграмме",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Рядом",
+            "overlay": "Наложение (подмножество)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Вид",
+          "description": "Что отображать в теле виджета",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Диаграмма",
+            "events": "Диаграмма событий",
+            "topPages": "Топ страниц",
+            "topReferrers": "Топ рефереров"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "События",
+          "description": "Выберите одно или несколько событий для диаграммы",
+          "placeholder": "Выберите события...",
+          "loading": "Загрузка событий...",
+          "noEvents": "События не найдены",
+          "configureWebsiteFirst": "Сначала выберите веб-сайт для загрузки событий"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Элементов для отображения",
+          "description": "Количество отображаемых верхних элементов (макс. 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "событий",
+        "label": "событий"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Прямой"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Прямой"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Выберите события для диаграммы"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Интеграция с Umami не настроена",
+        "noWebsite": "Веб-сайт не настроен",
+        "noData": "Нет данных",
+        "internalServerError": "Не удалось получить данные Umami"
       }
     },
     "common": {
@@ -2684,6 +2732,11 @@
         "user": "Пользователь",
         "name": "Название",
         "id": "Id",
+        "status": "",
+        "directPlay": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
           "title": "Техническая информация",
           "video": {
@@ -2749,6 +2802,193 @@
         "internalServerError": ""
       }
     },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "immich-serverStats": {
       "name": "Статистика сервера Immich",
       "description": "Информация о вашем экземпляре Immich",
@@ -2777,6 +3017,7 @@
     },
     "immich-albumCarousel": {
       "name": "Альбом Immich",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "ID альбома",
@@ -2796,7 +3037,6 @@
         }
       },
       "description": "Слайд-шоу фотографий из вашего альбома Immich",
-      "noAlbumSelected": "Альбом не выбран — отредактируйте виджет и выберите альбом",
       "noPhotos": "В этом альбоме нет фотографий"
     },
     "downloads": {
@@ -2839,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "Лимит элементов на интеграцию",
           "description": "Ограничивает количество отображаемых элементов для каждой интеграции, а не глобально"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Выберите столбцы в настройках элементов",
-        "noCommunications": "Не удалось загрузить данные из интеграции"
+        "noCommunications": "Не удалось загрузить данные из интеграции",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -2866,7 +3115,8 @@
           "detailsTitle": "Текущий индекс в клиенте"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Интеграция"
@@ -2900,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "Время завершения",
-          "detailsTitle": "Время с/до завершения"
+          "detailsTitle": "Время с/до завершения",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Тип",
@@ -2944,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": "Общий рейтинг"
+      "globalRatio": "Общий рейтинг",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Медиарелизы",
@@ -2981,6 +3248,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Открывать ссылки в новой вкладке"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -3088,6 +3361,35 @@
         }
       }
     },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
+    },
     "rssFeed": {
       "name": "RSS-ленты",
       "description": "Отслеживание и отображение одной или нескольких RSS, ATOM или JSON-лент",
@@ -3108,7 +3410,7 @@
           "label": "Скрыть описание"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Показать постер"
         }
       }
     },
@@ -3331,45 +3633,49 @@
       "name": "Уведомления",
       "description": "Отображает историю уведомлений из интеграции",
       "noItems": "Нет уведомлений для отображения.",
-      "option": {}
-    },
-    "speedtestTracker": {
-      "name": "",
-      "description": "",
       "option": {
-        "showLatestResult": {
-          "label": ""
-        },
-        "showStats": {
-          "label": ""
-        },
-        "showRecentResults": {
-          "label": ""
-        },
-        "showPingGraph": {
+        "hideLogos": {
           "label": ""
         }
+      }
+    },
+    "speedtestTracker": {
+      "name": "Спидтест Трекер",
+      "description": "Отображает результаты тестов скорости из вашего экземпляра Speedtest Tracker.",
+      "option": {
+        "showLatestResult": {
+          "label": "Показать последний результат"
+        },
+        "showStats": {
+          "label": "Показать средние значения"
+        },
+        "showRecentResults": {
+          "label": "Показать недавние результаты"
+        },
+        "showPingGraph": {
+          "label": "Показать график пинга"
+        }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Последний результат",
+      "averages": "Средние значения",
+      "tests": "{count} тестов",
+      "recentResults": "Недавние результаты",
+      "recentResultsSpeed": "Скорость",
+      "recentResultsPing": "Пинг",
+      "download": "Загрузка",
+      "upload": "Отправка",
+      "ping": "Пинг",
+      "status": "Статус",
+      "avgDownload": "Средняя загрузка",
+      "avgUpload": "Средняя отправка",
+      "avgPing": "Средний пинг",
+      "healthy": "Исправно",
+      "unhealthy": "Неисправен",
+      "ok": "ОК",
+      "fail": "Ошибка",
+      "noSectionsEnabled": "Включите хотя бы один раздел в настройках виджета.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не удалось получить данные теста скорости"
       }
     },
     "uptimeKuma": {
@@ -3407,6 +3713,40 @@
         "upCount": "",
         "downCount": "",
         "pausedCount": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
       },
       "error": {
         "internalServerError": ""
@@ -3538,6 +3878,11 @@
         },
         "showBackgroundBar": {
           "label": "Показывать фоновую шкалу использования"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3565,110 +3910,110 @@
       "executeFailed": ""
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Системы Beszel (Таблица)",
+      "description": "Табличное представление всех систем, отслеживаемых Beszel, с сортируемыми столбцами и индикаторами статуса",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Фильтр статуса"
         },
         "sortBy": {
-          "label": ""
+          "label": "Сортировать по"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Направление сортировки"
         },
         "showCpu": {
-          "label": ""
+          "label": "Показать ЦП"
         },
         "showMemory": {
-          "label": ""
+          "label": "Показать память"
         },
         "showDisk": {
-          "label": ""
+          "label": "Показать диск"
         },
         "showGpu": {
-          "label": ""
+          "label": "Показать GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Показать среднюю нагрузку"
         },
         "showNet": {
-          "label": ""
+          "label": "Показать сеть"
         },
         "showTemp": {
-          "label": ""
+          "label": "Показать температуру"
         },
         "showBattery": {
-          "label": ""
+          "label": "Показать батарею"
         },
         "showServices": {
-          "label": ""
+          "label": "Показать сервисы"
         },
         "showUptime": {
-          "label": ""
+          "label": "Показать время работы"
         },
         "showAgent": {
-          "label": ""
+          "label": "Показать версию агента"
         }
       },
-      "noRecords": "",
+      "noRecords": "Системы не найдены",
       "error": {
         "internalServerError": ""
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "Система",
+        "cpu": "ЦП",
+        "memory": "Память",
+        "disk": "Диск",
+        "gpu": "GPU",
+        "loadAvg": "Средн. нагрузка",
+        "net": "Сеть",
+        "temp": "Темп",
+        "battery": "Бат",
+        "services": "Сервисы",
+        "uptime": "Время работы",
+        "agent": "Агент"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Системы Beszel (Сетка)",
+      "description": "Представление в виде сетки карточек всех систем, отслеживаемых Beszel, с метриками в реальном времени",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Фильтр статуса"
         },
         "showCpu": {
-          "label": ""
+          "label": "Показать ЦП"
         },
         "showMemory": {
-          "label": ""
+          "label": "Показать память"
         },
         "showDisk": {
-          "label": ""
+          "label": "Показать диск"
         },
         "showGpu": {
-          "label": ""
+          "label": "Показать GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Показать среднюю нагрузку"
         },
         "showNet": {
-          "label": ""
+          "label": "Показать сеть"
         },
         "showTemp": {
-          "label": ""
+          "label": "Показать температуру"
         },
         "showBattery": {
-          "label": ""
+          "label": "Показать батарею"
         },
         "showServices": {
-          "label": ""
+          "label": "Показать сервисы"
         },
         "showUptime": {
-          "label": ""
+          "label": "Показать время работы"
         },
         "showAgent": {
-          "label": ""
+          "label": "Показать версию агента"
         }
       },
       "error": {
@@ -3678,78 +4023,78 @@
         "noSystems": ""
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "ЦП",
+        "memory": "Память",
+        "disk": "Диск",
+        "gpu": "GPU",
+        "loadAvg": "Средн. нагрузка",
+        "net": "Сеть",
+        "temp": "Темп",
+        "battery": "Бат",
+        "services": "Сервисы",
+        "uptime": "Время работы",
+        "agent": "Агент"
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Оповещения Beszel",
+      "description": "Просмотр конфигураций и истории оповещений Beszel",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Показать историю оповещений"
         },
         "maxHistoryItems": {
-          "label": ""
+          "label": "Макс. элементов истории"
         }
       },
-      "empty": "",
+      "empty": "Нет настроенных оповещений",
       "error": {
         "internalServerError": ""
       },
-      "history": "",
-      "resolved": "",
+      "history": "История",
+      "resolved": "Решено",
       "status": {
-        "triggered": "",
-        "ok": ""
+        "triggered": "Сработало",
+        "ok": "ОК"
       }
     },
     "beszelSystemStats": {
-      "name": "",
-      "description": "",
+      "name": "Статистика системы Beszel",
+      "description": "Графики временных рядов для метрик ЦП, памяти, диска, сети и контейнеров Docker",
       "option": {
         "systemId": {
           "label": "",
           "description": ""
         },
         "timePeriod": {
-          "label": ""
+          "label": "Период времени"
         },
         "showCpu": {
-          "label": ""
+          "label": "Показать график ЦП"
         },
         "showMemory": {
-          "label": ""
+          "label": "Показать график памяти"
         },
         "showDisk": {
-          "label": ""
+          "label": "Показать график диска"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Показать график ввода-вывода диска"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Показать график сети"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Показать график ЦП Docker"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Показать график памяти Docker"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Показать график сети Docker"
         }
       },
-      "selectSystem": "",
+      "selectSystem": "Выберите систему",
       "empty": {
         "noSystems": ""
       },
@@ -3761,44 +4106,49 @@
       },
       "chart": {
         "cpu": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Использование ЦП",
+          "subtitle": "Средняя загрузка ЦП всей системы",
+          "series": "ЦП"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
-          "series": "",
-          "cache": ""
+          "title": "Использование памяти",
+          "subtitle": "Точное использование в записанный момент времени",
+          "series": "Использовано",
+          "cache": "Кэш/Буферы"
         },
         "disk": {
-          "title": "",
+          "title": "Использование диска",
           "subtitle": "",
           "series": ""
         },
         "diskIO": {
+          "title": "Ввод-вывод диска",
+          "subtitle": "Пропускная способность корневой файловой системы",
+          "read": "Чтение",
+          "write": "Запись"
+        },
+        "storage": {
           "title": "",
           "subtitle": "",
-          "read": "",
-          "write": ""
+          "series": ""
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Пропускная способность",
+          "subtitle": "Сетевой трафик публичных интерфейсов",
+          "sent": "Отправлено",
+          "recv": "Получено"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Использование ЦП Docker",
+          "subtitle": "Средняя загрузка ЦП контейнеров"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Использование памяти Docker",
+          "subtitle": "Использование памяти контейнеров Docker"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "Ввод-вывод сети Docker",
+          "subtitle": "Сетевой трафик контейнеров Docker"
         }
       }
     }
@@ -4205,7 +4555,7 @@
             "api": "API",
             "certificates": "Сертификаты",
             "tasks": "Задачи",
-            "backup": ""
+            "backup": "Резервное копирование"
           }
         },
         "settings": "Настройки",
@@ -4286,7 +4636,7 @@
           "private": "Эта панель приватная"
         },
         "noResults": {
-          "title": ""
+          "title": "Панелей ещё нет"
         },
         "modal": {
           "createBoard": {
@@ -4320,20 +4670,20 @@
               "firstDayOfWeek": "Первый день недели",
               "accessibility": "Специальные возможности",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Обучающие туры",
+                "description": "Сбросьте обучающие туры, чтобы увидеть их снова при следующем посещении области управления или панели.",
+                "reset": "Сбросить обучающие туры",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Туры сброшены",
+                  "message": "Обучающие туры снова появятся при следующем посещении"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Завершено",
+                  "notStarted": "Не начато"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Управление",
+                  "dashboard": "Панель"
                 }
               }
             }
@@ -4521,7 +4871,7 @@
             "defaultColorScheme": {
               "label": "Цветовая схема по умолчанию",
               "options": {
-                "auto": "",
+                "auto": "Авто",
                 "light": "Светлая",
                 "dark": "Тёмная"
               }
@@ -4752,122 +5102,122 @@
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Полное резервное копирование базы данных",
+          "metaTitle": "Резервное копирование и восстановление",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Экспорт базы данных",
+            "description": "Загрузите полную резервную копию вашей базы данных SQLite, включая все настройки, пользователей, панели и зашифрованные секреты интеграций. Резервная копия упакована в ZIP-файл с ключом шифрования и метаданными.",
+            "button": "Скачать резервную копию",
+            "error": "Ошибка экспорта",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Экспорт конфиденциальных данных",
+              "warningTitle": "Этот экспорт содержит всю вашу базу данных.",
+              "warningBody": "Резервная копия включает всех пользователей, секреты интеграций (зашифрованные), API-ключи, настройки панелей и данные приложений. Храните экспортированный файл в безопасности и не делитесь им.",
+              "typePrompt": "Введите \"{phrase}\" для продолжения",
+              "submit": "Экспорт базы данных",
+              "cancel": "Отмена"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Восстановить базу данных",
+            "description": "Загрузите ранее экспортированный ZIP-архив для восстановления базы данных. Это полностью заменит вашу базу данных. Если резервная копия была создана с другим ключом шифрования, секреты будут автоматически перешифрованы.",
+            "warning": "Восстановление резервной копии полностью заменит вашу текущую базу данных и перезапустит приложение. Это действие нельзя отменить.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Перетащите ZIP-файл с резервной копией сюда или нажмите для выбора",
+              "description": "Принимаются только .zip файлы из резервной копии SQLite Homarr"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Изменить файл",
+            "button": "Восстановить базу данных",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Восстановление завершено",
+              "message": "База данных успешно восстановлена. Приложение перезапускается..."
             },
-            "error": ""
+            "error": "Ошибка импорта"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Содержимое резервной копии",
+            "exported": "Экспортировано {date}",
+            "loading": "Анализ файла резервной копии...",
+            "errorTitle": "Ошибка предпросмотра",
+            "entity": "Сущность",
+            "count": "Количество",
+            "boards": "Панели",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Панели",
+              "user": "Пользователи",
+              "app": "Приложения",
+              "integration": "Интеграции",
+              "item": "Виджеты",
+              "media": "Медиа",
+              "search_engine": "Поисковые системы"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Не удалось проанализировать файл резервной копии",
+            "invalidMissingMetadata": "Недействительная резервная копия: отсутствует metadata.json",
+            "invalidMissingDb": "Недействительная резервная копия: отсутствует db.sqlite"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Перетащите ZIP-файл с резервной копией сюда",
+              "description": "Принимаются .zip файлы из резервной копии SQLite Homarr (макс. 256 МБ)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Анализ резервной копии...",
+            "changeFile": "Изменить файл",
+            "continueToRestore": "Перейти к восстановлению",
+            "tryAgain": "Попробовать снова",
+            "analysisError": "Ошибка анализа",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Содержимое резервной копии",
+              "exported": "Экспортировано {date}",
+              "entity": "Сущность",
+              "count": "Количество",
+              "boards": "Панели",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Панели",
+                "user": "Пользователи",
+                "app": "Приложения",
+                "integration": "Интеграции",
+                "item": "Виджеты",
+                "media": "Медиа",
+                "search_engine": "Поисковые системы"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "Применена {count} миграция",
+              "migrationsAppliedPlural": "Применено {count} миграций",
+              "migrationsOlderVersion": "Эта резервная копия была из более старой версии Homarr. Была применена {count} миграция схемы для обновления.",
+              "migrationsOlderVersionPlural": "Эта резервная копия была из более старой версии Homarr. Было применено {count} миграций схемы для обновления.",
+              "migrationsUpToDate": "Схема базы данных актуальна (применено {count} миграций)",
+              "upToDate": "Актуально",
+              "migrationsPending": "{count} ожидает"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Применение миграций ({current}/{total})",
+              "migrationLabel": "Миграция {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Деструктивное действие",
+              "warningTitle": "Это безвозвратно заменит всю вашу базу данных.",
+              "warningBody": "Все текущие панели, пользователи, приложения, интеграции, настройки и сеансы будут потеряны. Это действие нельзя отменить. Приложение перезапустится после восстановления.",
+              "typePrompt": "Введите \"{phrase}\" для продолжения",
+              "cancel": "Отмена",
+              "submit": "Восстановить базу данных"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Восстановление базы данных...",
+              "extracting": "Извлечение архива резервной копии",
+              "migrating": "Применение миграций базы данных",
+              "encrypting": "Перешифрование секретов интеграций",
+              "swapping": "Замена файла базы данных",
+              "restarting": "Перезапуск сервера"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Восстановление завершено",
+              "message": "База данных успешно восстановлена. Сервер перезапускается — обновите страницу через несколько секунд."
             },
             "failed": {
-              "title": ""
+              "title": "Восстановление не удалось"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Недействительная резервная копия: отсутствует metadata.json",
+            "invalidMissingDb": "Недействительная резервная копия: отсутствует db.sqlite",
+            "analyzeError": "Не удалось проанализировать резервную копию"
           }
         }
       },
@@ -4884,8 +5234,8 @@
             "subtitle": "{count} помогают с переводами на разные языки"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Спонсоры",
+            "subtitle": "{count} поддерживают проект финансово"
           },
           "libraries": {
             "title": "Библиотеки",
@@ -4914,6 +5264,9 @@
     "title": "Контейнеры",
     "table": {
       "updated": "Обновлено {when}",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "Поиск среди {count} контейнеров",
       "selected": "Выбрано {selectCount} из {totalCount} контейнеров",
       "footer": "Всего {count} контейнеров",
@@ -4951,15 +5304,15 @@
         "label": "Порты"
       },
       "host": {
-        "label": ""
+        "label": "Хост"
       }
     },
     "action": {
       "title": "Действия",
       "logs": {
-        "label": "",
+        "label": "Просмотреть логи",
         "page": {
-          "title": ""
+          "title": "Логи {name}"
         }
       },
       "start": {
@@ -5389,7 +5742,7 @@
         "docker": {
           "label": "Docker",
           "logs": {
-            "label": ""
+            "label": "Логи"
           }
         },
         "kubernetes": {
@@ -5500,7 +5853,7 @@
             "title": "Глобальные команды",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Переключить режим оформления",
                 "light": "Переключить на светлую тему",
                 "dark": "Переключить на тёмную тему"
               },
@@ -5541,100 +5894,108 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Настройки",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Выберите настройку для изменения",
+                "backHint": "Нажмите Backspace или используйте кнопку назад для возврата",
+                "backAction": "Назад"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Не удалось обновить настройку"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Открыть настройки"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Включено",
+                "disabled": "Отключено"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Нет",
+                "unavailable": "Выбрано в настоящее время (недоступно)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "Нет",
+                "unavailable": "Выбрано в настоящее время (недоступно)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Цветовая схема",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Выберите цветовую схему"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Язык",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Выберите предпочитаемый язык"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Поисковая система по умолчанию",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Выберите поисковую систему по умолчанию"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Открывать результаты поиска в новой вкладке",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Открывать результаты поиска в новой вкладке"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "Включить DuckDuckGo bangs",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Включить DuckDuckGo bangs"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Первый день недели",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Выберите первый день недели"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Домашняя панель",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Выберите домашнюю панель"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Мобильная домашняя панель",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Выберите мобильную домашнюю панель"
                   }
                 }
               },
               "pingIconsEnabled": {
+                "label": "Использовать индикаторы доступности",
+                "children": {
+                  "detail": {
+                    "title": "Использовать индикаторы доступности"
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {
@@ -5643,36 +6004,36 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Открыть полную страницу настроек"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Искать фильмы или сериалы для запроса",
         "requestMovie": "Запросить фильм",
         "requestSeries": "Запросить сериал",
         "openIn": "Открыть в {kind}",
         "group": {
-          "title": ""
+          "title": "Фильмы и сериалы"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Искать фильмы или сериалы",
+            "description": "Начните вводить для поиска в интеграциях медиа-запросов",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Добавьте интеграцию Overseerr, Jellyseerr или Seerr для включения поиска медиа.",
+              "scoped": "У этого виджета нет доступной интеграции медиа-запросов."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Доступно",
+          "partiallyAvailable": "Частично",
+          "processing": "Обработка",
+          "requested": "Запрошено",
+          "pending": "Запрошено"
         }
       },
       "external": {
@@ -5680,13 +6041,13 @@
         "group": {
           "searchEngine": {
             "title": "Поисковые системы",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Совет: Вы также можете использовать любые DuckDuckGo bangs, например !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Искать \"{query}\" с {label}",
+              "pressEnterToOpen": "Нажмите Enter, чтобы открыть",
+              "engineSelected": "{label} выбрано (!{bang})",
+              "typeQueryToContinue": "Введите поисковый запрос для продолжения",
+              "emptyBangHint": "Введите bang, например !yt, затем нажмите пробел для выбора"
             },
             "children": {
               "action": {
@@ -5950,10 +6311,10 @@
               "header": {
                 "season": "Сезон",
                 "episodes": "Серии",
-                "status": ""
+                "status": "Статус"
               },
               "status": {
-                "requested": ""
+                "requested": "Запрошено"
               }
             },
             "button": {
@@ -6066,69 +6427,69 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Читать документацию",
+    "next": "Далее",
+    "prev": "Назад",
+    "done": "Готово",
+    "skip": "Пропустить тур",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Добро пожаловать в Homarr!",
+        "description": "Это ваш центр управления. Здесь вы управляете панелями, приложениями, интеграциями, пользователями и настройками сервера. Давайте пройдем тур по каждому разделу."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Ваши панели",
+        "description": "Здесь все ваши панели. Каждая панель имеет свой макет, фон и настройки доступа. Вы можете видеть, кто создал каждую и является ли она публичной или частной."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Создать панель",
+        "description": "Нажмите здесь, чтобы создать новую панель или импортировать из предыдущей установки Homarr. Каждая панель получает свой URL, которым можно поделиться."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Ваши приложения",
+        "description": "Это все добавленные вами приложения — ссылки на ваши собственные сервисы. Каждое приложение имеет значок, опциональную проверку здоровья и значок статуса на панели."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Добавить приложение",
+        "description": "Зарегистрируйте новый сервис здесь. Дайте ему имя, URL и значок — он появится в виде плитки на ваших панелях с мониторингом статуса в реальном времени."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Ваши интеграции",
+        "description": "Это сервисы, подключенные к Homarr — Sonarr, Radarr, Plex, Jellyfin и более 50 других. Все учетные данные зашифрованы."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Добавить интеграцию",
+        "description": "Подключите новый сервис здесь. Выберите тип, введите URL и API-ключ — Homarr проверит соединение перед сохранением."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Ваши пользователи",
+        "description": "Смотрите всех, у кого есть доступ. Организуйте пользователей в группы и управляйте тем, кто может просматривать или редактировать каждую панель."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Создать пользователя",
+        "description": "Добавьте нового пользователя здесь. Вы также можете использовать ссылки-приглашения для легкого входа. Это тур — теперь вы готовы!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Это ваша панель",
+        "description": "Перетаскиваемая панель, где вы размещаете приложения и виджеты. Нажмите Ctrl+K в любое время для поиска приложений, панелей и действий."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Режим редактирования",
+        "description": "Нажмите здесь, чтобы войти в режим редактирования. Затем вы можете добавлять виджеты, приложения и секции — перетаскивайте для перемещения, изменяйте размер за угол. Нажмите еще раз, чтобы сохранить изменения."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Настройки панели",
+        "description": "Измените имя панели, количество столбцов, фон, цвета и доступ. Каждая панель может быть публичной или частной."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Переключить панели",
+        "description": "Переключайтесь между панелями. Создавайте отдельные панели для разных целей — медиа, сети, пользователей или что угодно."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Ваш профиль",
+        "description": "Измените цветовую схему, язык, домашнюю панель и настройки. Также можете перейти в область управления отсюда."
       }
     }
   }

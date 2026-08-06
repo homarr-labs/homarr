@@ -23,10 +23,15 @@ export const createSessionStore = <TValue>(integration: { id: string }) => {
         return null;
       }
     },
-    async setAsync(value: TValue) {
-      logger.debug("Updating session in store", { store: channelName });
+    /**
+     * @param value session to store
+     * @param options pass `ttlSeconds` when the credential has a known lifetime, so a stored
+     * session can never outlive the token it holds
+     */
+    async setAsync(value: TValue, options?: { ttlSeconds?: number }) {
+      logger.debug("Updating session in store", { store: channelName, ttlSeconds: options?.ttlSeconds });
       try {
-        await channel.setAsync(encryptSecret(superjson.stringify(value)));
+        await channel.setAsync(encryptSecret(superjson.stringify(value)), options);
       } catch (error) {
         logger.error(new ErrorWithMetadata("Failed to save session", { store: channelName }, { cause: error }));
       }

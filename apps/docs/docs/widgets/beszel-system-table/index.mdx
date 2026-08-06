@@ -17,7 +17,16 @@ import { beszelIntegration } from '@site/docs/integrations/beszel';
   categories={['System Monitoring']}
 />
 
-This widget displays all your Beszel-monitored systems in a sortable data table. Each row shows system metrics like CPU, memory, disk, network, temperature, and more. Columns can be toggled on or off, and the table supports sorting by any column.
+This widget displays all your Beszel-monitored systems in a sortable data table. Each row shows system metrics like CPU, memory, disk, network, temperature, and more. Columns can be toggled on or off, dragged into a different order, and resized from their headers. Column order and widths are saved automatically for each widget. When Beszel reports extra filesystems, the disk column adds a hover breakdown for each mount alongside the root disk.
+
+Select a system row to open the complete statistics view, including system, filesystem, Docker, historical, and realtime charts.
+
+### Interactions
+
+- **Reorder columns** by hovering a header to reveal its grab handle, then dragging it
+- **Resize columns** by dragging a header's right edge
+- **Sort systems** by selecting a sortable column header
+- **Open system statistics** by selecting a row
 
 ### Supported Integrations
 

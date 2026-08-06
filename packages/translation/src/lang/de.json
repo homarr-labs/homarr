@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Symbole für Pings verwenden"
       },
+      "enableRightClickOnWidgets": {
+        "label": "Aktiviere Rechtsklick auf Widgets",
+        "description": "Zeigt Homarrs Kontextmenü, wenn mit der rechten Maustaste auf ein Widget geklickt wird. Deaktivieren, um das Standardmenü des Browsers zu verwenden (z.B. \"Link in neuem Tab öffnen\")."
+      },
       "defaultSearchEngine": {
         "label": "Standard Suchmaschine"
       },
@@ -1021,7 +1025,7 @@
       "mediaMonitoring": "Überwachung",
       "speedtest": "Geschwindigkeitstest",
       "analytics": "Nutzungsdaten",
-      "vpn": "",
+      "vpn": "VPN",
       "mediaLibrary": "Medienbibliothek",
       "uptimeMonitoring": "Überwachung der Betriebszeit"
     },
@@ -1285,6 +1289,14 @@
           "label": "API-Schlüssel (Secret)",
           "newLabel": "Neuer API-Schlüssel (Secret)"
         },
+        "patchmonApiKey": {
+          "label": "API Key",
+          "newLabel": "Neuer API Key"
+        },
+        "patchmonApiSecret": {
+          "label": "API Secret",
+          "newLabel": "Neues API Secret"
+        },
         "githubAppId": {
           "label": "App ID",
           "newLabel": "Neue App ID"
@@ -1328,9 +1340,21 @@
         }
       }
     },
+    "traefik": {
+      "name": "Traefik",
+      "description": ""
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentenverwaltungssystem zum Archivieren und Organisieren gescannter Dokumente"
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": ""
     }
   },
   "media": {
@@ -1468,7 +1492,7 @@
         "switchToDarkMode": "Zum dunklen Design wechseln",
         "switchToLightMode": "Zum hellen Design wechseln",
         "management": "Verwaltung",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Ihre Einstellungen",
         "logout": "Abmelden",
         "login": "Anmelden",
@@ -1599,9 +1623,15 @@
     "menu": {
       "label": {
         "settings": "Einstellungen",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "Aktualisieren",
+        "options": "Optionen",
+        "actions": "Aktionen"
+      },
+      "status": {
+        "success": "Ok",
+        "error": "Fehler",
+        "loading": "Wird geladen",
+        "idle": "Leerlauf"
       }
     },
     "create": {
@@ -1875,6 +1905,16 @@
         "customDateFormat": {
           "label": "Benutzerdefiniertes Datumsformat",
           "description": "ISO 8601 Standard benutzen um das Datum zu formatieren (dies wird andere Optionen überschreiben)"
+        },
+        "showWeather": {
+          "label": "Wetter anzeigen",
+          "description": "Zeigt ein kleines animiertes Wettersymbol und die Temperatur in der Ecke der Karte an"
+        },
+        "weatherLocation": {
+          "label": "Ort für Wetterbericht"
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": "Fahrenheit verwenden"
         }
       }
     },
@@ -1904,7 +1944,7 @@
       "noStation": "Keine Station ausgewählt",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "Search.ch URL"
         },
         "station": {
           "label": "Station"
@@ -1936,6 +1976,8 @@
         "clear": "Formatierung entfernen",
         "heading": "Überschrift {level}",
         "align": "Text ausrichten: {position}",
+        "directionLtr": "Setze Textausrichtung von links nach rechts",
+        "directionRtl": "Setze Textausrichtung von rechts nach links",
         "blockquote": "Blockzitat",
         "horizontalLine": "Horizontale Linie",
         "bulletList": "Aufzählung",
@@ -2225,7 +2267,8 @@
         "sunrise": "Sonnenaufgang",
         "sunset": "Sonnenuntergang",
         "maxWindSpeed": "Maximale Windgeschwindigkeit: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Maximale Windböen: {maxWindGusts} {unit}"
+        "maxWindGusts": "Maximale Windböen: {maxWindGusts} {unit}",
+        "humidity": "Luftfeuchtigkeit: {humidity}%"
       },
       "kind": {
         "clear": "Klar",
@@ -2283,6 +2326,11 @@
         },
         "fileSystem": {
           "label": "Dateisystem Info anzeigen"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": "Speichervolumen auswählen"
         },
         "defaultTab": {
           "label": "Standard Tab"
@@ -2364,7 +2412,7 @@
       "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Anzuzeigende Spalten"
         },
         "enableRowSorting": {
           "label": "Sortierung von Elementen aktivieren"
@@ -2420,9 +2468,9 @@
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "Übersicht deiner VPN-Verbindungen",
+      "serviceUnavailable": "VPN nicht verfügbar",
       "option": {}
     },
     "ups": {
@@ -2684,6 +2732,11 @@
         "user": "Benutzer",
         "name": "Name",
         "id": "Id",
+        "status": "Status",
+        "directPlay": "Direkte Wiedergabe",
+        "transcoding": "Transkodierung",
+        "paused": "Pausiert",
+        "remaining": "{minutes} Min. verbleibend",
         "metadata": {
           "title": "Statistiken für Nerds",
           "video": {
@@ -2749,6 +2802,193 @@
         "internalServerError": "Fehler beim Abrufen der Paperless-ngx-Daten"
       }
     },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "Hosts gesamt",
+      "hostsNeedingUpdates": "Update erforderlich",
+      "securityUpdates": "Sicherheits-Updates",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "Hosts mit Sicherheits-Updates",
+      "recentUpdates24h": "Updates (24h)",
+      "totalOutdatedPackages": "Veraltete Pakete",
+      "totalRepos": "Repositories",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "Alle Hosts anzeigen",
+          "description": "Gesamtanzahl der überwachten Hosts anzeigen"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Hosts die Updates benötigen anzeigen",
+          "description": "Hosts mit mindestens einem veralteten Paket anzeigen"
+        },
+        "showSecurityUpdates": {
+          "label": "Sicherheits-Updates anzeigen",
+          "description": "Gesamtzahl der verfügbaren Sicherheits-Updates anzeigen"
+        },
+        "showUpToDateHosts": {
+          "label": "Zeige aktuelle Hosts",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "immich-serverStats": {
       "name": "Immich Serverstatistik einblenden",
       "description": "Informationen über Ihre Immich Instanz",
@@ -2777,6 +3017,7 @@
     },
     "immich-albumCarousel": {
       "name": "Immich Album",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "Album ID",
@@ -2796,7 +3037,6 @@
         }
       },
       "description": "Diashow der Bilder in Ihrem Immich Album",
-      "noAlbumSelected": "Kein Album ausgewählt, Widget bearbeiten und Album auswählen",
       "noPhotos": "Keine Fotos in diesem Album"
     },
     "downloads": {
@@ -2839,11 +3079,20 @@
         "limitPerIntegration": {
           "label": "Elemente pro Integration begrenzen",
           "description": "Dies begrenzt die Anzahl der Elemente pro Integration, jedoch nicht global"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Spalten in Elementen auswählen",
-        "noCommunications": "Kann keine Daten von der Integration laden"
+        "noCommunications": "Kann keine Daten von der Integration laden",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -2866,7 +3115,8 @@
           "detailsTitle": "Aktueller Index im Client"
         },
         "id": {
-          "columnTitle": "ID"
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integration"
@@ -2900,7 +3150,8 @@
         },
         "time": {
           "columnTitle": "Endzeit",
-          "detailsTitle": "Zeit danach/zur Fertigstellung"
+          "detailsTitle": "Zeit danach/zur Fertigstellung",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Typ",
@@ -2944,7 +3195,23 @@
           }
         }
       },
-      "globalRatio": "Globales Verhältnis"
+      "globalRatio": "Globales Verhältnis",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Medien Veröffentlichungen",
@@ -2981,6 +3248,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Links in neuem Tab öffnen"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -3087,6 +3360,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
     },
     "rssFeed": {
       "name": "RSS Feeds",
@@ -3331,7 +3633,11 @@
       "name": "Benachrichtigungen",
       "description": "Benachrichtigungshistorie von einer Integration anzeigen",
       "noItems": "Keine Benachrichtigungen zum Anzeigen.",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": ""
+        }
+      }
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",
@@ -3410,6 +3716,40 @@
       },
       "error": {
         "internalServerError": "Fehler beim Abrufen der Laufzeit Daten"
+      }
+    },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
+      "error": {
+        "internalServerError": ""
       }
     },
     "audioStats": {
@@ -3538,6 +3878,11 @@
         },
         "showBackgroundBar": {
           "label": "Zeige Hintergrundnutzungsleiste"
+        },
+        "visibleStorageVolumes": {
+          "label": "",
+          "description": "",
+          "placeholder": ""
         }
       },
       "status": {
@@ -3781,6 +4126,11 @@
           "subtitle": "",
           "read": "",
           "write": ""
+        },
+        "storage": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
         },
         "network": {
           "title": "",
@@ -4884,8 +5234,8 @@
             "subtitle": "{count} tragen Übersetzungen in viele Sprachen bei"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponsoren",
+            "subtitle": "{count} unterstützen das Projekt finanziell"
           },
           "libraries": {
             "title": "Bibliotheken",
@@ -4914,6 +5264,9 @@
     "title": "Container",
     "table": {
       "updated": "Aktualisiert {when}",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "{count} Container durchsuchen",
       "selected": "{selectCount} von {totalCount} ausgewählten Containern",
       "footer": "Insgesamt {count} Container",
@@ -5635,6 +5988,14 @@
                 }
               },
               "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {

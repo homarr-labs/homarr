@@ -11,7 +11,7 @@ export interface CommonWidgetInputProps<TKey extends WidgetOptionType> {
   itemId?: string;
 }
 
-type UseWidgetInputTranslationReturnType = (key: "label" | "description") => string;
+type UseWidgetInputTranslationReturnType = (key: "label" | "description" | "placeholder") => string;
 
 /**
  * Short description why as and unknown convertions are used below:
