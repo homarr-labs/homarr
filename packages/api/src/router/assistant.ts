@@ -30,7 +30,7 @@ import {
 import type { createTRPCContext } from "../trpc";
 import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation-telemetry";
 import { verifyAssistantGenerationAccessToken } from "../assistant-generation-access";
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, isDemoMode, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import { boardRouter } from "./board";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
@@ -440,14 +440,10 @@ const addFeedbackToMessageContent = (serializedContent: string, type: "positive"
 };
 
 export const assistantRouter = createTRPCRouter({
-  getAvailability: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description: "Check whether Homarr Assistant is enabled and configured for the current user",
-      },
-    })
-    .query(async ({ ctx }) => {
+  getAvailability: protectedProcedure.query(async ({ ctx }) => {
+      if (isDemoMode) {
+        return { enabled: true };
+      }
       const configuration = await getConfigurationAsync(ctx.db);
       const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
       return {
@@ -457,26 +453,11 @@ export const assistantRouter = createTRPCRouter({
       };
     }),
 
-  getContextEntities: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Lists the apps, integrations, boards, and widgets the signed-in user may reference. Integration entries are permission-filtered. Use returned IDs as inputs for other tools.",
-      },
-    })
-    .query(async ({ ctx }) => {
+  getContextEntities: protectedProcedure.query(async ({ ctx }) => {
       return await getAssistantContextEntitiesAsync(ctx);
     }),
 
   getModelCapabilities: protectedProcedure
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Returns the configured assistant model's discovered input modalities and whether image input is supported, unsupported, or unknown.",
-      },
-    })
     .input(z.object({ modelId: z.string().trim().min(1).max(256).optional() }).optional())
     .query(async ({ ctx, input }) => {
       const configuration = await getConfigurationAsync(ctx.db);
@@ -495,6 +476,24 @@ export const assistantRouter = createTRPCRouter({
 
   getRuntimeOptions: protectedProcedure.query(async ({ ctx }) => {
     const configuration = await getConfigurationAsync(ctx.db);
+    if (isDemoMode) {
+      return {
+        provider: "homarr",
+        defaultModelId: "homarr-assistant",
+        models: [
+          {
+            id: "homarr-assistant",
+            name: "Homarr Assistant (Demo)",
+            description: null,
+            contextLength: null,
+            promptPrice: null,
+            completionPrice: null,
+            inputModalities: [],
+            toolSupport: "unknown" as const,
+          },
+        ],
+      };
+    }
     if (!configuration?.enabled || !configuration.modelId) {
       throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Homarr Assistant is not configured." });
     }
