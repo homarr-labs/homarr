@@ -444,7 +444,8 @@ export const assistantRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
-        description: "Check whether Homarr Assistant is enabled and configured for the current user",
+        description:
+          "Check whether Homarr Assistant is enabled and configured, or available in demo mode, for the current user",
       },
     })
     .query(async ({ ctx }) => {
