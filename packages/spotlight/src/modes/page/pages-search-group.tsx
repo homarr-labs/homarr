@@ -82,7 +82,7 @@ export const pagesSearchGroup = createGroup<{
         icon: IconPlug,
         path: "/manage/integrations",
         name: t("manageIntegration.label"),
-        hidden: !session?.user.permissions.includes("integration-full-all"),
+        hidden: !session,
       },
       {
         icon: IconSearch,

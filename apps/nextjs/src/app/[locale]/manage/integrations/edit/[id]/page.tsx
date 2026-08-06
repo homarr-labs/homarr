@@ -1,7 +1,5 @@
-import { notFound } from "next/navigation";
 import { Container, Fieldset, Group, Stack, Title } from "@mantine/core";
 
-import { auth } from "@homarr/auth/next";
 import { api } from "@homarr/api/server";
 import { getIntegrationName } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
@@ -18,11 +16,6 @@ interface EditIntegrationPageProps {
 
 export default async function EditIntegrationPage(props: EditIntegrationPageProps) {
   const params = await props.params;
-  const session = await auth();
-
-  if (!session?.user.permissions.includes("integration-full-all")) {
-    notFound();
-  }
   const editT = await getScopedI18n("integration.page.edit");
   const t = await getI18n();
   const integration = await api.integration.byId({ id: params.id }).catch(catchTrpcNotFound);

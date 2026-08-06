@@ -10,109 +10,124 @@ tags:
 
 # Settings
 
-The settings page has a few options that will be applied to the entire Homarr application.
-They may require a full page reload for changes to apply.
+The settings page applies options to the whole Homarr application.
+Some changes need a full page reload before they take effect.
 
 ## Analytics
 
-By default, Homarr is collecting anonymous analytics to identify issues and prioritize bugfixes and improvements.
-The data is never shared with any third-parties and is fully GDPR & CCPA compliant.
-The software being used is [Umami Analytics](https://umami.is/) which is fully open source.
-The main server software can be found [here](https://github.com/umami-software/umami) and [this node library](https://github.com/umami-software/node) to perform server side calls to the API.
+Homarr uses [PostHog](https://posthog.com/) to collect anonymous usage data.
+We collect this data to see what features people ACTUALLY use.
+We use this data to decide where we spend our development time.
 
-A full list of the collected data by default can be found here: https://umami.is/docs/metric-definitions.
+We do not sell the data. We do not share the data with third parties.
+The data does not contain personal information and does not identify you or your installation.
 
-We understand that you might not want Homarr to communicate with our services.
-By unchecking the `Send anonymous analytics` checkbox and reloading the full page, all communication by Umami will be disabled and no data will be collected.
-If you are paranoid, you can permanently block `umami.homarr.dev` from your DNS / firewall.
+Homarr sends the data to our own PostHog server at `https://hog.homarr.dev`.
+The server sends the data once a week and when the server starts.
 
-Additionally, you opt in to more data collection to help us provide more useful data.
+### What we collect
 
-### Integration data
+Homarr collects technical data about your installation:
 
-Enabling this optional data will send the types of integrations (e.g. SABnzbd, Sonarr, ...) and how many you have configured of them.
-This will not include any URLs, names, secrets, errors and others. This is disabled by default.
+- Your Homarr version
+- Your database type (SQLite, MySQL, or PostgreSQL)
+- Whether Docker or Kubernetes is enabled
+- Your enabled authentication providers
+- Your operating system and CPU architecture
+- Your default language
+- The number of boards, apps, sections, layouts, users, groups, search engines, icon repositories, cron jobs, API keys, invites, sessions, and accounts
+- The integration types you use and how many you have of each (for example, Sonarr or SABnzbd)
+- The widget types you use and how many you have of each
 
-### Widget data
+Homarr does NOT collect:
 
-Enabling this optional data will send the types of widgets (e.g. downloads, media streams, iframe, ...) and how many you have configured of them.
-This will not include any URLs, names, secrets, errors and others. This is disabled by default.
+- URLs
+- Names
+- Usernames, emails, or passwords
+- Integration secrets or API keys
+- Error messages or logs
+- Any data that can identify you
 
-### Users data
+Each installation gets a random ID. We use this ID only to count unique installations. We cannot use this ID to identify you.
 
-Enabling this optional data will send the count of users and whether you activated SSO.
-This will not include any usernames, passwords, emails, URLs, authentication flows or client IDs.
-This is disabled by default.
+Homarr does not use cookies for analytics. Homarr does not track page views automatically. Homarr only sends the data listed above.
+
+### Disable analytics
+
+Analytics are enabled by default. To disable analytics:
+
+1. Open the Settings page.
+2. Uncheck the "Help us improve Homarr" checkbox.
+3. Reload the full page.
+
+When analytics are disabled, Homarr does not send any data to PostHog.
+
+You can also set the `NO_EXTERNAL_CONNECTION` environment variable to `true`. This stops all external requests, including analytics. See the [environment variables](/docs/advanced/environment-variables) page for more information.
+
+You can block `hog.homarr.dev` in your DNS or firewall. Homarr cannot send data when this address is blocked.
 
 ## Search Engine Optimization (SEO)
 
-Big companies [like Google, Microsoft, Baidu and Yandex](https://de.wikipedia.org/wiki/Web-Index) will use [web crawlers](https://de.wikipedia.org/wiki/Webcrawler) to index the Internet for new websites & pages.
-This is desirable in many cases (for example when selling products in an online shop) but can lead to unwanted traffic and attention to your personal dashboard.
-Homarr is requesting the crawlers to not index Homarr instances by default for this reason.
-If you use Homarr as a public website and want it to be searchable on these search engines, you can disable these settings.
-Please note that Homarr doesn't have control over what the crawlers do; it is a mere request to them to not perform these actions but will not guarantee that your website doesn't land on some index.
+Search engines use web crawlers to index websites. This can cause unwanted traffic to your dashboard.
+Homarr asks crawlers to not index your instance by default. Use these settings to change this request.
+
+Homarr cannot control what the crawlers do. A crawler can ignore the request. Your website can still appear in an index.
 
 ### No index
 
-This will ask crawlers to not index your Homarr instance on any indexes.
-It is up to the crawler to properly respect this request.
-By default, this setting is enabled. Disabling it will allow indexing.
+This setting asks crawlers to not index your instance.
+This setting is enabled by default. Disable this setting to allow indexing.
 
 ### No follow
 
-If indexing is allowed, crawlers will also attempt to follow any links on your page to further "discover" new parts of the Internet and on your website.
-By default, this setting is enabled and will ask crawlers to not follow any links.
-Crawler of different companies may behave differently when indexing is prohibited and following is allowed.
+Crawlers follow links to discover new pages.
+This setting asks crawlers to not follow links. This setting is enabled by default.
+Crawler behavior can differ between search engines.
 
 ### No translate
 
-Google and Chrome on Android will prompt users to translate pages that are not in their device language.
-This can lead to some shifting and can be undesired in some cases. By enabling this,
-you ask crawlers to never translate and never prompt users for translation.
-It should be noted that some browsers will ignore this and translate regardless.
+Some browsers offer to translate pages.
+This setting asks crawlers to not offer translation. Some browsers ignore this setting.
 
 ### No site links search box
 
-This setting is exclusive to Google.
-[Google will create a box below your domain](https://developers.google.com/search/docs/appearance/structured-data/sitelinks-searchbox) that lists the paths that were discovered by the "folowing".
-The user can search them directly in Google.
-You can ask the crawlers to not allow searches by enabling this setting.
-This setting is disabled by default.
+This setting applies to Google only.
+Google can show a search box below your domain.
+This setting asks Google to not show this box. This setting is disabled by default.
 
 ## Boards
 
 ### Global home board
 
-You can set a global home board that will be used for all users that have not set a home board themselves.
-It will also be used for anonymous users.
-Note that the board must be public to be used as a global home board.
+You can set a global home board.
+This board is the fallback for users without their own home board. It is also the fallback for anonymous users.
+The board must be public.
 
 ### Global mobile board
 
-You can set a global mobile board. It will be shown instead of the global home board on mobile devices that can be detected by Homarr. (Using the User-Agent header).
-It will similar to the global home board be as fallback for normal users and for any anonymous users.
-It also has to be public.
+You can set a global mobile board.
+Homarr shows this board on mobile devices instead of the global home board.
+Homarr detects mobile devices with the User-Agent header.
+The board must be public.
 
 ### App status
 
 #### Enable status by default
 
-You can decide if the app status should be enabled by default when adding a new app to the board.
+You can decide if app status is enabled when you add a new app.
 
 #### Force disable status
 
-You can decide if the app status should be disabled for all boards.
-
-###
+You can decide if app status is disabled on all boards.
 
 ## Appearance
 
 ### Default color scheme
 
-You can set the default color scheme for all users that have not set a color scheme themselves.
+You can set the default color scheme for users without their own color scheme.
 
 ## Culture
 
 ### Default language
 
-You can set the default language for all users that have not set a language themselves.
+You can set the default language for users without their own language.
