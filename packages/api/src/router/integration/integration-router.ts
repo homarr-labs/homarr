@@ -371,6 +371,7 @@ export const integrationRouter = createTRPCRouter({
         url: input.url,
       });
 
+      await invalidateIntegrationCacheAsync(integrationId);
       invalidateIntegrationCache(integrationId);
     }),
   update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {

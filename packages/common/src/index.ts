@@ -12,4 +12,3 @@ export * from "./error";
 export * from "./theme";
 export * from "./function";
 export * from "./retryable-loader";
-export * from "./id";

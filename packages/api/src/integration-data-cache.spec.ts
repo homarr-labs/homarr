@@ -41,6 +41,11 @@ describe("getCachedIntegrationData", () => {
     vi.useRealTimers();
   });
 
+  test("throws on initial fetch failure when no stale data exists", async () => {
+    const fetcher = vi.fn().mockRejectedValue(new Error("upstream down"));
+    await expect(getCachedIntegrationData("integration-a", "q1", fetcher)).rejects.toThrow("upstream down");
+  });
+
   test("returns stale data when refetch fails", async () => {
     vi.useFakeTimers();
     const fetcher = vi

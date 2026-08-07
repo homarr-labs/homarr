@@ -41,4 +41,29 @@ describe("SVG sanitization", () => {
     const wrapped = `<html><body>${dirty}</body></html>`;
     expect(sanitizeSvg(dirty)).toBe(purify.sanitize(wrapped, svgSanitizeOptions));
   });
+
+  it("strips javascript: protocol in href", () => {
+    const dirty = '<svg><a href="javascript:alert(1)"><text>click</text></a></svg>';
+    const clean = sanitizeSvg(dirty);
+    expect(clean).not.toContain("javascript:");
+  });
+
+  it("strips xlink:href with javascript:", () => {
+    const dirty = '<svg><a xlink:href="javascript:alert(1)"><text>click</text></a></svg>';
+    const clean = sanitizeSvg(dirty);
+    expect(clean).not.toContain("javascript:");
+  });
+
+  it("strips style with url() import", () => {
+    const dirty =
+      '<svg><style>@import url("https://evil.com/steal.css");</style><rect width="100" height="100"/></svg>';
+    const clean = sanitizeSvg(dirty);
+    expect(clean).not.toContain("@import");
+  });
+
+  it("strips animate with onbegin handler", () => {
+    const dirty = '<svg><animate onbegin="alert(1)"/></svg>';
+    const clean = sanitizeSvg(dirty);
+    expect(clean).not.toContain("onbegin");
+  });
 });

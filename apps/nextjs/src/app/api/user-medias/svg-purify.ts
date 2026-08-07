@@ -3,6 +3,7 @@ import { parseHTML } from "linkedom";
 
 const svgSanitizeOptions = {
   USE_PROFILES: { svg: true, svgFilters: true },
+  FORBID_TAGS: ["style"],
 } as const;
 
 // ponytail: linkedom stores DOM tree pointers as own value properties; DOMPurify
