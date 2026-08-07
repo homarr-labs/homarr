@@ -1,0 +1,14 @@
+.github/workflows/autofix.yml
+  h_d6e478ca18e517 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "17f08c6d14207561e47244e5055b159595c093e8",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
