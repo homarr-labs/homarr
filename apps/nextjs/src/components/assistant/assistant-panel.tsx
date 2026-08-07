@@ -2454,9 +2454,6 @@ export const AssistantConversationSurface = ({
             <Text fw={700} lh={1.1} lineClamp={1}>
               {t("title")}
             </Text>
-            <Text size="xs" c="dimmed" lineClamp={1}>
-              {isRunning ? t("activity.thinking") : t("subtitle")}
-            </Text>
           </div>
         </Group>
         <Group className={classes.panelActions} gap={2} wrap="nowrap">
