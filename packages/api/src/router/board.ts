@@ -1426,6 +1426,7 @@ export const boardRouter = createTRPCRouter({
     for (const userId of userIds) {
       invalidateUserCache(userId);
     }
+    invalidateBoardCache(input.entityId);
   }),
   saveGroupBoardPermissions: protectedProcedure.input(boardSavePermissionsSchema).mutation(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
@@ -1488,6 +1489,7 @@ export const boardRouter = createTRPCRouter({
         invalidateUserCache(member.userId);
       }
     }
+    invalidateBoardCache(input.entityId);
   }),
   importOldmarrConfig: permissionRequiredProcedure
     .requiresPermission("board-create")

@@ -90,6 +90,7 @@ External redis is currently not supported with Proxmox Community Scripts
 | `REDIS_USERNAME`       | Username to connect to the Redis instance.                                                           | Any valid username       | -       |
 | `REDIS_PASSWORD`       | Password to connect to the Redis instance.                                                           | Any valid password       | -       |
 | `REDIS_DATABASE_INDEX` | Select which database of your redis instance should be used.                                         | Any numeric index        | -       |
+| `REDIS_CACHE_DB`       | Redis database number for the Next.js cache handler. Separate from the main Redis DB to avoid key collisions. | Any numeric index        | `1`     |
 | `REDIS_TLS_CA`         | CA certificate for Redis TLS connections. If a certificate is specified the connection will use TLS. | Any valid CA certificate | -       |
 
 ## Proxy

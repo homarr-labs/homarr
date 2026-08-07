@@ -23,7 +23,7 @@ export class RedisCacheHandler implements CacheHandler {
     });
     this.redis.on("error", () => {
       if (!this.loggedError) {
-        console.warn("[next-cache-handler] Redis connection error, falling back to memory");
+        console.warn("[next-cache-handler] Redis connection error, cache will degrade to always-miss");
         this.loggedError = true;
       }
     });
@@ -130,18 +130,20 @@ export class RedisCacheHandler implements CacheHandler {
   async refreshTags(): Promise<void> {
     try {
       await this.redis.connect().catch(() => {});
-      const keys = await this.redis.keys("nextCache:tag:*");
-      if (keys.length === 0) {
-        this.tagCache.clear();
-        return;
-      }
-      const values = await this.redis.mget(...keys);
       this.tagCache.clear();
-      for (let i = 0; i < keys.length; i++) {
-        const tag = keys[i]!.replace("nextCache:tag:", "");
-        const val = values[i];
-        if (val) this.tagCache.set(tag, Number(val));
-      }
+      let cursor = "0";
+      do {
+        const [nextCursor, keys] = await this.redis.scan(cursor, "MATCH", "nextCache:tag:*", "COUNT", 100);
+        cursor = nextCursor;
+        if (keys.length > 0) {
+          const values = await this.redis.mget(...keys);
+          for (let i = 0; i < keys.length; i++) {
+            const tag = keys[i]!.replace("nextCache:tag:", "");
+            const val = values[i];
+            if (val) this.tagCache.set(tag, Number(val));
+          }
+        }
+      } while (cursor !== "0");
     } catch {
       // Fail open — stale tag cache is better than crash
     }

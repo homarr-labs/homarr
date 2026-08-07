@@ -1,5 +1,7 @@
-// ponytail: module-level cache — one snapshot per integration per query key.
-// Ceiling: stale data for up to `ttlMs` (60s default). Upgrade: Redis-backed with pub/sub invalidation.
+// ponytail: module-level cache is single-instance only.
+// Multi-instance deployments (REDIS_IS_EXTERNAL=true) bypass this and rely on
+// the Redis-backed Next cache handler for cross-instance coordination.
+const isMultiInstance = process.env.REDIS_IS_EXTERNAL === "true";
 
 interface CachedEntry<T> {
   data: T;
@@ -19,6 +21,10 @@ export const getCachedIntegrationData = async <T>(
   fetcher: () => Promise<T>,
   ttlMs = DEFAULT_TTL_MS,
 ): Promise<T> => {
+  if (isMultiInstance) {
+    return fetcher();
+  }
+
   const key = cacheKey(integrationId, queryKey);
   const existing = cache.get(key) as CachedEntry<T> | undefined;
   const now = Date.now();

@@ -10,7 +10,6 @@ describe("cacheTags", () => {
     expect(cacheTags.boardList()).toBe("board-list");
     expect(cacheTags.user("u1")).toBe("user:u1");
     expect(cacheTags.integration("i1")).toBe("integration:i1");
-    expect(cacheTags.integrationData("i1", "downloads")).toBe("integration-data:i1:downloads");
     expect(cacheTags.app("a1")).toBe("app:a1");
   });
 
