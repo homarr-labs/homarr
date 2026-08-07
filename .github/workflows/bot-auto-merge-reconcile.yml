@@ -1,0 +1,40 @@
+name: "[Bots] Reconcile Auto-merge"
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Obtain token
+        id: obtainToken
+        uses: actions/create-github-app-token@v3
+        with:
+          private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
+          client-id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
+          permission-pull-requests: write # required to enable auto-merge
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+      - name: Re-enable auto-merge for prepared bot PRs
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+        run: |
+          # 158783068: homarr-renovate[bot]
+          # 190541745: homarr-crowdin[bot]
+          # 210161987: homarr-update-contributors[bot]
+          # 175441: homarr-releases[bot]
+          gh pr list --repo "${{ github.repository }}" --base dev --state open --limit 100 \
+            --json number,author,reviewDecision,mergeStateStatus,autoMergeRequest \
+            --jq '.[] | select(.author.login as $login | ["app/homarr-renovate", "app/homarr-crowdin", "app/homarr-update-contributors", "app/homarr-releases"] | index($login)) | select(.reviewDecision == "APPROVED") | select(.mergeStateStatus == "CLEAN") | select(.autoMergeRequest == null) | .number' \
+          | while read -r pr; do
+              echo "Re-enabling auto-merge on PR #$pr"
+              gh pr merge "$pr" --auto --squash --delete-branch
+            done
