@@ -930,7 +930,7 @@ const RequestTelemetry = () => {
   const generationQuery = clientApi.assistant.getGenerationTelemetry.useQuery(
     { threadId: threadId ?? "", messageId },
     {
-      enabled: opened && persistedTelemetry?.provider === "openrouter" && Boolean(threadId),
+      enabled: opened && persistedTelemetry?.provider === "openrouter" && Boolean(threadId) && Boolean(messageId),
       refetchInterval: (query) =>
         query.state.data?.complete === false && query.state.dataUpdateCount < 6 ? 1500 : false,
       retry: 2,
