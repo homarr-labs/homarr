@@ -2201,6 +2201,66 @@
         }
       }
     },
+    "tennis": {
+      "name": "Live Tennis",
+      "description": "Displays live, upcoming or completed tennis matches from the ATP, WTA, Challenger, ITF and junior tours",
+      "option": {
+        "tour": {
+          "label": "Tour",
+          "option": {
+            "all": {
+              "label": "All tours"
+            },
+            "atp": {
+              "label": "ATP"
+            },
+            "wta": {
+              "label": "WTA"
+            },
+            "challenger": {
+              "label": "Challenger"
+            },
+            "itf": {
+              "label": "ITF"
+            },
+            "juniors": {
+              "label": "Juniors"
+            }
+          }
+        },
+        "status": {
+          "label": "Match status",
+          "option": {
+            "live": {
+              "label": "Live"
+            },
+            "upcoming": {
+              "label": "Upcoming"
+            },
+            "completed": {
+              "label": "Completed"
+            }
+          }
+        },
+        "matchCount": {
+          "label": "Number of matches",
+          "description": "The maximum number of matches shown in the widget"
+        },
+        "showTournament": {
+          "label": "Show tournament name"
+        },
+        "showRanking": {
+          "label": "Show player ranking"
+        }
+      },
+      "status": {
+        "live": "LIVE"
+      },
+      "noMatches": "No matches found",
+      "error": {
+        "unauthorized": "No valid Live Tennis API key configured. Set the LIVE_TENNIS_API_KEY environment variable."
+      }
+    },
     "calendar": {
       "name": "Calendar",
       "description": "Display events from your integrations in a calendar view within a certain relative time period",

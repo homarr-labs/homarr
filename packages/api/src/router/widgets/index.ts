@@ -17,6 +17,7 @@ export const widgetRouter = createTRPCRouter({
   dnsHole: lazy(() => import("./dns-hole").then((mod) => mod.dnsHoleRouter)),
   smartHome: lazy(() => import("./smart-home").then((mod) => mod.smartHomeRouter)),
   stockPrice: lazy(() => import("./stocks").then((mod) => mod.stockPriceRouter)),
+  tennis: lazy(() => import("./tennis").then((mod) => mod.tennisRouter)),
   mediaServer: lazy(() => import("./media-server").then((mod) => mod.mediaServerRouter)),
   mediaRelease: lazy(() => import("./media-release").then((mod) => mod.mediaReleaseRouter)),
   calendar: lazy(() => import("./calendar").then((mod) => mod.calendarRouter)),

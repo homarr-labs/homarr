@@ -51,6 +51,7 @@ import * as uptimeKuma from "./uptime-kuma";
 import * as stockPrice from "./stocks";
 import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
+import * as tennis from "./tennis";
 import * as timetable from "./timetable";
 import * as traefik from "./traefik";
 import * as tracearr from "./tracearr";
@@ -88,6 +89,7 @@ export const widgetImports = {
   "smartHome-entityState": smartHomeEntityState,
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
   stockPrice,
+  tennis,
   mediaServer,
   calendar,
   downloads,
