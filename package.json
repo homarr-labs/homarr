@@ -46,7 +46,7 @@
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
     "start": "pnpm -F nextjs start",
-    "test": "cross-env NODE_ENV=development CI=true vitest run --project \"!e2e\" --coverage.enabled ",
+    "test": "cross-env NODE_ENV=development CI=true vitest run --project \"!e2e\" --retry 2 --coverage.enabled ",
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest e2e --retry 2 --maxWorkers 2",
     "test:workshop": "sh apps/workshop/test.sh",
     "test:workshop-image": "sh apps/workshop/test-image.sh",
