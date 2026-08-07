@@ -1,0 +1,21 @@
+apps/nextjs/src/app/api/user-medias/svg-purify.ts
+  s_a0e1fd495b97ff::t_d032d00b2b79ab 89
+apps/nextjs/src/app/api/user-medias/sanitize.spec.ts
+  s_a0e1fd495b97ff::t_d302f5bd6872f6 69-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b3b2d5a02267d1b55c3e1d4faccd9f87bf182c5a",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
