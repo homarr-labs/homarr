@@ -43,9 +43,14 @@ describe("Custom JSX custom widgets", () => {
 
     try {
       await page.goto(`${baseUrl}/auth/login`);
+      // The submit button is disabled until the form finishes hydrating, so wait for it
+      // before filling to avoid a hydration re-mount resetting the field values.
+      const submitButton = page.locator("css=button[type='submit']");
+      await expect(submitButton).toBeEnabled({ timeout: 30_000 });
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
-      await page.locator("css=button[type='submit']").click();
+      await expect(page.getByLabel("Username")).toHaveValue(adminCredentials.username);
+      await submitButton.click();
       await expect(page).not.toHaveURL(/\/auth\/login/, { timeout: 30_000 });
 
       await page.goto(`${baseUrl}/manage/custom-widgets/new`);
