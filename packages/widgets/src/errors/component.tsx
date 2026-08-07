@@ -1,30 +1,24 @@
-import { useMemo } from "react";
 import { IconExclamationCircle, IconShield } from "@tabler/icons-react";
 import { TRPCClientError } from "@trpc/client";
 import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 
-import type { WidgetKind } from "@homarr/definitions";
-
-import type { WidgetDefinition } from "..";
-import { widgetImports } from "..";
+import type { WidgetDefinition } from "../definition";
 import { ErrorBoundaryError } from "./base";
 import type { BaseWidgetErrorProps } from "./base-component";
 import { BaseWidgetError } from "./base-component";
 
 interface WidgetErrorProps {
-  kind: WidgetKind;
+  definition?: WidgetDefinition;
   error: unknown;
   resetErrorBoundary: () => void;
 }
 
-export const WidgetError = ({ error, resetErrorBoundary, kind }: WidgetErrorProps) => {
-  const currentDefinition = useMemo(() => widgetImports[kind].definition, [kind]);
-
+export const WidgetError = ({ error, resetErrorBoundary, definition }: WidgetErrorProps) => {
   if (error instanceof ErrorBoundaryError) {
     return <BaseWidgetError {...error.getErrorBoundaryData()} onRetry={resetErrorBoundary} />;
   }
 
-  const widgetTrpcErrorData = handleWidgetTrpcError(error, currentDefinition);
+  const widgetTrpcErrorData = definition ? handleWidgetTrpcError(error, definition) : null;
   if (widgetTrpcErrorData) {
     return <BaseWidgetError {...widgetTrpcErrorData} onRetry={resetErrorBoundary} />;
   }
@@ -34,13 +28,7 @@ export const WidgetError = ({ error, resetErrorBoundary, kind }: WidgetErrorProp
     return <BaseWidgetError {...trpcErrorData} onRetry={resetErrorBoundary} />;
   }
 
-  return (
-    <BaseWidgetError
-      icon={IconExclamationCircle}
-      message={(error as { toString: () => string }).toString()}
-      onRetry={resetErrorBoundary}
-    />
-  );
+  return <BaseWidgetError icon={IconExclamationCircle} message={String(error)} onRetry={resetErrorBoundary} />;
 };
 
 const handleWidgetTrpcError = (

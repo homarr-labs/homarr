@@ -14,11 +14,11 @@ import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
 
-import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";
 import { FormProvider, useForm } from "../_inputs/form";
 import type { BoardItemAdvancedOptions } from "../../../validation/src/shared";
 import type { OptionsBuilderResult } from "../options";
+import type { WidgetDefinition } from "../definition";
 import { OPTIONS_SUPER_REFINE } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
@@ -32,8 +32,9 @@ export interface WidgetEditModalState {
   advancedOptions: BoardItemAdvancedOptions;
 }
 
-interface ModalProps<TSort extends WidgetKind> {
+export interface WidgetEditModalProps<TSort extends WidgetKind> {
   kind: TSort;
+  definition: WidgetDefinition;
   value: WidgetEditModalState;
   onSuccessfulEdit: (value: WidgetEditModalState) => void;
   integrationData: IntegrationSelectOption[];
@@ -43,7 +44,7 @@ interface ModalProps<TSort extends WidgetKind> {
   appId?: string;
 }
 
-export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, innerProps }) => {
+export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ actions, innerProps }) => {
   const t = useI18n();
   const { data: session } = useSession();
   const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
@@ -53,7 +54,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   z.config({
     customError: zodErrorMap(t),
   });
-  const { definition } = widgetImports[innerProps.kind];
+  const { definition } = innerProps;
   const options = definition.createOptions(innerProps.settings) as Record<string, OptionsBuilderResult[string]>;
   const optionsSuperRefine = (options as Record<symbol, unknown>)[OPTIONS_SUPER_REFINE] as
     | ((data: Record<string, unknown>, ctx: z.RefinementCtx) => void)
@@ -124,10 +125,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
         <WidgetIntegrationSelect
           label={t("item.edit.field.integrations.label")}
           data={innerProps.integrationData}
-          canSelectMultiple={
-            ((widgetImports[innerProps.kind].definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity) >
-            1
-          }
+          canSelectMultiple={((definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity) > 1}
           {...form.getInputProps("integrationIds")}
         />
       )}
