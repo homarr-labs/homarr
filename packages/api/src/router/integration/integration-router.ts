@@ -2,6 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
+import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
+import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
@@ -828,6 +830,8 @@ export const integrationRouter = createTRPCRouter({
       const integration = await createIntegrationAsync(ctx.integration);
       const result = await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
       invalidateIntegrationDataCache(ctx.integration.id);
+      mediaRequestListRequestHandler.invalidateCache();
+      mediaRequestStatsRequestHandler.invalidateCache();
       return result;
     }),
 });
