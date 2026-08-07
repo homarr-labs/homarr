@@ -327,13 +327,22 @@ export const groupRouter = createTRPCRouter({
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
 
+      const group = await ctx.db.query.groups.findFirst({
+        columns: { ownerId: true },
+        where: eq(groups.id, input.groupId),
+      });
+
       await ctx.db
         .update(groups)
         .set({
           ownerId: input.userId,
         })
         .where(eq(groups.id, input.groupId));
+
       invalidateUserCache(input.userId);
+      if (group?.ownerId && group.ownerId !== input.userId) {
+        invalidateUserCache(group.ownerId);
+      }
     }),
   deleteGroup: permissionRequiredProcedure
     .requiresPermission("admin")

@@ -12,7 +12,7 @@ export const memoryPublish = (channel: string, data: unknown) => {
   const serialized = superjson.stringify(data);
   lastData.set(channel, { data: serialized, timestamp: Date.now() });
 
-  // Bounded: evict oldest if over limit
+  // ponytail: FIFO eviction by Map insertion order, not timestamp.
   if (lastData.size > MAX_ENTRIES) {
     const oldest = lastData.keys().next().value;
     if (oldest) lastData.delete(oldest);
