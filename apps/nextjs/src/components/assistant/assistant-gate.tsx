@@ -4,7 +4,6 @@ import type { PropsWithChildren } from "react";
 import { useMemo } from "react";
 import dynamic from "next/dynamic";
 
-import { useSession } from "@homarr/auth/client";
 import { useScopedI18n } from "@homarr/translation/client";
 import { AssistantWidgetRendererProvider } from "@homarr/widgets";
 
@@ -51,23 +50,30 @@ const DisabledAssistant = ({ children, description }: PropsWithChildren<{ descri
   );
 };
 
+/**
+ * Why the assistant is or is not usable, resolved on the server.
+ *
+ * `unauthenticated` is kept apart from `unconfigured` because the server cannot check availability
+ * for a signed-out visitor, and telling them the instance is unconfigured would be a guess.
+ */
+export type AssistantAvailability = "enabled" | "unconfigured" | "unauthenticated" | "error";
+
 interface AssistantGateProps extends PropsWithChildren {
-  /** Resolved on the server from the instance configuration, not per user. */
-  enabled: boolean;
+  availability: AssistantAvailability;
 }
 
-export const AssistantGate = ({ enabled, children }: AssistantGateProps) => {
+const unavailableMessageKeys = {
+  unauthenticated: "unavailable.signIn",
+  unconfigured: "unavailable.notConfigured",
+  error: "unavailable.error",
+} as const;
+
+export const AssistantGate = ({ availability, children }: AssistantGateProps) => {
   const t = useScopedI18n("common.assistant");
-  const session = useSession();
 
-  if (!enabled) {
-    return <DisabledAssistant description={t("unavailable.notConfigured")}>{children}</DisabledAssistant>;
+  if (availability === "enabled") {
+    return <EnabledAssistantRoot>{children}</EnabledAssistantRoot>;
   }
 
-  // The instance has the assistant on, but it is still per-user gated behind a session.
-  if (session.status !== "authenticated") {
-    return <DisabledAssistant description={t("unavailable.signIn")}>{children}</DisabledAssistant>;
-  }
-
-  return <EnabledAssistantRoot>{children}</EnabledAssistantRoot>;
+  return <DisabledAssistant description={t(unavailableMessageKeys[availability])}>{children}</DisabledAssistant>;
 };
