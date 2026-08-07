@@ -923,7 +923,8 @@ const RequestTelemetry = () => {
   const metadata = useAuiState((state) => state.message.metadata);
   const messageId = useAuiState((state) => state.message.id);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
-  const threadMessageMetadata = useAuiState((state) => state.thread.messages.map((message) => message.metadata));
+  const threadMessages = useAuiState((state) => state.thread.messages);
+  const threadMessageMetadata = useMemo(() => threadMessages.map((message) => message.metadata), [threadMessages]);
   const persistedTelemetry = getAssistantTelemetry(metadata);
   const persistedUsage = getAssistantUsage(metadata);
   const generationQuery = clientApi.assistant.getGenerationTelemetry.useQuery(
