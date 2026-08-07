@@ -22,6 +22,5 @@ export default {
   refreshTags: async () => (await getHandler()).refreshTags(),
   getExpiration: async (...args: Parameters<CacheHandler["getExpiration"]>) =>
     (await getHandler()).getExpiration(...args),
-  updateTags: async (...args: Parameters<CacheHandler["updateTags"]>) =>
-    (await getHandler()).updateTags(...args),
+  updateTags: async (...args: Parameters<CacheHandler["updateTags"]>) => (await getHandler()).updateTags(...args),
 } satisfies CacheHandler;

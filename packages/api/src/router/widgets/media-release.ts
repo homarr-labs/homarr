@@ -12,19 +12,19 @@ export const mediaReleaseRouter = createTRPCRouter({
       const results = await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const innerHandler = mediaReleaseRequestHandler.handler(integration, {});
-        const { data, timestamp } = await innerHandler.getDataAsync();
+          const innerHandler = mediaReleaseRequestHandler.handler(integration, {});
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
-        return {
-          integration: {
-            id: integration.id,
-            name: integration.name,
-            kind: integration.kind,
-            updatedAt: timestamp,
-          },
-          releases: data,
-        };
-      },
+          return {
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+              updatedAt: timestamp,
+            },
+            releases: data,
+          };
+        },
         { queryKey: integrationQueryKey("media-release", "getMediaReleases") },
       );
       return results.flatMap((result) =>

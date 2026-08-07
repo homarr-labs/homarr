@@ -36,15 +36,16 @@ const integrationLoaders: Record<IntegrationKind, IntegrationLoader> = {
   nextcloud: () => import("../nextcloud/nextcloud.integration").then((m) => m.NextcloudIntegration),
   ntfy: () => import("../ntfy/ntfy-integration").then((m) => m.NTFYIntegration),
   nzbGet: () => import("../download-client/nzbget/nzbget-integration").then((m) => m.NzbGetIntegration),
-  openmediavault: () =>
-    import("../openmediavault/openmediavault-integration").then((m) => m.OpenMediaVaultIntegration),
+  openmediavault: () => import("../openmediavault/openmediavault-integration").then((m) => m.OpenMediaVaultIntegration),
   opnsense: () => import("../opnsense/opnsense-integration").then((m) => m.OPNsenseIntegration),
   overseerr: () => import("../overseerr/overseerr-integration").then((m) => m.OverseerrIntegration),
   paperlessNgx: () => import("../paperless-ngx/paperless-ngx-integration").then((m) => m.PaperlessNgxIntegration),
   patchmon: () => import("../patchmon/patchmon-integration").then((m) => m.PatchMonIntegration),
   peaNut: () => import("../peanut/peanut-integration").then((m) => m.PeaNutIntegration),
   piHole: () =>
-    import("../pi-hole/pi-hole-integration-factory").then((m) => [m.createPiHoleIntegrationAsync] as [IntegrationFactory]),
+    import("../pi-hole/pi-hole-integration-factory").then(
+      (m) => [m.createPiHoleIntegrationAsync] as [IntegrationFactory],
+    ),
   plex: () => import("../plex/plex-integration").then((m) => m.PlexIntegration),
   prowlarr: () => import("../prowlarr/prowlarr-integration").then((m) => m.ProwlarrIntegration),
   proxmox: () => import("../proxmox/proxmox-integration").then((m) => m.ProxmoxIntegration),

@@ -26,12 +26,16 @@ export const mediaServerRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const { data } = await mediaServerRequestHandler
-          .handler(integration, { showOnlyPlaying: input.showOnlyPlaying })
-          .getDataAsync();
-        return { integrationId: integration.id, integrationKind: integration.kind, sessions: data };
-      },
-        { queryKey: integrationQueryKey("media-server", "getCurrentStreams", { showOnlyPlaying: input.showOnlyPlaying }) },
+          const { data } = await mediaServerRequestHandler
+            .handler(integration, { showOnlyPlaying: input.showOnlyPlaying })
+            .getDataAsync();
+          return { integrationId: integration.id, integrationKind: integration.kind, sessions: data };
+        },
+        {
+          queryKey: integrationQueryKey("media-server", "getCurrentStreams", {
+            showOnlyPlaying: input.showOnlyPlaying,
+          }),
+        },
       );
     }),
 });

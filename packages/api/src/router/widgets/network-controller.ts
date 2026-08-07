@@ -12,19 +12,19 @@ export const networkControllerRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const innerHandler = networkControllerRequestHandler.handler(integration, {});
-        const { data, timestamp } = await innerHandler.getDataAsync();
+          const innerHandler = networkControllerRequestHandler.handler(integration, {});
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
-        return {
-          integration: {
-            id: integration.id,
-            name: integration.name,
-            kind: integration.kind,
-          },
-          summary: data,
-          updatedAt: timestamp,
-        };
-      },
+          return {
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+            },
+            summary: data,
+            updatedAt: timestamp,
+          };
+        },
         { queryKey: integrationQueryKey("network-controller", "summary") },
       );
     }),

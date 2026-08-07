@@ -85,7 +85,9 @@ const purify = createDOMPurify(window as unknown as Parameters<typeof createDOMP
 export const sanitizeSvg = (svgText: string) => {
   // linkedom's DOMParser omits html/body for fragment-only SVG; DOMPurify needs a body root.
   const wrapped = `<html><body>${svgText}</body></html>`;
-  return purify.sanitize(wrapped, svgSanitizeOptions);
+  const sanitized = purify.sanitize(wrapped, svgSanitizeOptions);
+  const svgMatch = sanitized.match(/<svg[\s\S]*<\/svg>/i);
+  return svgMatch ? svgMatch[0] : sanitized;
 };
 
 export { svgSanitizeOptions, purify };

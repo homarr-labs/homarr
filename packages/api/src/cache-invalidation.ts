@@ -12,15 +12,17 @@ import { cacheTags } from "./cache-tags";
 import { invalidateIntegrationDataCache } from "./integration-data-cache";
 
 // ponytail: revalidateTag throws outside Next.js request context (tests, tasks, websocket).
-// Ceiling: if Next.js context detection changes, update the try-catch.
+// Ceiling: if Next.js context detection changes, update the require/catch.
 const safeRevalidateTag = (tag: string) => {
   try {
-    // Dynamic import avoidance — revalidateTag is only available within Next.js runtime.
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { revalidateTag } = require("next/cache") as typeof import("next/cache");
     revalidateTag(tag, "max");
-  } catch {
-    // Not in a Next.js request context — no-op
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : "";
+    if (!msg.includes("static generation") && !msg.includes("was called outside a request scope")) {
+      console.warn(`[cache-invalidation] revalidateTag("${tag}") failed:`, msg);
+    }
   }
 };
 

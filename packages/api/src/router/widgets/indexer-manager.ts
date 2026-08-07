@@ -20,14 +20,14 @@ export const indexerManagerRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const innerHandler = indexerManagerRequestHandler.handler(integration, {});
-        const { data: indexers } = await innerHandler.getDataAsync();
+          const innerHandler = indexerManagerRequestHandler.handler(integration, {});
+          const { data: indexers } = await innerHandler.getDataAsync();
 
-        return {
-          integrationId: integration.id,
-          indexers,
-        };
-      },
+          return {
+            integrationId: integration.id,
+            indexers,
+          };
+        },
         { queryKey: integrationQueryKey("indexer-manager", "getIndexersStatus") },
       );
     }),

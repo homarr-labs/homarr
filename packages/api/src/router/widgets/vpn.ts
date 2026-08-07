@@ -12,17 +12,17 @@ export const vpnRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const { data, timestamp } = await vpnSummaryHandler.handler(integration, {}).getDataAsync();
-        return {
-          integration: {
-            id: integration.id,
-            name: integration.name,
-            kind: integration.kind,
-            updatedAt: timestamp,
-          },
-          summary: data,
-        };
-      },
+          const { data, timestamp } = await vpnSummaryHandler.handler(integration, {}).getDataAsync();
+          return {
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+              updatedAt: timestamp,
+            },
+            summary: data,
+          };
+        },
         { queryKey: integrationQueryKey("vpn", "getSummaries") },
       );
     }),

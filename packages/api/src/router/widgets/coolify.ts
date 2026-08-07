@@ -11,17 +11,17 @@ export const coolifyRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const innerHandler = coolifyRequestHandler.handler(integration, {});
-        const { data, timestamp } = await innerHandler.getDataAsync();
+          const innerHandler = coolifyRequestHandler.handler(integration, {});
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          integrationUrl: integration.url,
-          instanceInfo: data,
-          updatedAt: timestamp,
-        };
-      },
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationUrl: integration.url,
+            instanceInfo: data,
+            updatedAt: timestamp,
+          };
+        },
         { queryKey: integrationQueryKey("coolify", "getInstancesInfo") },
       );
     }),

@@ -33,11 +33,7 @@ export async function SessionScopedProviders({ children }: PropsWithChildren) {
         })
       : null,
   );
-  const [session, user, serverSettings] = await Promise.all([
-    sessionPromise,
-    userPromise,
-    getRscServerSettingsAsync(),
-  ]);
+  const [session, user, serverSettings] = await Promise.all([sessionPromise, userPromise, getRscServerSettingsAsync()]);
 
   const StackedProvider = composeWrappers([
     (innerProps) => <AuthProvider session={session} logoutUrl={env.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />,

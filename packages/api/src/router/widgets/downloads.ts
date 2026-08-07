@@ -28,14 +28,18 @@ export const downloadsRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
-        const { data, timestamp } = await innerHandler.getDataAsync();
-        return {
-          integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
-          data,
-        };
-      },
-        { queryKey: integrationQueryKey("downloads", "getJobsAndStatuses", { limitPerIntegration: input.limitPerIntegration }) },
+          const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
+          const { data, timestamp } = await innerHandler.getDataAsync();
+          return {
+            integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
+            data,
+          };
+        },
+        {
+          queryKey: integrationQueryKey("downloads", "getJobsAndStatuses", {
+            limitPerIntegration: input.limitPerIntegration,
+          }),
+        },
       );
     }),
   pause: protectedProcedure

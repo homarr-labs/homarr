@@ -42,21 +42,21 @@ export const umamiRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const innerHandler = umamiRequestHandler.handler(integration, {
-          websiteId: input.websiteId,
-          timeFrame: input.timeFrame,
-          eventName: input.eventName,
-        });
-        const { data, timestamp } = await innerHandler.getDataAsync();
+          const innerHandler = umamiRequestHandler.handler(integration, {
+            websiteId: input.websiteId,
+            timeFrame: input.timeFrame,
+            eventName: input.eventName,
+          });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          integrationUrl: integration.url,
-          visitorStats: data,
-          updatedAt: timestamp,
-        };
-      },
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationUrl: integration.url,
+            visitorStats: data,
+            updatedAt: timestamp,
+          };
+        },
         {
           queryKey: integrationQueryKey("umami", "getVisitorStats", {
             websiteId: input.websiteId,

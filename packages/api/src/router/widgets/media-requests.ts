@@ -29,9 +29,9 @@ export const mediaRequestsRouter = createTRPCRouter({
       const results = await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const { data } = await mediaRequestListRequestHandler.handler(integration, input).getDataAsync();
-        return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
-      },
+          const { data } = await mediaRequestListRequestHandler.handler(integration, input).getDataAsync();
+          return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
+        },
         { queryKey: integrationQueryKey("media-requests", "getLatestRequests", input) },
       );
       return results
@@ -65,9 +65,9 @@ export const mediaRequestsRouter = createTRPCRouter({
       const results = await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const { data } = await mediaRequestStatsRequestHandler.handler(integration, {}).getDataAsync();
-        return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
-      },
+          const { data } = await mediaRequestStatsRequestHandler.handler(integration, {}).getDataAsync();
+          return { integration: { id: integration.id, name: integration.name, kind: integration.kind }, data };
+        },
         { queryKey: integrationQueryKey("media-requests", "getStats") },
       );
       return {

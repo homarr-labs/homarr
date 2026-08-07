@@ -12,17 +12,17 @@ export const upsRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const innerHandler = upsSummariesRequestHandler.handler(integration, {});
-        const { data, timestamp } = await innerHandler.getDataAsync();
+          const innerHandler = upsSummariesRequestHandler.handler(integration, {});
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          integrationUrl: integration.url,
-          summaries: data,
-          updatedAt: timestamp,
-        };
-      },
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationUrl: integration.url,
+            summaries: data,
+            updatedAt: timestamp,
+          };
+        },
         { queryKey: integrationQueryKey("ups", "getSummaries") },
       );
     }),

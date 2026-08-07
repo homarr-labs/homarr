@@ -31,7 +31,11 @@ interface CreateBoardLayoutProps<TParams extends Params> {
 
 const BoardLayoutFallback = ({ headerActions }: { headerActions: JSX.Element }) => (
   <ClientShell hasNavigation={false}>
-    <MainHeader logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />} actions={headerActions} hasNavigation={false} />
+    <MainHeader
+      logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+      actions={headerActions}
+      hasNavigation={false}
+    />
     <AppShellMain>
       <Skeleton height="100%" radius="sm" />
     </AppShellMain>

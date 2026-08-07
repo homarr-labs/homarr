@@ -29,14 +29,14 @@ export const healthMonitoringRouter = createTRPCRouter({
       return await settleIntegrationQueries(
         ctx.integrations,
         async (integration) => {
-        const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          healthInfo: data,
-          updatedAt: timestamp,
-        };
-      },
+          const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            healthInfo: data,
+            updatedAt: timestamp,
+          };
+        },
         { queryKey: integrationQueryKey("health-monitoring", "getSystemHealthStatus") },
       );
     }),

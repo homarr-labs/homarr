@@ -63,6 +63,26 @@ describe("getCachedIntegrationData", () => {
     vi.useRealTimers();
   });
 
+  test("concurrent cold-cache calls coalesce into one fetch, never return undefined", async () => {
+    let resolveOuter!: (v: { value: number }) => void;
+    const fetcher = vi.fn(
+      () =>
+        new Promise<{ value: number }>((resolve) => {
+          resolveOuter = resolve;
+        }),
+    );
+
+    const p1 = getCachedIntegrationData("integration-a", "widget:concurrent", fetcher);
+    const p2 = getCachedIntegrationData("integration-a", "widget:concurrent", fetcher);
+
+    resolveOuter({ value: 42 });
+
+    const [r1, r2] = await Promise.all([p1, p2]);
+    expect(r1).toEqual({ value: 42 });
+    expect(r2).toEqual({ value: 42 });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
   test("invalidates all cache entries for an integration", async () => {
     const fetcherOne = vi.fn(async () => ({ value: "one" }));
     const fetcherTwo = vi.fn(async () => ({ value: "two" }));

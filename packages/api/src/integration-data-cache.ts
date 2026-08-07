@@ -31,11 +31,11 @@ export const getCachedIntegrationData = async <T>(
   const now = Date.now();
 
   if (existing) {
-    if (now - existing.timestamp < ttlMs) {
-      return existing.data;
-    }
     if (existing.pending) {
       return existing.pending;
+    }
+    if (existing.timestamp > 0 && now - existing.timestamp < ttlMs) {
+      return existing.data;
     }
   }
 
