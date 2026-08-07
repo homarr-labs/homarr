@@ -1,6 +1,6 @@
 // ponytail: module-level cache is single-instance only.
-// Multi-instance deployments (REDIS_IS_EXTERNAL=true) bypass this and rely on
-// the Redis-backed Next cache handler for cross-instance coordination.
+// Multi-instance deployments (REDIS_IS_EXTERNAL=true) bypass this entirely —
+// each request calls the upstream fetcher directly.
 const isMultiInstance = process.env.REDIS_IS_EXTERNAL === "true";
 
 interface CachedEntry<T> {

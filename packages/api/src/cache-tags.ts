@@ -5,5 +5,4 @@ export const cacheTags = {
   boardList: () => "board-list" as const,
   user: (userId: string) => `user:${userId}` as const,
   integration: (integrationId: string) => `integration:${integrationId}` as const,
-  app: (appId: string) => `app:${appId}` as const,
 } as const;

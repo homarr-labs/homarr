@@ -6,6 +6,7 @@ import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-ma
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
 import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
@@ -45,5 +46,8 @@ export const indexerManagerRouter = createTRPCRouter({
           });
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
     }),
 });

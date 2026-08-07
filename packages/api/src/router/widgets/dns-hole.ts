@@ -5,6 +5,7 @@ import { createIntegrationAsync } from "@homarr/integrations";
 import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
 import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
@@ -44,6 +45,7 @@ export const dnsHoleRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration } }) => {
       const client = await createIntegrationAsync(integration);
       await client.enableAsync();
+      invalidateIntegrationDataCache(integration.id);
     }),
 
   disable: protectedProcedure
@@ -63,5 +65,6 @@ export const dnsHoleRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       await client.disableAsync(input.duration);
+      invalidateIntegrationDataCache(integration.id);
     }),
 });

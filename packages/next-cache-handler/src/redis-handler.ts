@@ -152,13 +152,36 @@ export class RedisCacheHandler implements CacheHandler {
   async getExpiration(tags: string[]): Promise<number> {
     if (tags.length === 0) return 0;
 
+    const missingTags: string[] = [];
     let maxTimestamp = 0;
+
     for (const tag of tags) {
       const cached = this.tagCache.get(tag);
-      if (cached && cached > maxTimestamp) {
-        maxTimestamp = cached;
+      if (cached !== undefined) {
+        if (cached > maxTimestamp) maxTimestamp = cached;
+      } else {
+        missingTags.push(tag);
       }
     }
+
+    if (missingTags.length > 0) {
+      try {
+        await this.redis.connect().catch(() => {});
+        const keys = missingTags.map((t) => this.tagKey(t));
+        const values = await this.redis.mget(...keys);
+        for (let i = 0; i < missingTags.length; i++) {
+          const val = values[i];
+          if (val) {
+            const ts = Number(val);
+            this.tagCache.set(missingTags[i]!, ts);
+            if (ts > maxTimestamp) maxTimestamp = ts;
+          }
+        }
+      } catch {
+        // Fail open
+      }
+    }
+
     return maxTimestamp;
   }
 

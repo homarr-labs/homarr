@@ -10,6 +10,7 @@ import {
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
 import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
@@ -107,5 +108,6 @@ export const mediaRequestsRouter = createTRPCRouter({
       } as const;
 
       await answerActions[input.answer](input.requestId);
+      invalidateIntegrationDataCache(integration.id);
     }),
 });

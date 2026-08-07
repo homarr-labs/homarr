@@ -6,6 +6,7 @@ import { downloadClientRequestHandler } from "@homarr/request-handler/downloads"
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
 import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
@@ -53,6 +54,9 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.pauseQueueAsync();
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
       downloadClientRequestHandler.invalidateCache();
     }),
   pauseItem: protectedProcedure
@@ -65,6 +69,9 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.pauseItemAsync(input.item);
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
       downloadClientRequestHandler.invalidateCache();
     }),
   resume: protectedProcedure
@@ -83,6 +90,9 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.resumeQueueAsync();
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
       downloadClientRequestHandler.invalidateCache();
     }),
   resumeItem: protectedProcedure
@@ -95,6 +105,9 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.resumeItemAsync(input.item);
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
       downloadClientRequestHandler.invalidateCache();
     }),
   deleteItem: protectedProcedure
@@ -107,6 +120,9 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.deleteItemAsync(input.item, input.fromDisk);
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
       downloadClientRequestHandler.invalidateCache();
     }),
 });
