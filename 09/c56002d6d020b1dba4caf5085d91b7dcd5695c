@@ -1,0 +1,25 @@
+packages/db/schema/mysql.ts
+  s_5dcfe7e44b75bf::t_40e54c143f084e 601,607-614
+  s_5dcfe7e44b75bf::t_bc9b6b719c5835 9
+packages/db/test/schema.spec.ts
+  s_5dcfe7e44b75bf::t_ded24083fc5367 2,4,7,112,152-153
+  s_5dcfe7e44b75bf::t_13a2386fc0ce82 60-72
+  s_5dcfe7e44b75bf::t_41221402c21ef6 109-111,114-115,117,120,122,124-131,135,140,146-151,154-164
+  s_5dcfe7e44b75bf::t_8bd62250abea05 73-74,165-166
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "09c56002d6d020b1dba4caf5085d91b7dcd5695c",
+  "prompts": {},
+  "sessions": {
+    "s_5dcfe7e44b75bf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9bcd108a-daea-48a5-b53c-d927f15a1b24",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
