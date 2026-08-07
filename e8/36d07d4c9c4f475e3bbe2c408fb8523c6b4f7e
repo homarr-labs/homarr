@@ -1,0 +1,27 @@
+apps/nextjs/src/app/api/user-medias/sanitize.spec.ts
+  s_a0e1fd495b97ff::t_e5914fcad3c4bf 70-84
+  s_a0e1fd495b97ff::t_c7236fa294c486 3
+.env.example
+  s_a0e1fd495b97ff::t_ce7875e2f57c82 58-61
+apps/nextjs/src/app/api/user-medias/[id]/route.ts
+  s_a0e1fd495b97ff::t_fcc3364bb3256f 8
+  s_a0e1fd495b97ff::t_67f3945eca7e20 26-28
+apps/nextjs/src/app/api/user-medias/svg-purify.ts
+  s_a0e1fd495b97ff::t_bdc8486030670a 94-100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "e836d07d4c9c4f475e3bbe2c408fb8523c6b4f7e",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
