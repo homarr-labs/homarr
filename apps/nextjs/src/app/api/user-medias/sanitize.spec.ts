@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { purify, sanitizeSvg, svgSanitizeOptions } from "./svg-purify";
+import { looksLikeSvg, purify, sanitizeSvg, svgSanitizeOptions } from "./svg-purify";
 
 describe("SVG sanitization", () => {
   it("strips script tags from SVG", () => {
@@ -65,6 +65,21 @@ describe("SVG sanitization", () => {
     const dirty = '<svg><animate onbegin="alert(1)"/></svg>';
     const clean = sanitizeSvg(dirty);
     expect(clean).not.toContain("onbegin");
+  });
+
+  it("DOMPurify actually strips dirty payload (guard against no-op shim)", () => {
+    const dirty = '<svg><script>alert("xss")</script><rect width="1" height="1"/></svg>';
+    const clean = sanitizeSvg(dirty);
+    expect(clean).not.toBe(dirty);
+    expect(clean).not.toContain("<script");
+    expect(clean).toContain("<rect");
+  });
+
+  it("looksLikeSvg detects SVG content regardless of MIME", () => {
+    const svg = new TextEncoder().encode('<svg viewBox="0 0 24 24"><path d="M0 0"/></svg>');
+    const png = new Uint8Array([0x89, 0x50, 0x4e, 0x47]);
+    expect(looksLikeSvg(svg)).toBe(true);
+    expect(looksLikeSvg(png)).toBe(false);
   });
 
   it("preserves well-formed SVG with self-closing children", () => {

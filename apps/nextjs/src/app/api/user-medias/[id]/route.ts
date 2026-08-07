@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 import { db, eq } from "@homarr/db";
 import { medias } from "@homarr/db/schema";
 
-import { sanitizeSvg } from "../svg-purify";
+import { looksLikeSvg, sanitizeSvg } from "../svg-purify";
 
 export async function GET(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -23,8 +23,9 @@ export async function GET(_req: NextRequest, props: { params: Promise<{ id: stri
 
   let content = new Uint8Array(image.content);
 
-  // Sanitize SVG content to prevent XSS attacks
-  if (image.contentType === "image/svg+xml" || image.contentType === "image/svg") {
+  const isSvgMime = image.contentType === "image/svg+xml" || image.contentType === "image/svg";
+  const isSvgContent = !isSvgMime && looksLikeSvg(content);
+  if (isSvgMime || isSvgContent) {
     const svgText = new TextDecoder().decode(content);
     const sanitized = sanitizeSvg(svgText);
     content = new TextEncoder().encode(sanitized);

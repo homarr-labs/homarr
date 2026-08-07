@@ -91,4 +91,11 @@ export const sanitizeSvg = (svgText: string) => {
   return svgMatch ? svgMatch[0] : "";
 };
 
+// ponytail: content-based SVG detection — catches mislabeled MIME types.
+// Ceiling: only checks first 512 bytes; deeply embedded SVG in other XML won't match.
+export function looksLikeSvg(content: Uint8Array): boolean {
+  const head = new TextDecoder().decode(content.subarray(0, 512));
+  return /<svg[\s>]/i.test(head);
+}
+
 export { svgSanitizeOptions, purify };
