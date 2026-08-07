@@ -33,7 +33,7 @@ jobs:
           # 175441: homarr-releases[bot]
           gh pr list --repo "${{ github.repository }}" --base dev --state open --limit 100 \
             --json number,author,reviewDecision,mergeStateStatus,autoMergeRequest \
-            --jq '.[] | select(IN(.author.login; "renovate[bot]", "homarr-crowdin[bot]", "homarr-update-contributors[bot]", "homarr-releases[bot]")) | select(.reviewDecision == "APPROVED") | select(.mergeStateStatus == "CLEAN") | select(.autoMergeRequest == null) | .number' \
+            --jq '.[] | select(.author.login as $login | ["app/homarr-renovate", "app/homarr-crowdin", "app/homarr-update-contributors", "app/homarr-releases"] | index($login)) | select(.reviewDecision == "APPROVED") | select(.mergeStateStatus == "CLEAN") | select(.autoMergeRequest == null) | .number' \
           | while read -r pr; do
               echo "Re-enabling auto-merge on PR #$pr"
               gh pr merge "$pr" --auto --squash --delete-branch
