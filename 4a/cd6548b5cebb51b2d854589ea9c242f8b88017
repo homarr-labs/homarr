@@ -1,0 +1,24 @@
+packages/db/test/mysql-migration.spec.ts
+  s_5dcfe7e44b75bf::t_cc347e94f1c5fc 3,7,39-53
+  s_5dcfe7e44b75bf::t_8722bc384d5d98 54
+packages/db/migrations/mysql/0044_add_assistant.sql
+  s_5dcfe7e44b75bf::t_99fe34ac84bfa2 29
+packages/db/schema/mysql.ts
+  s_5dcfe7e44b75bf::t_99fe34ac84bfa2 11,540-542
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4acd6548b5cebb51b2d854589ea9c242f8b88017",
+  "prompts": {},
+  "sessions": {
+    "s_5dcfe7e44b75bf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9bcd108a-daea-48a5-b53c-d927f15a1b24",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
