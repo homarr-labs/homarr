@@ -32,7 +32,7 @@ export async function GET(_req: NextRequest, props: { params: Promise<{ id: stri
   }
 
   const headers = new Headers();
-  headers.set("Content-Type", image.contentType);
+  headers.set("Content-Type", isSvgContent ? "image/svg+xml" : image.contentType);
   headers.set("Content-Length", content.length.toString());
   headers.set("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; sandbox");
   headers.set("X-Content-Type-Options", "nosniff");
