@@ -1,0 +1,28 @@
+packages/api/src/router/board.ts
+  s_a0e1fd495b97ff::t_cb3c6298defe85 1429
+  s_a0e1fd495b97ff::t_7cccf5ae39c03a 1492
+packages/next-cache-handler/src/redis-handler.ts
+  s_a0e1fd495b97ff::t_de8b2af622fe51 26
+  s_a0e1fd495b97ff::t_f55e344843938e 134-146
+packages/api/src/integration-data-cache.ts
+  s_a0e1fd495b97ff::t_a73135f54b6385 1-4
+  s_a0e1fd495b97ff::t_10529d24d0a387 24-27
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_a0e1fd495b97ff::t_e5e64f28b9d1f1 93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "6b45aca5d52935136a66535297a8c89529ca1ba8",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
