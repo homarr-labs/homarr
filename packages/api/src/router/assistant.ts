@@ -738,7 +738,7 @@ export const assistantRouter = createTRPCRouter({
         }),
         getConfigurationAsync(ctx.db),
       ]);
-      if (!message) throw new TRPCError({ code: "NOT_FOUND", message: "Message not found." });
+      if (!message) return { complete: true, generations: [] };
       if (configuration?.provider !== "openrouter" || !configuration.encryptedApiKey) {
         return { complete: true, generations: [] };
       }
