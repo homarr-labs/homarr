@@ -57,7 +57,7 @@ export class RedisCacheHandler implements CacheHandler {
 
       const allTags = [...parsed.tags, ...softTags];
       const expiration = await this.getExpiration(allTags);
-      if (expiration !== 0 && expiration < parsed.timestamp) {
+      if (expiration !== 0 && expiration > parsed.timestamp) {
         return undefined;
       }
 

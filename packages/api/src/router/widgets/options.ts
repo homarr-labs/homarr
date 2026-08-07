@@ -53,6 +53,10 @@ export const optionsRouter = createTRPCRouter({
         .set({ options: SuperJSON.stringify(options) })
         .where(eq(items.id, input.itemId));
 
-      invalidateBoardCache(input.boardId);
+      const board = await ctx.db.query.boards.findFirst({
+        where: eq(boards.id, input.boardId),
+        columns: { name: true },
+      });
+      invalidateBoardCache(input.boardId, board?.name);
     }),
 });
