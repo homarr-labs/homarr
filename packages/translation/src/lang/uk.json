@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "Інверсія сортування"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Не вдалося отримати статистику контейнерів"
+        "internalServerError": "Не вдалося отримати статистику контейнерів",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "Показувати тільки поточне відтворення",
           "description": "Вимкнення цієї опції не працюватиме для Plex."
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Зараз відтворюється",
@@ -2734,6 +2757,9 @@
         "id": "Id",
         "status": "Статус",
         "directPlay": "Пряме відтворення",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "Транскодування",
         "paused": "Призупинено",
         "remaining": "Залишилося {minutes} хв",
@@ -3768,18 +3794,6 @@
           "label": "Показувати пісні",
           "description": "Показати загальну кількість пісень у вашій музичній бібліотеці (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Показати, що зараз відтворюються",
-          "description": "Показувати пісні, що зараз відтворюються (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Показати список відтворення зараз",
-          "description": "Відображати окремі треки замість лише кількості активних потоків (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Максимум елементів для відтворення",
-          "description": "Максимальна кількість треків для відображення у списку відтворення (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Показувати кількість бібліотек",
           "description": "Показати кількість бібліотек на вашому екземплярі (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "Подкасти",
       "listeningTime": "Час прослуховування",
       "activeSessions": "Активні Сесії",
-      "nowPlaying": "Зараз програється",
-      "nowPlayingCount": "{count, plural, one {# трансляція} few {# трансляції} many {# трансляцій} other {# трансляцій}}",
       "error": {
         "internalServerError": "Не вдалося отримати статистику аудіо"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Показати версію агента"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Системи не знайдені",
       "error": {
-        "internalServerError": "Не вдається підключитися до Beszel. Перевірте параметри інтеграції."
+        "internalServerError": "Не вдається підключитися до Beszel. Перевірте параметри інтеграції.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "Система",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "Видалити",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Контейнери видалено",

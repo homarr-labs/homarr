@@ -6,6 +6,7 @@
  * initial client graph, even before a board has rendered one widget.
  */
 export const widgetQueryRefetchIntervals = [
+  { queryKey: [["docker", "getContainers"]], intervalSeconds: 30 },
   { queryKey: [["widget", "dnsHole"]], intervalSeconds: 5 },
   { queryKey: [["widget", "downloads"]], intervalSeconds: 5 },
   { queryKey: [["widget", "firewall"]], intervalSeconds: 5 },
