@@ -1,6 +1,8 @@
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
+import { getCachedIntegrationData } from "./integration-data-cache";
+
 const logger = createLogger({ module: "settleIntegrations" });
 
 interface IntegrationLike {
@@ -11,14 +13,29 @@ interface IntegrationLike {
 
 interface Options<TIntegration extends IntegrationLike, TResult> {
   fallback?: (integration: TIntegration, error: unknown) => TResult;
+  /** Widget procedure key, e.g. `downloads:getJobsAndStatuses:{"limitPerIntegration":50}` */
+  queryKey?: string;
 }
+
+export const integrationQueryKey = (widget: string, procedure: string, params?: unknown) => {
+  if (params === undefined) return `${widget}:${procedure}`;
+  return `${widget}:${procedure}:${JSON.stringify(params)}`;
+};
 
 export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
   integrations: TIntegration[],
   fn: (integration: TIntegration) => Promise<TResult>,
   options?: Options<TIntegration, TResult>,
 ): Promise<TResult[]> {
-  const settled = await Promise.allSettled(integrations.map(async (integration) => fn(integration)));
+  const queryKey = options?.queryKey;
+  const runQuery = async (integration: TIntegration) => {
+    if (queryKey) {
+      return getCachedIntegrationData(integration.id, queryKey, () => fn(integration));
+    }
+    return fn(integration);
+  };
+
+  const settled = await Promise.allSettled(integrations.map(runQuery));
   const results: TResult[] = [];
   const errors: unknown[] = [];
 

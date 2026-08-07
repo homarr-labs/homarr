@@ -1,5 +1,6 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { Alert, Card, Center, Code, Stack, Text, Title } from "@mantine/core";
+import { Alert, Card, Center, Code, Loader, Stack, Text, Title } from "@mantine/core";
 import { IconLogin } from "@tabler/icons-react";
 
 import { env } from "@homarr/auth/env";
@@ -18,8 +19,7 @@ interface LoginProps {
   }>;
 }
 
-export default async function Login(props: LoginProps) {
-  const searchParams = await props.searchParams;
+async function LoginContent({ searchParams }: { searchParams: { callbackUrl?: string } }) {
   const session = await auth();
 
   if (session) {
@@ -57,5 +57,21 @@ export default async function Login(props: LoginProps) {
         </Card>
       </Stack>
     </Center>
+  );
+}
+
+export default async function Login(props: LoginProps) {
+  const searchParams = await props.searchParams;
+
+  return (
+    <Suspense
+      fallback={
+        <Center h="100vh">
+          <Loader size="lg" />
+        </Center>
+      }
+    >
+      <LoginContent searchParams={searchParams} />
+    </Suspense>
   );
 }

@@ -3,7 +3,7 @@ import { notificationsRequestHandler } from "@homarr/request-handler/notificatio
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const createNotificationsIntegrationMiddleware = (action: IntegrationAction) =>
@@ -13,7 +13,9 @@ export const notificationsRouter = createTRPCRouter({
   getNotifications: publicProcedure
     .unstable_concat(createNotificationsIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
         const innerHandler = notificationsRequestHandler.handler(integration, {});
         const { data, timestamp } = await innerHandler.getDataAsync();
 
@@ -26,6 +28,8 @@ export const notificationsRouter = createTRPCRouter({
           },
           data,
         };
-      });
+      },
+        { queryKey: integrationQueryKey("notifications", "getNotifications") },
+      );
     }),
 });

@@ -1,14 +1,16 @@
 import { uptimeKumaRequestHandler } from "@homarr/request-handler/uptime-kuma";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const uptimeKumaRouter = createTRPCRouter({
   getDashboard: publicProcedure
     .concat(createManyIntegrationMiddleware("query", "uptimeKuma"))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
         const innerHandler = uptimeKumaRequestHandler.handler(integration, {});
         const { data, timestamp } = await innerHandler.getDataAsync();
 
@@ -19,6 +21,8 @@ export const uptimeKumaRouter = createTRPCRouter({
           dashboard: data,
           updatedAt: timestamp,
         };
-      });
+      },
+        { queryKey: integrationQueryKey("uptime-kuma", "getDashboard") },
+      );
     }),
 });

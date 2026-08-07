@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { cache } from "react";
+import { Center, Loader } from "@mantine/core";
 import { TRPCError } from "@trpc/server";
 
 // Placed here because gridstack styles are used for board content
@@ -33,6 +35,52 @@ interface Props<TParams extends Params> {
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
 }
 
+interface BoardContentPageProps<TParams extends Params> {
+  params: TParams;
+  getInitialBoard: (params: TParams) => Promise<Board>;
+}
+
+async function BoardContentPageDynamic<TParams extends Params>({
+  params,
+  getInitialBoard,
+}: BoardContentPageProps<TParams>) {
+  const queryClient = getQueryClient();
+
+  const [board, session] = await Promise.all([getInitialBoard(params), auth()]);
+
+  const itemsMap = board.items.reduce((acc, item) => {
+    const existing = acc.get(item.kind);
+    if (existing) {
+      existing.push(item);
+    } else {
+      acc.set(item.kind, [item]);
+    }
+    return acc;
+  }, new Map<WidgetKind, Item[]>());
+  const [integrations] = await Promise.all([
+    getIntegrationsWithPermissionsAsync(session),
+    ...Array.from(itemsMap).map(([kind, items]) =>
+      prefetchForKindAsync(kind, queryClient, items).catch((error) => {
+        logger.error(
+          new ErrorWithMetadata(
+            "Failed to prefetch widget",
+            { widgetKind: kind, itemCount: items.length },
+            { cause: error },
+          ),
+        );
+      }),
+    ),
+  ]);
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <IntegrationProvider integrations={integrations}>
+        <DynamicClientBoard />
+      </IntegrationProvider>
+    </HydrationBoundary>
+  );
+}
+
 export const createBoardContentPage = <TParams extends Record<string, unknown>>({
   getInitialBoardAsync: getInitialBoard,
 }: Props<TParams>) => {
@@ -45,40 +93,17 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     // eslint-disable-next-line no-restricted-syntax
     page: async ({ params }: { params: Promise<TParams> }) => {
       const resolvedParams = await params;
-      const queryClient = getQueryClient();
-
-      const [board, session] = await Promise.all([getInitialBoard(resolvedParams), auth()]);
-
-      const itemsMap = board.items.reduce((acc, item) => {
-        const existing = acc.get(item.kind);
-        if (existing) {
-          existing.push(item);
-        } else {
-          acc.set(item.kind, [item]);
-        }
-        return acc;
-      }, new Map<WidgetKind, Item[]>());
-      const [integrations] = await Promise.all([
-        getIntegrationsWithPermissionsAsync(session),
-        ...Array.from(itemsMap).map(([kind, items]) =>
-          prefetchForKindAsync(kind, queryClient, items).catch((error) => {
-            logger.error(
-              new ErrorWithMetadata(
-                "Failed to prefetch widget",
-                { widgetKind: kind, itemCount: items.length },
-                { cause: error },
-              ),
-            );
-          }),
-        ),
-      ]);
 
       return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <IntegrationProvider integrations={integrations}>
-            <DynamicClientBoard />
-          </IntegrationProvider>
-        </HydrationBoundary>
+        <Suspense
+          fallback={
+            <Center w="100%" h="100%">
+              <Loader size="xl" />
+            </Center>
+          }
+        >
+          <BoardContentPageDynamic params={resolvedParams} getInitialBoard={getInitialBoard} />
+        </Suspense>
       );
     },
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {

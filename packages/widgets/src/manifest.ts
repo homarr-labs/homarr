@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 
-import { objectEntries } from "@homarr/common";
+import { createRetryableLoader, objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 
@@ -142,25 +142,6 @@ const componentLoaders: Record<WidgetKind, () => Promise<WidgetComponentModule>>
 const definitionPromises = new Map<WidgetKind, Promise<WidgetDefinition>>();
 
 export const widgetKinds = Object.keys(moduleLoaders) as WidgetKind[];
-
-export const createRetryableLoader = <TKey, TValue>(loaders: ReadonlyMap<TKey, () => Promise<TValue>>) => {
-  const promises = new Map<TKey, Promise<TValue>>();
-
-  return (key: TKey) => {
-    const existing = promises.get(key);
-    if (existing) return existing;
-
-    const loader = loaders.get(key);
-    if (!loader) throw new Error(`No loader is registered for ${String(key)}`);
-
-    const promise = loader();
-    promises.set(key, promise);
-    void promise.catch(() => {
-      if (promises.get(key) === promise) promises.delete(key);
-    });
-    return promise;
-  };
-};
 
 export const loadWidgetModule = createRetryableLoader(
   new Map(Object.entries(moduleLoaders) as [WidgetKind, () => Promise<WidgetModule>][]),

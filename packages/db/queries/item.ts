@@ -2,7 +2,7 @@ import type { WidgetKind } from "@homarr/definitions";
 
 import type { Database } from "..";
 import { inArray } from "..";
-import type { inferSupportedIntegrations } from "../../widgets/src";
+import type { inferSupportedIntegrations } from "../../widgets/src/import";
 import { items } from "../schema";
 
 export const getItemsWithIntegrationsAsync = async <TKind extends WidgetKind>(

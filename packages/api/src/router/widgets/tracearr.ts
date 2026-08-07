@@ -1,12 +1,14 @@
 import { tracearrRequestHandler } from "@homarr/request-handler/tracearr";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const tracearrRouter = createTRPCRouter({
   getDashboard: publicProcedure.concat(createManyIntegrationMiddleware("query", "tracearr")).query(async ({ ctx }) => {
-    return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+    return await settleIntegrationQueries(
+      ctx.integrations,
+      async (integration) => {
       const innerHandler = tracearrRequestHandler.handler(integration, {});
       const { data, timestamp } = await innerHandler.getDataAsync();
 
@@ -17,6 +19,8 @@ export const tracearrRouter = createTRPCRouter({
         dashboard: data,
         updatedAt: timestamp,
       };
-    });
+    },
+      { queryKey: integrationQueryKey("tracearr", "getDashboard") },
+    );
   }),
 });

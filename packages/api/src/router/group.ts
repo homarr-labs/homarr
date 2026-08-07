@@ -19,6 +19,7 @@ import {
 } from "@homarr/validation/group";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import { invalidateUserCache } from "../cache-invalidation";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const groupRouter = createTRPCRouter({
@@ -245,6 +246,14 @@ export const groupRouter = createTRPCRouter({
           mobileHomeBoardId: input.settings.mobileHomeBoardId,
         })
         .where(eq(groups.id, input.id));
+
+      const members = await ctx.db.query.groupMembers.findMany({
+        columns: { userId: true },
+        where: eq(groupMembers.groupId, input.id),
+      });
+      for (const member of members) {
+        invalidateUserCache(member.userId);
+      }
     }),
   savePositions: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -275,6 +284,11 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
 
+      const members = await ctx.db.query.groupMembers.findMany({
+        columns: { userId: true },
+        where: eq(groupMembers.groupId, input.groupId),
+      });
+
       await ctx.db.delete(groupPermissions).where(eq(groupPermissions.groupId, input.groupId));
 
       if (input.permissions.length > 0) {
@@ -284,6 +298,10 @@ export const groupRouter = createTRPCRouter({
             permission,
           })),
         );
+      }
+
+      for (const member of members) {
+        invalidateUserCache(member.userId);
       }
     }),
   transferOwnership: permissionRequiredProcedure
@@ -307,7 +325,16 @@ export const groupRouter = createTRPCRouter({
       await throwIfGroupNotFoundAsync(ctx.db, input.id);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.id);
 
+      const members = await ctx.db.query.groupMembers.findMany({
+        columns: { userId: true },
+        where: eq(groupMembers.groupId, input.id),
+      });
+
       await ctx.db.delete(groups).where(eq(groups.id, input.id));
+
+      for (const member of members) {
+        invalidateUserCache(member.userId);
+      }
     }),
   addMember: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -339,6 +366,8 @@ export const groupRouter = createTRPCRouter({
         groupId: input.groupId,
         userId: input.userId,
       });
+
+      invalidateUserCache(input.userId);
     }),
   removeMember: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -351,6 +380,8 @@ export const groupRouter = createTRPCRouter({
       await ctx.db
         .delete(groupMembers)
         .where(and(eq(groupMembers.groupId, input.groupId), eq(groupMembers.userId, input.userId)));
+
+      invalidateUserCache(input.userId);
     }),
 });
 

@@ -8,6 +8,8 @@ import type { Database } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import { userChangeSearchPreferencesSchema } from "@homarr/validation/user";
 
+import { invalidateUserCache } from "../../cache-invalidation";
+
 export const changeSearchPreferencesInputSchema = userChangeSearchPreferencesSchema.and(
   z.object({ userId: z.string() }),
 );
@@ -51,4 +53,6 @@ export const changeSearchPreferencesAsync = async (
       ddgBangs: input.ddgBangsEnabled,
     })
     .where(eq(users.id, input.userId));
+
+  invalidateUserCache(input.userId);
 };

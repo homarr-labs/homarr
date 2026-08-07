@@ -3,7 +3,7 @@ import { SynologyIntegration } from "@homarr/integrations";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const healthMonitoringIntegrationKinds = [
@@ -27,7 +27,9 @@ export const healthMonitoringRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...healthMonitoringIntegrationKinds))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
         const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
         return {
           integrationId: integration.id,
@@ -35,7 +37,9 @@ export const healthMonitoringRouter = createTRPCRouter({
           healthInfo: data,
           updatedAt: timestamp,
         };
-      });
+      },
+        { queryKey: integrationQueryKey("health-monitoring", "getSystemHealthStatus") },
+      );
     }),
   listStorageVolumes: publicProcedure
     .meta({

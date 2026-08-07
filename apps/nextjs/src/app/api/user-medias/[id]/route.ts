@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import DOMPurify from "isomorphic-dompurify";
 
 import { db, eq } from "@homarr/db";
 import { medias } from "@homarr/db/schema";
+
+import { sanitizeSvg } from "../svg-purify";
 
 export async function GET(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -25,9 +26,7 @@ export async function GET(_req: NextRequest, props: { params: Promise<{ id: stri
   // Sanitize SVG content to prevent XSS attacks
   if (image.contentType === "image/svg+xml" || image.contentType === "image/svg") {
     const svgText = new TextDecoder().decode(content);
-    const sanitized = DOMPurify.sanitize(svgText, {
-      USE_PROFILES: { svg: true, svgFilters: true },
-    });
+    const sanitized = sanitizeSvg(svgText);
     content = new TextEncoder().encode(sanitized);
   }
 

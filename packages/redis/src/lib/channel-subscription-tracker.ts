@@ -3,7 +3,8 @@ import { randomUUID } from "crypto";
 import type { MaybePromise } from "@homarr/common/types";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
-import { createRedisConnection } from "./connection";
+import { getSubscriberClient, usesMemoryFallback } from "./connection";
+import { memorySubscribe } from "./memory-channel";
 
 const logger = createLogger({ module: "channelSubscriptionTracker" });
 
@@ -18,7 +19,8 @@ type SubscriptionCallback = (message: string) => MaybePromise<void>;
  */
 export class ChannelSubscriptionTracker {
   private static subscriptions = new Map<string, Map<string, SubscriptionCallback>>();
-  private static redis = createRedisConnection();
+  private static redis = getSubscriberClient();
+  private static memoryUnsubscribers = new Map<string, () => void>();
   private static listenerActive = false;
 
   /**
@@ -30,19 +32,27 @@ export class ChannelSubscriptionTracker {
   public static subscribe(channelName: string, callback: SubscriptionCallback) {
     logger.debug("Adding redis channel callback", { channel: channelName });
 
-    // We only want to activate the listener once
-    if (!this.listenerActive) {
-      this.activateListener();
-      this.listenerActive = true;
-    }
-
     const channelSubscriptions = this.subscriptions.get(channelName) ?? new Map<string, SubscriptionCallback>();
     const id = randomUUID();
 
     // If there are no subscriptions to the channel, subscribe to it
     if (channelSubscriptions.size === 0) {
       logger.debug("Subscribing to redis channel", { channel: channelName });
-      void this.redis.subscribe(channelName);
+      if (usesMemoryFallback()) {
+        const unsub = memorySubscribe(channelName, (message) => {
+          this.dispatchMessage(channelName, message);
+        });
+        this.memoryUnsubscribers.set(channelName, unsub);
+      } else {
+        if (!this.listenerActive) {
+          this.activateListener();
+          this.listenerActive = true;
+        }
+        const redis = this.redis;
+        if (redis) {
+          void redis.subscribe(channelName);
+        }
+      }
     }
 
     logger.debug("Adding redis channel callback", { channel: channelName, id });
@@ -65,9 +75,33 @@ export class ChannelSubscriptionTracker {
       }
 
       logger.debug("Unsubscribing from redis channel", { channel: channelName });
-      void this.redis.unsubscribe(channelName);
+      if (usesMemoryFallback()) {
+        this.memoryUnsubscribers.get(channelName)?.();
+        this.memoryUnsubscribers.delete(channelName);
+      } else {
+        const redis = this.redis;
+        if (redis) {
+          void redis.unsubscribe(channelName);
+        }
+      }
       this.subscriptions.delete(channelName);
     };
+  }
+
+  private static dispatchMessage(channel: string, message: string) {
+    const channelSubscriptions = this.subscriptions.get(channel);
+    if (!channelSubscriptions) {
+      logger.warn("Received message on unknown channel", { channel });
+      return;
+    }
+
+    for (const [id, callback] of channelSubscriptions.entries()) {
+      // Don't log messages from the logging channel as it would create an infinite loop
+      if (channel !== "pubSub:logging") {
+        logger.debug("Calling subscription callback", { channel, id });
+      }
+      void callback(message);
+    }
   }
 
   /**
@@ -75,20 +109,10 @@ export class ChannelSubscriptionTracker {
    */
   private static activateListener() {
     logger.debug("Activating listener");
-    this.redis.on("message", (channel, message) => {
-      const channelSubscriptions = this.subscriptions.get(channel);
-      if (!channelSubscriptions) {
-        logger.warn("Received message on unknown channel", { channel });
-        return;
-      }
-
-      for (const [id, callback] of channelSubscriptions.entries()) {
-        // Don't log messages from the logging channel as it would create an infinite loop
-        if (channel !== "pubSub:logging") {
-          logger.debug("Calling subscription callback", { channel, id });
-        }
-        void callback(message);
-      }
+    const redis = this.redis;
+    if (!redis) return;
+    redis.on("message", (channel, message) => {
+      this.dispatchMessage(channel, message);
     });
   }
 }

@@ -1,15 +1,32 @@
 import type { RedisClient } from "@homarr/core/infrastructure/redis";
 import { createRedisClient } from "@homarr/core/infrastructure/redis";
 
-/**
- * Creates a new Redis connection
- * @returns redis client
- */
-export const createRedisConnection = () => {
-  if (Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS)) {
-    // Return null if we are in CI as we don't want to connect to Redis
-    return null as unknown as RedisClient;
-  }
+let dataClient: RedisClient | undefined;
+let subscriberClient: RedisClient | undefined;
 
-  return createRedisClient();
+const isRedisExplicitlyDisabled = () =>
+  Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS);
+
+/**
+ * In-process pub/sub fallback for single-instance deployments when Redis is unavailable.
+ * Never used when REDIS_IS_EXTERNAL=true (multi-instance requires real Redis).
+ */
+export const usesMemoryFallback = (): boolean =>
+  process.env.REDIS_IS_EXTERNAL !== "true" && isRedisExplicitlyDisabled();
+
+/** Shared client for SET/GET/PUBLISH and other non-subscribe Redis commands. */
+export const getDataClient = (): RedisClient | null => {
+  if (usesMemoryFallback()) return null;
+  dataClient ??= createRedisClient();
+  return dataClient;
 };
+
+/** Dedicated client for SUBSCRIBE — ioredis requires a separate connection for pub/sub. */
+export const getSubscriberClient = (): RedisClient | null => {
+  if (usesMemoryFallback()) return null;
+  subscriberClient ??= createRedisClient();
+  return subscriberClient;
+};
+
+/** @deprecated Prefer getDataClient() — kept for test mocks. */
+export const createRedisConnection = () => getDataClient();

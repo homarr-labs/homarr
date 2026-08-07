@@ -31,6 +31,7 @@ import {
 } from "@homarr/validation/user";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
+import { invalidateUserCache } from "../cache-invalidation";
 import {
   createTRPCRouter,
   isDemoMode,
@@ -221,6 +222,8 @@ export const userRouter = createTRPCRouter({
           image: input.image,
         })
         .where(eq(users.id, input.userId));
+
+      invalidateUserCache(input.userId);
     }),
   getAll: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -452,6 +455,8 @@ export const userRouter = createTRPCRouter({
           emailVerified: emailDirty === true ? null : undefined,
         })
         .where(eq(users.id, input.id));
+
+      invalidateUserCache(input.id);
     }),
   delete: protectedProcedure
     .input(z.object({ userId: z.string() }))
@@ -598,6 +603,8 @@ export const userRouter = createTRPCRouter({
           mobileHomeBoardId: input.mobileHomeBoardId,
         })
         .where(eq(users.id, input.userId));
+
+      invalidateUserCache(input.userId);
     }),
   changeDefaultSearchEngine: protectedProcedure
     .input(
@@ -653,6 +660,8 @@ export const userRouter = createTRPCRouter({
           colorScheme: input.colorScheme,
         })
         .where(eq(users.id, ctx.session.user.id));
+
+      invalidateUserCache(ctx.session.user.id);
     }),
   changeEnableRightClickOnWidgets: protectedProcedure
     .meta({
@@ -679,6 +688,8 @@ export const userRouter = createTRPCRouter({
           enableRightClickOnWidgets: input.enableRightClickOnWidgets,
         })
         .where(eq(users.id, input.id));
+
+      invalidateUserCache(input.id);
     }),
   changePingIconsEnabled: protectedProcedure
     .input(userPingIconsEnabledSchema.and(byIdSchema))
@@ -697,6 +708,8 @@ export const userRouter = createTRPCRouter({
           pingIconsEnabled: input.pingIconsEnabled,
         })
         .where(eq(users.id, input.id));
+
+      invalidateUserCache(input.id);
     }),
   changeDdgBangs: protectedProcedure
     .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))
@@ -724,6 +737,8 @@ export const userRouter = createTRPCRouter({
           ddgBangs: input.ddgBangs,
         })
         .where(eq(users.id, input.id));
+
+      invalidateUserCache(input.id);
     }),
   changeFirstDayOfWeek: protectedProcedure
     .input(convertIntersectionToZodObject(userFirstDayOfWeekSchema.and(byIdSchema)))
@@ -765,6 +780,8 @@ export const userRouter = createTRPCRouter({
           firstDayOfWeek: input.firstDayOfWeek,
         })
         .where(eq(users.id, input.id));
+
+      invalidateUserCache(input.id);
     }),
   completeTour: protectedProcedure
     .input(z.object({ tour: z.enum(["manage", "board"]) }))
@@ -775,6 +792,8 @@ export const userRouter = createTRPCRouter({
       } as const;
 
       await ctx.db.update(users).set(columnByTour[input.tour]).where(eq(users.id, ctx.session.user.id));
+
+      invalidateUserCache(ctx.session.user.id);
     }),
   resetTours: protectedProcedure.mutation(async ({ ctx }) => {
     await ctx.db
@@ -784,6 +803,8 @@ export const userRouter = createTRPCRouter({
         completedBoardTour: false,
       })
       .where(eq(users.id, ctx.session.user.id));
+
+    invalidateUserCache(ctx.session.user.id);
   }),
   getTourStatus: protectedProcedure.query(async ({ ctx }) => {
     if (isDemoMode) {

@@ -6,7 +6,7 @@ import { downloadClientRequestHandler } from "@homarr/request-handler/downloads"
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
@@ -24,14 +24,18 @@ export const downloadsRouter = createTRPCRouter({
     .concat(createDownloadClientIntegrationMiddleware("query"))
     .input(z.object({ limitPerIntegration: z.number().default(50) }))
     .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
         const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
         const { data, timestamp } = await innerHandler.getDataAsync();
         return {
           integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
           data,
         };
-      });
+      },
+        { queryKey: integrationQueryKey("downloads", "getJobsAndStatuses", { limitPerIntegration: input.limitPerIntegration }) },
+      );
     }),
   pause: protectedProcedure
     .meta({

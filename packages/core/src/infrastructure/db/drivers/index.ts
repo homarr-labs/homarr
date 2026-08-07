@@ -1,12 +1,15 @@
+import { createRequire } from "node:module";
+
 import { DB_CASING } from "../constants";
-import { createDbMapping } from "../mapping";
-import { createMysqlDb } from "./mysql";
-import { createPostgresDb } from "./postgresql";
+import { dbEnv } from "../env";
 import type { SharedDrizzleConfig } from "./shared";
 import { WinstonDrizzleLogger } from "./shared";
-import { createSqliteDb } from "./sqlite";
 
-export type Database<TSchema extends Record<string, unknown>> = ReturnType<typeof createSqliteDb<TSchema>>;
+const require = createRequire(import.meta.url);
+
+export type Database<TSchema extends Record<string, unknown>> = ReturnType<
+  typeof import("./sqlite").createSqliteDb<TSchema>
+>;
 
 export const createSharedConfig = <TSchema extends Record<string, unknown>>(
   schema: TSchema,
@@ -18,10 +21,15 @@ export const createSharedConfig = <TSchema extends Record<string, unknown>>(
 
 export const createDb = <TSchema extends Record<string, unknown>>(schema: TSchema) => {
   const config = createSharedConfig(schema);
-
-  return createDbMapping({
-    mysql2: () => createMysqlDb(config),
-    "node-postgres": () => createPostgresDb(config),
-    "better-sqlite3": () => createSqliteDb(config),
-  });
+  // ponytail: conditional require — only the configured driver is loaded.
+  // Ceiling: all 3 stay on disk for runtime driver switching; only loaded graph shrinks.
+  const driver = dbEnv.DRIVER ?? "better-sqlite3";
+  switch (driver) {
+    case "mysql2":
+      return (require("./mysql") as typeof import("./mysql")).createMysqlDb(config);
+    case "node-postgres":
+      return (require("./postgresql") as typeof import("./postgresql")).createPostgresDb(config);
+    default:
+      return (require("./sqlite") as typeof import("./sqlite")).createSqliteDb(config);
+  }
 };

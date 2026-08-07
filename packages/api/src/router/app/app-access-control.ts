@@ -5,7 +5,7 @@ import type { Database } from "@homarr/db";
 import { eq, or } from "@homarr/db";
 import { items } from "@homarr/db/schema";
 
-import type { WidgetComponentProps } from "../../../../widgets/src";
+import type { WidgetComponentProps } from "../../../../widgets/src/definition";
 
 export class AppAccessControl {
   constructor(

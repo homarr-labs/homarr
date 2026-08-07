@@ -99,3 +99,4 @@ export { downloadClientItemSchema } from "./interfaces/downloads/download-client
 
 // Helpers
 export { createIntegrationAsync } from "./base/creator";
+export type { IntegrationInstanceOfKind } from "./base/kind-map";

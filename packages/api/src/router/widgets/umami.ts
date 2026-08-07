@@ -13,7 +13,7 @@ import {
 } from "@homarr/request-handler/umami";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "umami-router" });
@@ -39,7 +39,9 @@ export const umamiRouter = createTRPCRouter({
     )
     .concat(createManyIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
         const innerHandler = umamiRequestHandler.handler(integration, {
           websiteId: input.websiteId,
           timeFrame: input.timeFrame,
@@ -54,7 +56,15 @@ export const umamiRouter = createTRPCRouter({
           visitorStats: data,
           updatedAt: timestamp,
         };
-      });
+      },
+        {
+          queryKey: integrationQueryKey("umami", "getVisitorStats", {
+            websiteId: input.websiteId,
+            timeFrame: input.timeFrame,
+            eventName: input.eventName,
+          }),
+        },
+      );
     }),
 
   getEventNames: publicProcedure

@@ -6,7 +6,7 @@ import { eq } from "@homarr/db";
 import { getServerSettingsAsync } from "@homarr/db/queries";
 import { boards, items } from "@homarr/db/schema";
 
-import type { WidgetOptionsSettings } from "../../../../widgets/src";
+import type { WidgetOptionsSettings } from "../../../../widgets/src/definition";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 
