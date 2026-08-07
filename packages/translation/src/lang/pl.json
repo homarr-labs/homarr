@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "Odwróć sortowanie"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Nie udało się pobrać statystyk kontenerów"
+        "internalServerError": "Nie udało się pobrać statystyk kontenerów",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "Pokaż tylko aktualnie odtwarzane",
           "description": "Wyłączenie tej opcji nie zadziała w przypadku Plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Obecnie odtwarzane",
@@ -2734,6 +2757,9 @@
         "id": "ID",
         "status": "Status",
         "directPlay": "Odtwarzanie bezpośrednie",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "Transkodowanie",
         "paused": "Zatrzymane",
         "remaining": "{minutes} min pozostało",
@@ -3768,18 +3794,6 @@
           "label": "Pokaż utwory",
           "description": "Pokaż całkowitą liczbę utworów w twojej bibliotece muzycznej (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Pokaż teraz odtwarzane",
-          "description": "Pokaż aktualnie odtwarzane utwory (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Pokaż listę teraz odtwarzanych",
-          "description": "Pokaż poszczególne utwory zamiast tylko aktywnej liczby strumieni (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Maksymalna ilość teraz odtwarzanych elementów",
-          "description": "Maksymalna liczba elementów wyświetlanych na liście teraz odtwarzanych (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Pokaż ilość bibliotek",
           "description": "Pokaż liczbę bibliotek na twojej instancji (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "Podcasty",
       "listeningTime": "Czas Słuchania",
       "activeSessions": "Aktywne Sesje",
-      "nowPlaying": "Teraz Odtwarzane",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Nie udało się pobrać danych audio stats"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Pokaż wersję agenta"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Nie znaleziono systemów",
       "error": {
-        "internalServerError": "Nie można połączyć się z Beszel. Sprawdź ustawienia integracji."
+        "internalServerError": "Nie można połączyć się z Beszel. Sprawdź ustawienia integracji.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "System",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "Usuń",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Usunięto kontenery",
