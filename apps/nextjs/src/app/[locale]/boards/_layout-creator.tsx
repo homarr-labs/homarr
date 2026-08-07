@@ -12,6 +12,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { MainHeader } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
+import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { ClientShell } from "~/components/layout/shell";
 import { BoardTourGate } from "~/components/onboarding/board-tour-gate";
 import { env } from "~/env";
@@ -31,11 +32,7 @@ interface CreateBoardLayoutProps<TParams extends Params> {
 
 const BoardLayoutFallback = ({ headerActions }: { headerActions: JSX.Element }) => (
   <ClientShell hasNavigation={false}>
-    <MainHeader
-      logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
-      actions={headerActions}
-      hasNavigation={false}
-    />
+    <MainHeader logo={<HomarrLogoWithTitle size="md" />} actions={headerActions} hasNavigation={false} />
     <AppShellMain>
       <Skeleton height="100%" radius="sm" />
     </AppShellMain>

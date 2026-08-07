@@ -83,6 +83,27 @@ describe("getCachedIntegrationData", () => {
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
+  test("invalidation during pending fetch prevents stale write-back", async () => {
+    let resolveOuter!: (v: { value: string }) => void;
+    const fetcher = vi.fn(
+      () =>
+        new Promise<{ value: string }>((resolve) => {
+          resolveOuter = resolve;
+        }),
+    );
+
+    const p1 = getCachedIntegrationData("integration-a", "widget:race", fetcher);
+
+    invalidateIntegrationDataCache("integration-a");
+    resolveOuter({ value: "stale" });
+    await p1;
+
+    const freshFetcher = vi.fn(async () => ({ value: "fresh" }));
+    const result = await getCachedIntegrationData("integration-a", "widget:race", freshFetcher);
+    expect(result).toEqual({ value: "fresh" });
+    expect(freshFetcher).toHaveBeenCalledTimes(1);
+  });
+
   test("invalidates all cache entries for an integration", async () => {
     const fetcherOne = vi.fn(async () => ({ value: "one" }));
     const fetcherTwo = vi.fn(async () => ({ value: "two" }));

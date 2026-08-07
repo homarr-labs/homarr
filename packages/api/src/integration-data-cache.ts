@@ -56,8 +56,10 @@ export const getCachedIntegrationData = async <T>(
 
   const pending = fetcher()
     .then((data) => {
-      cache.set(key, { data, timestamp: Date.now() });
-      evictOldestEntry();
+      if (cache.get(key) === placeholder) {
+        cache.set(key, { data, timestamp: Date.now() });
+        evictOldestEntry();
+      }
       return data;
     })
     .catch((error) => {

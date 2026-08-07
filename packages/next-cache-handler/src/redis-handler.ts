@@ -10,7 +10,7 @@ type StoredEntry = {
   timestamp: number;
   expire: number;
   revalidate: number;
-  body: number[];
+  body: string;
 };
 
 // eslint-disable-next-line no-underscore-dangle
@@ -38,7 +38,7 @@ async function readStreamBody(stream: ReadableStream<Uint8Array>) {
 }
 
 function entryFromStored(parsed: StoredEntry): CacheEntry {
-  const body = new Uint8Array(parsed.body);
+  const body = new Uint8Array(Buffer.from(parsed.body, "base64"));
   return {
     value: new ReadableStream({
       start(controller) {
@@ -91,7 +91,16 @@ export class RedisCacheHandler implements CacheHandler {
 
   async get(cacheKey: string, softTags: string[]): Promise<CacheEntry | undefined> {
     const pending = this.pendingSets.get(cacheKey);
-    if (pending) return pending;
+    if (pending) {
+      try {
+        const entry = await pending;
+        const [forCaller, forRest] = entry.value.tee();
+        entry.value = forRest;
+        return { ...entry, value: forCaller };
+      } catch {
+        return undefined;
+      }
+    }
 
     try {
       await this.ensureConnected();
@@ -117,14 +126,20 @@ export class RedisCacheHandler implements CacheHandler {
   }
 
   async set(cacheKey: string, pendingEntry: Promise<CacheEntry>): Promise<void> {
-    this.pendingSets.set(cacheKey, pendingEntry);
+    const safeEntry = pendingEntry.then((entry) => {
+      const [forCallers, forPersist] = entry.value.tee();
+      entry.value = forCallers;
+      return { entry, forPersist };
+    });
+    const callerPromise = safeEntry.then(({ entry }) => entry);
+    this.pendingSets.set(cacheKey, callerPromise);
 
     try {
-      const entry = await pendingEntry;
-      const body = await readStreamBody(entry.value);
+      const { entry, forPersist } = await safeEntry;
+      const body = await readStreamBody(forPersist);
 
       const ttlMs = entry.expire * 1000;
-      if (ttlMs <= 0) return; // Dynamic entries (expire: 0) should not be persisted
+      if (ttlMs <= 0) return;
 
       const serialized = JSON.stringify({
         tags: entry.tags,
@@ -132,7 +147,7 @@ export class RedisCacheHandler implements CacheHandler {
         timestamp: entry.timestamp,
         expire: entry.expire,
         revalidate: entry.revalidate,
-        body: Array.from(body),
+        body: Buffer.from(body).toString("base64"),
       });
 
       await this.ensureConnected();
@@ -140,7 +155,7 @@ export class RedisCacheHandler implements CacheHandler {
     } catch {
       // Fail open
     } finally {
-      if (this.pendingSets.get(cacheKey) === pendingEntry) {
+      if (this.pendingSets.get(cacheKey) === callerPromise) {
         this.pendingSets.delete(cacheKey);
       }
     }
