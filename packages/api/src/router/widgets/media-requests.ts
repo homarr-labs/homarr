@@ -109,5 +109,7 @@ export const mediaRequestsRouter = createTRPCRouter({
 
       await answerActions[input.answer](input.requestId);
       invalidateIntegrationDataCache(integration.id);
+      mediaRequestListRequestHandler.invalidateCache();
+      mediaRequestStatsRequestHandler.invalidateCache();
     }),
 });

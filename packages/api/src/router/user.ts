@@ -480,6 +480,7 @@ export const userRouter = createTRPCRouter({
       }
 
       await ctx.db.delete(users).where(eq(users.id, input.userId));
+      invalidateUserCache(input.userId);
     }),
   changePassword: protectedProcedure
     .input(convertIntersectionToZodObject(userChangePasswordApiSchema))

@@ -39,4 +39,6 @@ export const importSingleOldmarrConfigAsync = async (
       boardInsertCollection.insertAll(db);
     },
   });
+
+  return boardInsertCollection.boards.map(({ id, name }) => ({ id, name }));
 };

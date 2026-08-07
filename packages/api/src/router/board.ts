@@ -326,6 +326,7 @@ export const boardRouter = createTRPCRouter({
 
       if (!user?.homeBoardId) {
         await ctx.db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, ctx.session.user.id));
+        invalidateUserCache(ctx.session.user.id);
       }
 
       invalidateBoardCache(boardId, input.name);
@@ -1497,7 +1498,10 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const content = await input.file.text();
       const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
-      await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
+      const importedBoards = await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
+      for (const board of importedBoards) {
+        invalidateBoardCache(board.id, board.name);
+      }
     }),
   addItem: protectedProcedure
     .meta({

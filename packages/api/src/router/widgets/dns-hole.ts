@@ -46,6 +46,7 @@ export const dnsHoleRouter = createTRPCRouter({
       const client = await createIntegrationAsync(integration);
       await client.enableAsync();
       invalidateIntegrationDataCache(integration.id);
+      dnsHoleRequestHandler.invalidateCache();
     }),
 
   disable: protectedProcedure
@@ -66,5 +67,6 @@ export const dnsHoleRouter = createTRPCRouter({
       const client = await createIntegrationAsync(integration);
       await client.disableAsync(input.duration);
       invalidateIntegrationDataCache(integration.id);
+      dnsHoleRequestHandler.invalidateCache();
     }),
 });

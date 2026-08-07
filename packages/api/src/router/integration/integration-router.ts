@@ -38,6 +38,7 @@ import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/va
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { invalidateIntegrationCache, invalidateUserCache } from "../../cache-invalidation";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
@@ -824,7 +825,9 @@ export const integrationRouter = createTRPCRouter({
     .input(mediaRequestRequestSchema)
     .mutation(async ({ ctx, input }) => {
       const integration = await createIntegrationAsync(ctx.integration);
-      return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
+      const result = await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
+      invalidateIntegrationDataCache(ctx.integration.id);
+      return result;
     }),
 });
 

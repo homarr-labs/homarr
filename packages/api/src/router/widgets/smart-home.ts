@@ -43,6 +43,7 @@ export const smartHomeRouter = createTRPCRouter({
       const success = await client.triggerToggleAsync(input.entityId);
 
       invalidateIntegrationDataCache(integration.id);
+      smartHomeEntityStateRequestHandler.invalidateCache();
       return success;
     }),
   executeAutomation: protectedProcedure
@@ -59,5 +60,6 @@ export const smartHomeRouter = createTRPCRouter({
       const client = await createIntegrationAsync(integration);
       await client.triggerAutomationAsync(input.automationId);
       invalidateIntegrationDataCache(integration.id);
+      smartHomeEntityStateRequestHandler.invalidateCache();
     }),
 });

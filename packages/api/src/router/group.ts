@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import { canManageGroupMembersLocally, isGroupMembershipManagedLocally } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
-import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
+import { and, eq, handleTransactionsAsync, inArray, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
@@ -277,6 +277,14 @@ export const groupRouter = createTRPCRouter({
           });
         },
       });
+
+      const members = await ctx.db.query.groupMembers.findMany({
+        columns: { userId: true },
+        where: inArray(groupMembers.groupId, input.positions),
+      });
+      for (const userId of new Set(members.map((member) => member.userId))) {
+        invalidateUserCache(userId);
+      }
     }),
   savePermissions: permissionRequiredProcedure
     .requiresPermission("admin")

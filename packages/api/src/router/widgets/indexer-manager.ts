@@ -49,5 +49,6 @@ export const indexerManagerRouter = createTRPCRouter({
       for (const integration of ctx.integrations) {
         invalidateIntegrationDataCache(integration.id);
       }
+      indexerManagerRequestHandler.invalidateCache();
     }),
 });

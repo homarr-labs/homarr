@@ -77,6 +77,8 @@ export const anchorNotesRouter = createTRPCRouter({
         });
 
         invalidateIntegrationDataCache(ctx.integration.id);
+        anchorNoteRequestHandler.invalidateCache();
+        anchorNotesListRequestHandler.invalidateCache();
         return updatedNote;
       } catch (error) {
         if (error instanceof ResponseError && error.statusCode === 400) {
