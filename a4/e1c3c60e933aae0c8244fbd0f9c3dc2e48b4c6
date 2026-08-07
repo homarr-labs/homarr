@@ -1,0 +1,44 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
+  s_5dcfe7e44b75bf::t_cc347e94f1c5fc 12
+apps/nextjs/src/components/assistant/assistant-widget.tsx
+  s_5dcfe7e44b75bf::t_cc347e94f1c5fc 15
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  s_5dcfe7e44b75bf::t_475084265ebd80 4,32
+  s_5dcfe7e44b75bf::t_90b7456700f6a1 726-738
+packages/api/package.json
+  s_5dcfe7e44b75bf::t_d6a6c150599360 18
+apps/nextjs/src/components/user-avatar-menu.tsx
+  s_5dcfe7e44b75bf::t_cc347e94f1c5fc 27
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_5dcfe7e44b75bf::t_cc347e94f1c5fc 17,30,90,129
+apps/nextjs/src/app/api/features/route.ts
+  s_5dcfe7e44b75bf::t_0d093032ee77e1 1-24
+apps/nextjs/src/components/assistant/assistant-context.tsx
+  s_5dcfe7e44b75bf::t_f39d70b32dc6be 1-56
+apps/nextjs/src/components/assistant/assistant-gate.tsx
+  s_5dcfe7e44b75bf::t_763a3ade6abf25 1-73
+apps/nextjs/src/components/assistant/assistant-spotlight-placeholder.ts
+  s_5dcfe7e44b75bf::t_bd99d742dce449 1-28
+apps/nextjs/src/components/assistant/assistant-widget-lazy.tsx
+  s_5dcfe7e44b75bf::t_93c443544b3ca8 1-18
+packages/api/src/features.ts
+  s_5dcfe7e44b75bf::t_69e90a666657b2 1-36
+packages/api/src/test/features.spec.ts
+  s_5dcfe7e44b75bf::t_ae795787ab05ac 1-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "a4e1c3c60e933aae0c8244fbd0f9c3dc2e48b4c6",
+  "prompts": {},
+  "sessions": {
+    "s_5dcfe7e44b75bf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9bcd108a-daea-48a5-b53c-d927f15a1b24",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
