@@ -24,8 +24,13 @@ export AUTH_SECRET=$(openssl rand -base64 32)
 # 1. Replace the HOSTNAME in the nginx template file
 # 2. Create the nginx configuration file from the template
 # 3. Start the nginx server
+# Only listen on IPv6 when the host actually has IPv6 configured (#4596).
+# Otherwise nginx aborts with "socket() [::]:7575 failed (97: Address family
+# not supported by protocol)". Note: (test -s) cannot be used here as proc files
+# always report size 0, so IPv6 presence is detected via grep on the file.
 export HOSTNAME
-envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+export NGINX_LISTEN_IPV6="$(grep -q . /proc/net/if_inet6 2>/dev/null && echo 'listen [::]:7575;')"
+envsubst '${HOSTNAME} ${NGINX_LISTEN_IPV6}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 # Start services in the background and store their PIDs
 nginx -g 'daemon off;' &
 NGINX_PID=$!
