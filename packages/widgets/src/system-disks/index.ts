@@ -8,7 +8,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemDis
   icon: IconServer2,
   queryKey: [["widget", "healthMonitoring"]],
   refetchInterval: 5,
-  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],
+  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology", "ugos"],
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

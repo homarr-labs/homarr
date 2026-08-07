@@ -348,6 +348,14 @@ export const integrationDefs = {
     documentationUrl: createDocumentationLink("/docs/integrations/unraid"),
     defaultPort: 80,
   },
+  ugos: {
+    name: "UGREEN NAS (UGOS)",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ugreen.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: createDocumentationLink("/docs/integrations/ugos"),
+    defaultPort: 9443,
+  },
   coolify: {
     name: "Coolify",
     secretKinds: [["apiKey"]],

@@ -16,7 +16,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
   icon: IconGraphFilled,
   queryKey: [["widget", "healthMonitoring"]],
   refetchInterval: 5,
-  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
+  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology", "ugos"],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       hasShadow: factory.switch({ defaultValue: true }),

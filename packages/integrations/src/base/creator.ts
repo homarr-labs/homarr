@@ -54,6 +54,7 @@ import { UmamiIntegration } from "../umami/umami-integration";
 import { UptimeKumaIntegration } from "../uptime-kuma/uptime-kuma-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import { UnraidIntegration } from "../unraid/unraid-integration";
+import { UgosIntegration } from "../ugos/ugos-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
@@ -116,6 +117,7 @@ export const integrationCreators = {
   truenas: TrueNasIntegration,
   synology: SynologyIntegration,
   unraid: UnraidIntegration,
+  ugos: UgosIntegration,
   coolify: CoolifyIntegration,
   tracearr: TracearrIntegration,
   glances: GlancesIntegration,
