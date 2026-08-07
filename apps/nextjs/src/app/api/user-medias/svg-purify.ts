@@ -4,7 +4,7 @@ import { parseHTML } from "linkedom";
 const svgSanitizeOptions = {
   USE_PROFILES: { svg: true, svgFilters: true },
   FORBID_TAGS: ["style"],
-} as const;
+};
 
 const LINKEDOM_NODE_PROPS = [
   "ownerDocument",
