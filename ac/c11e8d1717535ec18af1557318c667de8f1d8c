@@ -1,0 +1,21 @@
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_5dcfe7e44b75bf::t_f2ea7c701414b6 29,90-96,98-99,138
+apps/nextjs/src/components/assistant/assistant-gate.tsx
+  s_5dcfe7e44b75bf::t_3e72375e8e49f2 53-60,62,65-69,71-72,74-75,78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "acc11e8d1717535ec18af1557318c667de8f1d8c",
+  "prompts": {},
+  "sessions": {
+    "s_5dcfe7e44b75bf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9bcd108a-daea-48a5-b53c-d927f15a1b24",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
