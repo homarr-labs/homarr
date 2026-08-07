@@ -9,8 +9,8 @@
           "scratch": "Sākt no jauna",
           "importOldmarr": "",
           "restoreSqlite": "SQLite rezerves kopija",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqliteDescription": "Augšupielādējiet pilnu SQLite datu bāzes dublējumu no iepriekšējās Homarr instances. Tas atjaunos visus dēļus, lietotājus, lietotnes, integrācijas un iestatījumus.",
+          "backToOptions": "← Atpakaļ uz iestatīšanas opcijām"
         }
       },
       "import": {
@@ -95,8 +95,8 @@
       },
       "integrations": {
         "title": "Integrācijas",
-        "subtitle": "",
-        "description": "",
+        "subtitle": "Atlasiet pakalpojumus, ko izmantojat.",
+        "description": "Izvēlieties integrācijas, ko vēlaties savienot. Mēs automātiski iestatīsim jūsu informācijas paneli ar atbilstošiem logrīkiem.",
         "action": {
           "continue": "Turpināt",
           "skip": "Pagaidām izlaist šo soli"
@@ -104,35 +104,35 @@
         "configure": {
           "progress": "{current} no {total}",
           "skip": "Izlaist šo integrāciju",
-          "finishing": "",
+          "finishing": "Notiek informācijas paneļa iestatīšana...",
           "error": {
             "title": "Neizdevās iestatīt!",
-            "message": ""
+            "message": "Radās kļūda, iestatot jūsu informācijas paneli. Lūdzu, mēģiniet vēlreiz."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "URL palīgrīki",
+            "description": "Šie palīgrīki mēģina uzminēt jūsu pakalpojumu URL. Ja tas nedarbojas, vienkārši ievadiet adresi manuāli."
           }
         },
         "urlTemplate": {
           "label": "Bāzes URL",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "placeholder": "homelab.local vai 192.168.1.1",
+          "hint": "Ievadiet savu bāzes domēnu vai IP, lai automātiski aizpildītu integrāciju URL",
+          "warning": "Bāzes URL iestatīšana tagad automātiski aizpildīs visus integrāciju URL, ietaupot laiku iestatīšanas laikā",
+          "preview": "piem., {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Apakšdomēns",
+            "hostPort": "Resursdators:Ports"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker atklāja {count} pakalpojumus",
+          "detectedBreakdown": "{integrations} integrācijas · {apps} lietotnes",
+          "summary": "Homarr atklāja {apps} lietotnes, {integrations} no tām ir iebūvētas integrācijas",
+          "appBadge": "Lietotne",
+          "appSectionLabel": "Pievienojamās lietotnes informācijas panelim ({count} atlasītas)",
+          "scanning": "Notiek Docker skenēšana...",
+          "scanningDescription": "Meklē darbojošos konteinerus jūsu sistēmā"
         }
       },
       "finish": {
@@ -154,23 +154,23 @@
     "name": "Lietotājs",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Piesakieties savā kontā",
+        "subtitle": "Laipni lūgti! Lūdzu, ievadiet savus akreditācijas datus"
       },
       "invite": {
         "title": "Pievienoties Homarr",
-        "subtitle": "",
-        "description": ""
+        "subtitle": "Laipni lūgti Homarr! Lūdzu, izveidojiet savu kontu",
+        "description": "Jūs uzaicināja {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Jauna Homarr instalācija",
+        "subtitle": "Lūdzu, izveidojiet sākotnējo administratora lietotāju"
       }
     },
     "field": {
       "email": {
         "label": "E-pasts",
-        "verified": ""
+        "verified": "Apstiprināts"
       },
       "username": {
         "label": "Lietotājvārds"
@@ -193,10 +193,10 @@
         "label": "Iepriekšējā parole"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Sākuma dēlis"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Izmantot ikonas pingiem"
       },
       "enableRightClickOnWidgets": {
         "label": "",
@@ -209,29 +209,29 @@
         "label": ""
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Iespējot DuckDuckGo bangs"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Lietotājvārds jau aizņemts"
     },
     "action": {
       "login": {
         "label": "Pieslēgties",
-        "labelWith": "",
+        "labelWith": "Pieteikties ar {provider}",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Pieteikšanās veiksmīga",
             "message": "Jūs esat veiksmīgi pieteicies"
           },
           "error": {
             "title": "Pieteikšanās neizdevās",
-            "message": ""
+            "message": "Jūsu pieteikšanās neizdevās"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Aizmirsāt paroli?",
+          "description": "Administrators var izmantot šo komandu, lai atiestatītu jūsu paroli:"
         }
       },
       "register": {
@@ -239,11 +239,11 @@
         "notification": {
           "success": {
             "title": "Konts izveidots",
-            "message": ""
+            "message": "Lūdzu, piesakieties, lai turpinātu"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Konta izveide neizdevās",
+            "message": "Jūsu kontu nevarēja izveidot"
           }
         }
       },
@@ -262,10 +262,10 @@
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Sākuma dēlis veiksmīgi nomainīts"
           },
           "error": {
-            "message": ""
+            "message": "Nevar nomainīt sākuma dēli"
           }
         }
       },
@@ -282,58 +282,58 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Nedēļas pirmā diena veiksmīgi nomainīta"
           },
           "error": {
-            "message": ""
+            "message": "Nevar nomainīt nedēļas pirmo dienu"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Pinga ikonas veiksmīgi pārslēgtas"
           },
           "error": {
-            "message": ""
+            "message": "Nevar pārslēgt pinga ikonas"
           }
         }
       },
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo bangs veiksmīgi pārslēgti"
           },
           "error": {
-            "message": ""
+            "message": "Nevar pārslēgt DuckDuckGo bangs"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Mainīt attēlu",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Attēls veiksmīgi nomainīts"
             },
             "error": {
-              "message": ""
+              "message": "Nevar nomainīt attēlu"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Attēls ir pārāk liels",
+              "message": "Maksimālais attēla izmērs ir {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Noņemt attēlu",
+          "confirm": "Vai tiešām vēlaties noņemt attēlu?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Attēls veiksmīgi noņemts"
             },
             "error": {
-              "message": ""
+              "message": "Nevar noņemt attēlu"
             }
           }
         }
@@ -341,34 +341,34 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profils veiksmīgi atjaunināts"
           },
           "error": {
-            "message": ""
+            "message": "Nevar atjaunināt profilu"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Dzēst lietotāju neatgriezeniski",
+        "description": "Dzēš šo lietotāju, ieskaitot viņa preferences. Dēļi netiks dzēsti. Lietotājs netiks informēts.",
+        "confirm": "Vai esat pārliecināts, ka vēlaties dzēst lietotāju {username} ar viņa preferencēm?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Atlasīt lietotāju",
+        "notFound": "Lietotājs nav atrasts"
       },
       "transfer": {
-        "label": ""
+        "label": "Atlasīt jauno īpašnieku"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Grupas",
+    "name": "Grupa",
+    "search": "Atrast grupu",
     "field": {
       "name": "Nosaukums",
-      "members": "",
+      "members": "Dalībnieki",
       "homeBoard": {
         "label": "",
         "description": ""
@@ -383,8 +383,8 @@
         "title": "Administrators",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administrators",
+            "description": "Dalībniekiem ar šo atļauju ir pilna piekļuve visām funkcijām un iestatījumiem"
           }
         }
       },
@@ -392,20 +392,20 @@
         "title": "Lietotnes",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Izveidot lietotnes",
+            "description": "Atļaut dalībniekiem izveidot lietotnes"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Izmantot visas lietotnes",
+            "description": "Atļaut dalībniekiem pievienot jebkuras lietotnes saviem dēļiem"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificēt visas lietotnes",
+            "description": "Atļaut dalībniekiem modificēt visas lietotnes"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Pilna lietotņu piekļuve",
+            "description": "Atļaut dalībniekiem pārvaldīt, izmantot un dzēst jebkuru lietotni"
           }
         }
       },
@@ -413,165 +413,165 @@
         "title": "Dēļi",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Izveidot dēļus",
+            "description": "Atļaut dalībniekiem izveidot dēļus"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Skatīt visus dēļus",
+            "description": "Atļaut dalībniekiem skatīt visus dēļus"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificēt visus dēļus",
+            "description": "Atļaut dalībniekiem modificēt visus dēļus (neietver piekļuves kontroli un bīstamo zonu)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Pilna dēļu piekļuve",
+            "description": "Atļaut dalībniekiem skatīt, modificēt un dzēst visus dēļus (ieskaitot piekļuves kontroli un bīstamo zonu)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integrācijas",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Izveidot integrācijas",
+            "description": "Atļaut dalībniekiem izveidot integrācijas"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Izmantot visas integrācijas",
+            "description": "Atļauj dalībniekiem pievienot jebkuras integrācijas saviem dēļiem"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Mijiedarboties ar jebkuru integrāciju",
+            "description": "Atļaut dalībniekiem mijiedarboties ar jebkuru integrāciju"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Pilna integrāciju piekļuve",
+            "description": "Atļaut dalībniekiem pārvaldīt, izmantot un mijiedarboties ar jebkuru integrāciju"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Multimediji",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Augšupielādēt multimedijus",
+            "description": "Atļaut dalībniekiem augšupielādēt multimedijus"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Skatīt visus multimedijus",
+            "description": "Atļaut dalībniekiem skatīt visus multimedijus"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Pilna multivides piekļuve",
+            "description": "Atļaut dalībniekiem pārvaldīt un dzēst jebkuru multividi"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Cits",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Skatīt žurnālus",
+            "description": "Atļaut dalībniekiem skatīt žurnālus"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Meklētājprogrammas",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Izveidot meklētājprogrammas",
+            "description": "Atļaut dalībniekiem izveidot meklētājprogrammas"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificēt visas meklētājprogrammas",
+            "description": "Atļaut dalībniekiem modificēt visas meklētājprogrammas"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Pilna meklētājprogrammu piekļuve",
+            "description": "Atļaut dalībniekiem pārvaldīt un dzēst jebkuru meklētājprogrammu"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Daži dalībnieki ir no ārējiem pakalpojumu sniedzējiem un tos šeit nevar pārvaldīt",
+      "external": "Visi dalībnieki ir no ārējiem pakalpojumu sniedzējiem un tos šeit nevar pārvaldīt"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Šī grupa ir rezervēta sistēmas lietošanai un ierobežo dažas darbības. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Jauna grupa",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupa tika veiksmīgi izveidota"
           },
           "error": {
-            "message": ""
+            "message": "Grupu nevarēja izveidot"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Nodot īpašumtiesības",
+        "description": "Nodot šīs grupas īpašumtiesības citam lietotājam.",
+        "confirm": "Vai esat pārliecināts, ka vēlaties nodot īpašumtiesības grupai {name} lietotājam {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupa {group} veiksmīgi nodota {user}"
           },
           "error": {
-            "message": ""
+            "message": "Nevar nodot īpašumtiesības"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Pievienot dalībnieku"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Noņemt dalībnieku",
+        "confirm": "Vai esat pārliecināts, ka vēlaties noņemt {user} no šīs grupas?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Dzēst grupu",
+        "description": "Kad grupa tiek dzēsta, atgriešanās vairs nav iespējama. Lūdzu, esiet pārliecināts.",
+        "confirm": "Vai esat pārliecināts, ka vēlaties dzēst grupu {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupa {name} veiksmīgi dzēsta"
           },
           "error": {
-            "message": ""
+            "message": "Nevar dzēst grupu {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Atļaujas saglabātas",
+            "message": "Atļaujas ir veiksmīgi saglabātas"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Atļaujas nav saglabātas",
+            "message": "Atļaujas nav saglabātas"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupa {name} tika veiksmīgi saglabāta"
           },
           "error": {
-            "message": ""
+            "message": "Nevar saglabāt grupu {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Atlasīt grupu",
+        "notFound": "Grupa nav atrasta"
       },
       "settings": {
         "board": {
@@ -609,47 +609,47 @@
       "list": {
         "title": "Lietotnes",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Vēl nav nevienas lietotnes",
+          "action": "Izveidojiet savu pirmo lietotni"
         }
       },
       "create": {
-        "title": "",
+        "title": "Jauna lietotne",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Izveide veiksmīga",
+            "message": "Lietotne tika veiksmīgi izveidota"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Izveide neizdevās",
+            "message": "Lietotni nevarēja izveidot"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Rediģēt lietotni",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Izmaiņas veiksmīgi piemērotas",
+            "message": "Lietotne tika veiksmīgi saglabāta"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nevar piemērot izmaiņas",
+            "message": "Lietotni nevarēja saglabāt"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Dzēst lietotni",
+        "message": "Vai esat pārliecināts, ka vēlaties dzēst lietotni {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Dzēšana veiksmīga",
+            "message": "Lietotne tika veiksmīgi dzēsta"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Dzēšana neizdevās",
+            "message": "Nevar dzēst lietotni"
           }
         }
       }
@@ -659,10 +659,10 @@
         "label": "Nosaukums"
       },
       "description": {
-        "label": ""
+        "label": "Apraksts"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
@@ -673,8 +673,8 @@
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
+        "label": "Atlasīt lietotni",
+        "notFound": "Lietotne nav atrasta",
         "search": "",
         "noResults": "",
         "action": "",
@@ -691,30 +691,30 @@
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
+        "title": "Pielāgotie logrīki",
+        "noResults": "Vēl nav pielāgotu logrīku. Izveidojiet pirmo!",
         "loading": "Notiek ielāde..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "Izveidot pielāgotu logrīku",
+        "subtitle": "Definējiet API URL, autentifikāciju un to, kā attēlot atbildes datus."
       },
       "edit": {
-        "title": ""
+        "title": "Rediģēt pielāgoto logrīku"
       }
     },
     "action": {
       "create": "Izveidot",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
+      "import": "Importēt",
+      "save": "Saglabāt",
+      "delete": "Dzēst pielāgoto logrīku",
+      "deleteConfirm": "Vai tiešām vēlaties dzēst \"{name}\"? Šo darbību nevar atsaukt.",
+      "export": "Eksportēt",
+      "addMapping": "Pievienot kartējumu",
+      "addColumn": "Pievienot kolonnu",
+      "edit": "Rediģēt",
+      "removeMapping": "Noņemt kartējumu",
+      "removeColumn": "Noņemt kolonnu",
       "addItem": "",
       "removeItem": "",
       "addBar": "",
@@ -896,22 +896,22 @@
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integrācijas",
+        "search": "Meklēt integrācijas",
         "noResults": {
-          "title": ""
+          "title": "Vēl nav nevienas integrācijas"
         }
       },
       "create": {
-        "title": "",
+        "title": "Jauna {name} integrācija",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Izveide veiksmīga",
+            "message": "Integrācija tika veiksmīgi izveidota"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Izveide neizdevās",
+            "message": "Integrāciju nevarēja izveidot"
           }
         },
         "app": {
@@ -931,15 +931,15 @@
         }
       },
       "edit": {
-        "title": "",
+        "title": "Rediģēt {name} integrāciju",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Izmaiņas veiksmīgi piemērotas",
+            "message": "Integrācija tika veiksmīgi saglabāta"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nevar piemērot izmaiņas",
+            "message": "Integrāciju nevarēja saglabāt"
           }
         },
         "app": {
@@ -951,16 +951,16 @@
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Dzēst integrāciju",
+        "message": "Vai esat pārliecināts, ka vēlaties dzēst integrāciju {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Dzēšana veiksmīga",
+            "message": "Integrācija tika veiksmīgi dzēsta"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Dzēšana neizdevās",
+            "message": "Nevar dzēst integrāciju"
           }
         }
       }
@@ -970,7 +970,7 @@
         "label": "Nosaukums"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "attemptSearchEngineCreation": {
         "label": "",
@@ -987,52 +987,52 @@
         "placeholder": ""
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Iegūt API atslēgu"
       }
     },
     "action": {
-      "create": ""
+      "create": "Jauna integrācija"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} logrīki",
+      "noWidgets": "Nav logrīku",
+      "detected": "Atklāts caur Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
+      "dnsHole": "DNS",
+      "mediaService": "Multivide",
+      "calendar": "Kalendārs",
+      "mediaSearch": "Meklēt",
+      "mediaRelease": "Izlaidumi",
+      "mediaRequest": "Pieprasījumi",
+      "downloadClient": "Lejupielādes",
+      "usenet": "Usenet",
+      "torrent": "Torenti",
+      "miscellaneous": "Dažādi",
+      "smartHomeServer": "Viedā māja",
+      "indexerManager": "Indeksētājs",
+      "healthMonitoring": "Veselība",
+      "search": "Meklēt",
+      "mediaTranscoding": "Transkodēšana",
+      "networkController": "Tīkls",
+      "releasesProvider": "Izlaidumi",
+      "notifications": "Paziņojumi",
+      "firewall": "Ugunsmūris",
+      "timetable": "Laika grafiks",
+      "photoService": "Fotoattēli",
+      "documents": "Dokumenti",
+      "notes": "Piezīmes",
+      "mediaMonitoring": "Uzraudzība",
+      "speedtest": "Ātruma tests",
+      "analytics": "Analītika",
       "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "mediaLibrary": "Mediju bibliotēka",
+      "uptimeMonitoring": "Pieejamības uzraudzība"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Testēt savienojumu un izveidot",
+        "edit": "Testēt savienojumu un saglabāt"
       },
       "error": {
         "common": {
@@ -1160,71 +1160,71 @@
           }
         }
       },
-      "alertNotice": "",
+      "alertNotice": "Saglabāšanas poga ir iespējota, kad ir izveidots veiksmīgs savienojums",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Savienojums veiksmīgs",
+          "message": "Savienojums tika veiksmīgi izveidots"
         },
         "invalidUrl": {
           "title": "Nederīgs URL",
-          "message": ""
+          "message": "URL nav derīgs"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Trūkst akreditācijas datu",
+          "message": "Netika norādīti visi akreditācijas dati"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Nederīgi akreditācijas dati",
+          "message": "Akreditācijas dati ir nederīgi"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Savienojums neizdevās",
+          "message": "Savienojumu nevarēja izveidot"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Slikts pieprasījums",
+          "message": "Pieprasījums bija nepareizi veidots"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Neautorizēts",
+          "message": "Iespējams, nepareizi akreditācijas dati"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Aizliegts",
+          "message": "Iespējams, trūkst atļauju"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Nav atrasts",
+          "message": "Iespējams, nepareizs url vai ceļš"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Iekšēja servera kļūda",
+          "message": "Serveris saskārās ar kļūdu"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Pakalpojums nav pieejams",
+          "message": "Serveris pašlaik nav pieejams"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Savienojums pārtraukts",
+          "message": "Savienojums tika pārtraukts"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Domēns nav atrasts",
+          "message": "Domēnu nevarēja atrast"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Savienojums atteikts",
+          "message": "Savienojums tika atteikts"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Nederīgs JSON",
+          "message": "Atbilde nebija derīgs JSON"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Nepareizs ceļš",
+          "message": "Ceļš, iespējams, nav pareizs"
         },
         "tooManyRequests": {
           "title": "",
@@ -1233,29 +1233,29 @@
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Noslēpumi",
+      "lastUpdated": "Pēdējo reizi atjaunināts {date}",
       "notSet": {
         "label": "",
         "tooltip": ""
       },
-      "secureNotice": "",
+      "secureNotice": "Šo noslēpumu nevar iegūt pēc izveidošanas",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Atiestatīt noslēpumu",
+        "message": "Vai esat pārliecināts, ka vēlaties atiestatīt šo noslēpumu?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Nav noslēpumu",
+        "text": "Šai integrācijai nav nepieciešami noslēpumi"
       },
       "kind": {
         "username": {
           "label": "Lietotājvārds",
-          "newLabel": ""
+          "newLabel": "Jauns lietotājvārds"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API atslēga",
+          "newLabel": "Jauna API atslēga"
         },
         "password": {
           "label": "Parole",
@@ -1310,33 +1310,33 @@
           "newLabel": ""
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Statusa lapas daļa",
+          "newLabel": "Jauna statusa lapas daļa"
         }
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Atlasiet integrācijas vienumos",
+      "interact": "Mijiedarboties ar integrācijām",
+      "full": "Pilna integrāciju piekļuve"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Pašmitināts audiogrāmatu un podkāstu serveris"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Pašmitināts mūzikas straumēšanas serveris ar Subsonic API saderību"
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Pašmitināta pieejamības uzraudzība ar publiskām statusa lapām",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "Jūsu publiskās statusa lapas daļa. Ja nav iestatīts, noklusējums ir \"default\"."
         },
         "apiKey": {
-          "description": ""
+          "description": "Neobligāta API atslēga autentificētai piekļuvei /metrics"
         }
       }
     },
@@ -1345,8 +1345,8 @@
       "description": ""
     },
     "paperlessNgx": {
-      "name": "",
-      "description": ""
+      "name": "Paperless-ngx",
+      "description": "Dokumentu pārvaldības sistēma skenētu dokumentu arhivēšanai un organizēšanai"
     },
     "patchmon": {
       "name": "",
@@ -1358,8 +1358,8 @@
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Multimediji",
+    "search": "Atrast multividi",
     "field": {
       "name": "Nosaukums",
       "size": "Lielums",
@@ -1367,137 +1367,137 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Augšupielādēt multividi",
+        "file": "Izvēlēties failu",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Multivide tika veiksmīgi augšupielādēta"
           },
           "error": {
-            "message": ""
+            "message": "Multividi nevarēja augšupielādēt"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Dzēst multividi",
+        "description": "Vai esat pārliecināts, ka vēlaties dzēst multividi <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Multivide tika veiksmīgi dzēsta"
           },
           "error": {
-            "message": ""
+            "message": "Multividi nevarēja dzēst"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Kopēt URL"
       },
       "open": {
         "label": ""
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Nav augšupielādētu multivides failu"
     }
   },
   "common": {
     "success": "",
-    "beta": "",
+    "beta": "Beta",
     "error": "Kļūda",
     "action": {
       "add": "Pievienot",
       "apply": "Lietot",
-      "backToOverview": "",
-      "skip": "",
+      "backToOverview": "Atpakaļ uz pārskatu",
+      "skip": "Izlaist",
       "change": "",
       "create": "Izveidot",
       "createAnother": "",
       "edit": "Rediģēt",
-      "import": "",
+      "import": "Importēt",
       "insert": "Ievietot",
       "remove": "Noņemt",
       "save": "Saglabāt",
       "saveChanges": "Saglabāt izmaiņas",
       "cancel": "Atcelt",
       "delete": "Dzēst",
-      "discard": "",
+      "discard": "Atmest",
       "close": "",
       "confirm": "Apstipriniet",
-      "continue": "",
+      "continue": "Turpināt",
       "previous": "Iepriekšējais",
       "next": "Nākamais",
-      "checkoutDocs": "",
+      "checkoutDocs": "Skatīt dokumentāciju",
       "checkLogs": "",
       "tryAgain": "Mēģiniet vēlreiz",
-      "loading": "",
-      "show": "",
-      "hide": ""
+      "loading": "Notiek ielāde",
+      "show": "Rādīt",
+      "hide": "Paslēpt"
     },
-    "here": "",
+    "here": "šeit",
     "iconPicker": {
-      "label": "",
-      "header": "",
+      "label": "Ikonas URL",
+      "header": "Rakstiet nosaukumu vai objektus, lai filtrētu ikonas... Homarr pārmeklēs {countIcons} ikonas jūsu vietā.",
       "headerLoading": "",
       "noResults": "",
       "error": ""
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Automātiski",
         "light": "",
         "dark": ""
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "min": "Min",
+      "max": "Maks",
+      "days": "Dienas",
+      "hours": "Stundas",
+      "minutes": "Minūtes"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Izveide veiksmīga",
+        "error": "Izveide neizdevās"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Dzēšana veiksmīga",
+        "error": "Dzēšana neizdevās"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Izmaiņas veiksmīgi piemērotas",
+        "error": "Nevar piemērot izmaiņas"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Nodošana veiksmīga",
+        "error": "Nodošana neizdevās"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Izvēlieties vienu vai vairākas vērtības"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Pievienot vairāk vērtību",
+      "addLabel": "Pievienot {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Izvēlēties vērtību",
       "badge": {
-        "recommended": ""
+        "recommended": "Ieteicams"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "Pārslēgt uz tumšo režīmu",
+        "switchToLightMode": "Pārslēgt uz gaišo režīmu",
+        "management": "Pārvaldība",
         "docker": "",
         "preferences": "Jūsu iestatījumi",
-        "logout": "",
+        "logout": "Izrakstīties",
         "login": "Pieslēgties",
-        "homeBoard": "",
-        "loggedOut": "",
+        "homeBoard": "Jūsu sākuma dēlis",
+        "loggedOut": "Izrakstījies",
         "updateAvailable": ""
       }
     },
@@ -1508,8 +1508,8 @@
     "applications": "",
     "services": "",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Rādīt priekšskatījumu",
+      "hide": "Paslēpt priekšskatījumu"
     },
     "zod": {
       "errors": {
@@ -1519,7 +1519,7 @@
           "startsWith": "Šim laukam jāsākas ar {startsWith}",
           "endsWith": "Šim laukam jābeidzas ar {endsWith}",
           "includes": "Šajā laukā jāiekļauj {includes}",
-          "invalidEmail": ""
+          "invalidEmail": "Šim laukam jābūt derīgai e-pasta adresei"
         },
         "tooSmall": {
           "string": "Šim laukam jābūt vismaz {minimum} rakstzīmju garam",
@@ -1530,13 +1530,13 @@
           "number": "Šim laukam jābūt mazākam vai vienādam ar {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
+          "passwordsDoNotMatch": "Paroles nesakrīt",
+          "passwordRequirements": "Parole neatbilst prasībām",
+          "boardAlreadyExists": "Dēlis ar šādu nosaukumu jau pastāv",
+          "invalidFileType": "Nederīgs faila tips, sagaidīts {expected}",
           "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
+          "fileTooLarge": "Fails ir pārāk liels, maksimālais izmērs ir {maxSize}",
+          "invalidConfiguration": "Nederīga konfigurācija",
           "groupNameTaken": ""
         }
       }
@@ -1551,8 +1551,8 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Jauna dinamiskā sadaļa",
+        "remove": "Noņemt dinamisko sadaļu"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Noņemt dinamisko sadaļu",
+        "message": "Vai esat pārliecināts, ka vēlaties noņemt šo dinamisko sadaļu? Vienumi tiks pārvietoti uz to pašu atrašanās vietu vecāku sadaļā."
       }
     },
     "category": {
@@ -1577,32 +1577,32 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Jauna kategorija",
+        "edit": "Pārdēvēt kategoriju",
+        "remove": "Noņemt kategoriju",
         "moveUp": "Virzīt augšup",
         "moveDown": "Virzīt lejup",
-        "createAbove": "",
-        "createBelow": "",
+        "createAbove": "Jauna kategorija augšā",
+        "createBelow": "Jauna kategorija apakšā",
         "openAllInNewTabs": ""
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Jauna kategorija",
+        "submit": "Pievienot kategoriju"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Noņemt kategoriju",
+        "message": "Vai esat pārliecināts, ka vēlaties noņemt kategoriju {name}?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Pārdēvēt kategoriju",
+        "submit": "Pārdēvēt kategoriju"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Jauna kategorija",
           "changePosition": "Mainīt pozīciju",
-          "settings": ""
+          "settings": "Iestatījumi"
         }
       },
       "openAllInNewTabs": {
@@ -1613,12 +1613,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Jauns vienums",
+      "import": "Importēt vienumu",
+      "edit": "Rediģēt vienumu",
+      "moveResize": "Pārvietot / mainīt izmēru vienumam",
+      "duplicate": "Dublēt vienumu",
+      "remove": "Noņemt vienumu"
     },
     "menu": {
       "label": {
@@ -1635,12 +1635,12 @@
       }
     },
     "create": {
-      "title": "",
+      "title": "Izvēlieties pievienojamo vienumu",
       "search": "",
-      "addToBoard": ""
+      "addToBoard": "Pievienot dēlim"
     },
     "moveResize": {
-      "title": "",
+      "title": "Pārvietot / mainīt izmēru vienumam",
       "field": {
         "width": {
           "label": "Platums"
@@ -1649,35 +1649,35 @@
           "label": "Augstums"
         },
         "xOffset": {
-          "label": ""
+          "label": "X nobīde"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y nobīde"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Rediģēt vienumu",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Rediģēt logrīku",
+        "app": "Rediģēt lietotni"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Izmaiņas šajā lietotnē tiks piemērotas visur, kur tā tiek izmantota visos informācijas paneļos."
       },
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Papildu opcijas",
+        "title": "Papildu vienumu opcijas"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integrācijas"
         },
         "title": {
           "label": ""
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Pielāgotas css klases"
         },
         "borderColor": {
           "label": ""
@@ -1685,8 +1685,8 @@
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Noņemt vienumu",
+      "message": "Vai esat pārliecināts, ka vēlaties noņemt šo vienumu?"
     }
   },
   "widget": {
@@ -1698,17 +1698,17 @@
       "loadError": ""
     },
     "app": {
-      "name": "",
-      "description": "",
+      "name": "Lietotne",
+      "description": "Iegulst lietotni dēlī.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Izvēlēties lietotni"
         },
         "openInNewTab": {
           "label": "Atvērt jaunā cilnē"
         },
         "showTitle": {
-          "label": ""
+          "label": "Rādīt lietotnes nosaukumu"
         },
         "pingEnabled": {
           "label": ""
@@ -1734,17 +1734,17 @@
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Nav lietotnes",
+          "tooltip": "Jums nav izvēlēta derīga lietotne"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Grāmatzīmes",
+      "description": "Parāda vairākas lietotņu saites",
       "option": {
         "title": {
-          "label": ""
+          "label": "Nosaukums"
         },
         "layout": {
           "label": "Izkārtojums",
@@ -1756,7 +1756,7 @@
               "label": "Vertikāli"
             },
             "grid": {
-              "label": ""
+              "label": "Režģis"
             },
             "gridHorizontal": {
               "label": ""
@@ -1776,11 +1776,11 @@
           "label": ""
         },
         "withBorder": {
-          "label": ""
+          "label": "Rādīt apmali"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Grāmatzīmes",
+          "add": "Pievienot grāmatzīmi"
         }
       }
     },
@@ -1794,8 +1794,8 @@
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "DNS cauruma kopsavilkums",
+      "description": "Parāda jūsu DNS cauruma kopsavilkumu",
       "option": {
         "layout": {
           "label": "Izkārtojums",
@@ -1807,28 +1807,28 @@
               "label": "Vertikāli"
             },
             "grid": {
-              "label": ""
+              "label": "Režģis"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Izmantot Pi-Hole krāsas"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Neizdevās iegūt DNS cauruma kopsavilkumu",
+        "integrationsDisconnected": "Nav datu, visas integrācijas ir atvienotas"
       },
       "data": {
         "adsBlockedToday": "Šodien bloķēti",
         "adsBlockedTodayPercentage": "Šodien bloķēti",
         "dnsQueriesToday": "Pieprasījumi šodien",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "Domēni bloķēšanas sarakstā"
       },
       "domainsTooltip": ""
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "DNS cauruma vadības elementi",
       "description": "Vadiet PiHole vai AdGuard no sava informācijas paneļa",
       "option": {
         "layout": {
@@ -1841,62 +1841,62 @@
               "label": "Vertikāli"
             },
             "grid": {
-              "label": ""
+              "label": "Režģis"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Rādīt Pārslēgt Visas pogas"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neizdevās vadīt DNS caurumu"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
-        "set": "",
+        "enableAll": "Iespējot visu",
+        "disableAll": "Atspējot visu",
+        "setTimer": "Iestatīt taimeri",
+        "set": "Iestatīt",
         "enabled": "Iespējots",
         "disabled": "Atspējots",
-        "processing": "",
-        "disconnected": "",
-        "hours": "",
-        "minutes": "",
-        "unlimited": ""
+        "processing": "Apstrādā",
+        "disconnected": "Atvienots",
+        "hours": "Stundas",
+        "minutes": "Minūtes",
+        "unlimited": "Atstāt tukšu, lai neierobežotu"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Datums un laiks",
       "description": "Rāda pašreizējo datumu un laiku.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Pielāgots nosaukums/pilsētas attēlojums",
+          "description": "Parādiet pielāgotu nosaukumu vai pilsētas/valsts nosaukumu pulksteņa augšpusē."
         },
         "customTitle": {
-          "label": ""
+          "label": "Nosaukums"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24 stundu formāts",
+          "description": "Izmantot 24 stundu formātu, nevis 12 stundu formātu"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Rādīt sekundes"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Izmantot fiksētu laika joslu"
         },
         "timezone": {
           "label": "Laika zona",
-          "description": ""
+          "description": "Izvēlieties laika joslu atbilstoši IANA standartam"
         },
         "showDate": {
-          "label": ""
+          "label": "Rādīt datumu"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Datuma formāts",
+          "description": "Kā datumam jāizskatās"
         },
         "customTimeFormat": {
           "label": "",
@@ -1953,7 +1953,7 @@
     },
     "notebook": {
       "name": "Piezīmes",
-      "description": "",
+      "description": "Vienkāršs piezīmju bloka logrīks, kas atbalsta markdown",
       "option": {
         "showToolbar": {
           "label": "Rādīt rīkjoslu, lai palīdzētu rakstīt markdown tekstu"
@@ -2052,7 +2052,7 @@
       "saveFailed": ""
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Iegult jebkuru saturu no interneta. Dažas vietnes var ierobežot piekļuvi.",
       "option": {
         "embedUrl": {
@@ -2087,32 +2087,32 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Nav norādīts iFrame URL",
         "unsupportedProtocol": "",
         "noBrowerSupport": "Jūsu pārlūkprogramma neatbalsta iframe. Lūdzu, atjauniniet pārlūkprogrammu."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Vienības stāvoklis",
+      "description": "Parādīt vienības stāvokli un pēc izvēles to pārslēgt",
       "option": {
         "entityId": {
           "label": "Vienības ID"
         },
         "displayName": {
-          "label": ""
+          "label": "Parādāmais nosaukums"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Vienības mērvienība"
         },
         "clickable": {
-          "label": ""
+          "label": "Noklikšķināms"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Izpildīt automatizāciju",
+      "description": "Aktivizēt automatizāciju ar vienu klikšķi",
       "option": {
         "displayName": {
           "label": "Parādāmais nosaukums"
@@ -2203,7 +2203,7 @@
     },
     "calendar": {
       "name": "Kalendārs",
-      "description": "",
+      "description": "Rādīt notikumus no jūsu integrācijām kalendāra skatā noteiktā relatīvā laika periodā",
       "duration": {
         "allDay": ""
       },
@@ -2211,16 +2211,16 @@
         "releaseType": {
           "label": "Radarr laiduma tips",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "Kinoteātros",
+            "digitalRelease": "Digitālā izlaišana",
+            "physicalRelease": "Fiziskā izlaišana"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Sākt no"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Beigt pie"
         },
         "showUnmonitored": {
           "label": ""
@@ -2232,7 +2232,7 @@
       "description": "Rāda pašreizējo laikapstākļu informāciju par iestatīto atrašanās vietu.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatūra pēc Fārenheita"
         },
         "disableTemperatureDecimals": {
           "label": ""
@@ -2248,18 +2248,18 @@
           "label": "Laikapstākļu atrašānās vieta"
         },
         "showCity": {
-          "label": ""
+          "label": "Rādīt pilsētu"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Rādīt prognozi"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Prognozes dienu skaits",
+          "description": "Ja logrīks nav pietiekami plats, tiek rādīts mazāk dienu"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Datuma formāts",
+          "description": "Kā datumam jāizskatās"
         }
       },
       "currentWindSpeed": "",
@@ -2289,16 +2289,16 @@
     },
     "indexerManager": {
       "name": "Indeksētāja pārvaldnieka statuss",
-      "description": "",
+      "description": "Jūsu indeksētāju statuss",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Atvērt indeksētāja vietni jaunā cilnē"
         }
       },
       "title": "Indexer pārvaldnieks",
       "testAll": "Pārbaudīt visu",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neizdevās iegūt indeksētāju statusu"
       }
     },
     "healthMonitoring": {
@@ -2343,22 +2343,22 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
+        "information": "Informācija",
+        "processor": "Procesors: {cpuModelName}",
+        "memory": "Atmiņa: {memory} GiB",
+        "memoryAvailable": "Pieejams: {memoryAvailable} GiB ({percent}%)",
+        "version": "Versija: {version}",
         "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "loadAverage": "Vidējā slodze:",
+        "minute": "1 minūte",
+        "minutes": "<b>{count}</b> minūtes",
+        "used": "Izmantots",
         "available": "Pieejams",
-        "lastSeen": ""
+        "lastSeen": "Pēdējais statusa atjauninājums: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neizdevās iegūt veselības statusu"
       },
       "cluster": {
         "summary": {
@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2474,34 +2485,34 @@
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Pārraugiet savu UPS ierīču statusu, izmantojot NUT serveri",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Rādīt akumulatoru"
         },
         "showLoad": {
-          "label": ""
+          "label": "Rādīt slodzi"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Rādīt spriegumu"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Tiešsaistē",
+        "onBattery": "Uz akumulatora",
+        "lowBattery": "Zems akumulatora līmenis",
+        "charging": "Notiek uzlāde",
+        "unknown": "Nezināms"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Darbības laiks",
+        "load": "Slodze",
+        "input": "Ieeja",
+        "output": "Izeja"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neizdevās iegūt UPS datus"
       }
     },
     "tracearr": {
@@ -2584,84 +2595,84 @@
             "today": "",
             "24h": "",
             "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "30d": "Pēdējās 30 dienas",
+            "month": "Šis mēnesis",
+            "lastMonth": "Pagājušais mēnesis"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Notikums",
+          "description": "Rādīt konkrēta notikuma kopējo biežumu",
+          "placeholder": "Izvēlieties notikumu",
+          "loading": "Notiek notikumu ielāde...",
+          "noEvents": "Nav atrasts neviens notikums",
+          "none": "Nav notikuma",
+          "configureWebsiteFirst": "Vispirms izvēlieties vietni, lai ielādētu notikumus"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Diagrammas veids",
+          "description": "Diagrammas attēlošanas stils",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Joslu diagramma",
+            "sparkline": "Svītras"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Diagrammas stils",
+          "description": "Kā attēlot notikumu sērijas diagrammā",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Blakus",
+            "overlay": "Pārklājums (apakškopa)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Skats",
+          "description": "Ko rādīt logrīka pamatdaļā",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Diagramma",
+            "events": "Notikumu diagramma",
+            "topPages": "Populārākās lapas",
+            "topReferrers": "Populārākie piesaistītāji"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Notikumi",
+          "description": "Atlasiet vienu vai vairākus notikumus, lai attēlotu diagrammā",
+          "placeholder": "Atlasiet notikumus...",
+          "loading": "Notiek notikumu ielāde...",
+          "noEvents": "Nav atrasts neviens notikums",
+          "configureWebsiteFirst": "Vispirms izvēlieties vietni, lai ielādētu notikumus"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Rādāmie vienumi",
+          "description": "Galveno vienumu skaits, ko rādīt (maks. 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "notikumi",
+        "label": "notikumi"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Tieša"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Tieša"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Atlasiet notikumus, ko attēlot diagrammā"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Nav konfigurēta Umami integrācija",
+        "noWebsite": "Nav konfigurēta vietne",
+        "noData": "Nav pieejamu datu",
+        "internalServerError": "Neizdevās iegūt Umami datus"
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
+        "query": "Pilsēta / pasta indekss",
+        "latitude": "Platums",
+        "longitude": "Garums",
         "disabledTooltip": "",
         "unknownLocation": "",
         "search": "Meklēt",
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "",
           "description": ""
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "",
@@ -2734,6 +2757,9 @@
         "id": "",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -2758,48 +2784,48 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Pārskats par jūsu Paperless-ngx dokumentu arhīvu",
+      "documentsTotal": "Kopā dokumentu",
+      "documentsInbox": "Iesūtne",
+      "correspondents": "Korespondenti",
+      "tags": "Birkas",
+      "documentTypes": "Dokumentu veidi",
+      "inboxRatio": "Iesūtnes attiecība",
+      "inbox": "iesūtne",
+      "total": "kopā",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt iesūtnes attiecību",
+          "description": "Parādīt iesūtnes dokumentu attiecību pret kopējo hero sadaļā"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt iesūtnes riņķi",
+          "description": "Parādīt progresa riņķi kopā ar iesūtnes attiecību"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt kopējo dokumentu skaitu",
+          "description": "Parādīt kopējo dokumentu skaitu arhīvā"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt iesūtnes skaitu",
+          "description": "Parādīt neapstrādāto dokumentu skaitu iesūtnē"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt korespondentus",
+          "description": "Parādīt kopējo korespondentu skaitu"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt birkas",
+          "description": "Parādīt kopējo birku skaitu"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt dokumentu veidus",
+          "description": "Parādīt kopējo dokumentu veidu skaitu"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neizdevās iegūt Paperless-ngx datus"
       }
     },
     "patchmon": {
@@ -3079,11 +3105,20 @@
         "limitPerIntegration": {
           "label": "",
           "description": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "",
-        "noCommunications": ""
+        "noCommunications": "",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3141,8 @@
           "detailsTitle": ""
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integrācija"
@@ -3140,7 +3176,8 @@
         },
         "time": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "",
+          "eta": ""
         },
         "type": {
           "columnTitle": "",
@@ -3184,7 +3221,23 @@
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "",
@@ -3652,43 +3705,43 @@
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Pārraudzīt pieejamības statistiku no jūsu Uptime Kuma statusa lapas",
       "option": {
         "showAverageUptime": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt vidējo pieejamību",
+          "description": "Parādīt kombinēto 24 stundu vidējo pieejamības procentu"
         },
         "showUptimeRing": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt pieejamības riņķi",
+          "description": "Parādīt progresa riņķi kopā ar vidējo pieejamības vērtību"
         },
         "showTotalMonitors": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt kopējo monitoru skaitu",
+          "description": "Parādīt konfigurēto monitoru kopējo skaitu"
         },
         "showUpCount": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt \"up\" skaitu",
+          "description": "Parādīt, cik monitoru pašlaik ir \"up\""
         },
         "showDownCount": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt \"down\" skaitu",
+          "description": "Parādīt, cik monitoru pašlaik ir \"down\""
         },
         "showPausedCount": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt apturēto skaitu",
+          "description": "Parādīt, cik monitoru pašlaik ir apturēti"
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Vidējā pieejamība (24 h)",
       "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
+        "totalMonitors": "Kopējais monitoru skaits",
+        "upCount": "Augšup",
+        "downCount": "Lejup",
+        "pausedCount": "Apturēts"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neizdevās iegūt pieejamības datus"
       }
     },
     "traefik": {
@@ -3726,70 +3779,56 @@
       }
     },
     "audioStats": {
-      "name": "",
-      "description": "",
+      "name": "Audio statistika",
+      "description": "Bibliotēkas un atskaņošanas statistika no Navidrome vai Audiobookshelf",
       "option": {
         "showArtists": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt izpildītājus",
+          "description": "Parādīt kopējo izpildītāju skaitu mūzikas bibliotēkā (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt albumus",
+          "description": "Parādīt kopējo albumu skaitu mūzikas bibliotēkā (Navidrome)"
         },
         "showSongs": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt dziesmas",
+          "description": "Parādīt kopējo dziesmu skaitu mūzikas bibliotēkā (Navidrome)"
         },
         "showLibraryCount": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt bibliotēku skaitu",
+          "description": "Parādīt bibliotēku skaitu jūsu instancē (Audiobookshelf)"
         },
         "showAudiobooks": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt audiogrāmatas",
+          "description": "Parādīt kopējo audiogrāmatu skaitu visās bibliotēkās (Audiobookshelf)"
         },
         "showPodcasts": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt podkāstus",
+          "description": "Parādīt kopējo podkāstu skaitu visās bibliotēkās (Audiobookshelf)"
         },
         "showListeningTime": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt klausīšanās laiku",
+          "description": "Parādīt jūsu kopējo klausīšanās laiku (Audiobookshelf)"
         },
         "showActiveSessions": {
-          "label": "",
-          "description": ""
+          "label": "Rādīt aktīvās sesijas",
+          "description": "Parādīt pašlaik aktīvo atskaņošanas sesiju skaitu (Audiobookshelf)"
         },
         "compactMode": {
-          "label": "",
-          "description": ""
+          "label": "Kompaktais režīms",
+          "description": "Izmantot blīvāku izkārtojumu ar mazākiem elementiem, ideāli piemērots maziem logrīku izmēriem"
         }
       },
-      "artists": "",
-      "albums": "",
-      "songs": "",
-      "libraryCount": "",
-      "audiobooks": "",
-      "podcasts": "",
-      "listeningTime": "",
-      "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
+      "artists": "Izpildītāji",
+      "albums": "Albumi",
+      "songs": "Dziesmas",
+      "libraryCount": "Bibliotēkas",
+      "audiobooks": "Audiogrāmatas",
+      "podcasts": "Podkāsti",
+      "listeningTime": "Klausīšanās laiks",
+      "activeSessions": "Aktīvās sesijas",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neizdevās iegūt audio statistikas datus"
       }
     },
     "systemResources": {
@@ -3883,110 +3922,118 @@
       "executeFailed": ""
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Beszel sistēmas (Tabula)",
+      "description": "Tabulas skats visām Beszel uzraudzītajām sistēmām ar kārtojamām kolonnām un statusa indikatoriem",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Statusa filtrs"
         },
         "sortBy": {
-          "label": ""
+          "label": "Kārtot pēc"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Kārtošanas virziens"
         },
         "showCpu": {
-          "label": ""
+          "label": "Rādīt CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Rādīt atmiņu"
         },
         "showDisk": {
-          "label": ""
+          "label": "Rādīt disku"
         },
         "showGpu": {
-          "label": ""
+          "label": "Rādīt GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Rādīt slodzes vidējo"
         },
         "showNet": {
-          "label": ""
+          "label": "Rādīt tīklu"
         },
         "showTemp": {
-          "label": ""
+          "label": "Rādīt temperatūru"
         },
         "showBattery": {
-          "label": ""
+          "label": "Rādīt akumulatoru"
         },
         "showServices": {
-          "label": ""
+          "label": "Rādīt servisus"
         },
         "showUptime": {
-          "label": ""
+          "label": "Rādīt darbības laiku"
         },
         "showAgent": {
+          "label": "Rādīt aģenta versiju"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
           "label": ""
         }
       },
-      "noRecords": "",
+      "noRecords": "Nav atrasta neviena sistēma",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "Sistēma",
+        "cpu": "Procesors",
+        "memory": "Atmiņa",
+        "disk": "Disks",
+        "gpu": "Grafikas procesors",
+        "loadAvg": "Slodzes vidējais",
+        "net": "Tīkls",
+        "temp": "Temperatūra",
+        "battery": "Baterija",
+        "services": "Servisi",
+        "uptime": "Darbības laiks",
+        "agent": "Aģents"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Beszel sistēmas (Režģis)",
+      "description": "Karšu režģa skats visām Beszel uzraudzītajām sistēmām ar reāllaika metrikām",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Statusa filtrs"
         },
         "showCpu": {
-          "label": ""
+          "label": "Rādīt CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Rādīt atmiņu"
         },
         "showDisk": {
-          "label": ""
+          "label": "Rādīt disku"
         },
         "showGpu": {
-          "label": ""
+          "label": "Rādīt GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Rādīt slodzes vidējo"
         },
         "showNet": {
-          "label": ""
+          "label": "Rādīt tīklu"
         },
         "showTemp": {
-          "label": ""
+          "label": "Rādīt temperatūru"
         },
         "showBattery": {
-          "label": ""
+          "label": "Rādīt akumulatoru"
         },
         "showServices": {
-          "label": ""
+          "label": "Rādīt servisus"
         },
         "showUptime": {
-          "label": ""
+          "label": "Rādīt darbības laiku"
         },
         "showAgent": {
-          "label": ""
+          "label": "Rādīt aģenta versiju"
         }
       },
       "error": {
@@ -3996,78 +4043,78 @@
         "noSystems": ""
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "Procesors",
+        "memory": "Atmiņa",
+        "disk": "Disks",
+        "gpu": "Grafikas procesors",
+        "loadAvg": "Slodzes vidējais",
+        "net": "Tīkls",
+        "temp": "Temperatūra",
+        "battery": "Baterija",
+        "services": "Servisi",
+        "uptime": "Darbības laiks",
+        "agent": "Aģents"
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Beszel brīdinājumi",
+      "description": "Skatīt Beszel brīdinājumu konfigurācijas un vēsturi",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Rādīt brīdinājumu vēsturi"
         },
         "maxHistoryItems": {
-          "label": ""
+          "label": "Maks. vēstures ierakstu"
         }
       },
-      "empty": "",
+      "empty": "Nav konfigurētu brīdinājumu",
       "error": {
         "internalServerError": ""
       },
-      "history": "",
-      "resolved": "",
+      "history": "Vēsture",
+      "resolved": "Atrisināts",
       "status": {
-        "triggered": "",
-        "ok": ""
+        "triggered": "Izraisīts",
+        "ok": "Labi"
       }
     },
     "beszelSystemStats": {
-      "name": "",
-      "description": "",
+      "name": "Beszel sistēmas statistika",
+      "description": "Laikrindu diagrammas CPU, atmiņas, diska, tīkla un Docker konteineru metrikām",
       "option": {
         "systemId": {
           "label": "",
           "description": ""
         },
         "timePeriod": {
-          "label": ""
+          "label": "Laika periods"
         },
         "showCpu": {
-          "label": ""
+          "label": "Rādīt CPU diagrammu"
         },
         "showMemory": {
-          "label": ""
+          "label": "Rādīt atmiņas diagrammu"
         },
         "showDisk": {
-          "label": ""
+          "label": "Rādīt diska diagrammu"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Rādīt diska I/O diagrammu"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Rādīt tīkla diagrammu"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Rādīt Docker CPU diagrammu"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Rādīt Docker atmiņas diagrammu"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Rādīt Docker tīkla diagrammu"
         }
       },
-      "selectSystem": "",
+      "selectSystem": "Izvēlieties sistēmu",
       "empty": {
         "noSystems": ""
       },
@@ -4079,26 +4126,26 @@
       },
       "chart": {
         "cpu": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "CPU lietojums",
+          "subtitle": "Vidējais sistēmas mēroga CPU noslogojums",
+          "series": "Procesors"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
-          "series": "",
-          "cache": ""
+          "title": "Atmiņas lietojums",
+          "subtitle": "Precīza noslodze ierakstīšanas brīdī",
+          "series": "Lietots",
+          "cache": "Kešatmiņa/buferi"
         },
         "disk": {
-          "title": "",
+          "title": "Diska lietojums",
           "subtitle": "",
           "series": ""
         },
         "diskIO": {
-          "title": "",
-          "subtitle": "",
-          "read": "",
-          "write": ""
+          "title": "Diska I/O",
+          "subtitle": "Saknes failu sistēmas caurlaidspēja",
+          "read": "Lasīts",
+          "write": "Rakstīts"
         },
         "storage": {
           "title": "",
@@ -4106,22 +4153,22 @@
           "series": ""
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Joslas platums",
+          "subtitle": "Publisko interfeisu tīkla trafika",
+          "sent": "Nosūtīts",
+          "recv": "Saņemts"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker CPU lietojums",
+          "subtitle": "Vidējais konteineru CPU noslogojums"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker atmiņas lietojums",
+          "subtitle": "Docker konteineru atmiņas patēriņš"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker tīkla I/O",
+          "subtitle": "Docker konteineru tīkla trafika"
         }
       }
     }
@@ -4525,10 +4572,10 @@
             "docker": "",
             "kubernetes": "",
             "logs": "",
-            "api": "",
+            "api": "API & MCP",
             "certificates": "",
             "tasks": "",
-            "backup": ""
+            "backup": "Dublēšana"
           }
         },
         "settings": "Iestatījumi",
@@ -4609,7 +4656,7 @@
           "private": ""
         },
         "noResults": {
-          "title": ""
+          "title": "Pagaidām nav dēļu"
         },
         "modal": {
           "createBoard": {
@@ -4643,20 +4690,20 @@
               "firstDayOfWeek": "Nedēļas pirmā diena",
               "accessibility": "Piekļūstamība",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Ievada ekskursijas",
+                "description": "Atiestatiet ievada ekskursijas, lai tās redzētu vēlreiz nākamajā pārvaldības apgabala vai informācijas paneļa apmeklējumā.",
+                "reset": "Atiestatīt ievada ekskursijas",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Ekskursijas atiestatītas",
+                  "message": "Ievada ekskursijas tiks rādītas vēlreiz nākamajā apmeklējumā"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Pabeigts",
+                  "notStarted": "Nav sākts"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Pārvaldība",
+                  "dashboard": "Informācijas panelis"
                 }
               }
             }
@@ -4844,7 +4891,7 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "auto": "",
+                "auto": "Automātiski",
                 "light": "",
                 "dark": ""
               }
@@ -4984,213 +5031,213 @@
               }
             },
             "mcp": {
-              "label": "",
-              "title": "",
-              "subtitle": "",
-              "description": "",
-              "noApiKey": "",
-              "createApiKeyButton": "",
+              "label": "AI / MCP",
+              "title": "AI integrācija",
+              "subtitle": "Model Context Protocol (MCP) serveris",
+              "description": "Savienojiet AI asistentus ar savu Homarr instanci un kontrolējiet visu savu mājas laboratoriju dabiskā valodā. Meklējiet un pieprasiet multividi Overseerr, pārvaldiet Docker konteinerus, pārslēdziet Pi-hole, pārbaudiet servera veselību, kontrolējiet Home Assistant ierīces un daudz ko citu — tieši no sava AI asistenta.",
+              "noApiKey": "Lai autentificētos ar MCP serveri, nepieciešama API atslēga.",
+              "createApiKeyButton": "Izveidot API atslēgu",
               "endpoint": {
-                "title": ""
+                "title": "MCP galapunkts"
               },
               "authentication": {
-                "title": "",
-                "intro": "",
+                "title": "Autentifikācija",
+                "intro": "Jūs varat autentificēties ar savu MCP serveri, izmantojot API atslēgu vai OAuth. Abas metodes piešķir vienādu piekļuves līmeni.",
                 "apiKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "API atslēga (manuāli)",
+                  "description": "Nododiet ApiKey galveni ar savu pilno API atslēgu MCP klienta konfigurācijā."
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (pārlūka pieteikšanās)",
+                  "description": "Klienti, kas atbalsta OAuth (piemēram, Claude Code, opencode vai Cursor), var autentificēties, atverot pārlūkprogrammas logu. Palaidiet autentifikācijas komandu savā klientā, piesakieties Homarr pārlūkā, un esat savienots — API atslēga tiek izveidota automātiski.",
+                  "hint": "OAuth pilnvaras parādās kā parastas API atslēgas cilnē Autentifikācija. Jūs varat tās atsaukt jebkurā laikā."
                 },
-                "permissions": ""
+                "permissions": "API atslēga nosaka AI pieejamās atļaujas — tā darbojas ar tādu pašu piekļuves līmeni kā atslēgas īpašnieks."
               },
               "clientConfig": {
-                "title": "",
+                "title": "Klienta konfigurācija",
                 "streamableHttp": {
-                  "recommended": "",
-                  "title": "",
-                  "worksWith": "",
-                  "addToConfig": "",
-                  "cursor": "",
+                  "recommended": "Ieteicams",
+                  "title": "Straumējams HTTP",
+                  "worksWith": "Darbojas ar: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "Pievienojiet savam MCP klienta konfigurācijas failam:",
+                  "cursor": "{name}: {file} jūsu projektā vai globālajos iestatījumos",
                   "claudeDesktop": "",
-                  "claudeCode": "",
-                  "vsCodeCopilot": "",
-                  "replaceHint": ""
+                  "claudeCode": "{name}: {file} vai lietojiet {command}",
+                  "vsCodeCopilot": "{name}: {file} darbvietas iestatījumos",
+                  "replaceHint": "Aizstājiet vietzīmi ar API atslēgu, kuru saņēmāt, to izveidojot."
                 },
                 "stdio": {
-                  "title": "",
-                  "description": ""
+                  "title": "stdio (mantotajiem klientiem caur mcp-remote tiltu)",
+                  "description": "Klientiem, kas atbalsta tikai stdio transportu. Nepieciešama lokāli instalēta {dependency} (Node.js):"
                 }
               },
               "testConnection": {
-                "title": "",
-                "description": "",
-                "hint": ""
+                "title": "Pārbaudiet savienojumu",
+                "description": "Palaidiet to savā terminālī, lai pārbaudītu, vai galapunkts ir sasniedzams un jūsu API atslēga darbojas:",
+                "hint": "Veiksmīga atbilde atgriež MCP servera iespējas. Ja redzat kļūdu, pārbaudiet JSON atbildi, lai iegūtu mājienus."
               },
               "availableTools": {
-                "title": "",
-                "description": "",
-                "columnType": "",
-                "columnName": "",
-                "columnDescription": ""
+                "title": "Pieejamie rīki",
+                "description": "Pieejami {count} rīki. Izvērsiet kategoriju, lai redzētu atsevišķus rīkus un to aprakstus.",
+                "columnType": "Tips",
+                "columnName": "Rīks",
+                "columnDescription": "Apraksts"
               },
               "troubleshooting": {
-                "title": "",
+                "title": "Problēmu novēršana",
                 "missingHeader": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Trūkst ApiKey galvenes\"",
+                  "description": "Jūsu klients nesūta {header} galveni. Pārbaudiet, vai {section} sadaļa jūsu MCP konfigurācijā ir pareiza. Dažiem klientiem pēc konfigurācijas izmaiņām nepieciešama restartēšana."
                 },
                 "invalidFormat": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Nederīgs ApiKey formāts\"",
+                  "description": "Pārliecinieties, ka nokopējāt pilnu API atslēgu, nevis tikai daļu no tās."
                 },
                 "invalidKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Nederīga API atslēga\"",
+                  "description": "Atslēgas ID nav atrasts vai pilnvara ir nepareiza. API atslēgas var apskatīt tikai vienreiz, kad tās izveidotas. Ja pazaudējāt, izdzēsiet veco atslēgu un izveidojiet jaunu."
                 },
                 "connectionRefused": {
-                  "title": "",
-                  "description": ""
+                  "title": "Savienojums atteikts / noildze",
+                  "description": "Pārliecinieties, ka URL ir sasniedzams no jūsu AI klienta. Ja Homarr darbojas aiz reverse proxy vai Docker, izmantojiet ārējo URL (nevis {localhost}). Pārbaudiet, vai ports ir pareizs (noklusējums: 7575 Docker)."
                 },
                 "toolsNotAppearing": {
-                  "title": "",
-                  "description": ""
+                  "title": "Rīki neparādās",
+                  "description": "Dažiem rīkiem nepieciešama specifisku integrāciju konfigurācija (piem., Docker, Overseerr). Rīku saraksts ir atkarīgs no tā, kas pieejams jūsu Homarr instancē."
                 }
               },
-              "copy": "",
+              "copy": "Kopēt",
               "oneClick": {
-                "title": "",
-                "subtitle": "",
-                "vsCode": "",
-                "cursor": "",
-                "copyUrl": "",
-                "copied": "",
-                "copyHint": "",
-                "manualConfig": ""
+                "title": "Instalēt ar vienu klikšķi",
+                "subtitle": "Izmanto OAuth — autentificējieties pārlūkā pirmajā lietošanas reizē",
+                "vsCode": "Instalēt VS Code",
+                "cursor": "Instalēt Cursor",
+                "copyUrl": "Kopēt MCP URL",
+                "copied": "Nokopēts!",
+                "copyHint": "ChatGPT, Claude Code vai jebkuram MCP klientam",
+                "manualConfig": "Manuālā konfigurācija"
               }
             }
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Pilna datu bāzes dublēšana",
+          "metaTitle": "Dublēšana un atjaunošana",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Eksportēt datu bāzi",
+            "description": "Lejupielādējiet pilnu savas SQLite datu bāzes dublējumu, ieskaitot visus iestatījumus, lietotājus, dēļus un šifrētos integrāciju noslēpumus. Dublējums ir iesaiņots kā ZIP fails ar šifrēšanas atslēgu un metadatiem.",
+            "button": "Lejupielādēt dublējumu",
+            "error": "Eksportēšana neizdevās",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Sensitīvu datu eksports",
+              "warningTitle": "Šis eksports satur visu jūsu datu bāzi.",
+              "warningBody": "Dublējumā iekļauti visi lietotāji, integrāciju noslēpumi (šifrēti), API atslēgas, dēļu konfigurācijas un lietotņu dati. Glabājiet eksportēto failu droši un neizplatiet to.",
+              "typePrompt": "Ierakstiet \"{phrase}\", lai turpinātu",
+              "submit": "Eksportēt datu bāzi",
+              "cancel": "Atcelt"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Atjaunot datu bāzi",
+            "description": "Augšupielādējiet iepriekš eksportētu dublējuma ZIP, lai atjaunotu datu bāzi. Tas aizstās visu jūsu datu bāzi. Ja dublējums tika izveidots ar citu šifrēšanas atslēgu, noslēpumi tiks automātiski pāršifrēti.",
+            "warning": "Dublējuma atjaunošana pilnībā aizstās jūsu pašreizējo datu bāzi un restartēs lietojumprogrammu. Šo darbību nevar atsaukt.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Iemetiet savu dublējuma ZIP šeit vai noklikšķiniet, lai pārlūkotu",
+              "description": "Tiek pieņemti tikai .zip faili no Homarr SQLite dublējuma"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Mainīt failu",
+            "button": "Atjaunot datu bāzi",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Atjaunošana pabeigta",
+              "message": "Datu bāze ir veiksmīgi atjaunota. Lietojumprogramma tiek restartēta..."
             },
-            "error": ""
+            "error": "Importēšana neizdevās"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Dublējuma saturs",
+            "exported": "Eksportēts {date}",
+            "loading": "Notiek dublējuma faila analīze...",
+            "errorTitle": "Priekšskatījuma kļūda",
+            "entity": "Entītija",
+            "count": "Skaits",
+            "boards": "Dēļi",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Dēļi",
+              "user": "Lietotāji",
+              "app": "Lietotnes",
+              "integration": "Integrācijas",
+              "item": "Logrīki",
+              "media": "Multivide",
+              "search_engine": "Meklētājprogrammas"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Neizdevās analizēt dublējuma failu",
+            "invalidMissingMetadata": "Nederīgs dublējums: trūkst metadata.json",
+            "invalidMissingDb": "Nederīgs dublējums: trūkst db.sqlite"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Iemetiet savu dublējuma ZIP šeit",
+              "description": "Pieņem .zip failus no Homarr SQLite dublējuma (maks. 256 MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Notiek dublējuma analīze...",
+            "changeFile": "Mainīt failu",
+            "continueToRestore": "Turpināt atjaunošanu",
+            "tryAgain": "Mēģināt vēlreiz",
+            "analysisError": "Analīzes kļūda",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Dublējuma saturs",
+              "exported": "Eksportēts {date}",
+              "entity": "Entītija",
+              "count": "Skaits",
+              "boards": "Dēļi",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Dēļi",
+                "user": "Lietotāji",
+                "app": "Lietotnes",
+                "integration": "Integrācijas",
+                "item": "Logrīki",
+                "media": "Multivide",
+                "search_engine": "Meklētājprogrammas"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "{count} migrācija piemērota",
+              "migrationsAppliedPlural": "{count} migrācijas piemērotas",
+              "migrationsOlderVersion": "Šis dublējums bija no vecākas Homarr versijas. Tika piemērota {count} shēmas migrācija, lai to atjauninātu.",
+              "migrationsOlderVersionPlural": "Šis dublējums bija no vecākas Homarr versijas. Tika piemērotas {count} shēmas migrācijas, lai to atjauninātu.",
+              "migrationsUpToDate": "Datu bāzes shēma ir aktuāla ({count} migrācijas piemērotas)",
+              "upToDate": "Aktuāls",
+              "migrationsPending": "{count} gaida"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Notiek migrāciju piemērošana ({current}/{total})",
+              "migrationLabel": "Migrācija {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Destruktīva darbība",
+              "warningTitle": "Tas neatgriezeniski aizstās visu jūsu datu bāzi.",
+              "warningBody": "Visi pašreizējie dēļi, lietotāji, lietotnes, integrācijas, iestatījumi un sesijas tiks zaudētas. Šo darbību nevar atsaukt. Lietojumprogramma tiks restartēta pēc atjaunošanas.",
+              "typePrompt": "Ierakstiet \"{phrase}\", lai turpinātu",
+              "cancel": "Atcelt",
+              "submit": "Atjaunot datu bāzi"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Notiek datu bāzes atjaunošana...",
+              "extracting": "Izvelk dublējuma arhīvu",
+              "migrating": "Piemēro datu bāzes migrācijas",
+              "encrypting": "Pāršifrē integrāciju noslēpumus",
+              "swapping": "Aizvieto datu bāzes failu",
+              "restarting": "Restartē serveri"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Atjaunošana pabeigta",
+              "message": "Datu bāze ir veiksmīgi atjaunota. Serveris tiek restartēts – lūdzu, atsvaidziniet lapu pēc dažām sekundēm."
             },
             "failed": {
-              "title": ""
+              "title": "Atjaunošana neizdevās"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Nederīgs dublējums: trūkst metadata.json",
+            "invalidMissingDb": "Nederīgs dublējums: trūkst db.sqlite",
+            "analyzeError": "Neizdevās analizēt dublējumu"
           }
         }
       },
@@ -5277,15 +5324,15 @@
         "label": ""
       },
       "host": {
-        "label": ""
+        "label": "Resursdators"
       }
     },
     "action": {
       "title": "",
       "logs": {
-        "label": "",
+        "label": "Skatīt žurnālus",
         "page": {
-          "title": ""
+          "title": "{name} žurnāli"
         }
       },
       "start": {
@@ -5329,6 +5376,7 @@
       },
       "remove": {
         "label": "Noņemt",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",
@@ -5715,7 +5763,7 @@
         "docker": {
           "label": "",
           "logs": {
-            "label": ""
+            "label": "Žurnāli"
           }
         },
         "kubernetes": {
@@ -5826,7 +5874,7 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Pārslēgt izskata režīmu",
                 "light": "",
                 "dark": ""
               },
@@ -5867,104 +5915,104 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Iestatījumi",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Atlasiet iestatījumu, ko mainīt",
+                "backHint": "Nospiediet Backspace vai lietojiet atpakaļ pogu, lai atgrieztos",
+                "backAction": "Atgriezties"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Nevar atjaunināt iestatījumu"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Atvērt preferences"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Iespējots",
+                "disabled": "Atspējots"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Neviens",
+                "unavailable": "Pašlaik atlasīts (nav pieejams)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "Neviens",
+                "unavailable": "Pašlaik atlasīts (nav pieejams)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Krāsu shēma",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izvēlieties savu krāsu shēmu"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Valoda",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izvēlieties vēlamo valodu"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Noklusējuma meklētājprogramma",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izvēlieties noklusējuma meklētājprogrammu"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Atvērt meklēšanas rezultātus jaunā cilnē",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Atvērt meklēšanas rezultātus jaunā cilnē"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "Iespējot DuckDuckGo bangs",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Iespējot DuckDuckGo bangs"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Nedēļas pirmā diena",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izvēlieties nedēļas pirmo dienu"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Sākuma dēlis",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izvēlieties savu sākuma dēli"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Mobilais sākuma dēlis",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izvēlieties savu mobilo sākuma dēli"
                   }
                 }
               },
               "pingIconsEnabled": {
-                "label": "",
+                "label": "Lietot ikonas pingiem",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Lietot ikonas pingiem"
                   }
                 }
               },
@@ -5977,36 +6025,36 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Atvērt pilno iestatījumu lapu"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Meklējiet filmas vai seriālus, ko pieprasīt",
         "requestMovie": "",
         "requestSeries": "",
         "openIn": "",
         "group": {
-          "title": ""
+          "title": "Filmas un seriāli"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Meklēt filmas vai seriālus",
+            "description": "Sāciet rakstīt, lai meklētu savās multivides pieprasījumu integrācijās",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Pievienojiet Overseerr, Jellyseerr vai Seerr integrāciju, lai iespējotu multivides meklēšanu.",
+              "scoped": "Šim logrīkam nav pieejamas multivides pieprasījumu integrācijas."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Pieejams",
+          "partiallyAvailable": "Daļēji",
+          "processing": "Apstrādē",
+          "requested": "Pieprasīts",
+          "pending": "Pieprasīts"
         }
       },
       "external": {
@@ -6014,13 +6062,13 @@
         "group": {
           "searchEngine": {
             "title": "",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Padoms: Šeit varat izmantot arī jebkurus DuckDuckGo bangs, piem., !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Meklēt \"{query}\" ar {label}",
+              "pressEnterToOpen": "Nospiediet Enter, lai atvērtu",
+              "engineSelected": "{label} atlasīts (!{bang})",
+              "typeQueryToContinue": "Ierakstiet meklēšanas vaicājumu, lai turpinātu",
+              "emptyBangHint": "Ierakstiet bangu, piem., !yt, pēc tam spiediet atstarpi, lai atlasītu"
             },
             "children": {
               "action": {
@@ -6284,10 +6332,10 @@
               "header": {
                 "season": "",
                 "episodes": "",
-                "status": ""
+                "status": "Statuss"
               },
               "status": {
-                "requested": ""
+                "requested": "Pieprasīts"
               }
             },
             "button": {
@@ -6400,69 +6448,69 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Lasīt dokumentāciju",
+    "next": "Nākamais",
+    "prev": "Atpakaļ",
+    "done": "Gatavs",
+    "skip": "Izlaist ekskursiju",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Laipni lūgti Homarr!",
+        "description": "Šis ir jūsu vadības centrs. No šejienes jūs pārvaldāt dēļus, lietotnes, integrācijas, lietotājus un servera iestatījumus. Apskatīsim katru sadaļu."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Jūsu dēļi",
+        "description": "Šeit atrodas visi jūsu informācijas paneļi. Katram dēlim ir savs izkārtojums, fons un piekļuves iestatījumi. Jūs varat redzēt, kas katru izveidoja un vai tas ir publisks vai privāts."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Izveidot dēli",
+        "description": "Noklikšķiniet šeit, lai izveidotu jaunu informācijas paneli vai importētu to no iepriekšējās Homarr instalācijas. Katrs dēlis saņem savu URL, ar ko dalīties."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Jūsu lietotnes",
+        "description": "Šīs ir visas jūsu pievienotās lietotnes – saites uz jūsu pašu mitinātajiem pakalpojumiem. Katrai lietotnei ir ikona, izvēles veselības pārbaude un statusa zīme informācijas panelī."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Pievienot lietotni",
+        "description": "Reģistrējiet jaunu pakalpojumu šeit. Piešķiriet tam nosaukumu, URL un ikonu – tas parādīsies kā flīze jūsu dēļos ar tiešraides statusa uzraudzību."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Jūsu integrācijas",
+        "description": "Šie ir ar Homarr savienotie pakalpojumi – Sonarr, Radarr, Plex, Jellyfin un vairāk nekā 50 citi. Visi akreditācijas dati tiek šifrēti miera stāvoklī."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Pievienot integrāciju",
+        "description": "Pievienojiet jaunu pakalpojumu šeit. Izvēlieties tipu, ievadiet URL un API atslēgu – Homarr pārbaudīs savienojumu pirms saglabāšanas."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Jūsu lietotāji",
+        "description": "Redziet visus, kam ir piekļuve. Organizējiet lietotājus grupās un kontrolējiet, kas var skatīt vai rediģēt katru dēli."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Izveidot lietotāju",
+        "description": "Pievienojiet jaunu lietotāja kontu šeit. Varat arī izmantot ielūgumu saites ērtai pievienošanai. Tā ir ekskursija – esat gatavs!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Šis ir jūsu dēlis",
+        "description": "Vilkšanas un nomešanas informācijas panelis, kurā izkārtojat lietotnes un logrīkus. Jebkurā laikā nospiediet Ctrl+K, lai meklētu lietotnes, dēļus un darbības."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Rediģēšanas režīms",
+        "description": "Noklikšķiniet šeit, lai ieietu rediģēšanas režīmā. Pēc tam varat pievienot logrīkus, lietotnes un sadaļas – velciet, lai pārvietotu, mainiet izmēru ar stūra rokturi. Noklikšķiniet vēlreiz, lai saglabātu izmaiņas."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Dēļa iestatījumi",
+        "description": "Mainiet šī dēļa nosaukumu, kolonnas, fonu, krāsas un to, kas tam var piekļūt. Katrs dēlis var būt publisks vai privāts."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Pārslēgt dēļus",
+        "description": "Pārejiet starp dēļiem. Izveidojiet atsevišķus informācijas paneļus dažādiem mērķiem – multividei, tīklošanai, katram lietotājam vai jebkam, kas jums patīk."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Jūsu profils",
+        "description": "Mainiet savu krāsu shēmu, valodu, sākuma dēli un preferences. No šejienes varat arī pāriet uz pārvaldības apgabalu."
       }
     }
   }

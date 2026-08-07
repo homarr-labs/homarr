@@ -26,30 +26,39 @@ const columnTranslationKeyMap = {
 export const { definition, componentLoader } = createWidgetDefinition("dockerContainers", {
   icon: IconBrandDocker,
   queryKey: [["docker", "getContainers"]],
+  refetchInterval: 30,
   createOptions() {
-    return optionsBuilder.from((factory) => ({
-      columns: factory.multiSelect({
-        defaultValue: [...allColumnsList],
-        options: allColumnsList.map((value) => ({
-          value,
-          label: (t) => t(columnTranslationKeyMap[value]),
-        })),
-        searchable: true,
+    return optionsBuilder.from(
+      (factory) => ({
+        columns: factory.multiSelect({
+          defaultValue: [...allColumnsList],
+          options: allColumnsList.map((value) => ({
+            value,
+            label: (t) => t(columnTranslationKeyMap[value]),
+          })),
+          searchable: true,
+        }),
+        enableRowSorting: factory.switch({
+          defaultValue: false,
+        }),
+        defaultSort: factory.select({
+          defaultValue: "name",
+          options: columnsList.map((value) => ({
+            value,
+            label: (t) => t(`widget.dockerContainers.option.defaultSort.option.${value}`),
+          })),
+        }),
+        descendingDefaultSort: factory.switch({
+          defaultValue: false,
+        }),
+        columnOrder: factory.text({ defaultValue: "" }),
+        columnWidths: factory.text({ defaultValue: "" }),
       }),
-      enableRowSorting: factory.switch({
-        defaultValue: false,
-      }),
-      defaultSort: factory.select({
-        defaultValue: "name",
-        options: columnsList.map((value) => ({
-          value,
-          label: (t) => t(`widget.dockerContainers.option.defaultSort.option.${value}`),
-        })),
-      }),
-      descendingDefaultSort: factory.switch({
-        defaultValue: false,
-      }),
-    }));
+      {
+        columnOrder: { shouldHide: () => true },
+        columnWidths: { shouldHide: () => true },
+      },
+    );
   },
   errors: {
     INTERNAL_SERVER_ERROR: {

@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "並び替えを反転"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "コンテナステータスの取得に失敗しました"
+        "internalServerError": "コンテナステータスの取得に失敗しました",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2560,30 +2571,30 @@
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami 統計情報",
+      "description": "あなたの Umami 統計情報インスタンスから訪問者統計を表示します",
+      "visitors": "訪問者数",
+      "active": "活動中",
+      "pageviews": "ページビュー",
+      "visits": "訪問数",
+      "bounceRate": "直帰率",
+      "avgDuration": "平均",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "ウェブサイト",
+          "description": "あなたの Umami インスタンスで追跡されているウェブサイトを選択してください",
+          "placeholder": "ウェブサイトを選択",
+          "loading": "ウェブサイトを読み込み中…",
+          "noWebsites": "ウェブサイトが見つかりません",
+          "configureIntegrationFirst": "最初に Umami 統合を接続してください"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "期間",
+          "description": "訪問者データを表示する期間",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
+            "today": "今日",
+            "24h": "過去24時間",
+            "7d": "過去7日間",
             "30d": "",
             "month": "",
             "lastMonth": ""
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "現在再生中のみ表示",
           "description": "これを無効にすると plex では動作しません"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "再生中の曲",
@@ -2734,6 +2757,9 @@
         "id": "Id",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3079,11 +3105,20 @@
         "limitPerIntegration": {
           "label": "連携機能ごとに項目を制限",
           "description": "これは、連携機能ごとに表示されるアイテム数を制限します。グローバルではありません"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "項目内の列を選択",
-        "noCommunications": "連携機能からデータを読み込めません"
+        "noCommunications": "連携機能からデータを読み込めません",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3141,8 @@
           "detailsTitle": "クライアント内の現在のインデックス"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "連携機能"
@@ -3140,7 +3176,8 @@
         },
         "time": {
           "columnTitle": "終了時刻",
-          "detailsTitle": "完了までの時間"
+          "detailsTitle": "完了までの時間",
+          "eta": ""
         },
         "type": {
           "columnTitle": "種類",
@@ -3184,7 +3221,23 @@
           }
         }
       },
-      "globalRatio": "グローバル比"
+      "globalRatio": "グローバル比",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "メディアリリース",
@@ -3741,18 +3794,6 @@
           "label": "",
           "description": ""
         },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
-        },
         "showLibraryCount": {
           "label": "",
           "description": ""
@@ -3786,8 +3827,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3927,11 +3966,19 @@
         },
         "showAgent": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "",
@@ -5207,8 +5254,8 @@
             "subtitle": "{count} の多くの言語で翻訳を行っている"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "スポンサー",
+            "subtitle": "{count}人がプロジェクトを財政的に支援しています"
           },
           "libraries": {
             "title": "ライブラリ",
@@ -5329,6 +5376,7 @@
       },
       "remove": {
         "label": "削除",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "コンテナー削除",

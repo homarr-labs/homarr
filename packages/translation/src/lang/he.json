@@ -1505,8 +1505,8 @@
     "noResults": "לא נמצאו תוצאות",
     "unsavedChanges": "ישנם שינויים שלא נשמרו!",
     "servers": "שרתים",
-    "applications": "",
-    "services": "",
+    "applications": "אפליקציות",
+    "services": "שירותים",
     "preview": {
       "show": "הצג תצוגה מקדימה",
       "hide": "הסתר תצוגה המקדימה"
@@ -1938,16 +1938,16 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "לוח זמנים",
+      "description": "מציג זמני יציאה לתחנה",
+      "title": "יציאות {station}",
+      "noStation": "לא נבחרה תחנה",
       "option": {
         "baseUrl": {
           "label": ""
         },
         "station": {
-          "label": ""
+          "label": "תחנה"
         }
       }
     },
@@ -2024,32 +2024,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "פתק Anchor",
+      "description": "מציג פתק נבחר מ-Anchor",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "פתק"
         },
         "showTitle": {
-          "label": ""
+          "label": "הצג כותרת"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "הצג עדכון אחרון"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "בחר פתק להצגה",
+      "emptyContent": "לפתק זה אין תוכן",
+      "notFound": "הפתק לא נמצא",
+      "noNotes": "לא נמצאו פתקים",
+      "integrationRequired": "בחר תחילה אינטגרציית Anchor",
+      "updatedAt": "עודכן ב- {date}",
+      "untitled": "ללא כותרת",
+      "edit": "עריכה",
+      "save": "שמור",
+      "cancel": "בטל",
+      "readOnlyViewer": "יש לך גישת צפייה לפתק זה. עריכה מושבתת.",
+      "saveForbidden": "אין לך הרשאה לערוך פתק זה.",
+      "saveFailed": "שמירת הפתק נכשלה. נסה שוב."
     },
     "iframe": {
       "name": "iFrame",
@@ -2083,7 +2083,7 @@
           "label": "אפשר מיקום גיאוגרפי"
         },
         "allowModals": {
-          "label": ""
+          "label": "אפשר חלונות קופצים"
         }
       },
       "error": {
@@ -2319,7 +2319,7 @@
           "label": "הצג מידע זיכרון"
         },
         "gpu": {
-          "label": ""
+          "label": "הצג מידע GPU"
         },
         "showUptime": {
           "label": "הצג זמן פעולה"
@@ -2428,43 +2428,54 @@
         },
         "descendingDefaultSort": {
           "label": "מיון הפוך"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "נכשל באחזור סטטיסטיקות המכולות"
+        "internalServerError": "נכשל באחזור סטטיסטיקות המכולות",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "קוליפיי",
+      "description": "סקירה של מופע Coolify שלך עם שרתים ואפליקציות",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "הצג שרתים"
         },
         "showApplications": {
-          "label": ""
+          "label": "הצג אפליקציות"
         },
         "showServices": {
-          "label": ""
+          "label": "הצג שירותים"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "לא נמצאו שרתים",
+        "applications": "לא נמצאו אפליקציות",
+        "services": "לא נמצאו שירותים"
       },
       "footer": {
-        "updated": ""
+        "updated": "עודכן ב- {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "לא הוגדרה אינטגרציית Coolify",
+        "internalServerError": "אחזור נתוני Coolify נכשל"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "בנייה"
       },
       "instances": {
-        "title": ""
+        "title": "מופעים"
       }
     },
     "vpn": {
@@ -2505,85 +2516,85 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "טרייסאר",
+      "description": "ניטור שרת מדיה משופר עם נתוני זרם וקידוד מפורטים",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "הצג זרמים פעילים"
         },
         "showStats": {
-          "label": ""
+          "label": "הצג סיכום סטטיסטיקות"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "הצג פעילות אחרונה"
         },
         "showViolations": {
-          "label": ""
+          "label": "הצג הפרות"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "זרמים פעילים",
+        "totalUsers": "סך המשתמשים",
+        "transcodes": "קידודים",
+        "bandwidth": "רוחב פס"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "אין זרמים פעילים",
+        "user": "משתמש",
+        "media": "מדיה",
+        "state": "מצב",
+        "quality": "איכות",
+        "device": "מכשיר",
+        "progress": "התקדמות",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "הפעלה ישירה",
+          "transcode": "קידוד",
+          "directStream": "זרם ישיר"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "פעילות אחרונה",
+        "empty": "אין פעילות אחרונה",
+        "watched": "נצפה",
+        "partial": "חלקי"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "הפרות",
+        "empty": "אין הפרות אחרונות",
+        "rule": "כלל",
+        "user": "משתמש"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "לא הופעלו מקטעים",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "לא הוגדרה אינטגרציית Tracearr",
+        "internalServerError": "אחזור נתוני Tracearr נכשל"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami ניתוחים",
+      "description": "הצג נתוני מבקרים ממופע Umami Analytics שלך",
+      "visitors": "מבקרים",
+      "active": "פעילים",
+      "pageviews": "צפיות דף",
+      "visits": "ביקורים",
+      "bounceRate": "נטישה",
+      "avgDuration": "ממוצע",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "אתר",
+          "description": "בחר אתר המנוטר על ידי מופע ה-Umami שלך",
+          "placeholder": "בחר אתר",
+          "loading": "טוען אתרים...",
+          "noWebsites": "לא נמצאו אתרים",
+          "configureIntegrationFirst": "חבר תחילה אינטגרציית Umami"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "מסגרת זמן",
+          "description": "פרק הזמן להצגת נתוני מבקרים",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
+            "today": "היום",
+            "24h": "24 השעות האחרונות",
+            "7d": "7 הימים האחרונים",
             "30d": "",
             "month": "",
             "lastMonth": ""
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "הצג רק את ההפעלה הנוכחית",
           "description": "השבתת אפשרות זו לא תעבוד עבור פלקס"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "מתנגן כרגע",
@@ -2734,6 +2757,9 @@
         "id": "מזהה",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -2990,33 +3016,33 @@
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "סטטיסטיקות שרת Immich",
+      "description": "מידע על מופע ה-Immich שלך",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "הצג משתמשים",
+          "description": "הצג מספר משתמשים במופע שלך"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "הצג תמונות",
+          "description": "הצג מספר תמונות במופע שלך"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "הצג סרטונים",
+          "description": "הצג מספר סרטונים במופע שלך"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "הצג אחסון",
+          "description": "הצג את כמות האחסון הכוללת בשימוש"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "משתמשים",
+      "photos": "תמונות",
+      "videos": "סרטונים",
+      "storage": "אחסון בשימוש"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "אלבום Immich",
       "allPhotos": "",
       "option": {
         "albumId": {
@@ -3024,12 +3050,12 @@
           "description": ""
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "מרווח בשניות",
+          "description": "מחליף תמונות באלבום כל X שניות. חייב להיות לפחות 1. חייב להיות פחות מ-3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "הצג מידע תמונה",
+          "description": "הצג תאריך התמונה והאינדקס הנוכחי בתחתית המצגת"
         },
         "randomizePhotos": {
           "label": "",
@@ -3079,11 +3105,20 @@
         "limitPerIntegration": {
           "label": "הגבלת פריטים לכל אינטגרציה",
           "description": "פעולה זו תגביל את מספר הפריטים המוצגים בכל אינטגרציה, לא באופן גלובלי"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "בחר עמודות בפריטים",
-        "noCommunications": "לא ניתן לטעון נתונים מהאינטגרציה"
+        "noCommunications": "לא ניתן לטעון נתונים מהאינטגרציה",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3141,8 @@
           "detailsTitle": "מדד נוכחי בתוך הלקוח"
         },
         "id": {
-          "columnTitle": "מזהה"
+          "columnTitle": "מזהה",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "אינטגרציה"
@@ -3140,7 +3176,8 @@
         },
         "time": {
           "columnTitle": "זמן סיום",
-          "detailsTitle": "זמן מאז/עד סיום"
+          "detailsTitle": "זמן מאז/עד סיום",
+          "eta": ""
         },
         "type": {
           "columnTitle": "סוּג",
@@ -3184,7 +3221,23 @@
           }
         }
       },
-      "globalRatio": "יחס גלובלי"
+      "globalRatio": "יחס גלובלי",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "מדיה משוחררת",
@@ -3383,7 +3436,7 @@
           "label": "הסתר תיאור"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "הצג תמונת פוסטר"
         }
       }
     },
@@ -3613,42 +3666,42 @@
       }
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "מעקב Speedtest",
+      "description": "מציג תוצאות בדיקת מהירות ממופע מעקב Speedtest שלך.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "הצג תוצאה אחרונה"
         },
         "showStats": {
-          "label": ""
+          "label": "הצג ממוצעים"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "הצג תוצאות אחרונות"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "הצג גרף פינג"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "תוצאה אחרונה",
+      "averages": "ממוצעים",
+      "tests": "{count} בדיקות",
+      "recentResults": "תוצאות אחרונות",
+      "recentResultsSpeed": "מהירות",
+      "recentResultsPing": "פינג",
+      "download": "הורדה",
+      "upload": "העלאה",
+      "ping": "פינג",
+      "status": "מצב",
+      "avgDownload": "הורדה ממוצעת",
+      "avgUpload": "העלאה ממוצעת",
+      "avgPing": "פינג ממוצע",
+      "healthy": "בריא",
+      "unhealthy": "לא בריא",
+      "ok": "בסדר",
+      "fail": "כשל",
+      "noSectionsEnabled": "הפעל לפחות מקטע אחד באפשרויות הווידג'ט.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "אחזור נתוני speedtest נכשל"
       }
     },
     "uptimeKuma": {
@@ -3741,18 +3794,6 @@
           "label": "",
           "description": ""
         },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
-        },
         "showLibraryCount": {
           "label": "",
           "description": ""
@@ -3786,8 +3827,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3805,7 +3844,7 @@
           "option": {
             "cpu": "מעבד",
             "memory": "זיכרון",
-            "gpu": "",
+            "gpu": "מעבד גרפי",
             "network": "רשת"
           }
         },
@@ -3822,35 +3861,35 @@
       "card": {
         "cpu": "מעבד",
         "memory": "זיכרון",
-        "gpu": "",
+        "gpu": "מעבד גרפי",
         "network": "רשת",
         "up": "העלאה",
         "down": "הורדה"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "דיסקי מערכת",
+      "description": "שימוש בדיסקים במערכת",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "הצג טמפרטורה אם זמינה"
         },
         "displayMode": {
-          "label": "",
+          "label": "מצב תצוגה",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "אחוז (לדוגמה, 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "ערכים מוחלטים (לדוגמה, 800GB / 1TB)"
             },
             "free": {
-              "label": ""
+              "label": "אחוז שטח פנוי (לדוגמה, 24% פנוי)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "הצג סרגל שימוש ברקע"
         },
         "visibleStorageVolumes": {
           "label": "",
@@ -3859,7 +3898,7 @@
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "לא בריא"
       }
     },
     "customApi": {
@@ -3927,11 +3966,19 @@
         },
         "showAgent": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "",
@@ -4828,8 +4875,8 @@
           "user": {
             "title": "משתמשים",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "הפעל Gravatar",
+              "description": "מציג אווטר מ-Libravatar/Gravatar כברירת מחדל כשאין אווטר מותאם אישית וקיים דוא\"ל"
             }
           },
           "search": {
@@ -5207,8 +5254,8 @@
             "subtitle": "{count} תורמים בתרגום לשפות שונות"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "ספונסרים",
+            "subtitle": "{count} תומכים בפרויקט כלכלית"
           },
           "libraries": {
             "title": "ספריות",
@@ -5329,6 +5376,7 @@
       },
       "remove": {
         "label": "הסר",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "הקונטיינרים הוסרו",

@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "Invertir orden"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "No se pudo obtener las estadísticas de los contenedores"
+        "internalServerError": "No se pudo obtener las estadísticas de los contenedores",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2560,30 +2571,30 @@
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Estadísticas Umami",
+      "description": "Mostrar estadísticas de visitantes de su instancia de Umami Analytics",
+      "visitors": "visitantes",
+      "active": "activo",
+      "pageviews": "vistas de página",
+      "visits": "visitas",
+      "bounceRate": "rebote",
+      "avgDuration": "promedio",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Sitio web",
+          "description": "Seleccione un sitio web rastreado por su instancia de Umami",
+          "placeholder": "Seleccione un sitio web",
+          "loading": "Cargando sitios web...",
+          "noWebsites": "No se encontraron sitios web",
+          "configureIntegrationFirst": "Conecte primero una integración de Umami"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Período de tiempo",
+          "description": "El período de tiempo para mostrar los datos de los visitantes",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
+            "today": "Hoy",
+            "24h": "Últimas 24 horas",
+            "7d": "Últimos 7 días",
             "30d": "",
             "month": "",
             "lastMonth": ""
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "Mostrar sólo reproducción actual",
           "description": "Desactivar esta opción no funcionará para plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Reproducción en curso",
@@ -2734,6 +2757,9 @@
         "id": "ID",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3079,11 +3105,20 @@
         "limitPerIntegration": {
           "label": "Limitar elementos por integración",
           "description": "Esto limitará el número de elementos mostrados por integración, no globalmente"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Seleccionar Columnas en Artículos",
-        "noCommunications": "No se pueden cargar los datos desde la integración"
+        "noCommunications": "No se pueden cargar los datos desde la integración",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3141,8 @@
           "detailsTitle": "Índice actual dentro del cliente"
         },
         "id": {
-          "columnTitle": "ID"
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integración"
@@ -3140,7 +3176,8 @@
         },
         "time": {
           "columnTitle": "Hora de finalización",
-          "detailsTitle": "Tiempo desde/hasta la finalización"
+          "detailsTitle": "Tiempo desde/hasta la finalización",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Tipo",
@@ -3184,7 +3221,23 @@
           }
         }
       },
-      "globalRatio": "Relación global"
+      "globalRatio": "Relación global",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Lanzamientos de medios",
@@ -3741,18 +3794,6 @@
           "label": "",
           "description": ""
         },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
-        },
         "showLibraryCount": {
           "label": "",
           "description": ""
@@ -3786,8 +3827,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3927,11 +3966,19 @@
         },
         "showAgent": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "",
@@ -5207,8 +5254,8 @@
             "subtitle": "{count} contribuyendo con las traducciones en muchos idiomas"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Patrocinadores",
+            "subtitle": "{count} apoyando económicamente el proyecto"
           },
           "libraries": {
             "title": "Librerías",
@@ -5329,6 +5376,7 @@
       },
       "remove": {
         "label": "Eliminar",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Contenedores eliminados",

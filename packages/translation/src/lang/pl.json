@@ -199,8 +199,8 @@
         "label": "Użyj ikon dla pingów"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "Włącz prawe kliknięcie na widżetach",
+        "description": "Pokaż menu kontekstowe Homarr po kliknięciu prawym przyciskiem na widżet. Wyłącz, aby używać domyślnego menu przeglądarki (np. \"Otwórz link w nowej karcie\")."
       },
       "defaultSearchEngine": {
         "label": "Domyślna wyszukiwarka"
@@ -1290,12 +1290,12 @@
           "newLabel": "Nowy klucz API (Secret)"
         },
         "patchmonApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Klucz API",
+          "newLabel": "Nowy klucz API"
         },
         "patchmonApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Sekret API",
+          "newLabel": "Nowy sekret API"
         },
         "githubAppId": {
           "label": "Identyfikator aplikacji",
@@ -1341,20 +1341,20 @@
       }
     },
     "traefik": {
-      "name": "",
-      "description": ""
+      "name": "Traefik",
+      "description": "Chmurowy reverse proxy i load balancer"
     },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "System zarządzania dokumentami do archiwizacji i organizacji zeskanowaych dokumnteów"
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Zarządzanie łatkami i monitorowanie hostów Linux"
     },
     "bazarr": {
-      "name": "",
-      "description": ""
+      "name": "Bazarr",
+      "description": "Aplikacja towarzysząca Sonarr i Radarr do zarządzania i pobierania napisów"
     }
   },
   "media": {
@@ -1628,10 +1628,10 @@
         "actions": "Akcje"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
-        "idle": ""
+        "success": "OK",
+        "error": "Błąd",
+        "loading": "Ładowanie",
+        "idle": "Bezczynny"
       }
     },
     "create": {
@@ -1907,14 +1907,14 @@
           "description": "Użyj ISO 8601 do formatu daty (spowoduje to nadpisanie innych opcji)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż pogodę",
+          "description": "Wyświetl małą animowaną ikonę pogody i temperaturę w rogu karty"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Lokalizacja pogody"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Użyj Fahrenheita"
         }
       }
     },
@@ -1976,8 +1976,8 @@
         "clear": "Wyczyść formatowanie",
         "heading": "Nagłówek {level}",
         "align": "Wyrównanie tekstu: {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Ustaw kierunek tekstu od lewej do prawej",
+        "directionRtl": "Ustaw kierunek tekstu od prawej do lewej",
         "blockquote": "Cytat",
         "horizontalLine": "Linia pozioma",
         "bulletList": "Lista punktowana",
@@ -2268,7 +2268,7 @@
         "sunset": "Zachód słońca",
         "maxWindSpeed": "Maksymalna prędkość wiatru: {maxWindSpeed} km/h",
         "maxWindGusts": "Maksymalne porywy wiatru: {maxWindGusts} km/h",
-        "humidity": ""
+        "humidity": "Wilgotność: {humidity}%"
       },
       "kind": {
         "clear": "Bezchmurnie",
@@ -2328,9 +2328,9 @@
           "label": "Pokaż informacje o systemie plików"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Widoczne woluminy pamięci",
+          "description": "Dostępne tylko gdy wszystkie wybrane integracje to Synology. Pozostaw puste, aby wyświetlić wszystkie wykryte woluminy pamięci.",
+          "placeholder": "Wybierz woluminy pamięci"
         },
         "defaultTab": {
           "label": "Domyślna karta"
@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "Odwróć sortowanie"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Nie udało się pobrać statystyk kontenerów"
+        "internalServerError": "Nie udało się pobrać statystyk kontenerów",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,18 +2736,33 @@
         "showOnlyPlaying": {
           "label": "Pokaż tylko aktualnie odtwarzane",
           "description": "Wyłączenie tej opcji nie zadziała w przypadku Plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Obecnie odtwarzane",
         "user": "Użytkownik",
         "name": "Nazwa",
         "id": "ID",
-        "status": "",
-        "directPlay": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "status": "Status",
+        "directPlay": "Odtwarzanie bezpośrednie",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
+        "transcoding": "Transkodowanie",
+        "paused": "Zatrzymane",
+        "remaining": "{minutes} min pozostało",
         "metadata": {
           "title": "Statystyki dla nerdów",
           "video": {
@@ -2803,190 +2829,190 @@
       }
     },
     "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
+      "name": "PatchMon",
+      "description": "Przegląd stanu poprawek hostów z PatchMon",
+      "title": "Statystyki PatchMon",
+      "totalHosts": "Łączna liczba hostów",
+      "hostsNeedingUpdates": "Wymaga aktualizacji",
+      "securityUpdates": "Aktualizacje zabezpieczeń",
+      "upToDateHosts": "Aktualne hosty",
+      "hostsWithSecurityUpdates": "Hosty z aktualizacjami zabezpieczeń",
+      "recentUpdates24h": "Aktualizacje (24h)",
+      "totalOutdatedPackages": "Nieaktualne pakiety",
+      "totalRepos": "Repozytoria",
+      "osDistribution": "Dystrybucja systemu",
+      "compliance": "Zgodność poprawek",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Zaktualizowano {time}",
       "option": {
         "showTotalHosts": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż łączną liczbę hostów",
+          "description": "Wyświetla łączną liczbę monitorowanych hostów"
         },
         "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż hosty wymagające aktualizacji",
+          "description": "Wyświetla hosty z co najmniej jednym nieaktualnym pakietem"
         },
         "showSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż aktualizacje zabezpieczeń",
+          "description": "Wyświetla całkowitą liczbę dostępnych aktualizacji zabezpieczeń"
         },
         "showUpToDateHosts": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż aktualne hosty",
+          "description": "Wyświetla hosty bez nieaktualnych pakietów"
         },
         "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż hosty z aktualizacjami zabezpieczeń",
+          "description": "Wyświetla hosty wymagające poprawek bezpieczeństwa"
         },
         "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż ostatnie aktualizacje (24h)",
+          "description": "Wyświetla liczbę aktualizacji zastosowanych w ciągu ostatnich 24 godzin"
         },
         "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż nieaktualne pakiety",
+          "description": "Wyświetla całkowitą liczbę nieaktualnych pakietów na wszystkich hostach"
         },
         "showTotalRepos": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż repozytoria",
+          "description": "Wyświetla liczbę monitorowanych aktywnych repozytoriów"
         },
         "enableThresholdColors": {
-          "label": "",
-          "description": ""
+          "label": "Włącz kolory progów",
+          "description": "Koloruj wartości statystyk na zielono, żółto lub czerwono w zależności od ustawionych progów ważności"
         },
         "useCustomThresholds": {
-          "label": "",
-          "description": ""
+          "label": "Zaawansowane progi",
+          "description": "Dostosuj progi ostrzeżeń i krytyczne dla każdej statystyki, używając liczby bezwzględnej lub procentu wszystkich hostów"
         },
         "thresholdMode": {
           "option": {
-            "absolute": "",
-            "percent": ""
+            "absolute": "Liczba bezwzględna",
+            "percent": "Procent wszystkich hostów"
           }
         },
         "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Tryb progu dla wymagających aktualizacji",
+          "description": "Porównaj liczbę hostów wymagających aktualizacji jako wartość bezwzględną lub procent wszystkich hostów"
         },
         "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Próg ostrzeżenia dla wymagających aktualizacji",
+          "description": "Zmień na żółty, gdy wartość osiągnie ten próg"
         },
         "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Próg krytyczny dla wymagających aktualizacji",
+          "description": "Zmień na czerwony, gdy wartość osiągnie ten próg"
         },
         "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Tryb progu dla aktualizacji zabezpieczeń",
+          "description": "Porównaj liczbę aktualizacji zabezpieczeń jako wartość bezwzględną lub procent wszystkich hostów"
         },
         "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Próg ostrzeżenia dla aktualizacji zabezpieczeń",
+          "description": "Ustaw żółty kolor, gdy wartość osiągnie ten próg"
         },
         "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Próg krytyczny aktualizacji zabezpieczeń",
+          "description": "Ustaw czerwony kolor, gdy wartość osiągnie ten próg"
         },
         "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Tryb progu liczby hostów z aktualizacjami zabezpieczeń",
+          "description": "Porównaj liczbę hostów jako wartość bezwzględną lub procent całkowitej liczby hostów"
         },
         "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Próg ostrzegawczy dla hostów z aktualizacjami zabezpieczeń",
+          "description": "Ustaw żółty kolor, gdy wartość osiągnie ten próg"
         },
         "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Próg krytyczny dla hostów z aktualizacjami zabezpieczeń",
+          "description": "Ustaw czerwony kolor, gdy wartość osiągnie ten próg"
         },
         "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Tryb progu dla aktualnych hostów",
+          "description": "Porównaj liczbę aktualnych hostów jako wartość bezwzględną lub procent całkowitej liczby hostów"
         },
         "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Próg ostrzegawczy dla aktualnych hostów",
+          "description": "Ustaw żółty kolor, gdy wartość jest równa lub wyższa od tego progu, ale poniżej pełnego pokrycia"
         },
         "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Próg krytyczny dla aktualnych hostów",
+          "description": "Ustaw czerwony kolor, gdy wartość spadnie poniżej tego progu"
         },
         "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Tryb progu dla nieaktualnych pakietów",
+          "description": "Porównaj liczbę nieaktualnych pakietów jako wartość bezwzględną lub procent całkowitej liczby hostów"
         },
         "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Próg ostrzegawczy dla nieaktualnych pakietów",
+          "description": "Ustaw żółty kolor, gdy wartość osiągnie ten próg"
         },
         "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Próg krytyczny dla nieaktualnych pakietów",
+          "description": "Ustaw czerwony kolor, gdy wartość osiągnie ten próg"
         },
         "showOsDistribution": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż dystrybucję systemu operacyjnego",
+          "description": "Wyświetl podział monitorowanych hostów według systemu operacyjnego"
         },
         "osDistributionLimit": {
-          "label": "",
-          "description": "",
+          "label": "Limit dystrybucji systemu operacyjnego",
+          "description": "Maksymalna liczba systemów operacyjnych do wyświetlenia",
           "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
+            "3": "Top 3",
+            "5": "Top 5",
+            "10": "Top 10",
+            "all": "Wszystkie"
           }
         },
         "showOsVersion": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż wersję systemu operacyjnego",
+          "description": "Dodaj wersję systemu operacyjnego do każdej etykiety dystrybucji, jeśli jest dostępna"
         },
         "showComplianceHero": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż wskaźnik zgodności",
+          "description": "Wyświetl pierścień zgodności pokazujący procent aktualnych hostów"
         },
         "osDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Tryb wyświetlania systemu operacyjnego",
+          "description": "Wybierz sposób wyświetlania dystrybucji systemu operacyjnego",
           "option": {
-            "bars": "",
-            "donut": ""
+            "bars": "Paski poziome",
+            "donut": "Wykres pierścieniowy"
           }
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nie udało się pobrać danych PatchMon"
       }
     },
     "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
+      "name": "Bazarr",
+      "description": "Przegląd brakujących napisów i stanu zdrowia z instancji Bazarr",
+      "episodes": "Brakujące odcinki",
+      "movies": "Brakujące filmy",
+      "providers": "Problemy dostawców",
+      "status": "Problemy ze stanem",
       "option": {
         "showMissingEpisodes": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż brakujące odcinki",
+          "description": "Wyświetla liczbę odcinków z brakującymi napisami"
         },
         "showMissingMovies": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż brakujące filmy",
+          "description": "Wyświetla liczbę filmów z brakującymi napisami"
         },
         "showProviderIssues": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż problemy dostawców",
+          "description": "Wyświetla liczbę dostawców napisów z problemami"
         },
         "showHealthIssues": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż problemy ze stanem",
+          "description": "Wyświetla liczbę problemów ze stanem Bazarr"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nie udało się pobrać danych z Bazarr"
       }
     },
     "immich-serverStats": {
@@ -3017,7 +3043,7 @@
     },
     "immich-albumCarousel": {
       "name": "Album Immich",
-      "allPhotos": "",
+      "allPhotos": "Wszystkie zdjęcia",
       "option": {
         "albumId": {
           "label": "ID albumu",
@@ -3079,11 +3105,20 @@
         "limitPerIntegration": {
           "label": "Limit elementów na integrację",
           "description": "To ograniczy liczbę wyświetlanych elementów dla każdej integracji, a nie globalnie."
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Wybierz kolumny w elementach",
-        "noCommunications": "Nie można załadować danych z integracji"
+        "noCommunications": "Nie można załadować danych z integracji",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3141,8 @@
           "detailsTitle": "Bieżący indeks w ramach klienta"
         },
         "id": {
-          "columnTitle": "ID"
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integracja"
@@ -3140,7 +3176,8 @@
         },
         "time": {
           "columnTitle": "Czas zakończenia",
-          "detailsTitle": "Czas od/do zakończenia"
+          "detailsTitle": "Czas od/do zakończenia",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Typ",
@@ -3184,7 +3221,23 @@
           }
         }
       },
-      "globalRatio": "Wskaźnik globalny"
+      "globalRatio": "Wskaźnik globalny",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Wydania mediów",
@@ -3223,10 +3276,10 @@
           "label": "Otwieraj linki w nowej karcie"
         },
         "statusFilter": {
-          "label": ""
+          "label": "Statusy do wyświetlenia"
         },
         "recentDays": {
-          "label": ""
+          "label": "Pokaż tylko ostatnie żądania"
         }
       },
       "pending": {
@@ -3335,33 +3388,33 @@
       }
     },
     "mediaMissing": {
-      "name": "",
-      "description": "",
+      "name": "Brakujące i oczekujące media",
+      "description": "Pokazuje brakujące i oczekujące filmy i odcinki z Radarr i Sonarr",
       "option": {
         "showMissing": {
-          "label": ""
+          "label": "Pokaż brakujące elementy"
         },
         "showQueued": {
-          "label": ""
+          "label": "Pokaż oczekujące elementy"
         },
         "pageSize": {
-          "label": ""
+          "label": "Elementów na stronę"
         }
       },
       "tab": {
-        "missing": "",
-        "queued": ""
+        "missing": "Brakujące",
+        "queued": "Oczekujące"
       },
       "type": {
-        "movie": "",
-        "episode": ""
+        "movie": "Film",
+        "episode": "Odcinek"
       },
       "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
+        "missing": "Brak brakujących elementów",
+        "queued": "Brak oczekujących elementów",
+        "noTabsEnabled": "Włącz co najmniej jedną kartę w ustawieniach widżetu"
       },
-      "timeLeft": ""
+      "timeLeft": "Pozostały czas"
     },
     "rssFeed": {
       "name": "Kanały RSS",
@@ -3608,7 +3661,7 @@
       "noItems": "Brak powiadomień do wyświetlenia.",
       "option": {
         "hideLogos": {
-          "label": ""
+          "label": "Ukryj loga"
         }
       }
     },
@@ -3692,37 +3745,37 @@
       }
     },
     "traefik": {
-      "name": "",
-      "description": "",
+      "name": "Traefik",
+      "description": "Przegląd routerów, usług, middleware i punktów wejścia Traefik",
       "option": {
         "showTcp": {
-          "label": ""
+          "label": "Pokaż TCP"
         },
         "showUdp": {
-          "label": ""
+          "label": "Pokaż UDP"
         },
         "showEntryPoints": {
-          "label": ""
+          "label": "Pokaż punkty wejścia"
         }
       },
-      "instances": "",
-      "versionUnknown": "",
+      "instances": "Instancje Traefik",
+      "versionUnknown": "Wersja nieznana",
       "summary": {
-        "routers": "",
-        "entryPoints": ""
+        "routers": "Routery",
+        "entryPoints": "Punkty wejścia"
       },
       "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
+        "routers": "Routery",
+        "services": "Usługi",
+        "middlewares": "Middleware"
       },
       "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
+        "healthy": "Dobry",
+        "errors": "{count, plural, one {<b>#</b> błąd} few {<b>#</b> błędy} many {<b>#</b> błędów} other {<b>#</b> błędów}}",
+        "warnings": "{count, plural, one {<b>#</b> ostrzeżenie} few {<b>#</b> ostrzeżenia} many {<b>#</b> ostrzeżeń} other {<b>#</b> ostrzeżeń}}"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nie udało się pobrać danych Traefik"
       }
     },
     "audioStats": {
@@ -3740,18 +3793,6 @@
         "showSongs": {
           "label": "Pokaż utwory",
           "description": "Pokaż całkowitą liczbę utworów w twojej bibliotece muzycznej (Navidrome)"
-        },
-        "showNowPlaying": {
-          "label": "Pokaż teraz odtwarzane",
-          "description": "Pokaż aktualnie odtwarzane utwory (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Pokaż listę teraz odtwarzanych",
-          "description": "Pokaż poszczególne utwory zamiast tylko aktywnej liczby strumieni (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Maksymalna ilość teraz odtwarzanych elementów",
-          "description": "Maksymalna liczba elementów wyświetlanych na liście teraz odtwarzanych (Navidrome)"
         },
         "showLibraryCount": {
           "label": "Pokaż ilość bibliotek",
@@ -3786,8 +3827,6 @@
       "podcasts": "Podcasty",
       "listeningTime": "Czas Słuchania",
       "activeSessions": "Aktywne Sesje",
-      "nowPlaying": "Teraz Odtwarzane",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Nie udało się pobrać danych audio stats"
       }
@@ -3853,9 +3892,9 @@
           "label": "Pokaż pasek wykorzystania w tle"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Widoczne woluminy pamięci",
+          "description": "Dostępne tylko gdy wszystkie wybrane integracje to Synology. Pozostaw puste, aby wyświetlić wszystkie wykryte woluminy pamięci.",
+          "placeholder": "Wybierz woluminy pamięci"
         }
       },
       "status": {
@@ -3927,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Pokaż wersję agenta"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Nie znaleziono systemów",
       "error": {
-        "internalServerError": "Nie można połączyć się z Beszel. Sprawdź ustawienia integracji."
+        "internalServerError": "Nie można połączyć się z Beszel. Sprawdź ustawienia integracji.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "System",
@@ -4101,9 +4148,9 @@
           "write": "Zapis"
         },
         "storage": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Pamięć",
+          "subtitle": "Użycie dysku według systemu plików",
+          "series": "Używane"
         },
         "network": {
           "title": "Przepustowość",
@@ -5238,7 +5285,7 @@
     "table": {
       "updated": "Zaktualizowano {when}",
       "refresh": {
-        "lastUpdated": ""
+        "lastUpdated": "Ostatnie odświeżenie {when}"
       },
       "search": "Szukaj wśród {count} kontenerów",
       "selected": "Wybrano {selectCount} z {totalCount} kontenerów",
@@ -5329,6 +5376,7 @@
       },
       "remove": {
         "label": "Usuń",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Usunięto kontenery",
@@ -5969,10 +6017,10 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "",
+                "label": "Włącz prawe kliknięcie na widżetach",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Włącz prawe kliknięcie na widżetach"
                   }
                 }
               },

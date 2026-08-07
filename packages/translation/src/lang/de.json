@@ -199,8 +199,8 @@
         "label": "Symbole für Pings verwenden"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "Aktiviere Rechtsklick auf Widgets",
+        "description": "Zeigt Homarrs Kontextmenü, wenn mit der rechten Maustaste auf ein Widget geklickt wird. Deaktivieren, um das Standardmenü des Browsers zu verwenden (z.B. \"Link in neuem Tab öffnen\")."
       },
       "defaultSearchEngine": {
         "label": "Standard Suchmaschine"
@@ -1342,19 +1342,19 @@
     },
     "traefik": {
       "name": "Traefik",
-      "description": ""
+      "description": "Cloud-nativer Reverse-Proxy und Lastverteiler"
     },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentenverwaltungssystem zum Archivieren und Organisieren gescannter Dokumente"
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Patch-Verwaltung und Systemüberwachung für Linux-Hosts"
     },
     "bazarr": {
-      "name": "",
-      "description": ""
+      "name": "Bazarr",
+      "description": "Schwesteranwendung zu Sonarr und Radarr, welche Untertitel und Downloads verwaltet"
     }
   },
   "media": {
@@ -1492,7 +1492,7 @@
         "switchToDarkMode": "Zum dunklen Design wechseln",
         "switchToLightMode": "Zum hellen Design wechseln",
         "management": "Verwaltung",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Ihre Einstellungen",
         "logout": "Abmelden",
         "login": "Anmelden",
@@ -1628,7 +1628,7 @@
         "actions": "Aktionen"
       },
       "status": {
-        "success": "",
+        "success": "Ok",
         "error": "Fehler",
         "loading": "Wird geladen",
         "idle": "Leerlauf"
@@ -1907,14 +1907,14 @@
           "description": "ISO 8601 Standard benutzen um das Datum zu formatieren (dies wird andere Optionen überschreiben)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Wetter anzeigen",
+          "description": "Zeigt ein kleines animiertes Wettersymbol und die Temperatur in der Ecke der Karte an"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Ort für Wetterbericht"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Fahrenheit verwenden"
         }
       }
     },
@@ -1944,7 +1944,7 @@
       "noStation": "Keine Station ausgewählt",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "Search.ch URL"
         },
         "station": {
           "label": "Station"
@@ -1976,8 +1976,8 @@
         "clear": "Formatierung entfernen",
         "heading": "Überschrift {level}",
         "align": "Text ausrichten: {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Setze Textausrichtung von links nach rechts",
+        "directionRtl": "Setze Textausrichtung von rechts nach links",
         "blockquote": "Blockzitat",
         "horizontalLine": "Horizontale Linie",
         "bulletList": "Aufzählung",
@@ -2268,7 +2268,7 @@
         "sunset": "Sonnenuntergang",
         "maxWindSpeed": "Maximale Windgeschwindigkeit: {maxWindSpeed} {unit}",
         "maxWindGusts": "Maximale Windböen: {maxWindGusts} {unit}",
-        "humidity": ""
+        "humidity": "Luftfeuchtigkeit: {humidity}%"
       },
       "kind": {
         "clear": "Klar",
@@ -2328,8 +2328,8 @@
           "label": "Dateisystem Info anzeigen"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
+          "label": "Sichtbare Speichervolumes",
+          "description": "Nur verfügbar, wenn alle Integrationen Synology betreffen. Nicht ausfüllen, um alle erkannten Speichervolumes zu zeigen. ",
           "placeholder": "Speichervolumen auswählen"
         },
         "defaultTab": {
@@ -2412,7 +2412,7 @@
       "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Anzuzeigende Spalten"
         },
         "enableRowSorting": {
           "label": "Sortierung von Elementen aktivieren"
@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "Sortierung umkehren"
+        },
+        "columnOrder": {
+          "label": "Spaltenordnung"
+        },
+        "columnWidths": {
+          "label": "Spaltenbreite"
         }
       },
       "error": {
-        "internalServerError": "Fehler beim Abrufen der Container Statistiken"
+        "internalServerError": "Fehler beim Abrufen der Container Statistiken",
+        "layoutSaveTitle": "Tabellenlayout nicht gespeichert",
+        "layoutSaveMessage": "Die Docker-Tabelle konnte nicht gespeichert werden. Versuche die Spalte zu verschieben oder eine andere Spaltengröße zu verwenden. "
+      },
+      "empty": {
+        "noContainers": "Keine Docker-Container gefunden"
       }
     },
     "coolify": {
@@ -2468,7 +2479,7 @@
       }
     },
     "vpn": {
-      "name": "",
+      "name": "VPN",
       "description": "Übersicht deiner VPN-Verbindungen",
       "serviceUnavailable": "VPN nicht verfügbar",
       "option": {}
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "Nur aktuelle Wiedergabe anzeigen",
           "description": "Diese Einstellung zu deaktivieren wird für Plex nicht funktionieren"
+        },
+        "showBitrate": {
+          "label": "Zeigt die Bitrate an",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": "Zeigt an, ob der Stream über das LAN oder WAN läuft"
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": "Gesamtbitrate: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Aktuelle Wiedergabe",
@@ -2733,10 +2756,13 @@
         "name": "Name",
         "id": "Id",
         "status": "Status",
-        "directPlay": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "directPlay": "Direkte Wiedergabe",
+        "directStream": "Direkter Stream",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
+        "transcoding": "Transkodierung",
+        "paused": "Pausiert",
+        "remaining": "{minutes} Min. verbleibend",
         "metadata": {
           "title": "Statistiken für Nerds",
           "video": {
@@ -2803,21 +2829,21 @@
       }
     },
     "patchmon": {
-      "name": "",
+      "name": "PatchMon",
       "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
+      "title": "PatchMon-Statistiken",
+      "totalHosts": "Hosts gesamt",
+      "hostsNeedingUpdates": "Update erforderlich",
+      "securityUpdates": "Sicherheits-Updates",
+      "upToDateHosts": "Aktualisierte Hosts",
+      "hostsWithSecurityUpdates": "Hosts mit Sicherheits-Updates",
+      "recentUpdates24h": "Updates (24h)",
+      "totalOutdatedPackages": "Veraltete Pakete",
+      "totalRepos": "Repositories",
+      "osDistribution": "Betriebssystem-Distribution",
+      "compliance": "Patch-Kompatibilität",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Zuletzt aktualisiert: {time}",
       "option": {
         "showTotalHosts": {
           "label": "Alle Hosts anzeigen",
@@ -2832,31 +2858,31 @@
           "description": "Gesamtzahl der verfügbaren Sicherheits-Updates anzeigen"
         },
         "showUpToDateHosts": {
-          "label": "",
-          "description": ""
+          "label": "Zeige aktuelle Hosts",
+          "description": "Zeigt Hosts mit keinen veralteten Paketen an"
         },
         "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Zeigt Hosts mit Sicherheitsupdates an",
+          "description": "Zeigt Hosts an, welche Sicherheitsupdates benötigen"
         },
         "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
+          "label": "Zeigt vergangene Updates in den letzten 24 Stunden an",
+          "description": "Zeigt die Anzahl der angewendeten Updates in den letzten 24 Stunden an"
         },
         "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
+          "label": "Zeigt veraltete Pakete an",
+          "description": "Zeigt die Gesamtanzahl der veralteten Pakete über mehrere Hosts verteilt an"
         },
         "showTotalRepos": {
-          "label": "",
-          "description": ""
+          "label": "Zeigt Repositorys an",
+          "description": "Zeigt die Anzahl der zu überwachenden aktiven Repositorys an"
         },
         "enableThresholdColors": {
-          "label": "",
+          "label": "Aktiviert die Schwellwert-Farben",
           "description": ""
         },
         "useCustomThresholds": {
-          "label": "",
+          "label": "Erweiterte Schwellwerte",
           "description": ""
         },
         "thresholdMode": {
@@ -3079,11 +3105,20 @@
         "limitPerIntegration": {
           "label": "Elemente pro Integration begrenzen",
           "description": "Dies begrenzt die Anzahl der Elemente pro Integration, jedoch nicht global"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Spalten in Elementen auswählen",
-        "noCommunications": "Kann keine Daten von der Integration laden"
+        "noCommunications": "Kann keine Daten von der Integration laden",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3141,8 @@
           "detailsTitle": "Aktueller Index im Client"
         },
         "id": {
-          "columnTitle": "ID"
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integration"
@@ -3140,7 +3176,8 @@
         },
         "time": {
           "columnTitle": "Endzeit",
-          "detailsTitle": "Zeit danach/zur Fertigstellung"
+          "detailsTitle": "Zeit danach/zur Fertigstellung",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Typ",
@@ -3184,7 +3221,23 @@
           }
         }
       },
-      "globalRatio": "Globales Verhältnis"
+      "globalRatio": "Globales Verhältnis",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Medien Veröffentlichungen",
@@ -3741,18 +3794,6 @@
           "label": "Songs anzeigen",
           "description": "Zeigt die Gesamtzahl der Titel in deiner Musikbibliothek an (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "\"Sie hören\" anzeigen",
-          "description": "Zeige aktuell gespielte Titel an (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "\"Sie hören jetzt\" Wiedergabeliste anzeigen",
-          "description": "Einzelne Tracks anstelle der aktiven Streamanzahl anzeigen (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Maximale jetzt abgespielte Elemente",
-          "description": "Maximale Anzahl an Titeln, die in der \"Sie hören jetzt\" Wiedergabeliste angezeigt werden (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Anzahl der Bibliotheken anzeigen",
           "description": "Zeige die Anzahl der Bibliotheken in deiner Instanz (Hörbücherregal)"
@@ -3786,8 +3827,6 @@
       "podcasts": "Podcasts",
       "listeningTime": "Hördauer",
       "activeSessions": "Aktive Sitzungen",
-      "nowPlaying": "Aktuelle Wiedergabe",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Fehler beim Abrufen der Audio-Statistikdaten"
       }
@@ -3927,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Agent-Version anzeigen"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Keine Systeme gefunden",
       "error": {
-        "internalServerError": "Keine Verbindung zu Beszel. Überprüfen Sie Ihre Integrationseinstellungen."
+        "internalServerError": "Keine Verbindung zu Beszel. Überprüfen Sie Ihre Integrationseinstellungen.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "System",
@@ -5207,8 +5254,8 @@
             "subtitle": "{count} tragen Übersetzungen in viele Sprachen bei"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponsoren",
+            "subtitle": "{count} unterstützen das Projekt finanziell"
           },
           "libraries": {
             "title": "Bibliotheken",
@@ -5329,6 +5376,7 @@
       },
       "remove": {
         "label": "Entfernen",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Container entfernt",

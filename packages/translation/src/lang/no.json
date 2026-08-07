@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "Reverser sortering"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Kunne ikke hente containerstatistikk"
+        "internalServerError": "Kunne ikke hente containerstatistikk",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "Vis kun det som spiller nå",
           "description": "Å deaktivere dette fungerer ikke for Plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Spilles nå",
@@ -2734,6 +2757,9 @@
         "id": "Id",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3079,11 +3105,20 @@
         "limitPerIntegration": {
           "label": "Begrens elementer per integrasjon",
           "description": "Dette begrenser antall elementer vist per integrasjon, ikke globalt"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Velg kolonner i elementer",
-        "noCommunications": "Kan ikke laste inn data fra integrasjon"
+        "noCommunications": "Kan ikke laste inn data fra integrasjon",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -3106,7 +3141,8 @@
           "detailsTitle": "Gjeldende indeks i klienten"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integrasjon"
@@ -3140,7 +3176,8 @@
         },
         "time": {
           "columnTitle": "Fullfør tid",
-          "detailsTitle": "Tid siden/til fullførelse"
+          "detailsTitle": "Tid siden/til fullførelse",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Type",
@@ -3184,7 +3221,23 @@
           }
         }
       },
-      "globalRatio": "Global ratio"
+      "globalRatio": "Global ratio",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Medieutgivelser",
@@ -3741,18 +3794,6 @@
           "label": "",
           "description": ""
         },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
-        },
         "showLibraryCount": {
           "label": "",
           "description": ""
@@ -3786,8 +3827,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3927,11 +3966,19 @@
         },
         "showAgent": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "",
@@ -5329,6 +5376,7 @@
       },
       "remove": {
         "label": "Fjern",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Containere fjernet",

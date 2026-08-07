@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Bắt đầu từ đầu",
           "importOldmarr": "Nhập dữ liệu từ Homarr phiên bản trước 1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Khôi phục từ bản sao lưu SQLite",
+          "restoreSqliteDescription": "Tải lên bản sao lưu cơ sở dữ liệu SQLite đầy đủ từ phiên bản Homarr trước. Thao tác này sẽ khôi phục tất cả bảng, người dùng, ứng dụng, tích hợp và cài đặt.",
+          "backToOptions": "← Quay lại tùy chọn thiết lập"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": "Cấu hình cài đặt máy chủ."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Tích hợp",
+        "subtitle": "Chọn dịch vụ bạn dùng.",
+        "description": "Chọn các tích hợp bạn muốn kết nối. Chúng tôi sẽ tự động thiết lập bảng với widget phù hợp.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Tiếp tục",
+          "skip": "Bỏ qua lúc này"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{current} của {total}",
+          "skip": "Bỏ qua tích hợp này",
+          "finishing": "Đang thiết lập bảng của bạn...",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Thiết lập thất bại",
+            "message": "Đã xảy ra lỗi khi thiết lập bảng. Vui lòng thử lại."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "Trợ giúp URL",
+            "description": "Những trợ giúp này cố gắng đoán URL cho dịch vụ của bạn. Nếu không hiệu quả, hãy nhập địa chỉ thủ công."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "URL cơ sở",
+          "placeholder": "homelab.local hoặc 192.168.1.1",
+          "hint": "Nhập tên miền cơ sở hoặc IP để tự động điền URL tích hợp",
+          "warning": "Đặt URL cơ sở bây giờ sẽ tự động điền tất cả URL tích hợp, tiết kiệm thời gian thiết lập",
+          "preview": "ví dụ: {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Tên miền phụ",
+            "hostPort": "Máy:Cổng"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker phát hiện {count} dịch vụ",
+          "detectedBreakdown": "{integrations} tích hợp · {apps} ứng dụng",
+          "summary": "Homarr phát hiện {apps} ứng dụng, {integrations} trong đó có tích hợp sẵn",
+          "appBadge": "Ứng dụng",
+          "appSectionLabel": "Ứng dụng thêm vào bảng ({count} đã chọn)",
+          "scanning": "Đang quét Docker...",
+          "scanningDescription": "Đang tìm container đang chạy trên hệ thống của bạn"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Mật khẩu",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Gợi ý mật khẩu",
         "suggestion": {
           "length": "Bao gồm ít nhất 8 kí tự",
           "lowercase": "Bao gồm chữ thường",
@@ -193,10 +193,10 @@
         "label": "Mật khẩu trước đây"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Bảng chính"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Sử dụng biểu tượng cho ping"
       },
       "enableRightClickOnWidgets": {
         "label": "",
@@ -209,7 +209,7 @@
         "label": "Mở kết quả tìm kiếm trong thẻ mới"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Bật DuckDuckGo bangs"
       }
     },
     "error": {
@@ -231,7 +231,7 @@
         },
         "forgotPassword": {
           "label": "Bạn đã quên mật khẩu?",
-          "description": ""
+          "description": "Quản trị viên có thể sử dụng lệnh sau để đặt lại mật khẩu của bạn:"
         }
       },
       "register": {
@@ -262,10 +262,10 @@
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Đã thay đổi bảng chính thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể thay đổi bảng chính"
           }
         }
       },
@@ -292,20 +292,20 @@
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Đã bật/tắt biểu tượng ping thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể bật/tắt biểu tượng ping"
           }
         }
       },
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Đã bật/tắt DuckDuckGo bangs thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể bật/tắt DuckDuckGo bangs"
           }
         }
       },
@@ -397,14 +397,14 @@
           },
           "use-all": {
             "label": "Sử dụng tất cả các ứng dụng",
-            "description": ""
+            "description": "Cho phép thành viên thêm bất kỳ ứng dụng nào vào bảng của họ"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Sửa đổi tất cả ứng dụng",
+            "description": "Cho phép thành viên sửa đổi tất cả ứng dụng"
           },
           "full-all": {
-            "label": "",
+            "label": "Toàn quyền truy cập ứng dụng",
             "description": "Cho phép thành viên quản lý, tạo và xóa mọi ứng dụng"
           }
         }
@@ -413,50 +413,50 @@
         "title": "Bảng",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Tạo bảng",
+            "description": "Cho phép thành viên tạo bảng"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Xem tất cả bảng",
+            "description": "Cho phép thành viên xem tất cả bảng"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Sửa đổi tất cả bảng",
+            "description": "Cho phép thành viên sửa đổi tất cả bảng (Không bao gồm kiểm soát truy cập và vùng nguy hiểm)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Toàn quyền truy cập bảng",
+            "description": "Cho phép thành viên xem, sửa đổi và xóa tất cả bảng (Bao gồm kiểm soát truy cập và vùng nguy hiểm)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Tích hợp",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Tạo tích hợp",
+            "description": "Cho phép thành viên tạo tích hợp"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Sử dụng tất cả tích hợp",
+            "description": "Cho phép thành viên thêm bất kỳ tích hợp nào vào bảng của họ"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Tương tác với bất kỳ tích hợp nào",
+            "description": "Cho phép thành viên tương tác với bất kỳ tích hợp nào"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Toàn quyền truy cập tích hợp",
+            "description": "Cho phép thành viên quản lý, sử dụng và tương tác với bất kỳ tích hợp nào"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Media",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Tải lên media",
+            "description": "Cho phép thành viên tải lên media"
           },
           "view-all": {
             "label": "Xem tất cả media",
@@ -489,18 +489,18 @@
             "description": "Cho phép thành viên nhóm này sửa đổi tất cả công cụ tìm kiếm"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Toàn quyền truy cập công cụ tìm kiếm",
+            "description": "Cho phép thành viên quản lý và xóa mọi công cụ tìm kiếm"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Một số thành viên đến từ nhà cung cấp bên ngoài và không thể quản lý tại đây",
+      "external": "Tất cả thành viên đến từ nhà cung cấp bên ngoài và không thể quản lý tại đây"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Nhóm này dành riêng cho hệ thống sử dụng và hạn chế một số hành động. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
@@ -523,7 +523,7 @@
             "message": "Đã chuyển thành công quyền sở hữu nhóm {group} cho {username}"
           },
           "error": {
-            "message": ""
+            "message": "Không thể chuyển quyền sở hữu"
           }
         }
       },
@@ -532,46 +532,46 @@
       },
       "removeMember": {
         "label": "Xóa thành viên khỏi nhóm",
-        "confirm": ""
+        "confirm": "Bạn có chắc chắn muốn xóa {user} khỏi nhóm này không?"
       },
       "delete": {
         "label": "Xóa nhóm",
-        "description": "",
+        "description": "Khi bạn xóa một nhóm, không thể hoàn tác. Hãy chắc chắn.",
         "confirm": "Bạn chắc chắn muốn xóa nhóm {name}?",
         "notification": {
           "success": {
             "message": "Đã xóa nhóm {name} thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể xóa nhóm {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã lưu quyền",
+            "message": "Quyền đã được lưu thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Quyền chưa được lưu",
+            "message": "Quyền chưa được lưu"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Nhóm {name} đã được lưu thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể lưu nhóm {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Chọn nhóm",
+        "notFound": "Không tìm thấy nhóm"
       },
       "settings": {
         "board": {
@@ -617,39 +617,39 @@
         "title": "Ứng dụng mới",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Tạo thành công",
+            "message": "Ứng dụng đã được tạo thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Tạo không thành công",
+            "message": "Không thể tạo ứng dụng"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Chỉnh sửa ứng dụng",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Thay đổi đã được áp dụng thành công",
+            "message": "Ứng dụng đã được lưu thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không thể áp dụng thay đổi",
+            "message": "Không thể lưu ứng dụng"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Xóa ứng dụng",
+        "message": "Bạn có chắc chắn muốn xóa ứng dụng {name} không?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Xóa thành công",
+            "message": "Ứng dụng đã được xóa thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Xóa không thành công",
+            "message": "Không thể xóa ứng dụng"
           }
         }
       }
@@ -896,22 +896,22 @@
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Tích hợp",
+        "search": "Tìm kiếm tích hợp",
         "noResults": {
-          "title": ""
+          "title": "Chưa có tích hợp nào"
         }
       },
       "create": {
-        "title": "",
+        "title": "Tích hợp {name} mới",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Tạo thành công",
+            "message": "Tích hợp đã được tạo thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Tạo không thành công",
+            "message": "Không thể tạo tích hợp"
           }
         },
         "app": {
@@ -931,15 +931,15 @@
         }
       },
       "edit": {
-        "title": "",
+        "title": "Chỉnh sửa tích hợp {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Thay đổi đã được áp dụng thành công",
+            "message": "Tích hợp đã được lưu thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không thể áp dụng thay đổi",
+            "message": "Không thể lưu tích hợp"
           }
         },
         "app": {
@@ -951,16 +951,16 @@
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Xóa tích hợp",
+        "message": "Bạn có chắc chắn muốn xóa tích hợp {name} không?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Xóa thành công",
+            "message": "Tích hợp đã được xóa thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Xóa không thành công",
+            "message": "Không thể xóa tích hợp"
           }
         }
       }
@@ -987,44 +987,44 @@
         "placeholder": ""
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Lấy khóa API"
       }
     },
     "action": {
-      "create": ""
+      "create": "Tích hợp mới"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} widget",
+      "noWidgets": "Không có widget",
+      "detected": "Phát hiện qua Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
+      "dnsHole": "DNS",
+      "mediaService": "Phương tiện",
+      "calendar": "Lịch",
+      "mediaSearch": "Tìm kiếm",
+      "mediaRelease": "Phát hành",
+      "mediaRequest": "Yêu cầu",
+      "downloadClient": "Tải xuống",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Khác",
+      "smartHomeServer": "Nhà thông minh",
+      "indexerManager": "Bộ lập chỉ mục",
+      "healthMonitoring": "Sức khỏe",
+      "search": "Tìm kiếm",
+      "mediaTranscoding": "Chuyển mã",
+      "networkController": "Mạng",
+      "releasesProvider": "Phát hành",
+      "notifications": "Thông báo",
+      "firewall": "Tường lửa",
+      "timetable": "Thời khóa biểu",
+      "photoService": "Ảnh",
       "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
+      "notes": "Ghi chú",
+      "mediaMonitoring": "Giám sát",
+      "speedtest": "Kiểm tra tốc độ",
+      "analytics": "Phân tích",
       "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
@@ -1160,71 +1160,71 @@
           }
         }
       },
-      "alertNotice": "",
+      "alertNotice": "Nút Lưu được kích hoạt sau khi kết nối thành công",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Kết nối thành công",
+          "message": "Kết nối đã được thiết lập thành công"
         },
         "invalidUrl": {
           "title": "URL không hợp lệ",
-          "message": ""
+          "message": "URL không hợp lệ"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Thiếu thông tin xác thực",
+          "message": "Chưa cung cấp đầy đủ thông tin xác thực"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Thông tin xác thực không hợp lệ",
+          "message": "Thông tin xác thực không hợp lệ"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Kết nối không thành công",
+          "message": "Không thể thiết lập kết nối"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Yêu cầu không hợp lệ",
+          "message": "Yêu cầu bị sai định dạng"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Trái phép",
+          "message": "Có thể sai thông tin xác thực"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Bị cấm",
+          "message": "Có thể thiếu quyền"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Không tìm thấy",
+          "message": "Có thể sai url hoặc đường dẫn"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Lỗi máy chủ nội bộ",
+          "message": "Máy chủ gặp lỗi"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Dịch vụ không khả dụng",
+          "message": "Máy chủ hiện không khả dụng"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Kết nối bị hủy",
+          "message": "Kết nối đã bị hủy"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Không tìm thấy tên miền",
+          "message": "Không thể tìm thấy tên miền"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Kết nối bị từ chối",
+          "message": "Kết nối đã bị từ chối"
         },
         "invalidJson": {
           "title": "JSON không hợp lệ",
-          "message": ""
+          "message": "Phản hồi không phải JSON hợp lệ"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Sai đường dẫn",
+          "message": "Đường dẫn có thể không chính xác"
         },
         "tooManyRequests": {
           "title": "",
@@ -1233,29 +1233,29 @@
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Bí mật",
+      "lastUpdated": "Cập nhật lần cuối {date}",
       "notSet": {
         "label": "",
         "tooltip": ""
       },
-      "secureNotice": "",
+      "secureNotice": "Bí mật này không thể truy xuất sau khi tạo",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Đặt lại bí mật",
+        "message": "Bạn có chắc chắn muốn đặt lại bí mật này không?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Không có bí mật",
+        "text": "Tích hợp này không yêu cầu bí mật"
       },
       "kind": {
         "username": {
           "label": "Tên người dùng",
-          "newLabel": ""
+          "newLabel": "Tên người dùng mới"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Khóa API",
+          "newLabel": "Khóa API mới"
         },
         "password": {
           "label": "Mật khẩu",
@@ -1316,9 +1316,9 @@
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Chọn tích hợp trong các mục",
+      "interact": "Tương tác với tích hợp",
+      "full": "Toàn quyền truy cập tích hợp"
     },
     "audiobookshelf": {
       "name": "",
@@ -1358,8 +1358,8 @@
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Media",
+    "search": "Tìm media",
     "field": {
       "name": "Tên",
       "size": "Kích cỡ",
@@ -1367,137 +1367,137 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Tải lên media",
+        "file": "Chọn tệp",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Media đã được tải lên thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể tải lên media"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Xóa media",
+        "description": "Bạn có chắc chắn muốn xóa media <bName></bName> không?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Media đã được xóa thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể xóa media"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Sao chép URL"
       },
       "open": {
         "label": ""
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Chưa tải lên phương tiện"
     }
   },
   "common": {
     "success": "",
-    "beta": "",
+    "beta": "Bản beta",
     "error": "Lỗi",
     "action": {
       "add": "Thêm",
       "apply": "Áp dụng",
       "backToOverview": "Trở về mục tổng quan",
-      "skip": "",
+      "skip": "Bỏ qua",
       "change": "",
       "create": "Tạo nên",
       "createAnother": "",
       "edit": "Sửa",
-      "import": "",
+      "import": "Nhập",
       "insert": "Thêm",
       "remove": "Xóa",
       "save": "Lưu",
       "saveChanges": "Lưu thay đổi",
       "cancel": "Hủy",
       "delete": "Xóa",
-      "discard": "",
+      "discard": "Hủy bỏ",
       "close": "",
       "confirm": "Xác nhận",
-      "continue": "",
+      "continue": "Tiếp tục",
       "previous": "Trước",
       "next": "Kế tiếp",
-      "checkoutDocs": "",
+      "checkoutDocs": "Xem tài liệu",
       "checkLogs": "",
       "tryAgain": "Thử lại",
-      "loading": "",
-      "show": "",
-      "hide": ""
+      "loading": "Đang tải",
+      "show": "Hiện",
+      "hide": "Ẩn"
     },
-    "here": "",
+    "here": "tại đây",
     "iconPicker": {
-      "label": "",
-      "header": "",
+      "label": "URL biểu tượng",
+      "header": "Nhập tên hoặc đối tượng để lọc biểu tượng... Homarr sẽ tìm qua {countIcons} biểu tượng cho bạn.",
       "headerLoading": "",
       "noResults": "",
       "error": ""
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Tự động",
         "light": "",
         "dark": ""
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
+      "min": "Tối thiểu",
+      "max": "Tối đa",
+      "days": "Ngày",
       "hours": "Giờ",
       "minutes": "Phút"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Tạo thành công",
+        "error": "Tạo không thành công"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Xóa thành công",
+        "error": "Xóa không thành công"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Thay đổi đã được áp dụng thành công",
+        "error": "Không thể áp dụng thay đổi"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Chuyển thành công",
+        "error": "Chuyển không thành công"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Chọn một hoặc nhiều giá trị"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Thêm giá trị khác",
+      "addLabel": "Thêm {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Chọn giá trị",
       "badge": {
-        "recommended": ""
+        "recommended": "Được đề xuất"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
+        "switchToDarkMode": "Chuyển sang chế độ tối",
         "switchToLightMode": "Đổi qua chế độ nền sáng",
-        "management": "",
+        "management": "Quản lý",
         "docker": "",
         "preferences": "Cá nhân hoá",
-        "logout": "",
+        "logout": "Đăng xuất",
         "login": "Đăng nhập",
-        "homeBoard": "",
-        "loggedOut": "",
+        "homeBoard": "Bảng chính của bạn",
+        "loggedOut": "Đã đăng xuất",
         "updateAvailable": ""
       }
     },
@@ -1508,8 +1508,8 @@
     "applications": "",
     "services": "",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Hiển thị xem trước",
+      "hide": "Ẩn xem trước"
     },
     "zod": {
       "errors": {
@@ -1519,7 +1519,7 @@
           "startsWith": "Trường này phải bắt đầu bằng {startsWith}",
           "endsWith": "Trường này phải kết thúc bằng {endsWith}",
           "includes": "Trường này phải bao gồm {includes}",
-          "invalidEmail": ""
+          "invalidEmail": "Trường này phải là email hợp lệ"
         },
         "tooSmall": {
           "string": "Trường này phải dài ít nhất {minimum} ký tự",
@@ -1530,13 +1530,13 @@
           "number": "Trường này phải nhỏ hơn hoặc bằng {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
+          "passwordsDoNotMatch": "Mật khẩu không khớp",
+          "passwordRequirements": "Mật khẩu không đáp ứng yêu cầu",
+          "boardAlreadyExists": "Bảng có tên này đã tồn tại",
+          "invalidFileType": "Loại tệp không hợp lệ, dự kiến {expected}",
           "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
+          "fileTooLarge": "Tệp quá lớn, kích thước tối đa là {maxSize}",
+          "invalidConfiguration": "Cấu hình không hợp lệ",
           "groupNameTaken": ""
         }
       }
@@ -1551,8 +1551,8 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Phần động mới",
+        "remove": "Xóa phần động"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Xóa phần động",
+        "message": "Bạn có chắc chắn muốn xóa phần động này không? Các mục sẽ được chuyển đến cùng vị trí trong phần cha."
       }
     },
     "category": {
@@ -1577,32 +1577,32 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Danh mục mới",
+        "edit": "Đổi tên danh mục",
+        "remove": "Xóa danh mục",
         "moveUp": "Đi lên",
         "moveDown": "Đi xuống",
-        "createAbove": "",
-        "createBelow": "",
+        "createAbove": "Danh mục mới phía trên",
+        "createBelow": "Danh mục mới phía dưới",
         "openAllInNewTabs": ""
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Danh mục mới",
+        "submit": "Thêm danh mục"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Xóa danh mục",
+        "message": "Bạn có chắc chắn muốn xóa danh mục {name} không?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Đổi tên danh mục",
+        "submit": "Đổi tên danh mục"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Danh mục mới",
           "changePosition": "Đổi vị trí",
-          "settings": ""
+          "settings": "Cài đặt"
         }
       },
       "openAllInNewTabs": {
@@ -1613,12 +1613,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Mục mới",
+      "import": "Nhập mục",
+      "edit": "Chỉnh sửa mục",
+      "moveResize": "Di chuyển / đổi cỡ mục",
+      "duplicate": "Nhân bản mục",
+      "remove": "Xóa mục"
     },
     "menu": {
       "label": {
@@ -1635,12 +1635,12 @@
       }
     },
     "create": {
-      "title": "",
+      "title": "Chọn mục để thêm",
       "search": "",
-      "addToBoard": ""
+      "addToBoard": "Thêm vào bảng"
     },
     "moveResize": {
-      "title": "",
+      "title": "Di chuyển / đổi cỡ mục",
       "field": {
         "width": {
           "label": "Chiều rộng"
@@ -1649,35 +1649,35 @@
           "label": "Chiều cao"
         },
         "xOffset": {
-          "label": ""
+          "label": "Dịch chuyển X"
         },
         "yOffset": {
-          "label": ""
+          "label": "Dịch chuyển Y"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Chỉnh sửa mục",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Chỉnh sửa widget",
+        "app": "Chỉnh sửa ứng dụng"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Thay đổi ứng dụng này sẽ áp dụng cho mọi nơi nó được dùng trên tất cả bảng."
       },
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Tùy chọn nâng cao",
+        "title": "Tùy chọn mục nâng cao"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Tích hợp"
         },
         "title": {
           "label": ""
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Lớp css tùy chỉnh"
         },
         "borderColor": {
           "label": ""
@@ -1685,8 +1685,8 @@
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Xóa mục",
+      "message": "Bạn có chắc chắn muốn xóa mục này không?"
     }
   },
   "widget": {
@@ -1698,17 +1698,17 @@
       "loadError": ""
     },
     "app": {
-      "name": "",
-      "description": "",
+      "name": "Ứng dụng",
+      "description": "Nhúng một ứng dụng vào bảng.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Chọn ứng dụng"
         },
         "openInNewTab": {
           "label": "Mở trong tab mới"
         },
         "showTitle": {
-          "label": ""
+          "label": "Hiện tên ứng dụng"
         },
         "pingEnabled": {
           "label": ""
@@ -1734,17 +1734,17 @@
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Không có ứng dụng",
+          "tooltip": "Bạn chưa chọn ứng dụng hợp lệ"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Dấu trang",
+      "description": "Hiển thị nhiều liên kết ứng dụng",
       "option": {
         "title": {
-          "label": ""
+          "label": "Tiêu đề"
         },
         "layout": {
           "label": "Bố cục",
@@ -1756,7 +1756,7 @@
               "label": "Thẳng đứng"
             },
             "grid": {
-              "label": ""
+              "label": "Lưới"
             },
             "gridHorizontal": {
               "label": ""
@@ -1776,11 +1776,11 @@
           "label": ""
         },
         "withBorder": {
-          "label": ""
+          "label": "Hiển thị viền"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Dấu trang",
+          "add": "Thêm dấu trang"
         }
       }
     },
@@ -1794,8 +1794,8 @@
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "Tổng quan DNS Hole",
+      "description": "Hiển thị tổng quan về DNS Hole của bạn",
       "option": {
         "layout": {
           "label": "Bố cục",
@@ -1807,28 +1807,28 @@
               "label": "Thẳng đứng"
             },
             "grid": {
-              "label": ""
+              "label": "Lưới"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Sử dụng màu Pi-Hole"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Không thể lấy Tổng quan DNS Hole",
+        "integrationsDisconnected": "Không có dữ liệu, tất cả tích hợp bị ngắt kết nối"
       },
       "data": {
         "adsBlockedToday": "Đã chặn hôm nay",
         "adsBlockedTodayPercentage": "Đã chặn hôm nay",
         "dnsQueriesToday": "Truy vấn hôm nay",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "Tên miền trong danh sách chặn"
       },
       "domainsTooltip": ""
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "Điều khiển DNS Hole",
       "description": "Kiểm soát PiHole hoặc AdGuard từ bảng điều khiển của bạn",
       "option": {
         "layout": {
@@ -1841,62 +1841,62 @@
               "label": "Thẳng đứng"
             },
             "grid": {
-              "label": ""
+              "label": "Lưới"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Hiện nút Bật/Tắt Tất cả"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể điều khiển DNS Hole"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
+        "enableAll": "Bật tất cả",
+        "disableAll": "Tắt tất cả",
+        "setTimer": "Đặt hẹn giờ",
         "set": "Đặt",
         "enabled": "Bật",
         "disabled": "Tắt",
-        "processing": "",
-        "disconnected": "",
+        "processing": "Đang xử lý",
+        "disconnected": "Đã ngắt kết nối",
         "hours": "Giờ",
         "minutes": "Phút",
-        "unlimited": ""
+        "unlimited": "Để trống để không giới hạn"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Ngày và giờ",
       "description": "Hiện thị ngày giờ hiện tại.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị tiêu đề/thành phố tùy chỉnh",
+          "description": "Hiển thị tiêu đề tùy chỉnh hoặc tên thành phố/quốc gia phía trên đồng hồ."
         },
         "customTitle": {
-          "label": ""
+          "label": "Tiêu đề"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "Định dạng 24 giờ",
+          "description": "Sử dụng định dạng 24 giờ thay vì 12 giờ"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Hiển thị giây"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Sử dụng múi giờ cố định"
         },
         "timezone": {
           "label": "Múi giờ",
-          "description": ""
+          "description": "Chọn múi giờ theo tiêu chuẩn IANA"
         },
         "showDate": {
-          "label": ""
+          "label": "Hiển thị ngày"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Định dạng ngày",
+          "description": "Ngày tháng sẽ hiển thị như thế nào"
         },
         "customTimeFormat": {
           "label": "",
@@ -1953,7 +1953,7 @@
     },
     "notebook": {
       "name": "Ghi chú",
-      "description": "",
+      "description": "Một widget sổ tay đơn giản hỗ trợ markdown",
       "option": {
         "showToolbar": {
           "label": "Hiển thị thanh công cụ giúp bạn viết markdown"
@@ -2052,7 +2052,7 @@
       "saveFailed": ""
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Nhúng bất kỳ nội dung nào từ internet. Một số trang web có thể hạn chế quyền truy cập.",
       "option": {
         "embedUrl": {
@@ -2087,32 +2087,32 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Chưa cung cấp URL iFrame",
         "unsupportedProtocol": "",
         "noBrowerSupport": "Trình duyệt của bạn không hỗ trợ iframe. Vui lòng cập nhật trình duyệt của bạn."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Trạng thái Thực thể",
+      "description": "Hiển thị trạng thái của một thực thể và có thể bật/tắt nó",
       "option": {
         "entityId": {
           "label": "ID thực thể"
         },
         "displayName": {
-          "label": ""
+          "label": "Tên hiển thị"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Đơn vị Thực thể"
         },
         "clickable": {
-          "label": ""
+          "label": "Có thể nhấp"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Thực thi Tự động hóa",
+      "description": "Kích hoạt một tự động hóa chỉ với một cú nhấp",
       "option": {
         "displayName": {
           "label": "Tên hiển thị"
@@ -2203,7 +2203,7 @@
     },
     "calendar": {
       "name": "Lịch",
-      "description": "",
+      "description": "Hiển thị sự kiện từ các tích hợp của bạn trong chế độ xem lịch trong một khoảng thời gian tương đối nhất định",
       "duration": {
         "allDay": ""
       },
@@ -2211,16 +2211,16 @@
         "releaseType": {
           "label": "Loại phát hành Radarr",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "Tại rạp",
+            "digitalRelease": "Phát hành kỹ thuật số",
+            "physicalRelease": "Phát hành vật lý"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Bắt đầu từ"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Kết thúc tại"
         },
         "showUnmonitored": {
           "label": ""
@@ -2232,7 +2232,7 @@
       "description": "Hiển thị thông tin thời tiết của vị trí được đặt.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Nhiệt độ theo Fahrenheit"
         },
         "disableTemperatureDecimals": {
           "label": ""
@@ -2248,18 +2248,18 @@
           "label": "Vị trí thời tiết"
         },
         "showCity": {
-          "label": ""
+          "label": "Hiển thị thành phố"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Hiển thị dự báo"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Số ngày dự báo",
+          "description": "Khi widget không đủ rộng, sẽ hiển thị ít ngày hơn"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Định dạng ngày",
+          "description": "Ngày tháng sẽ hiển thị như thế nào"
         }
       },
       "currentWindSpeed": "",
@@ -2288,35 +2288,35 @@
       }
     },
     "indexerManager": {
-      "name": "",
-      "description": "",
+      "name": "Trạng thái quản lý indexer",
+      "description": "Trạng thái của các indexer của bạn",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Mở trang indexer trong tab mới"
         }
       },
-      "title": "",
-      "testAll": "",
+      "title": "Quản lý indexer",
+      "testAll": "Kiểm tra tất cả",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể lấy trạng thái indexer"
       }
     },
     "healthMonitoring": {
       "name": "Giám sát tình trạng hệ thống",
-      "description": "",
+      "description": "Hiển thị thông tin về tình trạng và trạng thái hệ thống của bạn.",
       "tab": {
         "system": "",
         "cluster": ""
       },
       "option": {
         "fahrenheit": {
-          "label": ""
+          "label": "Nhiệt độ CPU theo Fahrenheit"
         },
         "cpu": {
-          "label": ""
+          "label": "Hiển thị thông tin CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Hiển thị thông tin Bộ nhớ"
         },
         "gpu": {
           "label": ""
@@ -2325,7 +2325,7 @@
           "label": ""
         },
         "fileSystem": {
-          "label": ""
+          "label": "Hiển thị thông tin Hệ thống tệp"
         },
         "visibleStorageVolumes": {
           "label": "",
@@ -2343,22 +2343,22 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
+        "information": "Thông tin",
+        "processor": "Bộ xử lý: {cpuModelName}",
+        "memory": "Bộ nhớ: {memory}GiB",
+        "memoryAvailable": "Khả dụng: {memoryAvailable}GiB ({percent}%)",
+        "version": "Phiên bản: {version}",
         "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "loadAverage": "Tải trung bình:",
+        "minute": "1 phút",
+        "minutes": "{count} phút",
+        "used": "Đã sử dụng",
         "available": "Khả dụng",
-        "lastSeen": ""
+        "lastSeen": "Cập nhật trạng thái lần cuối: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể lấy trạng thái sức khỏe"
       },
       "cluster": {
         "summary": {
@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2474,34 +2485,34 @@
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Giám sát trạng thái thiết bị UPS qua máy chủ NUT",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Hiển thị pin"
         },
         "showLoad": {
-          "label": ""
+          "label": "Hiển thị tải"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Hiển thị điện áp"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Trực tuyến",
+        "onBattery": "Đang dùng pin",
+        "lowBattery": "Pin yếu",
+        "charging": "Đang sạc",
+        "unknown": "Không rõ"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Thời gian chạy",
+        "load": "Tải",
+        "input": "Đầu vào",
+        "output": "Đầu ra"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể lấy dữ liệu UPS"
       }
     },
     "tracearr": {
@@ -2584,96 +2595,96 @@
             "today": "",
             "24h": "",
             "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "30d": "30 ngày qua",
+            "month": "Tháng này",
+            "lastMonth": "Tháng trước"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Sự kiện",
+          "description": "Hiển thị tổng số lần xuất hiện của một sự kiện cụ thể",
+          "placeholder": "Chọn một sự kiện",
+          "loading": "Đang tải sự kiện...",
+          "noEvents": "Không tìm thấy sự kiện",
+          "none": "Không có sự kiện",
+          "configureWebsiteFirst": "Chọn một trang web trước để tải sự kiện"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Loại biểu đồ",
+          "description": "Kiểu hiển thị cho biểu đồ",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Biểu đồ cột",
+            "sparkline": "Sparkline"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Kiểu biểu đồ",
+          "description": "Cách hiển thị chuỗi sự kiện trong biểu đồ",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Cạnh nhau",
+            "overlay": "Lớp phủ (tập con)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Chế độ xem",
+          "description": "Hiển thị gì trong thân widget",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Biểu đồ",
+            "events": "Biểu đồ sự kiện",
+            "topPages": "Trang hàng đầu",
+            "topReferrers": "Giới thiệu hàng đầu"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Sự kiện",
+          "description": "Chọn một hoặc nhiều sự kiện để vẽ biểu đồ",
+          "placeholder": "Chọn sự kiện...",
+          "loading": "Đang tải sự kiện...",
+          "noEvents": "Không tìm thấy sự kiện",
+          "configureWebsiteFirst": "Chọn một trang web trước để tải sự kiện"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Số mục hiển thị",
+          "description": "Số mục hàng đầu cần hiển thị (tối đa 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "sự kiện",
+        "label": "sự kiện"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Trực tiếp"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Trực tiếp"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Chọn sự kiện để vẽ biểu đồ"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Chưa cấu hình tích hợp Umami",
+        "noWebsite": "Chưa cấu hình trang web",
+        "noData": "Không có dữ liệu",
+        "internalServerError": "Không thể lấy dữ liệu Umami"
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "query": "Thành phố / Mã bưu chính",
+        "latitude": "Vĩ độ",
+        "longitude": "Kinh độ",
+        "disabledTooltip": "Vui lòng nhập thành phố hoặc mã bưu chính",
+        "unknownLocation": "Vị trí không xác định",
         "search": "Tìm kiếm",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "Thành phố",
+            "country": "Quốc gia",
+            "coordinates": "Tọa độ",
+            "population": "Dân số"
           },
           "action": {
-            "select": ""
+            "select": "Chọn {city}, {countryCode}"
           },
           "population": {
             "fallback": "Không rõ"
@@ -2681,17 +2692,17 @@
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "Không tìm thấy tích hợp",
+        "description": "Nhấp <here></here> để tạo tích hợp mới"
       },
       "app": {
-        "noData": "",
-        "description": "",
+        "noData": "Không tìm thấy ứng dụng",
+        "description": "Nhấp <here></here> để tạo ứng dụng mới",
         "quickCreate": ""
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Chưa chọn tích hợp",
+        "noData": "Không có dữ liệu tích hợp"
       },
       "option": {}
     },
@@ -2704,28 +2715,40 @@
         },
         "hasAutoPlay": {
           "label": "Tự động phát",
-          "description": ""
+          "description": "Tự động phát chỉ hoạt động khi tắt tiếng do hạn chế của trình duyệt"
         },
         "isMuted": {
-          "label": ""
+          "label": "Tắt tiếng"
         },
         "hasControls": {
-          "label": ""
+          "label": "Hiển thị điều khiển"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "Chưa cung cấp URL Video",
+        "forYoutubeUseIframe": "Đối với video YouTube, hãy sử dụng tùy chọn iframe"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Luồng máy chủ media hiện tại",
+      "description": "Hiển thị các luồng hiện tại trên máy chủ media của bạn",
       "option": {
         "showOnlyPlaying": {
           "label": "",
           "description": ""
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "",
@@ -2734,6 +2757,9 @@
         "id": "",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3040,151 +3066,178 @@
       "noPhotos": ""
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Trình tải xuống",
+      "description": "Cho phép bạn xem và quản lý các tải xuống từ cả Torrent và Usenet.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Các cột cần hiển thị"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Bật sắp xếp mục"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Cột dùng để sắp xếp mặc định"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Đảo ngược sắp xếp"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Hiển thị các mục usenet đã hoàn thành"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Hiển thị các mục torrent đã hoàn thành"
         },
         "showCompletedHttp": {
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Ẩn torrent đã hoàn thành dưới ngưỡng này (kiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Danh mục/nhãn để lọc"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Lọc như danh sách trắng"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Sử dụng bộ lọc để tính Tỷ lệ"
         },
         "limitPerIntegration": {
           "label": "",
           "description": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Chọn Cột trong Mục",
+        "noCommunications": "Không thể tải dữ liệu từ tích hợp",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Điều khiển"
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "Đã thêm",
           "detailsTitle": "Ngày thêm"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Bổ sung",
+          "detailsTitle": "Danh mục (Hoặc thông tin bổ sung)"
         },
         "downSpeed": {
           "columnTitle": "Tải xuống",
           "detailsTitle": "Tốc độ tải"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "STT",
+          "detailsTitle": "Chỉ mục hiện tại trong client"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Tích hợp"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Tên công việc"
         },
         "progress": {
           "columnTitle": "Tiến độ",
-          "detailsTitle": ""
+          "detailsTitle": "Tiến độ tải xuống"
         },
         "ratio": {
           "columnTitle": "Tỉ lệ",
-          "detailsTitle": ""
+          "detailsTitle": "Tỷ lệ torrent (nhận/gửi)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Tổng tải xuống",
+          "detailsTitle": "Tổng dung lượng đã tải xuống"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Tổng tải lên",
+          "detailsTitle": "Tổng dung lượng đã tải lên"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Kích thước tệp",
+          "detailsTitle": "Tổng kích thước lựa chọn/tệp"
         },
         "state": {
           "columnTitle": "Trạng thái",
-          "detailsTitle": ""
+          "detailsTitle": "Trạng thái công việc"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Thời gian hoàn thành",
+          "detailsTitle": "Thời gian từ/đến khi hoàn thành",
+          "eta": ""
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Loại",
+          "detailsTitle": "Loại Trình tải xuống"
         },
         "upSpeed": {
           "columnTitle": "Tải lên",
-          "detailsTitle": ""
+          "detailsTitle": "Tốc độ tải lên"
         }
       },
       "states": {
         "downloading": "Đang tải",
-        "queued": "",
+        "queued": "Đã xếp hàng",
         "paused": "Tạm dừng",
         "completed": "Đã hoàn thành",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
+        "failed": "Thất bại",
+        "processing": "Đang xử lý",
+        "leeching": "Đang tải",
+        "stalled": "Đình trệ",
         "unknown": "Không rõ",
-        "seeding": ""
+        "seeding": "Đang chia sẻ"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "Danh sách trình tải xuống",
+          "pause": "Tạm dừng tất cả client/mục",
+          "resume": "Tiếp tục tất cả client/mục"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Tạm dừng client",
+          "resume": "Tiếp tục client"
         },
         "item": {
-          "pause": "",
-          "resume": "",
+          "pause": "Tạm dừng mục",
+          "resume": "Tiếp tục mục",
           "delete": {
-            "title": "",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "title": "Xóa mục",
+            "modalTitle": "Bạn có chắc chắn muốn xóa công việc này không?",
+            "entry": "Xóa mục nhập",
+            "entryAndFiles": "Xóa mục nhập và (các) tệp"
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "Tỷ lệ toàn cục",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "",
@@ -3216,7 +3269,7 @@
       }
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Danh sách Yêu cầu Media",
       "description": "Xem danh sách các yêu cầu đa phương tiện từ Overseerr hoặc Jellyseerr của bạn",
       "option": {
         "linksTargetNewTab": {
@@ -3230,14 +3283,14 @@
         }
       },
       "pending": {
-        "approve": "",
-        "approving": "",
-        "decline": ""
+        "approve": "Phê duyệt yêu cầu",
+        "approving": "Đang phê duyệt yêu cầu...",
+        "decline": "Từ chối yêu cầu"
       },
       "availability": {
         "unknown": "Không rõ",
-        "pending": "",
-        "processing": "",
+        "pending": "Đang chờ",
+        "processing": "Đang xử lý",
         "requested": "",
         "partiallyAvailable": "Một phần",
         "available": "Khả dụng",
@@ -3251,10 +3304,10 @@
         "failed": "",
         "completed": ""
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "Chưa xác định"
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "Thống kê Yêu cầu Media",
       "description": "Thống kê về các yêu cầu đa phương tiện của bạn",
       "option": {},
       "titles": {
@@ -3262,16 +3315,16 @@
           "main": "Thống kê truyền thông",
           "approved": "Đã được phê duyệt",
           "pending": "Chờ duyệt",
-          "processing": "",
-          "declined": "",
-          "available": "",
+          "processing": "Đang xử lý",
+          "declined": "Đã bị từ chối",
+          "available": "Đã có sẵn",
           "tv": "Yêu cầu TV",
           "movie": "Yêu cầu phim",
           "total": "Tổng cộng"
         },
         "users": {
           "main": "Người dùng hàng đầu",
-          "requests": ""
+          "requests": "Yêu cầu"
         }
       }
     },
@@ -3364,20 +3417,20 @@
       "timeLeft": ""
     },
     "rssFeed": {
-      "name": "",
-      "description": "",
+      "name": "Nguồn cấp RSS",
+      "description": "Giám sát và hiển thị một hoặc nhiều nguồn cấp RSS, ATOM hoặc JSON chung",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "URL nguồn cấp"
         },
         "enableRtl": {
-          "label": ""
+          "label": "Bật RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Giới hạn dòng mô tả"
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Giới hạn số lượng bài đăng"
         },
         "hideDescription": {
           "label": ""
@@ -3741,18 +3794,6 @@
           "label": "",
           "description": ""
         },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
-        },
         "showLibraryCount": {
           "label": "",
           "description": ""
@@ -3786,8 +3827,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3883,110 +3922,118 @@
       "executeFailed": ""
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Beszel Systems (Bảng)",
+      "description": "Dạng bảng của tất cả hệ thống được Beszel giám sát với các cột có thể sắp xếp và chỉ báo trạng thái",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Bộ lọc trạng thái"
         },
         "sortBy": {
-          "label": ""
+          "label": "Sắp xếp theo"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Hướng sắp xếp"
         },
         "showCpu": {
-          "label": ""
+          "label": "Hiển thị CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Hiển thị bộ nhớ"
         },
         "showDisk": {
-          "label": ""
+          "label": "Hiển thị đĩa"
         },
         "showGpu": {
-          "label": ""
+          "label": "Hiển thị GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Hiển thị tải trung bình"
         },
         "showNet": {
-          "label": ""
+          "label": "Hiển thị mạng"
         },
         "showTemp": {
-          "label": ""
+          "label": "Hiển thị nhiệt độ"
         },
         "showBattery": {
-          "label": ""
+          "label": "Hiển thị pin"
         },
         "showServices": {
-          "label": ""
+          "label": "Hiển thị dịch vụ"
         },
         "showUptime": {
-          "label": ""
+          "label": "Hiển thị thời gian hoạt động"
         },
         "showAgent": {
+          "label": "Hiển thị phiên bản tác tử"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
           "label": ""
         }
       },
-      "noRecords": "",
+      "noRecords": "Không tìm thấy hệ thống",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "Hệ thống",
+        "cpu": "CPU",
+        "memory": "Bộ nhớ",
+        "disk": "Đĩa",
+        "gpu": "GPU",
+        "loadAvg": "Tải Trung Bình",
+        "net": "Mạng",
+        "temp": "Nhiệt độ",
+        "battery": "Pin",
+        "services": "Dịch vụ",
+        "uptime": "Thời gian hoạt động",
+        "agent": "Tác tử"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Beszel Systems (Lưới)",
+      "description": "Dạng lưới thẻ của tất cả hệ thống được Beszel giám sát với các số liệu thời gian thực",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Bộ lọc trạng thái"
         },
         "showCpu": {
-          "label": ""
+          "label": "Hiển thị CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Hiển thị bộ nhớ"
         },
         "showDisk": {
-          "label": ""
+          "label": "Hiển thị đĩa"
         },
         "showGpu": {
-          "label": ""
+          "label": "Hiển thị GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Hiển thị tải trung bình"
         },
         "showNet": {
-          "label": ""
+          "label": "Hiển thị mạng"
         },
         "showTemp": {
-          "label": ""
+          "label": "Hiển thị nhiệt độ"
         },
         "showBattery": {
-          "label": ""
+          "label": "Hiển thị pin"
         },
         "showServices": {
-          "label": ""
+          "label": "Hiển thị dịch vụ"
         },
         "showUptime": {
-          "label": ""
+          "label": "Hiển thị thời gian hoạt động"
         },
         "showAgent": {
-          "label": ""
+          "label": "Hiển thị phiên bản tác tử"
         }
       },
       "error": {
@@ -3996,39 +4043,39 @@
         "noSystems": ""
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "CPU",
+        "memory": "Bộ nhớ",
+        "disk": "Đĩa",
+        "gpu": "GPU",
+        "loadAvg": "Tải Trung Bình",
+        "net": "Mạng",
+        "temp": "Nhiệt độ",
+        "battery": "Pin",
+        "services": "Dịch vụ",
+        "uptime": "Thời gian hoạt động",
+        "agent": "Tác tử"
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Cảnh báo Beszel",
+      "description": "Xem cấu hình và lịch sử cảnh báo Beszel",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Hiển thị lịch sử cảnh báo"
         },
         "maxHistoryItems": {
-          "label": ""
+          "label": "Mục lịch sử tối đa"
         }
       },
-      "empty": "",
+      "empty": "Không có cảnh báo nào được cấu hình",
       "error": {
         "internalServerError": ""
       },
-      "history": "",
-      "resolved": "",
+      "history": "Lịch sử",
+      "resolved": "Đã giải quyết",
       "status": {
-        "triggered": "",
-        "ok": ""
+        "triggered": "Đã kích hoạt",
+        "ok": "OK"
       }
     },
     "beszelSystemStats": {
@@ -4128,11 +4175,11 @@
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "Đã bật chế độ chỉnh sửa",
+      "disabled": "Đã tắt chế độ chỉnh sửa"
     },
     "dimensions": {
-      "title": ""
+      "title": "Thay đổi kích thước"
     }
   },
   "board": {
@@ -4154,52 +4201,52 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Thay đổi đã được áp dụng thành công",
+            "message": "Bảng đã được lưu thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không thể áp dụng thay đổi",
+            "message": "Không thể lưu bảng"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "Thay đổi chưa lưu",
+          "message": "Bạn có thay đổi chưa lưu, bạn có chắc chắn muốn rời đi không?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "Nhập từ Homarr trước 1.0.0",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Nhập thành công",
+            "message": "Bảng đã được nhập thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nhập không thành công",
+            "message": "Không thể nhập bảng, kiểm tra nhật ký để biết chi tiết"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "Chọn tệp JSON",
+            "invalidError": "Tệp cấu hình không hợp lệ"
           },
           "apps": {
             "label": "Ứng dụng",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Tránh trùng lặp",
+              "description": "Bỏ qua ứng dụng nếu đã có ứng dụng cùng href"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "Chỉ nhập ứng dụng",
+              "description": "Chỉ thêm ứng dụng, cần tạo lại bảng thủ công"
             }
           },
           "name": {
-            "label": ""
+            "label": "Tên bảng"
           },
           "screenSize": {
-            "label": "",
+            "label": "Kích thước màn hình",
             "description": "",
             "option": {
               "sm": "Bé nhỏ",
@@ -4208,16 +4255,16 @@
             }
           },
           "sidebarBehavior": {
-            "label": "",
-            "description": "",
+            "label": "Hành vi thanh bên",
+            "description": "Thanh bên đã bị loại bỏ trong 1.0, bạn có thể chọn điều gì xảy ra với các mục bên trong.",
             "option": {
               "lastSection": {
-                "label": "",
-                "description": ""
+                "label": "Phần cuối cùng",
+                "description": "Thanh bên sẽ hiển thị bên dưới phần cuối cùng"
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "Xóa mục",
+                "description": "Các mục trong thanh bên sẽ bị xóa"
               }
             }
           }
@@ -4232,19 +4279,19 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "Tiêu đề trang"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Tiêu đề meta"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "URL hình ảnh logo"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "URL favicon"
       },
       "backgroundImageUrl": {
-        "label": "",
+        "label": "URL hình ảnh nền",
         "placeholder": "",
         "group": {
           "your": "",
@@ -4255,24 +4302,24 @@
         "label": "Vị trí ảnh nền",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "Cố định",
+            "description": "Hình nền giữ nguyên vị trí."
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "Cuộn",
+            "description": "Hình nền cuộn theo chuột."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "Lặp hình nền",
         "option": {
           "repeat": {
-            "label": "",
-            "description": ""
+            "label": "Lặp",
+            "description": "Hình ảnh được lặp lại khi cần để phủ toàn bộ khu vực nền."
           },
           "no-repeat": {
-            "label": "",
+            "label": "Không lặp",
             "description": ""
           },
           "repeat-x": {
@@ -4528,7 +4575,7 @@
             "api": "",
             "certificates": "",
             "tasks": "",
-            "backup": ""
+            "backup": "Sao lưu"
           }
         },
         "settings": "Cài đặt",
@@ -4609,7 +4656,7 @@
           "private": ""
         },
         "noResults": {
-          "title": ""
+          "title": "Chưa có bảng"
         },
         "modal": {
           "createBoard": {
@@ -4643,20 +4690,20 @@
               "firstDayOfWeek": "Ngày đầu tiên trong tuần",
               "accessibility": "Trợ năng",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Hướng dẫn giới thiệu",
+                "description": "Đặt lại hướng dẫn giới thiệu để xem lại vào lần truy cập khu vực quản lý hoặc bảng tiếp theo.",
+                "reset": "Đặt lại hướng dẫn giới thiệu",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Đã đặt lại hướng dẫn",
+                  "message": "Hướng dẫn giới thiệu sẽ hiển thị lại vào lần truy cập tiếp theo"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Đã hoàn thành",
+                  "notStarted": "Chưa bắt đầu"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Quản lý",
+                  "dashboard": "Bảng"
                 }
               }
             }
@@ -4844,7 +4891,7 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "auto": "",
+                "auto": "Tự động",
                 "light": "",
                 "dark": ""
               }
@@ -5075,122 +5122,122 @@
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Sao lưu toàn bộ cơ sở dữ liệu",
+          "metaTitle": "Sao lưu & Khôi phục",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Xuất cơ sở dữ liệu",
+            "description": "Tải xuống bản sao lưu đầy đủ của cơ sở dữ liệu SQLite bao gồm tất cả cài đặt, người dùng, bảng và bí mật tích hợp đã mã hóa. Bản sao lưu được đóng gói dưới dạng tệp ZIP với khóa mã hóa và siêu dữ liệu.",
+            "button": "Tải xuống bản sao lưu",
+            "error": "Xuất thất bại",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Xuất dữ liệu nhạy cảm",
+              "warningTitle": "Bản xuất này chứa toàn bộ cơ sở dữ liệu của bạn.",
+              "warningBody": "Bản sao lưu bao gồm tất cả người dùng, bí mật tích hợp (đã mã hóa), khóa API, cấu hình bảng và dữ liệu ứng dụng. Lưu trữ tệp đã xuất an toàn và không chia sẻ.",
+              "typePrompt": "Nhập \"{phrase}\" để tiếp tục",
+              "submit": "Xuất cơ sở dữ liệu",
+              "cancel": "Hủy"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Khôi phục cơ sở dữ liệu",
+            "description": "Tải lên tệp ZIP sao lưu đã xuất trước đó để khôi phục cơ sở dữ liệu. Điều này sẽ thay thế toàn bộ cơ sở dữ liệu của bạn. Nếu bản sao lưu được tạo với khóa mã hóa khác, bí mật sẽ được tự động mã hóa lại.",
+            "warning": "Khôi phục bản sao lưu sẽ thay thế hoàn toàn cơ sở dữ liệu hiện tại và khởi động lại ứng dụng. Hành động này không thể hoàn tác.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Kéo tệp ZIP sao lưu vào đây hoặc nhấp để duyệt",
+              "description": "Chỉ chấp nhận tệp .zip từ bản sao lưu SQLite của Homarr"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Thay đổi tập tin",
+            "button": "Khôi phục cơ sở dữ liệu",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Khôi phục hoàn tất",
+              "message": "Cơ sở dữ liệu đã được khôi phục thành công. Ứng dụng đang khởi động lại..."
             },
-            "error": ""
+            "error": "Nhập thất bại"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Nội dung bản sao lưu",
+            "exported": "Đã xuất {date}",
+            "loading": "Đang phân tích tệp sao lưu...",
+            "errorTitle": "Lỗi xem trước",
+            "entity": "Thực thể",
+            "count": "Số lượng",
+            "boards": "Bảng",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Bảng",
+              "user": "Người dùng",
+              "app": "Ứng dụng",
+              "integration": "Tích hợp",
+              "item": "Widget",
+              "media": "Phương tiện",
+              "search_engine": "Công cụ tìm kiếm"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Không thể phân tích tệp sao lưu",
+            "invalidMissingMetadata": "Sao lưu không hợp lệ: thiếu metadata.json",
+            "invalidMissingDb": "Sao lưu không hợp lệ: thiếu db.sqlite"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Kéo tệp ZIP sao lưu vào đây",
+              "description": "Chấp nhận tệp .zip từ bản sao lưu SQLite của Homarr (tối đa 256 MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Đang phân tích bản sao lưu...",
+            "changeFile": "Thay đổi tập tin",
+            "continueToRestore": "Tiếp tục khôi phục",
+            "tryAgain": "Thử lại",
+            "analysisError": "Lỗi phân tích",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Nội dung bản sao lưu",
+              "exported": "Đã xuất {date}",
+              "entity": "Thực thể",
+              "count": "Số lượng",
+              "boards": "Bảng",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Bảng",
+                "user": "Người dùng",
+                "app": "Ứng dụng",
+                "integration": "Tích hợp",
+                "item": "Widget",
+                "media": "Phương tiện",
+                "search_engine": "Công cụ tìm kiếm"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "{count} di chuyển đã áp dụng",
+              "migrationsAppliedPlural": "{count} di chuyển đã áp dụng",
+              "migrationsOlderVersion": "Bản sao lưu này từ phiên bản Homarr cũ hơn. {count} lần di chuyển lược đồ đã được áp dụng để cập nhật.",
+              "migrationsOlderVersionPlural": "Bản sao lưu này từ phiên bản Homarr cũ hơn. {count} lần di chuyển lược đồ đã được áp dụng để cập nhật.",
+              "migrationsUpToDate": "Lược đồ cơ sở dữ liệu đã cập nhật ({count} lần di chuyển đã áp dụng)",
+              "upToDate": "Đã cập nhật",
+              "migrationsPending": "{count} đang chờ"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Đang áp dụng di chuyển ({current}/{total})",
+              "migrationLabel": "Di chuyển {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Hành động hủy diệt",
+              "warningTitle": "Điều này sẽ thay thế vĩnh viễn toàn bộ cơ sở dữ liệu của bạn.",
+              "warningBody": "Tất cả bảng, người dùng, ứng dụng, tích hợp, cài đặt và phiên hiện tại sẽ bị mất. Hành động này không thể hoàn tác. Ứng dụng sẽ khởi động lại sau khi khôi phục.",
+              "typePrompt": "Nhập \"{phrase}\" để tiếp tục",
+              "cancel": "Hủy",
+              "submit": "Khôi phục cơ sở dữ liệu"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Đang khôi phục cơ sở dữ liệu...",
+              "extracting": "Đang giải nén lưu trữ sao lưu",
+              "migrating": "Đang áp dụng di chuyển cơ sở dữ liệu",
+              "encrypting": "Đang mã hóa lại bí mật tích hợp",
+              "swapping": "Đang thay thế tệp cơ sở dữ liệu",
+              "restarting": "Đang khởi động lại máy chủ"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Khôi phục hoàn tất",
+              "message": "Cơ sở dữ liệu đã được khôi phục thành công. Máy chủ đang khởi động lại — vui lòng làm mới trang sau vài giây."
             },
             "failed": {
-              "title": ""
+              "title": "Khôi phục thất bại"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Sao lưu không hợp lệ: thiếu metadata.json",
+            "invalidMissingDb": "Sao lưu không hợp lệ: thiếu db.sqlite",
+            "analyzeError": "Không thể phân tích bản sao lưu"
           }
         }
       },
@@ -5277,15 +5324,15 @@
         "label": "Cổng"
       },
       "host": {
-        "label": ""
+        "label": "Máy chủ"
       }
     },
     "action": {
       "title": "",
       "logs": {
-        "label": "",
+        "label": "Xem nhật ký",
         "page": {
-          "title": ""
+          "title": "Nhật ký {name}"
         }
       },
       "start": {
@@ -5329,6 +5376,7 @@
       },
       "remove": {
         "label": "Xóa",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",
@@ -5715,7 +5763,7 @@
         "docker": {
           "label": "",
           "logs": {
-            "label": ""
+            "label": "Nhật ký"
           }
         },
         "kubernetes": {
@@ -5826,7 +5874,7 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Chuyển đổi chế độ giao diện",
                 "light": "",
                 "dark": ""
               },
@@ -5867,104 +5915,104 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Tùy chọn",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Chọn một tùy chọn để thay đổi",
+                "backHint": "Nhấn Backspace hoặc dùng nút quay lại để trở về",
+                "backAction": "Quay lại"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Không thể cập nhật tùy chọn"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Mở tùy chọn"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Bật",
+                "disabled": "Tắt"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Không",
+                "unavailable": "Đang chọn (không khả dụng)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "Không",
+                "unavailable": "Đang chọn (không khả dụng)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Bảng màu",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Chọn bảng màu của bạn"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Ngôn ngữ",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Chọn ngôn ngữ ưa thích của bạn"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Công cụ tìm kiếm mặc định",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Chọn công cụ tìm kiếm mặc định"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Mở kết quả tìm kiếm trong thẻ mới",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Mở kết quả tìm kiếm trong thẻ mới"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "Bật DuckDuckGo bangs",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Bật DuckDuckGo bangs"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Ngày đầu tiên trong tuần",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Chọn ngày đầu tiên trong tuần"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Bảng chính",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Chọn bảng chính của bạn"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Bảng chính cho di động",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Chọn bảng chính cho di động"
                   }
                 }
               },
               "pingIconsEnabled": {
-                "label": "",
+                "label": "Dùng biểu tượng cho ping",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Dùng biểu tượng cho ping"
                   }
                 }
               },
@@ -5977,36 +6025,36 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Mở trang tùy chọn đầy đủ"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Tìm kiếm phim hoặc chương trình để yêu cầu",
         "requestMovie": "",
         "requestSeries": "",
         "openIn": "",
         "group": {
-          "title": ""
+          "title": "Phim và chương trình"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Tìm kiếm phim hoặc chương trình",
+            "description": "Bắt đầu nhập để tìm kiếm tích hợp yêu cầu phương tiện của bạn",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Thêm tích hợp Overseerr, Jellyseerr, hoặc Seerr để bật tìm kiếm phương tiện.",
+              "scoped": "Widget này không có tích hợp yêu cầu phương tiện có thể truy cập."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Khả dụng",
+          "partiallyAvailable": "Một phần",
+          "processing": "Đang xử lý",
+          "requested": "Đã yêu cầu",
+          "pending": "Đã yêu cầu"
         }
       },
       "external": {
@@ -6014,13 +6062,13 @@
         "group": {
           "searchEngine": {
             "title": "",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Mẹo: Bạn có thể dùng bất kỳ DuckDuckGo bang nào ở đây, ví dụ: !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Tìm kiếm \"{query}\" với {label}",
+              "pressEnterToOpen": "Nhấn Enter để mở",
+              "engineSelected": "Đã chọn {label} (!{bang})",
+              "typeQueryToContinue": "Nhập truy vấn tìm kiếm để tiếp tục",
+              "emptyBangHint": "Nhập một bang, ví dụ: !yt, sau đó nhấn Space để chọn"
             },
             "children": {
               "action": {
@@ -6284,10 +6332,10 @@
               "header": {
                 "season": "",
                 "episodes": "",
-                "status": ""
+                "status": "Trạng thái"
               },
               "status": {
-                "requested": ""
+                "requested": "Đã yêu cầu"
               }
             },
             "button": {
@@ -6400,69 +6448,69 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Đọc tài liệu",
+    "next": "Kế tiếp",
+    "prev": "Quay lại",
+    "done": "Xong",
+    "skip": "Bỏ qua hướng dẫn",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Chào mừng đến với Homarr!",
+        "description": "Đây là trung tâm điều khiển của bạn. Từ đây bạn quản lý bảng, ứng dụng, tích hợp, người dùng và cài đặt máy chủ. Hãy tham quan từng phần."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Bảng của bạn",
+        "description": "Đây là tất cả bảng của bạn. Mỗi bảng có bố cục, nền và cài đặt truy cập riêng. Bạn có thể thấy ai tạo từng bảng và nó công khai hay riêng tư."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Tạo bảng",
+        "description": "Nhấp vào đây để tạo bảng mới hoặc nhập từ bản cài đặt Homarr trước đó. Mỗi bảng có URL riêng bạn có thể chia sẻ."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Ứng dụng của bạn",
+        "description": "Đây là tất cả ứng dụng bạn đã thêm — liên kết đến dịch vụ tự lưu trữ. Mỗi ứng dụng có biểu tượng, kiểm tra sức khỏe tùy chọn và huy hiệu trạng thái trên bảng."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Thêm ứng dụng",
+        "description": "Đăng ký dịch vụ mới ở đây. Đặt tên, URL và biểu tượng — nó sẽ xuất hiện dưới dạng ô trên bảng với giám sát trạng thái trực tiếp."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Tích hợp của bạn",
+        "description": "Đây là các dịch vụ kết nối với Homarr — Sonarr, Radarr, Plex, Jellyfin và hơn 50 nữa. Tất cả thông tin đăng nhập được mã hóa khi lưu trữ."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Thêm tích hợp",
+        "description": "Kết nối dịch vụ mới ở đây. Chọn loại, nhập URL và khóa API — Homarr xác thực kết nối trước khi lưu."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Người dùng của bạn",
+        "description": "Xem tất cả những ai có quyền truy cập. Sắp xếp người dùng thành nhóm và kiểm soát ai có thể xem hoặc chỉnh sửa từng bảng."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Tạo người dùng",
+        "description": "Thêm tài khoản người dùng mới ở đây. Bạn cũng có thể dùng liên kết mời để dễ dàng giới thiệu. Hết hướng dẫn — bạn đã sẵn sàng!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Đây là bảng của bạn",
+        "description": "Một bảng kéo-thả nơi bạn sắp xếp ứng dụng và widget. Nhấn Ctrl+K bất cứ lúc nào để tìm kiếm ứng dụng, bảng và hành động."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Chế độ chỉnh sửa",
+        "description": "Nhấp vào đây để vào chế độ chỉnh sửa. Sau đó bạn có thể thêm widget, ứng dụng và phần — kéo để đặt lại vị trí, đổi kích thước bằng núm góc. Nhấp lần nữa để lưu thay đổi."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Cài đặt bảng",
+        "description": "Thay đổi tên, cột, nền, màu sắc và ai có thể truy cập bảng này. Mỗi bảng có thể công khai hoặc riêng tư."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Chuyển bảng",
+        "description": "Chuyển đổi giữa các bảng. Tạo bảng riêng cho các mục đích khác nhau — phương tiện, mạng, mỗi người dùng, hoặc bất cứ gì bạn thích."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Hồ sơ của bạn",
+        "description": "Thay đổi bảng màu, ngôn ngữ, bảng chính và tùy chọn. Bạn cũng có thể chuyển đến khu vực quản lý từ đây."
       }
     }
   }

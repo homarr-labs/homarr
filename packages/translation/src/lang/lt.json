@@ -8,9 +8,9 @@
         "action": {
           "scratch": "",
           "importOldmarr": "",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Atkurti iš SQLite atsarginės kopijos",
+          "restoreSqliteDescription": "Įkelkite pilną SQLite duomenų bazės atsarginę kopiją iš ankstesnio Homarr egzemplioriaus. Tai atkurs visas lentas, naudotojus, programėles, integracijas ir nustatymus.",
+          "backToOptions": "← Atgal į sąrankos parinktis"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": ""
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Integracijos",
+        "subtitle": "Pasirinkite naudojamas paslaugas.",
+        "description": "Pasirinkite integracijas, kurias norite prijungti. Automatiškai sukonfigūruosime jūsų valdymo skydelį su atitinkamais valdikliais.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Tęsti",
+          "skip": "Kol kas praleisti"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{current} iš {total}",
+          "skip": "Praleisti šią integraciją",
+          "finishing": "Konfigūruojamas valdymo skydelis...",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sąranka nepavyko",
+            "message": "Kažkas nepavyko konfigūruojant valdymo skydelį. Bandykite dar kartą."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "URL pagalbininkai",
+            "description": "Šie pagalbininkai bando atspėti jūsų paslaugų URL. Jei nepavyksta, tiesiog įveskite adresą rankiniu būdu."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "Bazinis URL",
+          "placeholder": "homelab.local arba 192.168.1.1",
+          "hint": "Įveskite pagrindinį domeną ar IP, kad automatiškai užpildytumėte integracijų URL",
+          "warning": "Nustatę bazinį URL dabar, automatiškai užpildysite visus integracijų URL, taip sutaupydami laiko diegimo metu",
+          "preview": "pvz., {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Subdomenas",
+            "hostPort": "Mazgas:Prievadas"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker aptiko {count} paslaugas",
+          "detectedBreakdown": "{integrations} integracijų · {apps} programėlių",
+          "summary": "Homarr aptiko {apps} programėlių, iš kurių {integrations} turi integracijas",
+          "appBadge": "Programėlė",
+          "appSectionLabel": "Programėlės, pridedamos į valdymo skydelį (pasirinkta {count})",
+          "scanning": "Nuskaitomas Docker...",
+          "scanningDescription": "Ieškoma veikiančių konteinerių jūsų sistemoje"
         }
       },
       "finish": {
@@ -154,49 +154,49 @@
     "name": "Vartotojas",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Prisijunkite prie savo paskyros",
+        "subtitle": "Sveiki sugrįžę! Prašome įvesti savo prisijungimo duomenis"
       },
       "invite": {
         "title": "Prisijungti prie Homarr",
-        "subtitle": "",
-        "description": ""
+        "subtitle": "Sveiki, čia Homarr! Prašome susikurti paskyrą",
+        "description": "Jus pakvietė {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Nauja Homarr instaliacija",
+        "subtitle": "Prašome sukurti pradinį administratorių"
       }
     },
     "field": {
       "email": {
         "label": "El. paštas",
-        "verified": ""
+        "verified": "Patvirtinta"
       },
       "username": {
-        "label": ""
+        "label": "Vartotojo vardas"
       },
       "password": {
         "label": "Slaptažodis",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Slaptažodžio reikalavimai",
         "suggestion": {
-          "length": "",
-          "lowercase": "",
-          "uppercase": "",
-          "number": "",
-          "special": ""
+          "length": "Bent 8 simboliai",
+          "lowercase": "Yra mažoji raidė",
+          "uppercase": "Yra didžioji raidė",
+          "number": "Yra skaičius",
+          "special": "Yra specialistis simbolis"
         }
       },
       "passwordConfirm": {
         "label": "Patvirtinti slaptažodį"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Ankstesnis slaptažodis"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Pagrindinė lenta"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Naudoti piktogramas pingams"
       },
       "enableRightClickOnWidgets": {
         "label": "",
@@ -209,29 +209,29 @@
         "label": ""
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Įjungti DuckDuckGo bangs"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Vartotojo vardas jau užimtas"
     },
     "action": {
       "login": {
         "label": "Prisijungti",
-        "labelWith": "",
+        "labelWith": "Prisijungti su {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Prisijungimas sėkmingas",
+            "message": "Dabar esate prisijungę"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Prisijungti nepavyko",
+            "message": "Jūsų prisijungimas nepavyko"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Pamiršote slaptažodį?",
+          "description": "Administratorius gali naudoti šią komandą norėdamas atkurti jūsų slaptažodį:"
         }
       },
       "register": {
@@ -239,33 +239,33 @@
         "notification": {
           "success": {
             "title": "Paskyra sukurta",
-            "message": ""
+            "message": "Norėdami tęsti, prašome prisijungti"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Paskyros sukūrimas nepavyko",
+            "message": "Jūsų paskyra negalėjo būti sukurta"
           }
         }
       },
       "create": "Sukurti vartotoją",
       "changePassword": {
-        "label": "",
+        "label": "Keisti slaptažodį",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Slaptažodis sėkmingai pakeistas"
           },
           "error": {
-            "message": ""
+            "message": "Nepavyko pakeisti slaptažodžio"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Pagrindinė lenta sėkmingai pakeista"
           },
           "error": {
-            "message": ""
+            "message": "Nepavyko pakeisti pagrindinės lentos"
           }
         }
       },
@@ -282,58 +282,58 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Savaitės pirmoji diena sėkmingai pakeista"
           },
           "error": {
-            "message": ""
+            "message": "Nepavyko pakeisti savaitės pirmosios dienos"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ping piktogramos sėkmingai perjungtos"
           },
           "error": {
-            "message": ""
+            "message": "Nepavyko perjungti ping piktogramų"
           }
         }
       },
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo bangs perjungti sėkmingai"
           },
           "error": {
-            "message": ""
+            "message": "Nepavyko perjungti DuckDuckGo bangs"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Keisti paveikslėlį",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Paveikslėlis sėkmingai pakeistas"
             },
             "error": {
-              "message": ""
+              "message": "Nepavyko pakeisti paveikslėlio"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Paveikslėlis per didelis",
+              "message": "Didžiausias paveikslėlio dydis yra {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Pašalinti paveikslėlį",
+          "confirm": "Ar tikrai norite pašalinti paveikslėlį?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Paveikslėlis sėkmingai pašalintas"
             },
             "error": {
-              "message": ""
+              "message": "Nepavyko pašalinti paveikslėlio"
             }
           }
         }
@@ -341,34 +341,34 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profilis sėkmingai atnaujintas"
           },
           "error": {
-            "message": ""
+            "message": "Nepavyko atnaujinti profilio"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Pašalinti vartotoją visam laikui",
+        "description": "Pašalina šį vartotoją kartu su jo nuostatomis. Lentos nebus ištrintos. Vartotojas nebus informuotas.",
+        "confirm": "Ar tikrai norite pašalinti vartotoją {username} su jo nuostatomis?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Pasirinkti vartotoją",
+        "notFound": "Vartotojas nerastas"
       },
       "transfer": {
-        "label": ""
+        "label": "Pasirinkti naują savininką"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Grupės",
+    "name": "Grupė",
+    "search": "Ieškoti grupės",
     "field": {
       "name": "Pavadinimas",
-      "members": "",
+      "members": "Nariai",
       "homeBoard": {
         "label": "",
         "description": ""
@@ -383,8 +383,8 @@
         "title": "Administratorius",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administratorius",
+            "description": "Nariai su šiuo leidimu turi visišką prieigą prie visų funkcijų ir nustatymų"
           }
         }
       },
@@ -392,20 +392,20 @@
         "title": "Programėlės",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Kurti programas",
+            "description": "Leisti nariams kurti programas"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Naudoti visas programas",
+            "description": "Leisti nariams pridėti bet kokias programas prie savo lentų"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifikuoti visas programas",
+            "description": "Leisti nariams modifikuoti visas programas"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Visiška programų prieiga",
+            "description": "Leisti nariams tvarkyti, naudoti ir ištrinti bet kokią programą"
           }
         }
       },
@@ -413,165 +413,165 @@
         "title": "Lentos",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Kurti lentas",
+            "description": "Leisti nariams kurti lentas"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Peržiūrėti visas lentas",
+            "description": "Leisti nariams peržiūrėti visas lentas"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifikuoti visas lentas",
+            "description": "Leisti nariams modifikuoti visas lentas (neapima prieigos kontrolės ir pavojingos zonos)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Visiška lentų prieiga",
+            "description": "Leisti nariams peržiūrėti, modifikuoti ir ištrinti visas lentas (įskaitant prieigos kontrolę ir pavojingą zoną)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integracijos",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Kurti integracijas",
+            "description": "Leisti nariams kurti integracijas"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Naudoti visas integracijas",
+            "description": "Leisti nariams pridėti bet kokias integracijas prie savo lentų"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Sąveikauti su bet kokia integracija",
+            "description": "Leisti nariams sąveikauti su bet kokia integracija"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Visiška integracijų prieiga",
+            "description": "Leisti nariams tvarkyti, naudoti ir sąveikauti su bet kokia integracija"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Medijos",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Įkelti medijas",
+            "description": "Leisti nariams įkelti medijas"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Peržiūrėti visas medijas",
+            "description": "Leisti nariams peržiūrėti visas medijas"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Visiška medijos prieiga",
+            "description": "Leisti nariams tvarkyti ir ištrinti bet kokią mediją"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Kita",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Peržiūrėti žurnalus",
+            "description": "Leisti nariams peržiūrėti žurnalus"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Paieškos sistemos",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Kurti paieškos sistemas",
+            "description": "Leisti nariams kurti paieškos sistemas"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifikuoti visas paieškos sistemas",
+            "description": "Leisti nariams modifikuoti visas paieškos sistemas"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Visiška paieškos sistemų prieiga",
+            "description": "Leisti nariams tvarkyti ir ištrinti bet kokią paieškos sistemą"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Kai kurie nariai yra iš išorinių tiekėjų ir čia negali būti tvarkomi",
+      "external": "Visi nariai yra iš išorinių tiekėjų ir čia negali būti tvarkomi"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Ši grupė yra rezervuota sistemos naudojimui ir riboja kai kuriuos veiksmus. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Nauja grupė",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupė sėkmingai sukurta"
           },
           "error": {
-            "message": ""
+            "message": "Grupės sukurti nepavyko"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Perduoti nuosavybę",
+        "description": "Perduoti šios grupės nuosavybę kitam vartotojui.",
+        "confirm": "Ar tikrai norite perduoti grupės {name} nuosavybę {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupė {group} sėkmingai perduota {user}"
           },
           "error": {
-            "message": ""
+            "message": "Nepavyko perduoti nuosavybės"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Pridėti narį"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Pašalinti narį",
+        "confirm": "Ar tikrai norite pašalinti {user} iš šios grupės?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Ištrinti grupę",
+        "description": "Ištrynus grupę, kelio atgal nėra. Būkite tikri.",
+        "confirm": "Ar tikrai norite ištrinti grupę {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupė {name} sėkmingai ištrinta"
           },
           "error": {
-            "message": ""
+            "message": "Nepavyko ištrinti grupės {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Leidimai išsaugoti",
+            "message": "Leidimai sėkmingai išsaugoti"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Leidimai neišsaugoti",
+            "message": "Leidimai nebuvo išsaugoti"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupė {name} sėkmingai išsaugota"
           },
           "error": {
-            "message": ""
+            "message": "Nepavyko išsaugoti grupės {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Pasirinkti grupę",
+        "notFound": "Grupė nerasta"
       },
       "settings": {
         "board": {
@@ -609,47 +609,47 @@
       "list": {
         "title": "Programėlės",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Kol kas programų nėra",
+          "action": "Sukurti pirmąją programą"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nauja programa",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sukūrimas sėkmingas",
+            "message": "Programa sėkmingai sukurta"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sukūrimas nepavyko",
+            "message": "Programos sukurti nepavyko"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Redaguoti programą",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Pakeitimai sėkmingai pritaikyti",
+            "message": "Programa sėkmingai išsaugota"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nepavyko pritaikyti pakeitimų",
+            "message": "Programos išsaugoti nepavyko"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Ištrinti programą",
+        "message": "Ar tikrai norite ištrinti programą {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Ištrynimas sėkmingas",
+            "message": "Programa sėkmingai ištrinta"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Ištrynimas nepavyko",
+            "message": "Nepavyko ištrinti programos"
           }
         }
       }
@@ -659,10 +659,10 @@
         "label": "Pavadinimas"
       },
       "description": {
-        "label": ""
+        "label": "Aprašymas"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
@@ -673,8 +673,8 @@
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
+        "label": "Pasirinkti programą",
+        "notFound": "Programa nerasta",
         "search": "",
         "noResults": "",
         "action": "",
@@ -896,22 +896,22 @@
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integracijos",
+        "search": "Ieškoti integracijų",
         "noResults": {
-          "title": ""
+          "title": "Kol kas integracijų nėra"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nauja {name} integracija",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sukūrimas sėkmingas",
+            "message": "Integracija sėkmingai sukurta"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sukūrimas nepavyko",
+            "message": "Integracijos sukurti nepavyko"
           }
         },
         "app": {
@@ -931,15 +931,15 @@
         }
       },
       "edit": {
-        "title": "",
+        "title": "Redaguoti {name} integraciją",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Pakeitimai sėkmingai pritaikyti",
+            "message": "Integracija sėkmingai išsaugota"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nepavyko pritaikyti pakeitimų",
+            "message": "Integracijos išsaugoti nepavyko"
           }
         },
         "app": {
@@ -951,16 +951,16 @@
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Ištrinti integraciją",
+        "message": "Ar tikrai norite ištrinti integraciją {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Ištrynimas sėkmingas",
+            "message": "Integracija sėkmingai ištrinta"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Ištrynimas nepavyko",
+            "message": "Nepavyko ištrinti integracijos"
           }
         }
       }
@@ -970,7 +970,7 @@
         "label": "Pavadinimas"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "attemptSearchEngineCreation": {
         "label": "",
@@ -987,52 +987,52 @@
         "placeholder": ""
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Gauti API raktą"
       }
     },
     "action": {
-      "create": ""
+      "create": "Nauja integracija"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} valdikliai",
+      "noWidgets": "Nėra valdiklių",
+      "detected": "Aptikta per Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
+      "dnsHole": "DNS",
+      "mediaService": "Medija",
+      "calendar": "Kalendorius",
+      "mediaSearch": "Paieška",
+      "mediaRelease": "Leidiniai",
+      "mediaRequest": "Užklausos",
+      "downloadClient": "Atsisiuntimai",
+      "usenet": "Usenet",
+      "torrent": "Torrentas",
+      "miscellaneous": "Įvairūs",
+      "smartHomeServer": "Išmanieji namai",
+      "indexerManager": "Indeksuotojas",
+      "healthMonitoring": "Sveikata",
+      "search": "Paieška",
+      "mediaTranscoding": "Transkodavimas",
+      "networkController": "Tinklas",
+      "releasesProvider": "Leidiniai",
+      "notifications": "Pranešimai",
+      "firewall": "Ugniasienė",
+      "timetable": "Tvarkaraštis",
+      "photoService": "Nuotraukos",
+      "documents": "Dokumentai",
+      "notes": "Užrašai",
+      "mediaMonitoring": "Stebėjimas",
+      "speedtest": "Greičio testas",
+      "analytics": "Analizė",
       "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "mediaLibrary": "Medijos biblioteka",
+      "uptimeMonitoring": "Veikimo stebėjimas"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Tikrinti ryšį ir kurti",
+        "edit": "Tikrinti ryšį ir išsaugoti"
       },
       "error": {
         "common": {
@@ -1160,71 +1160,71 @@
           }
         }
       },
-      "alertNotice": "",
+      "alertNotice": "Išsaugojimo mygtukas yra įjungtas, kai sėkmingai užmezgamas ryšys",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Ryšys sėkmingas",
+          "message": "Ryšys sėkmingai užmegztas"
         },
         "invalidUrl": {
           "title": "Klaidingas URL",
-          "message": ""
+          "message": "URL yra netinkamas"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Trūksta prisijungimo duomenų",
+          "message": "Ne visi prisijungimo duomenys buvo pateikti"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Neteisingi prisijungimo duomenys",
+          "message": "Prisijungimo duomenys neteisingi"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Ryšio nepavyko užmegzti",
+          "message": "Ryšio užmegzti nepavyko"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Bloga užklausa",
+          "message": "Užklausa buvo neteisingai suformuota"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Neleidžiama",
+          "message": "Tikriausiai neteisingi prisijungimo duomenys"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Draudžiama",
+          "message": "Tikriausiai trūksta leidimų"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Nerasta",
+          "message": "Tikriausiai neteisingas url ar kelias"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Vidinė serverio klaida",
+          "message": "Serveris susidūrė su klaida"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Paslauga nepasiekiama",
+          "message": "Serveris šiuo metu nepasiekiamas"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Ryšys nutrauktas",
+          "message": "Ryšys buvo nutrauktas"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Domenas nerastas",
+          "message": "Domeno rasti nepavyko"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Ryšys atmestas",
+          "message": "Ryšys buvo atmestas"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Netinkamas JSON",
+          "message": "Atsakymas nebuvo tinkamas JSON"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Neteisingas kelias",
+          "message": "Tikriausiai kelias nėra teisingas"
         },
         "tooManyRequests": {
           "title": "",
@@ -1233,29 +1233,29 @@
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Paslaptys",
+      "lastUpdated": "Paskutinį kartą atnaujinta {date}",
       "notSet": {
         "label": "",
         "tooltip": ""
       },
-      "secureNotice": "",
+      "secureNotice": "Šios paslapties negalima gauti po sukūrimo",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Atstatyti paslaptį",
+        "message": "Ar tikrai norite atstatyti šią paslaptį?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Nėra paslapčių",
+        "text": "Šiai integracijai nereikia paslapčių"
       },
       "kind": {
         "username": {
-          "label": "",
-          "newLabel": ""
+          "label": "Vartotojo vardas",
+          "newLabel": "Naujas vartotojo vardas"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API raktas",
+          "newLabel": "Naujas API raktas"
         },
         "password": {
           "label": "Slaptažodis",
@@ -1310,33 +1310,33 @@
           "newLabel": ""
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Būsenos puslapio trumpinys",
+          "newLabel": "Naujas būsenos puslapio trumpinys"
         }
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Pasirinkite integracijas elementuose",
+      "interact": "Sąveikauti su integracijomis",
+      "full": "Visiška integracijų prieiga"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Savarankiškai talpinamas audioknygų ir tinklalaidžių serveris"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Savarankiškai talpinamas muzikos transliavimo serveris su Subsonic API suderinamumu"
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Savarankiškai talpinamas veikimo stebėjimas su viešais būsenos puslapiais",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "Jūsų viešo būsenos puslapio trumpinys. Jei nenustatyta, numatyta reikšmė \"default\"."
         },
         "apiKey": {
-          "description": ""
+          "description": "Pasirinktinis API raktas autentifikuotai /metrics prieigai"
         }
       }
     },
@@ -1345,8 +1345,8 @@
       "description": ""
     },
     "paperlessNgx": {
-      "name": "",
-      "description": ""
+      "name": "Paperless-ngx",
+      "description": "Dokumentų valdymo sistema, skirta nuskaitytų dokumentų archyvavimui ir tvarkymui"
     },
     "patchmon": {
       "name": "",
@@ -1358,185 +1358,185 @@
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Medijos",
+    "search": "Ieškoti medijos",
     "field": {
       "name": "Pavadinimas",
-      "size": "",
+      "size": "Dydis",
       "creator": "Kūrėjas"
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Įkelti mediją",
+        "file": "Pasirinkti failą",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Medija sėkmingai įkelta"
           },
           "error": {
-            "message": ""
+            "message": "Medijos įkelti nepavyko"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Ištrinti mediją",
+        "description": "Ar tikrai norite ištrinti mediją <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Medija sėkmingai ištrinta"
           },
           "error": {
-            "message": ""
+            "message": "Medijos ištrinti nepavyko"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Kopijuoti URL"
       },
       "open": {
         "label": ""
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Nėra įkelta medijos"
     }
   },
   "common": {
     "success": "",
-    "beta": "",
-    "error": "",
+    "beta": "Beta",
+    "error": "Klaida",
     "action": {
-      "add": "",
-      "apply": "",
-      "backToOverview": "",
-      "skip": "",
+      "add": "Pridėti",
+      "apply": "Taikyti",
+      "backToOverview": "Atgal į apžvalgą",
+      "skip": "Praleisti",
       "change": "",
       "create": "Sukurti",
       "createAnother": "",
-      "edit": "",
-      "import": "",
-      "insert": "",
+      "edit": "Redaguoti",
+      "import": "Importuoti",
+      "insert": "Įterpti",
       "remove": "Pašalinti",
-      "save": "",
+      "save": "Išsaugoti",
       "saveChanges": "Išsaugoti pakeitimus",
       "cancel": "Atšaukti",
-      "delete": "",
-      "discard": "",
+      "delete": "Ištrinti",
+      "discard": "Atmesti",
       "close": "",
-      "confirm": "",
-      "continue": "",
-      "previous": "",
-      "next": "",
-      "checkoutDocs": "",
+      "confirm": "Patvirtinti",
+      "continue": "Tęsti",
+      "previous": "Ankstesnis",
+      "next": "Kitas",
+      "checkoutDocs": "Peržiūrėti dokumentaciją",
       "checkLogs": "",
-      "tryAgain": "",
-      "loading": "",
-      "show": "",
-      "hide": ""
+      "tryAgain": "Bandyti dar kartą",
+      "loading": "Įkeliama",
+      "show": "Rodyti",
+      "hide": "Slėpti"
     },
-    "here": "",
+    "here": "čia",
     "iconPicker": {
-      "label": "",
-      "header": "",
+      "label": "Piktogramos URL",
+      "header": "Įveskite pavadinimą ar objektus, kad filtruoti piktogramas... Homarr ieškos per {countIcons} piktogramas.",
       "headerLoading": "",
       "noResults": "",
       "error": ""
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Automatinis",
         "light": "",
         "dark": ""
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "min": "Min",
+      "max": "Maks",
+      "days": "Dienos",
+      "hours": "Valandos",
+      "minutes": "Minutės"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Sukūrimas sėkmingas",
+        "error": "Sukūrimas nepavyko"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Ištrynimas sėkmingas",
+        "error": "Ištrynimas nepavyko"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Pakeitimai sėkmingai pritaikyti",
+        "error": "Nepavyko pritaikyti pakeitimų"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Perdavimas sėkmingas",
+        "error": "Perdavimas nepavyko"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Pasirinkite vieną ar daugiau reikšmių"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Pridėti daugiau reikšmių",
+      "addLabel": "Pridėti {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Pasirinkite reikšmę",
       "badge": {
-        "recommended": ""
+        "recommended": "Rekomenduojama"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "Perjungti į tamsų režimą",
+        "switchToLightMode": "Perjungti į šviesų režimą",
+        "management": "Valdymas",
         "docker": "",
-        "preferences": "",
-        "logout": "",
+        "preferences": "Jūsų nuostatos",
+        "logout": "Atsijungti",
         "login": "Prisijungti",
-        "homeBoard": "",
-        "loggedOut": "",
+        "homeBoard": "Jūsų pagrindinė lenta",
+        "loggedOut": "Atsijungta",
         "updateAvailable": ""
       }
     },
-    "dangerZone": "",
+    "dangerZone": "Pavojinga zona",
     "noResults": "Rezultatų nerasta",
     "unsavedChanges": "",
     "servers": "",
     "applications": "",
     "services": "",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Rodyti peržiūrą",
+      "hide": "Slėpti peržiūrą"
     },
     "zod": {
       "errors": {
-        "default": "",
+        "default": "Šis laukas neteisingas",
         "required": "Šis laukelis yra privalomas",
         "string": {
-          "startsWith": "",
-          "endsWith": "",
-          "includes": "",
-          "invalidEmail": ""
+          "startsWith": "Šis laukas turi prasidėti su {startsWith}",
+          "endsWith": "Šis laukas turi baigtis su {endsWith}",
+          "includes": "Šis laukas turi būti su {includes}",
+          "invalidEmail": "Šis laukas turi būti teisingas el. pašto adresas"
         },
         "tooSmall": {
-          "string": "",
-          "number": ""
+          "string": "Šis laukas turi būti bent {minimum} simbolių ilgio",
+          "number": "Šis laukas turi būti didesnis arba lygus {minimum}"
         },
         "tooBig": {
-          "string": "",
-          "number": ""
+          "string": "Šis laukas turi būti ne ilgesnis kaip {maximum} simbolių",
+          "number": "Šis laukas turi būti mažesnis arba lygus {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
+          "passwordsDoNotMatch": "Slaptažodžiai nesutampa",
+          "passwordRequirements": "Slaptažodis neatitinka reikalavimų",
+          "boardAlreadyExists": "Lenta su tokiu pavadinimu jau yra",
+          "invalidFileType": "Netinkamas failo tipas, tikimasi {expected}",
           "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
+          "fileTooLarge": "Failas per didelis, didžiausias dydis yra {maxSize}",
+          "invalidConfiguration": "Netinkama konfigūracija",
           "groupNameTaken": ""
         }
       }
@@ -1551,8 +1551,8 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Nauja dinaminė sekcija",
+        "remove": "Pašalinti dinaminę sekciją"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,8 @@
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Pašalinti dinaminę sekciją",
+        "message": "Ar tikrai norite pašalinti šią dinaminę sekciją? Elementai bus perkelti į tą pačią vietą pirminėje sekcijoje."
       }
     },
     "category": {
@@ -1577,32 +1577,32 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Nauja kategorija",
+        "edit": "Pervardyti kategoriją",
+        "remove": "Pašalinti kategoriją",
         "moveUp": "Pakelti aukštyn",
         "moveDown": "Perkelti žemyn",
-        "createAbove": "",
-        "createBelow": "",
+        "createAbove": "Nauja kategorija aukščiau",
+        "createBelow": "Nauja kategorija žemiau",
         "openAllInNewTabs": ""
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Nauja kategorija",
+        "submit": "Pridėti kategoriją"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Pašalinti kategoriją",
+        "message": "Ar tikrai norite pašalinti kategoriją {name}?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Pervardyti kategoriją",
+        "submit": "Pervardyti kategoriją"
       },
       "menu": {
         "label": {
-          "create": "",
-          "changePosition": "",
-          "settings": ""
+          "create": "Nauja kategorija",
+          "changePosition": "Keisti poziciją",
+          "settings": "Nustatymai"
         }
       },
       "openAllInNewTabs": {
@@ -1613,12 +1613,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Naujas elementas",
+      "import": "Importuoti elementą",
+      "edit": "Redaguoti elementą",
+      "moveResize": "Perkelti / keisti dydį",
+      "duplicate": "Dubliuoti elementą",
+      "remove": "Pašalinti elementą"
     },
     "menu": {
       "label": {
@@ -1635,12 +1635,12 @@
       }
     },
     "create": {
-      "title": "",
+      "title": "Pasirinkite elementą pridėti",
       "search": "",
-      "addToBoard": ""
+      "addToBoard": "Pridėti prie lentos"
     },
     "moveResize": {
-      "title": "",
+      "title": "Perkelti / keisti dydį",
       "field": {
         "width": {
           "label": "Plotis"
@@ -1649,35 +1649,35 @@
           "label": "Aukštis"
         },
         "xOffset": {
-          "label": ""
+          "label": "X poslinkis"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y poslinkis"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Redaguoti elementą",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Redaguoti valdiklį",
+        "app": "Redaguoti programėlę"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Šios programėlės pakeitimai bus taikomi visur, kur ji naudojama visose lentose."
       },
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Išplėstinės parinktys",
+        "title": "Išplėstinės elemento parinktys"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integracijos"
         },
         "title": {
           "label": ""
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Individualios CSS klasės"
         },
         "borderColor": {
           "label": ""
@@ -1685,8 +1685,8 @@
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Pašalinti elementą",
+      "message": "Ar tikrai norite pašalinti šį elementą?"
     }
   },
   "widget": {
@@ -1698,17 +1698,17 @@
       "loadError": ""
     },
     "app": {
-      "name": "",
-      "description": "",
+      "name": "Programėlė",
+      "description": "Įdeda programėlę į lentą.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Pasirinkite programėlę"
         },
         "openInNewTab": {
           "label": "Atidaryti naujame skirtuke"
         },
         "showTitle": {
-          "label": ""
+          "label": "Rodyti programėlės pavadinimą"
         },
         "pingEnabled": {
           "label": ""
@@ -1734,20 +1734,20 @@
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Nėra programėlės",
+          "tooltip": "Neturite pasirinktos tinkamos programėlės"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Žymės",
+      "description": "Rodo kelias programėlių nuorodas",
       "option": {
         "title": {
-          "label": ""
+          "label": "Pavadinimas"
         },
         "layout": {
-          "label": "",
+          "label": "Išdėstymas",
           "option": {
             "row": {
               "label": "Horizontalus"
@@ -1756,7 +1756,7 @@
               "label": "Vertikalus"
             },
             "grid": {
-              "label": ""
+              "label": "Tinklelis"
             },
             "gridHorizontal": {
               "label": ""
@@ -1776,11 +1776,11 @@
           "label": ""
         },
         "withBorder": {
-          "label": ""
+          "label": "Rodyti rėmelį"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Žymės",
+          "add": "Pridėti žymę"
         }
       }
     },
@@ -1794,11 +1794,11 @@
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "DNS skylės suvestinė",
+      "description": "Rodo jūsų DNS skylės suvestinę",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Išdėstymas",
           "option": {
             "row": {
               "label": "Horizontalus"
@@ -1807,32 +1807,32 @@
               "label": "Vertikalus"
             },
             "grid": {
-              "label": ""
+              "label": "Tinklelis"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Naudoti Pi-Hole spalvas"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Nepavyko gauti DNS skylės suvestinės",
+        "integrationsDisconnected": "Nėra duomenų, visos integracijos atjungtos"
       },
       "data": {
         "adsBlockedToday": "Šiandien užblokuota",
         "adsBlockedTodayPercentage": "Šiandien užblokuota",
         "dnsQueriesToday": "Užklausos šiandien",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "Domenai blokavimo sąraše"
       },
       "domainsTooltip": ""
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "DNS skylės valdymas",
       "description": "Valdykite PiHole arba AdGuard iš savo prietaisų skydelio",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Išdėstymas",
           "option": {
             "row": {
               "label": "Horizontalus"
@@ -1841,62 +1841,62 @@
               "label": "Vertikalus"
             },
             "grid": {
-              "label": ""
+              "label": "Tinklelis"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Rodyti perjungimo visus mygtukus"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nepavyko valdyti DNS skylės"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
-        "set": "",
-        "enabled": "",
-        "disabled": "",
-        "processing": "",
-        "disconnected": "",
-        "hours": "",
-        "minutes": "",
-        "unlimited": ""
+        "enableAll": "Įjungti visus",
+        "disableAll": "Išjungti visus",
+        "setTimer": "Nustatyti laikmatį",
+        "set": "Nustatyti",
+        "enabled": "Įjungta",
+        "disabled": "Išjungta",
+        "processing": "Apdorojama",
+        "disconnected": "Atjungta",
+        "hours": "Valandos",
+        "minutes": "Minutės",
+        "unlimited": "Palikite tuščią neribotam"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Data ir laikas",
       "description": "Rodo dabartinę datą ir laiką.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Individualus pavadinimas / miesto rodymas",
+          "description": "Rodo individualų pavadinimą arba miesto/šalies pavadinimą virš laikrodžio."
         },
         "customTitle": {
-          "label": ""
+          "label": "Pavadinimas"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24 valandų formatas",
+          "description": "Naudoti 24 valandų formatą vietoj 12 valandų"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Rodyti sekundes"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Naudoti fiksuotą laiko juostą"
         },
         "timezone": {
           "label": "Laiko juosta",
-          "description": ""
+          "description": "Pasirinkite laiko juostą pagal IANA standartą"
         },
         "showDate": {
-          "label": ""
+          "label": "Rodyti datą"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Datos formatas",
+          "description": "Kaip turėtų atrodyti data"
         },
         "customTimeFormat": {
           "label": "",
@@ -1953,7 +1953,7 @@
     },
     "notebook": {
       "name": "Užrašai",
-      "description": "",
+      "description": "Paprastas užrašų valdiklis, palaikantis markdown",
       "option": {
         "showToolbar": {
           "label": "Rodyti įrankių juostą, padedančią rašyti žymėjimą"
@@ -2001,7 +2001,7 @@
       },
       "align": {
         "left": "Kairėje",
-        "center": "",
+        "center": "Centruoti",
         "right": "Dešinėje"
       },
       "popover": {
@@ -2052,7 +2052,7 @@
       "saveFailed": ""
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Įterpkite bet kokį turinį iš interneto. Kai kuriose svetainėse prieiga gali būti ribojama.",
       "option": {
         "embedUrl": {
@@ -2087,32 +2087,32 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Nenurodytas iFrame URL",
         "unsupportedProtocol": "",
         "noBrowerSupport": "Jūsų naršyklė nepalaiko iframe. Atnaujinkite savo naršyklę."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Objekto būsena",
+      "description": "Rodyti objekto būseną ir pasirinktinai jį perjungti",
       "option": {
         "entityId": {
           "label": "Subjekto ID"
         },
         "displayName": {
-          "label": ""
+          "label": "Rodomas pavadinimas"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Objekto vienetas"
         },
         "clickable": {
-          "label": ""
+          "label": "Paspaudžiamas"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Vykdyti automatizaciją",
+      "description": "Aktyvuoti automatizaciją vienu paspaudimu",
       "option": {
         "displayName": {
           "label": "Rodomas vardas"
@@ -2203,7 +2203,7 @@
     },
     "calendar": {
       "name": "Kalendorius",
-      "description": "",
+      "description": "Rodyti įvykius iš jūsų integracijų kalendoriaus rodinyje per tam tikrą santykinį laikotarpį",
       "duration": {
         "allDay": ""
       },
@@ -2211,16 +2211,16 @@
         "releaseType": {
           "label": "\"Radarr\" išleidimo tipas",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "Kino teatruose",
+            "digitalRelease": "Skaitmeninis leidimas",
+            "physicalRelease": "Fizinis leidimas"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Pradėti nuo"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Baigti"
         },
         "showUnmonitored": {
           "label": ""
@@ -2228,11 +2228,11 @@
       }
     },
     "weather": {
-      "name": "",
-      "description": "",
+      "name": "Oras",
+      "description": "Rodo dabartinę orų informaciją pasirinktoje vietoje.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatūra Farenheitu"
         },
         "disableTemperatureDecimals": {
           "label": ""
@@ -2245,21 +2245,21 @@
           "label": ""
         },
         "location": {
-          "label": ""
+          "label": "Oro vieta"
         },
         "showCity": {
-          "label": ""
+          "label": "Rodyti miestą"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Rodyti prognozę"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Prognozės dienų skaičius",
+          "description": "Kai valdiklis nėra pakankamai platus, rodoma mažiau dienų"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Datos formatas",
+          "description": "Kaip turėtų atrodyti data"
         }
       },
       "currentWindSpeed": "",
@@ -2271,52 +2271,52 @@
         "humidity": ""
       },
       "kind": {
-        "clear": "",
-        "mainlyClear": "",
-        "fog": "",
-        "drizzle": "",
-        "freezingDrizzle": "",
-        "rain": "",
-        "freezingRain": "",
-        "snowFall": "",
-        "snowGrains": "",
-        "rainShowers": "",
-        "snowShowers": "",
-        "thunderstorm": "",
-        "thunderstormWithHail": "",
+        "clear": "Giedra",
+        "mainlyClear": "Dažniausiai giedra",
+        "fog": "Rūkas",
+        "drizzle": "Dulksna",
+        "freezingDrizzle": "Šąlanti dulksna",
+        "rain": "Lietus",
+        "freezingRain": "Šąlantis lietus",
+        "snowFall": "Sniegimas",
+        "snowGrains": "Sniego kruopos",
+        "rainShowers": "Liūtys",
+        "snowShowers": "Sniego škvalai",
+        "thunderstorm": "Audra",
+        "thunderstormWithHail": "Audra su kruša",
         "unknown": "Nežinoma"
       }
     },
     "indexerManager": {
       "name": "Indeksavimo tvarkytuvo būsena",
-      "description": "",
+      "description": "Jūsų indeksatorių būsena",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Atidaryti indeksatoriaus svetainę naujame skirtuke"
         }
       },
       "title": "Indeksavimo tvarkyklė",
       "testAll": "Išbandyk viską",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nepavyko gauti indeksatorių būsenos"
       }
     },
     "healthMonitoring": {
       "name": "Sistemos būklės stebėjimas",
-      "description": "",
+      "description": "Rodo informaciją apie jūsų sistemos (-ų) sveikatą ir būseną.",
       "tab": {
         "system": "",
         "cluster": ""
       },
       "option": {
         "fahrenheit": {
-          "label": ""
+          "label": "CPU temperatūra Farenheitu"
         },
         "cpu": {
-          "label": ""
+          "label": "Rodyti CPU informaciją"
         },
         "memory": {
-          "label": ""
+          "label": "Rodyti atminties informaciją"
         },
         "gpu": {
           "label": ""
@@ -2325,7 +2325,7 @@
           "label": ""
         },
         "fileSystem": {
-          "label": ""
+          "label": "Rodyti failų sistemos informaciją"
         },
         "visibleStorageVolumes": {
           "label": "",
@@ -2343,22 +2343,22 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
+        "information": "Informacija",
+        "processor": "Procesorius: {cpuModelName}",
+        "memory": "Atmintis: {memory}GiB",
+        "memoryAvailable": "Prieinama: {memoryAvailable}GiB ({percent}%)",
+        "version": "Versija: {version}",
         "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "loadAverage": "Vidutinė apkrova:",
+        "minute": "1 minutė",
+        "minutes": "{count} minutės",
+        "used": "Naudojama",
         "available": "Galima",
-        "lastSeen": ""
+        "lastSeen": "Paskutinis būsenos atnaujinimas: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nepavyko gauti sveikatos būsenos"
       },
       "cluster": {
         "summary": {
@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2474,34 +2485,34 @@
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Stebėkite UPS įrenginių būseną per NUT serverį",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Rodyti bateriją"
         },
         "showLoad": {
-          "label": ""
+          "label": "Rodyti apkrovą"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Rodyti įtampą"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Prisijungęs",
+        "onBattery": "Veikia iš baterijos",
+        "lowBattery": "Baterija išsikrovusi",
+        "charging": "Įkraunama",
+        "unknown": "Nežinoma"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Veikimo laikas",
+        "load": "Apkrova",
+        "input": "Įvestis",
+        "output": "Išvestis"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nepavyko gauti UPS duomenų"
       }
     },
     "tracearr": {
@@ -2584,96 +2595,96 @@
             "today": "",
             "24h": "",
             "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "30d": "Pastarosios 30 dienų",
+            "month": "Šis mėnuo",
+            "lastMonth": "Praėjęs mėnuo"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Įvykis",
+          "description": "Rodyti bendrą konkretaus įvykio pasikartojimų skaičių",
+          "placeholder": "Pasirinkite įvykį",
+          "loading": "Įkeliami įvykiai...",
+          "noEvents": "Įvykių nerasta",
+          "none": "Nėra įvykio",
+          "configureWebsiteFirst": "Pirmiausia pasirinkite svetainę, kad įkeltumėte įvykius"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Diagramos tipas",
+          "description": "Diagramos rodymo stilius",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Stulpelinė diagrama",
+            "sparkline": "Minigrafikas"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Diagramos stilius",
+          "description": "Kaip rodyti įvykių serijas diagramoje",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Šalia",
+            "overlay": "Perdanga (poaibis)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Rodinys",
+          "description": "Ką rodyti valdiklio turinyje",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Diagrama",
+            "events": "Įvykių diagrama",
+            "topPages": "Top puslapiai",
+            "topReferrers": "Top nukreipėjai"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Įvykiai",
+          "description": "Pasirinkite vieną ar kelis įvykius diagramai",
+          "placeholder": "Pasirinkite įvykius...",
+          "loading": "Įkeliami įvykiai...",
+          "noEvents": "Įvykių nerasta",
+          "configureWebsiteFirst": "Pirmiausia pasirinkite svetainę, kad įkeltumėte įvykius"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Rodomi elementai",
+          "description": "Rodomų populiariausių elementų skaičius (maks. 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "įvykiai",
+        "label": "įvykiai"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Tiesiogiai"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Tiesiogiai"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Pasirinkite įvykius diagramai"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Umami integracija nesukonfigūruota",
+        "noWebsite": "Svetainė nesukonfigūruota",
+        "noData": "Nėra duomenų",
+        "internalServerError": "Nepavyko gauti Umami duomenų"
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "query": "Miestas / Pašto kodas",
+        "latitude": "Platuma",
+        "longitude": "Ilguma",
+        "disabledTooltip": "Prašome įvesti miestą arba pašto kodą",
+        "unknownLocation": "Nežinoma vieta",
         "search": "Ieškoti",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "Miestas",
+            "country": "Šalis",
+            "coordinates": "Koordinatės",
+            "population": "Gyventojų skaičius"
           },
           "action": {
-            "select": ""
+            "select": "Pasirinkite {city}, {countryCode}"
           },
           "population": {
             "fallback": "Nežinoma"
@@ -2681,51 +2692,63 @@
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "Integracija nerasta",
+        "description": "Spustelėkite <here></here>, kad sukurtumėte naują integraciją"
       },
       "app": {
-        "noData": "",
-        "description": "",
+        "noData": "Programėlė nerasta",
+        "description": "Spustelėkite <here></here>, kad sukurtumėte naują programėlę",
         "quickCreate": ""
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Nepasirinkta integracija",
+        "noData": "Nėra integracijos duomenų"
       },
       "option": {}
     },
     "video": {
-      "name": "",
-      "description": "",
+      "name": "Vaizdo srautas",
+      "description": "Įdėti vaizdo srautą arba vaizdo įrašą iš kameros ar svetainės",
       "option": {
         "feedUrl": {
-          "label": ""
+          "label": "Srauto URL"
         },
         "hasAutoPlay": {
-          "label": "",
-          "description": ""
+          "label": "Automatinis paleidimas",
+          "description": "Automatinis paleidimas veikia tik išjungus garsą dėl naršyklės apribojimų"
         },
         "isMuted": {
-          "label": ""
+          "label": "Išjungtas garsas"
         },
         "hasControls": {
-          "label": ""
+          "label": "Rodyti valdiklius"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "Nenurodytas vaizdo URL",
+        "forYoutubeUseIframe": "YouTube vaizdo įrašams naudokite iframe parinktį"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Dabartiniai medijos serverio srautai",
+      "description": "Rodyti dabartinius srautus jūsų medijos serveriuose",
       "option": {
         "showOnlyPlaying": {
           "label": "",
           "description": ""
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "",
@@ -2734,6 +2757,9 @@
         "id": "",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -2758,48 +2784,48 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Jūsų Paperless-ngx dokumentų archyvo apžvalga",
+      "documentsTotal": "Iš viso dokumentų",
+      "documentsInbox": "Gautieji",
+      "correspondents": "Siuntėjai",
+      "tags": "Žymos",
+      "documentTypes": "Dokumentų tipai",
+      "inboxRatio": "Gautųjų santykis",
+      "inbox": "gautieji",
+      "total": "iš viso",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti gautųjų santykį",
+          "description": "Rodyti gautųjų ir visų dokumentų santykį pagrindinėje srityje"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti gautųjų žiedą",
+          "description": "Rodyti progreso žiedą kartu su gautųjų santykiu"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti bendrą dokumentų skaičių",
+          "description": "Rodyti bendrą dokumentų skaičių savo archyve"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti gautųjų skaičių",
+          "description": "Rodyti neapdorotų dokumentų skaičių gautuosiuose"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti siuntėjus",
+          "description": "Rodyti bendrą siuntėjų skaičių"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti žymas",
+          "description": "Rodyti bendrą žymų skaičių"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti dokumentų tipus",
+          "description": "Rodyti bendrą dokumentų tipų skaičių"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nepavyko gauti Paperless-ngx duomenų"
       }
     },
     "patchmon": {
@@ -3040,151 +3066,178 @@
       "noPhotos": ""
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Atsisiuntimų klientas",
+      "description": "Leidžia peržiūrėti ir valdyti atsisiuntimus tiek iš Torrent, tiek Usenet klientų.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Stulpeliai rodyti"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Įgalinti elementų rūšiavimą"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Stulpelis, naudojamas rūšiavimui pagal nutylėjimą"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Apversti rūšiavimą"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Rodyti usenet įrašus, pažymėtus kaip baigtus"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Rodyti torrent įrašus, pažymėtus kaip baigtus"
         },
         "showCompletedHttp": {
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Slėpti baigtus torrent žemiau šios ribos (kiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Kategorijos/žymos filtruoti"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Filtras kaip baltasis sąrašas"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Naudoti filtrą santykiui skaičiuoti"
         },
         "limitPerIntegration": {
           "label": "",
           "description": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Pasirinkite stulpelius elementuose",
+        "noCommunications": "Nepavyksta įkelti duomenų iš integracijos",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Valdymas"
         },
         "added": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Pridėta",
+          "detailsTitle": "Pridėjimo data"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Papildomai",
+          "detailsTitle": "Kategorijos (arba papildoma informacija)"
         },
         "downSpeed": {
           "columnTitle": "Žemyn",
           "detailsTitle": "Atsisiuntimo greitis"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "Dabartinis indeksas kliente"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integracija"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Užduoties pavadinimas"
         },
         "progress": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Progresas",
+          "detailsTitle": "Atsisiuntimo progresas"
         },
         "ratio": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Santykis",
+          "detailsTitle": "Torrent santykis (gauta/išsiųsta)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Viso atsisiųsta",
+          "detailsTitle": "Viso atsisiųsta"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Viso įkelta",
+          "detailsTitle": "Viso įkelta"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Failo dydis",
+          "detailsTitle": "Bendras pasirinkimo / failų dydis"
         },
         "state": {
           "columnTitle": "Būsena",
-          "detailsTitle": ""
+          "detailsTitle": "Užduoties būsena"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Pabaigos laikas",
+          "detailsTitle": "Laikas iki / nuo užbaigimo",
+          "eta": ""
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Tipas",
+          "detailsTitle": "Atsisiuntimo kliento tipas"
         },
         "upSpeed": {
           "columnTitle": "Aukštyn",
-          "detailsTitle": ""
+          "detailsTitle": "Įkėlimo greitis"
         }
       },
       "states": {
-        "downloading": "",
-        "queued": "",
-        "paused": "",
-        "completed": "",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
+        "downloading": "Atsisiunčiama",
+        "queued": "Eilėje",
+        "paused": "Pristabdyta",
+        "completed": "Baigta",
+        "failed": "Nepavyko",
+        "processing": "Apdorojama",
+        "leeching": "Siurbiama",
+        "stalled": "Sustabdyta",
         "unknown": "Nežinoma",
-        "seeding": ""
+        "seeding": "Dalijamasi"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "Atsisiuntimo klientų sąrašas",
+          "pause": "Pristabdyti visus klientus/elementus",
+          "resume": "Tęsti visus klientus/elementus"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Pristabdyti klientą",
+          "resume": "Tęsti klientą"
         },
         "item": {
-          "pause": "",
-          "resume": "",
+          "pause": "Pristabdyti elementą",
+          "resume": "Tęsti elementą",
           "delete": {
-            "title": "",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "title": "Ištrinti elementą",
+            "modalTitle": "Ar tikrai norite ištrinti šią užduotį?",
+            "entry": "Ištrinti įrašą",
+            "entryAndFiles": "Ištrinti įrašą ir failą (-us)"
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "Bendras santykis",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "",
@@ -3216,7 +3269,7 @@
       }
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Medijos užklausų sąrašas",
       "description": "Peržiūrėkite visų medijų užklausų iš \"Overseerr\" arba \"Jellyseerr\" sąrašą",
       "option": {
         "linksTargetNewTab": {
@@ -3230,14 +3283,14 @@
         }
       },
       "pending": {
-        "approve": "",
-        "approving": "",
-        "decline": ""
+        "approve": "Patvirtinti užklausą",
+        "approving": "Tvirtinama užklausa...",
+        "decline": "Atmesti užklausą"
       },
       "availability": {
         "unknown": "Nežinoma",
-        "pending": "",
-        "processing": "",
+        "pending": "Laukiama",
+        "processing": "Apdorojama",
         "requested": "",
         "partiallyAvailable": "Dalis",
         "available": "Galima",
@@ -3251,10 +3304,10 @@
         "failed": "",
         "completed": ""
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "TBD"
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "Medijos užklausų statistika",
       "description": "Statistikos apie jūsų medijų užklausas",
       "option": {},
       "titles": {
@@ -3262,16 +3315,16 @@
           "main": "Medijų statistikos",
           "approved": "Jau patvirtinta",
           "pending": "Laukia patvirtinimo",
-          "processing": "",
-          "declined": "",
-          "available": "",
+          "processing": "Apdorojama",
+          "declined": "Jau atmesta",
+          "available": "Jau prieinama",
           "tv": "TV užklausos",
           "movie": "Filmų užklausos",
           "total": "Iš viso"
         },
         "users": {
           "main": "Top vartotojai",
-          "requests": ""
+          "requests": "Užklausos"
         }
       }
     },
@@ -3364,20 +3417,20 @@
       "timeLeft": ""
     },
     "rssFeed": {
-      "name": "",
-      "description": "",
+      "name": "RSS srautai",
+      "description": "Stebėti ir rodyti vieną ar daugiau bendrų RSS, ATOM arba JSON srautų",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "Srautų URL"
         },
         "enableRtl": {
-          "label": ""
+          "label": "Įgalinti RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Aprašymo eilučių apkarpymas"
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Įrašų skaičiaus riba"
         },
         "hideDescription": {
           "label": ""
@@ -3652,43 +3705,43 @@
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Stebėkite veikimo statistiką iš savo Uptime Kuma būsenos puslapio",
       "option": {
         "showAverageUptime": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti vidutinį veikimo laiką",
+          "description": "Rodyti bendrą 24 valandų vidutinį veikimo procentą"
         },
         "showUptimeRing": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti veikimo žiedą",
+          "description": "Rodyti progreso žiedą kartu su vidutine veikimo reikšme"
         },
         "showTotalMonitors": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti bendrą monitorių skaičių",
+          "description": "Rodyti bendrą sukonfigūruotų monitorių skaičių"
         },
         "showUpCount": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti veikiančių skaičių",
+          "description": "Rodyti, kiek monitorių šiuo metu veikia"
         },
         "showDownCount": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti neveikiančių skaičių",
+          "description": "Rodyti, kiek monitorių šiuo metu neveikia"
         },
         "showPausedCount": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti pristabdytų skaičių",
+          "description": "Rodyti, kiek monitorių šiuo metu pristabdyta"
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Vidutinis veikimo laikas (24 val.)",
       "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
+        "totalMonitors": "Iš viso monitorių",
+        "upCount": "Veikia",
+        "downCount": "Neveikia",
+        "pausedCount": "Pristabdyti"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nepavyko gauti veikimo duomenų"
       }
     },
     "traefik": {
@@ -3726,44 +3779,32 @@
       }
     },
     "audioStats": {
-      "name": "",
-      "description": "",
+      "name": "Garso statistika",
+      "description": "Bibliotekos ir atkūrimo statistika iš Navidrome arba Audiobookshelf",
       "option": {
         "showArtists": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti atlikėjus",
+          "description": "Rodyti bendrą atlikėjų skaičių savo muzikos bibliotekoje (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti albumus",
+          "description": "Rodyti bendrą albumų skaičių savo muzikos bibliotekoje (Navidrome)"
         },
         "showSongs": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti dainas",
+          "description": "Rodyti bendrą dainų skaičių savo muzikos bibliotekoje (Navidrome)"
         },
         "showLibraryCount": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti bibliotekų skaičių",
+          "description": "Rodyti bibliotekų skaičių savo egzemplioriuje (Audiobookshelf)"
         },
         "showAudiobooks": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti audioknygas",
+          "description": "Rodyti bendrą audioknygų skaičių visose bibliotekose (Audiobookshelf)"
         },
         "showPodcasts": {
-          "label": "",
-          "description": ""
+          "label": "Rodyti tinklalaides",
+          "description": "Rodyti bendrą tinklalaidžių skaičių visose bibliotekose (Audiobookshelf)"
         },
         "showListeningTime": {
           "label": "",
@@ -3786,8 +3827,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3883,110 +3922,118 @@
       "executeFailed": ""
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Beszel sistemos (lentelė)",
+      "description": "Visų Beszel stebimų sistemų lentelės vaizdas su rūšiuojamais stulpeliais ir būsenos indikatoriais",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Būsenos filtras"
         },
         "sortBy": {
-          "label": ""
+          "label": "Rūšiuoti pagal"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Rūšiavimo kryptis"
         },
         "showCpu": {
-          "label": ""
+          "label": "Rodyti CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Rodyti atmintį"
         },
         "showDisk": {
-          "label": ""
+          "label": "Rodyti diską"
         },
         "showGpu": {
-          "label": ""
+          "label": "Rodyti GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Rodyti apkrovos vidurkį"
         },
         "showNet": {
-          "label": ""
+          "label": "Rodyti tinklą"
         },
         "showTemp": {
-          "label": ""
+          "label": "Rodyti temperatūrą"
         },
         "showBattery": {
-          "label": ""
+          "label": "Rodyti bateriją"
         },
         "showServices": {
-          "label": ""
+          "label": "Rodyti paslaugas"
         },
         "showUptime": {
-          "label": ""
+          "label": "Rodyti veikimo laiką"
         },
         "showAgent": {
+          "label": "Rodyti agento versiją"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
           "label": ""
         }
       },
-      "noRecords": "",
+      "noRecords": "Sistemų nerasta",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "Sistema",
+        "cpu": "CPU",
+        "memory": "Atmintis",
+        "disk": "Diskas",
+        "gpu": "GPU",
+        "loadAvg": "Apkrovos vid",
+        "net": "Tinklas",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Paslaugos",
+        "uptime": "Veikimo laikas",
+        "agent": "Agentas"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Beszel sistemos (tinklelis)",
+      "description": "Visų Beszel stebimų sistemų kortelių tinklelio vaizdas su realaus laiko metrika",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Būsenos filtras"
         },
         "showCpu": {
-          "label": ""
+          "label": "Rodyti CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Rodyti atmintį"
         },
         "showDisk": {
-          "label": ""
+          "label": "Rodyti diską"
         },
         "showGpu": {
-          "label": ""
+          "label": "Rodyti GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Rodyti apkrovos vidurkį"
         },
         "showNet": {
-          "label": ""
+          "label": "Rodyti tinklą"
         },
         "showTemp": {
-          "label": ""
+          "label": "Rodyti temperatūrą"
         },
         "showBattery": {
-          "label": ""
+          "label": "Rodyti bateriją"
         },
         "showServices": {
-          "label": ""
+          "label": "Rodyti paslaugas"
         },
         "showUptime": {
-          "label": ""
+          "label": "Rodyti veikimo laiką"
         },
         "showAgent": {
-          "label": ""
+          "label": "Rodyti agento versiją"
         }
       },
       "error": {
@@ -3996,78 +4043,78 @@
         "noSystems": ""
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "CPU",
+        "memory": "Atmintis",
+        "disk": "Diskas",
+        "gpu": "GPU",
+        "loadAvg": "Apkrovos vid",
+        "net": "Tinklas",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Paslaugos",
+        "uptime": "Veikimo laikas",
+        "agent": "Agentas"
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Beszel įspėjimai",
+      "description": "Peržiūrėkite Beszel įspėjimų konfigūracijas ir istoriją",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Rodyti įspėjimų istoriją"
         },
         "maxHistoryItems": {
-          "label": ""
+          "label": "Maks. istorijos elementų"
         }
       },
-      "empty": "",
+      "empty": "Nėra sukonfigūruotų įspėjimų",
       "error": {
         "internalServerError": ""
       },
-      "history": "",
-      "resolved": "",
+      "history": "Istorija",
+      "resolved": "Išspręsta",
       "status": {
-        "triggered": "",
-        "ok": ""
+        "triggered": "Suaktyvinta",
+        "ok": "Gerai"
       }
     },
     "beszelSystemStats": {
-      "name": "",
-      "description": "",
+      "name": "Beszel sistemos statistika",
+      "description": "Laiko eilučių diagramos CPU, atminčiai, diskui, tinklui ir Docker konteinerių metrikoms",
       "option": {
         "systemId": {
           "label": "",
           "description": ""
         },
         "timePeriod": {
-          "label": ""
+          "label": "Laikotarpis"
         },
         "showCpu": {
-          "label": ""
+          "label": "Rodyti CPU diagramą"
         },
         "showMemory": {
-          "label": ""
+          "label": "Rodyti atminties diagramą"
         },
         "showDisk": {
-          "label": ""
+          "label": "Rodyti disko diagramą"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Rodyti disko I/O diagramą"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Rodyti tinklo diagramą"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Rodyti Docker CPU diagramą"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Rodyti Docker atminties diagramą"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Rodyti Docker tinklo diagramą"
         }
       },
-      "selectSystem": "",
+      "selectSystem": "Pasirinkite sistemą",
       "empty": {
         "noSystems": ""
       },
@@ -4079,26 +4126,26 @@
       },
       "chart": {
         "cpu": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "CPU naudojimas",
+          "subtitle": "Vidutinis visos sistemos CPU panaudojimas",
+          "series": "CPU"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
-          "series": "",
-          "cache": ""
+          "title": "Atminties naudojimas",
+          "subtitle": "Tikslus panaudojimas įrašymo metu",
+          "series": "Naudojama",
+          "cache": "Podėlis / Buferiai"
         },
         "disk": {
-          "title": "",
+          "title": "Disko naudojimas",
           "subtitle": "",
           "series": ""
         },
         "diskIO": {
-          "title": "",
-          "subtitle": "",
-          "read": "",
-          "write": ""
+          "title": "Disko I/O",
+          "subtitle": "Šakninės failų sistemos pralaidumas",
+          "read": "Skaitymas",
+          "write": "Rašymas"
         },
         "storage": {
           "title": "",
@@ -4106,33 +4153,33 @@
           "series": ""
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Pralaidumas",
+          "subtitle": "Viešųjų sąsajų tinklo srautas",
+          "sent": "Išsiųsta",
+          "recv": "Gauta"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker CPU naudojimas",
+          "subtitle": "Vidutinis konteinerių CPU panaudojimas"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker atminties naudojimas",
+          "subtitle": "Docker konteinerių atminties naudojimas"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker tinklo I/O",
+          "subtitle": "Docker konteinerių tinklo srautas"
         }
       }
     }
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "Redagavimo režimas įjungtas",
+      "disabled": "Redagavimo režimas išjungtas"
     },
     "dimensions": {
-      "title": ""
+      "title": "Keisti matmenis"
     }
   },
   "board": {
@@ -4154,52 +4201,52 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Pakeitimai pritaikyti sėkmingai",
+            "message": "Lenta sėkmingai išsaugota"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nepavyko pritaikyti pakeitimų",
+            "message": "Lentos išsaugoti nepavyko"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "Neišsaugoti pakeitimai",
+          "message": "Turite neišsaugotų pakeitimų, ar tikrai norite išeiti?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "Importuoti iš homarr prieš 1.0.0",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Importavimas sėkmingas",
+            "message": "Lenta sėkmingai importuota"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Importavimas nepavyko",
+            "message": "Lentos importuoti nepavyko, patikrinkite žurnalus dėl išsamesnės informacijos"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "Pasirinkite JSON failą",
+            "invalidError": "Netinkamas konfigūracijos failas"
           },
           "apps": {
             "label": "Programėlės",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Vengti dublikatų",
+              "description": "Nepaiso programėlių, kai jau yra programėlė su tokiu pat href"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "Importuoti tik programėles",
+              "description": "Prideda tik programėles, lentą reikia perkurti rankiniu būdu"
             }
           },
           "name": {
-            "label": ""
+            "label": "Lentos pavadinimas"
           },
           "screenSize": {
-            "label": "",
+            "label": "Ekrano dydis",
             "description": "",
             "option": {
               "sm": "Mažas",
@@ -4208,16 +4255,16 @@
             }
           },
           "sidebarBehavior": {
-            "label": "",
-            "description": "",
+            "label": "Šoninės juostos elgsena",
+            "description": "Šoninės juostos buvo pašalintos 1.0, galite pasirinkti, kas turėtų nutikti su jose esančiais elementais.",
             "option": {
               "lastSection": {
-                "label": "",
-                "description": ""
+                "label": "Paskutinė sekcija",
+                "description": "Šoninė juosta bus rodoma po paskutine sekcija"
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "Pašalinti elementus",
+                "description": "Elementai, esantys šoninėje juostoje, bus pašalinti"
               }
             }
           }
@@ -4232,19 +4279,19 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "Puslapio pavadinimas"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Meta pavadinimas"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "Logotipo paveikslėlio URL"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "Favicon paveikslėlio URL"
       },
       "backgroundImageUrl": {
-        "label": "",
+        "label": "Fono paveikslėlio URL",
         "placeholder": "",
         "group": {
           "your": "",
@@ -4252,49 +4299,49 @@
         }
       },
       "backgroundImageAttachment": {
-        "label": "",
+        "label": "Fono paveikslėlio priedas",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "Fiksuotas",
+            "description": "Fonas lieka toje pačioje pozicijoje."
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "Slinkimas",
+            "description": "Fonas slenka su pele."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "Fono paveikslėlio kartojimas",
         "option": {
           "repeat": {
-            "label": "",
-            "description": ""
+            "label": "Kartoti",
+            "description": "Paveikslėlis kartojamas tiek, kiek reikia, kad užpildytų visą fono paveikslėlio piešimo sritį."
           },
           "no-repeat": {
-            "label": "",
-            "description": ""
+            "label": "Nekartoti",
+            "description": "Paveikslėlis nekartojamas ir gali neužpildyti visos erdvės."
           },
           "repeat-x": {
-            "label": "",
-            "description": ""
+            "label": "Kartoti X",
+            "description": "Tas pats kaip 'Kartoti', bet tik horizontalioje ašyje."
           },
           "repeat-y": {
-            "label": "",
-            "description": ""
+            "label": "Kartoti Y",
+            "description": "Tas pats kaip 'Kartoti', bet tik vertikalioje ašyje."
           }
         }
       },
       "backgroundImageSize": {
-        "label": "",
+        "label": "Fono paveikslėlio dydis",
         "option": {
           "cover": {
-            "label": "",
-            "description": ""
+            "label": "Uždengti",
+            "description": "Keičia paveikslėlio mastelį kuo mažesnį, kad padengtų visą langą, apkarpant perteklinę erdvę."
           },
           "contain": {
-            "label": "",
-            "description": ""
+            "label": "Tilpti",
+            "description": "Keičia paveikslėlio mastelį kuo didesnį jo konteineryje, neapkarpant ir neištempiant."
           }
         }
       },
@@ -4305,7 +4352,7 @@
         "label": "Antrinė spalva"
       },
       "opacity": {
-        "label": ""
+        "label": "Nepermatomumas"
       },
       "iconColor": {
         "label": ""
@@ -4314,11 +4361,11 @@
         "label": ""
       },
       "customCss": {
-        "label": "",
-        "description": "",
+        "label": "Individualus CSS šiai lentai",
+        "description": "Be to, pritaikykite savo prietaisų skydelį naudodami CSS, rekomenduojama tik patyrusiems vartotojams",
         "customClassesAlert": {
-          "title": "",
-          "description": ""
+          "title": "Individualios klasės",
+          "description": "Galite pridėti individualių klasių prie lentos elementų išplėstinėse kiekvieno elemento parinktyse ir naudoti jas aukščiau esančiame individualiame CSS."
         }
       },
       "disableStatus": {
@@ -4326,7 +4373,7 @@
         "description": ""
       },
       "columnCount": {
-        "label": ""
+        "label": "Stulpelių skaičius"
       },
       "itemRadius": {
         "label": "",
@@ -4344,21 +4391,21 @@
       },
       "isPublic": {
         "label": "Vieša",
-        "description": ""
+        "description": "Viešos lentos yra prieinamos visiems, net ir be paskyros."
       }
     },
     "content": {
-      "metaTitle": ""
+      "metaTitle": "{boardName} lenta"
     },
     "setting": {
-      "title": "",
+      "title": "Nustatymai {boardName} lentai",
       "section": {
         "general": {
           "title": "Bendras",
-          "unrecognizedLink": ""
+          "unrecognizedLink": "Pateikta nuoroda neatpažinta ir nebus peržiūrėta, ji vis tiek gali veikti."
         },
         "layout": {
-          "title": "",
+          "title": "Išdėstymas",
           "responsive": {
             "title": "",
             "action": {
@@ -4367,72 +4414,72 @@
           }
         },
         "background": {
-          "title": ""
+          "title": "Fonas"
         },
         "appearance": {
           "title": ""
         },
         "customCss": {
-          "title": ""
+          "title": "Individualus CSS"
         },
         "behavior": {
           "title": ""
         },
         "access": {
-          "title": "",
+          "title": "Prieigos kontrolė",
           "permission": {
             "item": {
               "view": {
                 "label": "Žiūrėti lentą"
               },
               "modify": {
-                "label": ""
+                "label": "Keisti lentą"
               },
               "full": {
-                "label": ""
+                "label": "Visa prieiga"
               }
             }
           }
         },
         "dangerZone": {
-          "title": "",
+          "title": "Pavojinga zona",
           "action": {
             "rename": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Pervardyti lentą",
+              "description": "Pakeitus pavadinimą, nutrūks visos nuorodos į šią lentą.",
+              "button": "Keisti pavadinimą",
               "modal": {
-                "title": ""
+                "title": "Pervardyti lentą"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "Keisti lentos matomumą",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "Ši lenta šiuo metu yra vieša.",
+                "private": "Ši lenta šiuo metu yra privati."
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "Padaryti privačią",
+                "private": "Padaryti viešą"
               },
               "confirm": {
                 "public": {
-                  "title": "",
-                  "description": ""
+                  "title": "Padaryti lentą privačią",
+                  "description": "Ar tikrai norite padaryti šią lentą privačią? Tai paslėps lentą nuo viešumos. Nuorodos svečiams nutrūks."
                 },
                 "private": {
-                  "title": "",
-                  "description": ""
+                  "title": "Padaryti lentą viešą",
+                  "description": "Ar tikrai norite padaryti šią lentą viešą? Tai padarys lentą prieinamą visiems."
                 }
               }
             },
             "delete": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Ištrinti šią lentą",
+              "description": "Ištrynus lentą, kelio atgal nėra. Prašome būti tikri.",
+              "button": "Ištrinti šią lentą",
               "confirm": {
                 "title": "Ištrinti lentą",
-                "description": ""
+                "description": "Ar tikrai norite ištrinti šią lentą? Tai visam laikui ištrins lentą ir visą jos turinį."
               }
             }
           }
@@ -4487,15 +4534,15 @@
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Valdymas",
     "title": {
-      "morning": "",
-      "afternoon": "",
-      "evening": ""
+      "morning": "Labas rytas, {username}",
+      "afternoon": "Laba diena, {username}",
+      "evening": "Labas vakaras, {username}"
     },
     "notFound": {
-      "title": "",
-      "text": ""
+      "title": "Nerasta",
+      "text": "Nepavyko rasti prašomo ištekliaus"
     },
     "error": {
       "title": "",
@@ -4507,28 +4554,28 @@
         "home": "Pagrindinis",
         "boards": "Lentos",
         "apps": "Programėlės",
-        "integrations": "",
+        "integrations": "Integracijos",
         "customWidgets": "",
-        "searchEngies": "",
-        "medias": "",
+        "searchEngies": "Paieškos sistemos",
+        "medias": "Medijos",
         "users": {
           "label": "Vartotojai",
           "items": {
             "manage": "Valdyti",
             "invites": "Pakvietimai",
-            "groups": ""
+            "groups": "Grupės"
           }
         },
         "tools": {
           "label": "Įrankiai",
           "items": {
-            "docker": "",
+            "docker": "Docker",
             "kubernetes": "",
-            "logs": "",
+            "logs": "Žurnalai",
             "api": "",
             "certificates": "",
-            "tasks": "",
-            "backup": ""
+            "tasks": "Užduotys",
+            "backup": "Atsarginė kopija"
           }
         },
         "settings": "Nustatymai",
@@ -4536,12 +4583,12 @@
           "label": "Pagalba",
           "items": {
             "documentation": "Dokumentacija",
-            "submitIssue": "",
+            "submitIssue": "Pateikti problemą",
             "discord": "Bendruomenės Discord",
-            "sourceCode": ""
+            "sourceCode": "Pirminis kodas"
           }
         },
-        "about": ""
+        "about": "Apie"
       }
     },
     "page": {
@@ -4550,17 +4597,17 @@
           "board": "Lentos",
           "user": "Vartotojai",
           "invite": "Pakvietimai",
-          "integration": "",
+          "integration": "Integracijos",
           "app": "Programėlės",
-          "group": "",
+          "group": "Grupės",
           "searchEngine": "",
           "media": ""
         },
         "statisticLabel": {
           "boards": "Lentos",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Ištekliai",
+          "authentication": "Autentifikacija",
+          "authorization": "Autorizacija"
         },
         "heroBanner": {
           "title": "",
@@ -4571,19 +4618,19 @@
         "title": "Jūsų lentos",
         "action": {
           "new": {
-            "label": ""
+            "label": "Nauja lenta"
           },
           "open": {
-            "label": ""
+            "label": "Atidaryti lentą"
           },
           "settings": {
             "label": "Nustatymai"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "Nustatyti kaip pagrindinę lentą",
             "badge": {
               "label": "Pagrindinis",
-              "tooltip": ""
+              "tooltip": "Ši lenta bus rodoma kaip jūsų pagrindinė lenta"
             }
           },
           "setMobileHomeBoard": {
@@ -4600,16 +4647,16 @@
             "label": "Ištrinti visam laikui",
             "confirm": {
               "title": "Ištrinti lentą",
-              "description": ""
+              "description": "Ar tikrai norite ištrinti {name} lentą?"
             }
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "Ši lenta yra vieša",
+          "private": "Ši lenta yra privati"
         },
         "noResults": {
-          "title": ""
+          "title": "Dar nėra lentų"
         },
         "modal": {
           "createBoard": {
@@ -4622,16 +4669,16 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Įtraukti mediją iš visų vartotojų"
       },
       "user": {
-        "back": "",
-        "fieldsDisabledExternalProvider": "",
+        "back": "Atgal į vartotojus",
+        "fieldsDisabledExternalProvider": "Kai kurie laukai yra išjungti, nes juos valdo išorinis autentifikacijos teikėjas.",
         "setting": {
           "general": {
             "title": "Bendras",
             "item": {
-              "language": "",
+              "language": "Kalba ir regionas",
               "board": {
                 "title": "",
                 "type": {
@@ -4640,23 +4687,23 @@
                 }
               },
               "search": "",
-              "firstDayOfWeek": "",
-              "accessibility": "",
+              "firstDayOfWeek": "Pirmoji savaitės diena",
+              "accessibility": "Pritaikymas neįgaliesiems",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Įvedimo mokymai",
+                "description": "Iš naujo nustatykite vedlio mokymus, kad pamatytumėte juos dar kartą kitą kartą apsilankę valdymo srityje arba valdymo skydelyje.",
+                "reset": "Atstatyti vedlio mokymus",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Mokymai nustatyti iš naujo",
+                  "message": "Vedlio mokymai vėl bus rodomi jūsų kito apsilankymo metu"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Užbaigta",
+                  "notStarted": "Nepradėta"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Valdymas",
+                  "dashboard": "Valdymo skydelis"
                 }
               }
             }
@@ -4673,48 +4720,48 @@
           "title": "Vartotojai"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "Redaguoti vartotoją {username}"
         },
         "create": {
           "metaTitle": "Sukurti vartotoją",
-          "title": "",
+          "title": "Sukurti naują vartotoją",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Asmeninė informacija"
             },
             "security": {
               "label": "Apsauga"
             },
             "groups": {
-              "label": "",
-              "title": "",
-              "description": ""
+              "label": "Grupės",
+              "title": "Pasirinkite visas grupes, kurių narys turėtų būti vartotojas",
+              "description": "Grupė {everyoneGroup} priskirta visiems vartotojams ir negali būti pašalinta."
             },
             "review": {
-              "label": ""
+              "label": "Peržiūra"
             },
             "completed": {
-              "title": ""
+              "title": "Vartotojas sukurtas"
             },
             "error": {
-              "title": ""
+              "title": "Vartotojo kūrimas nepavyko"
             }
           },
           "action": {
-            "createAnother": "",
-            "back": ""
+            "createAnother": "Sukurti kitą vartotoją",
+            "back": "Grįžti į vartotojų sąrašą"
           }
         },
         "invite": {
           "title": "Tvarkyti naudotojų kvietimus",
           "action": {
             "new": {
-              "title": "",
+              "title": "Naujas kvietimas",
               "description": "Pasibaigus galiojimo laikui, kvietimas nebegalios ir kvietimo gavėjas negalės sukurti paskyros."
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "Kopijuoti kvietimą",
+              "description": "Jūsų kvietimas sugeneruotas. Uždarius šį modalą, <b>nebegalėsite kopijuoti šios nuorodos.</b> Jei nebenorite kviesti to asmens, galite bet kada ištrinti šį kvietimą.",
               "link": "Kvietimo nuoroda",
               "button": ""
             },
@@ -4844,7 +4891,7 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "auto": "",
+                "auto": "Automatinis",
                 "light": "",
                 "dark": ""
               }
@@ -5075,122 +5122,122 @@
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Visa duomenų bazės atsarginė kopija",
+          "metaTitle": "Atsarginė kopija ir atkūrimas",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Eksportuoti duomenų bazę",
+            "description": "Atsisiųskite pilną SQLite duomenų bazės atsarginę kopiją, įskaitant visus nustatymus, naudotojus, lentas ir užšifruotus integracijos slaptažodžius. Atsarginė kopija supakuota kaip ZIP failas su šifravimo raktu ir metaduomenimis.",
+            "button": "Atsisiųsti atsarginę kopiją",
+            "error": "Eksportavimas nepavyko",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Jautrių duomenų eksportas",
+              "warningTitle": "Šiame eksporte yra visa jūsų duomenų bazė.",
+              "warningBody": "Atsarginėje kopijoje yra visi vartotojai, integracijos paslaptys (užšifruotos), API raktai, lentų konfigūracijos ir programos duomenys. Eksportuotą failą laikykite saugiai ir nesidalinkite juo.",
+              "typePrompt": "Įveskite \"{phrase}\", kad tęstumėte",
+              "submit": "Eksportuoti duomenų bazę",
+              "cancel": "Atšaukti"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Atkurti duomenų bazę",
+            "description": "Įkelkite anksčiau eksportuotą atsarginės kopijos ZIP failą, kad atkurtumėte duomenų bazę. Tai pakeis visą jūsų duomenų bazę. Jei atsarginė kopija buvo sukurta naudojant kitą šifravimo raktą, paslaptys bus automatiškai peršifruotos.",
+            "warning": "Atkūrus atsarginę kopiją, visa dabartinė duomenų bazė bus pakeista ir programa bus paleista iš naujo. Šio veiksmo atšaukti negalima.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Numeskite atsarginės kopijos ZIP failą čia arba spustelėkite, kad naršytumėte",
+              "description": "Priimami tik .zip failai iš Homarr SQLite atsarginės kopijos"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Pakeisti failą",
+            "button": "Atkurti duomenų bazę",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Atkūrimas baigtas",
+              "message": "Duomenų bazė sėkmingai atkurta. Programa paleidžiama iš naujo..."
             },
-            "error": ""
+            "error": "Importavimas nepavyko"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Atsarginės kopijos turinys",
+            "exported": "Eksportuota {date}",
+            "loading": "Analizuojamas atsarginės kopijos failas...",
+            "errorTitle": "Peržiūros klaida",
+            "entity": "Subjektas",
+            "count": "Skaičius",
+            "boards": "Lentos",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Lentos",
+              "user": "Vartotojai",
+              "app": "Programėlės",
+              "integration": "Integracijos",
+              "item": "Valdikliai",
+              "media": "Medija",
+              "search_engine": "Paieškos varikliai"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Nepavyko analizuoti atsarginės kopijos failo",
+            "invalidMissingMetadata": "Netinkama atsarginė kopija: trūksta metadata.json",
+            "invalidMissingDb": "Netinkama atsarginė kopija: trūksta db.sqlite"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Numeskite atsarginės kopijos ZIP failą čia",
+              "description": "Priima .zip failus iš Homarr SQLite atsarginės kopijos (maks. 256 MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Analizuojama atsarginė kopija...",
+            "changeFile": "Pakeisti failą",
+            "continueToRestore": "Tęsti atkūrimą",
+            "tryAgain": "Bandyti dar kartą",
+            "analysisError": "Analizės klaida",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Atsarginės kopijos turinys",
+              "exported": "Eksportuota {date}",
+              "entity": "Subjektas",
+              "count": "Skaičius",
+              "boards": "Lentos",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Lentos",
+                "user": "Vartotojai",
+                "app": "Programėlės",
+                "integration": "Integracijos",
+                "item": "Valdikliai",
+                "media": "Medija",
+                "search_engine": "Paieškos varikliai"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "Pritaikyta {count} migracija",
+              "migrationsAppliedPlural": "Pritaikytos {count} migracijos",
+              "migrationsOlderVersion": "Ši atsarginė kopija buvo iš senesnės Homarr versijos. Buvo pritaikyta {count} schemos migracija, kad būtų atnaujinta.",
+              "migrationsOlderVersionPlural": "Ši atsarginė kopija buvo iš senesnės Homarr versijos. Buvo pritaikytos {count} schemos migracijos, kad būtų atnaujinta.",
+              "migrationsUpToDate": "Duomenų bazės schema atnaujinta ({count} pritaikytos migracijos)",
+              "upToDate": "Atnaujinta",
+              "migrationsPending": "Laukia {count}"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Migracijų taikymas ({current}/{total})",
+              "migrationLabel": "Migracija {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Destruktyvus veiksmas",
+              "warningTitle": "Tai visam laikui pakeis jūsų duomenų bazę.",
+              "warningBody": "Visos esamos lentos, vartotojai, programėlės, integracijos, nustatymai ir sesijos bus prarasti. Šio veiksmo atšaukti negalima. Po atkūrimo programa bus paleista iš naujo.",
+              "typePrompt": "Įveskite \"{phrase}\", kad tęstumėte",
+              "cancel": "Atšaukti",
+              "submit": "Atkurti duomenų bazę"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Atkuriama duomenų bazė...",
+              "extracting": "Išskleidžiamas atsarginės kopijos archyvas",
+              "migrating": "Taikomos duomenų bazės migracijos",
+              "encrypting": "Peršifruojamos integracijų paslaptys",
+              "swapping": "Keičiamas duomenų bazės failas",
+              "restarting": "Paleidžiamas serveris iš naujo"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Atkūrimas baigtas",
+              "message": "Duomenų bazė sėkmingai atkurta. Serveris paleidžiamas iš naujo – po kelių sekundžių atnaujinkite puslapį."
             },
             "failed": {
-              "title": ""
+              "title": "Atkūrimas nepavyko"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Netinkama atsarginė kopija: trūksta metadata.json",
+            "invalidMissingDb": "Netinkama atsarginė kopija: trūksta db.sqlite",
+            "analyzeError": "Nepavyko analizuoti atsarginės kopijos"
           }
         }
       },
@@ -5277,15 +5324,15 @@
         "label": "Prievadai"
       },
       "host": {
-        "label": ""
+        "label": "Mazgas"
       }
     },
     "action": {
       "title": "",
       "logs": {
-        "label": "",
+        "label": "Peržiūrėti žurnalus",
         "page": {
-          "title": ""
+          "title": "{name} žurnalai"
         }
       },
       "start": {
@@ -5329,6 +5376,7 @@
       },
       "remove": {
         "label": "Pašalinti",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",
@@ -5715,7 +5763,7 @@
         "docker": {
           "label": "",
           "logs": {
-            "label": ""
+            "label": "Žurnalai"
           }
         },
         "kubernetes": {
@@ -5826,7 +5874,7 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Perjungti išvaizdos režimą",
                 "light": "",
                 "dark": ""
               },
@@ -5867,104 +5915,104 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Nuostatos",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Pasirinkite nuostatą, kurią norite pakeisti",
+                "backHint": "Paspauskite Backspace arba naudokite grįžimo mygtuką, kad grįžtumėte",
+                "backAction": "Grįžti"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Nepavyko atnaujinti nuostatos"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Atidaryti nuostatas"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Įjungta",
+                "disabled": "Išjungta"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Nėra",
+                "unavailable": "Šiuo metu pasirinkta (nepasiekiama)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "Nėra",
+                "unavailable": "Šiuo metu pasirinkta (nepasiekiama)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Spalvų schema",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Pasirinkite spalvų schemą"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Kalba",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Pasirinkite pageidaujamą kalbą"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Numatytoji paieškos sistema",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Pasirinkite numatytąją paieškos sistemą"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Atidaryti paieškos rezultatus naujame skirtuke",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Atidaryti paieškos rezultatus naujame skirtuke"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "Įjungti DuckDuckGo bangs",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Įjungti DuckDuckGo bangs"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Pirmoji savaitės diena",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Pasirinkite pirmąją savaitės dieną"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Pagrindinė lenta",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Pasirinkite pagrindinę lentą"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Mobilioji pagrindinė lenta",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Pasirinkite mobiliąją pagrindinę lentą"
                   }
                 }
               },
               "pingIconsEnabled": {
-                "label": "",
+                "label": "Naudoti piktogramas ping'ams",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Naudoti piktogramas ping'ams"
                   }
                 }
               },
@@ -5977,36 +6025,36 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Atidaryti pilną nuostatų puslapį"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Ieškokite filmų ar serialų, kad pateiktumėte užklausą",
         "requestMovie": "",
         "requestSeries": "",
         "openIn": "",
         "group": {
-          "title": ""
+          "title": "Filmai ir serialai"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Ieškoti filmų ar serialų",
+            "description": "Pradėkite rašyti, norėdami ieškoti savo medijos užklausų integracijose",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Pridėkite Overseerr, Jellyseerr arba Seerr integraciją, kad įgalintumėte medijos paiešką.",
+              "scoped": "Šis valdiklis neturi pasiekiamos medijos užklausų integracijos."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Pasiekiama",
+          "partiallyAvailable": "Iš dalies",
+          "processing": "Apdorojama",
+          "requested": "Užklausta",
+          "pending": "Užklausta"
         }
       },
       "external": {
@@ -6014,13 +6062,13 @@
         "group": {
           "searchEngine": {
             "title": "",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Patarimas: čia taip pat galite naudoti bet kokius DuckDuckGo bangs, pvz., !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Ieškoti \"{query}\" naudojant {label}",
+              "pressEnterToOpen": "Paspauskite Enter, kad atidarytumėte",
+              "engineSelected": "Pasirinktas {label} (!{bang})",
+              "typeQueryToContinue": "Įveskite paieškos užklausą, kad tęstumėte",
+              "emptyBangHint": "Įveskite bang, pvz., !yt, tada paspauskite tarpo klavišą, kad pasirinktumėte"
             },
             "children": {
               "action": {
@@ -6284,10 +6332,10 @@
               "header": {
                 "season": "",
                 "episodes": "",
-                "status": ""
+                "status": "Būsena"
               },
               "status": {
-                "requested": ""
+                "requested": "Užklausta"
               }
             },
             "button": {
@@ -6400,69 +6448,69 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Skaityti dokumentaciją",
+    "next": "Kitas",
+    "prev": "Atgal",
+    "done": "Baigta",
+    "skip": "Praleisti mokymus",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Sveiki atvykę į Homarr!",
+        "description": "Tai jūsų valdymo centras. Iš čia valdote lentas, programėles, integracijas, naudotojus ir serverio nustatymus. Leiskite pristatyti kiekvieną skyrių."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Jūsų lentos",
+        "description": "Čia yra visi jūsų valdymo skydeliai. Kiekviena lenta turi savo išdėstymą, foną ir prieigos nustatymus. Galite matyti, kas kiekvieną sukūrė ir ar ji vieša, ar privati."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Sukurti lentą",
+        "description": "Spustelėkite čia, kad sukurtumėte naują valdymo skydelį arba importuotumėte jį iš ankstesnės Homarr diegimo. Kiekviena lenta gauna savo URL, kurį galite dalintis."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Jūsų programėlės",
+        "description": "Tai visos jūsų pridėtos programėlės – nuorodos į savarankiškai talpinamas paslaugas. Kiekviena programėlė turi piktogramą, pasirinktiną sveikatos patikrinimą ir būsenos ženklelį valdymo skydelyje."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Pridėti programėlę",
+        "description": "Čia užregistruokite naują paslaugą. Suteikite jai pavadinimą, URL ir piktogramą – ji atsiras kaip plytelė jūsų lentose su tiesiogine būsenos stebėsena."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Jūsų integracijos",
+        "description": "Tai paslaugos, prijungtos prie Homarr – Sonarr, Radarr, Plex, Jellyfin ir daugiau nei 50 kitų. Visi prisijungimo duomenys yra užšifruoti saugykloje."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Pridėti integraciją",
+        "description": "Čia prijunkite naują paslaugą. Pasirinkite tipą, įveskite URL ir API raktą – Homarr patikrina ryšį prieš išsaugant."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Jūsų naudotojai",
+        "description": "Pamatykite visus, turinčius prieigą. Grupuokite naudotojus į grupes ir valdykite, kas gali peržiūrėti ar redaguoti kiekvieną lentą."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Sukurti naudotoją",
+        "description": "Čia pridėkite naują naudotojo paskyrą. Taip pat galite naudoti kvietimo nuorodas, kad palengvintumėte įvedimą. Tai ir viskas – esate pasiruošę!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Tai jūsų lenta",
+        "description": "Vilkite ir paleiskite valdymo skydelį, kuriame tvarkote programėles ir valdiklius. Paspauskite Ctrl+K bet kuriuo metu, kad ieškotumėte programėlių, lentų ir veiksmų."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Redagavimo režimas",
+        "description": "Spustelėkite čia, kad įeitumėte į redagavimo režimą. Tada galite pridėti valdiklių, programėlių ir skyrių – vilkite, kad pakeistumėte padėtį, keiskite dydį naudodami kampų rankenėles. Spustelėkite dar kartą, kad išsaugotumėte pakeitimus."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Lentos nustatymai",
+        "description": "Keiskite šios lentos pavadinimą, stulpelius, foną, spalvas ir kas gali ją pasiekti. Kiekviena lenta gali būti vieša arba privati."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Perjungti lentas",
+        "description": "Šokinėkite tarp lentų. Kurkite atskirus valdymo skydelius skirtingiems tikslams – medijai, tinklui, kiekvienam naudotojui ar bet kam kitam."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Jūsų profilis",
+        "description": "Keiskite spalvų schemą, kalbą, pagrindinę lentą ir nuostatas. Taip pat galite pereiti į valdymo sritį iš čia."
       }
     }
   }

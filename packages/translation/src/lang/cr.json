@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "crwdns3820:0crwdne3820:0"
+        },
+        "columnOrder": {
+          "label": "crwdns6155:0crwdne6155:0"
+        },
+        "columnWidths": {
+          "label": "crwdns6157:0crwdne6157:0"
         }
       },
       "error": {
-        "internalServerError": "crwdns3428:0crwdne3428:0"
+        "internalServerError": "crwdns3428:0crwdne3428:0",
+        "layoutSaveTitle": "crwdns6159:0crwdne6159:0",
+        "layoutSaveMessage": "crwdns6161:0crwdne6161:0"
+      },
+      "empty": {
+        "noContainers": "crwdns6163:0crwdne6163:0"
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "crwdns3176:0crwdne3176:0",
           "description": "crwdns3178:0crwdne3178:0"
+        },
+        "showBitrate": {
+          "label": "crwdns6175:0crwdne6175:0",
+          "description": "crwdns6177:0crwdne6177:0"
+        },
+        "showLocation": {
+          "label": "crwdns6179:0crwdne6179:0",
+          "description": "crwdns6181:0crwdne6181:0"
         }
+      },
+      "footer": {
+        "streams": "crwdns6183:0count={count}crwdne6183:0",
+        "totalBitrate": "crwdns6185:0{bitrate}crwdne6185:0"
       },
       "items": {
         "currentlyPlaying": "crwdns2847:0crwdne2847:0",
@@ -2734,6 +2757,9 @@
         "id": "crwdns2480:0crwdne2480:0",
         "status": "crwdns6085:0crwdne6085:0",
         "directPlay": "crwdns6087:0crwdne6087:0",
+        "directStream": "crwdns6187:0crwdne6187:0",
+        "transcodeVideo": "crwdns6189:0crwdne6189:0",
+        "transcodeAudio": "crwdns6191:0crwdne6191:0",
         "transcoding": "crwdns6089:0crwdne6089:0",
         "paused": "crwdns6091:0crwdne6091:0",
         "remaining": "crwdns6093:0{minutes}crwdne6093:0",
@@ -3079,11 +3105,20 @@
         "limitPerIntegration": {
           "label": "crwdns3442:0crwdne3442:0",
           "description": "crwdns3444:0crwdne3444:0"
+        },
+        "columnOrder": {
+          "label": "crwdns6121:0crwdne6121:0"
+        },
+        "columnWidths": {
+          "label": "crwdns6123:0crwdne6123:0"
         }
       },
       "errors": {
         "noColumns": "crwdns1194:0crwdne1194:0",
-        "noCommunications": "crwdns1196:0crwdne1196:0"
+        "noCommunications": "crwdns1196:0crwdne1196:0",
+        "noItems": "crwdns6125:0crwdne6125:0",
+        "actionFailed": "crwdns6127:0crwdne6127:0",
+        "actionFailedMessage": "crwdns6129:0crwdne6129:0"
       },
       "items": {
         "actions": {
@@ -3106,7 +3141,8 @@
           "detailsTitle": "crwdns1214:0crwdne1214:0"
         },
         "id": {
-          "columnTitle": "crwdns1216:0crwdne1216:0"
+          "columnTitle": "crwdns1216:0crwdne1216:0",
+          "detailsTitle": "crwdns6131:0crwdne6131:0"
         },
         "integration": {
           "columnTitle": "crwdns1218:0crwdne1218:0"
@@ -3140,7 +3176,8 @@
         },
         "time": {
           "columnTitle": "crwdns1246:0crwdne1246:0",
-          "detailsTitle": "crwdns1248:0crwdne1248:0"
+          "detailsTitle": "crwdns1248:0crwdne1248:0",
+          "eta": "crwdns6133:0crwdne6133:0"
         },
         "type": {
           "columnTitle": "crwdns1250:0crwdne1250:0",
@@ -3184,7 +3221,23 @@
           }
         }
       },
-      "globalRatio": "crwdns1300:0crwdne1300:0"
+      "globalRatio": "crwdns1300:0crwdne1300:0",
+      "contextMenu": {
+        "copyName": "crwdns6135:0crwdne6135:0",
+        "copyId": "crwdns6137:0crwdne6137:0",
+        "clearFilters": "crwdns6139:0crwdne6139:0"
+      },
+      "footer": {
+        "filter": "crwdns6141:0crwdne6141:0"
+      },
+      "stats": {
+        "show": "crwdns6143:0crwdne6143:0",
+        "hide": "crwdns6145:0crwdne6145:0",
+        "overallProgress": "crwdns6147:0crwdne6147:0",
+        "totalSize": "crwdns6149:0crwdne6149:0",
+        "clients": "crwdns6151:0count={count}crwdne6151:0"
+      },
+      "disconnected": "crwdns6153:0crwdne6153:0"
     },
     "mediaReleases": {
       "name": "crwdns3532:0crwdne3532:0",
@@ -3741,18 +3794,6 @@
           "label": "crwdns5109:0crwdne5109:0",
           "description": "crwdns5111:0crwdne5111:0"
         },
-        "showNowPlaying": {
-          "label": "crwdns5113:0crwdne5113:0",
-          "description": "crwdns5115:0crwdne5115:0"
-        },
-        "showNowPlayingList": {
-          "label": "crwdns5117:0crwdne5117:0",
-          "description": "crwdns5119:0crwdne5119:0"
-        },
-        "maxNowPlayingItems": {
-          "label": "crwdns5121:0crwdne5121:0",
-          "description": "crwdns5123:0crwdne5123:0"
-        },
         "showLibraryCount": {
           "label": "crwdns5125:0crwdne5125:0",
           "description": "crwdns5127:0crwdne5127:0"
@@ -3786,8 +3827,6 @@
       "podcasts": "crwdns5159:0crwdne5159:0",
       "listeningTime": "crwdns5161:0crwdne5161:0",
       "activeSessions": "crwdns5163:0crwdne5163:0",
-      "nowPlaying": "crwdns5165:0crwdne5165:0",
-      "nowPlayingCount": "crwdns5167:0count={count}crwdne5167:0",
       "error": {
         "internalServerError": "crwdns5169:0crwdne5169:0"
       }
@@ -3927,11 +3966,19 @@
         },
         "showAgent": {
           "label": "crwdns4809:0crwdne4809:0"
+        },
+        "columnOrder": {
+          "label": "crwdns6165:0crwdne6165:0"
+        },
+        "columnWidths": {
+          "label": "crwdns6167:0crwdne6167:0"
         }
       },
       "noRecords": "crwdns4811:0crwdne4811:0",
       "error": {
-        "internalServerError": "crwdns5651:0crwdne5651:0"
+        "internalServerError": "crwdns5651:0crwdne5651:0",
+        "layoutSaveTitle": "crwdns6169:0crwdne6169:0",
+        "layoutSaveMessage": "crwdns6171:0crwdne6171:0"
       },
       "column": {
         "system": "crwdns4813:0crwdne4813:0",
@@ -5329,6 +5376,7 @@
       },
       "remove": {
         "label": "crwdns1952:0crwdne1952:0",
+        "confirm": "crwdns6173:0crwdne6173:0",
         "notification": {
           "success": {
             "title": "crwdns1954:0crwdne1954:0",

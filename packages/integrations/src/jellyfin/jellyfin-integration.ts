@@ -56,6 +56,9 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
         if (sessionInfo.NowPlayingItem) {
           const positionMs = ticksToMs(sessionInfo.PlayState?.PositionTicks);
           const durationMs = ticksToMs(sessionInfo.NowPlayingItem.RunTimeTicks);
+          const bitrateBps =
+            sessionInfo.TranscodingInfo?.Bitrate ?? sessionInfo.NowPlayingItem.MediaSources?.[0]?.Bitrate ?? null;
+          const bitrateKbps = bitrateBps !== null ? Math.round(bitrateBps / 1000) : null;
 
           currentlyPlaying = {
             type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
@@ -98,7 +101,11 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
                   videoCodec: sessionInfo.TranscodingInfo?.VideoCodec ?? null,
                 },
                 container: sessionInfo.TranscodingInfo?.Container ?? null,
+                isVideoDirect: sessionInfo.TranscodingInfo?.IsVideoDirect ?? true,
+                isAudioDirect: sessionInfo.TranscodingInfo?.IsAudioDirect ?? true,
+                containerChanged: sessionInfo.PlayState?.PlayMethod === "DirectStream",
               },
+              bitrateKbps,
             },
           };
         }
