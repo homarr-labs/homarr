@@ -14,7 +14,6 @@ import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
 import { api } from "@homarr/api/server";
-import { getFeatureFlagsAsync } from "@homarr/api/features";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { db } from "@homarr/db";
@@ -87,7 +86,14 @@ export default async function Layout(props: {
   const session = await auth();
   const user = session ? await api.user.getById({ userId: session.user.id }).catch(() => null) : null;
   const serverSettings = await getServerSettingsAsync(db);
-  const features = await getFeatureFlagsAsync(db);
+  // Resolved on the server so the assistant runtime chunk is never referenced by a page when the
+  // feature is off. Reuses the same availability check the assistant management page invalidates.
+  const assistantEnabled = session
+    ? await api.assistant
+        .getAvailability()
+        .then((availability) => availability.enabled)
+        .catch(() => false)
+    : false;
   const colorScheme = await getCurrentColorSchemeAsync();
   const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
 
@@ -126,7 +132,7 @@ export default async function Layout(props: {
     (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
     (innerProps) => <ModalProvider {...innerProps} />,
     (innerProps) => <SpotlightProvider {...innerProps} />,
-    (innerProps) => <AssistantGate enabled={features.assistant} {...innerProps} />,
+    (innerProps) => <AssistantGate enabled={assistantEnabled} {...innerProps} />,
   ]);
 
   const { locale } = await props.params;
