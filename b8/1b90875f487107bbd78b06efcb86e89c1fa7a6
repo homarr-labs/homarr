@@ -1,0 +1,41 @@
+packages/api/src/cache-invalidation.ts
+  s_a0e1fd495b97ff::t_e0dd924e01e168 14-26,28-30,35,39,43
+packages/core/src/infrastructure/db/drivers/index.ts
+  s_a0e1fd495b97ff::t_b9f180b7b40686 2-4,7,9,21-26
+packages/integrations/test/pi-hole.spec.ts
+  s_a0e1fd495b97ff::t_f701f84cb14da6 7-8
+packages/integrations/test/home-assistant.spec.ts
+  s_a0e1fd495b97ff::t_fe3afa5f90bea4 8
+packages/integrations/test/sabnzbd.spec.ts
+  s_a0e1fd495b97ff::t_41e088129b5ad4 8
+packages/next-cache-handler/src/redis-handler.ts
+  s_a0e1fd495b97ff::t_b1890e2e638b49 142-143
+  s_a0e1fd495b97ff::t_7942401bc17e1d 7
+  s_a0e1fd495b97ff::t_84dedcec52457b 178-179
+.cursor/goal/scratchpad.md
+  s_a0e1fd495b97ff::t_d9a91e3686c786 2-3,5,7-26,29,35-37
+packages/integrations/test/nzbget.spec.ts
+  s_a0e1fd495b97ff::t_50b7117ee7d2ab 9
+packages/integrations/test/nextcloud.spec.ts
+  s_a0e1fd495b97ff::t_ff9db3a92479c1 9
+packages/integrations/test/aria2.spec.ts
+  s_a0e1fd495b97ff::t_ab9a5bb338a4bc 7
+.cursor/goal/archive/scratchpad-20260807T193445.md
+  s_a0e1fd495b97ff::t_d0c9b9c4aa73e5 1-105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b81b90875f487107bbd78b06efcb86e89c1fa7a6",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
