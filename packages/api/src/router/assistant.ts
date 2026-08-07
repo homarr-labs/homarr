@@ -441,21 +441,21 @@ const addFeedbackToMessageContent = (serializedContent: string, type: "positive"
 
 export const assistantRouter = createTRPCRouter({
   getAvailability: protectedProcedure.query(async ({ ctx }) => {
-      if (isDemoMode) {
-        return { enabled: true };
-      }
-      const configuration = await getConfigurationAsync(ctx.db);
-      const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
-      return {
-        enabled: Boolean(
-          configuration?.enabled && configuration.modelId && (!requiresApiKey || configuration.encryptedApiKey),
-        ),
-      };
-    }),
+    if (isDemoMode) {
+      return { enabled: true };
+    }
+    const configuration = await getConfigurationAsync(ctx.db);
+    const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
+    return {
+      enabled: Boolean(
+        configuration?.enabled && configuration.modelId && (!requiresApiKey || configuration.encryptedApiKey),
+      ),
+    };
+  }),
 
   getContextEntities: protectedProcedure.query(async ({ ctx }) => {
-      return await getAssistantContextEntitiesAsync(ctx);
-    }),
+    return await getAssistantContextEntitiesAsync(ctx);
+  }),
 
   getModelCapabilities: protectedProcedure
     .input(z.object({ modelId: z.string().trim().min(1).max(256).optional() }).optional())
