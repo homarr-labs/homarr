@@ -1,3 +1,7 @@
+// ponytail: invalidation is wired now; `cacheTag()` on RSC read paths is Phase 1 follow-up.
+// Until reads use `"use cache"` + `cacheTag()`, these calls affect only Next.js-internal
+// cached segments (layout shells, static params) via cacheComponents, not cross-request DB queries.
+
 import { revalidateTag } from "next/cache";
 
 import { cacheTags } from "./cache-tags";

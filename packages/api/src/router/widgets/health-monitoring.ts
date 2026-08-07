@@ -1,5 +1,4 @@
 import { createIntegrationAsync } from "@homarr/integrations";
-import { SynologyIntegration } from "@homarr/integrations";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -51,10 +50,11 @@ export const healthMonitoringRouter = createTRPCRouter({
     })
     .concat(createOneIntegrationMiddleware("query", "synology"))
     .query(async ({ ctx }) => {
-      const integrationInstance = await createIntegrationAsync(ctx.integration);
-      if (!(integrationInstance instanceof SynologyIntegration)) {
+      if (ctx.integration.kind !== "synology") {
         throw new Error("Expected Synology integration");
       }
+
+      const integrationInstance = await createIntegrationAsync(ctx.integration);
 
       return await integrationInstance.listStorageVolumesAsync();
     }),
