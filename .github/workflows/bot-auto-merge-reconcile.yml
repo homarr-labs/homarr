@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
       - name: Obtain token
         id: obtainToken
         uses: actions/create-github-app-token@v3
