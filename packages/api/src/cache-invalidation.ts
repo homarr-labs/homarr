@@ -13,18 +13,23 @@ import { invalidateIntegrationDataCache } from "./integration-data-cache";
 
 // ponytail: revalidateTag throws outside Next.js request context (tests, tasks, websocket).
 // Ceiling: if Next.js context detection changes, update the require/catch.
-const safeRevalidateTag = (tag: string) => {
+function isExpectedRevalidateError(error: unknown) {
+  const message = error instanceof Error ? error.message : "";
+  return message.includes("static generation") || message.includes("was called outside a request scope");
+}
+
+function safeRevalidateTag(tag: string) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { revalidateTag } = require("next/cache") as typeof import("next/cache");
     revalidateTag(tag, "max");
   } catch (error) {
-    const msg = error instanceof Error ? error.message : "";
-    if (!msg.includes("static generation") && !msg.includes("was called outside a request scope")) {
-      console.warn(`[cache-invalidation] revalidateTag("${tag}") failed:`, msg);
+    if (!isExpectedRevalidateError(error)) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(`[cache-invalidation] revalidateTag("${tag}") failed:`, message);
     }
   }
-};
+}
 
 export const invalidateBoardCache = (boardId: string, boardName?: string) => {
   safeRevalidateTag(cacheTags.board(boardId));

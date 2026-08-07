@@ -16,6 +16,20 @@ const MAX_ENTRIES = 200;
 
 const cacheKey = (integrationId: string, queryKey: string) => `${integrationId}:${queryKey}`;
 
+function evictOldestEntry() {
+  if (cache.size <= MAX_ENTRIES) return;
+
+  let oldestKey: string | undefined;
+  let oldestTime = Infinity;
+  for (const [key, entry] of cache) {
+    if (entry.timestamp < oldestTime) {
+      oldestTime = entry.timestamp;
+      oldestKey = key;
+    }
+  }
+  if (oldestKey) cache.delete(oldestKey);
+}
+
 export const getCachedIntegrationData = async <T>(
   integrationId: string,
   queryKey: string,
@@ -30,13 +44,9 @@ export const getCachedIntegrationData = async <T>(
   const existing = cache.get(key) as CachedEntry<T> | undefined;
   const now = Date.now();
 
-  if (existing) {
-    if (existing.pending) {
-      return existing.pending;
-    }
-    if (existing.timestamp > 0 && now - existing.timestamp < ttlMs) {
-      return existing.data;
-    }
+  if (existing?.pending) return existing.pending;
+  if (existing && existing.timestamp > 0 && now - existing.timestamp < ttlMs) {
+    return existing.data;
   }
 
   // Set pending synchronously BEFORE creating the fetch promise to prevent
@@ -47,19 +57,7 @@ export const getCachedIntegrationData = async <T>(
   const pending = fetcher()
     .then((data) => {
       cache.set(key, { data, timestamp: Date.now() });
-
-      if (cache.size > MAX_ENTRIES) {
-        let oldest: string | undefined;
-        let oldestTime = Infinity;
-        for (const [k, v] of cache) {
-          if (v.timestamp < oldestTime) {
-            oldestTime = v.timestamp;
-            oldest = k;
-          }
-        }
-        if (oldest) cache.delete(oldest);
-      }
-
+      evictOldestEntry();
       return data;
     })
     .catch((error) => {
@@ -78,9 +76,8 @@ export const getCachedIntegrationData = async <T>(
 };
 
 export const invalidateIntegrationDataCache = (integrationId: string) => {
-  for (const [key] of cache) {
-    if (key.startsWith(`${integrationId}:`)) {
-      cache.delete(key);
-    }
+  const prefix = `${integrationId}:`;
+  for (const key of cache.keys()) {
+    if (key.startsWith(prefix)) cache.delete(key);
   }
 };

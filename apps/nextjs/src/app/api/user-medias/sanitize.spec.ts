@@ -68,7 +68,8 @@ describe("SVG sanitization", () => {
   });
 
   it("preserves well-formed SVG with self-closing children", () => {
-    const icon = '<svg viewBox="0 0 24 24"><path d="M12 2L2 22h20Z" fill="currentColor"/><circle cx="12" cy="8" r="2"/></svg>';
+    const icon =
+      '<svg viewBox="0 0 24 24"><path d="M12 2L2 22h20Z" fill="currentColor"/><circle cx="12" cy="8" r="2"/></svg>';
     const clean = sanitizeSvg(icon);
     expect(clean).toContain("<path");
     expect(clean).toContain("<circle");

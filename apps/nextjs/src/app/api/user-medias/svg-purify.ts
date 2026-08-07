@@ -6,24 +6,25 @@ const svgSanitizeOptions = {
   FORBID_TAGS: ["style"],
 } as const;
 
+const LINKEDOM_NODE_PROPS = [
+  "ownerDocument",
+  "parentNode",
+  "nextSibling",
+  "previousSibling",
+  "nodeName",
+  "nodeType",
+  "childNodes",
+] as const;
+
 // ponytail: linkedom stores DOM tree pointers as own value properties; DOMPurify
 // resolves them via prototype getters (lookupGetter). Without this shim, sanitize
 // is a no-op and XSS payloads pass through unchanged.
 const patchLinkedomNodePrototype = (Node: typeof window.Node) => {
-  for (const prop of [
-    "ownerDocument",
-    "parentNode",
-    "nextSibling",
-    "previousSibling",
-    "nodeName",
-    "nodeType",
-    "childNodes",
-  ] as const) {
-    if (Object.getOwnPropertyDescriptor(Node.prototype, prop)?.get) {
-      continue;
-    }
+  for (const prop of LINKEDOM_NODE_PROPS) {
+    const descriptor = Object.getOwnPropertyDescriptor(Node.prototype, prop);
+    if (descriptor?.get) continue;
 
-    if (Object.getOwnPropertyDescriptor(Node.prototype, prop)?.value !== undefined) {
+    if (descriptor?.value !== undefined) {
       delete Node.prototype[prop as keyof Node];
     }
 

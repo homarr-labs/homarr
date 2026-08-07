@@ -24,16 +24,17 @@ import { composeWrappers } from "./compose";
 const logger = createLogger({ module: "sessionScopedProviders" });
 
 export async function SessionScopedProviders({ children }: PropsWithChildren) {
-  const sessionPromise = auth();
-  const userPromise = sessionPromise.then((session) =>
+  const session = await auth();
+
+  const [user, serverSettings] = await Promise.all([
     session
       ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
           logger.error(new Error("Failed to load the authenticated user in the root layout", { cause: error }));
           return null;
         })
-      : null,
-  );
-  const [session, user, serverSettings] = await Promise.all([sessionPromise, userPromise, getRscServerSettingsAsync()]);
+      : Promise.resolve(null),
+    getRscServerSettingsAsync(),
+  ]);
 
   const StackedProvider = composeWrappers([
     (innerProps) => <AuthProvider session={session} logoutUrl={env.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />,

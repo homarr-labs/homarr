@@ -10,7 +10,7 @@ import { createLanguageMapping } from "./mapping";
 // Ceiling: ~2 MB for 5 active locales. Upgrade: evict when size > 8.
 const mergedMessages = new Map<SupportedLanguage, Promise<TranslationObject>>();
 
-const loadMessagesAsync = (locale: SupportedLanguage): Promise<TranslationObject> => {
+function loadMessagesAsync(locale: SupportedLanguage): Promise<TranslationObject> {
   const existing = mergedMessages.get(locale);
   if (existing) return existing;
 
@@ -27,7 +27,7 @@ const loadMessagesAsync = (locale: SupportedLanguage): Promise<TranslationObject
     if (mergedMessages.get(locale) === promise) mergedMessages.delete(locale);
   });
   return promise;
-};
+}
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale;
@@ -36,17 +36,16 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return { locale, messages: await loadMessagesAsync(locale) };
 });
 
-const removeEmptyTranslations = (translations: Record<string, unknown>): Record<string, unknown> => {
-  return Object.entries(translations).reduce(
-    (acc, [key, value]) => {
-      if (typeof value !== "string") {
-        return { ...acc, [key]: removeEmptyTranslations(value as Record<string, unknown>) };
-      }
-      if (value.trim() === "") {
-        return acc;
-      }
-      return { ...acc, [key]: value };
-    },
-    {} as Record<string, unknown>,
-  );
-};
+function removeEmptyTranslations(translations: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(translations)) {
+    if (typeof value === "string") {
+      if (value.trim() !== "") result[key] = value;
+      continue;
+    }
+    result[key] = removeEmptyTranslations(value as Record<string, unknown>);
+  }
+
+  return result;
+}

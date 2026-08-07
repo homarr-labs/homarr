@@ -4,8 +4,55 @@ import type { CacheHandler } from "next/dist/server/lib/cache-handlers/types";
 
 type CacheEntry = Awaited<ReturnType<CacheHandler["get"]>> & {};
 
+type StoredEntry = {
+  tags: string[];
+  stale: number;
+  timestamp: number;
+  expire: number;
+  revalidate: number;
+  body: number[];
+};
+
 // eslint-disable-next-line no-underscore-dangle
 const BUILD_ID = process.env.__NEXT_BUILD_ID ?? "dev";
+const TAG_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+async function readStreamBody(stream: ReadableStream<Uint8Array>) {
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+  let done = false;
+  while (!done) {
+    const result = await reader.read();
+    done = result.done;
+    if (result.value) chunks.push(result.value);
+  }
+
+  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+  const body = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return body;
+}
+
+function entryFromStored(parsed: StoredEntry): CacheEntry {
+  const body = new Uint8Array(parsed.body);
+  return {
+    value: new ReadableStream({
+      start(controller) {
+        controller.enqueue(body);
+        controller.close();
+      },
+    }),
+    tags: parsed.tags,
+    stale: parsed.stale,
+    timestamp: parsed.timestamp,
+    expire: parsed.expire,
+    revalidate: parsed.revalidate,
+  };
+}
 
 export class RedisCacheHandler implements CacheHandler {
   private redis: Redis;
@@ -38,49 +85,32 @@ export class RedisCacheHandler implements CacheHandler {
     return `nextCache:tag:${tag}`;
   }
 
+  private async ensureConnected() {
+    await this.redis.connect().catch(() => {});
+  }
+
   async get(cacheKey: string, softTags: string[]): Promise<CacheEntry | undefined> {
     const pending = this.pendingSets.get(cacheKey);
     if (pending) return pending;
 
     try {
-      await this.redis.connect().catch(() => {});
+      await this.ensureConnected();
       const raw = await this.redis.getBuffer(this.entryKey(cacheKey));
       if (!raw) return undefined;
 
-      const parsed = JSON.parse(raw.toString()) as {
-        tags: string[];
-        stale: number;
-        timestamp: number;
-        expire: number;
-        revalidate: number;
-        body: number[];
-      };
+      const parsed = JSON.parse(raw.toString()) as StoredEntry;
 
       if (parsed.expire <= 0) {
         await this.redis.del(this.entryKey(cacheKey)).catch(() => {});
         return undefined;
       }
 
-      const allTags = [...parsed.tags, ...softTags];
-      const expiration = await this.getExpiration(allTags);
+      const expiration = await this.getExpiration([...parsed.tags, ...softTags]);
       if (expiration !== 0 && expiration > parsed.timestamp) {
         return undefined;
       }
 
-      const body = new Uint8Array(parsed.body);
-      return {
-        value: new ReadableStream({
-          start(controller) {
-            controller.enqueue(body);
-            controller.close();
-          },
-        }),
-        tags: parsed.tags,
-        stale: parsed.stale,
-        timestamp: parsed.timestamp,
-        expire: parsed.expire,
-        revalidate: parsed.revalidate,
-      };
+      return entryFromStored(parsed);
     } catch {
       return undefined;
     }
@@ -91,22 +121,10 @@ export class RedisCacheHandler implements CacheHandler {
 
     try {
       const entry = await pendingEntry;
-      const reader = entry.value.getReader();
-      const chunks: Uint8Array[] = [];
-      let done = false;
-      while (!done) {
-        const result = await reader.read();
-        done = result.done;
-        if (result.value) chunks.push(result.value);
-      }
+      const body = await readStreamBody(entry.value);
 
-      const totalLength = chunks.reduce((acc, c) => acc + c.length, 0);
-      const body = new Uint8Array(totalLength);
-      let offset = 0;
-      for (const chunk of chunks) {
-        body.set(chunk, offset);
-        offset += chunk.length;
-      }
+      const ttlMs = entry.expire * 1000;
+      if (ttlMs <= 0) return; // Dynamic entries (expire: 0) should not be persisted
 
       const serialized = JSON.stringify({
         tags: entry.tags,
@@ -117,9 +135,7 @@ export class RedisCacheHandler implements CacheHandler {
         body: Array.from(body),
       });
 
-      const ttlMs = entry.expire * 1000;
-      if (ttlMs <= 0) return; // Dynamic entries (expire: 0) should not be persisted
-      await this.redis.connect().catch(() => {});
+      await this.ensureConnected();
       await this.redis.set(this.entryKey(cacheKey), serialized, "PX", ttlMs);
     } catch {
       // Fail open
@@ -132,20 +148,19 @@ export class RedisCacheHandler implements CacheHandler {
 
   async refreshTags(): Promise<void> {
     try {
-      await this.redis.connect().catch(() => {});
+      await this.ensureConnected();
       this.tagCache.clear();
       let cursor = "0";
       do {
         const [nextCursor, keys] = await this.redis.scan(cursor, "MATCH", "nextCache:tag:*", "COUNT", 100);
         cursor = nextCursor;
-        if (keys.length > 0) {
-          const values = await this.redis.mget(...keys);
-          for (let i = 0; i < keys.length; i++) {
-            const tag = keys[i]?.replace("nextCache:tag:", "");
-            if (!tag) continue;
-            const val = values[i];
-            if (val) this.tagCache.set(tag, Number(val));
-          }
+        if (keys.length === 0) continue;
+
+        const values = await this.redis.mget(...keys);
+        for (let i = 0; i < keys.length; i++) {
+          const tag = keys[i]?.replace("nextCache:tag:", "");
+          const val = values[i];
+          if (tag && val) this.tagCache.set(tag, Number(val));
         }
       } while (cursor !== "0");
     } catch {
@@ -170,17 +185,15 @@ export class RedisCacheHandler implements CacheHandler {
 
     if (missingTags.length > 0) {
       try {
-        await this.redis.connect().catch(() => {});
-        const keys = missingTags.map((t) => this.tagKey(t));
-        const values = await this.redis.mget(...keys);
+        await this.ensureConnected();
+        const values = await this.redis.mget(...missingTags.map((tag) => this.tagKey(tag)));
         for (let i = 0; i < missingTags.length; i++) {
           const val = values[i];
-          if (val) {
-            const ts = Number(val);
-            const missingTag = missingTags[i];
-            if (missingTag) this.tagCache.set(missingTag, ts);
-            if (ts > maxTimestamp) maxTimestamp = ts;
-          }
+          const tag = missingTags[i];
+          if (!val || !tag) continue;
+          const timestamp = Number(val);
+          this.tagCache.set(tag, timestamp);
+          if (timestamp > maxTimestamp) maxTimestamp = timestamp;
         }
       } catch {
         // Fail open
@@ -193,17 +206,14 @@ export class RedisCacheHandler implements CacheHandler {
   async updateTags(tags: string[], durations?: { expire?: number }): Promise<void> {
     if (tags.length === 0) return;
     try {
-      await this.redis.connect().catch(() => {});
+      await this.ensureConnected();
       const now = Date.now();
+      const expireMs = durations?.expire ? durations.expire * 1000 : TAG_TTL_MS;
       const pipeline = this.redis.pipeline();
       for (const tag of tags) {
         const key = this.tagKey(tag);
         pipeline.set(key, String(now));
-        if (durations?.expire) {
-          pipeline.pexpire(key, durations.expire * 1000);
-        } else {
-          pipeline.pexpire(key, 7 * 24 * 60 * 60 * 1000);
-        }
+        pipeline.pexpire(key, expireMs);
         this.tagCache.set(tag, now);
       }
       await pipeline.exec();

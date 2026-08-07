@@ -1,7 +1,7 @@
-export const createRetryableLoader = <TKey, TValue>(loaders: ReadonlyMap<TKey, () => Promise<TValue>>) => {
+export function createRetryableLoader<TKey, TValue>(loaders: ReadonlyMap<TKey, () => Promise<TValue>>) {
   const promises = new Map<TKey, Promise<TValue>>();
 
-  return (key: TKey) => {
+  return function load(key: TKey) {
     const existing = promises.get(key);
     if (existing) return existing;
 
@@ -15,4 +15,4 @@ export const createRetryableLoader = <TKey, TValue>(loaders: ReadonlyMap<TKey, (
     });
     return promise;
   };
-};
+}
