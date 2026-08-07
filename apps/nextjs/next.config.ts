@@ -42,6 +42,13 @@ const nextConfig: NextConfig = {
         path: "**/*",
         title: "Encountered unexpected file in NFT list",
       },
+      {
+        // node:crypto is CJS; `export *` from it triggers a Turbopack warning
+        // that exits 1 in Next.js 16. Named imports in image-proxy are fine at
+        // runtime — suppress until upstream resolves the ESM/CJS detection.
+        path: "**/*",
+        title: "unexpected export *",
+      },
     ],
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
