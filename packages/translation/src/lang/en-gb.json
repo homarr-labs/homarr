@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "Invert sorting"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Failed to fetch containers stats"
+        "internalServerError": "Failed to fetch containers stats",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2564,26 +2575,26 @@
       "description": "Display visitor stats from your Umami analytics instance",
       "visitors": "visitors",
       "active": "active",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "pageviews": "pageviews",
+      "visits": "visits",
+      "bounceRate": "bounce",
+      "avgDuration": "avg",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Website",
+          "description": "Select a website tracked by your Umami instance",
+          "placeholder": "Select a website",
+          "loading": "Loading websites...",
+          "noWebsites": "No websites found",
+          "configureIntegrationFirst": "Connect a Umami integration first"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Time frame",
+          "description": "The time period to display visitor data for",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
+            "today": "Today",
+            "24h": "Last 24 hours",
+            "7d": "Last 7 days",
             "30d": "Last 30 days",
             "month": "This month",
             "lastMonth": "Last month"
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "Show only currently playing",
           "description": "Disabling this will not work for Plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Currently playing",
@@ -2734,6 +2757,9 @@
         "id": "Id",
         "status": "Status",
         "directPlay": "Direct play",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "Transcoding",
         "paused": "Paused",
         "remaining": "{minutes} min left",
@@ -3768,18 +3794,6 @@
           "label": "Show songs",
           "description": "Show the total number of songs in your music library (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Show now playing",
-          "description": "Show tracks currently being played (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Show now playing list",
-          "description": "Show individual tracks instead of only the active stream count (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Max now playing items",
-          "description": "Maximum number of tracks to show in the now playing list (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Show library count",
           "description": "Show the number of libraries on your instance (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "Podcasts",
       "listeningTime": "Listening Time",
       "activeSessions": "Active Sessions",
-      "nowPlaying": "Now Playing",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Failed to fetch audio stats data"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Show agent version"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "No systems found",
       "error": {
-        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "System",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",

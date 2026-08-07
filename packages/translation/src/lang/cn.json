@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "倒序"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "获取容器统计信息失败"
+        "internalServerError": "获取容器统计信息失败",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "只显示当前正在播放",
           "description": "禁用此功能对plex不起作用"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "正在播放",
@@ -2734,6 +2757,9 @@
         "id": "ID",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3768,18 +3794,6 @@
           "label": "显示歌曲",
           "description": "显示音乐库中歌曲的总数 (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "显示正在播放",
-          "description": "显示当前播放的曲目 (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "显示正在播放列表",
-          "description": "显示单个曲目而不仅仅是活跃流计数 (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "最大正在播放项目数",
-          "description": "正在播放列表中显示的最大曲目数 (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "显示库数量",
           "description": "显示实例中的库数量 (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "播客",
       "listeningTime": "收听时长",
       "activeSessions": "活跃会话",
-      "nowPlaying": "正在播放",
-      "nowPlayingCount": "{count, plural, other {# 个流}}",
       "error": {
         "internalServerError": "获取音频统计数据失败"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "显示代理版本"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "未找到系统",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "系统",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "删除",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "容器已删除",

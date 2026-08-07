@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "Inverti ordinamento"
+        },
+        "columnOrder": {
+          "label": "Ordine delle colonne"
+        },
+        "columnWidths": {
+          "label": "Larghezza delle colonne"
         }
       },
       "error": {
-        "internalServerError": "Recupero statistiche container non riuscito"
+        "internalServerError": "Recupero statistiche container non riuscito",
+        "layoutSaveTitle": "Layout della tabella non salvato",
+        "layoutSaveMessage": "Impossibile salvare il layout della tabella Docker. Prova a spostare o ridimensionare nuovamente la colonna."
+      },
+      "empty": {
+        "noContainers": "Nessun container trovato"
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "Mostra solo attualmente in riproduzione",
           "description": "La disabilitazione non funzionerà per Plex"
+        },
+        "showBitrate": {
+          "label": "Mostra bitrate",
+          "description": "Mostra il bitrate di riproduzione corrente accanto alla posizione"
+        },
+        "showLocation": {
+          "label": "Mostra posizione",
+          "description": "Mostra se lo stream si trova sulla tua LAN o WAN"
         }
+      },
+      "footer": {
+        "streams": "{count, plural, one {# stream attivo} other {# stream attivi}}",
+        "totalBitrate": "Totale: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Attualmente in riproduzione",
@@ -2734,6 +2757,9 @@
         "id": "Id",
         "status": "Stato",
         "directPlay": "Riproduzione diretta",
+        "directStream": "Streaming diretto",
+        "transcodeVideo": "Transcodifica video",
+        "transcodeAudio": "Transcodifica audio",
         "transcoding": "Transcodifica",
         "paused": "In pausa",
         "remaining": "{minutes} min rimanenti",
@@ -3768,18 +3794,6 @@
           "label": "Mostra brani",
           "description": "Mostra il numero totale di brani nella tua libreria musicale (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Mostra in riproduzione",
-          "description": "Mostra le tracce attualmente in riproduzione (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Mostra elenco in riproduzione",
-          "description": "Mostra le singole tracce invece del solo conteggio degli stream attivi (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Numero massimo elementi in riproduzione",
-          "description": "Numero massimo di tracce da mostrare nell'elenco in riproduzione (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Mostra conteggio librerie",
           "description": "Mostra il numero di librerie sulla tua istanza (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "Podcast",
       "listeningTime": "Tempo di Ascolto",
       "activeSessions": "Sessioni Attive",
-      "nowPlaying": "In Riproduzione",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Impossibile recuperare i dati delle statistiche audio"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Mostra versione agente"
+        },
+        "columnOrder": {
+          "label": "Ordine delle colonne"
+        },
+        "columnWidths": {
+          "label": "Larghezza delle colonne"
         }
       },
       "noRecords": "Nessun sistema trovato",
       "error": {
-        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione."
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione.",
+        "layoutSaveTitle": "Impossibile salvare il layout della tabella",
+        "layoutSaveMessage": "Impossibile salvare l'ordine o la larghezza delle colonne. Riprova."
       },
       "column": {
         "system": "Sistema",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "Rimuovi",
+        "confirm": "Fare clic di nuovo per rimuovere definitivamente",
         "notification": {
           "success": {
             "title": "Containers rimossi",
