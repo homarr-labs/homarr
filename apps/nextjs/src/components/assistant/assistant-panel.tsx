@@ -130,6 +130,7 @@ export interface AssistantConversationControls {
   modelOptionsLoading: boolean;
   reasoning: AssistantReasoningMode;
   isRefreshing: boolean;
+  autoFocusComposer?: boolean;
   onRefresh: () => Promise<void>;
   onModelChange: (modelId: string) => void;
   onReasoningChange: (reasoning: AssistantReasoningMode) => void;
@@ -2207,8 +2208,8 @@ const Composer = (props: ComposerProps) => {
                 placeholder={t("composerPlaceholder")}
                 directiveChip={ContextDirectiveChip}
                 // oxlint-disable-next-line jsx-a11y/no-autofocus -- opening the assistant is an explicit intent to compose
-                autoFocus
-                data-autofocus
+                autoFocus={props.autoFocusComposer}
+                data-autofocus={props.autoFocusComposer ? true : undefined}
               />
               {running ? (
                 <ComposerPrimitive.Cancel asChild>
@@ -2432,6 +2433,7 @@ export const AssistantConversationSurface = ({
   modelOptionsLoading,
   reasoning,
   isRefreshing,
+  autoFocusComposer,
   onRefresh,
   onModelChange,
   onReasoningChange,
@@ -2536,6 +2538,7 @@ export const AssistantConversationSurface = ({
             onRefresh={onRefresh}
             onModelChange={onModelChange}
             onReasoningChange={onReasoningChange}
+            autoFocusComposer={autoFocusComposer}
             pendingAction={pendingAction}
           />
         </ThreadPrimitive.Root>
@@ -2618,6 +2621,7 @@ export const AssistantPanel = ({
               onRefresh={onRefresh}
               onModelChange={onModelChange}
               onReasoningChange={onReasoningChange}
+              autoFocusComposer
               onMinimize={onClose}
             />
           </dialog>
