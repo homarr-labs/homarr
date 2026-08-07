@@ -128,10 +128,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         };
       } catch (error) {
         // Ignore not found and bad-request errors and return empty metadata
-        if (
-          error instanceof TRPCError &&
-          (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")
-        ) {
+        if (error instanceof TRPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
           return {};
         }
 
