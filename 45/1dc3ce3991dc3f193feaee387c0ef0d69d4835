@@ -1,0 +1,36 @@
+packages/api/src/integration-data-cache.ts
+  s_a0e1fd495b97ff::t_00c5945f767ccf 4
+packages/api/src/router/board.ts
+  s_a0e1fd495b97ff::t_10da83913989eb 1391-1395
+  s_a0e1fd495b97ff::t_19d45d35a9bf6b 1514
+  s_a0e1fd495b97ff::t_4bf09dd56cf692 1446,1451-1454
+  s_a0e1fd495b97ff::t_102ed320d8e08c 630
+  s_a0e1fd495b97ff::t_b4c332090e5099 861-865
+  s_a0e1fd495b97ff::t_687b46e4a02115 607-612
+  s_a0e1fd495b97ff::t_dcc9b18301d9d3 896
+  s_a0e1fd495b97ff::t_2f322bdf9c0b4e 1455
+apps/nextjs/src/app/api/user-medias/svg-purify.ts
+  s_a0e1fd495b97ff::t_a95be8f5b8e255 6
+packages/api/src/integration-data-cache.spec.ts
+  s_a0e1fd495b97ff::t_1ec9db5b39c840 44-48
+apps/nextjs/src/app/api/user-medias/sanitize.spec.ts
+  s_a0e1fd495b97ff::t_2b4634d1f81d5a 44-68
+packages/api/src/router/integration/integration-router.ts
+  s_a0e1fd495b97ff::t_7872e12e4f0ef7 374
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "451dc3ce3991dc3f193feaee387c0ef0d69d4835",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
