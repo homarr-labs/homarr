@@ -644,6 +644,8 @@ const buildDemoWidgets = (appIds: string[]): DemoWidget[] => [
   { kind: "notebook", width: 4, height: 4, needsIntegration: false },
   { kind: "dockerContainers", width: 6, height: 2, needsIntegration: false },
   { kind: "weather", width: 2, height: 1, needsIntegration: false },
+  // Row 12: assistant
+  { kind: "assistant", width: 8, height: 4, needsIntegration: false },
 ];
 
 const seedDemoUserAsync = async (db: Database) => {
