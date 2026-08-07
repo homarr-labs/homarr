@@ -1,0 +1,37 @@
+packages/next-cache-handler/src/redis-handler.ts
+  s_a0e1fd495b97ff::t_2db9c5c2f1a03a 54
+  s_a0e1fd495b97ff::t_7cc5373306a9c6 111
+  s_a0e1fd495b97ff::t_ad95dbaf615968 5
+  s_a0e1fd495b97ff::t_896e8f5f1db86d 30
+  s_a0e1fd495b97ff::t_586b59fb284af4 82-83
+apps/nextjs/src/app/api/user-medias/svg-purify.ts
+  s_a0e1fd495b97ff::t_1b4e5b1e42aadc 90
+apps/nextjs/next.config.ts
+  s_a0e1fd495b97ff::t_d189d7ca937bda 54-57
+packages/integrations/test/pi-hole.spec.ts
+  s_a0e1fd495b97ff::t_63bda4ef040781 7
+.cursor/goal/scratchpad.md
+  s_a0e1fd495b97ff::t_b07689a5209675 1,3-4,6-53
+packages/next-cache-handler/src/index.ts
+  s_a0e1fd495b97ff::t_f2e61e19efc301 3-4
+  s_a0e1fd495b97ff::t_3f87cc7d66fcf7 9-10
+packages/api/src/integration-data-cache.ts
+  s_a0e1fd495b97ff::t_7fa197d83daa30 41-51
+  s_a0e1fd495b97ff::t_6da46498cd7fac 23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "345a4be4b0d0f182e680a008b8d158f8c3a5e1a9",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
