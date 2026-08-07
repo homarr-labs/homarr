@@ -39,6 +39,11 @@ export const getCachedIntegrationData = async <T>(
     }
   }
 
+  // Set pending synchronously BEFORE creating the fetch promise to prevent
+  // concurrent stale-revalidation from spawning duplicate upstream calls.
+  const placeholder = existing ?? { data: undefined as T, timestamp: 0 };
+  if (!existing) cache.set(key, placeholder);
+
   const pending = fetcher()
     .then((data) => {
       cache.set(key, { data, timestamp: Date.now() });
@@ -67,13 +72,9 @@ export const getCachedIntegrationData = async <T>(
       throw error;
     });
 
-  if (existing) {
-    existing.pending = pending;
-    return existing.data;
-  }
+  placeholder.pending = pending;
 
-  cache.set(key, { data: undefined as T, timestamp: 0, pending });
-  return pending;
+  return existing ? existing.data : pending;
 };
 
 export const invalidateIntegrationDataCache = (integrationId: string) => {

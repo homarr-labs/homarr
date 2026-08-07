@@ -19,11 +19,12 @@ interface LoginProps {
   }>;
 }
 
-async function LoginContent({ searchParams }: { searchParams: { callbackUrl?: string } }) {
+async function LoginContent({ searchParams }: { searchParams: Promise<{ callbackUrl?: string }> }) {
+  const resolvedParams = await searchParams;
   const session = await auth();
 
   if (session) {
-    redirect(sanitizeRedirectionUrl(searchParams.callbackUrl));
+    redirect(sanitizeRedirectionUrl(resolvedParams.callbackUrl));
   }
 
   const t = await getScopedI18n("user.page.login");
@@ -52,7 +53,7 @@ async function LoginContent({ searchParams }: { searchParams: { callbackUrl?: st
             providers={env.AUTH_PROVIDERS}
             oidcClientName={env.AUTH_OIDC_CLIENT_NAME}
             isOidcAutoLoginEnabled={env.AUTH_OIDC_AUTO_LOGIN}
-            callbackUrl={searchParams.callbackUrl ?? "/"}
+            callbackUrl={resolvedParams.callbackUrl ?? "/"}
           />
         </Card>
       </Stack>
@@ -60,9 +61,7 @@ async function LoginContent({ searchParams }: { searchParams: { callbackUrl?: st
   );
 }
 
-export default async function Login(props: LoginProps) {
-  const searchParams = await props.searchParams;
-
+export default function Login(props: LoginProps) {
   return (
     <Suspense
       fallback={
@@ -71,7 +70,7 @@ export default async function Login(props: LoginProps) {
         </Center>
       }
     >
-      <LoginContent searchParams={searchParams} />
+      <LoginContent searchParams={props.searchParams} />
     </Suspense>
   );
 }

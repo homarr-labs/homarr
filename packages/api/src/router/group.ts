@@ -232,6 +232,14 @@ export const groupRouter = createTRPCRouter({
           name: input.name,
         })
         .where(eq(groups.id, input.id));
+
+      const members = await ctx.db.query.groupMembers.findMany({
+        columns: { userId: true },
+        where: eq(groupMembers.groupId, input.id),
+      });
+      for (const member of members) {
+        invalidateUserCache(member.userId);
+      }
     }),
   savePartialSettings: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -325,6 +333,7 @@ export const groupRouter = createTRPCRouter({
           ownerId: input.userId,
         })
         .where(eq(groups.id, input.groupId));
+      invalidateUserCache(input.userId);
     }),
   deleteGroup: permissionRequiredProcedure
     .requiresPermission("admin")

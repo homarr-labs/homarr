@@ -553,6 +553,7 @@ export const userRouter = createTRPCRouter({
           password: hashedPassword,
         })
         .where(eq(users.id, input.userId));
+      invalidateUserCache(input.userId);
     }),
   changeHomeBoards: protectedProcedure
     .input(convertIntersectionToZodObject(userChangeHomeBoardsSchema.and(z.object({ userId: z.string() }))))

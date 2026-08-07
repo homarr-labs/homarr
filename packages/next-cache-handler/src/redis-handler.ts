@@ -113,12 +113,9 @@ export class RedisCacheHandler implements CacheHandler {
       });
 
       const ttlMs = entry.expire * 1000;
+      if (ttlMs <= 0) return; // Dynamic entries (expire: 0) should not be persisted
       await this.redis.connect().catch(() => {});
-      if (ttlMs > 0) {
-        await this.redis.set(this.entryKey(cacheKey), serialized, "PX", ttlMs);
-      } else {
-        await this.redis.set(this.entryKey(cacheKey), serialized);
-      }
+      await this.redis.set(this.entryKey(cacheKey), serialized, "PX", ttlMs);
     } catch {
       // Fail open
     } finally {
