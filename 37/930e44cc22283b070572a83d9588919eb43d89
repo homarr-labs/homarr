@@ -1,0 +1,27 @@
+packages/api/src/cache-invalidation.ts
+  s_a0e1fd495b97ff::t_6e9b2d96fb3baa 1-4
+packages/api/src/router/widgets/health-monitoring.ts
+  s_a0e1fd495b97ff::t_e5d25b7c19f1f8 53,57
+  s_a0e1fd495b97ff::t_9c191b1a10f0af 58
+packages/api/src/router/test/integration/integration-test-connection.spec.ts
+  s_a0e1fd495b97ff::t_979a5e4481bf9d 27,70,120,170,224
+  s_a0e1fd495b97ff::t_3ea1899036d507 4
+packages/integrations/src/index.ts
+  s_a0e1fd495b97ff::t_f7c3a807349691 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "37930e44cc22283b070572a83d9588919eb43d89",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
