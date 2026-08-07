@@ -95,5 +95,6 @@ ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
 
+EXPOSE 7575/tcp
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD ["sh", "run.sh"]
