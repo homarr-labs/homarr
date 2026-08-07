@@ -36,5 +36,5 @@ jobs:
             --jq '.[] | select(.author.login as $login | ["app/homarr-renovate", "app/homarr-crowdin", "app/homarr-update-contributors", "app/homarr-releases"] | index($login)) | select(.reviewDecision == "APPROVED") | select(.mergeStateStatus == "CLEAN") | select(.autoMergeRequest == null) | .number' \
           | while read -r pr; do
               echo "Re-enabling auto-merge on PR #$pr"
-              gh pr merge "$pr" --auto --squash --delete-branch
+              gh pr merge "$pr" --auto --squash
             done
