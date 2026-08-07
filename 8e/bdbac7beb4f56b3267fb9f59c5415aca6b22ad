@@ -1,0 +1,19 @@
+package.json
+  s_5dcfe7e44b75bf::t_2fa638d18acc12 38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8ebdbac7beb4f56b3267fb9f59c5415aca6b22ad",
+  "prompts": {},
+  "sessions": {
+    "s_5dcfe7e44b75bf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9bcd108a-daea-48a5-b53c-d927f15a1b24",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
