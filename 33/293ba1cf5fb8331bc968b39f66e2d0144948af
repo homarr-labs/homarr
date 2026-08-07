@@ -1,0 +1,36 @@
+apps/nextjs/src/app/api/user-medias/svg-purify.ts
+  s_a0e1fd495b97ff::t_516c2aa5a3a236 9-18,23-25,27
+apps/nextjs/src/app/[locale]/_session-scoped-providers.tsx
+  s_a0e1fd495b97ff::t_18f29d3a2913e3 27-29,35-37
+packages/translation/src/request.ts
+  s_a0e1fd495b97ff::t_98a35140b21b52 13,30,39-51
+packages/api/src/integration-data-cache.ts
+  s_a0e1fd495b97ff::t_cad91c90bc7858 79-81
+  s_a0e1fd495b97ff::t_4926dbcea8bc76 19-32
+  s_a0e1fd495b97ff::t_f347e53d41cdda 47-49
+  s_a0e1fd495b97ff::t_54af950b0819de 60
+packages/next-cache-handler/src/redis-handler.ts
+  s_a0e1fd495b97ff::t_81d88134b75f7d 7-15,18-55,88-91,97,101,108,113,124,126-127,138,151,157-163,188-189,192-196,209,211,216
+packages/common/src/retryable-loader.ts
+  s_a0e1fd495b97ff::t_6cffc2b110a9b9 1,4,18
+packages/api/src/cache-invalidation.ts
+  s_a0e1fd495b97ff::t_92f1671d3c565f 16-21,27-29,32
+apps/nextjs/src/app/api/user-medias/sanitize.spec.ts
+  s_a0e1fd495b97ff::t_916300514ef1cf 71-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "33293ba1cf5fb8331bc968b39f66e2d0144948af",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
