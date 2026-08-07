@@ -1,0 +1,14 @@
+package.json
+  h_d6e478ca18e517 39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "da93adac14a7a5b0afc03025608beafea38fb93e",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
