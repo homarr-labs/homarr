@@ -1,0 +1,48 @@
+packages/api/src/router/widgets/options.ts
+  s_a0e1fd495b97ff::t_b035466a7349c5 10
+  s_a0e1fd495b97ff::t_a4466ff2c98fe3 55-56
+packages/api/src/integration-data-cache.ts
+  s_a0e1fd495b97ff::t_13d9f658c59713 2-3
+packages/api/src/router/widgets/anchor-notes.ts
+  s_a0e1fd495b97ff::t_cc0da383b2dd35 79
+  s_a0e1fd495b97ff::t_23dc9a0cc6e19a 10
+packages/api/src/router/widgets/downloads.ts
+  s_a0e1fd495b97ff::t_b07cb05fccd194 9
+  s_a0e1fd495b97ff::t_0bfde13c218459 93-95
+  s_a0e1fd495b97ff::t_cf1a2115f56ee2 72-74
+  s_a0e1fd495b97ff::t_614af3c42040d7 108-110
+  s_a0e1fd495b97ff::t_99e6f6f0bec23a 123-125
+  s_a0e1fd495b97ff::t_d32753a135fb04 57-59
+packages/api/src/router/widgets/dns-hole.ts
+  s_a0e1fd495b97ff::t_ba1408331ee210 48
+  s_a0e1fd495b97ff::t_4ceecdf2a57bcf 68
+  s_a0e1fd495b97ff::t_ca61d588ca308c 8
+packages/api/src/router/widgets/media-requests.ts
+  s_a0e1fd495b97ff::t_d7dcce65fb4993 13
+  s_a0e1fd495b97ff::t_c9cc65aae99e54 111
+packages/api/src/router/widgets/smart-home.ts
+  s_a0e1fd495b97ff::t_1de9ae630ca990 45
+  s_a0e1fd495b97ff::t_5ff13513d41479 9
+  s_a0e1fd495b97ff::t_012f4cf2f5c62f 61
+packages/api/src/router/widgets/indexer-manager.ts
+  s_a0e1fd495b97ff::t_fe970855f33222 49-51
+  s_a0e1fd495b97ff::t_a1e0e66bab8de5 9
+packages/next-cache-handler/src/redis-handler.ts
+  s_a0e1fd495b97ff::t_c5fdf10eb7a53b 155,157,160-181,184
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "0f8362c3daafaa8916f1d5276d9ab642629f9265",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
