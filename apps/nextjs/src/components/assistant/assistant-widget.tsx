@@ -12,7 +12,7 @@ import type { WidgetComponentProps } from "@homarr/widgets";
 import classes from "./assistant-panel.module.css";
 import { AssistantConversationSurface } from "./assistant-panel";
 import { getPendingAssistantAction } from "./assistant-pending-action";
-import { useAssistantPreferences, useHomarrAssistant } from "./assistant-provider";
+import { useAssistantPreferences, useHomarrAssistant } from "./assistant-context";
 
 export const AssistantBoardWidget = (props: WidgetComponentProps<"assistant">) => {
   const assistant = useHomarrAssistant();

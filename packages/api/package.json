@@ -15,6 +15,7 @@
     "./shared": "./src/shared.ts",
     "./open-api": "./src/open-api.ts",
     "./assistant": "./src/assistant.ts",
+    "./features": "./src/features.ts",
     "./custom-widget/display-data": "./src/router/custom-widget/display-data.ts",
     "./mcp": "./src/mcp.ts"
   },

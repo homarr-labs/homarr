@@ -14,6 +14,7 @@ import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
 import { api } from "@homarr/api/server";
+import { getFeatureFlagsAsync } from "@homarr/api/features";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { db } from "@homarr/db";
@@ -26,7 +27,7 @@ import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 
 import { Analytics } from "~/components/layout/analytics";
-import { AssistantProvider } from "~/components/assistant/assistant-provider";
+import { AssistantGate } from "~/components/assistant/assistant-gate";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
 
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
@@ -86,6 +87,7 @@ export default async function Layout(props: {
   const session = await auth();
   const user = session ? await api.user.getById({ userId: session.user.id }).catch(() => null) : null;
   const serverSettings = await getServerSettingsAsync(db);
+  const features = await getFeatureFlagsAsync(db);
   const colorScheme = await getCurrentColorSchemeAsync();
   const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
 
@@ -124,7 +126,7 @@ export default async function Layout(props: {
     (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
     (innerProps) => <ModalProvider {...innerProps} />,
     (innerProps) => <SpotlightProvider {...innerProps} />,
-    (innerProps) => <AssistantProvider {...innerProps} />,
+    (innerProps) => <AssistantGate enabled={features.assistant} {...innerProps} />,
   ]);
 
   const { locale } = await props.params;
