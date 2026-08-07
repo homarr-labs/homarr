@@ -1,0 +1,33 @@
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  s_a0e1fd495b97ff::t_e3881feb2d4013 22-23,27
+  s_a0e1fd495b97ff::t_622c8bb180ce4d 56
+  s_a0e1fd495b97ff::t_ae38d13eb59db1 64,73
+packages/next-cache-handler/src/redis-handler.ts
+  s_a0e1fd495b97ff::t_52af510712b583 116,118
+packages/api/src/integration-data-cache.ts
+  s_a0e1fd495b97ff::t_bbb7c3708624a9 42-46,75,77
+packages/api/src/router/group.ts
+  s_a0e1fd495b97ff::t_b1950f6c10f533 336
+  s_a0e1fd495b97ff::t_a89afa7340a539 235-242
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_a0e1fd495b97ff::t_b23d948f2f47e9 4
+  s_a0e1fd495b97ff::t_60bad9f6322eb8 73-75,79
+packages/api/src/router/user.ts
+  s_a0e1fd495b97ff::t_9ff7bd70e34e54 556
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "fbb2eddd877a043e5450d9e22e6cc49d93a80f3a",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
