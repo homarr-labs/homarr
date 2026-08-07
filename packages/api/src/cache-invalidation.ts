@@ -8,26 +8,37 @@
 // - `invalidateIntegrationDataCache` (from integration-data-cache.ts): for integration DATA changes
 //   (widget interact mutations). Clears module cache only — pair with requestHandler.invalidateCache().
 
-import { revalidateTag } from "next/cache";
-
 import { cacheTags } from "./cache-tags";
 import { invalidateIntegrationDataCache } from "./integration-data-cache";
 
+// ponytail: revalidateTag throws outside Next.js request context (tests, tasks, websocket).
+// Ceiling: if Next.js context detection changes, update the try-catch.
+const safeRevalidateTag = (tag: string) => {
+  try {
+    // Dynamic import avoidance — revalidateTag is only available within Next.js runtime.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { revalidateTag } = require("next/cache") as typeof import("next/cache");
+    revalidateTag(tag, "max");
+  } catch {
+    // Not in a Next.js request context — no-op
+  }
+};
+
 export const invalidateBoardCache = (boardId: string, boardName?: string) => {
-  revalidateTag(cacheTags.board(boardId), "max");
-  if (boardName) revalidateTag(cacheTags.boardByName(boardName), "max");
-  revalidateTag(cacheTags.boardList(), "max");
+  safeRevalidateTag(cacheTags.board(boardId));
+  if (boardName) safeRevalidateTag(cacheTags.boardByName(boardName));
+  safeRevalidateTag(cacheTags.boardList());
 };
 
 export const invalidateIntegrationCache = (integrationId: string) => {
   invalidateIntegrationDataCache(integrationId);
-  revalidateTag(cacheTags.integration(integrationId), "max");
+  safeRevalidateTag(cacheTags.integration(integrationId));
 };
 
 export const invalidateUserCache = (userId: string) => {
-  revalidateTag(cacheTags.user(userId), "max");
+  safeRevalidateTag(cacheTags.user(userId));
 };
 
 export const invalidateServerSettingsCache = () => {
-  revalidateTag(cacheTags.serverSettings(), "max");
+  safeRevalidateTag(cacheTags.serverSettings());
 };

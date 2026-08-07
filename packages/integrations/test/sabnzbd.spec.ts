@@ -5,7 +5,7 @@ import { beforeAll, describe, expect, test, vi } from "vitest";
 
 import { createDb } from "@homarr/db/test";
 
-import { SabnzbdIntegration } from "../src";
+import { SabnzbdIntegration } from "../src/download-client/sabnzbd/sabnzbd-integration";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 import type { DownloadClientItem } from "../src/interfaces/downloads/download-client-items";
 

@@ -4,6 +4,7 @@ import type { CacheHandler } from "next/dist/server/lib/cache-handlers/types";
 
 type CacheEntry = Awaited<ReturnType<CacheHandler["get"]>> & {};
 
+// eslint-disable-next-line no-underscore-dangle
 const BUILD_ID = process.env.__NEXT_BUILD_ID ?? "dev";
 
 export class RedisCacheHandler implements CacheHandler {
@@ -138,7 +139,8 @@ export class RedisCacheHandler implements CacheHandler {
         if (keys.length > 0) {
           const values = await this.redis.mget(...keys);
           for (let i = 0; i < keys.length; i++) {
-            const tag = keys[i]!.replace("nextCache:tag:", "");
+            const tag = keys[i]?.replace("nextCache:tag:", "");
+            if (!tag) continue;
             const val = values[i];
             if (val) this.tagCache.set(tag, Number(val));
           }
@@ -173,7 +175,8 @@ export class RedisCacheHandler implements CacheHandler {
           const val = values[i];
           if (val) {
             const ts = Number(val);
-            this.tagCache.set(missingTags[i]!, ts);
+            const missingTag = missingTags[i];
+            if (missingTag) this.tagCache.set(missingTag, ts);
             if (ts > maxTimestamp) maxTimestamp = ts;
           }
         }
