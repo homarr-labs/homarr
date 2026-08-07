@@ -5,5 +5,3 @@ import openCollectiveContributors from "@static-data/opencollective-contributors
 export const GET = () => {
   return NextResponse.json(openCollectiveContributors);
 };
-
-export const dynamic = "force-static";

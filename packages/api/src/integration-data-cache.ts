@@ -1,7 +1,3 @@
-// ponytail: module-level cache is single-instance only.
-// Multi-instance deployments (REDIS_IS_EXTERNAL=true) bypass this entirely —
-// each request calls the upstream fetcher directly.
-// isMultiInstance is read at module load; bypass behavior is verified via code review, not unit tests.
 const isMultiInstance = process.env.REDIS_IS_EXTERNAL === "true";
 
 interface CachedEntry<T> {
@@ -14,22 +10,6 @@ const cache = new Map<string, CachedEntry<unknown>>();
 const DEFAULT_TTL_MS = 60_000;
 const MAX_ENTRIES = 200;
 
-const cacheKey = (integrationId: string, queryKey: string) => `${integrationId}:${queryKey}`;
-
-function evictOldestEntry() {
-  if (cache.size <= MAX_ENTRIES) return;
-
-  let oldestKey: string | undefined;
-  let oldestTime = Infinity;
-  for (const [key, entry] of cache) {
-    if (entry.timestamp < oldestTime) {
-      oldestTime = entry.timestamp;
-      oldestKey = key;
-    }
-  }
-  if (oldestKey) cache.delete(oldestKey);
-}
-
 export const getCachedIntegrationData = async <T>(
   integrationId: string,
   queryKey: string,
@@ -40,7 +20,7 @@ export const getCachedIntegrationData = async <T>(
     return fetcher();
   }
 
-  const key = cacheKey(integrationId, queryKey);
+  const key = `${integrationId}:${queryKey}`;
   const existing = cache.get(key) as CachedEntry<T> | undefined;
   const now = Date.now();
 
@@ -58,7 +38,17 @@ export const getCachedIntegrationData = async <T>(
     .then((data) => {
       if (cache.get(key) === placeholder) {
         cache.set(key, { data, timestamp: Date.now() });
-        evictOldestEntry();
+        if (cache.size > MAX_ENTRIES) {
+          let oldestKey: string | undefined;
+          let oldestTime = Infinity;
+          for (const [k, e] of cache) {
+            if (e.timestamp < oldestTime) {
+              oldestTime = e.timestamp;
+              oldestKey = k;
+            }
+          }
+          if (oldestKey) cache.delete(oldestKey);
+        }
       }
       return data;
     })

@@ -87,12 +87,10 @@ export const sanitizeSvg = (svgText: string) => {
   // linkedom's DOMParser omits html/body for fragment-only SVG; DOMPurify needs a body root.
   const wrapped = `<html><body>${svgText}</body></html>`;
   const sanitized = purify.sanitize(wrapped, svgSanitizeOptions);
-  const svgMatch = sanitized.match(/<svg[^>]*\/>|<svg[\s\S]*<\/svg>/i);
+  const svgMatch = sanitized.match(/<svg[^>]*\/>|<svg[\s\S]*?<\/svg>/i);
   return svgMatch ? svgMatch[0] : "";
 };
 
-// ponytail: content-based SVG detection — catches mislabeled MIME types.
-// Ceiling: only checks first 512 bytes; deeply embedded SVG in other XML won't match.
 export function looksLikeSvg(content: Uint8Array): boolean {
   const head = new TextDecoder().decode(content.subarray(0, 512));
   return /<svg[\s>]/i.test(head);

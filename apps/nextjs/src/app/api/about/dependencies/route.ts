@@ -6,5 +6,3 @@ export const GET = async () => {
   const dependencies = await getDependenciesAsync();
   return NextResponse.json(dependencies);
 };
-
-export const dynamic = "force-static";

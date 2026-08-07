@@ -4,8 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import { createDb } from "@homarr/db/test";
 
-import { PiHoleIntegrationV5 } from "../src/pi-hole/v5/pi-hole-integration-v5";
-import { PiHoleIntegrationV6 } from "../src/pi-hole/v6/pi-hole-integration-v6";
+import { PiHoleIntegrationV5, PiHoleIntegrationV6 } from "../src";
 import type { SessionStore } from "../src/base/session-store";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 

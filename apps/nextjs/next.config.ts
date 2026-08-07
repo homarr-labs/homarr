@@ -15,17 +15,6 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "../../packages/translation/src/request.ts",
 });
 
-const getDevelopmentServiceAliases = () => {
-  if (process.env.NODE_ENV !== "development") {
-    return undefined;
-  }
-
-  return {
-    "@homarr/tasks": "./src/instrumentation-noop.ts",
-    "@homarr/websocket": "./src/instrumentation-noop.ts",
-  };
-};
-
 const nextConfig: NextConfig = {
   cacheHandlers: {
     default: path.resolve(import.meta.dirname, "../../packages/next-cache-handler/src/index.ts"),
@@ -62,7 +51,10 @@ const nextConfig: NextConfig = {
     root: path.resolve(import.meta.dirname, "../.."),
     // Development runs tasks and WebSocket as separate processes. These aliases
     // keep their production-only instrumentation imports out of the dev graph.
-    resolveAlias: getDevelopmentServiceAliases(),
+    resolveAlias:
+      process.env.NODE_ENV === "development"
+        ? { "@homarr/tasks": "./src/instrumentation-noop.ts", "@homarr/websocket": "./src/instrumentation-noop.ts" }
+        : undefined,
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {

@@ -1,13 +1,13 @@
 import type { CacheHandler } from "next/dist/server/lib/cache-handlers/types";
 
+import { RedisCacheHandler } from "./redis-handler";
+
 let handlerPromise: Promise<CacheHandler> | undefined;
 
 const createHandlerAsync = async (): Promise<CacheHandler> => {
   const useRedis = process.env.REDIS_HOST || process.env.REDIS_IS_EXTERNAL === "true";
-  if (useRedis) {
-    const { RedisCacheHandler } = await import("./redis-handler");
-    return new RedisCacheHandler();
-  }
+  if (useRedis) return new RedisCacheHandler();
+
   const { createDefaultCacheHandler } = await import("next/dist/server/lib/cache-handlers/default");
   return createDefaultCacheHandler(32 * 1024 * 1024);
 };

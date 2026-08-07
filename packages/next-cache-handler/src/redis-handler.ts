@@ -2,7 +2,7 @@ import Redis from "ioredis";
 
 import type { CacheHandler } from "next/dist/server/lib/cache-handlers/types";
 
-type CacheEntry = Awaited<ReturnType<CacheHandler["get"]>> & {};
+type CacheEntry = NonNullable<Awaited<ReturnType<CacheHandler["get"]>>>;
 
 type StoredEntry = {
   tags: string[];
@@ -27,14 +27,7 @@ async function readStreamBody(stream: ReadableStream<Uint8Array>) {
     if (result.value) chunks.push(result.value);
   }
 
-  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-  const body = new Uint8Array(totalLength);
-  let offset = 0;
-  for (const chunk of chunks) {
-    body.set(chunk, offset);
-    offset += chunk.length;
-  }
-  return body;
+  return new Uint8Array(Buffer.concat(chunks));
 }
 
 function entryFromStored(parsed: StoredEntry): CacheEntry {
@@ -58,6 +51,7 @@ export class RedisCacheHandler implements CacheHandler {
   private redis: Redis;
   private pendingSets = new Map<string, Promise<CacheEntry>>();
   private tagCache = new Map<string, number>();
+  private connectPromise: Promise<void> | undefined;
   private loggedError = false;
 
   constructor() {
@@ -85,8 +79,8 @@ export class RedisCacheHandler implements CacheHandler {
     return `nextCache:tag:${tag}`;
   }
 
-  private async ensureConnected() {
-    await this.redis.connect().catch(() => {});
+  private ensureConnected() {
+    return (this.connectPromise ??= this.redis.connect().catch(() => {}));
   }
 
   async get(cacheKey: string, softTags: string[]): Promise<CacheEntry | undefined> {
@@ -114,7 +108,7 @@ export class RedisCacheHandler implements CacheHandler {
         return undefined;
       }
 
-      const expiration = await this.getExpiration([...parsed.tags, ...softTags]);
+      const expiration = await this.getExpiration(parsed.tags.concat(softTags));
       if (expiration !== 0 && expiration > parsed.timestamp) {
         return undefined;
       }
