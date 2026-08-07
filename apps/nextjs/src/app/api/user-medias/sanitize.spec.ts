@@ -66,4 +66,14 @@ describe("SVG sanitization", () => {
     const clean = sanitizeSvg(dirty);
     expect(clean).not.toContain("onbegin");
   });
+
+  it("preserves well-formed SVG with self-closing children", () => {
+    const icon = '<svg viewBox="0 0 24 24"><path d="M12 2L2 22h20Z" fill="currentColor"/><circle cx="12" cy="8" r="2"/></svg>';
+    const clean = sanitizeSvg(icon);
+    expect(clean).toContain("<path");
+    expect(clean).toContain("<circle");
+    expect(clean).toContain("</svg>");
+    expect(clean).not.toContain("<html");
+    expect(clean).not.toContain("<body");
+  });
 });

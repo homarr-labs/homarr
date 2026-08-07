@@ -86,7 +86,7 @@ export const sanitizeSvg = (svgText: string) => {
   // linkedom's DOMParser omits html/body for fragment-only SVG; DOMPurify needs a body root.
   const wrapped = `<html><body>${svgText}</body></html>`;
   const sanitized = purify.sanitize(wrapped, svgSanitizeOptions);
-  const svgMatch = sanitized.match(/<svg[\s\S]*?(?:<\/svg>|\/>)/i);
+  const svgMatch = sanitized.match(/<svg[^>]*\/>|<svg[\s\S]*<\/svg>/i);
   return svgMatch ? svgMatch[0] : "";
 };
 
