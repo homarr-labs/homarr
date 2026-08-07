@@ -1,0 +1,44 @@
+packages/api/src/router/integration/integration-router.ts
+  s_a0e1fd495b97ff::t_9887fd403be18a 828-830
+  s_a0e1fd495b97ff::t_79b62152d9e887 41
+packages/old-import/src/index.ts
+  s_a0e1fd495b97ff::t_53c0e62a705445 12
+packages/api/src/router/user.ts
+  s_a0e1fd495b97ff::t_9107bd9e70727f 483
+packages/api/src/router/group.ts
+  s_a0e1fd495b97ff::t_bf079c2cc19cdf 280-287
+  s_a0e1fd495b97ff::t_352fe01b437f65 7
+packages/api/src/router/widgets/dns-hole.ts
+  s_a0e1fd495b97ff::t_a1af4ccf1c994b 70
+  s_a0e1fd495b97ff::t_8e3c8e6d550dc3 49
+packages/api/src/router/widgets/media-requests.ts
+  s_a0e1fd495b97ff::t_532bb4abb74fac 112-113
+packages/api/src/router/widgets/anchor-notes.ts
+  s_a0e1fd495b97ff::t_fc86c7d0b55793 80-81
+packages/api/src/router/widgets/indexer-manager.ts
+  s_a0e1fd495b97ff::t_c3ff96300c415f 52
+packages/api/src/router/board.ts
+  s_a0e1fd495b97ff::t_1500902b63633a 329
+  s_a0e1fd495b97ff::t_32d1291e8ef6b2 1501-1504
+packages/api/src/router/widgets/smart-home.ts
+  s_a0e1fd495b97ff::t_5172a6dcd6a22b 63
+  s_a0e1fd495b97ff::t_b32d405571497f 46
+packages/old-import/src/import/import-single-oldmarr.ts
+  s_a0e1fd495b97ff::t_d196d998887d39 42-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4361c8dbe2201df938a0dd7e6b8cd0babef6f2e3",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
