@@ -3,7 +3,15 @@ import { hkdfSync } from "node:crypto";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { MetadataExtractor } from "@ai-sdk/openai-compatible";
 import type { ToolSet, UIMessage } from "ai";
-import { convertToModelMessages, createUIMessageStream, createUIMessageStreamResponse, jsonSchema, stepCountIs, streamText, tool } from "ai";
+import {
+  convertToModelMessages,
+  createUIMessageStream,
+  createUIMessageStreamResponse,
+  jsonSchema,
+  stepCountIs,
+  streamText,
+  tool,
+} from "ai";
 import { parse, stringify } from "superjson";
 import { z } from "zod/v4";
 
