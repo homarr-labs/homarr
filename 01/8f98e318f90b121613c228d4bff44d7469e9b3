@@ -1,0 +1,273 @@
+apps/nextjs/next.config.ts
+  s_a0e1fd495b97ff::t_7e051e785d817e 41-47
+  s_a0e1fd495b97ff::t_89cdc77e0bb21e 55
+  s_a0e1fd495b97ff::t_08a0a1932c7642 30-32
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_a0e1fd495b97ff::t_8ef427a6d5e9fa 35
+apps/nextjs/package.json
+  s_a0e1fd495b97ff::t_9300cacb2d642d 40
+  s_a0e1fd495b97ff::t_497ac586471959 80,87
+apps/nextjs/src/app/api/user-medias/sanitize.spec.ts
+  s_a0e1fd495b97ff::t_d0b70257069ded 3,8,15,21,28,34,37-42
+  s_a0e1fd495b97ff::t_94f3592f0d4518 1-2,4-7,9-14,16-20,22-27,29-33,35-36,43-44
+packages/api/src/router/widgets/firewall.ts
+  s_a0e1fd495b97ff::t_e47a2f563c3a7d 10
+  s_a0e1fd495b97ff::t_d49d9c134231d7 21,24-26,32-34,38-50
+packages/api/src/router/widgets/dns-hole.ts
+  s_a0e1fd495b97ff::t_a3366602256d60 8
+  s_a0e1fd495b97ff::t_f49f9ff4d7acc3 22-24,30-32
+packages/integrations/src/index.ts
+  s_a0e1fd495b97ff::t_d4c9c6c05dbfa1 102
+packages/widgets/src/definition.ts
+  s_a0e1fd495b97ff::t_ec1dbc0f6b3846 12
+packages/api/src/router/integration/integration-router.ts
+  s_a0e1fd495b97ff::t_709d7571ca566e 480
+  s_a0e1fd495b97ff::t_9caa5c63eb050b 584-588
+  s_a0e1fd495b97ff::t_f7d1b373972a3d 646-650
+  s_a0e1fd495b97ff::t_032bf9e7169365 372-373
+  s_a0e1fd495b97ff::t_23a1d0dfd7f38b 629-639
+  s_a0e1fd495b97ff::t_fc3399d10c88d6 505
+  s_a0e1fd495b97ff::t_8bea5825e19b25 40
+  s_a0e1fd495b97ff::t_4ac98575efce5b 691-707
+packages/api/src/router/widgets/beszel.ts
+  s_a0e1fd495b97ff::t_1693a12e8c8045 123-126
+  s_a0e1fd495b97ff::t_09e77b1a80551e 13
+  s_a0e1fd495b97ff::t_55260703d7b912 50
+packages/api/src/settle-integrations.ts
+  s_a0e1fd495b97ff::t_a0d3b684c09db6 4-5,16-17,20-24,30-38
+packages/api/src/router/widgets/media-release.ts
+  s_a0e1fd495b97ff::t_1a775253c50605 12-14,27-29
+  s_a0e1fd495b97ff::t_3460a57d22634b 5
+packages/api/src/router/user.ts
+  s_a0e1fd495b97ff::t_540b67e681fabe 795-796,806-807
+  s_a0e1fd495b97ff::t_0bd8fc4ae3bfc9 691-692
+  s_a0e1fd495b97ff::t_92d4b088f303ac 783-784
+  s_a0e1fd495b97ff::t_1f8d310eb6cb82 740-741
+  s_a0e1fd495b97ff::t_545e237f3ee62f 458-459
+  s_a0e1fd495b97ff::t_d59994666f4d97 711-712
+  s_a0e1fd495b97ff::t_544e7644af3b82 663-664
+  s_a0e1fd495b97ff::t_a18c2ed2b6cce9 34
+  s_a0e1fd495b97ff::t_ec77ca21494344 606-607
+  s_a0e1fd495b97ff::t_19aa4bc02c5d7f 225-226
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_a0e1fd495b97ff::t_797434cca601b4 2,4
+  s_a0e1fd495b97ff::t_9540486b3c763b 38-83,98-106
+packages/api/src/router/user/change-search-preferences.ts
+  s_a0e1fd495b97ff::t_1af9f9e82d9e13 56-57
+  s_a0e1fd495b97ff::t_9798be30a890e0 11-12
+apps/nextjs/src/app/[locale]/boards/(content)/loading.tsx
+  s_a0e1fd495b97ff::t_86b5d53fa8e427 1-9
+packages/api/src/cache-invalidation.ts
+  s_a0e1fd495b97ff::t_07ab3393d78581 13
+  s_a0e1fd495b97ff::t_73d031379b2fdf 4
+  s_a0e1fd495b97ff::t_ff1da58b8d0e31 1-3,5-12,14-23
+packages/api/src/router/widgets/ups.ts
+  s_a0e1fd495b97ff::t_44aba22317ed5b 5
+  s_a0e1fd495b97ff::t_045c3c31c7cf2f 12-14,25-27
+packages/redis/src/lib/channel.spec.ts
+  s_a0e1fd495b97ff::t_d1dc709601ecb3 7-9,12,25-51
+  s_a0e1fd495b97ff::t_344ed8a3e0b28b 52
+packages/translation/src/request.ts
+  s_a0e1fd495b97ff::t_ddfd1de6e99fb9 9-30,32-36,43,48
+packages/api/src/router/widgets/options.ts
+  s_a0e1fd495b97ff::t_1065cc57dc6443 9
+packages/common/src/index.ts
+  s_a0e1fd495b97ff::t_33e1c054ed11cb 14
+packages/db/queries/item.ts
+  s_a0e1fd495b97ff::t_bf8ab658ec043e 5
+packages/api/src/router/serverSettings.ts
+  s_a0e1fd495b97ff::t_9a97b3659a6389 113-114
+  s_a0e1fd495b97ff::t_b25d28deb969c9 95-96
+  s_a0e1fd495b97ff::t_08d6af8619d3d3 124-125
+  s_a0e1fd495b97ff::t_3de7a228ba88e1 17
+packages/redis/src/lib/connection.ts
+  s_a0e1fd495b97ff::t_50327a623aef10 4-9,11-12,17-21,23-32
+  s_a0e1fd495b97ff::t_484217d12cdcb1 14-15
+packages/api/src/router/board.ts
+  s_a0e1fd495b97ff::t_7a10a8eb534de5 62
+  s_a0e1fd495b97ff::t_c1f05a8e0eed7c 883-884
+  s_a0e1fd495b97ff::t_22828e4a795209 1476-1489
+  s_a0e1fd495b97ff::t_292320d2f63ed7 581-585,587-591
+  s_a0e1fd495b97ff::t_0f93382dfac504 681-682
+  s_a0e1fd495b97ff::t_40b570f7460cb3 1301-1302
+  s_a0e1fd495b97ff::t_cac3781b2867c0 663-664
+  s_a0e1fd495b97ff::t_1803dd017c1190 837-838
+  s_a0e1fd495b97ff::t_4fe4864f980aab 561-562
+  s_a0e1fd495b97ff::t_1e689edb5862d1 1627-1628
+  s_a0e1fd495b97ff::t_cdbeabf01206f3 622-623
+  s_a0e1fd495b97ff::t_07906692896a3f 1419,1428
+  s_a0e1fd495b97ff::t_7c7b26e8aa47d1 1420-1427,1433-1436
+  s_a0e1fd495b97ff::t_8f66701c421c5b 639-643,645-646
+  s_a0e1fd495b97ff::t_5bf92ee1eb093e 1475,1490
+  s_a0e1fd495b97ff::t_51bf90848c1734 1379-1383
+  s_a0e1fd495b97ff::t_ad70b6b23d1965 331-332
+  s_a0e1fd495b97ff::t_21b3d53ae5088d 1437
+packages/api/src/router/widgets/network-controller.ts
+  s_a0e1fd495b97ff::t_f5dbbac6ce67a3 5
+  s_a0e1fd495b97ff::t_0861ebbe39e738 12-14,27-29
+packages/integrations/src/base/creator.ts
+  s_a0e1fd495b97ff::t_ef19c4465cec03 87
+  s_a0e1fd495b97ff::t_f31e6b255037ca 6
+  s_a0e1fd495b97ff::t_dae136289cac28 3-4,7-79,81-85,88,94
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  s_a0e1fd495b97ff::t_6e95c09f4b934c 2,4,32-119,134-143
+packages/core/src/infrastructure/db/drivers/index.ts
+  s_a0e1fd495b97ff::t_dc26b10ae02996 1-2,4,8-12,24-34
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_a0e1fd495b97ff::t_7633583bc3e4c7 2,4,20-21,47,70,72,77-79
+packages/api/src/router/widgets/media-requests.ts
+  s_a0e1fd495b97ff::t_18bcdcd51e9707 64-66,69-71
+  s_a0e1fd495b97ff::t_b08659ffa343ee 13
+  s_a0e1fd495b97ff::t_edf3db4e624f3e 28-30,33-35
+packages/api/src/router/section/section-router.ts
+  s_a0e1fd495b97ff::t_351176bb5d80a3 7
+  s_a0e1fd495b97ff::t_cb918aa5c52d7d 41,53-54
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_a0e1fd495b97ff::t_4780dae8c15d5f 2-3,50-60,253-257,261-266
+  s_a0e1fd495b97ff::t_0308e19e0a99eb 267-268
+packages/widgets/package.json
+  s_a0e1fd495b97ff::t_5dfb0f718bcaae 20
+packages/integrations/src/base/creator.spec.ts
+  s_a0e1fd495b97ff::t_0340959b844224 1-11
+.cursor/goal/scratchpad.md
+  s_a0e1fd495b97ff::t_7ccbb3126cce1f 42
+  s_a0e1fd495b97ff::t_2be2ec623886f8 1,3-6,35-36,38-41,48,53,55-56,60-62
+  s_a0e1fd495b97ff::t_579baa213a91ed 2,7-34,37,43-47,49-52,54,57-59
+packages/next-cache-handler/src/types.ts
+  s_a0e1fd495b97ff::t_eb81d31b3d82db 1
+packages/api/src/router/widgets/health-monitoring.ts
+  s_a0e1fd495b97ff::t_f69362200bf9cf 30-32,40-42
+  s_a0e1fd495b97ff::t_49bcca5330cb51 6
+packages/api/src/router/widgets/umami.ts
+  s_a0e1fd495b97ff::t_18fb112a1f8106 16
+  s_a0e1fd495b97ff::t_9a1b152ef8c33a 42-44,59-67
+packages/redis/src/lib/memory-channel.ts
+  s_a0e1fd495b97ff::t_fa93ea84f19572 1-34
+packages/api/src/router/widgets/vpn.ts
+  s_a0e1fd495b97ff::t_02f9fe4bbd062d 12-14,25-27
+  s_a0e1fd495b97ff::t_5f2d52b13c4287 5
+packages/api/src/cache-tags.spec.ts
+  s_a0e1fd495b97ff::t_5368ec42440cfd 1-21
+apps/nextjs/src/app/[locale]/widgets/[kind]/page.tsx
+  s_a0e1fd495b97ff::t_24eadfb8430f10 14-17
+packages/api/src/router/widgets/coolify.ts
+  s_a0e1fd495b97ff::t_98322c210e6cc7 4
+  s_a0e1fd495b97ff::t_7d2504f6e148be 11-13,24-26
+packages/widgets/src/import.ts
+  s_a0e1fd495b97ff::t_cb959de859a04c 1-56,59-129
+packages/api/src/server-settings-server.ts
+  s_a0e1fd495b97ff::t_7ced2eeb59e75a 1-2,8-13
+apps/nextjs/src/app/[locale]/boards/(content)/_theme.tsx
+  s_a0e1fd495b97ff::t_8b060600c62568 14-15
+packages/api/src/router/widgets/uptime-kuma.ts
+  s_a0e1fd495b97ff::t_4503b9059dabef 11-13,24-26
+  s_a0e1fd495b97ff::t_383c0f5a95bbe6 4
+packages/api/src/router/widgets/speedtest-tracker.ts
+  s_a0e1fd495b97ff::t_c7ea4ef279d25f 11-13,24-26
+  s_a0e1fd495b97ff::t_66aac1ececf622 4
+apps/nextjs/src/app/[locale]/manage/loading.tsx
+  s_a0e1fd495b97ff::t_dcb9a7d69c73cc 1-9
+packages/api/src/integration-data-cache.ts
+  s_a0e1fd495b97ff::t_5a4e9d54f82014 1-78
+packages/api/package.json
+  s_a0e1fd495b97ff::t_5ba63bf169c1db 13-14
+packages/redis/src/lib/channel.ts
+  s_a0e1fd495b97ff::t_3a289b0cca890b 6-7,9-11,28-29,35-39,50,52-53,56-59,65-68,88-89,97-98,104-105,112-113,129-130,139,141,144,150-151,166,168,172,174,185-186,194-195,199,209-211,215-216,220-221,224-226,233-234,238-239,241,254-255,271-272,276-277,324-325
+  s_a0e1fd495b97ff::t_18dc3c79174534 69
+  s_a0e1fd495b97ff::t_1b623bdc692dac 33-34
+  s_a0e1fd495b97ff::t_85215b61851e03 54-55,60-61
+packages/api/src/router/widgets/rssFeed.ts
+  s_a0e1fd495b97ff::t_fb491d8265142d 12
+packages/widgets/src/manifest.spec.ts
+  s_a0e1fd495b97ff::t_0175c0daaf231f 4
+packages/next-cache-handler/package.json
+  s_a0e1fd495b97ff::t_05361420303147 1-24
+packages/api/src/router/widgets/notifications.ts
+  s_a0e1fd495b97ff::t_6fd08e27771ff6 16-18,31-33
+  s_a0e1fd495b97ff::t_c5e2c06110e666 6
+packages/api/src/cache-tags.ts
+  s_a0e1fd495b97ff::t_e54ba197e6b749 1-10
+packages/next-cache-handler/tsconfig.json
+  s_a0e1fd495b97ff::t_9e48b25f88035b 1-8
+packages/api/src/router/app/app-access-control.ts
+  s_a0e1fd495b97ff::t_9987b6d16914de 8
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  s_a0e1fd495b97ff::t_f7486d50409216 1,3,22,62-75
+  s_a0e1fd495b97ff::t_4c55e75497fa77 76-77
+packages/integrations/src/base/kind-map.ts
+  s_a0e1fd495b97ff::t_00873d16102a7b 1-119
+packages/api/src/router/widgets/indexer-manager.ts
+  s_a0e1fd495b97ff::t_8065803ebaacbc 19-21,29-31
+  s_a0e1fd495b97ff::t_d08616049225ff 9
+packages/api/src/router/widgets/media-server.ts
+  s_a0e1fd495b97ff::t_41b0274d2e6c45 8
+  s_a0e1fd495b97ff::t_1ae1e025cd56e9 26-28,33-35
+apps/nextjs/src/app/api/user-medias/[id]/route.ts
+  s_a0e1fd495b97ff::t_eac4386781e294 29
+  s_a0e1fd495b97ff::t_65817f0e2a2cc4 8
+  s_a0e1fd495b97ff::t_948d021f034f8a 9
+packages/redis/src/lib/channel-subscription-tracker.ts
+  s_a0e1fd495b97ff::t_c2cbb0a35cfaa2 82-85
+  s_a0e1fd495b97ff::t_eede608632b30e 112-114
+  s_a0e1fd495b97ff::t_18951e359622b6 51-54
+  s_a0e1fd495b97ff::t_a50950226af034 6-7,22-23,41-50,55,78-81,86,91-104,115
+  s_a0e1fd495b97ff::t_07fa0f77cb6f4a 105-106
+pnpm-workspace.yaml
+  s_a0e1fd495b97ff::t_497ac586471959 192-193
+packages/next-cache-handler/src/index.ts
+  s_a0e1fd495b97ff::t_d2f89ae6eafea1 1-27
+packages/common/src/retryable-loader.ts
+  s_a0e1fd495b97ff::t_ef0b62e9defe3f 1-18
+apps/nextjs/src/app/api/user-medias/svg-purify.ts
+  s_a0e1fd495b97ff::t_ae6267ce3b1ae4 53-60,62,66-69,71,74-80,82
+  s_a0e1fd495b97ff::t_9b466c33cc537e 1-52,61,63-65,70,72-73,81,83-90
+packages/api/src/router/widgets/tracearr.ts
+  s_a0e1fd495b97ff::t_38b964ab20f560 4
+  s_a0e1fd495b97ff::t_3c07c636641e58 9-11,22-24
+packages/api/src/router/widgets/traefik.ts
+  s_a0e1fd495b97ff::t_36c37778841274 18-20,31-33
+  s_a0e1fd495b97ff::t_adb5c66d3e510d 4
+packages/api/src/router/widgets/downloads.ts
+  s_a0e1fd495b97ff::t_152be3987ea52e 27-29,36-38
+  s_a0e1fd495b97ff::t_faebba3b094081 9
+apps/nextjs/src/app/[locale]/_session-scoped-providers.tsx
+  s_a0e1fd495b97ff::t_2ebda07a8c700e 1-84
+packages/widgets/src/manifest.ts
+  s_a0e1fd495b97ff::t_9e329cc9fd862c 3
+apps/nextjs/src/app/[locale]/_client-providers/mantine.tsx
+  s_a0e1fd495b97ff::t_c1b0f5462d0289 16-17
+packages/next-cache-handler/src/redis-handler.ts
+  s_a0e1fd495b97ff::t_db33e2da054acd 1-184
+.gitignore
+  s_a0e1fd495b97ff::t_7152c909756eb8 82
+packages/api/src/router/group.ts
+  s_a0e1fd495b97ff::t_b846f156d45247 287-291,302-304
+  s_a0e1fd495b97ff::t_1556f448918792 369-370
+  s_a0e1fd495b97ff::t_6b11f9503189d5 305,328-332,334-337
+  s_a0e1fd495b97ff::t_0d40336f0a527f 22
+  s_a0e1fd495b97ff::t_482bd9f2c2c770 383-384
+  s_a0e1fd495b97ff::t_b015da9742fbb9 249-256
+packages/api/src/integration-data-cache.spec.ts
+  s_a0e1fd495b97ff::t_44e30e223950cf 1-61,65,69-71,75,79-80
+  s_a0e1fd495b97ff::t_572eb4d630f4c5 62-64,66-68,72-74,76-78
+scripts/run.sh
+  s_a0e1fd495b97ff::t_a8cb4364b0b48f 9
+pnpm-lock.yaml
+  s_a0e1fd495b97ff::t_830ac0d1f466ee 339-341,359,396-398,863-865,983-985,1004-1006,1179,1231,1482,1746,2090-2108,8753-8756,8786,9277,9350-9353,9373-9376,9413-9415,9769-9772,9779-9782,9791-9794,9798-9800,9807-9810,10783-10785,10793,11335,11531-11539,12350-12353,14390,14497,14759-14761,16975,16992,17107,17119,17128,17155,18320,18796,18964,18977,20025,20028,20369,20577,21401,21410,21414,21425,21429,21436,21575,21581,21592,21624,21654,21728,21735,21744,21754,21758,21762,21774,21795,21799,22210,22640-22641,23061,23210,23215,23227,23250-23257,23277-23278,23342-23343,23717-23722,23727-23728,23737-23740,23745-23748,23761-23766,24095,24161,24168,24333,24348,24350,24987-24988,25408,25422,25654-25661,25760,25775,26627,26660,26666,26696-26699,26904,27290,27636,27823,28099,28106,28594,28603,28613,29242,29247,29299-29300,29508-29509,29642,29718,29842,29873
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "018f98e318f90b121613c228d4bff44d7469e9b3",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
