@@ -1,0 +1,23 @@
+packages/api/src/router/widgets/options.ts
+  s_a0e1fd495b97ff::t_7cd3888b7b8a5c 56-60
+packages/api/src/cache-invalidation.ts
+  s_a0e1fd495b97ff::t_13248042d3348c 4-9
+packages/next-cache-handler/src/redis-handler.ts
+  s_a0e1fd495b97ff::t_4e6debc54fae72 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "67fcd69eb8af92ec3e9eaf43fe38333bf69a0b5f",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
