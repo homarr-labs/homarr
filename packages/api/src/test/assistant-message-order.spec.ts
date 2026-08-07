@@ -56,6 +56,32 @@ describe("orderMessagesByParent", () => {
     ).toEqual(["a", "b"]);
   });
 
+  test("keeps a child of a cycle behind its parent", () => {
+    // `child` hangs off the cycle a -> b -> a. Only the cycle's own back-edge can break the
+    // parent-before-child contract; `child` must still come after `a`.
+    const messages = [message("child", "a"), message("a", "b"), message("b", "a")];
+
+    const ordered = orderMessagesByParent(messages).map((entry) => entry.id);
+
+    expect(ordered.toSorted()).toEqual(["a", "b", "child"]);
+    expect(ordered.indexOf("a")).toBeLessThan(ordered.indexOf("child"));
+  });
+
+  test("handles a chain deeper than the call stack", () => {
+    // `getThread` loads every message in a thread, and a conversation is one long parent chain, so
+    // a recursive walk would blow the stack on a long thread.
+    const depth = 50_000;
+    const messages = Array.from({ length: depth }, (_, index) =>
+      message(`m${index}`, index === 0 ? null : `m${index - 1}`),
+    );
+
+    const ordered = orderMessagesByParent(messages);
+
+    expect(ordered).toHaveLength(depth);
+    expect(ordered[0]?.id).toBe("m0");
+    expect(ordered[depth - 1]?.id).toBe(`m${depth - 1}`);
+  });
+
   test("returns short lists unchanged", () => {
     expect(orderMessagesByParent([])).toEqual([]);
     expect(orderMessagesByParent([message("only", null)]).map((entry) => entry.id)).toEqual(["only"]);

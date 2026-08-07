@@ -14,12 +14,20 @@ interface OrderableMessage {
 export const orderMessagesByParent = <TMessage extends OrderableMessage>(messages: TMessage[]): TMessage[] => {
   if (messages.length <= 1) return messages;
 
-  const known = new Set(messages.map((message) => message.id));
+  const messagesById = new Map<string, TMessage>();
+  const incomingIndexById = new Map<string, number>();
+  messages.forEach((message, index) => {
+    messagesById.set(message.id, message);
+    incomingIndexById.set(message.id, index);
+  });
+
   const childrenByParent = new Map<string | null, TMessage[]>();
+  const resolvedParentIds = new Map<string, string | null>();
 
   for (const message of messages) {
     // Treat a dangling parent reference as a root so the message is never dropped.
-    const parentId = message.parentId !== null && known.has(message.parentId) ? message.parentId : null;
+    const parentId = message.parentId !== null && messagesById.has(message.parentId) ? message.parentId : null;
+    resolvedParentIds.set(message.id, parentId);
     const siblings = childrenByParent.get(parentId);
     if (siblings) siblings.push(message);
     else childrenByParent.set(parentId, [message]);
@@ -28,23 +36,65 @@ export const orderMessagesByParent = <TMessage extends OrderableMessage>(message
   const ordered: TMessage[] = [];
   const visited = new Set<string>();
 
-  const visit = (message: TMessage) => {
-    // Guards against a cycle introduced by corrupted data.
-    if (visited.has(message.id)) return;
-    visited.add(message.id);
-    ordered.push(message);
-    for (const child of childrenByParent.get(message.id) ?? []) {
-      visit(child);
+  // A conversation is one long parent chain, so the traversal depth grows with the message count.
+  // An explicit stack keeps a long thread from exhausting the call stack.
+  const visitFrom = (start: TMessage) => {
+    const stack: TMessage[] = [start];
+    while (stack.length > 0) {
+      const message = stack.pop();
+      if (!message || visited.has(message.id)) continue;
+      visited.add(message.id);
+      ordered.push(message);
+      const children = childrenByParent.get(message.id);
+      if (!children) continue;
+      // Pushed in reverse so the stack pops siblings back in their incoming order.
+      for (let index = children.length - 1; index >= 0; index--) {
+        const child = children[index];
+        if (child) stack.push(child);
+      }
     }
   };
 
   for (const root of childrenByParent.get(null) ?? []) {
-    visit(root);
+    visitFrom(root);
   }
 
-  // Any message left over is part of a cycle; append it so nothing is silently lost.
+  // Whatever is left belongs to a parent cycle, which by definition has no root to start from.
+  // Corrupted data should still come back complete and in a sensible order, so each cycle is
+  // broken at its earliest member in the incoming order and traversed from there. Only that one
+  // back-edge can violate parent-before-child; every other message in the component is fine.
+  const findCycleEntry = (start: TMessage) => {
+    const path: TMessage[] = [start];
+    const positionInPath = new Map<string, number>([[start.id, 0]]);
+    let current = start;
+
+    for (;;) {
+      const parentId = resolvedParentIds.get(current.id) ?? null;
+      if (parentId === null || visited.has(parentId)) return current;
+
+      const parent = messagesById.get(parentId);
+      if (!parent) return current;
+
+      const loopStart = positionInPath.get(parent.id);
+      if (loopStart !== undefined) {
+        // Closed the loop: the cycle is the tail of the walked path. Start from whichever of its
+        // members came first in the incoming list so the choice is deterministic.
+        return path.slice(loopStart).reduce((earliest, member) => {
+          const memberIndex = incomingIndexById.get(member.id) ?? 0;
+          const earliestIndex = incomingIndexById.get(earliest.id) ?? 0;
+          return memberIndex < earliestIndex ? member : earliest;
+        });
+      }
+
+      positionInPath.set(parent.id, path.length);
+      path.push(parent);
+      current = parent;
+    }
+  };
+
   for (const message of messages) {
-    if (!visited.has(message.id)) ordered.push(message);
+    if (visited.has(message.id)) continue;
+    visitFrom(findCycleEntry(message));
   }
 
   return ordered;
