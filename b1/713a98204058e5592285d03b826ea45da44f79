@@ -1,0 +1,42 @@
+packages/redis/src/lib/connection.ts
+  s_a70c07ac5b7a5a::t_c3019f2b7a0448 7-11
+  s_a70c07ac5b7a5a::t_5085e6d822b81e 14-19
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  s_a0e1fd495b97ff::t_d545ee5f711f0b 3,17,44-85,88-106
+apps/nextjs/src/app/[locale]/boards/(content)/_theme.tsx
+  s_a0e1fd495b97ff::t_4fdca774bb562e 14-15
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_a0e1fd495b97ff::t_4fdca774bb562e 48-74,77-81
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  s_a0e1fd495b97ff::t_ee0cedbdc63bb9 2,21-22,26,55
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_a0e1fd495b97ff::t_7e189aaae50bbf 2,49,240-245,249-251
+apps/nextjs/src/app/[locale]/_client-providers/mantine.tsx
+  s_a0e1fd495b97ff::t_341b824cad4ba9 16-17
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_a0e1fd495b97ff::t_faaa43e2012cae 13-14,16-24,28,30-39,46-48,68,88-102,105-141,143-152,154,158-163
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b1713a98204058e5592285d03b826ea45da44f79",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "lab <lab@local>"
+    }
+  }
+}
