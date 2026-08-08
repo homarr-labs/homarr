@@ -1,0 +1,21 @@
+REVIEW.md
+  s_093d61b162b9ca::t_2f25960e68381a 11-18,20-22,28-41,75-130,219-227
+MANTINE.md
+  s_093d61b162b9ca::t_2f25960e68381a 7,57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b937d4eb18ea7c6062159a26e5d33dcdd5a0734b",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
