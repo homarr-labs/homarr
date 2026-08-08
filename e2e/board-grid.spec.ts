@@ -845,9 +845,12 @@ describe("Board grid", () => {
 
       const stickyRailY = (await expectBoundingBoxAsync(rail)).y;
       await page.evaluate(() => window.scrollTo({ top: 500, behavior: "auto" }));
-      await expect.poll(async () => (await expectBoundingBoxAsync(rail)).y).toBeGreaterThanOrEqual(0);
-      const scrolledRailY = (await expectBoundingBoxAsync(rail)).y;
-      expect(scrolledRailY).toBeLessThanOrEqual(stickyRailY + 0.5);
+      await expect
+        .poll(async () => {
+          const y = (await expectBoundingBoxAsync(rail)).y;
+          return y >= 0 && y <= stickyRailY + 0.5;
+        })
+        .toBe(true);
       await page.evaluate(() => window.scrollTo({ top: 0, behavior: "auto" }));
 
       await setDocumentZoomAsync(page, 1.25);
@@ -860,6 +863,7 @@ describe("Board grid", () => {
       const zoomedOneColumnScale = (await expectBoundingBoxAsync(firstItem)).width / logicalCellSize;
       await dragLocatorByAsync(page, zoomedEastResizeHandle, logicalCellPitch * zoomedOneColumnScale, 0);
       await expect(firstItem).toHaveAttribute("data-grid-w", "2");
+      await expectGridEntryGeometrySettledAsync(firstItem);
       const zoomedTwoColumnScale =
         (await expectBoundingBoxAsync(firstItem)).width / (logicalCellSize * 2 + LOGICAL_GRID_GAP);
       await dragLocatorByAsync(page, zoomedEastResizeHandle, -logicalCellPitch * zoomedTwoColumnScale, 0);
