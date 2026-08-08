@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Anchor, Group, Text, Tooltip } from "@mantine/core";
+import { Anchor, Badge, Group, Text, Tooltip } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
@@ -51,6 +51,15 @@ export const UserListComponent = ({ initialUserList }: UserListComponentProps) =
             )}
           </Group>
         ),
+      },
+      {
+        accessorKey: "disabled",
+        header: t("user.field.status.label", { defaultValue: "Status" }),
+        size: 100,
+        Cell: ({ row }) => {
+          if (!row.original.disabled) return null;
+          return <Badge color="red">{t("user.field.status.disabled", { defaultValue: "Disabled" })}</Badge>;
+        },
       },
     ],
     [t],
