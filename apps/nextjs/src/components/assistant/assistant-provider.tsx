@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type {
   AttachmentAdapter,
@@ -17,7 +17,6 @@ import { useHotkeys } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
 
 import { clientApi, fetchApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
 import { createId } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
@@ -30,6 +29,7 @@ import {
 } from "@homarr/spotlight";
 import { AssistantWidgetRendererProvider } from "@homarr/widgets";
 
+import { AssistantContext, AssistantPreferencesContext, useAssistantPreferences } from "./assistant-context";
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
 import { AssistantAutoApprovalProvider } from "./assistant-auto-approval";
 import { createAssistantBrowserToolExecutors } from "./assistant-browser-tool-executors";
@@ -53,33 +53,6 @@ import { initialAssistantNotificationState, updateAssistantNotificationState } f
 import { AssistantViewRefreshProvider, useAssistantViewRefresh } from "./assistant-view-refresh";
 import { AssistantBoardWidget } from "./assistant-widget";
 
-interface AssistantContextValue {
-  enabled: boolean;
-  unavailableDescription: string | null;
-  opened: boolean;
-  isRunning: boolean;
-  isRefreshing: boolean;
-  unreadCount: number;
-  open: () => void;
-  close: () => void;
-  toggle: () => void;
-  sendPrompt: (prompt: string) => boolean;
-  refreshCurrentView: () => Promise<void>;
-}
-
-const AssistantContext = createContext<AssistantContextValue | null>(null);
-interface AssistantPreferencesContextValue {
-  defaultModelId: string | null;
-  modelId: string | null;
-  models: AssistantRuntimeModelOption[];
-  reasoning: AssistantReasoningMode;
-  isLoading: boolean;
-  setModelId: (modelId: string) => void;
-  setReasoning: (reasoning: AssistantReasoningMode) => void;
-  getRequestBody: () => { modelId?: string; reasoning: AssistantReasoningMode };
-}
-
-const AssistantPreferencesContext = createContext<AssistantPreferencesContextValue | null>(null);
 const ignoreUnsupportedArchiveAction = () => Promise.resolve();
 const assistantImageAttachmentTypes = ["image/gif", "image/jpeg", "image/png", "image/webp"];
 const assistantDocumentAttachmentTypes = [
@@ -156,22 +129,6 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
       pendingAttachmentIds.delete(attachment.id);
     },
   };
-};
-
-export const useHomarrAssistant = () => {
-  const value = useContext(AssistantContext);
-  if (!value) {
-    throw new Error("useHomarrAssistant must be used within AssistantProvider");
-  }
-  return value;
-};
-
-export const useOptionalHomarrAssistant = () => useContext(AssistantContext);
-
-export const useAssistantPreferences = () => {
-  const value = useContext(AssistantPreferencesContext);
-  if (!value) throw new Error("useAssistantPreferences must be used within AssistantPreferencesProvider");
-  return value;
 };
 
 const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
@@ -766,79 +723,16 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-interface DisabledAssistantProviderProps extends PropsWithChildren {
-  description: string;
-}
-
-const DisabledAssistantProvider = ({ children, description }: DisabledAssistantProviderProps) => {
-  const t = useScopedI18n("common.assistant");
-  const spotlightItem = useMemo(
-    () => ({
-      id: "homarr-assistant",
-      name: t("spotlight"),
-      icon: "/logo/logo.png",
-      description,
-      unavailable: true,
-      alwaysVisible: true,
-      interaction: (_query: string) => ({ type: "none" as const }),
-    }),
-    [description, t],
-  );
-  useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
-
-  const value = useMemo(
-    () => ({
-      enabled: false,
-      unavailableDescription: description,
-      opened: false,
-      isRunning: false,
-      isRefreshing: false,
-      unreadCount: 0,
-      open: () => undefined,
-      close: () => undefined,
-      toggle: () => undefined,
-      sendPrompt: () => false,
-      refreshCurrentView: () => Promise.resolve(),
-    }),
-    [description],
-  );
-
-  return (
-    <AssistantContext.Provider value={value}>
-      <AssistantWidgetRendererProvider renderer={AssistantBoardWidget}>{children}</AssistantWidgetRendererProvider>
-    </AssistantContext.Provider>
-  );
-};
-
-export const AssistantProvider = ({ children }: PropsWithChildren) => {
-  const t = useScopedI18n("common.assistant");
-  const session = useSession();
-  const { data, isLoading, isError } = clientApi.assistant.getAvailability.useQuery(undefined, {
-    enabled: session.status === "authenticated",
-    staleTime: 60_000,
-  });
-  const enabled = Boolean(data?.enabled && session.status === "authenticated");
-
-  if (enabled) {
-    return (
-      <AssistantPreferencesProvider>
-        <AssistantViewRefreshProvider>
-          <AssistantRuntime>
-            <EnabledAssistantProvider>{children}</EnabledAssistantProvider>
-          </AssistantRuntime>
-        </AssistantViewRefreshProvider>
-      </AssistantPreferencesProvider>
-    );
-  }
-
-  const unavailableDescription =
-    session.status !== "authenticated"
-      ? t("unavailable.signIn")
-      : isLoading
-        ? t("unavailable.checking")
-        : isError
-          ? t("unavailable.error")
-          : t("unavailable.notConfigured");
-
-  return <DisabledAssistantProvider description={unavailableDescription}>{children}</DisabledAssistantProvider>;
-};
+/**
+ * The enabled half of the assistant. Only rendered (and only downloaded) when the instance has the
+ * assistant configured and the visitor is signed in - see `assistant-gate`.
+ */
+export const EnabledAssistantRoot = ({ children }: PropsWithChildren) => (
+  <AssistantPreferencesProvider>
+    <AssistantViewRefreshProvider>
+      <AssistantRuntime>
+        <EnabledAssistantProvider>{children}</EnabledAssistantProvider>
+      </AssistantRuntime>
+    </AssistantViewRefreshProvider>
+  </AssistantPreferencesProvider>
+);

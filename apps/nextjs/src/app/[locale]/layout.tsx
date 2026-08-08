@@ -13,6 +13,7 @@ import { notFound } from "next/navigation";
 import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
+import { api } from "@homarr/api/server";
 import { env as authEnv } from "@homarr/auth/env";
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
@@ -27,7 +28,8 @@ import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
 import { Analytics } from "~/components/layout/analytics";
-import { AssistantProvider } from "~/components/assistant/assistant-provider";
+import type { AssistantAvailability } from "~/components/assistant/assistant-gate";
+import { AssistantGate } from "~/components/assistant/assistant-gate";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
 import { env } from "~/env";
 
@@ -98,11 +100,20 @@ export default async function Layout(props: {
         })
       : null,
   );
-  const [session, user, serverSettings, colorScheme] = await Promise.all([
+  const assistantAvailabilityPromise: Promise<AssistantAvailability> = sessionPromise.then((session) =>
+    !session
+      ? "unauthenticated"
+      : api.assistant
+          .getAvailability()
+          .then((availability) => (availability.enabled ? "enabled" : "unconfigured"))
+          .catch(() => "error"),
+  );
+  const [session, user, serverSettings, colorScheme, assistantAvailability] = await Promise.all([
     sessionPromise,
     userPromise,
     getRscServerSettingsAsync(),
     getCurrentColorSchemeAsync(),
+    assistantAvailabilityPromise,
   ]);
   const direction = isLocaleRTL(locale) ? "rtl" : "ltr";
   const publicUrls = resolveHomarrUrlConfig({
@@ -146,7 +157,7 @@ export default async function Layout(props: {
     (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
     (innerProps) => <ModalProvider {...innerProps} />,
     (innerProps) => <SpotlightProvider {...innerProps} />,
-    (innerProps) => <AssistantProvider {...innerProps} />,
+    (innerProps) => <AssistantGate availability={assistantAvailability} {...innerProps} />,
   ]);
 
   return (
