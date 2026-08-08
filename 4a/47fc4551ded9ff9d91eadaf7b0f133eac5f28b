@@ -1,0 +1,22 @@
+e2e/lazy-widgets.spec.ts
+  s_093d61b162b9ca::t_e8943684aea343 91-93,95
+packages/widgets/src/clock/component.tsx
+  s_093d61b162b9ca::t_e8943684aea343 60,127
+  s_093d61b162b9ca::t_e323f0e1294a95 53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4a47fc4551ded9ff9d91eadaf7b0f133eac5f28b",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
