@@ -14,7 +14,7 @@ import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
@@ -28,7 +28,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   const board = useRequiredBoard();
   const appQuery = clientApi.app.byId.useQuery({ id: options.appId });
   const app = getUsableWidgetQueryData(appQuery);
-  const href = getSafeApplicationUrl(app?.href);
+  const href = getSafeAppHref(app?.href);
   useRegisterSpotlightContextResults(
     `app-${app?.id ?? options.appId}`,
     app && href

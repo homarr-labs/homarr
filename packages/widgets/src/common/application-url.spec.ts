@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { getSafeApplicationUrl } from "./application-url";
+import { getSafeApplicationUrl, getSafeAppHref } from "./application-url";
 
 describe("getSafeApplicationUrl", () => {
   test.each(["javascript:alert(1)", "data:text/html,test", "not a URL", "/relative", "./relative"])(
@@ -27,4 +27,20 @@ describe("getSafeApplicationUrl", () => {
   test.each([undefined, null, ""])("rejects missing URL %s", (value) => {
     expect(getSafeApplicationUrl(value)).toBeUndefined();
   });
+});
+
+describe("getSafeAppHref", () => {
+  test.each(["#section", "/boards/home", "./relative", "vscode://file/example.ts", "https://example.com/path"])(
+    "allows configured app link %s",
+    (value) => expect(getSafeAppHref(value)).toBe(value),
+  );
+
+  test.each([
+    "javascript:alert(1)",
+    "data:text/html,test",
+    "file:///etc/passwd",
+    "//example.com/path",
+    "not a URL",
+    "https://user:password@example.com/path",
+  ])("rejects unsafe app link %s", (value) => expect(getSafeAppHref(value)).toBeUndefined());
 });
