@@ -11,6 +11,7 @@ onBootstrap((event) => {
   event.next();
   const users = event.app.findCollectionByNameOrId("users");
   users.oauth2.enabled = configured;
+  users.oauth2.mappedFields = { id: "", name: "", username: "displayName", avatarURL: "avatarUrl" };
   users.oauth2.providers = configured ? [{ name: "github", clientId, clientSecret }] : [];
   event.app.save(users);
   console.log(JSON.stringify({ event: "workshop_oauth_synchronized", enabled: configured }));

@@ -25,7 +25,7 @@ const deriveGithubIdentity = (oauthUser, recordId) => {
   const githubUsername =
     GITHUB_USERNAME_PATTERN.test(candidateUsername) && !candidateUsername.includes("--") ? candidateUsername : "";
   const displayName =
-    normalizedIdentityText(oauthUser && oauthUser.name, rawUser.name, githubUsername, rawUser.login).slice(0, 100) ||
+    normalizedIdentityText(githubUsername, rawUser.login, oauthUser && oauthUser.name, rawUser.name).slice(0, 100) ||
     `GitHub user ${String(recordId || "").slice(0, 8)}`;
   const candidateAvatarUrl = normalizedIdentityText(
     oauthUser && oauthUser.avatarURL,
