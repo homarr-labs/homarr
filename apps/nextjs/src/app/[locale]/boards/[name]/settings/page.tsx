@@ -82,7 +82,7 @@ export default async function BoardSettingsPage(props: Props) {
   }
 
   return (
-    <Container>
+    <Container size="xl">
       <Stack>
         <Title>{t("title", { boardName: capitalize(board.name) })}</Title>
         <ActiveTabAccordion variant="separated" defaultValue={searchParams.tab ?? "general"}>

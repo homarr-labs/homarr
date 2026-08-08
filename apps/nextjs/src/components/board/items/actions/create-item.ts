@@ -60,9 +60,13 @@ const createItemLayouts = (board: Board, currentSection: EmptySection, kind: Wid
   return layouts.map((layoutId) => {
     const boardLayout = board.layouts.find((layout) => layout.id === layoutId);
     const elements = getSectionElements(board, { sectionId: currentSection.id, layoutId });
+    const sizeForLayout = {
+      ...itemSize,
+      width: Math.min(boardLayout?.columnCount ?? itemSize.width, itemSize.width),
+    };
 
     const emptyPosition = boardLayout
-      ? getFirstEmptyPosition(elements, boardLayout.columnCount, 9999, itemSize)
+      ? getFirstEmptyPosition(elements, boardLayout.columnCount, 9999, sizeForLayout)
       : { xOffset: 0, yOffset: 0 };
 
     if (!emptyPosition) {
@@ -70,8 +74,8 @@ const createItemLayouts = (board: Board, currentSection: EmptySection, kind: Wid
     }
 
     return {
-      width: itemSize.width,
-      height: itemSize.height,
+      width: sizeForLayout.width,
+      height: sizeForLayout.height,
       ...emptyPosition,
       sectionId: currentSection.id,
       layoutId,

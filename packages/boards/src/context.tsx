@@ -11,13 +11,16 @@ import { updateBoardName } from "./updater";
 
 const BoardContext = createContext<{
   board: RouterOutputs["board"]["getBoardByName"];
+  layoutOverrideId: string | null;
 } | null>(null);
 
 export const BoardProvider = ({
   children,
   initialBoard,
+  layoutOverrideId = null,
 }: PropsWithChildren<{
   initialBoard: RouterOutputs["board"]["getBoardByName"];
+  layoutOverrideId?: string | null;
 }>) => {
   const { data } = clientApi.board.getBoardByName.useQuery({ name: initialBoard.name }, { initialData: initialBoard });
 
@@ -39,6 +42,7 @@ export const BoardProvider = ({
     <BoardContext.Provider
       value={{
         board: data,
+        layoutOverrideId,
       }}
     >
       {children}
@@ -62,7 +66,14 @@ export const useOptionalBoard = () => {
   return context?.board ?? null;
 };
 
-export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]) => {
+export const useLayoutOverride = () => useContext(BoardContext)?.layoutOverrideId ?? null;
+
+export const getCurrentLayout = (
+  board: RouterOutputs["board"]["getBoardByName"],
+  layoutOverrideId: string | null = null,
+) => {
+  if (layoutOverrideId && board.layouts.some((layout) => layout.id === layoutOverrideId)) return layoutOverrideId;
+
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (typeof window === "undefined") return board.layouts.at(0)!.id;
 
@@ -75,11 +86,12 @@ export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]
 
 export const useCurrentLayout = () => {
   const board = useRequiredBoard();
-  const [currentLayout, setCurrentLayout] = useState(getCurrentLayout(board));
+  const layoutOverrideId = useLayoutOverride();
+  const [currentLayout, setCurrentLayout] = useState(getCurrentLayout(board, layoutOverrideId));
 
   const onResize = useCallback(() => {
-    setCurrentLayout(getCurrentLayout(board));
-  }, [board]);
+    setCurrentLayout(getCurrentLayout(board, layoutOverrideId));
+  }, [board, layoutOverrideId]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -89,6 +101,8 @@ export const useCurrentLayout = () => {
       window.removeEventListener("resize", onResize);
     };
   }, [onResize]);
+
+  useEffect(() => onResize(), [onResize]);
 
   return currentLayout;
 };

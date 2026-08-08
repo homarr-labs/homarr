@@ -4,7 +4,7 @@ import { describe, expect, it, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import type { Database, InferInsertModel } from "@homarr/db";
-import { and, eq, not } from "@homarr/db";
+import { and, eq } from "@homarr/db";
 import {
   boardGroupPermissions,
   boards,
@@ -325,10 +325,13 @@ describe("createBoard should create a new board", () => {
     expect(firstSection?.xOffset).toBe(0);
     expect(firstSection?.yOffset).toBe(0);
 
-    expect(dbBoard?.layouts.length).toBe(1);
-    const firstLayout = dbBoard?.layouts.at(0);
-    expect(firstLayout?.columnCount).toBe(24);
-    expect(firstLayout?.breakpoint).toBe(0);
+    expect(dbBoard?.layouts.length).toBe(2);
+    expect(dbBoard?.layouts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "Mobile", role: "mobile", columnCount: 3, breakpoint: 0 }),
+        expect.objectContaining({ name: "Base", role: "base", columnCount: 24, breakpoint: 768 }),
+      ]),
+    );
   });
 
   test("should throw error when user has no board-create permission", async () => {
@@ -341,6 +344,36 @@ describe("createBoard should create a new board", () => {
 
     // Assert
     await expect(actAsync()).rejects.toThrowError("Permission denied");
+  });
+});
+
+describe("duplicateBoard should preserve protected layout invariants", () => {
+  test("normalizes a legacy single-layout board while preserving Base positions", async () => {
+    const db = createDb();
+    const session = {
+      ...defaultSession,
+      user: {
+        ...defaultSession.user,
+        permissions: ["board-create"] satisfies GroupPermissionKey[],
+      },
+    };
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session });
+    const { boardId } = await createFullBoardAsync(db, "source");
+
+    const result = await caller.duplicateBoard({ id: boardId, name: "copy" });
+
+    const copiedBoard = await db.query.boards.findFirst({
+      where: eq(boards.id, result.boardId),
+      with: { layouts: true, items: { with: { layouts: true } } },
+    });
+    expect(copiedBoard?.layouts).toHaveLength(2);
+    expect(copiedBoard?.layouts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ role: "mobile", columnCount: 3, breakpoint: 0 }),
+        expect.objectContaining({ role: "base", columnCount: 10, breakpoint: 768 }),
+      ]),
+    );
+    expect(copiedBoard?.items.at(0)?.layouts).toHaveLength(2);
   });
 });
 
@@ -1328,14 +1361,35 @@ const createExistingLayout = (id: string) => ({
   id,
   name: "Base",
   columnCount: 10,
+  breakpoint: 768,
+  role: "base" as const,
+});
+const createMobileLayout = (id: string) => ({
+  id,
+  name: "Mobile",
+  columnCount: 3,
   breakpoint: 0,
+  role: "mobile" as const,
 });
 const createNewLayout = (columnCount: number) => ({
   id: createId(),
   name: "New layout",
   columnCount,
-  breakpoint: 1400,
+  breakpoint: 480,
+  role: "custom" as const,
 });
+const addMobileLayoutAsync = async (db: Database, boardId: string) => {
+  const mobileLayoutId = createId();
+  await db.insert(layouts).values({
+    id: mobileLayoutId,
+    name: "Mobile",
+    columnCount: 3,
+    breakpoint: 0,
+    role: "mobile",
+    boardId,
+  });
+  return mobileLayoutId;
+};
 describe("saveLayouts should save layout changes", () => {
   test("should add layout when not present in database", async () => {
     // Arrange
@@ -1343,23 +1397,26 @@ describe("saveLayouts should save layout changes", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
     const newLayout = createNewLayout(12);
 
     // Act
-    await caller.saveLayouts({
+    const savedLayouts = await caller.saveLayouts({
       id: boardId,
-      layouts: [createExistingLayout(layoutId), newLayout],
+      layouts: [createMobileLayout(mobileLayoutId), createExistingLayout(layoutId), newLayout],
     });
 
     // Assert
     const layout = await db.query.layouts.findFirst({
-      where: not(eq(layouts.id, layoutId)),
+      where: eq(layouts.role, "custom"),
     });
 
     const definedLayout = expectToBeDefined(layout);
     expect(definedLayout.name).toBe(newLayout.name);
     expect(definedLayout.columnCount).toBe(newLayout.columnCount);
     expect(definedLayout.breakpoint).toBe(newLayout.breakpoint);
+    expect(definedLayout.role).toBe("custom");
+    expect(savedLayouts.find((candidate) => candidate.role === "custom")?.id).toBe(definedLayout.id);
   });
   test("should add items and dynamic sections generated from grid-algorithm when new layout is added", async () => {
     // Arrange
@@ -1367,6 +1424,7 @@ describe("saveLayouts should save layout changes", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
     const assignments = await createItemsAndSectionsAsync(db, {
       boardId,
       layoutId,
@@ -1377,12 +1435,12 @@ describe("saveLayouts should save layout changes", () => {
     // Act
     await caller.saveLayouts({
       id: boardId,
-      layouts: [createExistingLayout(layoutId), newLayout],
+      layouts: [createMobileLayout(mobileLayoutId), createExistingLayout(layoutId), newLayout],
     });
 
     // Assert
     const layout = await db.query.layouts.findFirst({
-      where: not(eq(layouts.id, layoutId)),
+      where: eq(layouts.role, "custom"),
     });
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expectLayoutForRootLayoutAsync(db, sectionId, layout!.id, {
@@ -1398,6 +1456,7 @@ describe("saveLayouts should save layout changes", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
     const updatedLayout = createExistingLayout(layoutId);
     updatedLayout.breakpoint = 1400;
     updatedLayout.name = "Updated layout";
@@ -1405,7 +1464,7 @@ describe("saveLayouts should save layout changes", () => {
     // Act
     await caller.saveLayouts({
       id: boardId,
-      layouts: [updatedLayout],
+      layouts: [createMobileLayout(mobileLayoutId), updatedLayout],
     });
 
     // Assert
@@ -1424,6 +1483,7 @@ describe("saveLayouts should save layout changes", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
     const assignments = await createItemsAndSectionsAsync(db, {
       boardId,
       layoutId,
@@ -1435,7 +1495,7 @@ describe("saveLayouts should save layout changes", () => {
     // Act
     await caller.saveLayouts({
       id: boardId,
-      layouts: [updatedLayout],
+      layouts: [createMobileLayout(mobileLayoutId), updatedLayout],
     });
 
     // Assert
@@ -1451,16 +1511,26 @@ describe("saveLayouts should save layout changes", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+    const customLayoutId = createId();
+    await db.insert(layouts).values({
+      id: customLayoutId,
+      name: "Custom",
+      columnCount: 6,
+      breakpoint: 480,
+      role: "custom",
+      boardId,
+    });
 
     // Act
     await caller.saveLayouts({
       id: boardId,
-      layouts: [createNewLayout(12)],
+      layouts: [createMobileLayout(mobileLayoutId), createExistingLayout(layoutId)],
     });
 
     // Assert
     const layout = await db.query.layouts.findFirst({
-      where: eq(layouts.id, layoutId),
+      where: eq(layouts.id, customLayoutId),
     });
     expect(layout).toBeUndefined();
   });
@@ -1475,11 +1545,72 @@ describe("saveLayouts should save layout changes", () => {
     const actAsync = async () =>
       await caller.saveLayouts({
         id: createId(),
-        layouts: [createExistingLayout(layoutId)],
+        layouts: [createMobileLayout(createId()), createExistingLayout(layoutId)],
       });
 
     // Assert
     await expect(actAsync()).rejects.toThrowError("Board not found");
+  });
+  test("should reject changing protected layout roles", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+
+    const actAsync = async () =>
+      await caller.saveLayouts({
+        id: boardId,
+        layouts: [
+          { ...createExistingLayout(layoutId), role: "mobile", breakpoint: 0 },
+          { ...createMobileLayout(mobileLayoutId), role: "base", breakpoint: 768 },
+        ],
+      });
+
+    await expect(actAsync()).rejects.toThrowError("Layout roles cannot be changed");
+  });
+});
+
+describe("resetLayout should rebuild a layout from Base", () => {
+  test("should replace target item positions and preserve layout metadata", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    await addMobileLayoutAsync(db, boardId);
+    const customLayoutId = createId();
+    await db.insert(layouts).values({
+      id: customLayoutId,
+      name: "Tablet",
+      columnCount: 6,
+      breakpoint: 480,
+      role: "custom",
+      boardId,
+    });
+    await db.insert(itemLayouts).values({
+      itemId,
+      sectionId,
+      layoutId: customLayoutId,
+      width: 2,
+      height: 2,
+      xOffset: 3,
+      yOffset: 4,
+    });
+
+    await caller.resetLayout({ boardId, layoutId: customLayoutId });
+
+    const resetPosition = await db.query.itemLayouts.findFirst({
+      where: and(eq(itemLayouts.itemId, itemId), eq(itemLayouts.layoutId, customLayoutId)),
+    });
+    expect(resetPosition).toMatchObject({ width: 1, height: 1, xOffset: 0, yOffset: 0, sectionId });
+    const customLayout = await db.query.layouts.findFirst({ where: eq(layouts.id, customLayoutId) });
+    expect(customLayout).toMatchObject({ name: "Tablet", columnCount: 6, breakpoint: 480, role: "custom" });
+  });
+
+  test("should reject resetting Base", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+
+    await expect(caller.resetLayout({ boardId, layoutId })).rejects.toThrowError("Base layout cannot be reset");
   });
 });
 
@@ -1521,7 +1652,8 @@ const createFullBoardAsync = async (db: Database, name: string) => {
     id: layoutId,
     name: "Base",
     columnCount: 10,
-    breakpoint: 0,
+    breakpoint: 768,
+    role: "base",
     boardId,
   });
 

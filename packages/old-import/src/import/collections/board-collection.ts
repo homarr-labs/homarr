@@ -1,6 +1,7 @@
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
+import { normalizeBoardLayoutRoles } from "@homarr/definitions";
 import type { BoardSize, OldmarrConfig } from "@homarr/old-schema";
 import { boardSizes, getBoardSizeName } from "@homarr/old-schema";
 
@@ -87,8 +88,8 @@ export const createBoardInsertCollection = (
       {} as Record<BoardSize, string>,
     );
 
-    insertCollection.layouts.push(
-      ...boardSizes.map((size) => ({
+    const importedLayouts = normalizeBoardLayoutRoles(
+      boardSizes.map((size) => ({
         id: layoutMapping[size],
         boardId: mappedBoard.id,
         columnCount: mapColumnCount(board.config.settings.customization.gridstack, size),
@@ -96,6 +97,8 @@ export const createBoardInsertCollection = (
         name: getBoardSizeName(size),
       })),
     );
+
+    insertCollection.layouts.push(...importedLayouts);
 
     const preparedSections = prepareSections(mappedBoard.id, { wrappers, categories });
 

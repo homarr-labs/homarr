@@ -294,9 +294,7 @@ export const onboardRouter = createTRPCRouter({
     }
 
     const section = board.sections.find((boardSection) => boardSection.kind === "empty");
-    const layout = board.layouts[0];
-
-    if (section && layout) {
+    if (section && board.layouts.length > 0) {
       const existingItems = await db.query.items.findMany({
         where: eq(items.boardId, board.id),
       });
@@ -310,12 +308,12 @@ export const onboardRouter = createTRPCRouter({
 
       await placeAllWidgetsAsync(
         db,
-        {
+        board.layouts.map((layout) => ({
           boardId: board.id,
           sectionId: section.id,
           layoutId: layout.id,
           columnCount: layout.columnCount,
-        },
+        })),
         allIntegrations,
         allApps,
       );

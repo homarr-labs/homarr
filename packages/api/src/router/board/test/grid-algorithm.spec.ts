@@ -1,8 +1,8 @@
 import { createId } from "@paralleldrive/cuid2";
 import { describe, expect, test } from "vitest";
 
-import type { GridAlgorithmItem } from "../grid-algorithm";
-import { generateResponsiveGridFor } from "../grid-algorithm";
+import { generateResponsiveGridFor } from "@homarr/common";
+import type { GridAlgorithmItem } from "@homarr/common";
 
 const ROOT_SECTION_ID = "section";
 

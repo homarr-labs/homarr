@@ -21,6 +21,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  LayoutRole,
   OnboardingStep,
   SearchEngineType,
   SectionKind,
@@ -330,6 +331,7 @@ export const layouts = sqliteTable("layout", {
     .references(() => boards.id, { onDelete: "cascade" }),
   columnCount: int().notNull(),
   breakpoint: int().notNull().default(0),
+  role: text().$type<LayoutRole>().notNull().default("custom"),
 });
 
 export const itemLayouts = sqliteTable(

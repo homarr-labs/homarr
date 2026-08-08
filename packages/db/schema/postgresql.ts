@@ -32,6 +32,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  LayoutRole,
   OnboardingStep,
   SearchEngineType,
   SectionKind,
@@ -344,6 +345,7 @@ export const layouts = pgTable("layout", {
     .references(() => boards.id, { onDelete: "cascade" }),
   columnCount: smallint().notNull(),
   breakpoint: smallint().notNull().default(0),
+  role: varchar({ length: 16 }).$type<LayoutRole>().notNull().default("custom"),
 });
 
 export const itemLayouts = pgTable(
