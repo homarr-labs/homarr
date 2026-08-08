@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { createId, generateResponsiveGridFor } from "@homarr/common";
+import type { GridAlgorithmItem } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
@@ -796,6 +797,16 @@ export const boardRouter = createTRPCRouter({
       const itemSectionLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = [];
       const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = [];
       const savedLayoutIds = new Map<string, string>();
+      const requestedBaseLayout = input.layouts.find((layout) => layout.id === baseLayout.id);
+      const resizedBaseLayout =
+        requestedBaseLayout && requestedBaseLayout.columnCount !== baseLayout.columnCount
+          ? getUpdatedBoardLayout(board, {
+              previous: { layoutId: baseLayout.id, columnCount: baseLayout.columnCount },
+              current: { layoutId: baseLayout.id, columnCount: requestedBaseLayout.columnCount },
+            })
+          : null;
+      const baseSourceElements = resizedBaseLayout ? getElementsForProjectedLayout(resizedBaseLayout) : undefined;
+      const baseSourceColumnCount = requestedBaseLayout?.columnCount ?? baseLayout.columnCount;
 
       for (const addedLayout of addedLayouts) {
         const layoutId = createId();
@@ -810,7 +821,11 @@ export const boardRouter = createTRPCRouter({
         });
 
         const projectedLayout = getUpdatedBoardLayout(board, {
-          previous: { layoutId: baseLayout.id, columnCount: baseLayout.columnCount },
+          previous: {
+            layoutId: baseLayout.id,
+            columnCount: baseSourceColumnCount,
+            elements: baseSourceElements,
+          },
           current: { layoutId, columnCount: addedLayout.columnCount },
         });
         itemSectionLayoutsToInsert.push(...projectedLayout.itemSectionLayouts);
@@ -825,10 +840,13 @@ export const boardRouter = createTRPCRouter({
         const dbLayout = existingLayoutsById.get(updatedLayout.id);
         if (!dbLayout || dbLayout.columnCount === updatedLayout.columnCount) continue;
 
-        const projectedLayout = getUpdatedBoardLayout(board, {
-          previous: { layoutId: dbLayout.id, columnCount: dbLayout.columnCount },
-          current: { layoutId: dbLayout.id, columnCount: updatedLayout.columnCount },
-        });
+        const projectedLayout =
+          updatedLayout.role === "base" && resizedBaseLayout
+            ? resizedBaseLayout
+            : getUpdatedBoardLayout(board, {
+                previous: { layoutId: dbLayout.id, columnCount: dbLayout.columnCount },
+                current: { layoutId: dbLayout.id, columnCount: updatedLayout.columnCount },
+              });
         itemSectionLayoutsToUpdate.push(...projectedLayout.itemSectionLayouts);
         sectionLayoutsToUpdate.push(...projectedLayout.sectionLayouts);
       }
@@ -953,53 +971,62 @@ export const boardRouter = createTRPCRouter({
         }))
         .toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint);
     }),
-  resetLayout: protectedProcedure.input(boardResetLayoutSchema).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
-
-    const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.boardId), ctx.session.user.id);
-    const targetLayout = board.layouts.find((layout) => layout.id === input.layoutId);
-    const baseLayout = board.layouts.find((layout) => layout.role === "base");
-
-    if (!targetLayout) throw new TRPCError({ code: "NOT_FOUND", message: "Layout not found" });
-    if (!baseLayout) {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base layout" });
-    }
-    if (targetLayout.role === "base") {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "The Base layout cannot be reset" });
-    }
-
-    const projectedLayout = getUpdatedBoardLayout(board, {
-      previous: { layoutId: baseLayout.id, columnCount: baseLayout.columnCount },
-      current: { layoutId: targetLayout.id, columnCount: targetLayout.columnCount },
-    });
-
-    await handleTransactionsAsync(ctx.db, {
-      async handleAsync(db, schema) {
-        await db.transaction(async (transaction) => {
-          await transaction.delete(schema.itemLayouts).where(eq(schema.itemLayouts.layoutId, targetLayout.id));
-          await transaction.delete(schema.sectionLayouts).where(eq(schema.sectionLayouts.layoutId, targetLayout.id));
-          if (projectedLayout.itemSectionLayouts.length > 0) {
-            await transaction.insert(schema.itemLayouts).values(projectedLayout.itemSectionLayouts);
-          }
-          if (projectedLayout.sectionLayouts.length > 0) {
-            await transaction.insert(schema.sectionLayouts).values(projectedLayout.sectionLayouts);
-          }
-        });
+  resetLayout: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Reset a board's Mobile or custom layout from its Base layout while preserving the target layout settings. Requires modify permission. REQUIRED: boardId (board ID), layoutId (non-Base layout ID)",
       },
-      handleSync(db) {
-        db.transaction((transaction) => {
-          transaction.delete(itemLayouts).where(eq(itemLayouts.layoutId, targetLayout.id)).run();
-          transaction.delete(sectionLayouts).where(eq(sectionLayouts.layoutId, targetLayout.id)).run();
-          if (projectedLayout.itemSectionLayouts.length > 0) {
-            transaction.insert(itemLayouts).values(projectedLayout.itemSectionLayouts).run();
-          }
-          if (projectedLayout.sectionLayouts.length > 0) {
-            transaction.insert(sectionLayouts).values(projectedLayout.sectionLayouts).run();
-          }
-        });
-      },
-    });
-  }),
+    })
+    .input(boardResetLayoutSchema)
+    .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+
+      const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.boardId), ctx.session.user.id);
+      const targetLayout = board.layouts.find((layout) => layout.id === input.layoutId);
+      const baseLayout = board.layouts.find((layout) => layout.role === "base");
+
+      if (!targetLayout) throw new TRPCError({ code: "NOT_FOUND", message: "Layout not found" });
+      if (!baseLayout) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base layout" });
+      }
+      if (targetLayout.role === "base") {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "The Base layout cannot be reset" });
+      }
+
+      const projectedLayout = getUpdatedBoardLayout(board, {
+        previous: { layoutId: baseLayout.id, columnCount: baseLayout.columnCount },
+        current: { layoutId: targetLayout.id, columnCount: targetLayout.columnCount },
+      });
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction.delete(schema.itemLayouts).where(eq(schema.itemLayouts.layoutId, targetLayout.id));
+            await transaction.delete(schema.sectionLayouts).where(eq(schema.sectionLayouts.layoutId, targetLayout.id));
+            if (projectedLayout.itemSectionLayouts.length > 0) {
+              await transaction.insert(schema.itemLayouts).values(projectedLayout.itemSectionLayouts);
+            }
+            if (projectedLayout.sectionLayouts.length > 0) {
+              await transaction.insert(schema.sectionLayouts).values(projectedLayout.sectionLayouts);
+            }
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.delete(itemLayouts).where(eq(itemLayouts.layoutId, targetLayout.id)).run();
+            transaction.delete(sectionLayouts).where(eq(sectionLayouts.layoutId, targetLayout.id)).run();
+            if (projectedLayout.itemSectionLayouts.length > 0) {
+              transaction.insert(itemLayouts).values(projectedLayout.itemSectionLayouts).run();
+            }
+            if (projectedLayout.sectionLayouts.length > 0) {
+              transaction.insert(sectionLayouts).values(projectedLayout.sectionLayouts).run();
+            }
+          });
+        },
+      });
+    }),
   savePartialBoardSettings: protectedProcedure
     .meta({
       openapi: { method: "PATCH", path: "/api/boards/{id}/settings", tags: ["boards"], protect: true },
@@ -1865,6 +1892,7 @@ const getUpdatedBoardLayout = (
     previous: {
       layoutId: string;
       columnCount: number;
+      elements?: GridAlgorithmItem[];
     };
     current: {
       layoutId: string;
@@ -1875,7 +1903,7 @@ const getUpdatedBoardLayout = (
   const itemSectionLayoutsCollection: InferInsertModel<typeof itemLayouts>[] = [];
   const sectionLayoutsCollection: InferInsertModel<typeof sectionLayouts>[] = [];
 
-  const elements = getElementsForLayout(board, options.previous.layoutId);
+  const elements = options.previous.elements ?? getElementsForLayout(board, options.previous.layoutId);
   const rootSections = board.sections.filter((section) => section.kind !== "dynamic");
 
   for (const rootSection of rootSections) {
@@ -1939,6 +1967,35 @@ const getUpdatedBoardLayout = (
     sectionLayouts: sectionLayoutsCollection,
   };
 };
+
+const getElementsForProjectedLayout = (
+  projectedLayout: ReturnType<typeof getUpdatedBoardLayout>,
+): GridAlgorithmItem[] => [
+  ...projectedLayout.itemSectionLayouts.map((layout) => ({
+    id: layout.itemId,
+    type: "item" as const,
+    height: layout.height,
+    width: layout.width,
+    xOffset: layout.xOffset,
+    yOffset: layout.yOffset,
+    sectionId: layout.sectionId,
+  })),
+  ...projectedLayout.sectionLayouts.flatMap((layout) =>
+    layout.parentSectionId
+      ? [
+          {
+            id: layout.sectionId,
+            type: "section" as const,
+            height: layout.height,
+            width: layout.width,
+            xOffset: layout.xOffset,
+            yOffset: layout.yOffset,
+            sectionId: layout.parentSectionId,
+          },
+        ]
+      : [],
+  ),
+];
 
 const getElementsForLayout = (board: BoardForLayoutProjection, layoutId: string) => {
   const sectionElements = board.sections

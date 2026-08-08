@@ -3,6 +3,7 @@
 import { Box, Paper, Stack, Text } from "@mantine/core";
 
 import { useCurrentLayout, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import { getRepresentativeLayoutWidth } from "../_layout-utils";
 import { BoardCategorySection } from "~/components/board/sections/category-section";
@@ -11,6 +12,7 @@ import { BoardBackgroundVideo } from "~/components/layout/background";
 
 export const ClientBoard = () => {
   const board = useRequiredBoard();
+  const tPreview = useScopedI18n("board.setting.section.layout.preview");
   const currentLayoutId = useCurrentLayout();
   const layoutOverrideId = useLayoutOverride();
 
@@ -42,7 +44,7 @@ export const ClientBoard = () => {
   return (
     <Stack align="center" gap="xs" p="md" mih="100%">
       <Text size="xs" c="dimmed" fw={500}>
-        {currentLayout.name} · {representativeWidth}px
+        {tPreview("editorWidthLabel", { layoutName: currentLayout.name, width: representativeWidth })}
       </Text>
       <Paper
         withBorder

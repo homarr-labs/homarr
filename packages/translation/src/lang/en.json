@@ -4427,7 +4427,8 @@
           "preview": {
             "columns": "columns",
             "empty": "This layout is empty",
-            "dynamicSection": "Dynamic section"
+            "dynamicSection": "Dynamic section",
+            "editorWidthLabel": "{layoutName} · {width}px"
           },
           "reset": {
             "action": "Reset from Base",

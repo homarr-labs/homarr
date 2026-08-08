@@ -21,6 +21,7 @@ import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
 import type { UseFormReturnType } from "@homarr/form";
 import { useConfirmModal } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
 import { SectionCard } from "~/components/manage/section-card";
@@ -42,7 +43,14 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
   const { openConfirmModal } = useConfirmModal();
   const [editingLayoutId, setEditingLayoutId] = useState<string | null>(null);
   const [resettingLayoutId, setResettingLayoutId] = useState<string | null>(null);
-  const { mutateAsync: resetLayout } = clientApi.board.resetLayout.useMutation();
+  const { mutateAsync: resetLayout } = clientApi.board.resetLayout.useMutation({
+    onError() {
+      showErrorNotification({
+        title: t("common.notification.update.error"),
+        message: t("common.notification.update.error"),
+      });
+    },
+  });
   const appIds = useMemo(
     () =>
       Array.from(
@@ -86,6 +94,8 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
             await resetLayout({ boardId: board.id, layoutId: canonicalLayout.id });
             await utils.board.getBoardByName.invalidate({ name: board.name });
             router.refresh();
+          } catch {
+            // The mutation callback displays the error notification.
           } finally {
             setResettingLayoutId(null);
           }
