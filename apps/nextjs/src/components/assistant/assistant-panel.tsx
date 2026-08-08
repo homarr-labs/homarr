@@ -43,7 +43,6 @@ import {
   Collapse,
   Combobox,
   Divider,
-  FocusTrap,
   Group,
   Image,
   Loader,
@@ -2608,24 +2607,22 @@ export const AssistantPanel = ({
         />
       )}
       {opened && (
-        <FocusTrap active>
-          <dialog className={classes.floatingPanel} aria-label={t("title")} open>
-            <AssistantConversationSurface
-              isRunning={isRunning}
-              pendingAction={pendingAction}
-              modelId={modelId}
-              models={models}
-              modelOptionsLoading={modelOptionsLoading}
-              reasoning={reasoning}
-              isRefreshing={isRefreshing}
-              onRefresh={onRefresh}
-              onModelChange={onModelChange}
-              onReasoningChange={onReasoningChange}
-              autoFocusComposer
-              onMinimize={onClose}
-            />
-          </dialog>
-        </FocusTrap>
+        <dialog className={classes.floatingPanel} aria-label={t("title")} open>
+          <AssistantConversationSurface
+            isRunning={isRunning}
+            pendingAction={pendingAction}
+            modelId={modelId}
+            models={models}
+            modelOptionsLoading={modelOptionsLoading}
+            reasoning={reasoning}
+            isRefreshing={isRefreshing}
+            onRefresh={onRefresh}
+            onModelChange={onModelChange}
+            onReasoningChange={onReasoningChange}
+            autoFocusComposer
+            onMinimize={onClose}
+          />
+        </dialog>
       )}
     </>
   );
