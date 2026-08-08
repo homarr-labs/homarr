@@ -14,13 +14,14 @@ interface CultureSettingsFormProps {
 
 export const CultureSettingsForm = ({ form }: CultureSettingsFormProps) => {
   const tCulture = useScopedI18n("management.page.settings.section.culture");
+  const localeInputProps = form.getInputProps("defaultLocale");
 
   return (
     <SectionCard title={tCulture("title")}>
       <LanguageCombobox
         label={tCulture("defaultLocale.label")}
-        value={form.getInputProps("defaultLocale").value as SupportedLanguage}
-        {...form.getInputProps("defaultLocale")}
+        {...localeInputProps}
+        value={localeInputProps.value as SupportedLanguage}
       />
     </SectionCard>
   );

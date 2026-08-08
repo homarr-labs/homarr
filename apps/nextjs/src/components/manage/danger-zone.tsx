@@ -1,14 +1,16 @@
+"use client";
+
 import { Fragment } from "react";
 import { Card, CardSection, Divider, Group, Stack, Text, Title } from "@mantine/core";
 
-import { getI18n } from "@homarr/translation/server";
+import { useI18n } from "@homarr/translation/client";
 
 interface DangerZoneRootProps {
   children: React.ReactNode[] | React.ReactNode;
 }
 
-export const DangerZoneRoot = async ({ children }: DangerZoneRootProps) => {
-  const t = await getI18n();
+export const DangerZoneRoot = ({ children }: DangerZoneRootProps) => {
+  const t = useI18n();
 
   return (
     <Stack gap="sm">

@@ -93,6 +93,7 @@ export const ColorSettingsContent = ({ form }: Props) => {
               {...form.getInputProps("iconColor")}
             />
             <Button
+              type="button"
               variant="subtle"
               leftSection={<IconX />}
               onClick={() => form.setFieldValue("iconColor", "")}

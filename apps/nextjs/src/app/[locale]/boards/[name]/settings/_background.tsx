@@ -103,8 +103,8 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
             />
             {session?.user.permissions.includes("media-upload") && (
               <UploadMedia
-                onSuccess={(medias) => {
-                  const first = medias.at(0);
+                onSuccess={(uploadedMedias) => {
+                  const first = uploadedMedias.at(0);
                   if (!first) return;
 
                   startTransition(() => {

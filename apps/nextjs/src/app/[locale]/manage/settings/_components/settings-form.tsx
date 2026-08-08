@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
@@ -11,7 +11,7 @@ import { colorSchemes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { ServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
-import { useI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 import { AnalyticsSettings } from "./analytics.settings";
@@ -62,6 +62,7 @@ interface SettingsFormProps {
 
 export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const t = useI18n();
+  const tSettings = useScopedI18n("management.page.settings");
 
   const initialValues = buildInitialValues(initialData);
   const initialValuesRef = useRef(initialValues);
@@ -73,7 +74,13 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const isDirtyRef = useRef(false);
   isDirtyRef.current = form.isDirty();
 
-  const saveSettingsMutation = clientApi.serverSettings.saveSettings.useMutation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const saveSettingsMutation = clientApi.serverSettings.saveSettings.useMutation({
+    onError(error) {
+      showErrorNotification({ title: t("common.notification.update.error"), message: error.message });
+    },
+  });
 
   useEffect(() => {
     const handler = (event: BeforeUnloadEvent) => {
@@ -134,21 +141,23 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
       .map((group) => saveSettingsMutation.mutateAsync({ settingsKey: group.settingsKey, value: group.value }));
     if (promises.length === 0) return;
 
+    setIsSubmitting(true);
     try {
-      await Promise.all(promises);
+      const results = await Promise.allSettled(promises);
+      if (!results.every((result) => result.status === "fulfilled")) {
+        return;
+      }
+
       initialValuesRef.current = values;
       form.setInitialValues(values);
       form.resetDirty();
       await revalidatePathActionAsync("/manage/settings");
       showSuccessNotification({
         title: t("common.notification.update.success"),
-        message: t("common.notification.update.success"),
+        message: tSettings("notification.success.message"),
       });
-    } catch {
-      showErrorNotification({
-        title: t("common.notification.update.error"),
-        message: t("common.notification.update.error"),
-      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -170,10 +179,10 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
 
         {form.isDirty() && (
           <UnsavedChangesBar>
-            <Button disabled={saveSettingsMutation.isPending} variant="default" onClick={handleDiscard}>
+            <Button type="button" disabled={isSubmitting} variant="default" onClick={handleDiscard}>
               {t("common.action.discard")}
             </Button>
-            <Button loading={saveSettingsMutation.isPending} type="submit" disabled={!form.isValid()}>
+            <Button loading={isSubmitting} type="submit" disabled={!form.isValid()}>
               {t("common.action.saveChanges")}
             </Button>
           </UnsavedChangesBar>

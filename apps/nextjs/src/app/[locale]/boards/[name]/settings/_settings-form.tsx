@@ -132,10 +132,10 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
     const saveActions: { when: boolean; action: () => Promise<unknown> }[] = [
       {
         when: changed(...PARTIAL_FORM_KEYS),
-        action: () => {
-          updateFavicon(values.faviconImageUrl ?? homarrLogoPath);
-          return savePartialSettings.mutateAsync({ id: board.id, ...partialSettings });
-        },
+        action: () =>
+          savePartialSettings.mutateAsync({ id: board.id, ...partialSettings }).then(() => {
+            updateFavicon(values.faviconImageUrl ?? homarrLogoPath);
+          }),
       },
       {
         when: changed("layouts"),
@@ -197,7 +197,7 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
 
         {form.isDirty() && (
           <UnsavedChangesBar>
-            <Button disabled={isPending} variant="default" onClick={handleDiscard}>
+            <Button type="button" disabled={isPending} variant="default" onClick={handleDiscard}>
               {t("common.action.discard")}
             </Button>
             <Button loading={isPending} type="submit" disabled={!form.isValid()}>

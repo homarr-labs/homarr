@@ -37,9 +37,10 @@ export const CustomCssSettingsContent = ({ form }: Props) => {
 interface CustomCssInputProps {
   value?: string;
   onChange: (value: string) => void;
+  error?: React.ReactNode;
 }
 
-const CustomCssInput = ({ value, onChange }: CustomCssInputProps) => {
+const CustomCssInput = ({ value, onChange, error }: CustomCssInputProps) => {
   const customCssT = useScopedI18n("board.field.customCss");
 
   return (
@@ -49,6 +50,7 @@ const CustomCssInput = ({ value, onChange }: CustomCssInputProps) => {
         htmlFor: "custom-css",
       }}
       description={customCssT("description")}
+      error={error}
       inputWrapperOrder={["label", "description", "input", "error"]}
     >
       <div className={classes.codeEditorRoot}>

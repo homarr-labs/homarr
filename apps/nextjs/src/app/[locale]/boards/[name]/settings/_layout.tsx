@@ -22,11 +22,13 @@ export const LayoutSettingsContent = ({ form }: Props) => {
         <Group justify="space-between" align="center">
           <Text fw={500}>{t("board.setting.section.layout.responsive.title")}</Text>
           <Button
+            type="button"
             variant="subtle"
             onClick={() => {
-              form.setValues({
-                layouts: [...form.values.layouts, { id: createId(), name: "", columnCount: 10, breakpoint: 0 }],
-              });
+              form.setValues((previous) => ({
+                ...previous,
+                layouts: [...(previous.layouts ?? []), { id: createId(), name: "", columnCount: 10, breakpoint: 0 }],
+              }));
             }}
           >
             {t("board.setting.section.layout.responsive.action.add")}
@@ -57,6 +59,7 @@ export const LayoutSettingsContent = ({ form }: Props) => {
             {form.values.layouts.length >= 2 && (
               <Group justify="end">
                 <Button
+                  type="button"
                   variant="subtle"
                   onClick={() => {
                     form.setValues((previous) => ({
