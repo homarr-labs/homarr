@@ -3,7 +3,7 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { basename, join, relative, resolve } from "node:path";
 
 const repositoryRoot = resolve(import.meta.dirname, "..");
-const nextRoot = join(repositoryRoot, "apps/nextjs/.next");
+const nextRoot = resolve(process.env.CUSTOM_WIDGET_NEXT_ROOT ?? join(repositoryRoot, "apps/nextjs/.next"));
 const budgetBytes = Number(process.env.CUSTOM_WIDGET_CHUNK_BUDGET_BYTES ?? 768 * 1024);
 if (!Number.isSafeInteger(budgetBytes) || budgetBytes <= 0) {
   throw new Error("CUSTOM_WIDGET_CHUNK_BUDGET_BYTES must be a positive integer.");
@@ -32,6 +32,15 @@ async function resolveChunk(chunk) {
   return null;
 }
 
+function isRuntimeOrWorkbenchRoute(manifestPath) {
+  const normalizedManifestPath = manifestPath.replaceAll("\\", "/");
+  return (
+    normalizedManifestPath.includes("/(board)/") ||
+    normalizedManifestPath.includes("/boards/(content)/(home)/") ||
+    normalizedManifestPath.includes("/manage/custom-widgets/")
+  );
+}
+
 let serverChunks;
 let manifestPaths;
 try {
@@ -51,17 +60,33 @@ for (const serverChunk of serverChunks) {
   for (const match of source.matchAll(/loadableGenerated:\{modules:\[(\d+)\]\}/gu)) moduleIds.add(match[1]);
 }
 if (moduleIds.size === 0) {
+  const hasRuntimeMarker = new Map();
+  for (const manifestPath of manifestPaths) {
+    if (!isRuntimeOrWorkbenchRoute(manifestPath)) continue;
+    const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    for (const [moduleId, entry] of Object.entries(manifest)) {
+      for (const file of entry.files ?? []) {
+        if (!file.endsWith(".js")) continue;
+        let hasMarker = hasRuntimeMarker.get(file);
+        if (hasMarker === undefined) {
+          const chunkPath = await resolveChunk(file);
+          hasMarker = chunkPath ? (await readFile(chunkPath, "utf8")).includes("RUNTIME_RENDER_ERROR") : false;
+          hasRuntimeMarker.set(file, hasMarker);
+        }
+        if (!hasMarker) continue;
+        moduleIds.add(moduleId);
+        break;
+      }
+    }
+  }
+}
+if (moduleIds.size === 0) {
   throw new Error("The Custom JSX dynamic module was not found in the Next.js server build.");
 }
 
 const routePayloads = [];
 for (const manifestPath of manifestPaths) {
-  const normalizedManifestPath = manifestPath.replaceAll("\\", "/");
-  const isRuntimeOrWorkbenchRoute =
-    normalizedManifestPath.includes("/(board)/") ||
-    normalizedManifestPath.includes("/boards/(content)/(home)/") ||
-    normalizedManifestPath.includes("/manage/custom-widgets/");
-  if (!isRuntimeOrWorkbenchRoute) continue;
+  if (!isRuntimeOrWorkbenchRoute(manifestPath)) continue;
   const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
   const files = new Set();
   for (const moduleId of moduleIds) {
