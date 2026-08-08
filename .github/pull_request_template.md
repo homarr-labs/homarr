@@ -16,6 +16,6 @@
 **When contributing a new integration or widget:**
 
 - [ ] I confirmed manually that the integration or widget is working with a real system and performed basic smoke
-  tests (e.g. what happens if it is offline)
+      tests (e.g. what happens if it is offline)
 - [ ] Optional but recommended: I confirm that I am willing to be added to the `CODEOWNERS` of this feature and will
-  provide support and maintain the integration (e.g. in case of breaking or failure)
+      provide support and maintain the integration (e.g. in case of breaking or failure)

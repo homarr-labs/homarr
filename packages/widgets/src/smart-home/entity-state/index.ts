@@ -1,4 +1,4 @@
-import { IconBinaryTree } from "@tabler/icons-react";
+import { IconBinaryTree, IconServerOff } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
@@ -7,6 +7,8 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("smartHome-entityState", {
   icon: IconBinaryTree,
+  queryKey: [["widget", "smartHome"]],
+  maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       entityId: factory.text({
@@ -20,4 +22,10 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
     }));
   },
   supportedIntegrations: getIntegrationKindsByCategory("smartHomeServer"),
+  errors: {
+    INTERNAL_SERVER_ERROR: {
+      icon: IconServerOff,
+      message: (t) => t("widget.smartHome-entityState.error.loadFailed"),
+    },
+  },
 }).withDynamicImport(() => import("./component"));

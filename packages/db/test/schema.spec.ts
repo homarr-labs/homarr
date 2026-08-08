@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable import/namespace -- This test compares equivalent schema exports by shared dynamic keys. */
 import { is } from "drizzle-orm";
 import type { Column, InferSelectModel } from "drizzle-orm";
 import { MySqlTable, getTableConfig as getMysqlTableConfig } from "drizzle-orm/mysql-core";
@@ -29,7 +30,6 @@ type FixedMysqlConfig = {
     };
   };
 };
-
 type FixedPostgresqlConfig = {
   [key in keyof PostgreisqlConfig]: {
     [column in keyof PostgreisqlConfig[key]]: {

@@ -1,21 +1,19 @@
 ---
-title: 'PatchMon'
-description: 'Displays host patch statistics from PatchMon including update and security counts.'
+title: "PatchMon"
+description: "Displays host patch statistics from PatchMon including update and security counts."
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { patchmonWidget } from '.';
-import { patchmonIntegration } from '@site/docs/integrations/patchmon';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { patchmonWidget } from ".";
+import { patchmonIntegration } from "@site/docs/integrations/patchmon";
 
-<WidgetHeader
-  widget={patchmonWidget}
-  categories={['Health Monitoring']}
-/>
+<WidgetHeader widget={patchmonWidget} categories={["Health Monitoring"]} />
 
 This widget displays patch statistics from your PatchMon instance, including total hosts, hosts needing updates, and security update counts. Each stat is shown with a dedicated icon and severity-tinted card background for quick visual scanning.
 
@@ -39,13 +37,13 @@ In **1-column-wide** layouts (such as 1×1), the compliance hero switches to a r
 
 When **Enable threshold colors** is on (default), stat values and card backgrounds are colored for at-a-glance severity:
 
-| Stat | Green | Yellow | Red |
-|------|-------|--------|-----|
-| Needs Updates | 0 | 1–4 | 5+ |
-| Security Updates | 0 | 1–9 | 10+ |
-| Hosts with Security Updates | 0 | — | 1+ |
-| Up-to-Date Hosts | 100% of total | 90–99% | below 90% |
-| Outdated Packages | 0 | 1–49 | 50+ |
+| Stat                        | Green         | Yellow | Red       |
+| --------------------------- | ------------- | ------ | --------- |
+| Needs Updates               | 0             | 1–4    | 5+        |
+| Security Updates            | 0             | 1–9    | 10+       |
+| Hosts with Security Updates | 0             | —      | 1+        |
+| Up-to-Date Hosts            | 100% of total | 90–99% | below 90% |
+| Outdated Packages           | 0             | 1–49   | 50+       |
 
 Enable **Advanced thresholds** to override warning and critical values per stat, using either absolute counts or percentages of total hosts.
 
@@ -62,13 +60,13 @@ The OS distribution limit defaults to **All**. A widget size of **2×3** or larg
 
 The widget adapts its layout based on the available space:
 
-| Widget size | Layout |
-|-------------|--------|
-| **1×1** | Primary selected content: compliance ring (no label), compact OS distribution, or up to two enabled stats |
+| Widget size       | Layout                                                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **1×1**           | Primary selected content: compliance ring (no label), compact OS distribution, or up to two enabled stats           |
 | **2×1** / **1×2** | Compact primary content; **2×1** shows compliance label and host ratio beside the ring; **1×2** uses ring-only hero |
-| **2×2** (default) | Compliance hero, stat grid with icons, and tinted cards |
-| **2×3** / **3×2** | Hero, stats, OS distribution, and "last updated" footer |
-| **3×3** or larger | Full layout with up to 4-column stat grid, donut chart, and optional OS legend |
+| **2×2** (default) | Compliance hero, stat grid with icons, and tinted cards                                                             |
+| **2×3** / **3×2** | Hero, stats, OS distribution, and "last updated" footer                                                             |
+| **3×3** or larger | Full layout with up to 4-column stat grid, donut chart, and optional OS legend                                      |
 
 ### Last updated
 
@@ -76,14 +74,21 @@ When the widget has enough space, a "last updated" timestamp appears at the bott
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: patchmonIntegration,
-  note: "Displays host patch and security update statistics"
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: patchmonIntegration,
+      note: "Displays host patch and security update statistics",
+    },
+  ]}
+/>
+
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={patchmonWidget.configuration} />

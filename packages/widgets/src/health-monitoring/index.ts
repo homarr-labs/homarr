@@ -8,6 +8,7 @@ import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options
 
 export const { definition, componentLoader } = createWidgetDefinition("healthMonitoring", {
   icon: IconHeartRateMonitor,
+  queryKeys: [[["integration", "byIds"]], [["widget", "healthMonitoring"]]],
   refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from(

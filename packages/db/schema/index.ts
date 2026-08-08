@@ -54,6 +54,8 @@ export const {
   cronJobConfigurations,
   customWidgetDefinitions,
   customWidgetSecrets,
+  legacyCustomWidgetDefinitions,
+  legacyCustomWidgetSecrets,
   widgetSecrets,
 } = schema;
 
@@ -68,3 +70,5 @@ export type Integration = InferSelectModel<typeof schema.integrations>;
 export type IntegrationSecret = InferSelectModel<typeof schema.integrationSecrets>;
 export type CustomWidgetDefinition = InferSelectModel<typeof schema.customWidgetDefinitions>;
 export type CustomWidgetSecret = InferSelectModel<typeof schema.customWidgetSecrets>;
+export type LegacyCustomWidgetDefinition = InferSelectModel<typeof schema.legacyCustomWidgetDefinitions>;
+export type LegacyCustomWidgetSecret = InferSelectModel<typeof schema.legacyCustomWidgetSecrets>;

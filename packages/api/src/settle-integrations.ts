@@ -1,7 +1,13 @@
+import { TRPCError } from "@trpc/server";
+
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 const logger = createLogger({ module: "settleIntegrations" });
+
+export const PUBLIC_INTEGRATION_ERROR: string = "INTEGRATION_REQUEST_FAILED";
+
+export const toPublicIntegrationError = (_error: unknown): string => PUBLIC_INTEGRATION_ERROR;
 
 interface IntegrationLike {
   id: string;
@@ -11,6 +17,7 @@ interface IntegrationLike {
 
 interface Options<TIntegration extends IntegrationLike, TResult> {
   fallback?: (integration: TIntegration, error: unknown) => TResult;
+  throwOnAllFailures?: boolean;
 }
 
 export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
@@ -37,16 +44,23 @@ export async function settleIntegrationQueries<TIntegration extends IntegrationL
       ),
     );
 
+    errors.push(result.reason);
+
     if (options?.fallback && integration) {
       results.push(options.fallback(integration, result.reason));
       return;
     }
-
-    errors.push(result.reason);
   });
 
-  if (results.length === 0 && errors.length > 0) {
-    throw errors[0];
+  if (
+    errors.length > 0 &&
+    (results.length === 0 || (options?.throwOnAllFailures === true && errors.length === integrations.length))
+  ) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "All integration queries failed",
+      cause: errors[0],
+    });
   }
 
   return results;

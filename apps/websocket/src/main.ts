@@ -12,6 +12,25 @@ const logger = createLogger({ module: "websocketMain" });
 const wss = new WebSocketServer({
   port: 3001,
 });
+wss.on("error", (error) => {
+  logger.error(new Error("WebSocket server error", { cause: error }));
+});
+
+export const startupPromise = new Promise<void>((resolve, reject) => {
+  const onListening = () => {
+    wss.off("error", onError);
+    logger.info("✅ WebSocket Server listening on ws://localhost:3001");
+    resolve();
+  };
+  const onError = (error: Error) => {
+    wss.off("listening", onListening);
+    reject(error);
+  };
+
+  wss.once("listening", onListening);
+  wss.once("error", onError);
+});
+
 const handler = applyWSSHandler({
   wss,
   router: appRouter,
@@ -57,7 +76,6 @@ wss.on("connection", (websocket, incomingMessage) => {
     logger.info(`➖ Connection (${wss.clients.size}) ${code} ${reason.toString()}`);
   });
 });
-logger.info("✅ WebSocket Server listening on ws://localhost:3001");
 
 process.on("SIGTERM", () => {
   logger.info("SIGTERM");

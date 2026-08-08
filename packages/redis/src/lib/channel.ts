@@ -1,12 +1,9 @@
 import superjson from "superjson";
 
 import { createId } from "@homarr/common";
-import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
 import { createRedisConnection } from "./connection";
-
-const logger = createLogger({ module: "redisChannel" });
 
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
@@ -114,10 +111,11 @@ export const createGetSetChannel = <TData>(name: string) => {
      * @param options optional TTL in seconds
      */
     setAsync: async (data: TData, options?: { ttlSeconds?: number }) => {
-      await getSetClient.set(name, superjson.stringify(data));
       if (options?.ttlSeconds) {
-        await getSetClient.expire(name, options.ttlSeconds);
+        await getSetClient.set(name, superjson.stringify(data), "EX", options.ttlSeconds);
+        return;
       }
+      await getSetClient.set(name, superjson.stringify(data));
     },
     /**
      * Remove data from the channel
@@ -128,32 +126,34 @@ export const createGetSetChannel = <TData>(name: string) => {
   };
 };
 
-const queryCacheKey = (userId: string, boardId: string) => `qc:${userId}:${boardId}`;
+/**
+ * Creates a short-lived distributed lock.
+ *
+ * The token prevents a process from releasing a lock that expired and was
+ * acquired by another process in the meantime.
+ */
+export const createLockChannel = (name: string) => {
+  return {
+    acquireAsync: async (ttlSeconds: number) => {
+      const token = createId();
+      const client = getSetClient as typeof getSetClient | null;
+      if (!client) return token;
 
-export const setQueryCacheAsync = async (
-  userId: string,
-  boardId: string,
-  value: string,
-  ttlMs: number,
-  maxValueBytes: number,
-) => {
-  if (Buffer.byteLength(value, "utf8") > maxValueBytes) {
-    logger.warn("Query cache value exceeded maximum size", {
-      key: queryCacheKey(userId, boardId),
-      valueBytes: Buffer.byteLength(value, "utf8"),
-      maxValueBytes,
-    });
-    return false;
-  }
-  await getSetClient.set(queryCacheKey(userId, boardId), value, "PX", ttlMs);
-  return true;
-};
+      const result = await client.set(name, token, "EX", ttlSeconds, "NX");
+      return result === "OK" ? token : null;
+    },
+    releaseAsync: async (token: string) => {
+      const client = getSetClient as typeof getSetClient | null;
+      if (!client) return;
 
-export const getQueryCacheAsync = async (userId: string, boardId: string) =>
-  await getSetClient.get(queryCacheKey(userId, boardId));
-
-export const removeQueryCacheAsync = async (userId: string, boardId: string) => {
-  await getSetClient.del(queryCacheKey(userId, boardId));
+      await client.eval(
+        "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end",
+        1,
+        name,
+        token,
+      );
+    },
+  };
 };
 
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {

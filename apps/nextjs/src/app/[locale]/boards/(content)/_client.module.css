@@ -1,0 +1,22 @@
+.columns {
+  display: grid;
+  align-items: start;
+  gap: 24px;
+}
+
+.lane {
+  min-width: 0;
+}
+
+.gutter {
+  position: relative;
+  top: 0;
+  align-self: start;
+  padding-top: 24px;
+  margin-top: -24px;
+  max-height: calc(100dvh - var(--app-shell-header-offset, 0px) - var(--mantine-spacing-md));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  transform: translateY(var(--board-gutter-sticky-offset, 0px));
+}

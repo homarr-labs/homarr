@@ -17,7 +17,13 @@ export interface DynamicSelectOption {
   label: string;
 }
 
-export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidgetInputProps<"dynamicSelect">) => {
+export const WidgetDynamicSelectInput = ({
+  property,
+  kind,
+  options,
+  itemId,
+  boardId,
+}: CommonWidgetInputProps<"dynamicSelect">) => {
   const t = useI18n();
   const tSelect = useScopedI18n("widget.dynamicSelect");
   const tWidget = useWidgetInputTranslation(kind, property);
@@ -26,10 +32,10 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 300);
   const {
+    error: optionsError,
     isPending,
-    isError = false,
     options: selectOptions,
-  } = options.useOptions(debouncedSearch, form.values.integrationIds, form.values.options);
+  } = options.useOptions(debouncedSearch, form.values.integrationIds, form.values.options, itemId, boardId);
   const currentOption = inputProps.value as DynamicSelectOption | null;
   const onChange = inputProps.onChange as (value: DynamicSelectOption | null) => void;
 
@@ -93,8 +99,7 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
       description={options.withDescription ? tWidget("description") : undefined}
       searchable
       {...inputProps}
-      disabled={isError}
-      error={isError ? tSelect("loadError") : inputProps.error}
+      error={inputProps.error ?? optionsError}
       value={currentOption === null ? null : currentOption.value}
       onChange={(selectedValue: string | null) => {
         if (selectedValue === null) {

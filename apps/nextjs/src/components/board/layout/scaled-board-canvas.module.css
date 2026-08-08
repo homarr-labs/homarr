@@ -1,0 +1,52 @@
+.viewport {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.viewport[data-board-hydrated="false"] {
+  overflow: clip;
+}
+
+.sizer {
+  position: relative;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0 auto auto 0;
+  transform-origin: top left;
+  will-change: transform;
+
+  /*
+   * Keep dashboard UI at its normal readable density while the fixed canvas
+   * is fitted below 100%. Above 100%, the canvas still behaves like browser
+   * zoom and enlarges everything together.
+   */
+  --mantine-scale: var(--board-canvas-ui-scale, 1);
+  --mantine-spacing-xs: calc(0.625rem * var(--board-canvas-ui-scale, 1));
+  --mantine-spacing-sm: calc(0.75rem * var(--board-canvas-ui-scale, 1));
+  --mantine-spacing-md: calc(1rem * var(--board-canvas-ui-scale, 1));
+  --mantine-spacing-lg: calc(1.25rem * var(--board-canvas-ui-scale, 1));
+  --mantine-spacing-xl: calc(2rem * var(--board-canvas-ui-scale, 1));
+  --mantine-font-size-xs: calc(0.75rem * var(--board-canvas-ui-scale, 1));
+  --mantine-font-size-sm: calc(0.875rem * var(--board-canvas-ui-scale, 1));
+  --mantine-font-size-md: calc(1rem * var(--board-canvas-ui-scale, 1));
+  --mantine-font-size-lg: calc(1.125rem * var(--board-canvas-ui-scale, 1));
+  --mantine-font-size-xl: calc(1.25rem * var(--board-canvas-ui-scale, 1));
+  --mantine-h1-font-size: calc(2.125rem * var(--board-canvas-ui-scale, 1));
+  --mantine-h2-font-size: calc(1.625rem * var(--board-canvas-ui-scale, 1));
+  --mantine-h3-font-size: calc(1.375rem * var(--board-canvas-ui-scale, 1));
+  --mantine-h4-font-size: calc(1.125rem * var(--board-canvas-ui-scale, 1));
+  --mantine-h5-font-size: calc(1rem * var(--board-canvas-ui-scale, 1));
+  --mantine-h6-font-size: calc(0.875rem * var(--board-canvas-ui-scale, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas {
+    will-change: auto;
+  }
+}

@@ -11,19 +11,19 @@ import { hotkeys } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
-import type { OpenMediaRequestSearchOptions } from "../index";
+import {
+  consumePendingMediaRequestSearch,
+  consumePendingSpotlightOpen,
+  mediaRequestSearchEvent,
+  spotlightOpenEvent,
+} from "../open";
+import type { OpenMediaRequestSearchOptions } from "../open";
 import type { inferSearchInteractionOptions } from "../lib/interaction";
 import type { SearchMode } from "../lib/mode";
 import { searchModes } from "../modes";
 import { useHomeEmptyGroupsWithPreferences } from "../modes/help/home-empty-groups";
 import { contextSpecificSearchGroups } from "../modes/home/context-specific-group";
-import {
-  mediaRequestSearchEvent,
-  mediaRequestSearchScopeAtom,
-  selectAction,
-  spotlightActions,
-  spotlightStore,
-} from "../spotlight-store";
+import { mediaRequestSearchScopeAtom, selectAction, spotlightActions, spotlightStore } from "../spotlight-store";
 import { SpotlightChildrenActions } from "./actions/children-actions";
 import { SpotlightActionGroups } from "./actions/groups/action-group";
 
@@ -65,6 +65,17 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
   const homeEmptyGroups = useHomeEmptyGroupsWithPreferences();
   const hasModeCharacter = activeMode.modeKey !== defaultMode && activeMode.character !== undefined;
 
+  useEffect(() => {
+    const handleOpen = () => {
+      consumePendingSpotlightOpen();
+      spotlightActions.open();
+    };
+
+    window.addEventListener(spotlightOpenEvent, handleOpen);
+    if (consumePendingSpotlightOpen()) spotlightActions.open();
+    return () => window.removeEventListener(spotlightOpenEvent, handleOpen);
+  }, []);
+
   const clearChildrenStack = useCallback(() => {
     setChildrenStack([]);
   }, []);
@@ -85,17 +96,24 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
   }, [setQuery]);
 
   useEffect(() => {
-    const handleMediaRequestSearch = (event: Event) => {
-      const { integrationIds, query } = (event as CustomEvent<OpenMediaRequestSearchOptions>).detail ?? {};
+    const applyMediaRequestSearch = ({ integrationIds, query: searchQuery }: OpenMediaRequestSearchOptions) => {
       setMediaRequestSearchScope({ integrationIds });
       setMode("media");
       clearChildrenStack();
-      setQuery(query ?? "");
+      setQuery(searchQuery ?? "");
       spotlightActions.open();
       setTimeout(() => selectAction(0, spotlightStore));
     };
 
+    const handleMediaRequestSearch = (event: Event) => {
+      consumePendingMediaRequestSearch();
+      const { integrationIds, query: searchQuery } = (event as CustomEvent<OpenMediaRequestSearchOptions>).detail ?? {};
+      applyMediaRequestSearch({ integrationIds, query: searchQuery });
+    };
+
     window.addEventListener(mediaRequestSearchEvent, handleMediaRequestSearch);
+    const pendingSearch = consumePendingMediaRequestSearch();
+    if (pendingSearch) applyMediaRequestSearch(pendingSearch);
     return () => {
       window.removeEventListener(mediaRequestSearchEvent, handleMediaRequestSearch);
     };
@@ -138,6 +156,7 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
       store={spotlightStore}
     >
       <MantineSpotlight.Search
+        data-homarr-dev-benchmark-spotlight
         placeholder={`${t("search.placeholder")}...`}
         ref={inputRef}
         leftSectionWidth={hasModeCharacter ? 80 : 48}

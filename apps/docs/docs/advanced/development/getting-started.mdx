@@ -8,70 +8,121 @@ tags:
 sidebar_position: 1
 ---
 
-## Setting up your development environment
-
-This guide will help you set up your development environment to start contributing to homarr.
+## Set up your development environment
 
 ### Prerequisites
 
-- **Node.js (lts)**: You can download it from the [official website](https://nodejs.org/).
-- **pnpm (latest)**: You can install it by running `npm install -g pnpm`.
+- **Node.js 24.18 or newer**: You can download it from the [official website](https://nodejs.org/).
+- **Corepack**: Run `corepack enable` so the repository selects its pinned pnpm 11 version.
 - **Git**: You can download it from the [official website](https://git-scm.com/).
 - **Docker or Docker Desktop**: Required for the Redis service and the developer Docker CLI.
 - **Go 1.25+**: Required only for the developer Docker CLI. You can download it from the [official website](https://go.dev/).
 - **GitHub CLI**: Required only for pull-request image features. Install it from the [official website](https://cli.github.com/), then authenticate with `gh auth login`.
 
-### Setting up the project
+The versions in the root `package.json` are the supported baseline. Let Corepack select the repository version instead
+of installing an unrelated global pnpm:
 
-1. Fork the repository by clicking on the "Fork" button on the top right corner of the repository page.
+```sh
+corepack enable
+corepack install
+pnpm install --frozen-lockfile
+```
 
-![Fork button](./img/fork.png)
+### Run the Homarr application
 
-2. Clone the repository to your local machine with `git clone`. You can find the url to use by clicking on the "Code" button on the top right corner of your forks repository page.
+1. Copy `.env.example` to `.env`.
+2. Set `DB_URL` to an absolute writable SQLite file path.
+3. Keep Redis and the optional local databases running in one terminal.
+4. Apply migrations and start Next.js in another terminal.
 
-![Clone button](./img/clone.png)
+```sh
+cp .env.example .env
+```
 
-3. Change directory to the project folder with `cd homarr`.
+Terminal 1:
 
-4. Install the dependencies with `pnpm install`.
+```sh
+pnpm docker:dev
+```
 
-5. Create `.env` from `.env.example`. In a POSIX shell, run `cp .env.example .env`; in PowerShell, run `Copy-Item .env.example .env`. Set `DB_URL` to an absolute path for your SQLite file.
+Terminal 2:
 
-6. Start Redis in the background with `pnpm docker:dev:up` if your development workflow needs it.
+```sh
+pnpm db:migration:sqlite:run
+pnpm dev
+```
 
-7. Create or update the database with `pnpm db:migration:sqlite:run`. This also seeds the default data. To run the seed explicitly later, use `pnpm db:seed`.
+The infrastructure command remains in the foreground. Open `http://127.0.0.1:3000`; the first user created through
+Homarr becomes the instance administrator.
+Use `pnpm docker:dev:up` instead when you only need Redis in the background. Running the migration also seeds the
+default data; use `pnpm db:seed` to seed it explicitly later.
 
-8. Start the development server with `pnpm dev` and wait for a message that says `✓ Ready in 10.7s`
+### Run PocketBase and documentation
 
-9. Open your browser and navigate to [http://localhost:3000](http://localhost:3000). (Loading the page might take up to 2 minutes the first time)
+Start PocketBase in another terminal:
 
-### Useful npm scripts
+```sh
+cp apps/workshop/.env.example apps/workshop/.env
+docker compose --env-file apps/workshop/.env -f apps/workshop/docker-compose.yml up --build workshop
+```
 
-#### During development
+Then start Docusaurus in a third terminal:
 
-- `pnpm dev`: Start the development server.
-- `pnpm dev:cli -- dev`: Browse and run local images and remote pull-request images.
-- `pnpm dev:cli -- build <name>`: Build the current checkout as `homarr:<name>`.
-- `pnpm dev:cli -- build --pr <number>`: Build a pull request locally from a temporary checkout.
-- `pnpm dev:cli -- rebuild <name>`: Rebuild a local image from its recorded checkout or pull request.
-- `pnpm dev:cli:install`: Optionally install the developer CLI as a `homarr` binary.
-- `pnpm cli`: Run cli commands.
-- `pnpm db:migration:sqlite:run`: Run the migrations to create or update the sqlite db file.
-- `pnpm db:seed`: Explicitly seed the default database data.
-- `pnpm docker:dev:up`: Start the Redis development service in the background.
-- `pnpm db:migration:sqlite:generate`: Generate a new migration file for the sqlite db. Also works with `mysql`.
-- `pnpm db:studio`: Open a visual studio for the database.
-- `pnpm package:new`: Create a new package in the monorepo.
+```sh
+WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
+```
 
-#### Checking code quality
+PocketBase runs on port 8090 and Docusaurus on port 3003. Stopping the services preserves the PocketBase volume.
 
-- `pnpm lint`: Run the linter to check for code quality issues.
-- `pnpm format:fix`: Run the formatter to fix code style issues.
-- `pnpm test`: Run the tests. You can also use `pnpm test:ui` to get a UI for the tests.
-- `pnpm typecheck`: Run the typescript type checker.
+Open `http://127.0.0.1:8090/_/` and create the first PocketBase superuser. The Workshop UI is available at
+`http://127.0.0.1:3003/workshop`.
 
-#### Building the project
+Point Homarr at the local services with:
 
-- `pnpm build`: Build the project for production.
-- `pnpm dev:cli -- build <name>`: Build a `homarr:<name>` image and record its checkout for later rebuilds.
-- `docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY='your_64_character_hex_string' homarr:<name>`: Run the created docker image.
+```dotenv
+HOMARR_WEBSITE_URL=http://127.0.0.1:3003
+WORKSHOP_API_URL=http://127.0.0.1:8090
+WORKSHOP_WEB_URL=http://127.0.0.1:3003/workshop
+```
+
+Restart `pnpm dev` after changing `.env`. GitHub OAuth is optional locally. See
+[`apps/workshop/README.md`](https://github.com/homarr-labs/homarr/blob/HEAD/apps/workshop/README.md) for OAuth,
+Workshop moderator promotion, logs, tests, backup, restore, stopping, and intentional volume reset.
+
+### URL testing
+
+Docusaurus reads `HOMARR_WEBSITE_URL` and `WORKSHOP_API_URL` when it starts or builds. Homarr also reads
+`WORKSHOP_WEB_URL` when its server starts, so these values do not rely on `NEXT_PUBLIC_*` build variables. Test a
+separate API origin before release:
+
+```sh
+HOMARR_WEBSITE_URL=http://127.0.0.1:3003 \
+WORKSHOP_API_URL=http://127.0.0.1:8090 \
+WORKSHOP_WEB_URL=http://127.0.0.1:3003/workshop \
+pnpm dev:docs
+```
+
+### Useful commands
+
+- `pnpm dev` — Next.js on port 3000.
+- `pnpm dev:benchmark` — authenticated-board benchmark; readiness-only `--smoke` runs are not performance claims.
+- `pnpm dev:cli -- dev` — browse and run local images and remote pull-request images.
+- `pnpm dev:cli -- build <name>` — build the current checkout as `homarr:<name>`.
+- `pnpm dev:cli -- build --pr <number>` — build a pull request from a temporary checkout.
+- `pnpm dev:cli -- rebuild <name>` — rebuild an image from its recorded checkout or pull request.
+- `pnpm dev:cli:install` — optionally install the developer CLI as a `homarr` binary.
+- `pnpm dev:docs` — Docusaurus only on port 3003.
+- `pnpm docker:workshop` — local PocketBase through Docker Compose.
+- `pnpm docker:dev:up` — Redis development service in the background.
+- `pnpm cli` — Homarr operations CLI.
+- `pnpm db:migration:sqlite:run` — create or update a SQLite database.
+- `pnpm db:seed` — seed the default database data explicitly.
+- `pnpm db:studio` — inspect the database.
+- `pnpm format` / `pnpm format:fix` — check or apply oxfmt.
+- `pnpm lint` / `pnpm lint:fix` — check or apply oxlint.
+- `pnpm typecheck` — typecheck all workspaces.
+- `pnpm test` — unit and contract suites.
+- `pnpm test:workshop` — disposable Workshop integration suite.
+- `pnpm build` — production monorepo build.
+- `docker build -t homarr .` — build a production Docker image.
+- `docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY='your_64_character_hex_string' homarr:<name>` — run it.

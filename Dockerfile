@@ -3,12 +3,18 @@
 FROM node:24.18.0-alpine AS base
 
 FROM base AS builder
+ARG TARGETPLATFORM
 WORKDIR /app
-RUN apk add --no-cache libc6-compat curl bash && apk update
+# Native dependencies normally use prebuilds, but the build must remain
+# reproducible when a prebuild download times out and compilation is required.
+RUN apk add --no-cache libc6-compat curl bash python3 make g++
 
 RUN corepack enable pnpm
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY .npmrc pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY patches ./patches
+COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
+# @homarr/definitions generates documentation types during install.
+COPY --parents ./packages/definitions/src ./
 # Workaround for pnpm/pnpm#5268: pnpm fetch crashes when patchedDependencies
 # are configured with nodeLinker: hoisted. The applyPatchToDir function tries
 # to chdir into node_modules/<pkg> which doesn't exist during fetch (only the
@@ -22,11 +28,13 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm fetch --ignore-scripts && \
     sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml
 
-COPY . .
-# Follow the pnpm fetch pattern from https://pnpm.io/cli/fetch
-# --frozen-lockfile is omitted as recommended by the pnpm fetch docs
+# Install only from the fetched, committed lockfile so local and Docker builds
+# resolve the same dependency graph. Serial lifecycle builds avoid esbuild's
+# atomic binary replacement racing across the hoisted workspace (pnpm/pnpm#8200).
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm install --recursive
+    npm_config_nodedir=/usr/local pnpm install --recursive --offline --frozen-lockfile --child-concurrency=1
+
+COPY . .
 
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
@@ -37,7 +45,9 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM \
     --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN \
     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
-    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}" pnpm build
+    --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM},target=/app/apps/nextjs/.next/cache,sharing=locked \
+    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}" \
+    pnpm turbo build --filter=@homarr/nextjs... --filter=@homarr/cli
 
 FROM base AS runner
 WORKDIR /app
@@ -85,5 +95,6 @@ ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
 
+EXPOSE 7575
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD ["sh", "run.sh"]

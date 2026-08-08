@@ -4,7 +4,7 @@ import { describe, expect, it, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import type { Database, InferInsertModel } from "@homarr/db";
-import { and, eq, not } from "@homarr/db";
+import { and, eq } from "@homarr/db";
 import {
   boardGroupPermissions,
   boards,
@@ -325,10 +325,13 @@ describe("createBoard should create a new board", () => {
     expect(firstSection?.xOffset).toBe(0);
     expect(firstSection?.yOffset).toBe(0);
 
-    expect(dbBoard?.layouts.length).toBe(1);
-    const firstLayout = dbBoard?.layouts.at(0);
-    expect(firstLayout?.columnCount).toBe(24);
-    expect(firstLayout?.breakpoint).toBe(0);
+    expect(dbBoard?.layouts.length).toBe(2);
+    expect(dbBoard?.layouts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "Mobile", role: "mobile", columnCount: 3, breakpoint: 0 }),
+        expect.objectContaining({ name: "Base", role: "base", columnCount: 24, breakpoint: 768 }),
+      ]),
+    );
   });
 
   test("should throw error when user has no board-create permission", async () => {
@@ -341,6 +344,36 @@ describe("createBoard should create a new board", () => {
 
     // Assert
     await expect(actAsync()).rejects.toThrowError("Permission denied");
+  });
+});
+
+describe("duplicateBoard should preserve protected layout invariants", () => {
+  test("normalizes a legacy single-layout board while preserving Base positions", async () => {
+    const db = createDb();
+    const session = {
+      ...defaultSession,
+      user: {
+        ...defaultSession.user,
+        permissions: ["board-create"] satisfies GroupPermissionKey[],
+      },
+    };
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session });
+    const { boardId } = await createFullBoardAsync(db, "source");
+
+    const result = await caller.duplicateBoard({ id: boardId, name: "copy" });
+
+    const copiedBoard = await db.query.boards.findFirst({
+      where: eq(boards.id, result.boardId),
+      with: { layouts: true, items: { with: { layouts: true } } },
+    });
+    expect(copiedBoard?.layouts).toHaveLength(2);
+    expect(copiedBoard?.layouts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ role: "mobile", columnCount: 3, breakpoint: 0 }),
+        expect.objectContaining({ role: "base", columnCount: 10, breakpoint: 768 }),
+      ]),
+    );
+    expect(copiedBoard?.items.at(0)?.layouts).toHaveLength(2);
   });
 });
 
@@ -569,7 +602,46 @@ describe("getBoardByName should return board by name", () => {
       name,
       ...fullBoardProps,
     });
+    expect(result.layouts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ role: "mobile", breakpoint: 0, columnCount: 3 }),
+        expect.objectContaining({ id: fullBoardProps.layoutId, role: "base", breakpoint: 768 }),
+      ]),
+    );
+    expect(result.items.at(0)?.layouts).toHaveLength(2);
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "view");
+  });
+
+  it("returns configured container behavior", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId: rootSectionId, layoutId } = await createFullBoardAsync(db, "default");
+    const sectionId = await addContainerAsync(db, {
+      boardId,
+      layoutId,
+      parentSectionId: rootSectionId,
+      options: {
+        title: "Media",
+        showLabel: false,
+        collapsible: true,
+        showOpenAll: true,
+      },
+    });
+
+    const result = await caller.getBoardByName({ name: "default" });
+    const section = expectToBeDefined(result.sections.find((candidate) => candidate.id === sectionId));
+
+    expect(result.id).toBe(boardId);
+    expect(section.kind).toBe("container");
+    if (section.kind === "container") {
+      expect(section.collapsed).toBe(false);
+      expect(section.options).toMatchObject({
+        title: "Media",
+        showLabel: false,
+        collapsible: true,
+        showOpenAll: true,
+      });
+    }
   });
 
   it("should throw error when not present", async () => {
@@ -850,60 +922,194 @@ describe("saveBoard should save full board", () => {
     expect(integration).toBeUndefined();
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
-  it.each([[{ kind: "empty" as const }], [{ kind: "category" as const, collapsed: false, name: "My first category" }]])(
-    "should add section when present in input",
-    async (partialSection) => {
-      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
-      const db = createDb();
-      const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+  it("should add root section when present in input", async () => {
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
-      const { boardId, sectionId } = await createFullBoardAsync(db, "default");
+    const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
-      const newSectionId = createId();
-      await caller.saveBoard({
-        id: boardId,
-        sections: [
-          {
-            id: newSectionId,
-            xOffset: 0,
-            yOffset: 1,
-            ...partialSection,
-          },
-          {
-            id: sectionId,
-            kind: "empty",
-            xOffset: 0,
-            yOffset: 0,
-          },
-        ],
-        items: [],
-      });
-
-      const board = await db.query.boards.findFirst({
-        where: eq(boards.id, boardId),
-        with: {
-          sections: true,
+    const newSectionId = createId();
+    await caller.saveBoard({
+      id: boardId,
+      sections: [
+        {
+          id: newSectionId,
+          kind: "empty",
+          xOffset: 0,
+          yOffset: 1,
         },
-      });
+        {
+          id: sectionId,
+          kind: "empty",
+          xOffset: 0,
+          yOffset: 0,
+        },
+      ],
+      items: [],
+    });
 
-      const section = await db.query.sections.findFirst({
-        where: eq(sections.id, newSectionId),
-      });
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+      with: {
+        sections: true,
+      },
+    });
 
-      const definedBoard = expectToBeDefined(board);
-      expect(definedBoard.sections.length).toBe(2);
-      const addedSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === newSectionId));
-      expect(addedSection).toBeDefined();
-      expect(addedSection.id).toBe(newSectionId);
-      expect(addedSection.kind).toBe(partialSection.kind);
-      expect(addedSection.yOffset).toBe(1);
-      if ("name" in partialSection) {
-        expect(addedSection.name).toBe(partialSection.name);
-      }
-      expect(section).toBeDefined();
-      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
-    },
-  );
+    const section = await db.query.sections.findFirst({
+      where: eq(sections.id, newSectionId),
+    });
+
+    const definedBoard = expectToBeDefined(board);
+    expect(definedBoard.sections.length).toBe(2);
+    const addedSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === newSectionId));
+    expect(addedSection).toBeDefined();
+    expect(addedSection.id).toBe(newSectionId);
+    expect(addedSection.kind).toBe("empty");
+    expect(addedSection.yOffset).toBe(1);
+    expect(addedSection.name).toBeNull();
+    expect(section).toBeDefined();
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
+  });
+  it("should add and update container behavior options", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId, sectionId: rootSectionId } = await createFullBoardAsync(db, "default");
+    const containerId = createId();
+
+    await caller.saveBoard({
+      id: boardId,
+      sections: [
+        {
+          id: rootSectionId,
+          kind: "empty",
+          xOffset: 0,
+          yOffset: 0,
+        },
+        {
+          id: containerId,
+          kind: "container",
+          collapsed: false,
+          options: {
+            title: "Navigation",
+            customCssClasses: ["pinned"],
+            borderColor: "#123456",
+            showLabel: true,
+            collapsible: true,
+            showOpenAll: true,
+          },
+          layouts: [
+            {
+              layoutId,
+              parentSectionId: rootSectionId,
+              xOffset: 1,
+              yOffset: 2,
+              width: 3,
+              height: 4,
+            },
+          ],
+        },
+      ],
+      items: [],
+    });
+
+    await caller.saveBoard({
+      id: boardId,
+      sections: [
+        {
+          id: rootSectionId,
+          kind: "empty",
+          xOffset: 0,
+          yOffset: 0,
+        },
+        {
+          id: containerId,
+          kind: "container",
+          collapsed: false,
+          options: {
+            title: "Operations",
+            customCssClasses: ["dense"],
+            borderColor: "#654321",
+            showLabel: false,
+            collapsible: false,
+            showOpenAll: false,
+          },
+          layouts: [
+            {
+              layoutId,
+              parentSectionId: rootSectionId,
+              xOffset: 2,
+              yOffset: 3,
+              width: 4,
+              height: 5,
+            },
+          ],
+        },
+      ],
+      items: [],
+    });
+
+    const section = await db.query.sections.findFirst({
+      where: eq(sections.id, containerId),
+    });
+
+    expect(SuperJSON.parse(section?.options ?? "")).toEqual({
+      title: "Operations",
+      customCssClasses: ["dense"],
+      borderColor: "#654321",
+      showLabel: false,
+      collapsible: false,
+      showOpenAll: false,
+    });
+    expect(
+      await db.query.sectionLayouts.findFirst({
+        where: and(eq(sectionLayouts.sectionId, containerId), eq(sectionLayouts.layoutId, layoutId)),
+      }),
+    ).toMatchObject({
+      parentSectionId: rootSectionId,
+      xOffset: 2,
+      yOffset: 3,
+      width: 4,
+      height: 5,
+    });
+  });
+  it("should add a container without layouts", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId: rootSectionId } = await createFullBoardAsync(db, "default");
+    const containerId = createId();
+
+    await caller.saveBoard({
+      id: boardId,
+      sections: [
+        {
+          id: rootSectionId,
+          kind: "empty",
+          xOffset: 0,
+          yOffset: 0,
+        },
+        {
+          id: containerId,
+          kind: "container",
+          collapsed: false,
+          options: {},
+          layouts: [],
+        },
+      ],
+      items: [],
+    });
+
+    expect(
+      await db.query.sections.findFirst({
+        where: eq(sections.id, containerId),
+      }),
+    ).toMatchObject({ id: containerId, kind: "container" });
+    expect(
+      await db.query.sectionLayouts.findMany({
+        where: eq(sectionLayouts.sectionId, containerId),
+      }),
+    ).toEqual([]);
+  });
   it("should add item when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
@@ -1049,15 +1255,22 @@ describe("saveBoard should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
-    const { boardId, sectionId } = await createFullBoardAsync(db, "default");
-    const newSectionId = createId();
+    const { boardId, sectionId, layoutId } = await createFullBoardAsync(db, "default");
+    const containerId = createId();
     await db.insert(sections).values({
-      id: newSectionId,
-      kind: "category",
-      name: "Before",
-      yOffset: 1,
-      xOffset: 0,
+      id: containerId,
+      kind: "container",
       boardId,
+      options: SuperJSON.stringify({ title: "Before" }),
+    });
+    await db.insert(sectionLayouts).values({
+      sectionId: containerId,
+      layoutId,
+      parentSectionId: sectionId,
+      xOffset: 0,
+      yOffset: 0,
+      width: 2,
+      height: 2,
     });
 
     await caller.saveBoard({
@@ -1065,19 +1278,32 @@ describe("saveBoard should save full board", () => {
       sections: [
         {
           id: sectionId,
-          kind: "category",
+          kind: "empty",
           yOffset: 1,
           xOffset: 0,
-          name: "Test",
-          collapsed: true,
         },
         {
-          id: newSectionId,
-          kind: "category",
-          name: "After",
-          yOffset: 0,
-          xOffset: 0,
+          id: containerId,
+          kind: "container",
           collapsed: false,
+          options: {
+            title: "After",
+            customCssClasses: ["dense"],
+            borderColor: "#123456",
+            showLabel: false,
+            collapsible: true,
+            showOpenAll: true,
+          },
+          layouts: [
+            {
+              layoutId,
+              parentSectionId: sectionId,
+              xOffset: 1,
+              yOffset: 2,
+              width: 3,
+              height: 4,
+            },
+          ],
         },
       ],
       items: [],
@@ -1097,11 +1323,17 @@ describe("saveBoard should save full board", () => {
     expect(firstSection.kind).toBe("empty");
     expect(firstSection.yOffset).toBe(1);
     expect(firstSection.name).toBe(null);
-    const secondSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === newSectionId));
-    expect(secondSection.id).toBe(newSectionId);
-    expect(secondSection.kind).toBe("category");
-    expect(secondSection.yOffset).toBe(0);
-    expect(secondSection.name).toBe("After");
+    const secondSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === containerId));
+    expect(secondSection.id).toBe(containerId);
+    expect(secondSection.kind).toBe("container");
+    expect(secondSection.yOffset).toBeNull();
+    expect(secondSection.name).toBeNull();
+    expect(SuperJSON.parse(secondSection.options ?? "")).toMatchObject({ title: "After", collapsible: true });
+    expect(
+      await db.query.sectionLayouts.findFirst({
+        where: and(eq(sectionLayouts.sectionId, containerId), eq(sectionLayouts.layoutId, layoutId)),
+      }),
+    ).toMatchObject({ xOffset: 1, yOffset: 2, width: 3, height: 4, parentSectionId: sectionId });
   });
   it("should update item when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
@@ -1160,12 +1392,12 @@ describe("saveBoard should save full board", () => {
     expect(firstItem.id).toBe(itemId);
     expect(firstItem.kind).toBe("clock");
     expect(SuperJSON.parse<{ is24HourFormat: boolean }>(firstItem.options).is24HourFormat).toBe(false);
-    const firstLayout = expectToBeDefined(firstItem.layouts[0]);
-    expect(firstLayout.sectionId).toBe(sectionId);
-    expect(firstLayout.height).toBe(3);
-    expect(firstLayout.width).toBe(2);
-    expect(firstLayout.xOffset).toBe(7);
-    expect(firstLayout.yOffset).toBe(5);
+    const updatedLayout = expectToBeDefined(firstItem.layouts.find((layout) => layout.layoutId === layoutId));
+    expect(updatedLayout.sectionId).toBe(sectionId);
+    expect(updatedLayout.height).toBe(3);
+    expect(updatedLayout.width).toBe(2);
+    expect(updatedLayout.xOffset).toBe(7);
+    expect(updatedLayout.yOffset).toBe(5);
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
   it("should fail when board not found", async () => {
@@ -1350,14 +1582,43 @@ const createExistingLayout = (id: string) => ({
   id,
   name: "Base",
   columnCount: 10,
+  leftGutterColumnCount: 0,
+  rightGutterColumnCount: 0,
+  breakpoint: 768,
+  role: "base" as const,
+});
+const createMobileLayout = (id: string) => ({
+  id,
+  name: "Mobile",
+  columnCount: 3,
+  leftGutterColumnCount: 0,
+  rightGutterColumnCount: 0,
   breakpoint: 0,
+  role: "mobile" as const,
 });
 const createNewLayout = (columnCount: number) => ({
   id: createId(),
   name: "New layout",
   columnCount,
-  breakpoint: 1400,
+  leftGutterColumnCount: 0,
+  rightGutterColumnCount: 0,
+  breakpoint: 480,
+  role: "custom" as const,
 });
+const addMobileLayoutAsync = async (db: Database, boardId: string) => {
+  const mobileLayoutId = createId();
+  await db.insert(layouts).values({
+    id: mobileLayoutId,
+    name: "Mobile",
+    columnCount: 3,
+    leftGutterColumnCount: 0,
+    rightGutterColumnCount: 0,
+    breakpoint: 0,
+    role: "mobile",
+    boardId,
+  });
+  return mobileLayoutId;
+};
 describe("saveLayouts should save layout changes", () => {
   test("should add layout when not present in database", async () => {
     // Arrange
@@ -1365,30 +1626,34 @@ describe("saveLayouts should save layout changes", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
     const newLayout = createNewLayout(12);
 
     // Act
-    await caller.saveLayouts({
+    const savedLayouts = await caller.saveLayouts({
       id: boardId,
-      layouts: [createExistingLayout(layoutId), newLayout],
+      layouts: [createMobileLayout(mobileLayoutId), createExistingLayout(layoutId), newLayout],
     });
 
     // Assert
     const layout = await db.query.layouts.findFirst({
-      where: not(eq(layouts.id, layoutId)),
+      where: eq(layouts.role, "custom"),
     });
 
     const definedLayout = expectToBeDefined(layout);
     expect(definedLayout.name).toBe(newLayout.name);
     expect(definedLayout.columnCount).toBe(newLayout.columnCount);
     expect(definedLayout.breakpoint).toBe(newLayout.breakpoint);
+    expect(definedLayout.role).toBe("custom");
+    expect(savedLayouts.find((candidate) => candidate.role === "custom")?.id).toBe(definedLayout.id);
   });
-  test("should add items and dynamic sections generated from grid-algorithm when new layout is added", async () => {
+  test("should add items and containers generated from grid-algorithm when new layout is added", async () => {
     // Arrange
     const db = createDb();
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
     const assignments = await createItemsAndSectionsAsync(db, {
       boardId,
       layoutId,
@@ -1399,12 +1664,12 @@ describe("saveLayouts should save layout changes", () => {
     // Act
     await caller.saveLayouts({
       id: boardId,
-      layouts: [createExistingLayout(layoutId), newLayout],
+      layouts: [createMobileLayout(mobileLayoutId), createExistingLayout(layoutId), newLayout],
     });
 
     // Assert
     const layout = await db.query.layouts.findFirst({
-      where: not(eq(layouts.id, layoutId)),
+      where: eq(layouts.role, "custom"),
     });
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expectLayoutForRootLayoutAsync(db, sectionId, layout!.id, {
@@ -1412,7 +1677,7 @@ describe("saveLayouts should save layout changes", () => {
       a: itemId,
     });
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layout!.id, assignments.inDynamicSection);
+    await expectLayoutForContainerAsync(db, assignments.inRoot.f, layout!.id, assignments.inContainer);
   });
   test("should update layout when present in input", async () => {
     // Arrange
@@ -1420,6 +1685,7 @@ describe("saveLayouts should save layout changes", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
     const updatedLayout = createExistingLayout(layoutId);
     updatedLayout.breakpoint = 1400;
     updatedLayout.name = "Updated layout";
@@ -1427,7 +1693,7 @@ describe("saveLayouts should save layout changes", () => {
     // Act
     await caller.saveLayouts({
       id: boardId,
-      layouts: [updatedLayout],
+      layouts: [createMobileLayout(mobileLayoutId), updatedLayout],
     });
 
     // Assert
@@ -1446,6 +1712,7 @@ describe("saveLayouts should save layout changes", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
     const assignments = await createItemsAndSectionsAsync(db, {
       boardId,
       layoutId,
@@ -1457,7 +1724,7 @@ describe("saveLayouts should save layout changes", () => {
     // Act
     await caller.saveLayouts({
       id: boardId,
-      layouts: [updatedLayout],
+      layouts: [createMobileLayout(mobileLayoutId), updatedLayout],
     });
 
     // Assert
@@ -1465,7 +1732,126 @@ describe("saveLayouts should save layout changes", () => {
       ...assignments.inRoot,
       a: itemId,
     });
-    await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layoutId, assignments.inDynamicSection);
+    await expectLayoutForContainerAsync(db, assignments.inRoot.f, layoutId, assignments.inContainer);
+  });
+  test("should reserve gutter columns and return gutter contents to the canvas when disabled", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "gutters");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+
+    await db
+      .update(itemLayouts)
+      .set({
+        xOffset: 9,
+      })
+      .where(and(eq(itemLayouts.itemId, itemId), eq(itemLayouts.layoutId, layoutId)));
+
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [
+        createMobileLayout(mobileLayoutId),
+        {
+          ...createExistingLayout(layoutId),
+          leftGutterColumnCount: 2,
+        },
+      ],
+    });
+
+    const enabledLayout = expectToBeDefined(await db.query.layouts.findFirst({ where: eq(layouts.id, layoutId) }));
+    expect(enabledLayout.leftGutterColumnCount).toBe(2);
+    const leftRoot = expectToBeDefined(
+      await db.query.sections.findFirst({
+        where: and(eq(sections.boardId, boardId), eq(sections.kind, "empty"), eq(sections.xOffset, -1)),
+      }),
+    );
+    const reflowedMainItem = expectToBeDefined(
+      await db.query.itemLayouts.findFirst({
+        where: and(eq(itemLayouts.itemId, itemId), eq(itemLayouts.layoutId, layoutId)),
+      }),
+    );
+    expect(reflowedMainItem.xOffset + reflowedMainItem.width).toBeLessThanOrEqual(8);
+
+    const gutterItemId = await addItemAsync(db, {
+      boardId,
+      layoutId,
+      sectionId: leftRoot.id,
+    });
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [createMobileLayout(mobileLayoutId), createExistingLayout(layoutId)],
+    });
+
+    const returnedItem = expectToBeDefined(
+      await db.query.itemLayouts.findFirst({
+        where: and(eq(itemLayouts.itemId, gutterItemId), eq(itemLayouts.layoutId, layoutId)),
+      }),
+    );
+    expect(returnedItem.sectionId).toBe(sectionId);
+  });
+  test("should create one gutter root when layouts are saved concurrently", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId } = await createFullBoardAsync(db, "concurrent-gutters");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+    const input = {
+      id: boardId,
+      layouts: [
+        createMobileLayout(mobileLayoutId),
+        {
+          ...createExistingLayout(layoutId),
+          leftGutterColumnCount: 2,
+        },
+      ],
+    };
+
+    await Promise.all([caller.saveLayouts(input), caller.saveLayouts(input)]);
+
+    const leftRoots = await db.query.sections.findMany({
+      where: and(eq(sections.boardId, boardId), eq(sections.kind, "empty"), eq(sections.xOffset, -1)),
+    });
+    expect(leftRoots).toHaveLength(1);
+  });
+  test("should project a new custom layout from the resized Base layout", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+    const secondItemId = createId();
+
+    await db.update(itemLayouts).set({ width: 4, xOffset: 0 }).where(eq(itemLayouts.itemId, itemId));
+    await db.insert(items).values({
+      id: secondItemId,
+      kind: "clock",
+      boardId,
+      options: SuperJSON.stringify({ is24HourFormat: true }),
+    });
+    await db.insert(itemLayouts).values({
+      itemId: secondItemId,
+      layoutId,
+      sectionId,
+      width: 4,
+      height: 1,
+      xOffset: 6,
+      yOffset: 0,
+    });
+
+    const resizedBase = { ...createExistingLayout(layoutId), columnCount: 6 };
+    const savedLayouts = await caller.saveLayouts({
+      id: boardId,
+      layouts: [createMobileLayout(mobileLayoutId), createNewLayout(8), resizedBase],
+    });
+    const customLayoutId = expectToBeDefined(savedLayouts.find((layout) => layout.role === "custom")).id;
+
+    const basePosition = await db.query.itemLayouts.findFirst({
+      where: and(eq(itemLayouts.itemId, secondItemId), eq(itemLayouts.layoutId, layoutId)),
+    });
+    const customPosition = await db.query.itemLayouts.findFirst({
+      where: and(eq(itemLayouts.itemId, secondItemId), eq(itemLayouts.layoutId, customLayoutId)),
+    });
+
+    expect(basePosition).toMatchObject({ xOffset: 0, yOffset: 1, width: 4, height: 1, sectionId });
+    expect(customPosition).toMatchObject({ xOffset: 0, yOffset: 1, width: 4, height: 1, sectionId });
   });
   test("should remove layout when not present in input", async () => {
     // Arrange
@@ -1473,16 +1859,26 @@ describe("saveLayouts should save layout changes", () => {
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+    const customLayoutId = createId();
+    await db.insert(layouts).values({
+      id: customLayoutId,
+      name: "Custom",
+      columnCount: 6,
+      breakpoint: 480,
+      role: "custom",
+      boardId,
+    });
 
     // Act
     await caller.saveLayouts({
       id: boardId,
-      layouts: [createNewLayout(12)],
+      layouts: [createMobileLayout(mobileLayoutId), createExistingLayout(layoutId)],
     });
 
     // Assert
     const layout = await db.query.layouts.findFirst({
-      where: eq(layouts.id, layoutId),
+      where: eq(layouts.id, customLayoutId),
     });
     expect(layout).toBeUndefined();
   });
@@ -1497,11 +1893,129 @@ describe("saveLayouts should save layout changes", () => {
     const actAsync = async () =>
       await caller.saveLayouts({
         id: createId(),
-        layouts: [createExistingLayout(layoutId)],
+        layouts: [createMobileLayout(createId()), createExistingLayout(layoutId)],
       });
 
     // Assert
     await expect(actAsync()).rejects.toThrowError("Board not found");
+  });
+  test("should reject changing protected layout roles", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+
+    const actAsync = async () =>
+      await caller.saveLayouts({
+        id: boardId,
+        layouts: [
+          { ...createExistingLayout(layoutId), role: "mobile", breakpoint: 0 },
+          { ...createMobileLayout(mobileLayoutId), role: "base", breakpoint: 768 },
+        ],
+      });
+
+    await expect(actAsync()).rejects.toThrowError("Layout roles cannot be changed");
+  });
+});
+
+describe("resetLayout should rebuild a layout from Base", () => {
+  test("should replace target item positions and preserve layout metadata", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    await addMobileLayoutAsync(db, boardId);
+    const customLayoutId = createId();
+    await db.insert(layouts).values({
+      id: customLayoutId,
+      name: "Tablet",
+      columnCount: 6,
+      breakpoint: 480,
+      role: "custom",
+      boardId,
+    });
+    await db.insert(itemLayouts).values({
+      itemId,
+      sectionId,
+      layoutId: customLayoutId,
+      width: 2,
+      height: 2,
+      xOffset: 3,
+      yOffset: 4,
+    });
+
+    await caller.resetLayout({ boardId, layoutId: customLayoutId });
+
+    const resetPosition = await db.query.itemLayouts.findFirst({
+      where: and(eq(itemLayouts.itemId, itemId), eq(itemLayouts.layoutId, customLayoutId)),
+    });
+    expect(resetPosition).toMatchObject({ width: 1, height: 1, xOffset: 0, yOffset: 0, sectionId });
+    const customLayout = await db.query.layouts.findFirst({ where: eq(layouts.id, customLayoutId) });
+    expect(customLayout).toMatchObject({ name: "Tablet", columnCount: 6, breakpoint: 480, role: "custom" });
+  });
+
+  test("should reject resetting Base", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+
+    await expect(caller.resetLayout({ boardId, layoutId })).rejects.toThrowError("Base layout cannot be reset");
+  });
+});
+
+describe("Custom Widget placement permissions", () => {
+  test("rejects a direct addItem request from a non-admin board modifier", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId } = await createFullBoardAsync(db, "custom-widget-add");
+
+    await expect(
+      caller.addItem({
+        boardId,
+        kind: "customApi",
+        options: {
+          definitionId: "definition-1",
+          refreshInterval: 30,
+          configuration: {},
+        },
+        integrationIds: [],
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  test("rejects a direct saveBoard request that adds a Custom Widget for a non-admin", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId, layoutId } = await createFullBoardAsync(db, "custom-widget-save");
+
+    await expect(
+      caller.saveBoard({
+        id: boardId,
+        sections: [{ id: sectionId, kind: "empty", yOffset: 0, xOffset: 0 }],
+        items: [
+          {
+            id: createId(),
+            kind: "customApi",
+            options: {
+              definitionId: "definition-1",
+              refreshInterval: 30,
+              configuration: {},
+            },
+            integrationIds: [],
+            advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+            layouts: [
+              {
+                layoutId,
+                sectionId,
+                height: 1,
+                width: 1,
+                xOffset: 0,
+                yOffset: 0,
+              },
+            ],
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 });
 
@@ -1543,7 +2057,8 @@ const createFullBoardAsync = async (db: Database, name: string) => {
     id: layoutId,
     name: "Base",
     columnCount: 10,
-    breakpoint: 0,
+    breakpoint: 768,
+    role: "base",
     boardId,
   });
 
@@ -1623,19 +2138,21 @@ const addItemAsync = async (
   return itemId;
 };
 
-const addDynamicSectionAsync = async (
+const addContainerAsync = async (
   db: Database,
   section: Partial<Pick<InferInsertModel<typeof sectionLayouts>, "xOffset" | "yOffset" | "width" | "height">> & {
     parentSectionId: string;
     boardId: string;
     layoutId: string;
+    options?: Record<string, unknown>;
   },
 ) => {
   const sectionId = createId();
   await db.insert(sections).values({
     id: sectionId,
-    kind: "dynamic",
+    kind: "container",
     boardId: section.boardId,
+    options: SuperJSON.stringify(section.options ?? {}),
   });
   await db.insert(sectionLayouts).values({
     parentSectionId: section.parentSectionId,
@@ -1677,7 +2194,7 @@ const createItemsAndSectionsAsync = async (
   const itemC = await addItemAsync(db, { boardId, layoutId, sectionId, xOffset: 6, width: 2, height: 2 });
   const itemD = await addItemAsync(db, { boardId, layoutId, sectionId, xOffset: 8, width: 2, height: 3 });
   const itemE = await addItemAsync(db, { boardId, layoutId, sectionId, yOffset: 1, height: 3 });
-  const sectionF = await addDynamicSectionAsync(db, {
+  const sectionF = await addContainerAsync(db, {
     yOffset: 1,
     xOffset: 1,
     width: 5,
@@ -1686,7 +2203,7 @@ const createItemsAndSectionsAsync = async (
     boardId,
     layoutId,
   });
-  const sectionG = await addDynamicSectionAsync(db, {
+  const sectionG = await addContainerAsync(db, {
     yOffset: 2,
     xOffset: 6,
     width: 2,
@@ -1717,7 +2234,7 @@ const createItemsAndSectionsAsync = async (
       f: sectionF,
       g: sectionG,
     },
-    inDynamicSection: {
+    inContainer: {
       h: itemH,
       i: itemI,
       j: itemJ,
@@ -1753,7 +2270,7 @@ gg`,
   );
 };
 
-const expectLayoutForDynamicSectionAsync = async (
+const expectLayoutForContainerAsync = async (
   db: Database,
   sectionId: string,
   layoutId: string,

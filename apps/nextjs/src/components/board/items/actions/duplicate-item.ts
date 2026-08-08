@@ -1,6 +1,8 @@
 import { createId } from "@homarr/common";
+import { getRootSectionLane } from "@homarr/definitions";
 
 import type { Board, EmptySection, ItemLayout, Section } from "~/app/[locale]/boards/_types";
+import { getBoardLaneColumnCount } from "~/components/board/layout";
 import { getFirstEmptyPosition } from "./empty-position";
 import { getSectionElements } from "./section-elements";
 
@@ -15,16 +17,17 @@ export const duplicateItemCallback =
     if (!itemToDuplicate) return previous;
 
     const clonedItem = structuredClone(itemToDuplicate);
+    const clonedLayouts = clonedItem.layouts.map((layout) => ({
+      ...layout,
+      ...getNextPosition(previous, layout),
+    }));
 
     return {
       ...previous,
       items: previous.items.concat({
         ...clonedItem,
         id: createId(),
-        layouts: clonedItem.layouts.map((layout) => ({
-          ...layout,
-          ...getNextPosition(previous, layout),
-        })),
+        layouts: clonedLayouts,
       }),
     };
   };
@@ -42,8 +45,10 @@ const getNextPosition = (board: Board, layout: ItemLayout): { xOffset: number; y
   }
 
   const firstSection = board.sections
-    .filter((section): section is EmptySection => section.kind === "empty")
-    .sort((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
+    .filter(
+      (section): section is EmptySection => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
+    )
+    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
     .at(0);
 
   if (!firstSection) {
@@ -67,18 +72,21 @@ const getEmptySectionPosition = (
   layout: ItemLayout,
   section: Section,
 ): { xOffset: number; yOffset: number } | undefined => {
-  const boardLayout = board.layouts.find((boardLayout) => boardLayout.id === layout.layoutId);
+  const boardLayout = board.layouts.find((candidate) => candidate.id === layout.layoutId);
   if (!boardLayout) return;
 
-  const sectionElements = getSectionElements(board, { sectionId: layout.sectionId, layoutId: layout.layoutId });
-  if (section.kind !== "dynamic") {
-    return getFirstEmptyPosition(sectionElements, boardLayout.columnCount, undefined, {
+  const sectionElements = getSectionElements(board, { sectionId: section.id, layoutId: layout.layoutId });
+  if (section.kind === "empty") {
+    const columnCount = getBoardLaneColumnCount(boardLayout, getRootSectionLane(section.xOffset));
+
+    const size = {
       width: layout.width,
       height: layout.height,
-    });
+    };
+    return getFirstEmptyPosition(sectionElements, columnCount, undefined, size);
   }
 
-  const sectionLayout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === layout.layoutId);
+  const sectionLayout = section.layouts.find((candidate) => candidate.layoutId === layout.layoutId);
   if (!sectionLayout) return;
 
   return getFirstEmptyPosition(sectionElements, sectionLayout.width, sectionLayout.height, {

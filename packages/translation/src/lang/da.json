@@ -688,211 +688,6 @@
       "add": "Tilføj en app"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
-      },
-      "create": {
-        "title": "",
-        "subtitle": ""
-      },
-      "edit": {
-        "title": ""
-      }
-    },
-    "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
-    },
-    "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
-      "template": {
-        "label": "",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
-    },
-    "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
-    },
-    "layoutOption": {
-      "list": "",
-      "grid": ""
-    },
-    "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
-    },
-    "labelPositionOption": {
-      "above": "",
-      "below": ""
-    },
-    "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
-    },
-    "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
-    },
-    "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
-    },
-    "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "secret": {
-      "apiKey": "",
-      "username": "",
-      "password": "",
-      "savedPlaceholder": ""
-    },
-    "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
-    },
-    "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
-    },
-    "table": {
-      "name": "",
-      "url": "",
-      "display": ""
-    },
-    "widget": {
-      "disabled": ""
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1549,10 +1344,10 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
-        "create": "Ny dynamisk sektion",
-        "remove": "Fjern dynamisk sektion"
+        "create": "Ny container",
+        "remove": "Fjern container"
       },
       "option": {
         "title": {
@@ -1566,48 +1361,8 @@
         }
       },
       "remove": {
-        "title": "Fjern dynamisk sektion",
-        "message": "Er du sikker på at du vil fjerne dette dynamiske afsnit? Elementer vil blive flyttet på samme sted i det overordnede afsnit."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Navn"
-        }
-      },
-      "action": {
-        "create": "Ny kategori",
-        "edit": "Omdøb kategori",
-        "remove": "Fjern kategori",
-        "moveUp": "Flyt op",
-        "moveDown": "Flyt ned",
-        "createAbove": "Ny kategori ovenover",
-        "createBelow": "Ny kategori nedenunder",
-        "openAllInNewTabs": "Åbn alt i faneblade"
-      },
-      "create": {
-        "title": "Ny kategori",
-        "submit": "Tilføj kategori"
-      },
-      "remove": {
-        "title": "Fjern kategori",
-        "message": "Er du sikker på, at du vil fjerne kategorien {name}?"
-      },
-      "edit": {
-        "title": "Omdøb kategori",
-        "submit": "Omdøb kategori"
-      },
-      "menu": {
-        "label": {
-          "create": "Ny kategori",
-          "changePosition": "Ændre placering",
-          "settings": "Indstillinger"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "Åbn alt i faneblade",
-        "text": "Nogle browsere kan blokere bulk-åbning af faner af sikkerhedsmæssige årsager. Homarr kunne ikke åbne alle vinduer, fordi din browser blokerede denne handling. Tillad venligst \"Åbn pop op-vinduer\" og prøv igen."
+        "title": "Fjern container",
+        "message": "Er du sikker på, at du vil fjerne denne container? Elementer vil blive flyttet til samme sted i det overordnede afsnit."
       }
     }
   },
@@ -2428,10 +2183,21 @@
         },
         "descendingDefaultSort": {
           "label": "Inverter sortering"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Kunne ikke hente containerstatistik"
+        "internalServerError": "Kunne ikke hente containerstatistik",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2491,19 @@
         "showOnlyPlaying": {
           "label": "Vis kun hvad der aktuelt afspilles",
           "description": "Deaktivering af dette vil ikke virke for plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Afspiller lige nu",
@@ -2734,6 +2512,9 @@
         "id": "Id",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3768,18 +3549,6 @@
           "label": "",
           "description": ""
         },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
-        },
         "showLibraryCount": {
           "label": "",
           "description": ""
@@ -3813,8 +3582,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3889,26 +3656,6 @@
         "unhealthy": "Usund"
       }
     },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
-    },
     "beszelSystemTable": {
       "name": "Beszel-systemer (tabel)",
       "description": "Tabelvisning af alle Beszel-overvågede systemer med sorterbare kolonner og statusindikatorer",
@@ -3954,11 +3701,19 @@
         },
         "showAgent": {
           "label": "Vis agentversion"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Ingen systemer fundet",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "System",
@@ -4531,11 +4286,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Hjem",
         "boards": "Tavler",
         "apps": "Apps",
         "integrations": "Integrationer",
-        "customWidgets": "",
         "searchEngies": "Søgemaskiner",
         "medias": "Medier",
         "users": {
@@ -5356,6 +5111,7 @@
       },
       "remove": {
         "label": "Fjern",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Containere fjernet",
@@ -5673,6 +5429,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Administrer",
       "boards": {
         "label": "Tavler"
@@ -5705,18 +5464,6 @@
         },
         "edit": {
           "label": "Rediger"
-        }
-      },
-      "custom-widgets": {
-        "label": "",
-        "new": {
-          "label": ""
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

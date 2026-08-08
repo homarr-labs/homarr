@@ -1,4 +1,3 @@
-import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import {
   featuredIntegrations,
@@ -6,30 +5,8 @@ import {
   hiddenFromOnboarding,
   integrationDefs,
   integrationKinds,
+  getWidgetKindsForIntegration,
 } from "@homarr/definitions";
-import { widgetImports } from "@homarr/widgets";
-
-const buildWidgetsByIntegration = () => {
-  const map = Object.fromEntries(integrationKinds.map((kind) => [kind, [] as WidgetKind[]])) as Record<
-    IntegrationKind,
-    WidgetKind[]
-  >;
-
-  for (const [widgetKind, widget] of objectEntries(widgetImports)) {
-    const supported =
-      "supportedIntegrations" in widget.definition
-        ? (widget.definition.supportedIntegrations as IntegrationKind[])
-        : [];
-    for (const kind of supported) {
-      if (kind in map) {
-        map[kind].push(widgetKind);
-      }
-    }
-  }
-  return map;
-};
-
-export const widgetsByIntegration = buildWidgetsByIntegration();
 
 export const categoryTranslationKeys: Record<string, string> = {
   dnsHole: "integration.category.dnsHole",
@@ -45,6 +22,7 @@ export const categoryTranslationKeys: Record<string, string> = {
   smartHomeServer: "integration.category.smartHomeServer",
   indexerManager: "integration.category.indexerManager",
   healthMonitoring: "integration.category.healthMonitoring",
+  beszel: "integration.category.beszel",
   search: "integration.category.search",
   mediaTranscoding: "integration.category.mediaTranscoding",
   networkController: "integration.category.networkController",
@@ -70,11 +48,11 @@ export interface IntegrationGridItem {
 
 export const buildSortedIntegrations = (
   options: { enableMockIntegration?: boolean; onboarding?: boolean } = {},
-): IntegrationGridItem[] =>
-  integrationKinds
+): IntegrationGridItem[] => {
+  return integrationKinds
     .filter((kind) => {
       if (options.onboarding && hiddenFromOnboarding.has(kind)) return false;
-      if (options.onboarding && widgetsByIntegration[kind].length === 0) return false;
+      if (options.onboarding && getWidgetKindsForIntegration(kind).length === 0) return false;
       if (!options.enableMockIntegration && kind === "mock") return false;
       return true;
     })
@@ -82,9 +60,9 @@ export const buildSortedIntegrations = (
       kind,
       name: getIntegrationName(kind),
       categories: [...new Set(integrationDefs[kind].category.flat())] as string[],
-      widgets: widgetsByIntegration[kind],
+      widgets: getWidgetKindsForIntegration(kind),
     }))
-    .sort((left, right) => {
+    .toSorted((left, right) => {
       const leftIdx = featuredIntegrations.indexOf(left.kind);
       const rightIdx = featuredIntegrations.indexOf(right.kind);
       if (leftIdx !== -1 && rightIdx !== -1) return leftIdx - rightIdx;
@@ -92,6 +70,7 @@ export const buildSortedIntegrations = (
       if (rightIdx !== -1) return 1;
       return right.widgets.length - left.widgets.length || left.name.localeCompare(right.name);
     });
+};
 
 export const filterIntegrations = (items: IntegrationGridItem[], search: string) =>
   items.filter((i) => i.name.toLowerCase().includes(search.toLowerCase().trim()));

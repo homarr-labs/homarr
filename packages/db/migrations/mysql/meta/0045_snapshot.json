@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "198c7cbc-fd76-4b1f-8acb-e3e6859204fb",
-  "prevId": "9d0deec6-904d-49c4-b78b-03c5aa94ac6d",
+  "id": "81b11351-4235-4a61-9a2f-68d01e089c42",
+  "prevId": "e2f11bb0-59e9-4fab-8ae1-5bf764795c74",
   "tables": {
     "account": {
       "name": "account",
@@ -88,9 +88,7 @@
       "indexes": {
         "userId_idx": {
           "name": "userId_idx",
-          "columns": [
-            "user_id"
-          ],
+          "columns": ["user_id"],
           "isUnique": false
         }
       },
@@ -99,12 +97,8 @@
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -112,10 +106,7 @@
       "compositePrimaryKeys": {
         "account_provider_provider_account_id_pk": {
           "name": "account_provider_provider_account_id_pk",
-          "columns": [
-            "provider",
-            "provider_account_id"
-          ]
+          "columns": ["provider", "provider_account_id"]
         }
       },
       "uniqueConstraints": {},
@@ -152,12 +143,8 @@
           "name": "apiKey_user_id_user_id_fk",
           "tableFrom": "apiKey",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -165,9 +152,7 @@
       "compositePrimaryKeys": {
         "apiKey_id": {
           "name": "apiKey_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -224,272 +209,7 @@
       "compositePrimaryKeys": {
         "app_id": {
           "name": "app_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "assistant_configuration": {
-      "name": "assistant_configuration",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'default'"
-        },
-        "enabled": {
-          "name": "enabled",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "web_search_enabled": {
-          "name": "web_search_enabled",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "provider": {
-          "name": "provider",
-          "type": "varchar(32)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'openrouter'"
-        },
-        "base_url": {
-          "name": "base_url",
-          "type": "varchar(2048)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'https://openrouter.ai/api/v1'"
-        },
-        "model_discovery_path": {
-          "name": "model_discovery_path",
-          "type": "varchar(512)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'/models'"
-        },
-        "encrypted_api_key": {
-          "name": "encrypted_api_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "encrypted_headers": {
-          "name": "encrypted_headers",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "model_id": {
-          "name": "model_id",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "assistant_configuration_id": {
-          "name": "assistant_configuration_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "assistant_message": {
-      "name": "assistant_message",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "thread_id": {
-          "name": "thread_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "parent_id": {
-          "name": "parent_id",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "format": {
-          "name": "format",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'ai-sdk/v6'"
-        },
-        "content": {
-          "name": "content",
-          "type": "mediumtext",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'{\"json\": {}}'"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        }
-      },
-      "indexes": {
-        "assistant_message__thread_id_created_at_idx": {
-          "name": "assistant_message__thread_id_created_at_idx",
-          "columns": [
-            "thread_id",
-            "created_at"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {
-        "assistant_message_thread_id_assistant_thread_id_fk": {
-          "name": "assistant_message_thread_id_assistant_thread_id_fk",
-          "tableFrom": "assistant_message",
-          "tableTo": "assistant_thread",
-          "columnsFrom": [
-            "thread_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "assistant_message_id": {
-          "name": "assistant_message_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "assistant_thread": {
-      "name": "assistant_thread",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "title": {
-          "name": "title",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "model_id": {
-          "name": "model_id",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        }
-      },
-      "indexes": {
-        "assistant_thread__user_id_updated_at_idx": {
-          "name": "assistant_thread__user_id_updated_at_idx",
-          "columns": [
-            "user_id",
-            "updated_at"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {
-        "assistant_thread_user_id_user_id_fk": {
-          "name": "assistant_thread_user_id_user_id_fk",
-          "tableFrom": "assistant_thread",
-          "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "assistant_thread_id": {
-          "name": "assistant_thread_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -526,12 +246,8 @@
           "name": "boardGroupPermission_board_id_board_id_fk",
           "tableFrom": "boardGroupPermission",
           "tableTo": "board",
-          "columnsFrom": [
-            "board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["board_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -539,12 +255,8 @@
           "name": "boardGroupPermission_group_id_group_id_fk",
           "tableFrom": "boardGroupPermission",
           "tableTo": "group",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -552,11 +264,7 @@
       "compositePrimaryKeys": {
         "boardGroupPermission_board_id_group_id_permission_pk": {
           "name": "boardGroupPermission_board_id_group_id_permission_pk",
-          "columns": [
-            "board_id",
-            "group_id",
-            "permission"
-          ]
+          "columns": ["board_id", "group_id", "permission"]
         }
       },
       "uniqueConstraints": {},
@@ -593,12 +301,8 @@
           "name": "boardUserPermission_board_id_board_id_fk",
           "tableFrom": "boardUserPermission",
           "tableTo": "board",
-          "columnsFrom": [
-            "board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["board_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -606,12 +310,8 @@
           "name": "boardUserPermission_user_id_user_id_fk",
           "tableFrom": "boardUserPermission",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -619,11 +319,7 @@
       "compositePrimaryKeys": {
         "boardUserPermission_board_id_user_id_permission_pk": {
           "name": "boardUserPermission_board_id_user_id_permission_pk",
-          "columns": [
-            "board_id",
-            "user_id",
-            "permission"
-          ]
+          "columns": ["board_id", "user_id", "permission"]
         }
       },
       "uniqueConstraints": {},
@@ -781,12 +477,8 @@
           "name": "board_creator_id_user_id_fk",
           "tableFrom": "board",
           "tableTo": "user",
-          "columnsFrom": [
-            "creator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["creator_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -794,17 +486,13 @@
       "compositePrimaryKeys": {
         "board_id": {
           "name": "board_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "board_name_unique": {
           "name": "board_name_unique",
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "checkConstraint": {}
@@ -840,9 +528,1017 @@
       "compositePrimaryKeys": {
         "cron_job_configuration_name": {
           "name": "cron_job_configuration_name",
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "custom_widget_v2_definition": {
+      "name": "custom_widget_v2_definition",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "icon_url": {
+          "name": "icon_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "sources": {
+          "name": "sources",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "requests": {
+          "name": "requests",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "options": {
+          "name": "options",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "template": {
+          "name": "template",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "enabled": {
+          "name": "enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "creator_id": {
+          "name": "creator_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "custom_widget_v2_definition_creator_id_user_id_fk": {
+          "name": "custom_widget_v2_definition_creator_id_user_id_fk",
+          "tableFrom": "custom_widget_v2_definition",
+          "tableTo": "user",
+          "columnsFrom": ["creator_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "custom_widget_v2_definition_id": {
+          "name": "custom_widget_v2_definition_id",
+          "columns": ["id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "custom_widget_v2_secret": {
+      "name": "custom_widget_v2_secret",
+      "columns": {
+        "source_id": {
+          "name": "source_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "encrypted_value": {
+          "name": "encrypted_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "definition_id": {
+          "name": "definition_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "custom_widget_v2_secret_definition_id_fk": {
+          "name": "custom_widget_v2_secret_definition_id_fk",
+          "tableFrom": "custom_widget_v2_secret",
+          "tableTo": "custom_widget_v2_definition",
+          "columnsFrom": ["definition_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "custom_widget_v2_secret_definition_id_source_id_kind_pk": {
+          "name": "custom_widget_v2_secret_definition_id_source_id_kind_pk",
+          "columns": ["definition_id", "source_id", "kind"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "groupMember": {
+      "name": "groupMember",
+      "columns": {
+        "group_id": {
+          "name": "group_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "groupMember_group_id_group_id_fk": {
+          "name": "groupMember_group_id_group_id_fk",
+          "tableFrom": "groupMember",
+          "tableTo": "group",
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "groupMember_user_id_user_id_fk": {
+          "name": "groupMember_user_id_user_id_fk",
+          "tableFrom": "groupMember",
+          "tableTo": "user",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "groupMember_group_id_user_id_pk": {
+          "name": "groupMember_group_id_user_id_pk",
+          "columns": ["group_id", "user_id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "groupPermission": {
+      "name": "groupPermission",
+      "columns": {
+        "group_id": {
+          "name": "group_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "permission": {
+          "name": "permission",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "groupPermission_group_id_group_id_fk": {
+          "name": "groupPermission_group_id_group_id_fk",
+          "tableFrom": "groupPermission",
+          "tableTo": "group",
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "group": {
+      "name": "group",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "home_board_id": {
+          "name": "home_board_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "mobile_home_board_id": {
+          "name": "mobile_home_board_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "position": {
+          "name": "position",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "group_owner_id_user_id_fk": {
+          "name": "group_owner_id_user_id_fk",
+          "tableFrom": "group",
+          "tableTo": "user",
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "group_home_board_id_board_id_fk": {
+          "name": "group_home_board_id_board_id_fk",
+          "tableFrom": "group",
+          "tableTo": "board",
+          "columnsFrom": ["home_board_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "group_mobile_home_board_id_board_id_fk": {
+          "name": "group_mobile_home_board_id_board_id_fk",
+          "tableFrom": "group",
+          "tableTo": "board",
+          "columnsFrom": ["mobile_home_board_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "group_id": {
+          "name": "group_id",
+          "columns": ["id"]
+        }
+      },
+      "uniqueConstraints": {
+        "group_name_unique": {
+          "name": "group_name_unique",
+          "columns": ["name"]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "iconRepository": {
+      "name": "iconRepository",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "iconRepository_id": {
+          "name": "iconRepository_id",
+          "columns": ["id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "icon": {
+      "name": "icon",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(250)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "checksum": {
+          "name": "checksum",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "icon_repository_id": {
+          "name": "icon_repository_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "icon_icon_repository_id_iconRepository_id_fk": {
+          "name": "icon_icon_repository_id_iconRepository_id_fk",
+          "tableFrom": "icon",
+          "tableTo": "iconRepository",
+          "columnsFrom": ["icon_repository_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "icon_id": {
+          "name": "icon_id",
+          "columns": ["id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "integrationGroupPermissions": {
+      "name": "integrationGroupPermissions",
+      "columns": {
+        "integration_id": {
+          "name": "integration_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "permission": {
+          "name": "permission",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "integrationGroupPermissions_integration_id_integration_id_fk": {
+          "name": "integrationGroupPermissions_integration_id_integration_id_fk",
+          "tableFrom": "integrationGroupPermissions",
+          "tableTo": "integration",
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "integrationGroupPermissions_group_id_group_id_fk": {
+          "name": "integrationGroupPermissions_group_id_group_id_fk",
+          "tableFrom": "integrationGroupPermissions",
+          "tableTo": "group",
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "integration_group_permission__pk": {
+          "name": "integration_group_permission__pk",
+          "columns": ["integration_id", "group_id", "permission"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "integration_item": {
+      "name": "integration_item",
+      "columns": {
+        "item_id": {
+          "name": "item_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "integration_id": {
+          "name": "integration_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "integration_item_item_id_item_id_fk": {
+          "name": "integration_item_item_id_item_id_fk",
+          "tableFrom": "integration_item",
+          "tableTo": "item",
+          "columnsFrom": ["item_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "integration_item_integration_id_integration_id_fk": {
+          "name": "integration_item_integration_id_integration_id_fk",
+          "tableFrom": "integration_item",
+          "tableTo": "integration",
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "integration_item_item_id_integration_id_pk": {
+          "name": "integration_item_item_id_integration_id_pk",
+          "columns": ["item_id", "integration_id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "integrationSecret": {
+      "name": "integrationSecret",
+      "columns": {
+        "kind": {
+          "name": "kind",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "integration_id": {
+          "name": "integration_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "integration_secret__kind_idx": {
+          "name": "integration_secret__kind_idx",
+          "columns": ["kind"],
+          "isUnique": false
+        },
+        "integration_secret__updated_at_idx": {
+          "name": "integration_secret__updated_at_idx",
+          "columns": ["updated_at"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "integrationSecret_integration_id_integration_id_fk": {
+          "name": "integrationSecret_integration_id_integration_id_fk",
+          "tableFrom": "integrationSecret",
+          "tableTo": "integration",
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "integrationSecret_integration_id_kind_pk": {
+          "name": "integrationSecret_integration_id_kind_pk",
+          "columns": ["integration_id", "kind"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "integrationUserPermission": {
+      "name": "integrationUserPermission",
+      "columns": {
+        "integration_id": {
+          "name": "integration_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "permission": {
+          "name": "permission",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "integrationUserPermission_integration_id_integration_id_fk": {
+          "name": "integrationUserPermission_integration_id_integration_id_fk",
+          "tableFrom": "integrationUserPermission",
+          "tableTo": "integration",
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "integrationUserPermission_user_id_user_id_fk": {
+          "name": "integrationUserPermission_user_id_user_id_fk",
+          "tableFrom": "integrationUserPermission",
+          "tableTo": "user",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "integrationUserPermission_integration_id_user_id_permission_pk": {
+          "name": "integrationUserPermission_integration_id_user_id_permission_pk",
+          "columns": ["integration_id", "user_id", "permission"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "integration": {
+      "name": "integration",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "app_id": {
+          "name": "app_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "integration__kind_idx": {
+          "name": "integration__kind_idx",
+          "columns": ["kind"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "integration_app_id_app_id_fk": {
+          "name": "integration_app_id_app_id_fk",
+          "tableFrom": "integration",
+          "tableTo": "app",
+          "columnsFrom": ["app_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "integration_id": {
+          "name": "integration_id",
+          "columns": ["id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "invite": {
+      "name": "invite",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "token": {
+          "name": "token",
+          "type": "varchar(512)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expiration_date": {
+          "name": "expiration_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "creator_id": {
+          "name": "creator_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "invite_creator_id_user_id_fk": {
+          "name": "invite_creator_id_user_id_fk",
+          "tableFrom": "invite",
+          "tableTo": "user",
+          "columnsFrom": ["creator_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "invite_id": {
+          "name": "invite_id",
+          "columns": ["id"]
+        }
+      },
+      "uniqueConstraints": {
+        "invite_token_unique": {
+          "name": "invite_token_unique",
+          "columns": ["token"]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "item_layout": {
+      "name": "item_layout",
+      "columns": {
+        "item_id": {
+          "name": "item_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "section_id": {
+          "name": "section_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "layout_id": {
+          "name": "layout_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "x_offset": {
+          "name": "x_offset",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "y_offset": {
+          "name": "y_offset",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "width": {
+          "name": "width",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "height": {
+          "name": "height",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "item_layout_item_id_item_id_fk": {
+          "name": "item_layout_item_id_item_id_fk",
+          "tableFrom": "item_layout",
+          "tableTo": "item",
+          "columnsFrom": ["item_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "item_layout_section_id_section_id_fk": {
+          "name": "item_layout_section_id_section_id_fk",
+          "tableFrom": "item_layout",
+          "tableTo": "section",
+          "columnsFrom": ["section_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "item_layout_layout_id_layout_id_fk": {
+          "name": "item_layout_layout_id_layout_id_fk",
+          "tableFrom": "item_layout",
+          "tableTo": "layout",
+          "columnsFrom": ["layout_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "item_layout_item_id_section_id_layout_id_pk": {
+          "name": "item_layout_item_id_section_id_layout_id_pk",
+          "columns": ["item_id", "section_id", "layout_id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "item": {
+      "name": "item",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "board_id": {
+          "name": "board_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "options": {
+          "name": "options",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "('{\"json\": {}}')"
+        },
+        "advanced_options": {
+          "name": "advanced_options",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "('{\"json\": {}}')"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "item_board_id_board_id_fk": {
+          "name": "item_board_id_board_id_fk",
+          "tableFrom": "item",
+          "tableTo": "board",
+          "columnsFrom": ["board_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "item_id": {
+          "name": "item_id",
+          "columns": ["id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "layout": {
+      "name": "layout",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "board_id": {
+          "name": "board_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "column_count": {
+          "name": "column_count",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "left_gutter_column_count": {
+          "name": "left_gutter_column_count",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "right_gutter_column_count": {
+          "name": "right_gutter_column_count",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "breakpoint": {
+          "name": "breakpoint",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "layout_board_id_board_id_fk": {
+          "name": "layout_board_id_board_id_fk",
+          "tableFrom": "layout",
+          "tableTo": "board",
+          "columnsFrom": ["board_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "layout_id": {
+          "name": "layout_id",
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -970,12 +1666,8 @@
           "name": "custom_widget_definition_creator_id_user_id_fk",
           "tableFrom": "custom_widget_definition",
           "tableTo": "user",
-          "columnsFrom": [
-            "creator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["creator_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -983,9 +1675,7 @@
       "compositePrimaryKeys": {
         "custom_widget_definition_id": {
           "name": "custom_widget_definition_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -1029,12 +1719,8 @@
           "name": "cw_secret_definition_id_cw_definition_id_fk",
           "tableFrom": "custom_widget_secret",
           "tableTo": "custom_widget_definition",
-          "columnsFrom": [
-            "definition_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["definition_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1042,961 +1728,7 @@
       "compositePrimaryKeys": {
         "custom_widget_secret_definition_id_kind_pk": {
           "name": "custom_widget_secret_definition_id_kind_pk",
-          "columns": [
-            "definition_id",
-            "kind"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "groupMember": {
-      "name": "groupMember",
-      "columns": {
-        "group_id": {
-          "name": "group_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "groupMember_group_id_group_id_fk": {
-          "name": "groupMember_group_id_group_id_fk",
-          "tableFrom": "groupMember",
-          "tableTo": "group",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "groupMember_user_id_user_id_fk": {
-          "name": "groupMember_user_id_user_id_fk",
-          "tableFrom": "groupMember",
-          "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "groupMember_group_id_user_id_pk": {
-          "name": "groupMember_group_id_user_id_pk",
-          "columns": [
-            "group_id",
-            "user_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "groupPermission": {
-      "name": "groupPermission",
-      "columns": {
-        "group_id": {
-          "name": "group_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "permission": {
-          "name": "permission",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "groupPermission_group_id_group_id_fk": {
-          "name": "groupPermission_group_id_group_id_fk",
-          "tableFrom": "groupPermission",
-          "tableTo": "group",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "group": {
-      "name": "group",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "home_board_id": {
-          "name": "home_board_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "mobile_home_board_id": {
-          "name": "mobile_home_board_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "position": {
-          "name": "position",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "group_owner_id_user_id_fk": {
-          "name": "group_owner_id_user_id_fk",
-          "tableFrom": "group",
-          "tableTo": "user",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "group_home_board_id_board_id_fk": {
-          "name": "group_home_board_id_board_id_fk",
-          "tableFrom": "group",
-          "tableTo": "board",
-          "columnsFrom": [
-            "home_board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "group_mobile_home_board_id_board_id_fk": {
-          "name": "group_mobile_home_board_id_board_id_fk",
-          "tableFrom": "group",
-          "tableTo": "board",
-          "columnsFrom": [
-            "mobile_home_board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "group_id": {
-          "name": "group_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "group_name_unique": {
-          "name": "group_name_unique",
-          "columns": [
-            "name"
-          ]
-        }
-      },
-      "checkConstraint": {}
-    },
-    "iconRepository": {
-      "name": "iconRepository",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "slug": {
-          "name": "slug",
-          "type": "varchar(150)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "iconRepository_id": {
-          "name": "iconRepository_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "icon": {
-      "name": "icon",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(250)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "url": {
-          "name": "url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "checksum": {
-          "name": "checksum",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "icon_repository_id": {
-          "name": "icon_repository_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "icon_icon_repository_id_iconRepository_id_fk": {
-          "name": "icon_icon_repository_id_iconRepository_id_fk",
-          "tableFrom": "icon",
-          "tableTo": "iconRepository",
-          "columnsFrom": [
-            "icon_repository_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "icon_id": {
-          "name": "icon_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "integrationGroupPermissions": {
-      "name": "integrationGroupPermissions",
-      "columns": {
-        "integration_id": {
-          "name": "integration_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "group_id": {
-          "name": "group_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "permission": {
-          "name": "permission",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "integrationGroupPermissions_integration_id_integration_id_fk": {
-          "name": "integrationGroupPermissions_integration_id_integration_id_fk",
-          "tableFrom": "integrationGroupPermissions",
-          "tableTo": "integration",
-          "columnsFrom": [
-            "integration_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "integrationGroupPermissions_group_id_group_id_fk": {
-          "name": "integrationGroupPermissions_group_id_group_id_fk",
-          "tableFrom": "integrationGroupPermissions",
-          "tableTo": "group",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "integration_group_permission__pk": {
-          "name": "integration_group_permission__pk",
-          "columns": [
-            "integration_id",
-            "group_id",
-            "permission"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "integration_item": {
-      "name": "integration_item",
-      "columns": {
-        "item_id": {
-          "name": "item_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "integration_id": {
-          "name": "integration_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "integration_item_item_id_item_id_fk": {
-          "name": "integration_item_item_id_item_id_fk",
-          "tableFrom": "integration_item",
-          "tableTo": "item",
-          "columnsFrom": [
-            "item_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "integration_item_integration_id_integration_id_fk": {
-          "name": "integration_item_integration_id_integration_id_fk",
-          "tableFrom": "integration_item",
-          "tableTo": "integration",
-          "columnsFrom": [
-            "integration_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "integration_item_item_id_integration_id_pk": {
-          "name": "integration_item_item_id_integration_id_pk",
-          "columns": [
-            "item_id",
-            "integration_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "integrationSecret": {
-      "name": "integrationSecret",
-      "columns": {
-        "kind": {
-          "name": "kind",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "value": {
-          "name": "value",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "integration_id": {
-          "name": "integration_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "integration_secret__kind_idx": {
-          "name": "integration_secret__kind_idx",
-          "columns": [
-            "kind"
-          ],
-          "isUnique": false
-        },
-        "integration_secret__updated_at_idx": {
-          "name": "integration_secret__updated_at_idx",
-          "columns": [
-            "updated_at"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {
-        "integrationSecret_integration_id_integration_id_fk": {
-          "name": "integrationSecret_integration_id_integration_id_fk",
-          "tableFrom": "integrationSecret",
-          "tableTo": "integration",
-          "columnsFrom": [
-            "integration_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "integrationSecret_integration_id_kind_pk": {
-          "name": "integrationSecret_integration_id_kind_pk",
-          "columns": [
-            "integration_id",
-            "kind"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "integrationUserPermission": {
-      "name": "integrationUserPermission",
-      "columns": {
-        "integration_id": {
-          "name": "integration_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "permission": {
-          "name": "permission",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "integrationUserPermission_integration_id_integration_id_fk": {
-          "name": "integrationUserPermission_integration_id_integration_id_fk",
-          "tableFrom": "integrationUserPermission",
-          "tableTo": "integration",
-          "columnsFrom": [
-            "integration_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "integrationUserPermission_user_id_user_id_fk": {
-          "name": "integrationUserPermission_user_id_user_id_fk",
-          "tableFrom": "integrationUserPermission",
-          "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "integrationUserPermission_integration_id_user_id_permission_pk": {
-          "name": "integrationUserPermission_integration_id_user_id_permission_pk",
-          "columns": [
-            "integration_id",
-            "user_id",
-            "permission"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "integration": {
-      "name": "integration",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "url": {
-          "name": "url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "kind": {
-          "name": "kind",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "app_id": {
-          "name": "app_id",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "integration__kind_idx": {
-          "name": "integration__kind_idx",
-          "columns": [
-            "kind"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {
-        "integration_app_id_app_id_fk": {
-          "name": "integration_app_id_app_id_fk",
-          "tableFrom": "integration",
-          "tableTo": "app",
-          "columnsFrom": [
-            "app_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "integration_id": {
-          "name": "integration_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "invite": {
-      "name": "invite",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "token": {
-          "name": "token",
-          "type": "varchar(512)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "expiration_date": {
-          "name": "expiration_date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "creator_id": {
-          "name": "creator_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "invite_creator_id_user_id_fk": {
-          "name": "invite_creator_id_user_id_fk",
-          "tableFrom": "invite",
-          "tableTo": "user",
-          "columnsFrom": [
-            "creator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "invite_id": {
-          "name": "invite_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "invite_token_unique": {
-          "name": "invite_token_unique",
-          "columns": [
-            "token"
-          ]
-        }
-      },
-      "checkConstraint": {}
-    },
-    "item_layout": {
-      "name": "item_layout",
-      "columns": {
-        "item_id": {
-          "name": "item_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "section_id": {
-          "name": "section_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "layout_id": {
-          "name": "layout_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "x_offset": {
-          "name": "x_offset",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "y_offset": {
-          "name": "y_offset",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "width": {
-          "name": "width",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "height": {
-          "name": "height",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "item_layout_item_id_item_id_fk": {
-          "name": "item_layout_item_id_item_id_fk",
-          "tableFrom": "item_layout",
-          "tableTo": "item",
-          "columnsFrom": [
-            "item_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "item_layout_section_id_section_id_fk": {
-          "name": "item_layout_section_id_section_id_fk",
-          "tableFrom": "item_layout",
-          "tableTo": "section",
-          "columnsFrom": [
-            "section_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "item_layout_layout_id_layout_id_fk": {
-          "name": "item_layout_layout_id_layout_id_fk",
-          "tableFrom": "item_layout",
-          "tableTo": "layout",
-          "columnsFrom": [
-            "layout_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "item_layout_item_id_section_id_layout_id_pk": {
-          "name": "item_layout_item_id_section_id_layout_id_pk",
-          "columns": [
-            "item_id",
-            "section_id",
-            "layout_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "item": {
-      "name": "item",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "board_id": {
-          "name": "board_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "kind": {
-          "name": "kind",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "options": {
-          "name": "options",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "('{\"json\": {}}')"
-        },
-        "advanced_options": {
-          "name": "advanced_options",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "('{\"json\": {}}')"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "item_board_id_board_id_fk": {
-          "name": "item_board_id_board_id_fk",
-          "tableFrom": "item",
-          "tableTo": "board",
-          "columnsFrom": [
-            "board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "item_id": {
-          "name": "item_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "layout": {
-      "name": "layout",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(32)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "board_id": {
-          "name": "board_id",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "column_count": {
-          "name": "column_count",
-          "type": "tinyint",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "breakpoint": {
-          "name": "breakpoint",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "layout_board_id_board_id_fk": {
-          "name": "layout_board_id_board_id_fk",
-          "tableFrom": "layout",
-          "tableTo": "board",
-          "columnsFrom": [
-            "board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "layout_id": {
-          "name": "layout_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["definition_id", "kind"]
         }
       },
       "uniqueConstraints": {},
@@ -2062,12 +1794,8 @@
           "name": "media_creator_id_user_id_fk",
           "tableFrom": "media",
           "tableTo": "user",
-          "columnsFrom": [
-            "creator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["creator_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2075,9 +1803,7 @@
       "compositePrimaryKeys": {
         "media_id": {
           "name": "media_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -2113,9 +1839,7 @@
       "compositePrimaryKeys": {
         "onboarding_id": {
           "name": "onboarding_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -2188,12 +1912,8 @@
           "name": "search_engine_integration_id_integration_id_fk",
           "tableFrom": "search_engine",
           "tableTo": "integration",
-          "columnsFrom": [
-            "integration_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2201,17 +1921,13 @@
       "compositePrimaryKeys": {
         "search_engine_id": {
           "name": "search_engine_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "search_engine_short_unique": {
           "name": "search_engine_short_unique",
-          "columns": [
-            "short"
-          ]
+          "columns": ["short"]
         }
       },
       "checkConstraint": {}
@@ -2248,12 +1964,8 @@
           "name": "section_collapse_state_user_id_user_id_fk",
           "tableFrom": "section_collapse_state",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2261,12 +1973,8 @@
           "name": "section_collapse_state_section_id_section_id_fk",
           "tableFrom": "section_collapse_state",
           "tableTo": "section",
-          "columnsFrom": [
-            "section_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["section_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2274,10 +1982,7 @@
       "compositePrimaryKeys": {
         "section_collapse_state_user_id_section_id_pk": {
           "name": "section_collapse_state_user_id_section_id_pk",
-          "columns": [
-            "user_id",
-            "section_id"
-          ]
+          "columns": ["user_id", "section_id"]
         }
       },
       "uniqueConstraints": {},
@@ -2342,12 +2047,8 @@
           "name": "section_layout_section_id_section_id_fk",
           "tableFrom": "section_layout",
           "tableTo": "section",
-          "columnsFrom": [
-            "section_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["section_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2355,12 +2056,8 @@
           "name": "section_layout_layout_id_layout_id_fk",
           "tableFrom": "section_layout",
           "tableTo": "layout",
-          "columnsFrom": [
-            "layout_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["layout_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2368,12 +2065,8 @@
           "name": "section_layout_parent_section_id_section_id_fk",
           "tableFrom": "section_layout",
           "tableTo": "section",
-          "columnsFrom": [
-            "parent_section_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_section_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2381,10 +2074,7 @@
       "compositePrimaryKeys": {
         "section_layout_section_id_layout_id_pk": {
           "name": "section_layout_section_id_layout_id_pk",
-          "columns": [
-            "section_id",
-            "layout_id"
-          ]
+          "columns": ["section_id", "layout_id"]
         }
       },
       "uniqueConstraints": {},
@@ -2450,12 +2140,8 @@
           "name": "section_board_id_board_id_fk",
           "tableFrom": "section",
           "tableTo": "board",
-          "columnsFrom": [
-            "board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["board_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2463,9 +2149,7 @@
       "compositePrimaryKeys": {
         "section_id": {
           "name": "section_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -2495,17 +2179,13 @@
       "compositePrimaryKeys": {
         "serverSetting_setting_key": {
           "name": "serverSetting_setting_key",
-          "columns": [
-            "setting_key"
-          ]
+          "columns": ["setting_key"]
         }
       },
       "uniqueConstraints": {
         "serverSetting_settingKey_unique": {
           "name": "serverSetting_settingKey_unique",
-          "columns": [
-            "setting_key"
-          ]
+          "columns": ["setting_key"]
         }
       },
       "checkConstraint": {}
@@ -2538,9 +2218,7 @@
       "indexes": {
         "user_id_idx": {
           "name": "user_id_idx",
-          "columns": [
-            "user_id"
-          ],
+          "columns": ["user_id"],
           "isUnique": false
         }
       },
@@ -2549,12 +2227,8 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2562,48 +2236,7 @@
       "compositePrimaryKeys": {
         "session_session_token": {
           "name": "session_session_token",
-          "columns": [
-            "session_token"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "trusted_certificate_hostname": {
-      "name": "trusted_certificate_hostname",
-      "columns": {
-        "hostname": {
-          "name": "hostname",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "thumbprint": {
-          "name": "thumbprint",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "certificate": {
-          "name": "certificate",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "trusted_certificate_hostname_hostname_thumbprint_pk": {
-          "name": "trusted_certificate_hostname_hostname_thumbprint_pk",
-          "columns": [
-            "hostname",
-            "thumbprint"
-          ]
+          "columns": ["session_token"]
         }
       },
       "uniqueConstraints": {},
@@ -2754,12 +2387,8 @@
           "name": "user_home_board_id_board_id_fk",
           "tableFrom": "user",
           "tableTo": "board",
-          "columnsFrom": [
-            "home_board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["home_board_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2767,12 +2396,8 @@
           "name": "user_mobile_home_board_id_board_id_fk",
           "tableFrom": "user",
           "tableTo": "board",
-          "columnsFrom": [
-            "mobile_home_board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["mobile_home_board_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2780,12 +2405,8 @@
           "name": "user_default_search_engine_id_search_engine_id_fk",
           "tableFrom": "user",
           "tableTo": "search_engine",
-          "columnsFrom": [
-            "default_search_engine_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["default_search_engine_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2793,9 +2414,7 @@
       "compositePrimaryKeys": {
         "user_id": {
           "name": "user_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -2831,10 +2450,7 @@
       "compositePrimaryKeys": {
         "verificationToken_identifier_token_pk": {
           "name": "verificationToken_identifier_token_pk",
-          "columns": [
-            "identifier",
-            "token"
-          ]
+          "columns": ["identifier", "token"]
         }
       },
       "uniqueConstraints": {},
@@ -2878,12 +2494,8 @@
           "name": "widget_secret_item_id_item_id_fk",
           "tableFrom": "widget_secret",
           "tableTo": "item",
-          "columnsFrom": [
-            "item_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["item_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2891,10 +2503,43 @@
       "compositePrimaryKeys": {
         "widget_secret_item_id_kind_pk": {
           "name": "widget_secret_item_id_kind_pk",
-          "columns": [
-            "item_id",
-            "kind"
-          ]
+          "columns": ["item_id", "kind"]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "trusted_certificate_hostname": {
+      "name": "trusted_certificate_hostname",
+      "columns": {
+        "hostname": {
+          "name": "hostname",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "thumbprint": {
+          "name": "thumbprint",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "certificate": {
+          "name": "certificate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "trusted_certificate_hostname_hostname_thumbprint_pk": {
+          "name": "trusted_certificate_hostname_hostname_thumbprint_pk",
+          "columns": ["hostname", "thumbprint"]
         }
       },
       "uniqueConstraints": {},

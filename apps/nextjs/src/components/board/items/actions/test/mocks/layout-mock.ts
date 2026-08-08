@@ -10,7 +10,10 @@ export class LayoutMockBuilder {
       id: createId(),
       name: "Base",
       columnCount: 12,
-      breakpoint: 0,
+      leftGutterColumnCount: 0,
+      rightGutterColumnCount: 0,
+      breakpoint: 768,
+      role: "base",
       ...layout,
     } satisfies Board["layouts"][0];
   }

@@ -19,7 +19,11 @@ export const systemDisksWidget: WidgetDefinition = {
         description: "How disk usage values are shown",
         values: {
           type: "select",
-          options: ["Percentage (e.g., 76%)", "Absolute values (e.g., 800GB / 1TB)", "Free space percentage (e.g., 24% free)"],
+          options: [
+            "Percentage (e.g., 76%)",
+            "Absolute values (e.g., 800GB / 1TB)",
+            "Free space percentage (e.g., 24% free)",
+          ],
         },
         defaultValue: "Percentage (e.g., 76%)",
       },

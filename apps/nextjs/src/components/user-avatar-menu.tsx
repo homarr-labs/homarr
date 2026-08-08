@@ -1,13 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useCallback, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Badge, Center, Indicator, Kbd, Loader, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
-import { useHotkeys, useTimeout } from "@mantine/hooks";
+import { useCallback } from "react";
+import { Badge, Indicator, Kbd, Loader, Menu, Text } from "@mantine/core";
 import {
   IconBrandDocker,
-  IconCheck,
   IconHome,
   IconLogin,
   IconLogout,
@@ -19,7 +16,7 @@ import {
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
 import { hotkeys } from "@homarr/definitions";
-import { createModal, useModalAction } from "@homarr/modals";
+import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
@@ -32,8 +29,10 @@ import { AvailableUpdatesMenuItem } from "./layout/header/update";
 
 interface UserAvatarMenuProps {
   children: ReactNode;
-  availableUpdatesPromise?: Promise<RouterOutputs["updateChecker"]["getAvailableUpdates"]>;
+  availableUpdates?: RouterOutputs["updateChecker"]["getAvailableUpdates"];
   isDockerEnabled?: boolean;
+  opened: boolean;
+  onOpenChange: (opened: boolean) => void;
 }
 
 const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
@@ -42,39 +41,33 @@ const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
     .map((key) => (key === "mod" ? modifierLabel : `${key.charAt(0).toUpperCase()}${key.slice(1)}`))
     .join(" + ");
 
-export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnabled }: UserAvatarMenuProps) => {
+export const UserAvatarMenu = ({
+  children,
+  availableUpdates,
+  isDockerEnabled,
+  opened,
+  onOpenChange,
+}: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
-  const { toggleColorScheme } = useMantineColorScheme();
-  useHotkeys([[hotkeys.toggleColorScheme, toggleColorScheme]]);
-
   const session = useSession();
-  const router = useRouter();
 
   const { logoutUrl } = useAuthContext();
-  const { openModal } = useModalAction(LogoutModal);
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
   const assistant = useOptionalHomarrAssistant();
 
   const handleSignout = useCallback(async () => {
+    const redirectUrl = logoutUrl ?? "/auth/login";
     await signOut({
       redirect: false,
     });
-    openModal({
-      onTimeout: () => {
-        if (logoutUrl) {
-          window.location.assign(logoutUrl);
-          return;
-        }
-        router.push("/auth/login");
-      },
-    });
-  }, [logoutUrl, openModal, router]);
+    window.location.assign(redirectUrl);
+  }, [logoutUrl]);
 
   return (
     // We use keepMounted so we can add event listeners to prevent navigating away without saving the board
-    <Menu width={300} withinPortal keepMounted>
+    <Menu width={300} withinPortal keepMounted opened={opened} onChange={onOpenChange}>
       <Menu.Dropdown>
-        <AvailableUpdatesMenuItem availableUpdatesPromise={availableUpdatesPromise} />
+        <AvailableUpdatesMenuItem availableUpdates={availableUpdates} />
         <Menu.Item component={Link} href="/boards" leftSection={<IconHome size="1rem" />}>
           {t("homeBoard")}
         </Menu.Item>
@@ -166,35 +159,3 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise, isDockerEnab
     </Menu>
   );
 };
-
-const LogoutModal = createModal<{ onTimeout: () => void }>(({ actions, innerProps }) => {
-  const t = useScopedI18n("common.userAvatar.menu");
-  const { start } = useTimeout(() => {
-    actions.closeModal();
-    innerProps.onTimeout();
-  }, 1500);
-
-  useEffect(() => {
-    start();
-  }, [start]);
-
-  return (
-    <Center h={200 - 2 * 16}>
-      <Stack align="center" c="green">
-        <IconCheck size={50} />
-        <Text ta="center" fw="bold">
-          {t("loggedOut")}
-        </Text>
-      </Stack>
-    </Center>
-  );
-}).withOptions({
-  centered: true,
-  withCloseButton: false,
-  transitionProps: {
-    transition: "pop",
-  },
-  size: 200,
-  closeOnClickOutside: false,
-  closeOnEscape: false,
-});

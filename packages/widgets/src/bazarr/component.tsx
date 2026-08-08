@@ -26,6 +26,7 @@ const statIcons = {
 } as const;
 
 const gridColsByWidth = [
+  { minWidth: 640, cols: 4 },
   { minWidth: 380, cols: 2 },
   { minWidth: 0, cols: 1 },
 ] as const;
@@ -36,13 +37,14 @@ const iconSizeByWidth = [
   { minWidth: 0, size: 16 },
 ] as const;
 
-export default function BazarrWidget({ integrationIds, options, width }: WidgetComponentProps<"bazarr">) {
+export default function BazarrWidget({ integrationIds, options, width, height }: WidgetComponentProps<"bazarr">) {
   const t = useScopedI18n("widget.bazarr");
-  const { data: badges } = clientApi.widget.bazarr.getBadges.useQuery(
+  const { data: badges, error } = clientApi.widget.bazarr.getBadges.useQuery(
     { integrationId: integrationIds[0] ?? "" },
     { enabled: Boolean(integrationIds[0]) },
   );
 
+  if (error && !badges) throw error;
   if (!badges) return <WidgetEmptyState />;
 
   const statValues = {
@@ -56,8 +58,8 @@ export default function BazarrWidget({ integrationIds, options, width }: WidgetC
     .filter(([optionKey]) => options[optionKey as keyof typeof options])
     .map(([, statKey]) => statKey);
 
-  const gridCols = getGridCols(width);
-  const iconSize = getIconSize(width);
+  const gridCols = getGridCols(width, height, visibleStatKeys.length);
+  const iconSize = getIconSize(Math.min(width, height));
 
   if (visibleStatKeys.length === 0) {
     return (
@@ -73,7 +75,11 @@ export default function BazarrWidget({ integrationIds, options, width }: WidgetC
 
   return (
     <div className={classes.root}>
-      <div className={classes.grid} style={{ "--stat-cols": gridCols } as CSSProperties}>
+      <div
+        className={classes.grid}
+        data-short={height < 120 || undefined}
+        style={{ "--stat-cols": gridCols } as CSSProperties}
+      >
         {visibleStatKeys.map((statKey) => {
           const Icon = statIcons[statKey];
           const value = statValues[statKey];
@@ -83,7 +89,9 @@ export default function BazarrWidget({ integrationIds, options, width }: WidgetC
             <div key={statKey} className={`${classes.statTile} ${isWarning ? classes.statTileWarning : ""}`}>
               <Icon className={classes.statIcon} size={iconSize} stroke={1.5} />
               <span className={`${classes.statValue} ${isWarning ? classes.statValueWarning : ""}`}>{value}</span>
-              <span className={classes.statLabel}>{t(statKey)}</span>
+              <span className={classes.statLabel} title={t(statKey)}>
+                {t(statKey)}
+              </span>
             </div>
           );
         })}
@@ -92,12 +100,17 @@ export default function BazarrWidget({ integrationIds, options, width }: WidgetC
   );
 }
 
-function getGridCols(width: number): number {
-  const match = gridColsByWidth.find(({ minWidth }) => width >= minWidth);
-  return match?.cols ?? 1;
+export function getGridCols(width: number, height: number, itemCount: number): number {
+  if (itemCount <= 1) return 1;
+
+  const preferredColumns = gridColsByWidth.find(({ minWidth }) => width >= minWidth)?.cols ?? 1;
+  const maxColumnsByWidth = Math.max(1, Math.floor(width / 100));
+  const maxRowsByHeight = Math.max(1, Math.floor(height / 72));
+  const columnsNeededToFit = Math.ceil(itemCount / maxRowsByHeight);
+  return Math.min(itemCount, maxColumnsByWidth, Math.max(preferredColumns, columnsNeededToFit));
 }
 
-function getIconSize(width: number): number {
+export function getIconSize(width: number): number {
   const match = iconSizeByWidth.find(({ minWidth }) => width >= minWidth);
   return match?.size ?? 16;
 }

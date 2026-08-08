@@ -1,7 +1,7 @@
 import SuperJSON from "superjson";
 
-import { createId, objectKeys } from "@homarr/common";
-import { customWidgetImportSchema } from "@homarr/validation/custom-widget";
+import { createId, generateResponsiveGridFor, objectKeys } from "@homarr/common";
+import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import {
   createDocumentationLink,
   credentialsAdminGroup,
@@ -11,11 +11,12 @@ import {
   getIntegrationName,
   integrationDefs,
   integrationKinds,
+  normalizeBoardLayoutRoles,
 } from "@homarr/definitions";
 import type { WidgetKind } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
-import type { Database } from "..";
+import type { Database, InferInsertModel } from "..";
 import { eq, inArray } from "..";
 import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
@@ -27,6 +28,7 @@ import {
 import {
   apps,
   boards,
+  customWidgetDefinitions,
   groupMembers,
   groupPermissions,
   groups,
@@ -38,102 +40,12 @@ import {
   onboarding,
   searchEngines,
   sections,
+  sectionLayouts,
   users,
-  customWidgetDefinitions,
 } from "../schema";
 import type { Integration } from "../schema";
 
 const isTruthyEnv = (value: string | undefined) => ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
-
-const CUSTOM_WIDGET_SEEDS: Array<{ id: string; data: Record<string, unknown> }> = [
-  {
-    id: "seed-dog-facts",
-    data: {
-      $schema: "homarr-custom-widget-v2",
-      name: "Random Dog Fact",
-      description: "Displays a random fun fact about dogs",
-      url: "https://dogapi.dog/api/v2/facts",
-      authType: "none",
-      method: "GET",
-      displayType: "singleValue",
-      displayConfig: {
-        type: "singleValue",
-        jsonPath: "$.data[0].attributes.body",
-        label: "Dog Fact",
-        unit: "",
-        valueSize: "sm",
-        labelPosition: "above",
-      },
-    },
-  },
-  {
-    id: "seed-currency-exchange",
-    data: {
-      $schema: "homarr-custom-widget-v2",
-      name: "Currency Exchange (JPY)",
-      description: "Converts 50 Japanese Yen to EUR and USD using European Central Bank rates",
-      url: "https://api.frankfurter.dev/v1/latest?from=JPY&to=EUR,USD&amount=50",
-      authType: "none",
-      method: "GET",
-      displayType: "keyValue",
-      displayConfig: {
-        type: "keyValue",
-        mappings: [
-          { label: "50 JPY → EUR", jsonPath: "$.rates.EUR", unit: "€" },
-          { label: "50 JPY → USD", jsonPath: "$.rates.USD", unit: "$" },
-        ],
-        layout: "list",
-        columns: 2,
-      },
-    },
-  },
-  {
-    id: "seed-jellyfin",
-    data: {
-      $schema: "homarr-custom-widget-v2",
-      name: "Jellyfin library",
-      description: "Counts the number of movies, series, episodes and songs in the library",
-      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
-      url: "https://jellyfin.homelab.com/Items/Counts",
-      authType: "apiKeyHeader",
-      headerName: "X-Emby-Token",
-      method: "GET",
-      requestBody: null,
-      displayType: "countGrid",
-      displayConfig: {
-        type: "countGrid",
-        items: [
-          { label: "Movies", jsonPath: "$.MovieCount", unit: "" },
-          { label: "Series", jsonPath: "$.SeriesCount", unit: "" },
-          { label: "Episodes", jsonPath: "$.EpisodeCount", unit: "" },
-          { label: "Songs", jsonPath: "$.SongCount", unit: "" },
-        ],
-        columns: 4,
-        valueSize: "lg",
-      },
-    },
-  },
-  {
-    id: "seed-pokedex",
-    data: {
-      $schema: "homarr-custom-widget-v2",
-      name: "Pokédex",
-      description: "Browseable Pokémon list",
-      iconUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
-      url: "https://pokeapi.co/api/v2/pokemon?limit=75",
-      authType: "none",
-      headerName: null,
-      method: "GET",
-      requestBody: null,
-      displayType: "customJsx",
-      displayConfig: {
-        type: "customJsx",
-        template:
-          '<Stack gap="md" p="xs">\n  <Card\n    withBorder\n    radius="xl"\n    p="md"\n    shadow="md"\n    style={{\n      background: "linear-gradient(135deg, rgba(250,82,82,0.22), rgba(253,126,20,0.10), rgba(255,255,255,0.03))",\n      border: "1px solid rgba(250,82,82,0.35)",\n      overflow: "hidden"\n    }}\n  >\n    <Group justify="space-between" wrap="nowrap">\n      <Stack gap={2}>\n        <Title order={3}>Pokédex</Title>\n      </Stack>\n    </Group>\n  </Card>\n\n  <PaginatedList pageSize={12}>\n    <Grid gutter="sm">\n      {data.results.map((pokemon, i) =>\n        <Grid.Col span={1.5}>\n          <Anchor href={pokemon.url} target="_blank" underline="never">\n            <Card\n              withBorder\n              radius="xl"\n              p="xs"\n              shadow="md"\n              style={{\n                cursor: "pointer",\n                position: "relative",\n                overflow: "hidden",\n                minHeight: 190,\n                background: "linear-gradient(160deg, rgba(255,255,255,0.12), rgba(250,82,82,0.10), rgba(0,0,0,0.04))",\n                border: "1px solid rgba(250,82,82,0.28)",\n                transition: "transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease"\n              }}\n            >\n              <Stack gap="sm" align="center">\n                <Group justify="space-between" wrap="nowrap" style={{ width: "100%" }}>\n                  <Badge size="sm" color="red" variant="filled">\n                    #{String(i + 1).padStart(3, "0")}\n                  </Badge>\n                  <Text fw={800} tt="capitalize" ta="right" truncate style={{ maxWidth: 120 }}>\n                    {pokemon.name}\n                  </Text>\n                </Group>\n\n                <Paper\n                  radius="xl"\n                  p="xs"\n                  withBorder\n                  style={{\n                    background: "radial-gradient(circle, rgba(255,255,255,0.95), rgba(250,82,82,0.16))",\n                    border: "1px solid rgba(255,255,255,0.45)",\n                    boxShadow: "inset 0 0 20px rgba(255,255,255,0.25)"\n                  }}\n                >\n                  <Avatar\n                    src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"}\n                    alt={pokemon.name}\n                    size={92}\n                    radius="xl"\n                    style={{\n                      transition: "transform 180ms ease",\n                      filter: "drop-shadow(0 8px 10px rgba(0,0,0,0.25))"\n                    }}\n                  />\n                </Paper>\n              </Stack>\n            </Card>\n          </Anchor>\n        </Grid.Col>\n      )}\n    </Grid>\n  </PaginatedList>\n</Stack>',
-      },
-    },
-  },
-];
 
 export const seedDataAsync = async (db: Database) => {
   if (isTruthyEnv(process.env.UNSAFE_ENABLE_MOCK_INTEGRATION)) {
@@ -155,6 +67,215 @@ export const seedDataAsync = async (db: Database) => {
   if (isTruthyEnv(process.env.DEMO_MODE)) {
     await seedDemoUserAsync(db);
   }
+
+  await seedProtectedBoardLayoutsAsync(db);
+};
+
+export const seedProtectedBoardLayoutsAsync = async (db: Database, boardId?: string) => {
+  const dbBoards = await db.query.boards.findMany({
+    where: boardId ? eq(boards.id, boardId) : undefined,
+    with: {
+      layouts: true,
+      items: { with: { layouts: true } },
+      sections: { with: { layouts: true } },
+    },
+  });
+
+  for (const board of dbBoards) {
+    if (board.layouts.length === 0) {
+      await db.insert(layouts).values([
+        {
+          id: createId(),
+          name: "Mobile",
+          columnCount: 3,
+          breakpoint: 0,
+          role: "mobile",
+          boardId: board.id,
+        },
+        {
+          id: createId(),
+          name: "Base",
+          columnCount: 10,
+          breakpoint: 768,
+          role: "base",
+          boardId: board.id,
+        },
+      ]);
+      continue;
+    }
+
+    if (board.layouts.length === 1) {
+      const [baseLayout] = board.layouts;
+      if (!baseLayout) continue;
+
+      const mobileLayout = {
+        id: createId(),
+        name: "Mobile",
+        columnCount: 3,
+        breakpoint: 0,
+        role: "mobile" as const,
+        boardId: board.id,
+      };
+
+      await db.update(layouts).set({ role: "base", breakpoint: 768 }).where(eq(layouts.id, baseLayout.id));
+      await db.insert(layouts).values(mobileLayout);
+      await insertMissingProjectedPositionsAsync(
+        db,
+        board,
+        { ...baseLayout, role: "base", breakpoint: 768 },
+        mobileLayout,
+      );
+      continue;
+    }
+
+    const normalizedLayouts = normalizeBoardLayoutRoles(board.layouts);
+    const alreadyNormalized = normalizedLayouts.every((layout) => {
+      const previousLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+      return layout.breakpoint === previousLayout?.breakpoint && previousLayout.role === layout.role;
+    });
+
+    if (!alreadyNormalized) {
+      for (const layout of normalizedLayouts) {
+        await db
+          .update(layouts)
+          .set({ breakpoint: layout.breakpoint, role: layout.role })
+          .where(eq(layouts.id, layout.id));
+      }
+    }
+
+    const mobileLayout = normalizedLayouts[0];
+    const baseLayout = normalizedLayouts.at(-1);
+    if (mobileLayout && baseLayout) {
+      await insertMissingProjectedPositionsAsync(
+        db,
+        board,
+        { ...baseLayout, role: "base" },
+        { ...mobileLayout, role: "mobile" },
+      );
+    }
+  }
+};
+
+interface BoardWithLayoutPositions {
+  items: Array<{
+    id: string;
+    layouts: Array<{
+      layoutId: string;
+      sectionId: string;
+      width: number;
+      height: number;
+      xOffset: number;
+      yOffset: number;
+    }>;
+  }>;
+  sections: Array<{
+    id: string;
+    kind: string;
+    layouts: Array<{
+      layoutId: string;
+      parentSectionId: string | null;
+      width: number;
+      height: number;
+      xOffset: number;
+      yOffset: number;
+    }>;
+  }>;
+}
+
+const insertMissingProjectedPositionsAsync = async (
+  db: Database,
+  board: BoardWithLayoutPositions,
+  sourceLayout: InferInsertModel<typeof layouts>,
+  targetLayout: InferInsertModel<typeof layouts>,
+) => {
+  const elements = [
+    ...board.items.flatMap((item) => {
+      const layout = item.layouts.find((itemLayout) => itemLayout.layoutId === sourceLayout.id);
+      return layout
+        ? [
+            {
+              id: item.id,
+              type: "item" as const,
+              width: layout.width,
+              height: layout.height,
+              xOffset: layout.xOffset,
+              yOffset: layout.yOffset,
+              sectionId: layout.sectionId,
+            },
+          ]
+        : [];
+    }),
+    ...board.sections.flatMap((section) => {
+      if (section.kind !== "dynamic") return [];
+      const layout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === sourceLayout.id);
+      return layout?.parentSectionId
+        ? [
+            {
+              id: section.id,
+              type: "section" as const,
+              width: layout.width,
+              height: layout.height,
+              xOffset: layout.xOffset,
+              yOffset: layout.yOffset,
+              sectionId: layout.parentSectionId,
+            },
+          ]
+        : [];
+    }),
+  ];
+
+  const projectedElements = board.sections
+    .filter((section) => section.kind !== "dynamic")
+    .flatMap(
+      (section) =>
+        generateResponsiveGridFor({
+          items: elements,
+          previousWidth: sourceLayout.columnCount,
+          width: targetLayout.columnCount,
+          sectionId: section.id,
+        }).items,
+    );
+
+  const existingItemIds = new Set(
+    board.items
+      .filter((item) => item.layouts.some((layout) => layout.layoutId === targetLayout.id))
+      .map((item) => item.id),
+  );
+  const itemPositions = projectedElements
+    .filter((element) => element.type === "item" && !existingItemIds.has(element.id))
+    .map(
+      (element): InferInsertModel<typeof itemLayouts> => ({
+        itemId: element.id,
+        layoutId: targetLayout.id,
+        sectionId: element.sectionId,
+        width: element.width,
+        height: element.height,
+        xOffset: element.xOffset,
+        yOffset: element.yOffset,
+      }),
+    );
+
+  const existingSectionIds = new Set(
+    board.sections
+      .filter((section) => section.layouts.some((layout) => layout.layoutId === targetLayout.id))
+      .map((section) => section.id),
+  );
+  const sectionPositions = projectedElements
+    .filter((element) => element.type === "section" && !existingSectionIds.has(element.id))
+    .map(
+      (element): InferInsertModel<typeof sectionLayouts> => ({
+        sectionId: element.id,
+        layoutId: targetLayout.id,
+        parentSectionId: element.sectionId,
+        width: element.width,
+        height: element.height,
+        xOffset: element.xOffset,
+        yOffset: element.yOffset,
+      }),
+    );
+
+  if (itemPositions.length > 0) await db.insert(itemLayouts).values(itemPositions);
+  if (sectionPositions.length > 0) await db.insert(sectionLayouts).values(sectionPositions);
 };
 
 const seedEveryoneGroupAsync = async (db: Database) => {
@@ -361,13 +482,24 @@ const seedDefaultBoardAsync = async (db: Database) => {
     yOffset: 0,
     boardId,
   });
-  await db.insert(layouts).values({
-    id: createId(),
-    name: "Base",
-    columnCount: 10,
-    breakpoint: 0,
-    boardId,
-  });
+  await db.insert(layouts).values([
+    {
+      id: createId(),
+      name: "Mobile",
+      columnCount: 3,
+      breakpoint: 0,
+      role: "mobile",
+      boardId,
+    },
+    {
+      id: createId(),
+      name: "Base",
+      columnCount: 10,
+      breakpoint: 768,
+      role: "base",
+      boardId,
+    },
+  ]);
 
   const everyoneGroupRow = await db.query.groups.findFirst({
     where: eq(groups.name, everyoneGroup),
@@ -600,7 +732,8 @@ const seedDemoUserAsync = async (db: Database) => {
     id: layoutId,
     name: "Base",
     columnCount: 12,
-    breakpoint: 0,
+    breakpoint: 768,
+    role: "base",
     boardId,
   });
 
@@ -648,40 +781,33 @@ const seedDemoUserAsync = async (db: Database) => {
 };
 
 const seedDefaultCustomWidgetsAsync = async (db: Database) => {
-  const seedIds = CUSTOM_WIDGET_SEEDS.map((s) => s.id);
+  const seedIds = BUNDLED_CUSTOM_WIDGETS.map(({ id }) => id);
   const existing = await db.query.customWidgetDefinitions.findMany({
     columns: { id: true },
     where: inArray(customWidgetDefinitions.id, seedIds),
   });
-  const existingIds = new Set(existing.map((row) => row.id));
-
-  const seedValues = CUSTOM_WIDGET_SEEDS.filter((seed) => !existingIds.has(seed.id)).map((seed) => {
-    const parsed = customWidgetImportSchema.parse(seed.data);
+  const existingIds = new Set(existing.map(({ id }) => id));
+  const values = BUNDLED_CUSTOM_WIDGETS.filter(({ id }) => !existingIds.has(id)).map(({ id, widget }) => {
+    const definition = customWidgetDefinitionSchema.parse(widget);
     return {
-      id: seed.id,
-      name: parsed.name,
-      description: parsed.description ?? null,
-      iconUrl: parsed.iconUrl ?? null,
-      url: parsed.url,
-      authType: parsed.authType,
-      headerName: parsed.headerName ?? null,
-      method: parsed.method,
-      requestBody: parsed.requestBody ?? null,
-      displayType: parsed.displayType,
-      displayConfig: SuperJSON.stringify(parsed.displayConfig),
+      id,
+      name: definition.name,
+      description: definition.description ?? null,
+      iconUrl: definition.iconUrl ?? null,
+      sources: SuperJSON.stringify(definition.sources),
+      requests: SuperJSON.stringify(definition.requests),
+      options: SuperJSON.stringify(definition.options),
+      template: definition.template,
       enabled: false,
       creatorId: null,
     };
   });
-
-  if (seedValues.length === 0) {
-    console.log("Skipping seeding of default custom widgets as they already exist");
+  if (values.length === 0) {
+    console.log("Skipping seeding of bundled custom widgets because they already exist");
     return;
   }
-
-  await db.insert(customWidgetDefinitions).values(seedValues);
-
-  console.log(`Created ${seedValues.length} default custom widgets through seeding process`);
+  await db.insert(customWidgetDefinitions).values(values);
+  console.log(`Created ${values.length} bundled custom widgets through seeding process`);
 };
 
 const seedBoardWidgetsAsync = async (db: Database) => {
@@ -697,7 +823,7 @@ const seedBoardWidgetsAsync = async (db: Database) => {
   if (!board) return;
 
   const section = board.sections.find((sec) => sec.kind === "empty");
-  const layout = board.layouts[0];
+  const layout = board.layouts.find((candidate) => candidate.role === "base") ?? board.layouts[0];
   if (!section || !layout) return;
 
   const allIntegrations = await db.query.integrations.findMany();

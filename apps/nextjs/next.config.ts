@@ -1,4 +1,6 @@
 // Importing env files here to validate on build
+import path from "node:path";
+
 import "@homarr/auth/env";
 import "@homarr/core/infrastructure/db/env";
 import "@homarr/common/env";
@@ -13,7 +15,21 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "../../packages/translation/src/request.ts",
 });
 
+const getDevelopmentServiceAliases = () => {
+  if (process.env.NODE_ENV !== "development") {
+    return undefined;
+  }
+
+  return {
+    "@homarr/tasks": "./src/instrumentation-noop.ts",
+    "@homarr/websocket": "./src/instrumentation-noop.ts",
+  };
+};
+
 const nextConfig: NextConfig = {
+  // Next previews otherwise create agent instruction files in the application
+  // directory during development.
+  agentRules: false,
   env: {
     HOMARR_VERSION: process.env.HOMARR_VERSION ?? "unknown",
   },
@@ -30,19 +46,14 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
-    turbopackFileSystemCacheForDev: true,
-    webpackMemoryOptimizations: true,
+    turbopackFileSystemCacheForBuild: true,
+    useTypeScriptCli: true,
   },
   turbopack: {
-    // ponytail: known Turbopack NFT warning from path.join(process.cwd(), …) in
-    // src/app/api/backup/{route,shared}.ts. No working placement in 16.2.x
-    // (see vercel/next.js#95125). Suppress until upstream fix lands.
-    ignoreIssue: [
-      {
-        path: "**/*",
-        title: "Encountered unexpected file in NFT list",
-      },
-    ],
+    root: path.resolve(import.meta.dirname, "../.."),
+    // Development runs tasks and WebSocket as separate processes. These aliases
+    // keep their production-only instrumentation imports out of the dev graph.
+    resolveAlias: getDevelopmentServiceAliases(),
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
@@ -68,6 +79,10 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)", // Apply CSP to all routes
         headers: [
+          {
+            key: "Accept-CH",
+            value: "Sec-CH-Viewport-Width",
+          },
           {
             key: "Content-Security-Policy",
             // worker-src / media-src with blob: is necessary for video.js, see https://github.com/homarr-labs/homarr/issues/3912 and https://stackoverflow.com/questions/65792855/problem-with-video-js-and-content-security-policy-csp

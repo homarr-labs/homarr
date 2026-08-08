@@ -1,11 +1,28 @@
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("clock", {
   icon: IconClock,
+  queryKey: [["widget", "weather", "atLocation"]],
+  queryMatcher: ({ input }, scope) => {
+    const location = scope.options.weatherLocation;
+    if (
+      scope.options.showWeather !== true ||
+      location === null ||
+      typeof location !== "object" ||
+      !("latitude" in location) ||
+      !("longitude" in location)
+    ) {
+      return false;
+    }
+    return widgetQueryInputMatches(input, {
+      latitude: location.latitude,
+      longitude: location.longitude,
+    });
+  },
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

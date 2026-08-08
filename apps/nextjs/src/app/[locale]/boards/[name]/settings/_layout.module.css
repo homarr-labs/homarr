@@ -1,0 +1,47 @@
+.gutterSettings {
+  background: color-mix(in srgb, var(--mantine-color-default) 55%, transparent);
+}
+
+.gutterPreview {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  min-height: 112px;
+  padding: 8px;
+  overflow: hidden;
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  transition: grid-template-columns 180ms ease-out;
+}
+
+.previewCanvas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  min-width: 0;
+}
+
+.previewCanvas > div,
+.previewGutter {
+  background: var(--mantine-color-default);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.previewCanvas > div:nth-child(1) {
+  grid-row: span 2;
+}
+
+.previewCanvas > div:nth-child(4) {
+  grid-column: span 2;
+}
+
+.previewGutter {
+  min-width: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gutterPreview {
+    transition: none;
+  }
+}

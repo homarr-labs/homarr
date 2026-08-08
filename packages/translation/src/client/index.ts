@@ -6,7 +6,7 @@ import type { SupportedLanguage } from "../config";
 import type englishTranslation from "../lang/en.json";
 
 export { useChangeLocale } from "./use-change-locale";
-export { useCurrentLocale } from "./use-current-locale";
+export { useCurrentIntlLocale, useCurrentLocale } from "./use-current-locale";
 
 declare module "next-intl" {
   interface AppConfig {
@@ -15,13 +15,10 @@ declare module "next-intl" {
   }
 }
 
-export const { useI18n, useScopedI18n } = {
-  useI18n: useTranslations,
-  useScopedI18n: useTranslations,
-};
-
-export const { useI18nMessages } = {
-  useI18nMessages: () => useMessages(),
-};
+// Keep these as direct exports so Turbopack and webpack can statically inspect
+// the client package's public surface.
+export const useI18n = useTranslations;
+export const useScopedI18n = useTranslations;
+export const useI18nMessages = () => useMessages();
 
 export { useTranslations };

@@ -1,9 +1,8 @@
-import { getCurrentLayout } from "@homarr/boards/context";
-
 import type { Board } from "~/app/[locale]/boards/_types";
 
 export interface MoveAndResizeItemInput {
   itemId: string;
+  layoutId: string;
   xOffset: number;
   yOffset: number;
   width: number;
@@ -11,10 +10,8 @@ export interface MoveAndResizeItemInput {
 }
 
 export const moveAndResizeItemCallback =
-  ({ itemId, ...layoutInput }: MoveAndResizeItemInput) =>
+  ({ itemId, layoutId, ...layoutInput }: MoveAndResizeItemInput) =>
   (previous: Board): Board => {
-    const currentLayout = getCurrentLayout(previous);
-
     return {
       ...previous,
       items: previous.items.map((item) =>
@@ -23,7 +20,7 @@ export const moveAndResizeItemCallback =
           : {
               ...item,
               layouts: item.layouts.map((layout) =>
-                layout.layoutId !== currentLayout
+                layout.layoutId !== layoutId
                   ? layout
                   : {
                       ...layout,

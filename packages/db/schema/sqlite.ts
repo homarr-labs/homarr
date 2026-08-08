@@ -3,7 +3,7 @@ import type { MantineSize } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
-import { blob, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { blob, foreignKey, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import {
   backgroundImageAttachments,
@@ -21,18 +21,14 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  LayoutRole,
   OnboardingStep,
   SearchEngineType,
   SectionKind,
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
-import type {
-  CustomWidgetAuthType,
-  CustomWidgetDisplayType,
-  CustomWidgetMethod,
-  CustomWidgetSecretKind,
-} from "@homarr/validation/custom-widget";
+import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 
 export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 
@@ -197,8 +193,8 @@ export const integrations = sqliteTable(
     kind: text().$type<IntegrationKind>().notNull(),
     appId: text().references(() => apps.id, { onDelete: "set null" }),
   },
-  (integrations) => ({
-    kindIdx: index("integration__kind_idx").on(integrations.kind),
+  (table) => ({
+    kindIdx: index("integration__kind_idx").on(table.kind),
   }),
 );
 
@@ -329,7 +325,10 @@ export const layouts = sqliteTable("layout", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   columnCount: int().notNull(),
+  leftGutterColumnCount: int().notNull().default(0),
+  rightGutterColumnCount: int().notNull().default(0),
   breakpoint: int().notNull().default(0),
+  role: text().$type<LayoutRole>().notNull().default("custom"),
 });
 
 export const itemLayouts = sqliteTable(
@@ -527,7 +526,7 @@ export const assistantMessages = sqliteTable(
       .references(() => assistantThreads.id, { onDelete: "cascade" }),
     parentId: text(),
     format: text().notNull().default("ai-sdk/v6"),
-    content: text().default(emptySuperJSON).notNull(),
+    content: text().notNull(),
     createdAt: int({ mode: "timestamp" })
       .notNull()
       .default(sql`(unixepoch())`),
@@ -561,18 +560,69 @@ export const onboarding = sqliteTable("onboarding", {
   previousStep: text().$type<OnboardingStep>(),
 });
 
-export const customWidgetDefinitions = sqliteTable("custom_widget_definition", {
+/**
+ * Read-only v1 definitions retained during the Custom JSX v2 upgrade.
+ * Their original physical table names keep the database readable by a v1 binary.
+ */
+export const legacyCustomWidgetDefinitions = sqliteTable(
+  "custom_widget_definition",
+  {
+    id: text().notNull().primaryKey(),
+    name: text().notNull(),
+    description: text(),
+    iconUrl: text(),
+    url: text().notNull(),
+    authType: text().notNull().default("none"),
+    headerName: text(),
+    method: text().notNull().default("GET"),
+    requestBody: text(),
+    displayType: text().notNull().default("singleValue"),
+    displayConfig: text().default(emptySuperJSON).notNull(),
+    enabled: int({ mode: "boolean" }).notNull().default(true),
+    createdAt: int({ mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+    updatedAt: int({ mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+    creatorId: text(),
+  },
+  (table) => ({
+    creatorFk: foreignKey({
+      columns: [table.creatorId],
+      foreignColumns: [users.id],
+      name: "custom_widget_definition_creator_id_user_id_fk",
+    }).onDelete("set null"),
+  }),
+);
+
+export const legacyCustomWidgetSecrets = sqliteTable(
+  "custom_widget_secret",
+  {
+    kind: text().$type<CustomWidgetSecretKind>().notNull(),
+    encryptedValue: text("value").$type<`${string}.${string}`>().notNull(),
+    updatedAt: int({ mode: "timestamp" }).notNull(),
+    definitionId: text().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({ columns: [table.definitionId, table.kind] }),
+    definitionFk: foreignKey({
+      columns: [table.definitionId],
+      foreignColumns: [legacyCustomWidgetDefinitions.id],
+      name: "custom_widget_secret_definition_id_custom_widget_definition_id_fk",
+    }).onDelete("cascade"),
+  }),
+);
+
+export const customWidgetDefinitions = sqliteTable("custom_widget_v2_definition", {
   id: text().notNull().primaryKey(),
   name: text().notNull(),
   description: text(),
   iconUrl: text(),
-  url: text().notNull(),
-  authType: text().$type<CustomWidgetAuthType>().notNull().default("none"),
-  headerName: text(),
-  method: text().$type<CustomWidgetMethod>().notNull().default("GET"),
-  requestBody: text(),
-  displayType: text().$type<CustomWidgetDisplayType>().notNull().default("singleValue"),
-  displayConfig: text().default(emptySuperJSON).notNull(),
+  sources: text().notNull(),
+  requests: text().notNull(),
+  options: text().notNull(),
+  template: text().notNull(),
   enabled: int({ mode: "boolean" }).notNull().default(true),
   createdAt: int({ mode: "timestamp" })
     .notNull()
@@ -584,21 +634,25 @@ export const customWidgetDefinitions = sqliteTable("custom_widget_definition", {
 });
 
 export const customWidgetSecrets = sqliteTable(
-  "custom_widget_secret",
+  "custom_widget_v2_secret",
   {
+    sourceId: text().notNull(),
     kind: text().$type<CustomWidgetSecretKind>().notNull(),
-    value: text().$type<`${string}.${string}`>().notNull(),
+    encryptedValue: text("encrypted_value").$type<`${string}.${string}`>().notNull(),
     updatedAt: int({ mode: "timestamp" })
       .$onUpdateFn(() => new Date())
       .notNull(),
-    definitionId: text()
-      .notNull()
-      .references(() => customWidgetDefinitions.id, { onDelete: "cascade" }),
+    definitionId: text().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
-      columns: [table.definitionId, table.kind],
+      columns: [table.definitionId, table.sourceId, table.kind],
     }),
+    definitionFk: foreignKey({
+      columns: [table.definitionId],
+      foreignColumns: [customWidgetDefinitions.id],
+      name: "custom_widget_v2_secret_definition_id_fk",
+    }).onDelete("cascade"),
   }),
 );
 
@@ -912,5 +966,20 @@ export const customWidgetSecretRelations = relations(customWidgetSecrets, ({ one
   definition: one(customWidgetDefinitions, {
     fields: [customWidgetSecrets.definitionId],
     references: [customWidgetDefinitions.id],
+  }),
+}));
+
+export const legacyCustomWidgetDefinitionRelations = relations(legacyCustomWidgetDefinitions, ({ many, one }) => ({
+  secrets: many(legacyCustomWidgetSecrets),
+  creator: one(users, {
+    fields: [legacyCustomWidgetDefinitions.creatorId],
+    references: [users.id],
+  }),
+}));
+
+export const legacyCustomWidgetSecretRelations = relations(legacyCustomWidgetSecrets, ({ one }) => ({
+  definition: one(legacyCustomWidgetDefinitions, {
+    fields: [legacyCustomWidgetSecrets.definitionId],
+    references: [legacyCustomWidgetDefinitions.id],
   }),
 }));

@@ -9,6 +9,8 @@ import { boards, items } from "@homarr/db/schema";
 import type { WidgetOptionsSettings } from "../../../../widgets/src";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
+import { validateTimetableOptionsChangeAsync } from "./timetable";
+import { throwIfCustomWidgetPlacementChangeForbidden } from "../board/custom-widget-placement-access";
 
 export const optionsRouter = createTRPCRouter({
   getWidgetOptionSettings: publicProcedure.query(async ({ ctx }): Promise<WidgetOptionsSettings> => {
@@ -45,11 +47,19 @@ export const optionsRouter = createTRPCRouter({
         });
       }
 
-      const options = SuperJSON.parse<Record<string, unknown>>(item.options);
-      Object.assign(options, input.newOptions);
+      const previousOptions = SuperJSON.parse<Record<string, unknown>>(item.options);
+      const updatedOptions = { ...previousOptions, ...input.newOptions };
+      if (item.kind === "timetable") {
+        await validateTimetableOptionsChangeAsync(updatedOptions, previousOptions);
+      }
+      throwIfCustomWidgetPlacementChangeForbidden({
+        isAdmin: ctx.session.user.permissions.includes("admin"),
+        submittedItems: [{ id: item.id, kind: item.kind, options: updatedOptions }],
+        storedItems: [{ id: item.id, kind: item.kind, options: previousOptions }],
+      });
       await ctx.db
         .update(items)
-        .set({ options: SuperJSON.stringify(options) })
+        .set({ options: SuperJSON.stringify(updatedOptions) })
         .where(eq(items.id, input.itemId));
     }),
 });

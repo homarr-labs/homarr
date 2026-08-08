@@ -44,12 +44,12 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   speedtestTracker: ["speedtestTracker"],
   uptimeKuma: ["uptimeKuma"],
   audioStats: ["navidrome", "audiobookshelf"],
+  umami: ["umami"],
   vpn: getIntegrationKindsByCategory("vpn"),
+  ups: getIntegrationKindsByCategory("ups"),
   archiveTeamWarrior: ["archiveTeamWarrior"],
   anchorNote: ["anchor"],
   traefik: ["traefik"],
-  umami: ["umami"],
-  ups: getIntegrationKindsByCategory("ups"),
 };
 
 /** Widgets that remain useful without a configured integration. */

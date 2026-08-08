@@ -2,6 +2,7 @@ import { Spotlight } from "@mantine/spotlight";
 
 import type { TranslationObject } from "@homarr/translation";
 import { Link } from "@homarr/ui";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "@homarr/common";
 
 import type { SearchGroup } from "../../../lib/group";
 import type { inferSearchInteractionOptions } from "../../../lib/interaction";
@@ -31,10 +32,18 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
 
   const { key: _reactKey, ...optionProps } = option as unknown as { key?: unknown } & Record<string, unknown>;
 
+  const safeHref = interaction.type === "link" ? getSafeApplicationUrl(interaction.href) : undefined;
   const renderRoot =
-    interaction.type === "link"
+    interaction.type === "link" && safeHref
       ? (props: Record<string, unknown>) => {
-          return <Link href={interaction.href} target={interaction.newTab ? "_blank" : undefined} {...props} />;
+          return (
+            <Link
+              href={safeHref}
+              target={interaction.newTab ? "_blank" : undefined}
+              rel={interaction.newTab ? SAFE_NEW_TAB_REL : undefined}
+              {...props}
+            />
+          );
         }
       : undefined;
 

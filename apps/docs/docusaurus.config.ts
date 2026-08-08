@@ -1,17 +1,30 @@
 import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
 import { themes as prismThemes } from "prism-react-renderer";
+import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 const a11yEmoji = require("@fec/remark-a11y-emoji");
 
+const deprecatedWorkshopUrl = process.env.WORKSHOP_URL;
+if (deprecatedWorkshopUrl && !process.env.WORKSHOP_API_URL) {
+  console.warn("WORKSHOP_URL is deprecated; use WORKSHOP_API_URL instead.");
+}
+
+const publicUrls = resolveHomarrUrlConfig({
+  homarrWebsiteUrl: process.env.HOMARR_WEBSITE_URL,
+  workshopApiUrl: process.env.WORKSHOP_API_URL ?? deprecatedWorkshopUrl,
+});
 const config: Config = {
   title: "Homarr documentation",
   tagline: "A simple yet powerful dashboard for your server.",
-  url: "https://homarr.dev",
+  url: publicUrls.homarrWebsiteUrl,
   baseUrl: "/",
   trailingSlash: undefined,
   favicon: "img/logo.png",
   organizationName: "homarr-labs",
   projectName: "homarr",
+  customFields: {
+    workshopUrl: publicUrls.workshopApiUrl,
+  },
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
@@ -42,17 +55,6 @@ const config: Config = {
   },
 
   themes: ["@docusaurus/theme-mermaid"],
-
-  scripts: [
-    {
-      src: "https://widget.kapa.ai/kapa-widget.bundle.js",
-      "data-website-id": "1e4656f4-abeb-4343-bbae-1d8626f52378",
-      "data-project-name": "Homarr",
-      "data-project-color": "#2B2B2B",
-      "data-project-logo": "https://homarr.dev/img/favicon.png",
-      async: true,
-    },
-  ],
 
   presets: [
     [
@@ -123,21 +125,30 @@ const config: Config = {
           label: "Blog",
           position: "left",
           to: "/blog",
+          className: "navbar-item--secondary",
+        },
+        {
+          label: "Workshop",
+          position: "left",
+          to: "/workshop",
         },
         {
           label: "About us",
           position: "left",
           to: "/about-us",
+          className: "navbar-item--collapse-first",
         },
         {
           to: "https://demo.homarr.dev/",
           label: "Demo",
           position: "right",
+          className: "navbar-item--secondary",
         },
         {
           to: "https://opencollective.com/homarr",
           label: "💴 Donate",
           position: "right",
+          className: "navbar-item--collapse-first",
         },
         {
           type: "dropdown",
@@ -236,11 +247,19 @@ const config: Config = {
         },
       ],
       logo: {
-        alt: "Homarr Logo",
-        src: "img/logo.png",
-        height: 100,
+        alt: "Homarr home",
+        src: "img/logo.svg",
+        href: "/",
+        width: 86,
+        height: 58,
       },
-      copyright: `<span class="copyright_text">Copyright © ${new Date().getFullYear()} Homarr<span> — <a href="/docs/community/license">License</a>`,
+      copyright: `
+        <div class="footer__brand-copy">
+          <strong class="footer__brand-name">Homarr</strong>
+          <span class="footer__brand-tagline">Your dashboard for the services you run.</span>
+          <span class="copyright_text">© ${new Date().getFullYear()} Homarr · <a href="/docs/community/license">License</a></span>
+        </div>
+      `,
     },
     prism: {
       theme: prismThemes.github,
@@ -277,8 +296,22 @@ const config: Config = {
     function homarrPackagesPlugin() {
       return {
         name: "resolve-homarr-packages",
-        configureWebpack() {
-          return { resolve: { symlinks: false } };
+        configureWebpack(_config, isServer, { getJSLoader }) {
+          return {
+            resolve: {
+              symlinks: false,
+              alias: { "@": require("path").resolve(__dirname, "src") },
+            },
+            module: {
+              rules: [
+                {
+                  test: /\.[jt]sx?$/iu,
+                  include: /node_modules[\\/]@homarr/u,
+                  use: [getJSLoader({ isServer })],
+                },
+              ],
+            },
+          };
         },
       };
     },
@@ -309,7 +342,67 @@ const config: Config = {
         },
       };
     },
-    "@signalwire/docusaurus-plugin-llms-txt",
+    function workshopRoutesPlugin() {
+      return {
+        name: "workshop-routes",
+        injectHtmlTags() {
+          return {
+            headTags: [
+              {
+                tagName: "style",
+                innerHTML: `
+#workshop-detail-route-fallback { display: none; }
+html[data-workshop-detail-loading] #__docusaurus { display: none; }
+html[data-workshop-detail-loading] #workshop-detail-route-fallback {
+  align-items: center;
+  background: #fff;
+  box-sizing: border-box;
+  color: #4b5563;
+  display: flex;
+  font: 500 0.875rem/1.5 Inter, system-ui, sans-serif;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-workshop-detail-loading] #workshop-detail-route-fallback {
+    background: #18191a;
+    color: #d1d5db;
+  }
+}`,
+              },
+              {
+                tagName: "script",
+                innerHTML: `(function () {
+  var match = window.location.pathname.match(/^\\/workshop\\/([^/]+)\\/?$/);
+  if (match && match[1] !== "admin") {
+    document.documentElement.setAttribute("data-workshop-detail-loading", "");
+  }
+})();`,
+              },
+            ],
+            preBodyTags: [
+              {
+                tagName: "div",
+                attributes: {
+                  id: "workshop-detail-route-fallback",
+                  role: "status",
+                  "aria-live": "polite",
+                },
+                innerHTML: "Loading Workshop…",
+              },
+            ],
+          };
+        },
+        async contentLoaded({ actions }) {
+          actions.addRoute({
+            path: "/workshop/:id",
+            component: "@site/src/components/workshop/WorkshopDetailRoutePage",
+            exact: true,
+          });
+        },
+      };
+    },
     async function tailwindCssPlugin() {
       return {
         name: "docusaurus-tailwindcss",

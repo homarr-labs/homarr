@@ -1,0 +1,13 @@
+.sessionRow {
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--mantine-color-default-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: -2px;
+  }
+}
