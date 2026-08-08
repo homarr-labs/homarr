@@ -115,3 +115,12 @@ export const createMobileBoardItems = (board: Board, desktopLayoutId: string): S
     height: Math.max(1, Math.min(item.height, mobileMaxHeight)),
   }));
 };
+
+export const createMobileBoardPreviewItems = (board: Board, desktopLayoutId: string) =>
+  createMobileBoardItems(board, desktopLayoutId).map((item) => ({
+    id: item.id,
+    kind: item.kind,
+    width: item.width,
+    height: item.height,
+    title: item.advancedOptions.title,
+  }));

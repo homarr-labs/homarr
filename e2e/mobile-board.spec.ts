@@ -1,7 +1,6 @@
-import type { Page } from "@playwright/test";
 import { chromium, devices, expect } from "@playwright/test";
 import { createId } from "@paralleldrive/cuid2";
-import { stringify } from "superjson";
+import { parse, stringify } from "superjson";
 import { describe, test } from "vitest";
 
 import { eq } from "drizzle-orm";
@@ -19,23 +18,12 @@ const credentials = {
 
 const boardName = "mobile-e2e";
 
-const setAutomaticMobileLayoutAsync = async (page: Page, enabled: boolean) => {
-  await page.goto(new URL("/manage/settings", page.url()).toString());
-  const toggle = page.getByRole("switch", { name: "Use automatic mobile layout" });
-  await expect(toggle).toBeVisible();
-
-  if ((await toggle.isChecked()) !== enabled) {
-    await toggle.setChecked(enabled);
-    await toggle.locator("xpath=ancestor::form").getByRole("button", { name: "Save", exact: true }).click();
-    await expect(page.getByText("Settings saved successfully")).toBeVisible();
-  }
-};
-
 const seedBoardAsync = async (db: SqliteDatabase, userId: string) => {
   const boardId = createId();
   const desktopLayoutId = createId();
   const mobileLayoutId = createId();
   const sectionId = createId();
+  const emptySectionId = createId();
   const notebookId = createId();
   const clockId = createId();
 
@@ -60,14 +48,23 @@ const seedBoardAsync = async (db: SqliteDatabase, userId: string) => {
       breakpoint: 0,
     },
   ]);
-  await db.insert(sqliteSchema.sections).values({
-    id: sectionId,
-    boardId,
-    kind: "category",
-    name: "Dashboard",
-    xOffset: 0,
-    yOffset: 0,
-  });
+  await db.insert(sqliteSchema.sections).values([
+    {
+      id: sectionId,
+      boardId,
+      kind: "category",
+      name: "Dashboard",
+      xOffset: 0,
+      yOffset: 0,
+    },
+    {
+      id: emptySectionId,
+      boardId,
+      kind: "empty",
+      xOffset: 0,
+      yOffset: 1,
+    },
+  ]);
   await db.insert(sqliteSchema.items).values([
     {
       id: notebookId,
@@ -133,10 +130,42 @@ const seedBoardAsync = async (db: SqliteDatabase, userId: string) => {
 };
 
 describe("Automatic mobile board", () => {
+  test("enables automatic mobile layout for a fresh database", async () => {
+    const { db, localMountPath } = await createSqliteDbFileAsync();
+    const container = await createHomarrContainer({
+      mounts: {
+        "/appdata": localMountPath,
+      },
+    }).start();
+
+    try {
+      const boardSettings = await db.query.serverSettings.findFirst({
+        where: eq(sqliteSchema.serverSettings.settingKey, "board"),
+      });
+      if (!boardSettings) throw new Error("Expected board server settings to be seeded");
+
+      expect(parse<{ enableAutomaticMobileLayout: boolean }>(boardSettings.value).enableAutomaticMobileLayout).toBe(
+        true,
+      );
+    } finally {
+      await container.stop();
+    }
+  }, 90_000);
+
   test("squeezes unchanged widgets into a read-only two-column grid", async () => {
     const { db, localMountPath } = await createSqliteDbFileAsync();
     const { userId } = await seedAdminUserAsync(db, credentials);
     await seedBoardAsync(db, userId);
+    await db.insert(sqliteSchema.serverSettings).values({
+      settingKey: "board",
+      value: stringify({
+        homeBoardId: null,
+        mobileHomeBoardId: null,
+        enableAutomaticMobileLayout: true,
+        enableStatusByDefault: true,
+        forceDisableStatus: false,
+      }),
+    });
 
     const container = await createHomarrContainer({
       environment: {
@@ -157,7 +186,26 @@ describe("Automatic mobile board", () => {
       await loginPage.locator("#password").fill(credentials.password);
       await loginPage.locator("button[type='submit']").click();
       await loginPage.waitForURL((url) => !url.pathname.includes("/auth/login"), { timeout: 15_000 });
-      await setAutomaticMobileLayoutAsync(loginPage, true);
+      await loginPage.goto(`${baseUrl}/boards/${boardName}`);
+      await expect(loginPage.locator("[data-mobile-board-preview-toggle]")).toHaveCount(0);
+      await loginPage.getByRole("button", { name: "Toggle board edit mode", exact: true }).click();
+      const previewToggle = loginPage.getByRole("button", { name: "Mobile preview", exact: true });
+      await expect(previewToggle).toBeVisible();
+      await previewToggle.click();
+      await expect(loginPage.locator("[data-mobile-board-preview]")).toBeVisible();
+      await expect(loginPage.locator("[data-mobile-board-preview-item]")).toHaveCount(2);
+      await loginPage
+        .locator("header button")
+        .filter({ has: loginPage.locator("svg.tabler-icon-plus") })
+        .click();
+      await loginPage.getByRole("menuitem", { name: "New item", exact: true }).click();
+      await loginPage.getByPlaceholder("Filter items...").fill("Weather");
+      await loginPage.getByPlaceholder("Filter items...").press("Enter");
+      await expect(loginPage.locator("[data-mobile-board-preview-item]")).toHaveCount(3);
+      await loginPage.getByRole("button", { name: "Cancel", exact: true }).click();
+      await loginPage.getByRole("button", { name: "Collapse mobile preview", exact: true }).click();
+      await expect(loginPage.locator("[data-mobile-board-preview]")).toHaveCount(0);
+      await expect(previewToggle).toBeVisible();
       const storageState = await loginContext.storageState();
 
       const mobileContext = await browser.newContext({
@@ -173,6 +221,7 @@ describe("Automatic mobile board", () => {
       const mobileBoard = mobilePage.locator("[data-mobile-board]");
       const items = mobilePage.locator("[data-mobile-board-item]");
       await expect(mobileBoard).toBeVisible({ timeout: 15_000 });
+      await expect(mobilePage.locator("[data-mobile-board-preview-toggle]")).toHaveCount(0);
       await expect(items).toHaveCount(2);
       await expect(mobilePage.locator(".grid-stack-item")).toHaveCount(0);
       await expect(mobilePage.getByText("Normal notebook content")).toBeVisible();
@@ -204,11 +253,43 @@ describe("Automatic mobile board", () => {
       expect(metrics.firstToSecondHeightRatio).toBeGreaterThan(1.8);
       expect(metrics.horizontalOverflow).toBeLessThanOrEqual(0);
       await mobileContext.close();
+    } finally {
+      await loginContext.close();
+      await browser.close();
+      await container.stop();
+    }
+  }, 180_000);
 
-      await setAutomaticMobileLayoutAsync(loginPage, false);
+  test("keeps preview and generated mobile grid disabled in legacy mode", async () => {
+    const { db, localMountPath } = await createSqliteDbFileAsync();
+    const { userId } = await seedAdminUserAsync(db, credentials);
+    await seedBoardAsync(db, userId);
+
+    const container = await createHomarrContainer({
+      environment: {
+        AUTH_PROVIDERS: "credentials",
+      },
+      mounts: {
+        "/appdata": localMountPath,
+      },
+    }).start();
+    const baseUrl = `http://${container.getHost()}:${container.getMappedPort(7575)}`;
+    const browser = await chromium.launch();
+    const desktopContext = await browser.newContext();
+
+    try {
+      const desktopPage = await desktopContext.newPage();
+      await desktopPage.goto(`${baseUrl}/auth/login`);
+      await desktopPage.getByLabel("Username").fill(credentials.username);
+      await desktopPage.locator("#password").fill(credentials.password);
+      await desktopPage.locator("button[type='submit']").click();
+      await desktopPage.waitForURL((url) => !url.pathname.includes("/auth/login"), { timeout: 15_000 });
+      await desktopPage.goto(`${baseUrl}/boards/${boardName}`);
+      await desktopPage.getByRole("button", { name: "Toggle board edit mode", exact: true }).click();
+      await expect(desktopPage.locator("[data-mobile-board-preview-toggle]")).toHaveCount(0);
 
       const legacyContext = await browser.newContext({
-        storageState: await loginContext.storageState(),
+        storageState: await desktopContext.storageState(),
         viewport: { width: 390, height: 844 },
         userAgent: devices["iPhone 13"].userAgent,
         hasTouch: true,
@@ -221,7 +302,7 @@ describe("Automatic mobile board", () => {
       await expect(legacyPage.getByRole("button", { name: "Toggle board edit mode", exact: true })).toBeVisible();
       await legacyContext.close();
     } finally {
-      await loginContext.close();
+      await desktopContext.close();
       await browser.close();
       await container.stop();
     }

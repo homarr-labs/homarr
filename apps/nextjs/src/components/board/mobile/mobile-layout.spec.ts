@@ -5,7 +5,7 @@ import { BoardMockBuilder } from "../items/actions/test/mocks/board-mock";
 import { DynamicSectionMockBuilder } from "../items/actions/test/mocks/dynamic-section-mock";
 import { EmptySectionMockBuilder } from "../items/actions/test/mocks/empty-section-mock";
 import { ItemMockBuilder } from "../items/actions/test/mocks/item-mock";
-import { createMobileBoardItems, getMobileRootSection } from "./mobile-layout";
+import { createMobileBoardItems, createMobileBoardPreviewItems, getMobileRootSection } from "./mobile-layout";
 
 describe("createMobileBoardItems", () => {
   test("selects the first root section in visual order", () => {
@@ -112,6 +112,40 @@ describe("createMobileBoardItems", () => {
     expect(createMobileBoardItems(board, desktopLayoutId)).toMatchObject([
       { id: "two-by-two", width: 2, height: 2 },
       { id: "one-by-one", width: 1, height: 1 },
+    ]);
+  });
+});
+
+describe("createMobileBoardPreviewItems", () => {
+  test("returns no tiles for an empty board", () => {
+    const board = new BoardMockBuilder().build();
+    const desktopLayoutId = board.layouts.at(0)?.id;
+    if (!desktopLayoutId) throw new Error("Expected a desktop layout");
+
+    expect(createMobileBoardPreviewItems(board, desktopLayoutId)).toEqual([]);
+  });
+
+  test("uses the production mobile order, footprint, kind, and custom title", () => {
+    const board = new BoardMockBuilder().build();
+    const desktopLayoutId = board.layouts.at(0)?.id;
+    if (!desktopLayoutId) throw new Error("Expected a desktop layout");
+    const rootSection = new EmptySectionMockBuilder({ id: "root" }).build();
+    board.sections.push(rootSection);
+    board.items.push(
+      new ItemMockBuilder({ id: "wide", kind: "notebook" })
+        .addLayout({ layoutId: desktopLayoutId, sectionId: rootSection.id, width: 8, height: 6, yOffset: 1 })
+        .build(),
+      new ItemMockBuilder({ id: "first", kind: "clock" })
+        .addLayout({ layoutId: desktopLayoutId, sectionId: rootSection.id, width: 1, height: 1, yOffset: 0 })
+        .build(),
+    );
+    const wideItem = board.items.find((item) => item.id === "wide");
+    if (!wideItem) throw new Error("Expected wide board item");
+    wideItem.advancedOptions.title = "Notes";
+
+    expect(createMobileBoardPreviewItems(board, desktopLayoutId)).toEqual([
+      { id: "first", kind: "clock", width: 1, height: 1, title: null },
+      { id: "wide", kind: "notebook", width: 2, height: 3, title: "Notes" },
     ]);
   });
 });
