@@ -1,0 +1,19 @@
+packages/redis/src/lib/connection.ts
+  s_a70c07ac5b7a5a::t_5085e6d822b81e 14-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b1dea913539846d05d0829ce799818eb9548cb66",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "lab <lab@local>"
+    }
+  }
+}
