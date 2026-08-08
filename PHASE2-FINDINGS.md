@@ -1,0 +1,113 @@
+# Phase 2 — where the memory actually goes
+
+Measured with `scripts/benchmarks/stress-restore.mts` on a **populated** instance, not an
+empty one: a real backup (4 boards, 51 widgets, 11 integrations) restored through the
+onboarding restore UI, signed in, then the busiest board (28 items / 16 widget kinds,
+28/28 widgets reaching `data-homarr-widget-ready`) opened, reloaded 4×, and soaked idle.
+
+Images built locally from known commits so the comparison is not against a stale registry
+tag: baseline = merge-base `06724cfeb`, branch = `abec79abe`.
+
+## Metric choice
+
+`memory.current` moved between **192 and 261 MiB for the same baseline image** across runs,
+because cgroup v2 counts reclaimable page cache. At idle that split was 144 MiB anon vs
+77 MiB page cache. Everything below therefore reports **anonymous memory**, which was
+stable to ±2.5 MiB across repeated runs of the same image.
+
+## Aggregate: branch vs merge-base
+
+| stage | baseline | branch | delta |
+| --- | --- | --- | --- |
+| boot idle | 139.2 / 144.1 | 115.2 / 99.0 | **−24%** |
+| board loaded (28 widgets) | 255.2 / 260.4 | 228.1 / 230.2 | **−11%** |
+| after 4 board reloads | 401.4 / 384.0 | 358.8 / 362.6 | **−8%** |
+| image size | 410 MB | 388 MB | −5% |
+
+## Attribution — this is the part that matters
+
+Built cumulatively from the baseline image, one change at a time:
+
+| config | boot idle anon | verdict |
+| --- | --- | --- |
+| baseline | 139.2 | — |
+| + integrations barrel diet | 139.5 | **no idle effect** |
+| + Redis clients 6 → 2 | 139.3 | **no idle effect** |
+| + `serverExternalPackages: mysql2, pg` | **118.6** | **−21 MiB — the entire idle win** |
+| branch (everything) | 115.2 / 99.0 | no further gain beyond the above |
+
+| change | diff size | idle | under load |
+| --- | --- | --- | --- |
+| `serverExternalPackages` + `mysql2`/`pg` | **1 line** | **−21 MiB** | −25 MiB |
+| integrations barrel diet | ~10 files, +119 lines | ~0 | −40 MiB (±25 noise) |
+| Redis clients 6 → 2 | 4 files | ~0 | ~0 |
+| V8 heap cap (`HOMARR_MAX_OLD_SPACE_SIZE=512`) | 1 line | ~0 | ~0 |
+| cache invalidation + `next-cache-handler` | ~30 files, 66 call sites, ~290 lines | **0** | **0** |
+
+### Why one config line beats the whole module-graph refactor
+
+`packages/core/src/infrastructure/db/drivers/index.ts` statically imports all three
+drivers, so `mysql2` and `pg` are in the graph even when `DB_DRIVER=better-sqlite3`.
+Bundled, their full transitive graphs are inlined into the boot-loaded server chunks;
+marked external they become a `require()` that the sqlite path never reaches. Verified
+inside the images:
+
+| image | server chunks | `mysql2` in `node_modules` |
+| --- | --- | --- |
+| baseline | 108,336 KB | no — it was inlined into the chunks |
+| + external pkgs | 94,936 KB | yes — traced, loaded only on demand |
+| branch | 98,084 KB | yes |
+
+This is fix-catalog **F6 ("load only the configured DB driver")** achieved by one config
+line, after the dynamic-`import()` attempt was reverted for breaking Vitest.
+
+### The V8 heap cap is a safety ceiling, not a reduction
+
+`branch-cap4096` (cap effectively removed) matched `branch` at every stage — idle 99.0 vs
+115.2, board loaded 230.2 vs 228.1, after stress 362.6 vs 358.8. The workload never
+approaches a 512 MB old space, so the cap cannot reduce steady-state usage. It is still
+worth keeping as one line: baseline's soak hit a 543.8 MiB anon sample, and capped
+baseline topped out at 347.5 MiB, which is exactly the unbounded-drift protection
+issue #5301 needs. It should not be described as a memory saving.
+
+### The cache layer is provably dead code
+
+On the current branch state there are **0** `"use cache"` directives, **0** `cacheTag()`,
+**0** `cacheLife()`, **0** `unstable_cache`, and no tagged `fetch` in application source —
+and `cacheHandlers`/`cacheComponents` have both been removed from `next.config.ts`.
+`packages/next-cache-handler` is referenced only by a `package.json` dependency line;
+nothing imports it. The 66 remaining `invalidate*` call sites call `revalidateTag` on tags
+nothing ever registers, with no handler to receive them, inside a `try/catch` that
+swallows the resulting out-of-scope error. Zero functional effect, ~30 files of churn.
+
+## Recommendation
+
+**Keep** — carries the measured win:
+
+1. `serverExternalPackages: [..., "mysql2", "pg"]` — 1 line, the whole idle win
+2. integrations barrel diet — the under-load win
+3. V8 heap cap — 1 line, bounds the pathological drift (label it as a ceiling)
+4. jsdom → linkedom — image size + a genuine XSS hardening; a `jsdom` import costs
+   ~136 MiB RSS whenever the SVG path is hit
+5. dead `/api/about` routes + runtime `package.json` glob removal
+
+**Drop** — measured at zero, and it is most of the diff:
+
+1. `packages/next-cache-handler` (~290 lines, orphaned)
+2. `cache-invalidation.ts`, `cache-tags.ts` and all 66 call sites across ~30 routers
+3. Redis 6 → 2 consolidation is defensible hygiene but bought nothing measurable —
+   low priority, not worth the churn on its own
+
+Dropping 1 and 2 removes the bulk of the file churn while keeping 100% of the measured
+memory improvement.
+
+## Reproducing
+
+```bash
+STRESS_IMAGE=homarr-bench:branch \
+STRESS_BACKUP_ZIP=~/Downloads/your-backup.zip \
+node --experimental-strip-types scripts/benchmarks/stress-restore.mts
+```
+
+The backup is read from that path and never copied into the repo — it contains real
+integration secrets and the instance's encryption key.
