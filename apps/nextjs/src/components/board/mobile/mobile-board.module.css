@@ -1,5 +1,8 @@
-.grid {
+.container {
   container-type: inline-size;
+}
+
+.grid {
   display: grid;
   grid-template-columns: repeat(var(--mobile-column-count), minmax(0, 1fr));
   grid-auto-flow: row;
