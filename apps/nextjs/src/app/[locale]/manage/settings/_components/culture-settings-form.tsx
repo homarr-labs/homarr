@@ -1,26 +1,27 @@
 "use client";
 
-import type { ServerSettings } from "@homarr/server-settings";
+import type { UseFormReturnType } from "@homarr/form";
 import type { SupportedLanguage } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { LanguageCombobox } from "~/components/language/language-combobox";
-import { CommonSettingsForm } from "./common-form";
+import { SectionCard } from "~/components/manage/section-card";
+import type { FormValues } from "./settings-form";
 
-export const CultureSettingsForm = ({ defaultValues }: { defaultValues: ServerSettings["culture"] }) => {
+interface CultureSettingsFormProps {
+  form: UseFormReturnType<FormValues>;
+}
+
+export const CultureSettingsForm = ({ form }: CultureSettingsFormProps) => {
   const tCulture = useScopedI18n("management.page.settings.section.culture");
 
   return (
-    <CommonSettingsForm settingKey="culture" defaultValues={defaultValues}>
-      {(form) => (
-        <>
-          <LanguageCombobox
-            label={tCulture("defaultLocale.label")}
-            value={form.getInputProps("defaultLocale").value as SupportedLanguage}
-            {...form.getInputProps("defaultLocale")}
-          />
-        </>
-      )}
-    </CommonSettingsForm>
+    <SectionCard title={tCulture("title")}>
+      <LanguageCombobox
+        label={tCulture("defaultLocale.label")}
+        value={form.getInputProps("defaultLocale").value as SupportedLanguage}
+        {...form.getInputProps("defaultLocale")}
+      />
+    </SectionCard>
   );
 };
