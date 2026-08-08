@@ -1,0 +1,37 @@
+.env.example
+  s_a0e1fd495b97ff::t_31db1d6a3763fb 59
+packages/api/src/router/board.ts
+  s_a0e1fd495b97ff::t_473fdb0394ebe9 651-655,658-660
+packages/redis/src/lib/channel-subscription-tracker.ts
+  s_a0e1fd495b97ff::t_19cbfcbbb22775 116
+  s_a0e1fd495b97ff::t_7fd5726513f796 55
+  s_a0e1fd495b97ff::t_556ea73a1eec75 22-26
+  s_a0e1fd495b97ff::t_178d1744c0c97b 86
+packages/next-cache-handler/src/redis-handler.ts
+  s_a0e1fd495b97ff::t_8aa1c2b99e1d16 58,63,65
+packages/redis/src/lib/connection.ts
+  s_a0e1fd495b97ff::t_fc60fd37688e6a 7
+packages/redis/src/lib/channel.ts
+  s_a0e1fd495b97ff::t_44161df4665b27 162-164,169-174,180-184
+apps/docs/docs/getting-started/installation/docker.mdx
+  s_a0e1fd495b97ff::t_0a64723c0d37b4 87
+  s_a0e1fd495b97ff::t_470ab376d1da29 101-102
+apps/docs/docs/advanced/command-line/index.mdx
+  s_a0e1fd495b97ff::t_34753f03b51b69 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3db87d781fe4636e1b232bde6506a0341c17ce41",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
