@@ -48,7 +48,7 @@ export const BoardAddMenu = () => {
   return (
     <Menu position="bottom-end">
       <Menu.Target>
-        <HeaderButton w="auto" px={4}>
+        <HeaderButton w="auto" px={4} aria-label={t("board.action.addContent")}>
           <Group gap={4} wrap="nowrap">
             <IconPlus stroke={1.5} />
             <IconChevronDown color="gray" size={16} />
