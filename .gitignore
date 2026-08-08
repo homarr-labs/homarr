@@ -80,3 +80,10 @@ apps/docs/build
 .pnpm-store
 benchmark-results
 .bench/
+
+# Homarr backups used by scripts/benchmarks/stress-restore.mts. These contain
+# real integration secrets and an encryption key — never commit one.
+homarr-backup*.zip
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
