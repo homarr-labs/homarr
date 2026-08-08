@@ -36,8 +36,9 @@ describe("Custom JSX v2 workbench", () => {
       await page.waitForLoadState("networkidle");
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
+      const signedIn = page.waitForURL(baseUrl, { waitUntil: "commit", timeout: 15_000 });
       await page.locator("button[type='submit']").click();
-      await page.waitForURL(baseUrl, { timeout: 15_000 });
+      await signedIn;
 
       await page.goto(`${baseUrl}/manage/custom-widgets/new`);
       await page.locator('input[data-path="name"]:visible').fill("E2E Custom JSX v2");
@@ -75,8 +76,12 @@ describe("Custom JSX v2 workbench", () => {
       await expect(page.getByText('Widget "E2E Custom JSX v2" updated successfully.')).toBeVisible({ timeout: 15_000 });
 
       await page.goto(baseUrl);
-      await page.getByRole("button", { name: "Edit", exact: true }).click();
-      await page.getByRole("button", { name: "New item", exact: true }).click();
+      await page.getByRole("button", { name: "Skip tour", exact: true }).click();
+      await expect(page.locator('[data-onboarding-tour-overlay="true"]')).toHaveCount(0);
+      const editToggle = page.getByTestId("board-edit-mode-toggle");
+      await editToggle.click();
+      await expect(editToggle).toHaveAttribute("aria-pressed", "true", { timeout: 15_000 });
+      await page.getByRole("button", { name: "Add board content", exact: true }).click();
       await page.getByRole("menuitem", { name: "New item", exact: true }).click();
       const picker = page.getByRole("dialog").last();
       const customWidgetCard = picker.getByText("E2E Custom JSX v2", { exact: true }).locator("xpath=../../..");
@@ -87,7 +92,8 @@ describe("Custom JSX v2 workbench", () => {
       await addDialog.getByRole("button", { name: "Save changes", exact: true }).click();
 
       await expect(page.getByText("Widget definition not found")).not.toBeVisible();
-      await page.getByRole("button", { name: "Save", exact: true }).click();
+      await editToggle.click();
+      await expect(editToggle).toHaveAttribute("aria-pressed", "false", { timeout: 15_000 });
       await expect(page.getByText("E2E Widget")).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText("42")).toBeVisible({ timeout: 15_000 });
     } finally {

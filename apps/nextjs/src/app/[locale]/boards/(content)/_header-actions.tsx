@@ -208,7 +208,9 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       <HeaderButton
         onClick={toggle}
         loading={isPending}
+        data-testid="board-edit-mode-toggle"
         aria-label={isEditMode ? commonT("common.action.save") : commonT("common.action.edit")}
+        aria-pressed={isEditMode}
       >
         {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
       </HeaderButton>

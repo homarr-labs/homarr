@@ -4463,6 +4463,7 @@
   },
   "board": {
     "action": {
+      "addContent": "Add board content",
       "duplicate": {
         "title": "Duplicate board",
         "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
