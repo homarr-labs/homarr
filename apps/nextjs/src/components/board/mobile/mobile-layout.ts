@@ -120,6 +120,7 @@ export const createMobileBoardPreviewItems = (board: Board, desktopLayoutId: str
   createMobileBoardItems(board, desktopLayoutId).map((item) => ({
     id: item.id,
     kind: item.kind,
+    appId: item.kind === "app" && typeof item.options.appId === "string" ? item.options.appId : null,
     width: item.width,
     height: item.height,
     title: item.advancedOptions.title,
