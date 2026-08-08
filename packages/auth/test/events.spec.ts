@@ -152,6 +152,26 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
       });
       expect(dbGroupMembers?.groupId).toBe("1");
     });
+    test("should add membership when the groups claim is a single string", async () => {
+      // Arrange
+      const db = createDb();
+      await createUserAsync(db, "oidc");
+      await createGroupAsync(db);
+      const eventHandler = createSignInEventHandler(db);
+
+      // Act
+      await eventHandler?.({
+        user: { id: "1", name: "test" },
+        profile: { preferred_username: "test", someRandomGroupsKey: "test" },
+        account: null,
+      });
+
+      // Assert
+      const dbGroupMembers = await db.query.groupMembers.findFirst({
+        where: eq(groupMembers.userId, "1"),
+      });
+      expect(dbGroupMembers?.groupId).toBe("1");
+    });
     test("should remove group membership", async () => {
       // Arrange
       const db = createDb();
