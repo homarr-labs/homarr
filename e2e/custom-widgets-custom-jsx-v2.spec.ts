@@ -76,8 +76,15 @@ describe("Custom JSX v2 workbench", () => {
       await expect(page.getByText('Widget "E2E Custom JSX v2" updated successfully.')).toBeVisible({ timeout: 15_000 });
 
       await page.goto(baseUrl);
-      await page.getByRole("button", { name: "Skip tour", exact: true }).click();
-      await expect(page.locator('[data-onboarding-tour-overlay="true"]')).toHaveCount(0);
+      const tourOverlay = page.locator('[data-onboarding-tour-overlay="true"]');
+      const skipTour = page.getByRole("button", { name: "Skip tour", exact: true });
+      try {
+        await skipTour.waitFor({ state: "visible", timeout: 5_000 });
+        await skipTour.click();
+        await expect(tourOverlay).toHaveCount(0);
+      } catch (error) {
+        if ((await tourOverlay.count()) > 0) throw error;
+      }
       const editToggle = page.getByTestId("board-edit-mode-toggle");
       await editToggle.click();
       await expect(editToggle).toHaveAttribute("aria-pressed", "true", { timeout: 15_000 });
