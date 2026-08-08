@@ -40,8 +40,9 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
-import { getDependenciesAsync, getPackageVersion } from "~/versions/package-reader";
+import { getPackageVersion } from "~/versions/package-reader";
 import githubContributors from "@static-data/contributors.json";
+import dependencies from "@static-data/dependencies.json";
 import openCollectiveContributors from "@static-data/opencollective-contributors.json";
 import crowdinContributors from "@static-data/translators.json";
 import classes from "./about.module.css";
@@ -57,7 +58,6 @@ export async function generateMetadata() {
 export default async function AboutPage() {
   const t = await getScopedI18n("management.page.about");
   const version = getPackageVersion();
-  const dependencies = await getDependenciesAsync();
 
   return (
     <div>
@@ -159,34 +159,26 @@ export default async function AboutPage() {
           </AccordionControl>
           <AccordionPanel>
             <SimpleGrid cols={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }} spacing="md">
-              {Object.entries(dependencies)
-                .filter(([, value]) => !value.includes("workspace:"))
-                .toSorted(([key1], [key2]) => key1.localeCompare(key2))
-                .map(([name, version]) => (
-                  <UnstyledButton
-                    key={name}
-                    component="a"
-                    href={`https://www.npmjs.com/package/${name}`}
-                    target="_blank"
-                  >
-                    <Card radius="md" p="xs" className={classes.dependencyCard}>
-                      <Group gap="sm" wrap="nowrap">
-                        <ThemeIcon variant="light" size="lg">
-                          <IconPackage size="1.5rem" stroke={1.5} />
-                        </ThemeIcon>
+              {Object.entries(dependencies).map(([name, version]) => (
+                <UnstyledButton key={name} component="a" href={`https://www.npmjs.com/package/${name}`} target="_blank">
+                  <Card radius="md" p="xs" className={classes.dependencyCard}>
+                    <Group gap="sm" wrap="nowrap">
+                      <ThemeIcon variant="light" size="lg">
+                        <IconPackage size="1.5rem" stroke={1.5} />
+                      </ThemeIcon>
 
-                        <Stack gap={0}>
-                          <Text size="sm" fw="bold" lineClamp={1} title={name}>
-                            {name}
-                          </Text>
-                          <Text size="sm" c="dimmed">
-                            v{version.replace("^", "").replace("~", "")}
-                          </Text>
-                        </Stack>
-                      </Group>
-                    </Card>
-                  </UnstyledButton>
-                ))}
+                      <Stack gap={0}>
+                        <Text size="sm" fw="bold" lineClamp={1} title={name}>
+                          {name}
+                        </Text>
+                        <Text size="sm" c="dimmed">
+                          v{version.replace("^", "").replace("~", "")}
+                        </Text>
+                      </Stack>
+                    </Group>
+                  </Card>
+                </UnstyledButton>
+              ))}
             </SimpleGrid>
           </AccordionPanel>
         </AccordionItem>
