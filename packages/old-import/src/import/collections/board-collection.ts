@@ -1,6 +1,7 @@
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
+import { normalizeBoardLayoutRoles } from "@homarr/definitions";
 import type { BoardSize, OldmarrConfig } from "@homarr/old-schema";
 import { boardSizes, getBoardSizeName } from "@homarr/old-schema";
 
@@ -88,14 +89,19 @@ export const createBoardInsertCollection = (
       {} as Record<BoardSize, string>,
     );
 
-    const preparedLayouts = boardSizes.map((size) => ({
-      id: layoutMapping[size],
-      boardId: mappedBoard.id,
-      columnCount: mapColumnCount(board.config.settings.customization.gridstack, size),
-      breakpoint: mapBreakpoint(size),
-      name: getBoardSizeName(size),
-    }));
-    insertCollection.layouts.push(...preparedLayouts);
+    const importedLayouts = normalizeBoardLayoutRoles(
+      boardSizes.map((size) => ({
+        id: layoutMapping[size],
+        boardId: mappedBoard.id,
+        columnCount: mapColumnCount(board.config.settings.customization.gridstack, size),
+        leftGutterColumnCount: 0,
+        rightGutterColumnCount: 0,
+        breakpoint: mapBreakpoint(size),
+        name: getBoardSizeName(size),
+      })),
+    );
+
+    insertCollection.layouts.push(...importedLayouts);
 
     const preparedSections = prepareSections(mappedBoard.id, { wrappers, categories });
 
@@ -113,7 +119,7 @@ export const createBoardInsertCollection = (
       layoutMapping,
       mappedBoard.id,
     );
-    insertCollection.sectionLayouts.push(...placePreparedSections(preparedSections, preparedItems, preparedLayouts));
+    insertCollection.sectionLayouts.push(...placePreparedSections(preparedSections, preparedItems, importedLayouts));
     preparedItems.forEach(({ layouts, ...item }) => {
       insertCollection.items.push(item);
       insertCollection.itemLayouts.push(...layouts);

@@ -21,6 +21,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  LayoutRole,
   OnboardingStep,
   SearchEngineType,
   SectionKind,
@@ -327,6 +328,7 @@ export const layouts = sqliteTable("layout", {
   leftGutterColumnCount: int().notNull().default(0),
   rightGutterColumnCount: int().notNull().default(0),
   breakpoint: int().notNull().default(0),
+  role: text().$type<LayoutRole>().notNull().default("custom"),
 });
 
 export const itemLayouts = sqliteTable(
