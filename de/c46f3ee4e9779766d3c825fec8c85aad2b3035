@@ -1,0 +1,22 @@
+scripts/check-custom-widget-bundle.mjs
+  s_093d61b162b9ca::t_6655615858be88 6,35-43,62-82,89
+scripts/check-custom-widget-bundle.spec.ts
+  s_093d61b162b9ca::t_6655615858be88 4-6,24-41,43-56
+  s_093d61b162b9ca::t_5c7d4740c364b5 42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "dec46f3ee4e9779766d3c825fec8c85aad2b3035",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
