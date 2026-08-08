@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 
+import { getCurrentLayout } from "@homarr/boards/context";
 import { useUpdateBoard } from "@homarr/boards/updater";
 
 interface MoveAndResizeInnerSection {
   innerSectionId: string;
-  layoutId: string;
   xOffset: number;
   yOffset: number;
   width: number;
@@ -12,7 +12,6 @@ interface MoveAndResizeInnerSection {
 }
 interface MoveInnerSectionToSection {
   innerSectionId: string;
-  layoutId: string;
   sectionId: string;
   xOffset: number;
   yOffset: number;
@@ -24,7 +23,7 @@ export const useSectionActions = () => {
   const { updateBoard } = useUpdateBoard();
 
   const moveAndResizeInnerSection = useCallback(
-    ({ innerSectionId, layoutId, ...positionProps }: MoveAndResizeInnerSection) => {
+    ({ innerSectionId, ...positionProps }: MoveAndResizeInnerSection) => {
       updateBoard((previous) => ({
         ...previous,
         sections: previous.sections.map((section) => {
@@ -32,10 +31,12 @@ export const useSectionActions = () => {
           if (section.id !== innerSectionId) return section;
           if (section.kind !== "container") return section;
 
+          const currentLayout = getCurrentLayout(previous);
+
           return {
             ...section,
             layouts: section.layouts.map((layout) => {
-              if (layout.layoutId !== layoutId) return layout;
+              if (layout.layoutId !== currentLayout) return layout;
               return {
                 ...layout,
                 ...positionProps,
@@ -49,7 +50,7 @@ export const useSectionActions = () => {
   );
 
   const moveInnerSectionToSection = useCallback(
-    ({ innerSectionId, layoutId, sectionId, ...positionProps }: MoveInnerSectionToSection) => {
+    ({ innerSectionId, sectionId, ...positionProps }: MoveInnerSectionToSection) => {
       updateBoard((previous) => {
         return {
           ...previous,
@@ -58,10 +59,12 @@ export const useSectionActions = () => {
             if (section.id !== innerSectionId) return section;
             if (section.kind !== "container") return section;
 
+            const currentLayout = getCurrentLayout(previous);
+
             return {
               ...section,
               layouts: section.layouts.map((layout) => {
-                if (layout.layoutId !== layoutId) return layout;
+                if (layout.layoutId !== currentLayout) return layout;
                 return {
                   ...layout,
                   ...positionProps,
