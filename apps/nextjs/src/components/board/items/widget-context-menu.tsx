@@ -44,9 +44,13 @@ interface WidgetContextMenuProps {
 
 export const WidgetContextMenu = ({ item, definition, widgetStateRef, children }: WidgetContextMenuProps) => {
   const { data: session } = useSession();
+  const [isEditMode] = useEditMode();
   const settings = useSettings();
 
   if (!session || !settings.enableRightClickOnWidgets) return <>{children}</>;
+  // App widgets are links — let the browser's native context menu (open in new tab, copy link)
+  // show in view mode. In edit mode keep the Homarr menu so items can still be edited/removed.
+  if (item.kind === "app" && !isEditMode) return <>{children}</>;
 
   return (
     <WidgetContextMenuInner item={item} definition={definition} widgetStateRef={widgetStateRef} settings={settings}>
