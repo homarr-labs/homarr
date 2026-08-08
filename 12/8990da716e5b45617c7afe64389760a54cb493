@@ -1,0 +1,19 @@
+packages/next-cache-handler/src/index.ts
+  s_a0e1fd495b97ff::t_77e2f47988c02f 243-248
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "128990da716e5b45617c7afe64389760a54cb493",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "lab <lab@local>"
+    }
+  }
+}
