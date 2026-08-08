@@ -98,16 +98,62 @@ Identical within run-to-run noise at every stage, lowest peak of any config, and
 28/28 widgets rendered — so **−883 lines and −18 files cost nothing**. Diff against
 the merge-base went from 100 files / 3,336 insertions to 82 files / 2,484.
 
+## Round 2 — GC tuning and wider unbundling
+
+Re-run on the second backup, where the demo account is already an admin whose home
+board is the 28-item board, so the harness modifies nothing (`fixture changes: none`).
+Every run now also proves the session instead of inferring it (see below) and records
+CPU seconds plus board-load latency, because every remaining lever trades memory for CPU.
+
+| config | idle | board loaded | under load | peak | CPU s | median load |
+| --- | --- | --- | --- | --- | --- | --- |
+| round-1 result | 120.0 | 209.6 | 353.9 | 710.6 | 15.8 | 594 ms |
+| `--max-semi-space-size=2` | 97.1 | 183.5 | 340.5 | 581.6 | 17.3 | 598 ms |
+| **`--max-semi-space-size=4`** | **97.2** | **183.0** | **306.6** | **560.2** | 17.1 | 570 ms |
+| **+ wider `serverExternalPackages`** | **90.3** | **164.6** | **302.5** | 594.2 | 16.3 | 549 ms |
+
+`--max-old-space-size` only bounds the old generation. V8 sizes the *young* generation
+generously too (16 MB per semi-space by default) and that slack is resident memory.
+Bounding it to 4 MB is the single biggest remaining win: **−19% idle, −21% peak**. It is
+not free — GC runs more often, costing ~8% CPU (15.8 → 17.1 CPU-seconds) — but board-load
+latency did not regress. 2 MB was not better than 4 MB and cost slightly more CPU.
+
+Externalising the remaining server-only packages (winston, drizzle-orm, ical.js, jszip,
+ldapts, node-unifi, @kubernetes/client-node, linkedom) took another **−18 MiB at
+board-loaded** with slightly *lower* CPU and latency. The cost is **image size: 388 → 401
+MB**, since those packages now ship in `node_modules` rather than being tree-shaken into
+chunks. Worth it here — RAM is the constrained resource on a self-hosted box — but it is
+a real trade, not a free win.
+
+**Cumulative vs merge-base: idle 141.7 → 90.3 MiB (−36%), board loaded 257.8 → 164.6 MiB
+(−36%), under load 392.7 → 302.5 MiB (−23%).**
+
+## Is the measurement actually behind a login?
+
+Worth stating explicitly, because "28 widgets rendered" would be meaningless if the board
+were public. Each run now asserts all three:
+
+1. `access fixture changes: none` — the harness modified nothing in the restored data.
+2. `control: anonymous access to /boards/default denied (landed on /auth/login)` — a
+   cookie-less context cannot render the board, so it is genuinely permission-gated.
+3. `signed in as demo (session cookie "homarr.session-token" present)` — Auth.js issued a
+   session; leaving `/auth/login` alone is not accepted as proof.
+
+Earlier rounds were correct but only *inferred* this from the private board rendering; the
+assertions now fail the run instead of quietly measuring an anonymous page.
+
 ## Recommendation
 
 **Keep** — carries the measured win:
 
-1. `serverExternalPackages: [..., "mysql2", "pg"]` — 1 line, the whole idle win
-2. integrations barrel diet — the under-load win
-3. V8 heap cap — 1 line, bounds the pathological drift (label it as a ceiling)
-4. jsdom → linkedom — image size + a genuine XSS hardening; a `jsdom` import costs
+1. `--max-semi-space-size=4` — 1 line, the biggest single lever (−19% idle, −21% peak)
+2. `serverExternalPackages` — the DB drivers alone were −21 MiB idle; the wider set
+   another −18 MiB at board-loaded, at +13 MB image
+3. integrations barrel diet — the under-load win
+4. V8 heap cap — 1 line, bounds the pathological drift (label it as a ceiling)
+5. jsdom → linkedom — image size + a genuine XSS hardening; a `jsdom` import costs
    ~136 MiB RSS whenever the SVG path is hit
-5. dead `/api/about` routes + runtime `package.json` glob removal
+6. dead `/api/about` routes + runtime `package.json` glob removal
 
 **Drop** — measured at zero, and it is most of the diff:
 
