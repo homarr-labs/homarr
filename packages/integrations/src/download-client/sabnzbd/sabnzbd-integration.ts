@@ -3,6 +3,7 @@ import duration from "dayjs/plugin/duration";
 import type { fetch as undiciFetch } from "undici";
 
 import { ResponseError } from "@homarr/common/server";
+import { parseSabnzbdIntegrationOptions } from "@homarr/definitions";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { Integration } from "../../base/integration";
@@ -12,7 +13,9 @@ import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/dow
 import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
+import { fetchSabnzbdArchivedHistorySlotsAsync, selectSabnzbdHistorySlots } from "./sabnzbd-history";
 import { historySchema, queueSchema } from "./sabnzbd-schema";
+import { DEFAULT_SABNZBD_ARCHIVE_PAGE_SIZE } from "./sabnzbd-options";
 
 dayjs.extend(duration);
 
@@ -31,6 +34,33 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
     const { history } = await historySchema.parseAsync(
       await this.sabNzbApiCallAsync("history", { limit: input.limit.toString() }),
     );
+    const sabnzbdOptions = parseSabnzbdIntegrationOptions(this.integration.options);
+    const archivePageSize = Math.max(input.limit, DEFAULT_SABNZBD_ARCHIVE_PAGE_SIZE);
+    const archivedHistorySlots = sabnzbdOptions.includeArchivedHistory
+      ? await fetchSabnzbdArchivedHistorySlotsAsync({
+          historyWindowDays: sabnzbdOptions.historyWindowDays,
+          pageSize: archivePageSize,
+          fetchPageAsync: async ({ start, limit }) => {
+            const { history: archivedHistory } = await historySchema.parseAsync(
+              await this.sabNzbApiCallAsync("history", {
+                archive: "1",
+                start: start.toString(),
+                limit: limit.toString(),
+              }),
+            );
+
+            return archivedHistory.slots;
+          },
+        })
+      : [];
+
+    const historySlots = selectSabnzbdHistorySlots({
+      includeArchivedHistory: sabnzbdOptions.includeArchivedHistory,
+      activeSlots: history.slots,
+      archivedSlots: archivedHistorySlots,
+      historyWindowDays: sabnzbdOptions.historyWindowDays,
+    });
+
     const status: DownloadClientStatus = {
       paused: queue.paused,
       rates: { down: Math.floor(Number(queue.kbpersec) * 1024) }, //Actually rounded kiBps ()
@@ -63,7 +93,7 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
         };
       })
       .concat(
-        history.slots.map((slot, index): DownloadClientItem => {
+        historySlots.map((slot, index): DownloadClientItem => {
           const state = SabnzbdIntegration.getUsenetHistoryState(slot.status);
           return {
             type,

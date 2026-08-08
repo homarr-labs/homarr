@@ -11,6 +11,7 @@ import { and, eq, inArray } from "@homarr/db";
 import { integrations } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
 
+import { deserializeIntegrationOptions } from "../integration-options";
 import { publicProcedure } from "../trpc";
 
 export type IntegrationAction = "query" | "interact";
@@ -56,6 +57,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
     const {
       secrets,
       kind,
+      options,
       items: _ignore1,
       groupPermissions: _ignore2,
       userPermissions: _ignore3,
@@ -68,6 +70,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
           ...rest,
           externalUrl: rest.app?.href ?? null,
           kind: kind as TKind,
+          options: deserializeIntegrationOptions(kind, options),
           decryptedSecrets: secrets.map((secret) => ({
             ...secret,
             value: decryptSecret(secret.value),
@@ -126,10 +129,19 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
     return next({
       ctx: {
         integrations: dbIntegrations.map(
-          ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => ({
+          ({
+            secrets,
+            kind,
+            options,
+            items: _ignore1,
+            groupPermissions: _ignore2,
+            userPermissions: _ignore3,
+            ...rest
+          }) => ({
             ...rest,
             externalUrl: rest.app?.href ?? null,
             kind: kind as TKind,
+            options: deserializeIntegrationOptions(kind, options),
             decryptedSecrets: secrets.map((secret) => ({
               ...secret,
               value: decryptSecret(secret.value),

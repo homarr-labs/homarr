@@ -5,7 +5,7 @@ import { fetch as undiciFetch } from "undici";
 
 import { removeTrailingSlash } from "@homarr/common";
 import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
-import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationOptions, IntegrationSecretKind } from "@homarr/definitions";
 
 import { HandleIntegrationErrors } from "./errors/decorator";
 import { TestConnectionError } from "./test-connection/test-connection-error";
@@ -19,6 +19,7 @@ export interface IntegrationInput {
   url: string;
   externalUrl: string | null;
   decryptedSecrets: IntegrationSecret[];
+  options?: IntegrationOptions;
 }
 
 export interface IntegrationTestingInput {
@@ -31,9 +32,20 @@ export interface IntegrationTestingInput {
   };
 }
 
+type ResolvedIntegrationInput = Omit<IntegrationInput, "options"> & {
+  options: IntegrationOptions;
+};
+
 @HandleIntegrationErrors([])
 export abstract class Integration {
-  constructor(protected integration: IntegrationInput) {}
+  protected integration: ResolvedIntegrationInput;
+
+  constructor(integration: IntegrationInput) {
+    this.integration = {
+      ...integration,
+      options: integration.options ?? {},
+    };
+  }
 
   public get publicIntegration() {
     return {

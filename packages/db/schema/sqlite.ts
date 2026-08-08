@@ -195,6 +195,7 @@ export const integrations = sqliteTable(
     name: text().notNull(),
     url: text().notNull(),
     kind: text().$type<IntegrationKind>().notNull(),
+    options: text().default(emptySuperJSON).notNull(),
     appId: text().references(() => apps.id, { onDelete: "set null" }),
   },
   (integrations) => ({

@@ -1,11 +1,12 @@
 import type { Modify } from "@homarr/common/types";
 import type { Integration, IntegrationSecret } from "@homarr/db/schema";
-import type { IntegrationKind } from "@homarr/definitions";
+import type { IntegrationKind, IntegrationOptions } from "@homarr/definitions";
 
 import { createRequestHandler } from "./request-handler";
 
-type IntegrationOfKind<TKind extends IntegrationKind> = Omit<Integration, "kind"> & {
+type IntegrationOfKind<TKind extends IntegrationKind> = Omit<Integration, "kind" | "options"> & {
   kind: TKind;
+  options: IntegrationOptions;
   decryptedSecrets: Modify<Pick<IntegrationSecret, "kind" | "value">, { value: string }>[];
   externalUrl: string | null;
 };

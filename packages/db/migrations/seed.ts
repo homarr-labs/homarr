@@ -6,6 +6,7 @@ import {
   createDocumentationLink,
   credentialsAdminGroup,
   defaultBookmarkApps,
+  emptySuperJSON,
   everyoneGroup,
   getIntegrationDefaultUrl,
   getIntegrationName,
@@ -282,6 +283,7 @@ const seedDefaultIntegrationsAsync = async (db: Database) => {
         name: `${name} Default`,
         url: defaultUrl,
         kind,
+        options: emptySuperJSON,
         appId: null,
       });
     }

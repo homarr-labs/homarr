@@ -40,6 +40,8 @@ import { Link } from "@homarr/ui";
 import { appHrefSchema } from "@homarr/validation/app";
 import { integrationCreateSchema } from "@homarr/validation/integration";
 
+import { IntegrationKindOptions } from "../_components/integration-kind-options";
+import { DEFAULT_SABNZBD_OPTIONS } from "../_components/integration-kind-options.types";
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
 import { SecretKindsSegmentedControl } from "../_components/secrets/integration-secret-segmented-control";
 import { IntegrationTestConnectionError } from "../_components/test-connection/integration-test-connection-error";
@@ -86,6 +88,7 @@ export const NewIntegrationForm = ({
     initialValues: {
       name: initialName ?? getIntegrationName(kind),
       url,
+      options: {},
       secrets: secretKinds[0].map((kind) => ({
         kind,
         value: "",
@@ -112,11 +115,13 @@ export const NewIntegrationForm = ({
     });
   const isPending = isCreatePending || isOnboardingCreatePending;
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
+  const [sabNzbdOptions, setSabnzbdOptions] = useState(DEFAULT_SABNZBD_OPTIONS);
 
   const handleSubmitAsync = async ({ appId, appHref, hasApp, ...values }: FormType) => {
     const url = hasUrlSecret
       ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
       : values.url;
+    const options = kind === "sabNzbd" ? sabNzbdOptions : undefined;
 
     const onMutationSuccess = (data: { error?: AnyMappedTestConnectionError } | undefined | void) => {
       if (data && "error" in data && data.error) {
@@ -145,7 +150,13 @@ export const NewIntegrationForm = ({
 
     if (isOnboarding) {
       await createOnboardingIntegrationAsync(
-        { kind, name: values.name, url, secrets: values.secrets },
+        {
+          kind,
+          name: values.name,
+          url,
+          secrets: values.secrets,
+          options,
+        },
         { onSuccess: onMutationSuccess, onError: onMutationError },
       );
       return;
@@ -166,7 +177,7 @@ export const NewIntegrationForm = ({
       : undefined;
 
     await createIntegrationAsync(
-      { kind, ...values, url, app },
+      { kind, ...values, url, app, options },
       { onSuccess: onMutationSuccess, onError: onMutationError },
     );
   };
@@ -203,6 +214,12 @@ export const NewIntegrationForm = ({
             <ApiKeySettingsLink kind={kind} url={form.values.url} />
           </Stack>
         </Fieldset>
+
+        <IntegrationKindOptions
+          kind={kind}
+          sabNzbdOptions={sabNzbdOptions}
+          onSabnzbdOptionsChange={setSabnzbdOptions}
+        />
 
         {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
 

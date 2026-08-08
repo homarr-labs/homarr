@@ -2,13 +2,14 @@ import { decryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { Integration } from "@homarr/db/schema";
-import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationKind, IntegrationOptions, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 
 const logger = createLogger({ module: "integrationTestConnection" });
 
-type FormIntegration = Omit<Integration, "appId"> & {
+type FormIntegration = Omit<Integration, "appId" | "options"> & {
+  options?: IntegrationOptions;
   secrets: {
     kind: IntegrationSecretKind;
     value: string | null;

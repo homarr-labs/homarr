@@ -988,6 +988,17 @@
       },
       "apiKeySettings": {
         "label": "Get API key"
+      },
+      "sabnzbdHistory": {
+        "title": "SABnzbd history",
+        "includeArchivedHistory": {
+          "label": "Include archived SABnzbd history",
+          "description": "Include completed downloads that SABnzbd has moved to Archive."
+        },
+        "historyWindowDays": {
+          "label": "History window",
+          "option": "{days} days"
+        }
       }
     },
     "action": {

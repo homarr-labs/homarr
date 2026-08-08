@@ -1,0 +1,1 @@
+ALTER TABLE "integration" ADD COLUMN "options" text DEFAULT '{"json": {}}' NOT NULL;

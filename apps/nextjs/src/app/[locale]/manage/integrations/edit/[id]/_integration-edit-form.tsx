@@ -20,6 +20,11 @@ import { Link } from "@homarr/ui";
 import { integrationUpdateSchema } from "@homarr/validation/integration";
 
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
+import { IntegrationKindOptions } from "../../_components/integration-kind-options";
+import {
+  DEFAULT_SABNZBD_OPTIONS,
+  parseSabnzbdIntegrationOptions,
+} from "../../_components/integration-kind-options.types";
 import { IntegrationSecretInput } from "../../_components/secrets/integration-secret-inputs";
 import { SecretKindsSegmentedControl } from "../../_components/secrets/integration-secret-segmented-control";
 import { IntegrationTestConnectionError } from "../../_components/test-connection/integration-test-connection-error";
@@ -69,6 +74,9 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   });
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation();
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
+  const [sabNzbdOptions, setSabnzbdOptions] = useState(() =>
+    integration.kind === "sabNzbd" ? parseSabnzbdIntegrationOptions(integration.options) : DEFAULT_SABNZBD_OPTIONS,
+  );
 
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
 
@@ -86,6 +94,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
           value: secret.value === "" ? null : secret.value,
         })),
         appId: app?.id ?? null,
+        options: integration.kind === "sabNzbd" ? sabNzbdOptions : undefined,
       },
       {
         onSuccess: (data) => {
@@ -187,6 +196,12 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             )}
           </Stack>
         </Fieldset>
+
+        <IntegrationKindOptions
+          kind={integration.kind}
+          sabNzbdOptions={sabNzbdOptions}
+          onSabnzbdOptionsChange={setSabnzbdOptions}
+        />
 
         <IntegrationLinkApp value={form.values.app} onChange={(app) => form.setFieldValue("app", app)} />
 

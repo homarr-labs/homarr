@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4df22d3b-b69e-4afc-9d82-ac73d3c6e100",
-  "prevId": "8e2ec048-e89a-4d46-84ee-ae3da138b5ab",
+  "id": "73560376-1083-4424-8df9-779f83b68a8b",
+  "prevId": "073d408e-ff80-4a57-8007-f1f32da1c71c",
   "tables": {
     "account": {
       "name": "account",
@@ -616,6 +616,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "auth_type": {
           "name": "auth_type",
           "type": "varchar(32)",
@@ -662,6 +669,14 @@
           "autoincrement": false,
           "default": "('{\"json\": {}}')"
         },
+        "enabled": {
+          "name": "enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -684,21 +699,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "url": {
-          "name": "url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "enabled": {
-          "name": "enabled",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": true
         }
       },
       "indexes": {},
@@ -1386,6 +1386,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "options": {
+          "name": "options",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "('{\"json\": {}}')"
         },
         "app_id": {
           "name": "app_id",
@@ -2421,6 +2429,14 @@
           "autoincrement": false,
           "default": false
         },
+        "enable_right_click_on_widgets": {
+          "name": "enable_right_click_on_widgets",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
         "completed_manage_tour": {
           "name": "completed_manage_tour",
           "type": "boolean",
@@ -2530,45 +2546,6 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
-    "trusted_certificate_hostname": {
-      "name": "trusted_certificate_hostname",
-      "columns": {
-        "hostname": {
-          "name": "hostname",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "thumbprint": {
-          "name": "thumbprint",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "certificate": {
-          "name": "certificate",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "trusted_certificate_hostname_hostname_thumbprint_pk": {
-          "name": "trusted_certificate_hostname_hostname_thumbprint_pk",
-          "columns": [
-            "hostname",
-            "thumbprint"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
     "widget_secret": {
       "name": "widget_secret",
       "columns": {
@@ -2619,11 +2596,50 @@
       },
       "compositePrimaryKeys": {
         "widget_secret_item_id_kind_pk": {
+          "name": "widget_secret_item_id_kind_pk",
           "columns": [
             "item_id",
             "kind"
-          ],
-          "name": "widget_secret_item_id_kind_pk"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "trusted_certificate_hostname": {
+      "name": "trusted_certificate_hostname",
+      "columns": {
+        "hostname": {
+          "name": "hostname",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "thumbprint": {
+          "name": "thumbprint",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "certificate": {
+          "name": "certificate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "trusted_certificate_hostname_hostname_thumbprint_pk": {
+          "name": "trusted_certificate_hostname_hostname_thumbprint_pk",
+          "columns": [
+            "hostname",
+            "thumbprint"
+          ]
         }
       },
       "uniqueConstraints": {},
