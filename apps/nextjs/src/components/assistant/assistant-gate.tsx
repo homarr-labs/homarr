@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import dynamic from "next/dynamic";
 
 import { useScopedI18n } from "@homarr/translation/client";
-import { AssistantWidgetRendererProvider } from "@homarr/widgets";
+import { AssistantWidgetRendererProvider } from "@homarr/widgets/assistant/context";
 
 import { AssistantContext } from "./assistant-context";
 import { AssistantBoardWidgetLazy } from "./assistant-widget-lazy";

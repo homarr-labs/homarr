@@ -92,7 +92,7 @@ describe("calendarRouter.findAllEvents", () => {
     ).rejects.toThrow();
   });
 
-  test("returns an integration-scoped error instead of silently dropping a failed calendar", async () => {
+  test("rejects the query when every selected calendar fails", async () => {
     const { caller, integrationId } = await createCallerAsync();
     getDataAsync.mockRejectedValueOnce(new Error("remote calendar unavailable"));
 
@@ -104,12 +104,6 @@ describe("calendarRouter.findAllEvents", () => {
         releaseType: ["inCinemas", "digitalRelease", "physicalRelease"],
         showUnmonitored: true,
       }),
-    ).resolves.toEqual([
-      {
-        events: [],
-        integration: { id: integrationId, name: "Radarr", kind: "radarr" },
-        error: "Calendar events could not be loaded from this integration.",
-      },
-    ]);
+    ).rejects.toThrow("All integration queries failed");
   });
 });
