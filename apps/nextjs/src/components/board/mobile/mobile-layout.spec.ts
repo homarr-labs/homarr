@@ -125,7 +125,7 @@ describe("createMobileBoardPreviewItems", () => {
     expect(createMobileBoardPreviewItems(board, desktopLayoutId)).toEqual([]);
   });
 
-  test("uses the production mobile order, footprint, kind, and custom title", () => {
+  test("uses the production mobile order, footprint, kind, app ID, and custom title", () => {
     const board = new BoardMockBuilder().build();
     const desktopLayoutId = board.layouts.at(0)?.id;
     if (!desktopLayoutId) throw new Error("Expected a desktop layout");
@@ -135,17 +135,20 @@ describe("createMobileBoardPreviewItems", () => {
       new ItemMockBuilder({ id: "wide", kind: "notebook" })
         .addLayout({ layoutId: desktopLayoutId, sectionId: rootSection.id, width: 8, height: 6, yOffset: 1 })
         .build(),
-      new ItemMockBuilder({ id: "first", kind: "clock" })
+      new ItemMockBuilder({ id: "first", kind: "app" })
         .addLayout({ layoutId: desktopLayoutId, sectionId: rootSection.id, width: 1, height: 1, yOffset: 0 })
         .build(),
     );
+    const appItem = board.items.find((item) => item.id === "first");
+    if (!appItem || appItem.kind !== "app") throw new Error("Expected app board item");
+    appItem.options.appId = "actual-app";
     const wideItem = board.items.find((item) => item.id === "wide");
     if (!wideItem) throw new Error("Expected wide board item");
     wideItem.advancedOptions.title = "Notes";
 
     expect(createMobileBoardPreviewItems(board, desktopLayoutId)).toEqual([
-      { id: "first", kind: "clock", width: 1, height: 1, title: null },
-      { id: "wide", kind: "notebook", width: 2, height: 3, title: "Notes" },
+      { id: "first", kind: "app", appId: "actual-app", width: 1, height: 1, title: null },
+      { id: "wide", kind: "notebook", appId: null, width: 2, height: 3, title: "Notes" },
     ]);
   });
 });
