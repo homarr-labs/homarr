@@ -6,8 +6,10 @@ import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
 import {
   boolean,
   customType,
+  foreignKey,
   index,
   int,
+  mediumtext,
   mysqlTable,
   primaryKey,
   smallint,
@@ -536,7 +538,9 @@ export const assistantMessages = mysqlTable(
       .references(() => assistantThreads.id, { onDelete: "cascade" }),
     parentId: varchar({ length: 128 }),
     format: varchar({ length: 64 }).notNull().default("ai-sdk/v6"),
-    content: text().default(emptySuperJSON).notNull(),
+    // `text` only holds 64KB on MySQL, which a single base64 image attachment already exceeds.
+    // `mediumtext` holds 16MB, comfortably above the 2MB request cap enforced by the chat route.
+    content: mediumtext().default(emptySuperJSON).notNull(),
     createdAt: timestamp().notNull().defaultNow(),
   },
   (message) => ({
@@ -594,14 +598,20 @@ export const customWidgetSecrets = mysqlTable(
     updatedAt: timestamp()
       .$onUpdateFn(() => new Date())
       .notNull(),
-    definitionId: varchar({ length: 64 })
-      .notNull()
-      .references(() => customWidgetDefinitions.id, { onDelete: "cascade" }),
+    definitionId: varchar({ length: 64 }).notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
       columns: [table.definitionId, table.kind],
     }),
+    // The name drizzle derives here is 65 characters, one over MySQL's 64-character identifier
+    // limit, so migration 0040 created the key under this shortened name. Declaring it explicitly
+    // keeps `drizzle-kit generate` from re-proposing an ALTER that MySQL rejects with error 1059.
+    definitionReference: foreignKey({
+      name: "cw_secret_definition_id_cw_definition_id_fk",
+      columns: [table.definitionId],
+      foreignColumns: [customWidgetDefinitions.id],
+    }).onDelete("cascade"),
   }),
 );
 

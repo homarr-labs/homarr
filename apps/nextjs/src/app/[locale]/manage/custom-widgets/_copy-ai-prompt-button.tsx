@@ -9,7 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-provider";
+import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
 
 const PROMPT_HEADER = `You are helping configure a Homarr custom widget. Homarr is a self-hosted dashboard that can display data from any API endpoint as a widget.
 

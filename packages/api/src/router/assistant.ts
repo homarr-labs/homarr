@@ -29,6 +29,7 @@ import {
 
 import type { createTRPCContext } from "../trpc";
 import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation-telemetry";
+import { orderMessagesByParent } from "../assistant-message-order";
 import { verifyAssistantGenerationAccessToken } from "../assistant-generation-access";
 import { createTRPCRouter, isDemoMode, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import { boardRouter } from "./board";
@@ -710,11 +711,13 @@ export const assistantRouter = createTRPCRouter({
     const thread = await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
     const messages = await ctx.db.query.assistantMessages.findMany({
       where: eq(assistantMessages.threadId, thread.id),
-      orderBy: assistantMessages.createdAt,
+      // `created_at` is only second-granular on MySQL and SQLite, so sibling messages written in the
+      // same second tie. The id tiebreaker makes the database order at least deterministic.
+      orderBy: [asc(assistantMessages.createdAt), asc(assistantMessages.id)],
     });
     return {
       thread,
-      messages: messages.map((message) => ({
+      messages: orderMessagesByParent(messages).map((message) => ({
         id: message.id,
         parentId: message.parentId,
         format: message.format,

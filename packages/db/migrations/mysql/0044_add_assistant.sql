@@ -26,7 +26,7 @@ CREATE TABLE `assistant_message` (
 	`thread_id` varchar(64) NOT NULL,
 	`parent_id` varchar(128),
 	`format` varchar(64) DEFAULT 'ai-sdk/v6' NOT NULL,
-	`content` text DEFAULT ('{"json": {}}') NOT NULL,
+	`content` mediumtext DEFAULT ('{"json": {}}') NOT NULL,
 	`created_at` timestamp DEFAULT (now()) NOT NULL,
 	CONSTRAINT `assistant_message_id` PRIMARY KEY(`id`)
 );

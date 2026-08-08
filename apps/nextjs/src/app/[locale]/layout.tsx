@@ -26,7 +26,8 @@ import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 
 import { Analytics } from "~/components/layout/analytics";
-import { AssistantProvider } from "~/components/assistant/assistant-provider";
+import type { AssistantAvailability } from "~/components/assistant/assistant-gate";
+import { AssistantGate } from "~/components/assistant/assistant-gate";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
 
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
@@ -86,6 +87,16 @@ export default async function Layout(props: {
   const session = await auth();
   const user = session ? await api.user.getById({ userId: session.user.id }).catch(() => null) : null;
   const serverSettings = await getServerSettingsAsync(db);
+  // Resolved on the server so the assistant runtime chunk is never referenced by a page unless the
+  // assistant is actually usable. Reuses the availability check the management page invalidates.
+  // The states stay distinct so a signed-out visitor is told to sign in rather than that the
+  // instance is unconfigured, which the server cannot know for them.
+  const assistantAvailability: AssistantAvailability = !session
+    ? "unauthenticated"
+    : await api.assistant
+        .getAvailability()
+        .then((availability) => (availability.enabled ? ("enabled" as const) : ("unconfigured" as const)))
+        .catch(() => "error" as const);
   const colorScheme = await getCurrentColorSchemeAsync();
   const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
 
@@ -124,7 +135,7 @@ export default async function Layout(props: {
     (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
     (innerProps) => <ModalProvider {...innerProps} />,
     (innerProps) => <SpotlightProvider {...innerProps} />,
-    (innerProps) => <AssistantProvider {...innerProps} />,
+    (innerProps) => <AssistantGate availability={assistantAvailability} {...innerProps} />,
   ]);
 
   const { locale } = await props.params;

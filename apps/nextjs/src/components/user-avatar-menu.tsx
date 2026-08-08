@@ -24,7 +24,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
-import { useOptionalHomarrAssistant } from "./assistant/assistant-provider";
+import { useOptionalHomarrAssistant } from "./assistant/assistant-context";
 import { CurrentColorSchemeCombobox } from "./color-scheme/current-color-scheme-combobox";
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
 import { DockerQuickAccessModal } from "./layout/header/docker-quick-access-modal";
