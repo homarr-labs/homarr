@@ -1,0 +1,2612 @@
+apps/docs/docs/widgets/media-server/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-12,14-20,22,24-25,27-29,33,39-58,65
+packages/spotlight/src/open.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-54
+packages/api/src/router/widgets/rssFeed.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,6,18-27,35-36,51-81
+apps/docs/docs/getting-started/installation/saltbox.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 8,11
+packages/custom-widgets/src/test/fixtures/reference-widgets.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-62
+apps/docs/docs/widgets/custom-api/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8
+scripts/check-custom-widget-bundle.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-21
+apps/docs/docs/widgets/dns-hole-controls/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-19,21,23,27-28,35-47,51-56,63
+packages/custom-widgets/src/jsx/string-methods.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-33,35-54,56-67,69-70,72-83,85-87,90-94,96-119
+apps/nextjs/src/components/board/layout/test/geometry.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-27
+packages/db/migrations/sqlite/meta/0044_snapshot.json
+  s_093d61b162b9ca::t_d86d1914c85a4e 91,100-101,108,146-147,239-240,248-249,256,294-295,303-304,311,467,476-477,615-616,670-671,678,709-710,718-719,726,757-758,816,825-826,834-835,843-844,922-923,963-964,972-973,980,1011-1012,1020-1021,1028,1070,1075,1084-1085,1092,1130-1131,1139-1140,1147,1196,1205-1206,1250,1259-1260,1328-1329,1337-1338,1346-1347,1354,1408-1409,1488-1489,1620-1621,1668-1669,1676,1743-1744,1848,1857-1858,1899-1900,1908-1909,1916,1982-1983,1991-1992,2000-2001,2008,2075-2076,2107,2144,2153-2154,2192,2344-2345,2353-2354,2362-2363,2401,2446-2447,2454,2472
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-90,92-99,102-107,109-145,148-238,241-247,250-255,257-293,296-302,305-310,312-466,468-475,478-614,617-669,672-677,679-708,711-717,720-725,727-756,759-815,817-824,827-833,836-842,845-921,924-962,965-971,974-979,981-1010,1013-1019,1022-1027,1029-1069,1071-1074,1076-1083,1086-1091,1093-1129,1132-1138,1141-1146,1148-1195,1197-1204,1207-1249,1251-1258,1261-1327,1330-1336,1339-1345,1348-1353,1355-1407,1410-1487,1490-1619,1622-1667,1670-1675,1677-1742,1745-1847,1849-1856,1859-1898,1901-1907,1910-1915,1917-1981,1984-1990,1993-1999,2002-2007,2009-2074,2077-2106,2108-2143,2145-2152,2155-2191,2193-2343,2346-2352,2355-2361,2364-2400,2402-2445,2448-2453,2455-2471
+scripts/benchmarks/dev-board.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-324
+apps/docs/src/components/workshop/WorkshopAccountMenu.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-118
+apps/nextjs/src/components/board/items/actions/test/item-move-targets.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-123
+apps/docs/src/components/ui/button.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-50
+packages/api/src/router/test/update-checker.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-58
+packages/custom-widgets/src/jsx/bindings.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-155
+packages/api/src/router/custom-widget/request-executor.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-87
+apps/nextjs/src/components/board/sections/container/container-menu.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,8-12,14,16,18-20,23-25,32,38-40,49-50,52-53,55,57,65-70,74
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 4-6,26,32,35,37-43,66-82,84-98,105,123-134,139-141,145,185,189-192,195
+packages/custom-widgets/tsconfig.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-9
+apps/docs/docs/widgets/docker-containers/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-17,19,29,35-41,47-48,56
+  s_093d61b162b9ca::t_c6a519217d234d 57
+apps/docs/static/data/contributions.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-127
+apps/docs/docs/advanced/command-line/integrations/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 10,47,61
+apps/nextjs/src/components/manage/section-card.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-19
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
+  s_093d61b162b9ca::t_d9fec9a02435fe 3,27,30,36-37,40,47-61,63-83
+  s_093d61b162b9ca::t_841d188d8e3eb5 6,15-16,19-24,38-39,41
+packages/db/migrations/seed.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,14,19,31,43,70-278,485-502,735-736,784,789-791,793-800,805-806,809-810,826
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-146
+packages/custom-widgets/src/test/request-limits.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-122
+packages/db/migrations/postgresql/meta/0011_snapshot.json
+  s_093d61b162b9ca::t_d86d1914c85a4e 100-101,109,146-147,236-237,245-246,254,291-292,300-301,309,451-452,462,587-588,640-641,649,680-681,689-690,698,729-730,788-789,797-798,806-807,817,890-891,931-932,940-941,949,980-981,989-990,998,1072-1073,1081,1118-1119,1127-1128,1136,1201-1202,1248-1249,1259,1319-1320,1328-1329,1337-1338,1346,1397-1398,1465-1466,1585-1586,1632-1633,1641,1703-1704,1806-1807,1817,1854-1855,1863-1864,1872,1933-1934,1942-1943,1951-1952,1960,2022-2023,2059,2111-2112,2251-2252,2260-2261,2269-2270,2309,2352-2353,2361,2397,2417
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,501-502,529-530,535-536,539,541-543,545,547-548,551,583-585,599-600,603-608,615-616,636-639,647-648,1437-1450,1477-1584,1587-1631,1634-1640,1642-1648
+packages/api/src/router/test/custom-widget/request-executor.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-65
+packages/db/migrations/sqlite/0044_serious_wallop.sql
+  s_093d61b162b9ca::t_841d188d8e3eb5 1
+packages/custom-widgets/src/runtime/refresh-button.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-45
+apps/docs/docs/advanced/command-line/password-recovery/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 15,19
+apps/docs/src/components/pages/home/integrations/available-integrations.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-7,11-13,17-20
+apps/docs/docs/integrations/seerr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19,21-36,40,44-52
+apps/nextjs/src/components/board/sections/grid/dnd/coordinates.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-145
+apps/nextjs/README.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3-4,6,8-11,13,15-17,19,21-24,26-27,29,31-34,36-48
+apps/nextjs/src/app/[locale]/manage/settings/_components/culture-settings-form.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,8-9,11-15,17,20-26
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.spec.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-37
+apps/docs/docs/getting-started/installation/source.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 31-46,50-53
+apps/docs/src/components/workshop/DetailSections.spec.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-43
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_customCss.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,11-12,15-17,21,24-26,31-32,34-38,45,48,58
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-275
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.spec.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-225
+packages/db/migrations/mysql/meta/0044_snapshot.json
+  s_093d61b162b9ca::t_7efbdb0628e7af 692-693,701-703,733-734,742-743,751,781-782,843-844,852-853,861-862,870,876,904,955-956,964,1001-1002,1010-1011,1019,1049-1050,1058-1059,1067,1108,1113,1122-1123,1131,1168-1169,1177-1178,1186,1234,1243-1244,1252,1296-1297,1305,1311,1375-1376,1384-1385,1393-1394,1402,1455-1456,1464,1516-1517,1525-1714
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,91,100-101,109,146-147,155,212,249-250,258-259,267,304-305,313-314,322,480-481,489,495,531,537-538,568-569,575-577,582-583,587,589-590,594,630-632,634-635,641-643,649-650,652-658,666-667,690-691,694-695,1715,1781-1782,1790,1826,1899-1900,1908,1914,1951-1952,1960-1961,1969,2034-2035,2043-2044,2052-2053,2061,2127-2128,2136,2166,2172,2205,2214-2215,2223,2259,2410-2411,2419-2420,2428-2429,2437,2473,2517-2518,2526,2543
+packages/custom-widgets/src/workbench/source-setup.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-189
+packages/api/src/board-server.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16
+apps/workshop/pb_hooks/workshop-utils.js
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-78
+e2e/onboarding.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 25-35,37-43,69-77,79-85
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,6-7,9-18,20-22,24-80,84-85,87-183,185,188-202
+packages/api/src/router/test/custom-widget/definition-persistence.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-551
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-86
+apps/nextjs/src/app/[locale]/boards/(content)/[name]/(board)/_definition.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,7
+apps/nextjs/src/components/workshop/workshop-publish-definition.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-52
+apps/docs/src/components/ui/kbd.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-20
+packages/db/migrations/sqlite/meta/0045_snapshot.json
+  s_093d61b162b9ca::t_31eaa844ef34f6 4,332
+  s_093d61b162b9ca::t_d86d1914c85a4e 91,100-101,108,146-147,346,355-356,416,425-426,466-467,475-476,483,521-522,530-531,538,694,703-704,842-843,897-898,905,936-937,945-946,953,984-985,1043,1052-1053,1061-1062,1070-1071,1149-1150,1190-1191,1199-1200,1207,1238-1239,1247-1248,1255,1297,1302,1311-1312,1319,1357-1358,1366-1367,1374,1423,1432-1433,1477,1486-1487,1555-1556,1564-1565,1573-1574,1581,1635-1636,1715-1716,1847-1848,1895-1896,1903,1970-1971,2075,2084-2085,2126-2127,2135-2136,2143,2209-2210,2218-2219,2227-2228,2235,2302-2303,2334,2371,2380-2381,2419,2571-2572,2580-2581,2589-2590,2628,2673-2674,2681,2699
+  s_093d61b162b9ca::t_1c3eb8f35ae231 1-3,5-90,92-99,102-107,109-145,148-331,333-345,347-354,357-415,417-424,427-465,468-474,477-482,484-520,523-529,532-537,539-693,695-702,705-841,844-896,899-904,906-935,938-944,947-952,954-983,986-1042,1044-1051,1054-1060,1063-1069,1072-1148,1151-1189,1192-1198,1201-1206,1208-1237,1240-1246,1249-1254,1256-1296,1298-1301,1303-1310,1313-1318,1320-1356,1359-1365,1368-1373,1375-1422,1424-1431,1434-1476,1478-1485,1488-1554,1557-1563,1566-1572,1575-1580,1582-1634,1637-1714,1717-1846,1849-1894,1897-1902,1904-1969,1972-2074,2076-2083,2086-2125,2128-2134,2137-2142,2144-2208,2211-2217,2220-2226,2229-2234,2236-2301,2304-2333,2335-2370,2372-2379,2382-2418,2420-2570,2573-2579,2582-2588,2591-2627,2629-2672,2675-2680,2682-2698
+packages/custom-widgets/src/jsx/runtime-components.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-282
+packages/integrations/src/traefik/traefik-integration.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-43
+packages/widgets/src/custom-api/migration-state.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-32
+apps/docs/docs/advanced/styling/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 22,29,38,40,45-46,50-52,54,62,65,67,72,74,82,94,100,102
+packages/custom-widgets/src/core/secret-requirements.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-33
+packages/db/migrations/mysql/meta/0047_snapshot.json
+  s_093d61b162b9ca::t_31eaa844ef34f6 4,347
+  s_093d61b162b9ca::t_d86d1914c85a4e 91,100-101,109,146-147,155,212,304,361,370-371,379,436,445-446,454,491-492,500-501,509,546-547,555-556,564,722-723,731,737,773,876-877,885,936-937,945,975-976,984-985,993,1023-1024,1085-1086,1094-1095,1103-1104,1112,1118,1146,1197-1198,1206,1243-1244,1252-1253,1261,1291-1292,1300-1301,1309,1350,1355,1364-1365,1373,1410-1411,1419-1420,1428,1476,1485-1486,1494,1538-1539,1547,1553,1617-1618,1626-1627,1635-1636,1644,1697-1698,1706,1782-1783,1791,1919-1920,1928,1972-1973,1981,2047-2048,2056,2092,2165-2166,2174,2180,2217-2218,2226-2227,2235,2300-2301,2309-2310,2318-2319,2327,2393-2394,2402,2432,2438,2471,2480-2481,2489,2525,2676-2677,2685-2686,2694-2695,2703,2739,2783-2784,2792,2809
+  s_093d61b162b9ca::t_31a135edabdf12 1-3,5-90,92-99,102-108,110-145,148-154,156-211,213-303,305-346,348-360,362-369,372-378,380-435,437-444,447-453,455-490,493-499,502-508,510-545,548-554,557-563,565-721,724-730,732-736,738-772,774-875,878-884,886-935,938-944,946-974,977-983,986-992,994-1022,1025-1084,1087-1093,1096-1102,1105-1111,1113-1117,1119-1145,1147-1196,1199-1205,1207-1242,1245-1251,1254-1260,1262-1290,1293-1299,1302-1308,1310-1349,1351-1354,1356-1363,1366-1372,1374-1409,1412-1418,1421-1427,1429-1475,1477-1484,1487-1493,1495-1537,1540-1546,1548-1552,1554-1616,1619-1625,1628-1634,1637-1643,1645-1696,1699-1705,1707-1781,1784-1790,1792-1918,1921-1927,1929-1971,1974-1980,1982-2046,2049-2055,2057-2091,2093-2164,2167-2173,2175-2179,2181-2216,2219-2225,2228-2234,2236-2299,2302-2308,2311-2317,2320-2326,2328-2392,2395-2401,2403-2431,2433-2437,2439-2470,2472-2479,2482-2488,2490-2524,2526-2675,2678-2684,2687-2693,2696-2702,2704-2738,2740-2782,2785-2791,2793-2808
+apps/nextjs/src/components/board/sections/grid/dnd/engine.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-757
+apps/docs/README.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 24-26,29-31,49,80,99-100,102-107
+packages/core/src/infrastructure/http/request.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,6,34,37-42,44-46,49-52
+packages/db/schema/postgresql.ts
+  s_093d61b162b9ca::t_8d5a5f991bd636 538
+  s_093d61b162b9ca::t_841d188d8e3eb5 9,36,43,210-211,343-344,346,570-620,625-628,636,638,640,644,648,650-654,970-984
+.agents/skills/homarr-custom-widget/references/schema.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-22
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-save-errors.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-74
+apps/docs/docs/widgets/system-disks/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8,47
+  s_093d61b162b9ca::t_649b59d3c6751a 48
+packages/widgets/src/notebook/read-only-task-item.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-66
+packages/widgets/src/firewall/bandwidth.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-40
+apps/docs/src/components/ui/textarea.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-18
+.impeccable/critique/2026-07-21T12-29-41Z__apps-docs-src-components-workshop.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-64
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-status.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-54
+apps/docs/docs/integrations/ical/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-13,15,18,20-24,28,32-40,44
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-references.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-18
+packages/widgets/src/_inputs/widget-internal-input.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-3
+apps/nextjs/package.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 22-23,25,27,38,62,66,73
+scripts/benchmarks/board-static-graph.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-235
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-6,11,14,16-17,21-24,27-28,30-31,35,37-38,42-48,52-53,57-65,67-69,71-82,86-129,134-137,139-140,142,144-151,157,167-179,181-182,184,192-193,195-197,200,204-205,208,210,213-221,224-238,243,245-246,266,273-298,306,311-315,318-319,340,343,347-348,359-360
+apps/nextjs/src/components/board/sections/grid/grid-portal-host.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3-9,12-25,28,31-34,36,38-51,54-56,58-64,67-73,75-86,88-96,98-127,129-133,135-140,142-151,153,155-184,186-191,193-194,197-199,203-207,209-211
+packages/custom-widgets/vitest.config.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-9
+packages/custom-widgets/src/jsx/interpreter.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-361
+apps/nextjs/src/components/workshop/workshop-installer.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-36
+packages/widgets/src/media-requests/list/component.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-38
+packages/api/src/router/custom-widget/preview-procedure-helpers.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,5-8,10-18,20,22-25,27-54
+apps/docs/docs/widgets/media-missing/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-17,23-25,35-44,48-49,51,63
+  s_093d61b162b9ca::t_7095e3f3ee574d 64
+apps/nextjs/src/components/board/items/widget-query-recovery.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,6-7,10-12,16-18,21,24-26,33,43,46,50,58
+packages/custom-widgets/src/core/component-catalog-policy.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-55
+packages/custom-widgets/src/test/schema.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-327
+apps/docs/docs/widgets/downloads/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-22,28-29,32,38,57-88,100-101,107
+apps/nextjs/src/components/board/items/actions/test/mocks/board-mock.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,48-51,62-63
+apps/docs/src/components/ui/input-group.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-130
+apps/nextjs/src/components/board/sections/grid/test/fixed-grid-item.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-321
+packages/widgets/src/umami/umami-layout.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16
+packages/custom-widgets/src/jsx/safe-language-policy.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-66
+apps/nextjs/src/components/board/sections/grid/dnd/engine.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-498
+packages/api/src/router/custom-widget/auth.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16,27
+apps/docs/src/components/ui/sonner.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-39
+packages/api/src/router/custom-widget/request-limits.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-5,7,9-26,28-29,31-34,36-63,65,67-69,71-75
+apps/docs/src/components/ui/card.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-70
+packages/api/src/router/test/board.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 7,328-334,350-379,605-611,615-646,925-928,930,932-999,1001-1014,1016-1023,1025-1050,1052-1054,1056-1112,1258-1259,1261-1262,1264-1273,1281,1286-1287,1289-1306,1326-1336,1395-1400,1585-1595,1597,1603-1606,1608-1621,1629,1633,1635,1640,1647-1648,1650,1656,1667,1672,1680,1688,1696,1715,1727,1735-1854,1862-1871,1876,1881,1896,1902-2019,2060-2061,2141,2147,2153,2155,2197,2206,2237,2273
+apps/nextjs/src/app/api/custom-widgets/[resource]/route.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-42
+apps/docs/docs/widgets/beszel-system-grid/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-12,14,16,28-35,42
+apps/nextjs/src/components/layout/header/user-client.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-125
+packages/db/test/mysql-migration.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,8,14-26,50,54-58,79-217
+  s_093d61b162b9ca::t_a585d62b0b8b95 218
+packages/definitions/src/widget-integration-map.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 47,49
+packages/custom-widgets/src/core/import.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-173
+packages/widgets/src/system-resources/history.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-39
+apps/nextjs/src/components/board/layout/constants.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-10
+apps/websocket/src/main.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 15-33
+packages/custom-widgets/src/runtime/actions.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-239
+apps/docs/docs/getting-started/installation/qnap.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7
+apps/docs/src/components/ui/input-otp.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-81
+packages/widgets/src/health-monitoring/cluster/accordion-state.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-4
+apps/docs/src/components/ui/header.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,21
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-21,25-27,30,32-34,38-40,42-43,45,47-55,58-115,118-121,123-147,149-155,157-230,233-263,265-277,279-284,286-353,355-422
+packages/custom-widgets/src/core/options.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-28
+packages/spotlight/src/components/spotlight.tsx
+  s_093d61b162b9ca::t_872e0ced5e9f6e 14-20,26,68-78,99,103,108-113,115-116,159
+apps/docs/src/components/ui/alert-dialog.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-158
+packages/widgets/src/firewall/failure-state.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-57
+packages/widgets/src/common/locale.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-72
+apps/docs/docs/community/translations.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 8-11,17-22,26,32,51,55
+packages/custom-widgets/src/workbench/code-editor.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-65
+packages/db/migrations/postgresql/0012_huge_warpath.sql
+  s_093d61b162b9ca::t_841d188d8e3eb5 1
+apps/docs/docs/widgets/notifications/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-12,14-21,27,34,37
+  s_093d61b162b9ca::t_4421f33fa19272 38
+apps/nextjs/src/components/workshop/workshop-install-button.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-62
+apps/docs/src/components/ui/empty.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-87
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-legacy-migration.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-30
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 8,32,35,46-49,52-68,105-110,262-266
+packages/db/migrations/postgresql/0011_futuristic_valkyrie.sql
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2
+apps/docs/docs/management/integrations/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 9,15,25,29,32,37,42,57,73,82,84-87,94,98,107
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-271
+apps/docs/tsconfig.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 18,20,22-23
+packages/custom-widgets/src/workbench/request-references.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-101
+scripts/benchmarks/docker-build.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-351
+packages/custom-widgets/src/server/request-dispatcher-lifecycle.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-62
+apps/workshop/tests/workshop-migration.mjs
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-166
+packages/custom-widgets/src/jsx/safe-properties.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-202
+packages/custom-widgets/src/test/workbench.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-164
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_settings-form.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-224
+packages/custom-widgets/src/core/options-schema.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-108
+apps/workshop/pb_hooks/submission-deleted-email.html
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-44
+packages/spotlight/src/component.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3
+apps/docs/.vscode/settings.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_shared.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 14-23
+packages/custom-widgets/src/test/component-catalog.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-141
+packages/custom-widgets/src/jsx/interpreter-foundation.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-115
+apps/workshop/.gitignore
+  s_093d61b162b9ca::t_841d188d8e3eb5 1
+packages/widgets/src/trpc-query-key.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-4
+apps/nextjs/src/app/[locale]/_client-providers/query-retry.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-27
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-115
+packages/custom-widgets/src/workbench/analyzer.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-129
+packages/custom-widgets/src/core/url-policy.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-116
+packages/widgets/src/advanced-focus-support.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-43
+apps/nextjs/src/components/board/items/widget-hover-overlay.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,9,15-16,34,108-114
+  s_093d61b162b9ca::t_1f903fd8e17bde 115-116
+apps/docs/docs/management/api/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 85-86,88-114
+apps/nextjs/src/app/[locale]/widgets/[kind]/_content.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,9-10,12,17,19,27,30-31,33,35,45,54-72,74-77,79-88,104-108,118,121,140-143
+packages/api/src/router/widgets/options.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 12-13,50-59,62
+packages/custom-widgets/src/test/jsx-policy.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-441
+PRODUCT.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-39
+apps/nextjs/src/app/[locale]/boards/_types.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 11-13
+scripts/benchmarks/dev-benchmark-lib.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-81
+apps/docs/docs/management/search-engines/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 9,17,23,27,29,36-38,41-46,54,61
+packages/custom-widgets/src/runtime/sub-fetch.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-197
+packages/auth/permissions/integrations-with-permissions.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 9-15,24,29-30
+packages/custom-widgets/scripts/check-architecture.mjs
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-108
+apps/docs/src/components/ui/checkbox.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-28
+packages/api/src/router/update-checker.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 15-16
+apps/nextjs/src/app/api/custom-widgets/admin.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-15
+apps/docs/docs/widgets/clock/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-12,14,20-22,24-27,30,37
+packages/db/collection.ts
+  s_093d61b162b9ca::t_363ad712337cf6 42
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,39-40,56-58
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-options-editor.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-271
+apps/nextjs/src/components/board/sections/test/section-collapse-storage.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-53
+apps/docs/scripts/dump-contributors.mjs
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,6-7,10-11,26,29-30,42,51,53,68,91-92,97-98
+apps/nextjs/src/components/board/sections/grid/grid-editor-loader.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-76
+packages/custom-widgets/src/core/component-descriptor.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-53
+packages/definitions/src/docs/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-12,20
+apps/docs/src/components/ui/chart.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-307
+apps/docs/docs/integrations/transmission/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19-20,23,27-35
+apps/nextjs/src/components/board/items/widget-query-scope.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-442
+packages/db/queries/widget-placement.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-18,20-25,28-33,35-44,47-55
+packages/widgets/src/common/application-url.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1
+apps/docs/docs/getting-started/installation/proxmox.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 34,52,59,64
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,5,7-8,12,19-20,25-26,34-35,44-47,49-107,134,149-161,163-164,171-246
+apps/nextjs/src/components/board/sections/container/container-edit-modal.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,10,13-14,17,20,33-48,50,54
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-analysis.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-38
+apps/docs/src/components/ui/carousel.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-212
+scripts/benchmarks/docker-runtime-lib.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-432
+apps/nextjs/src/components/layout/header/user.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,9,12
+apps/nextjs/src/app/[locale]/boards/_layout-utils.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-111
+.github/pull_request_template.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 19,21
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_background.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,11,18-19,22,24-25,29,47-74,76-102,104-108,110-146
+packages/db/migrations/sqlite/meta/0043_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 4-5,518-519,549-550,556-557,563-564,570-571,575,611-613,625-626,628-634,642-643,666-669,677,679,1449-1464,1490-1611,1614-1659,1662-1667,1669-1674
+  s_093d61b162b9ca::t_d86d1914c85a4e 91,100-101,108,146-147,239-240,248-249,256,294-295,303-304,311,467,476-477,615-616,670-671,678,709-710,718-719,726,757-758,816,825-826,834-835,843-844,922-923,963-964,972-973,980,1011-1012,1020-1021,1028,1070,1075,1084-1085,1092,1130-1131,1139-1140,1147,1196,1205-1206,1250,1259-1260,1328-1329,1337-1338,1346-1347,1354,1408-1409,1480-1481,1612-1613,1660-1661,1668,1735-1736,1840,1849-1850,1891-1892,1900-1901,1908,1974-1975,1983-1984,1992-1993,2000,2067-2068,2099,2136,2145-2146,2184,2336-2337,2345-2346,2354-2355,2393,2438-2439,2446,2464
+apps/docs/docs/management/settings/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 16-17
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-233
+nginx.conf
+  s_093d61b162b9ca::t_841d188d8e3eb5 8
+apps/nextjs/src/components/board/advanced-focus/escape.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-19
+apps/nextjs/src/components/workshop/workshop-publish-definition.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-33
+packages/boards/src/context.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,10,15-17,20-39,43-45,48-50,52-66,83-84,89-91,115,117-122,124-125,129,131-133,135-136,138-139,141-145,156-161
+apps/docs/docs/advanced/development/_category_.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-6,8
+vitest.setup.node.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-6
+apps/docs/docs/community/get-in-touch.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 12,19
+apps/docs/docs/widgets/tracearr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-14,16,22-27,31-32,39-40,47-53,56
+packages/api/src/custom-widget-configuration.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-7
+packages/widgets/src/definition.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-33
+apps/nextjs/src/components/board/sections/grid/test/grid-editor-loader.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-106
+apps/nextjs/src/components/workshop/workshop-browser.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-537
+packages/widgets/src/health-monitoring/integration-selection.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-25
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-1338
+apps/docs/src/components/workshop/SubmitForm.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-498
+apps/nextjs/src/components/board/layout/geometry.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-54
+apps/docs/docs/widgets/app/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-10,12,19-21,23,28-32,38
+apps/docs/docs/integrations/docker/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-9,11-12,14,17,19-20,22-24,28,51,126,129,170,176,184,186,193,200,205,210,212,219,221,230
+apps/nextjs/src/instrumentation.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-37
+scripts/benchmarks/request-handler-memory.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-107
+packages/widgets/src/rssFeed/feed-display.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16
+apps/docs/docs/integrations/patchmon/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-12,14,21-22,25,29-42
+packages/custom-widgets/src/workbench/ports.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-32
+apps/nextjs/src/components/layout/header/search.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 6,11,18,25-27,37-44
+packages/widgets/src/docker/layout.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-25
+apps/docs/docs/widgets/umami/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-16,22-30,42-47
+apps/nextjs/src/components/board/items/actions/test/move-and-resize-item.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,24,53
+apps/docs/docs/management/boards/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 12-16,27,33,38-41,44,46,50,59-60,62,64,72,81,86,92,96-109,113,117-121,125-146,150-174,177,179,184,188,192,199,201,203,205,207,209,211,213,216,220,222,225,238,241-254,256,261,280,282,286,291,296,300,308,318,321-323,330,336,338-339,343,345-346,350-353,360-362
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-4,7-19,22,24,28-39,49-54,56-132,134
+  s_093d61b162b9ca::t_f099c4f55004ee 45,47
+  s_093d61b162b9ca::t_8d6e83e386e487 40-41
+apps/docs/docs/management/mcp.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 99-102,160-161,173-244
+  s_093d61b162b9ca::t_363ad712337cf6 131-135,137-150
+apps/nextjs/src/components/board/items/actions/test/mocks/layout-mock.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 13-16
+apps/docs/docs/widgets/bazarr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-16,22,30-39,46
+apps/docs/docs/integrations/gluetun/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-12,14,22-26,42-58
+packages/widgets/src/smart-home/layout.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1
+apps/workshop/tests/oauth-sync.integration.mjs
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-34
+apps/docs/docs/widgets/system-resources/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8,70
+  s_093d61b162b9ca::t_2dc5c7f88e8ee3 71
+apps/nextjs/src/app/[locale]/boards/(content)/_edit-actions.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-79
+apps/docs/src/components/ui/hover-card.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-46
+packages/custom-widgets/src/test/preview-sessions.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-192
+packages/api/src/router/test/location.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-36
+packages/api/src/router/widgets/timetable.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-4,7-11,16,19,21-249,254-255,259-264,269-270,273-278
+packages/api/src/router/custom-widget/secret-procedures.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-178
+packages/auth/permissions/integration-provider.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 23,27,30,33,35-36,38-39,44
+packages/api/src/router/custom-widget/custom-widget-router.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,7-8,11,13-31,36-37,39-41,44-48,52-54,60-80,82-108,110-119,121-153,155-162,164-179,183-187,190-200,209-212,214-215,218-223,225-234,236-240
+packages/db/migrations/mysql/meta/0046_snapshot.json
+  s_093d61b162b9ca::t_d86d1914c85a4e 91,100-101,109,146-147,155,212,249-250,258-259,267,304-305,313-314,322,480-481,489,495,531,634-635,643,694-695,703,733-734,742-743,751,781-782,843-844,852-853,861-862,870,876,904,955-956,964,1001-1002,1010-1011,1019,1049-1050,1058-1059,1067,1108,1113,1122-1123,1131,1168-1169,1177-1178,1186,1234,1243-1244,1252,1296-1297,1305,1311,1375-1376,1384-1385,1393-1394,1402,1455-1456,1464,1540-1541,1549,1677-1678,1686,1730-1731,1739,1805-1806,1814,1850,1923-1924,1932,1938,1975-1976,1984-1985,1993,2058-2059,2067-2068,2076-2077,2085,2151-2152,2160,2190,2196,2229,2238-2239,2247,2283,2434-2435,2443-2444,2452-2453,2461,2497,2541-2542,2550,2567
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-90,92-99,102-108,110-145,148-154,156-211,213-248,251-257,260-266,268-303,306-312,315-321,323-479,482-488,490-494,496-530,532-633,636-642,644-693,696-702,704-732,735-741,744-750,752-780,783-842,845-851,854-860,863-869,871-875,877-903,905-954,957-963,965-1000,1003-1009,1012-1018,1020-1048,1051-1057,1060-1066,1068-1107,1109-1112,1114-1121,1124-1130,1132-1167,1170-1176,1179-1185,1187-1233,1235-1242,1245-1251,1253-1295,1298-1304,1306-1310,1312-1374,1377-1383,1386-1392,1395-1401,1403-1454,1457-1463,1465-1539,1542-1548,1550-1676,1679-1685,1687-1729,1732-1738,1740-1804,1807-1813,1815-1849,1851-1922,1925-1931,1933-1937,1939-1974,1977-1983,1986-1992,1994-2057,2060-2066,2069-2075,2078-2084,2086-2150,2153-2159,2161-2189,2191-2195,2197-2228,2230-2237,2240-2246,2248-2282,2284-2433,2436-2442,2445-2451,2454-2460,2462-2496,2498-2540,2543-2549,2551-2566
+packages/api/src/router/custom-widget/cache-version.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-17
+apps/docs/docs/getting-started/installation/docker.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,4,11,16,20,31,33-36,42,44-47,81,86,89-90,103-105
+packages/boards/src/updater.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 8-10,25-31,40-70
+  s_093d61b162b9ca::t_6aa41678bf65e5 71
+packages/custom-widgets/src/core/examples.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-77
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-unsaved-changes-guard.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-34
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_import-custom-widget-button.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-104
+apps/nextjs/src/components/board/layout/test/semantics.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-57
+apps/nextjs/src/instrumentation-noop.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-4
+apps/docs/src/components/ui/calendar.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-169
+packages/api/src/router/board/test/grid-algorithm.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4-5,28-29,31-32,35-40,42,47,49-55,67-70,81-100,215
+packages/db/migrations/sqlite/0045_violet_mikhail_rasputin.sql
+  s_093d61b162b9ca::t_31eaa844ef34f6 4,19,24,35
+apps/nextjs/src/components/layout/header.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 11,21-27,46
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-advanced-manifest.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-62
+packages/widgets/src/docker/layout.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-52
+packages/widgets/src/custom-api/widget-definition-context.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-166
+.agents/skills/homarr-custom-widget/references/security.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-7
+apps/workshop/README.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-184
+apps/docs/docs/widgets/weather/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-12,14,17-19,23-24,31-32,38,44
+apps/docs/docs/integrations/audiobookshelf/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-12,14,19-20,23,27-40
+apps/docs/docs/widgets/system-disks/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 22-26
+packages/api/src/router/board.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 6-7,9,13,34,36,39-40,43-44,61,77-81,333-354,407,411-469,486-503,512-514,536-551,559-560,852-856,858-861,863-866,868-881,883-886,888-919,921-926,928-933,935,937-938,941-944,947-949,951-984,986-1139,1142-1155,1157-1183,1232-1245,1257-1260,1265-1278,1280-1282,1382-1385,1389,1456-1459,1465-1482,1588-1591,1596,1826-1834,1931-1932,1935-1936,1939,1957-1958,2068-2072,2074-2086,2088-2101,2104-2114,2116-2134,2136-2144,2146-2178,2180-2196,2204-2313,2315-2331,2333-2340,2345-2347,2353-2366,2389-2390,2404,2416-2427,2464,2473-2487
+  s_093d61b162b9ca::t_400eec48e0ff09 2488-2489
+packages/api/src/router/widgets/indexer-manager.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 9,19-23,25-41
+packages/widgets/src/runtime-hooks.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-40
+packages/db/package.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 12-13,51
+apps/docs/docs/widgets/releases/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8,38
+  s_093d61b162b9ca::t_6034ac3bfdcb1c 39
+packages/custom-widgets/src/server/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-41
+apps/docs/src/components/ui/avatar.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-41
+packages/workshop/src/backend.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-878
+packages/custom-widgets/src/workbench/form-schema.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,5-11,14-24,27-39,42-51
+apps/nextjs/src/components/board/sections/grid/dnd/targeting.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-68
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.spec.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-87
+packages/api/src/router/board/board-access.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 22-27,40
+packages/db/migrations/mysql/meta/0040_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 91,100-101,109,146-147,155,212,249-250,258-259,267,304-305,313-314,322,480-481,489,495,531,658-659,667,711-712,720,750-751,759-760,768,798-799,860-861,869-870,878-879,887,893,921,972-973,981,1018-1019,1027-1028,1036,1066-1067,1075-1076,1084,1125,1130,1139-1140,1148,1185-1186,1194-1195,1203,1251,1260-1261,1269,1313-1314,1322,1328,1392-1393,1401-1402,1410-1411,1419,1472-1473,1481,1533-1534,1542,1608-1609,1617,1653,1726-1727,1735,1741,1778-1779,1787-1788,1796,1861-1862,1870-1871,1879-1880,1888,1954-1955,1963,1993,1999,2032,2041-2042,2050,2193-2194,2202-2203,2211-2212,2220,2256,2292,2309
+packages/api/src/router/custom-widget/preview-sessions.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-111
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_unsaved-changes-guard.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-42
+packages/request-handler/src/smart-home-entity-state.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-24
+apps/docs/docs/getting-started/installation/helm.md
+  s_093d61b162b9ca::t_6e7360066120b5 267-268,383-490
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,7,15,79-84,90-95,99,106,110,123,127,136,142,153,157,159,163-164,172,175-176,186,190,192,196,205,208-209,219,237-238,249,251,275,292,306-307,322,336-337,352,359-362,493
+packages/db/proxy-reader.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-173
+packages/custom-widgets/src/workbench/code-editor-toolbar.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-139
+apps/nextjs/src/components/custom-widgets/custom-widget-import-dialog.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-150
+apps/docs/src/components/workshop/WorkshopDetailRoutePage.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1
+apps/nextjs/src/components/board/items/item-content.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 13-26
+apps/docs/src/pages/workshop/index.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-26
+packages/custom-widgets/src/core/request-schema.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-242
+packages/widgets/src/weather/component.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-36
+apps/nextjs/src/app/[locale]/widgets/[kind]/page.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3,6,15-16,22-24
+packages/db/queries/widget-placement.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 33,39-40,42-43,48,54-76,90,94-96,100,118,130,150
+packages/db/schema/mysql.ts
+  s_093d61b162b9ca::t_8d5a5f991bd636 542
+  s_093d61b162b9ca::t_841d188d8e3eb5 38,45,212-213,345-346,348,574-624,629-632,640,642,644,652,654,657,974-988
+apps/nextjs/src/components/board/layout/semantics.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-56
+apps/nextjs/src/components/board/sections/grid/dnd/targeting.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-90
+packages/api/src/router/test/widgets/timetable.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-381
+packages/widgets/src/common/locale.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,5,7,9-16,19-21,24-26,28-32,34-37
+apps/docs/docs/advanced/proxy/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 12-13,16,22,32,34,58,61,63,144,147,154
+apps/docs/docs/management/backup.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 27-30,32
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_code-editor.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-48
+apps/nextjs/src/components/workshop/workshop-css-import-button.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-28
+apps/nextjs/src/app/api/custom-widgets/configuration-request/body.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-36
+packages/api/package.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 12,14-15,22-23,38,52,66
+apps/nextjs/src/components/assistant/assistant-widget-tool.tsx
+  s_093d61b162b9ca::t_1ed836bf97b69c 216
+apps/docs/src/components/ui/toggle-group.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-87
+packages/api/src/router/custom-widget/preview-action-procedures.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-92
+apps/docs/docs/management/custom-widgets/agent-authoring.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-104
+packages/custom-widgets/src/jsx/runtime-component-policy.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-28
+apps/docs/docs/widgets/health-monitoring/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8,67
+  s_093d61b162b9ca::t_0dde6445df6d84 68
+apps/nextjs/src/components/board/advanced-focus/wheel.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-26
+apps/docs/docs/integrations/glances/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-13,15,18,20-27,31,35-43
+apps/docs/docs/widgets/media-transcoding/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-17,19,21,26-28,38-46,53
+apps/nextjs/src/components/board/items/item-actions.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,35,37,81-82,84,88-89,91
+packages/custom-widgets/src/core/component-props.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-54
+apps/nextjs/src/instrumentation.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-125
+apps/docs/package.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 24,30,32-33,37,40,42-43,46-47,49-50,56,58-60,62
+packages/db/test/schema.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-option-fields.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-196
+apps/docs/src/components/ui/command.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-151
+apps/nextjs/src/app/[locale]/_client-providers/development-tools.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-120
+apps/docs/docs/management/custom-widgets/component-reference.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-13
+apps/nextjs/src/app/[locale]/manage/custom-widgets/preview/[id]/page.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-66
+packages/widgets/src/common/application-url.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-30
+apps/nextjs/src/components/board/sections/grid/grid-editor-runtime.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-17
+apps/workshop/Dockerfile
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-42
+packages/db/proxy/mysql.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-11
+packages/api/src/server-settings-server.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-8
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 22,25,27,30,37,43-46,48,51-82,84-93,95-121
+apps/docs/src/components/workshop/useWorkshop.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-284
+apps/nextjs/src/components/layout/viewport-hint.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-28
+apps/nextjs/src/components/layout/constants.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1
+apps/docs/components.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-24
+apps/docs/docs/widgets/calendar/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-12,14-25,34-36,38-43,48-72,77-80,87
+apps/docs/docs/integrations/jellyseerr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19,21-36,40,44-52
+packages/widgets/src/bazarr/layout.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-18
+apps/nextjs/src/components/board/advanced-focus/geometry.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-54
+packages/request-handler/src/test/update-checker-cache.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-244
+apps/docs/docs/integrations/nextcloud/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-17,20-21,24,28-43
+apps/nextjs/src/app/[locale]/boards/(content)/_integration-provider.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3,5-6,8-10,12-14
+packages/request-handler/src/timetable.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-216
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_reset-tours.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,13,23
+packages/api/src/settle-integrations.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,8-11,20,47-48,55-63
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-7,11,17,19-25,28-32,37-41,47-48,50-56,59-103,107,110-284,286-327,329-332,334-366,368,371,397-400,403,407,409,413,415,422,427-436,448-472
+  s_093d61b162b9ca::t_e4f839fc65d5bc 49
+packages/api/src/router/widgets/media-organizer.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 7,22-24,29,31,33-45
+packages/db/proxy-reader.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-128
+apps/docs/docs/integrations/ntfy/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-11,13,15,18,20-24,28,32-44
+apps/docs/docs/widgets/audio-stats/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8,41
+  s_093d61b162b9ca::t_b6d7242af7c1ac 42
+apps/nextjs/src/components/board/layout/test/scaled-board-canvas.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-60
+apps/docs/docs/advanced/keyboard-shortcuts/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 9-16,22-23
+  s_093d61b162b9ca::t_318176972c92aa 24
+apps/nextjs/src/components/manage/unsaved-changes-bar.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3-4,6,8-9,12,16-23,25
+packages/widgets/src/media-releases/component.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-24
+apps/nextjs/src/components/board/layout/scaled-board-canvas.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-52
+apps/nextjs/src/components/board/advanced-focus/escape.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-72
+packages/api/src/router/custom-widget/transfer-procedures.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-141
+packages/widgets/src/catalog.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-36,38-59,61-112
+  s_093d61b162b9ca::t_4105b844b866b5 37,60
+apps/nextjs/src/app/[locale]/manage/custom-widgets/page.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,13-14,23,31-41
+packages/api/src/router/widgets/firewall.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 10,21,24-42,46-49
+apps/nextjs/src/components/board/sections/grid/section-grid-placements.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-49
+packages/widgets/src/custom-api/jsx-icon-adapter.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-248
+apps/nextjs/src/components/workshop/workshop-client.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-14
+packages/api/src/router/test/widgets/partial-integration-failures.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-284
+packages/spotlight/src/index.ts
+  s_093d61b162b9ca::t_872e0ced5e9f6e 3,6,13
+packages/api/src/router/custom-widget/stored-definition.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3-5,7-10,12-15,17-19,21-31,33-44,46-52,54-58,60,62-65
+apps/docs/src/components/ui/spinner.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16
+packages/boards/src/layout-selection.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-21
+packages/api/src/router/test/widgets/options.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-107
+packages/custom-widgets/scripts/ai-evaluation.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-304
+packages/custom-widgets/src/workbench/preview-utils.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-79
+apps/nextjs/src/components/onboarding/board-tour.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,13,21-22,25,95-99
+packages/custom-widgets/scripts/verify-reference-apis.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-138
+apps/docs/docs/widgets/uptime-kuma/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-14,16,22-31,38
+packages/custom-widgets/src/core/component-catalog-types.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-62
+.github/ISSUE_TEMPLATE/bug_report.yml
+  s_093d61b162b9ca::t_841d188d8e3eb5 36
+apps/nextjs/src/components/board/advanced-focus/geometry.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-54
+apps/docs/docs/integrations/kubernetes/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-9,11,13,46
+packages/custom-widgets/src/server/request-limits.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-161
+apps/docs/docs/integrations/open-media-vault/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-17,20,22-30,34,38-52
+packages/api/src/router/test/section.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-90
+scripts/benchmarks/dev-benchmark-lib.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-56
+scripts/check-custom-widget-bundle.mjs
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-96
+packages/api/src/router/test/widgets/custom-api-v2.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-204
+apps/nextjs/src/env.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,4-17,24-26
+packages/custom-widgets/src/workbench/response-tree.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-123
+packages/custom-widgets/src/test/reference-widgets.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-44
+.github/workflows/ci.yml
+  s_093d61b162b9ca::t_841d188d8e3eb5 11,37-40,87,92-102,118-119,202,209-268,270-307,309,316-322,324-344,346-348,350-360
+.dockerignore
+  s_093d61b162b9ca::t_841d188d8e3eb5 20-21
+packages/custom-widgets/src/jsx/analyzer.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-321
+apps/docs/docs/integrations/pi-hole/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-15,17,19-20,24,26-33,37,41-54
+apps/docs/docs/widgets/bookmarks/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-12,14,18,22-25,30,35,38,45
+packages/api/src/user-server.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-24
+apps/docs/docs/widgets/paperless-ngx/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-14,16,22-31,38
+e2e/lldap.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 40-44,46-51,53-60,63-75,77-81
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-data.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-51
+packages/api/src/router/board/custom-widget-placement-access.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3,5-9,11-14,17-20,23-85
+packages/custom-widgets/src/core/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-9
+packages/custom-widgets/src/server/response.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-65
+apps/docs/src/components/ui/dropdown-menu.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-252
+apps/docs/docs/widgets/notebook/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8,29-30,41
+apps/nextjs/src/components/workshop/workshop-publish-modal.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-170
+packages/api/src/router/custom-widget/metadata-procedures.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-52
+packages/api/src/router/test/custom-widget/preview-options.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-49
+packages/validation/src/board-layout.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-42
+packages/widgets/src/firewall/bandwidth.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-39
+apps/docs/src/components/ui/aspect-ratio.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-18
+packages/api/src/router/custom-widget/secret-policy.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-41
+apps/docs/docs/advanced/icons/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 12,14-21,35
+packages/widgets/src/downloads/helpers.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-15
+apps/nextjs/src/components/board/sections/test/use-open-section-apps.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-78
+packages/redis/src/lib/channel.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-21
+apps/docs/src/components/ui/message.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-75
+packages/widgets/src/system-disks/display.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-14
+apps/nextjs/src/components/board/sections/grid/use-grid-layout-actions.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,7,9-12,15-18,21-26,29-35,37-51,53-61,63-81,83-91,93-99,104-106,108,111
+apps/docs/src/components/custom-jsx-component-reference.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-497
+packages/custom-widgets/src/workbench/import-review.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-130
+packages/integrations/src/overseerr/overseerr-integration.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-39
+packages/custom-widgets/src/workbench/preview-diagnostics-panel.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-73
+apps/workshop/entrypoint.sh
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16
+packages/api/src/router/custom-widget/workshop-procedures.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-181
+apps/nextjs/src/app/[locale]/manage/settings/_components/settings-form.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-5,8-11,13,16-63,66-154,156,159-162,164-166,171-189
+apps/docs/docs/integrations/nzbget/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19,21-25,29,33-41
+apps/docs/src/lib/pocketbase.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-21
+apps/docs/docs/management/users/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 23,25-26,40-41,45,47,52,57,64,81,89,98,102,109-110,114,116,118,122,127,131,135,142,146,150,154,164,180-184,190,194,203,214,219,222,230
+apps/nextjs/src/components/board/layout/test/board-lanes.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3,5,8-25,27-41,43-47,49-50,52-56,58-73,77-85,89-97,101-113
+apps/docs/docusaurus.config.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,7-15,19,25-27,128-133,139,145,151,250-254,256-262,299-314,345-403
+  s_093d61b162b9ca::t_90b4d51466f6a3 404-405
+apps/docs/docs/management/custom-widgets/requests-and-security.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-53
+packages/api/src/router/test/custom-widget/stored-definition.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-48
+packages/custom-widgets/src/styles.d.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-4
+packages/api/src/router/custom-widget/template-procedures.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-151
+apps/docs/docs/widgets/rss-feed/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-12,14,20,24-25,31,34-35,37,39,53
+packages/boards/package.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 16
+apps/tasks/src/main.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 8
+packages/db/migrations/sqlite/meta/0039_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 91,100-101,108,146-147,239-240,248-249,256,294-295,303-304,311,467,476-477,640-641,688-689,696,727-728,736-737,744,775-776,834,843-844,852-853,861-862,940-941,981-982,990-991,998,1029-1030,1038-1039,1046,1088,1093,1102-1103,1110,1148-1149,1157-1158,1165,1214,1223-1224,1268,1277-1278,1346-1347,1355-1356,1364-1365,1372,1426-1427,1482-1483,1552-1553,1657,1666-1667,1708-1709,1717-1718,1725,1791-1792,1800-1801,1809-1810,1817,1884-1885,1916,1953,1962-1963,2001,2145-2146,2154-2155,2163-2164,2202
+packages/db/test/sqlite-migration.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-164
+apps/docs/docs/integrations/deluge/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19,21-25,29,33-41
+packages/api/src/router/custom-widget/request-manifest.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-43
+packages/widgets/src/notebook/read-only-task-item.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-96
+packages/custom-widgets/src/workbench/preview-header.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-83
+packages/custom-widgets/src/runtime/types.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-101
+apps/workshop/Dockerfile.dockerignore
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-7
+packages/db/migrations/mysql/0045_shiny_sir_ram.sql
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2
+apps/docs/docs/advanced/command-line/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,15-18
+apps/docs/src/components/ui/radio-group.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-27
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_danger.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,13,85-86,89-93,95-104,106,109-113,115
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-128
+apps/docs/docs/getting-started/installation/home-assistant.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 17
+apps/docs/docs/integrations/bazarr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-12,14,20-21,25-27,37-38,41,45,48-58
+packages/widgets/src/common/action-target.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-11
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_json-preview-editor.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-35
+packages/boards/src/layout-selection.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-28
+apps/docs/docs/integrations/radarr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-13,15,18-19,22,26-34
+packages/workshop/src/schema.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-131
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 8,25,51-52,55,63,65,73
+apps/docs/src/components/custom-jsx-component-reference.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-451
+apps/nextjs/src/components/board/items/item-move-modal.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,5-6,8-9,11-16,18-36,38,41-54,56-87,90-94,98-102,106,109-118,120-150,152,154-165,171-178,182,184,190-195,200-202,208-217,230-363
+apps/docs/docs/widgets/network-controller-status/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-17,19,25-26,33-41,48
+apps/nextjs/src/app/[locale]/widgets/[kind]/layout.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,9-13
+packages/definitions/src/board.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 11,16-56
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_093d61b162b9ca::t_363ad712337cf6 62-63
+  s_093d61b162b9ca::t_872e0ced5e9f6e 11,22,36,38,45,49,51,60,102,131,135,140-167
+apps/docs/src/components/ui/drawer.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-209
+packages/api/src/router/custom-widget/legacy-migration.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-72
+packages/db/migrations/postgresql/meta/0013_snapshot.json
+  s_093d61b162b9ca::t_31eaa844ef34f6 2,320
+  s_093d61b162b9ca::t_1c3eb8f35ae231 1,3-99,102-108,110-145,148-319,321-357,360-440,443-481,484-490,493-499,501-536,539-545,548-554,556-696,699-707,709-832,835-885,888-894,896-925,928-934,937-943,945-974,977-1033,1036-1042,1045-1051,1054-1062,1064-1135,1138-1176,1179-1185,1188-1194,1196-1225,1228-1234,1237-1243,1245-1317,1320-1326,1328-1363,1366-1372,1375-1381,1383-1446,1449-1493,1496-1504,1506-1564,1567-1573,1576-1582,1585-1591,1593-1642,1645-1717,1720-1837,1840-1884,1887-1893,1895-1955,1958-2058,2061-2069,2071-2106,2109-2115,2118-2124,2126-2185,2188-2194,2197-2203,2206-2212,2214-2274,2277-2311,2313-2363,2366-2403,2405-2539,2542-2548,2551-2557,2560-2597,2599-2640,2643-2649,2651-2669
+  s_093d61b162b9ca::t_d86d1914c85a4e 100-101,109,146-147,358-359,441-442,482-483,491-492,500,537-538,546-547,555,697-698,708,833-834,886-887,895,926-927,935-936,944,975-976,1034-1035,1043-1044,1052-1053,1063,1136-1137,1177-1178,1186-1187,1195,1226-1227,1235-1236,1244,1318-1319,1327,1364-1365,1373-1374,1382,1447-1448,1494-1495,1505,1565-1566,1574-1575,1583-1584,1592,1643-1644,1718-1719,1838-1839,1885-1886,1894,1956-1957,2059-2060,2070,2107-2108,2116-2117,2125,2186-2187,2195-2196,2204-2205,2213,2275-2276,2312,2364-2365,2404,2540-2541,2549-2550,2558-2559,2598,2641-2642,2650,2670
+apps/docs/docs/advanced/running-as-different-user/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 11,35-37,39,79-81,83,93
+packages/widgets/src/smart-home/layout.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-14
+packages/integrations/src/audiobookshelf/audiobookshelf-integration.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 57,79-86
+packages/db/migrations/postgresql/meta/0010_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,100-101,109,146-147,236-237,245-246,254,291-292,300-301,309,451-452,462,501-502,529-530,535-536,539,541-543,545,547-548,551,583-585,587-588,599-600,603-608,615-616,633-641,647-649,680-681,689-690,698,729-730,788-789,797-798,806-807,817,890-891,931-932,940-941,949,980-981,989-990,998,1072-1073,1081,1118-1119,1127-1128,1136,1201-1202,1248-1249,1259,1319-1320,1328-1329,1337-1338,1346,1397-1398,1451-1452,1463-1634,1689-1690,1792-1793,1803,1840-1841,1849-1850,1858,1919-1920,1928-1929,1937-1938,1946,2008-2009,2045,2097-2098,2137,2273-2274,2282-2283,2291-2292,2331,2374-2375,2383
+apps/workshop/test.sh
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-61
+apps/docs/docs/integrations/prowlarr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-13,15,18-19,22,26-34
+packages/custom-widgets/src/server/errors.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-28
+apps/workshop/pb_hooks/workshop.pb.js
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-244
+packages/widgets/src/downloads/helpers.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-19
+packages/common/src/bounded-response.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-45
+apps/docs/docs/widgets/vpn/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-15,25,33-41
+apps/nextjs/src/components/layout/header/tour-target.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,7-22,24-41
+apps/nextjs/src/components/board/sections/container/actions/add-container.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,6-7,11,13-16,21,24-28,32,36,42-46,49,52,55
+apps/docs/src/components/ui/context-menu.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-235
+apps/nextjs/src/components/user-avatar-menu.tsx
+  s_093d61b162b9ca::t_e4f839fc65d5bc 4-5
+  s_093d61b162b9ca::t_841d188d8e3eb5 19,32,34-35,44-50,59,63-64,68,70
+apps/nextjs/src/app/[locale]/manage/settings/loading.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-9
+packages/api/src/router/test/custom-widget/request-limits.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3,5,7-11,14-20,22-30
+packages/widgets/src/trpc-query-key.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-12
+apps/docs/src/components/ui/marker.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-68
+apps/nextjs/src/app/[locale]/_client-providers/session-query-scope.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-39
+apps/nextjs/src/components/board/sections/container-section.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-3,6-8,10-13,16-20,22,25,27-29,31-42,45,47-51,54,65-120,123-125,127-128,130-140,145-170,172
+packages/custom-widgets/src/runtime/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-12
+apps/nextjs/src/app/[locale]/boards/[name]/settings/page.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,12,36,56,59-64
+apps/docs/src/components/ui/dialog.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-134
+apps/nextjs/src/theme/color-scheme.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,15-16
+packages/custom-widgets/src/core/source-setup.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-96
+packages/boards/src/edit-mode.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,9-15
+packages/custom-widgets/src/jsx/interpreter-method-context.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-6
+.github/workflows/bot-auto-merge-reconcile.yml
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-43
+apps/docs/docs/widgets/video/index.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 8
+packages/db/migrations/custom/0004_unify_sections_and_gutters.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-541
+packages/api/src/router/section/section-router.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-8,22,37-52
+  s_093d61b162b9ca::t_ee869f732e53f9 53
+apps/nextjs/src/components/board/advanced-focus/manual-surface.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-101
+apps/docs/src/components/ui/collapsible.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-15
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-6,9,15,24,30,32-50,55,64,69-70,73,83-84,87-90,92-99,107,110,125-156,159,161-188,190,193-213,215-226,229,234-238,241-243,245,251-255,270,283-286,289,315,320,324
+packages/custom-widgets/src/jsx/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-8
+apps/docs/docs/getting-started/installation/unraid.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,17,20,26-27
+apps/docs/docs/integrations/paperless-ngx/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-12,14,19-20,23,27-40
+packages/api/src/router/widgets/notifications.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 6,16-20,22-46
+packages/custom-widgets/src/server/request-executor.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-294
+packages/api/src/router/test/custom-widget/legacy-migration.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-72
+packages/db/migrations/postgresql/0013_condemned_speedball.sql
+  s_093d61b162b9ca::t_31eaa844ef34f6 4,19,35
+apps/docs/docs/integrations/overseerr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19,21-36,40,44-52
+apps/docs/docs/community/license.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 10
+packages/custom-widgets/src/server/auth.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-45
+packages/widgets/src/media-transcoding/layout.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-52
+apps/docs/docs/management/media/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 10,14
+.github/workflows/workshop.yml
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-63
+apps/docs/docs/widgets/beszel-alerts/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-14,16-18,28-37,44
+e2e/home.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 10-12,14-18
+packages/api/src/router/test/widgets/immich.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-76
+apps/nextjs/src/components/board/sections/grid/test/grid-portal-host.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-104
+packages/db/migrations/postgresql/meta/_journal.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 78-79,85-94
+  s_093d61b162b9ca::t_d86d1914c85a4e 104
+  s_093d61b162b9ca::t_31eaa844ef34f6 95-100
+packages/custom-widgets/src/runtime/status.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-15
+apps/docs/docs/integrations/proxmox/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-15,17,20-21,24,28-39,46-52,56-63,67-72,77-83,85-92,94,97,100,102-107
+apps/docs/src/components/widgets/interactions.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-62
+packages/widgets/src/_inputs/widget-custom-widget-select-input.spec.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-169
+packages/api/src/router/widgets/media-requests.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,6,15,18-23,36-55,60,73-78,90-111,113,124-126,153
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-dependencies.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-21
+packages/custom-widgets/src/test/runtime.spec.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-503
+apps/docs/static/api/open-api-schema.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-4732
+apps/nextjs/src/components/manage/danger-zone.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,6,12-13,18
+apps/docs/src/components/ui/tooltip.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-52
+packages/db/migrations/postgresql/0010_custom_widget_v2_tables.sql
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-25
+packages/api/src/router/widgets/smart-home.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,6-9,32-47,62-65,79-83
+packages/api/src/router/custom-widget/definition-insert.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,4-6,8,10,12-24,27-43
+apps/docs/docs/integrations/emby/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19-20,23,27-35
+packages/custom-widgets/src/test/component-registry.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-280
+apps/nextjs/src/components/board/items/actions/move-item-to-section.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,14,24
+CHANGELOG.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-identifier-input.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-48
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-save-issues-alert.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-37
+apps/docs/docs/integrations/aria2/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-12,14,17,19-23,27,31-43
+packages/db/migrations/mysql/meta/0041_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 91,100-101,109,146-147,155,212,249-250,258-259,267,304-305,313-314,322,480-481,489,495,531,659-660,668,712-713,721,751-752,760-761,769,799-800,861-862,870-871,879-880,888,894,922,973-974,982,1019-1020,1028-1029,1037,1067-1068,1076-1077,1085,1126,1131,1140-1141,1149,1186-1187,1195-1196,1204,1252,1261-1262,1270,1314-1315,1323,1329,1393-1394,1402-1403,1411-1412,1420,1473-1474,1482,1534-1535,1543,1609-1610,1618,1654,1727-1728,1736,1742,1779-1780,1788-1789,1797,1862-1863,1871-1872,1880-1881,1889,1955-1956,1964,1994,2000,2033,2042-2043,2051,2194-2195,2203-2204,2212-2213,2221,2257,2293
+packages/widgets/src/calendar/calendar-events.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-80
+packages/widgets/src/common/query-state-indicator.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-45
+apps/docs/src/components/custom-widget-code-client.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-114
+packages/api/src/router/test/custom-widget/workshop-error-privacy.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-113
+packages/custom-widgets/src/jsx/safe-bindings.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16
+packages/translation/src/lang/en.json
+  s_093d61b162b9ca::t_c2e3e6b106b9c4 1151-1156,1961-1966,1976,2011,2018,2307,5246-5286,5777-5778,6023-6092,7148,7217-7219
+  s_093d61b162b9ca::t_1509d7fc5471d7 391-403,705-728,733-740,753,764-777,827-1136,1138-1150,1157-1198,1292-1354,1489-1490,1973,1986,1990,1994,2004,2012-2017,2308,2310-2322,2324-2326,2328-2342,2344-2345,2347-2348,2350-2353,2430,2440-2445,2451-2458,2462-2472,2474-2476,2522-2526,2631-2650,2685-2690,2715-2716,2810-2811,2817-2824,2897-2899,2927-2937,2996-3014,3030-3040,3143-3149,3210-3221,3409-3410,3414-3429,3436-3442,3469-3475,3746-3752,4011-4012,4036-4045,4420-4426,4557-4559,4565-4571,4649-4658,4708-4712,4753-4757,4790-4805,4931-4952,4955,4963-4985,5188-5190,5238-5245,5301-5303,5319-5321,5330-5333,5404-5409,5541,5545-5578,5698-5717,5744,7146-7147
+  s_093d61b162b9ca::t_74dda23143eb8f 1137
+  s_093d61b162b9ca::t_281562e9d5db72 1967-1972,1974-1975,1977-1985,1987-1989,1991-1993,1995-2003,2007-2010,2309
+packages/custom-widgets/src/core/bundled-widgets.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-140
+packages/auth/callbacks.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 6,16-17,40-48,57
+apps/nextjs/next.config.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,18-28,30-32,49-50,53-56,82-85
+apps/docs/src/components/workshop/ScreenshotEditor.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-125
+packages/db/migrations/mysql/0046_long_proteus.sql
+  s_093d61b162b9ca::t_841d188d8e3eb5 1
+packages/custom-widgets/src/core/definition-schemas.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-13
+apps/nextjs/src/app/[locale]/manage/workshop/page.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-42
+packages/db/schema/sqlite.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 6,24,31,196-197,328-329,331,563-617,622-625,637,639,641,645,649,651-655,971-985
+  s_093d61b162b9ca::t_8d5a5f991bd636 529
+packages/custom-widgets/src/workbench/code-language.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-104
+packages/widgets/src/network-controller/network-status/layout.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-49
+apps/docs/docs/integrations/slskd/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-12,14,17,19-23,27,31-39
+packages/api/src/router/widgets/immich.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 37-48
+packages/widgets/src/media-missing/tabs.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-18
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-96
+packages/widgets/src/immich/albums-query.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3-6,8-30,32,34-38,40-42,44,46-50,52-66,68-86,88-92,94-95,97,99-104
+apps/docs/src/components/ui/direction.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-rename-handlers.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-38
+apps/docs/docs/widgets/iframe/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-12,14,23-24,31-32,42,45,48-49,54,60,71,80,82,88-89,92,98,103
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-dependencies.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-27
+packages/custom-widgets/src/server/request-manifest.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-107
+packages/custom-widgets/src/test/ai-evaluation.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-108
+scripts/benchmarks/benchmark-pair-lib.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-360
+packages/api/src/trpc.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 16,18,40-47,60
+apps/docs/docs/widgets/firewall/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-15,17,25-33
+apps/nextjs/src/components/board/items/item-select-data.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-28
+packages/custom-widgets/src/core/tabler-icons.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-105
+packages/custom-widgets/src/jsx/jsx-emitter.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-87
+apps/nextjs/src/components/board/items/actions/empty-position.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 10
+packages/common/src/server.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 5
+apps/workshop/pb_hooks/report-email.html
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-53
+packages/db/migrations/mysql/meta/_journal.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 316-317,323-332
+  s_093d61b162b9ca::t_31eaa844ef34f6 333-338
+packages/custom-widgets/src/jsx/analyzer-diagnostics.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-27
+apps/nextjs/src/app/api/mcp/[transport]/route.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 6-14,21-27,88-93,121-134,205-307,309,314,324-325,333,349-351,361,438-440
+packages/db/proxy/sqlite.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-11
+apps/docs/src/components/ui/item.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-179
+e2e/board-grid.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2099
+packages/db/migrations/sqlite/0043_numerous_forgotten_one.sql
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2
+packages/workshop/src/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2
+apps/nextjs/src/app/[locale]/custom-widget-configuration/[token]/configuration-entry.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-3,5-7,9-11,13,15,17,19,21-30,33-41,43-54,56-74,76-147
+apps/nextjs/src/components/board/items/actions/section-elements.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4-5,17
+packages/widgets/src/bookmarks/layout.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-33
+scripts/benchmarks/docker-build-lib.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4-21,23-40,42-61,64-71,74-77,79-82,85-100,103-109,112-123,125-135,138-142,144-146,149-157,159-175,177-179,182-197,200-222
+pnpm-workspace.yaml
+  s_093d61b162b9ca::t_708a7d31f8e74b 6-15,21-22,24,26,31,52,61,105,108,119-120,128,136,138,147,154,171,174,184,190-191,195,205,219-220,222,224,239
+  s_093d61b162b9ca::t_102064a5556e9d 250-253
+apps/docs/src/components/ui/combobox.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-261
+apps/docs/docs/widgets/dns-hole-summary/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7,9-16,18,20,24-29,31,33,41-55,62
+.github/workflows/bot-pr-automerge.yml
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,5,10,12,16,18-21,25,32,36-37,41-47
+apps/nextjs/src/components/board/sections/grid/grid-depth.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-14
+apps/nextjs/src/components/layout/header/tour-target.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-71
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-sources-editor.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-199
+apps/docs/docs/integrations/immich/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-13,15,18-19,22,26,55-56
+  s_093d61b162b9ca::t_6e7360066120b5 51
+packages/db/migrations/sqlite/meta/0042_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,91,100-101,108,146-147,239-240,248-249,256,294-295,303-304,311,467,476-477,518-519,549-550,556-557,563-564,570-571,575,611-613,615-616,625-626,628-634,642-643,666-671,677-679,709-710,718-719,726,757-758,816,825-826,834-835,843-844,922-923,963-964,972-973,980,1011-1012,1020-1021,1028,1070,1075,1084-1085,1092,1130-1131,1139-1140,1147,1196,1205-1206,1250,1259-1260,1328-1329,1337-1338,1346-1347,1354,1408-1409,1464-1465,1474-1658,1719-1720,1824,1833-1834,1875-1876,1884-1885,1892,1958-1959,1967-1968,1976-1977,1984,2051-2052,2083,2120,2129-2130,2168,2320-2321,2329-2330,2338-2339,2377,2422-2423,2430
+apps/docs/src/components/ui/bubble.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-118
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-utils.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-115
+e2e/custom-widgets-custom-jsx-v2.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-97
+packages/widgets/src/health-monitoring/integration-selection.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-12
+apps/nextjs/src/components/board/sections/grid/test/grid-import-boundary.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-89
+apps/docs/src/components/workshop/workshop-utils.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-25
+apps/nextjs/src/app/[locale]/manage/settings/_components/analytics.settings.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,6-8,11,14,18-20
+apps/nextjs/src/components/board/items/actions/test/duplicate-item.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,10-13,68-88,91
+  s_093d61b162b9ca::t_52103f7dcd72da 89-90
+apps/docs/docs/getting-started/installation/portainer.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,4,28,32,35,47-48
+apps/nextjs/src/components/layout/header/lazy-spotlight.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-89
+packages/widgets/src/stocks/component.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-53
+apps/docs/docs/widgets/ups/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-16,24-26,30-34,38-46,53
+packages/custom-widgets/src/jsx/interpreter-callbacks.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-50
+packages/api/src/router/custom-widget/secret-persistence.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-289
+packages/custom-widgets/src/test/workbench-ui.spec.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-157
+.impeccable/critique/2026-07-22T15-58-15Z__apps-docs-src-components-workshop.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-106
+apps/docs/docs/integrations/unifi-controller/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,22,24,28,32-40
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-121
+packages/widgets/src/common/query-state-indicator.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-72
+apps/docs/docs/integrations/jellyfin/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19-20,23,27-39
+packages/integrations/src/traefik/traefik-bounds.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-12
+apps/nextjs/src/app/[locale]/boards/(content)/_client.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-22
+apps/docs/docs/widgets/coolify/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-16,22-30,42-44,46
+apps/docs/docs/widgets/beszel-system-stats/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8,37
+  s_093d61b162b9ca::t_d32b79d1b074ff 38
+packages/workshop/src/client.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-273
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 17-19,21,28,34,38,52-53,63,89-90,94-102,112-115,117-123,127,175-176,182
+  s_093d61b162b9ca::t_e3179594865963 103-111,116
+apps/nextjs/src/proxy.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4-7,11-40,47-48,59-62
+apps/docs/docs/widgets/anchor-note/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-14,16,22,28-34,38,42
+  s_093d61b162b9ca::t_bef79fcdca78b1 43
+apps/nextjs/src/app/[locale]/manage/settings/page.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 9,29,35
+.env.example
+  s_093d61b162b9ca::t_841d188d8e3eb5 64-84,90
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-source-field.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,6-7,10-32,34-39,42-56,59,61-73,75-105,107-112,114-150,153
+packages/custom-widgets/src/server/preview-sessions.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-258
+apps/docs/src/components/ui/skeleton.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-7
+apps/docs/src/components/workshop/workshop-utils.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-27
+packages/custom-widgets/src/test/options.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-104
+apps/nextjs/src/components/board/sections/use-section-items.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,7,14
+apps/nextjs/src/app/[locale]/init/page.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,32-38,41
+packages/definitions/package.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 16
+apps/docs/src/components/ui/progress.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-59
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-5,8-24,26-27,29-64,66-72,75-86,88-120,122-153,156-166,168-171,173-174,176-196,201-262
+apps/nextjs/src/components/onboarding/manage-tour-gate.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-12
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-action.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-86
+packages/widgets/src/common/integration-error-indicator.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,6-7,14-15,18-20,22-24,27-29
+apps/docs/src/components/ui/badge.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-3,5-46,49
+package.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,7-11,14-16,32,36-37,51,60,81
+  s_093d61b162b9ca::t_f580310657d096 48
+apps/docs/docs/advanced/command-line/fix-usernames/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 17
+packages/custom-widgets/package.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-73
+apps/nextjs/src/components/board/sections/content.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,8-9,14,16,30,37,41,45,47-48,53,55,61-63
+apps/workshop/tests/workshop-identity.mjs
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-63
+apps/docs/docs/integrations/adguard-home/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19,21-28,32,36-44
+packages/workshop/src/schema.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-243
+apps/docs/src/components/ui/separator.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-19
+apps/docs/docs/widgets/indexer-manager/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-13,15,19-21,23,30-36,42-43,50
+packages/custom-widgets/src/core/component-catalog.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-53
+packages/custom-widgets/src/core/component-registry.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-78
+packages/api/src/query-cache.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-5,7-8,10-11,13-15,18-51,61,65
+apps/docs/docs/integrations/navidrome/index.mdx
+  s_093d61b162b9ca::t_6e7360066120b5 7-13,15,20-21
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,24,28-39
+packages/api/src/router/widgets/custom-api.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-14,16-27,29-40,42-43,45-66,68-75,77-92,94-96,98-108,110-115,117-121,123-124,126-142,144-161,163-164,166-190,192-230,232-254,256-263,265-292
+packages/custom-widgets/src/jsx/analyzer-ast.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-72
+apps/nextjs/src/app/[locale]/boards/_providers.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,4-8,10,12-16,19,21-24,26-31,34-38,40-41
+apps/docs/src/components/workshop/WorkshopAdmin.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-319
+packages/db/migrations/seed.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-97
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_unsaved-changes-guard.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-51
+packages/custom-widgets/src/workbench/code-editor-types.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-60
+apps/nextjs/src/components/onboarding/manage-tour.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,20,50,63,66,79,191-201
+apps/docs/docs/integrations/tracearr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-12,14,17-18,21,25-30,32-37
+packages/integrations/src/traefik/traefik-bounds.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-12
+apps/docs/src/components/ui/alert.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-40
+apps/nextjs/src/components/board/layout/reflow.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-207
+packages/common/src/grid-algorithm.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 28-37,40,45,49-58,80,83,86-87,98-99,101,108,119,121
+apps/docs/src/lib/workshop-schema.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-36
+apps/docs/src/components/ui/pagination.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-96
+apps/docs/src/components/ui/select.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-167
+packages/custom-widgets/src/jsx/interpreter-parser.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-50
+packages/custom-widgets/src/core/custom-jsx-schema.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-206
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-38
+apps/docs/src/pages/workshop/admin/index.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-14
+packages/custom-widgets/src/test/request-deadline.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-209
+packages/widgets/src/smart-home/entity-state/state.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16
+apps/docs/docs/integrations/uptime-kuma/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-12,14,19-20,23,27-34,36-39
+apps/nextjs/src/components/board/sections/grid/dnd/types.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-98
+packages/integrations/src/audiobookshelf/audiobookshelf-types.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 33-40
+apps/docs/docs/widgets/media-releases/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-16,18,24-25,34-48,55
+apps/nextjs/src/components/board/sections/empty-section.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,5,10-12,15,19-21,24,26-29
+packages/custom-widgets/src/jsx/regex-policy.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-144
+packages/custom-widgets/src/workbench/code-editor.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-274
+apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-6,8-22,24-68
+scripts/benchmarks/board-static-graph.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-37
+apps/docs/src/components/ui/switch.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-30
+packages/widgets/src/smart-home/entity-state/state.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-11
+packages/custom-widgets/src/jsx/collection-methods.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-205
+apps/docs/docs/widgets/custom-api/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-11,13,15,17,19-21,27-32,35,37-59
+packages/api/src/test/settle-integrations.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3,22-23,25-35,51,53-58,68-88
+apps/nextjs/src/app/[locale]/manage/settings/_components/appearance-settings-form.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 8,12-13,15-20,23-33,43
+packages/api/src/router/widgets/__tests__/custom-api-security.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-20
+apps/nextjs/src/components/board/items/actions/test/create-item.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,8,13-30,73,75,84,90,97-98,115-118,127,152-177
+  s_093d61b162b9ca::t_e4f839fc65d5bc 146,151
+apps/workshop/.env.example
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-12
+packages/widgets/src/_inputs/widget-dynamic-select-input.tsx
+  s_093d61b162b9ca::t_872e0ced5e9f6e 20-26,35,38,102
+apps/docs/docs/integrations/beszel/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-19,28,30-35,39,43-54
+apps/nextjs/src/components/board/layout/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-6
+packages/db/migrations/sqlite/meta/0038_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 91,100-101,108,146-147,239-240,248-249,256,294-295,303-304,311,467,476-477,639-640,687-688,695,726-727,735-736,743,774-775,833,842-843,851-852,860-861,939-940,980-981,989-990,997,1028-1029,1037-1038,1045,1087,1092,1101-1102,1109,1147-1148,1156-1157,1164,1213,1222-1223,1267,1276-1277,1345-1346,1354-1355,1363-1364,1371,1425-1426,1481-1482,1551-1552,1656,1665-1666,1707-1708,1716-1717,1724,1790-1791,1799-1800,1808-1809,1816,1883-1884,1915,1952,1961-1962,2000,2144-2145,2153-2154,2162-2163,2201,2219
+apps/docs/docs/advanced/development/getting-started.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 11,15-16,22-128
+packages/common/src/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 14
+apps/nextjs/src/components/board/sections/section-collapse.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-4,9,11,13-15,18-21,24-30,32-41,43-49,51-60,62-71,73,76,78-119,121-122
+e2e/shared/login.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-36
+apps/docs/docs/advanced/single-sign-on/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 13-14,21-27
+apps/docs/docs/integrations/q-bittorent/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19-20,23,27-39
+apps/docs/docs/integrations/dash-dot/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19,21-28,32-33
+apps/docs/docs/integrations/umami/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-12,14,17-18,21,25,28,31-52
+packages/widgets/src/media-missing/tabs.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-13
+packages/definitions/src/section.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3-33
+apps/docs/docs/community/donate.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 10,12,18,26,29
+packages/custom-widgets/src/core/catalog.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2
+packages/api/src/router/widgets/media-server.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 8,26-50
+apps/docs/src/components/ui/sidebar.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-673
+packages/api/src/router/custom-widget/custom-widget-access.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-45
+packages/request-handler/src/timetable-url.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-26
+packages/widgets/src/common/query-state.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-31
+packages/db/migrations/postgresql/meta/0007_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 100-101,109,146-147,236-237,245-246,254,291-292,300-301,309,451-452,462,609-610,656-657,665,696-697,705-706,714,745-746,804-805,813-814,822-823,833,906-907,947-948,956-957,965,996-997,1005-1006,1014,1088-1089,1097,1134-1135,1143-1144,1152,1217-1218,1264-1265,1275,1335-1336,1344-1345,1353-1354,1362,1413-1414,1467-1468,1533-1534,1636-1637,1647,1684-1685,1693-1694,1702,1763-1764,1772-1773,1781-1782,1790,1852-1853,1889,1941-1942,2074-2075,2083-2084,2092-2093,2132,2168
+packages/widgets/src/media-server/component.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-13
+packages/custom-widgets/src/runtime/data.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-90
+packages/custom-widgets/src/core/definition-security.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-220
+.gitignore
+  s_093d61b162b9ca::t_841d188d8e3eb5 19,75-79,86
+apps/docs/scripts/verify-algolia-search.mjs
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-4,8,11-15,21-26,28-29,39,48,55,63,70,81,87,97,107,126,128,132-133,136,142,146,148,151,154,157-158
+apps/nextjs/src/components/board/items/actions/test/move-item-to-section.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,25,55
+packages/widgets/src/iframe/component.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-34
+apps/docs/src/components/ui/button-group.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-78
+packages/widgets/src/custom-api/jsx-components.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-12
+packages/custom-widgets/src/core/authoring-resources.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-87
+packages/db/proxy-reader.integration.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-128
+packages/widgets/src/common/query-state.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-18
+packages/api/src/router/custom-widget/configuration-requests.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-106
+packages/widgets/src/tracearr/component.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-40
+packages/widgets/src/tracearr/bitrate.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-20
+apps/docs/src/components/custom-widget-code.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-82
+apps/nextjs/src/components/layout/header/update.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 11,15-16,21,28,31
+packages/widgets/src/uptime-kuma/aggregate.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-30
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-273
+packages/widgets/src/beszel/_shared/disk-usage.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-9
+apps/nextjs/src/components/layout/shell.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 8,27
+packages/api/src/router/widgets/releases.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 16,104-117,122,125-129,135
+e2e/board-advanced-interactions.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-505
+packages/common/src/url.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 51-85
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-3,6-7,10-19,22-31,34-38,41-42,45-47,49-50,53-55,58-62,65-67,70-76,79-82,85-88,91-96,99-102,105-110,113-118,121-125
+apps/docs/docs/integrations/synology/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 22
+e2e/shared/assertions/onboarding-assertions.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 60
+apps/docs/src/css/custom.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,7-8,11-79,96,98,101-168,177,182-228,262-312,314-344,361,375-388,413,457,465,480-569
+apps/nextjs/src/components/board/layout/board-lanes.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-94
+apps/nextjs/src/components/board/items/actions/test/mocks/container-section-mock.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,4,6-8,10-13,15-20,23,25-31,35-36
+apps/workshop/tests/workshop.integration.mjs
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-425
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_behavior.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,5,8-9,12,15,19-25
+Dockerfile
+  s_093d61b162b9ca::t_841d188d8e3eb5 6,8-10,13,15-17,31-33,35-37,48-50,98
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-12,14,18,29-36,43
+.agents/skills/homarr-custom-widget/references/runtime.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16
+apps/docs/src/components/ui/scroll-area.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-38
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-1038
+apps/nextjs/src/app/[locale]/manage/settings/_components/board-settings-form.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 6,10-11,13-17,22-50
+packages/translation/src/languages.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-46
+apps/docs/docs/getting-started/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 11-12,18,28-29,38,41
+apps/nextjs/src/components/board/sections/container/container-actions.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,6-8,10-12,15,18-19,22-23,26-28,34-36,41
+apps/docs/docs/widgets/timetable/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 14
+apps/nextjs/src/components/board/sections/section-context.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-5,8-9,11-14
+packages/db/migrations/mysql/meta/0045_snapshot.json
+  s_093d61b162b9ca::t_d86d1914c85a4e 91,100-101,109,146-147,155,212,249-250,258-259,267,304-305,313-314,322,480-481,489,495,531,634-635,643,694-695,703,733-734,742-743,751,781-782,843-844,852-853,861-862,870,876,904,955-956,964,1001-1002,1010-1011,1019,1049-1050,1058-1059,1067,1108,1113,1122-1123,1131,1168-1169,1177-1178,1186,1234,1243-1244,1252,1296-1297,1305,1311,1375-1376,1384-1385,1393-1394,1402,1455-1456,1464,1532-1533,1541,1669-1670,1678,1722-1723,1731,1797-1798,1806,1842,1915-1916,1924,1930,1967-1968,1976-1977,1985,2050-2051,2059-2060,2068-2069,2077,2143-2144,2152,2182,2188,2221,2230-2231,2239,2390-2391,2399-2400,2408-2409,2417,2453,2497-2498,2506,2542,2559
+  s_093d61b162b9ca::t_841d188d8e3eb5 4-5,537-538,568-569,575-577,582-583,587,589-590,594,630-632,641-642,649-650,652-658,666-667,690-693,701-702,1501-1516,1542-1668,1671-1677,1679-1721,1724-1730,2507-2541
+packages/widgets/src/weather/component.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-31
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-save-errors.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-64
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-requests-editor.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-232
+packages/custom-widgets/scripts/generate-component-metadata.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-732
+apps/docs/docs/widgets/video/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-12,14,30-31,37
+packages/old-import/src/prepare/prepare-sections.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-87
+apps/nextjs/src/app/[locale]/manage/custom-widgets/edit/[id]/page.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 11,23,32-52
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_use-custom-widget-form-actions.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-226
+packages/api/src/router/custom-widget/management-queries.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-209
+apps/docs/src/components/ui/breadcrumb.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-92
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-request-value-editors.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-228
+packages/custom-widgets/src/workbench/code-editor-diagnostics.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-41
+apps/docs/docs/integrations/sonarr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-13,15,18-19,22,26-34
+apps/nextjs/src/app/[locale]/manage/settings/_components/crawling-and-indexing.settings.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,5,8-10,13,16,20-33
+packages/translation/src/config.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16
+packages/custom-widgets/scripts/evaluate-ai-authoring.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-66
+apps/nextjs/src/components/board/sections/grid/dnd/coordinates.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-133
+apps/docs/src/hooks/use-mobile.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-19
+apps/docs/src/components/ui/resizable.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-42
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 57,115,122,140-141,189,192-197,201,206,210,222-223,227-229,233-238,241-243,254-257,329,331-333,335-338,340-343,345,347-350,352,354-358
+packages/custom-widgets/src/jsx/policy.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-121
+apps/nextjs/src/components/board/items/item-select-modal.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-20
+packages/db/migrations/custom/0004_unify_sections_and_gutters.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-168
+REVIEW.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-263
+apps/docs/docs/management/custom-widgets/troubleshooting.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-83
+apps/docs/docs/integrations/sabnzbd/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19-20,23,27-35
+apps/docs/docs/widgets/minecraft-server-status/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-16,18,24-25,27,29,32-33,39,45
+apps/docs/docs/getting-started/glossary.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-13
+apps/docs/docs/integrations/tdarr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-13,15,18-19,22,26-38
+apps/docs/docs/widgets/network-controller-summary/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-17,19,21,25,31-39
+.oxlintrc.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 33-41
+apps/nextjs/src/components/board/sections/grid/board-grid-editor-boundary.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,8-9,11,13-17,19-50,52-55
+scripts/benchmarks/docker-runtime.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-1656
+apps/nextjs/src/components/board/sections/grid/dnd/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-33
+apps/nextjs/src/components/board/items/widget-hover-overlay.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,10,22-32,34,44
+packages/db/migrations/sqlite/0042_custom_widget_v2_tables.sql
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-25
+apps/docs/docs/integrations/truenas/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-14,16,19-20,23,27-30,34-36,38-49,52-64,66-67
+apps/docs/src/components/ui/input.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-20
+packages/widgets/src/uptime-kuma/aggregate.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-55
+packages/widgets/src/umami/umami-layout.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-30
+apps/docs/src/components/workshop/WorkshopErrorBoundary.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-35
+packages/widgets/src/immich/server-stats/layout.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-15
+packages/custom-widgets/src/test/import.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-59
+apps/docs/src/components/workshop/DetailSections.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-166
+apps/nextjs/src/app/[locale]/_client-providers/query-retry.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-20
+apps/docs/src/lib/workshop-schema.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-24
+packages/api/src/test/mcp.spec.ts
+  s_093d61b162b9ca::t_e3a4b238532c4d 21
+  s_093d61b162b9ca::t_708a7d31f8e74b 57,71
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,5,9-20,22-56,58-70,72-110,112,114-139,141-144,146-166,169-211,213-227
+apps/nextjs/src/components/board/sections/use-open-section-apps.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3-5,8-9,11,13-16,18-21,23-58,60-79,81-100,102-107,109,114,117-118,122,125-126
+packages/custom-widgets/src/test/server-policy.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-314
+apps/docs/docs/community/faq.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 8-9,12,16,20,24,30-40,42-44,48,52,54,58,66-67,74,80,84,88,92,96,101,104
+apps/nextjs/src/components/board/items/actions/duplicate-item.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,5,20-23,30,48-51,75,78-82,85-86,89
+packages/custom-widgets/src/core/ai-prompt.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-259
+packages/api/src/test/query-cache.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 5-8,10,17,30-31,35-45,79-111
+  s_093d61b162b9ca::t_635d3790d02304 112-113
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_093d61b162b9ca::t_3fc532027f6bc6 2
+  s_093d61b162b9ca::t_841d188d8e3eb5 7,22,26,91-95
+packages/widgets/src/speedtest-tracker/helpers.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-41
+packages/db/migrations/postgresql/meta/0012_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-99,102-108,110-145,148-235,238-244,247-253,255-290,293-299,302-308,310-450,453-461,463-586,589-639,642-648,650-679,682-688,691-697,699-728,731-787,790-796,799-805,808-816,818-889,892-930,933-939,942-948,950-979,982-988,991-997,999-1071,1074-1080,1082-1117,1120-1126,1129-1135,1137-1200,1203-1247,1250-1258,1260-1318,1321-1327,1330-1336,1339-1345,1347-1396,1399-1471,1474-1591,1594-1638,1641-1647,1649-1709,1712-1812,1815-1823,1825-1860,1863-1869,1872-1878,1880-1939,1942-1948,1951-1957,1960-1966,1968-2028,2031-2065,2067-2117,2120-2157,2159-2293,2296-2302,2305-2311,2314-2351,2353-2394,2397-2403,2405-2423
+  s_093d61b162b9ca::t_d86d1914c85a4e 100-101,109,146-147,236-237,245-246,254,291-292,300-301,309,451-452,462,587-588,640-641,649,680-681,689-690,698,729-730,788-789,797-798,806-807,817,890-891,931-932,940-941,949,980-981,989-990,998,1072-1073,1081,1118-1119,1127-1128,1136,1201-1202,1248-1249,1259,1319-1320,1328-1329,1337-1338,1346,1397-1398,1472-1473,1592-1593,1639-1640,1648,1710-1711,1813-1814,1824,1861-1862,1870-1871,1879,1940-1941,1949-1950,1958-1959,1967,2029-2030,2066,2118-2119,2158,2294-2295,2303-2304,2312-2313,2352,2395-2396,2404,2424
+apps/docs/docs/widgets/immich-server-stats/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-14,16,20,26-36,44
+packages/custom-widgets/src/server/network-policy.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-213
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-ai-card.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-57
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-32
+apps/docs/docs/integrations/lidarr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-13,15,18,20-24,28,32-40
+apps/nextjs/src/proxy.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-122
+apps/docs/src/components/ui/popover.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-63
+packages/db/migrations/sqlite/meta/_journal.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 302-303,309-318
+  s_093d61b162b9ca::t_d86d1914c85a4e 328
+  s_093d61b162b9ca::t_31eaa844ef34f6 319-324
+apps/docs/src/components/ui/message-scroller.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-117
+packages/custom-widgets/src/core/component-types.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-12
+apps/nextjs/src/components/board/sections/grid/section-grid.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-75
+apps/nextjs/src/components/onboarding/board-tour-gate.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-11
+packages/validation/src/board.ts
+  s_093d61b162b9ca::t_872e0ced5e9f6e 8,29,80-124,127-132
+packages/custom-widgets/src/workbench/preview-error-boundary.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-61
+apps/docs/docs/integrations/gotify/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-12,14,17,19-23,27,31-39
+packages/widgets/src/refetch-intervals.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-35
+packages/custom-widgets/src/workbench/preview-response-panel.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-149
+apps/nextjs/src/components/board/sections/container/actions/container-actions.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-185
+apps/docs/src/components/workshop/WorkshopApp.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-542
+packages/db/migrations/mysql/meta/0042_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 91,100-101,109,146-147,155,212,249-250,258-259,267,304-305,313-314,322,480-481,489,495,531,659-660,668,712-713,721,751-752,760-761,769,799-800,861-862,870-871,879-880,888,894,922,973-974,982,1019-1020,1028-1029,1037,1067-1068,1076-1077,1085,1126,1131,1140-1141,1149,1186-1187,1195-1196,1204,1252,1261-1262,1270,1314-1315,1323,1329,1393-1394,1402-1403,1411-1412,1420,1473-1474,1482,1534-1535,1543,1609-1610,1618,1654,1727-1728,1736,1742,1779-1780,1788-1789,1797,1862-1863,1871-1872,1880-1881,1889,1955-1956,1964,1994,2000,2033,2042-2043,2051,2194-2195,2203-2204,2212-2213,2221,2257,2293,2337-2338,2345
+packages/custom-widgets/src/runtime/context.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-25
+packages/widgets/src/errors/component.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-60
+apps/nextjs/src/components/board/advanced-focus/manual-surface.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-107
+packages/custom-widgets/src/jsx/emitter-context.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-12
+apps/docs/src/components/ui/field.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-218
+packages/widgets/src/beszel-system-stats/selection.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-48
+scripts/benchmarks/benchmark-compare.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-40
+apps/docs/docs/management/certificates/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 10-11,14-15,20-22,24-25,28-29,32,67
+apps/nextjs/src/components/board/sections/section-collapse-storage.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-46
+apps/nextjs/src/components/board/items/item-select-data.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-48
+packages/api/src/router/board/test/custom-widget-placement-access.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-109
+packages/custom-widgets/scripts/ai-evaluation-cases.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-49
+packages/translation/src/languages.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-10
+apps/nextjs/src/components/layout/navigation-link.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,10-11,15-16,45,58
+apps/nextjs/src/components/board/items/actions/move-and-resize-item.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,13,23
+packages/workshop/package.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-39
+packages/custom-widgets/src/workbench/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-21
+apps/nextjs/src/components/board/layout/README.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-27
+apps/docs/static/data/translation-contributions.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-966
+apps/docs/docs/widgets/archive-team-warrior/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-38
+apps/nextjs/src/components/board/items/widget-query-recovery.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3-4
+apps/nextjs/src/components/board/sections/section-actions.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,6-7,26,35,40,50,56-59,65,70,82,90-109
+  s_093d61b162b9ca::t_927dcb61d2a072 110
+packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-348
+apps/nextjs/src/components/board/layout/test/reflow.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-134
+apps/docs/docs/widgets/stock-price/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-12,14,17,21-24,36-37,44,48,50,65
+MANTINE.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-474
+apps/nextjs/src/app/[locale]/manage/settings/_components/user-settings-form.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,8-9,11-15,19-25
+apps/docs/docs/widgets/archive-team-warrior/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16,18-19
+packages/api/src/server.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,6,13
+packages/api/src/router/widgets/beszel.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 13,52,54,126,128,193,270,273-277
+apps/docs/docs/integrations/unraid/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-13,20,23-24,27,31-71
+packages/validation/src/board.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-109
+scripts/benchmarks/benchmark-pair-lib.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-713
+apps/docs/docs/widgets/patchmon/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-14,16,40-46,63-65,67-69,77-86,93
+packages/db/migrations/sqlite/meta/0040_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 91,100-101,108,146-147,239-240,248-249,256,294-295,303-304,311,467,476-477,640-641,688-689,696,727-728,736-737,744,775-776,834,843-844,852-853,861-862,940-941,981-982,990-991,998,1029-1030,1038-1039,1046,1088,1093,1102-1103,1110,1148-1149,1157-1158,1165,1214,1223-1224,1268,1277-1278,1346-1347,1355-1356,1364-1365,1372,1426-1427,1482-1483,1552-1553,1657,1666-1667,1708-1709,1717-1718,1725,1791-1792,1800-1801,1809-1810,1817,1884-1885,1916,1953,1962-1963,2001,2145-2146,2154-2155,2163-2164,2202,2247-2248,2255
+.impeccable/critique/2026-07-21T11-32-50Z__apps-docs-src-components-workshop.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-116
+packages/db/proxy/postgresql.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-11
+apps/docs/docs/widgets/immich-album-carousel/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-14,16,20,26-36,43
+apps/docs/docs/widgets/smart-home-execute-automation/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-17,19,25-26,30-35,40-46,52-53,59
+apps/docs/docs/widgets/traefik/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8,31
+  s_093d61b162b9ca::t_ffef17268eaeef 32
+packages/api/src/router/widgets/calendar.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 8,30-32,47,49-56,58-62
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_form-error-boundary.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-54
+packages/custom-widgets/src/jsx/analyzer-language.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-137
+packages/custom-widgets/src/workbench/preview-request-panel.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-155
+.github/workflows/autofix.yml
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,9,16-17,24,29,33-35
+apps/workshop/pb_migrations/1784240000_workshop_widgets.js
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-302
+apps/workshop/pb_hooks/comment-email.html
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-97
+apps/docs/docs/integrations/coolify/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-12,14,17-18,21,29-53
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-list.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,7-9,17,34-37,41-203
+packages/api/src/env.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4-17,24-25,31-32
+apps/docs/src/components/workshop/DetailComments.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-357
+apps/docs/src/components/ui/tabs.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-69
+.oxfmtrc.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 6-16
+scripts/check-openapi-schema.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-17
+e2e/lazy-widgets.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,3-4,7,17-24,26-29,31-59,74-75,81,83-84,86-89,91-100,102-104
+packages/custom-widgets/src/core/schema.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-18
+packages/api/src/router/widgets/weather.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3,15-16
+apps/docs/docs/management/custom-widgets/custom-jsx.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-45
+packages/widgets/src/network-controller/network-status/layout.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-42
+packages/custom-widgets/src/workbench/direct-code-mirror.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-139
+apps/docs/docs/integrations/speedtest-tracker/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-12,14,17,19-23,27,31-39
+packages/api/src/router/custom-widget/preview-query-procedures.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-95
+packages/api/src/router/test/custom-widget/configuration-requests.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-34
+apps/docs/docs/widgets/timetable/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8,24-25,28-29,37-40
+packages/db/test/postgresql-migration.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-8,13-25,54,58-65,72-207
+  s_093d61b162b9ca::t_84d8a222fdca45 208
+packages/custom-widgets/src/test/request-manifest.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-84
+packages/custom-widgets/src/workbench/component-reference.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-114
+packages/db/migrations/postgresql/meta/0008_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 100-101,109,146-147,236-237,245-246,254,291-292,300-301,309,451-452,462,609-610,656-657,665,696-697,705-706,714,745-746,804-805,813-814,822-823,833,906-907,947-948,956-957,965,996-997,1005-1006,1014,1088-1089,1097,1134-1135,1143-1144,1152,1217-1218,1264-1265,1275,1335-1336,1344-1345,1353-1354,1362,1413-1414,1467-1468,1533-1534,1636-1637,1647,1684-1685,1693-1694,1702,1763-1764,1772-1773,1781-1782,1790,1852-1853,1889,1941-1942,2074-2075,2083-2084,2092-2093,2132,2168,2212-2213,2220
+packages/definitions/src/test/docs.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 33-47
+e2e/health-checks.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-9,12,14-17,19-24,27,30,39,41-44,46-57
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout-preview.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-70
+packages/widgets/src/widget-runtime.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-88
+packages/workshop/src/client.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2
+packages/widgets/src/beszel-system-stats/selection.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-46
+apps/nextjs/src/app/api/custom-widgets/admin.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-37
+packages/db/migrations/mysql/meta/0038_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 91,100-101,109,146-147,155,212,249-250,258-259,267,304-305,313-314,322,480-481,489,495,531,561-562,570-571,579,609-610,671-672,680-681,689-690,698,704,732,783-784,792,829-830,838-839,847,877-878,886-887,895,936,941,950-951,959,996-997,1005-1006,1014,1062,1071-1072,1080,1124-1125,1133,1139,1203-1204,1212-1213,1221-1222,1230,1283-1284,1292,1344-1345,1353,1419-1420,1428,1464,1537-1538,1546,1552,1589-1590,1598-1599,1607,1672-1673,1681-1682,1690-1691,1699,1765-1766,1774,1804,1810,1843,1852-1853,1861,1988-1989,1997-1998,2006-2007,2015,2051,2087,2104
+apps/docs/src/components/ui/slider.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-38,40-41
+apps/docs/src/components/ui/table.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-75
+packages/widgets/src/manifest.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-153
+e2e/shared/create-homarr-container.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,13-16,19
+apps/docs/src/components/ui/native-select.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-48
+packages/widgets/src/health-monitoring/cluster/accordion-state.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-17
+packages/custom-widgets/src/core/component-discovery.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-92
+apps/docs/docs/widgets/smart-home-entity-state/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-17,19,22,27-29,37-43,48-50,57,63,70,74
+packages/db/migrations/mysql/0044_custom_widget_v2_tables.sql
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-26
+apps/nextjs/src/components/board/sections/section-actions.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-42
+scripts/benchmarks/docker-build-lib.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-259
+apps/docs/static/custom-widgets/component-catalog-v1.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 1
+packages/db/migrations/custom/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 6,13
+packages/request-handler/src/lib/request-handler.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-224
+apps/docs/docs/widgets/media-request-list/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 7-8,49-51
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout-preview.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-124
+apps/docs/docs/getting-started/installation/runtipi.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,14,22-27,31,33
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_beta-banner.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,6-7,11-12,14,16,18,20
+packages/spotlight/src/open.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-44
+packages/custom-widgets/src/jsx/analyzer-jsx.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-135
+packages/workshop/tsconfig.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-6
+scripts/benchmarks/docker-runtime-lib.mts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-649
+apps/nextjs/src/app/[locale]/boards/[name]/layout.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,9
+apps/nextjs/src/components/board/sections/grid/test/grid-depth.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-26
+packages/widgets/src/archive-team-warrior/layout.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-23
+apps/nextjs/src/app/api/custom-widgets/configuration-request/body.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-52
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 28-36,48-50,58-62,66-75,77,88-96,100-104,112-120
+  s_093d61b162b9ca::t_6e7360066120b5 37-38
+apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,7
+apps/docs/docs/integrations/opnsense/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19,21-25,29,33-46,51-57,60-64,71-75
+packages/api/src/rsc-context.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-16
+apps/docs/src/lib/utils.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-21
+e2e/shared/seed-admin-user.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 39-40
+apps/docs/src/components/ui/menubar.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-256
+apps/docs/docs/widgets/speedtest-tracker/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-16,23,29-37,44
+packages/translation/src/lang/en-gb.json
+  s_093d61b162b9ca::t_1509d7fc5471d7 1373,1375-1376,1390-1391,2212-2217,2221-2226,2359-2362,2365-2370,2373-2374,2376-2378,2520-2527,2530-2533,2541-2543,2984-2986,3480-3485,3490-3492,3685-3934,4315,5140,5458-5460
+  s_093d61b162b9ca::t_c2e3e6b106b9c4 714
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,5,7-9,12,17-18,20,22-24,26-40,42-43,46,53-65,86,90-94,97-148,150-155,157-159,161-162,164-180,182-183,185-191,200-202,210-216,221,232,236-237,251,255,265-272,278-281,285,292-322,330-332,343-345,352,361-363,380,390
+apps/docs/docs/integrations/technitium-dns/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-16,18-20,24,26-33,37,42-45,48-52,55-59,61-72
+packages/custom-widgets/src/core/schema-references.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-60
+apps/nextjs/src/components/board/sections/item.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 18-67
+apps/docs/docs/integrations/home-assistant/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19,21-28,32,36-41,48-51
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,10,15-16,20,26-27,31-33,37-38,40,43,45,59,80,82-83,85,91-92,109,113-114,116-117,119-120,122,127-132,138-141,146-150
+apps/docs/docs/integrations/readarr/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-13,15,18-19,22,26-34
+packages/db/schema/index.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 57-58,73-74
+packages/custom-widgets/src/test/workshop-translations.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-20
+packages/custom-widgets/src/runtime/custom-jsx-renderer.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-236
+packages/api/src/router/custom-widget/management-query-mappers.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-159
+apps/nextjs/src/app/[locale]/custom-widget-configuration/[token]/page.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-18
+apps/nextjs/src/components/layout/header/button.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1,11-12,19-21
+packages/api/src/router/location.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 40-41,43
+packages/api/src/router/widgets/custom-api-security.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-67
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout.module.css
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-47
+apps/workshop/docker-compose.yml
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-51
+packages/api/src/router/onboard/onboard-router.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 297,311,316
+apps/nextjs/src/components/board/layout/types.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-10
+packages/db/tsconfig.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 7
+apps/nextjs/src/app/[locale]/manage/settings/_components/setting-switch.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 8-12,20-21,32,45
+apps/nextjs/src/app/[locale]/boards/(content)/_integration-provider.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-54
+apps/nextjs/src/components/board/items/widget-query-scope.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-83
+packages/widgets/src/coolify/coolify-utils.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-29
+apps/docs/docs/integrations/plex/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-10,12-14,16,19-20,23,27-32,34-47
+apps/nextjs/src/app/[locale]/manage/custom-widgets/new/page.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 10,31-33
+apps/docs/src/components/ui/sheet.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-102
+apps/docs/docs/management/custom-widgets/_category_.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-7
+packages/db/migrations/mysql/0047_lame_wallow.sql
+  s_093d61b162b9ca::t_31eaa844ef34f6 2-6,11,19-21,25-33,35-38
+apps/docs/docs/advanced/development/kubernetes.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 135
+apps/docs/docs/advanced/command-line/users/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 10,46,80
+apps/nextjs/src/app/[locale]/manage/settings/_components/search-settings-form.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 6,9-10,12-16,21-28
+packages/db/test/custom-widget-seed-assertions.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-65
+apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-275
+apps/docs/src/components/ui/attachment.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-185
+packages/api/src/router/test/widgets/rssFeed.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,20-31,43-89
+apps/nextjs/src/app/api/custom-widgets/configuration-request/[token]/route.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-130
+packages/db/migrations/postgresql/meta/0006_snapshot.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 100-101,109,146-147,236-237,245-246,254,291-292,300-301,309,451-452,462,608-609,655-656,664,695-696,704-705,713,744-745,803-804,812-813,821-822,832,905-906,946-947,955-956,964,995-996,1004-1005,1013,1087-1088,1096,1133-1134,1142-1143,1151,1216-1217,1263-1264,1274,1334-1335,1343-1344,1352-1353,1361,1412-1413,1466-1467,1532-1533,1635-1636,1646,1683-1684,1692-1693,1701,1762-1763,1771-1772,1780-1781,1789,1851-1852,1888,1940-1941,2073-2074,2082-2083,2091-2092,2131,2167,2187
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_general.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,8,12,15,19,22,29-63
+apps/docs/src/components/workshop/format.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-6
+packages/widgets/src/manifest.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-2,4,7-13,15-16,19-21,24-27,29-80,82-87,89-141,144-153,155-163,167-199,202,204-205,207-215,218-219,221,223-230
+  s_093d61b162b9ca::t_4105b844b866b5 28,88
+apps/nextjs/src/app/[locale]/_client-providers/session-query-scope.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-52
+packages/api/src/router/widgets/vpn.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 5,12-40
+packages/custom-widgets/src/core/component-example.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-46
+apps/nextjs/src/components/board/sections/container/actions/remove-container.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-7,9,13-14,17,21-42,47,57,76,87-179,181
+apps/workshop/tests/workshop-contracts.mjs
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-57
+apps/docs/src/components/ui/toggle.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-38
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 4,9,24-27,33,38,69-73,76,84-85
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7,9-10,12,17-18,21,46-73,89-92,95-100,102-103,105,112,114-116,118,124-141
+  s_093d61b162b9ca::t_9ded6c61cdc5c7 142
+apps/docs/docs/integrations/peanut/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7-12,14,20,22-23,25-26,30,34,39-53
+packages/request-handler/src/immich.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-50
+packages/widgets/src/custom-api/migration-state.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-13
+packages/api/src/router/custom-widget/domain-error.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,6,8-13,15
+apps/docs/docs/advanced/command-line/_category_.json
+  s_093d61b162b9ca::t_841d188d8e3eb5 4
+.agents/skills/homarr-custom-widget/SKILL.md
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-28
+apps/docs/docs/integrations/anchor/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,7-12,14,19,21-25,29,33-45
+e2e/shared/mock-api-server.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 2,6-7,13,16-18,20,24,28-50
+apps/docs/src/components/ui/navigation-menu.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-144
+packages/widgets/src/tracearr/bitrate.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-18
+packages/custom-widgets/src/core/option-value-types.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-8
+packages/api/src/router/test/widgets/patchmon.spec.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 104
+apps/docs/src/components/ui/label.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-22
+apps/docs/src/components/ui/accordion.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-60
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 3-4,6-13,15-22,27-43,47,50-56,61-72,74,76-106,108-117,120-128,130-195,197-214,216-231,233-241,243-279,281
+apps/nextjs/src/app/[locale]/boards/_layout-utils.ts
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-122
+apps/docs/docs/widgets/media-request-stats/index.mdx
+  s_093d61b162b9ca::t_841d188d8e3eb5 2-3,7,9-18,20,22,26-35,39,46-48
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form-layout.tsx
+  s_093d61b162b9ca::t_841d188d8e3eb5 1-85
+packages/custom-widgets/src/core/component-catalog.generated.json
+  s_093d61b162b9ca::t_e3c0bea1b58f24 1
+packages/integrations/src/index.ts
+  s_093d61b162b9ca::t_83a8663112d76b 64
+packages/integrations/src/interfaces/smart-home/smart-home-types.ts
+  s_093d61b162b9ca::t_a2d1b6717a3bac 1
+packages/integrations/src/overseerr/overseerr-integration.ts
+  s_093d61b162b9ca::t_60cad325c770f1 3,262,268-269,275,281-282
+packages/integrations/src/patchmon/patchmon-types.ts
+  s_093d61b162b9ca::t_00bd4091fd7896 55-57,85
+packages/integrations/src/plex/plex-integration.ts
+  s_093d61b162b9ca::t_6111ebeebdd2ca 100-101
+packages/integrations/src/plex/test/plex-integration.spec.ts
+  s_093d61b162b9ca::t_70262b8218d37d 140
+packages/integrations/src/traefik/traefik-integration.ts
+  s_093d61b162b9ca::t_d63c7f479d09df 7,12,29-30,39,67-98,110-126,129-133,143-156,159,165,211
+packages/integrations/src/traefik/traefik-types.ts
+  s_093d61b162b9ca::t_990a85a2a9b586 34-41,45-46
+packages/modals/src/confirm-modal.tsx
+  s_093d61b162b9ca::t_fb0b516069831c 88-94
+packages/modals/src/index.tsx
+  s_093d61b162b9ca::t_3dadc27a657f78 128
+packages/old-import/src/import/collections/board-collection.ts
+  s_093d61b162b9ca::t_0e660f2105e7fb 4,16,30,92-93,97-98,104-105,108,118,122
+packages/old-import/src/mappers/map-section.ts
+  s_093d61b162b9ca::t_21ecd1f377decd 1-2,6-8,10,16-27,30,34-37
+packages/old-import/src/prepare/prepare-items.ts
+  s_093d61b162b9ca::t_7502aadb9984d1 1-2
+packages/old-import/src/prepare/prepare-sections.ts
+  s_093d61b162b9ca::t_cb6313b76e15e6 1-3,6-24,29-115
+packages/redis/src/index.ts
+  s_093d61b162b9ca::t_2ade24ecb31d6c 9
+packages/redis/src/lib/channel.ts
+  s_093d61b162b9ca::t_15e2598d2c2767 115-116,118,129-140,142-147,149-156
+packages/request-handler/src/immich.ts
+  s_093d61b162b9ca::t_3d005103b41a8f 25,27,29-40,44-45
+packages/request-handler/src/lib/integration-request-handler.ts
+  s_093d61b162b9ca::t_b646eb43e172ad 17,27-30,33,38-39
+packages/request-handler/src/lib/request-handler.ts
+  s_093d61b162b9ca::t_2d04f22a124d90 3,6,9,13,18,27-50,54,57-59,64,66-68,71-75,80-82,85-102,107-112,116-118
+packages/request-handler/src/lib/widget-request-handler.ts
+  s_093d61b162b9ca::t_2794919adc39af 9-12
+packages/request-handler/src/smart-home-entity-state.ts
+  s_093d61b162b9ca::t_3c5477f7c2cc54 3,7-24,26,38
+packages/request-handler/src/timetable.ts
+  s_093d61b162b9ca::t_d4a7dd30bba711 1,5,8,36-43,47,50,57,60-64,70,77-118,120,122-149,155,170-222,241-242
+packages/request-handler/src/update-checker.ts
+  s_093d61b162b9ca::t_d9bd01a9aff9ab 8,14-71,73-115
+packages/request-handler/src/vpn.ts
+  s_093d61b162b9ca::t_af20659347c9ea 8,13-14
+packages/spotlight/package.json
+  s_093d61b162b9ca::t_c4c68caf9a24f9 16-17
+packages/spotlight/src/components/actions/items/children-action-item.tsx
+  s_093d61b162b9ca::t_c11470ebeb4716 3,19,21,23-30
+packages/spotlight/src/components/actions/items/group-action-item.tsx
+  s_093d61b162b9ca::t_0a404937d888d8 5,35,37,39-46
+packages/translation/package.json
+  s_093d61b162b9ca::t_97bf3523eaf4eb 19
+packages/translation/src/client/index.ts
+  s_093d61b162b9ca::t_7da44ed98ba61b 9,18-22
+packages/translation/src/client/use-current-locale.ts
+  s_093d61b162b9ca::t_f340b4c795f56f 3-4,6-7
+packages/translation/src/config.ts
+  s_093d61b162b9ca::t_cb088c7cfbde89 3-6,439-445,447
+packages/translation/src/index.ts
+  s_093d61b162b9ca::t_963967599a8117 1-2
+packages/translation/src/lang/ca.json
+  s_093d61b162b9ca::t_466037c27e006b 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586,2590,2594,2598,2602,2605-2616,2620,2624,2628,2631-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673,2677-2678,2680-2693,2695-2697,2699-2701,2703-2705,2707-2709,2711-2713,2715-2716,3409,3454-3459,3464-3466,3490-3749,3751-3753,3755-3757,3759-3761,3763-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3811,3818,3821-3824,3826-3828,3830-3840,3847,3851,3854,3857,3859-3880,3883,3886,3890-3894,3896-3899,3901-3907,4289,5114,5432-5434
+packages/translation/src/lang/cn.json
+  s_093d61b162b9ca::t_9f02e8b3e7059a 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586-2588,2590-2592,2594-2596,2598-2600,2602-2618,2620-2622,2624-2626,2628,2631-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673-2675,2677-2678,2680-2693,2695-2697,2699-2701,2703-2705,3286-3288,3290-3292,3294-3296,3454-3459,3464-3466,3493-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3795,3797-3799,3801-3803,3805-3811,3818-3824,3826-3828,3830-3840,3847-3849,3851-3852,3854-3855,3857-3858,3861-3863,3865-3867,3869-3881,3883-3884,3886-3887,3889-3907,4289,5114,5432-5434
+packages/translation/src/lang/cr.json
+  s_093d61b162b9ca::t_3f584b98d31ca6 723,1401,2240-2245,2249-2254,2548-2555,2558-2561,2569-2571,3726,3773-3778,3783-3785,4358,5184,5502-5504
+packages/translation/src/lang/cs.json
+  s_093d61b162b9ca::t_86d9e78cb9539b 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586,2590,2594,2598,2602,2605-2616,2620,2624,2628,2631-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673,2677-2678,2680-2693,2695-2697,2699-2701,2703-2705,2707-2709,2711-2713,2715-2716,3302,3306,3310,3314,3454-3459,3464-3466,3493-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3795,3797-3799,3801-3803,3805-3811,3818-3824,3826-3828,3830-3840,3847-3849,3851-3852,3854-3855,3857-3858,3861-3863,3865-3867,3869-3881,3883-3884,3886-3887,3889-3907,4289,5114,5432-5434
+packages/translation/src/lang/da.json
+  s_093d61b162b9ca::t_d742946cf5a02c 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/de-CH.json
+  s_093d61b162b9ca::t_a873752b68275d 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/de.json
+  s_093d61b162b9ca::t_71d63f7f0aec49 723,1194,1201-1202,1206,1257-1258,1403,1405-1406,1420-1421,1922-1927,2148-2149,2248-2253,2257-2262,2556-2563,2566-2569,2577-2579,2649,2651,2655,2660-2663,2679,2682-2683,2686-2687,2690-2691,2694-2695,2698,2702,3393-3396,3398-3399,3739,3786-3791,3796-3798,4371,5196,5514-5516,5557
+packages/translation/src/lang/el.json
+  s_093d61b162b9ca::t_c9b7a4a7bfe24f 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586,2590,2594,2598,2602,2605-2616,2620,2624,2628,2631-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673,2677-2678,2680-2693,2695-2697,2699-2701,2703-2705,2707-2709,2711-2713,2715-2716,3454-3459,3464-3466,3493-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3795,3797-3799,3801-3803,3805-3811,3818-3824,3826-3828,3830-3840,3847-3849,3851-3852,3854-3855,3857-3858,3861-3863,3865-3867,3869-3881,3883-3884,3886-3887,3889-3907,4289,5114,5432-5434
+packages/translation/src/lang/es.json
+  s_093d61b162b9ca::t_02200dc282c0f1 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/et.json
+  s_093d61b162b9ca::t_c801ec1ab84dab 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586,2590,2594,2598,2602,2605-2616,2620,2624,2628,2631-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673,2677-2678,2680-2693,2695-2697,2699-2701,2703-2705,2707-2709,2711-2713,2715-2716,3302,3306,3310,3314,3318,3454-3459,3464-3466,3490-3749,3751-3753,3755-3757,3759-3761,3763-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3811,3818,3821-3824,3826-3828,3830-3840,3847,3851,3854,3857,3859-3880,3883,3886,3890-3894,3896-3899,3901-3907,4289,5114,5432-5434
+packages/translation/src/lang/fi.json
+  s_093d61b162b9ca::t_78b4e57fde4bc7 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586-2588,2590-2592,2594-2596,2598-2600,2602-2618,2620-2622,2624-2626,2628-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673-2675,2677-2678,2680-2693,2695-2697,3454-3459,3464-3466,3493-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3795,3797-3799,3801-3803,3805-3811,3815,3818-3824,3826-3828,3830-3840,3844,3847-3849,3851-3852,3854-3855,3857-3858,3861-3863,3865-3867,3869-3881,3883-3884,3886-3887,3889-3907,4289,5114,5432-5434
+packages/translation/src/lang/fr.json
+  s_093d61b162b9ca::t_0e0f7480a2ee20 723,1256-1257,1402,1404-1405,1419-1420,1921-1926,2247-2252,2256-2261,2555-2562,2565-2568,2576-2578,3019-3021,3023-3024,3176-3179,3181-3182,3520-3525,3530-3532,3725-3974,4355,5180,5498-5500
+packages/translation/src/lang/he.json
+  s_093d61b162b9ca::t_0c2999d73b24e6 1203-1204,1349,1351-1352,1366-1367,1868-1873,2194-2199,2203-2208,2502-2509,2512-2515,2523-2525,3339-3342,3344-3345,3717-3722,3727-3729,4302,5127,5445-5447
+packages/translation/src/lang/hr.json
+  s_093d61b162b9ca::t_12e5ca37bebf4e 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586,2590,2594,2598,2602,2605-2616,2620,2624,2628,2631-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673,2677-2678,2680-2693,2695-2697,2699-2701,2703-2705,2707-2709,2711-2713,2715-2716,3302,3306,3310,3314,3318,3454-3459,3464-3466,3490-3749,3751-3753,3755-3757,3759-3761,3763-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3811,3818,3821-3824,3826-3828,3830-3840,3847,3851,3854,3857,3859-3880,3883,3886,3890-3894,3896-3899,3901-3907,4289,5114,5432-5434
+packages/translation/src/lang/hu.json
+  s_093d61b162b9ca::t_1dc7a89b456f27 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586-2588,2590-2592,2594-2596,2598-2600,2602-2618,2620-2622,2624-2626,2628,2631-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673-2675,2677-2678,2680-2693,2695-2697,2699-2701,2703-2705,3286-3288,3290-3292,3294-3296,3454-3459,3464-3466,3493-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3795,3797-3799,3801-3803,3805-3811,3818-3824,3826-3828,3830-3840,3847-3849,3851-3852,3854-3855,3857-3858,3861-3863,3865-3867,3869-3881,3883-3884,3886-3887,3889-3907,4289,5114,5432-5434
+packages/translation/src/lang/it.json
+  s_093d61b162b9ca::t_70ee75bb1f9a62 723,1401,1403-1404,1418-1419,2240-2245,2249-2254,2548-2555,2558-2561,2569-2571,3726,3773-3778,3783-3785,4358,5184,5502-5504
+packages/translation/src/lang/ja.json
+  s_093d61b162b9ca::t_ea61677c264032 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/ko.json
+  s_093d61b162b9ca::t_09ae3a4b6e992e 723,1401,1403-1404,1418-1419,2240-2245,2249-2254,2548-2555,2558-2561,2569-2571,3012-3014,3016-3017,3019-3020,3508-3513,3518-3520,3713-3962,4343,5168,5486-5488
+packages/translation/src/lang/lt.json
+  s_093d61b162b9ca::t_e0a29f068a40a4 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586,2590,2594,2598,2602,2605-2616,2620,2624,2628,2631-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673,2677-2678,2680-2693,2695-2697,2699-2701,2703-2705,2707-2709,2711-2713,2715-2716,3454-3459,3464-3466,3493-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3795,3797-3799,3801-3803,3805-3811,3818-3824,3826-3828,3830-3840,3847-3849,3851-3852,3854-3855,3857-3858,3861-3863,3865-3867,3869-3881,3883-3884,3886-3887,3889-3907,4289,5114,5432-5434
+packages/translation/src/lang/lv.json
+  s_093d61b162b9ca::t_0a0ba216776090 698,1357,1359-1360,1374-1375,2196-2201,2205-2210,2504-2511,2514-2517,2525-2527,2596,2600,2604,2608,2612,2615-2626,2630,2634,2638,2641-2651,2653-2654,2656-2657,2659-2660,2662-2663,2665-2666,2668-2669,2671-2672,2674-2675,2677-2678,2680-2681,2683,2687-2688,2690-2703,2705-2707,2709-2711,2713-2715,2717-2719,2721-2723,2725-2726,2728-2729,3419-3421,3464-3469,3474-3476,3503-3775,3777-3779,3781-3783,3785-3787,3789-3791,3793-3795,3797-3805,3807-3809,3811-3813,3815-3821,3828-3834,3836-3838,3840-3850,3857-3859,3861-3862,3864-3865,3867-3868,3871-3873,3875-3877,3879-3891,3893-3894,3896-3897,3899-3917,4299,5124,5442-5444
+packages/translation/src/lang/nl.json
+  s_093d61b162b9ca::t_8abf480cb8ee9c 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/no.json
+  s_093d61b162b9ca::t_ca7afcf20d93ce 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/pl.json
+  s_093d61b162b9ca::t_ab20da8423b84e 723,1401,1403-1404,1418-1419,2240-2245,2249-2254,2548-2555,2558-2561,2569-2571,3726,3773-3778,3783-3785,4358,5184,5502-5504
+packages/translation/src/lang/pt-br.json
+  s_093d61b162b9ca::t_e70b2e5cd5497f 722,1399,1401-1402,1416-1417,2238-2243,2247-2252,2546-2553,2556-2559,2567-2569,3010-3012,3014-3015,3017-3018,3506-3511,3516-3518,3711-3960,4341,5166,5484-5486
+packages/translation/src/lang/pt.json
+  s_093d61b162b9ca::t_0ae09850980dd5 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586,2590,2594,2598,2602,2605-2616,2620,2624,2628,2631-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673,2677-2678,2680-2693,2695-2697,2699-2701,2703-2705,2707-2709,2711-2713,2715-2716,3302,3306,3310,3314,3318,3454-3459,3464-3466,3493-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3795,3797-3799,3801-3803,3805-3811,3818-3824,3826-3828,3830-3840,3847-3849,3851-3852,3854-3855,3857-3858,3861-3863,3865-3867,3869-3881,3883-3884,3886-3887,3889-3907,4289,5114,5432-5434
+packages/translation/src/lang/ro.json
+  s_093d61b162b9ca::t_59bbcfd1dc9adb 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/ru.json
+  s_093d61b162b9ca::t_96cca61a07abb0 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/sk.json
+  s_093d61b162b9ca::t_2e50fdd17d83b7 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586,2590,2594,2598,2602,2605-2616,2620,2624,2628,2631-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673-2675,2677-2678,2680-2693,2695-2697,2699-2701,2703-2705,2707-2709,2711-2713,2715-2716,2718-2719,3409-3411,3413-3414,3454-3459,3464-3466,3493-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3795,3797-3799,3801-3803,3805-3811,3818-3824,3826-3828,3830-3840,3847-3849,3851-3852,3854-3855,3857-3858,3861-3863,3865-3867,3869-3881,3883-3884,3886-3887,3889-3907,4289,5114,5432-5434
+packages/translation/src/lang/sl.json
+  s_093d61b162b9ca::t_42e522c05868c7 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/sv.json
+  s_093d61b162b9ca::t_2f8207ba39a565 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/tr.json
+  s_093d61b162b9ca::t_ab12e3e5f36460 146,172,179-180,190,193,202-203,665,768,800,810,818,823-825,994,1076,1088-1089,1092-1093,1108-1109,1119-1120,1123-1124,1127-1128,1131,1134,1139-1140,1143-1144,1147-1148,1151-1152,1196,1225,1236-1238,1290,1341-1342,1347,1349-1350,1364-1365,1381-1383,1386-1389,1449-1453,1543-1544,1547,1665-1666,1669,1672,1702,1734-1735,1841,2000,2020,2024-2026,2077,2086-2088,2106,2125,2139,2160,2170,2173,2176,2178-2181,2185-2191,2195-2200,2205,2208,2211,2214,2218-2220,2223,2226-2227,2230,2233,2237-2239,2275,2278,2281,2284,2287,2291-2294,2297-2303,2305-2307,2311-2314,2317-2320,2322,2324-2325,2329,2332,2336,2389-2390,2403,2494-2501,2504-2507,2513-2520,2542-2551,2554-2555,2558-2559,2562-2563,2566-2567,2570-2571,2574-2575,2578-2579,2583,2587-2588,2591-2592,2595-2596,2599-2600,2603-2604,2607-2610,2613-2614,2617-2618,2621-2622,2625-2626,2629-2630,2633-2634,2678,2681,2687-2689,2713,2748,2794-2796,2799,2802-2806,2808,2847,2850,2862,2978,3028,3079-3083,3106,3108,3203,3209,3212,3215,3218,3221,3224-3228,3230-3231,3233-3241,3243,3247-3248,3251-3252,3255-3256,3259-3260,3263-3264,3267-3268,3271-3272,3275,3277-3280,3283,3287-3288,3291-3292,3295-3296,3299-3300,3303-3304,3307-3308,3311-3312,3315-3316,3319-3320,3323-3334,3336,3376-3377,3380,3383,3386,3389,3392,3397,3400-3402,3406,3454-3459,3464-3466,3525,3528,3531-3541,3545-3546,3549,3552,3555,3557,3559-3560,3562-3563,3567-3568,3571-3572,3575,3578,3581,3584,3587,3590,3593,3596,3599,3602,3604,3607-3610,3614-3616,3619-3622,3625-3627,3630-3633,3636-3638,3641-3644,3647-3648,3651-3652,3655-3656,3659-3908,4283-4285,4289,4310,4338-4339,4348-4349,4567-4568,4769-4774,4776,4779-4780,4782-4783,4786-4788,4790,4793,4795-4803,4806-4807,4811-4813,4816-4820,4823,4825-4826,4829-4830,4833-4834,4837-4838,4841-4842,4845,4847-4854,5023,5028-5029,5114,5158,5177,5432-5434,5555,5746,5749,6205,6217
+packages/translation/src/lang/uk.json
+  s_093d61b162b9ca::t_acd3c1599a218f 694,698,1357,1359-1360,1374-1375,2196-2201,2205-2210,2504-2511,2514-2517,2525-2527,2968-2970,2972-2973,3464-3469,3474-3476,3669-3918,4299,5124,5442-5444
+packages/translation/src/lang/vi.json
+  s_093d61b162b9ca::t_184b174cbfc73e 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,3704-3709,3714-3716,4289,5114,5432-5434
+packages/translation/src/lang/zh.json
+  s_093d61b162b9ca::t_c8478e5be34a36 1347,1349-1350,1364-1365,2186-2191,2195-2200,2494-2501,2504-2507,2515-2517,2586-2588,2590-2592,2594-2596,2598-2600,2602-2618,2620-2622,2624-2626,2628-2641,2643-2644,2646-2647,2649-2650,2652-2653,2655-2656,2658-2659,2661-2662,2664-2665,2667-2668,2670-2671,2673-2675,2677-2678,2680-2693,2695-2697,2699-2701,3454-3459,3464-3466,3493-3765,3767-3769,3771-3773,3775-3777,3779-3781,3783-3785,3787-3795,3797-3799,3801-3803,3805-3811,3815,3818-3824,3826-3828,3830-3840,3844,3847-3849,3851-3852,3854-3855,3857-3858,3861-3863,3865-3867,3869-3881,3883-3884,3886-3887,3889-3907,4289,5114,5432-5434
+packages/translation/src/middleware.ts
+  s_093d61b162b9ca::t_9c374fd9d2c76a 4
+packages/translation/src/routing.ts
+  s_093d61b162b9ca::t_12bde9757cd8b7 3,5-6
+packages/ui/src/styles.css
+  s_093d61b162b9ca::t_4c098582548eb0 6-13
+packages/validation/package.json
+  s_093d61b162b9ca::t_d469ae66b345fe 26-27
+packages/validation/src/shared.ts
+  s_093d61b162b9ca::t_40ecff021db288 24-26,32-35,53-54,57-77,79,81-83,87-90,96
+packages/widgets/package.json
+  s_093d61b162b9ca::t_c01aeb44343012 18,20-21,23-24,28-29,45,64,84-86
+packages/widgets/src/_inputs/common.tsx
+  s_093d61b162b9ca::t_297dfa05a7766d 12
+packages/widgets/src/_inputs/index.ts
+  s_093d61b162b9ca::t_c3de4649c30c64 5,22,25,43
+packages/widgets/src/_inputs/widget-custom-widget-select-input.tsx
+  s_093d61b162b9ca::t_7a451d3d8bc695 4-17,20-23,35-37,39,41-45,48-49,62-63,72-104,106-170
+packages/widgets/src/_inputs/widget-location-input.tsx
+  s_093d61b162b9ca::t_6653d3d5d8a90b 24,26,132,191,218
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_093d61b162b9ca::t_334ae4a83f7579 275,277-278,284,286-287
+packages/widgets/src/anchor-note/anchor-note.css
+  s_093d61b162b9ca::t_4afc49f2bbb8a9 7-34
+packages/widgets/src/anchor-note/component.tsx
+  s_093d61b162b9ca::t_357759edc46381 6-7,14,17,21-22,113-119,133-139,154-163,170-172,175-182,184-185,189-190,207-208,221,304,322-337,344-357,359-374,376-400
+packages/widgets/src/anchor-note/index.ts
+  s_093d61b162b9ca::t_d79423121b78f2 8-9
+packages/widgets/src/app/component.tsx
+  s_093d61b162b9ca::t_1cbdd2bc0c0fe6 5,17-19,29-31,34,43,50,53,60-72,74-138,154
+packages/widgets/src/app/index.ts
+  s_093d61b162b9ca::t_935366d8dc5d07 18-19
+packages/widgets/src/app/ping/ping-indicator.tsx
+  s_093d61b162b9ca::t_0113bf374786d1 14-16
+packages/widgets/src/app/prefetch.ts
+  s_093d61b162b9ca::t_b6da4603125efc 6,19
+packages/widgets/src/archive-team-warrior/component.tsx
+  s_093d61b162b9ca::t_39a99fb2cd9819 3,8,15-17,25-33,39-41,45-47,49-50,54-62,65,74-75,79,87-90,93-96,99-134,139,141,144,150-164,166-195
+packages/widgets/src/archive-team-warrior/index.ts
+  s_093d61b162b9ca::t_ddbe007af9496a 8
+packages/widgets/src/audio-stats/audio-stats-content.tsx
+  s_093d61b162b9ca::t_b908f164c3160d 11-18,40,43,45-50
+packages/widgets/src/audio-stats/audio-stats-shared.spec.ts
+  s_093d61b162b9ca::t_abb8bae1316e40 5,40-50,105-122
+packages/widgets/src/audio-stats/component.tsx
+  s_093d61b162b9ca::t_16f1698aef2369 3-5,7-8,11,13,16-35,37-39,42-119
+packages/widgets/src/audio-stats/index.ts
+  s_093d61b162b9ca::t_ea0aa47ca23dad 3,16-17
+packages/widgets/src/audio-stats/shared.ts
+  s_093d61b162b9ca::t_4ad093a5e9d3f4 158-174
+packages/widgets/src/bazarr/component.module.css
+  s_093d61b162b9ca::t_bb261146a39468 36-45
+packages/widgets/src/bazarr/component.tsx
+  s_093d61b162b9ca::t_bd0dc0fa05153e 29,40,42,47,61-62,78-82,92-94,103-110,113
+packages/widgets/src/bazarr/index.ts
+  s_093d61b162b9ca::t_494648b0b78b26 7,11
+packages/widgets/src/beszel-alerts/component.tsx
+  s_093d61b162b9ca::t_36ad19e50788e6 4-17,28-29,52,59-61,87-89,102,121,133,139,141,145,157,163,169,222,246,248,250-283
+packages/widgets/src/beszel-alerts/index.ts
+  s_093d61b162b9ca::t_3612e9d728b8c9 4,9-16
+packages/widgets/src/beszel-system-grid/component.module.css
+  s_093d61b162b9ca::t_5f2edf01831716 3,6-7,10-20
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_093d61b162b9ca::t_fa1048864617aa 39-40,334-336,340-342,354-357,374-378,394-396,411,427-429,436,442
+packages/widgets/src/beszel-system-grid/index.ts
+  s_093d61b162b9ca::t_b2f34452880bb9 9-10
+packages/widgets/src/beszel-system-stats/component.module.css
+  s_093d61b162b9ca::t_51740bcc08686a 11-12,16-28
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_093d61b162b9ca::t_3d9897890c4088 3-4,6,12,18,20-21,23,33,39-50,52-81,86-88,91-127,130,143,167,169,180,196,206-208,217-235,237-238,251
+packages/widgets/src/beszel-system-stats/index.ts
+  s_093d61b162b9ca::t_299cc57c1c078c 5,7,19,21-43,57
+packages/widgets/src/beszel-system-table/component.tsx
+  s_093d61b162b9ca::t_58c252114ce98e 29,42,106-108,110-126,204,216,228,248,260,277,293,305,316,328,340,355,383,386,403-404
+packages/widgets/src/beszel-system-table/index.ts
+  s_093d61b162b9ca::t_b53711a432f4b7 3,28-33
+packages/widgets/src/beszel/_shared/chart.tsx
+  s_093d61b162b9ca::t_871a5d97cbf25d 11-12,15-21,26-30,37-38,42,59,84,170,174,180-181,221,224-225,233,236,249,257,263,272-273
+packages/widgets/src/beszel/_shared/disk-usage.tsx
+  s_093d61b162b9ca::t_dbbce1390cceec 1-4,9,24-25,27,32-35,41-50,52-57,92-98,100-117
+packages/widgets/src/beszel/_shared/stats-view.tsx
+  s_093d61b162b9ca::t_95ef3e4c47b9c1 9,11,23,29-39,69,81,84,87,89,93,141-159,169-175,198,205,212,236,250,269,283,297,310,323,339,353,366
+packages/widgets/src/beszel/_shared/system-stats-modal.tsx
+  s_093d61b162b9ca::t_ad18f4e9b2d762 53
+packages/widgets/src/beszel/_shared/tooltip.tsx
+  s_093d61b162b9ca::t_8fd09088c82766 6,8,55,58,60-63,118-120,127-128,145,156-160,168
+packages/widgets/src/bookmarks/bookmark.module.css
+  s_093d61b162b9ca::t_33842c4e7c1b69 5-10,22-25
+packages/widgets/src/bookmarks/component.tsx
+  s_093d61b162b9ca::t_f94cb54afc0296 3-16,26-27,30-68,70-77,81-99,103-110,112,114,118-119,121,127-157,172,184,188-199,202-232,237-307,317-318,330-331,336-353,356-384,404,425-426,464,472-473
+packages/widgets/src/bookmarks/index.tsx
+  s_093d61b162b9ca::t_7b752c7b7eac2a 13
+packages/widgets/src/bookmarks/prefetch.ts
+  s_093d61b162b9ca::t_52113e80ddb7a4 6,24
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_093d61b162b9ca::t_26c53ebbf3180c 1,20,22-24,29-31,34-50,56,59,63-74,76-119,122-132,134-141,143,146-155,157,159-163,165-166,168-180,183-186,205-212
+packages/widgets/src/calendar/calendar.spec.ts
+  s_093d61b162b9ca::t_48b5bbef351075 5,56-101
+packages/widgets/src/calendar/component.tsx
+  s_093d61b162b9ca::t_f5571dca38a7a5 4,7-8,15,17,19-21,23-30,34-47,50-59,70,78-80,83-86,88-99,105-106,110,113-123,131-160,163-241,245-323
+packages/widgets/src/calendar/index.ts
+  s_093d61b162b9ca::t_db7a9d158fb596 7,12-13
+packages/widgets/src/clock/component.tsx
+  s_093d61b162b9ca::t_4e4e03949df6b3 4,11-12,14-15,23,32-33,43,53-57,66-70,80,83-99,111-117
+packages/widgets/src/clock/index.ts
+  s_093d61b162b9ca::t_53936d709c15bf 4,9-25
+packages/widgets/src/coolify/component.tsx
+  s_093d61b162b9ca::t_ddde75ee262b20 3,9,14,25,32,35-41,43-44,48-57,59-67,72,80,83
+packages/widgets/src/coolify/coolify-utils.ts
+  s_093d61b162b9ca::t_b01384aef0081f 1-3,10-11,50-51,106
+packages/widgets/src/coolify/index.ts
+  s_093d61b162b9ca::t_f92bf1209a4234 7
+packages/widgets/src/coolify/instance-card.tsx
+  s_093d61b162b9ca::t_40b4eaf56c99b4 3,10,22,25,27,43,53-69,81-90,95-102,107,116,147-160
+packages/widgets/src/coolify/resource-row.tsx
+  s_093d61b162b9ca::t_54a4f98f1b0cc6 3-11,13-16,38,41-61,63,66-67,69-71,76,78-87,91,97-108,112-123,127-132,134
+packages/widgets/src/coolify/servers-section.tsx
+  s_093d61b162b9ca::t_e90b8815373721 3-4,9-10,36-37,44-57,96-97,102-117,126
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_093d61b162b9ca::t_72255b2d851f79 10,22,25,41-42,55-64,88-99,101,104
+packages/widgets/src/custom-api/component.tsx
+  s_093d61b162b9ca::t_c2d1fa4e8370e7 4-5,8,10,13,17-22,24-31,33-36,40-41,43-44,47,50-56,58-74,77,80-130
+packages/widgets/src/custom-api/custom-jsx-display.spec.ts
+  s_093d61b162b9ca::t_bda5a3e516cd9b 2-5,8,12-20,22-38,41-44,63-70,73-74,82,84-90,104-162,174-294,384-394,418-623
+packages/widgets/src/custom-api/custom-jsx-display.tsx
+  s_093d61b162b9ca::t_af7c40aa8ed0c6 5-7,9-10,12,15-34,36-58,60-62,66-86,89-92
+packages/widgets/src/custom-api/index.ts
+  s_093d61b162b9ca::t_a38084162a1b22 12-13
+packages/widgets/src/definition.ts
+  s_093d61b162b9ca::t_55607fc88ec16f 4,14,30,33-70,73,105,107-108,126,129-169,179,183,185
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_093d61b162b9ca::t_ab2bd118d0d2fc 36-37,49,57-59,62-66,69-73,76,100,102,117-118,122-140,155,159-160,173,181,194,198-199,230-231,237-249,254,262,269-270,282-283,289,293,353-355,365-367,377-378,386-387,395-399,404,442-443
+packages/widgets/src/dns-hole/controls/index.ts
+  s_093d61b162b9ca::t_46889cd6cc881c 11
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_093d61b162b9ca::t_c73e7183e13b39 4-16,32,34-40,43-44,48-60,63-104,106-107,109,122,132,142,158,183-184,187,190-192,196,224,228,234
+packages/widgets/src/dns-hole/summary/index.ts
+  s_093d61b162b9ca::t_287f0f056d37fd 11
+packages/widgets/src/docker/component.tsx
+  s_093d61b162b9ca::t_ea003259555ce0 4-18,46-47,50,83-103,108,118,231,242,244-246,325-330,332-334,336,354,362-363,378,387-395,404-413,416,451,552
+packages/widgets/src/downloads/component.tsx
+  s_093d61b162b9ca::t_ada215790538e5 6,53,56,58,60,138-139,158-161,307-308,313,319,323-324,332,346,359,362-363,365-368,372,379,412-413,474,714,741,785-802,854,917,1054
+packages/widgets/src/downloads/index.ts
+  s_093d61b162b9ca::t_05a7abdcdbbcc0 7,45-50
+packages/widgets/src/errors/base-component.tsx
+  s_093d61b162b9ca::t_0276f4d027cda9 20
+packages/widgets/src/errors/component.tsx
+  s_093d61b162b9ca::t_de1bf543e5789f 5,11,16,21,34-35,70
+packages/widgets/src/filter-storage-volumes.spec.ts
+  s_093d61b162b9ca::t_12adf5938a220d 3
+packages/widgets/src/filter-storage-volumes.ts
+  s_093d61b162b9ca::t_094e6858eb614b 38
+packages/widgets/src/firewall/component.tsx
+  s_093d61b162b9ca::t_395c06cfb74575 4-17,22-23,27,29,36-70,73,76-77,80,83,86-91,98-114,117-126,130-137,139-192,197-218,220-269,271-284,286-310,313-318,320-364,366-445
+packages/widgets/src/firewall/firewall-menu.tsx
+  s_093d61b162b9ca::t_3fa0dc4a055ce8 13,17-18,24
+packages/widgets/src/firewall/firewall-version.tsx
+  s_093d61b162b9ca::t_58205e03871787 4,22-24,26-42,48
+packages/widgets/src/health-monitoring/cluster/cluster-health.tsx
+  s_093d61b162b9ca::t_10c47cf6bca7f9 1,10,13,39,42-48,64,68,70-71,73,90-96,194-199,217-222
+packages/widgets/src/health-monitoring/cluster/resource-table.tsx
+  s_093d61b162b9ca::t_426e05f4ecea5b 30,34,39,44,62,65,68,73-74,77-78,80
+packages/widgets/src/health-monitoring/component.tsx
+  s_093d61b162b9ca::t_26443a702f3497 3,11,13,19,22,24,28-63,78,80
+packages/widgets/src/health-monitoring/index.ts
+  s_093d61b162b9ca::t_ec64fb1a9f9114 11
+packages/widgets/src/health-monitoring/system-health.module.css
+  s_093d61b162b9ca::t_5c6afc3d16583e 8-39
+packages/widgets/src/health-monitoring/system-health.tsx
+  s_093d61b162b9ca::t_be6486403c3871 3-4,16,35,44,46,59-61,63-66,69-70,74-75,77-109,111-120,122-126,128-129,131-189,191-193,196-230,233-241,245-290
+packages/widgets/src/iframe/component.tsx
+  s_093d61b162b9ca::t_5cfef11c4fcf9c 10,16,21,26-40,46-47,76,81-86,91,117-119,126-134
+packages/widgets/src/iframe/index.ts
+  s_093d61b162b9ca::t_40168b4b08196f 1,4,7-21,23,25-36,38
+packages/widgets/src/immich/album-carousel/component.module.css
+  s_093d61b162b9ca::t_a20d5f9fac09fb 27,29-37,40-53,55-57,59,61-63
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_093d61b162b9ca::t_3ef040a7cc97eb 4-14,17,21-22,29-30,33,35-42,51-67,86-89,117-120,123-137,139,145,147,149-151,154-240,242,244
+packages/widgets/src/immich/album-carousel/index.ts
+  s_093d61b162b9ca::t_d3f49cd0e93b70 1,7,11-51,54-62,66-91,93
+packages/widgets/src/immich/server-stats/component.module.css
+  s_093d61b162b9ca::t_261eed0d02a5c9 5,7-12
+packages/widgets/src/immich/server-stats/component.tsx
+  s_093d61b162b9ca::t_4643ec69caa87d 4,6,10,14-16,19-20,24-27,30-39,41-45,47,50-55,57-62,68-69,76-77,85,88-144,153,156-169,172,174,178,184-195
+packages/widgets/src/immich/server-stats/index.ts
+  s_093d61b162b9ca::t_6c5dcf32af8e0e 3,8-9,13
+packages/widgets/src/index.tsx
+  s_093d61b162b9ca::t_a485318cbdc271 70,75-87
+packages/widgets/src/indexer-manager/component.module.css
+  s_093d61b162b9ca::t_d70741a55ffc5b 8-61
+packages/widgets/src/indexer-manager/component.tsx
+  s_093d61b162b9ca::t_ba04191d41a9ed 3-4,13-16,24-25,28-29,37-44,47-79,81,86,91,93,95,100,105,107-115,118-161
+packages/widgets/src/indexer-manager/index.ts
+  s_093d61b162b9ca::t_3d990aefcd3e16 1,8-14,16,18-31,33
+packages/widgets/src/media-missing/component.module.css
+  s_093d61b162b9ca::t_0923425ba9afe6 8,11,20-21,23,26-29,44-49
+packages/widgets/src/media-missing/component.tsx
+  s_093d61b162b9ca::t_035bf85cb7c88e 4-20,22,29-30,32,35-36,38-45,47-56,58-63,76-77,80,82-85,87-88,90,92-95,113-156,159-162,166,209-216,283-307
+packages/widgets/src/media-missing/index.ts
+  s_093d61b162b9ca::t_d970e88dfd75bf 5,12-13
+packages/widgets/src/media-releases/component.tsx
+  s_093d61b162b9ca::t_cce85c3ea94a79 4-17,27,31,33-36,38-52,55-71,78-80,83,87,90,94-95,98-103,106,110-116,119-123,125-135,137,154-165,167,170-171,176-178,184,190,196,203,209-210,213-217,220,222,233,240,257-259
+packages/widgets/src/media-requests/list/component.tsx
+  s_093d61b162b9ca::t_51651ac28b2ff8 3,8,17-20,23-24,31,33-47,49-52,55,57-61,65,72-75,81,91,104,106-108,112-119,122-123,127,129-130,140-147,152,154-156,160-189,203-207,209-229,242-243,246,248-252,257,266-271,274,277-279,289,292-294
+packages/widgets/src/media-requests/list/index.ts
+  s_093d61b162b9ca::t_58ebab2cee2690 7,11-27,30,32-42,46
+packages/widgets/src/media-requests/search-button.module.css
+  s_093d61b162b9ca::t_e809103e714786 20-24
+packages/widgets/src/media-requests/stats/component.module.css
+  s_093d61b162b9ca::t_183c7550290ffb 8-29
+packages/widgets/src/media-requests/stats/component.tsx
+  s_093d61b162b9ca::t_183ef843870e29 3,25-28,41,44,49-54,99-102,106-108,117,120-124,126,146-191,193-210,223
+packages/widgets/src/media-requests/stats/index.ts
+  s_093d61b162b9ca::t_87ed9db96a2d07 8-9,11,13-14,18
+packages/widgets/src/media-server/component.tsx
+  s_093d61b162b9ca::t_9206965e754472 20,28-30,32,59-73,76-84,86-105,125-127,156,162-168,170-172,174-176,178-198,200-208,217,219,231,233,239,270,273-292,301-314,321,325-343,345-361,363-365,367-380,382,422-423
+packages/widgets/src/media-server/index.ts
+  s_093d61b162b9ca::t_253a55a021bef2 5,10-15
+packages/widgets/src/media-transcoding/component.tsx
+  s_093d61b162b9ca::t_138154fb78cd9c 3-18,28-29,49-51,53-60,64,66-69,73-90,94-127,139,147,151-152,167,170-171,173-187,197-259
+packages/widgets/src/media-transcoding/health-check-status.tsx
+  s_093d61b162b9ca::t_d54c2e8bd2dba8 2,9-10,26-34,77-78
+packages/widgets/src/media-transcoding/index.ts
+  s_093d61b162b9ca::t_d296e6bcbb8a15 7,14-16
+packages/widgets/src/media-transcoding/panels/statistics.panel.tsx
+  s_093d61b162b9ca::t_2ffad545a2abed 74,76
+packages/widgets/src/minecraft/server-status/component.tsx
+  s_093d61b162b9ca::t_7b3292e33aac37 3,8,13-19,21-30,35-40,48,52-60,62-67,71-78,82,85,98,101-109,112-116
+packages/widgets/src/minecraft/server-status/index.ts
+  s_093d61b162b9ca::t_4a3322ac72c38e 4,8,10-16
+packages/widgets/src/network-controller/network-status/component.tsx
+  s_093d61b162b9ca::t_39b59573b78bfb 4,11,14,25-27,29-33,36-37,39-56,59-81
+packages/widgets/src/network-controller/network-status/variants/stat-row.tsx
+  s_093d61b162b9ca::t_e354567d7b14d9 3-11,14,17
+packages/widgets/src/network-controller/network-status/variants/wifi-variant.tsx
+  s_093d61b162b9ca::t_e3b161db026898 1,8-18,22,28-31
+packages/widgets/src/network-controller/network-status/variants/wired-variant.tsx
+  s_093d61b162b9ca::t_6de6f376b70c00 1,8-18,22,28-31
+packages/widgets/src/network-controller/summary/component.tsx
+  s_093d61b162b9ca::t_028e270915032c 3,14-15,23-24,26,29-30,33-37,39-41,43-48,50-143,147,150-153,155
+packages/widgets/src/network-controller/summary/index.ts
+  s_093d61b162b9ca::t_5bbb561182b237 9
+packages/widgets/src/notebook/index.ts
+  s_093d61b162b9ca::t_ae149d003978dc 8
+packages/widgets/src/notebook/notebook.css
+  s_093d61b162b9ca::t_12fb4a44102f85 73-100
+packages/widgets/src/notebook/notebook.tsx
+  s_093d61b162b9ca::t_64246a8506de78 4,16,18,71-72,94-101,103-104,112-119,124-130,135-158,210,212-221,238,244-258,261,264-267,269-274,277,289,303-320,324,330-332,334,337-342,344,349-351,368,378-380,481,508-530,532,534-535,537,541-543,549-550,552,556,562,740-746,749-755,758-764
+packages/widgets/src/notifications/component.tsx
+  s_093d61b162b9ca::t_cff1984bc1754d 4,10,13-14,16-22,26-27,29,36-42,46-53,56-105,107-120,122-132,134-138,145,149-151,154-159
+packages/widgets/src/notifications/index.ts
+  s_093d61b162b9ca::t_7b169a1d68341d 5,9,11-16
+packages/widgets/src/options.ts
+  s_093d61b162b9ca::t_2783c1126b74cf 59-60,62,105-110,229-234
+packages/widgets/src/paperless-ngx/component.tsx
+  s_093d61b162b9ca::t_b147a12da8664d 5,73-78,80-85,89-98,118-119,126-127,130,207,209
+packages/widgets/src/paperless-ngx/index.ts
+  s_093d61b162b9ca::t_5040c7a1dfe507 7,12
+packages/widgets/src/patchmon/component.tsx
+  s_093d61b162b9ca::t_1d9791cdb60a9a 81-84,86
+packages/widgets/src/patchmon/index.ts
+  s_093d61b162b9ca::t_96c6b57c26b40e 10,14,193-228
+packages/widgets/src/patchmon/os-distribution-section.tsx
+  s_093d61b162b9ca::t_7e520e2def15de 12,67,103-108
+packages/widgets/src/patchmon/stat-colors.ts
+  s_093d61b162b9ca::t_779b5124377475 16
+packages/widgets/src/patchmon/test/stat-colors.spec.ts
+  s_093d61b162b9ca::t_16bda1170a4c8a 120-129
+packages/widgets/src/patchmon/test/threshold-validation.spec.ts
+  s_093d61b162b9ca::t_883789582a774f 26-46
+packages/widgets/src/prefetch.ts
+  s_093d61b162b9ca::t_73ce9c1880f489 3,7,33,37-41
+packages/widgets/src/releases/component.module.scss
+  s_093d61b162b9ca::t_09d65161052338 10-14,20,24-28,32-36,40-44
+packages/widgets/src/releases/component.tsx
+  s_093d61b162b9ca::t_f53f5a05e3101d 4-15,41,52,63,190-213,215-224,226-235,237-242,244-286,288-344,350,354,360-361,364-368,370-372,374-375,377-379,381,383-384,386-389,391-402,404-405,407-414,416-417,419-421,425-426,428-429,431-443,445-446,448,450-476,478-479,481-483,485,487-488,490-527,529-530,532,534-559,561,582-583,653,658,660,665,684-686
+packages/widgets/src/releases/index.ts
+  s_093d61b162b9ca::t_3479e186a1e5c6 7,16,18-19
+packages/widgets/src/rssFeed/component.module.scss
+  s_093d61b162b9ca::t_6035e53ad3070b 1-25
+packages/widgets/src/rssFeed/component.tsx
+  s_093d61b162b9ca::t_2a5945389c714f 3-4,7,10,13-14,17-21,23-39,42-43,49-65,69-74,77-108,112-131,136-167
+packages/widgets/src/rssFeed/index.ts
+  s_093d61b162b9ca::t_759bf1bc2d21dc 1,4,14,16-21,23-28
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_093d61b162b9ca::t_b8202b645687cd 4,8-9,11,14-15,22-23,25-27,36-41,44-50,53-64,67,75,92,95,97-116,120,122-124,129,135-137,140-166
+packages/widgets/src/smart-home/entity-state/index.ts
+  s_093d61b162b9ca::t_c64baf2f0e0e58 1,10-11,25-30
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  s_093d61b162b9ca::t_fa5b4455223877 4-14,19,21,24,31-32,34-36,42,44,50,53-61,64,81,84,87,90-99,101-162
+packages/widgets/src/smart-home/execute-automation/index.ts
+  s_093d61b162b9ca::t_af011bdb0a5379 10
+packages/widgets/src/speedtest-tracker/averages.tsx
+  s_093d61b162b9ca::t_95d8481586ed42 13,21
+packages/widgets/src/speedtest-tracker/component.tsx
+  s_093d61b162b9ca::t_6c06180dc51b93 3-4,10,13,17-23,25-27,30,34-36,42-91,95,97-98,101
+packages/widgets/src/speedtest-tracker/helpers.ts
+  s_093d61b162b9ca::t_024837437d38a7 14-16,19,24,27,33,36,41,45-65,78-95
+packages/widgets/src/speedtest-tracker/latest-result.tsx
+  s_093d61b162b9ca::t_ce76fc150c3b9c 7,13,15,22-23,29
+packages/widgets/src/speedtest-tracker/recent-results.tsx
+  s_093d61b162b9ca::t_cba4f8f66e96e2 11,43,48,51,53,70-92,103,106,166,170-171,194-195,241,280,284-285,310,353
+packages/widgets/src/speedtest-tracker/section-label.tsx
+  s_093d61b162b9ca::t_84175d031f9460 6
+packages/widgets/src/speedtest-tracker/speed-stat-card.tsx
+  s_093d61b162b9ca::t_b5a6318c3ada96 3,24-28,30,32-44,46-52,54-55
+packages/widgets/src/stocks/component.tsx
+  s_093d61b162b9ca::t_3738ee5ac7b316 5,8,22,26-63,66-67,69,71,75-79,81,89,101,103-104,108,115-116,119,121-124,128
+packages/widgets/src/stocks/index.ts
+  s_093d61b162b9ca::t_229461279ea871 3,15,17-23
+packages/widgets/src/system-disks/component.tsx
+  s_093d61b162b9ca::t_30cb6e645e0eb9 4,12,14,19-22,42-51,59-62,72-75,101-109,113-114,120,124-134,137-147,155,159,167-172,174-201,204-206,208,215-218,220-222
+packages/widgets/src/system-disks/index.ts
+  s_093d61b162b9ca::t_2f5af052a27dbb 8
+packages/widgets/src/system-resources/chart/common-chart.tsx
+  s_093d61b162b9ca::t_b90f86690b8407 86-92,102-106
+packages/widgets/src/system-resources/chart/memory-chart.tsx
+  s_093d61b162b9ca::t_607adb56e352c8 25,48-49
+packages/widgets/src/system-resources/chart/network-traffic.tsx
+  s_093d61b162b9ca::t_d2040a10610872 26,36
+packages/widgets/src/system-resources/component.tsx
+  s_093d61b162b9ca::t_eb448e2903247d 3-4,8,10,17-18,20-27,32,37,42-46,48-52,54-67,70-73,79-90,93-133,136-180,182-193,197-203,207-212,217-243,246
+packages/widgets/src/test/translation.spec.ts
+  s_093d61b162b9ca::t_6ccfac989244d2 6-30,32,35-48,50
+packages/widgets/src/timetable/component.tsx
+  s_093d61b162b9ca::t_38daecfb682d31 1-2,5,8,11-17,24-33,39-42,45-50,52,54,57-58,60,62-70,72-84,86-124,128-185
+packages/widgets/src/timetable/index.ts
+  s_093d61b162b9ca::t_6056127eeb3072 1,5,12-18,24,27-33,35-36,41
+packages/widgets/src/tracearr/component.tsx
+  s_093d61b162b9ca::t_86b5cb3bc6b2b3 3,10,12,18-45,50-58,65-66,69,71-72,75,96,128-137,142-178,183-185,195-199
+packages/widgets/src/tracearr/recent-activity-section.tsx
+  s_093d61b162b9ca::t_34e0529c22ad0b 4,8,12,46
+packages/widgets/src/tracearr/violations-section.tsx
+  s_093d61b162b9ca::t_aae7c516aba0b0 5,9,13,57
+packages/widgets/src/traefik/component.tsx
+  s_093d61b162b9ca::t_b41fd61714be17 4,20,40-41,53-54,58-67,69,77-78,90-94,98-122,124-128,130-138,140-142,144,146-205,209-210
+packages/widgets/src/umami/component.tsx
+  s_093d61b162b9ca::t_3fd8d8ea0d19dd 4,6,10,13-72,85-87
+packages/widgets/src/umami/index.ts
+  s_093d61b162b9ca::t_42565a5db9af91 4,11-18,21-22
+packages/widgets/src/umami/umami-content.tsx
+  s_093d61b162b9ca::t_50f979fe2594a5 4,9,12,16-17,29-31,44-46,49-50,52,56,59-60,62,66,72-73,87,100-199,202,213-214,225,235,243-267,269,271-278
+packages/widgets/src/umami/umami-events-content.tsx
+  s_093d61b162b9ca::t_b728ac58868b98 4,8,11,19,28,31-32,34-40,66,113,130
+packages/widgets/src/umami/umami-top-list.tsx
+  s_093d61b162b9ca::t_1170ac457e6106 7,10,21-27,33-39,58-59,76
+packages/widgets/src/umami/umami-utils.ts
+  s_093d61b162b9ca::t_3ade66fb61c84a 9,14,19
+packages/widgets/src/ups/component.tsx
+  s_093d61b162b9ca::t_c2b646ab98b5e8 3-15,25,38-44,49-57,64-65,68,70,74-78,89-101,105-113,118-125,130,134,154,161,266-279
+packages/widgets/src/uptime-kuma/component.tsx
+  s_093d61b162b9ca::t_52bfaca513a632 4,13,16,80-105,110-118,125-126,129,131,135-141,143,149,154-167,172,174,182,227-244,247-291,294-295
+packages/widgets/src/video/component.tsx
+  s_093d61b162b9ca::t_6fe6bff5a1480e 19,24,28,31-39,67,110-111,125
+packages/widgets/src/video/index.ts
+  s_093d61b162b9ca::t_d0c5725ccfae69 7
+packages/widgets/src/vpn/component.tsx
+  s_093d61b162b9ca::t_7b6ad790903076 3,6,9,12-13,17-32,38-43,49-64,66
+packages/widgets/src/vpn/index.ts
+  s_093d61b162b9ca::t_146ee5e6404b76 9
+packages/widgets/src/vpn/vpn-card.tsx
+  s_093d61b162b9ca::t_c122a4504813c5 4-12,26,31,38,47,51,56,65-73,79,86,98,103,105,108-110,113-125,139,148,157-158,160-168,188-192,199,202
+packages/widgets/src/weather/component.tsx
+  s_093d61b162b9ca::t_db06505242b664 3-13,20,23-25,28-29,31-38,43-44,46,49-73,75-80,82,87,90-260,267-269,271-273,275-276,345-347,360-362,364-366,368-369,379,384,386-387,390-396,398-418,434-435,440-441,447-448,453-464
+packages/widgets/src/weather/icon.tsx
+  s_093d61b162b9ca::t_deed02c83cfe09 19,85,95,126-169
+packages/widgets/src/weather/index.ts
+  s_093d61b162b9ca::t_c40c7e5d5085e0 5,10-20
+pnpm-lock.yaml
+  s_093d61b162b9ca::t_297b3ef08f6226 13,16,22,30-59,69-74,78-80,84-86,100-101,177-179,186-188,342-347,353,355,372-377,399-401,429-431,450-452,502-503,510-512,528-530,549-551,564-566,571,591-593,625-626,668-671,704-706,712,715,718,721,724,727,736,763,767-769,775,778,781,784,788-790,793,799,802,805,808,811-814,818-823,832-835,842-844,848-853,859-865,869-874,890-892,896-904,908-910,941,959,963-968,972-974,978-980,989,1011-1013,1083-1085,1095-1097,1112,1116,1118,1127,1130,1133,1136,1139,1154,1205,1211,1253,1296,1384,1433,1461,1483-1485,1525-1527,1536,1539,1542,1545,1551,1563,1566-1569,1579,1615,1618,1640,1659,1690,1708,1733,1739,1779,1792,1856,1878-1972,1985-1987,2054,2076,2098,2123,2166,2185,2210,2301,2326,2374,2390,2409,2457,2482,2498,2514,2542,2591,2607,2622,2635,2689,2705,2726,2729,2742,2781,2803,2813-2818,2831,2856-2858,2913-2915,2973-2981,2999,3030-3058,3084-3085,3090-3091,3114-3119,3128-3133,3262-3263,3265,3290,3292,3326,3957-3983,4106-4108,4112-4114,4495-4497,4502-4504,4510-4512,4519-4524,4531-4536,4543-4545,4601,5509-5510,5563-5564,5567-5569,5573-5575,5579-5585,5589-5590,5594-5595,5600-5601,5606-5607,5612-5613,5618-5619,5624-5625,5630-5631,5636-5637,5642-5644,5649-5651,5656-5658,5663-5665,5670-5672,5677-5679,5684-5686,5691-5693,5698-5704,5707-5709,5713-5715,5719-5721,6353-6354,6356-6357,6362-6363,6368-6369,6375-6376,6382-6383,6389-6390,6396-6397,6402-6403,7070-7072,7193-7201,7224-7232,7242-7254,7277-7289,7316-7324,7334-7335,7347-7348,7360-7373,7386-7394,7508-7520,7547-7559,7573-7585,7677-7685,7786-7794,7804-7812,7822-7830,7858-7866,8315-8325,8362-8391,8778-8803,8814-8821,9090,9097,9124,9130,9527-9645,9970-9971,10120-10130,10157,10256,10561-10563,10625-10630,10635-10637,10906,11097,11210-11212,11556-11568,11808-11809,12198-12202,12541-12542,12602-12607,12994,13316,13324,13722,13724-13725,13727,13786-13793,13795,14057,14070,14321-14324,14372-14374,14797-14798,15061-15070,15157-15162,15259-15266,15593,15599-15603,15615-15624,15663-15670,15765-15767,15771-15776,16062-16063,16085-16087,16335,16412-16414,16540,16655,16660,16711,16754,16798,16860,16885,17091-17092,17107-17108,17186,17188-17189,17193,17195-17196,17221-17229,17238,17240-17247,17249,17254,17258-17259,17432-17433,17445-17446,17449,17451,17462,17467,17506-17507,18350-18374,18523-18528,18533-18539,18936-18937,18940-18945,18951-18956,18965-18977,18985-18993,19001-19005,19067,19086,19112,19115,19291,19293,19296-19297,19339,19341,19345,19385,19387,19421,19423,19454,19456,19488,19490,19520,19522,19553,19555,19585,19587,19622,19624,19628-19629,19658-19673,19709,19711,19715-19718,19762,19766,19795,19797,19799,19831,19835,19837-19838,20418,20422,20427,20431,20468,20500,20502-20503,20530,20533,20535,20538,20540-20545,20548,20551,20554,20557,20560,20563,20566,20569,20572,20575,20578,20580,20583,20585,20588,20590,20593,20595,20598,20600,20603,20605,20608,20610,20613,20615,20618,20623-20628,20631,20634,20832,21125,21143,21149,21179,21183,21467,21469,21472,21475,21478,21481,21484,21487,21490,22159-22160,22277-22282,22302-22307,22314-22335,22365-22377,22406-22411,22418-22428,22471-22477,22637-22646,22666-22674,22684-22692,22814-22820,22940-22945,22952-22959,22969-22975,22996-23001,23102,23105,23225,23227-23229,23231,23237,23239-23240,23245,23263,23266-23268,23270-23271,23273,23278-23283,23290,23292,23311,23313,23333,23335-23338,23340,23342-23343,23345,23349-23350,23352-23354,23358,23381,23383,23385,23389,23392,23419,23422,23424,23427,23429-23433,23443,23446,23448,23458,23463,23465,23481,23483,23485,23487-23489,23516,23532,23536,23538,23540-23541,23543,23547,23549,23556,23569,23578,23583,23585,23595,23601,23607,23611,23615,23631,23638,23653,23657,23667,23671-23675,23713-23746,23795,23800,23811,23815,23821,23823-23824,23830,23837-23839,23957,23960,23963,23965,23968,24047,24049,24051,24053-24087,24093,24095-24104,24112,24115,24141,24144,24388,24390-24391,24393,24395-24397,24400,24403,24405,24408-24409,24411,24413,24415,24417,24420-24421,24423,24474,24478,24489,24493,24639,24645,24656,24688,24718,24782,24789,24798,24808,24812,24816,24823-24875,24878-24879,24881-24882,24884-24885,24887-24888,24890-24891,24893-24894,24896-24897,24899-24900,24902-24903,24905-24906,24908-24909,24911-24912,24914-24915,24917-24918,24922,24926,24964,24967,24983,24994-25003,25009,25039,25093,25097,25101,25105-25106,25111,25115-25116,25118,25120-25122,25132,25134,25139,25141,25298,25300-25302,25451,25459-25467,25621,25645,25649-25651,25944-25947,26011-26022,26031-26040,26245,26252,26254,26261,26326,26448,26452,26653-26654,26803,26805,26929-26940,27227,27248,27261,27642,27772-27775,28260,28302-28306,28526,28540,28891,28938,28945,28947,28954,29601,29622,29671,29689,29692,29697,29704,29710,29714-29719,29721,29725,29730-29737,29742,29745,29755,29788,29794,30028,30197-30198,30257-30258,30413,30415,30418,30729,30951,31072,31075,31078-31080,31084-31085,31122-31129,31219-31223,31302,31309,31356-31375,31787,31789,31791-31793,31795,31823,31833-31834,31873-31878,31942,31944,31946,31948-31973,32087-32092,32097-32101,32378,32384,32386,32396-32397,32607,32610-32612,32618,32621-32623,32629,32631,32648,32650,32729-32750,33046,33050-33051,33056-33073,33092,33095,33106-33137,33156,33158,33162,33167,33170,33515,33525
+scripts/run.sh
+  s_093d61b162b9ca::t_f2e9557589bef7 27-31,33-37
+static-data/opencollective-contributors.json
+  s_093d61b162b9ca::t_90556e5d7cbc0f 1
+static-data/translators.json
+  s_093d61b162b9ca::t_db862d3f977446 1
+vitest.config.mts
+  s_093d61b162b9ca::t_4a3eb7cf72b9bb 19-71
+vitest.setup.ts
+  s_093d61b162b9ca::t_a18180fe583c5e 3-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "9fd7a8a05bee796daf143f84a198769998e20ddc",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
