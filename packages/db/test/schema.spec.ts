@@ -11,9 +11,6 @@ import * as mysqlSchema from "../schema/mysql";
 import * as postgresqlSchema from "../schema/postgresql";
 import * as sqliteSchema from "../schema/sqlite";
 
-const mysqlTables = { ...mysqlSchema };
-const postgresqlTables = { ...postgresqlSchema };
-
 // We need the following three types as there is currently no support for Buffer in mysql & pg and
 // so we use a custom type which results in the config beeing different
 type FixedMysqlConfig = {
@@ -66,7 +63,8 @@ test("schemas should match", () => {
       if (!("uniqueName" in sqliteColumn)) return;
       if (!("primary" in sqliteColumn)) return;
 
-      const mysqlTable = mysqlTables[tableName];
+      // oxlint-disable-next-line import/namespace -- this test intentionally compares matching dynamic schema keys.
+      const mysqlTable = mysqlSchema[tableName];
 
       const mysqlColumn = mysqlTable[columnName as keyof typeof mysqlTable] as object;
       if (!("isUnique" in mysqlColumn)) return;
@@ -87,7 +85,8 @@ test("schemas should match", () => {
       ).toEqual(mysqlColumn.primary);
     });
 
-    const mysqlTable = mysqlTables[tableName];
+    // oxlint-disable-next-line import/namespace -- this test intentionally compares matching dynamic schema keys.
+    const mysqlTable = mysqlSchema[tableName];
     const sqliteForeignKeys = sqliteTable[Symbol.for("drizzle:SQLiteInlineForeignKeys") as keyof typeof sqliteTable] as
       | SqliteForeignKey[]
       | undefined;
@@ -147,7 +146,8 @@ test("schemas should match for postgresql", () => {
   objectEntries(sqliteSchema).forEach(([tableName, sqliteTable]) => {
     // keys of sqliteSchema and postgresqlSchema are the same, so we can safely use tableName as key
     // skipcq: JS-E1007
-    const postgresqlTable = postgresqlTables[tableName];
+    // oxlint-disable-next-line import/namespace -- this test intentionally compares matching dynamic schema keys.
+    const postgresqlTable = postgresqlSchema[tableName];
     Object.entries(sqliteTable).forEach(([columnName, sqliteColumn]: [string, object]) => {
       if (!("isUnique" in sqliteColumn)) return;
       if (!("uniqueName" in sqliteColumn)) return;

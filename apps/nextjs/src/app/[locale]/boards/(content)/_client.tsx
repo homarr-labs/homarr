@@ -20,7 +20,7 @@ export const ClientBoard = () => {
     .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset);
 
   return (
-    <Box h="100%" pos="relative">
+    <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
       <BoardBackgroundVideo />
       {isMobile ? (
         <MobileBoard />

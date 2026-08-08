@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "Käänteinen järjestys"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "",
           "description": ""
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "",
@@ -2734,6 +2757,9 @@
         "id": "",
         "status": "Tila",
         "directPlay": "Muuntamaton toisto",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "Transkoodaus",
         "paused": "Keskeytetty",
         "remaining": "{minutes} min jäljellä",
@@ -3768,18 +3794,6 @@
           "label": "Näytä kappaleet",
           "description": "Näytä musiikkikirjastosi kappaleiden kokonaismäärä (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Näytä nyt soi",
-          "description": "Näytä tällä hetkellä toistettavat kappaleet (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Näytä nyt soiva lista",
-          "description": "Näytä yksittäiset kappaleet pelkän aktiivisten striimien määrän sijaan (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Nyt soivien kohteiden enimmäismäärä",
-          "description": "Nyt soivassa listassa näytettävien kappaleiden enimmäismäärä (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Näytä kirjastojen määrä",
           "description": "Näytä instanssisi kirjastojen lukumäärä (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "Podcastit",
       "listeningTime": "Kuunteluaika",
       "activeSessions": "Aktiiviset istunnot",
-      "nowPlaying": "Nyt soitetaan",
-      "nowPlayingCount": "{count, plural, one {# striimi} other {# striimiä}}",
       "error": {
         "internalServerError": "Audiotilastojen nouto epäonnistui"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Näytä agentin versio"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Järjestelmiä ei löytynyt",
       "error": {
-        "internalServerError": "Beszel-yhteyden muodostaminen epäonnistui. Tarkista integraatioasetuksesi."
+        "internalServerError": "Beszel-yhteyden muodostaminen epäonnistui. Tarkista integraatioasetuksesi.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "Järjestelmä",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "Poista",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",

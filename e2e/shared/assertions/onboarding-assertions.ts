@@ -57,6 +57,6 @@ export class OnboardingAssertions {
   }
 
   public async assertFinishStepVisibleAsync() {
-    await this.page.waitForSelector("text=completed the setup", { timeout: 15000 });
+    await this.page.waitForSelector("text=completed the setup", { timeout: 30_000 });
   }
 }

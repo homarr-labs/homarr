@@ -2,6 +2,7 @@ import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
+import { env } from "@homarr/common/env";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { items, users } from "@homarr/db/schema";
@@ -20,6 +21,8 @@ const feedsInput = z.object({
 
 export const rssFeedRouter = createTRPCRouter({
   getFeeds: publicProcedure.input(feedsInput).query(async ({ ctx, input }) => {
+    if (env.NO_EXTERNAL_CONNECTION) return [];
+
     const urls = (await canAccessAllFeedsAsync(ctx.db, ctx.session))
       ? input.urls
       : await restrictUrlsAsync(ctx.db, input.urls);

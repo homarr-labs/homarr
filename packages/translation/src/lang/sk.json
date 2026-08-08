@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Nepodarilo sa načítať štatistiky kontajnerov"
+        "internalServerError": "Nepodarilo sa načítať štatistiky kontajnerov",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "Zobraziť len aktuálne prehrávanú",
           "description": "Zakázanie tohto nebude fungovať pre plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Momentálne sa prehráva",
@@ -2734,6 +2757,9 @@
         "id": "Id",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3768,18 +3794,6 @@
           "label": "Zobraziť skladby",
           "description": "Zobraziť celkový počet skladieb vo vašej hudobnej knižnici (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Zobraziť práve hrané",
-          "description": "Zobraziť skladby, ktoré sa práve prehrávajú (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Zobraziť zoznam práve hraných",
-          "description": "Zobraziť jednotlivé skladby namiesto len počtu aktívnych streamov (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Max. počet položiek práve hraných",
-          "description": "Maximálny počet skladieb zobrazených v zozname práve hraných (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Zobraziť počet knižníc",
           "description": "Zobraziť počet knižníc na vašej inštancii (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "Podcasty",
       "listeningTime": "Čas počúvania",
       "activeSessions": "Aktívne relácie",
-      "nowPlaying": "Práve hrané",
-      "nowPlayingCount": "{count, plural, one {# stream} few {# streamy} many {# streamov} other {# streamov}}",
       "error": {
         "internalServerError": "Nepodarilo sa načítať údaje audio štatistík"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Zobraziť verziu agenta"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Nenašli sa žiadne systémy",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "Systém",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "Odstrániť",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Kontajnery boli odstránené",

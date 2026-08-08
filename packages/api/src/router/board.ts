@@ -2004,9 +2004,12 @@ const getElementsForLayout = (board: Awaited<ReturnType<typeof getFullBoardWithW
 };
 
 const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, userId: string | null) => {
-  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, userId ?? ""),
-  });
+  const groupPermissionWhere = userId
+    ? inArray(
+        boardGroupPermissions.groupId,
+        db.select({ groupId: groupMembers.groupId }).from(groupMembers).where(eq(groupMembers.userId, userId)),
+      )
+    : eq(boardGroupPermissions.groupId, "");
   const board = await db.query.boards.findFirst({
     where,
     with: {
@@ -2029,8 +2032,8 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
       items: {
         with: {
           integrations: {
-            with: {
-              integration: true,
+            columns: {
+              integrationId: true,
             },
           },
           layouts: true,
@@ -2044,7 +2047,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
         },
       },
       groupPermissions: {
-        where: inArray(boardGroupPermissions.groupId, groupsOfCurrentUser.map((group) => group.groupId).concat("")),
+        where: groupPermissionWhere,
       },
     },
   });
@@ -2092,7 +2095,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
             layoutId: layout.layoutId,
             sectionId: layout.sectionId,
           })),
-          integrationIds: itemIntegrations.map((item) => item.integration.id),
+          integrationIds: itemIntegrations.map((item) => item.integrationId),
           advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
           options: superjson.parse<Record<string, unknown>>(item.options),
         }),

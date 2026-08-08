@@ -105,12 +105,14 @@ export const useCategoryMenuActions = (category: CategorySection) => {
 
   const settings = useSettings();
   const openAllInNewTabs = useCallback(async () => {
-    const appIds = filterByItemKind(
-      board.items.filter(
-        (item) => item.layouts.find((layout) => layout.layoutId === currentLayoutId)?.sectionId === category.id,
-      ),
-      settings,
-      "app",
+    const appIds = (
+      await filterByItemKind(
+        board.items.filter(
+          (item) => item.layouts.find((layout) => layout.layoutId === currentLayoutId)?.sectionId === category.id,
+        ),
+        settings,
+        "app",
+      )
     ).map((item) => {
       return item.options.appId;
     });

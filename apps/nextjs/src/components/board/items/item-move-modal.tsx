@@ -9,13 +9,13 @@ import { useI18n } from "@homarr/translation/client";
 
 import type { Item, SectionItem } from "~/app/[locale]/boards/_types";
 
-interface InnerProps {
+export interface ItemMoveModalProps {
   gridStack: GridStack;
   item: Pick<SectionItem, "id" | "width" | "height" | "xOffset" | "yOffset">;
   columnCount: number;
 }
 
-export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) => {
+export const ItemMoveModal = createModal<ItemMoveModalProps>(({ actions, innerProps }) => {
   const t = useI18n();
   const maxWidthRef = useRef(innerProps.columnCount - innerProps.item.xOffset);
   const form = useZodForm(

@@ -3,24 +3,18 @@ import type { NextAuthConfig } from "next-auth";
 
 import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
-import { eq, inArray } from "@homarr/db";
+import { eq } from "@homarr/db";
 import { groupMembers, groupPermissions, users } from "@homarr/db/schema";
 import { getPermissionsWithChildren } from "@homarr/definitions";
 
 export const getCurrentUserPermissionsAsync = async (db: Database, userId: string) => {
-  const dbGroupMembers = await db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, userId),
-  });
-  const groupIds = dbGroupMembers.map((groupMember) => groupMember.groupId);
-
-  if (groupIds.length === 0) return [];
-
   const dbGroupPermissions = await db
     .selectDistinct({
       permission: groupPermissions.permission,
     })
     .from(groupPermissions)
-    .where(inArray(groupPermissions.groupId, groupIds));
+    .innerJoin(groupMembers, eq(groupPermissions.groupId, groupMembers.groupId))
+    .where(eq(groupMembers.userId, userId));
   const permissionKeys = dbGroupPermissions.map(({ permission }) => permission);
 
   return getPermissionsWithChildren(permissionKeys);
@@ -43,12 +37,15 @@ export const createSessionAsync = async (
 
 export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session"> => {
   return async ({ session, user }) => {
-    const additionalProperties = await db.query.users.findFirst({
-      where: eq(users.id, user.id),
-      columns: {
-        colorScheme: true,
-      },
-    });
+    const [additionalProperties, permissions] = await Promise.all([
+      db.query.users.findFirst({
+        where: eq(users.id, user.id),
+        columns: {
+          colorScheme: true,
+        },
+      }),
+      getCurrentUserPermissionsAsync(db, user.id),
+    ]);
 
     return {
       ...session,
@@ -57,7 +54,7 @@ export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session
         ...additionalProperties,
         id: user.id,
         name: user.name,
-        permissions: await getCurrentUserPermissionsAsync(db, user.id),
+        permissions,
       },
     };
   };

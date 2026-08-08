@@ -5,7 +5,7 @@ import { jobGroup } from "@homarr/cron-jobs";
 
 import { onStartAsync } from "./on-start";
 
-void (async () => {
+export const startupPromise = (async () => {
   await onStartAsync();
   await jobGroup.initializeAsync();
   await jobGroup.startAllAsync();
