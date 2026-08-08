@@ -5,7 +5,7 @@ ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.39.9@sha256:c0667fe6c5197ff2
 FROM node:24.18.0-alpine AS dependencies
 WORKDIR /app
 ENV COREPACK_HOME=/corepack
-RUN mkdir -p /corepack && corepack enable pnpm && corepack install --global pnpm@11.11.0
+RUN mkdir -p /corepack && corepack enable pnpm && corepack install --global pnpm@11.15.1
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
 COPY patches ./patches
 COPY apps/docs ./apps/docs

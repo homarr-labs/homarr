@@ -8,37 +8,37 @@ Audit health (Impeccable rubric): accessibility 1/4, performance 2/4, responsive
 
 ## Reviewed revision and environment
 
-| Item | Value |
-| --- | --- |
-| PR | #6502, `feat: modernize dashboard widgets` |
-| Reviewed head | `96e92485a5fd45f3648cfac0453e614779c414ba` |
-| Base branch / fetched base | `dev` / `d58a47b776a55d04dee2220f59d072b9af8bbed3` |
-| Merge base | `d58a47b776a55d04dee2220f59d072b9af8bbed3` |
-| Diff | 359 files, +15,721/-4,478 |
-| PR state | open, non-draft, `BLOCKED`; no approval decision |
+| Item                         | Value                                                                                          |
+| ---------------------------- | ---------------------------------------------------------------------------------------------- |
+| PR                           | #6502, `feat: modernize dashboard widgets`                                                     |
+| Reviewed head                | `96e92485a5fd45f3648cfac0453e614779c414ba`                                                     |
+| Base branch / fetched base   | `dev` / `d58a47b776a55d04dee2220f59d072b9af8bbed3`                                             |
+| Merge base                   | `d58a47b776a55d04dee2220f59d072b9af8bbed3`                                                     |
+| Diff                         | 359 files, +15,721/-4,478                                                                      |
+| PR state                     | open, non-draft, `BLOCKED`; no approval decision                                               |
 | Hosted checks at audit start | Fast gate, Container and E2E, CodeQL, JS/TS analysis, Actions analysis, title, auto-fix: green |
-| Inline threads | 34 total, 7 unresolved; only 2 remain substantively valid |
-| Mantine | repository lock: `@mantine/core`, hooks, charts and dates 9.4.1 |
-| Local tools | Node 24.16.0 and pnpm 9.5.0; repository requires Node >=24.18.0 and pnpm >=11.15.1 |
+| Inline threads               | 34 total, 7 unresolved; only 2 remain substantively valid                                      |
+| Mantine                      | repository lock: `@mantine/core`, hooks, charts and dates 9.4.1                                |
+| Local tools                  | Node 24.16.0 and pnpm 9.5.0; repository requires Node >=24.18.0 and pnpm >=11.15.1             |
 
 The former red baseline `7b7045202d289b7d83946befcee5d2845ea4a706` had a green Fast gate and a failed Container/E2E run (`30748255760`, job `91498308523`). The latest head has a green Container/E2E job (`30756067198`, job `91519039504`). This proves the current suite passed once; it does not satisfy the requested three-run flake characterization.
 
 ## PR-description traceability
 
-| Claim | Result | Evidence / correction |
-| --- | --- | --- |
-| “all 54 widget renderers with compact and advanced modes” | **Inaccurate** | 54 `WidgetKind` values exist. `displayMode="advanced"` reaches 53; `app` is deliberately excluded in `item-content.tsx:51` and documented as compact-only. Change copy to “53 widget renderers; app tiles remain compact,” or implement app advanced mode. |
-| advanced focus: hover, keyboard, touch, geometry | **Partial** | Entry paths, Escape ownership, reduced motion, close focus, touch button and zero-dimension guards exist. WID-002/003 remain. |
-| richer widget context actions | **Partial** | `Menu.ContextMenu` is a good Mantine choice and query scope is item-aware. Dispatch still crosses `any`; Custom API action authorization is not represented. |
-| standardized query identity/cache/status | **Partial** | Query keys, matchers, runtime capture, recovery and tests exist. Thirty-nine of 53 renderer query calls do not read errors; runtime ref registration is render-time mutable state. |
-| safe polling | **Mostly confirmed** | defaults are limited to `widget` namespace; Custom API resume immediately refetches; per-widget intervals exist. State/ref typing still needs redesign. |
-| partial-failure rendering | **Partial** | settlement helper and several routers are strong; many renderer-level total failures still appear empty/disconnected. |
-| bounded integration responses | **Mostly confirmed** | common bounded reader, Custom API 2 MiB, timetable 512 KiB, Traefik bounds and Beszel queue bounds exist. Custom action execution remains outside the hardened fetch path. |
-| timetable hardening | **Confirmed** | board/item permission checks, saved-value comparison, public-address resolution, private ranges, per-request DNS re-resolution, pinned dispatcher, redirect rejection, timeouts, response bounds and schemas are present. |
-| precise placement | **Mostly confirmed** | mouse, touch tolerance, keyboard, occupied-cell validation, dynamic bounds, nearest fit and immediate persistence exist. Failure/race/live responsive coverage remains insufficient. |
-| widget catalog documentation | **Partial** | all kinds have pages and shared interactions; wording overclaims focus behavior and validation counts are stale. |
-| validation: 40 files/162 tests, 6/6 E2E | **Stale** | current diff contains 57 changed unit-spec files (including three E2E specs); repository has 42 widget spec files and six E2E specs. Update from the exact final run. |
-| independent reviews “pass” | **Not supported** | unresolved valid findings, current P1s, and unavailable live QA contradict an unqualified pass. |
+| Claim                                                     | Result               | Evidence / correction                                                                                                                                                                                                                                      |
+| --------------------------------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| “all 54 widget renderers with compact and advanced modes” | **Inaccurate**       | 54 `WidgetKind` values exist. `displayMode="advanced"` reaches 53; `app` is deliberately excluded in `item-content.tsx:51` and documented as compact-only. Change copy to “53 widget renderers; app tiles remain compact,” or implement app advanced mode. |
+| advanced focus: hover, keyboard, touch, geometry          | **Partial**          | Entry paths, Escape ownership, reduced motion, close focus, touch button and zero-dimension guards exist. WID-002/003 remain.                                                                                                                              |
+| richer widget context actions                             | **Partial**          | `Menu.ContextMenu` is a good Mantine choice and query scope is item-aware. Dispatch still crosses `any`; Custom API action authorization is not represented.                                                                                               |
+| standardized query identity/cache/status                  | **Partial**          | Query keys, matchers, runtime capture, recovery and tests exist. Thirty-nine of 53 renderer query calls do not read errors; runtime ref registration is render-time mutable state.                                                                         |
+| safe polling                                              | **Mostly confirmed** | defaults are limited to `widget` namespace; Custom API resume immediately refetches; per-widget intervals exist. State/ref typing still needs redesign.                                                                                                    |
+| partial-failure rendering                                 | **Partial**          | settlement helper and several routers are strong; many renderer-level total failures still appear empty/disconnected.                                                                                                                                      |
+| bounded integration responses                             | **Mostly confirmed** | common bounded reader, Custom API 2 MiB, timetable 512 KiB, Traefik bounds and Beszel queue bounds exist. Custom action execution remains outside the hardened fetch path.                                                                                 |
+| timetable hardening                                       | **Confirmed**        | board/item permission checks, saved-value comparison, public-address resolution, private ranges, per-request DNS re-resolution, pinned dispatcher, redirect rejection, timeouts, response bounds and schemas are present.                                  |
+| precise placement                                         | **Mostly confirmed** | mouse, touch tolerance, keyboard, occupied-cell validation, dynamic bounds, nearest fit and immediate persistence exist. Failure/race/live responsive coverage remains insufficient.                                                                       |
+| widget catalog documentation                              | **Partial**          | all kinds have pages and shared interactions; wording overclaims focus behavior and validation counts are stale.                                                                                                                                           |
+| validation: 40 files/162 tests, 6/6 E2E                   | **Stale**            | current diff contains 57 changed unit-spec files (including three E2E specs); repository has 42 widget spec files and six E2E specs. Update from the exact final run.                                                                                      |
+| independent reviews “pass”                                | **Not supported**    | unresolved valid findings, current P1s, and unavailable live QA contradict an unqualified pass.                                                                                                                                                            |
 
 ## Mantine suitability ledger
 
@@ -72,62 +72,62 @@ Legend: **U** already used appropriately; **C** consolidation/replacement candid
 
 “Test” means a focused widget-local spec exists, not that all required states are covered. Every row still requires the common contract suite in WID-013.
 
-| WidgetKind | Family | Advanced | Focused test | Principal audit gap |
-| --- | --- | --- | --- | --- |
-| clock | basic | yes | no | query error, locale-format options |
-| weather | basic/feed | yes | yes | query error; dayjs locale/time patterns |
-| app | basic/link | **no** | no | PR wording; URL contract |
-| iframe | custom content | yes | yes | manual focus/iframe trapping; URL privacy thread now fixed |
-| video | custom content | yes | no | media/focus/live behavior |
-| notebook | notes | yes (inner) | yes | editor focus inside manual surface |
-| anchorNote | notes | yes | no | query error, save/error regression |
-| dnsHoleSummary | network | yes | no | total query error, hard-coded chart colors |
-| dnsHoleControls | network/security | yes | no | total error and permission matrix |
-| smartHome-entityState | smart home | yes | no | raw state in aria; action permissions |
-| smartHome-executeAutomation | smart home | yes | no | mutation/permission/edit-mode E2E |
-| stockPrice | analytics | yes | yes | total error |
-| mediaServer | media | yes | no | total error and table a11y |
-| calendar | calendar | yes | yes | total error; fixed HH:mm; schedule tradeoff |
-| downloads | media | yes | yes | four-state/component coverage, arbitrary z-index |
-| mediaRequests-requestList | media | yes | no | total error; external URLs/actions |
-| mediaRequests-requestStats | media | yes | no | total error; links/colors |
-| mediaTranscoding | media | yes | yes | total error and responsive table |
-| mediaMissing | media | yes | yes | total error and external URL |
-| minecraftServerStatus | infrastructure | yes | no | total error/malformed payload |
-| networkControllerSummary | networking | yes | no | total error; WAN/unknown localization |
-| networkControllerStatus | networking | yes | no | responsive rule duplication |
-| rssFeed | feed | yes | yes | strong stale/partial state; locale relative time |
-| bookmarks | basic/link | yes | yes | recomputation; URL contract |
-| indexerManager | media | yes | no | total error; runtime action ref |
-| healthMonitoring | infrastructure | yes | yes | integration query error |
-| releases | infrastructure/feed | yes | yes | secret/item authorization needs E2E |
-| mediaReleases | media | yes | no | total error; external URLs |
-| dockerContainers | infrastructure | yes | yes | total error; z-index/table semantics |
-| firewall | networking/security | yes | yes | partial-query matrix; loose router generics |
-| notifications | infrastructure | yes | no | total error; untrusted href |
-| systemResources | infrastructure | yes | yes | total error; previous network thread fixed |
-| coolify | infrastructure | yes | yes | total error; URL validation |
-| systemDisks | infrastructure | yes | yes | total error |
-| timetable | calendar | yes | no | backend strong; component locale/live tests absent |
-| immich-serverStats | media | yes | yes | two ignored query errors |
-| immich-albumCarousel | media | yes | yes (query) | query error and nested overlay/focus E2E |
-| paperlessNgx | analytics | yes | no | former error thread fixed, no regression spec |
-| patchmon | infrastructure | yes | yes | total error |
-| bazarr | media | yes | yes | total error |
-| tracearr | analytics | yes | yes | total error |
-| speedtestTracker | analytics | yes | yes | total error |
-| uptimeKuma | infrastructure | yes | yes | total error |
-| audioStats | media | yes | yes | good dual-error handling; partial-state tests needed |
-| umami | analytics | yes | no | runtime query registration; chart a11y |
-| vpn | networking/security | yes | no | total error; status/permission matrix |
-| archiveTeamWarrior | infrastructure | yes | yes | suspense path; docs present |
-| ups | infrastructure | yes | no | total error |
-| beszelSystemTable | monitoring | yes | yes | nested chart/focus and live subscription |
-| beszelSystemGrid | monitoring | yes | no | live/error UI; no focused renderer test |
-| beszelAlerts | monitoring | yes | no | partial error and status semantics |
-| beszelSystemStats | monitoring | yes | yes | runtime refs, locale tooltip |
-| traefik | networking | yes | no | total error; bounded backend positive |
-| customApi | custom content/security | yes | yes | WID-001/007/008; polling resume fixed |
+| WidgetKind                  | Family                  | Advanced    | Focused test | Principal audit gap                                        |
+| --------------------------- | ----------------------- | ----------- | ------------ | ---------------------------------------------------------- |
+| clock                       | basic                   | yes         | no           | query error, locale-format options                         |
+| weather                     | basic/feed              | yes         | yes          | query error; dayjs locale/time patterns                    |
+| app                         | basic/link              | **no**      | no           | PR wording; URL contract                                   |
+| iframe                      | custom content          | yes         | yes          | manual focus/iframe trapping; URL privacy thread now fixed |
+| video                       | custom content          | yes         | no           | media/focus/live behavior                                  |
+| notebook                    | notes                   | yes (inner) | yes          | editor focus inside manual surface                         |
+| anchorNote                  | notes                   | yes         | no           | query error, save/error regression                         |
+| dnsHoleSummary              | network                 | yes         | no           | total query error, hard-coded chart colors                 |
+| dnsHoleControls             | network/security        | yes         | no           | total error and permission matrix                          |
+| smartHome-entityState       | smart home              | yes         | no           | raw state in aria; action permissions                      |
+| smartHome-executeAutomation | smart home              | yes         | no           | mutation/permission/edit-mode E2E                          |
+| stockPrice                  | analytics               | yes         | yes          | total error                                                |
+| mediaServer                 | media                   | yes         | no           | total error and table a11y                                 |
+| calendar                    | calendar                | yes         | yes          | total error; fixed HH:mm; schedule tradeoff                |
+| downloads                   | media                   | yes         | yes          | four-state/component coverage, arbitrary z-index           |
+| mediaRequests-requestList   | media                   | yes         | no           | total error; external URLs/actions                         |
+| mediaRequests-requestStats  | media                   | yes         | no           | total error; links/colors                                  |
+| mediaTranscoding            | media                   | yes         | yes          | total error and responsive table                           |
+| mediaMissing                | media                   | yes         | yes          | total error and external URL                               |
+| minecraftServerStatus       | infrastructure          | yes         | no           | total error/malformed payload                              |
+| networkControllerSummary    | networking              | yes         | no           | total error; WAN/unknown localization                      |
+| networkControllerStatus     | networking              | yes         | no           | responsive rule duplication                                |
+| rssFeed                     | feed                    | yes         | yes          | strong stale/partial state; locale relative time           |
+| bookmarks                   | basic/link              | yes         | yes          | recomputation; URL contract                                |
+| indexerManager              | media                   | yes         | no           | total error; runtime action ref                            |
+| healthMonitoring            | infrastructure          | yes         | yes          | integration query error                                    |
+| releases                    | infrastructure/feed     | yes         | yes          | secret/item authorization needs E2E                        |
+| mediaReleases               | media                   | yes         | no           | total error; external URLs                                 |
+| dockerContainers            | infrastructure          | yes         | yes          | total error; z-index/table semantics                       |
+| firewall                    | networking/security     | yes         | yes          | partial-query matrix; loose router generics                |
+| notifications               | infrastructure          | yes         | no           | total error; untrusted href                                |
+| systemResources             | infrastructure          | yes         | yes          | total error; previous network thread fixed                 |
+| coolify                     | infrastructure          | yes         | yes          | total error; URL validation                                |
+| systemDisks                 | infrastructure          | yes         | yes          | total error                                                |
+| timetable                   | calendar                | yes         | no           | backend strong; component locale/live tests absent         |
+| immich-serverStats          | media                   | yes         | yes          | two ignored query errors                                   |
+| immich-albumCarousel        | media                   | yes         | yes (query)  | query error and nested overlay/focus E2E                   |
+| paperlessNgx                | analytics               | yes         | no           | former error thread fixed, no regression spec              |
+| patchmon                    | infrastructure          | yes         | yes          | total error                                                |
+| bazarr                      | media                   | yes         | yes          | total error                                                |
+| tracearr                    | analytics               | yes         | yes          | total error                                                |
+| speedtestTracker            | analytics               | yes         | yes          | total error                                                |
+| uptimeKuma                  | infrastructure          | yes         | yes          | total error                                                |
+| audioStats                  | media                   | yes         | yes          | good dual-error handling; partial-state tests needed       |
+| umami                       | analytics               | yes         | no           | runtime query registration; chart a11y                     |
+| vpn                         | networking/security     | yes         | no           | total error; status/permission matrix                      |
+| archiveTeamWarrior          | infrastructure          | yes         | yes          | suspense path; docs present                                |
+| ups                         | infrastructure          | yes         | no           | total error                                                |
+| beszelSystemTable           | monitoring              | yes         | yes          | nested chart/focus and live subscription                   |
+| beszelSystemGrid            | monitoring              | yes         | no           | live/error UI; no focused renderer test                    |
+| beszelAlerts                | monitoring              | yes         | no           | partial error and status semantics                         |
+| beszelSystemStats           | monitoring              | yes         | yes          | runtime refs, locale tooltip                               |
+| traefik                     | networking              | yes         | no           | total error; bounded backend positive                      |
+| customApi                   | custom content/security | yes         | yes          | WID-001/007/008; polling resume fixed                      |
 
 ## Severity-ranked findings
 
@@ -216,15 +216,15 @@ Legend: **U** already used appropriately; **C** consolidation/replacement candid
 
 ### WID-013 — P2 confirmed: open review-thread state no longer matches code
 
-| Thread | Classification |
-| --- | --- |
-| iframe complete URL | already fixed/false positive at current line: only host is rendered |
-| system resources network gate | already fixed, outdated |
-| RSS total error | already fixed: no-data error throws; stale data retained |
-| bookmarks memoization | valid P3/P2-low; benchmark first |
-| network-controller total error | already fixed, outdated |
-| network-controller breakpoint consolidation | valid P2 maintainability |
-| Paperless total error | already fixed, outdated |
+| Thread                                      | Classification                                                      |
+| ------------------------------------------- | ------------------------------------------------------------------- |
+| iframe complete URL                         | already fixed/false positive at current line: only host is rendered |
+| system resources network gate               | already fixed, outdated                                             |
+| RSS total error                             | already fixed: no-data error throws; stale data retained            |
+| bookmarks memoization                       | valid P3/P2-low; benchmark first                                    |
+| network-controller total error              | already fixed, outdated                                             |
+| network-controller breakpoint consolidation | valid P2 maintainability                                            |
+| Paperless total error                       | already fixed, outdated                                             |
 
 Resolve the five stale threads with evidence; address or explicitly disposition the two live suggestions. Re-run review because CodeRabbit was paused during active development.
 
