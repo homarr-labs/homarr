@@ -1,0 +1,20 @@
+packages/widgets/src/clock/component.tsx
+  s_093d61b162b9ca::t_cdb640853f109f 31,60,124
+  s_093d61b162b9ca::t_8401c75eb887a9 54-55,65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1db3b2c2cf4f795b0482acb658c2ebc1348ce613",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
