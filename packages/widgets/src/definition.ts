@@ -70,6 +70,7 @@ export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition ext
 export interface WidgetDefinition {
   icon: TablerIcon;
   queryKey?: QueryKey;
+  queryKeys?: QueryKey[];
   refetchInterval?: number | null;
   supportedIntegrations?: IntegrationKind[];
   integrationsRequired?: boolean;
@@ -89,6 +90,9 @@ export interface WidgetDefinition {
   >;
   contextActions?: (props: Omit<WidgetContextActionProps<WidgetKind>, "kind">) => WidgetContextMenuAction[];
 }
+
+export const getWidgetQueryKeys = (definition: WidgetDefinition, kind: WidgetKind): QueryKey[] =>
+  definition.queryKeys ?? [definition.queryKey ?? [["widget", kind]]];
 
 export interface WidgetProps<TKind extends WidgetKind> {
   options: inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>;

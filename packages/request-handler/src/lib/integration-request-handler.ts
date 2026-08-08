@@ -14,6 +14,7 @@ interface Options<TData, TKind extends IntegrationKind, TInput extends Record<st
   requestAsync: (integration: IntegrationOfKind<TKind>, input: TInput) => Promise<TData>;
   cacheTtlMs?: number;
   fallbackToStaleOnError?: boolean;
+  staleIfErrorTtlMs?: number;
 }
 
 export const createIntegrationRequestHandler = <
@@ -23,24 +24,18 @@ export const createIntegrationRequestHandler = <
 >(
   options: Options<TData, TKind, TInput>,
 ) => {
-  const integrationMap = new Map<string, IntegrationOfKind<TKind>>();
-  const inner = createRequestHandler<TData, { integrationId: string; options: TInput }>({
-    requestAsync: async (input) => {
-      const integration = integrationMap.get(input.integrationId);
-      if (!integration) {
-        throw new Error(`Integration ${input.integrationId} not found in cache`);
-      }
-      return options.requestAsync(integration, input.options);
-    },
+  const inner = createRequestHandler<TData, { integration: IntegrationOfKind<TKind>; options: TInput }>({
+    requestAsync: async ({ integration, options: itemOptions }) => options.requestAsync(integration, itemOptions),
+    getCacheKey: ({ integration, options: itemOptions }) =>
+      JSON.stringify({ integrationId: integration.id, itemOptions }),
     cacheTtlMs: options.cacheTtlMs,
     fallbackToStaleOnError: options.fallbackToStaleOnError,
+    staleIfErrorTtlMs: options.staleIfErrorTtlMs,
   });
 
   return {
     invalidateCache: inner.invalidateCache,
-    handler: (integration: IntegrationOfKind<TKind>, itemOptions: TInput) => {
-      integrationMap.set(integration.id, integration);
-      return inner.handler({ integrationId: integration.id, options: itemOptions });
-    },
+    handler: (integration: IntegrationOfKind<TKind>, itemOptions: TInput) =>
+      inner.handler({ integration, options: itemOptions }),
   };
 };

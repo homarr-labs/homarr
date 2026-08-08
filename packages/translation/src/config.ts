@@ -1,6 +1,9 @@
 import type { MRT_Localization } from "mantine-react-table";
 
-import { objectKeys } from "@homarr/common";
+import type { SupportedLanguage } from "./languages";
+
+export { supportedLanguages } from "./languages";
+export type { SupportedLanguage } from "./languages";
 
 export const localeConfigurations = {
   ca: {
@@ -433,10 +436,7 @@ export type LanguageIconDefinition =
       url: string;
     };
 
-export const supportedLanguages = objectKeys(localeConfigurations);
-export type SupportedLanguage = (typeof supportedLanguages)[number];
-
-export const fallbackLocale = "en" satisfies SupportedLanguage;
+export { fallbackLocale } from "./languages";
 
 export const isLocaleRTL = (locale: SupportedLanguage) =>
   "isRTL" in localeConfigurations[locale] && localeConfigurations[locale].isRTL;

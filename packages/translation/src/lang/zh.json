@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "只顯示目前播放中的項目",
           "description": "停用此功能將無法在 Plex 上運作"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "目前播放中",
@@ -2734,6 +2757,9 @@
         "id": "ID",
         "status": "狀態",
         "directPlay": "直接播放",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "轉碼中",
         "paused": "已暫停",
         "remaining": "剩餘 {minutes} 分鐘",
@@ -3768,18 +3794,6 @@
           "label": "顯示歌曲",
           "description": "顯示音樂庫中的歌曲總數 (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "顯示正在播放",
-          "description": "顯示目前播放中的曲目 (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "顯示正在播放清單",
-          "description": "顯示個別曲目，而非僅顯示活動串流計數 (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "最大正在播放項目數",
-          "description": "在正在播放清單中顯示的最大曲目數量 (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "顯示庫數量",
           "description": "顯示你的執行個體上的庫數量 (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "播客",
       "listeningTime": "聆聽時間",
       "activeSessions": "活躍會話",
-      "nowPlaying": "正在播放",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": "無法擷取音訊統計資料"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "顯示代理版本"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "找不到系統",
       "error": {
-        "internalServerError": "無法連線到 Beszel。請檢查整合設定。"
+        "internalServerError": "無法連線到 Beszel。請檢查整合設定。",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "系統",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "移除",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "容器已移除",

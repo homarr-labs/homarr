@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "",
           "description": ""
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "",
@@ -2734,6 +2757,9 @@
         "id": "",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3768,18 +3794,6 @@
           "label": "Rādīt dziesmas",
           "description": "Parādīt kopējo dziesmu skaitu mūzikas bibliotēkā (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Rādīt pašlaik atskaņoto",
-          "description": "Parādīt šobrīd atskaņotās dziesmas (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Rādīt pašlaik atskaņoto sarakstu",
-          "description": "Rādīt atsevišķas dziesmas, nevis tikai aktīvo straumju skaitu (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Maks. pašlaik atskaņoto vienumu skaits",
-          "description": "Maksimālais dziesmu skaits, ko rādīt pašlaik atskaņotajā sarakstā (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Rādīt bibliotēku skaitu",
           "description": "Parādīt bibliotēku skaitu jūsu instancē (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "Podkāsti",
       "listeningTime": "Klausīšanās laiks",
       "activeSessions": "Aktīvās sesijas",
-      "nowPlaying": "Atskaņo pašlaik",
-      "nowPlayingCount": "{count, plural, zero {# straumju} one {# straume} other {# straumes}}",
       "error": {
         "internalServerError": "Neizdevās iegūt audio statistikas datus"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Rādīt aģenta versiju"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Nav atrasta neviena sistēma",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "Sistēma",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "Noņemt",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",

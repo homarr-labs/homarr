@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "역순 정렬"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "컨테이너 상태 불러오기 실패"
+        "internalServerError": "컨테이너 상태 불러오기 실패",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "현재 재생 중 항목만 표시",
           "description": "비활성화 옵션은 plex에서는 지원되지 않음"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "현재 재생 중",
@@ -2734,6 +2757,9 @@
         "id": "아이디",
         "status": "상태",
         "directPlay": "직접 재생",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "트랜스코딩",
         "paused": "일시 중지됨",
         "remaining": "남은 시간 {minutes}분",
@@ -3768,18 +3794,6 @@
           "label": "음원 표시",
           "description": "음악 라이브러리에 있는 음원 총 수를 표시 (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "현재 재생 중 표시",
-          "description": "현재 재생 중인 트랙을 표시 (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "현재 재생 목록 표시",
-          "description": "활성 스트림 수 대신 개별 트랙 표시 (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "최대 현재 재생 항목 수",
-          "description": "현재 재생 목록에 표시할 최대 트랙 수 (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "라이브러리 수 표시",
           "description": "인스턴스에 있는 라이브러리 수 표시 (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "팟캐스트",
       "listeningTime": "청취 시간",
       "activeSessions": "활성 세션",
-      "nowPlaying": "현재 재생 중",
-      "nowPlayingCount": "{count, plural, one {# 스트림} other {# 스트림}}",
       "error": {
         "internalServerError": "오디오 정보 가져오기 실패"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "에이전트 버전 표시"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "시스템을 찾을 수 없음",
       "error": {
-        "internalServerError": "Beszel에 연결할 수 없습니다. 통합 설정을 확인하십시오."
+        "internalServerError": "Beszel에 연결할 수 없습니다. 통합 설정을 확인하십시오.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "시스템",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "제거",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "컨테이너 제거됨",

@@ -4,6 +4,8 @@ import type { GridItemHTMLElement } from "@homarr/gridstack";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { useEditMode } from "@homarr/boards/edit-mode";
 
 import type { DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import { BoardItemContent } from "../items/item-content";
@@ -15,7 +17,11 @@ import { useSectionItems } from "./use-section-items";
 
 export const SectionContent = () => {
   const { innerSections, items, refs } = useSectionContext();
-  const { data: integrations } = clientApi.integration.all.useQuery();
+  const { data: session } = useSession();
+  const [isEditMode] = useEditMode();
+  const { data: integrations } = clientApi.integration.all.useQuery(undefined, {
+    enabled: Boolean(session) && isEditMode,
+  });
 
   /**
    * IMPORTANT: THE ORDER OF THE BELOW ITEMS HAS TO MATCH THE ORDER OF

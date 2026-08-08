@@ -22,25 +22,25 @@ describe("Onboarding", () => {
     const actions = new OnboardingActions(page, db);
     const assertions = new OnboardingAssertions(page, db);
 
-    // Act
-    await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
-    await actions.startOnboardingAsync("scratch");
-    await actions.processUserStepAsync({
-      username: "admin",
-      password: "Comp(exP4sswOrd",
-      confirmPassword: "Comp(exP4sswOrd",
-    });
-    await actions.processSettingsStepAsync();
-    await actions.processIntegrationsStepAsync();
+    try {
+      // Act
+      await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
+      await actions.startOnboardingAsync("scratch");
+      await actions.processUserStepAsync({
+        username: "admin",
+        password: "Comp(exP4sswOrd",
+        confirmPassword: "Comp(exP4sswOrd",
+      });
+      await actions.processSettingsStepAsync();
+      await actions.processIntegrationsStepAsync();
 
-    // Assert
-    await assertions.assertFinishStepVisibleAsync();
-    await assertions.assertUserAndAdminGroupInsertedAsync("admin");
-    await assertions.assertDbOnboardingStepAsync("finish");
-
-    // Cleanup
-    await browser.close();
-    await homarrContainer.stop();
+      // Assert
+      await assertions.assertFinishStepVisibleAsync();
+      await assertions.assertUserAndAdminGroupInsertedAsync("admin");
+      await assertions.assertDbOnboardingStepAsync("finish");
+    } finally {
+      await Promise.all([browser.close(), homarrContainer.stop()]);
+    }
   }, 60_000);
 
   test("External provider onboarding setup should be successful", async () => {
@@ -66,22 +66,22 @@ describe("Onboarding", () => {
     const actions = new OnboardingActions(page, db);
     const assertions = new OnboardingAssertions(page, db);
 
-    // Act
-    await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
-    await actions.startOnboardingAsync("scratch");
-    await actions.processExternalGroupStepAsync({
-      name: externalGroupName,
-    });
-    await actions.processSettingsStepAsync();
-    await actions.processIntegrationsStepAsync();
+    try {
+      // Act
+      await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
+      await actions.startOnboardingAsync("scratch");
+      await actions.processExternalGroupStepAsync({
+        name: externalGroupName,
+      });
+      await actions.processSettingsStepAsync();
+      await actions.processIntegrationsStepAsync();
 
-    // Assert
-    await assertions.assertFinishStepVisibleAsync();
-    await assertions.assertExternalGroupInsertedAsync(externalGroupName);
-    await assertions.assertDbOnboardingStepAsync("finish");
-
-    // Cleanup
-    await browser.close();
-    await homarrContainer.stop();
+      // Assert
+      await assertions.assertFinishStepVisibleAsync();
+      await assertions.assertExternalGroupInsertedAsync(externalGroupName);
+      await assertions.assertDbOnboardingStepAsync("finish");
+    } finally {
+      await Promise.all([browser.close(), homarrContainer.stop()]);
+    }
   }, 60_000);
 });

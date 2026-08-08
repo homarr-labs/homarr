@@ -1,22 +1,54 @@
 import type { QueryKey } from "@tanstack/react-query";
 
-export const queryCacheDefaultStaleTimeMs = 0;
+// RSC-prefetched data must survive the hydration pass without an immediate
+// duplicate fetch. Widget-specific intervals still control live refreshes.
+export const queryCacheDefaultStaleTimeMs = 30_000;
 export const queryCacheDefaultRefetchIntervalMs = 30_000;
-export const queryCacheDefaultGcTimeMs = 1000 * 60 * 60 * 24;
-export const queryCacheMaxValueBytes = 1024 * 1024;
-export const queryCacheStoragePrefix = "homarr-widget-query";
-export const queryCacheBuster = "v2-superjson";
+export const queryCacheDefaultGcTimeMs = 1000 * 60 * 5;
+export const queryCacheMetadataStaleTimeMs = 1000 * 60 * 5;
 
-let activeQueryCacheBoardId: string | null = null;
+const widgetDataQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContainers", "integration.byIds"]);
+const excludedWidgetPaths = new Set(["widget.app.ping", "widget.beszel.getSystemStats"]);
 
-export const setActiveQueryCacheBoardId = (boardId: string | null) => {
-  activeQueryCacheBoardId = boardId;
+export const isWidgetDataTrpcPath = (path: string) => {
+  if (path.startsWith("widget.")) return !excludedWidgetPaths.has(path);
+  return widgetDataQueryPaths.has(path);
 };
 
-export const getActiveQueryCacheBoardId = () => activeQueryCacheBoardId;
-
-const persistableQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContainers", "integration.byIds"]);
-const excludedWidgetPaths = new Set(["widget.app.ping", "widget.beszel.getSystemStats"]);
+// These supporting queries can be numerous on a dashboard. Give them a
+// predictable refresh policy instead of refetching all of them after every tab
+// focus/reconnect event. Metadata can refresh after a bounded stale window;
+// Docker state remains live on a single shared timer.
+export const dashboardSupportingQueryPolicies = [
+  {
+    queryKey: [["app", "byId"]],
+    refetchInterval: false,
+    staleTime: queryCacheMetadataStaleTimeMs,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  },
+  {
+    queryKey: [["app", "byIds"]],
+    refetchInterval: false,
+    staleTime: queryCacheMetadataStaleTimeMs,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  },
+  {
+    queryKey: [["integration", "byIds"]],
+    refetchInterval: false,
+    staleTime: queryCacheMetadataStaleTimeMs,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  },
+  {
+    queryKey: [["docker", "getContainers"]],
+    refetchInterval: queryCacheDefaultRefetchIntervalMs,
+    staleTime: queryCacheDefaultStaleTimeMs,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  },
+] as const;
 
 const getTrpcPathFromQueryKey = (queryKey: QueryKey) => {
   const first = queryKey[0];
@@ -26,11 +58,9 @@ const getTrpcPathFromQueryKey = (queryKey: QueryKey) => {
   return parts.length > 0 ? parts : null;
 };
 
-export const isPersistableWidgetQueryKey = (queryKey: QueryKey) => {
+export const isWidgetDataQueryKey = (queryKey: QueryKey) => {
   const path = getTrpcPathFromQueryKey(queryKey);
   if (!path) return false;
 
-  if (path[0] === "widget") return !excludedWidgetPaths.has(path.join("."));
-
-  return persistableQueryPaths.has(path.join("."));
+  return isWidgetDataTrpcPath(path.join("."));
 };

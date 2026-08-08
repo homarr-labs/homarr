@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
@@ -8,39 +8,44 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { widgetImports } from "@homarr/widgets";
-import { WidgetEditModal } from "@homarr/widgets/modals";
+import type { WidgetDefinition } from "@homarr/widgets/definition";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
-import { ItemMoveModal } from "./item-move-modal";
+import { LazyItemMoveModal, preloadItemMoveModal } from "./lazy-item-move-modal";
+import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 
 interface BoardItemMenuProps {
   offset: number;
   item: SectionItem;
+  definition: WidgetDefinition;
   resetErrorBoundary?: () => void;
 }
 
 export const BoardItemMenu = (props: BoardItemMenuProps) => {
   const { data: session } = useSession();
-  if (!session) return null;
+  const [isEditMode] = useEditMode();
+  if (!session || !isEditMode) return null;
 
   return <BoardItemMenuInner {...props} />;
 };
 
-const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuProps) => {
+const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: BoardItemMenuProps) => {
   const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useScopedI18n("item");
   const t = useI18n();
-  const { openModal } = useModalAction(WidgetEditModal);
-  const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
+  const { openModal } = useModalAction(LazyWidgetEditModal);
+  const { openModal: openMoveModal } = useModalAction(LazyItemMoveModal);
   const { openConfirmModal } = useConfirmModal();
-  const [isEditMode] = useEditMode();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const hasSupportedIntegrations =
+    "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) > 0;
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
-  const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
-  const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
+  const { data: integrationData, isPending } = clientApi.integration.all.useQuery(undefined, {
+    enabled: isMenuOpen && hasSupportedIntegrations,
+  });
   const { gridstack } = useSectionContext().refs;
   const settings = useSettings();
 
@@ -52,12 +57,11 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
     }
   }, [item, resetErrorBoundary]);
 
-  if (!isEditMode || isPending) return null;
-
   const openEditModal = () => {
     openModal(
       {
         kind: item.kind,
+        definition,
         value: {
           advancedOptions: item.advancedOptions,
           options: item.options,
@@ -80,10 +84,10 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
         },
         integrationData: (integrationData ?? []).filter(
           (integration) =>
-            "supportedIntegrations" in currentDefinition &&
-            (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
+            "supportedIntegrations" in definition &&
+            (definition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
         ),
-        integrationSupport: "supportedIntegrations" in currentDefinition,
+        integrationSupport: "supportedIntegrations" in definition,
         settings,
         itemId: item.id,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
@@ -107,7 +111,7 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
   };
 
   return (
-    <Menu withinPortal position="right-start" arrowPosition="center">
+    <Menu withinPortal position="right-start" arrowPosition="center" opened={isMenuOpen} onChange={setIsMenuOpen}>
       <Menu.Target>
         <ActionIcon
           variant="default"
@@ -123,11 +127,19 @@ const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuP
       </Menu.Target>
       <Menu.Dropdown miw={128}>
         <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
-        <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
+        <Menu.Item
+          leftSection={<IconPencil size={16} />}
+          onClick={openEditModal}
+          onFocus={preloadWidgetEditModal}
+          onPointerEnter={preloadWidgetEditModal}
+          disabled={hasSupportedIntegrations && isPending}
+        >
           {tItem("action.edit")}
         </Menu.Item>
         <Menu.Item
           leftSection={<IconLayoutKanban size={16} />}
+          onFocus={preloadItemMoveModal}
+          onPointerEnter={preloadItemMoveModal}
           onClick={() => {
             if (!gridstack.current) return;
             openMoveModal({ item, columnCount: gridstack.current.getColumn(), gridStack: gridstack.current });

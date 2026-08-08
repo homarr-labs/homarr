@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "",
           "description": ""
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "",
@@ -2734,6 +2757,9 @@
         "id": "",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3768,18 +3794,6 @@
           "label": "Εμφάνιση τραγουδιών",
           "description": "Εμφάνιση του συνολικού αριθμού τραγουδιών στη βιβλιοθήκη μουσικής σας (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Εμφάνιση τρέχουσας αναπαραγωγής",
-          "description": "Εμφάνιση κομματιών που αναπαράγονται αυτήν τη στιγμή (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Εμφάνιση λίστας τρέχουσας αναπαραγωγής",
-          "description": "Εμφάνιση μεμονωμένων κομματιών αντί μόνο του αριθμού ενεργών ροών (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Μέγιστα στοιχεία τρέχουσας αναπαραγωγής",
-          "description": "Μέγιστος αριθμός κομματιών προς εμφάνιση στη λίστα τρέχουσας αναπαραγωγής (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Εμφάνιση αριθμού βιβλιοθηκών",
           "description": "Εμφάνιση του αριθμού βιβλιοθηκών στην εγκατάστασή σας (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "Ποντκαστ",
       "listeningTime": "Χρόνος Ακρόασης",
       "activeSessions": "Ενεργές Συνεδρίες",
-      "nowPlaying": "Τρέχουσα Αναπαραγωγή",
-      "nowPlayingCount": "{count, plural, one {# ροή} other {# ροές}}",
       "error": {
         "internalServerError": "Αποτυχία λήψης δεδομένων στατιστικών ήχου"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Εμφάνιση έκδοσης agent"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Δεν βρέθηκαν συστήματα",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "Σύστημα",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "Αφαίρεση",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",

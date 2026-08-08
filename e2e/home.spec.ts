@@ -7,10 +7,14 @@ describe("Home", () => {
     // Arrange
     const homarrContainer = await createHomarrContainer().start();
 
-    // Act
-    const homeResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/`);
+    try {
+      // Act
+      const homeResponse = await fetch(`http://localhost:${homarrContainer.getMappedPort(7575)}/`);
 
-    // Assert
-    expect(homeResponse.status).toBe(200);
+      // Assert
+      expect(homeResponse.status).toBe(200);
+    } finally {
+      await homarrContainer.stop();
+    }
   }, 60_000);
 });

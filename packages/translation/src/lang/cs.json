@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "",
           "description": ""
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "",
@@ -2734,6 +2757,9 @@
         "id": "Id",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3768,18 +3794,6 @@
           "label": "",
           "description": ""
         },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
-        },
         "showLibraryCount": {
           "label": "",
           "description": ""
@@ -3813,8 +3827,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Zobrazit verzi agenta"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Nenalezeny žádné systémy",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "Systém",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "Odstranit",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",

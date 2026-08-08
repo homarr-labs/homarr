@@ -2428,10 +2428,21 @@
         },
         "descendingDefaultSort": {
           "label": "Fordított rendezés"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "A konténerek statisztikáinak lekérése sikertelen"
+        "internalServerError": "A konténerek statisztikáinak lekérése sikertelen",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2725,7 +2736,19 @@
         "showOnlyPlaying": {
           "label": "Csak a jelenleg lejátszottakat mutasd",
           "description": "Ennek letiltása a Plex esetében nem fog működni"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Jelenleg lejátszás alatt",
@@ -2734,6 +2757,9 @@
         "id": "Azonosító",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -3768,18 +3794,6 @@
           "label": "Zeneszámok megjelenítése",
           "description": "A zeneszámok teljes számának megjelenítése a zenekönyvtárban (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Most játszott megjelenítése",
-          "description": "A jelenleg játszott sávok megjelenítése (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Most játszott lista megjelenítése",
-          "description": "Egyes sávok megjelenítése a csak aktív streamszám helyett (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Maximális most játszott elemek",
-          "description": "A most játszott listában megjelenítendő sávok maximális száma (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Könyvtárak számának megjelenítése",
           "description": "A példányodon lévő könyvtárak számának megjelenítése (Audiobookshelf)"
@@ -3813,8 +3827,6 @@
       "podcasts": "Podcastek",
       "listeningTime": "Hallgatási idő",
       "activeSessions": "Aktív munkamenetek",
-      "nowPlaying": "Most játszott",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# stream}}",
       "error": {
         "internalServerError": "Az audió statisztikai adatok letöltése nem sikerült"
       }
@@ -3954,11 +3966,19 @@
         },
         "showAgent": {
           "label": "Agent verzió mutatása"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Nincsenek rendszerek",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "Rendszer",
@@ -5356,6 +5376,7 @@
       },
       "remove": {
         "label": "Eltávolítás",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Konténerek eltávolítva",

@@ -1,9 +1,9 @@
-import { trpc } from "@homarr/api/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db, inArray } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 
 import type { Prefetch } from "../definition";
+import { createTrpcQueryKey } from "../trpc-query-key";
 
 const logger = createLogger({ module: "appWidgetPrefetch" });
 
@@ -16,7 +16,7 @@ const prefetchAllAsync: Prefetch<"app"> = async (queryClient, items) => {
   });
 
   for (const app of dbApps) {
-    queryClient.setQueryData(trpc.app.byId.queryKey({ id: app.id }), app);
+    queryClient.setQueryData(createTrpcQueryKey("app.byId", { id: app.id }), app);
   }
 
   logger.info("Successfully prefetched apps for app widget", { count: dbApps.length });

@@ -1,12 +1,13 @@
 "use client";
 
+import { Suspense, use } from "react";
 import { Avatar, Text, Tooltip } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getIconUrl } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
-import { widgetImports } from "@homarr/widgets";
+import { loadWidgetDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import classes from "./widget-hover-overlay.module.css";
@@ -18,8 +19,19 @@ interface WidgetHoverOverlayProps {
 
 export const WidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayProps) => {
   const [isEditMode] = useEditMode();
+
+  if (!isEditMode) return null;
+
+  return (
+    <Suspense fallback={null}>
+      <LoadedWidgetHoverOverlay item={item} integrations={integrations} />
+    </Suspense>
+  );
+};
+
+const LoadedWidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayProps) => {
   const t = useI18n();
-  const { definition } = widgetImports[item.kind];
+  const definition = use(loadWidgetDefinition(item.kind));
   const WidgetIcon = definition.icon;
 
   const displayName = item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`);
@@ -27,10 +39,6 @@ export const WidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayPro
   const connectedIntegrations = (integrations ?? []).filter((integration) =>
     item.integrationIds.includes(integration.id),
   );
-
-  if (!isEditMode) {
-    return null;
-  }
 
   return (
     <div className={classes.wrapper}>
