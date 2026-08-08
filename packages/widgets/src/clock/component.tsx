@@ -43,13 +43,19 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
             {options.customTitle}
           </Text>
         )}
-        <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
+        <Title
+          className="clock-time-text"
+          fw={700}
+          order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6}
+          lh="1"
+          suppressHydrationWarning
+        >
           {options.customTimeFormat
             ? dayjs(time).tz(timezone).format(customTimeFormat)
             : dayjs(time).tz(timezone).format(timeFormat)}
         </Title>
         {options.showDate && (
-          <Text className="clock-date-text" size={sizing} lineClamp={1}>
+          <Text className="clock-date-text" size={sizing} lineClamp={1} suppressHydrationWarning>
             {options.customDateFormat
               ? dayjs(time).tz(timezone).format(customDateFormat)
               : dayjs(time).tz(timezone).format(dateFormat)}
