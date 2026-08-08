@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 const columnsList = [
@@ -42,6 +42,12 @@ const sortColumns = [
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
+  queryKey: [["widget", "downloads", "getJobsAndStatuses"]],
+  queryMatcher: ({ input }, scope) =>
+    widgetQueryInputMatches(input, {
+      integrationIds: scope.integrationIds,
+      limitPerIntegration: scope.options.limitPerIntegration,
+    }),
   refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from(

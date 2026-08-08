@@ -4,6 +4,7 @@ import { createTRPCRouter } from "./trpc";
 import { appRouter as appRouterForApps } from "./router/app";
 import { apiKeysRouter } from "./router/apiKeys";
 import { boardRouter } from "./router/board";
+import { customWidgetRouter } from "./router/custom-widget/custom-widget-router";
 import { dockerRouter } from "./router/docker/docker-router";
 import { iconsRouter } from "./router/icons";
 import { infoRouter } from "./router/info";
@@ -26,6 +27,7 @@ export const mcpRouter = createTRPCRouter({
   app: appRouterForApps,
   apiKeys: apiKeysRouter,
   board: boardRouter,
+  customWidget: customWidgetRouter,
   docker: dockerRouter,
   icon: iconsRouter,
   info: infoRouter,

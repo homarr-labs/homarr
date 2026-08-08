@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { cache } from "react";
+import { notFound, redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
-
-// Placed here because gridstack styles are used for board content
-import "~/styles/gridstack.scss";
 
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { makeQueryClient } from "@homarr/api/shared";
@@ -21,7 +19,7 @@ import { createMetaTitle } from "~/metadata";
 import { env } from "~/env";
 import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
-import { DynamicClientBoard } from "./_dynamic-client";
+import { ClientBoard } from "./_client";
 import { BoardContentHeaderActions } from "./_header-actions";
 
 const logger = createLogger({ module: "createBoardContentPage" });
@@ -46,8 +44,24 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     page: async ({ params }: { params: Promise<TParams> }) => {
       const resolvedParams = await params;
       const queryClient = getQueryClient();
+      const session = await auth();
 
-      const [board, session] = await Promise.all([getInitialBoard(resolvedParams), auth()]);
+      const board = await getInitialBoard(resolvedParams).catch((error) => {
+        if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+          if (!session) {
+            logger.debug("No home board found for anonymous user, redirecting to login");
+            redirect("/auth/login");
+          }
+
+          notFound();
+        }
+
+        if (error instanceof TRPCError && error.code === "BAD_REQUEST") {
+          notFound();
+        }
+
+        throw error;
+      });
 
       const itemsMap = board.items.reduce((acc, item) => {
         const existing = acc.get(item.kind);
@@ -76,7 +90,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       return (
         <HydrationBoundary state={dehydrate(queryClient)}>
           <IntegrationProvider integrations={integrations}>
-            <DynamicClientBoard />
+            <ClientBoard />
           </IntegrationProvider>
         </HydrationBoundary>
       );
@@ -99,8 +113,8 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
           },
         };
       } catch (error) {
-        // Ignore not found errors and return empty metadata
-        if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+        // Ignore not found and bad-request errors and return empty metadata
+        if (error instanceof TRPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
           return {};
         }
 

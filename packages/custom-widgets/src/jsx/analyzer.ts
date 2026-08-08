@@ -1,0 +1,321 @@
+import { Parser } from "acorn";
+import jsx from "acorn-jsx";
+
+import {
+  CUSTOM_JSX_BLOCKED_PROPERTIES,
+  CUSTOM_JSX_LIMITS,
+  isBlockedCustomJsxLexicalBinding,
+  normalizeCustomJsxProperty,
+} from "./policy";
+import type { AstNode } from "./analyzer-ast";
+import { nodeOf, nodesOf, staticPropertyName } from "./analyzer-ast";
+import { createCustomJsxParseDiagnostic } from "./analyzer-diagnostics";
+import type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
+import { analyzeCustomJsxElement } from "./analyzer-jsx";
+import {
+  canStaticallyProduceCallable,
+  isStaticallyCallableBinding,
+  RESERVED_LOCAL_BINDINGS,
+  ROOT_BINDINGS,
+} from "./analyzer-language";
+import {
+  CUSTOM_JSX_BINARY_OPERATORS,
+  CUSTOM_JSX_CALLBACK_METHODS,
+  CUSTOM_JSX_SAFE_VALUE_METHODS,
+} from "./safe-language-policy";
+import { isSafeRegexLiteral } from "./regex-policy";
+
+export type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
+
+const JsxParser = Parser.extend(jsx());
+const requestStatusLabels = new Set(["loading", "success", "error"]);
+
+function directRequestStatusId(node: AstNode | null): string | null {
+  if (node?.type !== "MemberExpression") return null;
+  const object = nodeOf(node.object);
+  if (object?.type !== "Identifier" || object.name !== "status") return null;
+  const property = nodeOf(node.property);
+  return node.computed
+    ? (staticPropertyName(property) ?? null)
+    : String(property?.name ?? property?.value ?? "") || null;
+}
+
+function invalidRequestStatusComparison(node: AstNode) {
+  if (!["===", "==", "!==", "!="].includes(String(node.operator))) return null;
+  const left = nodeOf(node.left);
+  const right = nodeOf(node.right);
+  const leftStatus = directRequestStatusId(left);
+  const rightStatus = directRequestStatusId(right);
+  const leftLabel = left?.type === "Literal" && typeof left.value === "string" ? left.value : null;
+  const rightLabel = right?.type === "Literal" && typeof right.value === "string" ? right.value : null;
+  const requestId =
+    leftStatus && rightLabel && requestStatusLabels.has(rightLabel)
+      ? leftStatus
+      : rightStatus && leftLabel && requestStatusLabels.has(leftLabel)
+        ? rightStatus
+        : null;
+  return requestId
+    ? `INVALID_STATUS_COMPARISON: status.${requestId} is an object. Use status.${requestId}?.loading, status.${requestId}?.ok === true, or status.${requestId}?.ok === false`
+    : null;
+}
+
+export function validateCustomJsxTemplate(template: string): CustomJsxTemplateDiagnostic[] {
+  const diagnostics: CustomJsxTemplateDiagnostic[] = [];
+  let operations = 0;
+
+  const add = (node: AstNode, message: string, severity: "error" | "warning" = "error") => {
+    const line = node.loc?.start?.line ?? 1;
+    diagnostics.push({
+      severity,
+      message,
+      index: Math.max(0, (node.start ?? 2) - 2),
+      line,
+      column: Math.max(1, (node.loc?.start?.column ?? 0) + 1 - (line === 1 ? 2 : 0)),
+    });
+  };
+
+  const checkBudget = (node: AstNode, depth: number) => {
+    operations += 1;
+    if (depth > CUSTOM_JSX_LIMITS.astDepth)
+      add(node, `Template exceeds the AST depth limit (${CUSTOM_JSX_LIMITS.astDepth})`);
+    if (operations === CUSTOM_JSX_LIMITS.operations + 1) {
+      add(node, `Template exceeds the operation limit (${CUSTOM_JSX_LIMITS.operations})`);
+    }
+    return depth <= CUSTOM_JSX_LIMITS.astDepth && operations <= CUSTOM_JSX_LIMITS.operations;
+  };
+
+  let visit: (node: AstNode, depth: number, bindings: ReadonlySet<string>) => void;
+
+  const visitArrow = (node: AstNode, depth: number, bindings: ReadonlySet<string>) => {
+    if (node.async || node.generator) {
+      add(node, "CALLBACK_VALUE_NOT_ALLOWED: Async and generator callbacks are not supported");
+      return;
+    }
+    const callbackBindings = new Set(bindings);
+    const parameterNames = new Set<string>();
+    for (const parameter of nodesOf(node.params)) {
+      if (parameter.type !== "Identifier") {
+        add(parameter, "INVALID_LOCAL_DECLARATION: Callback parameters must be identifiers");
+        continue;
+      }
+      const name = String(parameter.name);
+      if (isBlockedCustomJsxLexicalBinding(name)) {
+        add(parameter, `INVALID_LOCAL_DECLARATION: '${name}' is not a safe callback parameter name`);
+        continue;
+      }
+      if (RESERVED_LOCAL_BINDINGS.has(name)) {
+        add(parameter, `RESERVED_LOCAL_BINDING: '${name}' cannot be shadowed`);
+        continue;
+      }
+      if (parameterNames.has(name)) {
+        add(parameter, `DUPLICATE_LOCAL_BINDING: '${name}' is already declared`);
+        continue;
+      }
+      parameterNames.add(name);
+      callbackBindings.add(name);
+    }
+    const body = nodeOf(node.body);
+    if (!body) return;
+    if (body.type === "BlockStatement")
+      add(body, "UNSUPPORTED_BLOCK_STATEMENT: Use one expression in authored callbacks");
+    else if (canStaticallyProduceCallable(body)) {
+      add(body, "CALLBACK_VALUE_NOT_ALLOWED: Authored callbacks cannot return callable values");
+    } else visit(body, depth + 1, callbackBindings);
+  };
+
+  visit = (node: AstNode, depth: number, bindings: ReadonlySet<string>): void => {
+    if (!checkBudget(node, depth)) return;
+
+    switch (node.type) {
+      case "Program":
+        nodesOf(node.body).forEach((child) => visit(child, depth + 1, bindings));
+        return;
+      case "ExpressionStatement": {
+        const expression = nodeOf(node.expression);
+        if (expression) visit(expression, depth + 1, bindings);
+        return;
+      }
+      case "JSXFragment":
+        nodesOf(node.children).forEach((child) => visit(child, depth + 1, bindings));
+        return;
+      case "JSXElement": {
+        analyzeCustomJsxElement(node, depth, bindings, { add, visit, visitArrow });
+        return;
+      }
+      case "JSXText":
+      case "JSXEmptyExpression":
+      case "TemplateElement":
+        return;
+      case "JSXExpressionContainer": {
+        const expression = nodeOf(node.expression);
+        if (expression && expression.type !== "JSXEmptyExpression") visit(expression, depth + 1, bindings);
+        return;
+      }
+      case "Literal":
+        if (typeof node.value === "bigint") add(node, "BIGINT_NOT_SUPPORTED: Use Number for widget values");
+        if (node.regex !== undefined && !isSafeRegexLiteral(node.regex))
+          add(node, "UNSAFE_REGEX: Use a conservative regex without repeated alternatives or variable quantifiers");
+        return;
+      case "Identifier": {
+        const name = String(node.name ?? "");
+        if (!bindings.has(name)) add(node, `Unknown binding '${name}'`);
+        return;
+      }
+      case "ArrayExpression":
+        nodesOf(node.elements).forEach((child) => {
+          const argument = child.type === "SpreadElement" ? nodeOf(child.argument) : child;
+          if (argument) visit(argument, depth + 1, bindings);
+        });
+        return;
+      case "ObjectExpression":
+        nodesOf(node.properties).forEach((property) => {
+          if (property.type === "SpreadElement") {
+            const argument = nodeOf(property.argument);
+            if (argument) visit(argument, depth + 1, bindings);
+            return;
+          }
+          if (property.type !== "Property" || property.kind !== "init" || property.method || property.shorthand) {
+            add(property, "Only explicit object properties are supported");
+            return;
+          }
+          const key = nodeOf(property.key);
+          if (property.computed && key) visit(key, depth + 1, bindings);
+          if (
+            !property.computed &&
+            key &&
+            CUSTOM_JSX_BLOCKED_PROPERTIES.has(normalizeCustomJsxProperty(key.name ?? key.value))
+          ) {
+            add(key, "Reflective object properties are not allowed");
+          }
+          const value = nodeOf(property.value);
+          if (value) visit(value, depth + 1, bindings);
+        });
+        return;
+      case "UnaryExpression":
+        if (!["!", "+", "-", "typeof"].includes(String(node.operator))) {
+          add(node, `Unary operator '${String(node.operator)}' is not supported`);
+        }
+        if (nodeOf(node.argument)) visit(node.argument as AstNode, depth + 1, bindings);
+        return;
+      case "BinaryExpression":
+      case "LogicalExpression": {
+        if (node.type === "BinaryExpression" && !CUSTOM_JSX_BINARY_OPERATORS.has(String(node.operator))) {
+          add(node, `Binary operator '${String(node.operator)}' is not supported`);
+        }
+        if (node.type === "BinaryExpression") {
+          const statusDiagnostic = invalidRequestStatusComparison(node);
+          if (statusDiagnostic) add(node, statusDiagnostic);
+        }
+        const left = nodeOf(node.left);
+        const right = nodeOf(node.right);
+        if (left) visit(left, depth + 1, bindings);
+        if (right) visit(right, depth + 1, bindings);
+        return;
+      }
+      case "ConditionalExpression": {
+        [node.test, node.consequent, node.alternate].map(nodeOf).forEach((child) => {
+          if (child) visit(child, depth + 1, bindings);
+        });
+        return;
+      }
+      case "MemberExpression": {
+        const object = nodeOf(node.object);
+        const property = nodeOf(node.property);
+        if (object) visit(object, depth + 1, bindings);
+        if (node.computed && property) visit(property, depth + 1, bindings);
+        const propertyName = node.computed
+          ? staticPropertyName(property)
+          : String(property?.name ?? property?.value ?? "");
+        if (propertyName && CUSTOM_JSX_BLOCKED_PROPERTIES.has(normalizeCustomJsxProperty(propertyName))) {
+          add(property ?? node, "Reflective property access is not allowed");
+        }
+        return;
+      }
+      case "CallExpression": {
+        const callee = nodeOf(node.callee);
+        const callArguments = nodesOf(node.arguments);
+        if (node.optional) {
+          add(node, "CALL_TARGET_NOT_ALLOWED: Optional calls are not supported");
+        }
+        if (callee?.type === "ArrowFunctionExpression") {
+          add(callee, "CALL_TARGET_NOT_ALLOWED: Inline IIFEs are not supported");
+          return;
+        }
+        if (callee) visit(callee, depth + 1, bindings);
+        const property = callee?.type === "MemberExpression" ? nodeOf(callee.property) : null;
+        const method = property?.type === "Identifier" ? String(property.name) : staticPropertyName(property);
+        if (
+          callee &&
+          !isStaticallyCallableBinding(callee) &&
+          (callee.type !== "MemberExpression" || !method || !CUSTOM_JSX_SAFE_VALUE_METHODS.has(method))
+        ) {
+          add(callee, "CALL_TARGET_NOT_ALLOWED: Only documented safe helpers and value methods can be called");
+        }
+        if (method && CUSTOM_JSX_CALLBACK_METHODS.has(method)) {
+          const callback = callArguments[0];
+          if (!callback) {
+            add(node, `CALLBACK_VALUE_NOT_ALLOWED: '${method}' requires a callback`);
+          } else if (["reduce", "sort"].includes(method) && callback.type !== "ArrowFunctionExpression") {
+            add(callback, `CALLBACK_VALUE_NOT_ALLOWED: '${method}' requires an inline arrow callback`);
+          } else if (callback.type !== "ArrowFunctionExpression" && !isStaticallyCallableBinding(callback)) {
+            add(callback, `CALLBACK_VALUE_NOT_ALLOWED: '${method}' requires an inline arrow or safe helper callback`);
+          }
+        }
+        callArguments.forEach((argument, argumentIndex) => {
+          if (argument.type === "SpreadElement") add(argument, "Spread call arguments are not supported");
+          else if (
+            argument.type === "ArrowFunctionExpression" &&
+            argumentIndex === 0 &&
+            method &&
+            CUSTOM_JSX_CALLBACK_METHODS.has(method)
+          ) {
+            visitArrow(argument, depth + 1, bindings);
+          } else if (argument.type === "ArrowFunctionExpression") {
+            add(argument, "CALLBACK_VALUE_NOT_ALLOWED: Callback arguments are only allowed in the first callback slot");
+          } else visit(argument, depth + 1, bindings);
+        });
+        return;
+      }
+      case "ArrowFunctionExpression": {
+        add(
+          node,
+          "CALLBACK_VALUE_NOT_ALLOWED: Callbacks are only allowed in safe collection methods and trusted slots",
+        );
+        return;
+      }
+      case "BlockStatement":
+        add(node, "UNSUPPORTED_BLOCK_STATEMENT: Authored callbacks must use one expression");
+        return;
+      case "AssignmentExpression":
+      case "UpdateExpression":
+      case "NewExpression":
+      case "AwaitExpression":
+      case "YieldExpression":
+        add(node, `UNSUPPORTED_BLOCK_STATEMENT: '${node.type}' is not allowed in safe expressions`);
+        return;
+      case "TemplateLiteral":
+        nodesOf(node.expressions).forEach((expression) => visit(expression, depth + 1, bindings));
+        return;
+      case "ChainExpression": {
+        const expression = nodeOf(node.expression);
+        if (expression) visit(expression, depth + 1, bindings);
+        return;
+      }
+      default:
+        add(node, `Unsupported expression '${node.type}'`);
+    }
+  };
+
+  try {
+    const program = JsxParser.parse(`<>${template}</>`, {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      locations: true,
+    }) as unknown as AstNode;
+    visit(program, 0, ROOT_BINDINGS);
+  } catch (error) {
+    diagnostics.push(createCustomJsxParseDiagnostic(template, error));
+  }
+
+  return diagnostics;
+}

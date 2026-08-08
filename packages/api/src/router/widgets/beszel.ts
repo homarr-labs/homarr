@@ -10,15 +10,13 @@ import {
   beszelSystemsRequestHandler,
 } from "@homarr/request-handler/beszel";
 
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { BoundedAsyncQueue } from "./bounded-async-queue";
 
 const logger = createLogger({ module: "beszelRouter" });
 const MAX_PENDING_LIVE_EVENTS = 4;
-
-const errorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
 
 export const beszelRouter = createTRPCRouter({
   getSystems: publicProcedure
@@ -41,7 +39,6 @@ export const beszelRouter = createTRPCRouter({
           return {
             integrationId: integration.id,
             integrationName: integration.name,
-            integrationUrl: integration.url,
             systems: data,
             updatedAt: timestamp,
           };
@@ -50,11 +47,11 @@ export const beszelRouter = createTRPCRouter({
           fallback: (integration, error) => ({
             integrationId: integration.id,
             integrationName: integration.name,
-            integrationUrl: integration.url,
             systems: [],
             updatedAt: new Date(0),
-            error: errorMessage(error),
+            error: toPublicIntegrationError(error),
           }),
+          throwOnAllFailures: true,
         },
       );
       logger.debug("getSystems completed", {
@@ -126,8 +123,9 @@ export const beszelRouter = createTRPCRouter({
             history: [],
             systemNameMap: {},
             updatedAt: new Date(0),
-            error: errorMessage(error),
+            error: toPublicIntegrationError(error),
           }),
+          throwOnAllFailures: true,
         },
       );
       logger.debug("getAlerts completed", {
@@ -192,7 +190,7 @@ export const beszelRouter = createTRPCRouter({
           systemStats: [],
           containerStats: [],
           updatedAt: new Date(0),
-          error: errorMessage(error),
+          error: toPublicIntegrationError(error),
         };
       }
     }),
@@ -269,15 +267,14 @@ export const beszelRouter = createTRPCRouter({
               integrationId: integration.id,
               systemId: input.systemId,
               emittedEventCount,
-              error: errorMessage(error),
+              error,
             });
             queue.fail(
-              error instanceof TRPCError
-                ? error
-                : new TRPCError({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: error instanceof Error ? error.message : String(error),
-                  }),
+              new TRPCError({
+                code: "BAD_GATEWAY",
+                message: "Live integration request failed",
+                cause: error,
+              }),
             );
           }
         })();

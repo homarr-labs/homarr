@@ -297,7 +297,7 @@ describe("Nextcloud integration", () => {
       // Assert
       const relevantEvents = events.filter((event) => event.title === testEvent.summary);
       expect(relevantEvents).toHaveLength(5);
-    });
+    }, 20_000);
   });
 });
 

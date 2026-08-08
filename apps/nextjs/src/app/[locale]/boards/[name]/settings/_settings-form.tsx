@@ -122,46 +122,44 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
     return () => window.removeEventListener("beforeunload", handler);
   }, []);
 
-  const handleSubmitAsync = async (values: FormValues) => {
+  const saveSettingsAsync = async (values: FormValues): Promise<FormValues | null> => {
     const defaults = initialValuesRef.current;
     const changed = <TKey extends keyof FormValues>(...fields: TKey[]) =>
       fields.some((field) => values[field] !== defaults[field]);
 
     const { layouts, ...partialSettings } = values;
-
-    const saveActions: { when: boolean; action: () => Promise<unknown> }[] = [
-      {
-        when: changed(...PARTIAL_FORM_KEYS),
-        action: () =>
-          savePartialSettings.mutateAsync({ id: board.id, ...partialSettings }).then(() => {
-            updateFavicon(values.faviconImageUrl ?? homarrLogoPath);
-          }),
-      },
-      {
-        when: changed("layouts"),
-        action: () => saveLayouts.mutateAsync({ id: board.id, layouts }),
-      },
-    ];
-
-    const promises = saveActions.filter((saveAction) => saveAction.when).map((saveAction) => saveAction.action());
-    if (promises.length === 0) return;
+    const partialSettingsChanged = changed(...PARTIAL_FORM_KEYS);
+    const layoutsChanged = changed("layouts");
+    if (!partialSettingsChanged && !layoutsChanged) return values;
 
     try {
-      await Promise.all(promises);
-      lastSavedRef.current = { pageTitle: values.pageTitle, logoImageUrl: values.logoImageUrl };
-      initialValuesRef.current = values;
-      form.setInitialValues(values);
-      form.resetDirty();
+      const [, canonicalLayouts] = await Promise.all([
+        partialSettingsChanged
+          ? savePartialSettings.mutateAsync({ id: board.id, ...partialSettings }).then(() => {
+              updateFavicon(values.faviconImageUrl ?? homarrLogoPath);
+            })
+          : Promise.resolve(),
+        layoutsChanged ? saveLayouts.mutateAsync({ id: board.id, layouts }) : Promise.resolve(null),
+      ]);
+      const canonicalValues = canonicalLayouts ? { ...values, layouts: canonicalLayouts } : values;
+
+      lastSavedRef.current = { pageTitle: canonicalValues.pageTitle, logoImageUrl: canonicalValues.logoImageUrl };
+      initialValuesRef.current = canonicalValues;
+      form.setValues(canonicalValues);
+      form.setInitialValues(canonicalValues);
+      form.resetDirty(canonicalValues);
       await revalidatePathActionAsync(`/boards/${board.name}/settings`);
       showSuccessNotification({
         title: t("common.notification.update.success"),
         message: t("common.notification.update.success"),
       });
+      return canonicalValues;
     } catch {
       showErrorNotification({
         title: t("common.notification.update.error"),
         message: t("common.notification.update.error"),
       });
+      return null;
     }
   };
 
@@ -178,35 +176,42 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
   const isPending = savePartialSettings.isPending || saveLayouts.isPending;
 
   return (
-    <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
-      <Stack gap="xl">
-        <GeneralSettingsContent board={board} form={form} />
-        <LayoutSettingsContent form={form} />
-        <BackgroundSettingsContent form={form} />
-        <ColorSettingsContent form={form} />
-        <CustomCssSettingsContent form={form} />
-        <BehaviorSettingsContent form={form} />
+    <Stack gap="xl">
+      <form onSubmit={form.onSubmit((values) => void saveSettingsAsync(values))}>
+        <Stack gap="xl">
+          <GeneralSettingsContent board={board} form={form} />
+          <LayoutSettingsContent
+            board={board}
+            form={form}
+            isSaving={isPending}
+            saveSettingsAsync={() => saveSettingsAsync(form.values)}
+          />
+          <BackgroundSettingsContent form={form} />
+          <ColorSettingsContent form={form} />
+          <CustomCssSettingsContent form={form} />
+          <BehaviorSettingsContent form={form} />
 
-        {hasFullAccess && (
-          <SectionCard title={tSection("access.title")}>
-            <BoardAccessSettings board={board} initialPermissions={permissions} />
-          </SectionCard>
-        )}
+          {form.isDirty() && (
+            <UnsavedChangesBar>
+              <Button type="button" disabled={isPending} variant="default" onClick={handleDiscard}>
+                {t("common.action.discard")}
+              </Button>
+              <Button loading={isPending} type="submit" disabled={!form.isValid()}>
+                {t("common.action.saveChanges")}
+              </Button>
+            </UnsavedChangesBar>
+          )}
+        </Stack>
+      </form>
 
-        {hasFullAccess && <DangerZoneSettingsContent hideVisibility={hideVisibility} />}
+      {hasFullAccess && (
+        <SectionCard title={tSection("access.title")}>
+          <BoardAccessSettings board={board} initialPermissions={permissions} />
+        </SectionCard>
+      )}
 
-        {form.isDirty() && (
-          <UnsavedChangesBar>
-            <Button type="button" disabled={isPending} variant="default" onClick={handleDiscard}>
-              {t("common.action.discard")}
-            </Button>
-            <Button loading={isPending} type="submit" disabled={!form.isValid()}>
-              {t("common.action.saveChanges")}
-            </Button>
-          </UnsavedChangesBar>
-        )}
-      </Stack>
-    </form>
+      {hasFullAccess && <DangerZoneSettingsContent hideVisibility={hideVisibility} />}
+    </Stack>
   );
 };
 

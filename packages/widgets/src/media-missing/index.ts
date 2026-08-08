@@ -2,14 +2,15 @@ import { IconMovie } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
 
 const pageSizeOptions = ["10", "20", "30", "50"] as const;
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaMissing", {
   icon: IconMovie,
-  queryKey: [["widget", "mediaOrganizer"]],
+  queryKey: [["widget", "mediaOrganizer", "getData"]],
+  queryMatcher: matchesWidgetRuntimeQuery,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showMissing: factory.switch({ defaultValue: true }),

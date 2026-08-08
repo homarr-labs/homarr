@@ -710,14 +710,7 @@
       "delete": "Elimina Widget Personalizzato",
       "deleteConfirm": "Sei sicuro di voler eliminare \"{name}\"? Questa azione non può essere annullata.",
       "export": "Esporta",
-      "addMapping": "Aggiungi Mappatura",
-      "addColumn": "Aggiungi Colonna",
       "edit": "Modifica",
-      "removeMapping": "Rimuovi mappatura",
-      "removeColumn": "Rimuovi colonna",
-      "addItem": "Aggiungi Elemento",
-      "removeItem": "Rimuovi elemento",
-      "addBar": "Aggiungi Barra",
       "duplicate": "Duplica",
       "copyAiPrompt": "Copia prompt IA",
       "enable": "Abilita",
@@ -727,140 +720,7 @@
     "field": {
       "name": "Nome",
       "description": "Descrizione",
-      "iconUrl": "URL Icona",
-      "url": "URL",
-      "authType": "Tipo Autenticazione",
-      "headerName": "Nome Header/Parametro Query",
-      "method": "Metodo",
-      "requestBody": "Corpo della Richiesta",
-      "displayType": "Tipo di Visualizzazione",
-      "jsonPath": "Percorso JSON",
-      "jsonPathHint": "Usa la sintassi JSONPath per estrarre i valori, ad es. $.data.temperature o $.items[0].name",
-      "label": "Etichetta",
-      "unit": "Unità",
-      "mappings": "Mappature",
-      "tablePath": "Percorso JSON Array",
-      "tablePathHint": "Percorso dell'array nella risposta, ad es. $.data.items",
-      "columns": "Colonne",
-      "header": "Intestazione",
-      "items": "Elementi",
-      "gridColumns": "Colonne Griglia",
-      "cardStyle": "Stile Card",
-      "bars": "Barre",
-      "valuePath": "Percorso JSON Valore",
-      "maxPath": "Percorso JSON Valore Massimo",
-      "showPercentage": "Mostra Percentuale",
-      "barSize": "Dimensione Barra",
-      "goodValues": "Valori Positivi (separati da virgola)",
-      "dotSize": "Dimensione Punto",
-      "valueSize": "Dimensione Valore",
-      "labelPosition": "Posizione Etichetta",
-      "kvLayout": "Layout",
-      "striped": "Righe Alternate",
-      "compact": "Modalità Compatta",
-      "maxHeight": "Altezza Massima (px)",
-      "color": "Colore",
-      "buttonLabel": "Etichetta Pulsante",
-      "buttonColor": "Colore Pulsante",
-      "confirmText": "Testo di Conferma",
-      "confirmTextHint": "Se impostato, verrà mostrata una finestra di conferma prima di eseguire la richiesta",
-      "successMessage": "Messaggio di Successo",
-      "successMessageHint": "Messaggio mostrato dopo l'esecuzione riuscita",
-      "enabled": "Abilitato",
-      "template": {
-        "label": "Template JSX",
-        "description": "Template JSX Mantine. Accedi ai campi della risposta API tramite binding dei dati (ad es. data.name). Usa solo componenti consentiti. Vietati: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura CPU",
-      "exampleLabelShort": "Temp CPU",
-      "exampleHeader": "Nome",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.nome",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "blu"
-    },
-    "cardStyleOption": {
-      "filled": "Riempito",
-      "outline": "Contorno",
-      "subtle": "Tenue"
-    },
-    "layoutOption": {
-      "list": "Elenco",
-      "grid": "Griglia"
-    },
-    "sizeOption": {
-      "sm": "Piccolo",
-      "md": "Medio",
-      "lg": "Grande",
-      "xl": "Molto Grande"
-    },
-    "labelPositionOption": {
-      "above": "Sopra",
-      "below": "Sotto"
-    },
-    "fieldset": {
-      "general": "Generale",
-      "connection": "Connessione API",
-      "display": "Configurazione Visualizzazione"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Mostra un singolo valore estratto con etichetta e unità",
-      "keyValue": "Mostra più valori etichettati affiancati",
-      "table": "Mostra righe di dati in formato tabella",
-      "statGrid": "Card statistiche colorate in una griglia, come i widget Pi-Hole o Speedtest",
-      "progressBars": "Barre di progresso che mostrano utilizzo o completamento, per disco, memoria, quote",
-      "statusIndicator": "Indicatori di stato colorati che mostrano online/offline o stati di salute",
-      "countGrid": "Contatori compatti numero + etichetta in una griglia ristretta",
-      "raw": "Output JSON formattato per il debug",
-      "actionButton": "Un pulsante che attiva una richiesta al clic",
-      "customJsx": "Layout JSX personalizzato che usa componenti Mantine consentiti con binding completo dei dati API"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Nessuno",
-      "bearer": "Token Bearer",
-      "basic": "Autenticazione Base",
-      "apiKeyHeader": "Chiave API (Header)",
-      "apiKeyQuery": "Chiave API (Query)"
-    },
-    "displayType": {
-      "singleValue": "Valore Singolo",
-      "keyValue": "Chiave-Valore",
-      "table": "Tabella",
-      "statGrid": "Griglia Statistiche",
-      "progressBars": "Barre di Progresso",
-      "statusIndicator": "Indicatore di Stato",
-      "countGrid": "Griglia Conteggi",
-      "raw": "JSON Grezzo",
-      "actionButton": "Pulsante Azione",
-      "customJsx": "JSX Personalizzato"
-    },
-    "secret": {
-      "apiKey": "Chiave API / Token",
-      "username": "Nome utente",
-      "password": "Password",
-      "savedPlaceholder": "••••••• (salvato, lascia vuoto per mantenere)"
-    },
-    "preview": {
-      "title": "Anteprima",
-      "test": "Test",
-      "hint": "Fai clic su Test per visualizzare in anteprima la risposta dell'API con la configurazione attuale.",
-      "rawResponse": "Risposta JSON grezza"
+      "iconUrl": "URL Icona"
     },
     "notification": {
       "created": "Widget \"{name}\" creato con successo.",
@@ -868,9 +728,6 @@
       "deleted": "Widget \"{name}\" eliminato.",
       "imported": "Widget importato con successo.",
       "aiPromptCopied": "Prompt IA copiato negli appunti",
-      "aiPromptDescription": "Copia un prompt predefinito da incollare in qualsiasi chatbot IA (ChatGPT, Claude, Gemini...). Include lo schema completo del widget e la risposta della tua API, in modo che l'IA possa generare una configurazione JSON pronta per l'importazione.",
-      "aiPromptCopy": "Copia negli appunti",
-      "aiPromptNoResponse": "Suggerimento: esegui prima un test per includere la risposta della tua API nel prompt e ottenere risultati migliori.",
       "aiPromptCopyError": "Impossibile copiare il prompt negli appunti. Il tuo browser potrebbe non supportare questa funzione.",
       "createError": "Impossibile creare il widget. Verifica che l'endpoint dell'API sia raggiungibile.",
       "updateError": "Impossibile aggiornare il widget. Le modifiche non sono state salvate.",
@@ -883,14 +740,6 @@
       "previewError": "Impossibile recuperare l'anteprima. Controlla l'URL e riprova.",
       "executed": "Azione eseguita con successo.",
       "executeError": "Azione non riuscita: {error}"
-    },
-    "table": {
-      "name": "Nome",
-      "url": "URL",
-      "display": "Visualizzazione"
-    },
-    "widget": {
-      "disabled": "Questo widget è disabilitato"
     }
   },
   "integration": {
@@ -1549,10 +1398,10 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
-        "create": "Nuova sezione dinamica",
-        "remove": "Rimuovi sezione dinamica"
+        "create": "Nuovo container",
+        "remove": "Rimuovi container"
       },
       "option": {
         "title": {
@@ -1566,48 +1415,8 @@
         }
       },
       "remove": {
-        "title": "Rimuovi sezione dinamica",
-        "message": "Vuoi davvero rimuovere questa sezione dinamica? Gli elementi verranno spostati nella stessa posizione nella sezione padre."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Nome"
-        }
-      },
-      "action": {
-        "create": "Nuova categoria",
-        "edit": "Rinomina categoria",
-        "remove": "Rimuovi categoria",
-        "moveUp": "Sposta in alto",
-        "moveDown": "Sposta in basso",
-        "createAbove": "Nuova categoria sopra",
-        "createBelow": "Nuova categoria sotto",
-        "openAllInNewTabs": "Apri tutto in schede"
-      },
-      "create": {
-        "title": "Nuova categoria",
-        "submit": "Aggiungi categoria"
-      },
-      "remove": {
-        "title": "Rimuovi categoria",
-        "message": "Sei sicuro di voler rimuovere la categoria {name}?"
-      },
-      "edit": {
-        "title": "Rinomina categoria",
-        "submit": "Rinomina categoria"
-      },
-      "menu": {
-        "label": {
-          "create": "Nuova categoria",
-          "changePosition": "Cambia posizione",
-          "settings": "Impostazioni"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "Apri tutto in schede",
-        "text": "Alcuni browser potrebbero bloccare l'apertura multipla delle schede per motivi di sicurezza. Homarr non è riuscito ad aprire tutte le finestre perché il browser ha bloccato questa azione. Consenti l'apertura di finestre pop-up e riprova."
+        "title": "Rimuovi container",
+        "message": "Vuoi davvero rimuovere questo container? Gli elementi verranno spostati nella stessa posizione nella sezione padre."
       }
     }
   },
@@ -3914,12 +3723,7 @@
         }
       },
       "noDefinition": "Nessuna definizione selezionata",
-      "definitionNotFound": "Definizione del widget non trovata. Potrebbe essere stata eliminata.",
-      "noDisplayOutput": "Nessun output di visualizzazione",
-      "executeConfirm": "Sei sicuro di voler eseguire questa azione?",
-      "executing": "Esecuzione in corso...",
-      "executeSuccess": "Azione eseguita con successo",
-      "executeFailed": "Azione non riuscita. Controlla la configurazione del widget."
+      "definitionNotFound": "Definizione del widget non trovata. Potrebbe essere stata eliminata."
     },
     "beszelSystemTable": {
       "name": "Sistemi Beszel (Tabella)",
@@ -4551,6 +4355,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Home",
         "boards": "Board",
         "apps": "Applicazioni",
@@ -5694,6 +5499,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Gestisci",
       "boards": {
         "label": "Board"

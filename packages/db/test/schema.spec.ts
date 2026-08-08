@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable import/namespace -- This test compares equivalent schema exports by shared dynamic keys. */
+import { is } from "drizzle-orm";
 import type { Column, InferSelectModel } from "drizzle-orm";
+import { MySqlTable, getTableConfig as getMysqlTableConfig } from "drizzle-orm/mysql-core";
 import type { ForeignKey as MysqlForeignKey, MySqlTableWithColumns } from "drizzle-orm/mysql-core";
 import type { PgTableWithColumns, ForeignKey as PostgresqlForeignKey } from "drizzle-orm/pg-core";
+import { SQLiteTable, getTableConfig as getSqliteTableConfig } from "drizzle-orm/sqlite-core";
 import type { ForeignKey as SqliteForeignKey, SQLiteTableWithColumns } from "drizzle-orm/sqlite-core";
 import { expect, expectTypeOf, test } from "vitest";
 
@@ -10,6 +14,9 @@ import { objectEntries } from "@homarr/common";
 import * as mysqlSchema from "../schema/mysql";
 import * as postgresqlSchema from "../schema/postgresql";
 import * as sqliteSchema from "../schema/sqlite";
+
+const mysqlTables = { ...mysqlSchema };
+const postgresqlTables = { ...postgresqlSchema };
 
 // We need the following three types as there is currently no support for Buffer in mysql & pg and
 // so we use a custom type which results in the config beeing different
@@ -23,7 +30,6 @@ type FixedMysqlConfig = {
     };
   };
 };
-
 type FixedPostgresqlConfig = {
   [key in keyof PostgreisqlConfig]: {
     [column in keyof PostgreisqlConfig[key]]: {
@@ -51,6 +57,21 @@ type FixedSqliteConfig = {
   };
 };
 
+/** Identifies a foreign key by what it links rather than by its generated name. */
+const referenceSignature = (foreignKey: {
+  reference: () => { columns: { name: string }[]; foreignTable: object; foreignColumns: { name: string }[] };
+}) => {
+  const reference = foreignKey.reference();
+  const target = Object.keys(reference.foreignTable).sort().join("+");
+  return `${reference.columns
+    .map((column) => column.name)
+    .sort()
+    .join(",")}->${target}(${reference.foreignColumns
+    .map((column) => column.name)
+    .sort()
+    .join(",")})`;
+};
+
 test("schemas should match", () => {
   expectTypeOf<SqliteTables>().toEqualTypeOf<MysqlTables>();
   expectTypeOf<MysqlTables>().toEqualTypeOf<SqliteTables>();
@@ -63,8 +84,7 @@ test("schemas should match", () => {
       if (!("uniqueName" in sqliteColumn)) return;
       if (!("primary" in sqliteColumn)) return;
 
-      // oxlint-disable-next-line import/namespace -- this test intentionally compares matching dynamic schema keys.
-      const mysqlTable = mysqlSchema[tableName];
+      const mysqlTable = mysqlTables[tableName];
 
       const mysqlColumn = mysqlTable[columnName as keyof typeof mysqlTable] as object;
       if (!("isUnique" in mysqlColumn)) return;
@@ -85,56 +105,63 @@ test("schemas should match", () => {
       ).toEqual(mysqlColumn.primary);
     });
 
-    // oxlint-disable-next-line import/namespace -- this test intentionally compares matching dynamic schema keys.
-    const mysqlTable = mysqlSchema[tableName];
-    const sqliteForeignKeys = sqliteTable[Symbol.for("drizzle:SQLiteInlineForeignKeys") as keyof typeof sqliteTable] as
-      | SqliteForeignKey[]
-      | undefined;
-    const mysqlForeignKeys = mysqlTable[Symbol.for("drizzle:MySqlInlineForeignKeys") as keyof typeof mysqlTable] as
-      | MysqlForeignKey[]
-      | undefined;
+    const mysqlTable = mysqlTables[tableName];
+    // Read through getTableConfig so keys declared at table level count too, not just inline
+    // `.references()` ones. MySQL needs a table-level declaration wherever drizzle's derived name
+    // would exceed its 64-character identifier limit.
+    if (!is(sqliteTable, SQLiteTable) || !is(mysqlTable, MySqlTable)) return;
 
-    if (!sqliteForeignKeys && !mysqlForeignKeys) return;
+    const sqliteForeignKeys = getSqliteTableConfig(sqliteTable).foreignKeys as SqliteForeignKey[];
+    const mysqlForeignKeys = getMysqlTableConfig(mysqlTable).foreignKeys as MysqlForeignKey[];
 
-    expect(mysqlForeignKeys, `mysql foreign key for ${tableName} to be defined`).toBeDefined();
-    expect(sqliteForeignKeys, `sqlite foreign key for ${tableName} to be defined`).toBeDefined();
+    if (sqliteForeignKeys.length === 0 && mysqlForeignKeys.length === 0) return;
 
     expect(
-      sqliteForeignKeys!.length,
+      sqliteForeignKeys.length,
       `expect number of foreign keys in table ${tableName} to be the same for both schemas`,
-    ).toEqual(mysqlForeignKeys!.length);
+    ).toEqual(mysqlForeignKeys.length);
 
-    sqliteForeignKeys?.forEach((sqliteForeignKey) => {
-      sqliteForeignKey.getName();
-      const mysqlForeignKey = mysqlForeignKeys!.find((key) => key.getName() === sqliteForeignKey.getName());
-      expect(
-        mysqlForeignKey,
-        `expect foreign key ${sqliteForeignKey.getName()} to be defined in mysql schema`,
-      ).toBeDefined();
+    sqliteForeignKeys.forEach((sqliteForeignKey) => {
+      const describeKey = `${tableName}.${referenceSignature(sqliteForeignKey)}`;
+      // Matched on what the key actually does rather than on its generated name, because the name
+      // is allowed to differ per dialect.
+      const mysqlForeignKey = mysqlForeignKeys.find(
+        (key) => referenceSignature(key) === referenceSignature(sqliteForeignKey),
+      );
+      expect(mysqlForeignKey, `expect foreign key ${describeKey} to be defined in mysql schema`).toBeDefined();
 
       expect(
         sqliteForeignKey.onDelete,
-        `expect foreign key (${sqliteForeignKey.getName()}) onDelete to be the same for both schemas`,
+        `expect foreign key (${describeKey}) onDelete to be the same for both schemas`,
       ).toEqual(mysqlForeignKey!.onDelete);
 
       expect(
         sqliteForeignKey.onUpdate,
-        `expect foreign key (${sqliteForeignKey.getName()}) onUpdate to be the same for both schemas`,
+        `expect foreign key (${describeKey}) onUpdate to be the same for both schemas`,
       ).toEqual(mysqlForeignKey!.onUpdate);
-
-      sqliteForeignKey.reference().foreignColumns.forEach((column) => {
-        expect(
-          mysqlForeignKey!.reference().foreignColumns.map((column) => column.name),
-          `expect foreign key (${sqliteForeignKey.getName()}) columns to be the same for both schemas`,
-        ).toContainEqual(column.name);
-      });
-
-      expect(
-        Object.keys(sqliteForeignKey.reference().foreignTable),
-        `expect foreign key (${sqliteForeignKey.getName()}) table to be the same for both schemas`,
-      ).toEqual(Object.keys(mysqlForeignKey!.reference().foreignTable));
     });
   });
+});
+
+test("mysql identifiers stay within the 64 character limit", () => {
+  // MySQL rejects longer identifiers with error 1059, and drizzle derives foreign key names from
+  // the table and column names, so a long pairing silently produces a migration that cannot apply.
+  const tooLong: string[] = [];
+
+  objectEntries(mysqlSchema).forEach(([, table]) => {
+    if (!is(table, MySqlTable)) return;
+
+    const config = getMysqlTableConfig(table);
+    if (config.name.length > 64) tooLong.push(config.name);
+    for (const foreignKey of config.foreignKeys) {
+      if (foreignKey.getName().length > 64) tooLong.push(foreignKey.getName());
+    }
+    for (const index of config.indexes) {
+      if (index.config.name.length > 64) tooLong.push(index.config.name);
+    }
+  });
+
+  expect(tooLong).toEqual([]);
 });
 
 test("schemas should match for postgresql", () => {
@@ -146,8 +173,7 @@ test("schemas should match for postgresql", () => {
   objectEntries(sqliteSchema).forEach(([tableName, sqliteTable]) => {
     // keys of sqliteSchema and postgresqlSchema are the same, so we can safely use tableName as key
     // skipcq: JS-E1007
-    // oxlint-disable-next-line import/namespace -- this test intentionally compares matching dynamic schema keys.
-    const postgresqlTable = postgresqlSchema[tableName];
+    const postgresqlTable = postgresqlTables[tableName];
     Object.entries(sqliteTable).forEach(([columnName, sqliteColumn]: [string, object]) => {
       if (!("isUnique" in sqliteColumn)) return;
       if (!("uniqueName" in sqliteColumn)) return;

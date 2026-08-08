@@ -21,8 +21,9 @@ import { IconClick, IconListSearch } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createModal, useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
+import { formatLocalizedCompactNumber } from "../common/locale";
 import type { OptionLocation } from "../options";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -128,7 +129,7 @@ const LocationSearchModal = createModal<LocationSearchInnerProps>(({ actions, in
   if (error) {
     return (
       <Alert title={tCommon("error")} color="red">
-        {error.message}
+        {tCommon("action.tryAgain")}
       </Alert>
     );
   }
@@ -187,6 +188,7 @@ interface LocationSearchTableRowProps {
 
 const LocationSelectTableRow = ({ city, onLocationSelect, closeModal }: LocationSearchTableRowProps) => {
   const t = useScopedI18n("widget.common.location.table");
+  const locale = useCurrentIntlLocale();
   const onSelect = useCallback(() => {
     onLocationSelect({
       name: city.name,
@@ -195,8 +197,6 @@ const LocationSelectTableRow = ({ city, onLocationSelect, closeModal }: Location
     });
     closeModal();
   }, [city, onLocationSelect, closeModal]);
-
-  const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
   return (
     <Table.Tr>
@@ -215,7 +215,7 @@ const LocationSelectTableRow = ({ city, onLocationSelect, closeModal }: Location
       </Table.Td>
       <Table.Td>
         {city.population ? (
-          <Text style={{ whiteSpace: "nowrap" }}>{formatter.format(city.population)}</Text>
+          <Text style={{ whiteSpace: "nowrap" }}>{formatLocalizedCompactNumber(city.population, locale)}</Text>
         ) : (
           <Text c="gray"> {t("population.fallback")}</Text>
         )}

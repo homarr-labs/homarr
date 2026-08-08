@@ -388,6 +388,19 @@
           }
         }
       },
+      "custom-widget": {
+        "title": "Custom widgets",
+        "item": {
+          "manage": {
+            "label": "Manage custom widgets",
+            "description": "Allow members to create, edit, and delete custom widget definitions"
+          },
+          "secret-write": {
+            "label": "Configure custom widget secrets",
+            "description": "Allow members and their API keys to set encrypted custom widget credentials"
+          }
+        }
+      },
       "app": {
         "title": "Apps",
         "item": {
@@ -689,11 +702,42 @@
     }
   },
   "customWidget": {
+    "betaBanner": {
+      "title": "Custom Widgets are in Beta",
+      "description": "This feature is experimental and will probably change significantly. If you encounter bugs, want additional capabilities, or find something confusing, please share your feedback in the",
+      "discussionLink": "official discussion forum",
+      "closing": "so it can be considered. Happy hacking!"
+    },
+    "secretEntry": {
+      "title": "Configure API source",
+      "description": "Confirm the server URL and enter credentials. Secret values are encrypted by Homarr and never returned to the requesting agent.",
+      "loading": "Loading secure request…",
+      "saved": "API source configured. You can close this page.",
+      "unavailable": "Request unavailable",
+      "saveError": "Unable to configure API source",
+      "source": "API source: {name}",
+      "baseUrl": "Server URL",
+      "networkScope": "Network access",
+      "save": "Save API configuration",
+      "expires": "This one-time request expires at {time}.",
+      "field": {
+        "apiKey": "API key or token",
+        "username": "Username",
+        "password": "Password"
+      }
+    },
     "page": {
       "list": {
         "title": "Custom Widgets",
         "noResults": "No custom widgets yet. Create your first one!",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "invalidDefinition": "Invalid definition",
+        "invalidDefinitionDescription": "This stored widget no longer matches the current Custom Widget schema. Delete it and recreate or import a valid definition.",
+        "migrationRequired": "Migration required",
+        "migrationDescription": "This v1 custom widget is preserved but cannot run until it is migrated to Custom JSX v2.",
+        "migrationInstructions": "Open Actions, copy the redacted migration prompt into an LLM, then copy its single JSON response and choose Paste migrated widget. Existing board placements keep working after migration.",
+        "missingCredentials": "{count, plural, one {Credential missing} other {# credentials missing}}",
+        "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Edit it to configure the encrypted values."
       },
       "create": {
         "title": "Create Custom Widget",
@@ -706,23 +750,31 @@
     "action": {
       "create": "Create",
       "import": "Import",
+      "pasteImportHint": "Paste a full custom widget JSON with Ctrl+V or Command+V",
       "save": "Save",
       "delete": "Delete Custom Widget",
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
       "export": "Export",
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "aiPrompt": "Design with AI",
+      "copyAiPrompt": "Copy AI prompt",
+      "enable": "Enable",
+      "disable": "Disable",
+      "menu": "Actions",
+      "downloadSkill": "View Custom Widget Skill",
+      "publishWorkshop": "Publish to Workshop",
+      "migrate": "Migrate Custom Widget",
+      "copyMigrationPrompt": "Copy LLM migration prompt",
+      "pasteMigration": "Paste migrated widget",
+      "importMigration": "Import migrated JSON file",
       "addMapping": "Add Mapping",
       "addColumn": "Add Column",
-      "edit": "Edit",
       "removeMapping": "Remove mapping",
       "removeColumn": "Remove column",
       "addItem": "Add Item",
       "removeItem": "Remove item",
-      "addBar": "Add Bar",
-      "duplicate": "Duplicate",
-      "copyAiPrompt": "Copy AI prompt",
-      "enable": "Enable",
-      "disable": "Disable",
-      "menu": "Actions"
+      "addBar": "Add Bar"
     },
     "field": {
       "name": "Name",
@@ -771,6 +823,378 @@
         "label": "JSX Template",
         "description": "Mantine JSX template. Access API response fields via data bindings (e.g. data.name). Use whitelisted components only. Forbidden: constructor, __proto__, eval, Function, window, document."
       }
+    },
+    "editor": {
+      "errorBoundary": {
+        "title": "Something went wrong",
+        "retry": "Try again"
+      },
+      "language": {
+        "jsx": "JSX",
+        "json": "JSON"
+      },
+      "action": {
+        "components": "Components",
+        "format": "Format",
+        "insertStarter": "Insert starter",
+        "undo": "Undo",
+        "redo": "Redo",
+        "copy": "Copy",
+        "copied": "Copied",
+        "schema": "Schema"
+      },
+      "reference": {
+        "schema": "JSON Schema",
+        "minimal": "Minimal example",
+        "full": "Full example"
+      },
+      "componentReference": {
+        "search": "Search components",
+        "empty": "No matching components",
+        "count": "{count, number} components available"
+      },
+      "status": {
+        "errors": "{count, number} errors",
+        "warnings": "{count, number} warnings",
+        "ready": "No issues found",
+        "position": "Ln {line, number}, Col {column, number}",
+        "characters": "{count, number} characters",
+        "charactersWithLimit": "{count, number} / {limit, number}"
+      },
+      "diagnostics": {
+        "title": "Template diagnostics",
+        "line": "Line {line, number}",
+        "ast": "{value}",
+        "bindingTypeConflict": "The input \"{value}\" is shared by controls with incompatible value types.",
+        "dynamicRequestId": "A literal requestId is required. Dynamic request IDs are not accepted.",
+        "dynamicInputBinding": "A literal input name is required for bind.",
+        "inlineRequestProps": "Network components accept requestId and params; inline URL, method, header, and body props are blocked.",
+        "invalidRequestManifest": "Named requests must be a valid request map. {value}",
+        "missingRequestId": "This network component requires a literal requestId.",
+        "templateEmpty": "Enter a JSX template.",
+        "templateTooLong": "The template exceeds the 50,000 character limit.",
+        "unknownRequest": "No named request with ID \"{value}\" exists."
+      }
+    },
+    "workbench": {
+      "configure": "Configure",
+      "sectionNavigation": "Custom widget sections",
+      "widgetPreview": "Widget preview",
+      "generalInformation": "General information",
+      "invalidWidget": "Invalid widget",
+      "section": {
+        "general": "General",
+        "sources": "API sources",
+        "requests": "Requests",
+        "options": "Options",
+        "jsx": "JSX",
+        "preview": "Preview"
+      },
+      "status": {
+        "unsaved": "Unsaved changes",
+        "invalid": "Needs attention",
+        "ready": "Ready"
+      },
+      "saveError": {
+        "title": "Widget was not saved",
+        "description": "Fix these validation errors and save again.",
+        "more": "+{count} more errors are shown in the workbench.",
+        "errors": "Validation errors",
+        "copy": "Copy errors",
+        "copied": "Errors copied"
+      },
+      "action": {
+        "preview": "Test and preview",
+        "previewLoading": "Testing requests",
+        "create": "Create",
+        "save": "Save"
+      },
+      "requests": {
+        "title": "Named queries and actions",
+        "label": "Requests",
+        "description": "Queries load data; actions only run after user interaction. Any HTTP method is valid for either kind."
+      },
+      "options": {
+        "title": "Widget options",
+        "schema": "Options schema",
+        "defaults": "Default option values"
+      },
+      "builder": {
+        "advancedManifest": "Advanced raw manifest",
+        "manifestFilename": "widget.json",
+        "advancedJson": "Advanced manifest JSON",
+        "request": "Request {count, number}",
+        "requestId": "Request ID",
+        "type": "Type",
+        "method": "Method",
+        "source": "API source",
+        "run": "Run",
+        "runLoad": "When the widget loads",
+        "runManual": "From SubFetch",
+        "permission": "Permission",
+        "path": "Path",
+        "pathDescription": "Use '{option:name}' for widget options and '{param:name}' for invocation values.",
+        "requestDetails": "Query, body and behavior",
+        "queryValues": "Query values",
+        "queryKey": "Query key",
+        "queryKeyInvalid": "Use a unique ID that starts with a letter and contains only letters, numbers, - or _.",
+        "valueSource": "Value source",
+        "literal": "Literal",
+        "widgetOption": "Widget option",
+        "invocationParameter": "Invocation parameter",
+        "option": "Option",
+        "parameterName": "Parameter name",
+        "value": "Value",
+        "removeQueryValue": "Remove query value",
+        "addQueryValue": "Add query value",
+        "jsonBody": "JSON body",
+        "jsonBodyDescription": "Optional. Insert $option and $param references at any depth.",
+        "insertOptionReference": "Insert option reference",
+        "insertParameterReference": "Insert parameter reference",
+        "confirmation": "Confirmation message",
+        "invalidation": "Refresh after success",
+        "invalidationDescription": "Comma-separated query IDs",
+        "noAuth": "Send without source authentication",
+        "moveRequestUp": "Move request up",
+        "moveRequestDown": "Move request down",
+        "removeRequest": "Remove request",
+        "addRequest": "Add request",
+        "optionName": "Option name",
+        "label": "Label",
+        "control": "Control",
+        "description": "Description",
+        "default": "Default",
+        "optionDetails": "Constraints and dynamic choices",
+        "minimum": "Minimum",
+        "maximum": "Maximum",
+        "step": "Step",
+        "choiceLabel": "Choice label",
+        "choiceValue": "Choice value",
+        "newChoice": "New choice",
+        "addChoice": "Add choice",
+        "removeChoice": "Remove choice",
+        "choicesRequest": "Load choices from request",
+        "itemsPath": "Items path",
+        "itemsPathPlaceholder": "items (optional)",
+        "valuePath": "Value path",
+        "labelPath": "Label path",
+        "group": "Group",
+        "advancedOption": "Advanced option",
+        "moveOptionUp": "Move option up",
+        "moveOptionDown": "Move option down",
+        "removeOption": "Remove option",
+        "addOption": "Add option",
+        "invalidJson": "Invalid JSON",
+        "invalidWidget": "Invalid widget"
+      },
+      "jsx": {
+        "title": "JSX template",
+        "label": "Template"
+      },
+      "sources": {
+        "title": "API sources and credentials",
+        "newName": "API {count, number}",
+        "duplicateSourceId": "API source IDs must be unique.",
+        "credentialRemoved": "Credential removed",
+        "credentialRemovedDescription": "The stored value was deleted.",
+        "primary": "Primary API",
+        "id": "Source ID",
+        "name": "Name",
+        "baseUrl": "Base URL",
+        "baseUrlError": {
+          "invalid": "Enter a complete URL.",
+          "protocol": "Use an HTTP or HTTPS URL.",
+          "credentials": "Remove the username and password from this URL. Configure credentials below instead.",
+          "queryOrFragment": "Remove the query string or fragment from this base URL. Add query values to a named request."
+        },
+        "networkScope": "Network access",
+        "authentication": "Authentication",
+        "headerName": "Header name",
+        "queryParameter": "Query parameter",
+        "configured": "Configured — enter a replacement",
+        "clear": "Clear",
+        "remove": "Remove source and its requests",
+        "advanced": "Advanced",
+        "add": "Add another API source",
+        "secret": {
+          "apiKey": "API key or token",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "ai": {
+        "title": "Create or fix with any AI",
+        "description": "Copy one prompt, then paste the AI's single JSON block. Homarr loads its JSX into the editor automatically.",
+        "request": "What should this widget do?",
+        "documentationUrl": "API documentation URL (optional)",
+        "paste": "Paste AI response",
+        "response": "AI response",
+        "loaded": "Widget loaded into the editor",
+        "invalidResponse": "Clipboard does not contain a valid v2 widget",
+        "invalidResponseDetail": "The AI response is invalid: {message}"
+      },
+      "preview": {
+        "invalid": "Fix validation errors to preview this widget.",
+        "fixtureError": "Preview fixture error",
+        "requestData": "Request data",
+        "status": {
+          "idle": "Requests have not been tested",
+          "loading": "Testing requests",
+          "success": "All load requests succeeded",
+          "error": "One or more load requests failed"
+        },
+        "result": {
+          "loading": {
+            "title": "Testing API requests",
+            "description": "Homarr is creating a preview session and loading the widget data."
+          },
+          "success": {
+            "title": "Preview ready",
+            "description": "{succeeded, plural, =0 {This widget has no load requests.} one {# load request succeeded.} other {# load requests succeeded.}} Open Data to inspect the response."
+          },
+          "error": {
+            "title": "Preview completed with request errors",
+            "description": "{succeeded, number} succeeded and {failed, number} failed. Open Data for the response and error details."
+          }
+        },
+        "instanceOptions": "Instance options",
+        "liveActions": "Run actions against the configured API",
+        "liveActionsDescription": "Off is safe simulation. Turning this on affects the real service.",
+        "noActions": "No actions are defined.",
+        "sessionActive": "Preview session active",
+        "simulationPending": "Actions are simulated until you run preview",
+        "containedFailures": "Runtime failures are contained inside this widget. Request journals never include secret values.",
+        "validation": {
+          "title": "Validation",
+          "ready": "The widget definition is valid."
+        },
+        "accessibility": {
+          "title": "Accessibility checks",
+          "ready": "No common accessibility omissions detected.",
+          "pending": "Accessibility checks will run when the widget definition is valid.",
+          "imageAlt": "Add alt text to every Image, using an empty alt only for decorative images.",
+          "actionIconLabel": "Add an aria-label or title to every ActionIcon.",
+          "inputLabel": "Add a visible label or accessible name to every input."
+        },
+        "journal": "Redacted request journal",
+        "actionParameters": "Action parameters (JSON)",
+        "invalidParameters": "Use the declared string, number, and boolean parameter types.",
+        "runDestructive": "Run destructive action",
+        "runAction": "Run action",
+        "deleteConfirmation": "This preview action sends a DELETE request to the configured API.",
+        "simulated": "Action simulated",
+        "httpStatus": "HTTP {status, number}",
+        "tab": {
+          "widget": "Widget",
+          "data": "Data",
+          "options": "Options",
+          "state": "State",
+          "actions": "Actions",
+          "diagnostics": "Diagnostics"
+        },
+        "size": {
+          "compact": "Compact",
+          "standard": "Standard",
+          "wide": "Wide"
+        },
+        "theme": {
+          "light": "Light",
+          "dark": "Dark"
+        },
+        "fixture": {
+          "live": "Live",
+          "loading": "Loading",
+          "empty": "Empty",
+          "error": "Error"
+        }
+      }
+    },
+    "preview": {
+      "request": {
+        "permission": {
+          "view": "View",
+          "modify": "Modify",
+          "full": "Full"
+        }
+      },
+      "title": "Preview",
+      "test": "Test",
+      "hint": "Click Test to preview the API response with your current configuration.",
+      "rawResponse": "Raw JSON response"
+    },
+    "notification": {
+      "created": "Widget \"{name}\" created successfully.",
+      "updated": "Widget \"{name}\" updated successfully.",
+      "deleted": "Widget \"{name}\" deleted.",
+      "imported": "Widget imported successfully.",
+      "migrated": "Legacy widget migrated successfully. Existing board placements now use the v2 definition.",
+      "migrationError": "Failed to migrate the legacy widget. Ensure the file uses the homarr-custom-widget-v2 schema.",
+      "migrationPromptCopied": "A redacted migration prompt was copied. Paste it into an LLM, copy its single JSON response, then choose Paste migrated widget here.",
+      "migrationPromptCopyError": "Failed to copy the migration prompt.",
+      "aiPromptCopied": "AI prompt copied to clipboard",
+      "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
+      "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
+      "aiPromptSent": "Prompt sent. You can keep editing while the assistant works in the background.",
+      "updateError": "Failed to update widget. Your changes were not saved.",
+      "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
+      "exportError": "Failed to export widget.",
+      "duplicated": "Widget \"{name}\" duplicated.",
+      "duplicateError": "Failed to duplicate widget.",
+      "toggleError": "Failed to toggle widget status.",
+      "deleteError": "Failed to delete widget.",
+      "previewError": "Failed to fetch preview. Check the URL and try again.",
+      "aiPromptDescription": "Copy a pre-built prompt to paste into any AI chatbot (ChatGPT, Claude, Gemini...). It includes the full widget schema and your API response so the AI can generate a ready-to-import JSON config for you.",
+      "aiPromptCopy": "Copy to clipboard",
+      "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
+      "createError": "Failed to create widget. Check your API endpoint is reachable.",
+      "executed": "Action executed successfully.",
+      "executeError": "Action failed: {error}",
+      "aiPromptRequestLabel": "What should the widget do?",
+      "aiPromptRequestPlaceholder": "For example, show service health as a compact status grid and highlight offline services.",
+      "aiPromptAssistant": "Ask Homarr Assistant",
+      "aiPromptAssistantBusy": "Assistant is working",
+      "aiPromptAssistantUnavailable": "Homarr Assistant is unavailable. You can still copy the prepared prompt."
+    },
+    "importReview": {
+      "title": "Review custom widget import",
+      "description": "Check where this widget connects and what board access its controls require before importing it.",
+      "migrationTitle": "Review migrated v2 replacement",
+      "migrationDescription": "Review and confirm this generated v2 definition. Confirming atomically replaces the preserved v1 record while keeping existing board placements linked to the same widget ID.",
+      "fileLabel": "Choose a custom widget JSON file",
+      "name": "Name",
+      "origin": "Base origin",
+      "authentication": "Authentication",
+      "networkScope": "Network scope",
+      "methods": "HTTP methods",
+      "permissions": "Required board permissions",
+      "credentials": {
+        "title": "Configure credentials now",
+        "description": "Secrets are encrypted locally and never added to the imported widget. You can leave a field blank and configure it later.",
+        "header": "Sent through the {name} header",
+        "query": "Sent through the {name} query parameter",
+        "field": {
+          "apiKey": "API key or token",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "sourceSetup": {
+        "title": "Configure API sources",
+        "description": "Confirm where this widget connects and add credentials. Private and loopback URLs are specific to your Homarr installation.",
+        "suggestedUrl": "Suggested URL",
+        "confirmUrl": "I confirm that this server URL is correct for my Homarr installation",
+        "ready": "URL ready",
+        "needsUrl": "Confirm URL",
+        "credentialsMissing": "Credentials missing",
+        "credentialsOptional": "You can install without credentials and configure them later, but requests will fail until they are added."
+      },
+      "actionWarning": {
+        "title": "This widget can change remote data",
+        "description": "Review every named action, inherited credential, and destructive confirmation after import. Secrets are not included in the file."
+      },
+      "cancel": "Cancel import",
+      "confirm": "Import widget",
+      "confirmMigration": "Confirm v2 replacement"
     },
     "placeholder": {
       "exampleLabel": "CPU Temperature",
@@ -856,34 +1280,6 @@
       "password": "Password",
       "savedPlaceholder": "••••••• (saved, leave empty to keep)"
     },
-    "preview": {
-      "title": "Preview",
-      "test": "Test",
-      "hint": "Click Test to preview the API response with your current configuration.",
-      "rawResponse": "Raw JSON response"
-    },
-    "notification": {
-      "created": "Widget \"{name}\" created successfully.",
-      "updated": "Widget \"{name}\" updated successfully.",
-      "deleted": "Widget \"{name}\" deleted.",
-      "imported": "Widget imported successfully.",
-      "aiPromptCopied": "AI prompt copied to clipboard",
-      "aiPromptDescription": "Copy a pre-built prompt to paste into any AI chatbot (ChatGPT, Claude, Gemini...). It includes the full widget schema and your API response so the AI can generate a ready-to-import JSON config for you.",
-      "aiPromptCopy": "Copy to clipboard",
-      "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
-      "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
-      "createError": "Failed to create widget. Check your API endpoint is reachable.",
-      "updateError": "Failed to update widget. Your changes were not saved.",
-      "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
-      "exportError": "Failed to export widget.",
-      "duplicated": "Widget \"{name}\" duplicated.",
-      "duplicateError": "Failed to duplicate widget.",
-      "toggleError": "Failed to toggle widget status.",
-      "deleteError": "Failed to delete widget.",
-      "previewError": "Failed to fetch preview. Check the URL and try again.",
-      "executed": "Action executed successfully.",
-      "executeError": "Action failed: {error}"
-    },
     "table": {
       "name": "Name",
       "url": "URL",
@@ -892,6 +1288,69 @@
     "widget": {
       "disabled": "This widget is disabled"
     }
+  },
+  "workshop": {
+    "installSuccess": "Custom widget installed",
+    "installSuccessDescription": "Add its credentials, test the requests, and save when it is ready.",
+    "installError": "Could not install widget",
+    "installErrorDescription": "The Workshop submission is not a valid Custom JSX v2 widget.",
+    "title": "Workshop",
+    "openCommunity": "Open public Workshop",
+    "description": "Community Custom JSX v2 widgets. Inspect the source and network capabilities before installing.",
+    "descriptionCss": "Community Custom CSS themes. Preview every rule before importing it into a board.",
+    "securityNotice": "Workshop widgets can call their declared API sources and perform declared actions with credentials you configure locally. Secrets are never included.",
+    "securityNoticeCss": "Community CSS can change the appearance and usability of a board. Review it before importing; nothing is saved until you save board settings.",
+    "signIn": "Sign in with GitHub",
+    "signInError": "GitHub sign-in failed. Check that the Workshop OAuth provider is configured and that popups are allowed.",
+    "signOut": "Sign out",
+    "search": "Search widgets",
+    "searchCss": "Search CSS themes",
+    "sort": "Sort",
+    "sortTop": "Top rated",
+    "sortNewest": "Newest",
+    "unavailableTitle": "Homarr Workshop seems to be unavailable",
+    "unavailable": "The community service may be temporarily down. Try again in a moment. Your installed widgets are unaffected.",
+    "retry": "Try again",
+    "empty": "No widgets match this search.",
+    "emptyCss": "No CSS themes match this search.",
+    "noDescription": "No description",
+    "author": "by {name}",
+    "inspect": "Inspect widget",
+    "inspectCss": "Inspect CSS",
+    "details": "Widget details",
+    "loadError": "This submission could not be loaded.",
+    "sources": "Declared API sources",
+    "requests": "Declared queries and actions",
+    "noRequests": "This widget does not declare network requests.",
+    "export": "Export",
+    "report": "Report",
+    "install": "Install widget",
+    "useCss": "Import CSS",
+    "signInHint": "Sign in to vote or report. Installing does not require a Workshop account.",
+    "reportTitle": "Report submission",
+    "reportReason": "Reason",
+    "reportExplanation": "What should the Workshop moderators know?",
+    "reportSend": "Send report",
+    "reportSent": "Report sent",
+    "reportSentDescription": "Workshop moderators can now review this submission.",
+    "voteError": "The vote could not be saved.",
+    "publish": {
+      "title": "Publish to Workshop",
+      "success": "Published immediately. Community members can now install and report this widget.",
+      "signInHint": "Sign in to publish under your Workshop identity.",
+      "titleField": "Title",
+      "descriptionField": "Description",
+      "screenshots": "Screenshots",
+      "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
+      "privateSourceWarning": "This widget contains private source URLs for: {sources}. Replace personal hosts or IP addresses with safe service placeholders before publishing.",
+      "privateSourceConfirmation": "I reviewed these source URLs and they do not expose private infrastructure details",
+      "action": "Publish now",
+      "definitionChanged": "The widget changed while publication was being prepared. Review its private source URLs again, then retry.",
+      "error": "Publication failed"
+    },
+    "installDialog": "Install from Workshop",
+    "installed": "Widget installed",
+    "installedDescription": "{name} is ready to configure."
   },
   "integration": {
     "page": {
@@ -1027,7 +1486,8 @@
       "analytics": "Analytics",
       "vpn": "VPN",
       "mediaLibrary": "Media Library",
-      "uptimeMonitoring": "Uptime Monitoring"
+      "uptimeMonitoring": "Uptime Monitoring",
+      "beszel": "Beszel"
     },
     "testConnection": {
       "action": {
@@ -1498,7 +1958,10 @@
         "login": "Login",
         "homeBoard": "Your home board",
         "loggedOut": "Logged out",
-        "updateAvailable": "{countUpdates} updates available: {tag}"
+        "updateAvailable": "{countUpdates} updates available: {tag}",
+        "assistant": "Homarr Assistant",
+        "assistantThinking": "Thinking",
+        "modifier": "Mod"
       }
     },
     "dangerZone": "Danger zone",
@@ -1546,9 +2009,350 @@
         "kilometersPerHour": "km/h",
         "milesPerHour": "mph"
       }
+    },
+    "widgetQuery": {
+      "loading": "Loading widget data",
+      "stale": "Could not refresh {widget}; showing saved data"
+    },
+    "total": "Total",
+    "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}",
+    "assistant": {
+      "title": "Homarr Assistant",
+      "open": "Open Homarr Assistant",
+      "close": "Close assistant",
+      "minimize": "Minimize assistant",
+      "spotlight": "Ask Homarr Assistant",
+      "spotlightDescription": "Type and send a prompt without leaving the command menu.",
+      "spotlightPrompt": {
+        "title": "Ask Assistant",
+        "description": "Type a prompt above. Enter sends it in the background.",
+        "send": "Send prompt",
+        "empty": "Type a prompt above"
+      },
+      "unavailable": {
+        "checking": "Checking whether the assistant is available…",
+        "error": "The assistant's availability could not be checked. Try again.",
+        "notConfigured": "An administrator must configure and enable the assistant first.",
+        "signIn": "Sign in to use Homarr Assistant."
+      },
+      "newConversation": "New conversation",
+      "conversations": "Conversations",
+      "delete": "Delete",
+      "closeHistory": "Close conversation history",
+      "openHistory": "Open conversation history",
+      "emptyTitle": "What can I help with?",
+      "emptyDescription": "Ask about your Homarr setup, inspect live instance data, or approve actions when you want me to make a change.",
+      "suggestions": {
+        "health": {
+          "label": "Check service health",
+          "prompt": "Check my integrations and summarize anything that needs attention."
+        },
+        "explore": {
+          "label": "Explore my Homarr",
+          "prompt": "Show me what I can view and manage in this Homarr instance."
+        },
+        "media": {
+          "label": "Find media to request",
+          "prompt": "Help me find a movie or series to request."
+        },
+        "style": {
+          "label": "Improve a dashboard",
+          "prompt": "Help me improve a board's appearance or custom CSS. Show me my boards first, then preserve my current settings while we make the change."
+        }
+      },
+      "composerPlaceholder": "Ask Homarr Assistant…",
+      "runtime": {
+        "model": "Model",
+        "searchModels": "Search models",
+        "noModels": "No models available",
+        "otherModels": "Other models",
+        "imageInput": "Accepts image input",
+        "thinking": "Thinking mode",
+        "reasoning": {
+          "auto": "Auto",
+          "none": "Off",
+          "minimal": "Minimal",
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        }
+      },
+      "stop": "Stop response",
+      "send": "Send message",
+      "copy": "Copy response",
+      "copyMessage": "Copy message",
+      "editMessage": "Edit message",
+      "cancelEdit": "Cancel",
+      "updateMessage": "Update message",
+      "regenerate": "Regenerate response",
+      "helpful": "Helpful",
+      "notHelpful": "Not helpful",
+      "feedbackError": "Your feedback could not be saved. Try again.",
+      "exportMarkdown": "Export as Markdown",
+      "reasoning": "Thinking",
+      "previousResponse": "Previous response",
+      "nextResponse": "Next response",
+      "removeAttachment": "Remove attachment",
+      "downloadFile": "Download {name}",
+      "attachedImage": "Attached image",
+      "externalImageBlocked": "External image blocked for privacy",
+      "quoteSelection": "Quote",
+      "dismissQuote": "Remove quote",
+      "attachments": {
+        "add": "Attach an image or document",
+        "errorTitle": "Attachment could not be added"
+      },
+      "mentions": {
+        "menu": "Add Homarr context",
+        "hint": "Type @ to add context",
+        "context": "Context",
+        "app": "Apps",
+        "integration": "Integrations",
+        "board": "Boards",
+        "widget": "Widgets",
+        "tools": "Available tools"
+      },
+      "markdown": {
+        "diagram": "Diagram",
+        "renderingDiagram": "Rendering diagram…",
+        "diagramUnavailable": "This diagram could not be rendered."
+      },
+      "commands": {
+        "menu": "Assistant commands",
+        "hint": "Type / for shortcuts",
+        "health": "Prepare a service-health check",
+        "explore": "Prepare an overview of this Homarr instance",
+        "media": "Prepare a media search",
+        "style": "Prepare a board appearance or custom CSS change"
+      },
+      "usage": {
+        "tokens": "tokens",
+        "contextWindow": "Context window",
+        "requestDetails": "Request details",
+        "used": "Used",
+        "remaining": "Remaining",
+        "capacity": "Capacity",
+        "input": "Input",
+        "output": "Output",
+        "cached": "Cached input",
+        "cacheWrite": "Cache write",
+        "reasoning": "Reasoning",
+        "inputShort": "in",
+        "outputShort": "out",
+        "cachedShort": "cached",
+        "reasoningShort": "reasoning",
+        "firstOutput": "First output",
+        "homarrTiming": "Homarr observed",
+        "endToEnd": "End to end",
+        "observedThroughput": "Observed throughput",
+        "providerTiming": "Provider reported",
+        "loadingProviderDetails": "Loading generation details…",
+        "providerDetailsPending": "OpenRouter is still processing some generation details. Reopen to retry.",
+        "providerLatency": "Provider latency",
+        "generationTime": "Generation time",
+        "moderationLatency": "Moderation",
+        "providerThroughput": "Provider throughput",
+        "fallbacks": "Fallbacks",
+        "fallbackLatency": "Fallback latency",
+        "cacheDiscount": "Cache discount",
+        "normalizedTokens": "OpenRouter normalized input / output",
+        "byok": "BYOK",
+        "cost": "Cost",
+        "reported": "Reported by provider",
+        "estimated": "Estimated from model pricing",
+        "upstreamCost": "Upstream inference",
+        "webSearches": "Web searches",
+        "finishReason": "Finish reason",
+        "notReported": "Not reported",
+        "agentSteps": "Agent steps",
+        "step": "Step {number}",
+        "generation": "Generation"
+      },
+      "toolInput": "Input",
+      "toolOutput": "Output",
+      "webSearch": {
+        "title": "Web search",
+        "completed": "OpenRouter searched the live web for this response.",
+        "searches": "{count, plural, one {# search} other {# searches}}",
+        "sources": "{count, plural, one {# source} other {# sources}}"
+      },
+      "responseError": {
+        "title": "The assistant could not finish",
+        "description": "Try again. If the problem continues, ask an administrator to verify the configured model endpoint.",
+        "retry": "Try again"
+      },
+      "toolPreparationError": {
+        "title": "This request could not be prepared",
+        "description": "The model stopped before it supplied complete details. Retry the response or describe the request again. No change was made."
+      },
+      "busy": {
+        "title": "The assistant is already working",
+        "description": "Wait for the current response or open it to stop the run."
+      },
+      "pendingAction": {
+        "answerTitle": "Answer needed",
+        "answerFallback": "Choose an answer to continue",
+        "formTitle": "Review app details",
+        "boardFormTitle": "Review board changes",
+        "review": "Review",
+        "sendBlocked": "Resolve the pending request before sending"
+      },
+      "activity": {
+        "thinking": "Assistant is thinking",
+        "working": "Working on your prompt",
+        "ready": "Response ready",
+        "completed": "Open the response",
+        "approval": "Approval needed",
+        "failed": "Assistant needs attention",
+        "expand": "Open the assistant response",
+        "dismiss": "Dismiss assistant activity"
+      },
+      "scrollToLatest": "Scroll to latest",
+      "refresh": {
+        "action": "Refresh current view",
+        "working": "Refreshing current view",
+        "completeTitle": "View refreshed",
+        "completeDescription": "Visible Homarr data has been reloaded.",
+        "failedTitle": "View could not be refreshed",
+        "failedDescription": "The change may still be saved. Try the refresh action again."
+      },
+      "askUser": {
+        "preparing": "Preparing question",
+        "answered": "Your answer",
+        "other": "Other",
+        "otherLabel": "Your answer",
+        "otherPlaceholder": "Type another answer…",
+        "submit": "Send answer",
+        "cancelOther": "Cancel other answer",
+        "automaticAffirmative": "Choosing the affirmative answer automatically",
+        "optionKind": {
+          "affirmative": "Confirm",
+          "negative": "Decline",
+          "alternative": "Option",
+          "custom": "Custom"
+        }
+      },
+      "configureApp": {
+        "title": "Review app details",
+        "description": "Choose a local icon and adjust anything before the assistant requests creation approval.",
+        "preparing": "Preparing app details",
+        "continue": "Use these details",
+        "ready": "App details ready",
+        "automaticContinue": "Using these app details automatically"
+      },
+      "configureBoardSettings": {
+        "title": "Review board changes",
+        "loading": "Loading current board settings",
+        "loadErrorTitle": "Board settings could not be loaded",
+        "loadErrorDescription": "The board may no longer exist, or you may not have permission to modify it.",
+        "retry": "Try again",
+        "proposedCount": "Assistant proposed {count} fields",
+        "changeCount": "{count} changes ready",
+        "ready": "Board changes ready",
+        "cancelled": "Current board settings kept",
+        "noChanges": "No settings will change",
+        "keepCurrent": "Keep current settings",
+        "continue": "Continue to approval",
+        "automaticContinue": "Accepting the proposed board changes automatically",
+        "resetAll": "Reset all changes",
+        "tabs": {
+          "css": "Custom CSS",
+          "appearance": "Appearance",
+          "background": "Background",
+          "general": "General"
+        },
+        "cssDescription": "Edit the complete stylesheet. Existing rules are kept unless they are removed here.",
+        "cssCharacters": "{count} of 16384 characters",
+        "copy": "Copy",
+        "copyCss": "Copy CSS",
+        "copied": "Copied",
+        "restoreCss": "Restore current CSS",
+        "remoteCssTitle": "This CSS loads a remote resource",
+        "remoteCssDescription": "Imported stylesheets and remote URLs contact another server when the board loads. Review them before continuing."
+      },
+      "configureWidget": {
+        "title": "Review widget",
+        "preparing": "Preparing widget settings",
+        "review": "Review widget and integrations",
+        "ready": "Widget configuration ready",
+        "cancelled": "Widget was not added",
+        "automaticContinue": "Accepting the proposed widget configuration automatically",
+        "loadErrorTitle": "Integrations could not be loaded",
+        "loadErrorDescription": "Homarr could not load the integrations available for this widget.",
+        "retry": "Try again",
+        "noIntegrationTitle": "A compatible integration is required",
+        "noIntegrationDescription": "Configure an integration supported by this widget before adding it to the dashboard.",
+        "manageIntegrations": "Manage integrations",
+        "skip": "Do not add",
+        "errorTitle": "Widget settings could not be prepared",
+        "errorDescription": "The model did not provide a complete widget configuration. No widget was added."
+      },
+      "approvalRequired": "Approval required",
+      "complete": "Complete",
+      "denied": "Denied",
+      "failed": "Failed",
+      "working": "Working",
+      "approvalDescription": "Review this change before it runs.",
+      "approveAndRun": "Approve and run",
+      "deny": "Deny",
+      "autoApproval": {
+        "label": "Automatic approvals",
+        "title": "Automatic approvals",
+        "description": "Automatically approve protected changes, use presented form details, and choose answers categorized as affirmative. Neutral selections still wait for you. Your Homarr permissions still apply. This turns off when you switch conversations.",
+        "enable": "Enable for this conversation",
+        "disable": "Turn off automatic approvals",
+        "enabled": "Automatic approvals are on",
+        "approving": "Approving automatically"
+      }
     }
   },
   "section": {
+    "option": {
+      "showLabel": {
+        "label": "Show label",
+        "description": "Display the container label above its contents."
+      },
+      "collapsible": {
+        "label": "Allow collapse",
+        "description": "Let viewers expand and collapse this container."
+      },
+      "showOpenAll": {
+        "label": "Show open-all action",
+        "description": "Show an action that opens every app in this container in new tabs."
+      }
+    },
+    "action": {
+      "openAllInNewTabs": "Open all in tabs",
+      "openAllInNewTabsFor": "Open all apps in {name} in tabs"
+    },
+    "openAllInNewTabs": {
+      "title": "Open all in tabs",
+      "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
+    },
+    "container": {
+      "untitled": "Untitled container",
+      "action": {
+        "create": "New container",
+        "remove": "Remove container",
+        "expand": "Expand",
+        "collapse": "Collapse"
+      },
+      "option": {
+        "title": {
+          "label": "Title"
+        },
+        "customCssClasses": {
+          "label": "Custom css classes"
+        },
+        "borderColor": {
+          "label": "Border color"
+        }
+      },
+      "remove": {
+        "title": "Remove container",
+        "message": "Remove this container? Its contents will move into the surrounding area."
+      }
+    },
     "dynamic": {
       "action": {
         "create": "New dynamic section",
@@ -1623,6 +2427,7 @@
     "menu": {
       "label": {
         "settings": "Settings",
+        "settingsFor": "Settings for {name}",
         "refresh": "Refresh",
         "options": "Options",
         "actions": "Actions"
@@ -1632,16 +2437,43 @@
         "error": "Error",
         "loading": "Loading",
         "idle": "Idle"
+      },
+      "notification": {
+        "saveError": {
+          "title": "Unable to save widget",
+          "message": "The widget changes were rolled back"
+        }
       }
     },
     "create": {
       "title": "Choose item to add",
       "search": "Filter items",
-      "addToBoard": "Add to board"
+      "addToBoard": "Add to board",
+      "addAtPosition": "Add item here",
+      "notification": {
+        "error": {
+          "title": "Unable to add item",
+          "message": "The item could not be added to this board"
+        }
+      }
     },
     "moveResize": {
       "title": "Move / resize item",
+      "entryLabel": "{name}, column {column}, row {row}",
+      "target": {
+        "numbered": "{name}, destination {index}",
+        "located": "{name}, {location}, destination {index}"
+      },
+      "keyboard": {
+        "instructions": "Press Enter or Space to start keyboard editing. Use arrow keys to move, Shift plus arrow keys to resize, and Escape to stop.",
+        "started": "Keyboard editing started. Use arrow keys to move, Shift plus arrow keys to resize, and Escape to stop.",
+        "stopped": "Keyboard editing stopped.",
+        "boundary": "That change does not fit inside this section."
+      },
       "field": {
+        "section": {
+          "label": "Section or rail"
+        },
         "width": {
           "label": "Width"
         },
@@ -1687,6 +2519,11 @@
     "remove": {
       "title": "Remove item",
       "message": "Are you sure you want to remove this item?"
+    },
+    "advancedFocus": {
+      "open": "Open advanced view",
+      "close": "Close advanced view",
+      "label": "{widget} advanced view"
     }
   },
   "widget": {
@@ -1791,6 +2628,26 @@
         "showBroadcastMessage": {
           "label": "Show broadcast messages"
         }
+      },
+      "noProjectSelected": "No project selected",
+      "runnerStatus": "Runner: {status}",
+      "updatedAt": "Updated {date}",
+      "metric": {
+        "running": "Running",
+        "completed": "Done",
+        "failed": "Failed",
+        "canceled": "Canceled",
+        "download": "Download",
+        "upload": "Upload"
+      },
+      "status": {
+        "running": "Running",
+        "completed": "Completed",
+        "failed": "Failed",
+        "canceled": "Canceled",
+        "stopped": "Stopped",
+        "idle": "Idle",
+        "unknown": "Unknown"
       }
     },
     "dnsHoleSummary": {
@@ -1825,7 +2682,12 @@
         "dnsQueriesToday": "Queries today",
         "domainsBeingBlocked": "Domains on blocklist"
       },
-      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
+      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked",
+      "status": {
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "unknown": "Unknown"
+      }
     },
     "dnsHoleControls": {
       "name": "DNS Hole Controls",
@@ -1850,7 +2712,8 @@
         }
       },
       "error": {
-        "internalServerError": "Failed to control DNS Hole"
+        "internalServerError": "Failed to control DNS Hole",
+        "bulkActionsFailed": "{count, plural, one {# action failed} other {# actions failed}}"
       },
       "controls": {
         "enableAll": "Enable All",
@@ -1944,11 +2807,21 @@
       "noStation": "No station selected",
       "option": {
         "baseUrl": {
-          "label": "Search.ch URL"
+          "label": "Search.ch URL",
+          "description": "Custom URLs must resolve to a public IP address. Private and local hosts are rejected."
         },
         "station": {
-          "label": "Station"
+          "label": "Station",
+          "placeholder": "Search for a station"
         }
+      },
+      "error": {
+        "customSourceUnavailable": "The timetable source is unavailable. Check that its URL resolves to a public IP address.",
+        "stationSearch": "Unable to search stations. Check the custom URL and your board access."
+      },
+      "warning": {
+        "stale": "The timetable could not be refreshed. Showing departures last updated at {time}.",
+        "staleCompact": "Stale data"
       }
     },
     "notebook": {
@@ -2021,7 +2894,9 @@
           "discard": "Discard changes",
           "keepEditing": "Keep editing"
         }
-      }
+      },
+      "saveFailed": "Unable to save note",
+      "documentStats": "{words, plural, one {# word} other {# words}} · {characters, plural, one {# character} other {# characters}}"
     },
     "anchorNote": {
       "name": "Anchor Note",
@@ -2049,7 +2924,17 @@
       "cancel": "Cancel",
       "readOnlyViewer": "You have viewer access to this note. Editing is disabled.",
       "saveForbidden": "You do not have permission to edit this note.",
-      "saveFailed": "Failed to save this note. Please try again."
+      "saveFailed": "Failed to save this note. Please try again.",
+      "createdAt": "Created {date}",
+      "permission": {
+        "owner": "Owner",
+        "editor": "Editor",
+        "viewer": "Viewer"
+      },
+      "status": {
+        "pinned": "Pinned",
+        "archived": "Archived"
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -2108,6 +2993,25 @@
         "clickable": {
           "label": "Clickable"
         }
+      },
+      "state": {
+        "on": "On",
+        "off": "Off",
+        "unavailable": "Unavailable",
+        "unknown": "Unknown"
+      },
+      "advanced": {
+        "entityId": "Entity ID: {id}",
+        "lastUpdated": "Updated {date}",
+        "attribute": {
+          "unit": "Unit",
+          "deviceClass": "Device class",
+          "icon": "Icon"
+        }
+      },
+      "error": {
+        "loadFailed": "Unable to load entity",
+        "toggleFailed": "Unable to update entity"
       }
     },
     "smartHome-executeAutomation": {
@@ -2123,6 +3027,17 @@
       },
       "spotlightAction": {
         "run": "Run {name}"
+      },
+      "advanced": {
+        "lastExecuted": "Last run at {time}",
+        "automationId": "Automation ID: {id}"
+      },
+      "status": {
+        "running": "Running automation",
+        "success": "Automation completed"
+      },
+      "error": {
+        "executeFailed": "Unable to run automation"
       }
     },
     "stockPrice": {
@@ -2225,6 +3140,13 @@
         "showUnmonitored": {
           "label": "Show unmonitored"
         }
+      },
+      "advanced": {
+        "previousMonth": "Show previous month",
+        "nextMonth": "Show next month",
+        "eventCount": "{count, plural, one {# event} other {# events}}",
+        "loading": "Loading calendar events...",
+        "noEvents": "No events in this month"
       }
     },
     "weather": {
@@ -2285,6 +3207,18 @@
         "thunderstorm": "Thunderstorm",
         "thunderstormWithHail": "Thunderstorm with hail",
         "unknown": "Unknown"
+      },
+      "details": "Show weather details",
+      "detailsFor": "Show weather details for {date}",
+      "advanced": {
+        "forecast": "7-day forecast",
+        "day": "Day",
+        "conditions": "Conditions",
+        "temperature": "High / low",
+        "humidity": "Humidity",
+        "wind": "Wind / gusts ({unit})",
+        "sun": "Sunrise / sunset",
+        "noForecast": "No forecast data available"
       }
     },
     "indexerManager": {
@@ -2472,17 +3406,40 @@
         "internalServerError": "Failed to fetch Coolify data"
       },
       "server": {
-        "buildServer": "Build"
+        "buildServer": "Build",
+        "resourceCounts": "{applications, plural, one {# app} other {# apps}} / {services, plural, one {# service} other {# services}}"
       },
       "instances": {
         "title": "Instances"
+      },
+      "action": {
+        "openResource": "Open {name}",
+        "openLogs": "Open {name} logs",
+        "showIp": "Show IP address",
+        "hideIp": "Hide IP address"
+      },
+      "status": {
+        "running": "Running",
+        "stopped": "Stopped",
+        "exited": "Exited",
+        "starting": "Starting",
+        "restarting": "Restarting",
+        "unknown": "Unknown",
+        "online": "Online",
+        "offline": "Offline"
       }
     },
     "vpn": {
       "name": "VPN",
       "description": "Overview of your VPN connections",
       "serviceUnavailable": "VPN unavailable",
-      "option": {}
+      "option": {},
+      "status": {
+        "running": "Running",
+        "notRunning": "Not running",
+        "unavailable": "Unavailable",
+        "vpn": "VPN: {status}"
+      }
     },
     "ups": {
       "name": "UPS",
@@ -2509,7 +3466,13 @@
         "runtime": "Runtime",
         "load": "Load",
         "input": "Input",
-        "output": "Output"
+        "output": "Output",
+        "batteryVoltage": "Battery voltage",
+        "power": "Power",
+        "temperature": "Temperature",
+        "manufacturer": "Manufacturer",
+        "model": "Model",
+        "serial": "Serial"
       },
       "error": {
         "internalServerError": "Failed to fetch UPS data"
@@ -2780,7 +3743,13 @@
             "resolution": "Resolution",
             "target": "Target codec"
           }
-        }
+        },
+        "unknownUser": "Unknown user"
+      },
+      "summary": {
+        "sessions": "{count, plural, one {# session} other {# sessions}}",
+        "playing": "{count} playing",
+        "transcoding": "{count} transcoding"
       }
     },
     "paperlessNgx": {
@@ -3039,7 +4008,8 @@
       "users": "Users",
       "photos": "Photos",
       "videos": "Videos",
-      "storage": "Used Storage"
+      "storage": "Used Storage",
+      "albumLimit": "Largest albums (up to {count} shown)"
     },
     "immich-albumCarousel": {
       "name": "Immich Album",
@@ -3063,7 +4033,16 @@
         }
       },
       "description": "Slideshow of pictures from an Immich album or your full library",
-      "noPhotos": "No photos found"
+      "noPhotos": "No photos found",
+      "albumPhoto": "Album photo",
+      "actions": {
+        "previousPhoto": "Previous photo",
+        "nextPhoto": "Next photo",
+        "pauseSlideshow": "Pause slideshow",
+        "resumeSlideshow": "Resume slideshow",
+        "toggleSlideshow": "Pause or resume slideshow",
+        "photo": "Photo {number}"
+      }
     },
     "downloads": {
       "name": "Download Client",
@@ -3438,6 +4417,13 @@
         "showPosterImage": {
           "label": "Show poster image"
         }
+      },
+      "error": {
+        "allFeedsFailed": "Unable to load RSS feeds. Check the feed URLs and try again."
+      },
+      "warning": {
+        "partial": "{count, plural, one {# RSS feed could not be loaded} other {# RSS feeds could not be loaded}}",
+        "stale": "RSS feeds could not be refreshed. Showing previously loaded entries."
       }
     },
     "releases": {
@@ -3568,14 +4554,21 @@
           "noProviderResponse": "No response from provider",
           "unexpected": "Unexpected provider error"
         }
-      }
+      },
+      "expandDetails": "Show details for {name}",
+      "collapseDetails": "Hide details for {name}"
     },
     "networkControllerSummary": {
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": "{count} connected"
-        }
+          "countConnected": "{count, plural, one {# connected} other {# connected}}",
+          "label": "VPN"
+        },
+        "wan": "WAN",
+        "web": "Web",
+        "wifi": "Wi-Fi",
+        "lan": "LAN"
       },
       "error": {
         "integrationsDisconnected": "No data available, all integrations disconnected",
@@ -3653,6 +4646,16 @@
           "recv": "Received",
           "title": "Network Interfaces"
         }
+      },
+      "empty": {
+        "noInterfaces": "No network interface data yet"
+      },
+      "versionUnknown": "Unknown version",
+      "metricAccessible": "{metric}: {value}%, {status}",
+      "status": {
+        "normal": "Normal",
+        "warning": "Warning",
+        "critical": "Critical"
       }
     },
     "notifications": {
@@ -3702,6 +4705,11 @@
       "noSectionsEnabled": "Enable at least one section in widget options.",
       "error": {
         "internalServerError": "Failed to fetch speedtest data"
+      },
+      "range": {
+        "twelveHours": "12h",
+        "oneDay": "24h",
+        "all": "All"
       }
     },
     "uptimeKuma": {
@@ -3742,6 +4750,11 @@
       },
       "error": {
         "internalServerError": "Failed to fetch uptime data"
+      },
+      "status": {
+        "up": "Up",
+        "down": "Down",
+        "paused": "Paused"
       }
     },
     "traefik": {
@@ -3776,7 +4789,20 @@
       },
       "error": {
         "internalServerError": "Failed to fetch Traefik data"
-      }
+      },
+      "resourceType": {
+        "router": "Router",
+        "service": "Service",
+        "middleware": "Middleware"
+      },
+      "resourceStatus": {
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "warning": "Warning",
+        "error": "Error",
+        "unknown": "Unknown"
+      },
+      "failedEndpoint": "Failed: {endpoint}"
     },
     "audioStats": {
       "name": "Audio stats",
@@ -3902,11 +4928,31 @@
       }
     },
     "customApi": {
-      "name": "Custom API",
-      "description": "Display data from any external API with custom configuration.",
+      "name": "Custom widget",
+      "description": "Render a configured Custom JSX definition.",
+      "customJsx": {
+        "noTemplate": "No JSX template is configured.",
+        "templateWarnings": "{count} template warnings:",
+        "requestIdRequired": "This network control requires a named requestId.",
+        "unsavedPreview": "Run a GET test in the editor before testing named requests.",
+        "invalidParams": "The request parameters are invalid.",
+        "loading": "Loading request...",
+        "loadRequest": "Load request",
+        "requestFailed": "The request failed.",
+        "retry": "Retry request",
+        "actionCompleted": "Action completed successfully.",
+        "actionSimulated": "Action simulated; no request was sent.",
+        "actionsDisabledEditMode": "Actions are disabled while the board is in edit mode.",
+        "widgetItemUnavailable": "This widget item is not available.",
+        "toggle": "Toggle",
+        "refresh": "Refresh",
+        "copy": "Copy",
+        "copied": "Copied",
+        "confirmDelete": "Confirm this destructive action."
+      },
       "option": {
         "definitionId": {
-          "label": "Definition ID"
+          "label": "Custom widget"
         },
         "refreshInterval": {
           "label": "Refresh interval",
@@ -3914,12 +4960,29 @@
         }
       },
       "noDefinition": "No definition selected",
-      "definitionNotFound": "Widget definition not found. It may have been deleted.",
-      "noDisplayOutput": "No display output",
-      "executeConfirm": "Are you sure you want to execute this action?",
-      "executing": "Executing...",
-      "executeSuccess": "Action executed successfully",
-      "executeFailed": "Action failed. Check the widget configuration."
+      "definitionNotFound": "Custom widget unavailable",
+      "migrationRequired": "This legacy custom widget is preserved, but it must be migrated to Custom JSX v2 from Manage custom widgets before it can run.",
+      "manageMigration": "Open Manage custom widgets",
+      "contactAdmin": "Contact an administrator.",
+      "configurationNeedsRepair": "This widget's options changed. Edit the widget to repair its configuration.",
+      "removeFromBoard": "Remove from board",
+      "editModePending": "Save the board to load this widget.",
+      "picker": {
+        "group": "Custom JSX widgets",
+        "empty": "No custom widgets found",
+        "preview": "Preview",
+        "sources": "{count, plural, one {# source} other {# sources}}",
+        "requests": "{count, plural, one {# request} other {# requests}}",
+        "migrationRequired": "Migration required",
+        "migrationDescription": "This placed v1 widget cannot run yet. Copy its redacted prompt to an LLM, then paste the single JSON response into Homarr.",
+        "manageMigration": "Open Manage custom widgets",
+        "contactAdmin": "Contact an administrator."
+      },
+      "configuration": {
+        "needsAttention": "Configuration needs attention: {message}",
+        "advancedOptions": "Advanced options",
+        "invalidJson": "Invalid JSON"
+      }
     },
     "beszelSystemTable": {
       "name": "Beszel Systems (Table)",
@@ -4122,7 +5185,9 @@
         "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
         "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",
         "switchToHistorical": "Switch to historical view",
-        "systemNotFound": "Selected system was not found. Choose a different system."
+        "systemNotFound": "Selected system was not found. Choose a different system.",
+        "selectionSaveTitle": "Unable to save selection",
+        "selectionSaveMessage": "Your system or time period selection could not be saved. Please try again."
       },
       "chart": {
         "cpu": {
@@ -4170,6 +5235,55 @@
           "title": "Docker Network I/O",
           "subtitle": "Network traffic of docker containers"
         }
+      },
+      "period": {
+        "live": "Live",
+        "oneHour": "1h",
+        "twelveHours": "12h",
+        "oneDay": "24h",
+        "oneWeek": "1w",
+        "thirtyDays": "30d"
+      }
+    },
+    "dynamicSelect": {
+      "noResults": "No results found",
+      "loadError": "Failed to load options"
+    },
+    "assistant": {
+      "name": "Assistant",
+      "description": "Have a complete assistant conversation directly on your board.",
+      "option": {
+        "conversationMode": {
+          "label": "Conversation",
+          "description": "Follow the conversation used elsewhere in Homarr, or keep this widget attached to a specific conversation.",
+          "option": {
+            "current": "Current conversation",
+            "pinned": "Pinned conversation"
+          }
+        },
+        "conversation": {
+          "label": "Pinned conversation",
+          "description": "Choose the saved conversation this widget should keep available.",
+          "placeholder": "Select a saved conversation"
+        }
+      },
+      "pinned": {
+        "title": "Pinned conversation",
+        "description": "This widget is attached to {conversation}. Open it to continue here without silently changing your active conversation.",
+        "selectTitle": "Choose a conversation",
+        "selectDescription": "Open the widget settings and select the conversation this widget should keep available.",
+        "open": "Open conversation",
+        "opening": "Opening conversation...",
+        "error": "This conversation could not be opened. It may have been deleted."
+      },
+      "unavailable": {
+        "title": "Assistant unavailable",
+        "description": "Sign in and ask an administrator to configure the Assistant from the management panel."
+      },
+      "compact": {
+        "title": "Assistant",
+        "description": "Resize this widget to chat here, or open the full conversation.",
+        "open": "Open assistant"
       }
     }
   },
@@ -4184,6 +5298,9 @@
   },
   "board": {
     "action": {
+      "addContent": "Add board content",
+      "settings": "Board settings",
+      "switch": "Switch board",
       "duplicate": {
         "title": "Duplicate board",
         "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
@@ -4199,6 +5316,9 @@
         }
       },
       "edit": {
+        "enter": "Edit board",
+        "save": "Save board",
+        "exit": "Exit edit mode",
         "notification": {
           "success": {
             "title": "Changes applied successfully",
@@ -4207,6 +5327,10 @@
           "error": {
             "title": "Unable to apply changes",
             "message": "The board could not be saved"
+          },
+          "loadError": {
+            "title": "Unable to start editing",
+            "message": "The board editor could not be loaded. Your dashboard is still available in view mode."
           }
         },
         "confirmLeave": {
@@ -4276,6 +5400,12 @@
           "createAndUse": "Create and use"
         }
       }
+    },
+    "landmark": {
+      "canvas": "Dashboard canvas",
+      "leftRail": "Left dashboard rail",
+      "rightRail": "Right dashboard rail",
+      "items": "Dashboard items"
     },
     "field": {
       "pageTitle": {
@@ -4408,8 +5538,43 @@
           "title": "Layout",
           "responsive": {
             "title": "Responsive layouts",
+            "description": "Each layout keeps its own widget positions and sizes. Mobile and Base are always available; add custom layouts for widths in between.",
             "action": {
               "add": "Add layout"
+            }
+          },
+          "role": {
+            "mobile": "Mobile",
+            "base": "Base",
+            "custom": "Custom"
+          },
+          "custom": {
+            "defaultName": "Custom layout"
+          },
+          "mobile": {
+            "breakpointDescription": "Mobile is always used from 0px until the next layout breakpoint."
+          },
+          "preview": {
+            "columns": "columns",
+            "empty": "This layout is empty",
+            "dynamicSection": "Dynamic section",
+            "editorWidthLabel": "{layoutName} · {width}px"
+          },
+          "reset": {
+            "action": "Reset from Base",
+            "confirm": {
+              "title": "Reset {layoutName}?",
+              "message": "This replaces every saved position and size in this layout with a new layout generated from Base. This cannot be undone."
+            }
+          },
+          "edit": {
+            "action": "Edit layout",
+            "saveAndEdit": "Save and edit",
+            "save": "Save layout",
+            "cancel": {
+              "action": "Cancel layout editing",
+              "title": "Discard layout changes?",
+              "message": "Your unsaved changes to this layout will be discarded."
             }
           }
         },
@@ -4530,6 +5695,26 @@
       "breakpoint": {
         "label": "Breakpoint",
         "description": "Layout will be used on all screens larger than this breakpoint until the next bigger breakpoint."
+      },
+      "gutters": {
+        "label": "Fixed sidebars",
+        "description": "Reserve up to three dashboard columns on either side. The remaining canvas reflows automatically.",
+        "left": {
+          "label": "Left sidebar",
+          "description": "Keep this area visible while the dashboard scrolls.",
+          "thumbLabel": "Left sidebar width"
+        },
+        "right": {
+          "label": "Right sidebar",
+          "description": "Keep this area visible while the dashboard scrolls.",
+          "thumbLabel": "Right sidebar width"
+        },
+        "width": {
+          "label": "Width in columns"
+        },
+        "preview": {
+          "label": "Dashboard layout preview"
+        }
       }
     }
   },
@@ -4556,6 +5741,7 @@
         "apps": "Apps",
         "integrations": "Integrations",
         "customWidgets": "Custom Widgets",
+        "workshop": "Workshop",
         "searchEngies": "Search engines",
         "medias": "Medias",
         "users": {
@@ -4588,7 +5774,8 @@
             "sourceCode": "Source Code"
           }
         },
-        "about": "About"
+        "about": "About",
+        "assistant": "Assistant"
       }
     },
     "page": {
@@ -4901,6 +6088,221 @@
             "title": "Culture",
             "defaultLocale": {
               "label": "Default language"
+            }
+          },
+          "assistant": {
+            "loading": "Loading assistant configuration",
+            "title": "Assistant",
+            "description": "Connect an OpenAI-compatible model endpoint for the instance-wide assistant.",
+            "security": {
+              "title": "Server-side secrets",
+              "description": "API keys and additional header values are encrypted in the Homarr database. They are never returned to browsers. Model requests are sent from the Homarr server directly to the configured endpoint."
+            },
+            "overview": {
+              "connectionReady": "Connection ready",
+              "unsavedChanges": "Unsaved changes",
+              "setupRequired": "Setup required",
+              "keyProtected": "Key protected",
+              "available": "Available",
+              "disabled": "Disabled",
+              "noModel": "No model selected"
+            },
+            "connection": {
+              "title": "Provider connection",
+              "endpointTitle": "Provider and endpoint",
+              "description": "Choose a preset or connect any service that implements the OpenAI Chat Completions API.",
+              "saved": "Connection saved",
+              "notSaved": "Not configured",
+              "save": "Save provider connection",
+              "clearCredentials": "Remove all credentials"
+            },
+            "credentials": {
+              "title": "Credentials",
+              "description": "Add the secrets this endpoint needs. Stored values stay encrypted and cannot be read back.",
+              "required": "Key required",
+              "optional": "Key optional"
+            },
+            "provider": {
+              "title": "Provider",
+              "groups": {
+                "hosted": "Hosted providers",
+                "local": "Local providers",
+                "custom": "Custom"
+              },
+              "options": {
+                "homarr": {
+                  "label": "Homarr",
+                  "description": "A Homarr-hosted OpenRouter proxy with the same model discovery, tool, and web search features. Available in a future release."
+                },
+                "openrouter": {
+                  "label": "OpenRouter",
+                  "description": "Hosted model routing with a large tool-capable model catalog."
+                },
+                "openai": {
+                  "label": "OpenAI",
+                  "description": "OpenAI Chat Completions through the official API endpoint."
+                },
+                "anthropic": {
+                  "label": "Anthropic Claude",
+                  "description": "Claude through Anthropic's OpenAI SDK compatibility endpoint."
+                },
+                "google-gemini": {
+                  "label": "Google Gemini",
+                  "description": "Gemini through Google's OpenAI-compatible API endpoint."
+                },
+                "xai": {
+                  "label": "xAI",
+                  "description": "Grok models through xAI's OpenAI-compatible API."
+                },
+                "groq": {
+                  "label": "Groq",
+                  "description": "Fast hosted inference through Groq's OpenAI-compatible API."
+                },
+                "mistral": {
+                  "label": "Mistral AI",
+                  "description": "Mistral models through the official API."
+                },
+                "deepseek": {
+                  "label": "DeepSeek",
+                  "description": "DeepSeek models through its OpenAI-compatible API."
+                },
+                "together": {
+                  "label": "Together AI",
+                  "description": "Hosted open models through Together's OpenAI-compatible API."
+                },
+                "ollama": {
+                  "label": "Ollama",
+                  "description": "A local or network Ollama server using its OpenAI-compatible API."
+                },
+                "lm-studio": {
+                  "label": "LM Studio",
+                  "description": "An LM Studio local server with OpenAI compatibility enabled."
+                },
+                "custom": {
+                  "label": "Custom endpoint",
+                  "description": "Any other endpoint compatible with OpenAI Chat Completions."
+                }
+              },
+              "comingSoon": "Coming soon"
+            },
+            "baseUrl": {
+              "title": "API base URL",
+              "description": "Include the API prefix, usually /v1. In containers, localhost refers to the Homarr container."
+            },
+            "destinationChanged": {
+              "title": "Credentials will not follow this endpoint",
+              "description": "Changing the provider or base URL clears the stored API key and headers unless replacements are entered now. This prevents sending one provider's secrets to another service."
+            },
+            "apiKey": {
+              "title": "API key",
+              "required": "Required by this provider. The value is encrypted and write-only.",
+              "optional": "Optional for local endpoints. Leave it blank when the service does not require bearer authentication.",
+              "placeholder": "Enter an API key",
+              "replacementPlaceholder": "Enter a replacement API key",
+              "configuredBadge": "Saved key active",
+              "pendingRemoval": "Removal pending",
+              "savedTitle": "Encrypted API key saved",
+              "savedDescription": "Homarr can use this key, but it cannot display or recover its value.",
+              "replace": "Replace key",
+              "remove": "Remove saved API key",
+              "removeDescription": "Deletes the saved key after you click Save provider connection.",
+              "removalPendingDescription": "The saved key will be deleted when you save the provider connection.",
+              "replaceFlow": {
+                "title": "Replace the saved API key",
+                "description": "Enter the new key first. You will review the endpoint and impact before anything changes.",
+                "enterStep": "Enter new key",
+                "reviewStep": "Review change",
+                "newKey": "New API key",
+                "newKeyDescription": "The existing key remains active until you confirm the replacement.",
+                "cancel": "Cancel replacement",
+                "review": "Review replacement",
+                "warningTitle": "The current key will stop being used",
+                "warningDescription": "Confirming replaces the encrypted key for this endpoint. Homarr cannot restore the previous value, and model discovery and assistant requests will use the new key immediately.",
+                "provider": "Provider",
+                "endpoint": "Destination",
+                "back": "Edit new key",
+                "confirm": "Replace API key"
+              },
+              "removeFlow": {
+                "title": "Remove the saved API key?",
+                "description": "This provider requires an API key. Removing it can stop model discovery and assistant responses until another key is saved.",
+                "optionalDescription": "The endpoint will stop receiving bearer authentication after this key is removed. Confirm that it accepts unauthenticated requests or uses another stored header.",
+                "cancel": "Keep saved key",
+                "confirm": "Remove API key"
+              }
+            },
+            "headers": {
+              "title": "Additional request headers",
+              "description": "Optional authentication or routing headers. Header values are encrypted and write-only.",
+              "add": "Add header",
+              "name": "Header name",
+              "value": "Header value",
+              "valuePlaceholder": "Secret or routing value",
+              "remove": "Remove header",
+              "configured": "Additional encrypted headers are configured. Adding headers replaces the complete stored set.",
+              "empty": "No additional headers are stored for this provider.",
+              "savedBadge": "Headers saved",
+              "pendingRemoval": "Removal pending",
+              "clear": "Remove stored headers when saving",
+              "keep": "Keep stored headers"
+            },
+            "model": {
+              "title": "Model",
+              "description": "Select a discovered model or enter an exact endpoint model ID.",
+              "placeholder": "Model ID",
+              "refresh": "Refresh models",
+              "chooseModel": "Choose the model used for new conversations.",
+              "discoveryPath": "Model discovery path",
+              "discoveryPathDescription": "Appended to the API base URL. Leave blank to disable discovery and use a manual model ID.",
+              "manual": "Enter a model ID manually or save the connection to discover models.",
+              "manualFallback": "Discovery is unavailable. You can still enter a model ID manually.",
+              "saveConnectionFirst": "Save the provider connection before choosing a model.",
+              "discovering": "Refreshing the models available from this provider…",
+              "discovered": "{count, plural, one {Discovered # model. Tool support depends on the selected endpoint and model.} other {Discovered # models. Tool support depends on the selected endpoint and model.}}",
+              "discoveryFailed": "Model discovery did not complete",
+              "context": "{count, number} token context",
+              "toolsConfirmed": "Tools advertised",
+              "toolsUnknown": "Verify tool support"
+            },
+            "serverTools": {
+              "title": "Server tools",
+              "beta": "Beta",
+              "webSearch": {
+                "label": "Web search",
+                "description": "Allow the model to search the live web through OpenRouter when a request needs current information. Search usage is charged separately by OpenRouter.",
+                "proxyDescription": "Send OpenRouter's web-search server tool to this endpoint. Enable this only when the custom endpoint forwards the OpenRouter server-tools format, such as a Homarr Router proxy.",
+                "limit": "The model decides when to search, with a limit of 3 searches and 5 results per search for each request."
+              }
+            },
+            "enabled": {
+              "label": "Enable Assistant",
+              "description": "Shows the assistant to all signed-in users. Existing Homarr permissions still apply to every internal tool call."
+            },
+            "clearCredentials": {
+              "title": "Remove all assistant credentials",
+              "warningTitle": "The assistant will be disabled",
+              "description": "This permanently removes the stored API key and additional headers, clears the selected model, and disables the assistant. The encrypted values cannot be recovered.",
+              "cancel": "Keep credentials",
+              "confirm": "Remove credentials"
+            },
+            "save": "Save assistant",
+            "notification": {
+              "connectionSaved": {
+                "title": "Provider connection saved",
+                "message": "The endpoint and encrypted credentials are ready for model selection.",
+                "credentialsCleared": "The endpoint changed, so previous credentials were cleared. Add credentials for the new destination if required."
+              },
+              "credentialsCleared": {
+                "title": "Provider credentials removed",
+                "message": "The stored API key and headers were removed, and the assistant was disabled."
+              },
+              "saved": {
+                "title": "Assistant settings saved",
+                "message": "The new model and availability settings are active."
+              },
+              "error": {
+                "title": "Assistant settings could not be saved"
+              }
             }
           }
         }
@@ -5272,7 +6674,8 @@
               "toggleBoardEdit": "Toggle board edit mode",
               "toggleColorScheme": "Toggle light/dark mode",
               "saveNotebook": "Save notebook (only inside notebook widget)",
-              "openSpotlight": "Open search"
+              "openSpotlight": "Open search",
+              "openAssistant": "Open Homarr Assistant"
             },
             "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
@@ -5740,6 +7143,9 @@
           }
         }
       },
+      "workshop": {
+        "label": "Workshop"
+      },
       "users": {
         "label": "Users",
         "create": {
@@ -5808,6 +7214,9 @@
       },
       "about": {
         "label": "About"
+      },
+      "assistant": {
+        "label": "Assistant"
       }
     }
   },

@@ -1,13 +1,15 @@
 import type { JSX, PropsWithChildren } from "react";
+import { cookies, headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { AppShellMain } from "@mantine/core";
 import { TRPCError } from "@trpc/server";
 
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
-import { BoardProvider } from "@homarr/boards/context";
-import { EditModeProvider } from "@homarr/boards/edit-mode";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ModalProvider } from "@homarr/modals";
 
 import { MainHeader } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
@@ -16,6 +18,7 @@ import { BoardTourGate } from "~/components/onboarding/board-tour-gate";
 import { env } from "~/env";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import type { Board } from "./_types";
+import { BoardProviders } from "./_providers";
 import type { Params } from "./(content)/_creator";
 import { CustomCss } from "./(content)/_custom-css";
 import { BoardReadyProvider } from "./(content)/_ready-context";
@@ -47,6 +50,7 @@ export const createBoardLayout = <TParams extends Params>({
       (error: unknown) => ({ status: "rejected", error }) as const,
     );
     const colorSchemePromise = getCurrentColorSchemeAsync();
+    const initialViewportWidthPromise = getInitialViewportWidthAsync();
     const shouldRunBoardTourPromise = sessionPromise.then(async (session) => {
       if (!withTour || !session || env.DEMO_MODE) return false;
 
@@ -58,11 +62,12 @@ export const createBoardLayout = <TParams extends Params>({
         return false;
       }
     });
-    const [session, initialBoardResult, colorScheme, shouldRunBoardTour] = await Promise.all([
+    const [session, initialBoardResult, colorScheme, shouldRunBoardTour, initialViewportWidth] = await Promise.all([
       sessionPromise,
       initialBoardPromise,
       colorSchemePromise,
       shouldRunBoardTourPromise,
+      initialViewportWidthPromise,
     ]);
     if (initialBoardResult.status === "rejected") {
       const { error } = initialBoardResult;
@@ -83,12 +88,19 @@ export const createBoardLayout = <TParams extends Params>({
       throw error;
     }
     const initialBoard = initialBoardResult.board;
+    const { hasChangeAccess } = constructBoardPermissions(initialBoard, session);
+    const initialLayoutId = getLayoutIdForViewportWidth(initialBoard.layouts, initialViewportWidth);
 
     return (
-      <BoardProvider initialBoard={initialBoard}>
+      <BoardProviders
+        initialBoard={initialBoard}
+        initialLayoutId={initialLayoutId}
+        initialViewportWidth={initialViewportWidth}
+        canModify={hasChangeAccess}
+      >
         <BoardReadyProvider>
-          <EditModeProvider>
-            <BoardMantineProvider defaultColorScheme={colorScheme}>
+          <BoardMantineProvider defaultColorScheme={colorScheme}>
+            <ModalProvider>
               <CustomCss />
               <BoardTourGate enabled={shouldRunBoardTour}>
                 <ClientShell hasNavigation={false}>
@@ -97,15 +109,34 @@ export const createBoardLayout = <TParams extends Params>({
                     actions={headerActions}
                     hasNavigation={false}
                   />
-                  <AppShellMain>{children}</AppShellMain>
+                  <AppShellMain data-advanced-focus-background>{children}</AppShellMain>
                 </ClientShell>
               </BoardTourGate>
-            </BoardMantineProvider>
-          </EditModeProvider>
+            </ModalProvider>
+          </BoardMantineProvider>
         </BoardReadyProvider>
-      </BoardProvider>
+      </BoardProviders>
     );
   };
 
   return Layout;
+};
+
+const getInitialViewportWidthAsync = async () => {
+  const cookieValue = (await cookies()).get(boardViewportWidthCookieName)?.value;
+  const cookieWidth = Number(cookieValue);
+  if (Number.isInteger(cookieWidth) && cookieWidth >= 200 && cookieWidth <= 10_000) {
+    return cookieWidth;
+  }
+
+  const requestHeaders = await headers();
+  const clientHintWidth = Number(requestHeaders.get("sec-ch-viewport-width"));
+  if (Number.isInteger(clientHintWidth) && clientHintWidth >= 200 && clientHintWidth <= 10_000) {
+    return clientHintWidth;
+  }
+
+  const userAgent = requestHeaders.get("user-agent") ?? "";
+  if (/iPad|Tablet|PlayBook|Silk/i.test(userAgent)) return 1024;
+  if (/Mobi|Android|iPhone|iPod|IEMobile|Opera Mini/i.test(userAgent)) return 390;
+  return 1440;
 };

@@ -13,8 +13,9 @@ import type { OpenApiMeta } from "trpc-to-openapi";
 import { ZodError } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
-import { FlattenError } from "@homarr/common";
+import { extractBaseUrlFromHeaders, FlattenError } from "@homarr/common";
 import { userAgent } from "@homarr/common/server";
+import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
@@ -36,7 +37,14 @@ const logger = createLogger({ module: "trpc" });
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = (opts: { headers: Headers; session: Session | null }) => {
+interface ApiContext {
+  session: Session | null;
+  deviceType: DeviceType;
+  baseUrl?: `${string}://${string}`;
+  db: typeof db;
+}
+
+export const createTRPCContext = (opts: { headers: Headers; session: Session | null }): ApiContext => {
   const session = opts.session;
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
 
@@ -49,6 +57,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
   return {
     session,
     deviceType: userAgent(opts.headers).device.type,
+    baseUrl: extractBaseUrlFromHeaders(opts.headers),
     db,
   };
 };

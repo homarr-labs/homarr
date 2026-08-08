@@ -1,74 +1,92 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import JsxParser from "react-jsx-parser";
-import { Alert, Stack, Text } from "@mantine/core";
-import { IconAlertTriangle } from "@tabler/icons-react";
 
-import { WHITELISTED_COMPONENTS, SAFE_BINDINGS } from "./jsx-whitelist";
+import { useScopedI18n } from "@homarr/translation/client";
+import type { CustomWidgetPublishedQueryState } from "@homarr/custom-widgets/runtime";
+import { CustomJsxRenderer, parseRequestCapabilities } from "@homarr/custom-widgets/runtime";
 
-const MAX_PARSE_ERRORS = 5;
+import { createCustomWidgetComponents, SAFE_BINDINGS } from "./jsx-components";
+import { InactiveWidgetDefinitionProvider, WidgetDefinitionProvider } from "./widget-definition-context";
 
-function appendParseError(prev: string[], message: string): string[] {
-  if (prev.length >= MAX_PARSE_ERRORS) return prev;
-  if (prev.includes(message)) return prev;
-  return [...prev, message];
-}
+export { CUSTOM_JSX_METHOD_COLORS } from "@homarr/custom-widgets/runtime";
 
 export default function CustomJsxDisplay({ data }: { data: Record<string, unknown> }) {
-  const template = String(data.template ?? "");
-  const apiData = data.data;
-  const [parseErrors, setParseErrors] = useState<string[]>([]);
-  const bindings = useMemo(() => SAFE_BINDINGS(apiData), [apiData]);
-
-  useEffect(() => {
-    setParseErrors([]);
-  }, [template, bindings]);
-
-  const handleError = useCallback((error: Error) => {
-    setParseErrors((prev) => appendParseError(prev, error.message));
+  const t = useScopedI18n("widget.customApi.customJsx");
+  const capabilities = useMemo(() => parseRequestCapabilities(data.requestCapabilities), [data.requestCapabilities]);
+  const components = useMemo(() => createCustomWidgetComponents({ copy: t("copy"), copied: t("copied") }), [t]);
+  const [queryState, setQueryState] = useState<Record<string, CustomWidgetPublishedQueryState>>({});
+  useEffect(
+    () => setQueryState({}),
+    [data.widgetDefinitionId, data.widgetItemId, data.previewSessionId, data.template],
+  );
+  const publishQueryState = useCallback((requestId: string, value: CustomWidgetPublishedQueryState | null) => {
+    setQueryState((current) => {
+      if (!value) {
+        if (!Object.hasOwn(current, requestId)) return current;
+        const next = { ...current };
+        delete next[requestId];
+        return next;
+      }
+      const previous = current[requestId];
+      if (previous && previous.data === value.data && sameStatus(previous.status, value.status)) return current;
+      return { ...current, [requestId]: value };
+    });
   }, []);
-
-  if (!template.trim()) {
+  const baseData = isRecord(data.data) ? data.data : {};
+  const baseStatus = isRecord(data.status) ? data.status : {};
+  const renderer = (
+    <CustomJsxRenderer
+      template={String(data.template ?? "")}
+      data={{ ...baseData, ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.data])) }}
+      status={{
+        ...baseStatus,
+        ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.status])),
+      }}
+      options={isRecord(data.options) ? data.options : {}}
+      components={components}
+      createBindings={SAFE_BINDINGS}
+      messages={{
+        noTemplate: t("noTemplate"),
+        templateWarnings: (count) => t("templateWarnings", { count: String(count) }),
+      }}
+    />
+  );
+  const definitionId = typeof data.widgetDefinitionId === "string" ? data.widgetDefinitionId : undefined;
+  const itemId = typeof data.widgetItemId === "string" ? data.widgetItemId : undefined;
+  const previewSessionId = typeof data.previewSessionId === "string" ? data.previewSessionId : undefined;
+  if (!itemId && !previewSessionId) {
     return (
-      <Alert color="gray" variant="light" p="xs">
-        <Text size="xs" c="dimmed">
-          No JSX template configured
-        </Text>
-      </Alert>
+      <InactiveWidgetDefinitionProvider definitionId={definitionId} isEditMode={data.isEditMode === true}>
+        {renderer}
+      </InactiveWidgetDefinitionProvider>
     );
   }
-
   return (
-    <Stack gap={0} h="100%">
-      <JsxParser
-        jsx={template}
-        components={WHITELISTED_COMPONENTS as never}
-        bindings={bindings}
-        disableKeyGeneration
-        componentsOnly
-        allowUnknownElements={false}
-        blacklistedAttrs={[/^on.+/i, /^dangerously/i]}
-        blacklistedTags={["script", "iframe", "object", "embed", "form", "style", "link", "meta", "base"]}
-        onError={handleError}
-        renderError={({ error }) => (
-          <Alert color="red" variant="light" icon={<IconAlertTriangle size={16} />} p="xs">
-            <Text size="xs">{String(error)}</Text>
-          </Alert>
-        )}
-      />
-      {parseErrors.length > 0 && (
-        <Alert color="yellow" variant="light" p="xs" mt="xs">
-          <Text size="xs" c="dimmed">
-            {parseErrors.length} template warning(s):
-          </Text>
-          {parseErrors.map((msg) => (
-            <Text key={msg} size="xs" c="dimmed" style={{ fontFamily: "monospace" }}>
-              {msg}
-            </Text>
-          ))}
-        </Alert>
-      )}
-    </Stack>
+    <WidgetDefinitionProvider
+      definitionId={definitionId}
+      itemId={itemId}
+      previewSessionId={previewSessionId}
+      previewLiveActions={data.previewLiveActions === true}
+      queriesDisabled={data.queriesDisabled === true}
+      isEditMode={data.isEditMode === true}
+      requestCapabilities={capabilities}
+      setQueryState={publishQueryState}
+    >
+      {renderer}
+    </WidgetDefinitionProvider>
   );
+}
+function sameStatus(left: CustomWidgetPublishedQueryState["status"], right: CustomWidgetPublishedQueryState["status"]) {
+  return (
+    left.loading === right.loading &&
+    left.ok === right.ok &&
+    left.status === right.status &&
+    left.statusText === right.statusText &&
+    left.error === right.error
+  );
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

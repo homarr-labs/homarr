@@ -64,15 +64,31 @@ import * as beszelSystemStats from "./beszel-system-stats";
 import * as video from "./video";
 import * as weather from "./weather";
 import * as customApi from "./custom-api";
+import * as assistant from "./assistant";
 
 export type {
+  NormalizedWidgetQuery,
   WidgetDefinition,
   WidgetContextMenuAction,
   WidgetContextActionProps,
   WidgetOptionsSettings,
+  WidgetQueryMatcher,
+  WidgetQueryMatcherScope,
+  WidgetRuntimeActions,
+  WidgetRuntimeRef,
+  WidgetRuntimeState,
+} from "./definition";
+export {
+  createWidgetRuntimeState,
+  getWidgetQueryKeys,
+  getWidgetRuntimeQueries,
+  normalizeWidgetQuery,
+  supportsAdvancedFocus,
+  widgetQueryValueEquals,
 } from "./definition";
 export type { WidgetComponentProps };
 export type { WidgetOptionDefinition, WidgetOptionType } from "./options";
+export { AssistantWidgetRendererProvider } from "./assistant/context";
 
 export const widgetImports = {
   clock,
@@ -129,6 +145,7 @@ export const widgetImports = {
   beszelSystemStats,
   traefik,
   customApi,
+  assistant,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

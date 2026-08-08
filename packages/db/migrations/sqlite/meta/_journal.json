@@ -295,6 +295,34 @@
       "when": 1783786658943,
       "tag": "0041_add_right_click_preference",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "6",
+      "when": 1784305283910,
+      "tag": "0042_custom_widget_v2_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "6",
+      "when": 1786212459480,
+      "tag": "0043_numerous_forgotten_one",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "6",
+      "when": 1786215203092,
+      "tag": "0044_serious_wallop",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "6",
+      "when": 1786217088950,
+      "tag": "0045_violet_mikhail_rasputin",
+      "breakpoints": true
     }
   ]
 }

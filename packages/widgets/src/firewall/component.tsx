@@ -1,241 +1,445 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Accordion, Box, Center, Flex, Group, RingProgress, ScrollArea, Text } from "@mantine/core";
+import {
+  Accordion,
+  Badge,
+  Center,
+  Flex,
+  Group,
+  Paper,
+  RingProgress,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import type { FirewallInterface, FirewallInterfacesSummary } from "@homarr/integrations";
+import type { FirewallInterfacesSummary } from "@homarr/integrations";
+import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { calculateBandwidth, formatBitsPerSec } from "./bandwidth";
 import { FirewallMenu } from "./firewall-menu";
-import { FirewallVersion } from "./firewall-version";
+import { FirewallVersion, formatVersion } from "./firewall-version";
 
 export interface Firewall {
   label: string;
   value: string;
 }
 
-export default function FirewallWidget({ integrationIds, width, itemId }: WidgetComponentProps<"firewall">) {
-  const [selectedFirewall, setSelectedFirewall] = useState<string>("");
+interface FirewallQueryState {
+  isPending: boolean;
+  isFetching: boolean;
+  isError: boolean;
+  data?: readonly { error?: string; integration?: { id: string } }[];
+}
+
+export const hasTotalFirewallFailure = (queries: readonly FirewallQueryState[]) =>
+  queries.every((query) => !query.isPending && !query.isFetching) &&
+  queries.every(
+    (query) =>
+      (query.isError && query.data === undefined) ||
+      (query.data !== undefined && query.data.length > 0 && query.data.every(({ error }) => error)),
+  );
+
+export const hasFirewallPartialFailure = (firewallId: string, queries: readonly FirewallQueryState[]) =>
+  queries.some(
+    (query) =>
+      query.isError ||
+      query.data?.some(({ error, integration }) => integration?.id === firewallId && Boolean(error)) === true,
+  );
+
+export default function FirewallWidget({
+  integrationIds,
+  width,
+  height,
+  itemId,
+  displayMode,
+}: WidgetComponentProps<"firewall">) {
+  const [selectedFirewall, setSelectedFirewall] = useState("");
+  const isAdvanced = displayMode === "advanced";
+  const isTiny = !isAdvanced && (width < 256 || height < 180);
+  const ringSize = isAdvanced ? 100 : height < 120 ? 44 : isTiny ? 64 : 100;
+  const showInterfaces = isAdvanced || (!isTiny && height >= 120);
+  const t = useI18n();
 
   const handleSelect = useCallback((value: string | null) => {
-    if (value !== null) {
-      setSelectedFirewall(value);
-    } else {
-      setSelectedFirewall("default_value");
-    }
+    setSelectedFirewall(value ?? "");
   }, []);
 
-  const { data: firewallsCpuData = [] } = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({ integrationIds });
-  const { data: firewallsMemoryData = [] } = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({
+  const cpuQuery = clientApi.widget.firewall.getFirewallCpuStatus.useQuery({ integrationIds });
+  const memoryQuery = clientApi.widget.firewall.getFirewallMemoryStatus.useQuery({
     integrationIds,
   });
-  const { data: firewallsVersionData = [] } = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({
+  const versionQuery = clientApi.widget.firewall.getFirewallVersionStatus.useQuery({
     integrationIds,
   });
-  const { data: firewallsInterfacesData = [] } = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({
+  const interfacesQuery = clientApi.widget.firewall.getFirewallInterfacesStatus.useQuery({
     integrationIds,
   });
-
-  const initialSelectedFirewall = firewallsVersionData[0] ? firewallsVersionData[0].integration.id : "undefined";
-  const isTiny = width < 256;
+  const firewallsCpuData = cpuQuery.data ?? [];
+  const firewallsMemoryData = memoryQuery.data ?? [];
+  const firewallsVersionData = versionQuery.data ?? [];
+  const firewallsInterfacesData = interfacesQuery.data ?? [];
+  const queries = [cpuQuery, memoryQuery, versionQuery, interfacesQuery];
+  const hasTotalFailure = hasTotalFirewallFailure(queries);
 
   const [accordionValue, setAccordionValue] = useLocalStorage<string | null>({
     key: `homarr-${itemId}-firewall`,
     defaultValue: "interfaces",
   });
 
-  const dropdownItems = firewallsVersionData.map((firewall) => ({
-    label: firewall.integration.name,
-    value: firewall.integration.id,
+  if (hasTotalFailure) {
+    throw new Error(t("widget.firewall.error.internalServerError"));
+  }
+
+  const firewallMetadata = new Map(
+    [...firewallsVersionData, ...firewallsCpuData, ...firewallsMemoryData, ...firewallsInterfacesData].map(
+      ({ integration }) => [integration.id, integration] as const,
+    ),
+  );
+  const firewallIds = [...firewallMetadata.keys()];
+  const initialSelectedFirewall = firewallIds[0] ?? "";
+  const activeFirewall = firewallMetadata.has(selectedFirewall) ? selectedFirewall : initialSelectedFirewall;
+  const displayedFirewallIds = isAdvanced ? firewallIds : activeFirewall ? [activeFirewall] : [];
+  const firewallHasError = (firewallId: string) => hasFirewallPartialFailure(firewallId, queries);
+  const dropdownItems = firewallIds.map((firewallId) => ({
+    label: firewallMetadata.get(firewallId)?.name ?? firewallId,
+    value: firewallId,
   }));
 
-  const t = useI18n();
+  if (firewallIds.length === 0) {
+    const isLoading = queries.some((query) => query.isPending || query.isFetching);
+    return (
+      <Center h="100%" p="sm">
+        <Text size="sm" c="dimmed" ta="center">
+          {isLoading ? t("common.action.loading") : t("widget.firewall.empty.noInterfaces")}
+        </Text>
+      </Center>
+    );
+  }
 
   return (
     <ScrollArea h="100%">
-      <Group justify="space-between" w="100%" style={{ padding: "8px" }}>
-        <FirewallMenu
-          onChange={handleSelect}
-          selectedFirewall={selectedFirewall || initialSelectedFirewall}
-          dropdownItems={dropdownItems}
-          isTiny={isTiny}
-        />
-        <FirewallVersion
-          firewallsVersionData={firewallsVersionData}
-          selectedFirewall={selectedFirewall || initialSelectedFirewall}
-          isTiny={isTiny}
-        />
-      </Group>
-      <Flex justify="center" align="center" wrap="wrap">
-        {/* Render CPU and Memory data */}
-        {firewallsCpuData
-          .filter(({ integration }) => integration.id === (selectedFirewall || initialSelectedFirewall))
-          .map(({ summary, integration }) => (
-            <RingProgress
-              key={`${integration.name}-cpu`}
-              roundCaps
-              size={isTiny ? 50 : 100}
-              thickness={isTiny ? 4 : 8}
-              label={
-                <Center style={{ flexDirection: "column" }}>
-                  <Text size={isTiny ? "8px" : "xs"}>{`${summary.total.toFixed(2)}%`}</Text>
-                  <IconCpu size={isTiny ? 8 : 16} />
-                </Center>
-              }
-              sections={[
-                {
-                  value: Number(summary.total.toFixed(1)),
-                  color: summary.total > 50 ? (summary.total < 75 ? "yellow" : "red") : "green",
-                },
-              ]}
+      <Stack gap="xs" p={isAdvanced ? "xs" : 0}>
+        {!isAdvanced && (
+          <Group justify="space-between" w="100%" p="xs">
+            <FirewallMenu
+              onChange={handleSelect}
+              selectedFirewall={activeFirewall}
+              dropdownItems={dropdownItems}
+              isTiny={isTiny}
             />
-          ))}
-        {firewallsMemoryData
-          .filter(({ integration }) => integration.id === (selectedFirewall || initialSelectedFirewall))
-          .map(({ summary, integration }) => (
-            <RingProgress
-              key={`${integration.name}-memory`}
-              roundCaps
-              size={isTiny ? 50 : 100}
-              thickness={isTiny ? 4 : 8}
-              label={
-                <Center style={{ flexDirection: "column" }}>
-                  <Text size={isTiny ? "8px" : "xs"}>{`${summary.percent.toFixed(1)}%`}</Text>
-                  <IconBrain size={isTiny ? 8 : 16} />
-                </Center>
-              }
-              sections={[
-                {
-                  value: Number(summary.percent.toFixed(1)),
-                  color: summary.percent > 50 ? (summary.percent < 75 ? "yellow" : "red") : "green",
-                },
-              ]}
-            />
-          ))}
-      </Flex>
-      {firewallsInterfacesData
-        .filter(({ integration }) => integration.id === (selectedFirewall || initialSelectedFirewall))
-        .map(({ summary }) => (
-          <Accordion key="interfaces" value={accordionValue} onChange={setAccordionValue}>
-            <Accordion.Item value="interfaces">
-              <Accordion.Control icon={isTiny ? null : <IconTopologyBus size={16} />}>
-                <Text size={isTiny ? "8px" : "xs"}> {t("widget.firewall.widget.interfaces.title")} </Text>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <Flex direction="column" key="interfaces">
-                  {Array.isArray(summary) && summary.every((item) => Array.isArray(item.data)) ? (
-                    calculateBandwidth(summary).data.map(({ name, receive, transmit }) => (
-                      <Flex
-                        key={name}
-                        direction={isTiny ? "column" : "row"}
-                        style={{
-                          width: "100%",
-                          padding: isTiny ? "2px" : "0px",
-                        }}
-                      >
-                        <Flex w={isTiny ? "100%" : "33%"} style={{ justifyContent: "flex-start" }}>
-                          <Text
-                            size={isTiny ? "8px" : "xs"}
-                            color="lightblue"
-                            style={{
-                              maxWidth: "100px",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                              textAlign: "left",
-                            }}
-                          >
-                            {name}
-                          </Text>
-                        </Flex>
-                        <Flex
-                          align="center"
-                          gap="4"
-                          w={isTiny ? "100%" : "33%"}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <IconArrowBarUp size={isTiny ? "8" : "12"} color="lightgreen" />
-                          <Text size={isTiny ? "8px" : "xs"} c="lightgreen" style={{ textAlign: "left" }}>
-                            {formatBitsPerSec(transmit, 2)}
-                          </Text>
-                        </Flex>
-                        <Flex
-                          align="center"
-                          gap="4"
-                          w={isTiny ? "100%" : "33%"}
-                          style={{ justifyContent: "flex-start" }}
-                        >
-                          <IconArrowBarDown size={isTiny ? "8" : "12"} color="yellow" />
-                          <Text size={isTiny ? "8px" : "xs"} c="yellow" style={{ textAlign: "left" }}>
-                            {formatBitsPerSec(receive, 2)}
-                          </Text>
-                        </Flex>
-                      </Flex>
-                    ))
-                  ) : (
-                    <Box>No data available</Box>
-                  )}
-                </Flex>
-              </Accordion.Panel>
-            </Accordion.Item>
-          </Accordion>
-        ))}
+            <Group gap={4} wrap="nowrap">
+              {activeFirewall && firewallHasError(activeFirewall) && (
+                <Tooltip label={t("widget.firewall.error.internalServerError")}>
+                  <Badge color="red" variant="light" size="xs">
+                    {t("common.error")}
+                  </Badge>
+                </Tooltip>
+              )}
+              <FirewallVersion
+                firewallsVersionData={firewallsVersionData.filter(({ error }) => !error)}
+                selectedFirewall={activeFirewall}
+                isTiny={isTiny}
+              />
+            </Group>
+          </Group>
+        )}
+
+        <SimpleGrid cols={isAdvanced && width >= 720 ? 2 : 1} spacing="xs">
+          {displayedFirewallIds.map((firewallId) => {
+            const cpu = firewallsCpuData.find(({ integration }) => integration.id === firewallId);
+            const memory = firewallsMemoryData.find(({ integration }) => integration.id === firewallId);
+            const version = firewallsVersionData.find(({ integration }) => integration.id === firewallId);
+            const interfaces = firewallsInterfacesData.find(({ integration }) => integration.id === firewallId);
+            const hasError = firewallHasError(firewallId);
+            const metadata = firewallMetadata.get(firewallId);
+
+            return (
+              <FirewallPanel
+                key={firewallId}
+                name={metadata?.name ?? firewallId}
+                kind={metadata?.kind}
+                version={version?.error ? undefined : version?.summary.version}
+                cpu={cpu?.error ? undefined : cpu?.summary.total}
+                memory={memory?.error ? undefined : memory?.summary.percent}
+                interfaces={interfaces?.summary}
+                interfacesLoaded={interfaces !== undefined}
+                interfacesError={interfacesQuery.isError || Boolean(interfaces?.error)}
+                hasError={hasError}
+                isAdvanced={isAdvanced}
+                ringSize={ringSize}
+                showInterfaces={showInterfaces}
+                accordionValue={accordionValue}
+                setAccordionValue={setAccordionValue}
+                errorLabel={t("widget.firewall.error.internalServerError")}
+                noDataLabel={t("widget.firewall.empty.noInterfaces")}
+                loadingLabel={t("common.action.loading")}
+                errorBadgeLabel={t("common.error")}
+                interfacesLabel={t("widget.firewall.widget.interfaces.title")}
+                t={t}
+              />
+            );
+          })}
+        </SimpleGrid>
+      </Stack>
     </ScrollArea>
   );
 }
 
-export function formatBitsPerSec(bytes: number, decimals: number): string {
-  if (bytes === 0) return "0 b/s";
-
-  const kilobyte = 1024;
-  const sizes = ["b/s", "kb/s", "Mb/s", "Gb/s", "Tb/s", "Pb/s", "Eb/s", "Zb/s", "Yb/s"];
-
-  const i = Math.floor(Math.log(bytes) / Math.log(kilobyte));
-
-  return `${parseFloat((bytes / Math.pow(kilobyte, i)).toFixed(decimals))} ${sizes[i]}`;
+interface FirewallPanelProps {
+  name: string;
+  kind?: string;
+  version?: string;
+  cpu?: number;
+  memory?: number;
+  interfaces?: FirewallInterfacesSummary[];
+  interfacesLoaded: boolean;
+  interfacesError: boolean;
+  hasError: boolean;
+  isAdvanced: boolean;
+  ringSize: number;
+  showInterfaces: boolean;
+  accordionValue: string | null;
+  setAccordionValue: (value: string | null) => void;
+  errorLabel: string;
+  noDataLabel: string;
+  loadingLabel: string;
+  errorBadgeLabel: string;
+  interfacesLabel: string;
+  t: TranslationFunction;
 }
 
-export function calculateBandwidth(data: FirewallInterfacesSummary[]): { data: FirewallInterface[] } {
-  const result = {
-    data: [] as FirewallInterface[],
-    timestamp: new Date().toISOString(),
-  };
+const FirewallPanel = ({
+  name,
+  kind,
+  version,
+  cpu,
+  memory,
+  interfaces,
+  interfacesLoaded,
+  interfacesError,
+  hasError,
+  isAdvanced,
+  ringSize,
+  showInterfaces,
+  accordionValue,
+  setAccordionValue,
+  errorLabel,
+  noDataLabel,
+  loadingLabel,
+  errorBadgeLabel,
+  interfacesLabel,
+  t,
+}: FirewallPanelProps) => (
+  <Paper withBorder={isAdvanced} radius="sm" p={isAdvanced ? "xs" : 0}>
+    <Stack gap="xs">
+      {isAdvanced && (
+        <Group justify="space-between" wrap="nowrap">
+          <Stack gap={0} miw={0}>
+            <Text size="sm" fw={600} truncate="end">
+              {name}
+            </Text>
+            {kind && (
+              <Text size="xs" c="dimmed">
+                {kind}
+              </Text>
+            )}
+          </Stack>
+          <Group gap={4} wrap="nowrap">
+            {hasError && (
+              <Tooltip label={errorLabel}>
+                <Badge color="red" variant="light" size="xs">
+                  {t("common.error")}
+                </Badge>
+              </Tooltip>
+            )}
+            <Badge variant="outline" color="gray" size="xs">
+              {formatVersion(version ?? "", t("widget.firewall.versionUnknown"))}
+            </Badge>
+          </Group>
+        </Group>
+      )}
 
-  if (data.length > 1) {
-    const firstData = data[0];
-    const secondData = data[1];
+      <Flex justify="center" align="center" wrap="wrap">
+        {cpu !== undefined && (
+          <MetricRing value={cpu} icon={IconCpu} size={ringSize} label={t("widget.firewall.widget.cpu")} t={t} />
+        )}
+        {memory !== undefined && (
+          <MetricRing
+            value={memory}
+            icon={IconBrain}
+            size={ringSize}
+            label={t("widget.firewall.widget.memory")}
+            t={t}
+          />
+        )}
+      </Flex>
 
-    if (firstData && secondData) {
-      const time1 = new Date(firstData.timestamp);
-      const time2 = new Date(secondData.timestamp);
-      const timeDiffInSeconds = (time1.getTime() - time2.getTime()) / 1000;
+      {showInterfaces && (
+        <InterfacesPanel
+          summary={interfaces ?? []}
+          hasResult={interfacesLoaded}
+          hasError={interfacesError}
+          isAdvanced={isAdvanced}
+          accordionValue={accordionValue}
+          setAccordionValue={setAccordionValue}
+          errorLabel={errorLabel}
+          errorBadgeLabel={errorBadgeLabel}
+          noDataLabel={noDataLabel}
+          loadingLabel={loadingLabel}
+          label={interfacesLabel}
+        />
+      )}
+    </Stack>
+  </Paper>
+);
 
-      firstData.data.forEach((iface) => {
-        const ifaceName = iface.name;
-        const recv1 = iface.receive;
-        const trans1 = iface.transmit;
-
-        const iface2 = secondData.data.find((i) => i.name === ifaceName);
-
-        if (iface2) {
-          const recv2 = iface2.receive;
-          const trans2 = iface2.transmit;
-          const recvDiff = recv1 - recv2;
-          const transDiff = trans1 - trans2;
-
-          result.data.push({
-            name: ifaceName,
-            receive: (8 * recvDiff) / timeDiffInSeconds,
-            transmit: (8 * transDiff) / timeDiffInSeconds,
-          });
-        }
-      });
-    }
-  }
-
-  return result;
+interface MetricRingProps {
+  value: number;
+  icon: typeof IconCpu;
+  size: number;
+  label: string;
+  t: TranslationFunction;
 }
+
+const MetricRing = ({ value, icon: Icon, size, label, t }: MetricRingProps) => {
+  const safeValue = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
+  const status = getMetricStatus(safeValue);
+  const statusLabel = t(`widget.firewall.status.${status}`);
+  const showIcon = size >= 64;
+  const showStatus = size >= 96;
+
+  return (
+    <RingProgress
+      aria-label={t("widget.firewall.metricAccessible", {
+        metric: label,
+        value: safeValue.toFixed(1),
+        status: statusLabel,
+      })}
+      roundCaps
+      size={size}
+      thickness={size < 72 ? 4 : 8}
+      label={
+        <Center style={{ flexDirection: "column" }}>
+          <Text size="xs">{safeValue.toFixed(1)}%</Text>
+          {showIcon && <Icon size={size < 96 ? 12 : 16} />}
+          {showStatus && <Text size="xs">{statusLabel}</Text>}
+        </Center>
+      }
+      sections={[
+        {
+          value: safeValue,
+          color: status === "warning" ? "yellow" : status === "critical" ? "red" : "green",
+        },
+      ]}
+    />
+  );
+};
+
+const getMetricStatus = (value: number): "normal" | "warning" | "critical" => {
+  if (value >= 75) return "critical";
+  if (value > 50) return "warning";
+  return "normal";
+};
+
+interface InterfacesPanelProps {
+  summary: FirewallInterfacesSummary[];
+  hasResult: boolean;
+  hasError: boolean;
+  isAdvanced: boolean;
+  accordionValue: string | null;
+  setAccordionValue: (value: string | null) => void;
+  errorLabel: string;
+  errorBadgeLabel: string;
+  noDataLabel: string;
+  loadingLabel: string;
+  label: string;
+}
+
+const InterfacesPanel = ({
+  summary,
+  hasResult,
+  hasError,
+  isAdvanced,
+  accordionValue,
+  setAccordionValue,
+  errorLabel,
+  errorBadgeLabel,
+  noDataLabel,
+  loadingLabel,
+  label,
+}: InterfacesPanelProps) => {
+  const bandwidth = calculateBandwidth(summary).data;
+
+  return (
+    <Accordion
+      value={isAdvanced ? "interfaces" : accordionValue}
+      onChange={isAdvanced ? undefined : setAccordionValue}
+      variant={isAdvanced ? "contained" : "default"}
+    >
+      <Accordion.Item value="interfaces">
+        <Accordion.Control icon={<IconTopologyBus size={16} />}>
+          <Group justify="space-between" wrap="nowrap" gap="xs">
+            <Text size="xs">{label}</Text>
+            {hasError && (
+              <Badge color="red" variant="light" size="xs">
+                {errorBadgeLabel}
+              </Badge>
+            )}
+          </Group>
+        </Accordion.Control>
+        <Accordion.Panel>
+          <Stack gap={4}>
+            {bandwidth.map(({ name, receive, transmit }) => (
+              <Group key={name} gap="xs" wrap="nowrap" justify="space-between">
+                <Text
+                  size="xs"
+                  c="light-dark(var(--mantine-color-blue-8), var(--mantine-color-blue-3))"
+                  truncate="end"
+                  style={{ flex: 1 }}
+                >
+                  {name}
+                </Text>
+                <Group gap={4} wrap="nowrap">
+                  <IconArrowBarUp
+                    size={12}
+                    color="light-dark(var(--mantine-color-green-8), var(--mantine-color-green-3))"
+                  />
+                  <Text size="xs" c="light-dark(var(--mantine-color-green-8), var(--mantine-color-green-3))">
+                    {formatBitsPerSec(transmit, 2)}
+                  </Text>
+                </Group>
+                <Group gap={4} wrap="nowrap">
+                  <IconArrowBarDown
+                    size={12}
+                    color="light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-3))"
+                  />
+                  <Text size="xs" c="light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-3))">
+                    {formatBitsPerSec(receive, 2)}
+                  </Text>
+                </Group>
+              </Group>
+            ))}
+            {hasError ? (
+              <Text size="xs" c="red">
+                {errorLabel}
+              </Text>
+            ) : bandwidth.length === 0 ? (
+              <Text size="xs" c="dimmed">
+                {hasResult ? noDataLabel : loadingLabel}
+              </Text>
+            ) : null}
+          </Stack>
+        </Accordion.Panel>
+      </Accordion.Item>
+    </Accordion>
+  );
+};

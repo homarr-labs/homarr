@@ -1,8 +1,13 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
 import type {
   CoolifyApplicationWithContext,
   CoolifyServer,
   CoolifyServiceWithContext,
 } from "@homarr/integrations/types";
+
+dayjs.extend(relativeTime);
 
 export function parseStatus(status: string): string {
   const firstPart = status.split(":")[0]?.toLowerCase();
@@ -42,26 +47,8 @@ export function getBadgeColor(running: number, total: number): string {
 
 export function formatRelativeTime(dateString: string | null | undefined): string | undefined {
   if (!dateString) return undefined;
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return undefined;
-
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffSec = Math.floor(diffMs / 1000);
-  const diffMin = Math.floor(diffSec / 60);
-  const diffHour = Math.floor(diffMin / 60);
-  const diffDay = Math.floor(diffHour / 24);
-
-  if (diffDay > 0) {
-    const remainingHours = diffHour % 24;
-    return remainingHours > 0 ? `${diffDay}d ${remainingHours}h ago` : `${diffDay}d ago`;
-  }
-  if (diffHour > 0) {
-    const remainingMin = diffMin % 60;
-    return remainingMin > 0 ? `${diffHour}h ${remainingMin}m ago` : `${diffHour}h ago`;
-  }
-  if (diffMin > 0) return `${diffMin}m ago`;
-  return "just now";
+  const date = dayjs(dateString);
+  return date.isValid() ? date.fromNow() : undefined;
 }
 
 export function getResourceTimestamp(
@@ -116,7 +103,7 @@ export function buildServerResourceCounts(
 }
 
 export function createWidgetKey(integrationIds: string[]): string {
-  return integrationIds.slice().sort().join("-");
+  return integrationIds.toSorted().join("-");
 }
 
 export function createStorageKey(widgetKey: string, integrationId: string, type: "sections" | "show-ip"): string {

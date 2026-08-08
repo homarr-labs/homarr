@@ -1,8 +1,15 @@
 "use client";
 
 import React from "react";
-import { Badge, Box, Card, Flex, Group, Text } from "@mantine/core";
-import { IconArrowsExchange, IconMapPin, IconShieldCheck, IconShieldX } from "@tabler/icons-react";
+import { Badge, Box, Card, Flex, Group, Text, VisuallyHidden } from "@mantine/core";
+import {
+  IconArrowsExchange,
+  IconCircleCheckFilled,
+  IconCircleXFilled,
+  IconMapPin,
+  IconShieldCheck,
+  IconShieldX,
+} from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -16,17 +23,19 @@ export function VpnIntegrationCard({
   vpn,
   integrationName,
   variant = "single",
+  dense = false,
 }: {
   vpn: VpnInfo;
   integrationName?: string;
   variant?: "single" | "list";
+  dense?: boolean;
 }) {
   const board = useRequiredBoard();
   const compact = variant === "list";
 
   const content = vpn ? (
     <Flex direction="row" w="100%" align="center" gap="xs">
-      <VpnStatusColumn vpnStatus={vpn.vpnStatus} dnsStatus={vpn.dnsStatus} compact={compact} />
+      <VpnStatusColumn vpnStatus={vpn.vpnStatus} dnsStatus={vpn.dnsStatus} compact={compact} dense={dense} />
       <VpnInfoColumn
         integrationName={compact ? integrationName : undefined}
         publicIp={vpn.publicIp}
@@ -35,15 +44,16 @@ export function VpnIntegrationCard({
         provider={vpn.vpnProvider.provider}
         protocol={vpn.vpnProvider.protocol}
         compact={compact}
+        dense={dense}
       />
     </Flex>
   ) : (
-    <VpnUnavailableContent compact={compact} integrationName={compact ? integrationName : undefined} />
+    <VpnUnavailableContent compact={compact} dense={dense} integrationName={compact ? integrationName : undefined} />
   );
 
   if (compact) {
     return (
-      <Card withBorder radius={board.itemRadius} p="xs" w="100%">
+      <Card withBorder radius={board.itemRadius} p={dense ? 6 : "xs"} w="100%">
         {content}
       </Card>
     );
@@ -52,20 +62,28 @@ export function VpnIntegrationCard({
   return <Box w="100%">{content}</Box>;
 }
 
-function VpnUnavailableContent({ compact, integrationName }: { compact: boolean; integrationName?: string }) {
+function VpnUnavailableContent({
+  compact,
+  dense,
+  integrationName,
+}: {
+  compact: boolean;
+  dense: boolean;
+  integrationName?: string;
+}) {
   const t = useScopedI18n("widget.vpn");
 
   return (
     <Flex direction="row" w="100%" align="center" gap="xs">
       {/* Empty statuses render the shield and DNS badge in red (see getStatusColor). */}
-      <VpnStatusColumn vpnStatus="" dnsStatus="" compact={compact} />
+      <VpnStatusColumn vpnStatus="" dnsStatus="" compact={compact} dense={dense} />
       <Flex gap={2} direction="column" w="100%" align="flex-start" style={{ minWidth: 0 }}>
         {integrationName ? (
           <Text fw={600} size="xs" lh={1.2} c="dimmed" lineClamp={1}>
             {integrationName}
           </Text>
         ) : null}
-        <Text fw={700} size={compact ? "md" : "lg"} lh={1.2} c="red" lineClamp={2}>
+        <Text fw={700} size={dense ? "sm" : compact ? "md" : "lg"} lh={1.2} c="red" lineClamp={2}>
           {t("serviceUnavailable")}
         </Text>
       </Flex>
@@ -77,17 +95,34 @@ function VpnStatusColumn({
   vpnStatus,
   dnsStatus,
   compact,
+  dense,
 }: {
   vpnStatus: string;
   dnsStatus: string;
   compact: boolean;
+  dense: boolean;
 }) {
+  const t = useScopedI18n("widget.vpn");
   // Connected shows a shield with a check; anything else (stopped or unavailable) shows a shield with a cross.
   const ShieldIcon = vpnStatus === RUNNING_STATUS ? IconShieldCheck : IconShieldX;
+  const statusLabel = t(
+    vpnStatus === RUNNING_STATUS ? "status.running" : vpnStatus ? "status.notRunning" : "status.unavailable",
+  );
 
   return (
-    <Flex gap={4} direction="column" w={compact ? "28%" : "30%"} miw={compact ? 56 : undefined} align="center">
-      <ShieldIcon stroke={2} color={getStatusColor(vpnStatus)} size={compact ? 44 : 52} />
+    <Flex
+      gap={4}
+      direction="column"
+      w={compact ? "28%" : "30%"}
+      miw={dense ? 44 : compact ? 56 : undefined}
+      align="center"
+    >
+      <ShieldIcon
+        aria-label={t("status.vpn", { status: statusLabel })}
+        stroke={2}
+        color={getStatusColor(vpnStatus)}
+        size={dense ? 32 : compact ? 44 : 52}
+      />
       <DnsStatusBadge status={dnsStatus} />
     </Flex>
   );
@@ -101,6 +136,7 @@ function VpnInfoColumn({
   provider,
   protocol,
   compact,
+  dense,
 }: {
   integrationName?: string;
   publicIp: string;
@@ -109,6 +145,7 @@ function VpnInfoColumn({
   provider: string;
   protocol: string;
   compact: boolean;
+  dense: boolean;
 }) {
   return (
     <Flex gap={2} direction="column" w="100%" align="flex-start" style={{ minWidth: 0 }}>
@@ -117,16 +154,18 @@ function VpnInfoColumn({
           {integrationName}
         </Text>
       ) : null}
-      <Text fw={700} size={compact ? "xl" : "2xl"} lh={1.1} lineClamp={1}>
-        {publicIp}
+      <Text fw={700} size={dense ? "md" : compact ? "xl" : "2xl"} lh={1.1} lineClamp={1}>
+        {publicIp || "—"}
       </Text>
-      <Group gap={4} justify="flex-start" wrap="nowrap">
-        <IconMapPin size={10} />
-        <Text fs="italic" fw={500} size="sm" lh={1.2} lineClamp={1}>
-          {city}, {country}
-        </Text>
-      </Group>
-      <VpnProviderDetails provider={provider} protocol={protocol} />
+      {!dense && (city || country) && (
+        <Group gap={4} justify="flex-start" wrap="nowrap">
+          <IconMapPin aria-hidden size={10} />
+          <Text fs="italic" fw={500} size="sm" lh={1.2} lineClamp={1}>
+            {[city, country].filter(Boolean).join(", ")}
+          </Text>
+        </Group>
+      )}
+      {!dense && (provider || protocol) && <VpnProviderDetails provider={provider} protocol={protocol} />}
     </Flex>
   );
 }
@@ -145,20 +184,22 @@ function VpnProviderDetails({ provider, protocol }: { provider: string; protocol
   );
 }
 
-function StatusDot({ status, size = 10 }: { status: string; size?: number }) {
-  return <Box bg={getStatusColor(status)} h={size} w={size} style={{ borderRadius: 999 }} />;
-}
-
 function DnsStatusBadge({ status }: { status: string }) {
+  const t = useScopedI18n("widget.vpn");
+  const StatusIcon = status === RUNNING_STATUS ? IconCircleCheckFilled : IconCircleXFilled;
+  const statusLabel = t(
+    status === RUNNING_STATUS ? "status.running" : status ? "status.notRunning" : "status.unavailable",
+  );
   return (
     <Badge
       variant="outline"
       color={getStatusColor(status)}
       size="xs"
       radius="xl"
-      leftSection={<StatusDot status={status} size={5} />}
+      leftSection={<StatusIcon aria-hidden size={9} />}
     >
       DNS
+      <VisuallyHidden> {statusLabel}</VisuallyHidden>
     </Badge>
   );
 }

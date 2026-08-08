@@ -710,14 +710,7 @@
       "delete": "crwdns5301:0crwdne5301:0",
       "deleteConfirm": "crwdns5303:0{name}crwdne5303:0",
       "export": "crwdns5305:0crwdne5305:0",
-      "addMapping": "crwdns5307:0crwdne5307:0",
-      "addColumn": "crwdns5309:0crwdne5309:0",
       "edit": "crwdns5311:0crwdne5311:0",
-      "removeMapping": "crwdns5313:0crwdne5313:0",
-      "removeColumn": "crwdns5315:0crwdne5315:0",
-      "addItem": "crwdns5317:0crwdne5317:0",
-      "removeItem": "crwdns5319:0crwdne5319:0",
-      "addBar": "crwdns5321:0crwdne5321:0",
       "duplicate": "crwdns5323:0crwdne5323:0",
       "copyAiPrompt": "crwdns5325:0crwdne5325:0",
       "enable": "crwdns5327:0crwdne5327:0",
@@ -727,140 +720,7 @@
     "field": {
       "name": "crwdns5333:0crwdne5333:0",
       "description": "crwdns5335:0crwdne5335:0",
-      "iconUrl": "crwdns5337:0crwdne5337:0",
-      "url": "crwdns5339:0crwdne5339:0",
-      "authType": "crwdns5341:0crwdne5341:0",
-      "headerName": "crwdns5343:0crwdne5343:0",
-      "method": "crwdns5345:0crwdne5345:0",
-      "requestBody": "crwdns5347:0crwdne5347:0",
-      "displayType": "crwdns5349:0crwdne5349:0",
-      "jsonPath": "crwdns5351:0crwdne5351:0",
-      "jsonPathHint": "crwdns5353:0crwdne5353:0",
-      "label": "crwdns5355:0crwdne5355:0",
-      "unit": "crwdns5357:0crwdne5357:0",
-      "mappings": "crwdns5359:0crwdne5359:0",
-      "tablePath": "crwdns5361:0crwdne5361:0",
-      "tablePathHint": "crwdns5363:0crwdne5363:0",
-      "columns": "crwdns5365:0crwdne5365:0",
-      "header": "crwdns5367:0crwdne5367:0",
-      "items": "crwdns5369:0crwdne5369:0",
-      "gridColumns": "crwdns5371:0crwdne5371:0",
-      "cardStyle": "crwdns5373:0crwdne5373:0",
-      "bars": "crwdns5375:0crwdne5375:0",
-      "valuePath": "crwdns5377:0crwdne5377:0",
-      "maxPath": "crwdns5379:0crwdne5379:0",
-      "showPercentage": "crwdns5381:0crwdne5381:0",
-      "barSize": "crwdns5383:0crwdne5383:0",
-      "goodValues": "crwdns5385:0crwdne5385:0",
-      "dotSize": "crwdns5387:0crwdne5387:0",
-      "valueSize": "crwdns5389:0crwdne5389:0",
-      "labelPosition": "crwdns5391:0crwdne5391:0",
-      "kvLayout": "crwdns5393:0crwdne5393:0",
-      "striped": "crwdns5395:0crwdne5395:0",
-      "compact": "crwdns5397:0crwdne5397:0",
-      "maxHeight": "crwdns5399:0crwdne5399:0",
-      "color": "crwdns5401:0crwdne5401:0",
-      "buttonLabel": "crwdns5403:0crwdne5403:0",
-      "buttonColor": "crwdns5405:0crwdne5405:0",
-      "confirmText": "crwdns5407:0crwdne5407:0",
-      "confirmTextHint": "crwdns5409:0crwdne5409:0",
-      "successMessage": "crwdns5411:0crwdne5411:0",
-      "successMessageHint": "crwdns5413:0crwdne5413:0",
-      "enabled": "crwdns5415:0crwdne5415:0",
-      "template": {
-        "label": "crwdns5417:0crwdne5417:0",
-        "description": "crwdns5419:0__proto__crwdne5419:0"
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "crwdns5421:0crwdne5421:0",
-      "exampleLabelShort": "crwdns5423:0crwdne5423:0",
-      "exampleHeader": "crwdns5425:0crwdne5425:0",
-      "exampleUnit": "crwdns5427:0crwdne5427:0",
-      "iconUrl": "crwdns5429:0crwdne5429:0",
-      "url": "crwdns5431:0crwdne5431:0",
-      "headerName": "crwdns5433:0crwdne5433:0",
-      "jsonPath": "crwdns5435:0crwdne5435:0",
-      "tablePath": "crwdns5437:0crwdne5437:0",
-      "columnJsonPath": "crwdns5439:0crwdne5439:0",
-      "valuePath": "crwdns5441:0crwdne5441:0",
-      "maxPath": "crwdns5443:0crwdne5443:0",
-      "goodValues": "crwdns5445:0crwdne5445:0",
-      "color": "crwdns5447:0crwdne5447:0"
-    },
-    "cardStyleOption": {
-      "filled": "crwdns5449:0crwdne5449:0",
-      "outline": "crwdns5451:0crwdne5451:0",
-      "subtle": "crwdns5453:0crwdne5453:0"
-    },
-    "layoutOption": {
-      "list": "crwdns5455:0crwdne5455:0",
-      "grid": "crwdns5457:0crwdne5457:0"
-    },
-    "sizeOption": {
-      "sm": "crwdns5459:0crwdne5459:0",
-      "md": "crwdns5461:0crwdne5461:0",
-      "lg": "crwdns5463:0crwdne5463:0",
-      "xl": "crwdns5465:0crwdne5465:0"
-    },
-    "labelPositionOption": {
-      "above": "crwdns5467:0crwdne5467:0",
-      "below": "crwdns5469:0crwdne5469:0"
-    },
-    "fieldset": {
-      "general": "crwdns5471:0crwdne5471:0",
-      "connection": "crwdns5473:0crwdne5473:0",
-      "display": "crwdns5475:0crwdne5475:0"
-    },
-    "displayTypeDescription": {
-      "singleValue": "crwdns5477:0crwdne5477:0",
-      "keyValue": "crwdns5479:0crwdne5479:0",
-      "table": "crwdns5481:0crwdne5481:0",
-      "statGrid": "crwdns5483:0crwdne5483:0",
-      "progressBars": "crwdns5485:0crwdne5485:0",
-      "statusIndicator": "crwdns5487:0crwdne5487:0",
-      "countGrid": "crwdns5489:0crwdne5489:0",
-      "raw": "crwdns5491:0crwdne5491:0",
-      "actionButton": "crwdns5493:0crwdne5493:0",
-      "customJsx": "crwdns5495:0crwdne5495:0"
-    },
-    "method": {
-      "GET": "crwdns5497:0crwdne5497:0",
-      "POST": "crwdns5499:0crwdne5499:0",
-      "PUT": "crwdns5501:0crwdne5501:0",
-      "DELETE": "crwdns5503:0crwdne5503:0",
-      "PATCH": "crwdns5505:0crwdne5505:0"
-    },
-    "authType": {
-      "none": "crwdns5507:0crwdne5507:0",
-      "bearer": "crwdns5509:0crwdne5509:0",
-      "basic": "crwdns5511:0crwdne5511:0",
-      "apiKeyHeader": "crwdns5513:0crwdne5513:0",
-      "apiKeyQuery": "crwdns5515:0crwdne5515:0"
-    },
-    "displayType": {
-      "singleValue": "crwdns5517:0crwdne5517:0",
-      "keyValue": "crwdns5519:0crwdne5519:0",
-      "table": "crwdns5521:0crwdne5521:0",
-      "statGrid": "crwdns5523:0crwdne5523:0",
-      "progressBars": "crwdns5525:0crwdne5525:0",
-      "statusIndicator": "crwdns5527:0crwdne5527:0",
-      "countGrid": "crwdns5529:0crwdne5529:0",
-      "raw": "crwdns5531:0crwdne5531:0",
-      "actionButton": "crwdns5533:0crwdne5533:0",
-      "customJsx": "crwdns5535:0crwdne5535:0"
-    },
-    "secret": {
-      "apiKey": "crwdns5537:0crwdne5537:0",
-      "username": "crwdns5539:0crwdne5539:0",
-      "password": "crwdns5541:0crwdne5541:0",
-      "savedPlaceholder": "crwdns5543:0crwdne5543:0"
-    },
-    "preview": {
-      "title": "crwdns5545:0crwdne5545:0",
-      "test": "crwdns5547:0crwdne5547:0",
-      "hint": "crwdns5549:0crwdne5549:0",
-      "rawResponse": "crwdns5551:0crwdne5551:0"
+      "iconUrl": "crwdns5337:0crwdne5337:0"
     },
     "notification": {
       "created": "crwdns5553:0{name}crwdne5553:0",
@@ -868,9 +728,6 @@
       "deleted": "crwdns5557:0{name}crwdne5557:0",
       "imported": "crwdns6079:0crwdne6079:0",
       "aiPromptCopied": "crwdns5561:0crwdne5561:0",
-      "aiPromptDescription": "crwdns5563:0crwdne5563:0",
-      "aiPromptCopy": "crwdns5565:0crwdne5565:0",
-      "aiPromptNoResponse": "crwdns5567:0crwdne5567:0",
       "aiPromptCopyError": "crwdns5569:0crwdne5569:0",
       "createError": "crwdns5571:0crwdne5571:0",
       "updateError": "crwdns5573:0crwdne5573:0",
@@ -883,14 +740,6 @@
       "previewError": "crwdns5587:0crwdne5587:0",
       "executed": "crwdns5589:0crwdne5589:0",
       "executeError": "crwdns5591:0{error}crwdne5591:0"
-    },
-    "table": {
-      "name": "crwdns5593:0crwdne5593:0",
-      "url": "crwdns5595:0crwdne5595:0",
-      "display": "crwdns5597:0crwdne5597:0"
-    },
-    "widget": {
-      "disabled": "crwdns5599:0crwdne5599:0"
     }
   },
   "integration": {
@@ -1549,7 +1398,7 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
         "create": "crwdns650:0crwdne650:0",
         "remove": "crwdns652:0crwdne652:0"
@@ -1568,46 +1417,6 @@
       "remove": {
         "title": "crwdns654:0crwdne654:0",
         "message": "crwdns656:0crwdne656:0"
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "crwdns658:0crwdne658:0"
-        }
-      },
-      "action": {
-        "create": "crwdns660:0crwdne660:0",
-        "edit": "crwdns662:0crwdne662:0",
-        "remove": "crwdns664:0crwdne664:0",
-        "moveUp": "crwdns666:0crwdne666:0",
-        "moveDown": "crwdns668:0crwdne668:0",
-        "createAbove": "crwdns670:0crwdne670:0",
-        "createBelow": "crwdns672:0crwdne672:0",
-        "openAllInNewTabs": "crwdns2730:0crwdne2730:0"
-      },
-      "create": {
-        "title": "crwdns674:0crwdne674:0",
-        "submit": "crwdns676:0crwdne676:0"
-      },
-      "remove": {
-        "title": "crwdns678:0crwdne678:0",
-        "message": "crwdns680:0{name}crwdne680:0"
-      },
-      "edit": {
-        "title": "crwdns682:0crwdne682:0",
-        "submit": "crwdns684:0crwdne684:0"
-      },
-      "menu": {
-        "label": {
-          "create": "crwdns686:0crwdne686:0",
-          "changePosition": "crwdns688:0crwdne688:0",
-          "settings": "crwdns4259:0crwdne4259:0"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "crwdns2732:0crwdne2732:0",
-        "text": "crwdns2734:0crwdne2734:0"
       }
     }
   },
@@ -3914,12 +3723,7 @@
         }
       },
       "noDefinition": "crwdns5611:0crwdne5611:0",
-      "definitionNotFound": "crwdns5613:0crwdne5613:0",
-      "noDisplayOutput": "crwdns5615:0crwdne5615:0",
-      "executeConfirm": "crwdns5617:0crwdne5617:0",
-      "executing": "crwdns5619:0crwdne5619:0",
-      "executeSuccess": "crwdns5621:0crwdne5621:0",
-      "executeFailed": "crwdns5623:0crwdne5623:0"
+      "definitionNotFound": "crwdns5613:0crwdne5613:0"
     },
     "beszelSystemTable": {
       "name": "crwdns4779:0crwdne4779:0",
@@ -4551,6 +4355,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "crwdns1572:0crwdne1572:0",
         "boards": "crwdns1574:0crwdne1574:0",
         "apps": "crwdns1576:0crwdne1576:0",
@@ -5694,6 +5499,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "crwdns1994:0crwdne1994:0",
       "boards": {
         "label": "crwdns1996:0crwdne1996:0"

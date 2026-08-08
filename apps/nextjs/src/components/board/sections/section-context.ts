@@ -1,13 +1,17 @@
 import { createContext, useContext } from "react";
 
-import type { DynamicSectionItem, Section, SectionItem } from "~/app/[locale]/boards/_types";
-import type { UseGridstackRefs } from "./gridstack/use-gridstack";
+import type { RouterOutputs } from "@homarr/api";
+
+import type { ContainerSectionItem, Section, SectionItem } from "~/app/[locale]/boards/_types";
 
 interface SectionContextProps {
-  section: Exclude<Section, { kind: "dynamic" }> | DynamicSectionItem;
-  innerSections: DynamicSectionItem[];
+  section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
+  innerSections: ContainerSectionItem[];
   items: SectionItem[];
-  refs: UseGridstackRefs;
+  integrations: RouterOutputs["integration"]["all"] | undefined;
+  columnCount: number;
+  maxRowCount: number | null;
+  announce: (message: string) => void;
 }
 
 const SectionContext = createContext<SectionContextProps | null>(null);

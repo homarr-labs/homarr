@@ -5,6 +5,7 @@ import {
   IconApi,
   IconBook2,
   IconBox,
+  IconBuildingStore,
   IconBrandDiscord,
   IconBrandDocker,
   IconBrandGithub,
@@ -20,6 +21,7 @@ import {
   IconMailForward,
   IconPhotoFilled,
   IconPointerFilled,
+  IconRobot,
   IconSearch,
   IconSettingsFilled,
   IconUserFilled,
@@ -98,6 +100,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconApi,
       href: "/manage/custom-widgets",
       label: t("items.customWidgets"),
+      hidden: !session?.user.permissions.includes("admin"),
+    },
+    {
+      icon: IconBuildingStore,
+      href: "/manage/workshop",
+      label: t("items.workshop"),
       hidden: !session?.user.permissions.includes("admin"),
     },
     {
@@ -190,6 +198,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           hidden: !session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3",
         },
       ],
+    },
+    {
+      label: t("items.assistant"),
+      href: "/manage/assistant",
+      icon: IconRobot,
+      hidden: !session?.user.permissions.includes("admin"),
     },
     {
       label: t("items.settings"),

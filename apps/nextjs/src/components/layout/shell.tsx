@@ -5,6 +5,7 @@ import { AppShell } from "@mantine/core";
 import { useAtomValue } from "jotai";
 
 import { useOptionalBackgroundProps } from "./background";
+import { appShellHeaderHeight } from "./constants";
 import { navigationCollapsedAtom } from "./header/burger";
 
 interface ClientShellProps {
@@ -23,7 +24,7 @@ export const ClientShell = ({
   return (
     <AppShell
       {...backgroundProps}
-      header={hasHeader ? { height: 60 } : undefined}
+      header={hasHeader ? { height: appShellHeaderHeight } : undefined}
       navbar={
         hasNavigation
           ? {

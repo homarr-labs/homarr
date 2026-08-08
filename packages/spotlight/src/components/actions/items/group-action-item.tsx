@@ -2,6 +2,7 @@ import { Spotlight } from "@mantine/spotlight";
 
 import type { TranslationObject } from "@homarr/translation";
 import { Link } from "@homarr/ui";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "@homarr/common";
 
 import type { SearchGroup } from "../../../lib/group";
 import type { inferSearchInteractionOptions } from "../../../lib/interaction";
@@ -26,14 +27,23 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
   option,
 }: SpotlightGroupActionItemProps<TOption>) => {
   const interaction = group.useInteraction(option, query);
+  const unavailable = "unavailable" in option && option.unavailable === true;
   // Avoid passing React's special `key` prop via spread
 
   const { key: _reactKey, ...optionProps } = option as unknown as { key?: unknown } & Record<string, unknown>;
 
+  const safeHref = interaction.type === "link" ? getSafeApplicationUrl(interaction.href) : undefined;
   const renderRoot =
-    interaction.type === "link"
+    interaction.type === "link" && safeHref
       ? (props: Record<string, unknown>) => {
-          return <Link href={interaction.href} target={interaction.newTab ? "_blank" : undefined} {...props} />;
+          return (
+            <Link
+              href={safeHref}
+              target={interaction.newTab ? "_blank" : undefined}
+              rel={interaction.newTab ? SAFE_NEW_TAB_REL : undefined}
+              {...props}
+            />
+          );
         }
       : undefined;
 
@@ -65,6 +75,7 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
         (interaction.type !== "javaScript" || interaction.closeSpotlightOnTrigger !== false)
       }
       className={classes.spotlightAction}
+      aria-disabled={unavailable || undefined}
     >
       <group.Component {...(optionProps as TOption)} />
     </Spotlight.Action>

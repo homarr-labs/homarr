@@ -26,6 +26,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
 import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
@@ -38,7 +39,7 @@ import {
   getProgressTrackSize,
 } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
-import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
 
@@ -102,12 +103,27 @@ export default function BeszelSystemTableWidget({
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
-  const {
-    data: results = [],
-    error: systemsError,
-    isPending,
-  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const results = getUsableWidgetQueryData(systemsQuery) ?? [];
+  const { isPending } = systemsQuery;
   const size = useMemo(() => getSizeConfig(width), [width]);
+  const visibleMetricKeys = useMemo(() => {
+    const enabled = [
+      "showCpu",
+      "showMemory",
+      "showDisk",
+      "showGpu",
+      "showLoadAvg",
+      "showNet",
+      "showTemp",
+      "showBattery",
+      "showServices",
+      "showUptime",
+      "showAgent",
+    ].filter((key) => options[key as keyof typeof options]) as string[];
+    const budget = width < 360 ? 1 : width < 560 ? 2 : width < 760 ? 4 : enabled.length;
+    return new Set(enabled.slice(0, budget));
+  }, [options, width]);
 
   const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
     onError: () =>
@@ -185,7 +201,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
       },
-      options.showCpu && {
+      visibleMetricKeys.has("showCpu") && {
         accessor: "cpu",
         width: 140,
         title: (
@@ -197,7 +213,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <PercentCell value={record.cpu} />,
       },
-      options.showMemory && {
+      visibleMetricKeys.has("showMemory") && {
         accessor: "memory",
         width: 140,
         title: (
@@ -209,7 +225,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <PercentCell value={record.memory} />,
       },
-      options.showDisk && {
+      visibleMetricKeys.has("showDisk") && {
         accessor: "disk",
         width: 160,
         title: (
@@ -229,7 +245,7 @@ export default function BeszelSystemTableWidget({
           />
         ),
       },
-      options.showGpu && {
+      visibleMetricKeys.has("showGpu") && {
         accessor: "gpu",
         width: 140,
         title: (
@@ -241,7 +257,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <PercentCell value={record.gpu} />,
       },
-      options.showLoadAvg && {
+      visibleMetricKeys.has("showLoadAvg") && {
         accessor: "loadAvg",
         width: 100,
         title: (
@@ -258,7 +274,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
       },
-      options.showNet && {
+      visibleMetricKeys.has("showNet") && {
         accessor: "netBytes",
         width: 100,
         title: (
@@ -274,7 +290,7 @@ export default function BeszelSystemTableWidget({
           </Text>
         ),
       },
-      options.showTemp && {
+      visibleMetricKeys.has("showTemp") && {
         accessor: "temp",
         width: 80,
         title: (
@@ -286,7 +302,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{formatTemp(record.temp, false)}</Text>,
       },
-      options.showBattery && {
+      visibleMetricKeys.has("showBattery") && {
         accessor: "battery",
         width: 70,
         title: (
@@ -297,7 +313,7 @@ export default function BeszelSystemTableWidget({
         ),
         render: (record) => <Text size={size.fontSize}>{record.battery ? `${record.battery[0]}%` : "—"}</Text>,
       },
-      options.showServices && {
+      visibleMetricKeys.has("showServices") && {
         accessor: "services",
         width: 80,
         title: (
@@ -309,7 +325,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{record.services}</Text>,
       },
-      options.showUptime && {
+      visibleMetricKeys.has("showUptime") && {
         accessor: "uptime",
         width: 90,
         title: (
@@ -321,7 +337,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{formatUptime(record.uptime)}</Text>,
       },
-      options.showAgent && {
+      visibleMetricKeys.has("showAgent") && {
         accessor: "agentVersion",
         width: 90,
         title: (
@@ -336,21 +352,7 @@ export default function BeszelSystemTableWidget({
     ];
 
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
-  }, [
-    options.showAgent,
-    options.showBattery,
-    options.showCpu,
-    options.showDisk,
-    options.showGpu,
-    options.showLoadAvg,
-    options.showMemory,
-    options.showNet,
-    options.showServices,
-    options.showTemp,
-    options.showUptime,
-    size,
-    t,
-  ]);
+  }, [t, size, visibleMetricKeys]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
@@ -370,8 +372,6 @@ export default function BeszelSystemTableWidget({
     [openModal],
   );
 
-  if (systemsError) throw systemsError;
-
   if (isPending) {
     return (
       <Center h="100%">
@@ -380,10 +380,10 @@ export default function BeszelSystemTableWidget({
     );
   }
 
-  return (
+  const table = (
     <div style={{ position: "relative", height: "100%" }}>
       <div style={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}>
-        <BeszelIntegrationErrorIndicator results={results} />
+        <IntegrationErrorIndicator results={results} />
       </div>
       <HomarrDataTable
         isEditMode={isEditMode}
@@ -400,4 +400,6 @@ export default function BeszelSystemTableWidget({
       />
     </div>
   );
+
+  return table;
 }

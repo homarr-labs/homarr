@@ -1,4 +1,4 @@
-interface EntityState {
+export interface EntityState {
   attributes: Record<string, string | number | boolean | null | (string | number)[]>;
   entity_id: string;
   last_changed: Date;

@@ -1,16 +1,17 @@
 "use client";
 
-import { ScrollArea, Stack, Text } from "@mantine/core";
+import { ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { createWidgetKey } from "./coolify-utils";
 import { InstanceCard } from "./instance-card";
 import { SingleInstanceLayout } from "./single-instance-layout";
 
-export default function CoolifyWidget({ options, integrationIds, width }: WidgetComponentProps<"coolify">) {
+export default function CoolifyWidget({ options, integrationIds, width, height }: WidgetComponentProps<"coolify">) {
   const t = useScopedI18n("widget.coolify");
 
   if (integrationIds.length === 0) {
@@ -21,29 +22,54 @@ export default function CoolifyWidget({ options, integrationIds, width }: Widget
     );
   }
 
-  return <CoolifyContent integrationIds={integrationIds} options={options} width={width} />;
+  return <CoolifyContent integrationIds={integrationIds} options={options} width={width} height={height} />;
 }
 
 interface CoolifyContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"coolify">["options"];
   width: number;
+  height: number;
 }
 
-function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps) {
-  const { data: instancesData = [] } = clientApi.widget.coolify.getInstancesInfo.useQuery({ integrationIds });
+function CoolifyContent({ integrationIds, options, width, height }: CoolifyContentProps) {
+  const t = useScopedI18n("common");
+  const instancesQuery = clientApi.widget.coolify.getInstancesInfo.useQuery({
+    integrationIds,
+  });
+  const instancesData = getUsableWidgetQueryData(instancesQuery) ?? [];
+  const { isPending } = instancesQuery;
 
-  const isTiny = width < 256;
+  const isTiny = width < 256 || height < 144;
+  const hideFooter = height < 112;
   const [firstInstance] = instancesData;
   const widgetKey = createWidgetKey(integrationIds);
 
+  if (isPending) {
+    return (
+      <Stack align="center" justify="center" h="100%">
+        <Text c="dimmed" size="sm">
+          {t("action.loading")}
+        </Text>
+      </Stack>
+    );
+  }
+
   if (instancesData.length === 1 && firstInstance) {
-    return <SingleInstanceLayout instance={firstInstance} options={options} isTiny={isTiny} widgetKey={widgetKey} />;
+    return (
+      <SingleInstanceLayout
+        instance={firstInstance}
+        options={options}
+        isTiny={isTiny}
+        widgetKey={widgetKey}
+        hideFooter={hideFooter}
+      />
+    );
   }
 
   return (
     <ScrollArea h="100%">
-      <Stack gap="xs" p="xs">
+      <SimpleGrid cols={width >= 760 ? 2 : 1} spacing="sm" p="xs">
         {instancesData.map((instance) => (
           <InstanceCard
             key={instance.integrationId}
@@ -51,9 +77,10 @@ function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps)
             options={options}
             isTiny={isTiny}
             widgetKey={widgetKey}
+            hideFooter={hideFooter}
           />
         ))}
-      </Stack>
+      </SimpleGrid>
     </ScrollArea>
   );
 }

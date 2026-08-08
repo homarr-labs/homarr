@@ -53,6 +53,7 @@ export const widgetKinds = [
   "beszelSystemStats",
   "traefik",
   "customApi",
+  "assistant",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];
 
@@ -63,4 +64,5 @@ export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; hei
   patchmon: { width: 2, height: 2 },
   mediaMissing: { width: 4, height: 3 },
   bazarr: { width: 2, height: 2 },
+  assistant: { width: 10, height: 4 },
 };

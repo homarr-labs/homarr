@@ -1,80 +1,424 @@
 "use client";
 
-import { Button, Fieldset, Grid, Group, Input, NumberInput, Slider, Stack, Text, TextInput } from "@mantine/core";
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Badge,
+  Box,
+  Button,
+  Fieldset,
+  Grid,
+  Group,
+  Input,
+  NumberInput,
+  Paper,
+  Slider,
+  Stack,
+  Switch,
+  Text,
+  TextInput,
+} from "@mantine/core";
+import { IconEdit, IconRefresh } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
 import type { UseFormReturnType } from "@homarr/form";
+import { useConfirmModal } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
 import { SectionCard } from "~/components/manage/section-card";
+import type { Board } from "../../_types";
+import { LayoutPreview } from "./_layout-preview";
 import type { FormValues } from "./_settings-form";
+import classes from "./_layout.module.css";
 
 interface Props {
+  board: Board;
   form: UseFormReturnType<FormValues>;
+  isSaving: boolean;
+  saveSettingsAsync: () => Promise<FormValues | null>;
 }
 
-export const LayoutSettingsContent = ({ form }: Props) => {
+export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync }: Props) => {
   const t = useI18n();
+  const router = useRouter();
+  const utils = clientApi.useUtils();
+  const { openConfirmModal } = useConfirmModal();
+  const [editingLayoutId, setEditingLayoutId] = useState<string | null>(null);
+  const [resettingLayoutId, setResettingLayoutId] = useState<string | null>(null);
+  const { mutateAsync: resetLayout } = clientApi.board.resetLayout.useMutation({
+    onError() {
+      showErrorNotification({
+        title: t("common.notification.update.error"),
+        message: t("common.notification.update.error"),
+      });
+    },
+  });
+  const appIds = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          board.items.flatMap((item) =>
+            item.kind === "app" && typeof item.options.appId === "string" ? [item.options.appId] : [],
+          ),
+        ),
+      ),
+    [board.items],
+  );
+  const { data: apps = [] } = clientApi.app.byIds.useQuery(appIds, { enabled: appIds.length > 0 });
+
+  const openLayoutEditorAsync = async (layout: FormValues["layouts"][number]) => {
+    setEditingLayoutId(layout.id);
+    try {
+      const persistedLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+      const savedValues = form.isDirty() || !persistedLayout ? await saveSettingsAsync() : form.values;
+      const canonicalLayout = savedValues ? findCanonicalLayout(savedValues.layouts, layout) : undefined;
+      if (!canonicalLayout) return;
+
+      router.push(`/boards/${board.name}?layout=${encodeURIComponent(canonicalLayout.id)}&edit=true&returnTo=settings`);
+    } finally {
+      setEditingLayoutId(null);
+    }
+  };
+
+  const confirmReset = (layout: FormValues["layouts"][number]) => {
+    openConfirmModal({
+      title: t("board.setting.section.layout.reset.confirm.title", { layoutName: layout.name }),
+      children: t("board.setting.section.layout.reset.confirm.message"),
+      confirmProps: { children: t("board.setting.section.layout.reset.action"), color: "red" },
+      onConfirm() {
+        setResettingLayoutId(layout.id);
+        void (async () => {
+          try {
+            const savedValues = form.isDirty() ? await saveSettingsAsync() : form.values;
+            const canonicalLayout = savedValues ? findCanonicalLayout(savedValues.layouts, layout) : undefined;
+            if (!canonicalLayout) return;
+
+            await resetLayout({ boardId: board.id, layoutId: canonicalLayout.id });
+            await utils.board.getBoardByName.invalidate({ name: board.name });
+            router.refresh();
+          } catch {
+            // The mutation callback displays the error notification.
+          } finally {
+            setResettingLayoutId(null);
+          }
+        })();
+      },
+    });
+  };
+
+  const nextBreakpoint = getNextCustomBreakpoint(form.values.layouts);
+  const baseLayout = form.values.layouts.find((layout) => layout.role === "base");
+  const sortedLayouts = form.values.layouts
+    .map((layout, index) => ({ layout, index }))
+    .toSorted((entryA, entryB) => entryA.layout.breakpoint - entryB.layout.breakpoint);
 
   return (
     <SectionCard title={t("board.setting.section.layout.title")}>
-      <Stack gap="sm">
-        <Group justify="space-between" align="center">
-          <Text fw={500}>{t("board.setting.section.layout.responsive.title")}</Text>
+      <Stack gap="lg">
+        <Group justify="space-between" align="flex-start" wrap="wrap">
+          <Stack gap={2} maw="52rem">
+            <Text fw={500}>{t("board.setting.section.layout.responsive.title")}</Text>
+            <Text size="sm">{t("board.setting.section.layout.responsive.description")}</Text>
+          </Stack>
           <Button
             type="button"
-            variant="subtle"
+            variant="light"
+            disabled={nextBreakpoint === null || !baseLayout}
             onClick={() => {
-              form.setValues((previous) => ({
-                ...previous,
-                layouts: [...(previous.layouts ?? []), { id: createId(), name: "", columnCount: 10, breakpoint: 0 }],
-              }));
+              if (nextBreakpoint === null || !baseLayout) return;
+              form.setFieldValue("layouts", [
+                ...form.values.layouts,
+                {
+                  id: createId(),
+                  name: t("board.setting.section.layout.custom.defaultName"),
+                  columnCount: baseLayout.columnCount,
+                  leftGutterColumnCount: baseLayout.leftGutterColumnCount,
+                  rightGutterColumnCount: baseLayout.rightGutterColumnCount,
+                  breakpoint: nextBreakpoint,
+                  role: "custom",
+                },
+              ]);
             }}
           >
             {t("board.setting.section.layout.responsive.action.add")}
           </Button>
         </Group>
 
-        {form.values.layouts.map((layout, index) => (
-          <Fieldset key={layout.id} legend={layout.name} bg="transparent">
-            <Grid>
-              <Grid.Col span={{ sm: 12, md: 6 }}>
-                <TextInput {...form.getInputProps(`layouts.${index}.name`)} label={t("layout.field.name.label")} />
-              </Grid.Col>
+        {sortedLayouts.map(({ layout, index }) => {
+          const persistedLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+          const sourceLayout = persistedLayout ?? board.layouts.find((candidate) => candidate.role === "base");
+          const customBreakpoints = form.values.layouts
+            .filter((candidate) => candidate.role === "custom" && candidate.id !== layout.id)
+            .map((candidate) => candidate.breakpoint);
+          const baseBreakpoint = form.values.layouts.find((candidate) => candidate.role === "base")?.breakpoint ?? 768;
 
-              <Grid.Col span={{ sm: 12, md: 6 }}>
-                <Input.Wrapper label={t("layout.field.columnCount.label")}>
-                  <Slider mt="xs" min={1} max={24} step={1} {...form.getInputProps(`layouts.${index}.columnCount`)} />
-                </Input.Wrapper>
-              </Grid.Col>
+          return (
+            <Fieldset
+              key={layout.id}
+              legend={
+                <Group gap="xs">
+                  <Text>{layout.name || t(`board.setting.section.layout.role.${layout.role}`)}</Text>
+                  <Badge size="sm" variant="default">
+                    {t(`board.setting.section.layout.role.${layout.role}`)}
+                  </Badge>
+                </Group>
+              }
+              bg="transparent"
+            >
+              <Grid gap={{ base: "lg", xl: "xl" }} align="flex-start">
+                <Grid.Col span={{ base: 12, md: 4 }}>
+                  <Stack gap="md">
+                    <TextInput {...form.getInputProps(`layouts.${index}.name`)} label={t("layout.field.name.label")} />
+                    <Input.Wrapper label={t("layout.field.columnCount.label")}>
+                      <Slider
+                        thumbLabel={`${t("layout.field.columnCount.label")} — ${layout.name}`}
+                        mt="xs"
+                        min={1}
+                        max={24}
+                        step={1}
+                        marks={[1, 6, 12, 18, 24].map((value) => ({ value, label: String(value) }))}
+                        styles={{
+                          markLabel: { color: "light-dark(var(--mantine-color-black), var(--mantine-color-white))" },
+                        }}
+                        value={layout.columnCount}
+                        onChange={(columnCount) => {
+                          const left = Math.min(layout.leftGutterColumnCount, Math.max(0, columnCount - 1));
+                          const right = Math.min(layout.rightGutterColumnCount, Math.max(0, columnCount - left - 1));
+                          form.setFieldValue(`layouts.${index}.columnCount`, columnCount);
+                          form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, left);
+                          form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, right);
+                        }}
+                      />
+                    </Input.Wrapper>
+                    <NumberInput
+                      {...form.getInputProps(`layouts.${index}.breakpoint`)}
+                      label={t("layout.field.breakpoint.label")}
+                      description={
+                        layout.role === "mobile"
+                          ? t("board.setting.section.layout.mobile.breakpointDescription")
+                          : t("layout.field.breakpoint.description")
+                      }
+                      disabled={layout.role === "mobile"}
+                      styles={{ description: { color: "var(--mantine-color-text)" } }}
+                      min={
+                        layout.role === "base"
+                          ? Math.max(1, ...customBreakpoints.map((breakpoint) => breakpoint + 1))
+                          : 1
+                      }
+                      max={layout.role === "custom" ? baseBreakpoint - 1 : 32767}
+                    />
+                    <GutterSettings
+                      left={layout.leftGutterColumnCount}
+                      right={layout.rightGutterColumnCount}
+                      columnCount={layout.columnCount}
+                      onLeftChange={(value) => form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, value)}
+                      onRightChange={(value) => form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, value)}
+                    />
+                  </Stack>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 8 }}>
+                  {sourceLayout && (
+                    <LayoutPreview
+                      board={board}
+                      layout={layout}
+                      layouts={form.values.layouts}
+                      sourceLayout={sourceLayout}
+                      apps={apps}
+                    />
+                  )}
+                </Grid.Col>
+              </Grid>
 
-              <Grid.Col span={{ sm: 12, md: 6 }}>
-                <NumberInput
-                  {...form.getInputProps(`layouts.${index}.breakpoint`)}
-                  label={t("layout.field.breakpoint.label")}
-                  description={t("layout.field.breakpoint.description")}
-                />
-              </Grid.Col>
-            </Grid>
-            {form.values.layouts.length >= 2 && (
-              <Group justify="end">
+              <Group justify="space-between" mt="lg" gap="sm" wrap="wrap">
+                <Group gap="xs">
+                  {layout.role !== "base" && persistedLayout && (
+                    <Button
+                      type="button"
+                      variant="default"
+                      leftSection={<IconRefresh size={16} color="var(--mantine-color-red-5)" />}
+                      loading={resettingLayoutId === layout.id}
+                      disabled={isSaving}
+                      onClick={() => confirmReset(layout)}
+                    >
+                      {t("board.setting.section.layout.reset.action")}
+                    </Button>
+                  )}
+                  {layout.role === "custom" && (
+                    <Button
+                      type="button"
+                      variant="subtle"
+                      color="red"
+                      disabled={isSaving}
+                      onClick={() => {
+                        form.setFieldValue(
+                          "layouts",
+                          form.values.layouts.filter((candidate) => candidate.id !== layout.id),
+                        );
+                      }}
+                    >
+                      {t("common.action.remove")}
+                    </Button>
+                  )}
+                </Group>
                 <Button
                   type="button"
-                  variant="subtle"
-                  onClick={() => {
-                    form.setValues((previous) => ({
-                      ...previous,
-                      layouts: form.values.layouts.filter((filteredLayout) => filteredLayout.id !== layout.id),
-                    }));
-                  }}
+                  variant="default"
+                  leftSection={<IconEdit size={16} color="var(--mantine-color-red-5)" />}
+                  loading={editingLayoutId === layout.id}
+                  disabled={isSaving || !form.isValid()}
+                  onClick={() => void openLayoutEditorAsync(layout)}
                 >
-                  {t("common.action.remove")}
+                  {form.isDirty() || !persistedLayout
+                    ? t("board.setting.section.layout.edit.saveAndEdit")
+                    : t("board.setting.section.layout.edit.action")}
                 </Button>
               </Group>
-            )}
-          </Fieldset>
-        ))}
+            </Fieldset>
+          );
+        })}
       </Stack>
     </SectionCard>
+  );
+};
+
+const findCanonicalLayout = (layouts: FormValues["layouts"], layout: FormValues["layouts"][number]) =>
+  layouts.find((candidate) => candidate.id === layout.id) ??
+  layouts.find((candidate) => candidate.breakpoint === layout.breakpoint && candidate.role === layout.role);
+
+const getNextCustomBreakpoint = (layouts: Array<{ breakpoint: number }>) => {
+  const sortedBreakpoints = layouts
+    .map((layout) => layout.breakpoint)
+    .toSorted((breakpointA, breakpointB) => breakpointA - breakpointB);
+  let largestGap: { start: number; end: number } | null = null;
+
+  for (let index = 0; index < sortedBreakpoints.length - 1; index++) {
+    const start = sortedBreakpoints[index];
+    const end = sortedBreakpoints[index + 1];
+    if (start === undefined || end === undefined || end - start <= 1) continue;
+    if (!largestGap || end - start > largestGap.end - largestGap.start) largestGap = { start, end };
+  }
+
+  return largestGap ? Math.floor((largestGap.start + largestGap.end) / 2) : null;
+};
+
+interface GutterSettingsProps {
+  left: number;
+  right: number;
+  columnCount: number;
+  onLeftChange: (value: number) => void;
+  onRightChange: (value: number) => void;
+}
+
+const gutterMarks = [
+  { value: 1, label: "1" },
+  { value: 2, label: "2" },
+  { value: 3, label: "3" },
+];
+
+const GutterSettings = ({ left, right, columnCount, onLeftChange, onRightChange }: GutterSettingsProps) => {
+  const t = useI18n();
+  const maxGutterWidth = Math.min(3, Math.max(1, columnCount - 1));
+
+  return (
+    <Paper className={classes.gutterSettings} p="md">
+      <Stack gap="md">
+        <Box>
+          <Text fw={600}>{t("layout.field.gutters.label")}</Text>
+          <Text size="sm" c="dimmed">
+            {t("layout.field.gutters.description")}
+          </Text>
+        </Box>
+
+        <GutterPreview left={left} right={right} columnCount={columnCount} />
+
+        <Grid>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <GutterControl
+              side="left"
+              value={left}
+              max={Math.min(maxGutterWidth, columnCount - right - 1)}
+              onChange={onLeftChange}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <GutterControl
+              side="right"
+              value={right}
+              max={Math.min(maxGutterWidth, columnCount - left - 1)}
+              onChange={onRightChange}
+            />
+          </Grid.Col>
+        </Grid>
+      </Stack>
+    </Paper>
+  );
+};
+
+const GutterControl = ({
+  side,
+  value,
+  max,
+  onChange,
+}: {
+  side: "left" | "right";
+  value: number;
+  max: number;
+  onChange: (value: number) => void;
+}) => {
+  const t = useI18n();
+  const enabled = value > 0;
+
+  return (
+    <Stack gap="sm">
+      <Switch
+        checked={enabled}
+        disabled={max < 1}
+        onChange={(event) => onChange(event.currentTarget.checked ? Math.min(2, max) : 0)}
+        label={t(`layout.field.gutters.${side}.label`)}
+        description={t(`layout.field.gutters.${side}.description`)}
+      />
+      {enabled && (
+        <Input.Wrapper label={t("layout.field.gutters.width.label")}>
+          <Slider
+            mt="xs"
+            min={1}
+            max={max}
+            value={Math.min(value, max)}
+            marks={gutterMarks.filter((mark) => mark.value <= max)}
+            restrictToMarks
+            thumbLabel={t(`layout.field.gutters.${side}.thumbLabel`)}
+            onChange={(nextValue) => onChange(Math.min(nextValue, max))}
+          />
+        </Input.Wrapper>
+      )}
+    </Stack>
+  );
+};
+
+const GutterPreview = ({ left, right, columnCount }: { left: number; right: number; columnCount: number }) => {
+  const t = useI18n();
+  const safeColumnCount = Math.max(1, columnCount);
+  const main = Math.max(1, safeColumnCount - left - right);
+  const tracks = [left > 0 ? `${left}fr` : null, `${main}fr`, right > 0 ? `${right}fr` : null]
+    .filter((track) => track !== null)
+    .join(" ");
+
+  return (
+    <Box
+      className={classes.gutterPreview}
+      aria-label={t("layout.field.gutters.preview.label")}
+      style={{ gridTemplateColumns: tracks }}
+    >
+      {left > 0 && <Box className={classes.previewGutter} data-side="left" />}
+      <Box className={classes.previewCanvas}>
+        <Box />
+        <Box />
+        <Box />
+        <Box />
+      </Box>
+      {right > 0 && <Box className={classes.previewGutter} data-side="right" />}
+    </Box>
   );
 };

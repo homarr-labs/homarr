@@ -20,32 +20,27 @@ export const IntegrationProvider = ({ integrations, children }: PropsWithChildre
   return <IntegrationContext.Provider value={{ integrations }}>{children}</IntegrationContext.Provider>;
 };
 
-export const useIntegrationsWithUseAccess = () => {
+const useIntegrationContext = () => {
   const context = useContext(IntegrationContext);
 
   if (!context) {
-    throw new Error("useIntegrationsWithUseAccess must be used within an IntegrationProvider");
+    throw new Error("Integration hooks must be used within an IntegrationProvider");
   }
 
-  return context.integrations.filter((integration) => integration.permissions.hasUseAccess);
+  return context;
 };
 
+export const useIntegrations = () => useIntegrationContext().integrations;
+
+export const useIntegrationsWithUseAccess = () =>
+  useIntegrationContext().integrations.filter((integration) => integration.permissions.hasUseAccess);
+
 export const useIntegrationsWithInteractAccess = () => {
-  const context = useContext(IntegrationContext);
-
-  if (!context) {
-    throw new Error("useIntegrationsWithInteractAccess must be used within an IntegrationProvider");
-  }
-
+  const context = useIntegrationContext();
   return context.integrations.filter((integration) => integration.permissions.hasInteractAccess);
 };
 
 export const useIntegrationsWithFullAccess = () => {
-  const context = useContext(IntegrationContext);
-
-  if (!context) {
-    throw new Error("useIntegrationsWithFullAccess must be used within an IntegrationProvider");
-  }
-
+  const context = useIntegrationContext();
   return context.integrations.filter((integration) => integration.permissions.hasFullAccess);
 };

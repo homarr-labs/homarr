@@ -1,38 +1,78 @@
 "use client";
 
-import { ScrollArea, Stack, Text } from "@mantine/core";
+import { ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { TracearrDashboardData } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
+import { formatTotalTracearrBitrate } from "./bitrate";
 import { RecentActivityList } from "./recent-activity-section";
 import { StatsBar } from "./stats-section";
 import { StreamsList } from "./streams-section";
 import { ViolationsList } from "./violations-section";
 
-export default function TracearrWidget({ options, integrationIds, width }: WidgetComponentProps<"tracearr">) {
+const ADVANCED_GRID_BREAKPOINT = 800;
+const ADVANCED_GRID_GAP_PX = 16;
+const ADVANCED_GRID_PADDING_PX = 16;
+
+export const getCompactSectionVisibility = ({
+  height,
+  showStreams,
+  showViolations,
+  hasViolations,
+  showRecentActivity,
+}: {
+  height: number;
+  showStreams: boolean;
+  showViolations: boolean;
+  hasViolations: boolean;
+  showRecentActivity: boolean;
+}) => ({
+  violations: showViolations && (hasViolations || height >= 240 || !showStreams),
+  recentActivity: showRecentActivity && (height >= 360 || (!showStreams && (!showViolations || !hasViolations))),
+});
+
+export default function TracearrWidget({
+  options,
+  integrationIds,
+  width,
+  height,
+  displayMode = "compact",
+}: WidgetComponentProps<"tracearr">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }
 
-  return <TracearrContent integrationIds={integrationIds} options={options} width={width} />;
+  return (
+    <TracearrContent
+      integrationIds={integrationIds}
+      options={options}
+      width={width}
+      height={height}
+      displayMode={displayMode}
+    />
+  );
 }
 
 interface TracearrContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"tracearr">["options"];
   width: number;
+  height: number;
+  displayMode: "compact" | "advanced";
 }
 
-function TracearrContent({ integrationIds, options, width }: TracearrContentProps) {
+function TracearrContent({ integrationIds, options, width, height, displayMode }: TracearrContentProps) {
   const t = useScopedI18n("widget.tracearr");
-  const { data: dashboardData = [] } = clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds });
+  const dashboardData =
+    getUsableWidgetQueryData(clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds })) ?? [];
 
   // Merge data from all integrations
-  const combined = dashboardData.reduce<TracearrDashboardData>(
+  const combinedData = dashboardData.reduce<TracearrDashboardData>(
     (acc, item) => {
       const { stats, streams, violations, recentActivity } = item.dashboard;
       const vData = violations ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
@@ -53,7 +93,7 @@ function TracearrContent({ integrationIds, options, width }: TracearrContentProp
             transcodes: acc.streams.summary.transcodes + streams.summary.transcodes,
             directStreams: acc.streams.summary.directStreams + streams.summary.directStreams,
             directPlays: acc.streams.summary.directPlays + streams.summary.directPlays,
-            totalBitrate: streams.summary.totalBitrate,
+            totalBitrate: "—",
             byServer: [...acc.streams.summary.byServer, ...streams.summary.byServer],
           },
         },
@@ -85,17 +125,64 @@ function TracearrContent({ integrationIds, options, width }: TracearrContentProp
       recentActivity: null,
     },
   );
+  const combined: TracearrDashboardData = {
+    ...combinedData,
+    streams: {
+      ...combinedData.streams,
+      summary: {
+        ...combinedData.streams.summary,
+        totalBitrate: formatTotalTracearrBitrate(combinedData.streams.data),
+      },
+    },
+  };
 
   const noSectionsEnabled =
     !options.showStats && !options.showStreams && !options.showRecentActivity && !options.showViolations;
+
+  const compactLimit = height < 220 ? 2 : height < 360 ? 4 : 8;
+  const streams = displayMode === "advanced" ? combined.streams.data : combined.streams.data.slice(0, compactLimit);
+  const violations = combined.violations?.data ?? [];
+  const recentActivity = combined.recentActivity?.data ?? [];
+  const compactSections = getCompactSectionVisibility({
+    height,
+    showStreams: options.showStreams,
+    showViolations: options.showViolations,
+    hasViolations: violations.length > 0,
+    showRecentActivity: options.showRecentActivity,
+  });
+
+  if (displayMode === "advanced") {
+    const isTwoColumn = width >= ADVANCED_GRID_BREAKPOINT;
+    const columnWidth = getAdvancedColumnWidth(width, isTwoColumn);
+    return (
+      <ScrollArea h="100%">
+        <SimpleGrid
+          cols={isTwoColumn ? 2 : 1}
+          spacing={`${ADVANCED_GRID_GAP_PX}px`}
+          p={`${ADVANCED_GRID_PADDING_PX}px`}
+        >
+          <Stack gap="sm">
+            {options.showStats && (
+              <StatsBar stats={combined.stats} summary={combined.streams.summary} width={columnWidth} />
+            )}
+            {options.showStreams && <StreamsList streams={streams} width={columnWidth} />}
+          </Stack>
+          <Stack gap="sm">
+            {options.showViolations && <ViolationsList violations={violations} />}
+            {options.showRecentActivity && <RecentActivityList sessions={recentActivity} />}
+          </Stack>
+        </SimpleGrid>
+      </ScrollArea>
+    );
+  }
 
   return (
     <ScrollArea h="100%">
       <Stack gap="xs" p="xs">
         {options.showStats && <StatsBar stats={combined.stats} summary={combined.streams.summary} width={width} />}
-        {options.showStreams && <StreamsList streams={combined.streams.data} width={width} />}
-        {options.showViolations && <ViolationsList violations={combined.violations?.data ?? []} />}
-        {options.showRecentActivity && <RecentActivityList sessions={combined.recentActivity?.data ?? []} />}
+        {compactSections.violations && <ViolationsList violations={violations.slice(0, compactLimit)} />}
+        {options.showStreams && <StreamsList streams={streams} width={width} />}
+        {compactSections.recentActivity && <RecentActivityList sessions={recentActivity.slice(0, compactLimit)} />}
         {noSectionsEnabled && (
           <Text c="dimmed" ta="center">
             {t("noSectionsEnabled")}
@@ -105,3 +192,8 @@ function TracearrContent({ integrationIds, options, width }: TracearrContentProp
     </ScrollArea>
   );
 }
+
+export const getAdvancedColumnWidth = (width: number, isTwoColumn: boolean) => {
+  const contentWidth = Math.max(0, width - ADVANCED_GRID_PADDING_PX * 2);
+  return isTwoColumn ? Math.max(0, (contentWidth - ADVANCED_GRID_GAP_PX) / 2) : contentWidth;
+};

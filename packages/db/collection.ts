@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace -- Schema tables are intentionally selected by typed runtime keys. */
 import type { InferInsertModel } from "drizzle-orm";
 
 import { objectEntries } from "@homarr/common";
@@ -61,7 +62,6 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
     },
   };
 };
-
 export const createDbInsertCollectionWithoutTransaction = <TTableKey extends TableKey>(
   tablesInInsertOrder: TTableKey[],
 ) => {

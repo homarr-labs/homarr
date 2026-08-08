@@ -36,6 +36,8 @@ export const seedAdminUserAsync = async (db: SqliteDatabase, input: SeedAdminUse
     name: input.username,
     provider: "credentials",
     password: await hashPasswordAsync(input.password),
+    completedManageTour: true,
+    completedBoardTour: true,
   });
 
   await db.insert(sqliteSchema.groups).values({

@@ -36,8 +36,9 @@ Underscores and hyphen-minus are allowed.
 
 ### Column count
 
-Homarr has a complex drag-and-drop system that can be used from the browser.
-The column count defines how many horizontal columns are available to drag and drop elements to.
+The column count defines how many fixed-width cells are available in each row.
+One cell contains a `200 × 200` logical-pixel tile.
+Homarr scales the whole board uniformly instead of changing widget proportions, with horizontal scrolling when further shrinking would make controls too small.
 
 ### Public
 
@@ -88,32 +89,89 @@ Homarr will fall back to the Homarr logo if nothing is set.
 
 ### Layout
 
-In this section you can configure the different responsive layouts. Depending on your screens width the layout will change.
+In this section you can configure the different responsive layouts. Homarr selects the layout with the highest breakpoint that is not wider than the current screen, then scales its complete fixed-size canvas uniformly.
 
 ![](./img/layout-settings.png)
 
-On each element the position and size of items can be changed seperately.
-When adding a new layout the position and sizes will automatically be generated depending on the column count.
-When adding a new item / dynamic section that will always be 1x1 on each layout and placed on the first available position.
+Every board has two protected layouts:
+
+- **Mobile** starts at `0px` and uses three columns on new boards.
+- **Base** is the widest layout and starts at `768px` on new boards.
+
+Mobile and Base can be renamed and their column counts and rails can be changed, but they cannot be removed. You can add removable custom layouts between their breakpoints.
+
+Each layout stores independent positions and sizes. Moving or resizing a widget while editing Mobile does not move it in Base or any custom layout. New custom layouts are generated from Base and scaled to their selected column count.
+
+Use **Reset from Base** on Mobile or a custom layout to replace all of its positions and sizes with a newly generated version of Base. The layout's name, breakpoint, and column count are kept.
+
+Every `1 × 1` tile has a `200 × 200` logical-pixel content area, with a separate `24` logical-pixel gap between tiles. Homarr scales the whole canvas to the available width without shrinking below 75%; narrower screens scroll horizontally so controls remain accessible.
+
+The board edge is a hard drag boundary. Moving a tile outside it cancels the placement, while adding content can still create the rows it needs. New items use their widget's default size and new Containers use a useful `4 × 3` size when space allows.
 
 #### Name
 
-The name of the layout can be choosen freely. It is only used for the management and will not be visible on the board.
+The name of the layout can be chosen freely. It is only used for management and is not displayed on the board.
 
 #### Column count
 
-Amount of columns for this layout. Defines how many items can be placed in a row. When changed it will automatically adjust the position and size of the items.
+The total number of columns in the layout. Changing it projects the saved positions and sizes into the new grid width without overlap.
+
+#### Fixed rails
+
+Each layout can reserve a fixed left rail, a fixed right rail, or both. Set a rail width to zero to disable it, or choose one to three columns. Reserved rail columns reduce the main canvas width. Apps, widgets, and Containers in rails use the same fixed cell sizes and remain visible while the page scrolls.
 
 #### Breakpoint
 
-Minimum width of the screen where the layout will be used.
-Once the minimum of the next layout is reached the layout will change.
+The minimum screen width where the layout is used. Mobile is fixed at `0px`. Custom breakpoints must be unique and sit between Mobile and Base. Base must remain the highest breakpoint.
+
+#### View and edit modes
+
+View mode renders a static board without executing the drag-and-drop editor.
+After the board is interactive, Homarr prepares the editor in the background for users who can modify it.
+Entering edit mode keeps the static board visible until that preparation finishes, then enables collision-aware movement and resizing without changing the board geometry.
+Widget content is inert in edit mode, so dragging anywhere on the content moves the tile instead of activating the widget; its settings button remains visible in the compact header above the tile.
+Dropping a tile into another tile's exact slot swaps their positions when both resulting placements fit without overlapping other content.
+For other collisions, or when a tile grows into occupied space, nearby tiles are compacted out of the way.
+The visible corner controls provide a 44-pixel resize target, and edge controls appear on hover for horizontal or vertical resizing.
+Resize handles stop at the tile's minimum allowed size while the pointer is still moving.
+Exit edit mode to save the resulting positions.
+
+Pointer users can drag anywhere on a widget tile. Containers use the grab button at their top-left corner.
+Resize tiles from any edge or corner handle.
+On a touch screen, press and hold the tile before moving it; resize handles support direct touch input.
+Keyboard users can focus a tile, press Enter or Space to start editing, use the arrow keys to move it, and use Shift plus the arrow keys to resize it.
+Press Enter, Space, or Escape to stop keyboard editing.
+Keyboard moves and resizes apply immediately; Escape stops keyboard editing without undoing those changes.
+During a pointer or touch interaction, Escape cancels the move or resize and restores the layout from before that interaction.
+The **Move / resize item** action in the edit menu remains available for precise numeric input.
 
 #### Preview
+
+Layout Settings shows a lightweight structural preview for every layout, including saved spans, Containers, widget labels, and app icons. The canvas width represents the screen range where that layout is active.
+
+Choose **Edit layout** to open the real board editor at that representative width on desktop. Save returns to Layout Settings. Cancel discards the local changes. On phones and tablets, the normal board editor continues to use the layout selected by the device width.
 
 <img src={layoutSmallImage} height={256} />
 <img src={layoutMediumImage} height={256} />
 <img src={layoutLargeImage} height={256} />
+
+### Containers and rails
+
+Containers can hold apps, widgets, and nested Containers.
+The same Container model works on the main canvas, inside a fixed rail, or inside another Container.
+Move and resize Containers directly in edit mode; nested content stays within the Container's local bounds.
+Resize outlines follow the pointer continuously while a dashed preview marks the grid size that will be applied on release.
+Each responsive layout stores its own Container position and size.
+
+Each Container can configure:
+
+- Its label and whether that label is visible.
+- Whether users can collapse and expand it like an accordion.
+- Whether its menu shows **Open all in new tabs** for the app links it contains.
+- Its border color and custom CSS classes.
+
+Collapsing a Container reduces its full-width header to a half-row expansion bar and compacts the surrounding layout without losing its expanded size.
+Expanding it smoothly restores those bounds and moves following items out of the way without reloading the widgets inside it.
 
 ### Background
 
@@ -159,7 +217,7 @@ Change the color of your bookmark / app icons.
 
 #### Item radius
 
-Change the radius of your items / categories.
+Change the radius of your items and Containers.
 
 <img src={itemRadiusImage} height={100} />
 
@@ -168,6 +226,10 @@ Change the radius of your items / categories.
 This is the field where you can enter custom CSS.
 The styling will only be applied on the respective board page.
 
+When Homarr Assistant is enabled, users with modify permission can also ask it to edit the board's Custom
+CSS and other visual or behavior settings. The assistant reads the current stylesheet first and presents an
+editable review form before requesting approval to save the change.
+
 [See this guide on how to work with custom CSS](/docs/advanced/styling/).
 
 ### Behaviour
@@ -175,6 +237,20 @@ The styling will only be applied on the respective board page.
 #### Disable app status
 
 This will disable the status check for apps.
+
+#### Work directly from the board
+
+Widgets expose their routine controls without requiring edit mode:
+
+- Hold `Shift` while hovering a widget that supports advanced view to expand it in place while the other widgets
+  remain visible but dimmed. Release `Shift` to close it. Focus that widget and press `Shift` + `Enter` to keep the view
+  open until you close it. On touch devices, open it from the widget menu. Other widgets adapt in place instead.
+- Right-click a widget to inspect its live query status, refresh its data, change quick options, open settings, or run
+  supported actions. Available controls follow your board and integration permissions.
+- If you can modify the board, right-click or touch and hold an empty grid cell to add an item there. Focus a board
+  section and press `Shift` + `F10` for the keyboard equivalent.
+
+Widget and empty-space context menus follow the **Enable right click on widgets** preference in your user settings.
 
 ### Access control
 

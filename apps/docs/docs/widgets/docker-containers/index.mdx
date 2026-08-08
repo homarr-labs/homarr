@@ -1,24 +1,22 @@
 ---
-title: 'Docker stats'
-description: 'Stats of your containers'
+title: "Docker stats"
+description: "Stats of your containers"
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { IconAd } from "@tabler/icons-react";
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import { dockerContainersWidget } from '.';
-import { dockerIntegration } from '@site/docs/integrations/docker';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import { dockerContainersWidget } from ".";
+import { dockerIntegration } from "@site/docs/integrations/docker";
 
-
-<WidgetHeader
-  widget={dockerContainersWidget}
-  categories={['Containers']}
-/>
+<WidgetHeader widget={dockerContainersWidget} categories={["Containers"]} />
 
 This widget displays the resource usage of your Docker containers and allows you to manage them.
 
@@ -28,19 +26,25 @@ This widget can only be used with administrator privileges.
 
 ### Screenshots
 
-import dockerTable from './img/table.png';
+import dockerTable from "./img/table.png";
 
 <img src={dockerTable} alt="docker-stats table docker-containers" width={128 * 3} height={128 * 2} />
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: dockerIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: dockerIntegration,
+    },
+  ]}
+/>
 
 ### Interactions
 
 Hover a column header to reveal its grab handle, then drag it to reorder the table or drag the header's edge to resize it. The layout is saved automatically for each widget instance and restored after a reload. These controls are disabled while the board is in edit mode.
+
+Advanced mode exposes every available column regardless of the compact-mode column selection.
 
 Each container row has an action menu, accessible via the three-dot icon or by right-clicking the row, with the following options:
 
@@ -48,6 +52,8 @@ Each container row has an action menu, accessible via the three-dot icon or by r
 - **Start** / **Stop** / **Restart** - manage the container's state
 - **Remove** - permanently remove the container after a second confirmation click
 - **Add to Homarr** - create a bookmark app from the container
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

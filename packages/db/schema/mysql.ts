@@ -6,8 +6,10 @@ import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
 import {
   boolean,
   customType,
+  foreignKey,
   index,
   int,
+  mediumtext,
   mysqlTable,
   primaryKey,
   smallint,
@@ -33,18 +35,14 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  LayoutRole,
   OnboardingStep,
   SearchEngineType,
   SectionKind,
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
-import type {
-  CustomWidgetAuthType,
-  CustomWidgetDisplayType,
-  CustomWidgetMethod,
-  CustomWidgetSecretKind,
-} from "@homarr/validation/custom-widget";
+import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
@@ -211,8 +209,8 @@ export const integrations = mysqlTable(
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
     appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },
-  (integrations) => ({
-    kindIdx: index("integration__kind_idx").on(integrations.kind),
+  (table) => ({
+    kindIdx: index("integration__kind_idx").on(table.kind),
   }),
 );
 
@@ -344,7 +342,10 @@ export const layouts = mysqlTable("layout", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   columnCount: tinyint().notNull(),
+  leftGutterColumnCount: tinyint().notNull().default(0),
+  rightGutterColumnCount: tinyint().notNull().default(0),
   breakpoint: smallint().notNull().default(0),
+  role: varchar({ length: 16 }).$type<LayoutRole>().notNull().default("custom"),
 });
 
 export const itemLayouts = mysqlTable(
@@ -481,6 +482,71 @@ export const serverSettings = mysqlTable("serverSetting", {
   value: text().default(emptySuperJSON).notNull(),
 });
 
+export const assistantConfigurations = mysqlTable("assistant_configuration", {
+  id: varchar({ length: 64 }).notNull().primaryKey().default("default"),
+  enabled: boolean().notNull().default(false),
+  webSearchEnabled: boolean().notNull().default(false),
+  provider: varchar({ length: 32 })
+    .$type<
+      | "openrouter"
+      | "openai"
+      | "anthropic"
+      | "google-gemini"
+      | "xai"
+      | "groq"
+      | "mistral"
+      | "deepseek"
+      | "together"
+      | "ollama"
+      | "lm-studio"
+      | "custom"
+    >()
+    .notNull()
+    .default("openrouter"),
+  baseUrl: varchar({ length: 2048 }).notNull().default("https://openrouter.ai/api/v1"),
+  modelDiscoveryPath: varchar({ length: 512 }).default("/models"),
+  encryptedApiKey: text().$type<`${string}.${string}`>(),
+  encryptedHeaders: text().$type<`${string}.${string}`>(),
+  modelId: varchar({ length: 256 }),
+  updatedAt: timestamp().notNull().defaultNow(),
+});
+
+export const assistantThreads = mysqlTable(
+  "assistant_thread",
+  {
+    id: varchar({ length: 64 }).notNull().primaryKey(),
+    userId: varchar({ length: 64 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    title: varchar({ length: 256 }),
+    modelId: varchar({ length: 256 }),
+    createdAt: timestamp().notNull().defaultNow(),
+    updatedAt: timestamp().notNull().defaultNow(),
+  },
+  (thread) => ({
+    userUpdatedAtIdx: index("assistant_thread__user_id_updated_at_idx").on(thread.userId, thread.updatedAt),
+  }),
+);
+
+export const assistantMessages = mysqlTable(
+  "assistant_message",
+  {
+    id: varchar({ length: 128 }).notNull().primaryKey(),
+    threadId: varchar({ length: 64 })
+      .notNull()
+      .references(() => assistantThreads.id, { onDelete: "cascade" }),
+    parentId: varchar({ length: 128 }),
+    format: varchar({ length: 64 }).notNull().default("ai-sdk/v6"),
+    // `text` only holds 64KB on MySQL, which a single base64 image attachment already exceeds.
+    // `mediumtext` holds 16MB, comfortably above the 2MB request cap enforced by the chat route.
+    content: mediumtext().notNull(),
+    createdAt: timestamp().notNull().defaultNow(),
+  },
+  (message) => ({
+    threadCreatedAtIdx: index("assistant_message__thread_id_created_at_idx").on(message.threadId, message.createdAt),
+  }),
+);
+
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
   user: one(users, {
     fields: [apiKeys.userId],
@@ -505,18 +571,65 @@ export const onboarding = mysqlTable("onboarding", {
   previousStep: varchar({ length: 64 }).$type<OnboardingStep>(),
 });
 
-export const customWidgetDefinitions = mysqlTable("custom_widget_definition", {
+/**
+ * Read-only v1 definitions retained during the Custom JSX v2 upgrade.
+ * Their original physical table names keep the database readable by a v1 binary.
+ */
+export const legacyCustomWidgetDefinitions = mysqlTable(
+  "custom_widget_definition",
+  {
+    id: varchar({ length: 64 }).notNull().primaryKey(),
+    name: varchar({ length: 256 }).notNull(),
+    description: text(),
+    iconUrl: text(),
+    url: text().notNull(),
+    authType: varchar({ length: 32 }).notNull().default("none"),
+    headerName: varchar({ length: 256 }),
+    method: varchar({ length: 16 }).notNull().default("GET"),
+    requestBody: text(),
+    displayType: varchar({ length: 32 }).notNull().default("singleValue"),
+    displayConfig: text().default(emptySuperJSON).notNull(),
+    enabled: boolean().notNull().default(true),
+    createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
+    updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
+    creatorId: varchar({ length: 64 }),
+  },
+  (table) => ({
+    creatorFk: foreignKey({
+      columns: [table.creatorId],
+      foreignColumns: [users.id],
+      name: "custom_widget_definition_creator_id_user_id_fk",
+    }).onDelete("set null"),
+  }),
+);
+
+export const legacyCustomWidgetSecrets = mysqlTable(
+  "custom_widget_secret",
+  {
+    kind: varchar({ length: 64 }).$type<CustomWidgetSecretKind>().notNull(),
+    encryptedValue: text("value").$type<`${string}.${string}`>().notNull(),
+    updatedAt: timestamp().notNull(),
+    definitionId: varchar({ length: 64 }).notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({ columns: [table.definitionId, table.kind] }),
+    definitionFk: foreignKey({
+      columns: [table.definitionId],
+      foreignColumns: [legacyCustomWidgetDefinitions.id],
+      name: "cw_secret_definition_id_cw_definition_id_fk",
+    }).onDelete("cascade"),
+  }),
+);
+
+export const customWidgetDefinitions = mysqlTable("custom_widget_v2_definition", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: varchar({ length: 256 }).notNull(),
   description: text(),
   iconUrl: text(),
-  url: text().notNull(),
-  authType: varchar({ length: 32 }).$type<CustomWidgetAuthType>().notNull().default("none"),
-  headerName: varchar({ length: 256 }),
-  method: varchar({ length: 16 }).$type<CustomWidgetMethod>().notNull().default("GET"),
-  requestBody: text(),
-  displayType: varchar({ length: 32 }).$type<CustomWidgetDisplayType>().notNull().default("singleValue"),
-  displayConfig: text().default(emptySuperJSON).notNull(),
+  sources: text().notNull(),
+  requests: text().notNull(),
+  options: text().notNull(),
+  template: text().notNull(),
   enabled: boolean().notNull().default(true),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
@@ -524,21 +637,25 @@ export const customWidgetDefinitions = mysqlTable("custom_widget_definition", {
 });
 
 export const customWidgetSecrets = mysqlTable(
-  "custom_widget_secret",
+  "custom_widget_v2_secret",
   {
+    sourceId: varchar({ length: 64 }).notNull(),
     kind: varchar({ length: 64 }).$type<CustomWidgetSecretKind>().notNull(),
-    value: text().$type<`${string}.${string}`>().notNull(),
+    encryptedValue: text("encrypted_value").$type<`${string}.${string}`>().notNull(),
     updatedAt: timestamp()
       .$onUpdateFn(() => new Date())
       .notNull(),
-    definitionId: varchar({ length: 64 })
-      .notNull()
-      .references(() => customWidgetDefinitions.id, { onDelete: "cascade" }),
+    definitionId: varchar({ length: 64 }).notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
-      columns: [table.definitionId, table.kind],
+      columns: [table.definitionId, table.sourceId, table.kind],
     }),
+    definitionFk: foreignKey({
+      columns: [table.definitionId],
+      foreignColumns: [customWidgetDefinitions.id],
+      name: "custom_widget_v2_secret_definition_id_fk",
+    }).onDelete("cascade"),
   }),
 );
 
@@ -852,5 +969,20 @@ export const customWidgetSecretRelations = relations(customWidgetSecrets, ({ one
   definition: one(customWidgetDefinitions, {
     fields: [customWidgetSecrets.definitionId],
     references: [customWidgetDefinitions.id],
+  }),
+}));
+
+export const legacyCustomWidgetDefinitionRelations = relations(legacyCustomWidgetDefinitions, ({ many, one }) => ({
+  secrets: many(legacyCustomWidgetSecrets),
+  creator: one(users, {
+    fields: [legacyCustomWidgetDefinitions.creatorId],
+    references: [users.id],
+  }),
+}));
+
+export const legacyCustomWidgetSecretRelations = relations(legacyCustomWidgetSecrets, ({ one }) => ({
+  definition: one(legacyCustomWidgetDefinitions, {
+    fields: [legacyCustomWidgetSecrets.definitionId],
+    references: [legacyCustomWidgetDefinitions.id],
   }),
 }));
