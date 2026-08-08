@@ -1,0 +1,22 @@
+scripts/benchmarks/stress-restore.mts
+  s_a70c07ac5b7a5a::t_517abd28f8779f 231-233
+  s_a70c07ac5b7a5a::t_4cda25f12eb54f 42
+  s_a70c07ac5b7a5a::t_2864f76e09d324 306-314
+  s_a70c07ac5b7a5a::t_f9785e653431c7 155-159
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "6363d96a1bb69f2468129674c03036625684119d",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

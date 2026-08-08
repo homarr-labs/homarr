@@ -1,0 +1,35 @@
+scripts/benchmarks/stress-restore-lib.mts
+  s_a70c07ac5b7a5a::t_c67a9204b1054d 142-147,150
+  s_a70c07ac5b7a5a::t_7a87909499baf5 165-168,170-172,177
+scripts/benchmarks/stress-restore-lib.spec.ts
+  s_a70c07ac5b7a5a::t_710671990dcfda 17,23,30
+  s_a70c07ac5b7a5a::t_6c5e26cb063eb1 141,143-147,156-157,165-171
+  s_a70c07ac5b7a5a::t_ceb64ac2e97a93 172-173
+  s_093d61b162b9ca::t_4feb0bde899955 181,189
+scripts/benchmarks/stress-restore.mts
+  s_a70c07ac5b7a5a::t_fd91994008efe8 149-178
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "fb80b3882dff02d88d7e511d3750e148d36a4ce7",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
