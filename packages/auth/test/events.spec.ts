@@ -188,10 +188,11 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
       });
 
       // Assert
-      const dbGroupMembers = await db.query.groupMembers.findFirst({
+      const dbGroupMembers = await db.query.groupMembers.findMany({
         where: eq(groupMembers.userId, "1"),
+        columns: { groupId: true },
       });
-      expect(dbGroupMembers?.groupId).toBe("1");
+      expect(dbGroupMembers).toEqual([{ groupId: "1" }]);
     });
     test("should remove group membership", async () => {
       // Arrange
