@@ -53,7 +53,10 @@ const nextConfig: NextConfig = {
     // keep their production-only instrumentation imports out of the dev graph.
     resolveAlias:
       process.env.NODE_ENV === "development"
-        ? { "@homarr/tasks": "./src/instrumentation-noop.ts", "@homarr/websocket": "./src/instrumentation-noop.ts" }
+        ? {
+            "@homarr/tasks": path.resolve(import.meta.dirname, "src/instrumentation-noop.ts"),
+            "@homarr/websocket": path.resolve(import.meta.dirname, "src/instrumentation-noop.ts"),
+          }
         : undefined,
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],

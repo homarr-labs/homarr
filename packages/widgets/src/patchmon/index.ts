@@ -188,42 +188,18 @@ export const { definition, componentLoader } = createWidgetDefinition("patchmon"
         useCustomThresholds: {
           shouldHide: (options) => !options.enableThresholdColors,
         },
-        hostsNeedingUpdatesThresholdMode: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        hostsNeedingUpdatesWarningAt: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        hostsNeedingUpdatesCriticalAt: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        securityUpdatesThresholdMode: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        securityUpdatesWarningAt: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        securityUpdatesCriticalAt: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        hostsWithSecurityUpdatesThresholdMode: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        hostsWithSecurityUpdatesWarningAt: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        hostsWithSecurityUpdatesCriticalAt: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        upToDateHostsThresholdMode: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        upToDateHostsWarningAt: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
-        upToDateHostsCriticalAt: {
-          shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds,
-        },
+        hostsNeedingUpdatesThresholdMode: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        hostsNeedingUpdatesWarningAt: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        hostsNeedingUpdatesCriticalAt: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        securityUpdatesThresholdMode: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        securityUpdatesWarningAt: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        securityUpdatesCriticalAt: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        hostsWithSecurityUpdatesThresholdMode: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        hostsWithSecurityUpdatesWarningAt: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        hostsWithSecurityUpdatesCriticalAt: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        upToDateHostsThresholdMode: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        upToDateHostsWarningAt: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
+        upToDateHostsCriticalAt: { shouldHide: (options) => !options.enableThresholdColors || !options.useCustomThresholds },
         totalOutdatedPackagesThresholdMode: {
           shouldHide: (options) =>
             !options.enableThresholdColors || !options.useCustomThresholds || !options.showTotalOutdatedPackages,

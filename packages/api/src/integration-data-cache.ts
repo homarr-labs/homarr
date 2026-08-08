@@ -24,7 +24,7 @@ export const getCachedIntegrationData = async <T>(
   const existing = cache.get(key) as CachedEntry<T> | undefined;
   const now = Date.now();
 
-  if (existing?.pending) return existing.pending;
+  if (existing?.pending) return existing.timestamp > 0 ? existing.data : existing.pending;
   if (existing && existing.timestamp > 0 && now - existing.timestamp < ttlMs) {
     return existing.data;
   }

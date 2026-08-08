@@ -142,6 +142,8 @@ export const collectBoardStaticGraph = (repositoryRoot: string) => {
   const parents = new Map<string, { importer: string; specifier: string }>();
   const bareWidgetImports: Array<{ importer: string; specifier: string }> = [];
   const forbiddenModules = new Set([
+    path.join(root, "packages/widgets/index.ts"),
+    path.join(root, "packages/widgets/src/index.tsx"),
     path.join(root, "packages/spotlight/src/component.ts"),
     path.join(root, "packages/spotlight/src/components/spotlight.tsx"),
     path.join(root, "packages/spotlight/src/spotlight-store.ts"),

@@ -1,14 +1,18 @@
 ---
-title: "Custom API"
-description: "Displays data from a custom API endpoint using configurable display types and optional JSX templates."
+title: 'Custom API'
+description: 'Displays data from a custom API endpoint using configurable display types and optional JSX templates.'
 hide_title: true
 ---
 
-import { WidgetHeader } from "@site/src/components/widgets/header";
-import { AddingWidget } from "@site/src/components/widgets/adding";
-import { customApiWidget } from ".";
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { customApiWidget } from '.';
 
-<WidgetHeader widget={customApiWidget} categories={["Custom", "API"]} />
+
+<WidgetHeader
+  widget={customApiWidget}
+  categories={['Custom', 'API']}
+/>
 
 This widget fetches data from a custom API endpoint defined in [Custom Widgets management](/docs/management/custom-widgets) and renders it using configurable display types.
 

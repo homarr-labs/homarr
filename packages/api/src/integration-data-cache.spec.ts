@@ -36,6 +36,7 @@ describe("getCachedIntegrationData", () => {
     expect(fetcher).toHaveBeenCalledTimes(2);
 
     vi.advanceTimersByTime(100);
+    await vi.advanceTimersByTimeAsync(0);
     await expect(getCachedIntegrationData("integration-a", "widget:stale", fetcher, 50)).resolves.toEqual({ value: 2 });
 
     vi.useRealTimers();

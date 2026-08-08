@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Inter } from "next/font/google";
-import { ColorSchemeScript, Loader } from "@mantine/core";
+import { Center, ColorSchemeScript, Loader } from "@mantine/core";
 
 import "@gfazioli/mantine-onboarding-tour/styles.css";
 import "@homarr/notifications/styles.css";
@@ -76,7 +76,13 @@ export default async function Layout(props: {
         <CrowdinLiveTranslation locale={locale} />
       </head>
       <body className={[fontSans.className, fontSans.variable].join(" ")} suppressHydrationWarning>
-        <Suspense fallback={<Loader size="xl" className="absolute inset-0 m-auto" />}>
+        <Suspense
+          fallback={
+            <Center h="100vh" w="100%">
+              <Loader size="xl" />
+            </Center>
+          }
+        >
           <SessionScopedProviders>{props.children}</SessionScopedProviders>
         </Suspense>
       </body>

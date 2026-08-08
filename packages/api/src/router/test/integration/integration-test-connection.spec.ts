@@ -1,7 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 
 import * as homarrDefinitions from "@homarr/definitions";
-import type { IntegrationInstanceOfKind } from "@homarr/integrations";
 import * as homarrIntegrations from "@homarr/integrations";
 
 import { testConnectionAsync } from "../../integration/integration-test-connection";
@@ -24,7 +23,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     factorySpy.mockReturnValue(
       Promise.resolve({
         testConnectionAsync: async () => await Promise.resolve({ success: true }),
-      } as IntegrationInstanceOfKind<"piHole">),
+      } as homarrIntegrations.PiHoleIntegrationV6),
     );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
@@ -67,7 +66,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     factorySpy.mockReturnValue(
       Promise.resolve({
         testConnectionAsync: async () => await Promise.resolve({ success: true }),
-      } as IntegrationInstanceOfKind<"piHole">),
+      } as homarrIntegrations.PiHoleIntegrationV6),
     );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
@@ -117,7 +116,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     factorySpy.mockReturnValue(
       Promise.resolve({
         testConnectionAsync: async () => await Promise.resolve({ success: true }),
-      } as IntegrationInstanceOfKind<"piHole">),
+      } as homarrIntegrations.PiHoleIntegrationV6),
     );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
@@ -167,7 +166,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     factorySpy.mockReturnValue(
       Promise.resolve({
         testConnectionAsync: async () => await Promise.resolve({ success: true }),
-      } as IntegrationInstanceOfKind<"piHole">),
+      } as homarrIntegrations.PiHoleIntegrationV6),
     );
     optionsSpy.mockReturnValue([["username", "password"], ["apiKey"]]);
 
@@ -221,7 +220,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     factorySpy.mockReturnValue(
       Promise.resolve({
         testConnectionAsync: async () => await Promise.resolve({ success: true }),
-      } as IntegrationInstanceOfKind<"piHole">),
+      } as homarrIntegrations.PiHoleIntegrationV6),
     );
     optionsSpy.mockReturnValue([["username", "password"], ["apiKey"]]);
 

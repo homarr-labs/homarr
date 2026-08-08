@@ -1,28 +1,32 @@
 ---
-title: "Minecraft Server Status"
-description: "Displays the status of a Minecraft server."
+title: 'Minecraft Server Status'
+description: 'Displays the status of a Minecraft server.'
 hide_title: true
 ---
 
-import { AddingWidget } from "@site/src/components/widgets/adding";
-import { WidgetConfig } from "@site/src/components/widgets/configuration";
-import { WidgetHeader } from "@site/src/components/widgets/header";
-import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { IconAd } from "@tabler/icons-react";
-import TabItem from "@theme/TabItem";
-import Tabs from "@theme/Tabs";
-import { minecraftServerStatusWidget } from ".";
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+import { minecraftServerStatusWidget } from '.';
 
-<WidgetHeader widget={minecraftServerStatusWidget} categories={["Gaming", "Minecraft"]} />
+
+<WidgetHeader
+  widget={minecraftServerStatusWidget}
+  categories={['Gaming', 'Minecraft']}
+/>
 
 Shows the status and amount of players on a Minecraft server. It supports both Java and Bedrock editions, however only public servers are supported which can be reached through the used api of [api.mcsrvstat.us](https://api.mcsrvstat.us).
 
 ### Screenshots
 
-import javaItem from "./img/java.png";
-import bedrockItem from "./img/bedrock.png";
+import javaItem from './img/java.png';
+import bedrockItem from './img/bedrock.png';
 
-<div className="flex gap-1">
+<div className='flex gap-1'>
   <img src={javaItem} alt="minecraft-server-status java-edition" width={128 * 1.5} height={128 * 1.5} />
   <img src={bedrockItem} alt="minecraft-server-status bedrock-editon" width={128 * 1.5} height={128 * 1.5} />
 </div>
@@ -32,7 +36,6 @@ import bedrockItem from "./img/bedrock.png";
 <AddingWidget />
 
 ### Configuration
-
 <WidgetConfig configuration={minecraftServerStatusWidget.configuration} />
 
 ### Data source

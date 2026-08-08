@@ -23,27 +23,25 @@ const baseOptions = {
   totalOutdatedPackagesCriticalAt: 50,
 };
 
-const optionsSchema = z
-  .object({
-    hostsNeedingUpdatesWarningAt: z.number().int().min(0),
-    hostsNeedingUpdatesCriticalAt: z.number().int().min(0),
-    securityUpdatesWarningAt: z.number().int().min(0),
-    securityUpdatesCriticalAt: z.number().int().min(0),
-    hostsWithSecurityUpdatesWarningAt: z.number().int().min(0),
-    hostsWithSecurityUpdatesCriticalAt: z.number().int().min(0),
-    upToDateHostsWarningAt: z.number().int().min(0),
-    upToDateHostsCriticalAt: z.number().int().min(0),
-    totalOutdatedPackagesWarningAt: z.number().int().min(0),
-    totalOutdatedPackagesCriticalAt: z.number().int().min(0),
-    enableThresholdColors: z.boolean(),
-    useCustomThresholds: z.boolean(),
-    hostsNeedingUpdatesThresholdMode: z.enum(["absolute", "percent"]),
-    securityUpdatesThresholdMode: z.enum(["absolute", "percent"]),
-    hostsWithSecurityUpdatesThresholdMode: z.enum(["absolute", "percent"]),
-    upToDateHostsThresholdMode: z.enum(["absolute", "percent"]),
-    totalOutdatedPackagesThresholdMode: z.enum(["absolute", "percent"]),
-  })
-  .superRefine(patchmonOptionsSuperRefine);
+const optionsSchema = z.object({
+  hostsNeedingUpdatesWarningAt: z.number().int().min(0),
+  hostsNeedingUpdatesCriticalAt: z.number().int().min(0),
+  securityUpdatesWarningAt: z.number().int().min(0),
+  securityUpdatesCriticalAt: z.number().int().min(0),
+  hostsWithSecurityUpdatesWarningAt: z.number().int().min(0),
+  hostsWithSecurityUpdatesCriticalAt: z.number().int().min(0),
+  upToDateHostsWarningAt: z.number().int().min(0),
+  upToDateHostsCriticalAt: z.number().int().min(0),
+  totalOutdatedPackagesWarningAt: z.number().int().min(0),
+  totalOutdatedPackagesCriticalAt: z.number().int().min(0),
+  enableThresholdColors: z.boolean(),
+  useCustomThresholds: z.boolean(),
+  hostsNeedingUpdatesThresholdMode: z.enum(["absolute", "percent"]),
+  securityUpdatesThresholdMode: z.enum(["absolute", "percent"]),
+  hostsWithSecurityUpdatesThresholdMode: z.enum(["absolute", "percent"]),
+  upToDateHostsThresholdMode: z.enum(["absolute", "percent"]),
+  totalOutdatedPackagesThresholdMode: z.enum(["absolute", "percent"]),
+}).superRefine(patchmonOptionsSuperRefine);
 
 describe("patchmonOptionsSuperRefine", () => {
   test("accepts percent thresholds within 0-100", () => {

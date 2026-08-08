@@ -1,39 +1,43 @@
 ---
-title: "Download Client"
-description: "Allows you to view and manage your Downloads from both Torrent and Usenet clients."
+title: 'Download Client'
+description: 'Allows you to view and manage your Downloads from both Torrent and Usenet clients.'
 hide_title: true
 ---
 
-import { aria2Integration } from "@site/docs/integrations/aria2";
-import { delugeIntegration } from "@site/docs/integrations/deluge";
-import { nzbgetIntegration } from "@site/docs/integrations/nzbget";
-import { qBittorentIntegration } from "@site/docs/integrations/q-bittorent";
-import { sabnzbdIntegration } from "@site/docs/integrations/sabnzbd";
-import { transmissionIntegration } from "@site/docs/integrations/transmission";
-import { slskdIntegration } from "@site/docs/integrations/slskd";
-import { AddingWidget } from "@site/src/components/widgets/adding";
-import { WidgetConfig } from "@site/src/components/widgets/configuration";
-import { WidgetHeader } from "@site/src/components/widgets/header";
-import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
-import { downloadsWidget } from ".";
+import { aria2Integration } from '@site/docs/integrations/aria2';
+import { delugeIntegration } from '@site/docs/integrations/deluge';
+import { nzbgetIntegration } from '@site/docs/integrations/nzbget';
+import { qBittorentIntegration } from '@site/docs/integrations/q-bittorent';
+import { sabnzbdIntegration } from '@site/docs/integrations/sabnzbd';
+import { transmissionIntegration } from '@site/docs/integrations/transmission';
+import { slskdIntegration } from '@site/docs/integrations/slskd';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { downloadsWidget } from '.';
 
-<WidgetHeader widget={downloadsWidget} categories={["Torrent client", "Usenet client", "Downloads"]} />
+
+<WidgetHeader
+  widget={downloadsWidget}
+  categories={['Torrent client', 'Usenet client', 'Downloads']}
+/>
 
 This widget displays a list of torrents or usenet-articles that are currently being downloaded, along with their progress and other relevant information. It supports 7 download client integrations and provides a rich, responsive table interface.
 
 ### Screenshots
 
-import downloadsCard from "./img/screenshot.png";
-import contextMenuImg from "./img/context-menu.png";
+import downloadsCard from './img/screenshot.png';
+import contextMenuImg from './img/context-menu.png';
 
 <div>
-  <img src={downloadsCard} alt="Downloads widget showing torrent and usenet items" width={128 * 4} />
+    <img src={downloadsCard} alt="Downloads widget showing torrent and usenet items" width={128 * 4} />
 </div>
 
 #### Right-click context menu
 
 <div>
-  <img src={contextMenuImg} alt="Downloads widget context menu with pause, delete, and copy actions" width={128 * 4} />
+    <img src={contextMenuImg} alt="Downloads widget context menu with pause, delete, and copy actions" width={128 * 4} />
 </div>
 
 ### Features
@@ -52,38 +56,28 @@ import contextMenuImg from "./img/context-menu.png";
 
 ### Supported Integrations
 
-<WidgetIntegrations
-  items={[
-    {
-      integration: sabnzbdIntegration,
-      note: "Usenet client",
-    },
-    {
-      integration: nzbgetIntegration,
-      note: "Usenet client",
-    },
-    {
-      integration: delugeIntegration,
-      note: "Torrent client",
-    },
-    {
-      integration: transmissionIntegration,
-      note: "Torrent client",
-    },
-    {
-      integration: qBittorentIntegration,
-      note: "Torrent client",
-    },
-    {
-      integration: aria2Integration,
-      note: "Multi-protocol download client",
-    },
-    {
-      integration: slskdIntegration,
-      note: "Soulseek client (read-only)",
-    },
-  ]}
-/>
+<WidgetIntegrations items={[{
+  integration: sabnzbdIntegration,
+  note: "Usenet client"
+}, {
+  integration: nzbgetIntegration,
+  note: "Usenet client"
+}, {
+  integration: delugeIntegration,
+  note: "Torrent client"
+}, {
+  integration: transmissionIntegration,
+  note: "Torrent client"
+}, {
+  integration: qBittorentIntegration,
+  note: "Torrent client"
+}, {
+  integration: aria2Integration,
+  note: "Multi-protocol download client"
+}, {
+  integration: slskdIntegration,
+  note: "Soulseek client (read-only)"
+}]} />
 
 ### Interactions
 
@@ -100,5 +94,4 @@ import contextMenuImg from "./img/context-menu.png";
 <AddingWidget />
 
 ### Configuration
-
 <WidgetConfig configuration={downloadsWidget.configuration} />

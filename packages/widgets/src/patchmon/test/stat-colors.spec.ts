@@ -117,16 +117,11 @@ describe("resolveStatColor options", () => {
   test("handles zero total hosts for percent-based stats", () => {
     expect(resolveStatColor("upToDateHosts", 0, { totalHosts: 0 }, defaultOptions)).toBe("green");
     expect(
-      resolveStatColor(
-        "hostsNeedingUpdates",
-        1,
-        { totalHosts: 0 },
-        {
-          ...defaultOptions,
-          useCustomThresholds: true,
-          hostsNeedingUpdatesThresholdMode: "percent",
-        },
-      ),
+      resolveStatColor("hostsNeedingUpdates", 1, { totalHosts: 0 }, {
+        ...defaultOptions,
+        useCustomThresholds: true,
+        hostsNeedingUpdatesThresholdMode: "percent",
+      }),
     ).toBe("red");
   });
 

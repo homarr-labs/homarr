@@ -25,14 +25,13 @@ This is especially useful for [docker secrets](https://docs.docker.com/engine/sw
 Using the `PUID` and `PGID` will require you to set the correct permissions on the mounted volumes and if used the docker socket. See more in the [Running as a different user](/docs/advanced/running-as-different-user) documentation.
 :::
 
-| Environment Variable        | Description                                                                                                                                                                        | Possible values                     | Default |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------- |
-| `PUID`                      | User ID to run the container as                                                                                                                                                    | Any valid user ID                   | `0`     |
-| `PGID`                      | Group ID to run the container as                                                                                                                                                   | Any valid group ID                  | `0`     |
-| `LOG_LEVEL`                 | Log level to use                                                                                                                                                                   | `debug` / `info` / `warn` / `error` | `info`  |
-| `NO_EXTERNAL_CONNECTION`    | Disables Homarr's internet-backed requests, including update checks, weather, and RSS feeds                                                                                        | `true` or `false`                   | `false` |
-| `ENABLE_DNS_CACHING`        | Enables dns caching. Enabled by default, but if you experience issues with IPv6 or static IPs, see [#4006](https://github.com/homarr-labs/homarr/issues/4006) or disable this flag | `true` or `false`                   | `true`  |
-| `HOMARR_MAX_OLD_SPACE_SIZE` | V8 old-space heap limit in MB. Prevents RSS drift on large-memory hosts. Raise for very large boards.                                                                              | Any positive integer (MB)           | `512`   |
+| Environment Variable     | Description                                                                                                                                                                        | Possible values                     | Default |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------- |
+| `PUID`                   | User ID to run the container as                                                                                                                                                    | Any valid user ID                   | `0`     |
+| `PGID`                   | Group ID to run the container as                                                                                                                                                   | Any valid group ID                  | `0`     |
+| `LOG_LEVEL`              | Log level to use                                                                                                                                                                   | `debug` / `info` / `warn` / `error` | `info`  |
+| `NO_EXTERNAL_CONNECTION` | Disables Homarr's internet-backed requests, including update checks, weather, and RSS feeds                                                                                        | `true` or `false`                   | `false` |
+| `ENABLE_DNS_CACHING`     | Enables dns caching. Enabled by default, but if you experience issues with IPv6 or static IPs, see [#4006](https://github.com/homarr-labs/homarr/issues/4006) or disable this flag | `true` or `false`                   | `true`  |
 
 ## Authentication
 
@@ -82,16 +81,15 @@ However for example for K8s it can be useful to use an external Redis instance.
 External redis is currently not supported with Proxmox Community Scripts
 :::
 
-| Environment Variable   | Description                                                                                                   | Possible values          | Default |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------ | ------- |
-| `REDIS_IS_EXTERNAL`    | Whether Redis is running externally.                                                                          | `true` / `false`         | `false` |
-| `REDIS_HOST`           | Hostname of the Redis instance.                                                                               | Any valid hostname       | -       |
-| `REDIS_PORT`           | Port of the Redis instance.                                                                                   | Any valid port           | `6379`  |
-| `REDIS_USERNAME`       | Username to connect to the Redis instance.                                                                    | Any valid username       | -       |
-| `REDIS_PASSWORD`       | Password to connect to the Redis instance.                                                                    | Any valid password       | -       |
-| `REDIS_DATABASE_INDEX` | Select which database of your redis instance should be used.                                                  | Any numeric index        | -       |
-| `REDIS_CACHE_DB`       | Redis database number for the Next.js cache handler. Separate from the main Redis DB to avoid key collisions. | Any numeric index        | `1`     |
-| `REDIS_TLS_CA`         | CA certificate for Redis TLS connections. If a certificate is specified the connection will use TLS.          | Any valid CA certificate | -       |
+| Environment Variable   | Description                                                                                          | Possible values          | Default |
+| ---------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------ | ------- |
+| `REDIS_IS_EXTERNAL`    | Whether Redis is running externally.                                                                 | `true` / `false`         | `false` |
+| `REDIS_HOST`           | Hostname of the Redis instance.                                                                      | Any valid hostname       | -       |
+| `REDIS_PORT`           | Port of the Redis instance.                                                                          | Any valid port           | `6379`  |
+| `REDIS_USERNAME`       | Username to connect to the Redis instance.                                                           | Any valid username       | -       |
+| `REDIS_PASSWORD`       | Password to connect to the Redis instance.                                                           | Any valid password       | -       |
+| `REDIS_DATABASE_INDEX` | Select which database of your redis instance should be used.                                         | Any numeric index        | -       |
+| `REDIS_TLS_CA`         | CA certificate for Redis TLS connections. If a certificate is specified the connection will use TLS. | Any valid CA certificate | -       |
 
 ## Proxy
 

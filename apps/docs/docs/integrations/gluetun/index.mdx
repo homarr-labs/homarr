@@ -1,17 +1,20 @@
 ---
-title: "Gluetun"
-description: "Connect Gluetun to Homarr as a VPN integration."
+title: 'Gluetun'
+description: 'Connect Gluetun to Homarr as a VPN integration.'
 hide_title: true
 ---
 
-import { IntegrationHeader } from "@site/src/components/integrations/header";
-import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
-import { AddingIntegration } from "@site/src/components/integrations/adding";
-import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
-import { gluetunIntegration } from ".";
-import { vpnWidget } from "@site/docs/widgets/vpn";
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { gluetunIntegration } from '.';
+import { vpnWidget } from '@site/docs/widgets/vpn';
 
-<IntegrationHeader integration={gluetunIntegration} categories={["VPN", "Network"]} />
+<IntegrationHeader
+  integration={gluetunIntegration}
+  categories={['VPN', 'Network']}
+/>
 
 [Gluetun](https://github.com/qdm12/gluetun) exposes a control server that Homarr can query to report the VPN tunnel
 status, DNS status, public IP address, and active provider details in the VPN widget.
@@ -19,11 +22,9 @@ status, DNS status, public IP address, and active provider details in the VPN wi
 ### Widgets & Capabilities
 
 <IntegrationCapabilites
-  items={[
-    {
-      widget: vpnWidget,
-    },
-  ]}
+  items={[{
+    widget: vpnWidget,
+  }]}
 />
 
 ### Setting up the Gluetun control server
@@ -39,20 +40,13 @@ Refer to the [Gluetun control server documentation](https://github.com/qdm12/glu
 Gluetun's control server can be left unprotected or secured with either an API key or HTTP Basic authentication.
 Choose the option that matches how your Gluetun instance integration is set up.
 
-<IntegrationSecrets
-  secrets={[
-    {
-      credentials: [],
-      steps: [],
-    },
-    {
-      credentials: ["username", "password"],
-      steps: [],
-    },
-    {
-      credentials: ["apiKey"],
-      steps: [],
-    },
-    ,
-  ]}
-/>
+<IntegrationSecrets secrets={[{
+  credentials: [],
+  steps: [],
+},{
+  credentials: ['username', 'password'],
+  steps: [],
+},{
+  credentials: ['apiKey'],
+  steps: [],
+},,]} />

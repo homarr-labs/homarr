@@ -13,8 +13,10 @@
     transform 150ms ease;
 }
 
-:global(.grid-stack-item[data-type="item"]:not([data-kind="app"]):hover) .wrapper,
-:global(.grid-stack-item[data-type="item"]:not([data-kind="app"]):focus-within) .wrapper {
+:global(.grid-stack-item[data-type="item"]:not([data-kind="app"]):hover)
+  .wrapper,
+:global(.grid-stack-item[data-type="item"]:not([data-kind="app"]):focus-within)
+  .wrapper {
   opacity: 1;
   transform: translateY(0);
 }
