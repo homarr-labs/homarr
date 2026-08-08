@@ -14,18 +14,20 @@ import {
 const snapshot = ({
   current = 300 * 1024 * 1024,
   peak = 400 * 1024 * 1024,
+  anon = 250_000_000,
   processes = ["1|0|4096|nginx|2048", "20|1|204800|node|180000", "30|1|8192|redis-server|4096"],
   redis = true,
 }: {
   current?: number;
   peak?: number;
+  anon?: number;
   processes?: string[];
   redis?: boolean;
 } = {}) =>
   [
     `memory_current=${current}`,
     `memory_peak=${peak}`,
-    "cgroup_anon=250000000",
+    `cgroup_anon=${anon}`,
     "cgroup_file=50000000",
     ...processes.map((process) => `process=${process}`),
     ...(redis ? ["redis_used_memory=1048576", "redis_used_memory_peak=2097152"] : []),
@@ -136,8 +138,13 @@ describe("getGrowthBytesPerHour", () => {
 });
 
 describe("summarizeStress", () => {
+  /** anon defaults to current so the fixture's two metrics move together. */
   const build = (name: string, currentMiB: number, elapsedMs: number) =>
-    parseStressSnapshot(name, elapsedMs, snapshot({ current: currentMiB * 1024 * 1024, peak: 900 * 1024 * 1024 }));
+    parseStressSnapshot(
+      name,
+      elapsedMs,
+      snapshot({ current: currentMiB * 1024 * 1024, anon: currentMiB * 1024 * 1024, peak: 900 * 1024 * 1024 }),
+    );
 
   it("surfaces the headline lifecycle numbers", () => {
     const summary = summarizeStress([
@@ -146,11 +153,22 @@ describe("summarizeStress", () => {
       build("05-after-stress", 600, 120_000),
     ]);
 
+    expect(summary.headline.bootIdleAnonMiB).toBe(200);
+    expect(summary.headline.boardLoadedAnonMiB).toBe(450);
     expect(summary.headline.bootIdleMiB).toBe(200);
     expect(summary.headline.boardLoadedMiB).toBe(450);
     expect(summary.headline.afterStressMiB).toBe(600);
     expect(summary.headline.peakMiB).toBe(900);
     expect(summary.checkpointCount).toBe(3);
+  });
+
+  it("compares on anon, not memory.current, so page cache cannot skew a run", () => {
+    const summary = summarizeStress([
+      parseStressSnapshot("01-boot-idle", 0, snapshot({ current: 500 * 1024 * 1024, anon: 100 * 1024 * 1024 })),
+    ]);
+
+    expect(summary.headline.bootIdleAnonMiB).toBe(100);
+    expect(summary.headline.bootIdleMiB).toBe(500);
   });
 
   it("derives soak growth only from soak checkpoints", () => {
@@ -160,7 +178,7 @@ describe("summarizeStress", () => {
       build("soak-02", 200, 3_600_000),
     ]);
 
-    expect(summary.headline.soakGrowthMiBPerHour).toBe(100);
+    expect(summary.headline.soakAnonGrowthMiBPerHour).toBe(100);
   });
 
   it("leaves headline fields null when their checkpoints were not captured", () => {
@@ -168,7 +186,7 @@ describe("summarizeStress", () => {
 
     expect(summary.headline.bootIdleMiB).toBeNull();
     expect(summary.headline.boardLoadedMiB).toBeNull();
-    expect(summary.headline.soakGrowthMiBPerHour).toBeNull();
+    expect(summary.headline.soakAnonGrowthMiBPerHour).toBeNull();
   });
 
   it("reports the peak redis footprint across checkpoints", () => {

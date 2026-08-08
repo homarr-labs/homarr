@@ -139,9 +139,15 @@ export const summarizeStress = (checkpoints: StressCheckpoint[], soakPrefix = "s
     const checkpoint = checkpoints.find((candidate) => candidate.name === name);
     return checkpoint ? toMiB(checkpoint.container.currentBytes) : null;
   };
+  // Anonymous memory is the number to compare across runs: memory.current also
+  // counts reclaimable page cache, which swings tens of MiB with unrelated disk I/O.
+  const anonMiBByName = (name: string) => {
+    const checkpoint = checkpoints.find((candidate) => candidate.name === name);
+    return checkpoint ? toMiB(checkpoint.container.anonymousBytes) : null;
+  };
   const soakSamples = checkpoints
     .filter((checkpoint) => checkpoint.name.startsWith(soakPrefix))
-    .map((checkpoint) => ({ elapsedMs: checkpoint.elapsedMs, bytes: checkpoint.container.currentBytes }));
+    .map((checkpoint) => ({ elapsedMs: checkpoint.elapsedMs, bytes: checkpoint.container.anonymousBytes }));
 
   const peak = checkpoints.reduce(
     (max, checkpoint) => Math.max(max, checkpoint.container.peakBytes ?? checkpoint.container.currentBytes),
@@ -156,12 +162,19 @@ export const summarizeStress = (checkpoints: StressCheckpoint[], soakPrefix = "s
     nodeRssMiB: Object.fromEntries(
       checkpoints.map((checkpoint) => [checkpoint.name, toMiB(sumNodeRssBytes(checkpoint))]),
     ),
+    anonMiB: Object.fromEntries(
+      checkpoints.map((checkpoint) => [checkpoint.name, toMiB(checkpoint.container.anonymousBytes)]),
+    ),
+    // Primary comparison metric: anonymous (non-reclaimable) memory.
     headline: {
+      bootIdleAnonMiB: anonMiBByName("01-boot-idle"),
+      boardLoadedAnonMiB: anonMiBByName("04-board-loaded"),
+      afterStressAnonMiB: anonMiBByName("05-after-stress"),
       bootIdleMiB: containerMiBByName("01-boot-idle"),
       boardLoadedMiB: containerMiBByName("04-board-loaded"),
       afterStressMiB: containerMiBByName("05-after-stress"),
       peakMiB: toMiB(peak),
-      soakGrowthMiBPerHour: (() => {
+      soakAnonGrowthMiBPerHour: (() => {
         const slope = getGrowthBytesPerHour(soakSamples);
         return slope === null ? null : toMiB(slope);
       })(),

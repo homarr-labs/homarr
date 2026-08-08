@@ -146,18 +146,36 @@ const restoreBackupAsync = async (page: Page, baseUrl: string) => {
 };
 
 const loginAsync = async (page: Page, baseUrl: string) => {
-  await page.goto(`${baseUrl}/auth/login`, { waitUntil: "domcontentloaded" });
-  // Selectors mirror e2e/lazy-widgets.spec.ts: getByLabel(/password/i) is ambiguous
-  // because Mantine's PasswordInput also renders a visibility-toggle button.
-  await page.getByLabel("Username").fill(username);
-  await page.locator("#password").fill(password);
-  await page.locator("css=button[type='submit']").click();
-  // Poll location instead of page.waitForURL: sign-in redirects client-side, so
-  // waitForURL's implicit "load" state may never be reached for that navigation.
-  await page.waitForFunction(() => !window.location.pathname.includes("/auth/login"), undefined, {
-    timeout: 60_000,
-  });
-  log(`signed in as ${username}`);
+  // networkidle: submitting before the form hydrates is a no-op click, which then
+  // looks exactly like an authentication failure.
+  await page.goto(`${baseUrl}/auth/login`, { waitUntil: "networkidle" });
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    // Selectors mirror e2e/lazy-widgets.spec.ts: getByLabel(/password/i) is ambiguous
+    // because Mantine's PasswordInput also renders a visibility-toggle button.
+    await page.getByLabel("Username").fill(username);
+    await page.locator("#password").fill(password);
+    await page.locator("css=button[type='submit']").first().click();
+    try {
+      // Poll location rather than page.waitForURL: sign-in redirects client-side, so
+      // waitForURL's implicit "load" state is never reached for that navigation.
+      await page.waitForFunction(() => !window.location.pathname.includes("/auth/login"), undefined, {
+        timeout: 20_000,
+      });
+      log(`signed in as ${username}`);
+      return;
+    } catch {
+      if (attempt === 3) {
+        const error = await page
+          .locator('[role="alert"], .mantine-Alert-message')
+          .first()
+          .innerText()
+          .catch(() => "(no alert on page)");
+        throw new Error(`Login did not navigate away from /auth/login after 3 attempts. Page alert: ${error}`);
+      }
+      log(`login attempt ${attempt} did not navigate (likely a pre-hydration click), retrying`);
+    }
+  }
 };
 
 const waitForBoardAsync = async (page: Page) => {
