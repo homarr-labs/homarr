@@ -1,0 +1,45 @@
+scripts/run.sh
+  s_a70c07ac5b7a5a::t_3694f304ec6ef1 9-15
+apps/nextjs/next.config.ts
+  s_a70c07ac5b7a5a::t_201280e6b86c63 33-39,41-54
+scripts/benchmarks/stress-restore-lib.mts
+  s_a70c07ac5b7a5a::t_f4b2b272ea824a 202-208
+  s_a70c07ac5b7a5a::t_11ce685dea7704 94,106-113
+  s_a70c07ac5b7a5a::t_97d99dd969a674 26-31
+  s_a70c07ac5b7a5a::t_073a83bcd40aa5 48
+scripts/benchmarks/stress-restore.mts
+  s_a70c07ac5b7a5a::t_e58cb81a6cc566 95,100,102-112,115,118-121
+  s_a70c07ac5b7a5a::t_2640f8ac34bee5 326,329-330,334
+  s_a70c07ac5b7a5a::t_b4ea6b8bf62bd9 86-89
+  s_a70c07ac5b7a5a::t_115a50da4199e4 353-356
+  s_a70c07ac5b7a5a::t_0d6c132b3fa341 396
+  s_a70c07ac5b7a5a::t_2e0a30492bc2c0 397-404
+  s_a70c07ac5b7a5a::t_f202a9366b2be9 206-213
+  s_a70c07ac5b7a5a::t_3b1ad745ccf97e 161-188
+  s_a70c07ac5b7a5a::t_ef8e1734e60c15 342,344,347-349,352,357
+  s_093d61b162b9ca::t_f71444970700cb 24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "79ea9877617c610c0523bbbcd94f18ea6f81ec5d",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
