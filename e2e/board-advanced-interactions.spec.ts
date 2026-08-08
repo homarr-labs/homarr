@@ -81,9 +81,9 @@ describe("Board advanced interactions", () => {
       await compactSurface.evaluate((element) => {
         element.setAttribute("data-lifecycle-probe", "same-instance");
       });
+      await widget.hover();
       await widget.focus();
       await page.keyboard.down("Shift");
-      await widget.hover();
       await expect(previewSurface).toBeVisible({ timeout: 2_000 });
       await expect(previewSurface).toHaveCSS("animation-name", "none");
       const compactBounds = await widget.boundingBox();
