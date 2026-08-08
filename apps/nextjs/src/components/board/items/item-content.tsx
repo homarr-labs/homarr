@@ -46,7 +46,7 @@ interface BoardItemContentProps {
 
 const getOverflowFromKind = (kind: SectionItem["kind"], hasCustomCssClasses: boolean) => {
   if (kind === "systemResources") return { overflowX: "visible", overflowY: "visible" } as const;
-  if (kind === "iframe") return { overflowX: "hidden", overflowY: "hidden" } as const;
+  if (kind === "iframe" || kind === "assistant") return { overflowX: "hidden", overflowY: "hidden" } as const;
   if (hasCustomCssClasses) return {};
   return { overflowX: "hidden", overflowY: "auto" } as const;
 };

@@ -4,6 +4,7 @@ import { createTRPCRouter } from "./trpc";
 import { appRouter as appRouterForApps } from "./router/app";
 import { apiKeysRouter } from "./router/apiKeys";
 import { boardRouter } from "./router/board";
+import { customWidgetRouter } from "./router/custom-widget/custom-widget-router";
 import { dockerRouter } from "./router/docker/docker-router";
 import { iconsRouter } from "./router/icons";
 import { infoRouter } from "./router/info";
@@ -13,7 +14,6 @@ import { bazarrRouter } from "./router/widgets/bazarr";
 import { serverSettingsRouter } from "./router/serverSettings";
 import { beszelRouter } from "./router/widgets/beszel";
 import { calendarRouter } from "./router/widgets/calendar";
-import { customWidgetRouter } from "./router/custom-widget/custom-widget-router";
 import { dnsHoleRouter } from "./router/widgets/dns-hole";
 import { downloadsRouter } from "./router/widgets/downloads";
 import { healthMonitoringRouter } from "./router/widgets/health-monitoring";
@@ -27,6 +27,7 @@ export const mcpRouter = createTRPCRouter({
   app: appRouterForApps,
   apiKeys: apiKeysRouter,
   board: boardRouter,
+  customWidget: customWidgetRouter,
   docker: dockerRouter,
   icon: iconsRouter,
   info: infoRouter,
@@ -36,7 +37,6 @@ export const mcpRouter = createTRPCRouter({
   serverSettings: serverSettingsRouter,
   beszel: beszelRouter,
   calendar: calendarRouter,
-  customWidget: customWidgetRouter,
   dnsHole: dnsHoleRouter,
   downloads: downloadsRouter,
   healthMonitoring: healthMonitoringRouter,

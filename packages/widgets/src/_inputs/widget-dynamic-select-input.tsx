@@ -6,7 +6,7 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { IconCheck } from "@tabler/icons-react";
 
 import { translateIfNecessary } from "@homarr/translation";
-import { useI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -25,6 +25,7 @@ export const WidgetDynamicSelectInput = ({
   boardId,
 }: CommonWidgetInputProps<"dynamicSelect">) => {
   const t = useI18n();
+  const tSelect = useScopedI18n("widget.dynamicSelect");
   const tWidget = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
   const inputProps = form.getInputProps(`options.${property}`);
@@ -76,6 +77,8 @@ export const WidgetDynamicSelectInput = ({
         )}
       searchValue={search}
       onSearchChange={setSearch}
+      placeholder={tWidget("placeholder")}
+      nothingFoundMessage={tSelect("noResults")}
       leftSection={isPending && <Loader size="xs" />}
       renderOption={({ option, checked }) => {
         return (

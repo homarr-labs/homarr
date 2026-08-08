@@ -10,7 +10,7 @@ export const iconsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Search for icons by name across all icon repositories. OPTIONAL: searchText (string to filter), limitPerGroup (number 1-500, default 12). Call with no arguments to browse all icons",
+          "Search for icons by name across all icon repositories. Returns matching icon names and exact image URLs; use those URLs directly for app icons and Markdown image previews. OPTIONAL: searchText (string to filter), limitPerGroup (number 1-500, default 12). Call with no arguments to browse all icons",
       },
     })
     .input(iconsFindSchema)
@@ -23,8 +23,8 @@ export const iconsRouter = createTRPCRouter({
         whereCondition = and(...keywords.map((keyword) => like(icons.name, `%${keyword}%`)));
       }
 
-      return {
-        icons: await ctx.db.query.iconRepositories.findMany({
+      const [repositories, countIcons] = await Promise.all([
+        ctx.db.query.iconRepositories.findMany({
           with: {
             icons: {
               columns: { id: true, name: true, url: true },
@@ -47,7 +47,12 @@ export const iconsRouter = createTRPCRouter({
             },
           },
         }),
-        countIcons: await ctx.db.$count(icons),
+        ctx.db.$count(icons),
+      ]);
+
+      return {
+        icons: term.length > 0 ? repositories.filter((repository) => repository.icons.length > 0) : repositories,
+        countIcons,
       };
     }),
 });

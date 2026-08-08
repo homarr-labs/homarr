@@ -1,0 +1,179 @@
+.configuration {
+  width: 100%;
+  max-width: 74rem;
+}
+
+.summary {
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.summaryProvider {
+  min-width: 0;
+}
+
+.summaryProviderText {
+  min-width: 0;
+}
+
+.summaryEndpoint {
+  max-width: min(46rem, 70vw);
+}
+
+.section {
+  overflow: hidden;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background-color: var(--mantine-color-body);
+}
+
+.sectionHeader {
+  padding: var(--mantine-spacing-md);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.sectionHeading {
+  min-width: 0;
+}
+
+.stepNumber {
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: 0 0 1.75rem;
+  border-radius: 50%;
+  background-color: var(--mantine-primary-color-light);
+  color: var(--mantine-primary-color-light-color);
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 700;
+  line-height: 1.75rem;
+  text-align: center;
+}
+
+.sectionBody {
+  padding: var(--mantine-spacing-md);
+}
+
+.sectionActions {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-top: 1px solid var(--mantine-color-default-border);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.credentialSummary {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-sm);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.credentialSummaryContent {
+  min-width: 0;
+}
+
+.credentialFlow {
+  padding: var(--mantine-spacing-md);
+  border: 1px solid light-dark(var(--mantine-color-yellow-4), var(--mantine-color-yellow-8));
+  border-radius: var(--mantine-radius-md);
+  background-color: light-dark(
+    var(--mantine-color-yellow-0),
+    color-mix(in srgb, var(--mantine-color-yellow-9) 18%, transparent)
+  );
+}
+
+.credentialStepper :global(.mantine-Stepper-stepLabel) {
+  font-size: var(--mantine-font-size-sm);
+}
+
+.credentialStepper :global(.mantine-Stepper-content) {
+  padding-top: var(--mantine-spacing-md);
+}
+
+.advancedControl {
+  min-height: 3.25rem;
+}
+
+.selectedModel {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-sm);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.selectedModelText {
+  min-width: 0;
+}
+
+.selectedModelBadges {
+  flex-shrink: 0;
+}
+
+.capabilityRow,
+.enableRow {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-sm);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.securityNote {
+  max-width: 66ch;
+}
+
+.flowActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--mantine-spacing-xs);
+}
+
+@media (max-width: 48em) {
+  .summaryEndpoint {
+    max-width: 78vw;
+  }
+
+  .summaryActions,
+  .credentialActions,
+  .sectionActions > :global(.mantine-Group-root) {
+    width: 100%;
+  }
+
+  .summaryActions > *,
+  .credentialActions > *,
+  .flowActions > *,
+  .sectionActions :global(.mantine-Button-root) {
+    flex: 1 1 auto;
+  }
+
+  .credentialSummary {
+    align-items: stretch;
+  }
+
+  .flowActions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .credentialStepper :global(.mantine-Stepper-stepLabel) {
+    display: none;
+  }
+
+  .selectedModel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .selectedModelBadges {
+    justify-content: flex-start;
+    flex-shrink: 1;
+  }
+
+  .capabilityRow {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .configuration *,
+  .configuration *::before,
+  .configuration *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

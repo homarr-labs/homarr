@@ -330,6 +330,13 @@
       "when": 1786215199760,
       "tag": "0046_long_proteus",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "5",
+      "when": 1786217088950,
+      "tag": "0047_lame_wallow",
+      "breakpoints": true
     }
   ]
 }
