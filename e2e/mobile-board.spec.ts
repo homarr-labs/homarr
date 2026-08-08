@@ -253,6 +253,21 @@ describe("Automatic mobile board", () => {
       expect(metrics.firstToSecondHeightRatio).toBeGreaterThan(1.8);
       expect(metrics.horizontalOverflow).toBeLessThanOrEqual(0);
       await mobileContext.close();
+
+      const tabletContext = await browser.newContext({
+        storageState,
+        viewport: { width: 768, height: 1024 },
+        userAgent: devices["iPad (gen 7)"].userAgent,
+        hasTouch: true,
+        isMobile: true,
+      });
+      const tabletPage = await tabletContext.newPage();
+      await tabletPage.goto(`${baseUrl}/boards/${boardName}`);
+      await expect(tabletPage.locator("[data-mobile-board]")).toBeVisible({ timeout: 15_000 });
+      await expect(tabletPage.locator("[data-mobile-board-item]")).toHaveCount(2);
+      await expect(tabletPage.locator("[data-mobile-board-preview-toggle]")).toHaveCount(0);
+      await expect(tabletPage.getByRole("button", { name: "Toggle board edit mode", exact: true })).toHaveCount(0);
+      await tabletContext.close();
     } finally {
       await loginContext.close();
       await browser.close();
