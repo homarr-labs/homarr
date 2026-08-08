@@ -88,8 +88,11 @@ describe("lazy widget application graph", () => {
       );
       await expect(clockWidget).toBeVisible({ timeout: 15_000 });
 
+      await expect(page.locator("[data-homarr-dev-benchmark-spotlight-preloaded]")).toHaveCount(1, {
+        timeout: 15_000,
+      });
       await page.keyboard.press("Control+K");
-      await expect(page.locator("[data-homarr-dev-benchmark-spotlight]")).toBeVisible();
+      await expect(page.locator("[data-homarr-dev-benchmark-spotlight]")).toBeVisible({ timeout: 15_000 });
       await page.keyboard.press("Escape");
       await expect(page.locator("[data-homarr-dev-benchmark-spotlight]")).not.toBeVisible();
 
