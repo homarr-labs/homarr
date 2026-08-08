@@ -90,6 +90,7 @@ GITHUB_CLIENT_SECRET=...
 OAuth settings synchronize on every PocketBase startup. Restart after rotation. A production deployment must never
 supply only one credential. `PB_ALLOWED_ORIGINS=*` is appropriate for the central community because arbitrary
 self-hosted Homarr origins must open its OAuth popup; a restricted list must include every allowed browser origin.
+Workshop uses the OAuth provider username as the public display name instead of the profile's full name.
 
 ## Promote a Workshop moderator
 

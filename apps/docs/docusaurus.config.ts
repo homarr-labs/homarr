@@ -345,6 +345,55 @@ const config: Config = {
     function workshopRoutesPlugin() {
       return {
         name: "workshop-routes",
+        injectHtmlTags() {
+          return {
+            headTags: [
+              {
+                tagName: "style",
+                innerHTML: `
+#workshop-detail-route-fallback { display: none; }
+html[data-workshop-detail-loading] #__docusaurus { display: none; }
+html[data-workshop-detail-loading] #workshop-detail-route-fallback {
+  align-items: center;
+  background: #fff;
+  box-sizing: border-box;
+  color: #4b5563;
+  display: flex;
+  font: 500 0.875rem/1.5 Inter, system-ui, sans-serif;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-workshop-detail-loading] #workshop-detail-route-fallback {
+    background: #18191a;
+    color: #d1d5db;
+  }
+}`,
+              },
+              {
+                tagName: "script",
+                innerHTML: `(function () {
+  var match = window.location.pathname.match(/^\\/workshop\\/([^/]+)\\/?$/);
+  if (match && match[1] !== "admin") {
+    document.documentElement.setAttribute("data-workshop-detail-loading", "");
+  }
+})();`,
+              },
+            ],
+            preBodyTags: [
+              {
+                tagName: "div",
+                attributes: {
+                  id: "workshop-detail-route-fallback",
+                  role: "status",
+                  "aria-live": "polite",
+                },
+                innerHTML: "Loading Workshop…",
+              },
+            ],
+          };
+        },
         async contentLoaded({ actions }) {
           actions.addRoute({
             path: "/workshop/:id",
