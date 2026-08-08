@@ -161,8 +161,9 @@ export const seedDataAsync = async (db: Database) => {
   await seedProtectedBoardLayoutsAsync(db);
 };
 
-export const seedProtectedBoardLayoutsAsync = async (db: Database) => {
+export const seedProtectedBoardLayoutsAsync = async (db: Database, boardId?: string) => {
   const dbBoards = await db.query.boards.findMany({
+    where: boardId ? eq(boards.id, boardId) : undefined,
     with: {
       layouts: true,
       items: { with: { layouts: true } },

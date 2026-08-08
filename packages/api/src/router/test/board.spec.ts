@@ -602,6 +602,13 @@ describe("getBoardByName should return board by name", () => {
       name,
       ...fullBoardProps,
     });
+    expect(result.layouts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ role: "mobile", breakpoint: 0, columnCount: 3 }),
+        expect.objectContaining({ id: fullBoardProps.layoutId, role: "base", breakpoint: 768 }),
+      ]),
+    );
+    expect(result.items.at(0)?.layouts).toHaveLength(2);
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "view");
   });
 
@@ -1171,12 +1178,12 @@ describe("saveBoard should save full board", () => {
     expect(firstItem.id).toBe(itemId);
     expect(firstItem.kind).toBe("clock");
     expect(SuperJSON.parse<{ is24HourFormat: boolean }>(firstItem.options).is24HourFormat).toBe(false);
-    const firstLayout = expectToBeDefined(firstItem.layouts[0]);
-    expect(firstLayout.sectionId).toBe(sectionId);
-    expect(firstLayout.height).toBe(3);
-    expect(firstLayout.width).toBe(2);
-    expect(firstLayout.xOffset).toBe(7);
-    expect(firstLayout.yOffset).toBe(5);
+    const updatedLayout = expectToBeDefined(firstItem.layouts.find((layout) => layout.layoutId === layoutId));
+    expect(updatedLayout.sectionId).toBe(sectionId);
+    expect(updatedLayout.height).toBe(3);
+    expect(updatedLayout.width).toBe(2);
+    expect(updatedLayout.xOffset).toBe(7);
+    expect(updatedLayout.yOffset).toBe(5);
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
   it("should fail when board not found", async () => {

@@ -10,6 +10,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
 import { and, asc, eq, handleTransactionsAsync, inArray, isNull, like, not, or, sql } from "@homarr/db";
 import { createDbInsertCollectionWithoutTransaction } from "@homarr/db/collection";
+import { seedProtectedBoardLayoutsAsync } from "@homarr/db/migrations/seed";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
   boardGroupPermissions,
@@ -2037,7 +2038,14 @@ const getElementsForLayout = (board: BoardForLayoutProjection, layoutId: string)
   return [...itemElements, ...sectionElements];
 };
 
-const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, userId: string | null) => {
+const protectedLayoutRepairPromises = new Map<string, Promise<void>>();
+
+const getFullBoardWithWhereAsync = async (
+  db: Database,
+  where: SQL<unknown>,
+  userId: string | null,
+  repairProtectedLayouts = true,
+) => {
   const groupPermissionWhere = userId
     ? inArray(
         boardGroupPermissions.groupId,
@@ -2093,6 +2101,18 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
     });
   }
 
+  if (repairProtectedLayouts && boardLayoutsNeedRepair(board.layouts)) {
+    let repairPromise = protectedLayoutRepairPromises.get(board.id);
+    if (!repairPromise) {
+      repairPromise = seedProtectedBoardLayoutsAsync(db, board.id).finally(() => {
+        protectedLayoutRepairPromises.delete(board.id);
+      });
+      protectedLayoutRepairPromises.set(board.id, repairPromise);
+    }
+    await repairPromise;
+    return getFullBoardWithWhereAsync(db, where, userId, false);
+  }
+
   const { sections, items, layouts, ...otherBoardProperties } = board;
 
   return {
@@ -2136,6 +2156,23 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
       )
       .filter((item): item is NonNullable<typeof item> => item !== null),
   };
+};
+
+export const boardLayoutsNeedRepair = (
+  boardLayouts: Array<{ id: string; breakpoint: number; role: "mobile" | "base" | "custom" }>,
+) => {
+  const mobileLayouts = boardLayouts.filter((layout) => layout.role === "mobile");
+  const baseLayouts = boardLayouts.filter((layout) => layout.role === "base");
+  const baseLayout = baseLayouts.at(0);
+
+  return (
+    mobileLayouts.length !== 1 ||
+    baseLayouts.length !== 1 ||
+    mobileLayouts.at(0)?.breakpoint !== 0 ||
+    !baseLayout ||
+    boardLayouts.some((layout) => layout.id !== baseLayout.id && layout.breakpoint >= baseLayout.breakpoint) ||
+    new Set(boardLayouts.map((layout) => layout.breakpoint)).size !== boardLayouts.length
+  );
 };
 
 const forKind = <T extends WidgetKind>(kind: T) =>
