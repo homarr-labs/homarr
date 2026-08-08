@@ -26,9 +26,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 
-type TranscodingDecision = NonNullable<
-  NonNullable<StreamSession["currentlyPlaying"]>["metadata"]
->["transcoding"];
+type TranscodingDecision = NonNullable<NonNullable<StreamSession["currentlyPlaying"]>["metadata"]>["transcoding"];
 
 type PlaybackStatus = "directPlay" | "directStream" | "transcodeVideo" | "transcodeAudio" | "transcoding";
 
