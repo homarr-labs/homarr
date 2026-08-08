@@ -50,14 +50,14 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
           </Text>
         )}
         <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
-          <time dateTime={dayjs(time).tz(timezone).toISOString()} suppressHydrationWarning>
+          <time dateTime={dayjs(time).tz(timezone).toISOString()}>
             {options.customTimeFormat
               ? dayjs(time).tz(timezone).format(customTimeFormat)
               : dayjs(time).tz(timezone).format(timeFormat)}
           </time>
         </Title>
         {options.showDate && (
-          <Text className="clock-date-text" size={sizing} lineClamp={1} suppressHydrationWarning>
+          <Text className="clock-date-text" size={sizing} lineClamp={1}>
             {options.customDateFormat
               ? dayjs(time).tz(timezone).format(customDateFormat)
               : dayjs(time).tz(timezone).format(dateFormat)}
@@ -124,7 +124,7 @@ interface UseCurrentTimeProps {
 }
 
 const useCurrentTime = ({ showSeconds }: UseCurrentTimeProps) => {
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState(() => new Date(0));
   const timeoutRef = useRef<NodeJS.Timeout>(null);
   const intervalRef = useRef<NodeJS.Timeout>(null);
   const intervalMultiplier = useMemo(() => (showSeconds ? 1 : 60), [showSeconds]);
