@@ -80,6 +80,24 @@ nothing imports it. The 66 remaining `invalidate*` call sites call `revalidateTa
 nothing ever registers, with no handler to receive them, inside a `try/catch` that
 swallows the resulting out-of-scope error. Zero functional effect, ~30 files of churn.
 
+## Verification after trimming
+
+The three zero-effect changes were removed (`next-cache-handler`, cache-tags/
+cache-invalidation and its 66 call sites, Redis 6 → 2 — keeping the
+`pubSub:last:*` TTL). Re-measured to confirm nothing regressed:
+
+| stage | baseline | branch before trim | after trim |
+| --- | --- | --- | --- |
+| boot idle | 139.2 / 144.1 | 115.2 / 99.0 | **120.0** |
+| board loaded | 255.2 / 260.4 | 228.1 / 230.2 | **229.5** |
+| after 4 reloads | 401.4 / 384.0 | 358.8 / 362.6 | **357.0** |
+| peak | 684.8 / 710 | 679.8 / 673 | **599.5** |
+| image | 410 MB | 388 MB | **388 MB** |
+
+Identical within run-to-run noise at every stage, lowest peak of any config, and
+28/28 widgets rendered — so **−883 lines and −18 files cost nothing**. Diff against
+the merge-base went from 100 files / 3,336 insertions to 82 files / 2,484.
+
 ## Recommendation
 
 **Keep** — carries the measured win:
