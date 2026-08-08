@@ -1,0 +1,32 @@
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_093d61b162b9ca::t_179006ac7c2bb1 173-174
+packages/widgets/src/bookmarks/component.tsx
+  s_093d61b162b9ca::t_179006ac7c2bb1 26,82,190,266,345
+packages/widgets/src/app/component.tsx
+  s_093d61b162b9ca::t_179006ac7c2bb1 17,31
+packages/widgets/src/common/application-url.spec.ts
+  s_093d61b162b9ca::t_48092f32bd9ac6 46
+  s_093d61b162b9ca::t_179006ac7c2bb1 3,31-45
+packages/common/src/url.ts
+  s_093d61b162b9ca::t_179006ac7c2bb1 78-93
+packages/widgets/src/common/application-url.ts
+  s_093d61b162b9ca::t_179006ac7c2bb1 1
+apps/nextjs/src/components/board/sections/use-open-section-apps.ts
+  s_093d61b162b9ca::t_179006ac7c2bb1 5,111,113-114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "f24d757ec8dfba236dba32bf543bae20e6d9a696",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
