@@ -1,0 +1,19 @@
+e2e/custom-widgets-custom-jsx-v2.spec.ts
+  s_093d61b162b9ca::t_a9665af9bea398 79-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "7619492516a2e8c7279a87c4b9b927c9a8663406",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
