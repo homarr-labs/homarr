@@ -4,6 +4,7 @@ import { IconApi } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { createId } from "@homarr/common";
 import { getIconUrl, getIntegrationName, widgetIntegrationSupport, widgetKinds } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -16,6 +17,7 @@ import type { TablerIcon } from "@homarr/ui";
 import { widgetCatalogIcons } from "@homarr/widgets/catalog";
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
+import { WorkshopInstallButton } from "~/components/workshop/workshop-install-button";
 import { useItemActions } from "./item-actions";
 import { resolveMatchingIntegrationsAsync, tryLockSelection, unlockSelection } from "./item-select-data";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
@@ -23,10 +25,10 @@ import classes from "./item-select-modal.module.css";
 
 interface ItemSelectModalContentProps {
   actions: { closeModal: () => void };
-  innerProps: void;
   integrationData: RouterOutputs["integration"]["all"] | undefined;
-  customWidgetDefs: RouterOutputs["customWidget"]["all"] | undefined;
+  customWidgetDefs: RouterOutputs["customWidget"]["available"] | undefined;
   ensureIntegrationDataAsync: () => Promise<RouterOutputs["integration"]["all"]>;
+  isAdmin: boolean;
 }
 
 const ItemSelectModalContent = ({
@@ -34,6 +36,7 @@ const ItemSelectModalContent = ({
   integrationData,
   customWidgetDefs,
   ensureIntegrationDataAsync,
+  isAdmin,
 }: ItemSelectModalContentProps) => {
   const [search, setSearch] = useState("");
   const [loadingSelection, setLoadingSelection] = useState<string | null>(null);
@@ -80,8 +83,7 @@ const ItemSelectModalContent = ({
   }, [items, search]);
 
   const filteredCustomWidgets = useMemo(
-    () =>
-      (customWidgetDefs ?? []).filter((def) => def.enabled && def.name.toLowerCase().includes(search.toLowerCase())),
+    () => (customWidgetDefs ?? []).filter((def) => def.name.toLowerCase().includes(search.toLowerCase())),
     [customWidgetDefs, search],
   );
 
@@ -92,16 +94,43 @@ const ItemSelectModalContent = ({
     });
   };
 
-  const handleAddCustomWidget = async (definitionId: string) => {
+  const handleAddCustomWidget = async (customWidgetDefinition: NonNullable<typeof customWidgetDefs>[number]) => {
     if (!tryLockSelection(selectionLock)) return;
-    setLoadingSelection(`custom:${definitionId}`);
+    setLoadingSelection(`custom:${customWidgetDefinition.id}`);
+    preloadWidgetEditModal();
     try {
       const definition = await loadWidgetDefinition("customApi");
       const itemId = createId();
       const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
-      createItem({ id: itemId, kind: "customApi", integrationIds: [] });
-      updateItemOptions({ itemId, newOptions: { ...defaultOptions, definitionId } });
+      const options = {
+        ...defaultOptions,
+        definitionId: customWidgetDefinition.id,
+        configuration: customWidgetDefinition.defaultOptions,
+        configurationVersion: customWidgetDefinition.updatedAt.getTime(),
+      };
       actions.closeModal();
+      openEditModal(
+        {
+          kind: "customApi",
+          definition,
+          value: {
+            advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+            options,
+            integrationIds: [],
+          },
+          onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }) => {
+            createItem({ id: itemId, kind: "customApi", integrationIds: [] });
+            updateItemOptions({ itemId, newOptions: configuredOptions });
+            updateItemAdvancedOptions({ itemId, newAdvancedOptions: advancedOptions });
+          },
+          integrationData: [],
+          integrationSupport: false,
+          settings,
+        },
+        {
+          title: (titleT) => `${titleT("item.edit.title")} - ${customWidgetDefinition.name}`,
+        },
+      );
     } catch (error) {
       notifyDefinitionLoadError(error);
     } finally {
@@ -189,7 +218,7 @@ const ItemSelectModalContent = ({
         />
       ))}
 
-      {filteredCustomWidgets.length > 0 && (
+      {isAdmin && (
         <>
           <Divider
             label={t("customWidget.page.list.title")}
@@ -219,7 +248,7 @@ const ItemSelectModalContent = ({
                   </Text>
                 </Group>
                 <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
-                  {def.description ?? def.url}
+                  {def.description ?? ""}
                 </Text>
               </Stack>
               <Box
@@ -234,7 +263,7 @@ const ItemSelectModalContent = ({
                 }}
               >
                 <Button
-                  onClick={() => void handleAddCustomWidget(def.id)}
+                  onClick={() => void handleAddCustomWidget(def)}
                   variant="light"
                   size="xs"
                   fullWidth
@@ -246,10 +275,14 @@ const ItemSelectModalContent = ({
               </Box>
             </Card>
           ))}
+
+          <Box style={{ gridColumn: "1 / -1" }}>
+            <WorkshopInstallButton fullWidth>{t("workshop.installDialog")}</WorkshopInstallButton>
+          </Box>
         </>
       )}
 
-      {filteredItems.length === 0 && filteredCustomWidgets.length === 0 && (
+      {filteredItems.length === 0 && (!isAdmin || filteredCustomWidgets.length === 0) && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>
@@ -258,22 +291,36 @@ const ItemSelectModalContent = ({
   );
 };
 
-const ItemSelectModalFrame = (props: Pick<ItemSelectModalContentProps, "actions" | "innerProps">) => {
+const ItemSelectModalFrame = ({
+  actions,
+  innerProps,
+}: {
+  actions: { closeModal: () => void };
+  innerProps: { boardId: string };
+}) => {
   const utils = clientApi.useUtils();
+  const { data: session } = useSession();
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const { data: integrationData } = clientApi.integration.all.useQuery();
-  const { data: customWidgetDefs } = clientApi.customWidget.all.useQuery();
+  const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery(
+    { boardId: innerProps.boardId },
+    { enabled: isAdmin },
+  );
 
   return (
     <ItemSelectModalContent
-      {...props}
+      actions={actions}
       integrationData={integrationData}
       customWidgetDefs={customWidgetDefs}
       ensureIntegrationDataAsync={() => utils.integration.all.ensureData()}
+      isAdmin={isAdmin}
     />
   );
 };
 
-export const ItemSelectModal = createModal<void>((props) => <ItemSelectModalFrame {...props} />).withOptions({
+export const ItemSelectModal = createModal<{ boardId: string }>((props) => (
+  <ItemSelectModalFrame {...props} />
+)).withOptions({
   defaultTitle: (t) => t("item.create.title"),
   size: modalSizeSelect,
 });

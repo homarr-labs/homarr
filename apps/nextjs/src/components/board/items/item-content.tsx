@@ -177,7 +177,7 @@ const InnerContent = ({ item, definition, Component, ...dimensions }: InnerConte
   const [isEditMode] = useEditMode();
   const options = reduceWidgetOptionsWithDefinition(definition, settings, item.options);
   const newItem = { ...item, options };
-  const { updateItemOptions } = useItemActions();
+  const { removeItem, updateItemOptions } = useItemActions();
   const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
     updateItemOptions({ itemId: item.id, newOptions });
   const widgetSupportsIntegrations =
@@ -221,6 +221,7 @@ const InnerContent = ({ item, definition, Component, ...dimensions }: InnerConte
               isEditMode={isEditMode}
               boardId={board.id}
               itemId={item.id}
+              removeItem={() => removeItem({ itemId: item.id })}
               setOptions={(partialNewOptions) =>
                 updateOptions({
                   newOptions: {

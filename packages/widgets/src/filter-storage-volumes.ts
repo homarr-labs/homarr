@@ -35,11 +35,7 @@ const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string
   );
 };
 
-const matchesVisibleStorageVolume = (
-  visibleVolume: string,
-  integrationId: string,
-  deviceName: string,
-): boolean => {
+const matchesVisibleStorageVolume = (visibleVolume: string, integrationId: string, deviceName: string): boolean => {
   const separatorIndex = visibleVolume.indexOf(":");
   if (separatorIndex === -1) {
     return storageDeviceNamesMatch(visibleVolume, deviceName);

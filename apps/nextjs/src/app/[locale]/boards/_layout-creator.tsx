@@ -8,6 +8,7 @@ import { auth } from "@homarr/auth/next";
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ModalProvider } from "@homarr/modals";
 
 import { MainHeader } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
@@ -89,17 +90,19 @@ export const createBoardLayout = <TParams extends Params>({
         <BoardReadyProvider>
           <EditModeProvider>
             <BoardMantineProvider defaultColorScheme={colorScheme}>
-              <CustomCss />
-              <BoardTourGate enabled={shouldRunBoardTour}>
-                <ClientShell hasNavigation={false}>
-                  <MainHeader
-                    logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
-                    actions={headerActions}
-                    hasNavigation={false}
-                  />
-                  <AppShellMain>{children}</AppShellMain>
-                </ClientShell>
-              </BoardTourGate>
+              <ModalProvider>
+                <CustomCss />
+                <BoardTourGate enabled={shouldRunBoardTour}>
+                  <ClientShell hasNavigation={false}>
+                    <MainHeader
+                      logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                      actions={headerActions}
+                      hasNavigation={false}
+                    />
+                    <AppShellMain>{children}</AppShellMain>
+                  </ClientShell>
+                </BoardTourGate>
+              </ModalProvider>
             </BoardMantineProvider>
           </EditModeProvider>
         </BoardReadyProvider>

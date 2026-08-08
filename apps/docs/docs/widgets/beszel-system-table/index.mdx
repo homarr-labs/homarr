@@ -1,21 +1,17 @@
 ---
-title: 'Beszel Systems (Table)'
-description: 'Table view of all Beszel-monitored systems with sortable columns and status indicators.'
+title: "Beszel Systems (Table)"
+description: "Table view of all Beszel-monitored systems with sortable columns and status indicators."
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { beszelSystemTableWidget } from '.';
-import { beszelIntegration } from '@site/docs/integrations/beszel';
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { beszelSystemTableWidget } from ".";
+import { beszelIntegration } from "@site/docs/integrations/beszel";
 
-
-<WidgetHeader
-  widget={beszelSystemTableWidget}
-  categories={['System Monitoring']}
-/>
+<WidgetHeader widget={beszelSystemTableWidget} categories={["System Monitoring"]} />
 
 This widget displays all your Beszel-monitored systems in a sortable data table. Each row shows system metrics like CPU, memory, disk, network, temperature, and more. Columns can be toggled on or off, dragged into a different order, and resized from their headers. Column order and widths are saved automatically for each widget. When Beszel reports extra filesystems, the disk column adds a hover breakdown for each mount alongside the root disk.
 
@@ -30,14 +26,19 @@ Select a system row to open the complete statistics view, including system, file
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: beszelIntegration,
-  note: "Displays all monitored systems in a sortable table"
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: beszelIntegration,
+      note: "Displays all monitored systems in a sortable table",
+    },
+  ]}
+/>
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={beszelSystemTableWidget.configuration} />

@@ -7,13 +7,13 @@ import { getScopedI18n } from "@homarr/translation/server";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { CustomWidgetBetaBanner } from "../_beta-banner";
 import { CustomWidgetForm } from "../_custom-widget-form";
+import { FormErrorBoundary } from "../_form-error-boundary";
 
 export default async function NewCustomWidgetPage() {
   const session = await auth();
   if (!session || !session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
-
   const t = await getScopedI18n("customWidget");
 
   return (
@@ -28,7 +28,9 @@ export default async function NewCustomWidgetPage() {
             </Text>
           </div>
           <CustomWidgetBetaBanner />
-          <CustomWidgetForm mode="create" />
+          <FormErrorBoundary>
+            <CustomWidgetForm mode="create" />
+          </FormErrorBoundary>
         </Stack>
       </Container>
     </>

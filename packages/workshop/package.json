@@ -1,0 +1,39 @@
+{
+  "name": "@homarr/workshop",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./backend": "./src/backend.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "oxfmt .",
+    "lint": "oxlint",
+    "test": "vitest run --root ../.. packages/workshop/src",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@homarr/custom-widgets": "workspace:^0.1.0",
+    "@tanstack/react-query": "catalog:",
+    "pocketbase": "catalog:",
+    "react": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,51 @@
+name: homarr-workshop
+
+services:
+  workshop:
+    build:
+      context: ../..
+      dockerfile: apps/workshop/Dockerfile
+      target: development
+    restart: unless-stopped
+    environment:
+      PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
+      PORT: ${PB_EXPOSE_PORT:-8090}
+      WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:-http://localhost:3003/workshop}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      WORKSHOP_PUBLIC_ORIGIN: ${WORKSHOP_PUBLIC_ORIGIN:-http://localhost:3003}
+    ports:
+      - "127.0.0.1:${PB_EXPOSE_PORT:-8090}:${PB_EXPOSE_PORT:-8090}"
+    volumes:
+      - pb_data:/pb_data
+      - ./pb_hooks:/pb_hooks:ro
+      - ./pb_migrations:/pb_migrations:ro
+    security_opt:
+      - no-new-privileges:true
+
+  docs:
+    profiles:
+      - docs
+    build:
+      context: ../..
+      dockerfile: apps/workshop/Dockerfile
+      target: production
+      args:
+        HOMARR_WEBSITE_URL: ${HOMARR_WEBSITE_URL:-http://localhost:3003}
+        WORKSHOP_API_URL: ${WORKSHOP_API_URL:-http://localhost:3003}
+    environment:
+      PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
+      PORT: ${DOCS_EXPOSE_PORT:-3003}
+      WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:-http://localhost:3003/workshop}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      WORKSHOP_PUBLIC_ORIGIN: ${WORKSHOP_PUBLIC_ORIGIN:-http://localhost:3003}
+    ports:
+      - "127.0.0.1:${DOCS_EXPOSE_PORT:-3003}:${DOCS_EXPOSE_PORT:-3003}"
+    volumes:
+      - pb_data:/pb_data
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  pb_data:
