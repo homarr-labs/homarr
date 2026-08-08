@@ -129,13 +129,16 @@ export interface WidgetDefinition {
 export const supportsAdvancedFocus = (definition: object) =>
   !("supportsAdvancedFocus" in definition) || definition.supportsAdvancedFocus !== false;
 
-export const getWidgetQueryKeys = (definition: {
-  kind: string;
-  queryKey?: QueryKey;
-  queryKeys?: readonly QueryKey[];
-}): readonly QueryKey[] => {
+export const getWidgetQueryKeys = (
+  definition: {
+    kind?: string;
+    queryKey?: QueryKey;
+    queryKeys?: readonly QueryKey[];
+  },
+  kind?: WidgetKind,
+): readonly QueryKey[] => {
   if (definition.queryKeys && definition.queryKeys.length > 0) return definition.queryKeys;
-  return [definition.queryKey ?? [["widget", definition.kind]]];
+  return [definition.queryKey ?? [["widget", definition.kind ?? kind]]];
 };
 
 export const normalizeWidgetQuery = (queryKey: QueryKey): NormalizedWidgetQuery | null => {
@@ -178,6 +181,8 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
   width: number;
   height: number;
   widgetRuntimeRef?: WidgetRuntimeRef;
+  widgetStateRef?: React.MutableRefObject<Record<string, unknown> | null>;
+  removeItem?: () => void;
 };
 
 export type WidgetOptionsRecordOf<TKind extends WidgetKind> = WidgetImports[TKind]["definition"]["createOptions"];

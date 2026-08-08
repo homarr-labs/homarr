@@ -144,13 +144,13 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
         .elementsFromPoint(event.clientX, event.clientY)
         .map((element) =>
           element instanceof HTMLElement
-            ? element.matches(".grid-stack-item-content")
+            ? element.matches("[data-advanced-focus-source]")
               ? element
-              : element.closest<HTMLElement>(".grid-stack-item-content")
+              : element.closest<HTMLElement>("[data-advanced-focus-source]")
             : null,
         )
         .find((source) => source !== null && source !== current.source);
-      const itemId = underlyingSource?.closest<HTMLElement>(".grid-stack-item[data-id]")?.dataset.id;
+      const itemId = underlyingSource?.dataset.itemId;
       if (!underlyingSource || !itemId) return;
 
       if (underlyingSource.hasAttribute("aria-keyshortcuts")) {

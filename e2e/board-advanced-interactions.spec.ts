@@ -1,4 +1,4 @@
-import type { Browser, BrowserContext, Locator, Page } from "@playwright/test";
+import type { Browser, BrowserContext, Page } from "@playwright/test";
 import { chromium, expect } from "@playwright/test";
 import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
@@ -26,7 +26,6 @@ const ownerCredentials = { username: "owner", password: "Comp(exP4sswOrd" };
 const disabledModifierCredentials = { username: "modifier", password: "Comp(exP4sswOrd" };
 const viewerCredentials = { username: "viewer", password: "Comp(exP4sswOrd" };
 const boardName = "advanced-interactions-e2e";
-const emptyCellCenterXRatio = 7.5 / 12;
 
 describe("Board advanced interactions", () => {
   let browser: Browser;
@@ -68,13 +67,15 @@ describe("Board advanced interactions", () => {
     const { context, page } = await openBoardAsync(browser, baseUrl, ownerCredentials);
 
     try {
-      const widget = page.locator(".grid-stack-item[data-kind='clock'] > .grid-stack-item-content").first();
+      const widget = page.locator("[data-grid-item-id][data-kind='clock'] [data-advanced-focus-source]").first();
       const compactSurface = page.locator(".clock-wrapper").first();
       const previewSurface = page.getByRole("region", { name: "Date and time advanced view" });
       const manualSurface = page.getByRole("dialog", { name: "Date and time advanced view" });
       const bookmarksPreviewSurface = page.getByRole("region", { name: "Bookmarks advanced view" });
       const dimmingOverlay = page.locator("[data-advanced-focus-overlay]");
-      const otherWidget = page.locator(".grid-stack-item[data-kind='bookmarks'] > .grid-stack-item-content").first();
+      const otherWidget = page
+        .locator("[data-grid-item-id][data-kind='bookmarks'] [data-advanced-focus-source]")
+        .first();
       const header = page.locator("header[data-advanced-focus-background]");
       const boardMain = page.locator("main[data-advanced-focus-background]");
 
@@ -142,7 +143,7 @@ describe("Board advanced interactions", () => {
       await expect(manualSurface).toHaveAttribute("aria-modal", "true");
       await expect(header).toHaveAttribute("inert", "");
       await expect(boardMain).toHaveAttribute("inert", "");
-      expect(await manualSurface.evaluate((element) => element.closest(".grid-stack-item"))).toBeNull();
+      expect(await manualSurface.evaluate((element) => element.closest("[data-grid-item-id]"))).toBeNull();
       await expect(manualSurface.locator(".clock-wrapper")).toHaveAttribute("data-lifecycle-probe", "same-instance");
       await expect(dimmingOverlay).toHaveCSS("pointer-events", "auto");
       expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe("hidden");
@@ -231,7 +232,7 @@ describe("Board advanced interactions", () => {
 
       for (const compactOnlyKind of ["app", "iframe"]) {
         const compactOnlyWidget = page
-          .locator(`.grid-stack-item[data-kind='${compactOnlyKind}'] > .grid-stack-item-content`)
+          .locator(`[data-grid-item-id][data-kind='${compactOnlyKind}'] [data-advanced-focus-source]`)
           .first();
         await expect(compactOnlyWidget).not.toHaveAttribute("aria-keyshortcuts", "Shift+Enter");
         await compactOnlyWidget.dispatchEvent("contextmenu", { button: 2 });
@@ -252,7 +253,7 @@ describe("Board advanced interactions", () => {
     const { context, page } = await openBoardAsync(browser, baseUrl, ownerCredentials);
 
     try {
-      const iframeSlot = page.locator(".grid-stack-item[data-kind='iframe'] > .grid-stack-item-content").first();
+      const iframeSlot = page.locator("[data-grid-item-id][data-kind='iframe'] [data-advanced-focus-source]").first();
       const iframe = iframeSlot.locator("iframe");
       await iframe.evaluate((element) => {
         (element as HTMLIFrameElement).srcdoc = '<label>State <input id="state" value="initial"></label>';
@@ -271,13 +272,15 @@ describe("Board advanced interactions", () => {
       await page.keyboard.up("Shift");
       await expect(frame.locator("#state")).toHaveValue("changed");
 
-      const bookmarksSlot = page.locator(".grid-stack-item[data-kind='bookmarks'] > .grid-stack-item-content").first();
+      const bookmarksSlot = page
+        .locator("[data-grid-item-id][data-kind='bookmarks'] [data-advanced-focus-source]")
+        .first();
       await bookmarksSlot.focus();
       await page.keyboard.press("Shift+Enter");
       await expect(page.getByRole("dialog", { name: "Bookmarks advanced view" })).toBeVisible();
       await page.setViewportSize({ width: 800, height: 900 });
       await expect(page.getByRole("dialog", { name: "Bookmarks advanced view" })).toBeHidden();
-      await expect(page.locator(".grid-stack-item[data-kind='iframe'] iframe")).toBeVisible();
+      await expect(page.locator("[data-grid-item-id][data-kind='iframe'] iframe")).toBeVisible();
     } finally {
       await context.close();
     }
@@ -287,7 +290,7 @@ describe("Board advanced interactions", () => {
     const { context, page } = await openBoardAsync(browser, baseUrl, ownerCredentials, { width: 1366, height: 768 });
 
     try {
-      const widget = page.locator(".grid-stack-item[data-kind='clock'] > .grid-stack-item-content").first();
+      const widget = page.locator("[data-grid-item-id][data-kind='clock'] [data-advanced-focus-source]").first();
       await widget.focus();
       await page.keyboard.press("Shift+Enter");
       const closeButton = page.getByRole("button", { name: "Close advanced view" });
@@ -317,70 +320,29 @@ describe("Board advanced interactions", () => {
     }
   }, 60_000);
 
-  test("opens the add-at-position chooser only when right click and change access are enabled", async () => {
-    const { context, page } = await openBoardAsync(browser, baseUrl, ownerCredentials);
-
-    try {
-      const grid = page.locator(".grid-stack[data-kind='empty']");
-      const addHereMenuItem = page.getByRole("menuitem", { name: "Add item here" });
-      await expect(grid).toHaveAttribute("aria-label", "Add item here");
-
-      await grid.press("Shift+F10");
-      await expect(addHereMenuItem).toBeFocused();
-      await page.keyboard.press("Enter");
-      await expect(page.getByRole("dialog").filter({ hasText: "Choose item to add" })).toBeVisible();
-      await page.keyboard.press("Escape");
-      await expect(grid).toBeFocused();
-
-      await touchAndHoldEmptyGridSpaceAsync(grid);
-      await expect(addHereMenuItem).toBeVisible({ timeout: 1_000 });
-      await page.keyboard.press("Escape");
-      await expect(addHereMenuItem).toBeHidden();
-      await expect(grid).toBeFocused();
-
-      await rightClickEmptyGridSpaceAsync(grid);
-      await expect(addHereMenuItem).toBeVisible();
-      await addHereMenuItem.click();
-      await expect(page.getByRole("dialog").filter({ hasText: "Choose item to add" })).toBeVisible();
-      await page.keyboard.press("Escape");
-      await expect(grid).toBeFocused();
-    } finally {
-      await context.close();
-    }
-  }, 60_000);
-
   test("honors the user setting gate even when the user can modify the board", async () => {
     const { context, page } = await openBoardAsync(browser, baseUrl, disabledModifierCredentials);
 
     try {
-      const widget = page.locator(".grid-stack-item[data-kind='clock'] > .grid-stack-item-content").first();
-      const grid = page.locator(".grid-stack[data-kind='empty']");
+      const widget = page.locator("[data-grid-item-id][data-kind='clock'] [data-advanced-focus-source]").first();
 
       await widget.click({ button: "right" });
       await expect(page.getByRole("menuitem", { name: "Open advanced view" })).toHaveCount(0);
-      await expect(grid).not.toHaveAttribute("aria-label", "Add item here");
-      await rightClickEmptyGridSpaceAsync(grid);
-      await expect(page.getByRole("menuitem", { name: "Add item here" })).toHaveCount(0);
     } finally {
       await context.close();
     }
   }, 60_000);
 
-  test("keeps read-only advanced viewing but blocks add-at-position without change access", async () => {
+  test("keeps read-only advanced viewing", async () => {
     const { context, page } = await openBoardAsync(browser, baseUrl, viewerCredentials);
 
     try {
-      const widget = page.locator(".grid-stack-item[data-kind='clock'] > .grid-stack-item-content").first();
-      const grid = page.locator(".grid-stack[data-kind='empty']");
+      const widget = page.locator("[data-grid-item-id][data-kind='clock'] [data-advanced-focus-source]").first();
 
       await widget.click({ button: "right" });
       await page.getByRole("menuitem", { name: "Open advanced view" }).click();
       await expect(page.getByRole("dialog", { name: "Date and time advanced view" })).toBeVisible();
       await page.keyboard.press("Escape");
-
-      await expect(grid).not.toHaveAttribute("aria-label", "Add item here");
-      await rightClickEmptyGridSpaceAsync(grid);
-      await expect(page.getByRole("menuitem", { name: "Add item here" })).toHaveCount(0);
     } finally {
       await context.close();
     }
@@ -402,29 +364,6 @@ const openBoardAsync = async (
   });
 
   return { context, page };
-};
-
-const rightClickEmptyGridSpaceAsync = async (grid: Locator) => {
-  const bounds = await grid.boundingBox();
-  expect(bounds).not.toBeNull();
-  if (!bounds) return;
-
-  await grid.click({
-    button: "right",
-    position: { x: bounds.width * emptyCellCenterXRatio, y: Math.min(24, bounds.height / 2) },
-  });
-};
-
-const touchAndHoldEmptyGridSpaceAsync = async (grid: Locator) => {
-  const bounds = await grid.boundingBox();
-  expect(bounds).not.toBeNull();
-  if (!bounds) return;
-
-  const clientX = bounds.x + bounds.width * emptyCellCenterXRatio;
-  const clientY = bounds.y + Math.min(24, bounds.height / 2);
-  await grid.dispatchEvent("pointerdown", { pointerType: "touch", clientX, clientY });
-  await new Promise((resolve) => setTimeout(resolve, 800));
-  await grid.dispatchEvent("pointerup", { pointerType: "touch", clientX, clientY });
 };
 
 const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) => {

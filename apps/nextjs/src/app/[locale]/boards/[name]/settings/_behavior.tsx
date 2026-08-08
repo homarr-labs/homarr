@@ -1,48 +1,27 @@
 "use client";
 
-import { Button, Group, Stack, Switch } from "@mantine/core";
+import { Switch } from "@mantine/core";
 
-import { useForm } from "@homarr/form";
+import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 
-import type { Board } from "../../_types";
-import { useSavePartialSettingsMutation } from "./_shared";
+import { SectionCard } from "~/components/manage/section-card";
+import type { FormValues } from "./_settings-form";
 
 interface Props {
-  board: Board;
+  form: UseFormReturnType<FormValues>;
 }
 
-export const BehaviorSettingsContent = ({ board }: Props) => {
+export const BehaviorSettingsContent = ({ form }: Props) => {
   const t = useI18n();
-  const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
-  const form = useForm({
-    initialValues: {
-      disableStatus: board.disableStatus,
-    },
-  });
 
   return (
-    <form
-      onSubmit={form.onSubmit((values) => {
-        savePartialSettings({
-          id: board.id,
-          ...values,
-        });
-      })}
-    >
-      <Stack>
-        <Switch
-          label={t("board.field.disableStatus.label")}
-          description={t("board.field.disableStatus.description")}
-          {...form.getInputProps("disableStatus", { type: "checkbox" })}
-        />
-
-        <Group justify="end">
-          <Button type="submit" loading={isPending}>
-            {t("common.action.saveChanges")}
-          </Button>
-        </Group>
-      </Stack>
-    </form>
+    <SectionCard title={t("board.setting.section.behavior.title")}>
+      <Switch
+        label={t("board.field.disableStatus.label")}
+        description={t("board.field.disableStatus.description")}
+        {...form.getInputProps("disableStatus", { type: "checkbox" })}
+      />
+    </SectionCard>
   );
 };

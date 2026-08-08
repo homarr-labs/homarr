@@ -1,42 +1,22 @@
-import { IconApi, IconPlayerPause } from "@tabler/icons-react";
+import { IconApi } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
-import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
+import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
-
-const createOptions = () =>
-  optionsBuilder.from((factory) => ({
-    definitionId: factory.customWidgetSelect({ defaultValue: "" }),
-    refreshInterval: factory.slider({
-      defaultValue: 30,
-      validate: z.number().min(1).max(3600),
-      step: 1,
-      withDescription: true,
-    }),
-  }));
 
 export const { definition, componentLoader } = createWidgetDefinition("customApi", {
   icon: IconApi,
-  queryKey: [["widget", "customApi", "getData"]],
-  queryMatcher: ({ input }, scope) =>
-    widgetQueryInputMatches(input, {
-      boardId: scope.boardId,
-      itemId: scope.itemId,
-      definitionId: scope.options.definitionId,
-    }),
-  contextActions: ({ options, widgetRuntimeRef }) => {
-    return [
-      {
-        key: "togglePolling",
-        label: "widget.customApi.actions.togglePolling",
-        icon: IconPlayerPause,
-        hidden: typeof options.definitionId !== "string" || options.definitionId.trim() === "",
-        disabled: typeof widgetRuntimeRef.current.actions.togglePolling !== "function",
-        onClick: () => {
-          widgetRuntimeRef.current.actions.togglePolling?.();
-        },
-      },
-    ];
+  createOptions() {
+    return optionsBuilder.from((factory) => ({
+      definitionId: factory.customWidgetSelect({ defaultValue: "" }),
+      configuration: factory.customWidgetConfiguration(),
+      configurationVersion: factory.internal({ defaultValue: 1 }),
+      refreshInterval: factory.slider({
+        defaultValue: 30,
+        validate: z.number().min(1).max(3600),
+        step: 1,
+        withDescription: true,
+      }),
+    }));
   },
-  createOptions,
 }).withDynamicImport(() => import("./component"));

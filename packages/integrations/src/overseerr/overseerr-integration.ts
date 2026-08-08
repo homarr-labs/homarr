@@ -185,9 +185,15 @@ export class OverseerrIntegration
       }),
     );
 
-    return settled
+    const fulfilled = settled
       .filter((result): result is PromiseFulfilledResult<MediaRequest> => result.status === "fulfilled")
       .map((result) => result.value);
+
+    if (fulfilled.length === 0) {
+      throw new Error("Failed to resolve any media request information");
+    }
+
+    return fulfilled;
   }
 
   protected mapRequestStatus(status: UpstreamMediaRequestStatus): MediaRequestStatus {

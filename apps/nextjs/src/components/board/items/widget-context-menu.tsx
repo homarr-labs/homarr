@@ -1,18 +1,9 @@
 "use client";
 
-import type { ReactNode, RefObject } from "react";
+import type { MutableRefObject, ReactNode, RefObject } from "react";
 import { useCallback, useMemo, useState } from "react";
 import { Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
-import {
-  IconAlertTriangle,
-  IconCircleCheck,
-  IconCopy,
-  IconLayoutKanban,
-  IconMaximize,
-  IconRefresh,
-  IconSettings,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconAlertTriangle, IconCircleCheck, IconMaximize, IconRefresh, IconSettings } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
@@ -22,60 +13,56 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { usePersistBoard } from "@homarr/boards/updater";
 import { useTimeAgo } from "@homarr/common";
-import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TranslationFunction } from "@homarr/translation";
-import type { WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets";
-import {
-  getWidgetQueryKeys,
-  getWidgetRuntimeQueries,
-  reduceWidgetOptionsWithDefaultValues,
-  supportsAdvancedFocus,
-  widgetImports,
-} from "@homarr/widgets";
-import { WidgetEditModal } from "@homarr/widgets/modals";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import type { WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
+import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } from "@homarr/widgets/definition";
+import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { useBoardPermissions } from "../permissions/client";
-import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
-import { ItemMoveModal } from "./item-move-modal";
+import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 import { matchesWidgetItemQuery } from "./widget-query-scope";
 
 interface WidgetContextMenuProps {
   item: SectionItem;
+  definition: WidgetDefinition;
+  widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   sourceRef: RefObject<HTMLElement | null>;
   children: ReactNode;
 }
 
-export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children }: WidgetContextMenuProps) => {
+export const WidgetContextMenu = ({
+  item,
+  definition,
+  widgetRuntimeRef,
+  sourceRef,
+  children,
+}: WidgetContextMenuProps) => {
   const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
   const { updateAndPersistBoard } = usePersistBoard(board);
-  const tItem = useScopedI18n("item");
   const tMenu = useScopedI18n("item.menu.label");
   const t = useI18n();
   const settings = useSettings();
-  const isRightClickEnabled = settings.enableRightClickOnWidgets;
-  const { openModal } = useModalAction(WidgetEditModal);
-  const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
-  const { openConfirmModal } = useConfirmModal();
-  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
-    useItemActions();
-  const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
-  const currentDefinition = useMemo(
-    () => widgetImports[item.kind].definition as WidgetDefinition & { kind: string },
-    [item.kind],
-  );
-  const canOpenAdvancedFocus = supportsAdvancedFocus(currentDefinition);
-  const { gridstack } = useSectionContext().refs;
+  const { openModal } = useModalAction(LazyWidgetEditModal);
+  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
+  const hasSupportedIntegrations = (definition.supportedIntegrations?.length ?? 0) > 0;
+  const { data: integrationData = [], isPending } = clientApi.integration.all.useQuery(undefined, {
+    enabled: hasSupportedIntegrations,
+  });
+  const canConfigureWidget =
+    hasChangeAccess && (item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false));
+  const canOpenAdvancedFocus = supportsAdvancedFocus(definition);
   const queryClient = useQueryClient();
   const { open: openAdvancedFocus } = useAdvancedFocus();
   const integrationsWithInteractAccess = useIntegrationsWithInteractAccess();
@@ -96,12 +83,10 @@ export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children 
   );
 
   const options = useMemo(
-    () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options),
-    [item.kind, settings, item.options],
+    () => reduceWidgetOptionsWithDefinition(definition, settings, item.options),
+    [definition, settings, item.options],
   );
-
-  const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(currentDefinition), [currentDefinition]);
-  const widgetQueryMatcher = "queryMatcher" in currentDefinition ? currentDefinition.queryMatcher : undefined;
+  const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(definition, item.kind), [definition, item.kind]);
   const matchesWidgetQuery = useCallback(
     (queryKey: QueryKey) =>
       matchesWidgetItemQuery(
@@ -114,9 +99,9 @@ export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children 
           options,
           runtimeQueries: getWidgetRuntimeQueries(widgetRuntimeRef),
         },
-        widgetQueryMatcher,
+        definition.queryMatcher,
       ),
-    [board.id, item.id, item.integrationIds, options, widgetQueryKeys, widgetQueryMatcher, widgetRuntimeRef],
+    [board.id, definition.queryMatcher, item.id, item.integrationIds, options, widgetQueryKeys, widgetRuntimeRef],
   );
   const isWidgetFetching =
     useIsFetching({
@@ -134,11 +119,6 @@ export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children 
 
   const setItemOptions = useCallback(
     (partial: Record<string, unknown>) => {
-      if (isEditMode) {
-        updateItemOptions({ itemId: item.id, newOptions: { ...options, ...partial } });
-        return;
-      }
-
       persistBoard((previous) => ({
         ...previous,
         items: previous.items.map((boardItem) =>
@@ -146,18 +126,18 @@ export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children 
         ),
       }));
     },
-    [isEditMode, item.id, options, persistBoard, updateItemOptions],
+    [item.id, persistBoard],
   );
 
   type OptionDef = { type: string; skipContextMenu?: boolean };
   const toggleOptions = useMemo(() => {
-    if (!hasChangeAccess) return [];
-    const rawOptions = currentDefinition.createOptions(settings) as unknown as Record<string, OptionDef>;
-    return Object.entries(rawOptions).filter(([, def]) => def.type === "switch" && !def.skipContextMenu);
-  }, [currentDefinition, hasChangeAccess, settings]);
+    if (!canConfigureWidget) return [];
+    const rawOptions = definition.createOptions(settings) as unknown as Record<string, OptionDef>;
+    return Object.entries(rawOptions).filter(([, option]) => option.type === "switch" && !option.skipContextMenu);
+  }, [canConfigureWidget, definition, settings]);
 
   const widgetContextActions =
-    currentDefinition.contextActions?.({
+    definition.contextActions?.({
       options,
       setOptions: setItemOptions,
       integrationIds: item.integrationIds,
@@ -174,38 +154,34 @@ export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children 
     openModal(
       {
         kind: item.kind,
+        definition,
         value: {
           advancedOptions: item.advancedOptions,
           options: item.options,
           integrationIds: item.integrationIds,
         },
         onSuccessfulEdit: (editResult) => {
-          if (isEditMode) {
-            updateItemOptions({ itemId: item.id, newOptions: editResult.options });
-            updateItemAdvancedOptions({ itemId: item.id, newAdvancedOptions: editResult.advancedOptions });
-            updateItemIntegrations({ itemId: item.id, newIntegrations: editResult.integrationIds });
-          } else {
-            persistBoard((previous) => ({
-              ...previous,
-              items: previous.items.map((boardItem) =>
-                boardItem.id !== item.id
-                  ? boardItem
-                  : {
-                      ...boardItem,
-                      options: editResult.options,
-                      advancedOptions: editResult.advancedOptions,
-                      integrationIds: editResult.integrationIds,
-                    },
-              ),
-            }));
-          }
+          updateItemOptions({ itemId: item.id, newOptions: editResult.options });
+          updateItemAdvancedOptions({ itemId: item.id, newAdvancedOptions: editResult.advancedOptions });
+          updateItemIntegrations({ itemId: item.id, newIntegrations: editResult.integrationIds });
+          persistBoard((previous) => ({
+            ...previous,
+            items: previous.items.map((boardItem) =>
+              boardItem.id !== item.id
+                ? boardItem
+                : {
+                    ...boardItem,
+                    options: editResult.options,
+                    advancedOptions: editResult.advancedOptions,
+                    integrationIds: editResult.integrationIds,
+                  },
+            ),
+          }));
         },
-        integrationData: (integrationData ?? []).filter(
-          (integration) =>
-            "supportedIntegrations" in currentDefinition &&
-            (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
+        integrationData: integrationData.filter((integration) =>
+          definition.supportedIntegrations?.some((kind) => kind === integration.kind),
         ),
-        integrationSupport: "supportedIntegrations" in currentDefinition,
+        integrationSupport: definition.supportedIntegrations !== undefined,
         settings,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
@@ -213,16 +189,15 @@ export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children 
       { title: (fn: any) => `${fn("item.edit.title")} - ${fn(`widget.${item.kind}.name`)}` },
     );
   }, [
-    openModal,
+    definition,
+    integrationData,
     item,
-    updateItemOptions,
+    openModal,
+    persistBoard,
+    settings,
     updateItemAdvancedOptions,
     updateItemIntegrations,
-    integrationData,
-    currentDefinition,
-    settings,
-    isEditMode,
-    persistBoard,
+    updateItemOptions,
   ]);
 
   const handleToggle = useCallback(
@@ -230,10 +205,9 @@ export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children 
     [setItemOptions],
   );
 
-  if (!session) return <>{children}</>;
-  if (!isRightClickEnabled) return <>{children}</>;
+  if (!session || !settings.enableRightClickOnWidgets || isEditMode) return <>{children}</>;
 
-  const visibleWidgetActions = widgetContextActions.filter((a) => !a.hidden);
+  const visibleWidgetActions = widgetContextActions.filter((action) => !action.hidden);
 
   return (
     <Menu
@@ -255,13 +229,13 @@ export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children 
               onClick={() => {
                 if (sourceRef.current) openAdvancedFocus(item.id, sourceRef.current);
               }}
-              disabled={isEditMode}
             >
               {t("item.advancedFocus.open")}
             </Menu.Item>
             <Menu.Divider />
           </>
         )}
+
         {toggleOptions.length > 0 && (
           <>
             <Menu.Label>{tMenu("options")}</Menu.Label>
@@ -296,77 +270,32 @@ export const WidgetContextMenu = ({ item, widgetRuntimeRef, sourceRef, children 
           </>
         )}
 
-        {isEditMode && (
-          <>
-            {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
-            <Menu.Item
-              closeMenuOnClick
-              leftSection={<IconLayoutKanban size={16} />}
-              onClick={() => {
-                if (!gridstack.current) return;
-                openMoveModal({ item, columnCount: gridstack.current.getColumn(), gridStack: gridstack.current });
-              }}
-            >
-              {tItem("action.moveResize")}
-            </Menu.Item>
-            <Menu.Item
-              closeMenuOnClick
-              leftSection={<IconCopy size={16} />}
-              onClick={() => duplicateItem({ itemId: item.id })}
-            >
-              {tItem("action.duplicate")}
-            </Menu.Item>
-          </>
-        )}
-
-        <>
-          {(toggleOptions.length > 0 || visibleWidgetActions.length > 0 || isEditMode) && <Menu.Divider />}
-          <Menu.Item
-            leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
-            onClick={handleRefetch}
-            disabled={isWidgetFetching}
-          >
-            <Group justify="space-between" wrap="nowrap" gap="sm">
-              {tMenu("refresh")}
-              <WidgetQueryStatus
-                queryClient={queryClient}
-                matchesQuery={matchesWidgetQuery}
-                isFetching={isWidgetFetching}
-                t={t}
-              />
-            </Group>
-          </Menu.Item>
-          {hasChangeAccess && (
-            <Menu.Item
-              closeMenuOnClick
-              leftSection={<IconSettings size={16} />}
-              onClick={openEditModal}
-              disabled={isPending}
-            >
-              {tMenu("settings")}
-            </Menu.Item>
-          )}
-        </>
-
-        {isEditMode && (
-          <>
-            <Menu.Divider />
-            <Menu.Item
-              closeMenuOnClick
-              color="red"
-              leftSection={<IconTrash size={16} />}
-              onClick={() => {
-                openConfirmModal({
-                  title: tItem("remove.title"),
-                  children: tItem("remove.message"),
-                  onConfirm: () => removeItem({ itemId: item.id }),
-                });
-              }}
-            >
-              {tItem("action.remove")}
-            </Menu.Item>
-          </>
-        )}
+        {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
+        <Menu.Item
+          leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
+          onClick={handleRefetch}
+          disabled={isWidgetFetching}
+        >
+          <Group justify="space-between" wrap="nowrap" gap="sm">
+            {tMenu("refresh")}
+            <WidgetQueryStatus
+              queryClient={queryClient}
+              matchesQuery={matchesWidgetQuery}
+              isFetching={isWidgetFetching}
+              t={t}
+            />
+          </Group>
+        </Menu.Item>
+        <Menu.Item
+          closeMenuOnClick
+          leftSection={<IconSettings size={16} />}
+          onClick={openEditModal}
+          onFocus={preloadWidgetEditModal}
+          onPointerEnter={preloadWidgetEditModal}
+          disabled={!canConfigureWidget || (hasSupportedIntegrations && isPending)}
+        >
+          {tMenu("settings")}
+        </Menu.Item>
       </Menu.Dropdown>
     </Menu>
   );
@@ -408,8 +337,7 @@ const WidgetQueryStatus = ({ queryClient, matchesQuery, isFetching, t }: WidgetQ
     );
   }
 
-  const hasError = queries.some((q) => q.state.status === "error");
-
+  const hasError = queries.some((query) => query.state.status === "error");
   if (hasError) {
     return (
       <Tooltip label={t("item.menu.status.error")} position="left">

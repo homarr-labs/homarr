@@ -9,6 +9,7 @@
   "exports": {
     ".": "./index.ts",
     "./collection": "./collection.ts",
+    "./proxy-reader": "./proxy-reader.ts",
     "./schema": "./schema/index.ts",
     "./test": "./test/index.ts",
     "./queries": "./queries/index.ts",
@@ -46,6 +47,7 @@
     "@auth/core": "catalog:",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
+    "@homarr/custom-widgets": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",

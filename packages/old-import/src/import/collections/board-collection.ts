@@ -12,7 +12,7 @@ import { mapColumnCount } from "../../mappers/map-column-count";
 import { moveWidgetsAndAppsIfMerge } from "../../move-widgets-and-apps-merge";
 import { prepareItems } from "../../prepare/prepare-items";
 import type { prepareMultipleImports } from "../../prepare/prepare-multiple";
-import { prepareSections } from "../../prepare/prepare-sections";
+import { placePreparedSections, prepareSections } from "../../prepare/prepare-sections";
 import type { InitialOldmarrImportSettings } from "../../settings";
 
 const logger = createLogger({ module: "boardCollection" });
@@ -26,6 +26,7 @@ export const createBoardInsertCollection = (
     "boards",
     "layouts",
     "sections",
+    "sectionLayouts",
     "items",
     "itemLayouts",
   ]);
@@ -87,21 +88,18 @@ export const createBoardInsertCollection = (
       {} as Record<BoardSize, string>,
     );
 
-    insertCollection.layouts.push(
-      ...boardSizes.map((size) => ({
-        id: layoutMapping[size],
-        boardId: mappedBoard.id,
-        columnCount: mapColumnCount(board.config.settings.customization.gridstack, size),
-        breakpoint: mapBreakpoint(size),
-        name: getBoardSizeName(size),
-      })),
-    );
+    const preparedLayouts = boardSizes.map((size) => ({
+      id: layoutMapping[size],
+      boardId: mappedBoard.id,
+      columnCount: mapColumnCount(board.config.settings.customization.gridstack, size),
+      breakpoint: mapBreakpoint(size),
+      name: getBoardSizeName(size),
+    }));
+    insertCollection.layouts.push(...preparedLayouts);
 
     const preparedSections = prepareSections(mappedBoard.id, { wrappers, categories });
 
-    for (const section of preparedSections.values()) {
-      insertCollection.sections.push(section);
-    }
+    insertCollection.sections.push(...preparedSections.sections);
     logger.debug("Added sections to board insert collection", { count: insertCollection.sections.length });
 
     const preparedItems = prepareItems(
@@ -111,10 +109,11 @@ export const createBoardInsertCollection = (
         settings: board.config.settings,
       },
       appsMap,
-      preparedSections,
+      preparedSections.byLegacyId,
       layoutMapping,
       mappedBoard.id,
     );
+    insertCollection.sectionLayouts.push(...placePreparedSections(preparedSections, preparedItems, preparedLayouts));
     preparedItems.forEach(({ layouts, ...item }) => {
       insertCollection.items.push(item);
       insertCollection.itemLayouts.push(...layouts);

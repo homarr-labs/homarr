@@ -2,9 +2,9 @@
 
 <img src="https://raw.githubusercontent.com/homarr-labs/charts/refs/heads/main/charts/homarr/icon.svg" align="right" width="92" alt="homarr logo">
 
-![Version: 8.25.0](https://img.shields.io/badge/Version-8.25.0-informational?style=flat)
+![Version: 8.26.0](https://img.shields.io/badge/Version-8.26.0-informational?style=flat)
 ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat)
-![AppVersion: v1.73.0](https://img.shields.io/badge/AppVersion-v1.73.0-informational?style=flat)
+![AppVersion: v1.74.0](https://img.shields.io/badge/AppVersion-v1.74.0-informational?style=flat)
 
 A Helm chart to deploy homarr for Kubernetes
 
@@ -12,7 +12,7 @@ A Helm chart to deploy homarr for Kubernetes
 
 ## Source Code
 
-* <https://github.com/homarr-labs/homarr>
+- <https://github.com/homarr-labs/homarr>
 
 ## Requirements
 
@@ -76,38 +76,38 @@ To avoid including sensitive information in plain text within your version contr
 
 Below is an exhaustive list of all secrets:
 
-| FEATURE   | SECRET NAME             | SECRET KEYS                             | Required |
-|-----------|-------------------------|-----------------------------------------|----------|
-| OIDC      | auth-oidc-secret        | oidc-client-id<br>oidc-client-secret    | No       |
-| LDAP      | auth-ldap-secret        | bind-password                           | No       |
-| DATABASE  | db-secret               | db-url                                  | No       |
-| DATABASE  | db-encryption           | db-encryption-key                       | yes      |
+| FEATURE  | SECRET NAME      | SECRET KEYS                          | Required |
+| -------- | ---------------- | ------------------------------------ | -------- |
+| OIDC     | auth-oidc-secret | oidc-client-id<br>oidc-client-secret | No       |
+| LDAP     | auth-ldap-secret | bind-password                        | No       |
+| DATABASE | db-secret        | db-url                               | No       |
+| DATABASE | db-encryption    | db-encryption-key                    | yes      |
 
 ### Database
 
 You have multiple options for configuring the database:
 
-| DRIVER TYPE    | Persistence mode                |
-|----------------|---------------------------------|
-| better-sqlite3 | Pod disk                        |
-| better-sqlite3 | homarr-database PVC             |
-| mysql2         | External MySql database         |
-| node-postgres  | External Postgresql database    |
+| DRIVER TYPE    | Persistence mode             |
+| -------------- | ---------------------------- |
+| better-sqlite3 | Pod disk                     |
+| better-sqlite3 | homarr-database PVC          |
+| mysql2         | External MySql database      |
+| node-postgres  | External Postgresql database |
 
 #### Pod disk
 
-No additional configuration is required. However, keep in mind that if the pod restarts, all data will be lost. This setup is not *recommended* for production use.
+No additional configuration is required. However, keep in mind that if the pod restarts, all data will be lost. This setup is not _recommended_ for production use.
 
 To create the necessary database secret, execute the following command:
 
 <details>
 <summary>Required Secrets</summary>
 
-````yaml
+```yaml
 kubectl create secret generic db-encryption \
 --from-literal=db-encryption-key='<SECRET_ENCRYPTION_KEY_SECRET_TO_CHANGE>' \
 --namespace homarr
-````
+```
 
 </details>
 
@@ -120,11 +120,11 @@ Associated secret to create :
 <details>
 <summary>DB Required Secrets</summary>
 
-````yaml
+```yaml
 kubectl create secret generic db-encryption \
 --from-literal=db-encryption-key='<SECRET_ENCRYPTION_KEY_SECRET_TO_CHANGE>' \
 --namespace homarr
-````
+```
 
 </details>
 
@@ -133,13 +133,13 @@ Bellow an example of the override value file :
 <details>
 <summary>values.yaml</summary>
 
-````yaml
+```yaml
 persistence:
   homarrDatabase:
     enabled: true
     storageClassName: "default"
     size: "1Gi"
-````
+```
 
 </details>
 
@@ -150,17 +150,18 @@ To create the necessary database secrets, execute the following command:
 <details>
 <summary>Required Secrets</summary>
 
-````yaml
+```yaml
 kubectl create secret generic db-encryption \
 --from-literal=db-encryption-key='<SECRET_ENCRYPTION_KEY_SECRET_TO_CHANGE>' \
 --namespace homarr
-````
+```
 
-````yaml
+```yaml
 kubectl create secret generic db-secret \
 --from-literal=db-url='mysql://user:password@host:port/homarrdb' \
 --namespace homarr
-````
+```
+
 </details>
 
 Below is an example of the override values file:
@@ -168,10 +169,11 @@ Below is an example of the override values file:
 <details>
 <summary>values.yaml</summary>
 
-````yaml
+```yaml
 database:
   type: mysql
-````
+```
+
 </details>
 
 #### External Postgresql database
@@ -181,17 +183,17 @@ To create the necessary database secrets, execute the following command:
 <details>
 <summary>Required Secrets</summary>
 
-````yaml
+```yaml
 kubectl create secret generic db-encryption \
 --from-literal=db-encryption-key='<SECRET_ENCRYPTION_KEY_SECRET_TO_CHANGE>' \
 --namespace homarr
-````
+```
 
-````yaml
+```yaml
 kubectl create secret generic db-secret \
 --from-literal=db-url='postgresql://user:password@host:port/homarrdb' \
 --namespace homarr
-````
+```
 
 </details>
 
@@ -200,10 +202,11 @@ Below is an example of the override values file:
 <details>
 <summary>values.yaml</summary>
 
-````yaml
+```yaml
 database:
   type: postgresql
-````
+```
+
 </details>
 
 ### Ingress
@@ -213,7 +216,7 @@ The ingress section in the values.yaml file allows you to configure how external
 <details>
 <summary>values.yaml</summary>
 
-````yaml
+```yaml
 service:
   enabled: true # Ensure the service is enabled for Ingress to route traffic
 ingress:
@@ -231,7 +234,8 @@ ingress:
         - "homarr.homelab.dev"
         - "www.homarr.homelab.dev"
       secretName: homelab-tls
-````
+```
+
 </details>
 
 ### HTTPRoute (Gateway API)
@@ -242,9 +246,9 @@ This provides a more expressive and future-proof alternative to Ingress, with su
 <details>
 <summary>values.yaml</summary>
 
-````yaml
+```yaml
 service:
-  enabled: true  # must be enabled for HTTPRoute to forward traffic
+  enabled: true # must be enabled for HTTPRoute to forward traffic
 httproute:
   enabled: true
   parentRefs:
@@ -267,7 +271,7 @@ httproute:
 
 - parentRefs: the Gateway(s) this route attaches to. Gateways must already exist.
 - hostnames: domain names this route applies to.
-- rules:  each rule can define matches (paths, headers, queries), optional filters, and backendRefs to services
+- rules: each rule can define matches (paths, headers, queries), optional filters, and backendRefs to services
 - TLS must be configured on the Gateway (not on HTTPRoute). For example, the Gateway can have a TLS listener for homarr.homelab.dev, and this route will automatically apply once matched.
 
 ### Certificates
@@ -284,7 +288,7 @@ Use inline certificates to generate a ConfigMap, mounted as individual files.
 <details>
 <summary>values.yaml</summary>
 
-````yaml
+```yaml
 persistence:
   homarrTrustedCerts:
     enabled: true
@@ -298,7 +302,8 @@ persistence:
         -----BEGIN CERTIFICATE-----
         MIID...EFGH==
         -----END CERTIFICATE-----
-````
+```
+
 </details>
 
 Behavior:
@@ -313,7 +318,7 @@ Use inline certificates to generate a Kubernetes Secret, mounted as files.
 <details>
 <summary>values.yaml</summary>
 
-````yaml
+```yaml
 persistence:
   homarrTrustedCerts:
     enabled: true
@@ -327,7 +332,8 @@ persistence:
         -----BEGIN CERTIFICATE-----
         MIIC...XYZ==
         -----END CERTIFICATE-----
-````
+```
+
 </details>
 
 Behavior:
@@ -342,16 +348,17 @@ Use an existing Kubernetes Secret, assuming its keys are filenames.
 <details>
 <summary>values.yaml</summary>
 
-````yaml
+```yaml
 persistence:
   homarrTrustedCerts:
     enabled: true
     type: existingSecret
     existingSecretName: "existingSecretName"
     existingSecretKeys:
-        - cert3.crt
-        - cert4.crt
-````
+      - cert3.crt
+      - cert4.crt
+```
+
 </details>
 
 Behavior:
@@ -429,7 +436,7 @@ All available values are listed on the [artifacthub](https://artifacthub.io/pack
 | httproute.rules[0].matches[0].path.value | string | `"/"` | Path value to match |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"ghcr.io/homarr-labs/homarr"` | Image repository |
-| image.tag | string | `"v1.73.0"` | Overrides the image tag whose default is the chart appVersion |
+| image.tag | string | `"v1.74.0"` | Overrides the image tag whose default is the chart appVersion |
 | imagePullSecrets | list | `[]` | Secrets for Docker registry |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.enabled | bool | `false` | Enable ingress |
@@ -482,4 +489,5 @@ All available values are listed on the [artifacthub](https://artifacthub.io/pack
 | tolerations | list | `[]` | Node tolerations for pod scheduling |
 
 ---
+
 Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs)

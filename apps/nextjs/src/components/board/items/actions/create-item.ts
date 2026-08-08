@@ -1,50 +1,43 @@
 import { getBoardLayouts } from "@homarr/boards/context";
 import { createId } from "@homarr/common";
 import type { Modify } from "@homarr/common/types";
+import { getRootSectionLane } from "@homarr/definitions";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetDefaultSizes } from "@homarr/definitions";
-import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 
 import type { Board, EmptySection, Item, ItemLayout } from "~/app/[locale]/boards/_types";
-import { getFirstEmptyPosition, getNearestEmptyPosition } from "./empty-position";
+import { getBoardLaneColumnCount } from "~/components/board/layout";
+import { getFirstEmptyPosition } from "./empty-position";
 import { getSectionElements } from "./section-elements";
-
-export interface BoardPlacementHint {
-  sectionId: string;
-  layoutId: string;
-  xOffset: number;
-  yOffset: number;
-}
 
 export interface CreateItemInput {
   id?: string;
   kind: WidgetKind;
   options?: Record<string, unknown>;
   integrationIds?: string[];
-  advancedOptions?: BoardItemAdvancedOptions;
-  placement?: BoardPlacementHint;
 }
 
 export const createItemCallback =
-  ({ id, kind, options = {}, integrationIds = [], advancedOptions, placement }: CreateItemInput) =>
+  ({ id, kind, options = {}, integrationIds = [] }: CreateItemInput) =>
   (previous: Board): Board => {
     const firstSection = previous.sections
-      .filter((section): section is EmptySection => section.kind === "empty")
+      .filter(
+        (section): section is EmptySection =>
+          section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
+      )
       .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset)
       .at(0);
 
-    if (!firstSection && !placement) return previous;
+    if (!firstSection) return previous;
 
-    const defaultSectionId = firstSection?.id ?? placement?.sectionId;
-    if (!defaultSectionId) return previous;
-
+    const itemLayouts = createItemLayouts(previous, firstSection, kind);
     const widget = {
       id: id ?? createId(),
       kind,
       options,
-      layouts: createItemLayouts(previous, defaultSectionId, kind, placement),
+      layouts: itemLayouts,
       integrationIds,
-      advancedOptions: advancedOptions ?? {
+      advancedOptions: {
         title: null,
         customCssClasses: [],
         borderColor: "",
@@ -66,31 +59,21 @@ const defaultItemSize = { width: 1, height: 1 };
 
 const getWidgetItemSize = (kind: WidgetKind) => widgetDefaultSizes[kind] ?? defaultItemSize;
 
-const createItemLayouts = (
-  board: Board,
-  defaultSectionId: string,
-  kind: WidgetKind,
-  placement?: BoardPlacementHint,
-): ItemLayout[] => {
+const createItemLayouts = (board: Board, currentSection: EmptySection, kind: WidgetKind): ItemLayout[] => {
   const layouts = getBoardLayouts(board);
   const itemSize = getWidgetItemSize(kind);
 
   return layouts.map((layoutId) => {
     const boardLayout = board.layouts.find((layout) => layout.id === layoutId);
-    const targetSectionId = placement?.layoutId === layoutId ? placement.sectionId : defaultSectionId;
-    const elements = getSectionElements(board, { sectionId: targetSectionId, layoutId });
+    const elements = getSectionElements(board, { sectionId: currentSection.id, layoutId });
+    const columnCount = boardLayout ? getBoardLaneColumnCount(boardLayout, "main") : itemSize.width;
+    const size = {
+      width: Math.min(itemSize.width, columnCount),
+      height: itemSize.height,
+    };
 
-    const targetSection = board.sections.find((section) => section.id === targetSectionId);
-    const dynamicLayout =
-      targetSection?.kind === "dynamic"
-        ? targetSection.layouts.find((layout) => layout.layoutId === layoutId)
-        : undefined;
-    const columnCount = dynamicLayout?.width ?? boardLayout?.columnCount ?? 1;
-    const rowCount = dynamicLayout?.height ?? 9999;
     const emptyPosition = boardLayout
-      ? placement?.layoutId === layoutId
-        ? getNearestEmptyPosition(elements, columnCount, rowCount, placement, itemSize)
-        : getFirstEmptyPosition(elements, columnCount, rowCount, itemSize)
+      ? getFirstEmptyPosition(elements, columnCount, undefined, size)
       : { xOffset: 0, yOffset: 0 };
 
     if (!emptyPosition) {
@@ -98,10 +81,10 @@ const createItemLayouts = (
     }
 
     return {
-      width: itemSize.width,
-      height: itemSize.height,
+      width: size.width,
+      height: size.height,
       ...emptyPosition,
-      sectionId: targetSectionId,
+      sectionId: currentSection.id,
       layoutId,
     };
   });

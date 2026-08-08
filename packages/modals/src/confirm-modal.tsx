@@ -85,7 +85,13 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
           {cancelProps?.children ?? translateIfNecessary(t, cancelLabel)}
         </Button>
 
-        <Button data-autofocus {...confirmProps} onClick={handleConfirm} color="red.9" loading={loading}>
+        <Button
+          data-autofocus
+          {...confirmProps}
+          onClick={handleConfirm}
+          color={confirmProps?.color ?? "red.9"}
+          loading={loading}
+        >
           {confirmProps?.children ?? translateIfNecessary(t, confirmLabel)}
         </Button>
       </Group>

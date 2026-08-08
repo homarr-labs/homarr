@@ -1,9 +1,9 @@
-import { trpc } from "@homarr/api/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db, inArray } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 
 import type { Prefetch } from "../definition";
+import { createTrpcQueryKey } from "../trpc-query-key";
 
 const logger = createLogger({ module: "bookmarksWidgetPrefetch" });
 
@@ -21,7 +21,7 @@ const prefetchAllAsync: Prefetch<"bookmarks"> = async (queryClient, items) => {
     }
 
     queryClient.setQueryData(
-      trpc.app.byIds.queryKey(item.options.items),
+      createTrpcQueryKey("app.byIds", item.options.items),
       dbApps.filter((app) => item.options.items.includes(app.id)),
     );
   }

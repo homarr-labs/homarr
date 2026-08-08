@@ -84,7 +84,7 @@ export default function WeatherWidget({
 }
 
 interface WeatherProps extends Pick<WidgetComponentProps<"weather">, "options"> {
-  weather: RouterOutputs["widget"]["weather"]["atLocation"];
+  weather: NonNullable<RouterOutputs["widget"]["weather"]["atLocation"]>;
 }
 
 interface CompactWeatherProps extends WeatherProps {
