@@ -44,4 +44,5 @@ export const widgetRouter = createTRPCRouter({
   traefik: lazy(() => import("./traefik").then((mod) => mod.traefikRouter)),
   customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
   secrets: lazy(() => import("./widget-secrets").then((mod) => mod.widgetSecretsRouter)),
+  wud: lazy(() => import("./wud").then((mod) => mod.wudRouter)),
 });
