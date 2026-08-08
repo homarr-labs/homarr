@@ -25,7 +25,9 @@ describe("testConnectionAsync should run test connection of integration", () => 
     // Arrange
     const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
-    factorySpy.mockResolvedValue(mockIntegration() as Awaited<ReturnType<typeof homarrIntegrations.createIntegrationAsync>>);
+    factorySpy.mockResolvedValue(
+      mockIntegration() as Awaited<ReturnType<typeof homarrIntegrations.createIntegrationAsync>>,
+    );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
     const integration = {
@@ -64,7 +66,9 @@ describe("testConnectionAsync should run test connection of integration", () => 
     // Arrange
     const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
-    factorySpy.mockResolvedValue(mockIntegration() as Awaited<ReturnType<typeof homarrIntegrations.createIntegrationAsync>>);
+    factorySpy.mockResolvedValue(
+      mockIntegration() as Awaited<ReturnType<typeof homarrIntegrations.createIntegrationAsync>>,
+    );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
     const integration = {
@@ -110,7 +114,9 @@ describe("testConnectionAsync should run test connection of integration", () => 
     // Arrange
     const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
-    factorySpy.mockResolvedValue(mockIntegration() as Awaited<ReturnType<typeof homarrIntegrations.createIntegrationAsync>>);
+    factorySpy.mockResolvedValue(
+      mockIntegration() as Awaited<ReturnType<typeof homarrIntegrations.createIntegrationAsync>>,
+    );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
     const integration = {
@@ -156,7 +162,9 @@ describe("testConnectionAsync should run test connection of integration", () => 
     // Arrange
     const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
-    factorySpy.mockResolvedValue(mockIntegration() as Awaited<ReturnType<typeof homarrIntegrations.createIntegrationAsync>>);
+    factorySpy.mockResolvedValue(
+      mockIntegration() as Awaited<ReturnType<typeof homarrIntegrations.createIntegrationAsync>>,
+    );
     optionsSpy.mockReturnValue([["username", "password"], ["apiKey"]]);
 
     const integration = {
@@ -206,7 +214,9 @@ describe("testConnectionAsync should run test connection of integration", () => 
     // Arrange
     const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
-    factorySpy.mockResolvedValue(mockIntegration() as Awaited<ReturnType<typeof homarrIntegrations.createIntegrationAsync>>);
+    factorySpy.mockResolvedValue(
+      mockIntegration() as Awaited<ReturnType<typeof homarrIntegrations.createIntegrationAsync>>,
+    );
     optionsSpy.mockReturnValue([["username", "password"], ["apiKey"]]);
 
     const integration = {
