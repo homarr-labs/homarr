@@ -1,0 +1,36 @@
+packages/redis/src/lib/connection.ts
+  s_a70c07ac5b7a5a::t_c3019f2b7a0448 7-11
+  s_a70c07ac5b7a5a::t_5085e6d822b81e 14-19
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_a0e1fd495b97ff::t_faaa43e2012cae 13-14,16-24,28,30-39,46-48,68,88-102,105-141,143-152,154,158-163
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  s_a0e1fd495b97ff::t_ee0cedbdc63bb9 2,21-22,26,55
+.cursor/goal/archive/scratchpad-20260807T193445.md
+  s_a0e1fd495b97ff::t_930657c4af717a 1-105
+p1rev-modcost.mts
+  s_a70c07ac5b7a5a::t_429a9f2ff5562f 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "c37a937fcbfb267fd29225643278fab17e4be984",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": null
+    },
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "lab <lab@local>"
+    }
+  }
+}
