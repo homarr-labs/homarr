@@ -172,6 +172,27 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
       });
       expect(dbGroupMembers?.groupId).toBe("1");
     });
+    test("should not change memberships for an invalid groups claim", async () => {
+      // Arrange
+      const db = createDb();
+      await createUserAsync(db, "oidc");
+      await createGroupAsync(db);
+      await db.insert(groupMembers).values({ userId: "1", groupId: "1" });
+      const eventHandler = createSignInEventHandler(db);
+
+      // Act
+      await eventHandler?.({
+        user: { id: "1", name: "test" },
+        profile: { preferred_username: "test", someRandomGroupsKey: 42 },
+        account: null,
+      });
+
+      // Assert
+      const dbGroupMembers = await db.query.groupMembers.findFirst({
+        where: eq(groupMembers.userId, "1"),
+      });
+      expect(dbGroupMembers?.groupId).toBe("1");
+    });
     test("should remove group membership", async () => {
       // Arrange
       const db = createDb();

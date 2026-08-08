@@ -171,9 +171,11 @@ export class BeszelIntegration extends Integration {
         integrationId: this.integration.id,
         error: error instanceof Error ? error.message : String(error),
       });
-      throw new ErrorWithMetadata("Beszel authentication response was not valid JSON", {
-        integrationId: this.integration.id,
-      });
+      throw new ErrorWithMetadata(
+        "Beszel authentication response was not valid JSON",
+        { integrationId: this.integration.id },
+        { cause: error instanceof Error ? error : new Error(String(error)) },
+      );
     }
     const expiresAt = parseTokenExpiration(data.token) ?? undefined;
 
@@ -626,7 +628,11 @@ export class BeszelIntegration extends Integration {
       logger.warn("Failed to parse Beszel testing response JSON", {
         error: error instanceof Error ? error.message : String(error),
       });
-      return TestConnectionError.ParseResult(new ParseError("Beszel testing response was not valid JSON"));
+      return TestConnectionError.ParseResult(
+        new ParseError("Beszel testing response was not valid JSON", {
+          cause: error instanceof Error ? error : new Error(String(error)),
+        }),
+      );
     }
     if (!data.token) {
       return TestConnectionError.UnauthorizedResult(401);
