@@ -23,7 +23,8 @@ describe("testConnectionAsync should run test connection of integration", () => 
     factorySpy.mockReturnValue(
       Promise.resolve({
         testConnectionAsync: async () => await Promise.resolve({ success: true }),
-      } as homarrIntegrations.PiHoleIntegrationV6),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any),
     );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
@@ -66,7 +67,8 @@ describe("testConnectionAsync should run test connection of integration", () => 
     factorySpy.mockReturnValue(
       Promise.resolve({
         testConnectionAsync: async () => await Promise.resolve({ success: true }),
-      } as homarrIntegrations.PiHoleIntegrationV6),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any),
     );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
@@ -116,7 +118,8 @@ describe("testConnectionAsync should run test connection of integration", () => 
     factorySpy.mockReturnValue(
       Promise.resolve({
         testConnectionAsync: async () => await Promise.resolve({ success: true }),
-      } as homarrIntegrations.PiHoleIntegrationV6),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any),
     );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
@@ -166,7 +169,8 @@ describe("testConnectionAsync should run test connection of integration", () => 
     factorySpy.mockReturnValue(
       Promise.resolve({
         testConnectionAsync: async () => await Promise.resolve({ success: true }),
-      } as homarrIntegrations.PiHoleIntegrationV6),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any),
     );
     optionsSpy.mockReturnValue([["username", "password"], ["apiKey"]]);
 
@@ -220,7 +224,8 @@ describe("testConnectionAsync should run test connection of integration", () => 
     factorySpy.mockReturnValue(
       Promise.resolve({
         testConnectionAsync: async () => await Promise.resolve({ success: true }),
-      } as homarrIntegrations.PiHoleIntegrationV6),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any),
     );
     optionsSpy.mockReturnValue([["username", "password"], ["apiKey"]]);
 
