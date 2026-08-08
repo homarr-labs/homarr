@@ -23,6 +23,12 @@ export type StressCheckpoint = {
     anonymousBytes: number;
     fileBytes: number;
   };
+  /**
+   * Cumulative cgroup CPU time. Needed because most ways of lowering memory
+   * (smaller GC spaces, tighter heap caps) buy it with CPU, and a win that just
+   * moves the cost somewhere unmeasured is not a win.
+   */
+  cpu: { usageUsec: number; userUsec: number; systemUsec: number } | null;
   processes: ProcessSample[];
   redis: { usedMemoryBytes: number; peakMemoryBytes: number } | null;
 };
@@ -39,6 +45,7 @@ echo "memory_current=$(cat /sys/fs/cgroup/memory.current 2>/dev/null || echo 0)"
 memory_peak="$(cat /sys/fs/cgroup/memory.peak 2>/dev/null || true)"
 case "$memory_peak" in ''|'max') ;; *) echo "memory_peak=$memory_peak" ;; esac
 awk '/^anon / { print "cgroup_anon=" $2 } /^file / { print "cgroup_file=" $2 }' /sys/fs/cgroup/memory.stat 2>/dev/null
+awk '/^usage_usec / { print "cpu_usage_usec=" $2 } /^user_usec / { print "cpu_user_usec=" $2 } /^system_usec / { print "cpu_system_usec=" $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null
 for status_file in /proc/[0-9]*/status; do
   [ -r "$status_file" ] || continue
   process_dir="$(dirname "$status_file")"
@@ -84,6 +91,7 @@ export const parseStressSnapshot = (name: string, elapsedMs: number, output: str
 
   const redisUsed = readNumericLine(output, "redis_used_memory");
   const redisPeak = readNumericLine(output, "redis_used_memory_peak");
+  const cpuUsage = readNumericLine(output, "cpu_usage_usec");
 
   return {
     name,
@@ -95,6 +103,14 @@ export const parseStressSnapshot = (name: string, elapsedMs: number, output: str
       anonymousBytes: readNumericLine(output, "cgroup_anon") ?? 0,
       fileBytes: readNumericLine(output, "cgroup_file") ?? 0,
     },
+    cpu:
+      cpuUsage === null
+        ? null
+        : {
+            usageUsec: cpuUsage,
+            userUsec: readNumericLine(output, "cpu_user_usec") ?? 0,
+            systemUsec: readNumericLine(output, "cpu_system_usec") ?? 0,
+          },
     processes,
     redis: redisUsed === null || redisPeak === null ? null : { usedMemoryBytes: redisUsed, peakMemoryBytes: redisPeak },
   };
@@ -182,6 +198,13 @@ export const summarizeStress = (checkpoints: StressCheckpoint[], soakPrefix = "s
     redisPeakMiB: (() => {
       const peaks = checkpoints.flatMap((c) => (c.redis ? [c.redis.peakMemoryBytes] : []));
       return peaks.length === 0 ? null : toMiB(Math.max(...peaks));
+    })(),
+    // Total CPU the container burned over the run, so a memory reduction bought
+    // with extra GC work shows up instead of hiding.
+    cpuSeconds: (() => {
+      const samples = checkpoints.flatMap((c) => (c.cpu ? [c.cpu.usageUsec] : []));
+      if (samples.length < 2) return null;
+      return Math.round(((Math.max(...samples) - Math.min(...samples)) / 1_000_000) * 10) / 10;
     })(),
   };
 };

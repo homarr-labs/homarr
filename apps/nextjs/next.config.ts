@@ -30,8 +30,28 @@ const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: true },
   /**
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
+   *
+   * Everything else here is a server-only dependency that is cheaper left as a
+   * runtime require than inlined into the server bundle. Bundling pulls a package's
+   * whole transitive graph into a chunk that is loaded and compiled at boot even
+   * when the code path never runs — measurably so for the DB drivers: only
+   * better-sqlite3 is ever used, yet inlining mysql2 and pg cost ~21 MiB of
+   * resident memory at idle.
    */
-  serverExternalPackages: ["dockerode", "better-sqlite3", "mysql2", "pg"],
+  serverExternalPackages: [
+    "dockerode",
+    "better-sqlite3",
+    "mysql2",
+    "pg",
+    "winston",
+    "drizzle-orm",
+    "ical.js",
+    "jszip",
+    "ldapts",
+    "node-unifi",
+    "@kubernetes/client-node",
+    "linkedom",
+  ],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForBuild: true,

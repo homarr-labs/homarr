@@ -21,7 +21,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { chromium } from "@playwright/test";
-import type { Page } from "@playwright/test";
+import type { Browser, Page } from "@playwright/test";
 
 import { parseStressSnapshot, stressMemoryScript, summarizeStress, toMiB } from "./stress-restore-lib.mts";
 import type { StressCheckpoint } from "./stress-restore-lib.mts";
@@ -83,29 +83,42 @@ const waitForReadyAsync = async (baseUrl: string, timeoutMs = 180_000) => {
 };
 
 /**
- * The restored backup's boards are private and owned by another account, and
- * the demo user has no home board. Grant access explicitly so the measurement
- * targets a fully-populated board instead of an empty state.
+ * Ensures the benchmark user can open the target board, and reports what it had
+ * to change. A backup where that user is already an admin with the board as
+ * their home board reports "none" — which keeps the run honest about how much
+ * the harness touched the restored state.
  */
 const applyAccessFixtureAsync = async () => {
   const script = `
 const Database = require("/app/node_modules/better-sqlite3");
 const db = new Database("/appdata/db/db.sqlite");
-const user = db.prepare("SELECT id FROM user WHERE name = ?").get(process.argv[1]);
+const user = db.prepare("SELECT id, home_board_id FROM user WHERE name = ?").get(process.argv[1]);
 if (!user) throw new Error("user not found: " + process.argv[1]);
 const board = db.prepare("SELECT id FROM board WHERE name = ?").get(process.argv[2]);
 if (!board) throw new Error("board not found: " + process.argv[2]);
 const adminGroup = db.prepare("SELECT group_id AS id FROM groupPermission WHERE permission = 'admin' LIMIT 1").get();
+const changes = [];
 if (adminGroup) {
-  db.prepare("INSERT OR IGNORE INTO groupMember (group_id, user_id) VALUES (?, ?)").run(adminGroup.id, user.id);
+  const already = db
+    .prepare("SELECT 1 AS ok FROM groupMember WHERE group_id = ? AND user_id = ?")
+    .get(adminGroup.id, user.id);
+  if (!already) {
+    db.prepare("INSERT INTO groupMember (group_id, user_id) VALUES (?, ?)").run(adminGroup.id, user.id);
+    changes.push("granted-admin");
+  }
 }
-db.prepare("UPDATE user SET home_board_id = ?, mobile_home_board_id = ? WHERE id = ?").run(board.id, board.id, user.id);
+if (user.home_board_id !== board.id) {
+  db.prepare("UPDATE user SET home_board_id = ?, mobile_home_board_id = ? WHERE id = ?").run(board.id, board.id, user.id);
+  changes.push("set-home-board");
+}
 db.close();
-console.log("fixture-applied");
+console.log("FIXTURE:" + (changes.length ? changes.join(",") : "none"));
 `;
   const { stdout } = await execFileAsync("docker", ["exec", containerName, "node", "-e", script, username, boardName]);
-  if (!stdout.includes("fixture-applied")) throw new Error(`Access fixture failed: ${stdout}`);
-  log("access fixture applied (admin group + home board)");
+  const applied = /FIXTURE:(.*)/.exec(stdout)?.[1]?.trim();
+  if (!applied) throw new Error(`Access fixture failed: ${stdout}`);
+  log(`access fixture changes: ${applied}`);
+  return applied;
 };
 
 const restoreBackupAsync = async (page: Page, baseUrl: string) => {
@@ -145,6 +158,34 @@ const restoreBackupAsync = async (page: Page, baseUrl: string) => {
   log("restore submitted; server will exit and be restarted by run.sh");
 };
 
+/**
+ * Control: the restored boards are private, so an anonymous visitor must not see
+ * one. Without this, "28 widgets rendered" could mean the board was public and
+ * the sign-in step never actually authenticated anything.
+ */
+const verifyAnonymousAccessDeniedAsync = async (browser: Browser, baseUrl: string) => {
+  const context = await browser.newContext();
+  try {
+    const page = await context.newPage();
+    await page.goto(`${baseUrl}/boards/${boardName}`, { waitUntil: "domcontentloaded" });
+    const boardVisible = await page
+      .locator("[data-homarr-dev-benchmark-board]")
+      .waitFor({ state: "visible", timeout: 10_000 })
+      .then(() => true)
+      .catch(() => false);
+    if (boardVisible) {
+      throw new Error(
+        `Anonymous request to /boards/${boardName} rendered the board — it is public, so the ` +
+          `authenticated measurement would prove nothing about sign-in.`,
+      );
+    }
+    log(`control: anonymous access to /boards/${boardName} denied (landed on ${new URL(page.url()).pathname})`);
+    return new URL(page.url()).pathname;
+  } finally {
+    await context.close();
+  }
+};
+
 const loginAsync = async (page: Page, baseUrl: string) => {
   // networkidle: submitting before the form hydrates is a no-op click, which then
   // looks exactly like an authentication failure.
@@ -162,8 +203,14 @@ const loginAsync = async (page: Page, baseUrl: string) => {
       await page.waitForFunction(() => !window.location.pathname.includes("/auth/login"), undefined, {
         timeout: 20_000,
       });
-      log(`signed in as ${username}`);
-      return;
+      // Leaving /auth/login is necessary but not sufficient — require the session
+      // cookie Auth.js sets, so a redirect for any other reason cannot pass as auth.
+      const sessionCookie = (await page.context().cookies()).find((cookie) => cookie.name.endsWith("session-token"));
+      if (!sessionCookie) {
+        throw new Error(`Navigated away from /auth/login but no session-token cookie was set for ${username}`);
+      }
+      log(`signed in as ${username} (session cookie "${sessionCookie.name}" present)`);
+      return sessionCookie.name;
     } catch {
       if (attempt === 3) {
         const error = await page
@@ -276,13 +323,15 @@ const main = async () => {
     await waitForReadyAsync(baseUrl);
     await captureAsync("02-post-restore");
 
-    await applyAccessFixtureAsync();
+    const fixtureChanges = await applyAccessFixtureAsync();
 
     await context.close();
+    const anonymousLanding = await verifyAnonymousAccessDeniedAsync(browser, baseUrl);
+
     const freshContext = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
     const freshPage = await freshContext.newPage();
 
-    await loginAsync(freshPage, baseUrl);
+    const sessionCookieName = await loginAsync(freshPage, baseUrl);
     await captureAsync("03-post-login");
 
     await freshPage.goto(`${baseUrl}/boards/${boardName}`, { waitUntil: "domcontentloaded" });
@@ -290,11 +339,22 @@ const main = async () => {
     await captureAsync("04-board-loaded");
 
     log(`stress: ${navIterations} reload iterations`);
+    const boardLoadMs: number[] = [];
     for (let iteration = 0; iteration < navIterations; iteration++) {
+      const startedNav = Date.now();
       await freshPage.goto(`${baseUrl}/boards/${boardName}`, { waitUntil: "domcontentloaded" });
       await waitForBoardAsync(freshPage);
+      // Wall time from navigation start to every widget having mounted — the
+      // latency side of any memory/CPU trade-off.
+      boardLoadMs.push(Date.now() - startedNav);
       await captureAsync(`nav-${String(iteration + 1).padStart(2, "0")}`);
     }
+    const sortedLoads = [...boardLoadMs].sort((left, right) => left - right);
+    const lowerMedian = sortedLoads[Math.floor((sortedLoads.length - 1) / 2)];
+    const upperMedian = sortedLoads[Math.ceil((sortedLoads.length - 1) / 2)];
+    const medianBoardLoadMs =
+      lowerMedian === undefined || upperMedian === undefined ? null : (lowerMedian + upperMedian) / 2;
+    log(`board load ms: [${boardLoadMs.join(", ")}] median=${medianBoardLoadMs}`);
     await captureAsync("05-after-stress");
 
     log(`soak: ${soakMs}ms idle with board open`);
@@ -333,6 +393,15 @@ const main = async () => {
       // Recorded so an A/B pair can be rejected if the two runs rendered
       // different amounts of the board (e.g. more widgets errored on one side).
       board: boardOutcome,
+      latency: { boardLoadMs, medianBoardLoadMs },
+      // Evidence that the board was measured behind a real session rather than
+      // because it happened to be publicly readable.
+      auth: {
+        username,
+        sessionCookieName,
+        anonymousBoardAccess: `denied (redirected to ${anonymousLanding})`,
+        fixtureChanges,
+      },
       ...summarizeStress(checkpoints),
     };
     await writeFile(path.join(outputDirectory, "summary.json"), `${JSON.stringify(summary, null, 2)}\n`);
