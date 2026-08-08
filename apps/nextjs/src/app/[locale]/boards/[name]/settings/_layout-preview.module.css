@@ -1,0 +1,39 @@
+.canvas {
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: color-mix(in srgb, var(--mantine-color-body) 82%, var(--mantine-primary-color-light));
+  padding: var(--mantine-spacing-xs);
+  min-height: 7rem;
+}
+
+.section {
+  border-radius: var(--mantine-radius-sm);
+  background: color-mix(in srgb, var(--mantine-color-default) 78%, transparent);
+  padding: 0.35rem;
+}
+
+.grid {
+  display: grid;
+  gap: 3px;
+  grid-auto-rows: clamp(0.65rem, 1.7vw, 1.15rem);
+  min-height: 2.5rem;
+}
+
+.tile {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--mantine-primary-color-filled) 24%, var(--mantine-color-default-border));
+  border-radius: calc(var(--mantine-radius-sm) * 0.75);
+  background: color-mix(in srgb, var(--mantine-primary-color-light) 70%, var(--mantine-color-body));
+  padding-inline: 0.3rem;
+}
+
+.dynamicTile {
+  border-style: dashed;
+  background: color-mix(in srgb, var(--mantine-color-default) 88%, var(--mantine-primary-color-light));
+}
+
+.appIcon {
+  width: 0.85rem;
+  height: 0.85rem;
+}

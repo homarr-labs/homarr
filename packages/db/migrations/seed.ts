@@ -1,6 +1,6 @@
 import SuperJSON from "superjson";
 
-import { createId, objectKeys } from "@homarr/common";
+import { createId, generateResponsiveGridFor, objectKeys } from "@homarr/common";
 import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import {
   createDocumentationLink,
@@ -11,11 +11,12 @@ import {
   getIntegrationName,
   integrationDefs,
   integrationKinds,
+  normalizeBoardLayoutRoles,
 } from "@homarr/definitions";
 import type { WidgetKind } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
-import type { Database } from "..";
+import type { Database, InferInsertModel } from "..";
 import { eq, inArray } from "..";
 import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
@@ -39,6 +40,7 @@ import {
   onboarding,
   searchEngines,
   sections,
+  sectionLayouts,
   users,
 } from "../schema";
 import type { Integration } from "../schema";
@@ -65,6 +67,215 @@ export const seedDataAsync = async (db: Database) => {
   if (isTruthyEnv(process.env.DEMO_MODE)) {
     await seedDemoUserAsync(db);
   }
+
+  await seedProtectedBoardLayoutsAsync(db);
+};
+
+export const seedProtectedBoardLayoutsAsync = async (db: Database, boardId?: string) => {
+  const dbBoards = await db.query.boards.findMany({
+    where: boardId ? eq(boards.id, boardId) : undefined,
+    with: {
+      layouts: true,
+      items: { with: { layouts: true } },
+      sections: { with: { layouts: true } },
+    },
+  });
+
+  for (const board of dbBoards) {
+    if (board.layouts.length === 0) {
+      await db.insert(layouts).values([
+        {
+          id: createId(),
+          name: "Mobile",
+          columnCount: 3,
+          breakpoint: 0,
+          role: "mobile",
+          boardId: board.id,
+        },
+        {
+          id: createId(),
+          name: "Base",
+          columnCount: 10,
+          breakpoint: 768,
+          role: "base",
+          boardId: board.id,
+        },
+      ]);
+      continue;
+    }
+
+    if (board.layouts.length === 1) {
+      const [baseLayout] = board.layouts;
+      if (!baseLayout) continue;
+
+      const mobileLayout = {
+        id: createId(),
+        name: "Mobile",
+        columnCount: 3,
+        breakpoint: 0,
+        role: "mobile" as const,
+        boardId: board.id,
+      };
+
+      await db.update(layouts).set({ role: "base", breakpoint: 768 }).where(eq(layouts.id, baseLayout.id));
+      await db.insert(layouts).values(mobileLayout);
+      await insertMissingProjectedPositionsAsync(
+        db,
+        board,
+        { ...baseLayout, role: "base", breakpoint: 768 },
+        mobileLayout,
+      );
+      continue;
+    }
+
+    const normalizedLayouts = normalizeBoardLayoutRoles(board.layouts);
+    const alreadyNormalized = normalizedLayouts.every((layout) => {
+      const previousLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+      return layout.breakpoint === previousLayout?.breakpoint && previousLayout.role === layout.role;
+    });
+
+    if (!alreadyNormalized) {
+      for (const layout of normalizedLayouts) {
+        await db
+          .update(layouts)
+          .set({ breakpoint: layout.breakpoint, role: layout.role })
+          .where(eq(layouts.id, layout.id));
+      }
+    }
+
+    const mobileLayout = normalizedLayouts[0];
+    const baseLayout = normalizedLayouts.at(-1);
+    if (mobileLayout && baseLayout) {
+      await insertMissingProjectedPositionsAsync(
+        db,
+        board,
+        { ...baseLayout, role: "base" },
+        { ...mobileLayout, role: "mobile" },
+      );
+    }
+  }
+};
+
+interface BoardWithLayoutPositions {
+  items: Array<{
+    id: string;
+    layouts: Array<{
+      layoutId: string;
+      sectionId: string;
+      width: number;
+      height: number;
+      xOffset: number;
+      yOffset: number;
+    }>;
+  }>;
+  sections: Array<{
+    id: string;
+    kind: string;
+    layouts: Array<{
+      layoutId: string;
+      parentSectionId: string | null;
+      width: number;
+      height: number;
+      xOffset: number;
+      yOffset: number;
+    }>;
+  }>;
+}
+
+const insertMissingProjectedPositionsAsync = async (
+  db: Database,
+  board: BoardWithLayoutPositions,
+  sourceLayout: InferInsertModel<typeof layouts>,
+  targetLayout: InferInsertModel<typeof layouts>,
+) => {
+  const elements = [
+    ...board.items.flatMap((item) => {
+      const layout = item.layouts.find((itemLayout) => itemLayout.layoutId === sourceLayout.id);
+      return layout
+        ? [
+            {
+              id: item.id,
+              type: "item" as const,
+              width: layout.width,
+              height: layout.height,
+              xOffset: layout.xOffset,
+              yOffset: layout.yOffset,
+              sectionId: layout.sectionId,
+            },
+          ]
+        : [];
+    }),
+    ...board.sections.flatMap((section) => {
+      if (section.kind !== "dynamic") return [];
+      const layout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === sourceLayout.id);
+      return layout?.parentSectionId
+        ? [
+            {
+              id: section.id,
+              type: "section" as const,
+              width: layout.width,
+              height: layout.height,
+              xOffset: layout.xOffset,
+              yOffset: layout.yOffset,
+              sectionId: layout.parentSectionId,
+            },
+          ]
+        : [];
+    }),
+  ];
+
+  const projectedElements = board.sections
+    .filter((section) => section.kind !== "dynamic")
+    .flatMap(
+      (section) =>
+        generateResponsiveGridFor({
+          items: elements,
+          previousWidth: sourceLayout.columnCount,
+          width: targetLayout.columnCount,
+          sectionId: section.id,
+        }).items,
+    );
+
+  const existingItemIds = new Set(
+    board.items
+      .filter((item) => item.layouts.some((layout) => layout.layoutId === targetLayout.id))
+      .map((item) => item.id),
+  );
+  const itemPositions = projectedElements
+    .filter((element) => element.type === "item" && !existingItemIds.has(element.id))
+    .map(
+      (element): InferInsertModel<typeof itemLayouts> => ({
+        itemId: element.id,
+        layoutId: targetLayout.id,
+        sectionId: element.sectionId,
+        width: element.width,
+        height: element.height,
+        xOffset: element.xOffset,
+        yOffset: element.yOffset,
+      }),
+    );
+
+  const existingSectionIds = new Set(
+    board.sections
+      .filter((section) => section.layouts.some((layout) => layout.layoutId === targetLayout.id))
+      .map((section) => section.id),
+  );
+  const sectionPositions = projectedElements
+    .filter((element) => element.type === "section" && !existingSectionIds.has(element.id))
+    .map(
+      (element): InferInsertModel<typeof sectionLayouts> => ({
+        sectionId: element.id,
+        layoutId: targetLayout.id,
+        parentSectionId: element.sectionId,
+        width: element.width,
+        height: element.height,
+        xOffset: element.xOffset,
+        yOffset: element.yOffset,
+      }),
+    );
+
+  if (itemPositions.length > 0) await db.insert(itemLayouts).values(itemPositions);
+  if (sectionPositions.length > 0) await db.insert(sectionLayouts).values(sectionPositions);
 };
 
 const seedEveryoneGroupAsync = async (db: Database) => {
@@ -271,13 +482,24 @@ const seedDefaultBoardAsync = async (db: Database) => {
     yOffset: 0,
     boardId,
   });
-  await db.insert(layouts).values({
-    id: createId(),
-    name: "Base",
-    columnCount: 10,
-    breakpoint: 0,
-    boardId,
-  });
+  await db.insert(layouts).values([
+    {
+      id: createId(),
+      name: "Mobile",
+      columnCount: 3,
+      breakpoint: 0,
+      role: "mobile",
+      boardId,
+    },
+    {
+      id: createId(),
+      name: "Base",
+      columnCount: 10,
+      breakpoint: 768,
+      role: "base",
+      boardId,
+    },
+  ]);
 
   const everyoneGroupRow = await db.query.groups.findFirst({
     where: eq(groups.name, everyoneGroup),
@@ -508,7 +730,8 @@ const seedDemoUserAsync = async (db: Database) => {
     id: layoutId,
     name: "Base",
     columnCount: 12,
-    breakpoint: 0,
+    breakpoint: 768,
+    role: "base",
     boardId,
   });
 
@@ -598,7 +821,7 @@ const seedBoardWidgetsAsync = async (db: Database) => {
   if (!board) return;
 
   const section = board.sections.find((sec) => sec.kind === "empty");
-  const layout = board.layouts[0];
+  const layout = board.layouts.find((candidate) => candidate.role === "base") ?? board.layouts[0];
   if (!section || !layout) return;
 
   const allIntegrations = await db.query.integrations.findMany();
