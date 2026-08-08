@@ -7,7 +7,7 @@ export const getFirstEmptyPosition = (
   size: { width: number; height: number } = { width: 1, height: 1 },
 ) => {
   for (let yOffset = 0; yOffset < rowCount + 1 - size.height; yOffset++) {
-    for (let xOffset = 0; xOffset < columnCount + 1 - size.width; xOffset++) {
+    for (let xOffset = 0; xOffset < columnCount; xOffset++) {
       const isOccupied = elements.some(
         (element) =>
           element.yOffset < yOffset + size.height &&
