@@ -4,7 +4,7 @@ import { createRedisClient } from "@homarr/core/infrastructure/redis";
 let dataClient: RedisClient | undefined;
 let subscriberClient: RedisClient | undefined;
 
-const isRedisExplicitlyDisabled = () => Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS);
+const isRedisExplicitlyDisabled = () => process.env.CI === "true" || process.env.CI === "1" || process.env.DISABLE_REDIS_LOGS === "true" || process.env.DISABLE_REDIS_LOGS === "1";
 
 /**
  * In-process pub/sub fallback for single-instance deployments when Redis is unavailable.

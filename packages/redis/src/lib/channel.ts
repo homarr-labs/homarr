@@ -159,17 +159,29 @@ export const createGetSetChannel = <TData>(name: string) => {
  * The token prevents a process from releasing a lock that expired and was
  * acquired by another process in the meantime.
  */
+// ponytail: in-memory lock map for single-instance fallback; upgrade to redis-based lock when Redis is available
+const memoryLocks = new Map<string, { token: string; expiresAt: number }>();
+
 export const createLockChannel = (name: string) => {
   return {
     acquireAsync: async (ttlSeconds: number) => {
       const token = createId();
-      if (!dataClient) return token;
+      if (!dataClient) {
+        const existing = memoryLocks.get(name);
+        if (existing && existing.expiresAt > Date.now()) return null;
+        memoryLocks.set(name, { token, expiresAt: Date.now() + ttlSeconds * 1000 });
+        return token;
+      }
 
       const result = await dataClient.set(name, token, "EX", ttlSeconds, "NX");
       return result === "OK" ? token : null;
     },
     releaseAsync: async (token: string) => {
-      if (!dataClient) return;
+      if (!dataClient) {
+        const existing = memoryLocks.get(name);
+        if (existing?.token === token) memoryLocks.delete(name);
+        return;
+      }
 
       await dataClient.eval(
         "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end",

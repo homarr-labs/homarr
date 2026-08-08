@@ -19,7 +19,11 @@ type SubscriptionCallback = (message: string) => MaybePromise<void>;
  */
 export class ChannelSubscriptionTracker {
   private static subscriptions = new Map<string, Map<string, SubscriptionCallback>>();
-  private static redis = getSubscriberClient();
+  private static redis: ReturnType<typeof getSubscriberClient> | undefined;
+  private static getRedis() {
+    this.redis ??= getSubscriberClient();
+    return this.redis;
+  }
   private static memoryUnsubscribers = new Map<string, () => void>();
   private static listenerActive = false;
 
@@ -48,7 +52,7 @@ export class ChannelSubscriptionTracker {
           this.activateListener();
           this.listenerActive = true;
         }
-        const redis = this.redis;
+        const redis = this.getRedis();
         if (redis) {
           void redis.subscribe(channelName);
         }
@@ -79,7 +83,7 @@ export class ChannelSubscriptionTracker {
         this.memoryUnsubscribers.get(channelName)?.();
         this.memoryUnsubscribers.delete(channelName);
       } else {
-        const redis = this.redis;
+        const redis = this.getRedis();
         if (redis) {
           void redis.unsubscribe(channelName);
         }
@@ -109,7 +113,7 @@ export class ChannelSubscriptionTracker {
    */
   private static activateListener() {
     logger.debug("Activating listener");
-    const redis = this.redis;
+    const redis = this.getRedis();
     if (!redis) return;
     redis.on("message", (channel, message) => {
       this.dispatchMessage(channel, message);

@@ -648,8 +648,16 @@ export const boardRouter = createTRPCRouter({
         columns: { name: true },
       });
 
+      const affectedUsers = await ctx.db.query.users.findMany({
+        columns: { id: true },
+        where: eq(users.homeBoardId, input.id),
+      });
+
       await ctx.db.delete(boards).where(eq(boards.id, input.id));
 
+      for (const user of affectedUsers) {
+        invalidateUserCache(user.id);
+      }
       invalidateBoardCache(input.id, existingBoard?.name);
     }),
   setHomeBoard: protectedProcedure

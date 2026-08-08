@@ -55,11 +55,14 @@ export class RedisCacheHandler implements CacheHandler {
   private loggedError = false;
 
   constructor() {
+    const tlsCa = process.env.REDIS_TLS_CA;
     this.redis = new Redis({
       host: process.env.REDIS_HOST ?? "localhost",
       port: Number(process.env.REDIS_PORT ?? 6379),
       password: process.env.REDIS_PASSWORD || undefined,
+      username: process.env.REDIS_USERNAME || undefined,
       db: Number(process.env.REDIS_CACHE_DB ?? 1),
+      tls: tlsCa ? { ca: tlsCa } : undefined,
       lazyConnect: true,
       retryStrategy: (times) => Math.min(times * 100, 3000),
     });
