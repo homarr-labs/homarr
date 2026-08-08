@@ -149,6 +149,26 @@ export const AppForm = ({
     }
   }, [debouncedName, iconsData]);
 
+  // Auto-detect the app's favicon from its URL when no icon has been chosen yet.
+  const [debouncedHref] = useDebouncedValue(form.values.href, 500);
+  const fetchableHref = (debouncedHref ?? "").trim();
+  const isFetchableHref = /^https?:\/\//i.test(fetchableHref);
+
+  const { data: faviconData } = clientApi.icon.getIconForUrl.useQuery(
+    {
+      href: fetchableHref,
+    },
+    {
+      enabled: isFetchableHref && !form.values.iconUrl,
+    },
+  );
+
+  useEffect(() => {
+    if (faviconData?.url && !form.values.iconUrl) {
+      form.setFieldValue("iconUrl", faviconData.url);
+    }
+  }, [faviconData]);
+
   const formFields = (
     <Stack>
       <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
