@@ -19,7 +19,6 @@ jobs:
           node-version: 24.18.0
       - uses: pnpm/action-setup@v6
         with:
-          version: 11.11.0
           run_install: false
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @homarr/workshop typecheck
