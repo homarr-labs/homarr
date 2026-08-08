@@ -50,14 +50,14 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
           </Text>
         )}
         <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
-          <time dateTime={dayjs(time).tz(timezone).toISOString()}>
+          <time dateTime={dayjs(time).tz(timezone).toISOString()} suppressHydrationWarning>
             {options.customTimeFormat
               ? dayjs(time).tz(timezone).format(customTimeFormat)
               : dayjs(time).tz(timezone).format(timeFormat)}
           </time>
         </Title>
         {options.showDate && (
-          <Text className="clock-date-text" size={sizing} lineClamp={1}>
+          <Text className="clock-date-text" size={sizing} lineClamp={1} suppressHydrationWarning>
             {options.customDateFormat
               ? dayjs(time).tz(timezone).format(customDateFormat)
               : dayjs(time).tz(timezone).format(dateFormat)}
