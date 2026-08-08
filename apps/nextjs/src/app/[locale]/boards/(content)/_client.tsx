@@ -5,6 +5,7 @@ import { Box, Stack } from "@mantine/core";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 
 import { MobileBoard } from "~/components/board/mobile/mobile-board";
+import { MobileBoardPreview } from "~/components/board/mobile/mobile-preview";
 import { BoardCategorySection } from "~/components/board/sections/category-section";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
 import { useIsMobileBoard } from "~/components/board/use-mobile-board";
@@ -35,6 +36,7 @@ export const ClientBoard = () => {
           )}
         </Stack>
       )}
+      <MobileBoardPreview />
     </Box>
   );
 };

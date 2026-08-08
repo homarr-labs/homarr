@@ -4183,6 +4183,12 @@
     }
   },
   "board": {
+    "mobilePreview": {
+      "title": "Mobile preview",
+      "action": "Mobile preview",
+      "collapse": "Collapse mobile preview",
+      "empty": "Add items to the board to preview the automatic mobile layout."
+    },
     "action": {
       "duplicate": {
         "title": "Duplicate board",

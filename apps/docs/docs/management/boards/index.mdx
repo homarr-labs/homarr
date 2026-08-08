@@ -90,9 +90,13 @@ The available controls depend on the server-wide **Use automatic mobile layout**
 
 When automatic mode is enabled, this section configures the desktop column count. Items and sections can be moved and resized on desktop while the board is in edit mode.
 
+Automatic mode is enabled by default on fresh Homarr installations. It is a server-wide setting, so creating another account on an existing installation does not change the saved choice.
+
 Phones and small tablets display the same widgets in a generated, read-only two-column grid. Widget content and controls are unchanged. Items follow desktop visual order and retain their desktop footprint, clamped to two columns wide and three rows high.
 
 Categories and dynamic sections are flattened: their items participate directly in the generated grid instead of rendering nested layout containers. To rearrange, add, remove, or resize items, open the board on a larger screen.
+
+In desktop edit mode, select the floating **Mobile preview** button to expand a lightweight map of the generated layout. The map updates with unsaved board changes and can be collapsed back to the button without leaving edit mode.
 
 <img src={layoutLargeImage} height={256} />
 
