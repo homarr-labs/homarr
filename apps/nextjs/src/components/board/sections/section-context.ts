@@ -5,6 +5,7 @@ import type { UseGridstackRefs } from "./gridstack/use-gridstack";
 
 interface SectionContextProps {
   section: Exclude<Section, { kind: "dynamic" }> | DynamicSectionItem;
+  ancestorSectionIds: ReadonlySet<string>;
   innerSections: DynamicSectionItem[];
   items: SectionItem[];
   refs: UseGridstackRefs;

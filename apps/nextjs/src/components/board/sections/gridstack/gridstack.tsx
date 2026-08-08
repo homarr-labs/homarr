@@ -12,16 +12,21 @@ import { useGridstack } from "./use-gridstack";
 
 interface Props extends BoxProps {
   section: Exclude<Section, { kind: "dynamic" }> | DynamicSectionItem;
+  ancestorSectionIds?: ReadonlySet<string>;
 }
 
-export const GridStack = ({ section, ...props }: Props) => {
+export const GridStack = ({ section, ancestorSectionIds = new Set(), ...props }: Props) => {
   const { items, innerSections } = useSectionItems(section.id);
-  const itemIds = [...items, ...innerSections].map((item) => item.id);
+  const nextAncestorSectionIds = new Set(ancestorSectionIds).add(section.id);
+  const safeInnerSections = filterRecursiveInnerSections(innerSections, nextAncestorSectionIds);
+  const itemIds = [...items, ...safeInnerSections].map((item) => item.id);
 
   const { refs } = useGridstack(section, itemIds);
 
   return (
-    <SectionProvider value={{ section, items, innerSections, refs }}>
+    <SectionProvider
+      value={{ section, ancestorSectionIds: nextAncestorSectionIds, items, innerSections: safeInnerSections, refs }}
+    >
       <Box
         {...props}
         data-kind={section.kind}
@@ -34,3 +39,8 @@ export const GridStack = ({ section, ...props }: Props) => {
     </SectionProvider>
   );
 };
+
+export const filterRecursiveInnerSections = <T extends { id: string }>(
+  innerSections: T[],
+  ancestorSectionIds: ReadonlySet<string>,
+) => innerSections.filter((innerSection) => !ancestorSectionIds.has(innerSection.id));

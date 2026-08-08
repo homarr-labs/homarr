@@ -6,6 +6,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { BoardDynamicSectionMenu } from "./dynamic/dynamic-menu";
 import { GridStack } from "./gridstack/gridstack";
+import { useSectionContext } from "./section-context";
 import classes from "./item.module.css";
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 export const BoardDynamicSection = ({ section }: Props) => {
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
+  const { ancestorSectionIds } = useSectionContext();
   const options = section.options;
 
   return (
@@ -53,7 +55,12 @@ export const BoardDynamicSection = ({ section }: Props) => {
           </Badge>
         )}
         {/* Use unique key by layout to reinitialize gridstack */}
-        <GridStack key={`${currentLayoutId}-${section.id}`} section={section} className="min-row" />
+        <GridStack
+          key={`${currentLayoutId}-${section.id}`}
+          section={section}
+          ancestorSectionIds={ancestorSectionIds}
+          className="min-row"
+        />
       </Card>
       <BoardDynamicSectionMenu section={section} />
     </Box>
