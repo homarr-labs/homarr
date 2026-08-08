@@ -19,35 +19,30 @@ import { IconEdit, IconRefresh } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
-import { useZodForm } from "@homarr/form";
+import type { UseFormReturnType } from "@homarr/form";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { boardSaveLayoutsSchema } from "@homarr/validation/board";
 
+import { SectionCard } from "~/components/manage/section-card";
 import type { Board } from "../../_types";
 import { LayoutPreview } from "./_layout-preview";
+import type { FormValues } from "./_settings-form";
 
 interface Props {
   board: Board;
+  form: UseFormReturnType<FormValues>;
+  isSaving: boolean;
+  saveSettingsAsync: () => Promise<FormValues | null>;
 }
 
-export const LayoutSettingsContent = ({ board }: Props) => {
+export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync }: Props) => {
   const t = useI18n();
   const router = useRouter();
   const utils = clientApi.useUtils();
   const { openConfirmModal } = useConfirmModal();
   const [editingLayoutId, setEditingLayoutId] = useState<string | null>(null);
   const [resettingLayoutId, setResettingLayoutId] = useState<string | null>(null);
-  const { mutateAsync: saveLayouts, isPending: isSaving } = clientApi.board.saveLayouts.useMutation({
-    onSettled() {
-      void utils.board.getBoardByName.invalidate({ name: board.name });
-      void utils.board.getHomeBoard.invalidate();
-    },
-  });
   const { mutateAsync: resetLayout } = clientApi.board.resetLayout.useMutation();
-  const form = useZodForm(boardSaveLayoutsSchema.omit({ id: true }).required(), {
-    initialValues: { layouts: board.layouts },
-  });
   const appIds = useMemo(
     () =>
       Array.from(
@@ -61,21 +56,12 @@ export const LayoutSettingsContent = ({ board }: Props) => {
   );
   const { data: apps = [] } = clientApi.app.byIds.useQuery(appIds, { enabled: appIds.length > 0 });
 
-  const persistLayoutsAsync = async () => {
-    const savedLayouts = await saveLayouts({ id: board.id, layouts: form.values.layouts });
-    form.setValues({ layouts: savedLayouts });
-    form.resetDirty({ layouts: savedLayouts });
-    return savedLayouts;
-  };
-
-  const openLayoutEditorAsync = async (layout: (typeof form.values.layouts)[number]) => {
+  const openLayoutEditorAsync = async (layout: FormValues["layouts"][number]) => {
     setEditingLayoutId(layout.id);
     try {
-      const isNew = !board.layouts.some((candidate) => candidate.id === layout.id);
-      const savedLayouts = form.isDirty() || isNew ? await persistLayoutsAsync() : form.values.layouts;
-      const canonicalLayout =
-        savedLayouts.find((candidate) => candidate.id === layout.id) ??
-        savedLayouts.find((candidate) => candidate.breakpoint === layout.breakpoint && candidate.role === layout.role);
+      const persistedLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+      const savedValues = form.isDirty() || !persistedLayout ? await saveSettingsAsync() : form.values;
+      const canonicalLayout = savedValues ? findCanonicalLayout(savedValues.layouts, layout) : undefined;
       if (!canonicalLayout) return;
 
       router.push(`/boards/${board.name}?layout=${encodeURIComponent(canonicalLayout.id)}&edit=true&returnTo=settings`);
@@ -84,7 +70,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
     }
   };
 
-  const confirmReset = (layout: (typeof form.values.layouts)[number]) => {
+  const confirmReset = (layout: FormValues["layouts"][number]) => {
     openConfirmModal({
       title: t("board.setting.section.layout.reset.confirm.title", { layoutName: layout.name }),
       children: t("board.setting.section.layout.reset.confirm.message"),
@@ -93,12 +79,8 @@ export const LayoutSettingsContent = ({ board }: Props) => {
         setResettingLayoutId(layout.id);
         void (async () => {
           try {
-            const savedLayouts = form.isDirty() ? await persistLayoutsAsync() : form.values.layouts;
-            const canonicalLayout =
-              savedLayouts.find((candidate) => candidate.id === layout.id) ??
-              savedLayouts.find(
-                (candidate) => candidate.breakpoint === layout.breakpoint && candidate.role === layout.role,
-              );
+            const savedValues = form.isDirty() ? await saveSettingsAsync() : form.values;
+            const canonicalLayout = savedValues ? findCanonicalLayout(savedValues.layouts, layout) : undefined;
             if (!canonicalLayout) return;
 
             await resetLayout({ boardId: board.id, layoutId: canonicalLayout.id });
@@ -119,19 +101,16 @@ export const LayoutSettingsContent = ({ board }: Props) => {
     .toSorted((entryA, entryB) => entryA.layout.breakpoint - entryB.layout.breakpoint);
 
   return (
-    <form
-      onSubmit={form.onSubmit(async () => {
-        await persistLayoutsAsync();
-      })}
-    >
+    <SectionCard title={t("board.setting.section.layout.title")}>
       <Stack gap="lg">
-        <Group justify="space-between" align="center">
-          <Stack gap={2}>
+        <Group justify="space-between" align="flex-start" wrap="wrap">
+          <Stack gap={2} maw="52rem">
             <Text fw={500}>{t("board.setting.section.layout.responsive.title")}</Text>
             <Text size="sm">{t("board.setting.section.layout.responsive.description")}</Text>
           </Stack>
           <Button
-            variant="subtle"
+            type="button"
+            variant="light"
             disabled={nextBreakpoint === null || !baseLayout}
             onClick={() => {
               if (nextBreakpoint === null || !baseLayout) return;
@@ -172,8 +151,8 @@ export const LayoutSettingsContent = ({ board }: Props) => {
               }
               bg="transparent"
             >
-              <Grid gap="xl" align="flex-start">
-                <Grid.Col span={{ base: 12, lg: 5 }}>
+              <Grid gap={{ base: "lg", xl: "xl" }} align="flex-start">
+                <Grid.Col span={{ base: 12, md: 4 }}>
                   <Stack gap="md">
                     <TextInput {...form.getInputProps(`layouts.${index}.name`)} label={t("layout.field.name.label")} />
                     <Input.Wrapper label={t("layout.field.columnCount.label")}>
@@ -209,7 +188,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
                     />
                   </Stack>
                 </Grid.Col>
-                <Grid.Col span={{ base: 12, lg: 7 }}>
+                <Grid.Col span={{ base: 12, md: 8 }}>
                   {sourceLayout && (
                     <LayoutPreview
                       board={board}
@@ -222,14 +201,15 @@ export const LayoutSettingsContent = ({ board }: Props) => {
                 </Grid.Col>
               </Grid>
 
-              <Group justify="space-between" mt="md">
+              <Group justify="space-between" mt="lg" gap="sm" wrap="wrap">
                 <Group gap="xs">
                   {layout.role !== "base" && persistedLayout && (
                     <Button
-                      variant="filled"
-                      color="dark"
+                      type="button"
+                      variant="default"
                       leftSection={<IconRefresh size={16} color="var(--mantine-color-red-5)" />}
                       loading={resettingLayoutId === layout.id}
+                      disabled={isSaving}
                       onClick={() => confirmReset(layout)}
                     >
                       {t("board.setting.section.layout.reset.action")}
@@ -237,8 +217,10 @@ export const LayoutSettingsContent = ({ board }: Props) => {
                   )}
                   {layout.role === "custom" && (
                     <Button
+                      type="button"
                       variant="subtle"
                       color="red"
+                      disabled={isSaving}
                       onClick={() => {
                         form.setFieldValue(
                           "layouts",
@@ -251,9 +233,11 @@ export const LayoutSettingsContent = ({ board }: Props) => {
                   )}
                 </Group>
                 <Button
+                  type="button"
                   variant="default"
                   leftSection={<IconEdit size={16} color="var(--mantine-color-red-5)" />}
                   loading={editingLayoutId === layout.id}
+                  disabled={isSaving || !form.isValid()}
                   onClick={() => void openLayoutEditorAsync(layout)}
                 >
                   {form.isDirty() || !persistedLayout
@@ -264,16 +248,14 @@ export const LayoutSettingsContent = ({ board }: Props) => {
             </Fieldset>
           );
         })}
-
-        <Group justify="end">
-          <Button type="submit" loading={isSaving}>
-            {t("common.action.saveChanges")}
-          </Button>
-        </Group>
       </Stack>
-    </form>
+    </SectionCard>
   );
 };
+
+const findCanonicalLayout = (layouts: FormValues["layouts"], layout: FormValues["layouts"][number]) =>
+  layouts.find((candidate) => candidate.id === layout.id) ??
+  layouts.find((candidate) => candidate.breakpoint === layout.breakpoint && candidate.role === layout.role);
 
 const getNextCustomBreakpoint = (layouts: Array<{ breakpoint: number }>) => {
   const sortedBreakpoints = layouts
