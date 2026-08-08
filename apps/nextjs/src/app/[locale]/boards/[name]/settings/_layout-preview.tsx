@@ -58,7 +58,7 @@ export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Pr
               return (
                 <Stack key={section.id} gap={4} className={classes.section}>
                   {section.kind === "category" && (
-                    <Text size="xs" fw={600} truncate>
+                    <Text size="xs" fw={600}>
                       {section.name}
                     </Text>
                   )}
@@ -85,32 +85,33 @@ export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Pr
 
                       return (
                         <Tooltip key={`${element.type}-${element.id}`} label={label} openDelay={350}>
-                          <Group
-                            gap={4}
-                            wrap="nowrap"
-                            align="center"
+                          <Box
+                            role="img"
+                            aria-label={label}
                             className={`${classes.tile} ${element.type === "section" ? classes.dynamicTile : ""}`}
                             style={{
                               gridColumn: `${element.xOffset + 1} / span ${element.width}`,
                               gridRow: `${element.yOffset + 1} / span ${element.height}`,
                             }}
                           >
-                            <ThemeIcon size="sm" variant="light" radius="sm" style={{ flexShrink: 0 }}>
-                              {app ? (
-                                <MaskedOrNormalImage
-                                  imageUrl={app.iconUrl}
-                                  hasColor={false}
-                                  alt=""
-                                  className={classes.appIcon}
-                                />
-                              ) : (
-                                <WidgetIcon size={13} stroke={1.7} />
-                              )}
-                            </ThemeIcon>
-                            <Text size="xs" fw={500} truncate>
-                              {label}
-                            </Text>
-                          </Group>
+                            <Group gap={4} wrap="nowrap" className={classes.tileContent}>
+                              <ThemeIcon size="sm" variant="light" radius="sm" style={{ flexShrink: 0 }}>
+                                {app ? (
+                                  <MaskedOrNormalImage
+                                    imageUrl={app.iconUrl}
+                                    hasColor={false}
+                                    alt=""
+                                    className={classes.appIcon}
+                                  />
+                                ) : (
+                                  <WidgetIcon size={13} stroke={1.7} />
+                                )}
+                              </ThemeIcon>
+                              <Text component="span" size="xs" fw={500} className={classes.tileLabel}>
+                                {label}
+                              </Text>
+                            </Group>
+                          </Box>
                         </Tooltip>
                       );
                     })}
