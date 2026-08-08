@@ -1018,6 +1018,10 @@ export default function MarketplaceDetailPage() {
   const { siteConfig } = useDocusaurusContext();
   const configuredWorkshopUrl = (siteConfig.customFields?.workshopUrl as string | undefined) ?? "";
 
+  useEffect(() => {
+    document.documentElement.removeAttribute("data-workshop-detail-loading");
+  }, []);
+
   return (
     <Layout title="Workshop" description="Community custom CSS and custom widgets for Homarr">
       <main className="marketplace bg-background text-foreground min-h-[80vh]">

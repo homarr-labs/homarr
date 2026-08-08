@@ -13,7 +13,7 @@ const identity = deriveGithubIdentity(
   "record123456",
 );
 if (
-  identity.displayName !== "Octo Cat" ||
+  identity.displayName !== "octocat" ||
   identity.githubUsername !== "octocat" ||
   identity.githubProfileUrl !== "https://github.com/octocat" ||
   identity.avatarUrl !== "https://avatars.githubusercontent.com/u/1?v=4"
@@ -35,7 +35,7 @@ const rawFallback = deriveGithubIdentity(
   "record123456",
 );
 if (
-  rawFallback.displayName !== "Raw User" ||
+  rawFallback.displayName !== "raw-user" ||
   rawFallback.githubUsername !== "raw-user" ||
   rawFallback.githubProfileUrl !== "https://github.com/raw-user"
 ) {
