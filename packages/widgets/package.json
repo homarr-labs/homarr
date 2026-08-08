@@ -17,6 +17,7 @@
     "./custom-api/component": "./src/custom-api/component.tsx",
     "./custom-api/custom-jsx-display": "./src/custom-api/custom-jsx-display.tsx",
     "./custom-api/extract-display-data": "./src/custom-api/extract-display-data.ts",
+    "./assistant/context": "./src/assistant/context.tsx",
     "./catalog": "./src/catalog.ts",
     "./definition": "./src/definition.ts",
     "./errors": "./src/errors/component.tsx",
