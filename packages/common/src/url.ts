@@ -75,6 +75,22 @@ export const getSafeApplicationUrl = (value: unknown, options: SafeApplicationUr
   }
 };
 
+/** Returns a safe user-configured app link, including same-origin paths and custom URI schemes. */
+export const getSafeAppHref = (value: unknown): string | undefined => {
+  if (typeof value !== "string" || value.trim() === "") return undefined;
+
+  const href = value.trim();
+  if (/^(?:javascript|data|vbscript|file|blob):/i.test(href)) return undefined;
+
+  try {
+    const url = new URL(href);
+    if (url.username !== "" || url.password !== "") return undefined;
+    return url.toString();
+  } catch {
+    return /^(?:[#?]|\/(?![\\/])|\.{1,2}\/)/.test(href) ? href : undefined;
+  }
+};
+
 const parseHttpUrl = (value: unknown, baseUrl?: string): URL | undefined => {
   if (typeof value !== "string") return undefined;
   const url = new URL(value, baseUrl);

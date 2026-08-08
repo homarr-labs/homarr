@@ -170,7 +170,8 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
 
   const leave = useCallback(
     (itemId: string) => {
-      if (hoveredRef.current?.itemId === itemId) hoveredRef.current = null;
+      if (hoveredRef.current?.itemId !== itemId) return;
+      hoveredRef.current = null;
       cancelHoverTimer();
     },
     [cancelHoverTimer],
