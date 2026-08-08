@@ -83,8 +83,14 @@ const WudWidgetContent = ({
           <Text size="xs">{t("updatesAvailable", { count: stats.updatesAvailable })}</Text>
         </Stack>
       }
+      events={{ hover: true, focus: true, touch: false }}
     >
-      <Center>{ring}</Center>
+      <Center
+        tabIndex={0}
+        aria-label={`${stats.totalContainers} ${t("monitored")}, ${t("updatesAvailable", { count: stats.updatesAvailable })}`}
+      >
+        {ring}
+      </Center>
     </Tooltip>
   ) : (
     <Center>
@@ -187,7 +193,7 @@ const UpdateCard = ({
         <Text size="xs" fw={500} lineClamp={1} miw={0}>
           {update.name}
         </Text>
-        <Group gap={4} wrap="nowrap">
+        <Group gap={4} wrap="nowrap" style={{ flexShrink: 0 }}>
           {versionText && (
             <Tooltip label={fullVersionText} disabled={isDigestUpdate || versionText === fullVersionText}>
               <Badge size="xs" variant="light" color="gray" style={{ whiteSpace: "nowrap" }}>
