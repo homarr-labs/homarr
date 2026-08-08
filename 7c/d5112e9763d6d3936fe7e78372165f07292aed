@@ -1,0 +1,24 @@
+apps/docs/docs/management/boards/index.mdx
+  s_71d02d5c989477::t_b27aa860a35498 39,45
+  s_71d02d5c989477::t_dafc3aab7b805c 58
+apps/nextjs/src/app/[locale]/manage/settings/_components/setting-switch.tsx
+  s_71d02d5c989477::t_ea7bc9c0ba1c28 45
+apps/nextjs/src/components/manage/danger-zone.tsx
+  s_71d02d5c989477::t_8862d51fad9374 6,13,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "7cd5112e9763d6d3936fe7e78372165f07292aed",
+  "prompts": {},
+  "sessions": {
+    "s_71d02d5c989477": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_01f48b881ffeNr74dFqpywho5H",
+        "model": "deepseek/deepseek-v4-flash-0731"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
