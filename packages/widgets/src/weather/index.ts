@@ -2,11 +2,22 @@ import { IconCloud } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("weather", {
   icon: IconCloud,
+  queryKey: [["widget", "weather", "atLocation"]],
+  queryMatcher: ({ input }, scope) => {
+    const location = scope.options.location;
+    if (location === null || typeof location !== "object" || !("latitude" in location) || !("longitude" in location)) {
+      return false;
+    }
+    return widgetQueryInputMatches(input, {
+      latitude: location.latitude,
+      longitude: location.longitude,
+    });
+  },
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

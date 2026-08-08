@@ -5,10 +5,10 @@
   text-decoration: none;
   color: inherit;
   border: 1px solid var(--border-color);
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
   transition:
     border-color 120ms ease,
-    transform 120ms ease,
-    box-shadow 120ms ease;
+    background-color 120ms ease;
 
   @mixin dark {
     --border-color: var(--mantine-color-dark-4);
@@ -17,22 +17,16 @@
     --border-color: var(--mantine-color-gray-3);
   }
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     border-color: var(--mantine-primary-color-filled);
-    transform: translateY(-1px);
-    box-shadow: var(--mantine-shadow-sm);
+    background-color: var(--mantine-color-default-hover);
   }
-}
 
-.backdrop {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: blur(20px) saturate(1.2);
-  transform: scale(1.3);
-  opacity: 0.16;
-  pointer-events: none;
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: -2px;
+  }
 }
 
 .content {
@@ -46,4 +40,10 @@
   flex-shrink: 0;
   object-fit: cover;
   box-shadow: var(--mantine-shadow-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
 }

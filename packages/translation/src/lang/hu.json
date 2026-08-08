@@ -688,211 +688,6 @@
       "add": "Alkalmazás hozzáadása"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Egyéni widgetek",
-        "noResults": "Még nincsenek egyéni widgetek. Hozd létre az elsőt!",
-        "loading": "Töltés..."
-      },
-      "create": {
-        "title": "Egyéni widget létrehozása",
-        "subtitle": "Adj meg egy API URL-t, hitelesítést, és hogy hogyan jelenjenek meg a válaszadatok."
-      },
-      "edit": {
-        "title": "Egyéni widget szerkesztése"
-      }
-    },
-    "action": {
-      "create": "Létrehozás",
-      "import": "Importálás",
-      "save": "Mentés",
-      "delete": "Egyéni widget törlése",
-      "deleteConfirm": "Biztosan törölni szeretnéd \"{name}\" widgetet? Ez a művelet nem vonható vissza.",
-      "export": "Exportálás",
-      "addMapping": "Leképezés hozzáadása",
-      "addColumn": "Oszlop hozzáadása",
-      "edit": "Szerkesztés",
-      "removeMapping": "Leképezés eltávolítása",
-      "removeColumn": "Oszlop eltávolítása",
-      "addItem": "Elem hozzáadása",
-      "removeItem": "Elem eltávolítása",
-      "addBar": "Sáv hozzáadása",
-      "duplicate": "Duplikálás",
-      "copyAiPrompt": "AI prompt másolása",
-      "enable": "Engedélyezés",
-      "disable": "Letiltás",
-      "menu": "Műveletek"
-    },
-    "field": {
-      "name": "Név",
-      "description": "Leírás",
-      "iconUrl": "Ikon URL",
-      "url": "URL",
-      "authType": "Hitelesítés típusa",
-      "headerName": "Fejléc/lekérdezési paraméter neve",
-      "method": "Metódus",
-      "requestBody": "Kérelem törzse",
-      "displayType": "Megjelenítés típusa",
-      "jsonPath": "JSON elérési út",
-      "jsonPathHint": "Használd a JSONPath szintaxist az értékek kinyeréséhez, pl. $.data.temperature vagy $.items[0].name",
-      "label": "Címke",
-      "unit": "Mértékegység",
-      "mappings": "Leképezések",
-      "tablePath": "Tömb JSON elérési útja",
-      "tablePathHint": "A válaszban lévő tömb elérési útja, pl. $.data.items",
-      "columns": "Oszlopok",
-      "header": "Fejléc",
-      "items": "Elemek",
-      "gridColumns": "Rács oszlopok",
-      "cardStyle": "Kártya stílus",
-      "bars": "Sávok",
-      "valuePath": "Érték JSON elérési út",
-      "maxPath": "Maximális érték JSON elérési út",
-      "showPercentage": "Százalék megjelenítése",
-      "barSize": "Sáv mérete",
-      "goodValues": "Jó értékek (vesszővel elválasztva)",
-      "dotSize": "Pont mérete",
-      "valueSize": "Érték mérete",
-      "labelPosition": "Címke pozíciója",
-      "kvLayout": "Elrendezés",
-      "striped": "Csíkos sorok",
-      "compact": "Kompakt mód",
-      "maxHeight": "Maximális magasság (px)",
-      "color": "Szín",
-      "buttonLabel": "Gomb felirata",
-      "buttonColor": "Gomb színe",
-      "confirmText": "Megerősítő szöveg",
-      "confirmTextHint": "Ha be van állítva, egy megerősítő ablak jelenik meg a kérés végrehajtása előtt",
-      "successMessage": "Sikerüzenet",
-      "successMessageHint": "A sikeres végrehajtás után megjelenő üzenet",
-      "enabled": "Engedélyezve",
-      "template": {
-        "label": "JSX sablon",
-        "description": "Mantine JSX sablon. Az API válasz mezőit adatkötéseken keresztül éred el (pl. data.name). Csak engedélyezett komponenseket használj. Tilos: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU hőmérséklet",
-      "exampleLabelShort": "CPU hőm",
-      "exampleHeader": "Név",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "kék"
-    },
-    "cardStyleOption": {
-      "filled": "Kitöltött",
-      "outline": "Körvonal",
-      "subtle": "Halvány"
-    },
-    "layoutOption": {
-      "list": "Lista",
-      "grid": "Rács"
-    },
-    "sizeOption": {
-      "sm": "Kicsi",
-      "md": "Közepes",
-      "lg": "Nagy",
-      "xl": "Extra nagy"
-    },
-    "labelPositionOption": {
-      "above": "Felette",
-      "below": "Alatta"
-    },
-    "fieldset": {
-      "general": "Általános",
-      "connection": "API kapcsolat",
-      "display": "Megjelenítési konfiguráció"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Egy kinyert érték megjelenítése címkével és mértékegységgel",
-      "keyValue": "Több címkézett érték megjelenítése egymás mellett",
-      "table": "Adatsorok megjelenítése táblázatos formában",
-      "statGrid": "Színezett statisztikai kártyák rácsban – mint a Pi-Hole vagy Speedtest widgetek",
-      "progressBars": "Folyamatjelző sávok használat vagy készültség mutatására – lemez, memória, kvóta",
-      "statusIndicator": "Színezett állapotpontok, amelyek online/offline vagy egészségügyi állapotot mutatnak",
-      "countGrid": "Kompakt szám + címke számlálók sűrű rácsban",
-      "raw": "Szépen formázott JSON kimenet hibakereséshez",
-      "actionButton": "Egy gomb, ami kérés végrehajtását váltja ki kattintásra",
-      "customJsx": "Egyéni JSX elrendezés engedélyezett Mantine komponensekkel és teljes API adatkötéssel"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Nincs",
-      "bearer": "Bearer token",
-      "basic": "Basic Auth",
-      "apiKeyHeader": "API-kulcs (fejléc)",
-      "apiKeyQuery": "API-kulcs (lekérdezés)"
-    },
-    "displayType": {
-      "singleValue": "Egyedi érték",
-      "keyValue": "Kulcs-érték",
-      "table": "Táblázat",
-      "statGrid": "Statisztikai rács",
-      "progressBars": "Folyamatjelző sávok",
-      "statusIndicator": "Állapotjelző",
-      "countGrid": "Számláló rács",
-      "raw": "Nyers JSON",
-      "actionButton": "Műveleti gomb",
-      "customJsx": "Egyéni JSX"
-    },
-    "secret": {
-      "apiKey": "API kulcs / token",
-      "username": "Felhasználónév",
-      "password": "Jelszó",
-      "savedPlaceholder": "••••••• (mentve, üresen hagyva megtartja)"
-    },
-    "preview": {
-      "title": "Előnézet",
-      "test": "Teszt",
-      "hint": "Kattints a Teszt gombra az API válasz előnézetéhez a jelenlegi konfigurációval.",
-      "rawResponse": "Nyers JSON válasz"
-    },
-    "notification": {
-      "created": "\"{name}\" widget sikeresen létrehozva.",
-      "updated": "\"{name}\" widget sikeresen frissítve.",
-      "deleted": "\"{name}\" widget törölve.",
-      "imported": "",
-      "aiPromptCopied": "AI prompt a vágólapra másolva",
-      "aiPromptDescription": "Másolj egy előre elkészített promptot bármelyik AI chatbotba (ChatGPT, Claude, Gemini...). Tartalmazza a teljes widget sémát és az API választ, így az AI generálhat egy importálásra kész JSON konfigurációt.",
-      "aiPromptCopy": "Másolás a vágólapra",
-      "aiPromptNoResponse": "Tipp: Futtass egy tesztet először, hogy az API válasz is bekerüljön a promptba a jobb eredmények érdekében.",
-      "aiPromptCopyError": "A prompt vágólapra másolása sikertelen. Előfordulhat, hogy a böngésződ nem támogatja ezt a funkciót.",
-      "createError": "A widget létrehozása sikertelen. Ellenőrizd, hogy az API végpont elérhető-e.",
-      "updateError": "A widget frissítése sikertelen. A módosításaid nem lettek mentve.",
-      "importError": "A widget importálása sikertelen. Ellenőrizd, hogy a fájl érvényes egyéni widget JSON export-e.",
-      "exportError": "A widget exportálása sikertelen.",
-      "duplicated": "\"{name}\" widget duplikálva.",
-      "duplicateError": "A widget duplikálása sikertelen.",
-      "toggleError": "A widget állapotának átkapcsolása sikertelen.",
-      "deleteError": "A widget törlése sikertelen.",
-      "previewError": "Az előnézet lekérése sikertelen. Ellenőrizd az URL-t és próbáld újra.",
-      "executed": "A művelet sikeresen végrehajtva.",
-      "executeError": "A művelet sikertelen: {error}"
-    },
-    "table": {
-      "name": "Név",
-      "url": "URL",
-      "display": "Megjelenítés"
-    },
-    "widget": {
-      "disabled": "Ez a widget le van tiltva"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1549,10 +1344,10 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
-        "create": "Új dinamikus szakasz",
-        "remove": "A dinamikus szakasz eltávolítása"
+        "create": "Új konténer",
+        "remove": "A konténer eltávolítása"
       },
       "option": {
         "title": {
@@ -1566,48 +1361,8 @@
         }
       },
       "remove": {
-        "title": "Dinamikus szakasz eltávolítása",
-        "message": "Biztosan el akarja távolítani ezt a dinamikus részt? Az elemek a szülő rész ugyanazon helyére kerülnek át."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Név"
-        }
-      },
-      "action": {
-        "create": "Új kategória",
-        "edit": "Kategória átnevezése",
-        "remove": "Kategória eltávolítása",
-        "moveUp": "Felfelé mozgatás",
-        "moveDown": "Mozgatás le",
-        "createAbove": "Új kategória fent",
-        "createBelow": "Új kategória alább",
-        "openAllInNewTabs": "Mindet lapokban megnyitni"
-      },
-      "create": {
-        "title": "Új kategória",
-        "submit": "Kategória hozzáadása"
-      },
-      "remove": {
-        "title": "Kategória eltávolítása",
-        "message": "Biztosan el akarja távolítani a {name} kategóriát?"
-      },
-      "edit": {
-        "title": "Kategória átnevezése",
-        "submit": "Kategória átnevezése"
-      },
-      "menu": {
-        "label": {
-          "create": "Új kategória",
-          "changePosition": "Pozíció módosítása",
-          "settings": "Beállítások"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "Mindet lapokban megnyitni",
-        "text": "Bizonyos böngészők biztonsági okokból megakadályozhatják a lapok tömeges megnyitását. A Homarr nem tudta megnyitni az összes ablakot, mert a böngészője letiltotta ezt a műveletet. Kérjük, engedélyezze a „Felugró ablakok megnyitása” opciót, majd próbálja meg újra."
+        "title": "Konténer eltávolítása",
+        "message": "Biztosan el akarja távolítani ezt a konténert? Az elemek a szülő rész ugyanazon helyére kerülnek át."
       }
     }
   },
@@ -2828,193 +2583,6 @@
         "internalServerError": "A Paperless-ngx adatok letöltése nem sikerült"
       }
     },
-    "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
-      "option": {
-        "showTotalHosts": {
-          "label": "",
-          "description": ""
-        },
-        "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showSecurityUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showUpToDateHosts": {
-          "label": "",
-          "description": ""
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
-        },
-        "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
-        },
-        "showTotalRepos": {
-          "label": "",
-          "description": ""
-        },
-        "enableThresholdColors": {
-          "label": "",
-          "description": ""
-        },
-        "useCustomThresholds": {
-          "label": "",
-          "description": ""
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "",
-            "percent": ""
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "showOsDistribution": {
-          "label": "",
-          "description": ""
-        },
-        "osDistributionLimit": {
-          "label": "",
-          "description": "",
-          "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
-          }
-        },
-        "showOsVersion": {
-          "label": "",
-          "description": ""
-        },
-        "showComplianceHero": {
-          "label": "",
-          "description": ""
-        },
-        "osDisplayMode": {
-          "label": "",
-          "description": "",
-          "option": {
-            "bars": "",
-            "donut": ""
-          }
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
-    "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "",
-          "description": ""
-        },
-        "showMissingMovies": {
-          "label": "",
-          "description": ""
-        },
-        "showProviderIssues": {
-          "label": "",
-          "description": ""
-        },
-        "showHealthIssues": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
     "immich-serverStats": {
       "name": "Immich szerver statisztikák",
       "description": "Információk az Immich-példányodról",
@@ -3387,35 +2955,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "",
-      "description": "",
-      "option": {
-        "showMissing": {
-          "label": ""
-        },
-        "showQueued": {
-          "label": ""
-        },
-        "pageSize": {
-          "label": ""
-        }
-      },
-      "tab": {
-        "missing": "",
-        "queued": ""
-      },
-      "type": {
-        "movie": "",
-        "episode": ""
-      },
-      "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
-      },
-      "timeLeft": ""
-    },
     "rssFeed": {
       "name": "RSS feedek",
       "description": "Egy vagy több általános RSS-, ATOM- vagy JSON-hírcsatorna figyelése és megjelenítése",
@@ -3744,40 +3283,6 @@
         "internalServerError": "Az üzemidőadatok letöltése nem sikerült"
       }
     },
-    "traefik": {
-      "name": "",
-      "description": "",
-      "option": {
-        "showTcp": {
-          "label": ""
-        },
-        "showUdp": {
-          "label": ""
-        },
-        "showEntryPoints": {
-          "label": ""
-        }
-      },
-      "instances": "",
-      "versionUnknown": "",
-      "summary": {
-        "routers": "",
-        "entryPoints": ""
-      },
-      "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
-      },
-      "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
     "audioStats": {
       "name": "Audió statisztikák",
       "description": "Könyvtári és lejátszási statisztikák Navidrome-ból vagy Audiobookshelf-ből",
@@ -3900,26 +3405,6 @@
       "status": {
         "unhealthy": "Hibás"
       }
-    },
-    "customApi": {
-      "name": "Egyéni API",
-      "description": "Adatok megjelenítése bármely külső API-ból egyedi konfigurációval.",
-      "option": {
-        "definitionId": {
-          "label": "Definíció azonosító"
-        },
-        "refreshInterval": {
-          "label": "Frissítési időköz",
-          "description": "Milyen gyakran kérje le újra az adatokat az API-tól (másodpercben)"
-        }
-      },
-      "noDefinition": "Nincs definíció kiválasztva",
-      "definitionNotFound": "A widget definíció nem található. Lehet, hogy törölték.",
-      "noDisplayOutput": "Nincs megjelenítési kimenet",
-      "executeConfirm": "Biztosan végre szeretnéd hajtani ezt a műveletet?",
-      "executing": "Végrehajtás...",
-      "executeSuccess": "A művelet sikeresen végrehajtva",
-      "executeFailed": "A művelet sikertelen. Ellenőrizd a widget konfigurációját."
     },
     "beszelSystemTable": {
       "name": "Beszel Rendszerek (Táblázat)",
@@ -4170,6 +3655,256 @@
           "title": "Docker Hálózati I/O",
           "subtitle": "A Docker konténerek hálózati forgalma"
         }
+      }
+    },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
+    },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
+      "error": {
+        "internalServerError": ""
       }
     }
   },
@@ -4551,11 +4286,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Nyitólap",
         "boards": "Táblák",
         "apps": "Alkalmazások",
         "integrations": "Integrációk",
-        "customWidgets": "",
         "searchEngies": "Keresőmotorok",
         "medias": "Média",
         "users": {
@@ -5694,6 +5429,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Kezelés",
       "boards": {
         "label": "Táblák"
@@ -5726,18 +5464,6 @@
         },
         "edit": {
           "label": "Szerkesztés"
-        }
-      },
-      "custom-widgets": {
-        "label": "",
-        "new": {
-          "label": ""
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

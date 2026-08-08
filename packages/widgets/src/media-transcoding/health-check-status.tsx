@@ -1,10 +1,12 @@
 import type { MantineColor } from "@mantine/core";
-import { Divider, Group, HoverCard, Indicator, RingProgress, Stack, Text } from "@mantine/core";
+import { ActionIcon, Divider, Group, Indicator, Popover, RingProgress, Stack, Text } from "@mantine/core";
 import { useColorScheme } from "@mantine/hooks";
 import { IconHeartbeat } from "@tabler/icons-react";
 
 import type { TdarrStatistics } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
+
+import actionTargetClasses from "../common/action-target.module.css";
 
 interface HealthCheckStatusProps {
   statistics: TdarrStatistics;
@@ -21,13 +23,15 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
       : "green";
 
   return (
-    <HoverCard position="bottom" width={250} shadow="sm">
-      <HoverCard.Target>
-        <Indicator color={textColor(indicatorColor, colorScheme)} size={6} display="flex">
-          <IconHeartbeat size={16} />
-        </Indicator>
-      </HoverCard.Target>
-      <HoverCard.Dropdown
+    <Popover position="bottom" width={250} shadow="sm" withArrow>
+      <Popover.Target>
+        <ActionIcon className={actionTargetClasses.root} variant="subtle" size="sm" aria-label={t("title")}>
+          <Indicator color={textColor(indicatorColor, colorScheme)} size={6} display="flex">
+            <IconHeartbeat size={16} />
+          </Indicator>
+        </ActionIcon>
+      </Popover.Target>
+      <Popover.Dropdown
         style={{
           backgroundColor: "light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-8))",
         }}
@@ -70,8 +74,8 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
             </Stack>
           </Group>
         </Stack>
-      </HoverCard.Dropdown>
-    </HoverCard>
+      </Popover.Dropdown>
+    </Popover>
   );
 }
 

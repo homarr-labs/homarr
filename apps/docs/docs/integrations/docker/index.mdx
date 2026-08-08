@@ -1,32 +1,31 @@
 ---
-title: 'Docker'
+title: "Docker"
 description: "Docker is a platform where you can run your applications in containers, allowing for easy deployment and management of applications."
 hide_title: true
 ---
 
-import { IntegrationHeader } from '@site/src/components/integrations/header';
-import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
-import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { IconBrandDocker, IconTool } from "@tabler/icons-react";
-import { dockerIntegration } from '.';
-import { dockerContainersWidget } from '@site/docs/widgets/docker-containers';
+import { dockerIntegration } from ".";
+import { dockerContainersWidget } from "@site/docs/widgets/docker-containers";
 
-
-<IntegrationHeader
-  integration={dockerIntegration}
-  categories={['Containers']}
-/>
+<IntegrationHeader integration={dockerIntegration} categories={["Containers"]} />
 
 ### Widgets & Capabilities
+
 <IntegrationCapabilites
-    items={[{
+  items={[
+    {
       widget: dockerContainersWidget,
-      note: "This widget can only be used with administrator privileges"
-    }]}
+      note: "This widget can only be used with administrator privileges",
+    },
+  ]}
 />
 
-
 ## Enabling the Docker integration
+
 This integration must first be enabled.
 If you directly run on the host system and you have docker installed, it will be enabled by default.
 Otherwise, you'll need to mount the [docker socket](https://docs.docker.com/engine/security/protect-access/) to the Homarr container,
@@ -49,7 +48,7 @@ services:
     environment:
       - SECRET_ENCRYPTION_KEY=your_64_character_hex_string # <--- can be generated with `openssl rand -hex 32`
     ports:
-      - '7575:7575'
+      - "7575:7575"
 ```
 
 With docker run, add this parameter: `-v /var/run/docker.sock:/var/run/docker.sock`.
@@ -124,8 +123,10 @@ services:
 ```
 
 ### Managing your Docker containers within Homarr
+
 Homarr allows you to interact with Docker containers running on your system.
 Each container row has an action menu with the following options:
+
 - **View logs** - opens a dedicated logs page with a live terminal
 - **Start** - start a stopped container
 - **Stop** - stop a running container
@@ -166,11 +167,13 @@ Currently Homarr supports one label for configuration of the containers:
 - **homarr.hide:** If set to any value, the container will be hidden from the Docker Containers widget and tools page.
 
 ### Security
+
 Mounting docker sockets can be risky, as they permit full control over your docker service.
 As an example, a thread actor could abuse Homarr use the socket to start, stop or delete containers on your system.
 
 Therefore we recommend the usage of a socket proxy, which can prohibit certain actions.
 A few examples include:
+
 - https://github.com/linuxserver/docker-socket-proxy
 - https://github.com/Tecnativa/docker-socket-proxy
 
@@ -178,36 +181,44 @@ See documentation of the respective proxies on how to configure them.
 Homarr may behave in unexpected ways when you use proxies.
 
 #### Permissions
+
 Homarr needs the following permissions from the Docker API:
+
 - Containers/Start
 - Containers/Stop
 - Containers/Restart
 - Containers/Remove
 
 For socket proxies, you will need these permissions:
+
 - `CONTAINERS=1`
 - `POST=1`
 
 **Caution:** `POST` access is security critical as it provides extensive capabilities to modify your docker environment. Please leave it disabled if you're concerned about this.
 
 As a workaround, you can use [LSIO's socket proxy](https://github.com/linuxserver/docker-socket-proxy) and set the following:
+
 - ALLOW_START=1
 - ALLOW_STOP=1
 - ALLOW_RESTARTS=1
 
-These will work even with `POST=0`. 
+These will work even with `POST=0`.
 
 You lose the ability to remove containers, but start, stop and restarts should work just fine.
 
 #### Connecting to Docker via Socket Proxies
+
 To connect to Docker via a socket proxy, you'll need to add these two environment variables in the compose file:
+
 - `DOCKER_HOSTNAMES=<name of the socket proxy container>`
 - `DOCKER_PORTS=<socket proxy port, usually 2375>`
 
 Refer: https://homarr.dev/docs/advanced/environment-variables/
 
 You will also need to add Homarr to the network of your socket proxy. You can do it like this:
+
 1. Add the network to your compose file (with appropriate changes):
+
 ```yaml
 networks:
   socket-proxy:
@@ -216,6 +227,7 @@ networks:
 ```
 
 2. Add the network to the homarr service in the compose file:
+
 ```yaml
 networks:
   - socket-proxy

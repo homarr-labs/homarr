@@ -26,6 +26,7 @@ export const boardNameSchema = z
   .max(255)
   .regex(/^[A-Za-z0-9-_]*$/);
 export const boardColumnCountSchema = z.number().min(1).max(24);
+export const boardGutterColumnCountSchema = z.number().int().min(0).max(3);
 
 export const boardByNameSchema = z.object({
   name: boardNameSchema,
@@ -71,13 +72,20 @@ export const boardSavePartialSettingsSchema = z
   })
   .partial();
 
-export const boardLayoutSchema = z.object({
-  id: z.string(),
-  name: z.string().trim().nonempty().max(32),
-  columnCount: boardColumnCountSchema,
-  breakpoint: z.number().int().min(0).max(32767),
-  role: z.enum(layoutRoles.values),
-});
+export const boardLayoutSchema = z
+  .object({
+    id: z.string(),
+    name: z.string().trim().nonempty().max(32),
+    columnCount: boardColumnCountSchema,
+    leftGutterColumnCount: boardGutterColumnCountSchema.default(0),
+    rightGutterColumnCount: boardGutterColumnCountSchema.default(0),
+    breakpoint: z.number().int().min(0).max(32767),
+    role: z.enum(layoutRoles.values),
+  })
+  .refine((layout) => layout.leftGutterColumnCount + layout.rightGutterColumnCount < layout.columnCount, {
+    message: "Gutters must leave at least one dashboard column",
+    path: ["columnCount"],
+  });
 
 export const responsiveBoardLayoutsSchema = z
   .array(boardLayoutSchema)

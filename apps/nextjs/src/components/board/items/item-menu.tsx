@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -13,11 +12,10 @@ import type { WidgetDefinition } from "@homarr/widgets/definition";
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
-import { LazyItemMoveModal, preloadItemMoveModal } from "./lazy-item-move-modal";
+import { useOpenItemMoveModal } from "./item-move-modal";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 
 interface BoardItemMenuProps {
-  offset: number;
   item: SectionItem;
   definition: WidgetDefinition;
   resetErrorBoundary?: () => void;
@@ -30,24 +28,21 @@ export const BoardItemMenu = (props: BoardItemMenuProps) => {
 
   return <BoardItemMenuInner {...props} />;
 };
-
-const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: BoardItemMenuProps) => {
+const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemMenuProps) => {
+  const { data: session } = useSession();
+  const canDuplicate = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useScopedI18n("item");
   const t = useI18n();
   const { openModal } = useModalAction(LazyWidgetEditModal);
-  const { openModal: openMoveModal } = useModalAction(LazyItemMoveModal);
+  const openMoveModal = useOpenItemMoveModal();
   const { openConfirmModal } = useConfirmModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const hasSupportedIntegrations =
-    "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) > 0;
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
-  const { data: integrationData, isPending } = clientApi.integration.all.useQuery(undefined, {
-    enabled: isMenuOpen && hasSupportedIntegrations,
-  });
-  const { gridstack } = useSectionContext().refs;
+  const { integrations: integrationData = [], section } = useSectionContext();
   const settings = useSettings();
+  const label = item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`);
 
   // Reset error boundary on next render if item has been edited
   useEffect(() => {
@@ -82,7 +77,7 @@ const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: Bo
           });
           refResetErrorBoundaryOnNextRender.current = true;
         },
-        integrationData: (integrationData ?? []).filter(
+        integrationData: integrationData.filter(
           (integration) =>
             "supportedIntegrations" in definition &&
             (definition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
@@ -93,8 +88,8 @@ const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: Bo
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       {
-        title(t) {
-          return `${t("item.edit.title")} - ${t(`widget.${item.kind}.name`)}`;
+        title(translate) {
+          return `${translate("item.edit.title")} - ${translate(`widget.${item.kind}.name`)}`;
         },
       },
     );
@@ -115,14 +110,16 @@ const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: Bo
       <Menu.Target>
         <ActionIcon
           variant="default"
-          radius={"xl"}
+          size={24}
+          radius="sm"
           pos="absolute"
-          top={offset}
-          right={offset}
+          top={12}
+          right={8}
           style={{ zIndex: 10 }}
-          aria-label={tItem("menu.label.settings")}
+          data-board-widget-settings
+          aria-label={tItem("menu.label.settingsFor", { name: label })}
         >
-          <IconDotsVertical size={"1rem"} />
+          <IconDotsVertical size="1rem" />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
@@ -132,24 +129,25 @@ const BoardItemMenuInner = ({ offset, item, definition, resetErrorBoundary }: Bo
           onClick={openEditModal}
           onFocus={preloadWidgetEditModal}
           onPointerEnter={preloadWidgetEditModal}
-          disabled={hasSupportedIntegrations && isPending}
         >
           {tItem("action.edit")}
         </Menu.Item>
         <Menu.Item
           leftSection={<IconLayoutKanban size={16} />}
-          onFocus={preloadItemMoveModal}
-          onPointerEnter={preloadItemMoveModal}
           onClick={() => {
-            if (!gridstack.current) return;
-            openMoveModal({ item, columnCount: gridstack.current.getColumn(), gridStack: gridstack.current });
+            openMoveModal({
+              entry: item,
+              sourceSectionId: section.id,
+            });
           }}
         >
           {tItem("action.moveResize")}
         </Menu.Item>
-        <Menu.Item leftSection={<IconCopy size={16} />} onClick={() => duplicateItem({ itemId: item.id })}>
-          {tItem("action.duplicate")}
-        </Menu.Item>
+        {canDuplicate && (
+          <Menu.Item leftSection={<IconCopy size={16} />} onClick={() => duplicateItem({ itemId: item.id })}>
+            {tItem("action.duplicate")}
+          </Menu.Item>
+        )}
         <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
         <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>

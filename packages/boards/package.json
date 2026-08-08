@@ -13,6 +13,7 @@
   },
   "exports": {
     "./context": "./src/context.tsx",
+    "./layout-selection": "./src/layout-selection.ts",
     "./updater": "./src/updater.ts",
     "./edit-mode": "./src/edit-mode.tsx"
   },

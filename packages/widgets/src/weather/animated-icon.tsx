@@ -7,7 +7,6 @@ interface AnimatedWeatherIconProps {
   size?: string | number;
 }
 
-
 const getAnimationClass = (code: number): string => {
   if (code === 0) return "weather-anim-sun";
   if ([1, 2, 3].includes(code)) return "weather-anim-cloud";
@@ -17,7 +16,6 @@ const getAnimationClass = (code: number): string => {
   if ([95, 96, 99].includes(code)) return "weather-anim-storm";
   return "";
 };
-
 
 export const AnimatedWeatherIcon = ({ code, size = 26 }: AnimatedWeatherIconProps) => {
   return (

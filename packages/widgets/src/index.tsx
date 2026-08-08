@@ -66,10 +66,24 @@ import * as weather from "./weather";
 import * as customApi from "./custom-api";
 
 export type {
+  NormalizedWidgetQuery,
   WidgetDefinition,
   WidgetContextMenuAction,
   WidgetContextActionProps,
   WidgetOptionsSettings,
+  WidgetQueryMatcher,
+  WidgetQueryMatcherScope,
+  WidgetRuntimeActions,
+  WidgetRuntimeRef,
+  WidgetRuntimeState,
+} from "./definition";
+export {
+  createWidgetRuntimeState,
+  getWidgetQueryKeys,
+  getWidgetRuntimeQueries,
+  normalizeWidgetQuery,
+  supportsAdvancedFocus,
+  widgetQueryValueEquals,
 } from "./definition";
 export type { WidgetComponentProps };
 export type { WidgetOptionDefinition, WidgetOptionType } from "./options";

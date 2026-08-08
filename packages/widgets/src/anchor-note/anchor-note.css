@@ -4,6 +4,34 @@
   height: 100%;
 }
 
+.homarr-anchor-actions {
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.homarr-anchor-note:hover .homarr-anchor-actions,
+.homarr-anchor-note:focus-within .homarr-anchor-actions,
+.homarr-anchor-actions[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (any-pointer: coarse) {
+  .homarr-anchor-actions {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homarr-anchor-actions {
+    transition: none;
+  }
+}
+
 .homarr-anchor-quill .ql-toolbar.ql-snow,
 .homarr-anchor-quill .ql-container.ql-snow {
   border: 0;

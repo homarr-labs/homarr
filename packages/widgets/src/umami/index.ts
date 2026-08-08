@@ -1,15 +1,25 @@
 import { IconChartBar, IconServerOff } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const timeFrameValues = ["today", "24h", "7d", "30d", "month", "lastMonth"] as const;
 
 export const { definition, componentLoader } = createWidgetDefinition("umami", {
   icon: IconChartBar,
+  queryKeys: [
+    [["widget", "umami", "getVisitorStats"]],
+    [["widget", "umami", "getActiveVisitors"]],
+    [["widget", "umami", "getMultiEventTimeSeries"]],
+    [["widget", "umami", "getTopPages"]],
+    [["widget", "umami", "getTopReferrers"]],
+  ],
+  queryMatcher: matchesWidgetRuntimeQuery,
   refetchInterval: null,
   supportedIntegrations: ["umami"],
+  integrationsRequired: true,
+  maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

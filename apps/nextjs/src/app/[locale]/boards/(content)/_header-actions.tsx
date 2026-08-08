@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { startTransition, useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Box, Center, Loader, Menu, ScrollArea } from "@mantine/core";
@@ -10,7 +10,6 @@ import {
   IconLayoutBoard,
   IconPencil,
   IconPencilOff,
-  IconPlus,
   IconReplace,
   IconSettings,
   IconX,
@@ -28,22 +27,32 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { useBoardPermissions } from "~/components/board/permissions/client";
+import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
+import type * as EditActionsModule from "./_edit-actions";
 
-const loadBoardAddMenu = () => import("./_board-add-menu");
-const preloadBoardAddMenu = () => void loadBoardAddMenu().catch(() => undefined);
-const BoardAddMenu = dynamic(() => loadBoardAddMenu().then(({ BoardAddMenu: AddMenu }) => AddMenu), {
-  loading: () => (
-    <HeaderButton loading>
-      <IconPlus stroke={1.5} />
-    </HeaderButton>
-  ),
-});
+let editActionsModulePromise: Promise<typeof EditActionsModule> | undefined;
+const loadEditActionsAsync = () => {
+  editActionsModulePromise ??= import("./_edit-actions").catch((error: unknown) => {
+    editActionsModulePromise = undefined;
+    throw error;
+  });
+  return editActionsModulePromise;
+};
+const loadBoardEditorAsync = async () =>
+  await Promise.all([
+    loadGridEditorAsync(),
+    loadEditActionsAsync(),
+    import("~/components/board/items/item-menu"),
+    import("~/components/board/sections/container/container-menu"),
+  ]);
+const BoardEditActions = dynamic(loadEditActionsAsync, { ssr: false });
 
 export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
+  const t = useI18n();
   const { hasChangeAccess } = useBoardPermissions(board);
 
   if (!hasChangeAccess) {
@@ -52,13 +61,13 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
 
   return (
     <>
-      {isEditMode && <BoardAddMenu />}
+      {isEditMode && <BoardEditActions />}
 
       <EditModeMenu demoReadOnly={demoReadOnly} />
 
       {!demoReadOnly && (
         <TourTarget id="board-settings">
-          <HeaderButton href={`/boards/${board.name}/settings`}>
+          <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("board.action.settings")}>
             <IconSettings stroke={1.5} />
           </HeaderButton>
         </TourTarget>
@@ -71,6 +80,8 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
 
 const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode, { open, close }] = useEditMode();
+  const [editorLoadState, setEditorLoadState] = useState<"scheduled" | "loading" | "ready" | "error">("scheduled");
+  const [isEnteringEditMode, setIsEnteringEditMode] = useState(false);
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const router = useRouter();
@@ -83,6 +94,9 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
     searchParams.get("edit") === "true" &&
     searchParams.get("layout") !== null &&
     searchParams.get("returnTo") === "settings";
+  const latestBoardRef = useRef(board);
+
+  latestBoardRef.current = board;
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onSuccess() {
       showSuccessNotification({
@@ -90,6 +104,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
         message: t("notification.success.message"),
       });
       void utils.board.getBoardByName.invalidate({ name: board.name });
+      void utils.widget.customApi.getData.invalidate();
       void revalidatePathActionAsync(`/boards/${board.name}`);
       close();
       if (returnToLayoutSettings) router.push(`/boards/${board.name}/settings?tab=layout`);
@@ -107,13 +122,55 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
     close();
   }, [utils, board.name, close]);
 
-  const toggle = useCallback(() => {
+  const prepareEditorAsync = useCallback(async () => {
+    if (editorLoadState === "ready") return;
+
+    setEditorLoadState("loading");
+    try {
+      await loadBoardEditorAsync();
+      setEditorLoadState("ready");
+    } catch {
+      setEditorLoadState("error");
+      throw new Error("Unable to load the board editor");
+    }
+  }, [editorLoadState]);
+
+  useEffect(() => {
+    return scheduleGridEditorWarmup(async () => {
+      setEditorLoadState("loading");
+      try {
+        await loadBoardEditorAsync();
+        setEditorLoadState("ready");
+      } catch {
+        setEditorLoadState("error");
+      }
+    });
+  }, []);
+
+  const prewarmEditor = useCallback(() => {
+    void prepareEditorAsync().catch(() => {
+      // A click or hotkey retries and reports the error.
+    });
+  }, [prepareEditorAsync]);
+
+  const toggle = useCallback(async () => {
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
-      return saveBoard(board);
+      return saveBoard(latestBoardRef.current);
     }
-    open();
-  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
+    setIsEnteringEditMode(true);
+    try {
+      await prepareEditorAsync();
+      startTransition(open);
+    } catch {
+      showErrorNotification({
+        title: t("notification.loadError.title"),
+        message: t("notification.loadError.message"),
+      });
+    } finally {
+      setIsEnteringEditMode(false);
+    }
+  }, [demoReadOnly, discardDemoChanges, isEditMode, open, prepareEditorAsync, saveBoard, t]);
 
   const cancelLayoutEdit = useCallback(() => {
     openConfirmModal({
@@ -130,7 +187,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
     });
   }, [board.name, close, commonT, openConfirmModal, router, utils.board.getBoardByName]);
 
-  useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
+  useHotkeys([[hotkeys.toggleBoardEdit, () => void toggle()]]);
   usePreventLeaveWithDirty(isEditMode);
 
   if (returnToLayoutSettings) {
@@ -157,10 +214,15 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   return (
     <TourTarget id="board-edit-mode">
       <HeaderButton
-        onClick={toggle}
-        loading={isPending}
-        onFocus={preloadBoardAddMenu}
-        onPointerEnter={preloadBoardAddMenu}
+        onClick={() => void toggle()}
+        onFocus={prewarmEditor}
+        onPointerEnter={prewarmEditor}
+        loading={isPending || isEnteringEditMode}
+        data-testid="board-edit-mode-toggle"
+        data-board-editor-preload-state={editorLoadState}
+        aria-busy={isPending || isEnteringEditMode}
+        aria-label={isEditMode ? (demoReadOnly ? t("exit") : t("save")) : t("enter")}
+        aria-pressed={isEditMode}
       >
         {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
       </HeaderButton>
@@ -169,6 +231,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
 };
 
 const SelectBoardsMenu = () => {
+  const t = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const utils = clientApi.useUtils();
   const { data: boards = [], isPending } = clientApi.board.getAllBoards.useQuery(undefined, { enabled: isOpen });
@@ -179,7 +242,7 @@ const SelectBoardsMenu = () => {
       <Box onFocus={preloadBoards} onPointerEnter={preloadBoards}>
         <Menu position="bottom-end" opened={isOpen} onChange={setIsOpen}>
           <Menu.Target>
-            <HeaderButton w="auto" px={4}>
+            <HeaderButton w="auto" px={4} aria-label={t("board.action.switch")}>
               <IconReplace stroke={1.5} />
             </HeaderButton>
           </Menu.Target>

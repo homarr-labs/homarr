@@ -688,211 +688,6 @@
       "add": "Lisää sovellus"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Mukautetut widgetit",
-        "noResults": "Ei vielä mukautettuja widgettejä. Luo ensimmäinen!",
-        "loading": "Ladataan..."
-      },
-      "create": {
-        "title": "Luo mukautettu widget",
-        "subtitle": "Määritä API-URL, todennus ja miten vastaustiedot näytetään."
-      },
-      "edit": {
-        "title": "Muokkaa mukautettua widgettiä"
-      }
-    },
-    "action": {
-      "create": "Luo",
-      "import": "Tuo",
-      "save": "Tallenna",
-      "delete": "Poista mukautettu widget",
-      "deleteConfirm": "Haluatko varmasti poistaa \"{name}\"? Tätä toimintoa ei voi peruuttaa.",
-      "export": "Vie",
-      "addMapping": "Lisää kartoitus",
-      "addColumn": "Lisää sarake",
-      "edit": "Muokkaa",
-      "removeMapping": "Poista kartoitus",
-      "removeColumn": "Poista sarake",
-      "addItem": "Lisää kohde",
-      "removeItem": "Poista kohde",
-      "addBar": "Lisää palkki",
-      "duplicate": "Monista",
-      "copyAiPrompt": "Kopioi AI-kehoteprompt",
-      "enable": "Ota käyttöön",
-      "disable": "Poista käytöstä",
-      "menu": "Toiminnot"
-    },
-    "field": {
-      "name": "Nimi",
-      "description": "Kuvaus",
-      "iconUrl": "Kuvakkeen URL-osoite",
-      "url": "URL",
-      "authType": "Tunnistautumistyyppi",
-      "headerName": "Otsikko/kyselyparametrin nimi",
-      "method": "Menetelmä",
-      "requestBody": "Pyynnön runko",
-      "displayType": "Näyttötyyppi",
-      "jsonPath": "JSON-polku",
-      "jsonPathHint": "Käytä JSONPath-syntaksia arvojen poimimiseen, esim. $.data.temperature tai $.items[0].name",
-      "label": "Tunniste",
-      "unit": "Yksikkö",
-      "mappings": "Kartoitukset",
-      "tablePath": "Taulukon JSON-polku",
-      "tablePathHint": "Polku vastauksen taulukkoon, esim. $.data.items",
-      "columns": "Sarakkeet",
-      "header": "Otsikko",
-      "items": "Kohteet",
-      "gridColumns": "Ruudukon sarakkeet",
-      "cardStyle": "Kortin tyyli",
-      "bars": "Palkit",
-      "valuePath": "Arvon JSON-polku",
-      "maxPath": "Maksimiarvon JSON-polku",
-      "showPercentage": "Näytä prosenttiosuus",
-      "barSize": "Palkin koko",
-      "goodValues": "Hyvät arvot (pilkuin eroteltuina)",
-      "dotSize": "Pisteen koko",
-      "valueSize": "Arvon koko",
-      "labelPosition": "Tunnisteen sijainti",
-      "kvLayout": "Asettelu",
-      "striped": "Raidalliset rivit",
-      "compact": "Tiivis tila",
-      "maxHeight": "Maksimikorkeus (px)",
-      "color": "Väri",
-      "buttonLabel": "Painikkeen teksti",
-      "buttonColor": "Painikkeen väri",
-      "confirmText": "Vahvistusteksti",
-      "confirmTextHint": "Jos asetettu, vahvistusvalintaikkuna tulee esiin ennen pyynnön suorittamista",
-      "successMessage": "Onnistumisviesti",
-      "successMessageHint": "Viesti, joka näytetään onnistuneen suorituksen jälkeen",
-      "enabled": "Käytössä",
-      "template": {
-        "label": "JSX-mallipohja",
-        "description": "Mantine JSX -mallipohja. Käytä vastauskenttiä datan sidonnoilla (esim. data.name). Käytä vain sallittuja komponentteja. Kielletyt: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU-lämpötila",
-      "exampleLabelShort": "CPU-lämpö",
-      "exampleHeader": "Nimi",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.nimi",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "sininen"
-    },
-    "cardStyleOption": {
-      "filled": "Täytetty",
-      "outline": "Ääriviiva",
-      "subtle": "Hienovarainen"
-    },
-    "layoutOption": {
-      "list": "Luettelo",
-      "grid": "Ruudukko"
-    },
-    "sizeOption": {
-      "sm": "Pieni",
-      "md": "Keskikokoinen",
-      "lg": "Suuri",
-      "xl": "Erittäin suuri"
-    },
-    "labelPositionOption": {
-      "above": "Yläpuolella",
-      "below": "Alapuolella"
-    },
-    "fieldset": {
-      "general": "Yleiset",
-      "connection": "API-yhteys",
-      "display": "Näyttöasetukset"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Näytä yksi poimittu arvo tunnisteella ja yksiköllä",
-      "keyValue": "Näytä useita tunnisteellisia arvoja vierekkäin",
-      "table": "Näytä tietorivit taulukkomuodossa",
-      "statGrid": "Värilliset tilastokortit ruudukossa – kuten Pi-Hole- tai Speedtest-widgetit",
-      "progressBars": "Edistymispalkit, jotka näyttävät käyttöasteen tai valmistumisen – levylle, muistille, kiintiöille",
-      "statusIndicator": "Värilliset tilapisteet, jotka näyttävät online/offline- tai terveydentilan",
-      "countGrid": "Tiiviit numero + tunniste -laskurit tiukassa ruudukossa",
-      "raw": "Muotoiltu JSON-tuloste vianetsintään",
-      "actionButton": "Painike, joka laukaisee pyynnön napsautettaessa",
-      "customJsx": "Mukautettu JSX-asettelu käyttäen sallittuja Mantine-komponentteja täydellä API-tietojen sidonnalla"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Ei mitään",
-      "bearer": "Bearer-tunniste",
-      "basic": "Basic-todennus",
-      "apiKeyHeader": "API-avain (otsikko)",
-      "apiKeyQuery": "API-avain (kysely)"
-    },
-    "displayType": {
-      "singleValue": "Yksittäinen arvo",
-      "keyValue": "Avain-arvo",
-      "table": "Taulukko",
-      "statGrid": "Tilastoruudukko",
-      "progressBars": "Edistymispalkit",
-      "statusIndicator": "Tilan ilmaisin",
-      "countGrid": "Laskuriruudukko",
-      "raw": "Raaka JSON",
-      "actionButton": "Toimintopainike",
-      "customJsx": "Mukautettu JSX"
-    },
-    "secret": {
-      "apiKey": "API-avain / token",
-      "username": "Käyttäjätunnus",
-      "password": "Salasana",
-      "savedPlaceholder": "••••••• (tallennettu, jätä tyhjäksi säilyttääksesi)"
-    },
-    "preview": {
-      "title": "Esikatselu",
-      "test": "Testaa",
-      "hint": "Napsauta Testaa nähdäksesi API-vastauksen nykyisillä asetuksillasi.",
-      "rawResponse": "Raaka JSON-vastaus"
-    },
-    "notification": {
-      "created": "Widget \"{name}\" luotiin onnistuneesti.",
-      "updated": "Widget \"{name}\" päivitettiin onnistuneesti.",
-      "deleted": "Widget \"{name}\" poistettiin.",
-      "imported": "Widget tuotiin onnistuneesti.",
-      "aiPromptCopied": "AI-kehoteprompt kopioitu leikepöydälle",
-      "aiPromptDescription": "Kopioi valmis kehoteprompt liitettäväksi mihin tahansa AI-chatbottiin (ChatGPT, Claude, Gemini...). Se sisältää täyden widget-skeeman ja API-vastauksesi, jotta AI voi luoda sinulle tuotavissa olevan JSON-asetuksen.",
-      "aiPromptCopy": "Kopioi leikepöydälle",
-      "aiPromptNoResponse": "Vinkki: Suorita testi ensin sisällyttääksesi API-vastauksesi kehotepromptiin parempien tulosten saamiseksi.",
-      "aiPromptCopyError": "Kehotepromptin kopiointi leikepöydälle epäonnistui. Selaimesi ei ehkä tue tätä ominaisuutta.",
-      "createError": "Widgetin luonti epäonnistui. Tarkista, että API-päätepisteesi on tavoitettavissa.",
-      "updateError": "Widgetin päivitys epäonnistui. Muutoksiasi ei tallennettu.",
-      "importError": "Widgetin tuonti epäonnistui. Varmista, että tiedosto on kelvollinen mukautetun widgetin JSON-vienti.",
-      "exportError": "Widgetin vienti epäonnistui.",
-      "duplicated": "Widget \"{name}\" kopioitiin.",
-      "duplicateError": "Widgetin kopiointi epäonnistui.",
-      "toggleError": "Widgetin tilan vaihto epäonnistui.",
-      "deleteError": "Widgetin poisto epäonnistui.",
-      "previewError": "Esikatselun nouto epäonnistui. Tarkista URL ja yritä uudelleen.",
-      "executed": "Toiminto suoritettu onnistuneesti.",
-      "executeError": "Toiminto epäonnistui: {error}"
-    },
-    "table": {
-      "name": "Nimi",
-      "url": "URL",
-      "display": "Näyttö"
-    },
-    "widget": {
-      "disabled": "Tämä widget on poistettu käytöstä"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1549,10 +1344,10 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
-        "create": "Uusi dynaaminen osio",
-        "remove": ""
+        "create": "Uusi kontti",
+        "remove": "Poista kontti"
       },
       "option": {
         "title": {
@@ -1566,48 +1361,8 @@
         }
       },
       "remove": {
-        "title": "",
-        "message": "Haluatko varmasti poistaa tämän dynaamisen osion? Kohteet siirretään samaan paikkaan yläosiossa."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": ""
-        }
-      },
-      "action": {
-        "create": "Uusi kategoria",
-        "edit": "",
-        "remove": "",
-        "moveUp": "",
-        "moveDown": "",
-        "createAbove": "",
-        "createBelow": "",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "",
-        "submit": ""
-      },
-      "remove": {
-        "title": "",
-        "message": "Haluatko varmasti poistaa kategorian {name}?"
-      },
-      "edit": {
-        "title": "",
-        "submit": ""
-      },
-      "menu": {
-        "label": {
-          "create": "",
-          "changePosition": "",
-          "settings": "Asetukset"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": "Jotkin selaimet voivat turvallisuussyistä estää välilehtien massa-avaamisen. Homarr ei voinut avata kaikkia ikkunoita, koska selaimesi esti toimenpiteen. Salli ponnahdusikkunoiden avaaminen ja yritä uudelleen."
+        "title": "Poista kontti",
+        "message": "Haluatko varmasti poistaa tämän kontin? Kohteet siirretään samaan paikkaan yläosiossa."
       }
     }
   },
@@ -2828,193 +2583,6 @@
         "internalServerError": "Paperless-ngx-tietojen haku epäonnistui"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Yleiskatsaus isäntien päivitystilanteesta PatchMonista",
-      "title": "PatchMon-tilastot",
-      "totalHosts": "Isännät yhteensä",
-      "hostsNeedingUpdates": "Päivitystä tarvitsevat",
-      "securityUpdates": "Tietoturvapäivitykset",
-      "upToDateHosts": "Ajan tasalla olevat isännät",
-      "hostsWithSecurityUpdates": "Isännät, joilla on tietoturvapäivityksiä",
-      "recentUpdates24h": "Päivitykset (24 h)",
-      "totalOutdatedPackages": "Vanhentuneet paketit",
-      "totalRepos": "Pakettivarastot",
-      "osDistribution": "Käyttöjärjestelmien jakauma",
-      "compliance": "Päivityskattavuus",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Päivitetty {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Näytä isännät yhteensä",
-          "description": "Näytä valvottujen isäntien kokonaismäärä"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Näytä päivitystä tarvitsevat isännät",
-          "description": "Näytä isännät, joilla on vähintään yksi vanhentunut paketti"
-        },
-        "showSecurityUpdates": {
-          "label": "Näytä tietoturvapäivitykset",
-          "description": "Näytä saatavilla olevien tietoturvapäivitysten kokonaismäärä"
-        },
-        "showUpToDateHosts": {
-          "label": "Näytä ajan tasalla olevat isännät",
-          "description": "Näytä isännät, joissa ei ole vanhentuneita paketteja"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Näytä isännät, joilla on tietoturvapäivityksiä",
-          "description": "Näytä isännät, jotka tarvitsevat tietoturvakorjauksia"
-        },
-        "showRecentUpdates24h": {
-          "label": "Näytä viimeaikaiset päivitykset (24 h)",
-          "description": "Näytä viimeisen 24 tunnin aikana asennettujen päivitysten määrä"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Näytä vanhentuneet paketit",
-          "description": "Näytä vanhentuneiden pakettien kokonaismäärä kaikissa isännissä"
-        },
-        "showTotalRepos": {
-          "label": "Näytä repositoriot",
-          "description": "Näytä valvottavien aktiivisten repositorioiden määrä"
-        },
-        "enableThresholdColors": {
-          "label": "Ota käyttöön kynnysarvovärit",
-          "description": "Väritä tilastoarvot vihreäksi, keltaiseksi tai punaiseksi vakavuusesiasetusten perusteella"
-        },
-        "useCustomThresholds": {
-          "label": "Edistyneet kynnysarvot",
-          "description": "Mukauta varoitus- ja kriittiset kynnysarvot tilastoittain käyttäen absoluuttisia määriä tai prosenttiosuutta isäntien kokonaismäärästä"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Absoluuttinen määrä",
-            "percent": "Prosenttia isäntien kokonaismäärästä"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Päivityksiä tarvitsevien kynnysarvotila",
-          "description": "Vertaa päivitystarpeiden määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Päivitystarpeiden varoituskynnysarvo",
-          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Päivitystarpeiden kriittinen kynnysarvo",
-          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Tietoturvapäivitysten kynnysarvotila",
-          "description": "Vertaa tietoturvapäivitysten määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Tietoturvapäivitysten varoituskynnysarvo",
-          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Tietoturvapäivitysten kriittinen kynnysarvo",
-          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Tietoturvapäivityksiä sisältävien isäntien kynnysarvotila",
-          "description": "Vertaa isäntien määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Tietoturvapäivityksiä sisältävien isäntien varoituskynnysarvo",
-          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Tietoturvapäivityksiä sisältävien isäntien kriittinen kynnysarvo",
-          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Ajan tasalla olevien isäntien kynnysarvotila",
-          "description": "Vertaa ajan tasalla olevien isäntien määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Ajan tasalla olevien isäntien varoituskynnysarvo",
-          "description": "Muuta keltaiseksi, kun arvo on vähintään tämä kynnysarvo, mutta alle täyden kattavuuden"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Ajan tasalla olevien isäntien kriittinen kynnysarvo",
-          "description": "Muuta punaiseksi, kun arvo laskee tämän kynnysarvon alle"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Vanhentuneiden pakettien kynnysarvotila",
-          "description": "Vertaa vanhentuneiden pakettien määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Vanhentuneiden pakettien varoituskynnysarvo",
-          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Vanhentuneiden pakettien kriittinen kynnysarvo",
-          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
-        },
-        "showOsDistribution": {
-          "label": "Näytä käyttöjärjestelmäjakauma",
-          "description": "Näytä erittely valvotuista isännistä käyttöjärjestelmittäin"
-        },
-        "osDistributionLimit": {
-          "label": "Käyttöjärjestelmäjakauman rajoitus",
-          "description": "Näytettävien käyttöjärjestelmien enimmäismäärä",
-          "option": {
-            "3": "3 parasta",
-            "5": "5 parasta",
-            "10": "10 parasta",
-            "all": "Kaikki"
-          }
-        },
-        "showOsVersion": {
-          "label": "Näytä käyttöjärjestelmän versio",
-          "description": "Liitä käyttöjärjestelmän versio jokaiseen jakauman nimikkeeseen, kun se on saatavilla"
-        },
-        "showComplianceHero": {
-          "label": "Näytä compliance-hero",
-          "description": "Näytä vaatimustenmukaisuusrengas, joka näyttää ajan tasalla olevien isäntien prosenttiosuuden"
-        },
-        "osDisplayMode": {
-          "label": "Käyttöjärjestelmän näyttötila",
-          "description": "Valitse, miten käyttöjärjestelmän jakelu näytetään",
-          "option": {
-            "bars": "Vaakapalkit",
-            "donut": "Donitsikaavio"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "PatchMon-tietojen nouto epäonnistui"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Yleiskatsaus puuttuvista tekstityksistä ja terveystilasta Bazarr-instanssistasi",
-      "episodes": "Puuttuvat jaksot",
-      "movies": "Puuttuvat elokuvat",
-      "providers": "Palveluntarjoajan ongelmat",
-      "status": "Terveysongelmat",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Näytä puuttuvat jaksot",
-          "description": "Näytä niiden jaksojen määrä, joista puuttuu tekstitys"
-        },
-        "showMissingMovies": {
-          "label": "Näytä puuttuvat elokuvat",
-          "description": "Näytä niiden elokuvien määrä, joista puuttuu tekstitykset"
-        },
-        "showProviderIssues": {
-          "label": "Näytä tarjoajien ongelmat",
-          "description": "Näytä ongelmallisten tekstitystarjoajien määrä"
-        },
-        "showHealthIssues": {
-          "label": "Näytä kunto-ongelmat",
-          "description": "Näytä Bazarrin kunto-ongelmien määrä"
-        }
-      },
-      "error": {
-        "internalServerError": "Bazarrin tietojen nouto epäonnistui"
-      }
-    },
     "immich-serverStats": {
       "name": "",
       "description": "",
@@ -3387,35 +2955,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "Puuttuva & jonossa oleva media",
-      "description": "Näyttää puuttuvat ja jonossa olevat elokuvat ja jaksot Radarr:sta ja Sonarr:sta",
-      "option": {
-        "showMissing": {
-          "label": "Näytä puuttuvat kohteet"
-        },
-        "showQueued": {
-          "label": "Näytä jonossa olevat kohteet"
-        },
-        "pageSize": {
-          "label": "Kohteita per sivu"
-        }
-      },
-      "tab": {
-        "missing": "Puuttuvat",
-        "queued": "Jonossa"
-      },
-      "type": {
-        "movie": "Elokuva",
-        "episode": "Jakso"
-      },
-      "empty": {
-        "missing": "Ei puuttuvia kohteita",
-        "queued": "Ei jonossa olevia kohteita",
-        "noTabsEnabled": "Ota käyttöön vähintään yksi välilehti widgetin asetuksissa"
-      },
-      "timeLeft": "Jäljellä oleva aika"
-    },
     "rssFeed": {
       "name": "",
       "description": "",
@@ -3744,40 +3283,6 @@
         "internalServerError": "Käytettävyystietojen haku epäonnistui"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Yleiskatsaus Traefikin reitittimistä, palveluista, middlewareista ja sisääntulopisteistä",
-      "option": {
-        "showTcp": {
-          "label": "Näytä TCP"
-        },
-        "showUdp": {
-          "label": "Näytä UDP"
-        },
-        "showEntryPoints": {
-          "label": "Näytä sisääntulopisteet"
-        }
-      },
-      "instances": "Traefik-instanssit",
-      "versionUnknown": "Versio tuntematon",
-      "summary": {
-        "routers": "Reitittimet",
-        "entryPoints": "Sisääntulopisteet"
-      },
-      "resource": {
-        "routers": "Reitittimet",
-        "services": "Palvelut",
-        "middlewares": "Middlewaret"
-      },
-      "status": {
-        "healthy": "Terve",
-        "errors": "{count} virhettä",
-        "warnings": "{count} varoitusta"
-      },
-      "error": {
-        "internalServerError": "Traefikin tietojen nouto epäonnistui"
-      }
-    },
     "audioStats": {
       "name": "Äänitilastot",
       "description": "Kirjasto- ja toistotilastot Navidromesta tai Audiobookshelfistä",
@@ -3900,26 +3405,6 @@
       "status": {
         "unhealthy": ""
       }
-    },
-    "customApi": {
-      "name": "Mukautettu API",
-      "description": "Näytä dataa mistä tahansa ulkoisesta API:sta mukautetuilla asetuksilla.",
-      "option": {
-        "definitionId": {
-          "label": "Määritelmän tunnus"
-        },
-        "refreshInterval": {
-          "label": "Päivitysväli",
-          "description": "Kuinka usein data haetaan uudelleen API:sta (sekunteina)"
-        }
-      },
-      "noDefinition": "Määritelmää ei valittu",
-      "definitionNotFound": "Widget-määritelmää ei löydy. Se on saatettu poistaa.",
-      "noDisplayOutput": "Ei näyttötulostetta",
-      "executeConfirm": "Haluatko varmasti suorittaa tämän toiminnon?",
-      "executing": "Suoritetaan...",
-      "executeSuccess": "Toiminto suoritettu onnistuneesti",
-      "executeFailed": "Toiminto epäonnistui. Tarkista widgetin asetukset."
     },
     "beszelSystemTable": {
       "name": "Beszel-järjestelmät (taulukko)",
@@ -4170,6 +3655,256 @@
           "title": "Docker-verkon I/O",
           "subtitle": "Docker-konttien verkkoliikenne"
         }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Yleiskatsaus isäntien päivitystilanteesta PatchMonista",
+      "title": "PatchMon-tilastot",
+      "totalHosts": "Isännät yhteensä",
+      "hostsNeedingUpdates": "Päivitystä tarvitsevat",
+      "securityUpdates": "Tietoturvapäivitykset",
+      "upToDateHosts": "Ajan tasalla olevat isännät",
+      "hostsWithSecurityUpdates": "Isännät, joilla on tietoturvapäivityksiä",
+      "recentUpdates24h": "Päivitykset (24 h)",
+      "totalOutdatedPackages": "Vanhentuneet paketit",
+      "totalRepos": "Pakettivarastot",
+      "osDistribution": "Käyttöjärjestelmien jakauma",
+      "compliance": "Päivityskattavuus",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Päivitetty {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Näytä isännät yhteensä",
+          "description": "Näytä valvottujen isäntien kokonaismäärä"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Näytä päivitystä tarvitsevat isännät",
+          "description": "Näytä isännät, joilla on vähintään yksi vanhentunut paketti"
+        },
+        "showSecurityUpdates": {
+          "label": "Näytä tietoturvapäivitykset",
+          "description": "Näytä saatavilla olevien tietoturvapäivitysten kokonaismäärä"
+        },
+        "showUpToDateHosts": {
+          "label": "Näytä ajan tasalla olevat isännät",
+          "description": "Näytä isännät, joissa ei ole vanhentuneita paketteja"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Näytä isännät, joilla on tietoturvapäivityksiä",
+          "description": "Näytä isännät, jotka tarvitsevat tietoturvakorjauksia"
+        },
+        "showRecentUpdates24h": {
+          "label": "Näytä viimeaikaiset päivitykset (24 h)",
+          "description": "Näytä viimeisen 24 tunnin aikana asennettujen päivitysten määrä"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Näytä vanhentuneet paketit",
+          "description": "Näytä vanhentuneiden pakettien kokonaismäärä kaikissa isännissä"
+        },
+        "showTotalRepos": {
+          "label": "Näytä repositoriot",
+          "description": "Näytä valvottavien aktiivisten repositorioiden määrä"
+        },
+        "enableThresholdColors": {
+          "label": "Ota käyttöön kynnysarvovärit",
+          "description": "Väritä tilastoarvot vihreäksi, keltaiseksi tai punaiseksi vakavuusesiasetusten perusteella"
+        },
+        "useCustomThresholds": {
+          "label": "Edistyneet kynnysarvot",
+          "description": "Mukauta varoitus- ja kriittiset kynnysarvot tilastoittain käyttäen absoluuttisia määriä tai prosenttiosuutta isäntien kokonaismäärästä"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Absoluuttinen määrä",
+            "percent": "Prosenttia isäntien kokonaismäärästä"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Päivityksiä tarvitsevien kynnysarvotila",
+          "description": "Vertaa päivitystarpeiden määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Päivitystarpeiden varoituskynnysarvo",
+          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Päivitystarpeiden kriittinen kynnysarvo",
+          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Tietoturvapäivitysten kynnysarvotila",
+          "description": "Vertaa tietoturvapäivitysten määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Tietoturvapäivitysten varoituskynnysarvo",
+          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Tietoturvapäivitysten kriittinen kynnysarvo",
+          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Tietoturvapäivityksiä sisältävien isäntien kynnysarvotila",
+          "description": "Vertaa isäntien määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Tietoturvapäivityksiä sisältävien isäntien varoituskynnysarvo",
+          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Tietoturvapäivityksiä sisältävien isäntien kriittinen kynnysarvo",
+          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Ajan tasalla olevien isäntien kynnysarvotila",
+          "description": "Vertaa ajan tasalla olevien isäntien määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Ajan tasalla olevien isäntien varoituskynnysarvo",
+          "description": "Muuta keltaiseksi, kun arvo on vähintään tämä kynnysarvo, mutta alle täyden kattavuuden"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Ajan tasalla olevien isäntien kriittinen kynnysarvo",
+          "description": "Muuta punaiseksi, kun arvo laskee tämän kynnysarvon alle"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Vanhentuneiden pakettien kynnysarvotila",
+          "description": "Vertaa vanhentuneiden pakettien määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Vanhentuneiden pakettien varoituskynnysarvo",
+          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Vanhentuneiden pakettien kriittinen kynnysarvo",
+          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "showOsDistribution": {
+          "label": "Näytä käyttöjärjestelmäjakauma",
+          "description": "Näytä erittely valvotuista isännistä käyttöjärjestelmittäin"
+        },
+        "osDistributionLimit": {
+          "label": "Käyttöjärjestelmäjakauman rajoitus",
+          "description": "Näytettävien käyttöjärjestelmien enimmäismäärä",
+          "option": {
+            "3": "3 parasta",
+            "5": "5 parasta",
+            "10": "10 parasta",
+            "all": "Kaikki"
+          }
+        },
+        "showOsVersion": {
+          "label": "Näytä käyttöjärjestelmän versio",
+          "description": "Liitä käyttöjärjestelmän versio jokaiseen jakauman nimikkeeseen, kun se on saatavilla"
+        },
+        "showComplianceHero": {
+          "label": "Näytä compliance-hero",
+          "description": "Näytä vaatimustenmukaisuusrengas, joka näyttää ajan tasalla olevien isäntien prosenttiosuuden"
+        },
+        "osDisplayMode": {
+          "label": "Käyttöjärjestelmän näyttötila",
+          "description": "Valitse, miten käyttöjärjestelmän jakelu näytetään",
+          "option": {
+            "bars": "Vaakapalkit",
+            "donut": "Donitsikaavio"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "PatchMon-tietojen nouto epäonnistui"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Yleiskatsaus puuttuvista tekstityksistä ja terveystilasta Bazarr-instanssistasi",
+      "episodes": "Puuttuvat jaksot",
+      "movies": "Puuttuvat elokuvat",
+      "providers": "Palveluntarjoajan ongelmat",
+      "status": "Terveysongelmat",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Näytä puuttuvat jaksot",
+          "description": "Näytä niiden jaksojen määrä, joista puuttuu tekstitys"
+        },
+        "showMissingMovies": {
+          "label": "Näytä puuttuvat elokuvat",
+          "description": "Näytä niiden elokuvien määrä, joista puuttuu tekstitykset"
+        },
+        "showProviderIssues": {
+          "label": "Näytä tarjoajien ongelmat",
+          "description": "Näytä ongelmallisten tekstitystarjoajien määrä"
+        },
+        "showHealthIssues": {
+          "label": "Näytä kunto-ongelmat",
+          "description": "Näytä Bazarrin kunto-ongelmien määrä"
+        }
+      },
+      "error": {
+        "internalServerError": "Bazarrin tietojen nouto epäonnistui"
+      }
+    },
+    "mediaMissing": {
+      "name": "Puuttuva & jonossa oleva media",
+      "description": "Näyttää puuttuvat ja jonossa olevat elokuvat ja jaksot Radarr:sta ja Sonarr:sta",
+      "option": {
+        "showMissing": {
+          "label": "Näytä puuttuvat kohteet"
+        },
+        "showQueued": {
+          "label": "Näytä jonossa olevat kohteet"
+        },
+        "pageSize": {
+          "label": "Kohteita per sivu"
+        }
+      },
+      "tab": {
+        "missing": "Puuttuvat",
+        "queued": "Jonossa"
+      },
+      "type": {
+        "movie": "Elokuva",
+        "episode": "Jakso"
+      },
+      "empty": {
+        "missing": "Ei puuttuvia kohteita",
+        "queued": "Ei jonossa olevia kohteita",
+        "noTabsEnabled": "Ota käyttöön vähintään yksi välilehti widgetin asetuksissa"
+      },
+      "timeLeft": "Jäljellä oleva aika"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Yleiskatsaus Traefikin reitittimistä, palveluista, middlewareista ja sisääntulopisteistä",
+      "option": {
+        "showTcp": {
+          "label": "Näytä TCP"
+        },
+        "showUdp": {
+          "label": "Näytä UDP"
+        },
+        "showEntryPoints": {
+          "label": "Näytä sisääntulopisteet"
+        }
+      },
+      "instances": "Traefik-instanssit",
+      "versionUnknown": "Versio tuntematon",
+      "summary": {
+        "routers": "Reitittimet",
+        "entryPoints": "Sisääntulopisteet"
+      },
+      "resource": {
+        "routers": "Reitittimet",
+        "services": "Palvelut",
+        "middlewares": "Middlewaret"
+      },
+      "status": {
+        "healthy": "Terve",
+        "errors": "{count} virhettä",
+        "warnings": "{count} varoitusta"
+      },
+      "error": {
+        "internalServerError": "Traefikin tietojen nouto epäonnistui"
       }
     }
   },
@@ -4551,11 +4286,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Aloitus",
         "boards": "Paneelit",
         "apps": "Sovellukset",
         "integrations": "Integraatiot",
-        "customWidgets": "Mukautetut widgetit",
         "searchEngies": "Hakukoneet",
         "medias": "Mediatiedostot",
         "users": {
@@ -5694,6 +5429,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "",
       "boards": {
         "label": "Paneelit"
@@ -5726,18 +5464,6 @@
         },
         "edit": {
           "label": "Muokkaa"
-        }
-      },
-      "custom-widgets": {
-        "label": "Mukautetut widgetit",
-        "new": {
-          "label": "Uusi"
-        },
-        "edit": {
-          "label": "Muokkaa",
-          "flow": {
-            "label": "Kulku"
-          }
         }
       },
       "users": {

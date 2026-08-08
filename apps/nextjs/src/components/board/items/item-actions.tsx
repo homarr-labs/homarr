@@ -34,12 +34,7 @@ export const useItemActions = () => {
   const { updateBoard } = useUpdateBoard();
   const currentLayoutId = useCurrentLayout();
 
-  const createItem = useCallback(
-    (input: CreateItemInput) => {
-      updateBoard(createItemCallback(input));
-    },
-    [updateBoard],
-  );
+  const createItem = useCallback((input: CreateItemInput) => updateBoard(createItemCallback(input)), [updateBoard]);
 
   const duplicateItem = useCallback(
     ({ itemId }: DuplicateItemInput) => {

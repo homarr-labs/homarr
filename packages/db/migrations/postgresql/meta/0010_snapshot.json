@@ -1,5 +1,5 @@
 {
-  "id": "d47caa0d-b494-4dbf-b68b-e308405c48ca",
+  "id": "99938d86-5059-41b3-a21c-ac767440ed00",
   "prevId": "97bda61f-0a71-4e41-8e60-874aafe17115",
   "version": "7",
   "dialect": "postgresql",
@@ -498,8 +498,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.custom_widget_definition": {
-      "name": "custom_widget_definition",
+    "public.custom_widget_v2_definition": {
+      "name": "custom_widget_v2_definition",
       "schema": "",
       "columns": {
         "id": {
@@ -526,51 +526,29 @@
           "primaryKey": false,
           "notNull": false
         },
-        "url": {
-          "name": "url",
+        "sources": {
+          "name": "sources",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "auth_type": {
-          "name": "auth_type",
-          "type": "varchar(32)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'none'"
-        },
-        "header_name": {
-          "name": "header_name",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "method": {
-          "name": "method",
-          "type": "varchar(16)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'GET'"
-        },
-        "request_body": {
-          "name": "request_body",
+        "requests": {
+          "name": "requests",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "display_type": {
-          "name": "display_type",
-          "type": "varchar(32)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'singleValue'"
-        },
-        "display_config": {
-          "name": "display_config",
+        "options": {
+          "name": "options",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'{\"json\": {}}'"
+          "notNull": true
+        },
+        "template": {
+          "name": "template",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
         "enabled": {
           "name": "enabled",
@@ -602,9 +580,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "custom_widget_definition_creator_id_user_id_fk": {
-          "name": "custom_widget_definition_creator_id_user_id_fk",
-          "tableFrom": "custom_widget_definition",
+        "custom_widget_v2_definition_creator_id_user_id_fk": {
+          "name": "custom_widget_v2_definition_creator_id_user_id_fk",
+          "tableFrom": "custom_widget_v2_definition",
           "tableTo": "user",
           "columnsFrom": ["creator_id"],
           "columnsTo": ["id"],
@@ -618,18 +596,24 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.custom_widget_secret": {
-      "name": "custom_widget_secret",
+    "public.custom_widget_v2_secret": {
+      "name": "custom_widget_v2_secret",
       "schema": "",
       "columns": {
+        "source_id": {
+          "name": "source_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "kind": {
           "name": "kind",
           "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true
         },
-        "value": {
-          "name": "value",
+        "encrypted_value": {
+          "name": "encrypted_value",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -649,10 +633,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "custom_widget_secret_definition_id_custom_widget_definition_id_fk": {
-          "name": "custom_widget_secret_definition_id_custom_widget_definition_id_fk",
-          "tableFrom": "custom_widget_secret",
-          "tableTo": "custom_widget_definition",
+        "custom_widget_v2_secret_definition_id_fk": {
+          "name": "custom_widget_v2_secret_definition_id_fk",
+          "tableFrom": "custom_widget_v2_secret",
+          "tableTo": "custom_widget_v2_definition",
           "columnsFrom": ["definition_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -660,9 +644,9 @@
         }
       },
       "compositePrimaryKeys": {
-        "custom_widget_secret_definition_id_kind_pk": {
-          "name": "custom_widget_secret_definition_id_kind_pk",
-          "columns": ["definition_id", "kind"]
+        "custom_widget_v2_secret_definition_id_source_id_kind_pk": {
+          "name": "custom_widget_v2_secret_definition_id_source_id_kind_pk",
+          "columns": ["definition_id", "source_id", "kind"]
         }
       },
       "uniqueConstraints": {},
@@ -1456,13 +1440,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": 0
-        },
-        "role": {
-          "name": "role",
-          "type": "varchar(16)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'custom'"
         }
       },
       "indexes": {},
@@ -1478,6 +1455,178 @@
         }
       },
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.custom_widget_definition": {
+      "name": "custom_widget_definition",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "icon_url": {
+          "name": "icon_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "auth_type": {
+          "name": "auth_type",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'none'"
+        },
+        "header_name": {
+          "name": "header_name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "method": {
+          "name": "method",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'GET'"
+        },
+        "request_body": {
+          "name": "request_body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "display_type": {
+          "name": "display_type",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'singleValue'"
+        },
+        "display_config": {
+          "name": "display_config",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{\"json\": {}}'"
+        },
+        "enabled": {
+          "name": "enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "creator_id": {
+          "name": "creator_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "custom_widget_definition_creator_id_user_id_fk": {
+          "name": "custom_widget_definition_creator_id_user_id_fk",
+          "tableFrom": "custom_widget_definition",
+          "tableTo": "user",
+          "columnsFrom": ["creator_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.custom_widget_secret": {
+      "name": "custom_widget_secret",
+      "schema": "",
+      "columns": {
+        "kind": {
+          "name": "kind",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "definition_id": {
+          "name": "definition_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "custom_widget_secret_definition_id_custom_widget_definition_id_fk": {
+          "name": "custom_widget_secret_definition_id_custom_widget_definition_id_fk",
+          "tableFrom": "custom_widget_secret",
+          "tableTo": "custom_widget_definition",
+          "columnsFrom": ["definition_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "custom_widget_secret_definition_id_kind_pk": {
+          "name": "custom_widget_secret_definition_id_kind_pk",
+          "columns": ["definition_id", "kind"]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},

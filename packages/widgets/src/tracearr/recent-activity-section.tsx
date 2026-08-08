@@ -1,14 +1,15 @@
 import { Avatar, Badge, Group, Paper, Stack, Text } from "@mantine/core";
 
 import type { TracearrHistorySession } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 export function RecentActivityList({ sessions }: { sessions: TracearrHistorySession[] }) {
   const t = useScopedI18n("widget.tracearr");
+  const locale = useCurrentIntlLocale();
 
   return (
     <Stack gap={4}>
-      <Text size="xs" fw={600} c="dimmed" tt="uppercase">
+      <Text size="xs" fw={600} c="dimmed">
         {t("recentActivity.title")}
       </Text>
       {sessions.length === 0 ? (
@@ -42,7 +43,7 @@ export function RecentActivityList({ sessions }: { sessions: TracearrHistorySess
                       {session.watched ? t("recentActivity.watched") : t("recentActivity.partial")}
                     </Badge>
                     <Text size="xs" c="dimmed" lineClamp={1}>
-                      {new Date(session.startedAt).toLocaleDateString()}
+                      {new Date(session.startedAt).toLocaleDateString(locale)}
                     </Text>
                   </Stack>
                 </Group>

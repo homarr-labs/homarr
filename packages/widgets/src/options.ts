@@ -56,7 +56,10 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
     query: string,
     integrationIds: string[],
     options: Record<string, unknown>,
+    itemId?: string,
+    boardId?: string,
   ) => {
+    error?: string;
     isPending: boolean;
     options: DynamicSelectOption[];
   };
@@ -98,6 +101,12 @@ export interface OptionLocation {
 }
 
 const optionsFactory = {
+  internal: <T>(input: CommonInput<T> & { defaultValue: T }) => ({
+    type: "internal" as const,
+    defaultValue: input.defaultValue,
+    withDescription: false,
+    skipContextMenu: true,
+  }),
   switch: (input?: CommonInput<boolean>) => ({
     type: "switch" as const,
     defaultValue: input?.defaultValue ?? false,
@@ -215,6 +224,12 @@ const optionsFactory = {
     type: "customWidgetSelect" as const,
     defaultValue: input?.defaultValue ?? "",
     withDescription: input?.withDescription ?? false,
+  }),
+  customWidgetConfiguration: (input?: CommonInput<Record<string, unknown>>) => ({
+    type: "customWidgetConfiguration" as const,
+    defaultValue: input?.defaultValue ?? {},
+    withDescription: input?.withDescription ?? false,
+    skipContextMenu: true,
   }),
   sortableItemList: <const TItem, const TOptionValue extends UniqueIdentifier>(
     input: SortableItemListInput<TItem, TOptionValue>,

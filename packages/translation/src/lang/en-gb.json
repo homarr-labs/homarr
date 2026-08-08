@@ -710,187 +710,7 @@
       "delete": "Delete Custom Widget",
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
       "export": "Export",
-      "addMapping": "Add Mapping",
-      "addColumn": "Add Column",
-      "edit": "Edit",
-      "removeMapping": "Remove mapping",
-      "removeColumn": "Remove column",
-      "addItem": "Add Item",
-      "removeItem": "Remove item",
-      "addBar": "Add Bar",
-      "duplicate": "Duplicate",
-      "copyAiPrompt": "Copy AI prompt",
-      "enable": "Enable",
-      "disable": "Disable",
-      "menu": "Actions"
-    },
-    "field": {
-      "name": "Name",
-      "description": "Description",
-      "iconUrl": "Icon URL",
-      "url": "URL",
-      "authType": "Auth Type",
-      "headerName": "Header/Query Parameter Name",
-      "method": "Method",
-      "requestBody": "Request Body",
-      "displayType": "Display Type",
-      "jsonPath": "JSON Path",
-      "jsonPathHint": "Use JSONPath syntax to extract values, e.g. $.data.temperature or $.items[0].name",
-      "label": "Label",
-      "unit": "Unit",
-      "mappings": "Mappings",
-      "tablePath": "Array JSON Path",
-      "tablePathHint": "Path to the array in the response, e.g. $.data.items",
-      "columns": "Columns",
-      "header": "Header",
-      "items": "Items",
-      "gridColumns": "Grid Columns",
-      "cardStyle": "Card Style",
-      "bars": "Bars",
-      "valuePath": "Value JSON Path",
-      "maxPath": "Max Value JSON Path",
-      "showPercentage": "Show Percentage",
-      "barSize": "Bar Size",
-      "goodValues": "Good Values (comma-separated)",
-      "dotSize": "Dot Size",
-      "valueSize": "Value Size",
-      "labelPosition": "Label Position",
-      "kvLayout": "Layout",
-      "striped": "Striped Rows",
-      "compact": "Compact Mode",
-      "maxHeight": "Max Height (px)",
-      "color": "Colour",
-      "buttonLabel": "Button Label",
-      "buttonColor": "Button Colour",
-      "confirmText": "Confirmation Text",
-      "confirmTextHint": "If set, a confirmation dialogue will appear before executing the request",
-      "successMessage": "Success Message",
-      "successMessageHint": "Message shown after successful execution",
-      "enabled": "Enabled",
-      "template": {
-        "label": "JSX Template",
-        "description": "Mantine JSX template. Access API response fields via data bindings (e.g. data.name). Use whitelisted components only. Forbidden: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU Temperature",
-      "exampleLabelShort": "CPU Temp",
-      "exampleHeader": "Name",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "blue"
-    },
-    "cardStyleOption": {
-      "filled": "Filled",
-      "outline": "Outline",
-      "subtle": "Subtle"
-    },
-    "layoutOption": {
-      "list": "List",
-      "grid": "Grid"
-    },
-    "sizeOption": {
-      "sm": "Small",
-      "md": "Medium",
-      "lg": "Large",
-      "xl": "Extra Large"
-    },
-    "labelPositionOption": {
-      "above": "Above",
-      "below": "Below"
-    },
-    "fieldset": {
-      "general": "General",
-      "connection": "API Connection",
-      "display": "Display Configuration"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Show one extracted value with a label and unit",
-      "keyValue": "Show multiple labeled values side by side",
-      "table": "Show rows of data in a table format",
-      "statGrid": "Colored stat cards in a grid — like Pi-Hole or Speedtest widgets",
-      "progressBars": "Progress bars showing usage or completion — for disk, memory, quotas",
-      "statusIndicator": "Colored status dots showing online/offline or health states",
-      "countGrid": "Compact number + label counters in a tight grid",
-      "raw": "Pretty-printed JSON output for debugging",
-      "actionButton": "A button that triggers a request when clicked",
-      "customJsx": "Custom JSX layout using whitelisted Mantine components with full API data binding"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "None",
-      "bearer": "Bearer Token",
-      "basic": "Basic Auth",
-      "apiKeyHeader": "API Key (Header)",
-      "apiKeyQuery": "API Key (Query)"
-    },
-    "displayType": {
-      "singleValue": "Single Value",
-      "keyValue": "Key-Value",
-      "table": "Table",
-      "statGrid": "Stat Grid",
-      "progressBars": "Progress Bars",
-      "statusIndicator": "Status Indicator",
-      "countGrid": "Count Grid",
-      "raw": "Raw JSON",
-      "actionButton": "Action Button",
-      "customJsx": "Custom JSX"
-    },
-    "secret": {
-      "apiKey": "API Key / Token",
-      "username": "Username",
-      "password": "Password",
-      "savedPlaceholder": "••••••• (saved, leave empty to keep)"
-    },
-    "preview": {
-      "title": "Preview",
-      "test": "Test",
-      "hint": "Click Test to preview the API response with your current configuration.",
-      "rawResponse": "Raw JSON response"
-    },
-    "notification": {
-      "created": "Widget \"{name}\" created successfully.",
-      "updated": "Widget \"{name}\" updated successfully.",
-      "deleted": "Widget \"{name}\" deleted.",
-      "imported": "Widget imported successfully.",
-      "aiPromptCopied": "AI prompt copied to clipboard",
-      "aiPromptDescription": "Copy a pre-built prompt to paste into any AI chatbot (ChatGPT, Claude, Gemini...). It includes the full widget schema and your API response so the AI can generate a ready-to-import JSON config for you.",
-      "aiPromptCopy": "Copy to clipboard",
-      "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
-      "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
-      "createError": "Failed to create widget. Check your API endpoint is reachable.",
-      "updateError": "Failed to update widget. Your changes were not saved.",
-      "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
-      "exportError": "Failed to export widget.",
-      "duplicated": "Widget \"{name}\" duplicated.",
-      "duplicateError": "Failed to duplicate widget.",
-      "toggleError": "Failed to toggle widget status.",
-      "deleteError": "Failed to delete widget.",
-      "previewError": "Failed to fetch preview. Check the URL and try again.",
-      "executed": "Action executed successfully.",
-      "executeError": "Action failed: {error}"
-    },
-    "table": {
-      "name": "Name",
-      "url": "URL",
-      "display": "Display"
-    },
-    "widget": {
-      "disabled": "This widget is disabled"
+      "edit": "Edit"
     }
   },
   "integration": {
@@ -1549,10 +1369,10 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
-        "create": "Create a new dynamic section",
-        "remove": "Delete dynamic section"
+        "create": "Create a new container",
+        "remove": "Delete container"
       },
       "option": {
         "title": {
@@ -1566,48 +1386,8 @@
         }
       },
       "remove": {
-        "title": "Remove dynamic section",
-        "message": "Are you certain that you want to remove this dynamic section? All items inside will be moved to the same location within the parent section."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Name"
-        }
-      },
-      "action": {
-        "create": "New category",
-        "edit": "Rename category",
-        "remove": "Remove category",
-        "moveUp": "Move upwards",
-        "moveDown": "Move downwards",
-        "createAbove": "Create new category above",
-        "createBelow": "Create new category below",
-        "openAllInNewTabs": "Open all in new tabs"
-      },
-      "create": {
-        "title": "New category",
-        "submit": "Add category"
-      },
-      "remove": {
-        "title": "Remove category",
-        "message": "Are you sure you want to remove the category {name}?"
-      },
-      "edit": {
-        "title": "Rename category",
-        "submit": "Rename category"
-      },
-      "menu": {
-        "label": {
-          "create": "New category",
-          "changePosition": "Change position",
-          "settings": "Settings"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "Open all in tabs",
-        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
+        "title": "Remove container",
+        "message": "Are you certain that you want to remove this container? All items inside will be moved to the same location within the parent section."
       }
     }
   },
@@ -2828,193 +2608,6 @@
         "internalServerError": "Failed to fetch Paperless-ngx data"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Overview of host patch status from PatchMon",
-      "title": "PatchMon Statistics",
-      "totalHosts": "Total Hosts",
-      "hostsNeedingUpdates": "Needs Updates",
-      "securityUpdates": "Security Updates",
-      "upToDateHosts": "Up-to-Date Hosts",
-      "hostsWithSecurityUpdates": "Hosts with Security Updates",
-      "recentUpdates24h": "Updates (24h)",
-      "totalOutdatedPackages": "Outdated Packages",
-      "totalRepos": "Repositories",
-      "osDistribution": "OS Distribution",
-      "compliance": "Patch Compliance",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Updated {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Show total hosts",
-          "description": "Display the total number of monitored hosts"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Show hosts needing updates",
-          "description": "Display hosts with at least one outdated package"
-        },
-        "showSecurityUpdates": {
-          "label": "Show security updates",
-          "description": "Display the total number of security updates available"
-        },
-        "showUpToDateHosts": {
-          "label": "Show up-to-date hosts",
-          "description": "Display hosts with zero outdated packages"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Show hosts with security updates",
-          "description": "Display hosts requiring security patches"
-        },
-        "showRecentUpdates24h": {
-          "label": "Show recent updates (24h)",
-          "description": "Display the number of updates applied in the last 24 hours"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Show outdated packages",
-          "description": "Display the total number of outdated packages across all hosts"
-        },
-        "showTotalRepos": {
-          "label": "Show repositories",
-          "description": "Display the number of active repositories being monitored"
-        },
-        "enableThresholdColors": {
-          "label": "Enable threshold colours",
-          "description": "Colour stat values green, yellow, or red based on severity presets"
-        },
-        "useCustomThresholds": {
-          "label": "Advanced thresholds",
-          "description": "Customise warning and critical thresholds per stat using absolute counts or percentages of total hosts"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Absolute count",
-            "percent": "Percent of total hosts"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Needs updates threshold mode",
-          "description": "Compare the needs-updates count as an absolute value or percentage of total hosts"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Needs updates warning threshold",
-          "description": "Enter yellow when the value reaches this threshold"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Needs updates critical threshold",
-          "description": "Enter red when the value reaches this threshold"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Security updates threshold mode",
-          "description": "Compare the security-updates count as an absolute value or percentage of total hosts"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Security updates warning threshold",
-          "description": "Enter yellow when the value reaches this threshold"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Security updates critical threshold",
-          "description": "Enter red when the value reaches this threshold"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Hosts with security updates threshold mode",
-          "description": "Compare the host count as an absolute value or percentage of total hosts"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Hosts with security updates warning threshold",
-          "description": "Enter yellow when the value reaches this threshold"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Hosts with security updates critical threshold",
-          "description": "Enter red when the value reaches this threshold"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Up-to-date hosts threshold mode",
-          "description": "Compare the up-to-date host count as an absolute value or percentage of total hosts"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Up-to-date hosts warning threshold",
-          "description": "Enter yellow when the value is at or above this threshold but below full coverage"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Up-to-date hosts critical threshold",
-          "description": "Enter red when the value falls below this threshold"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Outdated packages threshold mode",
-          "description": "Compare the outdated-packages count as an absolute value or percentage of total hosts"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Outdated packages warning threshold",
-          "description": "Enter yellow when the value reaches this threshold"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Outdated packages critical threshold",
-          "description": "Enter red when the value reaches this threshold"
-        },
-        "showOsDistribution": {
-          "label": "Show OS distribution",
-          "description": "Display a breakdown of monitored hosts by operating system"
-        },
-        "osDistributionLimit": {
-          "label": "OS distribution limit",
-          "description": "Maximum number of operating systems to display",
-          "option": {
-            "3": "Top 3",
-            "5": "Top 5",
-            "10": "Top 10",
-            "all": "All"
-          }
-        },
-        "showOsVersion": {
-          "label": "Show OS version",
-          "description": "Append the OS version to each distribution label when available"
-        },
-        "showComplianceHero": {
-          "label": "Show compliance hero",
-          "description": "Display a compliance ring showing the percentage of up-to-date hosts"
-        },
-        "osDisplayMode": {
-          "label": "OS display mode",
-          "description": "Choose how to display the operating system distribution",
-          "option": {
-            "bars": "Horizontal bars",
-            "donut": "Doughnut chart"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "Failed to fetch PatchMon data"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Overview of missing subtitles and health status from your Bazarr instance",
-      "episodes": "Missing Episodes",
-      "movies": "Missing Movies",
-      "providers": "Provider Issues",
-      "status": "Health Issues",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Show missing episodes",
-          "description": "Display the number of episodes with missing subtitles"
-        },
-        "showMissingMovies": {
-          "label": "Show missing movies",
-          "description": "Display the number of movies with missing subtitles"
-        },
-        "showProviderIssues": {
-          "label": "Show provider issues",
-          "description": "Display the number of subtitle providers with issues"
-        },
-        "showHealthIssues": {
-          "label": "Show health issues",
-          "description": "Display the number of Bazarr health issues"
-        }
-      },
-      "error": {
-        "internalServerError": "Failed to fetch Bazarr data"
-      }
-    },
     "immich-serverStats": {
       "name": "Immich Server Stats",
       "description": "Information about your Immich instance",
@@ -3387,35 +2980,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "Missing & Queued Media",
-      "description": "Shows missing and queued movies and episodes from Radarr and Sonarr",
-      "option": {
-        "showMissing": {
-          "label": "Show missing items"
-        },
-        "showQueued": {
-          "label": "Show queued items"
-        },
-        "pageSize": {
-          "label": "Items per page"
-        }
-      },
-      "tab": {
-        "missing": "Missing",
-        "queued": "Queued"
-      },
-      "type": {
-        "movie": "Movie",
-        "episode": "Episode"
-      },
-      "empty": {
-        "missing": "No missing items",
-        "queued": "No queued items",
-        "noTabsEnabled": "Enable at least one tab in the widget settings"
-      },
-      "timeLeft": "Time left"
-    },
     "rssFeed": {
       "name": "",
       "description": "",
@@ -3744,40 +3308,6 @@
         "internalServerError": "Failed to fetch uptime data"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Overview of Traefik routers, services, middlewares, and entry points",
-      "option": {
-        "showTcp": {
-          "label": "Show TCP"
-        },
-        "showUdp": {
-          "label": "Show UDP"
-        },
-        "showEntryPoints": {
-          "label": "Show entry points"
-        }
-      },
-      "instances": "Traefik instances",
-      "versionUnknown": "Version unknown",
-      "summary": {
-        "routers": "Routers",
-        "entryPoints": "Entry points"
-      },
-      "resource": {
-        "routers": "Routers",
-        "services": "Services",
-        "middlewares": "Middlewares"
-      },
-      "status": {
-        "healthy": "Healthy",
-        "errors": "{count} errors",
-        "warnings": "{count} warnings"
-      },
-      "error": {
-        "internalServerError": "Failed to fetch Traefik data"
-      }
-    },
     "audioStats": {
       "name": "Audio stats",
       "description": "Library and playback statistics from Navidrome or Audiobookshelf",
@@ -3900,26 +3430,6 @@
       "status": {
         "unhealthy": ""
       }
-    },
-    "customApi": {
-      "name": "Custom API",
-      "description": "Display data from any external API with custom configuration.",
-      "option": {
-        "definitionId": {
-          "label": "Definition ID"
-        },
-        "refreshInterval": {
-          "label": "Refresh interval",
-          "description": "How often to refetch data from the API (in seconds)"
-        }
-      },
-      "noDefinition": "No definition selected",
-      "definitionNotFound": "Widget definition not found. It may have been deleted.",
-      "noDisplayOutput": "No display output",
-      "executeConfirm": "Are you sure you want to execute this action?",
-      "executing": "Executing...",
-      "executeSuccess": "Action executed successfully",
-      "executeFailed": "Action failed. Check the widget configuration."
     },
     "beszelSystemTable": {
       "name": "Beszel Systems (Table)",
@@ -4170,6 +3680,256 @@
           "title": "Docker Network I/O",
           "subtitle": "Network traffic of docker containers"
         }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Overview of host patch status from PatchMon",
+      "title": "PatchMon Statistics",
+      "totalHosts": "Total Hosts",
+      "hostsNeedingUpdates": "Needs Updates",
+      "securityUpdates": "Security Updates",
+      "upToDateHosts": "Up-to-Date Hosts",
+      "hostsWithSecurityUpdates": "Hosts with Security Updates",
+      "recentUpdates24h": "Updates (24h)",
+      "totalOutdatedPackages": "Outdated Packages",
+      "totalRepos": "Repositories",
+      "osDistribution": "OS Distribution",
+      "compliance": "Patch Compliance",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Updated {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Show total hosts",
+          "description": "Display the total number of monitored hosts"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Show hosts needing updates",
+          "description": "Display hosts with at least one outdated package"
+        },
+        "showSecurityUpdates": {
+          "label": "Show security updates",
+          "description": "Display the total number of security updates available"
+        },
+        "showUpToDateHosts": {
+          "label": "Show up-to-date hosts",
+          "description": "Display hosts with zero outdated packages"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Show hosts with security updates",
+          "description": "Display hosts requiring security patches"
+        },
+        "showRecentUpdates24h": {
+          "label": "Show recent updates (24h)",
+          "description": "Display the number of updates applied in the last 24 hours"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Show outdated packages",
+          "description": "Display the total number of outdated packages across all hosts"
+        },
+        "showTotalRepos": {
+          "label": "Show repositories",
+          "description": "Display the number of active repositories being monitored"
+        },
+        "enableThresholdColors": {
+          "label": "Enable threshold colours",
+          "description": "Colour stat values green, yellow, or red based on severity presets"
+        },
+        "useCustomThresholds": {
+          "label": "Advanced thresholds",
+          "description": "Customise warning and critical thresholds per stat using absolute counts or percentages of total hosts"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Absolute count",
+            "percent": "Percent of total hosts"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Needs updates threshold mode",
+          "description": "Compare the needs-updates count as an absolute value or percentage of total hosts"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Needs updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Needs updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Security updates threshold mode",
+          "description": "Compare the security-updates count as an absolute value or percentage of total hosts"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Security updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Security updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Hosts with security updates threshold mode",
+          "description": "Compare the host count as an absolute value or percentage of total hosts"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Hosts with security updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Hosts with security updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Up-to-date hosts threshold mode",
+          "description": "Compare the up-to-date host count as an absolute value or percentage of total hosts"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Up-to-date hosts warning threshold",
+          "description": "Enter yellow when the value is at or above this threshold but below full coverage"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Up-to-date hosts critical threshold",
+          "description": "Enter red when the value falls below this threshold"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Outdated packages threshold mode",
+          "description": "Compare the outdated-packages count as an absolute value or percentage of total hosts"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Outdated packages warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Outdated packages critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "showOsDistribution": {
+          "label": "Show OS distribution",
+          "description": "Display a breakdown of monitored hosts by operating system"
+        },
+        "osDistributionLimit": {
+          "label": "OS distribution limit",
+          "description": "Maximum number of operating systems to display",
+          "option": {
+            "3": "Top 3",
+            "5": "Top 5",
+            "10": "Top 10",
+            "all": "All"
+          }
+        },
+        "showOsVersion": {
+          "label": "Show OS version",
+          "description": "Append the OS version to each distribution label when available"
+        },
+        "showComplianceHero": {
+          "label": "Show compliance hero",
+          "description": "Display a compliance ring showing the percentage of up-to-date hosts"
+        },
+        "osDisplayMode": {
+          "label": "OS display mode",
+          "description": "Choose how to display the operating system distribution",
+          "option": {
+            "bars": "Horizontal bars",
+            "donut": "Doughnut chart"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "Failed to fetch PatchMon data"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Overview of missing subtitles and health status from your Bazarr instance",
+      "episodes": "Missing Episodes",
+      "movies": "Missing Movies",
+      "providers": "Provider Issues",
+      "status": "Health Issues",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Show missing episodes",
+          "description": "Display the number of episodes with missing subtitles"
+        },
+        "showMissingMovies": {
+          "label": "Show missing movies",
+          "description": "Display the number of movies with missing subtitles"
+        },
+        "showProviderIssues": {
+          "label": "Show provider issues",
+          "description": "Display the number of subtitle providers with issues"
+        },
+        "showHealthIssues": {
+          "label": "Show health issues",
+          "description": "Display the number of Bazarr health issues"
+        }
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Bazarr data"
+      }
+    },
+    "mediaMissing": {
+      "name": "Missing & Queued Media",
+      "description": "Shows missing and queued movies and episodes from Radarr and Sonarr",
+      "option": {
+        "showMissing": {
+          "label": "Show missing items"
+        },
+        "showQueued": {
+          "label": "Show queued items"
+        },
+        "pageSize": {
+          "label": "Items per page"
+        }
+      },
+      "tab": {
+        "missing": "Missing",
+        "queued": "Queued"
+      },
+      "type": {
+        "movie": "Movie",
+        "episode": "Episode"
+      },
+      "empty": {
+        "missing": "No missing items",
+        "queued": "No queued items",
+        "noTabsEnabled": "Enable at least one tab in the widget settings"
+      },
+      "timeLeft": "Time left"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Overview of Traefik routers, services, middlewares, and entry points",
+      "option": {
+        "showTcp": {
+          "label": "Show TCP"
+        },
+        "showUdp": {
+          "label": "Show UDP"
+        },
+        "showEntryPoints": {
+          "label": "Show entry points"
+        }
+      },
+      "instances": "Traefik instances",
+      "versionUnknown": "Version unknown",
+      "summary": {
+        "routers": "Routers",
+        "entryPoints": "Entry points"
+      },
+      "resource": {
+        "routers": "Routers",
+        "services": "Services",
+        "middlewares": "Middlewares"
+      },
+      "status": {
+        "healthy": "Healthy",
+        "errors": "{count} errors",
+        "warnings": "{count} warnings"
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Traefik data"
       }
     }
   },
@@ -4551,11 +4311,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "",
         "boards": "",
         "apps": "",
         "integrations": "",
-        "customWidgets": "Custom Widgets",
         "searchEngies": "",
         "medias": "",
         "users": {
@@ -5694,6 +5454,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "",
       "boards": {
         "label": ""
@@ -5726,18 +5489,6 @@
         },
         "edit": {
           "label": ""
-        }
-      },
-      "custom-widgets": {
-        "label": "Custom widgets",
-        "new": {
-          "label": "New"
-        },
-        "edit": {
-          "label": "Edit",
-          "flow": {
-            "label": "Flow"
-          }
         }
       },
       "users": {

@@ -6,6 +6,7 @@ import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
 import {
   boolean,
   customType,
+  foreignKey,
   index,
   int,
   mysqlTable,
@@ -40,12 +41,7 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
-import type {
-  CustomWidgetAuthType,
-  CustomWidgetDisplayType,
-  CustomWidgetMethod,
-  CustomWidgetSecretKind,
-} from "@homarr/validation/custom-widget";
+import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
@@ -212,8 +208,8 @@ export const integrations = mysqlTable(
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
     appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },
-  (integrations) => ({
-    kindIdx: index("integration__kind_idx").on(integrations.kind),
+  (table) => ({
+    kindIdx: index("integration__kind_idx").on(table.kind),
   }),
 );
 
@@ -345,6 +341,8 @@ export const layouts = mysqlTable("layout", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   columnCount: tinyint().notNull(),
+  leftGutterColumnCount: tinyint().notNull().default(0),
+  rightGutterColumnCount: tinyint().notNull().default(0),
   breakpoint: smallint().notNull().default(0),
   role: varchar({ length: 16 }).$type<LayoutRole>().notNull().default("custom"),
 });
@@ -507,18 +505,65 @@ export const onboarding = mysqlTable("onboarding", {
   previousStep: varchar({ length: 64 }).$type<OnboardingStep>(),
 });
 
-export const customWidgetDefinitions = mysqlTable("custom_widget_definition", {
+/**
+ * Read-only v1 definitions retained during the Custom JSX v2 upgrade.
+ * Their original physical table names keep the database readable by a v1 binary.
+ */
+export const legacyCustomWidgetDefinitions = mysqlTable(
+  "custom_widget_definition",
+  {
+    id: varchar({ length: 64 }).notNull().primaryKey(),
+    name: varchar({ length: 256 }).notNull(),
+    description: text(),
+    iconUrl: text(),
+    url: text().notNull(),
+    authType: varchar({ length: 32 }).notNull().default("none"),
+    headerName: varchar({ length: 256 }),
+    method: varchar({ length: 16 }).notNull().default("GET"),
+    requestBody: text(),
+    displayType: varchar({ length: 32 }).notNull().default("singleValue"),
+    displayConfig: text().default(emptySuperJSON).notNull(),
+    enabled: boolean().notNull().default(true),
+    createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
+    updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
+    creatorId: varchar({ length: 64 }),
+  },
+  (table) => ({
+    creatorFk: foreignKey({
+      columns: [table.creatorId],
+      foreignColumns: [users.id],
+      name: "custom_widget_definition_creator_id_user_id_fk",
+    }).onDelete("set null"),
+  }),
+);
+
+export const legacyCustomWidgetSecrets = mysqlTable(
+  "custom_widget_secret",
+  {
+    kind: varchar({ length: 64 }).$type<CustomWidgetSecretKind>().notNull(),
+    encryptedValue: text("value").$type<`${string}.${string}`>().notNull(),
+    updatedAt: timestamp().notNull(),
+    definitionId: varchar({ length: 64 }).notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({ columns: [table.definitionId, table.kind] }),
+    definitionFk: foreignKey({
+      columns: [table.definitionId],
+      foreignColumns: [legacyCustomWidgetDefinitions.id],
+      name: "cw_secret_definition_id_cw_definition_id_fk",
+    }).onDelete("cascade"),
+  }),
+);
+
+export const customWidgetDefinitions = mysqlTable("custom_widget_v2_definition", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: varchar({ length: 256 }).notNull(),
   description: text(),
   iconUrl: text(),
-  url: text().notNull(),
-  authType: varchar({ length: 32 }).$type<CustomWidgetAuthType>().notNull().default("none"),
-  headerName: varchar({ length: 256 }),
-  method: varchar({ length: 16 }).$type<CustomWidgetMethod>().notNull().default("GET"),
-  requestBody: text(),
-  displayType: varchar({ length: 32 }).$type<CustomWidgetDisplayType>().notNull().default("singleValue"),
-  displayConfig: text().default(emptySuperJSON).notNull(),
+  sources: text().notNull(),
+  requests: text().notNull(),
+  options: text().notNull(),
+  template: text().notNull(),
   enabled: boolean().notNull().default(true),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp({ mode: "date" }).notNull().defaultNow(),
@@ -526,21 +571,25 @@ export const customWidgetDefinitions = mysqlTable("custom_widget_definition", {
 });
 
 export const customWidgetSecrets = mysqlTable(
-  "custom_widget_secret",
+  "custom_widget_v2_secret",
   {
+    sourceId: varchar({ length: 64 }).notNull(),
     kind: varchar({ length: 64 }).$type<CustomWidgetSecretKind>().notNull(),
-    value: text().$type<`${string}.${string}`>().notNull(),
+    encryptedValue: text("encrypted_value").$type<`${string}.${string}`>().notNull(),
     updatedAt: timestamp()
       .$onUpdateFn(() => new Date())
       .notNull(),
-    definitionId: varchar({ length: 64 })
-      .notNull()
-      .references(() => customWidgetDefinitions.id, { onDelete: "cascade" }),
+    definitionId: varchar({ length: 64 }).notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
-      columns: [table.definitionId, table.kind],
+      columns: [table.definitionId, table.sourceId, table.kind],
     }),
+    definitionFk: foreignKey({
+      columns: [table.definitionId],
+      foreignColumns: [customWidgetDefinitions.id],
+      name: "custom_widget_v2_secret_definition_id_fk",
+    }).onDelete("cascade"),
   }),
 );
 
@@ -854,5 +903,20 @@ export const customWidgetSecretRelations = relations(customWidgetSecrets, ({ one
   definition: one(customWidgetDefinitions, {
     fields: [customWidgetSecrets.definitionId],
     references: [customWidgetDefinitions.id],
+  }),
+}));
+
+export const legacyCustomWidgetDefinitionRelations = relations(legacyCustomWidgetDefinitions, ({ many, one }) => ({
+  secrets: many(legacyCustomWidgetSecrets),
+  creator: one(users, {
+    fields: [legacyCustomWidgetDefinitions.creatorId],
+    references: [users.id],
+  }),
+}));
+
+export const legacyCustomWidgetSecretRelations = relations(legacyCustomWidgetSecrets, ({ one }) => ({
+  definition: one(legacyCustomWidgetDefinitions, {
+    fields: [legacyCustomWidgetSecrets.definitionId],
+    references: [legacyCustomWidgetDefinitions.id],
   }),
 }));

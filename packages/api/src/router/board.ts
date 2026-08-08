@@ -31,13 +31,17 @@ import {
   sections,
   users,
 } from "@homarr/db/schema";
-import type { WidgetKind } from "@homarr/definitions";
+import type { BoardLane, WidgetKind } from "@homarr/definitions";
 import {
+  boardLanes,
   emptySuperJSON,
   everyoneGroup,
+  getBoardLaneColumnCount,
+  getRootSectionLane,
   getPermissionsWithChildren,
   getPermissionsWithParents,
   normalizeBoardLayoutRoles,
+  rootSectionOffsets,
   widgetDefaultSizes,
   widgetKinds,
 } from "@homarr/definitions";
@@ -65,6 +69,11 @@ import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
+import {
+  throwIfCustomWidgetBoardDuplicationForbidden,
+  throwIfCustomWidgetPlacementChangeForbidden,
+} from "./board/custom-widget-placement-access";
+import { validateTimetableOptionsChangeAsync } from "./widgets/timetable";
 
 export const boardRouter = createTRPCRouter({
   exists: permissionRequiredProcedure
@@ -321,6 +330,8 @@ export const boardRouter = createTRPCRouter({
           id: createId(),
           name: "Mobile",
           columnCount: 3,
+          leftGutterColumnCount: 0,
+          rightGutterColumnCount: 0,
           breakpoint: 0,
           role: "mobile",
           boardId,
@@ -329,6 +340,8 @@ export const boardRouter = createTRPCRouter({
           id: createId(),
           name: "Base",
           columnCount: input.columnCount,
+          leftGutterColumnCount: 0,
+          rightGutterColumnCount: 0,
           breakpoint: 768,
           role: "base",
           boardId,
@@ -386,6 +399,7 @@ export const boardRouter = createTRPCRouter({
       }
 
       const { sections: boardSections, items: boardItems, layouts: boardLayouts, ...boardProps } = board;
+      throwIfCustomWidgetBoardDuplicationForbidden(ctx.session.user.permissions.includes("admin"), boardItems);
 
       const newBoardId = createId();
 
@@ -393,8 +407,18 @@ export const boardRouter = createTRPCRouter({
       const generatedMobilePositions =
         boardLayouts.length === 1 && boardLayouts[0]
           ? getUpdatedBoardLayout(board, {
-              previous: { layoutId: boardLayouts[0].id, columnCount: boardLayouts[0].columnCount },
-              current: { layoutId: generatedMobileLayoutId, columnCount: 3 },
+              previous: {
+                layoutId: boardLayouts[0].id,
+                columnCount: boardLayouts[0].columnCount,
+                leftGutterColumnCount: boardLayouts[0].leftGutterColumnCount,
+                rightGutterColumnCount: boardLayouts[0].rightGutterColumnCount,
+              },
+              current: {
+                layoutId: generatedMobileLayoutId,
+                columnCount: 3,
+                leftGutterColumnCount: 0,
+                rightGutterColumnCount: 0,
+              },
             })
           : null;
       const normalizedBoardLayouts =
@@ -404,6 +428,8 @@ export const boardRouter = createTRPCRouter({
                 id: generatedMobileLayoutId,
                 name: "Mobile",
                 columnCount: 3,
+                leftGutterColumnCount: 0,
+                rightGutterColumnCount: 0,
                 breakpoint: 0,
                 role: "mobile" as const,
                 boardId: board.id,
@@ -412,6 +438,8 @@ export const boardRouter = createTRPCRouter({
                 id: createId(),
                 name: "Base",
                 columnCount: 10,
+                leftGutterColumnCount: 0,
+                rightGutterColumnCount: 0,
                 breakpoint: 768,
                 role: "base" as const,
                 boardId: board.id,
@@ -423,6 +451,8 @@ export const boardRouter = createTRPCRouter({
                   id: generatedMobileLayoutId,
                   name: "Mobile",
                   columnCount: 3,
+                  leftGutterColumnCount: 0,
+                  rightGutterColumnCount: 0,
                   breakpoint: 0,
                   role: "mobile" as const,
                   boardId: board.id,
@@ -769,6 +799,11 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
+      const requiredGutterRoots = (["left", "right"] as const).filter((lane) =>
+        input.layouts.some((layout) => getBoardLaneColumnCount(layout, lane) > 0),
+      );
+      await ensureGutterRootSectionsAsync(ctx.db, input.id, requiredGutterRoots);
+
       const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
       const existingLayoutsById = new Map(board.layouts.map((layout) => [layout.id, layout]));
       const addedLayouts = filterAddedItems(input.layouts, board.layouts);
@@ -800,14 +835,32 @@ export const boardRouter = createTRPCRouter({
       const savedLayoutIds = new Map<string, string>();
       const requestedBaseLayout = input.layouts.find((layout) => layout.id === baseLayout.id);
       const resizedBaseLayout =
-        requestedBaseLayout && requestedBaseLayout.columnCount !== baseLayout.columnCount
+        requestedBaseLayout &&
+        (requestedBaseLayout.columnCount !== baseLayout.columnCount ||
+          requestedBaseLayout.leftGutterColumnCount !== baseLayout.leftGutterColumnCount ||
+          requestedBaseLayout.rightGutterColumnCount !== baseLayout.rightGutterColumnCount)
           ? getUpdatedBoardLayout(board, {
-              previous: { layoutId: baseLayout.id, columnCount: baseLayout.columnCount },
-              current: { layoutId: baseLayout.id, columnCount: requestedBaseLayout.columnCount },
+              previous: {
+                layoutId: baseLayout.id,
+                columnCount: baseLayout.columnCount,
+                leftGutterColumnCount: baseLayout.leftGutterColumnCount,
+                rightGutterColumnCount: baseLayout.rightGutterColumnCount,
+              },
+              current: {
+                layoutId: baseLayout.id,
+                columnCount: requestedBaseLayout.columnCount,
+                leftGutterColumnCount: requestedBaseLayout.leftGutterColumnCount,
+                rightGutterColumnCount: requestedBaseLayout.rightGutterColumnCount,
+              },
             })
           : null;
       const baseSourceElements = resizedBaseLayout ? getElementsForProjectedLayout(resizedBaseLayout) : undefined;
-      const baseSourceColumnCount = requestedBaseLayout?.columnCount ?? baseLayout.columnCount;
+      const baseSourceGeometry = {
+        layoutId: baseLayout.id,
+        columnCount: requestedBaseLayout?.columnCount ?? baseLayout.columnCount,
+        leftGutterColumnCount: requestedBaseLayout?.leftGutterColumnCount ?? baseLayout.leftGutterColumnCount,
+        rightGutterColumnCount: requestedBaseLayout?.rightGutterColumnCount ?? baseLayout.rightGutterColumnCount,
+      };
 
       for (const addedLayout of addedLayouts) {
         const layoutId = createId();
@@ -816,6 +869,8 @@ export const boardRouter = createTRPCRouter({
           id: layoutId,
           name: addedLayout.name,
           columnCount: addedLayout.columnCount,
+          leftGutterColumnCount: addedLayout.leftGutterColumnCount,
+          rightGutterColumnCount: addedLayout.rightGutterColumnCount,
           breakpoint: addedLayout.breakpoint,
           role: "custom",
           boardId: board.id,
@@ -823,11 +878,15 @@ export const boardRouter = createTRPCRouter({
 
         const projectedLayout = getUpdatedBoardLayout(board, {
           previous: {
-            layoutId: baseLayout.id,
-            columnCount: baseSourceColumnCount,
+            ...baseSourceGeometry,
             elements: baseSourceElements,
           },
-          current: { layoutId, columnCount: addedLayout.columnCount },
+          current: {
+            layoutId,
+            columnCount: addedLayout.columnCount,
+            leftGutterColumnCount: addedLayout.leftGutterColumnCount,
+            rightGutterColumnCount: addedLayout.rightGutterColumnCount,
+          },
         });
         itemSectionLayoutsToInsert.push(...projectedLayout.itemSectionLayouts);
         sectionLayoutsToInsert.push(...projectedLayout.sectionLayouts);
@@ -839,14 +898,30 @@ export const boardRouter = createTRPCRouter({
 
       for (const updatedLayout of layoutsToUpdate) {
         const dbLayout = existingLayoutsById.get(updatedLayout.id);
-        if (!dbLayout || dbLayout.columnCount === updatedLayout.columnCount) continue;
+        if (
+          !dbLayout ||
+          (dbLayout.columnCount === updatedLayout.columnCount &&
+            dbLayout.leftGutterColumnCount === updatedLayout.leftGutterColumnCount &&
+            dbLayout.rightGutterColumnCount === updatedLayout.rightGutterColumnCount)
+        )
+          continue;
 
         const projectedLayout =
           updatedLayout.role === "base" && resizedBaseLayout
             ? resizedBaseLayout
             : getUpdatedBoardLayout(board, {
-                previous: { layoutId: dbLayout.id, columnCount: dbLayout.columnCount },
-                current: { layoutId: dbLayout.id, columnCount: updatedLayout.columnCount },
+                previous: {
+                  layoutId: dbLayout.id,
+                  columnCount: dbLayout.columnCount,
+                  leftGutterColumnCount: dbLayout.leftGutterColumnCount,
+                  rightGutterColumnCount: dbLayout.rightGutterColumnCount,
+                },
+                current: {
+                  layoutId: dbLayout.id,
+                  columnCount: updatedLayout.columnCount,
+                  leftGutterColumnCount: updatedLayout.leftGutterColumnCount,
+                  rightGutterColumnCount: updatedLayout.rightGutterColumnCount,
+                },
               });
         itemSectionLayoutsToUpdate.push(...projectedLayout.itemSectionLayouts);
         sectionLayoutsToUpdate.push(...projectedLayout.sectionLayouts);
@@ -902,7 +977,13 @@ export const boardRouter = createTRPCRouter({
             for (const layout of layoutsToUpdate) {
               await transaction
                 .update(schema.layouts)
-                .set({ name: layout.name, columnCount: layout.columnCount, breakpoint: layout.breakpoint })
+                .set({
+                  name: layout.name,
+                  columnCount: layout.columnCount,
+                  leftGutterColumnCount: layout.leftGutterColumnCount,
+                  rightGutterColumnCount: layout.rightGutterColumnCount,
+                  breakpoint: layout.breakpoint,
+                })
                 .where(eq(schema.layouts.id, layout.id));
             }
             if (removedLayoutIds.length > 0) {
@@ -954,7 +1035,13 @@ export const boardRouter = createTRPCRouter({
             for (const layout of layoutsToUpdate) {
               transaction
                 .update(layouts)
-                .set({ name: layout.name, columnCount: layout.columnCount, breakpoint: layout.breakpoint })
+                .set({
+                  name: layout.name,
+                  columnCount: layout.columnCount,
+                  leftGutterColumnCount: layout.leftGutterColumnCount,
+                  rightGutterColumnCount: layout.rightGutterColumnCount,
+                  breakpoint: layout.breakpoint,
+                })
                 .where(eq(layouts.id, layout.id))
                 .run();
             }
@@ -997,8 +1084,18 @@ export const boardRouter = createTRPCRouter({
       }
 
       const projectedLayout = getUpdatedBoardLayout(board, {
-        previous: { layoutId: baseLayout.id, columnCount: baseLayout.columnCount },
-        current: { layoutId: targetLayout.id, columnCount: targetLayout.columnCount },
+        previous: {
+          layoutId: baseLayout.id,
+          columnCount: baseLayout.columnCount,
+          leftGutterColumnCount: baseLayout.leftGutterColumnCount,
+          rightGutterColumnCount: baseLayout.rightGutterColumnCount,
+        },
+        current: {
+          layoutId: targetLayout.id,
+          columnCount: targetLayout.columnCount,
+          leftGutterColumnCount: targetLayout.leftGutterColumnCount,
+          rightGutterColumnCount: targetLayout.rightGutterColumnCount,
+        },
       });
 
       await handleTransactionsAsync(ctx.db, {
@@ -1076,6 +1173,20 @@ export const boardRouter = createTRPCRouter({
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
     const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
+    throwIfCustomWidgetPlacementChangeForbidden({
+      isAdmin: ctx.session.user.permissions.includes("admin"),
+      submittedItems: input.items,
+      storedItems: dbBoard.items,
+    });
+
+    for (const item of input.items) {
+      if (item.kind !== "timetable") continue;
+      const previousItem = dbBoard.items.find((dbItem) => dbItem.id === item.id);
+      await validateTimetableOptionsChangeAsync(
+        item.options,
+        previousItem?.kind === "timetable" ? previousItem.options : undefined,
+      );
+    }
 
     await handleTransactionsAsync(ctx.db, {
       async handleAsync(db, schema) {
@@ -1087,32 +1198,32 @@ export const boardRouter = createTRPCRouter({
               addedSections.map((section) => ({
                 id: section.id,
                 kind: section.kind,
-                yOffset: section.kind !== "dynamic" ? section.yOffset : null,
-                xOffset: section.kind === "dynamic" ? null : 0,
-                options: section.kind === "dynamic" ? superjson.stringify(section.options) : emptySuperJSON,
-                name: "name" in section ? section.name : null,
+                yOffset: section.kind === "empty" ? section.yOffset : null,
+                xOffset: section.kind === "empty" ? section.xOffset : null,
+                options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
+                name: null,
                 boardId: dbBoard.id,
               })),
             );
 
-            if (addedSections.some((section) => section.kind === "dynamic")) {
-              await transaction.insert(schema.sectionLayouts).values(
-                addedSections
-                  .filter((section) => section.kind === "dynamic")
-                  .flatMap((section) =>
-                    section.layouts.map(
-                      (sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
-                        layoutId: sectionLayout.layoutId,
-                        sectionId: section.id,
-                        parentSectionId: sectionLayout.parentSectionId,
-                        height: sectionLayout.height,
-                        width: sectionLayout.width,
-                        xOffset: sectionLayout.xOffset,
-                        yOffset: sectionLayout.yOffset,
-                      }),
-                    ),
-                  ),
+            const sectionLayoutsToInsert = addedSections
+              .filter((section) => section.kind === "container")
+              .flatMap((section) =>
+                section.layouts.map(
+                  (sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
+                    layoutId: sectionLayout.layoutId,
+                    sectionId: section.id,
+                    parentSectionId: sectionLayout.parentSectionId,
+                    height: sectionLayout.height,
+                    width: sectionLayout.width,
+                    xOffset: sectionLayout.xOffset,
+                    yOffset: sectionLayout.yOffset,
+                  }),
+                ),
               );
+
+            if (sectionLayoutsToInsert.length > 0) {
+              await transaction.insert(schema.sectionLayouts).values(sectionLayoutsToInsert);
             }
           }
 
@@ -1209,18 +1320,17 @@ export const boardRouter = createTRPCRouter({
           const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
 
           for (const section of updatedSections) {
-            const prev = dbBoard.sections.find((dbSection) => dbSection.id === section.id);
             await transaction
               .update(schema.sections)
               .set({
-                yOffset: prev?.kind !== "dynamic" && "yOffset" in section ? section.yOffset : null,
-                xOffset: prev?.kind !== "dynamic" && "yOffset" in section ? 0 : null,
-                options: section.kind === "dynamic" ? superjson.stringify(section.options) : emptySuperJSON,
-                name: prev?.kind === "category" && "name" in section ? section.name : null,
+                yOffset: section.kind === "empty" ? section.yOffset : null,
+                xOffset: section.kind === "empty" ? section.xOffset : null,
+                options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
+                name: null,
               })
               .where(eq(schema.sections.id, section.id));
 
-            if (section.kind !== "dynamic") continue;
+            if (section.kind !== "container") continue;
 
             for (const sectionLayout of section.layouts) {
               await transaction
@@ -1287,36 +1397,33 @@ export const boardRouter = createTRPCRouter({
                 addedSections.map((section) => ({
                   id: section.id,
                   kind: section.kind,
-                  yOffset: section.kind !== "dynamic" ? section.yOffset : null,
-                  xOffset: section.kind === "dynamic" ? null : 0,
-                  options: section.kind === "dynamic" ? superjson.stringify(section.options) : emptySuperJSON,
-                  name: "name" in section ? section.name : null,
+                  yOffset: section.kind === "empty" ? section.yOffset : null,
+                  xOffset: section.kind === "empty" ? section.xOffset : null,
+                  options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
+                  name: null,
                   boardId: dbBoard.id,
                 })),
               )
               .run();
 
-            if (addedSections.some((section) => section.kind === "dynamic")) {
-              transaction
-                .insert(sectionLayouts)
-                .values(
-                  addedSections
-                    .filter((section) => section.kind === "dynamic")
-                    .flatMap((section) =>
-                      section.layouts.map(
-                        (sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
-                          layoutId: sectionLayout.layoutId,
-                          sectionId: section.id,
-                          parentSectionId: sectionLayout.parentSectionId,
-                          height: sectionLayout.height,
-                          width: sectionLayout.width,
-                          xOffset: sectionLayout.xOffset,
-                          yOffset: sectionLayout.yOffset,
-                        }),
-                      ),
-                    ),
-                )
-                .run();
+            const sectionLayoutsToInsert = addedSections
+              .filter((section) => section.kind === "container")
+              .flatMap((section) =>
+                section.layouts.map(
+                  (sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
+                    layoutId: sectionLayout.layoutId,
+                    sectionId: section.id,
+                    parentSectionId: sectionLayout.parentSectionId,
+                    height: sectionLayout.height,
+                    width: sectionLayout.width,
+                    xOffset: sectionLayout.xOffset,
+                    yOffset: sectionLayout.yOffset,
+                  }),
+                ),
+              );
+
+            if (sectionLayoutsToInsert.length > 0) {
+              transaction.insert(sectionLayouts).values(sectionLayoutsToInsert).run();
             }
           }
 
@@ -1419,19 +1526,18 @@ export const boardRouter = createTRPCRouter({
           const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
 
           for (const section of updatedSections) {
-            const prev = dbBoard.sections.find((dbSection) => dbSection.id === section.id);
             transaction
               .update(sections)
               .set({
-                yOffset: prev?.kind !== "dynamic" && "yOffset" in section ? section.yOffset : null,
-                xOffset: prev?.kind !== "dynamic" && "yOffset" in section ? 0 : null,
-                options: section.kind === "dynamic" ? superjson.stringify(section.options) : emptySuperJSON,
-                name: prev?.kind === "category" && "name" in section ? section.name : null,
+                yOffset: section.kind === "empty" ? section.yOffset : null,
+                xOffset: section.kind === "empty" ? section.xOffset : null,
+                options: section.kind === "empty" ? emptySuperJSON : superjson.stringify(section.options),
+                name: null,
               })
               .where(eq(sections.id, section.id))
               .run();
 
-            if (section.kind !== "dynamic") continue;
+            if (section.kind !== "container") continue;
 
             for (const sectionLayout of section.layouts) {
               transaction
@@ -1661,6 +1767,15 @@ export const boardRouter = createTRPCRouter({
     .output(z.object({ itemId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+      throwIfCustomWidgetPlacementChangeForbidden({
+        isAdmin: ctx.session.user.permissions.includes("admin"),
+        submittedItems: [{ id: "", kind: input.kind, options: input.options }],
+        storedItems: [],
+      });
+
+      if (input.kind === "timetable") {
+        await validateTimetableOptionsChangeAsync(input.options);
+      }
 
       if (input.integrationIds.length > 0) {
         const existing = await ctx.db.query.integrations.findMany({
@@ -1862,6 +1977,7 @@ const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredId
 };
 
 interface BoardForLayoutProjection {
+  id: string;
   items: Array<{
     id: string;
     layouts: Array<{
@@ -1876,6 +1992,8 @@ interface BoardForLayoutProjection {
   sections: Array<{
     id: string;
     kind: string;
+    xOffset?: number | null;
+    yOffset?: number | null;
     layouts?: Array<{
       layoutId: string;
       parentSectionId: string | null;
@@ -1890,78 +2008,103 @@ interface BoardForLayoutProjection {
 const getUpdatedBoardLayout = (
   board: BoardForLayoutProjection,
   options: {
-    previous: {
-      layoutId: string;
-      columnCount: number;
-      elements?: GridAlgorithmItem[];
-    };
-    current: {
-      layoutId: string;
-      columnCount: number;
-    };
+    previous: BoardLayoutGeometry & { elements?: GridAlgorithmItem[] };
+    current: BoardLayoutGeometry;
   },
 ) => {
-  const itemSectionLayoutsCollection: InferInsertModel<typeof itemLayouts>[] = [];
-  const sectionLayoutsCollection: InferInsertModel<typeof sectionLayouts>[] = [];
-
   const elements = options.previous.elements ?? getElementsForLayout(board, options.previous.layoutId);
-  const rootSections = board.sections.filter((section) => section.kind !== "dynamic");
-
-  for (const rootSection of rootSections) {
-    const result = generateResponsiveGridFor({
-      items: elements,
-      previousWidth: options.previous.columnCount,
-      width: options.current.columnCount,
-      sectionId: rootSection.id,
-    });
-
-    itemSectionLayoutsCollection.push(
-      ...board.items
-        .map((item): InferInsertModel<typeof itemLayouts> | null => {
-          const currentElement = result.items.find((element) => element.type === "item" && element.id === item.id);
-
-          if (!currentElement) {
-            return null;
-          }
-
-          return {
-            itemId: item.id,
-            layoutId: options.current.layoutId,
-            sectionId: currentElement.sectionId,
-            height: currentElement.height,
-            width: currentElement.width,
-            xOffset: currentElement.xOffset,
-            yOffset: currentElement.yOffset,
-          };
-        })
-        .filter((item) => item !== null),
-    );
-
-    sectionLayoutsCollection.push(
-      ...board.sections
-        .filter((section) => section.kind === "dynamic")
-        .map((section): InferInsertModel<typeof sectionLayouts> | null => {
-          const currentElement = result.items.find(
-            (element) => element.type === "section" && element.id === section.id,
-          );
-
-          if (!currentElement) {
-            return null;
-          }
-
-          return {
-            layoutId: options.current.layoutId,
-            sectionId: section.id,
-            parentSectionId: currentElement.sectionId,
-            height: currentElement.height,
-            width: currentElement.width,
-            xOffset: currentElement.xOffset,
-            yOffset: currentElement.yOffset,
-          };
-        })
-        .filter((section) => section !== null),
-    );
+  const emptyRoots = board.sections
+    .filter((section) => section.kind === "empty")
+    .toSorted((first, second) => (first.yOffset ?? 0) - (second.yOffset ?? 0) || first.id.localeCompare(second.id));
+  const rootByLane = new Map<BoardLane, (typeof emptyRoots)[number]>();
+  for (const root of emptyRoots) {
+    const lane = getRootSectionLane(root.xOffset);
+    if (!rootByLane.has(lane)) rootByLane.set(lane, root);
   }
+  const mainRoot = rootByLane.get("main");
+  if (!mainRoot) throw new Error(`Board "${board.id}" has no main canvas root`);
+
+  const sourceRootById = new Map(
+    emptyRoots.map((section) => [section.id, getRootSectionLane(section.xOffset)] as const),
+  );
+  const targetLaneBySourceLane = new Map<BoardLane, BoardLane>(
+    boardLanes.map((lane) => [
+      lane,
+      lane !== "main" && getBoardLaneColumnCount(options.current, lane) === 0 ? "main" : lane,
+    ]),
+  );
+  const remappedElements = elements.map((element) => {
+    const sourceLane = sourceRootById.get(element.sectionId);
+    if (!sourceLane) return element;
+    const targetLane = targetLaneBySourceLane.get(sourceLane) ?? "main";
+    const targetRoot = rootByLane.get(targetLane) ?? mainRoot;
+    return {
+      ...element,
+      sectionId: targetRoot.id,
+    };
+  });
+
+  const results = boardLanes.flatMap((lane) => {
+    const root = rootByLane.get(lane);
+    const width = getBoardLaneColumnCount(options.current, lane);
+    if (!root || width === 0) return [];
+    const sourceLanes = boardLanes.filter(
+      (sourceLane) =>
+        rootByLane.has(sourceLane) &&
+        getBoardLaneColumnCount(options.previous, sourceLane) > 0 &&
+        targetLaneBySourceLane.get(sourceLane) === lane,
+    );
+    const previousWidth =
+      sourceLanes.length === 1
+        ? getBoardLaneColumnCount(options.previous, sourceLanes[0] ?? "main")
+        : Number.MAX_SAFE_INTEGER;
+
+    return [
+      generateResponsiveGridFor({
+        items: remappedElements,
+        previousWidth,
+        width,
+        sectionId: root.id,
+      }),
+    ];
+  });
+  const updatedElements = results.flatMap((result) => result.items);
+  const updatedElementById = new Map(updatedElements.map((element) => [element.id, element]));
+
+  const itemSectionLayoutsCollection = board.items.flatMap((item): InferInsertModel<typeof itemLayouts>[] => {
+    const currentElement = updatedElementById.get(item.id);
+    if (!currentElement || currentElement.type !== "item") return [];
+
+    return [
+      {
+        itemId: item.id,
+        layoutId: options.current.layoutId,
+        sectionId: currentElement.sectionId,
+        height: currentElement.height,
+        width: currentElement.width,
+        xOffset: currentElement.xOffset,
+        yOffset: currentElement.yOffset,
+      },
+    ];
+  });
+
+  const sectionLayoutsCollection = board.sections.flatMap((section): InferInsertModel<typeof sectionLayouts>[] => {
+    if (section.kind !== "container") return [];
+    const currentElement = updatedElementById.get(section.id);
+    if (!currentElement || currentElement.type !== "section") return [];
+
+    return [
+      {
+        layoutId: options.current.layoutId,
+        sectionId: section.id,
+        parentSectionId: currentElement.sectionId,
+        height: currentElement.height,
+        width: currentElement.width,
+        xOffset: currentElement.xOffset,
+        yOffset: currentElement.yOffset,
+      },
+    ];
+  });
 
   return {
     itemSectionLayouts: itemSectionLayoutsCollection,
@@ -1998,9 +2141,89 @@ const getElementsForProjectedLayout = (
   ),
 ];
 
+interface BoardLayoutGeometry {
+  layoutId: string;
+  columnCount: number;
+  leftGutterColumnCount: number;
+  rightGutterColumnCount: number;
+}
+
+type GutterLane = Exclude<BoardLane, "main">;
+
+const ensureGutterRootSectionsAsync = async (db: Database, boardId: string, lanes: readonly GutterLane[]) => {
+  if (lanes.length === 0) return;
+
+  const getMissingLanes = (existingOffsets: readonly (number | null)[]) =>
+    lanes.filter((lane) => {
+      const rootCount = existingOffsets.filter((offset) => offset === rootSectionOffsets[lane]).length;
+      if (rootCount > 1) throw new Error(`Board "${boardId}" has multiple ${lane} canvas roots`);
+      return rootCount === 0;
+    });
+  const getRows = (missingLanes: readonly GutterLane[]) =>
+    missingLanes.map((lane) => ({
+      id: createId(),
+      boardId,
+      kind: "empty" as const,
+      xOffset: rootSectionOffsets[lane],
+      yOffset: 0,
+      options: emptySuperJSON,
+    }));
+
+  await handleTransactionsAsync(db, {
+    async handleAsync(database, schema) {
+      await database.transaction(async (transaction) => {
+        await transaction
+          .select({ id: schema.boards.id })
+          .from(schema.boards)
+          .where(eq(schema.boards.id, boardId))
+          .for("update");
+
+        const existingRoots = await transaction
+          .select({ xOffset: schema.sections.xOffset })
+          .from(schema.sections)
+          .where(
+            and(
+              eq(schema.sections.boardId, boardId),
+              eq(schema.sections.kind, "empty"),
+              inArray(
+                schema.sections.xOffset,
+                lanes.map((lane) => rootSectionOffsets[lane]),
+              ),
+            ),
+          );
+        const rows = getRows(getMissingLanes(existingRoots.map(({ xOffset }) => xOffset)));
+        if (rows.length > 0) await transaction.insert(schema.sections).values(rows);
+      });
+    },
+    handleSync(database) {
+      database.transaction(
+        (transaction) => {
+          const existingRoots = transaction
+            .select({ xOffset: sections.xOffset })
+            .from(sections)
+            .where(
+              and(
+                eq(sections.boardId, boardId),
+                eq(sections.kind, "empty"),
+                inArray(
+                  sections.xOffset,
+                  lanes.map((lane) => rootSectionOffsets[lane]),
+                ),
+              ),
+            )
+            .all();
+          const rows = getRows(getMissingLanes(existingRoots.map(({ xOffset }) => xOffset)));
+          if (rows.length > 0) transaction.insert(sections).values(rows).run();
+        },
+        { behavior: "immediate" },
+      );
+    },
+  });
+};
+
 const getElementsForLayout = (board: BoardForLayoutProjection, layoutId: string) => {
   const sectionElements = board.sections
-    .filter((section) => section.kind === "dynamic")
+    .filter((section) => section.kind === "container")
     .flatMap((section) => {
       const clonedLayout = section.layouts?.find((sectionLayout) => sectionLayout.layoutId === layoutId);
       if (!clonedLayout?.parentSectionId) return [];

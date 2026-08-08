@@ -1,0 +1,83 @@
+# Correct Custom Widget problems
+
+## Correct an unavailable widget
+
+The definition does not exist. If it was deleted, remove the unavailable tile from the board.
+
+If the Custom Widgets page shows the definition with a **Migration required** badge, an administrator can open its
+action menu and select **Copy migration prompt**. Give that redacted prompt to an LLM, then import the resulting v2 JSON
+from the same menu. The LLM returns one complete JSON block; copy it once and select **Paste migrated widget**. Homarr
+places its `template` value into the JSX editor automatically. Because arbitrary v1 display text or JSX may contain
+credentials, the prompt omits that display configuration; describe the old widget's visible layout and behavior without
+including secrets. Other viewers see **Contact an administrator** instead of a migration link.
+
+Homarr keeps the v1 definition and encrypted secret after migration. The validated v2 replacement uses the same ID and
+takes precedence; the archived v1 record reappears if the v2 replacement is deleted. There is no v1 permanent-delete
+action during the v2 stabilization period.
+
+Otherwise, install or create a Custom JSX v2 definition.
+
+## Correct an invalid saved definition
+
+The Custom Widgets page isolates a definition that does not conform to the current schema. The other definitions remain available.
+
+An invalid definition shows its validation errors. You can delete it.
+
+You cannot edit, enable, export, duplicate, publish, or select an invalid v2 definition. Recreate the definition or import a valid definition. Preserved v1 definitions use the separate **Migration required** workflow described above.
+
+## Correct validation errors
+
+Read the first schema or JSX diagnostic. Use its path to find the invalid value.
+
+Make sure keyed API source and request names are valid and unique.
+
+Make sure that each named request references an API source. Use explicit `$option` and `$param` references.
+
+Make sure every option default matches its control. Use the correct request kind for each runtime component.
+
+An incomplete API source URL or icon URL causes a form validation error. The workbench keeps the draft open.
+
+The workbench marks the invalid field while you type. An invalid URL does not replace the form with the error boundary.
+
+An invalid definition disables widget preview and Save/Create. The Data, Options, Actions, and Diagnostics tabs remain available so you can correct it.
+
+The Diagnostics tab shows the current schema errors.
+
+## Workshop unavailable
+
+If Workshop is unavailable, check `WORKSHOP_API_URL` and PocketBase health. Widgets that are already installed continue
+to work.
+
+## Correct request errors
+
+Check the API source network scope. Check the base URL and credentials.
+
+Check the request method, path, body, direct value bindings, and board permission.
+
+For “invalid placeholder,” use `{option:name}` or `{param:name}`. Load queries can only reference options. The preview journal does not show credentials.
+
+The journal shows the method, request ID, path template, status, and duration.
+
+In a multi-instance deployment, all Homarr replicas must share Redis. Versioned cache invalidation is distributed
+through Redis; replicas connected to different Redis databases can serve stale query responses after an action.
+
+## Correct a Mantine prop warning
+
+`UNKNOWN_MANTINE_PROP` is a warning. Homarr passes the prop to Mantine.
+
+Check the prop in the documentation for the installed Mantine version. `BLOCKED_CAPABILITY` identifies an unsafe capability.
+
+Use safe widget options, temporary inputs, or named requests instead.
+
+## Repair an existing item
+
+The widget option definitions changed and the saved values are invalid. Open the item settings.
+
+Correct the marked configuration values. Homarr does not infer widget option migrations.
+
+## Roll back safely
+
+Before an application upgrade, back up the database and preserve the exact `SECRET_ENCRYPTION_KEY`. The v2 schema keeps
+the physical v1 definition and secret tables readable by a v1 binary. Roll back the application without running
+manual cleanup, verify legacy widgets, and restore the database backup if the migration itself must be reversed.
+PocketBase Workshop data is a separate backup and restore operation.

@@ -32,7 +32,7 @@ export const useSectionActions = () => {
         sections: previous.sections.map((section) => {
           // Return same section if section is not the one we're moving
           if (section.id !== innerSectionId) return section;
-          if (section.kind !== "dynamic") return section;
+          if (section.kind !== "container") return section;
 
           return {
             ...section,
@@ -62,7 +62,7 @@ export const useSectionActions = () => {
           sections: previous.sections.map((section) => {
             // Return section without changes when not the section we're moving
             if (section.id !== innerSectionId) return section;
-            if (section.kind !== "dynamic") return section;
+            if (section.kind !== "container") return section;
 
             return {
               ...section,
@@ -101,7 +101,7 @@ export const wouldCreateSectionCycle = (
     visitedSectionIds.add(currentSectionId);
 
     const currentSection = board.sections.find((section) => section.id === currentSectionId);
-    if (currentSection?.kind !== "dynamic") return false;
+    if (currentSection?.kind !== "container") return false;
 
     currentSectionId = currentSection.layouts.find((layout) => layout.layoutId === layoutId)?.parentSectionId ?? null;
   }

@@ -1,0 +1,65 @@
+.root {
+  margin-top: 4px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+  overflow: hidden;
+}
+
+.root:focus-within {
+  border-color: var(--mantine-primary-color-filled);
+  outline: 2px solid color-mix(in srgb, var(--mantine-primary-color-filled) 20%, transparent);
+  outline-offset: 1px;
+}
+
+.toolbar,
+.footer {
+  padding: 7px 10px;
+  background: var(--mantine-color-default-hover);
+}
+
+.toolbar {
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+}
+.footer {
+  border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+}
+.viewport {
+  max-height: min(62vh, 680px);
+  overflow: auto;
+}
+.viewport :global(.cm-editor) {
+  background: var(--mantine-color-body);
+  color: var(--mantine-color-text);
+  font-family: "Fira Code", "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+}
+.viewport :global(.cm-editor.cm-focused) {
+  outline: none;
+}
+.viewport :global(.cm-scroller) {
+  line-height: 1.65;
+  overflow: auto;
+}
+.viewport :global(.cm-gutters) {
+  background: var(--mantine-color-default-hover);
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+}
+.diagnosticButton {
+  min-height: 44px;
+  border-radius: var(--mantine-radius-sm);
+}
+.reference {
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+  padding: 10px;
+}
+
+@media (max-width: 48em) {
+  .viewport {
+    max-height: 52vh;
+  }
+  .toolbar,
+  .footer {
+    align-items: flex-start;
+  }
+}

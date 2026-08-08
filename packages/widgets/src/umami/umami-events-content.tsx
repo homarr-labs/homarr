@@ -1,13 +1,14 @@
 "use client";
 
 import { BarChart, LineChart } from "@mantine/charts";
-import { Box, Group, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { Box, Group, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { UmamiEventSeries } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { EVENT_COLORS, formatXLabel, umamiQueryOptions } from "./umami-utils";
+import { getUsableWidgetQueryData } from "../common/query-state";
 
 interface UmamiEventsContentProps {
   integrationIds: string[];
@@ -15,6 +16,7 @@ interface UmamiEventsContentProps {
   timeFrame: string;
   eventNames: string[];
   chartType: string;
+  showXAxis: boolean;
 }
 
 export function UmamiEventsContent({
@@ -23,15 +25,19 @@ export function UmamiEventsContent({
   timeFrame,
   eventNames,
   chartType,
+  showXAxis,
 }: UmamiEventsContentProps) {
   const t = useScopedI18n("widget.umami");
-  const { colorScheme } = useMantineColorScheme();
-  const tickColor = colorScheme === "dark" ? "#c1c2c5" : "#495057";
+  const locale = useCurrentIntlLocale();
+  const tickColor = "var(--mantine-color-dimmed)";
 
-  const { data: series = [] } = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
-    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
-    umamiQueryOptions,
-  );
+  const series =
+    getUsableWidgetQueryData(
+      clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
+        { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
+        umamiQueryOptions,
+      ),
+    ) ?? [];
 
   if (eventNames.length === 0) {
     return (
@@ -57,7 +63,7 @@ export function UmamiEventsContent({
   );
 
   const chartData = allTimestamps.map((timestamp) => {
-    const row: Record<string, string | number> = { label: formatXLabel(timestamp, timeFrame) };
+    const row: Record<string, string | number> = { label: formatXLabel(timestamp, timeFrame, locale) };
     for (const serie of series) {
       row[serie.eventName] = byEvent.get(serie.eventName)?.get(timestamp) ?? 0;
     }
@@ -104,7 +110,7 @@ export function UmamiEventsContent({
             gridAxis="none"
             withLegend={false}
             withTooltip
-            withXAxis
+            withXAxis={showXAxis}
             withYAxis={false}
             xAxisProps={{
               tick: { fontSize: 9, fill: tickColor },
@@ -121,7 +127,7 @@ export function UmamiEventsContent({
             gridAxis="none"
             withLegend={false}
             withTooltip
-            withXAxis
+            withXAxis={showXAxis}
             withYAxis={false}
             barProps={{ radius: 2 }}
             xAxisProps={{

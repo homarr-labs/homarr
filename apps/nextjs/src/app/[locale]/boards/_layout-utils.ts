@@ -1,9 +1,12 @@
 import { generateResponsiveGridFor } from "@homarr/common";
 import type { GridAlgorithmItem } from "@homarr/common";
+import type { BoardLane } from "@homarr/definitions";
+import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 
 import type { Board } from "./_types";
 
 export type BoardLayout = Board["layouts"][number];
+type LayoutGeometry = Pick<BoardLayout, "id" | "columnCount" | "leftGutterColumnCount" | "rightGutterColumnCount">;
 
 export const getRepresentativeLayoutWidth = (layout: BoardLayout, allLayouts: BoardLayout[]) => {
   if (layout.role === "mobile") return 390;
@@ -17,28 +20,69 @@ export const getRepresentativeLayoutWidth = (layout: BoardLayout, allLayouts: Bo
   return nextLayout ? Math.round((layout.breakpoint + nextLayout.breakpoint) / 2) : Math.max(1280, layout.breakpoint);
 };
 
-export const projectBoardLayout = (
-  board: Board,
-  sourceLayout: Pick<BoardLayout, "id" | "columnCount">,
-  targetLayout: Pick<BoardLayout, "id" | "columnCount">,
-) => {
+export const projectBoardLayout = (board: Board, sourceLayout: LayoutGeometry, targetLayout: LayoutGeometry) => {
   const elements = getElementsForLayout(board, sourceLayout.id);
 
-  if (sourceLayout.id === targetLayout.id && sourceLayout.columnCount === targetLayout.columnCount) {
+  if (
+    sourceLayout.id === targetLayout.id &&
+    sourceLayout.columnCount === targetLayout.columnCount &&
+    sourceLayout.leftGutterColumnCount === targetLayout.leftGutterColumnCount &&
+    sourceLayout.rightGutterColumnCount === targetLayout.rightGutterColumnCount
+  ) {
     return elements;
   }
 
-  return board.sections
-    .filter((section) => section.kind !== "dynamic")
-    .flatMap(
-      (section) =>
-        generateResponsiveGridFor({
-          items: elements,
-          previousWidth: sourceLayout.columnCount,
-          width: targetLayout.columnCount,
-          sectionId: section.id,
-        }).items,
+  const emptyRoots = board.sections
+    .filter((section) => section.kind === "empty")
+    .toSorted((first, second) => first.xOffset - second.xOffset || first.id.localeCompare(second.id));
+  const rootByLane = new Map<BoardLane, (typeof emptyRoots)[number]>();
+  for (const root of emptyRoots) {
+    const lane = getRootSectionLane(root.xOffset);
+    if (!rootByLane.has(lane)) rootByLane.set(lane, root);
+  }
+
+  const mainRoot = rootByLane.get("main");
+  if (!mainRoot) return [];
+
+  const sourceRootById = new Map(
+    emptyRoots.map((section) => [section.id, getRootSectionLane(section.xOffset)] as const),
+  );
+  const targetLaneBySourceLane = new Map<BoardLane, BoardLane>(
+    boardLanes.map((lane) => [
+      lane,
+      lane !== "main" && getBoardLaneColumnCount(targetLayout, lane) === 0 ? "main" : lane,
+    ]),
+  );
+  const remappedElements = elements.map((element) => {
+    const sourceLane = sourceRootById.get(element.sectionId);
+    if (!sourceLane) return element;
+    const targetLane = targetLaneBySourceLane.get(sourceLane) ?? "main";
+    return { ...element, sectionId: (rootByLane.get(targetLane) ?? mainRoot).id };
+  });
+
+  return boardLanes.flatMap((lane) => {
+    const root = rootByLane.get(lane);
+    const width = getBoardLaneColumnCount(targetLayout, lane);
+    if (!root || width === 0) return [];
+
+    const sourceLanes = boardLanes.filter(
+      (sourceLane) =>
+        rootByLane.has(sourceLane) &&
+        getBoardLaneColumnCount(sourceLayout, sourceLane) > 0 &&
+        targetLaneBySourceLane.get(sourceLane) === lane,
     );
+    const previousWidth =
+      sourceLanes.length === 1
+        ? getBoardLaneColumnCount(sourceLayout, sourceLanes[0] ?? "main")
+        : Number.MAX_SAFE_INTEGER;
+
+    return generateResponsiveGridFor({
+      items: remappedElements,
+      previousWidth,
+      width,
+      sectionId: root.id,
+    }).items;
+  });
 };
 
 const getElementsForLayout = (board: Board, layoutId: string): GridAlgorithmItem[] => [
@@ -59,7 +103,7 @@ const getElementsForLayout = (board: Board, layoutId: string): GridAlgorithmItem
       : [];
   }),
   ...board.sections.flatMap((section) => {
-    if (section.kind !== "dynamic") return [];
+    if (section.kind !== "container") return [];
     const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
     return layout?.parentSectionId
       ? [

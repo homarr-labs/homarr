@@ -22,13 +22,26 @@ export const immichAlbumsRequestHandler = createIntegrationRequestHandler<
     assetCount: number;
   }[],
   IntegrationKindByCategory<"photoService">,
-  Record<string, never>
+  { limit?: number }
 >({
-  async requestAsync(integration) {
+  async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getAlbumsAsync();
+    const albums = await integrationInstance.getAlbumsAsync();
+
+    if (input.limit === undefined) return albums;
+
+    return albums
+      .toSorted(
+        (left, right) =>
+          right.assetCount - left.assetCount ||
+          compareText(left.albumName, right.albumName) ||
+          compareText(left.id, right.id),
+      )
+      .slice(0, input.limit);
   },
 });
+
+const compareText = (left: string, right: string) => (left < right ? -1 : left > right ? 1 : 0);
 
 export const immichAlbumRequestHandler = createIntegrationRequestHandler<
   ImmichAlbum,

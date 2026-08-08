@@ -59,7 +59,7 @@
   }
 }
 
-.dynamicTile {
+.containerTile {
   border-style: dashed;
   background: color-mix(in srgb, var(--mantine-color-default) 88%, var(--mantine-primary-color-light));
 }
