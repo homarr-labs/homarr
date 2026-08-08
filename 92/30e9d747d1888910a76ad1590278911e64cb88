@@ -1,0 +1,23 @@
+packages/widgets/src/clock/component.tsx
+  s_093d61b162b9ca::t_e0a14203e7bf64 52,93
+  s_093d61b162b9ca::t_4a5d4bfb7c09fe 46
+e2e/lazy-widgets.spec.ts
+  s_093d61b162b9ca::t_7418da2e095198 91
+  s_093d61b162b9ca::t_e0a14203e7bf64 92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "9230e9d747d1888910a76ad1590278911e64cb88",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}
