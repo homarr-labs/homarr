@@ -49,7 +49,7 @@ describe("automatic mobile layout upgrade default", () => {
   test.each([
     { boardId: "board", name: "Phone", breakpoint: 0 },
     { boardId: "board", name: "Base", breakpoint: 480 },
-  ])("preserves legacy mode for a noncanonical saved layout", (existingLayout) => {
+  ])("preserves legacy mode for a noncanonical saved layout $name/$breakpoint", (existingLayout) => {
     expect(shouldEnableAutomaticMobileLayoutForUpgrade([existingLayout])).toBe(false);
   });
 

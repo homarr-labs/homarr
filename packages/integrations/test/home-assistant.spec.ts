@@ -88,10 +88,12 @@ const waitForHomeAssistantAsync = async (container: StartedTestContainer) => {
     try {
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${DEFAULT_API_KEY}` },
+        signal: AbortSignal.timeout(500),
       });
       if (response.ok) return;
     } catch {
       // Home Assistant is still restarting.
+      continue;
     }
 
     await new Promise((resolve) => setTimeout(resolve, 500));

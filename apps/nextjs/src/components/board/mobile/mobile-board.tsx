@@ -32,21 +32,23 @@ export const MobileBoard = () => {
           refs: { wrapper: wrapperRef, items: itemRefs, gridstack: gridstackRef },
         }}
       >
-        <Box
-          className={classes.grid}
-          style={{ "--mobile-column-count": mobileColumnCount } as CSSProperties}
-          data-mobile-board
-        >
-          {items.map((item) => (
-            <Box
-              key={item.id}
-              className={classes.item}
-              style={{ gridColumn: `span ${item.width}`, gridRow: `span ${item.height}` }}
-              data-mobile-board-item={item.id}
-            >
-              <BoardItemContent item={item} />
-            </Box>
-          ))}
+        <Box ref={wrapperRef} className={classes.container}>
+          <Box
+            className={classes.grid}
+            style={{ "--mobile-column-count": mobileColumnCount } as CSSProperties}
+            data-mobile-board
+          >
+            {items.map((item) => (
+              <Box
+                key={item.id}
+                className={classes.item}
+                style={{ gridColumn: `span ${item.width}`, gridRow: `span ${item.height}` }}
+                data-mobile-board-item={item.id}
+              >
+                <BoardItemContent item={item} />
+              </Box>
+            ))}
+          </Box>
         </Box>
       </SectionProvider>
     </ReadOnlyEditModeProvider>
