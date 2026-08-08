@@ -1,0 +1,19 @@
+packages/api/src/router/test/integration/integration-test-connection.spec.ts
+  s_a0e1fd495b97ff::t_4f0a3dadbb5d30 26-27,70-71,121-122,172-173,227-228
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "9596a83f60e24596acca7fdeb194ae734bcfb536",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
