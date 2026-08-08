@@ -1,11 +1,7 @@
 import type { QueryKey } from "@tanstack/react-query";
 
-import {
-  normalizeWidgetQuery,
-  type WidgetQueryMatcher,
-  type WidgetQueryMatcherScope,
-  widgetQueryValueEquals,
-} from "@homarr/widgets/definition";
+import type { WidgetQueryMatcher, WidgetQueryMatcherScope } from "@homarr/widgets/definition";
+import { normalizeWidgetQuery, widgetQueryValueEquals } from "@homarr/widgets/definition";
 
 export const matchesWidgetItemQuery = (
   queryKey: QueryKey,
