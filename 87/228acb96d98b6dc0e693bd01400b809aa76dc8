@@ -1,0 +1,20 @@
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_a0e1fd495b97ff::t_08fef475dac16c 19-22
+  s_a0e1fd495b97ff::t_d82df346998c2e 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "87228acb96d98b6dc0e693bd01400b809aa76dc8",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "lab <lab@local>"
+    }
+  }
+}
