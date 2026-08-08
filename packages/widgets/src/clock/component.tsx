@@ -24,6 +24,7 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
   const customDateFormat = options.customDateFormat;
   const timezone = options.useCustomTimezone ? options.timezone : Intl.DateTimeFormat().resolvedOptions().timeZone;
   const time = useCurrentTime(options);
+  const zonedTime = time === null ? null : dayjs(time).tz(timezone);
 
   const sizing = width < 128 ? "xs" : width < 196 ? "sm" : "md";
   const showWeatherCorner = options.showWeather && sizing !== "xs";
@@ -44,15 +45,11 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
           </Text>
         )}
         <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
-          {options.customTimeFormat
-            ? dayjs(time).tz(timezone).format(customTimeFormat)
-            : dayjs(time).tz(timezone).format(timeFormat)}
+          {zonedTime === null ? "--:--" : zonedTime.format(options.customTimeFormat ? customTimeFormat : timeFormat)}
         </Title>
         {options.showDate && (
           <Text className="clock-date-text" size={sizing} lineClamp={1}>
-            {options.customDateFormat
-              ? dayjs(time).tz(timezone).format(customDateFormat)
-              : dayjs(time).tz(timezone).format(dateFormat)}
+            {zonedTime?.format(options.customDateFormat ? customDateFormat : dateFormat)}
           </Text>
         )}
       </Stack>
@@ -90,7 +87,7 @@ interface UseCurrentTimeProps {
 }
 
 const useCurrentTime = ({ showSeconds }: UseCurrentTimeProps) => {
-  const [time, setTime] = useState(() => new Date(0));
+  const [time, setTime] = useState<Date | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>(null);
   const intervalRef = useRef<NodeJS.Timeout>(null);
   const intervalMultiplier = useMemo(() => (showSeconds ? 1 : 60), [showSeconds]);
