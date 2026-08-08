@@ -291,7 +291,13 @@ const ItemSelectModalContent = ({
   );
 };
 
-const ItemSelectModalFrame = ({ actions, innerProps }: { actions: { closeModal: () => void }; innerProps: { boardId: string } }) => {
+const ItemSelectModalFrame = ({
+  actions,
+  innerProps,
+}: {
+  actions: { closeModal: () => void };
+  innerProps: { boardId: string };
+}) => {
   const utils = clientApi.useUtils();
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
@@ -312,7 +318,9 @@ const ItemSelectModalFrame = ({ actions, innerProps }: { actions: { closeModal: 
   );
 };
 
-export const ItemSelectModal = createModal<{ boardId: string }>((props) => <ItemSelectModalFrame {...props} />).withOptions({
+export const ItemSelectModal = createModal<{ boardId: string }>((props) => (
+  <ItemSelectModalFrame {...props} />
+)).withOptions({
   defaultTitle: (t) => t("item.create.title"),
   size: modalSizeSelect,
 });
