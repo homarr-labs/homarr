@@ -42,7 +42,7 @@ export const SwitchSetting = <TFormValue extends Record<string, unknown>>({
           </Text>
         </Stack>
       </UnstyledButton>
-      <Switch disabled={disabled} onClick={handleClick} checked={Boolean(form.values[formKey]) && !disabled} />
+      <Switch disabled={disabled} onClick={handleClick} checked={Boolean(form.values[formKey])} />
     </Group>
   );
 };
