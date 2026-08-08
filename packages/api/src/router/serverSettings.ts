@@ -55,7 +55,7 @@ export const serverSettingsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Update global board defaults. Requires admin permission. Optional fields: homeBoardId, mobileHomeBoardId, enableAutomaticMobileLayout, enableStatusByDefault, forceDisableStatus. Home board IDs must reference public boards or be null",
+          "Update global board defaults. Requires admin permission. Optional fields: homeBoardId, mobileHomeBoardId, enableAutomaticMobileLayout, enableStatusByDefault, forceDisableStatus. Home board IDs must reference public boards returned by the public-board listing tool or API, using each board's id field, or be null",
       },
     })
     .input(boardServerSettingsUpdateSchema)

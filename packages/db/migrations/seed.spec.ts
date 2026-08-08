@@ -72,6 +72,61 @@ describe("automatic mobile layout upgrade default", () => {
     });
   });
 
+  test("persists the enabled default when a fresh instance is seeded repeatedly", async () => {
+    const db = createDb();
+
+    await seedServerSettingsAsync(db);
+    await seedServerSettingsAsync(db);
+
+    await expect(getServerSettingByKeyAsync(db, "board")).resolves.toStrictEqual(defaultServerSettings.board);
+  });
+
+  test("backfills the enabled default for canonical layouts", async () => {
+    const db = createDb();
+    const boardId = createId();
+    await db.insert(boards).values({ id: boardId, name: "dashboard", isPublic: false });
+    await db.insert(layouts).values({
+      id: createId(),
+      boardId,
+      name: "Base",
+      columnCount: 12,
+      breakpoint: 0,
+    });
+    await db.insert(serverSettings).values({
+      settingKey: "board",
+      value: stringify({
+        homeBoardId: null,
+        mobileHomeBoardId: null,
+        enableStatusByDefault: true,
+        forceDisableStatus: false,
+      }),
+    });
+
+    await seedServerSettingsAsync(db);
+    await seedServerSettingsAsync(db);
+
+    await expect(getServerSettingByKeyAsync(db, "board")).resolves.toStrictEqual(defaultServerSettings.board);
+  });
+
+  test("does not override an explicit disabled choice", async () => {
+    const db = createDb();
+    await db.insert(serverSettings).values({
+      settingKey: "board",
+      value: stringify({
+        ...defaultServerSettings.board,
+        enableAutomaticMobileLayout: false,
+      }),
+    });
+
+    await seedServerSettingsAsync(db);
+    await seedServerSettingsAsync(db);
+
+    await expect(getServerSettingByKeyAsync(db, "board")).resolves.toStrictEqual({
+      ...defaultServerSettings.board,
+      enableAutomaticMobileLayout: false,
+    });
+  });
+
   test("backfills legacy responsive instances once without overriding an explicit choice", async () => {
     const db = createDb();
     const boardId = createId();
