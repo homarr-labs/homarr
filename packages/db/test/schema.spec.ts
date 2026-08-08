@@ -24,7 +24,6 @@ type FixedMysqlConfig = {
     };
   };
 };
-
 type FixedPostgresqlConfig = {
   [key in keyof PostgreisqlConfig]: {
     [column in keyof PostgreisqlConfig[key]]: {

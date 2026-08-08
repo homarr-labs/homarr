@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Box, Card, Group, Stack, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip, useMantineColorScheme } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -9,13 +9,17 @@ import { formatBytesPair } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
-import { filterStorageVolumes } from "../filter-storage-volumes";
+import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
 type DisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
 
-const getDisplayText = (item: { used: string; available: string; percentage: number }, displayMode: DisplayMode) => {
+export const getDisplayText = (
+  item: { used: string; available: string; percentage: number },
+  displayMode: DisplayMode,
+) => {
   switch (displayMode) {
     case "percentage":
       return `${Math.round(item.percentage)}%`;
@@ -35,6 +39,16 @@ const getDisplayText = (item: { used: string; available: string; percentage: num
   }
 };
 
+export const clampPercentage = (percentage: number): number => Math.min(100, Math.max(0, percentage));
+
+const getAbsoluteText = (item: { used: string; available: string }) => {
+  const usedInBytes = Number(item.used);
+  const availableInBytes = Number(item.available);
+  if (!Number.isFinite(usedInBytes) || !Number.isFinite(availableInBytes)) return `${item.used} / ${item.available}`;
+  const { used, available } = formatBytesPair(usedInBytes, availableInBytes);
+  return `${used} / ${available}`;
+};
+
 interface SystemDiskCardProps {
   deviceName: string;
   percentage: number;
@@ -42,6 +56,10 @@ interface SystemDiskCardProps {
   temperature: number | null | undefined;
   healthy: boolean;
   showBackgroundBar: boolean;
+  integrationName?: string;
+  secondaryText?: string;
+  showSecondaryText: boolean;
+  showTemperature: boolean;
 }
 
 const SystemDiskCard = ({
@@ -51,6 +69,10 @@ const SystemDiskCard = ({
   temperature,
   healthy,
   showBackgroundBar,
+  integrationName,
+  secondaryText,
+  showSecondaryText,
+  showTemperature,
 }: SystemDiskCardProps) => {
   const board = useRequiredBoard();
   const scheme = useMantineColorScheme();
@@ -76,42 +98,65 @@ const SystemDiskCard = ({
   }, [displayText, healthy]);
 
   const unhealthyLabel = t("widget.systemDisks.status.unhealthy");
+  const hasHiddenTemperature = temperature !== null && temperature !== undefined && !showTemperature;
+  const hasHiddenSecondaryText = Boolean(secondaryText && secondaryText !== displayText && !showSecondaryText);
+  const tooltipLabel = [
+    healthy ? displayText : `${displayText} (${unhealthyLabel})`,
+    hasHiddenSecondaryText ? secondaryText : null,
+    hasHiddenTemperature ? `${temperature}°C` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <Tooltip
-      label={healthy ? displayText : `${displayText} (${unhealthyLabel})`}
-      disabled={valueFits}
+      label={tooltipLabel}
+      disabled={valueFits && !hasHiddenTemperature && !hasHiddenSecondaryText}
       position="top"
       withinPortal
     >
       <Card
         radius={board.itemRadius}
-        py={"xs"}
+        py="xs"
         bg={scheme.colorScheme === "dark" ? "dark.7" : "gray.1"}
         style={{ overflow: "hidden", position: "relative" }}
       >
-        <Group justify="space-between" style={{ zIndex: 1 }}>
-          <div>
-            <p style={{ margin: 0 }}>
-              <b>{deviceName}</b>
-            </p>
-            <p ref={valueRef} style={{ margin: 0, visibility: valueFits ? "visible" : "hidden" }}>
+        <Group justify="space-between" wrap="nowrap" style={{ zIndex: 1, minWidth: 0 }}>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <Text fw={700} size="sm" truncate="end">
+              {deviceName}
+            </Text>
+            {integrationName && (
+              <Text size="xs" c="dimmed" truncate="end">
+                {integrationName}
+              </Text>
+            )}
+            <Text ref={valueRef} size="sm" style={{ visibility: valueFits ? "visible" : "hidden" }}>
               <span>{displayText}</span>
               {!healthy && <span style={{ marginLeft: 5 }}>{unhealthyLabel}</span>}
-            </p>
+            </Text>
+            {showSecondaryText && secondaryText && secondaryText !== displayText && (
+              <Text size="xs" c="dimmed">
+                {secondaryText}
+              </Text>
+            )}
           </div>
-          <div>{temperature ? <p style={{ margin: 0 }}>{temperature}°C</p> : null}</div>
+          <div style={{ flexShrink: 0 }}>
+            {showTemperature && temperature !== null && temperature !== undefined ? (
+              <Text size="sm">{temperature}°C</Text>
+            ) : null}
+          </div>
         </Group>
         <Box
-          bg={healthy ? "green" : "red"}
           style={{
             position: "absolute",
             top: 0,
             left: 0,
-            width: `${percentage}%`,
+            width: `${clampPercentage(percentage)}%`,
             height: "100%",
             zIndex: 0,
             display: showBackgroundBar ? "block" : "none",
+            backgroundColor: healthy ? "var(--mantine-color-green-light)" : "var(--mantine-color-red-light)",
           }}
         ></Box>
       </Card>
@@ -119,41 +164,61 @@ const SystemDiskCard = ({
   );
 };
 
-export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemDisks">) {
+export default function SystemResources({
+  integrationIds,
+  options,
+  width,
+  height,
+}: WidgetComponentProps<"systemDisks">) {
   const queryInput = { integrationIds };
-  const { data = [] } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
+  const data =
+    getUsableWidgetQueryData(clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput)) ?? [];
 
-  const lastItem = data.at(-1);
+  if (data.length === 0) return <WidgetEmptyState />;
 
-  if (!lastItem) return <WidgetEmptyState />;
+  const disks = data.flatMap((entry) => {
+    const fileSystem = filterStorageVolumes(
+      entry.healthInfo.fileSystem,
+      options.visibleStorageVolumes,
+      entry.integrationId,
+    );
+    const smart = filterStorageVolumes(entry.healthInfo.smart, options.visibleStorageVolumes, entry.integrationId);
+    return fileSystem.map((item) => ({
+      integrationId: entry.integrationId,
+      integrationName: entry.integrationName,
+      item,
+      smartItem: smart.find(
+        (candidate) => normalizeStorageDeviceName(candidate.deviceName) === normalizeStorageDeviceName(item.deviceName),
+      ),
+    }));
+  });
 
-  const rawFileSystem = lastItem.healthInfo.fileSystem;
-  if (rawFileSystem.length === 0) {
-    throw new NoIntegrationDataError();
-  }
+  if (data.every((entry) => entry.healthInfo.fileSystem.length === 0)) throw new NoIntegrationDataError();
+  if (disks.length === 0) return <WidgetEmptyState />;
 
-  const fileSystem = filterStorageVolumes(rawFileSystem, options.visibleStorageVolumes, lastItem.integrationId);
-  const smart = filterStorageVolumes(lastItem.healthInfo.smart, options.visibleStorageVolumes, lastItem.integrationId);
-
-  if (fileSystem.length === 0) return <WidgetEmptyState />;
+  const minimumCardWidth = 260;
+  const columns = Math.max(1, Math.min(disks.length, Math.floor(width / minimumCardWidth)));
+  const cellWidth = width / columns;
 
   return (
-    <Stack gap="xs" p="xs" h="100%">
-      {fileSystem.map((item) => {
-        const smartItem = smart.find((smart) => smart.deviceName === item.deviceName);
-
-        return (
+    <ScrollArea h="100%">
+      <SimpleGrid cols={columns} spacing="xs" p="xs">
+        {disks.map(({ integrationId, integrationName, item, smartItem }) => (
           <SystemDiskCard
-            key={`disk-${item.deviceName}`}
+            key={`${integrationId}:${item.deviceName}`}
             deviceName={item.deviceName}
             percentage={item.percentage}
             displayText={getDisplayText(item, options.displayMode)}
             temperature={options.showTemperatureIfAvailable ? smartItem?.temperature : undefined}
             healthy={smartItem?.healthy ?? true} // fall back to healthy if no information is available
             showBackgroundBar={options.showBackgroundBar}
+            integrationName={data.length > 1 ? integrationName : undefined}
+            secondaryText={getAbsoluteText(item)}
+            showSecondaryText={height >= 160 && cellWidth >= 260}
+            showTemperature={height >= 100 && cellWidth >= 220}
           />
-        );
-      })}
-    </Stack>
+        ))}
+      </SimpleGrid>
+    </ScrollArea>
   );
 }

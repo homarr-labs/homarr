@@ -8,6 +8,7 @@ import { optionsBuilder } from "../../options";
 export const widgetKind = "dnsHoleControls";
 
 export const { definition, componentLoader } = createWidgetDefinition(widgetKind, {
+  supportsAdvancedFocus: false,
   icon: IconDeviceGamepad,
   queryKey: [["widget", "dnsHole"]],
   refetchInterval: 5,

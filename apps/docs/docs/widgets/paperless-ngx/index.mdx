@@ -4,6 +4,8 @@ description: "Displays document management statistics including inbox ratio, doc
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -25,6 +27,8 @@ This widget displays statistics from your Paperless-ngx instance, including an i
     },
   ]}
 />
+
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

@@ -54,6 +54,7 @@ export class AudiobookshelfIntegration extends Integration {
 
     const statsByLibrary = await Promise.all(
       libraries.map(async (library) => ({
+        library,
         mediaType: library.mediaType,
         stats: await this.getLibraryStatsAsync(library.id),
       })),
@@ -75,6 +76,14 @@ export class AudiobookshelfIntegration extends Integration {
       totalPodcasts: counts.totalPodcasts,
       totalListeningTimeSeconds: listeningStats.totalTime,
       activeSessions,
+      libraries: statsByLibrary.map(({ library, stats }) => ({
+        id: library.id,
+        name: library.name,
+        mediaType: library.mediaType,
+        totalItems: stats.totalItems,
+        totalDurationSeconds: stats.totalDuration ?? null,
+        totalSizeBytes: stats.totalSize ?? null,
+      })),
     };
   }
 

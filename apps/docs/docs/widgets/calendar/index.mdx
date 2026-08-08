@@ -4,6 +4,8 @@ description: "Display events from your integrations in a calendar view within a 
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -70,8 +72,10 @@ import withoutIntegrations from "./img/without-integrations.png";
 ### Interactions
 
 - Hover over a marked date to preview its events in a popover.
-- Click on a marked date to pin the popover open (it will stay visible even after moving the mouse away).
-- Click the date again or click outside to close the pinned popover.
+- The advanced view replaces the month grid with a grouped event list. Use its previous and next controls to change months.
+- If one selected integration is unavailable, its warning indicator remains visible while events from healthy integrations continue to load.
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

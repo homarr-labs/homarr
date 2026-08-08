@@ -15,7 +15,8 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
-  queryKeys: [[["app", "byId"]], [["widget", "app"]]],
+  supportsAdvancedFocus: false,
+  queryKeys: [[["app", "byId"]], [["widget", "app", "ping"]]],
   createOptions(settings) {
     return optionsBuilder.from(
       (factory) => ({

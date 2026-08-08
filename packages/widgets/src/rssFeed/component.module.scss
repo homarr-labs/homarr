@@ -1,11 +1,26 @@
-.backgroundImage {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  filter: blur(5px);
-  transform: scaleX(-1.05) scaleZ(-1.05);
-  opacity: 0.25;
-  top: 0;
-  left: 0;
-  object-fit: cover;
+.entry {
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 120ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--mantine-color-default-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: -2px;
+  }
+}
+
+.poster {
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry {
+    transition: none;
+  }
 }

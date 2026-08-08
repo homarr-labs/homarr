@@ -108,7 +108,7 @@ export const createBoardLayout = <TParams extends Params>({
                       actions={headerActions}
                       hasNavigation={false}
                     />
-                    <AppShellMain>{children}</AppShellMain>
+                    <AppShellMain data-advanced-focus-background>{children}</AppShellMain>
                   </ClientShell>
                 </BoardTourGate>
               </ModalProvider>

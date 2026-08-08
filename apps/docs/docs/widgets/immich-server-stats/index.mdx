@@ -4,6 +4,8 @@ description: "Information about your Immich instance"
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { immichIntegration } from "../../integrations/immich";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -28,6 +30,10 @@ import screen from "./img/screen.png";
     },
   ]}
 />
+
+In advanced mode, the widget also ranks the largest albums by asset count. To keep the dashboard response lightweight, it shows up to 50 albums.
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

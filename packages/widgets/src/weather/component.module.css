@@ -1,0 +1,31 @@
+.detailsButton,
+.forecastButton {
+  color: inherit;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.detailsButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.forecastButton {
+  display: block;
+}
+
+.detailsButton:focus-visible,
+.forecastButton:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+@media (any-pointer: coarse) {
+  .detailsButton,
+  .forecastButton {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

@@ -6,6 +6,7 @@ import { Box } from "@mantine/core";
 import { useCurrentLayout, useInitialViewportWidth, useRequiredBoard } from "@homarr/boards/context";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import {
   getBoardLaneColumnCount,
   getInitialBoardLogicalHeight,
@@ -110,68 +111,70 @@ export const ClientBoard = () => {
     .join(" ");
 
   return (
-    <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
-      <BoardBackgroundVideo />
-      <BoardSectionCollapseProvider>
-        <BoardGridPortalHost>
-          <ScaledBoardCanvas
-            logicalWidth={logicalWidth}
-            initialLogicalHeight={initialLogicalHeight}
-            initialAvailableWidth={initialAvailableWidth}
-            label={board.name}
-          >
-            <BoardGridEditorBoundary key={currentLayoutId}>
-              <BoardGridPortalRenderer />
-              <div
-                ref={columnsRef}
-                className={classes.columns}
-                style={{ gridTemplateColumns, paddingTop: LOGICAL_GRID_GAP }}
-              >
-                {leftColumnCount > 0 && leftSection && (
-                  <aside
-                    className={`${classes.lane} ${classes.gutter}`}
-                    aria-label={t("leftRail")}
-                    data-board-gutter="left"
-                  >
-                    <BoardEmptySection
-                      key={`${currentLayoutId}-${leftSection.id}`}
-                      section={leftSection}
-                      columnCount={leftColumnCount}
-                      requestedRowCount={0}
-                      railPlacement="left"
-                    />
-                  </aside>
-                )}
+    <BoardAdvancedFocusProvider>
+      <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
+        <BoardBackgroundVideo />
+        <BoardSectionCollapseProvider>
+          <BoardGridPortalHost>
+            <ScaledBoardCanvas
+              logicalWidth={logicalWidth}
+              initialLogicalHeight={initialLogicalHeight}
+              initialAvailableWidth={initialAvailableWidth}
+              label={board.name}
+            >
+              <BoardGridEditorBoundary key={currentLayoutId}>
+                <BoardGridPortalRenderer />
+                <div
+                  ref={columnsRef}
+                  className={classes.columns}
+                  style={{ gridTemplateColumns, paddingTop: LOGICAL_GRID_GAP }}
+                >
+                  {leftColumnCount > 0 && leftSection && (
+                    <aside
+                      className={`${classes.lane} ${classes.gutter}`}
+                      aria-label={t("leftRail")}
+                      data-board-gutter="left"
+                    >
+                      <BoardEmptySection
+                        key={`${currentLayoutId}-${leftSection.id}`}
+                        section={leftSection}
+                        columnCount={leftColumnCount}
+                        requestedRowCount={0}
+                        railPlacement="left"
+                      />
+                    </aside>
+                  )}
 
-                <section className={classes.lane} aria-label={t("canvas")}>
-                  <BoardEmptySection
-                    key={`${currentLayoutId}-${mainSection.id}`}
-                    section={mainSection}
-                    columnCount={mainColumnCount}
-                    requestedRowCount={0}
-                  />
-                </section>
-
-                {rightColumnCount > 0 && rightSection && (
-                  <aside
-                    className={`${classes.lane} ${classes.gutter}`}
-                    aria-label={t("rightRail")}
-                    data-board-gutter="right"
-                  >
+                  <section className={classes.lane} aria-label={t("canvas")}>
                     <BoardEmptySection
-                      key={`${currentLayoutId}-${rightSection.id}`}
-                      section={rightSection}
-                      columnCount={rightColumnCount}
+                      key={`${currentLayoutId}-${mainSection.id}`}
+                      section={mainSection}
+                      columnCount={mainColumnCount}
                       requestedRowCount={0}
-                      railPlacement="right"
                     />
-                  </aside>
-                )}
-              </div>
-            </BoardGridEditorBoundary>
-          </ScaledBoardCanvas>
-        </BoardGridPortalHost>
-      </BoardSectionCollapseProvider>
-    </Box>
+                  </section>
+
+                  {rightColumnCount > 0 && rightSection && (
+                    <aside
+                      className={`${classes.lane} ${classes.gutter}`}
+                      aria-label={t("rightRail")}
+                      data-board-gutter="right"
+                    >
+                      <BoardEmptySection
+                        key={`${currentLayoutId}-${rightSection.id}`}
+                        section={rightSection}
+                        columnCount={rightColumnCount}
+                        requestedRowCount={0}
+                        railPlacement="right"
+                      />
+                    </aside>
+                  )}
+                </div>
+              </BoardGridEditorBoundary>
+            </ScaledBoardCanvas>
+          </BoardGridPortalHost>
+        </BoardSectionCollapseProvider>
+      </Box>
+    </BoardAdvancedFocusProvider>
   );
 };

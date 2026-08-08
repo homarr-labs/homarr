@@ -272,19 +272,19 @@ const ProviderTokensSection = ({ itemId, repositories }: { itemId: string; repos
   const { data: configuredKinds = [], refetch } = clientApi.widget.secrets.getConfiguredKinds.useQuery({ itemId });
   const setSecret = clientApi.widget.secrets.setSecret.useMutation({
     onSuccess: () => refetch(),
-    onError: (error) => {
+    onError: () => {
       showErrorNotification({
-        title: "Failed to save token",
-        message: error.message,
+        title: tRepository("tokens.label"),
+        message: tRepository("tokens.notConfigured"),
       });
     },
   });
   const deleteSecret = clientApi.widget.secrets.deleteSecret.useMutation({
     onSuccess: () => refetch(),
-    onError: (error) => {
+    onError: () => {
       showErrorNotification({
-        title: "Failed to delete token",
-        message: error.message,
+        title: tRepository("tokens.label"),
+        message: tRepository("tokens.notConfigured"),
       });
     },
   });

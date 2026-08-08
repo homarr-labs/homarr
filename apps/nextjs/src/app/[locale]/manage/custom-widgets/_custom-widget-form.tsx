@@ -47,7 +47,6 @@ interface CustomWidgetFormProps {
   initialValues?: Partial<CustomWidgetFormValues>;
   definitionId?: string;
 }
-
 const sectionLinks = [
   ["general", "section.general", IconSettings],
   ["sources", "section.sources", IconApi],

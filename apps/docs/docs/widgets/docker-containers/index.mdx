@@ -4,6 +4,8 @@ description: "Stats of your containers"
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -42,12 +44,16 @@ import dockerTable from "./img/table.png";
 
 Hover a column header to reveal its grab handle, then drag it to reorder the table or drag the header's edge to resize it. The layout is saved automatically for each widget instance and restored after a reload. These controls are disabled while the board is in edit mode.
 
+Advanced mode exposes every available column regardless of the compact-mode column selection.
+
 Each container row has an action menu, accessible via the three-dot icon or by right-clicking the row, with the following options:
 
 - **View logs** - opens a dedicated terminal page streaming the container's logs
 - **Start** / **Stop** / **Restart** - manage the container's state
 - **Remove** - permanently remove the container after a second confirmation click
 - **Add to Homarr** - create a bookmark app from the container
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

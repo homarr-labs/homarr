@@ -8,33 +8,38 @@ import dayjs from "dayjs";
 
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
+import { formatLocalizedDate } from "../../common/locale";
+
 export type BeszelTimePeriod = "1m" | "1h" | "12h" | "24h" | "1w" | "30d";
 
-const timeFormats: Record<BeszelTimePeriod, string> = {
-  "1m": "HH:mm:ss",
-  "1h": "HH:mm",
-  "12h": "HH:mm",
-  "24h": "HH:mm",
-  "1w": "MMM D",
-  "30d": "MMM D",
+const timeFormatOptions: Record<BeszelTimePeriod, Intl.DateTimeFormatOptions> = {
+  "1m": { hour: "numeric", minute: "2-digit", second: "2-digit" },
+  "1h": { hour: "numeric", minute: "2-digit" },
+  "12h": { hour: "numeric", minute: "2-digit" },
+  "24h": { hour: "numeric", minute: "2-digit" },
+  "1w": { month: "short", day: "numeric" },
+  "30d": { month: "short", day: "numeric" },
 };
 
 const periodDays: Partial<Record<BeszelTimePeriod, number>> = { "1w": 7, "30d": 30 };
 
-function prepareRecords<T>(records: T[], timePeriod: BeszelTimePeriod) {
-  const fmt = (timestamp: string) => dayjs(timestamp).format(timeFormats[timePeriod]);
+export const formatBeszelChartTimestamp = (timestamp: string, timePeriod: BeszelTimePeriod, locale: string): string =>
+  formatLocalizedDate(timestamp, locale, timeFormatOptions[timePeriod]);
+
+function prepareRecords<T>(records: T[], timePeriod: BeszelTimePeriod, locale: string) {
+  const fmt = (timestamp: string) => formatBeszelChartTimestamp(timestamp, timePeriod, locale);
   if (timePeriod === "1m") {
     return { fmt, ordered: records };
   }
   return { fmt, ordered: [...records].toReversed() };
 }
 
-function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeriod) {
-  if (timePeriod === "1m") return padLiveTimeGrid(data);
+function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeriod, locale: string) {
+  if (timePeriod === "1m") return padLiveTimeGrid(data, 60, locale);
   const days = periodDays[timePeriod];
   if (!days) return data;
 
-  const fmt = (ts: string) => dayjs(ts).format(timeFormats[timePeriod]);
+  const fmt = (timestamp: string) => formatBeszelChartTimestamp(timestamp, timePeriod, locale);
   const now = dayjs();
   const existingDays = new Set(data.map((d) => dayjs(d.rawTime as string).format("YYYY-MM-DD")));
   const result = [...data];
@@ -51,7 +56,7 @@ function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeri
   return result.toSorted((a, b) => new Date(a.rawTime as string).getTime() - new Date(b.rawTime as string).getTime());
 }
 
-export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60) {
+export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60, locale = "en-US") {
   if (data.length === 0) return data;
 
   const end = dayjs(
@@ -76,7 +81,7 @@ export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60
     const timestamp = end.subtract(pointCount - index - 1, "second");
     return (
       pointsBySecond.get(timestamp.valueOf()) ?? {
-        time: timestamp.format(timeFormats["1m"]),
+        time: formatBeszelChartTimestamp(timestamp.toISOString(), "1m", locale),
         rawTime: timestamp.toISOString(),
       }
     );
@@ -162,17 +167,18 @@ export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   mapFn: (stats: BeszelSystemStatsRecord["stats"]) => Record<string, unknown>,
   timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
 ) =>
   useMemo(() => {
     if (!systemStats) return [];
-    const { fmt, ordered } = prepareRecords(systemStats, timePeriod);
+    const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
     const mapped = ordered.map((r) => ({
       time: fmt(r.created),
       rawTime: r.created,
       ...mapFn(r.stats),
     }));
-    return padTimeGrid(mapped, timePeriod);
-  }, [systemStats, mapFn, timePeriod]);
+    return padTimeGrid(mapped, timePeriod, locale);
+  }, [systemStats, mapFn, timePeriod, locale]);
 
 export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) => {
   const prevRef = useRef<string[]>([]);
@@ -212,10 +218,11 @@ export const useDiskChartData = (
   efsPaths: string[],
   rootSeriesName: string,
   timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
 ) =>
   useMemo(
-    () => buildDiskChartData(systemStats, efsPaths, rootSeriesName, timePeriod),
-    [systemStats, efsPaths, rootSeriesName, timePeriod],
+    () => buildDiskChartData(systemStats, efsPaths, rootSeriesName, timePeriod, locale),
+    [systemStats, efsPaths, rootSeriesName, timePeriod, locale],
   );
 
 export const buildDiskChartData = (
@@ -223,9 +230,10 @@ export const buildDiskChartData = (
   efsPaths: string[],
   rootSeriesName: string,
   timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
 ) => {
   if (!systemStats?.length) return [];
-  const { fmt, ordered } = prepareRecords(systemStats, timePeriod);
+  const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
   const mapped = ordered.map((record) => {
     const point: Record<string, unknown> = {
       time: fmt(record.created),
@@ -238,7 +246,7 @@ export const buildDiskChartData = (
     }
     return point;
   });
-  return padTimeGrid(mapped, timePeriod);
+  return padTimeGrid(mapped, timePeriod, locale);
 };
 
 export const useDockerChartData = (
@@ -246,12 +254,13 @@ export const useDockerChartData = (
   containerNames: string[],
   metric: "cpu" | "memory" | "network",
   timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
 ) =>
   useMemo(() => {
     if (!containerStats?.length) return [];
     const extract = defaultContainerExtractors[metric];
     if (!extract) return [];
-    const { fmt, ordered } = prepareRecords(containerStats, timePeriod);
+    const { fmt, ordered } = prepareRecords(containerStats, timePeriod, locale);
     const mapped = ordered.map((record) => {
       const point: Record<string, unknown> = { time: fmt(record.created), rawTime: record.created };
       const byName = new Map(record.stats.map((c) => [c.n, c]));
@@ -260,5 +269,5 @@ export const useDockerChartData = (
       }
       return point;
     });
-    return padTimeGrid(mapped, timePeriod);
-  }, [containerStats, containerNames, metric, timePeriod]);
+    return padTimeGrid(mapped, timePeriod, locale);
+  }, [containerStats, containerNames, metric, timePeriod, locale]);

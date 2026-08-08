@@ -6,17 +6,17 @@ export const umamiQueryOptions = { refetchInterval: 60_000 } as const;
 
 export const EVENT_COLORS = ["blue.5", "orange.5", "green.5", "red.5", "violet.5", "teal.5", "yellow.5", "pink.5"];
 
-export function formatXLabel(timestamp: string, timeFrame: string): string {
+export function formatXLabel(timestamp: string, timeFrame: string, locale: string): string {
   const date = new Date(timestamp);
   switch (timeFrame) {
     case "today":
     case "24h":
-      return `${date.getHours().toString().padStart(2, "0")}:00`;
+      return date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
     case "7d":
     case "30d":
     case "month":
     case "lastMonth":
-      return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
     default:
       return timestamp;
   }
