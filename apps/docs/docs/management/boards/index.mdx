@@ -89,57 +89,40 @@ Homarr will fall back to the Homarr logo if nothing is set.
 
 ### Layout
 
-In this section you can configure the different responsive layouts.
-Homarr selects a layout from the screen width, then scales its complete fixed-size canvas uniformly.
+In this section you can configure the different responsive layouts. Homarr selects the layout with the highest breakpoint that is not wider than the current screen, then scales its complete fixed-size canvas uniformly.
 
 ![](./img/layout-settings.png)
 
-Every `1 × 1` tile has a `200 × 200` logical-pixel content area.
-The `24` logical-pixel gap between tiles is separate from that size.
-A `2 × 1` tile therefore contains two fixed cell widths plus the gap between them.
-Widgets see their logical size, while the board's visual scale makes the complete layout larger or smaller.
-When fitting below 100%, Homarr keeps widget typography and control density at their normal readable size.
-On larger canvases, the complete board grows together like browser zoom.
-The scale never drops below 75%; on narrower screens the canvas scrolls horizontally instead of shrinking controls below an accessible size.
+Every board has two protected layouts:
 
-The position and size of every item are independent in each responsive layout.
-Moving or resizing an item in one layout does not change any other layout.
-When adding a new layout, its initial positions and sizes are generated from the column count.
-New items use their widget's default grid size, while a new Container starts at a useful `4 × 3` size when the layout has enough columns.
-Both are placed in the first available position.
+- **Mobile** starts at `0px` and uses three columns on new boards.
+- **Base** is the widest layout and starts at `768px` on new boards.
 
-The current board edge is a hard drag boundary, so moving a tile outside the canvas cancels that placement instead of creating empty rows.
-Adding content can still create the rows required for the new tile.
-Nested Containers keep their own resizable bounds.
+Mobile and Base can be renamed and their column counts and rails can be changed, but they cannot be removed. You can add removable custom layouts between their breakpoints.
+
+Each layout stores independent positions and sizes. Moving or resizing a widget while editing Mobile does not move it in Base or any custom layout. New custom layouts are generated from Base and scaled to their selected column count.
+
+Use **Reset from Base** on Mobile or a custom layout to replace all of its positions and sizes with a newly generated version of Base. The layout's name, breakpoint, and column count are kept.
+
+Every `1 × 1` tile has a `200 × 200` logical-pixel content area, with a separate `24` logical-pixel gap between tiles. Homarr scales the whole canvas to the available width without shrinking below 75%; narrower screens scroll horizontally so controls remain accessible.
+
+The board edge is a hard drag boundary. Moving a tile outside it cancels the placement, while adding content can still create the rows it needs. New items use their widget's default size and new Containers use a useful `4 × 3` size when space allows.
 
 #### Name
 
-The name of the layout can be chosen freely. It is only used for management and will not be visible on the board.
+The name of the layout can be chosen freely. It is only used for management and is not displayed on the board.
 
 #### Column count
 
-Total number of columns for this layout.
-When changed, Homarr moves items into the next available positions without overlap.
+The total number of columns in the layout. Changing it projects the saved positions and sizes into the new grid width without overlap.
 
 #### Fixed rails
 
-Each responsive layout can enable a fixed left rail, a fixed right rail, or both.
-Set a rail width to zero to disable it for that layout.
-Choose a width from one to three columns with the three-step slider.
-The preview shows how much space remains for the main canvas.
-
-Rail columns are reserved from the layout's total column count.
-For example, a 12-column layout with a two-column left rail leaves ten columns for the canvas.
-Enabling or widening a rail reflows canvas items into the remaining columns.
-Disabling a rail moves its contents back into the next available canvas positions.
-
-Rails remain visible while the page scrolls.
-Apps, widgets, and Containers inside them still use the same fixed `200 × 200` cells and can be rearranged in edit mode.
+Each layout can reserve a fixed left rail, a fixed right rail, or both. Set a rail width to zero to disable it, or choose one to three columns. Reserved rail columns reduce the main canvas width. Apps, widgets, and Containers in rails use the same fixed cell sizes and remain visible while the page scrolls.
 
 #### Breakpoint
 
-Minimum width of the screen where the layout will be used.
-Once the minimum of the next layout is reached, the layout will change.
+The minimum screen width where the layout is used. Mobile is fixed at `0px`. Custom breakpoints must be unique and sit between Mobile and Base. Base must remain the highest breakpoint.
 
 #### View and edit modes
 
@@ -163,6 +146,10 @@ During a pointer or touch interaction, Escape cancels the move or resize and res
 The **Move / resize item** action in the edit menu remains available for precise numeric input.
 
 #### Preview
+
+Layout Settings shows a lightweight structural preview for every layout, including saved spans, Containers, widget labels, and app icons. The canvas width represents the screen range where that layout is active.
+
+Choose **Edit layout** to open the real board editor at that representative width on desktop. Save returns to Layout Settings. Cancel discards the local changes. On phones and tablets, the normal board editor continues to use the layout selected by the device width.
 
 <img src={layoutSmallImage} height={256} />
 <img src={layoutMediumImage} height={256} />
