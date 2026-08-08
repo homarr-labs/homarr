@@ -131,7 +131,6 @@ catalog:
   glob: ^13.0.6
   ical.js: ^2.2.1
   ioredis: 5.11.1
-  isomorphic-dompurify: ^3.18.0
   jotai: ^2.20.1
   jsdom: ^29.1.1
   json5: ^2.2.3
@@ -190,6 +189,8 @@ catalog:
   zod: ^4.4.3
   zod-form-data: ^3.0.2
   zod-validation-error: ^5.0.0
+  linkedom: ^0.18.13
+  dompurify: ^3.4.13
 
 catalogMode: strict
 nodeLinker: hoisted

@@ -79,3 +79,4 @@ apps/docs/.docusaurus
 apps/docs/build
 .pnpm-store
 benchmark-results
+.bench/

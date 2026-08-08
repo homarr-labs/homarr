@@ -9,7 +9,7 @@ import type { SettingsContextProps } from "@homarr/settings/creator";
 import type { stringOrTranslation } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
 
-import type { WidgetImports } from ".";
+import type { WidgetImports } from "./import";
 import type { inferOptionsFromCreator, inferOptionsFromDefinition, WidgetOptionsRecord } from "./options";
 
 export interface WidgetContextMenuAction {

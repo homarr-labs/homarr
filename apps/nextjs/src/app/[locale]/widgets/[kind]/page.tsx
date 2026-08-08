@@ -11,6 +11,10 @@ interface Props {
   params: Promise<{ kind: string }>;
 }
 
+export function generateStaticParams() {
+  return widgetKinds.map((kind) => ({ kind }));
+}
+
 export default async function WidgetPreview(props: Props) {
   const { kind } = await props.params;
   if (!widgetKinds.includes(kind as WidgetKind)) {

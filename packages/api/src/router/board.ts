@@ -59,6 +59,7 @@ import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 
+import { invalidateBoardCache, invalidateUserCache } from "../cache-invalidation";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { generateResponsiveGridFor } from "./board/grid-algorithm";
@@ -325,7 +326,10 @@ export const boardRouter = createTRPCRouter({
 
       if (!user?.homeBoardId) {
         await ctx.db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, ctx.session.user.id));
+        invalidateUserCache(ctx.session.user.id);
       }
+
+      invalidateBoardCache(boardId, input.name);
 
       return { boardId };
     }),
@@ -555,6 +559,8 @@ export const boardRouter = createTRPCRouter({
         },
       });
 
+      invalidateBoardCache(newBoardId, input.name);
+
       return { boardId: newBoardId };
     }),
   renameBoard: protectedProcedure
@@ -573,7 +579,17 @@ export const boardRouter = createTRPCRouter({
 
       await noBoardWithSimilarNameAsync(ctx.db, input.name, [input.id]);
 
+      const existingBoard = await ctx.db.query.boards.findFirst({
+        where: eq(boards.id, input.id),
+        columns: { name: true },
+      });
+
       await ctx.db.update(boards).set({ name: input.name }).where(eq(boards.id, input.id));
+
+      invalidateBoardCache(input.id, input.name);
+      if (existingBoard && existingBoard.name !== input.name) {
+        invalidateBoardCache(input.id, existingBoard.name);
+      }
     }),
   changeBoardVisibility: protectedProcedure
     .meta({
@@ -588,6 +604,12 @@ export const boardRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+
+      const existingBoard = await ctx.db.query.boards.findFirst({
+        where: eq(boards.id, input.id),
+        columns: { name: true },
+      });
+
       const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
 
       if (
@@ -604,6 +626,8 @@ export const boardRouter = createTRPCRouter({
         .update(boards)
         .set({ isPublic: input.visibility === "public" })
         .where(eq(boards.id, input.id));
+
+      invalidateBoardCache(input.id, existingBoard?.name);
     }),
   deleteBoard: protectedProcedure
     .meta({
@@ -619,7 +643,22 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
+      const existingBoard = await ctx.db.query.boards.findFirst({
+        where: eq(boards.id, input.id),
+        columns: { name: true },
+      });
+
+      const affectedUsers = await ctx.db.query.users.findMany({
+        columns: { id: true },
+        where: eq(users.homeBoardId, input.id),
+      });
+
       await ctx.db.delete(boards).where(eq(boards.id, input.id));
+
+      for (const user of affectedUsers) {
+        invalidateUserCache(user.id);
+      }
+      invalidateBoardCache(input.id, existingBoard?.name);
     }),
   setHomeBoard: protectedProcedure
     .meta({
@@ -636,6 +675,8 @@ export const boardRouter = createTRPCRouter({
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
 
       await ctx.db.update(users).set({ homeBoardId: input.id }).where(eq(users.id, ctx.session.user.id));
+
+      invalidateUserCache(ctx.session.user.id);
     }),
   setMobileHomeBoard: protectedProcedure
     .meta({
@@ -652,6 +693,8 @@ export const boardRouter = createTRPCRouter({
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
 
       await ctx.db.update(users).set({ mobileHomeBoardId: input.id }).where(eq(users.id, ctx.session.user.id));
+
+      invalidateUserCache(ctx.session.user.id);
     }),
   getHomeBoard: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
@@ -806,6 +849,8 @@ export const boardRouter = createTRPCRouter({
     if (removedLayoutIds.length > 0) {
       await ctx.db.delete(layouts).where(inArray(layouts.id, removedLayoutIds));
     }
+
+    invalidateBoardCache(board.id, board.name);
   }),
   savePartialBoardSettings: protectedProcedure
     .meta({
@@ -820,6 +865,11 @@ export const boardRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
+
+      const existingBoard = await ctx.db.query.boards.findFirst({
+        where: eq(boards.id, input.id),
+        columns: { name: true },
+      });
 
       await ctx.db
         .update(boards)
@@ -850,6 +900,8 @@ export const boardRouter = createTRPCRouter({
           disableStatus: input.disableStatus,
         })
         .where(eq(boards.id, input.id));
+
+      invalidateBoardCache(input.id, existingBoard?.name);
     }),
   saveBoard: protectedProcedure.input(boardSaveSchema).mutation(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
@@ -1266,6 +1318,8 @@ export const boardRouter = createTRPCRouter({
         });
       },
     });
+
+    invalidateBoardCache(dbBoard.id, dbBoard.name);
   }),
   getBoardPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
@@ -1342,6 +1396,16 @@ export const boardRouter = createTRPCRouter({
   saveUserBoardPermissions: protectedProcedure.input(boardSavePermissionsSchema).mutation(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
 
+    const board = await ctx.db.query.boards.findFirst({
+      where: eq(boards.id, input.entityId),
+      columns: { name: true },
+    });
+
+    const existingUserPermissions = await ctx.db.query.boardUserPermissions.findMany({
+      columns: { userId: true },
+      where: eq(boardUserPermissions.boardId, input.entityId),
+    });
+
     await handleTransactionsAsync(ctx.db, {
       async handleAsync(db, schema) {
         await db.transaction(async (transaction) => {
@@ -1377,9 +1441,30 @@ export const boardRouter = createTRPCRouter({
         });
       },
     });
+
+    const userIds = [
+      ...new Set([
+        ...existingUserPermissions.map((permission) => permission.userId),
+        ...input.permissions.map((permission) => permission.principalId),
+      ]),
+    ];
+    for (const userId of userIds) {
+      invalidateUserCache(userId);
+    }
+    invalidateBoardCache(input.entityId, board?.name);
   }),
   saveGroupBoardPermissions: protectedProcedure.input(boardSavePermissionsSchema).mutation(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
+
+    const board = await ctx.db.query.boards.findFirst({
+      where: eq(boards.id, input.entityId),
+      columns: { name: true },
+    });
+
+    const existingGroupPermissions = await ctx.db.query.boardGroupPermissions.findMany({
+      columns: { groupId: true },
+      where: eq(boardGroupPermissions.boardId, input.entityId),
+    });
 
     await handleTransactionsAsync(ctx.db, {
       async handleAsync(db, schema) {
@@ -1418,6 +1503,23 @@ export const boardRouter = createTRPCRouter({
         });
       },
     });
+
+    const groupIds = [
+      ...new Set([
+        ...existingGroupPermissions.map((permission) => permission.groupId),
+        ...input.permissions.map((permission) => permission.principalId),
+      ]),
+    ];
+    if (groupIds.length > 0) {
+      const groupMembersForBoard = await ctx.db.query.groupMembers.findMany({
+        columns: { userId: true },
+        where: inArray(groupMembers.groupId, groupIds),
+      });
+      for (const member of groupMembersForBoard) {
+        invalidateUserCache(member.userId);
+      }
+    }
+    invalidateBoardCache(input.entityId, board?.name);
   }),
   importOldmarrConfig: permissionRequiredProcedure
     .requiresPermission("board-create")
@@ -1425,7 +1527,10 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const content = await input.file.text();
       const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
-      await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
+      const importedBoards = await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
+      for (const board of importedBoards) {
+        invalidateBoardCache(board.id, board.name);
+      }
     }),
   addItem: protectedProcedure
     .meta({
@@ -1553,6 +1658,8 @@ export const boardRouter = createTRPCRouter({
           .insert(integrationItems)
           .values(input.integrationIds.map((integrationId) => ({ itemId, integrationId })));
       }
+
+      invalidateBoardCache(input.boardId, board.name);
 
       return { itemId };
     }),

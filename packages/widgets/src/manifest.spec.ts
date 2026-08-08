@@ -1,10 +1,10 @@
 import type { QueryKey } from "@tanstack/react-query";
 import { describe, expect, it } from "vitest";
 
+import { createRetryableLoader } from "@homarr/common";
 import { widgetIntegrationSupport, widgetKinds as definedWidgetKinds } from "@homarr/definitions";
 
 import {
-  createRetryableLoader,
   loadAllWidgetDefinitions,
   loadWidgetComponent,
   loadWidgetDefinition,

@@ -15,17 +15,6 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "../../packages/translation/src/request.ts",
 });
 
-const getDevelopmentServiceAliases = () => {
-  if (process.env.NODE_ENV !== "development") {
-    return undefined;
-  }
-
-  return {
-    "@homarr/tasks": "./src/instrumentation-noop.ts",
-    "@homarr/websocket": "./src/instrumentation-noop.ts",
-  };
-};
-
 const nextConfig: NextConfig = {
   // Next previews otherwise create agent instruction files in the application
   // directory during development.
@@ -41,9 +30,8 @@ const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: true },
   /**
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
-   * isomorphic-dompurify and jsdom are required, see https://github.com/kkomelin/isomorphic-dompurify/issues/356
    */
-  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
+  serverExternalPackages: ["dockerode", "better-sqlite3", "mysql2", "pg"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForBuild: true,
@@ -53,7 +41,13 @@ const nextConfig: NextConfig = {
     root: path.resolve(import.meta.dirname, "../.."),
     // Development runs tasks and WebSocket as separate processes. These aliases
     // keep their production-only instrumentation imports out of the dev graph.
-    resolveAlias: getDevelopmentServiceAliases(),
+    resolveAlias:
+      process.env.NODE_ENV === "development"
+        ? {
+            "@homarr/tasks": path.resolve(import.meta.dirname, "src/instrumentation-noop.ts"),
+            "@homarr/websocket": path.resolve(import.meta.dirname, "src/instrumentation-noop.ts"),
+          }
+        : undefined,
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {

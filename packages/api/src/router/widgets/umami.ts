@@ -13,7 +13,7 @@ import {
 } from "@homarr/request-handler/umami";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "umami-router" });
@@ -39,22 +39,32 @@ export const umamiRouter = createTRPCRouter({
     )
     .concat(createManyIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const innerHandler = umamiRequestHandler.handler(integration, {
-          websiteId: input.websiteId,
-          timeFrame: input.timeFrame,
-          eventName: input.eventName,
-        });
-        const { data, timestamp } = await innerHandler.getDataAsync();
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const innerHandler = umamiRequestHandler.handler(integration, {
+            websiteId: input.websiteId,
+            timeFrame: input.timeFrame,
+            eventName: input.eventName,
+          });
+          const { data, timestamp } = await innerHandler.getDataAsync();
 
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          integrationUrl: integration.url,
-          visitorStats: data,
-          updatedAt: timestamp,
-        };
-      });
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationUrl: integration.url,
+            visitorStats: data,
+            updatedAt: timestamp,
+          };
+        },
+        {
+          queryKey: integrationQueryKey("umami", "getVisitorStats", {
+            websiteId: input.websiteId,
+            timeFrame: input.timeFrame,
+            eventName: input.eventName,
+          }),
+        },
+      );
     }),
 
   getEventNames: publicProcedure

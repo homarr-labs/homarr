@@ -5,7 +5,7 @@ import { beforeAll, describe, expect, test, vi } from "vitest";
 
 import { createDb } from "@homarr/db/test";
 
-import { HomeAssistantIntegration } from "../src";
+import { HomeAssistantIntegration } from "../src/homeassistant/homeassistant-integration";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 
 vi.mock("@homarr/db", async (importActual) => {

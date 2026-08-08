@@ -6,7 +6,8 @@ import { downloadClientRequestHandler } from "@homarr/request-handler/downloads"
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
@@ -24,14 +25,22 @@ export const downloadsRouter = createTRPCRouter({
     .concat(createDownloadClientIntegrationMiddleware("query"))
     .input(z.object({ limitPerIntegration: z.number().default(50) }))
     .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
-        const { data, timestamp } = await innerHandler.getDataAsync();
-        return {
-          integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
-          data,
-        };
-      });
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
+          const { data, timestamp } = await innerHandler.getDataAsync();
+          return {
+            integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
+            data,
+          };
+        },
+        {
+          queryKey: integrationQueryKey("downloads", "getJobsAndStatuses", {
+            limitPerIntegration: input.limitPerIntegration,
+          }),
+        },
+      );
     }),
   pause: protectedProcedure
     .meta({
@@ -49,6 +58,9 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.pauseQueueAsync();
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
       downloadClientRequestHandler.invalidateCache();
     }),
   pauseItem: protectedProcedure
@@ -61,6 +73,9 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.pauseItemAsync(input.item);
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
       downloadClientRequestHandler.invalidateCache();
     }),
   resume: protectedProcedure
@@ -79,6 +94,9 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.resumeQueueAsync();
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
       downloadClientRequestHandler.invalidateCache();
     }),
   resumeItem: protectedProcedure
@@ -91,6 +109,9 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.resumeItemAsync(input.item);
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
       downloadClientRequestHandler.invalidateCache();
     }),
   deleteItem: protectedProcedure
@@ -103,6 +124,9 @@ export const downloadsRouter = createTRPCRouter({
           await integrationInstance.deleteItemAsync(input.item, input.fromDisk);
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
       downloadClientRequestHandler.invalidateCache();
     }),
 });

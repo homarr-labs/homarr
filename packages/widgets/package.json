@@ -12,12 +12,12 @@
     }
   },
   "exports": {
-    ".": "./index.ts",
     "./_inputs/json-path-tree-picker": "./src/_inputs/json-path-tree-picker.tsx",
     "./custom-api/component": "./src/custom-api/component.tsx",
     "./custom-api/extract-display-data": "./src/custom-api/extract-display-data.ts",
     "./catalog": "./src/catalog.ts",
     "./definition": "./src/definition.ts",
+    "./import": "./src/import.ts",
     "./errors": "./src/errors/component.tsx",
     "./manifest": "./src/manifest.ts",
     "./options": "./src/options.ts",

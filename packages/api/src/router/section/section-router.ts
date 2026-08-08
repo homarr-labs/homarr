@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { and, eq } from "@homarr/db";
 import { sectionCollapseStates, sections } from "@homarr/db/schema";
 
+import { invalidateUserCache } from "../../cache-invalidation";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
 export const sectionRouter = createTRPCRouter({
@@ -37,6 +38,7 @@ export const sectionRouter = createTRPCRouter({
           userId: ctx.session.user.id,
           collapsed: input.collapsed,
         });
+        invalidateUserCache(ctx.session.user.id);
         return;
       }
 
@@ -48,5 +50,7 @@ export const sectionRouter = createTRPCRouter({
         .where(
           and(eq(sectionCollapseStates.sectionId, section.id), eq(sectionCollapseStates.userId, ctx.session.user.id)),
         );
+
+      invalidateUserCache(ctx.session.user.id);
     }),
 });

@@ -6,6 +6,7 @@ mkdir -p /appdata/redis
 mkdir -p /appdata/trusted-certificates
 
 # Run migrations
+export NODE_OPTIONS="--max-old-space-size=${HOMARR_MAX_OLD_SPACE_SIZE:-512} ${NODE_OPTIONS}"
 if [ "$DB_MIGRATIONS_DISABLED" = "true" ]; then
   echo "DB migrations are disabled, skipping"
 else

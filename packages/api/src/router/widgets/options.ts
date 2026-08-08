@@ -6,7 +6,8 @@ import { eq } from "@homarr/db";
 import { getServerSettingsAsync } from "@homarr/db/queries";
 import { boards, items } from "@homarr/db/schema";
 
-import type { WidgetOptionsSettings } from "../../../../widgets/src";
+import type { WidgetOptionsSettings } from "../../../../widgets/src/definition";
+import { invalidateBoardCache } from "../../cache-invalidation";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 
@@ -51,5 +52,11 @@ export const optionsRouter = createTRPCRouter({
         .update(items)
         .set({ options: SuperJSON.stringify(options) })
         .where(eq(items.id, input.itemId));
+
+      const board = await ctx.db.query.boards.findFirst({
+        where: eq(boards.id, input.boardId),
+        columns: { name: true },
+      });
+      invalidateBoardCache(input.boardId, board?.name);
     }),
 });

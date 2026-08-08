@@ -10,7 +10,7 @@ import {
   beszelSystemsRequestHandler,
 } from "@homarr/request-handler/beszel";
 
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { BoundedAsyncQueue } from "./bounded-async-queue";
@@ -47,6 +47,7 @@ export const beszelRouter = createTRPCRouter({
           };
         },
         {
+          queryKey: integrationQueryKey("beszel", "getSystems"),
           fallback: (integration, error) => ({
             integrationId: integration.id,
             integrationName: integration.name,
@@ -119,6 +120,10 @@ export const beszelRouter = createTRPCRouter({
           };
         },
         {
+          queryKey: integrationQueryKey("beszel", "getAlerts", {
+            includeHistory: input.includeHistory,
+            maxHistoryItems: input.maxHistoryItems,
+          }),
           fallback: (integration, error) => ({
             integrationId: integration.id,
             integrationName: integration.name,
