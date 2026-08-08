@@ -1,0 +1,88 @@
+apps/nextjs/src/app/[locale]/manage/settings/_components/board-settings-form.tsx
+  s_71d02d5c989477::t_ad5968cbd879fd 6,10-11,13-17,22-50
+apps/nextjs/src/app/[locale]/boards/[name]/settings/page.tsx
+  s_71d02d5c989477::t_bbd36e2941d96e 2,12,36,59-64
+apps/nextjs/src/app/[locale]/manage/settings/_components/setting-switch.tsx
+  s_71d02d5c989477::t_adbc936fb6dd7e 12
+  s_71d02d5c989477::t_75cece6a33ba4e 20
+  s_71d02d5c989477::t_e4d818c95c8ffd 8-11,21,33,45
+  s_71d02d5c989477::t_ede0cf05239910 32
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_general.tsx
+  s_71d02d5c989477::t_021099fb7b883a 3-4,8,12,15,19,22,29-63
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_background.tsx
+  s_71d02d5c989477::t_240f0188a7cbd7 4,11,18-19,22,24-25,29,47-74,76-102,104-105,108,110-146
+  s_71d02d5c989477::t_2b5d96509c1e0f 106-107
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout.tsx
+  s_71d02d5c989477::t_23788002bdbac8 6,9-10,13,15-16,20-24,26-27,32-36,38-43,45-49,51-61,63-76,78
+  s_71d02d5c989477::t_754886385fa46b 25,28-29,31,62
+  s_71d02d5c989477::t_e3d30f9585d277 30
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_behavior.tsx
+  s_71d02d5c989477::t_365a1e25db0d8f 3,5,8-9,12,15,19-25
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_customCss.tsx
+  s_71d02d5c989477::t_853329f756155d 3,11,14-15,19,22,27-28,30-33
+  s_71d02d5c989477::t_fff7d83bd3a28b 40,43,53
+apps/nextjs/src/app/[locale]/manage/settings/_components/user-settings-form.tsx
+  s_71d02d5c989477::t_b6aa75dc027177 5,8-9,11-15,19-25
+apps/nextjs/src/app/[locale]/manage/settings/_components/crawling-and-indexing.settings.tsx
+  s_71d02d5c989477::t_c69b5bb7f80180 3,5,8-10,13,16,20-33
+apps/nextjs/src/app/[locale]/manage/settings/_components/settings-form.tsx
+  s_71d02d5c989477::t_170da9ff333508 4-5,8-11,15-63,66-76,84-143,145,151-154,156,161-162,164-166,171-181,183-184,186-189
+  s_71d02d5c989477::t_46c20230fbb4a8 13
+  s_71d02d5c989477::t_209addb04f8489 65,77-83
+  s_71d02d5c989477::t_93df677bf7ded6 182,185
+  s_71d02d5c989477::t_6215b39bff3293 144,146-150,157,159-160
+  s_71d02d5c989477::t_085288672c2a2b 14
+  s_71d02d5c989477::t_28651390dcc23f 3
+apps/nextjs/src/app/[locale]/manage/settings/_components/culture-settings-form.tsx
+  s_71d02d5c989477::t_c60e14f4f9971a 3,8-9,11-15,20-22,25-26
+  s_71d02d5c989477::t_6a0d920b81263c 17,23-24
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  s_71d02d5c989477::t_1bb134de6ac0e3 22,25,27,30,37,43-46,48,51-82,84-93,95,97-121
+  s_71d02d5c989477::t_2b08d865006e6e 96
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_danger.tsx
+  s_71d02d5c989477::t_720d4146bb813d 5,13,85-86,89-93,95-104,106,109-113,115
+apps/nextjs/src/app/[locale]/manage/settings/_components/analytics.settings.tsx
+  s_71d02d5c989477::t_5ff301a725d38d 3,6-8,11,14,18-20
+apps/nextjs/src/components/manage/unsaved-changes-bar.tsx
+  s_71d02d5c989477::t_b45283ffb83565 1-25
+apps/nextjs/src/app/[locale]/manage/settings/_components/search-settings-form.tsx
+  s_71d02d5c989477::t_904f46cee81b7c 6,9-10,12-16,21-28
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_shared.tsx
+  s_71d02d5c989477::t_314b576ef925f0 14-23
+apps/nextjs/src/app/[locale]/manage/settings/page.tsx
+  s_71d02d5c989477::t_81cf4c8cd3f8ca 9,29,35
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_settings-form.tsx
+  s_71d02d5c989477::t_cc4c4ecde94d20 5
+  s_71d02d5c989477::t_4805bf209f2012 1-4,6-19,21-134,139-199,201-219
+  s_71d02d5c989477::t_ecaac805f0913c 20
+  s_71d02d5c989477::t_060325618be0c1 135-138,200
+apps/nextjs/src/components/manage/section-card.tsx
+  s_71d02d5c989477::t_0e2eb08325b515 1-19
+apps/nextjs/src/app/[locale]/manage/settings/_components/appearance-settings-form.tsx
+  s_71d02d5c989477::t_4736429c5f1cea 8,12-13,15-20,23-33,43
+apps/nextjs/src/components/manage/danger-zone.tsx
+  s_71d02d5c989477::t_99bd5244d7b8c9 1-2,6,12-13
+apps/docs/docs/management/settings/index.mdx
+  s_71d02d5c989477::t_47f39b69e2d6f4 16-17
+apps/docs/docs/management/boards/index.mdx
+  s_71d02d5c989477::t_10d9b7534226e7 12-16,27,33,38,43,49,58-59,61,63,71,80,85,109,114-116,119,121,126,130,134,141,143,145,147,149,151,153,155,158,162,164,167,176,180,185,204,206,210,215,220,232,242,245-247,254,260,262-263,267,269-270,274-277,284-286,295
+  s_71d02d5c989477::t_1c7cf330d55d0d 224
+apps/nextjs/src/app/[locale]/manage/settings/loading.tsx
+  s_71d02d5c989477::t_e2067328173429 1-9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b9bd21b3488faa455b64ac039b1c942aa1199e81",
+  "prompts": {},
+  "sessions": {
+    "s_71d02d5c989477": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_01f48b881ffeNr74dFqpywho5H",
+        "model": "deepseek/deepseek-v4-flash-0731"
+      },
+      "human_author": "lab <lab@local>"
+    }
+  }
+}
