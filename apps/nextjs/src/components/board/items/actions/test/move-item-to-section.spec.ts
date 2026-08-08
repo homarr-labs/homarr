@@ -1,4 +1,6 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
+
+import * as boardContext from "@homarr/boards/context";
 
 import { moveItemToSectionCallback } from "../move-item-to-section";
 import { BoardMockBuilder } from "./mocks/board-mock";
@@ -9,6 +11,8 @@ describe("moveItemToSectionCallback should move item to section", () => {
     // Arrange
     const itemToMove = "2";
     const layoutId = "1";
+    const spy = vi.spyOn(boardContext, "getCurrentLayout");
+    spy.mockReturnValue(layoutId);
     const newPosition = {
       sectionId: "3",
       xOffset: 20,
@@ -22,7 +26,7 @@ describe("moveItemToSectionCallback should move item to section", () => {
     const board = new BoardMockBuilder().addItem(itemA).addItem(itemB).addItem(itemC).build();
 
     // Act
-    const updatedBoard = moveItemToSectionCallback({ itemId: itemToMove, layoutId, ...newPosition })(board);
+    const updatedBoard = moveItemToSectionCallback({ itemId: itemToMove, ...newPosition })(board);
 
     // Assert
     expect(updatedBoard.items).toHaveLength(3);
@@ -40,6 +44,8 @@ describe("moveItemToSectionCallback should move item to section", () => {
     // Arrange
     const itemToMove = "2";
     const layoutId = "1";
+    const spy = vi.spyOn(boardContext, "getCurrentLayout");
+    spy.mockReturnValue(layoutId);
     const newPosition = {
       sectionId: "3",
       xOffset: 20,
@@ -52,7 +58,7 @@ describe("moveItemToSectionCallback should move item to section", () => {
     const board = new BoardMockBuilder().addItem(itemA).addItem(itemC).build();
 
     // Act
-    const updatedBoard = moveItemToSectionCallback({ itemId: itemToMove, layoutId, ...newPosition })(board);
+    const updatedBoard = moveItemToSectionCallback({ itemId: itemToMove, ...newPosition })(board);
 
     // Assert
     expect(updatedBoard.items).toHaveLength(2);

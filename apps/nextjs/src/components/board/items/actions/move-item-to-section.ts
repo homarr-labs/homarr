@@ -1,8 +1,9 @@
+import { getCurrentLayout } from "@homarr/boards/context";
+
 import type { Board } from "~/app/[locale]/boards/_types";
 
 export interface MoveItemToSectionInput {
   itemId: string;
-  layoutId: string;
   sectionId: string;
   xOffset: number;
   yOffset: number;
@@ -11,8 +12,10 @@ export interface MoveItemToSectionInput {
 }
 
 export const moveItemToSectionCallback =
-  ({ itemId, layoutId, ...layoutInput }: MoveItemToSectionInput) =>
+  ({ itemId, ...layoutInput }: MoveItemToSectionInput) =>
   (board: Board): Board => {
+    const currentLayout = getCurrentLayout(board);
+
     return {
       ...board,
       items: board.items.map((item) =>
@@ -21,7 +24,7 @@ export const moveItemToSectionCallback =
           : {
               ...item,
               layouts: item.layouts.map((layout) =>
-                layout.layoutId !== layoutId
+                layout.layoutId !== currentLayout
                   ? layout
                   : {
                       ...layout,

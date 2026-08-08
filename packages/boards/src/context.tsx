@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useSettings } from "@homarr/settings";
 
 import { updateBoardName } from "./updater";
 
@@ -63,65 +62,33 @@ export const useOptionalBoard = () => {
   return context?.board ?? null;
 };
 
-export const getDesktopLayout = (board: RouterOutputs["board"]["getBoardByName"]) => {
-  const layout = board.layouts
-    .toSorted(
-      (layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint || layoutB.columnCount - layoutA.columnCount,
-    )
-    .at(0);
-
-  if (!layout) {
-    throw new Error("Board must have a layout");
-  }
-
-  return layout;
-};
-
-export const getCurrentLayout = (
-  board: RouterOutputs["board"]["getBoardByName"],
-  enableAutomaticMobileLayout: boolean,
-  viewportWidth?: number,
-) => {
-  if (enableAutomaticMobileLayout || viewportWidth === undefined) {
-    return getDesktopLayout(board).id;
-  }
+export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]) => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  if (typeof window === "undefined") return board.layouts.at(0)!.id;
 
   const sortedLayouts = board.layouts.toSorted((layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint);
-  const layout = sortedLayouts.find((candidate) => candidate.breakpoint <= viewportWidth) ?? sortedLayouts.at(-1);
 
-  if (!layout) {
-    throw new Error("Board must have a layout");
-  }
-
-  return layout.id;
+  // Fallback to smallest if none exists with breakpoint smaller than window width
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return sortedLayouts.find((layout) => layout.breakpoint <= window.innerWidth)?.id ?? sortedLayouts.at(0)!.id;
 };
 
 export const useCurrentLayout = () => {
   const board = useRequiredBoard();
-  const { enableAutomaticMobileLayout } = useSettings();
-  const [currentLayout, setCurrentLayout] = useState(() =>
-    getCurrentLayout(
-      board,
-      enableAutomaticMobileLayout,
-      !enableAutomaticMobileLayout && typeof window !== "undefined" ? window.innerWidth : undefined,
-    ),
-  );
+  const [currentLayout, setCurrentLayout] = useState(getCurrentLayout(board));
 
-  const updateCurrentLayout = useCallback(() => {
-    setCurrentLayout(getCurrentLayout(board, enableAutomaticMobileLayout, window.innerWidth));
-  }, [board, enableAutomaticMobileLayout]);
+  const onResize = useCallback(() => {
+    setCurrentLayout(getCurrentLayout(board));
+  }, [board]);
 
   useEffect(() => {
-    updateCurrentLayout();
-
-    if (enableAutomaticMobileLayout) return;
-
-    window.addEventListener("resize", updateCurrentLayout);
+    if (typeof window === "undefined") return;
+    window.addEventListener("resize", onResize);
 
     return () => {
-      window.removeEventListener("resize", updateCurrentLayout);
+      window.removeEventListener("resize", onResize);
     };
-  }, [enableAutomaticMobileLayout, updateCurrentLayout]);
+  }, [onResize]);
 
   return currentLayout;
 };

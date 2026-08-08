@@ -77,29 +77,7 @@ const prepareHomeAssistantContainerAsync = async () => {
   const startedContainer = await homeAssistantContainer.start();
   await startedContainer.exec(["unzip", "-o", "/tmp/config.zip", "-d", "/config"]);
   await startedContainer.restart();
-  await waitForHomeAssistantAsync(startedContainer);
   return startedContainer;
-};
-
-const waitForHomeAssistantAsync = async (container: StartedTestContainer) => {
-  const url = `http://${container.getHost()}:${container.getMappedPort(8123)}/api/config`;
-
-  for (let attempt = 0; attempt < 40; attempt++) {
-    try {
-      const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${DEFAULT_API_KEY}` },
-        signal: AbortSignal.timeout(500),
-      });
-      if (response.ok) return;
-    } catch {
-      // Home Assistant is still restarting.
-      continue;
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 500));
-  }
-
-  throw new Error("Home Assistant did not become ready after restart");
 };
 
 const createHomeAssistantContainer = () => {

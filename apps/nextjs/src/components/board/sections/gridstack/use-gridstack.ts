@@ -103,7 +103,6 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
         // Updates the react-query state
         moveAndResizeItem({
           itemId: id,
-          layoutId: currentLayoutId,
           // We want the following properties to be null by default
           // so the next free position is used from the gridstack
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -121,7 +120,6 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
       if (type === "section") {
         moveAndResizeInnerSection({
           innerSectionId: id,
-          layoutId: currentLayoutId,
           // We want the following properties to be null by default
           // so the next free position is used from the gridstack
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -138,7 +136,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
 
       console.error(`Unknown grid-stack-item type to move. type='${type}' id='${id}'`);
     },
-    [currentLayoutId, moveAndResizeItem, moveAndResizeInnerSection],
+    [moveAndResizeItem, moveAndResizeInnerSection],
   );
   const onAdd = useCallback(
     (addedNode: GridStackNode) => {
@@ -151,7 +149,6 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
         // Updates the react-query state
         moveItemToSection({
           itemId: id,
-          layoutId: currentLayoutId,
           sectionId: section.id,
           // We want the following properties to be null by default
           // so the next free position is used from the gridstack
@@ -170,7 +167,6 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
       if (type === "section") {
         moveInnerSectionToSection({
           innerSectionId: id,
-          layoutId: currentLayoutId,
           sectionId: section.id,
           // We want the following properties to be null by default
           // so the next free position is used from the gridstack
@@ -188,7 +184,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
 
       console.error(`Unknown grid-stack-item type to add. type='${type}' id='${id}'`);
     },
-    [currentLayoutId, moveItemToSection, moveInnerSectionToSection, section.id],
+    [moveItemToSection, moveInnerSectionToSection, section.id],
   );
 
   // initialize the gridstack

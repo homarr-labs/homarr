@@ -19,7 +19,6 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { useBoardPermissions } from "~/components/board/permissions/client";
-import { useIsMobileBoard } from "~/components/board/use-mobile-board";
 import { HeaderButton } from "~/components/layout/header/button";
 import { TourTarget } from "~/components/layout/header/tour-target";
 
@@ -37,7 +36,6 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
-  const isMobile = useIsMobileBoard();
 
   if (!hasChangeAccess) {
     return <SelectBoardsMenu />;
@@ -45,9 +43,9 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
 
   return (
     <>
-      {isEditMode && !isMobile && <BoardAddMenu />}
+      {isEditMode && <BoardAddMenu />}
 
-      <EditModeMenu demoReadOnly={demoReadOnly} hidden={isMobile} />
+      <EditModeMenu demoReadOnly={demoReadOnly} />
 
       {!demoReadOnly && (
         <TourTarget id="board-settings">
@@ -62,7 +60,7 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
   );
 };
 
-const EditModeMenu = ({ demoReadOnly, hidden }: { demoReadOnly: boolean; hidden: boolean }) => {
+const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode, { open, close }] = useEditMode();
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
@@ -91,25 +89,21 @@ const EditModeMenu = ({ demoReadOnly, hidden }: { demoReadOnly: boolean; hidden:
   }, [utils, board.name, close]);
 
   const toggle = useCallback(() => {
-    if (hidden && !isEditMode) return;
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
       return saveBoard(board);
     }
     open();
-  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges, hidden]);
+  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
-
-  if (hidden && !isEditMode) return null;
 
   return (
     <TourTarget id="board-edit-mode">
       <HeaderButton
         onClick={toggle}
         loading={isPending}
-        aria-label={t("label")}
         onFocus={preloadBoardAddMenu}
         onPointerEnter={preloadBoardAddMenu}
       >

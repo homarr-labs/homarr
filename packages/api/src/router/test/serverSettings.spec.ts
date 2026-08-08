@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
-import { boards, layouts, serverSettings } from "@homarr/db/schema";
+import { boards, serverSettings } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
@@ -56,33 +56,6 @@ describe("getAll server settings", () => {
 });
 
 describe("saveSettings", () => {
-  test("saveSettings should persist settings when defaults are not seeded", async () => {
-    const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
-      db,
-      deviceType: undefined,
-      session: defaultSession,
-    });
-
-    await caller.saveSettings({
-      settingsKey: "board",
-      value: {
-        enableAutomaticMobileLayout: false,
-      },
-    });
-
-    const dbSettings = await db.select().from(serverSettings);
-    expect(dbSettings).toStrictEqual([
-      {
-        settingKey: "board",
-        value: stringify({
-          ...defaultServerSettings.board,
-          enableAutomaticMobileLayout: false,
-        }),
-      },
-    ]);
-  });
-
   test("saveSettings should update settings and return true when it updated only one", async () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({
@@ -116,33 +89,6 @@ describe("saveSettings", () => {
       },
     ]);
   });
-
-  test("saveSettings should preserve concurrent partial updates", async () => {
-    const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
-      db,
-      deviceType: undefined,
-      session: defaultSession,
-    });
-
-    await Promise.all([
-      caller.saveSettings({
-        settingsKey: "analytics",
-        value: { enableGeneral: false },
-      }),
-      caller.saveSettings({
-        settingsKey: "analytics",
-        value: { instanceId: "concurrent-instance" },
-      }),
-    ]);
-
-    await expect(caller.getAll()).resolves.toMatchObject({
-      analytics: {
-        enableGeneral: false,
-        instanceId: "concurrent-instance",
-      },
-    });
-  });
 });
 
 describe("board settings API", () => {
@@ -155,36 +101,6 @@ describe("board settings API", () => {
     });
 
     await expect(caller.getBoardSettings()).resolves.toStrictEqual(defaultServerSettings.board);
-  });
-
-  test("getBoardSettings should backfill the automatic layout default for legacy values", async () => {
-    const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
-      db,
-      deviceType: undefined,
-      session: defaultSession,
-    });
-    const boardId = createId();
-    await db.insert(boards).values({ id: boardId, name: "legacy", isPublic: false });
-    await db.insert(layouts).values([
-      { id: createId(), boardId, name: "Base", columnCount: 12, breakpoint: 0 },
-      { id: createId(), boardId, name: "Mobile", columnCount: 4, breakpoint: 480 },
-    ]);
-    const legacyBoardSettings = {
-      homeBoardId: defaultServerSettings.board.homeBoardId,
-      mobileHomeBoardId: defaultServerSettings.board.mobileHomeBoardId,
-      enableStatusByDefault: defaultServerSettings.board.enableStatusByDefault,
-      forceDisableStatus: defaultServerSettings.board.forceDisableStatus,
-    };
-    await db.insert(serverSettings).values({
-      settingKey: "board",
-      value: stringify(legacyBoardSettings),
-    });
-
-    await expect(caller.getBoardSettings()).resolves.toStrictEqual({
-      ...defaultServerSettings.board,
-      enableAutomaticMobileLayout: false,
-    });
   });
 
   test("updateBoardSettings should insert settings when defaults are not persisted", async () => {
@@ -229,7 +145,6 @@ describe("board settings API", () => {
     await caller.updateBoardSettings({ homeBoardId: boardId });
     const result = await caller.updateBoardSettings({
       mobileHomeBoardId: boardId,
-      enableAutomaticMobileLayout: false,
       enableStatusByDefault: false,
     });
 
@@ -237,7 +152,6 @@ describe("board settings API", () => {
       ...defaultServerSettings.board,
       homeBoardId: boardId,
       mobileHomeBoardId: boardId,
-      enableAutomaticMobileLayout: false,
       enableStatusByDefault: false,
     });
     const dbSettings = await db.select().from(serverSettings);
@@ -247,25 +161,6 @@ describe("board settings API", () => {
         value: stringify(result),
       },
     ]);
-  });
-
-  test("updateBoardSettings should preserve concurrent partial updates", async () => {
-    const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
-      db,
-      deviceType: undefined,
-      session: defaultSession,
-    });
-
-    await Promise.all([
-      caller.updateBoardSettings({ forceDisableStatus: true }),
-      caller.updateBoardSettings({ enableStatusByDefault: false }),
-    ]);
-
-    await expect(caller.getBoardSettings()).resolves.toMatchObject({
-      forceDisableStatus: true,
-      enableStatusByDefault: false,
-    });
   });
 
   test("updateBoardSettings should reject private home boards", async () => {

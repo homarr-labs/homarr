@@ -12,14 +12,14 @@ export type SettingsContextProps = Pick<
   | "pingIconsEnabled"
   | "enableRightClickOnWidgets"
 > &
-  Pick<ServerSettings["board"], "enableAutomaticMobileLayout" | "enableStatusByDefault" | "forceDisableStatus"> &
+  Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus"> &
   Pick<ServerSettings["user"], "enableGravatar">;
 
 export interface PublicServerSettings {
   search: Pick<ServerSettings["search"], "defaultSearchEngineId">;
   board: Pick<
     ServerSettings["board"],
-    "homeBoardId" | "mobileHomeBoardId" | "enableAutomaticMobileLayout" | "enableStatusByDefault" | "forceDisableStatus"
+    "homeBoardId" | "mobileHomeBoardId" | "enableStatusByDefault" | "forceDisableStatus"
   >;
   user: Pick<ServerSettings["user"], "enableGravatar">;
 }
@@ -51,7 +51,6 @@ export const createSettings = ({
   mobileHomeBoardId: user?.mobileHomeBoardId ?? serverSettings.board.mobileHomeBoardId,
   pingIconsEnabled: user?.pingIconsEnabled ?? false,
   enableRightClickOnWidgets: user?.enableRightClickOnWidgets ?? true,
-  enableAutomaticMobileLayout: serverSettings.board.enableAutomaticMobileLayout,
   enableStatusByDefault: serverSettings.board.enableStatusByDefault,
   forceDisableStatus: serverSettings.board.forceDisableStatus,
   enableGravatar: serverSettings.user.enableGravatar,

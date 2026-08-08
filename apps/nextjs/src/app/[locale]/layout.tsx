@@ -121,7 +121,6 @@ export default async function Layout(props: {
           board: {
             homeBoardId: serverSettings.board.homeBoardId,
             mobileHomeBoardId: serverSettings.board.mobileHomeBoardId,
-            enableAutomaticMobileLayout: serverSettings.board.enableAutomaticMobileLayout,
             enableStatusByDefault: serverSettings.board.enableStatusByDefault,
             forceDisableStatus: serverSettings.board.forceDisableStatus,
           },

@@ -1,5 +1,4 @@
 import type { JSX, PropsWithChildren } from "react";
-import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { AppShellMain } from "@mantine/core";
 import { TRPCError } from "@trpc/server";
@@ -8,11 +7,9 @@ import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
-import { userAgent } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { MainHeader } from "~/components/layout/header";
-import { MobileBoardViewportProvider } from "~/components/board/use-mobile-board";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
 import { ClientShell } from "~/components/layout/shell";
 import { BoardTourGate } from "~/components/onboarding/board-tour-gate";
@@ -50,7 +47,6 @@ export const createBoardLayout = <TParams extends Params>({
       (error: unknown) => ({ status: "rejected", error }) as const,
     );
     const colorSchemePromise = getCurrentColorSchemeAsync();
-    const requestHeadersPromise = headers();
     const shouldRunBoardTourPromise = sessionPromise.then(async (session) => {
       if (!withTour || !session || env.DEMO_MODE) return false;
 
@@ -62,11 +58,10 @@ export const createBoardLayout = <TParams extends Params>({
         return false;
       }
     });
-    const [session, initialBoardResult, colorScheme, requestHeaders, shouldRunBoardTour] = await Promise.all([
+    const [session, initialBoardResult, colorScheme, shouldRunBoardTour] = await Promise.all([
       sessionPromise,
       initialBoardPromise,
       colorSchemePromise,
-      requestHeadersPromise,
       shouldRunBoardTourPromise,
     ]);
     if (initialBoardResult.status === "rejected") {
@@ -88,31 +83,27 @@ export const createBoardLayout = <TParams extends Params>({
       throw error;
     }
     const initialBoard = initialBoardResult.board;
-    const deviceType = userAgent(new Headers(requestHeaders)).device.type;
-    const initialIsMobile = deviceType === "mobile" || deviceType === "tablet";
 
     return (
-      <MobileBoardViewportProvider initialIsMobile={initialIsMobile}>
-        <BoardProvider initialBoard={initialBoard}>
-          <BoardReadyProvider>
-            <EditModeProvider>
-              <BoardMantineProvider defaultColorScheme={colorScheme}>
-                <CustomCss />
-                <BoardTourGate enabled={shouldRunBoardTour}>
-                  <ClientShell hasNavigation={false}>
-                    <MainHeader
-                      logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
-                      actions={headerActions}
-                      hasNavigation={false}
-                    />
-                    <AppShellMain>{children}</AppShellMain>
-                  </ClientShell>
-                </BoardTourGate>
-              </BoardMantineProvider>
-            </EditModeProvider>
-          </BoardReadyProvider>
-        </BoardProvider>
-      </MobileBoardViewportProvider>
+      <BoardProvider initialBoard={initialBoard}>
+        <BoardReadyProvider>
+          <EditModeProvider>
+            <BoardMantineProvider defaultColorScheme={colorScheme}>
+              <CustomCss />
+              <BoardTourGate enabled={shouldRunBoardTour}>
+                <ClientShell hasNavigation={false}>
+                  <MainHeader
+                    logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                    actions={headerActions}
+                    hasNavigation={false}
+                  />
+                  <AppShellMain>{children}</AppShellMain>
+                </ClientShell>
+              </BoardTourGate>
+            </BoardMantineProvider>
+          </EditModeProvider>
+        </BoardReadyProvider>
+      </BoardProvider>
     );
   };
 
