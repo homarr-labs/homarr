@@ -310,8 +310,7 @@
                       {
                         "anyOf": [
                           {
-                            "type": "string",
-                            "pattern": "^(?!javascript)[a-zA-Z]*:\\/\\/"
+                            "type": "string"
                           },
                           {
                             "type": "string",
@@ -873,8 +872,7 @@
                       {
                         "anyOf": [
                           {
-                            "type": "string",
-                            "pattern": "^(?!javascript)[a-zA-Z]*:\\/\\/"
+                            "type": "string"
                           },
                           {
                             "type": "string",
