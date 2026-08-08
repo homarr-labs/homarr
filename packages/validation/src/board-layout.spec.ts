@@ -10,6 +10,7 @@ describe("board layout gutters", () => {
         name: "Base",
         columnCount: 12,
         breakpoint: 0,
+        role: "base",
       }),
     ).toMatchObject({
       leftGutterColumnCount: 0,
@@ -26,6 +27,7 @@ describe("board layout gutters", () => {
         leftGutterColumnCount: 3,
         rightGutterColumnCount: 2,
         breakpoint: 0,
+        role: "base",
       }).success,
     ).toBe(true);
     expect(
@@ -36,6 +38,7 @@ describe("board layout gutters", () => {
         leftGutterColumnCount: 3,
         rightGutterColumnCount: 3,
         breakpoint: 0,
+        role: "base",
       }).success,
     ).toBe(false);
   });
