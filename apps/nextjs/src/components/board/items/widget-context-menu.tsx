@@ -3,15 +3,7 @@
 import type { MutableRefObject, ReactNode } from "react";
 import { useCallback, useMemo, useState } from "react";
 import { Group, Loader, Menu, Switch, Text, Tooltip } from "@mantine/core";
-import {
-  IconAlertTriangle,
-  IconCircleCheck,
-  IconCopy,
-  IconLayoutKanban,
-  IconRefresh,
-  IconSettings,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconAlertTriangle, IconCircleCheck, IconRefresh, IconSettings } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { partialMatchKey, useIsFetching, useQueryClient } from "@tanstack/react-query";
 
@@ -20,7 +12,7 @@ import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useTimeAgo } from "@homarr/common";
-import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
@@ -30,9 +22,7 @@ import { getWidgetQueryKeys } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
-import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
-import { LazyItemMoveModal, preloadItemMoveModal } from "./lazy-item-move-modal";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 
 interface WidgetContextMenuProps {
@@ -44,9 +34,10 @@ interface WidgetContextMenuProps {
 
 export const WidgetContextMenu = ({ item, definition, widgetStateRef, children }: WidgetContextMenuProps) => {
   const { data: session } = useSession();
+  const [isEditMode] = useEditMode();
   const settings = useSettings();
 
-  if (!session || !settings.enableRightClickOnWidgets) return <>{children}</>;
+  if (!session || !settings.enableRightClickOnWidgets || isEditMode) return <>{children}</>;
 
   return (
     <WidgetContextMenuInner item={item} definition={definition} widgetStateRef={widgetStateRef} settings={settings}>
@@ -96,7 +87,6 @@ type WidgetContextMenuDropdownProps = Omit<WidgetContextMenuProps, "children"> &
 const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings }: WidgetContextMenuDropdownProps) => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
-  const tItem = useScopedI18n("item");
   const tMenu = useScopedI18n("item.menu.label");
   const t = useI18n();
   const { data: session } = useSession();
@@ -104,15 +94,11 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
   const hasSupportedIntegrations =
     "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) > 0;
   const { openModal } = useModalAction(LazyWidgetEditModal);
-  const { openModal: openMoveModal } = useModalAction(LazyItemMoveModal);
-  const { openConfirmModal } = useConfirmModal();
-  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
-    useItemActions();
-  const { data: integrationData, isPending } = clientApi.integration.all.useQuery(undefined, {
+  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
+  const { data: integrationData = [], isPending } = clientApi.integration.all.useQuery(undefined, {
     enabled: hasSupportedIntegrations,
   });
   const { mutate: saveBoard } = clientApi.board.saveBoard.useMutation();
-  const { gridstack } = useSectionContext().refs;
   const queryClient = useQueryClient();
 
   const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(definition, item.kind), [definition, item.kind]);
@@ -188,7 +174,7 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
             );
           }
         },
-        integrationData: (integrationData ?? []).filter(
+        integrationData: integrationData.filter(
           (integration) =>
             "supportedIntegrations" in definition &&
             (definition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
@@ -266,35 +252,8 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
         </>
       )}
 
-      {isEditMode && (
-        <>
-          {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
-          <Menu.Item
-            closeMenuOnClick
-            leftSection={<IconLayoutKanban size={16} />}
-            onFocus={preloadItemMoveModal}
-            onPointerEnter={preloadItemMoveModal}
-            onClick={() => {
-              if (!gridstack.current) return;
-              openMoveModal({ item, columnCount: gridstack.current.getColumn(), gridStack: gridstack.current });
-            }}
-          >
-            {tItem("action.moveResize")}
-          </Menu.Item>
-          {canConfigureWidget && (
-            <Menu.Item
-              closeMenuOnClick
-              leftSection={<IconCopy size={16} />}
-              onClick={() => duplicateItem({ itemId: item.id })}
-            >
-              {tItem("action.duplicate")}
-            </Menu.Item>
-          )}
-        </>
-      )}
-
       <>
-        {(toggleOptions.length > 0 || visibleWidgetActions.length > 0 || isEditMode) && <Menu.Divider />}
+        {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
         <Menu.Item
           leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
           onClick={handleRefetch}
@@ -316,31 +275,11 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
           onClick={openEditModal}
           onFocus={preloadWidgetEditModal}
           onPointerEnter={preloadWidgetEditModal}
-          disabled={hasSupportedIntegrations && isPending}
+          disabled={!canConfigureWidget || (hasSupportedIntegrations && isPending)}
         >
           {tMenu("settings")}
         </Menu.Item>
       </>
-
-      {isEditMode && (
-        <>
-          <Menu.Divider />
-          <Menu.Item
-            closeMenuOnClick
-            color="red"
-            leftSection={<IconTrash size={16} />}
-            onClick={() => {
-              openConfirmModal({
-                title: tItem("remove.title"),
-                children: tItem("remove.message"),
-                onConfirm: () => removeItem({ itemId: item.id }),
-              });
-            }}
-          >
-            {tItem("action.remove")}
-          </Menu.Item>
-        </>
-      )}
     </>
   );
 };

@@ -1344,10 +1344,10 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Container nou",
+        "remove": "Elimină containerul"
       },
       "option": {
         "title": {
@@ -1361,48 +1361,8 @@
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Nume"
-        }
-      },
-      "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
-        "moveUp": "Mută în sus",
-        "moveDown": "Mută în jos",
-        "createAbove": "",
-        "createBelow": "",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "",
-        "submit": ""
-      },
-      "remove": {
-        "title": "",
-        "message": ""
-      },
-      "edit": {
-        "title": "",
-        "submit": ""
-      },
-      "menu": {
-        "label": {
-          "create": "",
-          "changePosition": "Schimbă locația",
-          "settings": "Setări"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Elimină containerul",
+        "message": "Sigur doriți să eliminați acest container? Elementele vor fi mutate în aceeași poziție din secțiunea părinte."
       }
     }
   },

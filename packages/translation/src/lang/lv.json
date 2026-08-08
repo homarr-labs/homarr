@@ -1354,10 +1354,10 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
-        "create": "Jauna dinamiskā sadaļa",
-        "remove": "Noņemt dinamisko sadaļu"
+        "create": "Jauns konteiners",
+        "remove": "Noņemt konteineru"
       },
       "option": {
         "title": {
@@ -1371,48 +1371,8 @@
         }
       },
       "remove": {
-        "title": "Noņemt dinamisko sadaļu",
-        "message": "Vai esat pārliecināts, ka vēlaties noņemt šo dinamisko sadaļu? Vienumi tiks pārvietoti uz to pašu atrašanās vietu vecāku sadaļā."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Nosaukums"
-        }
-      },
-      "action": {
-        "create": "Jauna kategorija",
-        "edit": "Pārdēvēt kategoriju",
-        "remove": "Noņemt kategoriju",
-        "moveUp": "Virzīt augšup",
-        "moveDown": "Virzīt lejup",
-        "createAbove": "Jauna kategorija augšā",
-        "createBelow": "Jauna kategorija apakšā",
-        "openAllInNewTabs": ""
-      },
-      "create": {
-        "title": "Jauna kategorija",
-        "submit": "Pievienot kategoriju"
-      },
-      "remove": {
-        "title": "Noņemt kategoriju",
-        "message": "Vai esat pārliecināts, ka vēlaties noņemt kategoriju {name}?"
-      },
-      "edit": {
-        "title": "Pārdēvēt kategoriju",
-        "submit": "Pārdēvēt kategoriju"
-      },
-      "menu": {
-        "label": {
-          "create": "Jauna kategorija",
-          "changePosition": "Mainīt pozīciju",
-          "settings": "Iestatījumi"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Noņemt konteineru",
+        "message": "Vai esat pārliecināts, ka vēlaties noņemt šo konteineru? Vienumi tiks pārvietoti uz to pašu atrašanās vietu vecāku sadaļā."
       }
     }
   },

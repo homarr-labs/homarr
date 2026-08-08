@@ -1344,10 +1344,10 @@
     }
   },
   "section": {
-    "dynamic": {
+    "container": {
       "action": {
-        "create": "Nova secció dinàmica",
-        "remove": "Elimina la secció dinàmica"
+        "create": "Nou contenidor",
+        "remove": "Elimina el contenidor"
       },
       "option": {
         "title": {
@@ -1361,48 +1361,8 @@
         }
       },
       "remove": {
-        "title": "Elimina la secció dinàmica",
-        "message": "Esteu segur que voleu eliminar aquesta secció dinàmica? Els elements es mouran a la mateixa ubicació dins la secció pare."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Nom"
-        }
-      },
-      "action": {
-        "create": "Nova categoria",
-        "edit": "Canvia el nom de la categoria",
-        "remove": "Elimina la categoria",
-        "moveUp": "Mou cap amunt",
-        "moveDown": "Mou cap avall",
-        "createAbove": "Nova categoria a sobre",
-        "createBelow": "Nova categoria a sota",
-        "openAllInNewTabs": "Obrir-ho tot en pestanyes"
-      },
-      "create": {
-        "title": "Nova categoria",
-        "submit": "Afegeix categoria"
-      },
-      "remove": {
-        "title": "Elimina la categoria",
-        "message": "Esteu segur que voleu eliminar la categoria {name}?"
-      },
-      "edit": {
-        "title": "Canvia el nom de la categoria",
-        "submit": "Canvia el nom de la categoria"
-      },
-      "menu": {
-        "label": {
-          "create": "Nova categoria",
-          "changePosition": "Canvia la posició",
-          "settings": ""
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "Obrir-ho tot en pestanyes",
-        "text": "Alguns navegadors poden bloquejar l'obertura massiva de pestanyes per motius de seguretat. Homarr no ha pogut obrir totes les finestres perquè el teu navegador ha bloquejat aquesta acció. Si us plau, permet \"Obrir finestres emergents\" i torna-ho a intentar."
+        "title": "Elimina el contenidor",
+        "message": "Esteu segur que voleu eliminar aquest contenidor? Els elements es mouran a la mateixa ubicació dins la secció pare."
       }
     }
   },

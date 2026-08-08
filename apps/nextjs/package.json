@@ -14,8 +14,12 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@dnd-kit/abstract": "catalog:",
+    "@dnd-kit/collision": "catalog:",
     "@dnd-kit/core": "catalog:",
+    "@dnd-kit/dom": "catalog:",
     "@dnd-kit/modifiers": "catalog:",
+    "@dnd-kit/react": "catalog:",
     "@dnd-kit/sortable": "catalog:",
     "@dnd-kit/utilities": "catalog:",
     "@gfazioli/mantine-onboarding-tour": "catalog:",
@@ -32,7 +36,6 @@
     "@homarr/docker": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
     "@homarr/forms-collection": "workspace:^0.1.0",
-    "@homarr/gridstack": "catalog:",
     "@homarr/icons": "workspace:^0.1.0",
     "@homarr/image-proxy": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",

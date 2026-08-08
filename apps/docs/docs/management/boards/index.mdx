@@ -36,8 +36,9 @@ Underscores and hyphen-minus are allowed.
 
 ### Column count
 
-Homarr has a complex drag-and-drop system that can be used from the browser.
-The column count defines how many horizontal columns are available to drag and drop elements to.
+The column count defines how many fixed-width cells are available in each row.
+One cell contains a `200 × 200` logical-pixel tile.
+Homarr scales the whole board uniformly instead of changing widget proportions, with horizontal scrolling when further shrinking would make controls too small.
 
 ### Public
 
@@ -88,32 +89,102 @@ Homarr will fall back to the Homarr logo if nothing is set.
 
 ### Layout
 
-In this section you can configure the different responsive layouts. Depending on your screens width the layout will change.
+In this section you can configure the different responsive layouts.
+Homarr selects a layout from the screen width, then scales its complete fixed-size canvas uniformly.
 
 ![](./img/layout-settings.png)
 
-On each element the position and size of items can be changed seperately.
-When adding a new layout the position and sizes will automatically be generated depending on the column count.
-When adding a new item / dynamic section that will always be 1x1 on each layout and placed on the first available position.
+Every `1 × 1` tile has a `200 × 200` logical-pixel content area.
+The `24` logical-pixel gap between tiles is separate from that size.
+A `2 × 1` tile therefore contains two fixed cell widths plus the gap between them.
+Widgets see their logical size, while the board's visual scale makes the complete layout larger or smaller.
+When fitting below 100%, Homarr keeps widget typography and control density at their normal readable size.
+On larger canvases, the complete board grows together like browser zoom.
+The scale never drops below 75%; on narrower screens the canvas scrolls horizontally instead of shrinking controls below an accessible size.
+
+The position and size of every item are independent in each responsive layout.
+Moving or resizing an item in one layout does not change any other layout.
+When adding a new layout, its initial positions and sizes are generated from the column count.
+New items use their widget's default grid size, while a new Container starts at a useful `4 × 3` size when the layout has enough columns.
+Both are placed in the first available position.
+
+The current board edge is a hard drag boundary, so moving a tile outside the canvas cancels that placement instead of creating empty rows.
+Adding content can still create the rows required for the new tile.
+Nested Containers keep their own resizable bounds.
 
 #### Name
 
-The name of the layout can be choosen freely. It is only used for the management and will not be visible on the board.
+The name of the layout can be chosen freely. It is only used for management and will not be visible on the board.
 
 #### Column count
 
-Amount of columns for this layout. Defines how many items can be placed in a row. When changed it will automatically adjust the position and size of the items.
+Total number of columns for this layout.
+When changed, Homarr moves items into the next available positions without overlap.
+
+#### Fixed rails
+
+Each responsive layout can enable a fixed left rail, a fixed right rail, or both.
+Set a rail width to zero to disable it for that layout.
+Choose a width from one to three columns with the three-step slider.
+The preview shows how much space remains for the main canvas.
+
+Rail columns are reserved from the layout's total column count.
+For example, a 12-column layout with a two-column left rail leaves ten columns for the canvas.
+Enabling or widening a rail reflows canvas items into the remaining columns.
+Disabling a rail moves its contents back into the next available canvas positions.
+
+Rails remain visible while the page scrolls.
+Apps, widgets, and Containers inside them still use the same fixed `200 × 200` cells and can be rearranged in edit mode.
 
 #### Breakpoint
 
 Minimum width of the screen where the layout will be used.
-Once the minimum of the next layout is reached the layout will change.
+Once the minimum of the next layout is reached, the layout will change.
+
+#### View and edit modes
+
+View mode renders a static board without executing the drag-and-drop editor.
+After the board is interactive, Homarr prepares the editor in the background for users who can modify it.
+Entering edit mode keeps the static board visible until that preparation finishes, then enables collision-aware movement and resizing without changing the board geometry.
+Widget content is inert in edit mode, so dragging anywhere on the content moves the tile instead of activating the widget; its settings button remains visible in the compact header above the tile.
+Dropping a tile into another tile's exact slot swaps their positions when both resulting placements fit without overlapping other content.
+For other collisions, or when a tile grows into occupied space, nearby tiles are compacted out of the way.
+The visible corner controls provide a 44-pixel resize target, and edge controls appear on hover for horizontal or vertical resizing.
+Resize handles stop at the tile's minimum allowed size while the pointer is still moving.
+Exit edit mode to save the resulting positions.
+
+Pointer users can drag anywhere on a widget tile. Containers use the grab button at their top-left corner.
+Resize tiles from any edge or corner handle.
+On a touch screen, press and hold the tile before moving it; resize handles support direct touch input.
+Keyboard users can focus a tile, press Enter or Space to start editing, use the arrow keys to move it, and use Shift plus the arrow keys to resize it.
+Press Enter, Space, or Escape to stop keyboard editing.
+Keyboard moves and resizes apply immediately; Escape stops keyboard editing without undoing those changes.
+During a pointer or touch interaction, Escape cancels the move or resize and restores the layout from before that interaction.
+The **Move / resize item** action in the edit menu remains available for precise numeric input.
 
 #### Preview
 
 <img src={layoutSmallImage} height={256} />
 <img src={layoutMediumImage} height={256} />
 <img src={layoutLargeImage} height={256} />
+
+### Containers and rails
+
+Containers can hold apps, widgets, and nested Containers.
+The same Container model works on the main canvas, inside a fixed rail, or inside another Container.
+Move and resize Containers directly in edit mode; nested content stays within the Container's local bounds.
+Resize outlines follow the pointer continuously while a dashed preview marks the grid size that will be applied on release.
+Each responsive layout stores its own Container position and size.
+
+Each Container can configure:
+
+- Its label and whether that label is visible.
+- Whether users can collapse and expand it like an accordion.
+- Whether its menu shows **Open all in new tabs** for the app links it contains.
+- Its border color and custom CSS classes.
+
+Collapsing a Container reduces its full-width header to a half-row expansion bar and compacts the surrounding layout without losing its expanded size.
+Expanding it smoothly restores those bounds and moves following items out of the way without reloading the widgets inside it.
 
 ### Background
 
@@ -159,7 +230,7 @@ Change the color of your bookmark / app icons.
 
 #### Item radius
 
-Change the radius of your items / categories.
+Change the radius of your items and Containers.
 
 <img src={itemRadiusImage} height={100} />
 
