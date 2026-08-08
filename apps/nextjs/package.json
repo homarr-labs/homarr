@@ -37,7 +37,6 @@
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/modals-collection": "workspace:^0.1.0",
-    "@homarr/next-cache-handler": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/old-import": "workspace:^0.1.0",
     "@homarr/old-schema": "workspace:^0.1.0",

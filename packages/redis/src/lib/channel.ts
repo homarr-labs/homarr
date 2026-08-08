@@ -3,12 +3,12 @@ import superjson from "superjson";
 import { createId } from "@homarr/common";
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
-import { getDataClient, usesMemoryFallback } from "./connection";
-import { memoryGetLast, memoryPublish } from "./memory-channel";
+import { createRedisConnection } from "./connection";
+
+const publisher = createRedisConnection();
+const lastDataClient = createRedisConnection();
 
 const LAST_DATA_TTL_SECONDS = 86_400;
-
-const dataClient = getDataClient();
 
 /**
  * Creates a new pub/sub channel.
@@ -25,18 +25,11 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      */
     subscribe: (callback: (data: TData) => void) => {
       if (persist) {
-        if (usesMemoryFallback()) {
-          const data = memoryGetLast(lastChannelName);
+        void lastDataClient.get(lastChannelName).then((data) => {
           if (data) {
             callback(superjson.parse(data));
           }
-        } else if (dataClient) {
-          void dataClient.get(lastChannelName).then((data) => {
-            if (data) {
-              callback(superjson.parse(data));
-            }
-          });
-        }
+        });
       }
       return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
         callback(superjson.parse(message));
@@ -47,30 +40,21 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      * @param data data to be published
      */
     publishAsync: async (data: TData) => {
-      const serialized = superjson.stringify(data);
       if (persist) {
-        if (usesMemoryFallback()) {
-          memoryPublish(lastChannelName, data);
-        } else if (dataClient) {
-          await dataClient.set(lastChannelName, serialized, "EX", LAST_DATA_TTL_SECONDS);
-        }
+        // Without an expiry these keys accumulate one payload per channel forever.
+        // getLastDataAsync already tolerates a miss, so expiring them is safe.
+        await lastDataClient.set(lastChannelName, superjson.stringify(data), "EX", LAST_DATA_TTL_SECONDS);
       }
-      if (usesMemoryFallback()) {
-        memoryPublish(channelName, data);
-      } else if (dataClient) {
-        await dataClient.publish(channelName, serialized);
-      }
+      await publisher.publish(channelName, superjson.stringify(data));
     },
     getLastDataAsync: async () => {
-      if (usesMemoryFallback()) {
-        const data = memoryGetLast(lastChannelName);
-        return data ? superjson.parse<TData>(data) : null;
-      }
-      const data = await dataClient?.get(lastChannelName);
+      const data = await lastDataClient.get(lastChannelName);
       return data ? superjson.parse<TData>(data) : null;
     },
   };
 };
+
+const getSetClient = createRedisConnection();
 
 /**
  * Creates a new redis channel for a list
@@ -85,8 +69,7 @@ export const createListChannel = <TItem>(name: string) => {
      * @returns an array of all items
      */
     getAllAsync: async () => {
-      if (!dataClient) return [];
-      const items = await dataClient.lrange(listChannelName, 0, -1);
+      const items = await getSetClient.lrange(listChannelName, 0, -1);
       return items.map((item) => superjson.parse<TItem>(item));
     },
     /**
@@ -94,23 +77,20 @@ export const createListChannel = <TItem>(name: string) => {
      * @param item item to remove
      */
     removeAsync: async (item: TItem) => {
-      if (!dataClient) return;
-      await dataClient.lrem(listChannelName, 0, superjson.stringify(item));
+      await getSetClient.lrem(listChannelName, 0, superjson.stringify(item));
     },
     /**
      * Clear all items from the channels list
      */
     clearAsync: async () => {
-      if (!dataClient) return;
-      await dataClient.del(listChannelName);
+      await getSetClient.del(listChannelName);
     },
     /**
      * Add an item to the channels list
      * @param item item to add
      */
     addAsync: async (item: TItem) => {
-      if (!dataClient) return;
-      await dataClient.lpush(listChannelName, superjson.stringify(item));
+      await getSetClient.lpush(listChannelName, superjson.stringify(item));
     },
   };
 };
@@ -126,8 +106,7 @@ export const createGetSetChannel = <TData>(name: string) => {
      * @returns data or null if not found
      */
     getAsync: async () => {
-      if (!dataClient) return null;
-      const data = await dataClient.get(name);
+      const data = await getSetClient.get(name);
       return data ? superjson.parse<TData>(data) : null;
     },
     /**
@@ -136,19 +115,17 @@ export const createGetSetChannel = <TData>(name: string) => {
      * @param options optional TTL in seconds
      */
     setAsync: async (data: TData, options?: { ttlSeconds?: number }) => {
-      if (!dataClient) return;
       if (options?.ttlSeconds) {
-        await dataClient.set(name, superjson.stringify(data), "EX", options.ttlSeconds);
+        await getSetClient.set(name, superjson.stringify(data), "EX", options.ttlSeconds);
         return;
       }
-      await dataClient.set(name, superjson.stringify(data));
+      await getSetClient.set(name, superjson.stringify(data));
     },
     /**
      * Remove data from the channel
      */
     removeAsync: async () => {
-      if (!dataClient) return;
-      await dataClient.del(name);
+      await getSetClient.del(name);
     },
   };
 };
@@ -159,31 +136,21 @@ export const createGetSetChannel = <TData>(name: string) => {
  * The token prevents a process from releasing a lock that expired and was
  * acquired by another process in the meantime.
  */
-// ponytail: in-memory lock map for single-instance fallback; upgrade to redis-based lock when Redis is available
-const memoryLocks = new Map<string, { token: string; expiresAt: number }>();
-
 export const createLockChannel = (name: string) => {
   return {
     acquireAsync: async (ttlSeconds: number) => {
       const token = createId();
-      if (!dataClient) {
-        const existing = memoryLocks.get(name);
-        if (existing && existing.expiresAt > Date.now()) return null;
-        memoryLocks.set(name, { token, expiresAt: Date.now() + ttlSeconds * 1000 });
-        return token;
-      }
+      const client = getSetClient as typeof getSetClient | null;
+      if (!client) return token;
 
-      const result = await dataClient.set(name, token, "EX", ttlSeconds, "NX");
+      const result = await client.set(name, token, "EX", ttlSeconds, "NX");
       return result === "OK" ? token : null;
     },
     releaseAsync: async (token: string) => {
-      if (!dataClient) {
-        const existing = memoryLocks.get(name);
-        if (existing?.token === token) memoryLocks.delete(name);
-        return;
-      }
+      const client = getSetClient as typeof getSetClient | null;
+      if (!client) return;
 
-      await dataClient.eval(
+      await client.eval(
         "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end",
         1,
         name,
@@ -194,8 +161,9 @@ export const createLockChannel = (name: string) => {
 };
 
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
-  if (!dataClient) return;
-  await dataClient.del(`session-store:${integrationId}`);
+  const client = getSetClient as typeof getSetClient | null;
+  if (!client) return;
+  await client.del(`session-store:${integrationId}`);
 };
 
 /**
@@ -203,12 +171,11 @@ export const invalidateIntegrationCacheAsync = async (integrationId: string): Pr
  */
 export const createChannelEventHistoryOld = <TData>(channelName: string, maxElements = 15) => {
   const popElementsOverMaxAsync = async () => {
-    if (!dataClient) return;
-    const length = await dataClient.llen(channelName);
+    const length = await getSetClient.llen(channelName);
     if (length <= maxElements) {
       return;
     }
-    await dataClient.ltrim(channelName, 0, maxElements - 1);
+    await getSetClient.ltrim(channelName, 0, maxElements - 1);
   };
 
   return {
@@ -218,39 +185,33 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       });
     },
     publishAndPushAsync: async (data: TData) => {
-      if (!dataClient) return;
-      await dataClient.publish(channelName, superjson.stringify(data));
-      await dataClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await publisher.publish(channelName, superjson.stringify(data));
+      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
       await popElementsOverMaxAsync();
     },
     pushAsync: async (data: TData) => {
-      if (!dataClient) return;
-      await dataClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
       await popElementsOverMaxAsync();
     },
     clearAsync: async () => {
-      if (!dataClient) return;
-      await dataClient.del(channelName);
+      await getSetClient.del(channelName);
     },
     getLastAsync: async () => {
-      if (!dataClient) return null;
-      const length = await dataClient.llen(channelName);
-      const data = await dataClient.lrange(channelName, length - 1, length);
+      const length = await getSetClient.llen(channelName);
+      const data = await getSetClient.lrange(channelName, length - 1, length);
       if (data.length !== 1) return null;
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return superjson.parse<{ data: TData; timestamp: Date }>(data[0]!);
     },
     getSliceAsync: async (startIndex: number, endIndex: number) => {
-      if (!dataClient) return [];
-      const range = await dataClient.lrange(channelName, startIndex, endIndex);
+      const range = await getSetClient.lrange(channelName, startIndex, endIndex);
       return range.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item));
     },
     getSliceUntilTimeAsync: async (time: Date) => {
-      if (!dataClient) return [];
-      const length = await dataClient.llen(channelName);
+      const length = await getSetClient.llen(channelName);
       const items: TData[] = [];
-      const itemsInCollection = await dataClient.lrange(channelName, 0, length - 1);
+      const itemsInCollection = await getSetClient.lrange(channelName, 0, length - 1);
 
       for (let i = 0; i < length - 1; i++) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -263,12 +224,13 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       return items;
     },
     getLengthAsync: async () => {
-      if (!dataClient) return 0;
-      return await dataClient.llen(channelName);
+      return await getSetClient.llen(channelName);
     },
     name: channelName,
   };
 };
+
+const queueClient = createRedisConnection();
 
 type WithId<TItem> = TItem & { _id: string };
 
@@ -280,13 +242,11 @@ type WithId<TItem> = TItem & { _id: string };
 export const createQueueChannel = <TItem>(name: string) => {
   const queueChannelName = `queue:${name}`;
   const getDataAsync = async () => {
-    if (!dataClient) return [];
-    const data = await dataClient.get(queueChannelName);
+    const data = await queueClient.get(queueChannelName);
     return data ? superjson.parse<WithId<TItem>[]>(data) : [];
   };
   const setDataAsync = async (data: WithId<TItem>[]) => {
-    if (!dataClient) return;
-    await dataClient.set(queueChannelName, superjson.stringify(data));
+    await queueClient.set(queueChannelName, superjson.stringify(data));
   };
 
   return {
@@ -333,6 +293,5 @@ export const createQueueChannel = <TItem>(name: string) => {
 };
 
 export const handshakeAsync = async () => {
-  if (!dataClient) return;
-  await dataClient.hello();
+  await getSetClient.hello();
 };

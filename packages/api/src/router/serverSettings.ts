@@ -14,7 +14,6 @@ import { defaultServerSettingsKeys } from "@homarr/server-settings";
 import { settingsInitSchema } from "@homarr/validation/settings";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, publicProcedure } from "../trpc";
-import { invalidateServerSettingsCache } from "../cache-invalidation";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 const boardServerSettingsSchema = z.object({
@@ -92,8 +91,6 @@ export const serverSettingsRouter = createTRPCRouter({
         await insertServerSettingByKeyAsync(ctx.db, "board", next);
       }
 
-      invalidateServerSettingsCache();
-
       return next;
     }),
   saveSettings: permissionRequiredProcedure
@@ -110,8 +107,6 @@ export const serverSettingsRouter = createTRPCRouter({
         ...current,
         ...input.value,
       } as ServerSettings[keyof ServerSettings]);
-
-      invalidateServerSettingsCache();
     }),
   initSettings: onboardingProcedure
     .requiresStep("settings")
@@ -121,7 +116,5 @@ export const serverSettingsRouter = createTRPCRouter({
       await updateServerSettingByKeyAsync(ctx.db, "analytics", { ...currentAnalytics, ...input.analytics });
       await updateServerSettingByKeyAsync(ctx.db, "crawlingAndIndexing", input.crawlingAndIndexing);
       await nextOnboardingStepAsync(ctx.db, undefined);
-
-      invalidateServerSettingsCache();
     }),
 });

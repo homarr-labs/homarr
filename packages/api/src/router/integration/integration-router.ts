@@ -39,7 +39,6 @@ import {
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { invalidateIntegrationCache, invalidateUserCache } from "../../cache-invalidation";
 import { invalidateIntegrationDataCache } from "../../integration-data-cache";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
@@ -374,7 +373,7 @@ export const integrationRouter = createTRPCRouter({
       });
 
       await invalidateIntegrationCacheAsync(integrationId);
-      invalidateIntegrationCache(integrationId);
+      invalidateIntegrationDataCache(integrationId);
     }),
   update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
@@ -481,7 +480,7 @@ export const integrationRouter = createTRPCRouter({
     // Invalidate all cached data for this integration so that widgets pick up the
     // new configuration immediately instead of serving stale (or errored) data.
     await invalidateIntegrationCacheAsync(input.id);
-    invalidateIntegrationCache(input.id);
+    invalidateIntegrationDataCache(input.id);
   }),
   delete: protectedProcedure
     .meta({
@@ -506,7 +505,7 @@ export const integrationRouter = createTRPCRouter({
 
       // Clean up any cached data left behind by the deleted integration.
       await invalidateIntegrationCacheAsync(input.id);
-      invalidateIntegrationCache(input.id);
+      invalidateIntegrationDataCache(input.id);
     }),
   getIntegrationPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
@@ -585,11 +584,6 @@ export const integrationRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
 
-      const existingUserPermissions = await ctx.db.query.integrationUserPermissions.findMany({
-        columns: { userId: true },
-        where: eq(integrationUserPermissions.integrationId, input.entityId),
-      });
-
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await ctx.db.transaction(async (transaction) => {
@@ -631,26 +625,12 @@ export const integrationRouter = createTRPCRouter({
         },
       });
 
-      const userIds = [
-        ...new Set([
-          ...existingUserPermissions.map((permission) => permission.userId),
-          ...input.permissions.map((permission) => permission.principalId),
-        ]),
-      ];
-      for (const userId of userIds) {
-        invalidateUserCache(userId);
-      }
-      invalidateIntegrationCache(input.entityId);
+      invalidateIntegrationDataCache(input.entityId);
     }),
   saveGroupIntegrationPermissions: protectedProcedure
     .input(integrationSavePermissionsSchema)
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
-
-      const existingGroupPermissions = await ctx.db.query.integrationGroupPermissions.findMany({
-        columns: { groupId: true },
-        where: eq(integrationGroupPermissions.integrationId, input.entityId),
-      });
 
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
@@ -693,22 +673,7 @@ export const integrationRouter = createTRPCRouter({
         },
       });
 
-      const groupIds = [
-        ...new Set([
-          ...existingGroupPermissions.map((permission) => permission.groupId),
-          ...input.permissions.map((permission) => permission.principalId),
-        ]),
-      ];
-      if (groupIds.length > 0) {
-        const members = await ctx.db.query.groupMembers.findMany({
-          columns: { userId: true },
-          where: inArray(groupMembers.groupId, groupIds),
-        });
-        for (const member of members) {
-          invalidateUserCache(member.userId);
-        }
-      }
-      invalidateIntegrationCache(input.entityId);
+      invalidateIntegrationDataCache(input.entityId);
     }),
   searchInIntegration: protectedProcedure
     .meta({
