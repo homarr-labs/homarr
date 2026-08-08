@@ -15,17 +15,44 @@
 .grid {
   display: grid;
   gap: 3px;
-  grid-auto-rows: clamp(0.65rem, 1.7vw, 1.15rem);
+  grid-auto-rows: clamp(1.35rem, 2.2vw, 1.75rem);
   min-height: 2.5rem;
 }
 
 .tile {
+  container-type: inline-size;
   min-width: 0;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--mantine-primary-color-filled) 24%, var(--mantine-color-default-border));
   border-radius: calc(var(--mantine-radius-sm) * 0.75);
   background: color-mix(in srgb, var(--mantine-primary-color-light) 70%, var(--mantine-color-body));
-  padding-inline: 0.3rem;
+  padding-inline: 0.25rem;
+}
+
+.tileContent {
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.tileLabel {
+  display: none;
+  min-width: 0;
+  max-height: 2.1em;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  line-height: 1.05;
+}
+
+@container (min-width: 9rem) {
+  .tileContent {
+    justify-content: flex-start;
+  }
+
+  .tileLabel {
+    display: block;
+  }
 }
 
 .dynamicTile {
