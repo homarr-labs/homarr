@@ -20,13 +20,9 @@ import { clientApi, fetchApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
+import { closeSpotlight } from "@homarr/spotlight/store";
 import { useScopedI18n } from "@homarr/translation/client";
-import {
-  closeSpotlight,
-  openMediaRequestSearch,
-  openSpotlight,
-  useRegisterSpotlightContextResults,
-} from "@homarr/spotlight";
+import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { AssistantWidgetRendererProvider } from "@homarr/widgets";
 
 import { AssistantContext, AssistantPreferencesContext, useAssistantPreferences } from "./assistant-context";
