@@ -1,0 +1,48 @@
+apps/nextjs/src/components/manage/danger-zone.tsx
+  s_71d02d5c989477::t_99bd5244d7b8c9 1-2,6,12-13
+apps/nextjs/src/app/[locale]/manage/settings/_components/setting-switch.tsx
+  s_71d02d5c989477::t_e4d818c95c8ffd 8-11,21,33,45
+  s_71d02d5c989477::t_ede0cf05239910 32
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_customCss.tsx
+  s_71d02d5c989477::t_fff7d83bd3a28b 40,43,53
+apps/docs/docs/management/settings/index.mdx
+  s_71d02d5c989477::t_47f39b69e2d6f4 16-17
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  s_71d02d5c989477::t_2b08d865006e6e 96
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout.tsx
+  s_71d02d5c989477::t_754886385fa46b 25,28-29,31,62
+  s_71d02d5c989477::t_e3d30f9585d277 30
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_background.tsx
+  s_71d02d5c989477::t_2b5d96509c1e0f 106-107
+apps/nextjs/src/app/[locale]/manage/settings/_components/culture-settings-form.tsx
+  s_71d02d5c989477::t_6a0d920b81263c 17,23-24
+apps/nextjs/src/app/[locale]/manage/settings/_components/settings-form.tsx
+  s_71d02d5c989477::t_209addb04f8489 65,77-83
+  s_71d02d5c989477::t_93df677bf7ded6 182,185
+  s_71d02d5c989477::t_6215b39bff3293 144,146-150,157,159-160
+  s_71d02d5c989477::t_085288672c2a2b 14
+  s_71d02d5c989477::t_28651390dcc23f 3
+apps/docs/docs/management/boards/index.mdx
+  s_71d02d5c989477::t_10d9b7534226e7 12-16,27,33,38,43,49,58-59,61,63,71,80,85,109,114-116,119,121,126,130,134,141,143,145,147,149,151,153,155,158,162,164,167,176,180,185,204,206,210,215,220,232,242,245-247,254,260,262-263,267,269-270,274-277,284-286,295
+  s_71d02d5c989477::t_1c7cf330d55d0d 224
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_settings-form.tsx
+  s_71d02d5c989477::t_060325618be0c1 135-138,200
+apps/nextjs/src/app/[locale]/manage/settings/loading.tsx
+  s_71d02d5c989477::t_e2067328173429 1-9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2c7deb1b8605428d974c5392211735831c75824f",
+  "prompts": {},
+  "sessions": {
+    "s_71d02d5c989477": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_01f48b881ffeNr74dFqpywho5H",
+        "model": "deepseek/deepseek-v4-flash-0731"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
