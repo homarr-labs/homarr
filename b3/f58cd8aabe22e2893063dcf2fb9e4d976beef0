@@ -1,0 +1,43 @@
+packages/redis/src/lib/channel.ts
+  s_a70c07ac5b7a5a::t_997053e1ef7883 11
+  s_a70c07ac5b7a5a::t_a2cc2ac470aad7 44-46
+  s_093d61b162b9ca::t_86c8492f6131b1 6,8-9,28,32,48,51,57-58,72,80,86,93,109,119,122,128,143-144,146,150-151,153,164-166,174,178,188-189,193,197,200-201,208,212,214,227,233-234,245,249,296
+packages/api/src/router/board.ts
+  s_a70c07ac5b7a5a::t_a6840f37e1f555 1428
+packages/api/src/router/group.ts
+  s_a70c07ac5b7a5a::t_5ad5f6186ffc46 7
+packages/api/src/router/integration/integration-router.ts
+  s_a70c07ac5b7a5a::t_694479aee2233a 376,483,508,628,676
+packages/redis/src/lib/channel-subscription-tracker.ts
+  s_a70c07ac5b7a5a::t_48237a6e0a602a 6,21,33-38,45,68,78-91
+packages/redis/src/lib/channel.spec.ts
+  s_a70c07ac5b7a5a::t_a741a38e8acc7d 9
+packages/redis/src/lib/connection.ts
+  s_a70c07ac5b7a5a::t_98964c5294c2d4 5-6,8-12,14
+pnpm-lock.yaml
+  s_a70c07ac5b7a5a::t_87500b6b2b97eb 21929,29806,29869
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b3f58cd8aabe22e2893063dcf2fb9e4d976beef0",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
