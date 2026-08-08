@@ -71,13 +71,18 @@ export const useLayoutOverride = () => useContext(BoardContext)?.layoutOverrideI
 export const getCurrentLayout = (
   board: RouterOutputs["board"]["getBoardByName"],
   layoutOverrideId: string | null = null,
+) => getCurrentLayoutFromLayouts(board.layouts, layoutOverrideId);
+
+const getCurrentLayoutFromLayouts = (
+  layouts: RouterOutputs["board"]["getBoardByName"]["layouts"],
+  layoutOverrideId: string | null,
 ) => {
-  if (layoutOverrideId && board.layouts.some((layout) => layout.id === layoutOverrideId)) return layoutOverrideId;
+  if (layoutOverrideId && layouts.some((layout) => layout.id === layoutOverrideId)) return layoutOverrideId;
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  if (typeof window === "undefined") return board.layouts.at(0)!.id;
+  if (typeof window === "undefined") return layouts.at(0)!.id;
 
-  const sortedLayouts = board.layouts.toSorted((layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint);
+  const sortedLayouts = layouts.toSorted((layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint);
 
   // Fallback to smallest if none exists with breakpoint smaller than window width
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -88,10 +93,11 @@ export const useCurrentLayout = () => {
   const board = useRequiredBoard();
   const layoutOverrideId = useLayoutOverride();
   const [currentLayout, setCurrentLayout] = useState(getCurrentLayout(board, layoutOverrideId));
+  const layouts = board.layouts;
 
   const onResize = useCallback(() => {
-    setCurrentLayout(getCurrentLayout(board, layoutOverrideId));
-  }, [board, layoutOverrideId]);
+    setCurrentLayout(getCurrentLayoutFromLayouts(layouts, layoutOverrideId));
+  }, [layoutOverrideId, layouts]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

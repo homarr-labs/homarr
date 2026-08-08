@@ -78,6 +78,26 @@ describe("Grid Algorithm", () => {
       );
     },
   );
+
+  test("stops projecting a corrupted recursive section graph", () => {
+    const recursiveSection = algoItem({ id: "recursive", type: "section", width: 3 });
+    const duplicateRecursiveLayout = algoItem({
+      id: "recursive",
+      type: "section",
+      width: 3,
+      sectionId: "recursive",
+    });
+
+    const result = generateResponsiveGridFor({
+      items: [recursiveSection, duplicateRecursiveLayout],
+      width: 3,
+      previousWidth: 12,
+      sectionId: ROOT_SECTION_ID,
+    });
+
+    expect(result.items).toContainEqual(expect.objectContaining({ id: "recursive", sectionId: ROOT_SECTION_ID }));
+    expect(result.items).toHaveLength(2);
+  });
 });
 
 const algoItem = (item: Partial<GridAlgorithmItem>): GridAlgorithmItem => ({

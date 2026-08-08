@@ -1,7 +1,9 @@
 import { useCallback } from "react";
 
-import { getCurrentLayout } from "@homarr/boards/context";
+import { useCurrentLayout } from "@homarr/boards/context";
 import { useUpdateBoard } from "@homarr/boards/updater";
+
+import type { Board } from "~/app/[locale]/boards/_types";
 
 interface MoveAndResizeInnerSection {
   innerSectionId: string;
@@ -21,6 +23,7 @@ interface MoveInnerSectionToSection {
 
 export const useSectionActions = () => {
   const { updateBoard } = useUpdateBoard();
+  const currentLayoutId = useCurrentLayout();
 
   const moveAndResizeInnerSection = useCallback(
     ({ innerSectionId, ...positionProps }: MoveAndResizeInnerSection) => {
@@ -31,12 +34,10 @@ export const useSectionActions = () => {
           if (section.id !== innerSectionId) return section;
           if (section.kind !== "dynamic") return section;
 
-          const currentLayout = getCurrentLayout(previous);
-
           return {
             ...section,
             layouts: section.layouts.map((layout) => {
-              if (layout.layoutId !== currentLayout) return layout;
+              if (layout.layoutId !== currentLayoutId) return layout;
               return {
                 ...layout,
                 ...positionProps,
@@ -46,12 +47,16 @@ export const useSectionActions = () => {
         }),
       }));
     },
-    [updateBoard],
+    [currentLayoutId, updateBoard],
   );
 
   const moveInnerSectionToSection = useCallback(
     ({ innerSectionId, sectionId, ...positionProps }: MoveInnerSectionToSection) => {
       updateBoard((previous) => {
+        if (wouldCreateSectionCycle(previous, { innerSectionId, sectionId, layoutId: currentLayoutId })) {
+          return previous;
+        }
+
         return {
           ...previous,
           sections: previous.sections.map((section) => {
@@ -59,12 +64,10 @@ export const useSectionActions = () => {
             if (section.id !== innerSectionId) return section;
             if (section.kind !== "dynamic") return section;
 
-            const currentLayout = getCurrentLayout(previous);
-
             return {
               ...section,
               layouts: section.layouts.map((layout) => {
-                if (layout.layoutId !== currentLayout) return layout;
+                if (layout.layoutId !== currentLayoutId) return layout;
                 return {
                   ...layout,
                   ...positionProps,
@@ -76,11 +79,32 @@ export const useSectionActions = () => {
         };
       });
     },
-    [updateBoard],
+    [currentLayoutId, updateBoard],
   );
 
   return {
     moveAndResizeInnerSection,
     moveInnerSectionToSection,
   };
+};
+
+export const wouldCreateSectionCycle = (
+  board: Board,
+  { innerSectionId, sectionId, layoutId }: { innerSectionId: string; sectionId: string; layoutId: string },
+) => {
+  const visitedSectionIds = new Set<string>();
+  let currentSectionId: string | null = sectionId;
+
+  while (currentSectionId) {
+    if (currentSectionId === innerSectionId) return true;
+    if (visitedSectionIds.has(currentSectionId)) return true;
+    visitedSectionIds.add(currentSectionId);
+
+    const currentSection = board.sections.find((section) => section.id === currentSectionId);
+    if (currentSection?.kind !== "dynamic") return false;
+
+    currentSectionId = currentSection.layouts.find((layout) => layout.layoutId === layoutId)?.parentSectionId ?? null;
+  }
+
+  return false;
 };

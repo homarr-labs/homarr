@@ -25,7 +25,16 @@ export const generateResponsiveGridFor = ({
   previousWidth,
   width,
   sectionId,
-}: GridAlgorithmInput): GridAlgorithmOutput => {
+}: GridAlgorithmInput): GridAlgorithmOutput =>
+  generateResponsiveGridForSection({ items, previousWidth, width, sectionId }, new Set());
+
+const generateResponsiveGridForSection = (
+  { items, previousWidth, width, sectionId }: GridAlgorithmInput,
+  ancestorSectionIds: ReadonlySet<string>,
+): GridAlgorithmOutput => {
+  if (ancestorSectionIds.has(sectionId)) return { height: 0, items: [] };
+
+  const nextAncestorSectionIds = new Set(ancestorSectionIds).add(sectionId);
   const itemsOfCurrentSection = items
     .filter((item) => item.sectionId === sectionId)
     .toSorted((itemA, itemB) =>
@@ -38,12 +47,15 @@ export const generateResponsiveGridFor = ({
   const newItems: GridAlgorithmItem[] = [];
   const dynamicSectionHeightMap = new Map<string, number>();
   for (const dynamicSection of normalizedItems.filter((item) => item.type === "section")) {
-    const result = generateResponsiveGridFor({
-      items,
-      previousWidth: dynamicSection.previousWidth,
-      width: dynamicSection.width,
-      sectionId: dynamicSection.id,
-    });
+    const result = generateResponsiveGridForSection(
+      {
+        items,
+        previousWidth: dynamicSection.previousWidth,
+        width: dynamicSection.width,
+        sectionId: dynamicSection.id,
+      },
+      nextAncestorSectionIds,
+    );
     newItems.push(...result.items);
     dynamicSectionHeightMap.set(dynamicSection.id, result.height);
   }
