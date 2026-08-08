@@ -73,9 +73,30 @@ const WudWidgetContent = ({
     </Stack>
   );
 
+  const tinyContent = options.showRing ? (
+    <Tooltip
+      label={
+        <Stack gap={2}>
+          <Text size="xs">
+            {stats.totalContainers} {t("monitored")}
+          </Text>
+          <Text size="xs">{t("updatesAvailable", { count: stats.updatesAvailable })}</Text>
+        </Stack>
+      }
+    >
+      <Center>{ring}</Center>
+    </Tooltip>
+  ) : (
+    <Center>
+      <Badge color={badgeColor} variant="light">
+        {t("updatesAvailable", { count: stats.updatesAvailable })}
+      </Badge>
+    </Center>
+  );
+
   return (
     <Stack p="xs" gap="xs" h="100%">
-      {options.showTitle && (
+      {options.showTitle && !isTiny && (
         <Group gap="xs" wrap="nowrap" justify="space-between" miw={0}>
           <Group gap="xs" wrap="nowrap" miw={0}>
             <Avatar size={20} radius="sm" src={getIconUrl("wud")} />
@@ -91,7 +112,9 @@ const WudWidgetContent = ({
         </Group>
       )}
 
-      {options.layout === "horizontal" ? (
+      {isTiny ? (
+        tinyContent
+      ) : options.layout === "horizontal" ? (
         <Group justify="center" wrap="nowrap" gap="md">
           {options.showRing && ring}
           {summary}
@@ -123,16 +146,14 @@ const progressColor = (percentage: number) => {
 
 const SHA256_DIGEST_PREFIX = "sha256:";
 const SHA256_DIGEST_LENGTH = SHA256_DIGEST_PREFIX.length + 64;
-const DIGEST_DISPLAY_HEX_CHARS = 12;
 const GENERIC_MAX_LENGTH = 20;
 const GENERIC_DISPLAY_LENGTH = 17;
 
+const isDigestVersion = (value: string | null): boolean =>
+  value !== null && value.startsWith(SHA256_DIGEST_PREFIX) && value.length === SHA256_DIGEST_LENGTH;
+
 const truncateVersion = (value: string | null): string | null => {
   if (!value) return value;
-
-  if (value.startsWith(SHA256_DIGEST_PREFIX) && value.length === SHA256_DIGEST_LENGTH) {
-    return `${value.slice(0, SHA256_DIGEST_PREFIX.length + DIGEST_DISPLAY_HEX_CHARS)}…`;
-  }
 
   if (value.length > GENERIC_MAX_LENGTH) {
     return `${value.slice(0, GENERIC_DISPLAY_LENGTH)}…`;
@@ -154,11 +175,11 @@ const UpdateCard = ({
   className: string | undefined;
 }) => {
   const t = useScopedI18n("widget.wud");
+  const isDigestUpdate = isDigestVersion(update.newVersion);
   const fullVersionText = buildVersionText(update.currentVersion, update.newVersion);
-  const versionText = buildVersionText(
-    truncateVersion(update.currentVersion),
-    truncateVersion(update.newVersion),
-  );
+  const versionText = isDigestUpdate
+    ? t("updateAvailable")
+    : buildVersionText(truncateVersion(update.currentVersion), truncateVersion(update.newVersion));
 
   return (
     <Card className={combineClasses(className)} radius={radius} p="xs" style={{ overflow: "visible" }}>
@@ -168,7 +189,7 @@ const UpdateCard = ({
         </Text>
         <Group gap={4} wrap="nowrap">
           {versionText && (
-            <Tooltip label={fullVersionText} disabled={versionText === fullVersionText}>
+            <Tooltip label={fullVersionText} disabled={isDigestUpdate || versionText === fullVersionText}>
               <Badge size="xs" variant="light" color="gray" style={{ whiteSpace: "nowrap" }}>
                 {versionText}
               </Badge>

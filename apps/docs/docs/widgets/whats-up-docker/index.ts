@@ -15,6 +15,12 @@ export const wudWidget: WidgetDefinition = {
         defaultValue: "yes",
       },
       {
+        name: "Show update ring",
+        description: "Displays a ring showing the percentage of monitored containers with a pending update",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
         name: "Layout",
         description: "Arrange the two stats side by side (Horizontal) or stacked (Vertical)",
         values: { type: "select", options: ["Horizontal", "Vertical"] },
