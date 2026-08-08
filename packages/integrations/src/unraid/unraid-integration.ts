@@ -36,9 +36,6 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
   public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
     const systemInfo = await this.getSystemInformationAsync();
 
-    const cpuUtilization = systemInfo.metrics.cpu.cpus.reduce((acc, val) => acc + val.percentTotal, 0);
-    const cpuCount = systemInfo.info.cpu.cores;
-
     // We use "info" object instead of the stats since this is the exact amount the kernel sees, which is what Unraid displays.
     const totalMemory = systemInfo.info.memory.layout.reduce((acc, layout) => layout.size + acc, 0);
     const usedMemory = totalMemory * (systemInfo.metrics.memory.percentTotal / 100);
@@ -47,7 +44,12 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
     return {
       version: systemInfo.info.os.release,
       cpuModelName: systemInfo.info.cpu.brand,
-      cpuUtilization: cpuUtilization / cpuCount,
+      // Use the overall CPU utilization the Unraid API already reports (0-100),
+      // which is the value Unraid itself displays. Previously the per-thread
+      // percentages were summed and divided by the number of physical cores,
+      // which double-counted on hyper-threaded systems (e.g. 24 threads over
+      // 12 cores) and could even exceed 100%.
+      cpuUtilization: systemInfo.metrics.cpu.percentTotal,
       memUsedInBytes: usedMemory,
       memAvailableInBytes: totalMemory - usedMemory,
       uptime: dayjs().diff(uptime, "seconds"),
