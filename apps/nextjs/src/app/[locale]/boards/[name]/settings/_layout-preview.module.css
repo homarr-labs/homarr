@@ -4,6 +4,10 @@
   background: color-mix(in srgb, var(--mantine-color-body) 82%, var(--mantine-primary-color-light));
   padding: var(--mantine-spacing-xs);
   min-height: 7rem;
+  max-height: min(24rem, 48dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .section {

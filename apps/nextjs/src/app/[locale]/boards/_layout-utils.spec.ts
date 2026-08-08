@@ -20,6 +20,18 @@ describe("layout representative widths", () => {
 });
 
 describe("projectBoardLayout", () => {
+  test("returns exact saved positions without recursively re-projecting the active layout", () => {
+    const rootSection = new EmptySectionMockBuilder({ id: "root" }).build();
+    const dynamicSection = new DynamicSectionMockBuilder({ id: "dynamic" })
+      .addLayout({ layoutId: mobile.id, parentSectionId: rootSection.id, width: 3, height: 2 })
+      .build();
+    const board = new BoardMockBuilder().addLayout(mobile).addSections([rootSection, dynamicSection]).build();
+
+    expect(projectBoardLayout(board, mobile, mobile)).toEqual([
+      expect.objectContaining({ id: dynamicSection.id, sectionId: rootSection.id, width: 3, height: 2 }),
+    ]);
+  });
+
   test("uses production ordering and sizing for items and dynamic sections", () => {
     const rootSection = new EmptySectionMockBuilder({ id: "root" }).build();
     const dynamicSection = new DynamicSectionMockBuilder({ id: "dynamic" })

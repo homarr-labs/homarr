@@ -24,6 +24,10 @@ export const projectBoardLayout = (
 ) => {
   const elements = getElementsForLayout(board, sourceLayout.id);
 
+  if (sourceLayout.id === targetLayout.id && sourceLayout.columnCount === targetLayout.columnCount) {
+    return elements;
+  }
+
   return board.sections
     .filter((section) => section.kind !== "dynamic")
     .flatMap(
