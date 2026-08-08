@@ -1,0 +1,25 @@
+scripts/benchmarks/build-compare.sh
+  s_a0e1fd495b97ff::t_0ee993280a0ca8 10,13-20,22-23,29-30,33,62-66,76-79
+packages/api/src/router/test/integration/integration-test-connection.spec.ts
+  s_a0e1fd495b97ff::t_028a3aedc3c3d0 28,67
+  s_a0e1fd495b97ff::t_1f2f48ac64c5e0 113,159
+  s_a0e1fd495b97ff::t_58d8dc90d9ffab 4,9-11
+  s_a0e1fd495b97ff::t_8c100109f020b3 209
+  s_a0e1fd495b97ff::t_59b7cd543ceac0 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "abec79abe8e35acee04663d1a661d115474183af",
+  "prompts": {},
+  "sessions": {
+    "s_a0e1fd495b97ff": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12c583c6-2fdd-40bf-9bf0-8cdcad90cc36",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
