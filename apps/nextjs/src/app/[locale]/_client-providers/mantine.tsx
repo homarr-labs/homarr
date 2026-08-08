@@ -13,8 +13,8 @@ import { theme } from "@homarr/ui";
 
 export const CustomMantineProvider = ({
   children,
-  defaultColorScheme = "auto",
-}: PropsWithChildren<{ defaultColorScheme?: MantineColorScheme }>) => {
+  defaultColorScheme,
+}: PropsWithChildren<{ defaultColorScheme: MantineColorScheme }>) => {
   const manager = useColorSchemeManager();
   return (
     <DirectionProvider>

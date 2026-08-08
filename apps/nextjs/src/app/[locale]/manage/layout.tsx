@@ -1,6 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { Suspense } from "react";
-import { AppShellMain, Skeleton } from "@mantine/core";
+import { AppShellMain } from "@mantine/core";
 import {
   IconAffiliateFilled,
   IconApi,
@@ -47,17 +46,7 @@ import { env as nextEnv } from "~/env";
 
 const logger = createLogger({ module: "manageLayout" });
 
-const ManageLayoutFallback = () => (
-  <ClientShell hasNavigation>
-    <MainHeader />
-    <MainNavigation links={[]} />
-    <AppShellMain>
-      <Skeleton height="100%" radius="sm" />
-    </AppShellMain>
-  </ClientShell>
-);
-
-async function ManageLayoutContent({ children }: PropsWithChildren) {
+export default async function ManageLayout({ children }: PropsWithChildren) {
   const sessionPromise = auth();
   const shouldRunManageTourPromise = sessionPromise.then(async (session) => {
     if (!session || nextEnv.DEMO_MODE) return false;
@@ -248,21 +237,17 @@ async function ManageLayoutContent({ children }: PropsWithChildren) {
 
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
 
+  const shell = (
+    <ClientShell hasNavigation>
+      <MainHeader></MainHeader>
+      <MainNavigation links={navigationLinks}></MainNavigation>
+      <AppShellMain>{children}</AppShellMain>
+    </ClientShell>
+  );
+
   return (
     <ManageTourGate enabled={shouldRunManageTour} isAdmin={isAdmin}>
-      <ClientShell hasNavigation>
-        <MainHeader />
-        <MainNavigation links={navigationLinks} />
-        <AppShellMain>{children}</AppShellMain>
-      </ClientShell>
+      {shell}
     </ManageTourGate>
-  );
-}
-
-export default function ManageLayout({ children }: PropsWithChildren) {
-  return (
-    <Suspense fallback={<ManageLayoutFallback />}>
-      <ManageLayoutContent>{children}</ManageLayoutContent>
-    </Suspense>
   );
 }

@@ -1,6 +1,5 @@
-import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { Alert, Card, Center, Code, Loader, Stack, Text, Title } from "@mantine/core";
+import { Alert, Card, Center, Code, Stack, Text, Title } from "@mantine/core";
 import { IconLogin } from "@tabler/icons-react";
 
 import { env } from "@homarr/auth/env";
@@ -19,12 +18,12 @@ interface LoginProps {
   }>;
 }
 
-async function LoginContent({ searchParams }: { searchParams: Promise<{ callbackUrl?: string }> }) {
-  const resolvedParams = await searchParams;
+export default async function Login(props: LoginProps) {
+  const searchParams = await props.searchParams;
   const session = await auth();
 
   if (session) {
-    redirect(sanitizeRedirectionUrl(resolvedParams.callbackUrl));
+    redirect(sanitizeRedirectionUrl(searchParams.callbackUrl));
   }
 
   const t = await getScopedI18n("user.page.login");
@@ -53,24 +52,10 @@ async function LoginContent({ searchParams }: { searchParams: Promise<{ callback
             providers={env.AUTH_PROVIDERS}
             oidcClientName={env.AUTH_OIDC_CLIENT_NAME}
             isOidcAutoLoginEnabled={env.AUTH_OIDC_AUTO_LOGIN}
-            callbackUrl={resolvedParams.callbackUrl ?? "/"}
+            callbackUrl={searchParams.callbackUrl ?? "/"}
           />
         </Card>
       </Stack>
     </Center>
-  );
-}
-
-export default function Login(props: LoginProps) {
-  return (
-    <Suspense
-      fallback={
-        <Center h="100vh">
-          <Loader size="lg" />
-        </Center>
-      }
-    >
-      <LoginContent searchParams={props.searchParams} />
-    </Suspense>
   );
 }

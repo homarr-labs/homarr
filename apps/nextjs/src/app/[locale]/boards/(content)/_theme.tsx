@@ -11,8 +11,8 @@ import { useColorSchemeManager } from "../../_client-providers/mantine";
 
 export const BoardMantineProvider = ({
   children,
-  defaultColorScheme = "auto",
-}: PropsWithChildren<{ defaultColorScheme?: ColorScheme }>) => {
+  defaultColorScheme,
+}: PropsWithChildren<{ defaultColorScheme: ColorScheme }>) => {
   const board = useRequiredBoard();
   const colorSchemeManager = useColorSchemeManager();
 

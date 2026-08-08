@@ -16,9 +16,6 @@ const withNextIntl = createNextIntlPlugin({
 });
 
 const nextConfig: NextConfig = {
-  cacheHandlers: {
-    default: path.resolve(import.meta.dirname, "../../packages/next-cache-handler/src/index.ts"),
-  },
   // Next previews otherwise create agent instruction files in the application
   // directory during development.
   agentRules: false,
@@ -27,13 +24,6 @@ const nextConfig: NextConfig = {
   },
   output: "standalone",
   reactStrictMode: true,
-  cacheComponents: true,
-  cacheMaxMemorySize: 32 * 1024 * 1024,
-  cacheLife: {
-    config: { stale: 60, revalidate: 60 * 60 * 24, expire: 60 * 60 * 24 * 7 },
-    integration: { stale: 15, revalidate: 60, expire: 60 * 10 },
-    session: { stale: 30, revalidate: 60 * 5, expire: 60 * 30 },
-  },
   // react compiler breaks mantine-react-table, so disabled for now
   //reactCompiler: true,
   /** We already do typechecking as separate tasks in CI */

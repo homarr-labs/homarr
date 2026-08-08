@@ -4,11 +4,19 @@ import { createRedisClient } from "@homarr/core/infrastructure/redis";
 let dataClient: RedisClient | undefined;
 let subscriberClient: RedisClient | undefined;
 
-const isRedisExplicitlyDisabled = () => process.env.CI === "true" || process.env.CI === "1" || process.env.DISABLE_REDIS_LOGS === "true" || process.env.DISABLE_REDIS_LOGS === "1";
+const isRedisExplicitlyDisabled = () =>
+  process.env.CI === "true" ||
+  process.env.CI === "1" ||
+  process.env.DISABLE_REDIS_LOGS === "true" ||
+  process.env.DISABLE_REDIS_LOGS === "1";
 
 /**
- * In-process pub/sub fallback for single-instance deployments when Redis is unavailable.
- * Never used when REDIS_IS_EXTERNAL=true (multi-instance requires real Redis).
+ * In-process pub/sub fallback for single-instance deployments, opted into via
+ * CI/DISABLE_REDIS_LOGS. This is a static, env-driven switch — it does not detect
+ * Redis unreachability at runtime; an unreachable Redis outside those flags still
+ * attempts a real connection (with ioredis's default retry/backoff), it does not
+ * fall back automatically. Never used when REDIS_IS_EXTERNAL=true (multi-instance
+ * requires real Redis).
  */
 export const usesMemoryFallback = (): boolean =>
   process.env.REDIS_IS_EXTERNAL !== "true" && isRedisExplicitlyDisabled();

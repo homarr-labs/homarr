@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Suspense } from "react";
 import { Inter } from "next/font/google";
-import { Center, ColorSchemeScript, Loader } from "@mantine/core";
 
 import "@gfazioli/mantine-onboarding-tour/styles.css";
 import "@homarr/notifications/styles.css";
@@ -12,19 +10,42 @@ import "~/styles/color-scheme.scss";
 import "~/styles/scroll-area.scss";
 
 import { notFound } from "next/navigation";
+import type { DayOfWeek } from "@mantine/dates";
+import { NextIntlClientProvider } from "next-intl";
 
+import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
+import { getRscUserSettingsAsync } from "@homarr/api/user-server";
+import { env } from "@homarr/auth/env";
+import { auth } from "@homarr/auth/next";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ModalProvider } from "@homarr/modals";
+import { Notifications } from "@homarr/notifications";
+import { SettingsProvider } from "@homarr/settings";
+import { SpotlightProvider } from "@homarr/spotlight";
 import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 
-import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
+import { Analytics } from "~/components/layout/analytics";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
-import { SessionScopedProviders } from "./_session-scoped-providers";
+
+import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
+import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
+import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
+import { DayJsLoader } from "./_client-providers/dayjs-loader";
+import { JotaiProvider } from "./_client-providers/jotai";
+import { CustomMantineProvider } from "./_client-providers/mantine";
+import { AuthProvider } from "./_client-providers/session";
+import { TRPCReactProvider } from "./_client-providers/trpc";
+import { composeWrappers } from "./compose";
 
 const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
+const logger = createLogger({ module: "rootLayout" });
+
+// eslint-disable-next-line no-restricted-syntax
 export const generateMetadata = async (): Promise<Metadata> => ({
   title: "Homarr",
   description:
@@ -44,7 +65,7 @@ export const generateMetadata = async (): Promise<Metadata> => ({
     title: "Homarr",
     capable: true,
     startupImage: { url: "/logo/logo.png" },
-    statusBarStyle: "default",
+    statusBarStyle: (await getCurrentColorSchemeAsync()) === "dark" ? "black-translucent" : "default",
   },
 });
 
@@ -64,27 +85,82 @@ export default async function Layout(props: {
     notFound();
   }
 
+  const sessionPromise = auth();
+  const userPromise = sessionPromise.then((session) =>
+    session
+      ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
+          logger.error(new Error("Failed to load the authenticated user in the root layout", { cause: error }));
+          return null;
+        })
+      : null,
+  );
+  const [session, user, serverSettings, colorScheme] = await Promise.all([
+    sessionPromise,
+    userPromise,
+    getRscServerSettingsAsync(),
+    getCurrentColorSchemeAsync(),
+  ]);
   const direction = isLocaleRTL(locale) ? "rtl" : "ltr";
 
+  const StackedProvider = composeWrappers([
+    (innerProps) => {
+      return <AuthProvider session={session} logoutUrl={env.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />;
+    },
+    (innerProps) => (
+      <SettingsProvider
+        user={
+          user
+            ? {
+                ...user,
+                // Convert type, because output schema is not smart enough to infer $type from drizzle
+                firstDayOfWeek: user.firstDayOfWeek as DayOfWeek,
+              }
+            : null
+        }
+        serverSettings={{
+          board: {
+            homeBoardId: serverSettings.board.homeBoardId,
+            mobileHomeBoardId: serverSettings.board.mobileHomeBoardId,
+            enableStatusByDefault: serverSettings.board.enableStatusByDefault,
+            forceDisableStatus: serverSettings.board.forceDisableStatus,
+          },
+          search: { defaultSearchEngineId: serverSettings.search.defaultSearchEngineId },
+          user: { enableGravatar: serverSettings.user.enableGravatar },
+        }}
+        {...innerProps}
+      />
+    ),
+    (innerProps) => <JotaiProvider {...innerProps} />,
+    (innerProps) => <TRPCReactProvider {...innerProps} />,
+    (innerProps) => <DayJsLoader {...innerProps} />,
+    (innerProps) => <NextIntlClientProvider {...innerProps} />,
+    (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
+    (innerProps) => <ModalProvider {...innerProps} />,
+    (innerProps) => <SpotlightProvider {...innerProps} />,
+  ]);
+
   return (
-    <html lang={locale} dir={direction} suppressHydrationWarning>
+    // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
+    <html
+      lang={locale}
+      dir={direction}
+      data-mantine-color-scheme={colorScheme}
+      style={{
+        backgroundColor: colorScheme === "dark" ? "#242424" : colorScheme === "auto" ? undefined : "#fff",
+      }}
+      suppressHydrationWarning
+    >
       <head>
-        <ColorSchemeScript />
-        <Suspense>
-          <SearchEngineOptimization />
-        </Suspense>
+        <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
       </head>
       <body className={[fontSans.className, fontSans.variable].join(" ")} suppressHydrationWarning>
-        <Suspense
-          fallback={
-            <Center h="100vh" w="100%">
-              <Loader size="xl" />
-            </Center>
-          }
-        >
-          <SessionScopedProviders>{props.children}</SessionScopedProviders>
-        </Suspense>
+        <Analytics enabled={serverSettings.analytics.enableGeneral} />
+        <StackedProvider>
+          <Notifications pauseResetOnHover="notification" />
+          <ServiceWorkerRegistration />
+          {props.children}
+        </StackedProvider>
       </body>
     </html>
   );
